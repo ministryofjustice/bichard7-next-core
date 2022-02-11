@@ -2,7 +2,7 @@ import { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/Incomi
 import { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
 
-export default (courtResult: ResultedCaseMessageParsedXml, triggerCode: TriggerCode, resultCodesForTrigger: number[]) => {
+export default (courtResult: ResultedCaseMessageParsedXml, triggerCode: TriggerCode, resultCodesForTrigger: number[], caseLevelTrigger: boolean = false) => {
     const shouldTrigger = (offence: OffenceParsedXml): boolean => (
         offence.Result.some(result => resultCodesForTrigger.includes(result.ResultCode))
     )
@@ -17,5 +17,9 @@ export default (courtResult: ResultedCaseMessageParsedXml, triggerCode: TriggerC
         return acc
     }
 
-    return courtResult.Session.Case.Defendant.Offence.reduce(generateTriggers, [])
+    const triggers = courtResult.Session.Case.Defendant.Offence.reduce(generateTriggers, [])
+    if (caseLevelTrigger) {
+        return triggers.length > 0 ? [{ code: triggerCode }] : []
+    }
+    return triggers
 }
