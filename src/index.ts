@@ -3,9 +3,6 @@ import { Trigger } from "./types/Trigger"
 import generateTriggers from "./use-cases/generateTriggers"
 import parseMessage from "./use-cases/parseMessage"
 
-
-
-
 type BichardResultType = {
     triggers: Trigger[]
     exceptions: ExceptionCode[]
