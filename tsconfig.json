@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "outDir": "build",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "baseUrl": ".",
+    "preserveSymlinks": false,
+    "paths": {}
+  },
+  "compileOnSave": true,
+  "include": [
+    "src/**/*.ts"
+  ]
+}
