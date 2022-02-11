@@ -1,13 +1,10 @@
-import TRPR0001 from "./TRPR0001";
-import TRPR0005 from "./TRPR0005";
-import TRPR0006 from "./TRPR0006";
-import TRPR0012 from "./TRPR0012";
-import TRPR0017 from "./TRPR0017";
+import { KeyValue } from "src/types/KeyValue";
+import { TriggerCode } from "src/types/TriggerCode";
+import { TriggerGenerator } from "src/types/TriggerGenerator";
 
-export default {
-    TRPR0001,
-    TRPR0005,
-    TRPR0006,
-    TRPR0012,
-    TRPR0017
-}
+const modules = Object.keys(TriggerCode).reduce((acc: KeyValue<TriggerGenerator>, code) => {
+    acc[code] = require(`./${code}`).default
+    return acc
+}, {})
+
+export default modules
