@@ -13,7 +13,6 @@ export default (message: string): BichardResultType => {
 
     const triggers = generateTriggers(courtResult)
 
-    console.log(courtResult)
     return {
         triggers,
         exceptions: []
