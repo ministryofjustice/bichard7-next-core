@@ -1,6 +1,6 @@
-import { TriggerCode } from "./TriggerCode";
+import type { TriggerCode } from "./TriggerCode"
 
 export type Trigger = {
-    code: TriggerCode
-    offenceSequenceNumber?: number
+  code: TriggerCode
+  offenceSequenceNumber?: number
 }
