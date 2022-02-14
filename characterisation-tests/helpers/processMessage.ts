@@ -4,7 +4,7 @@ import CoreHandler from "../../src"
 import { v4 as uuid } from "uuid"
 import ActiveMqHelper from "./ActiveMqHelper"
 import defaults from "./defaults"
-import mockRecordInPnc from "./mockRecordInPnc"
+import { mockRecordInPnc, mockEnquiryErrorInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import promisePoller from "promise-poller"
@@ -28,6 +28,8 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
   if (recordable) {
     // Insert matching record in PNC
     await mockRecordInPnc(messageXml)
+  } else {
+    await mockEnquiryErrorInPnc()
   }
 
   // Push the message to MQ
@@ -41,7 +43,8 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
   // Wait for the record to appear in Postgres
   const query = `SELECT t.trigger_code, t.trigger_item_identity FROM br7own.error_list AS e
     INNER JOIN br7own.error_list_triggers AS t ON t.error_id = e.error_id
-    WHERE message_id = '${correlationId}'`
+    WHERE message_id = '${correlationId}'
+    ORDER BY t.trigger_item_identity ASC`
 
   const fetchRecord = () => pgHelper.pg.many(query)
 

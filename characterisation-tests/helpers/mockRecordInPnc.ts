@@ -27,6 +27,7 @@ const extractDates = (offence: OffenceParsedXml) => {
   }
   return { startDate, endDate }
 }
+
 const mockEnquiry = (messageXml: string) => {
   const parsed: ResultedCaseMessageParsedXml = parseMessage(messageXml)
   const prosecutorRef = parsed.Session.Case.Defendant.ProsecutorReference.slice(-7)
@@ -67,6 +68,10 @@ const mockEnquiry = (messageXml: string) => {
   }
 }
 
+const mockEnquiryError = (): string => {
+  return `<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>`
+}
+
 const addMock = async (matchRegex: string, response: string, count: number | null = null): Promise<string> => {
   const data = { matchRegex, response, count }
   const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
@@ -83,8 +88,16 @@ const clearMocks = async (): Promise<void> => {
   }
 }
 
-export default async (messageXml: string): Promise<void> => {
+const mockRecordInPnc = async (messageXml: string): Promise<void> => {
   const enquiry = mockEnquiry(messageXml)
   await clearMocks()
   await addMock(enquiry.matchRegex, enquiry.response)
 }
+
+const mockEnquiryErrorInPnc = async (): Promise<void> => {
+  const enquiryError = mockEnquiryError()
+  await clearMocks()
+  await addMock("CXE01", enquiryError)
+}
+
+export { mockRecordInPnc, mockEnquiryErrorInPnc }
