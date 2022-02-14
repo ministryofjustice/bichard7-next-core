@@ -1,5 +1,5 @@
-import { ExceptionCode } from "./ExceptionCode";
-import { Trigger } from "./Trigger";
+import type { ExceptionCode } from "./ExceptionCode"
+import type { Trigger } from "./Trigger"
 
 type BichardResultType = {
   triggers: Trigger[]

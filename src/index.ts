@@ -1,4 +1,4 @@
-import BichardResultType from "./types/BichardResultType"
+import type BichardResultType from "./types/BichardResultType"
 import generateTriggers from "./use-cases/generateTriggers"
 import parseMessage from "./use-cases/parseMessage"
 

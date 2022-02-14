@@ -23,7 +23,6 @@ export type GenericOffenceParsedXml<T> = {
         OffenceEndDate: string
       }
     }
-
   }
   InitiatedDate: string
   Plea: number
