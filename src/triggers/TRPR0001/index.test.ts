@@ -26,6 +26,7 @@ describe("TRPR0001", () => {
     expect(result).toHaveLength(1)
     expect(result).toStrictEqual([{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }])
   })
+
   it("should not generate a trigger correctly", () => {
     const data = parseFile("input-message-001.xml")
     const result = TRPR0001(data)

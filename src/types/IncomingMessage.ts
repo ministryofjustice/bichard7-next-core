@@ -14,6 +14,15 @@ export type GenericOffenceParsedXml<T> = {
     ChargeDate: string
     ArrestDate: string
     LocationOfOffence: string
+    OffenceTiming: {
+      OffenceDateCode: number
+      OffenceStart: {
+        OffenceDateStartDate: string
+      }
+      OffenceEnd: {
+        OffenceEndDate: string
+      }
+    }
   }
   InitiatedDate: string
   Plea: number
@@ -27,8 +36,21 @@ export type GenericOffenceParsedXml<T> = {
 export type GenericResultedCaseMessageParsedXml<T> = {
   Session: {
     Case: {
+      PTIURN: string
       Defendant: {
         Offence: T
+        ProsecutorReference: string
+        CourtIndividualDefendant: {
+          PersonDefendant: {
+            BasePersonDetails: {
+              PersonName: {
+                PersonTitle: string
+                PersonGivenName1: string
+                PersonFamilyName: string
+              }
+            }
+          }
+        }
       }
     }
   }
