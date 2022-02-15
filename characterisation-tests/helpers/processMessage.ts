@@ -70,7 +70,7 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
 
   const triggers = queryResult.map((record) => ({
     code: record.trigger_code,
-    offenceSequenceNumber: parseInt(record.trigger_item_identity, 10)
+    ...(record.trigger_item_identity ? { offenceSequenceNumber: parseInt(record.trigger_item_identity, 10) } : {})
   }))
 
   return { triggers, exceptions: [] }
