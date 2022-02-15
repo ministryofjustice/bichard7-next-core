@@ -6,8 +6,8 @@ import TriggerRecordable from "src/types/TriggerRecordable"
 import generateTriggersFromResultQualifier from "./generateTriggersFromResultQualifier"
 
 const config: TriggerConfig = {
-  triggerCode: TriggerCode.TRPR0023,
-  resultCodeQualifier: "LG",
+  triggerCode: TriggerCode.TRPR0024,
+  resultCodeQualifier: "LH",
   caseLevelTrigger: true,
   triggerRecordable: TriggerRecordable.Both
 }

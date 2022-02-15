@@ -12,6 +12,12 @@ const offenceTests = [
     resultCode: 4594,
     resultQualifier: "LG",
     recordable: TriggerRecordable.Both
+  },
+  {
+    code: TriggerCode.TRPR0024,
+    resultCode: 4594,
+    resultQualifier: "LH",
+    recordable: TriggerRecordable.Both
   }
 ]
 
@@ -20,7 +26,7 @@ describe("Generic offence triggers", () => {
     PostgresHelper.closeConnection()
   })
 
-  describe.each(offenceTests)("Testing generic trigger $code", ({ code, resultCode, resultQualifier }) => {
+  describe.each(offenceTests)("Testing result qualifier trigger $code", ({ code, resultCode, resultQualifier }) => {
     it("should generate a trigger correctly with single offences", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
