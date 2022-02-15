@@ -18,6 +18,8 @@ const pgHelper = new PostgresHelper({
   ssl: false
 })
 
+const realPnc = process.env.REAL_PNC === "true"
+
 const processMessageCore = (messageXml: string): BichardResultType => {
   return CoreHandler(messageXml)
 }
@@ -25,11 +27,14 @@ const processMessageCore = (messageXml: string): BichardResultType => {
 const processMessageBichard = async (messageXml: string, recordable: boolean): Promise<BichardResultType> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
-  if (recordable) {
-    // Insert matching record in PNC
-    await mockRecordInPnc(messageXml)
-  } else {
-    await mockEnquiryErrorInPnc()
+
+  if (!realPnc) {
+    if (recordable) {
+      // Insert matching record in PNC
+      await mockRecordInPnc(messageXml)
+    } else {
+      await mockEnquiryErrorInPnc()
+    }
   }
 
   // Push the message to MQ
@@ -46,7 +51,11 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
     WHERE message_id = '${correlationId}'
     ORDER BY t.trigger_item_identity ASC`
 
-  const fetchRecord = () => pgHelper.pg.many(query)
+  if (!recordable) {
+    await new Promise((resolve) => setTimeout(resolve, 3_000))
+  }
+
+  const fetchRecord = () => (recordable ? pgHelper.pg.many(query) : pgHelper.pg.none(query))
 
   const queryResult = await promisePoller({
     taskFn: fetchRecord,
@@ -55,6 +64,10 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
   })
 
   // Return record data
+  if (!queryResult) {
+    return { triggers: [], exceptions: [] }
+  }
+
   const triggers = queryResult.map((record) => ({
     code: record.trigger_code,
     offenceSequenceNumber: parseInt(record.trigger_item_identity, 10)
