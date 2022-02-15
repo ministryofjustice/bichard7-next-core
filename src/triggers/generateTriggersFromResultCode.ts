@@ -1,13 +1,20 @@
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import type { Trigger } from "src/types/Trigger"
-import type { TriggerCode } from "src/types/TriggerCode"
+import type TriggerConfig from "src/types/TriggerConfig"
+import TriggerRecordable from "src/types/TriggerRecordable"
 
 export default (
   courtResult: ResultedCaseMessageParsedXml,
-  triggerCode: TriggerCode,
-  resultCodesForTrigger: number[],
-  caseLevelTrigger = false
-) => {
+  { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig,
+  recordable: boolean
+): Trigger[] => {
+  if (
+    (!recordable && triggerRecordable === TriggerRecordable.Yes) ||
+    (recordable && triggerRecordable === TriggerRecordable.No)
+  ) {
+    return []
+  }
+
   const shouldTrigger = (offence: OffenceParsedXml): boolean =>
     offence.Result.some((result) => resultCodesForTrigger.includes(result.ResultCode))
 

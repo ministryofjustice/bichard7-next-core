@@ -20,8 +20,8 @@ const pgHelper = new PostgresHelper({
 
 const realPnc = process.env.REAL_PNC === "true"
 
-const processMessageCore = (messageXml: string): BichardResultType => {
-  return CoreHandler(messageXml)
+const processMessageCore = (messageXml: string, recordable: boolean): BichardResultType => {
+  return CoreHandler(messageXml, recordable)
 }
 
 const processMessageBichard = async (messageXml: string, recordable: boolean): Promise<BichardResultType> => {
@@ -81,5 +81,5 @@ export default (messageXml: string, recordable = true): Promise<BichardResultTyp
     return processMessageBichard(messageXml, recordable)
   }
 
-  return Promise.resolve(processMessageCore(messageXml))
+  return Promise.resolve(processMessageCore(messageXml, recordable))
 }
