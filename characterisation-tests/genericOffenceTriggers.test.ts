@@ -56,20 +56,20 @@ describe("Generic offence triggers", () => {
         { code, offenceSequenceNumber: 3 }
       ])
     })
+  })
 
-    describe.each(nonRecordableOffenceTests)("Testing generic non-recordable trigger $code", ({ resultCode }) => {
-      it("should not generate a trigger when record is not recordable", async () => {
-        // Generate a mock message
-        const inputMessage = generateMessage({
-          offences: [{ resultCodes: [resultCode], recordable: false }]
-        })
-
-        // Process the mock message
-        const { triggers } = await processMessage(inputMessage, false)
-
-        // Check the right triggers are generated
-        expect(triggers).toHaveLength(0)
+  describe.each(nonRecordableOffenceTests)("Testing generic non-recordable trigger $code", ({ resultCode }) => {
+    it("should not generate a trigger when record is not recordable", async () => {
+      // Generate a mock message
+      const inputMessage = generateMessage({
+        offences: [{ resultCodes: [resultCode], recordable: false }]
       })
+
+      // Process the mock message
+      const { triggers } = await processMessage(inputMessage, false)
+
+      // Check the right triggers are generated
+      expect(triggers).toHaveLength(0)
     })
   })
 
