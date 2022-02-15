@@ -12,7 +12,7 @@ const parseFile = (file: string): ResultedCaseMessageParsedXml => {
 describe("generateTriggers", () => {
   it("should generate multiple triggers", () => {
     const data = parseFile("input-message-003.xml")
-    const result = generateTriggers(data)
+    const result = generateTriggers(data, true)
     expect(result).toHaveLength(4)
     expect(result).toStrictEqual([
       { code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 },
