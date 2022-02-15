@@ -8,36 +8,38 @@ import TriggerRecordable from "../src/types/TriggerRecordable"
 
 const offenceTests = [
   {
-    code: TriggerCode.TRPR0001,
-    resultCode: 3070,
+    code: TriggerCode.TRPR0005,
+    resultCode: 4012,
     recordable: TriggerRecordable.Both
   },
   {
-    code: TriggerCode.TRPR0016,
-    resultCode: 3055,
-    recordable: TriggerRecordable.Yes
-  },
-  {
-    code: TriggerCode.TRPR0017,
-    resultCode: 2007,
-    recordable: TriggerRecordable.No
-  },
-  {
-    code: TriggerCode.TRPR0021,
-    resultCode: 3002,
+    code: TriggerCode.TRPR0006,
+    resultCode: 1002,
     recordable: TriggerRecordable.Both
   },
   {
-    code: TriggerCode.TRPR0026,
-    resultCode: 3075,
+    code: TriggerCode.TRPR0007,
+    resultCode: 2065,
+    recordable: TriggerRecordable.Both
+  },
+  {
+    code: TriggerCode.TRPR0012,
+    resultCode: 2509,
+    recordable: TriggerRecordable.Both
+  },
+  {
+    code: TriggerCode.TRPR0019,
+    resultCode: 4017,
+    recordable: TriggerRecordable.Both
+  },
+  {
+    code: TriggerCode.TRPR0022,
+    resultCode: 4022,
     recordable: TriggerRecordable.Both
   }
 ]
 
-const recordableOffenceTests = offenceTests.filter((x) => x.recordable !== "NO")
-const nonRecordableOffenceTests = offenceTests.filter((x) => x.recordable === "NO")
-
-describe("Generic offence triggers", () => {
+describe("Generic case triggers", () => {
   afterAll(() => {
     PostgresHelper.closeConnection()
   })
@@ -53,7 +55,7 @@ describe("Generic offence triggers", () => {
       const { triggers } = await processMessage(inputMessage)
 
       // Check the right triggers are generated
-      expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
+      expect(triggers).toStrictEqual([{ code }])
     })
 
     it("should generate multiple triggers correctly with multiple offences", async () => {
@@ -66,29 +68,9 @@ describe("Generic offence triggers", () => {
       const { triggers } = await processMessage(inputMessage)
 
       // Check the right triggers are generated
-      expect(triggers).toStrictEqual([
-        { code, offenceSequenceNumber: 1 },
-        { code, offenceSequenceNumber: 3 }
-      ])
+      expect(triggers).toStrictEqual([{ code }])
     })
-  })
 
-  describe.each(nonRecordableOffenceTests)("Testing generic non-recordable trigger $code", ({ resultCode }) => {
-    it("should not generate a trigger when record is not recordable", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [{ resultCodes: [resultCode], recordable: false }]
-      })
-
-      // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false)
-
-      // Check the right triggers are generated
-      expect(triggers).toHaveLength(0)
-    })
-  })
-
-  describe.each(recordableOffenceTests)("Testing generic recordable trigger $code", ({ code, resultCode }) => {
     it("should generate a trigger when record is recordable", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
@@ -99,7 +81,7 @@ describe("Generic offence triggers", () => {
       const { triggers } = await processMessage(inputMessage, true)
 
       // Check the right triggers are generated
-      expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
+      expect(triggers).toStrictEqual([{ code }])
     })
   })
 })

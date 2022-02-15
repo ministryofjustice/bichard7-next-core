@@ -3,12 +3,12 @@ import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
 import type TriggerConfig from "src/types/TriggerConfig"
 import TriggerRecordable from "src/types/TriggerRecordable"
-import generateTriggersFromResultCode from "../generateTriggersFromResultCode"
+import generateTriggersFromResultCode from "./generateTriggersFromResultCode"
 
 const config: TriggerConfig = {
-  triggerCode: TriggerCode.TRPR0012,
-  resultCodesForTrigger: [2509],
-  caseLevelTrigger: true,
+  triggerCode: TriggerCode.TRPR0026,
+  resultCodesForTrigger: [3075, 3076],
+  caseLevelTrigger: false,
   triggerRecordable: TriggerRecordable.Both
 }
 
