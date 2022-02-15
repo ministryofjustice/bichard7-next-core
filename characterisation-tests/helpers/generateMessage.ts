@@ -1,5 +1,6 @@
 type Offence = {
   resultCodes: number[]
+  recordable?: boolean
 }
 
 type GenerateMessageOptions = {
@@ -24,7 +25,7 @@ const generateOffences = (options: GenerateMessageOptions) => {
   <DC:Offence>
     <DC:BaseOffenceDetails>
       <DC:OffenceSequenceNumber>${(index + 1).toString().padStart(3, "0")}</DC:OffenceSequenceNumber>
-      <DC:OffenceCode>TH68006</DC:OffenceCode>
+      <DC:OffenceCode>${offence.recordable === false ? "TH68046C" : "TH68006"}</DC:OffenceCode>
       <DC:OffenceWording>Theft of pedal cycle.</DC:OffenceWording>
       <DC:OffenceTiming>
         <DC:OffenceDateCode>1</DC:OffenceDateCode>
