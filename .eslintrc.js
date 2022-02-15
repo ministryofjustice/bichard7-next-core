@@ -60,6 +60,12 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
         "@typescript-eslint/no-non-null-assertion": "off"
       }
+    },
+    {
+      files: ["characterisation-tests/**/*.ts"],
+      rules: {
+        "import/no-extraneous-dependencies": "off"
+      }
     }
   ]
 }

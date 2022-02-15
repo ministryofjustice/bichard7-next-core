@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import pgPromise from "pg-promise"
 import type { IDatabase } from "pg-promise"
 import type pg from "pg-promise/typescript/pg-subset"

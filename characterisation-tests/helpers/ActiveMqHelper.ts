@@ -1,5 +1,4 @@
 import type { Client } from "stompit"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { ConnectFailover } from "stompit"
 
 type Options = {

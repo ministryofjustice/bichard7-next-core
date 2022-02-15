@@ -3,6 +3,6 @@ module.exports = {
   testEnvironment: "node",
   modulePathIgnorePatterns: ["node_modules", "build"],
   moduleNameMapper: {
-    "src/(.*)": "<rootDir>/src/$1"
+    "^src/(.*)": "<rootDir>/src/$1"
   }
 }
