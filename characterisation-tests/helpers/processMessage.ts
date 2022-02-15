@@ -1,12 +1,10 @@
 import type BichardResultType from "../../src/types/BichardResultType"
 import CoreHandler from "../../src"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 as uuid } from "uuid"
 import ActiveMqHelper from "./ActiveMqHelper"
 import defaults from "./defaults"
 import { mockRecordInPnc, mockEnquiryErrorInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import promisePoller from "promise-poller"
 
 const pgHelper = new PostgresHelper({

@@ -1,6 +1,5 @@
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 import parseMessage from "../../src/use-cases/parseMessage"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from "axios"
 import defaults from "./defaults"
 
