@@ -85,7 +85,7 @@ describe("Generic offence triggers", () => {
       })
 
       // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false)
+      const { triggers } = await processMessage(inputMessage, false, false)
 
       // Check the right triggers are generated
       expect(triggers).toHaveLength(0)
