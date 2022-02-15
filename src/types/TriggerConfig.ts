@@ -3,7 +3,8 @@ import type TriggerRecordable from "./TriggerRecordable"
 
 type TriggerConfig = {
   triggerCode: TriggerCode
-  resultCodesForTrigger: number[]
+  resultCodesForTrigger?: number[]
+  resultCodeQualifier?: string
   triggerRecordable: TriggerRecordable
   caseLevelTrigger?: boolean
 }

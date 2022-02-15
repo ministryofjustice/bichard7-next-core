@@ -8,6 +8,10 @@ export default (
   { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig,
   recordable: boolean
 ): Trigger[] => {
+  if (!resultCodesForTrigger) {
+    throw new Error("resultCodesForTrigger is undefined")
+  }
+
   if (
     (!recordable && triggerRecordable === TriggerRecordable.Yes) ||
     (recordable && triggerRecordable === TriggerRecordable.No)

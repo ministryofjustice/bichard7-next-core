@@ -1,6 +1,7 @@
 export type ResultParsedXml = {
   ResultCode: number
   ResultText: string
+  ResultCodeQualifier?: string
   Outcome: {
     ResultAmountSterling?: string
   }

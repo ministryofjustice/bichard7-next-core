@@ -46,7 +46,7 @@ describe("Generic offence triggers", () => {
     it("should generate a trigger correctly with single offences", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ resultCodes: [resultCode] }]
+        offences: [{ results: [{ code: resultCode }] }]
       })
 
       // Process the mock message
@@ -59,7 +59,11 @@ describe("Generic offence triggers", () => {
     it("should generate multiple triggers correctly with multiple offences", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ resultCodes: [resultCode] }, { resultCodes: [1015] }, { resultCodes: [resultCode] }]
+        offences: [
+          { results: [{ code: resultCode }] },
+          { results: [{ code: 1015 }] },
+          { results: [{ code: resultCode }] }
+        ]
       })
 
       // Process the mock message
@@ -77,11 +81,11 @@ describe("Generic offence triggers", () => {
     it("should not generate a trigger when record is not recordable", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ resultCodes: [resultCode], recordable: false }]
+        offences: [{ results: [{ code: resultCode }], recordable: false }]
       })
 
       // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false)
+      const { triggers } = await processMessage(inputMessage, false, false)
 
       // Check the right triggers are generated
       expect(triggers).toHaveLength(0)
@@ -92,7 +96,7 @@ describe("Generic offence triggers", () => {
     it("should generate a trigger when record is recordable", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ resultCodes: [resultCode] }]
+        offences: [{ results: [{ code: resultCode }] }]
       })
 
       // Process the mock message

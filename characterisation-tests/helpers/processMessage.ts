@@ -22,7 +22,11 @@ const processMessageCore = (messageXml: string, recordable: boolean): BichardRes
   return CoreHandler(messageXml, recordable)
 }
 
-const processMessageBichard = async (messageXml: string, recordable: boolean): Promise<BichardResultType> => {
+const processMessageBichard = async (
+  messageXml: string,
+  recordable: boolean,
+  expectResult: boolean
+): Promise<BichardResultType> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
 
@@ -49,11 +53,11 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
     WHERE message_id = '${correlationId}'
     ORDER BY t.trigger_item_identity ASC`
 
-  if (!recordable) {
+  if (!expectResult) {
     await new Promise((resolve) => setTimeout(resolve, 3_000))
   }
 
-  const fetchRecord = () => (recordable ? pgHelper.pg.many(query) : pgHelper.pg.none(query))
+  const fetchRecord = () => (expectResult ? pgHelper.pg.many(query) : pgHelper.pg.none(query))
 
   const queryResult = await promisePoller({
     taskFn: fetchRecord,
@@ -74,9 +78,9 @@ const processMessageBichard = async (messageXml: string, recordable: boolean): P
   return { triggers, exceptions: [] }
 }
 
-export default (messageXml: string, recordable = true): Promise<BichardResultType> => {
+export default (messageXml: string, recordable = true, expectResult = true): Promise<BichardResultType> => {
   if (process.env.USE_BICHARD === "true") {
-    return processMessageBichard(messageXml, recordable)
+    return processMessageBichard(messageXml, recordable, expectResult)
   }
 
   return Promise.resolve(processMessageCore(messageXml, recordable))

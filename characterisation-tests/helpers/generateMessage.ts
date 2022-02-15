@@ -1,8 +1,13 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
 
+type Result = {
+  code: number
+  qualifier?: string
+}
+
 type Offence = {
-  resultCodes: number[]
+  results: Result[]
   recordable?: boolean
 }
 
