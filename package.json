@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "test": "jest",
+    "test:bichard": "USE_BICHARD=true jest --runInBand",
     "test:watch": "jest --watch",
     "clean": "rimraf build",
     "build": "npm run clean && tsc -p tsconfig.json",
