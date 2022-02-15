@@ -1,4 +1,4 @@
-jest.setTimeout(20000)
+jest.setTimeout(30000)
 
 import { TriggerCode } from "../src/types/TriggerCode"
 import generateMessage from "./helpers/generateMessage"
@@ -8,47 +8,27 @@ import TriggerRecordable from "../src/types/TriggerRecordable"
 
 const offenceTests = [
   {
-    code: TriggerCode.TRPR0005,
-    resultCode: 4012,
-    recordable: TriggerRecordable.Both
-  },
-  {
-    code: TriggerCode.TRPR0006,
-    resultCode: 1002,
-    recordable: TriggerRecordable.Both
-  },
-  {
-    code: TriggerCode.TRPR0007,
-    resultCode: 2065,
-    recordable: TriggerRecordable.Both
-  },
-  {
-    code: TriggerCode.TRPR0012,
-    resultCode: 2509,
-    recordable: TriggerRecordable.Both
-  },
-  {
-    code: TriggerCode.TRPR0019,
-    resultCode: 4017,
-    recordable: TriggerRecordable.Both
-  },
-  {
-    code: TriggerCode.TRPR0022,
-    resultCode: 4022,
+    code: TriggerCode.TRPR0023,
+    resultCode: 4594,
+    resultQualifier: "LG",
     recordable: TriggerRecordable.Both
   }
 ]
 
-describe("Generic case triggers", () => {
+describe("Generic offence triggers", () => {
   afterAll(() => {
     PostgresHelper.closeConnection()
   })
 
-  describe.each(offenceTests)("Testing generic trigger $code", ({ code, resultCode }) => {
+  describe.each(offenceTests)("Testing generic trigger $code", ({ code, resultCode, resultQualifier }) => {
     it("should generate a trigger correctly with single offences", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }] }]
+        offences: [
+          {
+            results: [{ code: resultCode, qualifier: resultQualifier }]
+          }
+        ]
       })
 
       // Process the mock message
@@ -62,9 +42,11 @@ describe("Generic case triggers", () => {
       // Generate a mock message
       const inputMessage = generateMessage({
         offences: [
-          { results: [{ code: resultCode }] },
+          {
+            results: [{ code: resultCode, qualifier: resultQualifier }]
+          },
           { results: [{ code: 1015 }] },
-          { results: [{ code: resultCode }] }
+          { results: [{ code: resultCode, qualifier: resultQualifier }] }
         ]
       })
 
@@ -75,10 +57,23 @@ describe("Generic case triggers", () => {
       expect(triggers).toStrictEqual([{ code }])
     })
 
+    it("should generate a trigger when record is not recordable", async () => {
+      // Generate a mock message
+      const inputMessage = generateMessage({
+        offences: [{ results: [{ code: resultCode, qualifier: resultQualifier }], recordable: false }]
+      })
+
+      // Process the mock message
+      const { triggers } = await processMessage(inputMessage, true)
+
+      // Check the right triggers are generated
+      expect(triggers).toStrictEqual([{ code }])
+    })
+
     it("should generate a trigger when record is recordable", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }] }]
+        offences: [{ results: [{ code: resultCode, qualifier: resultQualifier }] }]
       })
 
       // Process the mock message

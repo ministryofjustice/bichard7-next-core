@@ -90,10 +90,13 @@
                   <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
                   <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
                   <DC:Finding>G</DC:Finding>
-                  {% for resultCode in offence.resultCodes %}
+                  {% for result in offence.results %}
                     <DC:Result>
-                      <DC:ResultCode>{{ resultCode }}</DC:ResultCode>
+                      <DC:ResultCode>{{ result.code }}</DC:ResultCode>
                       <DC:ResultText>RESULT_TEXT</DC:ResultText>
+                      {% if result.qualifier %}
+                        <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
+                      {% endif %}
                     </DC:Result>
                   {% endfor %}
                 </DC:Offence>
