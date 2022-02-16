@@ -1,12 +1,20 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
 
+export enum Guilt {
+  Guilty = "G",
+  NotGuilty = "NG"
+}
+
 type Result = {
   code: number
   qualifier?: string
+  text?: string
 }
 
 type Offence = {
+  code?: string
+  finding?: Guilt
   results: Result[]
   recordable?: boolean
 }
