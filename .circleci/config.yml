@@ -1,0 +1,113 @@
+version: 2.1
+
+commands:
+  checkout_and_install:
+    description: Check out the repo and install the node dependencies
+    steps:
+      - checkout
+      - run:
+          name: Hash package-lock.json
+          command: bash .circleci/scripts/hash-package-lock.sh
+      - restore_cache:
+          name: Load node_modules from the cache if they haven't changed
+          keys:
+            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+            - v1-npm-deps-
+      - run:
+          name: Install npm dependencies
+          command: npm i
+      - save_cache:
+          key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+          paths: node_modules
+
+  clone_bichard_repo:
+    description: Check out the bichard7-next repo
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - f3:11:43:21:ad:34:00:77:21:25:d7:01:85:55:13:90
+      - run:
+          name: Remove SSH keys
+          command: ssh-add -D
+      - run:
+          name: Add bichard7-next deploy key
+          command: ssh-add ~/.ssh/id_rsa_f3114321ad3400772125d70185551390
+      - run:
+          name: Clone bichard7-next
+          command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
+
+  fetch_docker_images:
+    description: Fetch all of the required docker images from ECR
+    steps:
+      - run:
+          name: Fetch the BeanConnect image
+          working_directory: ~/bichard7-next
+          command: bash scripts/fetch_beanconnect_docker.sh
+      - run:
+          name: Fetch the PNC Emulator image
+          working_directory: ~/bichard7-next
+          command: bash scripts/fetch_pncemulator_docker.sh
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:16.13.1
+    working_directory: ~
+    steps:
+      - checkout_and_install
+      - run:
+          name: Check the code for linting errors
+          command: npm run lint
+      - run:
+          name: Build the code
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths: build
+
+  test_core:
+    docker:
+      - image: cimg/node:16.13.1
+    working_directory: ~
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run tests against core code
+          command: npm t
+
+  test_bichard:
+    machine:
+      image: ubuntu-2004:202104-01
+      docker_layer_caching: true
+    working_directory: ~
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: .
+      - clone_bichard_repo
+      - fetch_docker_images
+      - run:
+          name: Run Bichard stack
+          working_directory: ~/bichard7-next
+          command: make run-beanconnect run-activemq run-liberty run-pg
+      - run:
+          name: Wait for Bichard
+          working_directory: ~/bichard7-next
+          command: bash scripts/wait_for_bichard.sh
+      - run:
+          name: Run tests against Bichard application
+          command: npm run test:bichard
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test_core:
+          requires:
+            - build
+      - test_bichard:
+          requires:
+            - build
