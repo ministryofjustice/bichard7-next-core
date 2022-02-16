@@ -11,7 +11,8 @@
     "build": "npm run clean && tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "update-deps": "ncu -u && npm install"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.4",
+    "npm-check-updates": "^12.3.0",
     "nunjucks": "^3.2.3",
     "pg-promise": "^10.11.1",
     "prettier": "^2.5.1",
