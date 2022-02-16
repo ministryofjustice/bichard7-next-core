@@ -1,0 +1,5098 @@
+[
+  {
+    "cjsCode": "1000",
+    "description": "Uncoded text result",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1002",
+    "description": "Imprisonment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1003",
+    "description": "Detained during HM Pleasure",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1004",
+    "description": "Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1007",
+    "description": "Detention",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1008",
+    "description": "Hospital Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1010",
+    "description": "Community Service",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1014",
+    "description": "Guardianship Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1015",
+    "description": "Fine",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1016",
+    "description": "Bound Over",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1017",
+    "description": "Absolute Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1018",
+    "description": "Conditional Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1021",
+    "description": "No Order Made",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1022",
+    "description": "Youth Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1024",
+    "description": "Young Offenders Institution",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1025",
+    "description": "Referred Voluntary Measures",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1026",
+    "description": "Admonished",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1027",
+    "description": "Sentence Accumulated",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1028",
+    "description": "Subsequently Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1029",
+    "description": "Order Revoked",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1030",
+    "description": "Order Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1031",
+    "description": "Order Extended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1032",
+    "description": "Order Amended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1034",
+    "description": "Dismissed with Disgrace from HM Forces",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1035",
+    "description": "Dismissed from HM Forces",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1036",
+    "description": "Reduced to the Ranks",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1037",
+    "description": "Forfeiture of Seniority",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1038",
+    "description": "Severe Reprimand",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1039",
+    "description": "Reprimand",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1040",
+    "description": "Order to Continue",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1044",
+    "description": "Supervision Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1046",
+    "description": "Varied on Appeal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1049",
+    "description": "Substituted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1051",
+    "description": "Loss of Privilege",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1054",
+    "description": "Non Standard Foreign Disposal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1055",
+    "description": "Unserved from Original Sentence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1056",
+    "description": "Detained in Place approved by Sec. Of State",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1057",
+    "description": "No Separate Penalty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1058",
+    "description": "Training School Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1062",
+    "description": "Jersey Parish Hall Voluntary Supervision",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1063",
+    "description": "Recognizance Paid (Guernsey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1064",
+    "description": "Official Caution (Verbal)(Guernsey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1065",
+    "description": "Official Caution (Written)(Guernsey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1066",
+    "description": "Placed on the Black List (Guernsey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1067",
+    "description": "Bound Over to Leave the Island within 3 days",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1068",
+    "description": "Caution Imposed (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1070",
+    "description": "Estreat",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1071",
+    "description": "Fine (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1073",
+    "description": "Detained without Limit of Time",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1074",
+    "description": "Criminal Procedure (Scotland) Act 1975",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1075",
+    "description": "Order under Prisoner & Criminal Proceedings (Scotland) Act 1993 s.16",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1076",
+    "description": "Warning (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1077",
+    "description": "Youth Custody (Guernsey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1078",
+    "description": "Supervised Attendance Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1080",
+    "description": "Secure Training Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1081",
+    "description": "Detention and Training Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1082",
+    "description": "Restriction of Liberty Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1083",
+    "description": "Reparation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1085",
+    "description": "Parenting Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "1086",
+    "description": "Drug Treatment and Testing Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1087",
+    "description": "No Action on Breach",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1088",
+    "description": "Hospital & Limitation Directions",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1090",
+    "description": "Supervision Order (Young Offenders)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1091",
+    "description": "Detained during Secretary of State's pleasure (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1092",
+    "description": "Young Offenders Centre (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1093",
+    "description": "Juvenile Justice Centre (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1094",
+    "description": "Recognizance Estreated (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1096",
+    "description": "Custody Probation Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1097",
+    "description": "Referral Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1100",
+    "description": "Exclusion order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1101",
+    "description": "Drug Abstinence order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1103",
+    "description": "Civil Diligence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1104",
+    "description": "Enhanced Probation Order (Drugs)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1105",
+    "description": "Fine or Imprisonment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1106",
+    "description": "Fine or YOI",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1107",
+    "description": "Fine or Supervised Attendance Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1108",
+    "description": "Disposal Unknown",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1109",
+    "description": "Penalty Notice",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1110",
+    "description": "Return to Detention",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1111",
+    "description": "Return to Prison",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1113",
+    "description": "NFA - No Court Appearance",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1115",
+    "description": "Suspended Imprisonment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1116",
+    "description": "Community Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1117",
+    "description": "Conditional Caution Completed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1118",
+    "description": "Conditional Caution Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1119",
+    "description": "Excise Penalty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1120",
+    "description": "Referral to Scottish Minister (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1121",
+    "description": "Indeterminate Sentence Minimum",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1122",
+    "description": "Compulsion Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1123",
+    "description": "Hospital Direction (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1124",
+    "description": "Compulsion & Restriction Order (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1125",
+    "description": "Youth Conference Order (PSNI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1126",
+    "description": "One Days Detention",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1127",
+    "description": "Procurator Fiscal Fine",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1128",
+    "description": "Procurator Fiscal Compensation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1129",
+    "description": "Procurator Fiscal Combination Fine/Compensation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1130",
+    "description": "Community Responsibility Order (PSNI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1131",
+    "description": "Procurator Fiscal Penalty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1132",
+    "description": "Compounded Penalty (HMRC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1133",
+    "description": "Return to YOI",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1134",
+    "description": "Suspended Sentence YOI",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1135",
+    "description": "Children & Young Persons Justice Intervention (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1136",
+    "description": "Procurator Fiscal Work Order 10 HRS",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1137",
+    "description": "Procurator Fiscal Work Order 20 Hrs",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1138",
+    "description": "Procurator Fiscal Work Order 30 Hrs",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1139",
+    "description": "Procurator Fiscal Work Order 40 hrs",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1140",
+    "description": "Procurator Fiscal Work Order 50 Hrs",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1141",
+    "description": "Youth Rehabilitation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1142",
+    "description": "Youth Rehabilitation Order Intensive Supervision & Surveillance",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1143",
+    "description": "Youth Rehabilitation Order with Fostering",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1144",
+    "description": "Engagement and Support Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1145",
+    "description": "Grounds accepted and supervision requirement made",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1146",
+    "description": "Grounds established and supervision requirement made",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1147",
+    "description": "Grounds accepted and discharged",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1148",
+    "description": "Grounds established and discharged",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1149",
+    "description": "Grounds accepted and considered in disposal of review - Supervision requirement continued with variation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1150",
+    "description": "Grounds accepted and considered in disposal of review - Supervision requirement continued without variation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1151",
+    "description": "Grounds established and considered in disposal of review - Supervision requirement terminated",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1152",
+    "description": "Grounds established and considered in disposal of review - Supervision requirement continued with variation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1153",
+    "description": "Grounds established and considered in disposal of review - Supervision requirement continued without variation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1154",
+    "description": "Grounds established and considered in disposal of review - Supervision requirement terminated",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1155",
+    "description": "Community Payback Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1156",
+    "description": "Fiscal Warning (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1157",
+    "description": "Referred to Drug Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1158",
+    "description": "Temporary retention - Scotland Only - Single Agency Referral",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1159",
+    "description": "Order Discharged (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1160",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1161",
+    "description": "Prison Committal - Determinate",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1162",
+    "description": "Crown Court - Imprisonment/Detention - Determinate",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1163",
+    "description": "Community Service Order Adult",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1164",
+    "description": "Community Service Order - Juvenile",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1165",
+    "description": "Attendance Centre Order - First Date",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1166",
+    "description": "Probation Order - Juvenile",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1167",
+    "description": "Bound Over Until Specified Date",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1168",
+    "description": "Bound Over in Addition/In Lieu to Other Disposal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1169",
+    "description": "Combination Order - Juvenile",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1170",
+    "description": "Custody Probation Order (Crown)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1171",
+    "description": "Suspended Sentence to YOC",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1172",
+    "description": "Custody Probation Order (Crown)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1173",
+    "description": "Attendance Centre Order - Discharge / Vary",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1174",
+    "description": "Return to Prison - Article 28 Licence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1175",
+    "description": "Dog order -General",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1176",
+    "description": "Attendance Centre Order - Consec/Concurrent",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1177",
+    "description": "Criminal Behaviour Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1178",
+    "description": "Interim Criminal Behaviour Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "1179",
+    "description": "Sexual Harm Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1180",
+    "description": "Supervision Default Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1181",
+    "description": "Interim Sexual Harm Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "1182",
+    "description": "Combination Order (Enhanced) (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1183",
+    "description": "Compliance Order (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1184",
+    "description": "Fail To Comply-Breach Considered-No Order Made (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1185",
+    "description": "No Order Made Final Order Made (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1186",
+    "description": "Endorseable Penalty Notice (IOM)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1501",
+    "description": "Recall to Prison",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1505",
+    "description": "Registration of Fixed Penalty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1507",
+    "description": "Suspended Sentence Implemented",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1508",
+    "description": "Suspended Sentence Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1509",
+    "description": "Detention in Default",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1510",
+    "description": "Imprisonment in default",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1511",
+    "description": "Attachment of Earnings Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1513",
+    "description": "Clamping Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1514",
+    "description": "Benefits Deduction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2004",
+    "description": "Not Guilty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2005",
+    "description": "Acquitted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2006",
+    "description": "Dismissed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2007",
+    "description": "Adjourned sine die",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "2008",
+    "description": "Lie on File",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "2009",
+    "description": "Unfit to Plead",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2010",
+    "description": "Insane",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2012",
+    "description": "Committed to Military Escort",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2015",
+    "description": "Referral Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2016",
+    "description": "Not Proven",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2017",
+    "description": "Deserted Pro Loco",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2018",
+    "description": "Deserted Simpliciter",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2023",
+    "description": "Nolle Pros",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2050",
+    "description": "No Evidence Offered - Dismissed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2051",
+    "description": "Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2052",
+    "description": "Not Proceeded with (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2053",
+    "description": "Discontinuance",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2057",
+    "description": "Prosecution Fine (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2058",
+    "description": "Heard at Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2059",
+    "description": "Carried Forward to Court Case",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2060",
+    "description": "Replaced With Another Offence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2061",
+    "description": "Proceedings Stayed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2062",
+    "description": "Aggravation by committing offence while on Bail (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "2063",
+    "description": "Withdrawn - Final",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2064",
+    "description": "Judge Rules No Case to Answer",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2065",
+    "description": "Defendant Deceased",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2067",
+    "description": "Community Service Order discharged",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2068",
+    "description": "Sentence Quashed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2069",
+    "description": "Disallowed/Quashed under s2(5) (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2070",
+    "description": "Temporary Retention - Not to arrange a Childrens Hearing - Insufficient Evidence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2071",
+    "description": "Temporary retention - Scotland Only - No Further Action",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2072",
+    "description": "Bound Over Where Charge Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2073",
+    "description": "Abandon/Withdraw",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2074",
+    "description": "Nullity Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2075",
+    "description": "Dismissed on Merits",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2076",
+    "description": "Dismissed without prejudice",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2077",
+    "description": "Collapsed/Ineffective Trial",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2078",
+    "description": "Withdrawn - to proceed by way of report",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2079",
+    "description": "CCRC - Conviction Quashed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2080",
+    "description": "158A Application - Rescind",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2081",
+    "description": "Trial Aborted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2082",
+    "description": "Abuse of Process Application Granted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2083",
+    "description": "Appeal Allowed - Conviction and Order Reversed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2084",
+    "description": "C C Review Commission - Quashes Conviction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2085",
+    "description": "Review Commission Order-Dismiss",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2086",
+    "description": "Dismiss AG Ref S36",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2087",
+    "description": "Not committed for trial (Information Refused)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2088",
+    "description": "Dismissal Granted- Serious Fraud Article 5(1)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2089",
+    "description": "Article 5(1) Dismissed and Quashed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2090",
+    "description": "Left on Books - No retrial ordered",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2091",
+    "description": "No Evidence Offered - Defendant Acquitted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2092",
+    "description": "Statutory Declaration Granted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2093",
+    "description": "Order to revoke YCO/RO/CRO on application",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2094",
+    "description": "Withdrawn due to Diversionary Route",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2095",
+    "description": "Appeal Allowed - Aquitted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2096",
+    "description": "Appeal Allowed - Retrial Ordered",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2097",
+    "description": "STAY PROCEEDINGS",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2098",
+    "description": "Strike Out",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2099",
+    "description": "Autrefois - defendant discharged",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2100",
+    "description": "Allow Appeal & Conviction Quashed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2101",
+    "description": "Allow & Quash",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2102",
+    "description": "Rescind Crown Court Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2103",
+    "description": "Proceedings stayed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2104",
+    "description": "Adjourned sine die (Henderson)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2105",
+    "description": "Endorsable penalty notice (IOM)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2503",
+    "description": "Defendant Committed Suicide",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2505",
+    "description": "Wasted Costs Order Against",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "2507",
+    "description": "Bail Appeal Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "2508",
+    "description": "Summons Not Served",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2509",
+    "description": "Warrant Not Executed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "2511",
+    "description": "Power of Arrest",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3002",
+    "description": "Disqualified from being Company Director",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3006",
+    "description": "Deportation Recommended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3007",
+    "description": "Disqualified from Driving",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3008",
+    "description": "Driving Licence Endorsed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3010",
+    "description": "Legal Aid Contribution",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3011",
+    "description": "Costs",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3012",
+    "description": "Compensation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3013",
+    "description": "Restitution",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3014",
+    "description": "Back Duty",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3016",
+    "description": "Forfeiture of Recognisance",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3018",
+    "description": "Pardoned",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3019",
+    "description": "Sentence Deferred From",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3020",
+    "description": "Order for Dog to be Neutered",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3021",
+    "description": "Order for Destruction of Dog",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3022",
+    "description": "Disqualification from Keeping Dog",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3023",
+    "description": "Disqualified from Having Custody of a Dog",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3025",
+    "description": "Disqualification from keeping animal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3026",
+    "description": "Reinstated Lie on File",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3027",
+    "description": "Reinstated Adjourned Sine Die",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3028",
+    "description": "Disqualification Limited to",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3029",
+    "description": "R Period Extended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3030",
+    "description": "Driving Licence Restored with effect from",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3031",
+    "description": "Jersey Early Return of Driving Licence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3032",
+    "description": "Disqualified (Scotland) From Holding",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3033",
+    "description": "Dog to be Muzzled at all Times",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3034",
+    "description": "Order to keep Dog under Control",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3035",
+    "description": "Firearm Certificate Revoked or cancelled",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3038",
+    "description": "Existing Guernsey Probation Order Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3039",
+    "description": "Dismissed under the Probation of Offenders Law",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3041",
+    "description": "Licensed Premises Exclusion Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3042",
+    "description": "Resulting from Original Conviction of",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3044",
+    "description": "Appeal Pending",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3045",
+    "description": "Appeal Dismissed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3047",
+    "description": "Restraining Order Protection from Harassment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3049",
+    "description": "Proceeding Invalidated by Statutory Declaration",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3050",
+    "description": "Disqualification from Driving Reduced if Course Completed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3051",
+    "description": "Reduced Disqualification from Driving - special reasons or mitigating circumstances",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3052",
+    "description": "Sex Offenders Notice",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3053",
+    "description": "Secure Accommodation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3055",
+    "description": "Deprivation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3056",
+    "description": "Confiscation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3061",
+    "description": "Supervised Release Order (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3062",
+    "description": "Driving Licence Revoked",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3063",
+    "description": "Disposal Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3064",
+    "description": "Destruction Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3065",
+    "description": "Certificate of Realisation (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3066",
+    "description": "Allowed to drive pending appeal (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3067",
+    "description": "Non-molestation Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3068",
+    "description": "Football Banning Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3070",
+    "description": "Disqualified from Driving - Obligatory",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3071",
+    "description": "Disqualified from Driving - Discretionary",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3072",
+    "description": "Disqualified from Driving - Points (Totting)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3073",
+    "description": "Disqualified from Driving until Ordinary Test Passed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3074",
+    "description": "Disqualified from Driving until Extended Test Passed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3075",
+    "description": "Driving Disqualification Suspended Pending Appeal on Imposition",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3076",
+    "description": "Driving Disqualification Suspended Pending Appeal Subsequent to Imposition",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3077",
+    "description": "Dog to be kept on lead at all times",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3078",
+    "description": "Travel Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3079",
+    "description": "Supplementary Information to Charge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3080",
+    "description": "Anti-Social Behaviour Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3081",
+    "description": "Restraining order Sexual offence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3082",
+    "description": "Contingent Destruction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3083",
+    "description": "Financial circumstances order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3084",
+    "description": "Individual support order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3085",
+    "description": "Notification order - sex offender",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3086",
+    "description": "Sexual offences prevention order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3087",
+    "description": "Foreign travel order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3088",
+    "description": "Risk of sexual harm order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3089",
+    "description": "Interim notification order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3090",
+    "description": "Interim sexual offences prevention order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3091",
+    "description": "Interim Risk of sexual harm order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3092",
+    "description": "Interim Secure Accommodation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3093",
+    "description": "Appeal Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3094",
+    "description": "Disqualified from Driving non-motoring offence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3095",
+    "description": "Disqualified from Driving - Vehicle Used In Crime",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3096",
+    "description": "Interim Disqualification from Driving",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3097",
+    "description": "Intervention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3098",
+    "description": "Financial Reporting Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3099",
+    "description": "Football Incident",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3100",
+    "description": "Interim ASBO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3101",
+    "description": "Unpaid Work Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3102",
+    "description": "Activity Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3103",
+    "description": "Programme Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3104",
+    "description": "Prohibited Activity Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3105",
+    "description": "Curfew Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3106",
+    "description": "Exclusion Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3107",
+    "description": "Residence Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3108",
+    "description": "Mental Health Treatment Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3109",
+    "description": "Drug Rehabilitation Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3110",
+    "description": "Alcohol Treatment Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3111",
+    "description": "Attendance Centre Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3112",
+    "description": "Taken into consideration (TIC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3113",
+    "description": "Court Assessed Dangerous Offender",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3114",
+    "description": "Lifelong Restriction (Scotland)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3115",
+    "description": "Disqualification relating to animals",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3116",
+    "description": "Destruction of Animal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3117",
+    "description": "Victim Surcharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3118",
+    "description": "Number of Offences TIC'd at Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3119",
+    "description": "Personal Licence Suspended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3120",
+    "description": "Remove Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3121",
+    "description": "Serious Crime Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3122",
+    "description": "Interim Violent Offender Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3123",
+    "description": "Violent Offender Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3124",
+    "description": "Interim Drinking Banning Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3125",
+    "description": "Drinking Banning Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3126",
+    "description": "Extended Activity Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3127",
+    "description": "Local Authority Residence Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3128",
+    "description": "Drug Treatment Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3129",
+    "description": "Drug Testing Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3130",
+    "description": "Intoxicating Substance Treatment Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3131",
+    "description": "Education Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3132",
+    "description": "Interim Hospital Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3133",
+    "description": "Foreign Travel Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3134",
+    "description": "Forfeiture of cash",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3135",
+    "description": "Forfeiture and destruction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3136",
+    "description": "Forfeiture of licence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3137",
+    "description": "Forfeiture and sale",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3138",
+    "description": "Forfeiture of vehicle",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3139",
+    "description": "Notification Order for Terrorist Nominal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3140",
+    "description": "Child Protection Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3141",
+    "description": "Interim Child Protection Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3142",
+    "description": "Interim Restraining Travel Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3143",
+    "description": "Notification Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3144",
+    "description": "Travel Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3145",
+    "description": "Restraining Order (Jersey)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3146",
+    "description": "Alcohol Abstinence Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3147",
+    "description": "Foreign Travel Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3148",
+    "description": "Electronic Monitoring (Location only) Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3149",
+    "description": "Found under a disability",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3150",
+    "description": "Allow Appeal & Vary Decrease",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3151",
+    "description": "Allow Appeal & Vary Increase",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3152",
+    "description": "Disqualified from Driving for Set Duration",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3153",
+    "description": "Appeal Dismissed - No Appearance - Vary Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3154",
+    "description": "Appeal Dismissed - Affirm Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3155",
+    "description": "Dismiss Appeal & Affirm",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3156",
+    "description": "Appeal Abandoned (High Court Court of Appeal)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3157",
+    "description": "Appeal Abandoned (County Court Appeal)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3158",
+    "description": "Forfeiture/Destruction/Disposal/Confiscation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3159",
+    "description": "Further Restriction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3160",
+    "description": "Amend/Revoke/Vary PO/CSO/CO Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3161",
+    "description": "Revoke ACO : Subsequent Conviction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3162",
+    "description": "Lesser / Alternative charge substituted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3163",
+    "description": "Customs & Excise - Forfeiture Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3164",
+    "description": "Youth to be Monitored",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3165",
+    "description": "Disqualified Until Date Specified",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3166",
+    "description": "Disqualified due to Penalty Points exceeded",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3167",
+    "description": "Disqualified until Appropriate Test Passed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3168",
+    "description": "Disqualified Until Tested",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3169",
+    "description": "Disqualified for Duration and until Tested",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3170",
+    "description": "Disqualified until Test of Competence Passed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3171",
+    "description": "Terrorist Offences - Travel Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3172",
+    "description": "Vary/Discharge Anti-Social Behaviour Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3173",
+    "description": "Licence suspended Art 29. (Final)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3174",
+    "description": "Breach of Prison Licence - Terrorism Act 2000",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3175",
+    "description": "158a Application Withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3176",
+    "description": "158A Application - Vary original order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3177",
+    "description": "158A Application - rehearing",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3178",
+    "description": "158A Application Refused - order affirmed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3179",
+    "description": "Appeal Abandoned/Committal Warrant",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3180",
+    "description": "Att. Cen. Ord. - Fail Comply PO/CSO/CO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3181",
+    "description": "Att. Cen. Ord. - Fail Comply PO/CSO/CO - Cons/Conc",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3182",
+    "description": "Appeal-Affirm Conviction-Defer Sentence DTBF",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3183",
+    "description": "Appeal-Affirm Conviction-Defer Sentence-date set",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3184",
+    "description": "Appeal not proceeded with",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3185",
+    "description": "Appeal not perfected - Recognizance not signed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3186",
+    "description": "Revoke ACO due to Breach",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3187",
+    "description": "Commit to Prison on Revoke/Breach of PO/CSO/CO/ACO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3188",
+    "description": "Breach Prison Licence Art 3 Treatment of Offenders",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3189",
+    "description": "Sex Offenders - Breach Art 26 Conv at Mag Ct",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3190",
+    "description": "Sex Off Return to Prison - Art 28",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3191",
+    "description": "Breach of Subsequent Community Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3192",
+    "description": "Grant Application & Dismiss Appeal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3193",
+    "description": "Application for Leave to appeal House of Lords",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3194",
+    "description": "Retrial Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3195",
+    "description": "Commit JJC/YOC - Breach JJCO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3196",
+    "description": "Crown Court Commit - Breach C/D- In Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3197",
+    "description": "Crown Court Commit - Breach C/D - On Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3198",
+    "description": "Crown Court - PoC Confiscation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3199",
+    "description": "Crown Court - Confiscation Order Increase Default",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3200",
+    "description": "Drink Drivers Course - Completion",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3201",
+    "description": "Disqualification Order (Children)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3202",
+    "description": "Licence Suspended Art.29 (ADJ)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3203",
+    "description": "Disqualified - no endorsement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3204",
+    "description": "Disqualification/Penalty Points Not Imposed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3205",
+    "description": "Disqualified for Remainder of Life",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3206",
+    "description": "Fail to comply - Breach CSO/PO/CO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3207",
+    "description": "Increase Detention JJC",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3208",
+    "description": "No Order made - Deportation Recommendation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3209",
+    "description": "Penalty Points",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3210",
+    "description": "Permission to Drive Pending Appeal Refused",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3211",
+    "description": "Sex Off Recall to Prison (Art 27) Breach",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3212",
+    "description": "Revoke JJC Order (Escape)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3213",
+    "description": "Revoke JJC Order on Subsequent Conviction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3214",
+    "description": "Revoke PO/CSO/CO/ACO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3215",
+    "description": "Return to Prison - No Order - Art 3| No Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3216",
+    "description": "Return to Prison - Terrorism Act 2000",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3217",
+    "description": "Return to Prison - Art 3 - Treatment of Offenders",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3218",
+    "description": "Sex Offenders Registration Required - Final",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3219",
+    "description": "Special Reasons- penalty points -disqual",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3220",
+    "description": "Suspended Sentence - Prison or YOC",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3221",
+    "description": "Suspended Sentence - No Order Made",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3222",
+    "description": "Suspended Sentence - No Order Made",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3223",
+    "description": "Suspended Sentence (Full) Put Into Operation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3224",
+    "description": "Suspended Sentence (Full) Put Into Operation (CC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3225",
+    "description": "Suspended Sentence - Subsequent Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3226",
+    "description": "Suspended Sentence Reduced and Put Into Operation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3227",
+    "description": "Suspended Sentence Reduced - Put Into Effect (CC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3228",
+    "description": "Suspended Sentence Varied Only",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3229",
+    "description": "Suspended sentence varied (CC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3230",
+    "description": "Tariff Set for Life Sentence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3231",
+    "description": "Sexual Offences Act - Vary| Renew| or Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3232",
+    "description": "Appeal Withdrawn/Committal Warrant",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3233",
+    "description": "Order to extend YCO/RO/CRO on application",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3234",
+    "description": "Order to vary a YCO/RO/CRO on application",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3235",
+    "description": "Order to extend YCO/RO/CRO on fail to comply",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3236",
+    "description": "Order to revoke a YCO/RO/CRO on fail to comply",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3237",
+    "description": "Youth Community Responsibility Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3238",
+    "description": "Order to vary a YCO/RO/CRO on fail to comply",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3239",
+    "description": "YOC - Commital",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3240",
+    "description": "Youth Reparation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3241",
+    "description": "Abandon/Dismiss/Withdraw - Committal Warrant",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3242",
+    "description": "Application dismissed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3243",
+    "description": "Appeal Deemed Abandoned",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3244",
+    "description": "Prosecution Appeal - Allow and Reversed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3245",
+    "description": "Concurrent sentences",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3246",
+    "description": "Suspension of licensed premises on conviction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3247",
+    "description": "158A - Original Case reheard",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3248",
+    "description": "Custody Youth Conference Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3249",
+    "description": "Revocation of Travel Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3250",
+    "description": "Appeal Dismissed - No Appearance - Affirm Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3251",
+    "description": "YP Committed to Yoc",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3252",
+    "description": "Appeal Withdrawn - Order of Lower Court Affirmed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3253",
+    "description": "Detention in lieu of Sentence of Imprisonment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3254",
+    "description": "Sex Off - Breach Art 26 Licence (non-custodial)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3255",
+    "description": "Crown Court Comm Warrant - Indeterminate/Extended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3256",
+    "description": "Committal of Child - Indeterminate/Extended",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3257",
+    "description": "Juvenile Detention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3258",
+    "description": "Variation of Confiscation Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3259",
+    "description": "Disqualified for holding a goods vehicle cert",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3260",
+    "description": "Restraining Order Acquit - Protect from Harassment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3261",
+    "description": "Counter-Terrorism Registration Required",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3262",
+    "description": "Surrender Licence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3263",
+    "description": "Restraining order - Vary/Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3264",
+    "description": "Justice Act - Banning Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3265",
+    "description": "Justice Act - Variation of Banning Order Granted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3266",
+    "description": "Justice Act - Termination of Banning Order Granted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3267",
+    "description": "Amend or Revoke A Supervised Activity Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3268",
+    "description": "Suspended Sentence - Reduced and Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3269",
+    "description": "Suspended Sentence - Reduced and Varied (CC)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3270",
+    "description": "Appeal Allowed and Varied (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3271",
+    "description": "Appeal Allowed- Order Varied on Appeal (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3272",
+    "description": "Rehabilitation Activity Requirement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3273",
+    "description": "Penalty Points - Licence Holder (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3274",
+    "description": "Forfeiture order section 23 Terrorism Act (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3275",
+    "description": "Revoke Forfeiture/Destruction?Disposal Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3276",
+    "description": "Restraining Order - Protection from Harassment (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3277",
+    "description": "Disqualified until test passed (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3279",
+    "description": "Disqualified - to be reduced for course (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3280",
+    "description": "Offender Levy - Custodial Sentnece (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3281",
+    "description": "Interim Sexual Risk Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3282",
+    "description": "Sexual Risk Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3283",
+    "description": "Criminal Courts Charge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3284",
+    "description": "Interim Slavery and Trafficking Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3285",
+    "description": "Slavery and Trafficking Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3286",
+    "description": "Appeal Against Charge Withdrawn (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3287",
+    "description": "Appeal Against Charge Dismissed (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3288",
+    "description": "Psychoactive substance prohibition order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3289",
+    "description": "Female genital mutilation prohibition order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3291",
+    "description": "Appeal Withdrawn (All Charges) (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3295",
+    "description": "Application for Leave to Appeal Refused (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3296",
+    "description": "Violent Offences Prevention Order (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3297",
+    "description": "Violent Offences Prevention Order - Discharge",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3298",
+    "description": "Violent Offences Prevention Order - Renew (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3299",
+    "description": "Violent Offences Prevention Order - Vary (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3300",
+    "description": "Appeal Abandoned by Notice (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3301",
+    "description": "Appeal entered in error - treat as deleted (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3302",
+    "description": "Appeal entered in error (treat as deleted) (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3303",
+    "description": "Disqualification under welfare of animals act (NI) 2011",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3304",
+    "description": "Knife Crime Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3305",
+    "description": "Interim Knife Crime Prevention Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3306",
+    "description": "Interim Stalking Protection Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "3307",
+    "description": "Stalking Protection Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3308",
+    "description": "Finding re Sentence (statutory characteristics)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3501",
+    "description": "Dealt with for Original Offence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3502",
+    "description": "Dealt with for breach",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3503",
+    "description": "Order to give Personal Details e.g. Date of Birth and/or Sex",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3504",
+    "description": "Certificate of Tainted Acquittal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3508",
+    "description": "No Endorsement (Special Reasons)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3509",
+    "description": "No Disqualification (Special Reasons or Mitigating Circumstances)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3510",
+    "description": "Order to Produce Driving Licence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3512",
+    "description": "No Compensation Reasons",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3514",
+    "description": "Adjourned for consideration of an ASBO",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "3515",
+    "description": "Gang Injunction Proceedings",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "3516",
+    "description": "Anti-social Behaviour Injunction Proceedings",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4001",
+    "description": "Committed to Crown Court for Sentence",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4004",
+    "description": "Sentence Postponed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4005",
+    "description": "Sentence Deferred",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4006",
+    "description": "Remitted to Children's Hearing",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4007",
+    "description": "Remitted to High Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4008",
+    "description": "Remitted to Sheriff Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4009",
+    "description": "Transferred to High Court",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4010",
+    "description": "Withdrawn (Other)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4011",
+    "description": "Remittal for Sentence on Conditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4012",
+    "description": "Remittal for Sentence in Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4013",
+    "description": "Remittal for Sentence Unconditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4014",
+    "description": "Commit to Crown Court for Sentence Unconditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4015",
+    "description": "Commit to Crown Court for Sentence Conditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4016",
+    "description": "Commit to Crown Court for Sentence in Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4017",
+    "description": "Commit to Crown Court for Sentence in Custody with Direction to Release on Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4018",
+    "description": "Discharged - Other",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4020",
+    "description": "Commit to Crown Court for Sentence - Remand to Local Authority Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4022",
+    "description": "Extradited",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4023",
+    "description": "Remittal for Sentence on Adjournment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4024",
+    "description": "Remittal to Youth Court Adjournment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4025",
+    "description": "Committal to Crown Court for sentence - corporation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4026",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4027",
+    "description": "Remand On Conditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4028",
+    "description": "Remand In Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4029",
+    "description": "Remand In Local Authority Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4031",
+    "description": "Remittal To Youth Court Conditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4032",
+    "description": "Remittal To Youth Court In Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4033",
+    "description": "Remittal To Youth Court - Local Authority Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4035",
+    "description": "Remittal To Youth Court Unconditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4036",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4037",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4038",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4039",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4040",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4041",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4042",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4043",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4044",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4045",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4046",
+    "description": "Remand In Custody With Direction To Release On Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4047",
+    "description": "Remand On Unconditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4048",
+    "description": "Commit To Crown Court (Associated Offence)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4049",
+    "description": "Remand in Custody after Bail Appeal by Prosecutor",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4050",
+    "description": "remand in Custody to Customs Detention",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4051",
+    "description": "Remand in Custody to Hospital (Mental Health Act)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4052",
+    "description": "Reserved",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4053",
+    "description": "Mental Health - Commit to Crown Court for Restriction (Remand to prison)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4054",
+    "description": "Committed to Crown Court for Sentence in Youth Detention Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4055",
+    "description": "Remanded in Youth Detention Accommodation with bail direction",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4056",
+    "description": "Remitted to Youth Court in Youth Detention Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4057",
+    "description": "Commit/Transfer/Send for Trial to CC in Youth Detention Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4058",
+    "description": "Remanded in Youth Detention Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4059",
+    "description": "Remand into care of DHSS for Report",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4060",
+    "description": "Sentence Deferred - Date to be Fixed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4061",
+    "description": "Remanded On Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4062",
+    "description": "ASBO (full) - On Application",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4063",
+    "description": "Conditional Discharge Breached",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4064",
+    "description": "Life Sentence - Tariff to be set later",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4065",
+    "description": "Life Sentence and Tariff Set Together",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4066",
+    "description": "Remit to Youth Court for Sentence - Cont Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4067",
+    "description": "Extradition ordered",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4068",
+    "description": "Extradition proceedings pending",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4069",
+    "description": "Fail to comply-Breach considered-no order made (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4070",
+    "description": "Witness summons with disclosure granted - Mag Court (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4071",
+    "description": "No bill application granted (NI)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4505",
+    "description": "Warrant for Further Detention",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4506",
+    "description": "Adjournment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4507",
+    "description": "Hearing Notice Criminal Case",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4508",
+    "description": "Summons Re-Issued",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4509",
+    "description": "Reporting Restrictions Dispensed With / Lifted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "4510",
+    "description": "Reporting Restrictions Imposed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "4532",
+    "description": "Remand in Custody - Full Bail Arguement",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "4541",
+    "description": "Remand in Police Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4553",
+    "description": "Case Rescheduled - Not bailed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4554",
+    "description": "Case Rescheduled - Not bailed (Personal Service)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4555",
+    "description": "Case Rescheduled - Defendant on Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4556",
+    "description": "Case Rescheduled - Defendant on Bail (Personal Service)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4557",
+    "description": "Rescheduling of Case to Reopen under s142 MCA",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4558",
+    "description": "Commit/Transfer/Send to Crown Court for Trial on Unconditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4559",
+    "description": "Commit/Transfer/Send to Crown Court for Trial on Conditional Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4560",
+    "description": "Commit/Transfer/Send to Crown Court for Trial in Custody",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4561",
+    "description": "Commit/Transfer/Send to Crown Court for Trial in Custody With Direction to Bail",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4562",
+    "description": "Commit/Transfer/Send to Crown Court for Trial in Local Authority Accommodation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4564",
+    "description": "Commit/Transfer/Send to Crown Court for Trial in Custody (Transfer Direction)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4566",
+    "description": "Summary offence joined on indictment s.40 Criminal Justice Act 1988",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4567",
+    "description": "Commit/Send to Crown Court for trial - corporation",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4572",
+    "description": "Bail Review Impose/Vary Conditions",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4573",
+    "description": "Bail Review - Order to Surrender",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4574",
+    "description": "Variation of Bail Conditions - Application by defendant",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4575",
+    "description": "Warrant for Offence Backed for Bail (Dated)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4576",
+    "description": "Warrant for Offence Not Backed for Bail (Undated)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4577",
+    "description": "Warrant for Offence Backed for Bail (Undated)",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4583",
+    "description": "Hearing Removed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4584",
+    "description": "Reopen Case",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4585",
+    "description": "Warrant of Arrest for Parent/Guardian",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4586",
+    "description": "Warrant for Arrest of Witness",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4592",
+    "description": "Defendant's personal details changed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "P"
+  },
+  {
+    "cjsCode": "4593",
+    "description": "Committed to Crown Court - bail app in murder case",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "I"
+  },
+  {
+    "cjsCode": "4594",
+    "description": "Urgent notification sent",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "P"
+  },
+  {
+    "cjsCode": "4597",
+    "description": "Police Bail Varied",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "24",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4598",
+    "description": "LAA appeal granted",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4599",
+    "description": "LAA appeal refused",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4600",
+    "description": "LAA transfer of representation grantred",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4601",
+    "description": "LAA transfer of representation refused",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4602",
+    "description": "LAA representaion withdrawn",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "4603",
+    "description": "LAA representation level changed",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "5021",
+    "description": "Conditions of community payback order varied to",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "5022",
+    "description": "Community payback order varied to",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "5023",
+    "description": "Community payback order - unpaid work extended by",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "9999",
+    "description": "Non Standard BRC Disposal",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  }
+]
