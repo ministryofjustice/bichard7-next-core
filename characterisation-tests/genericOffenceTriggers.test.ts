@@ -20,7 +20,7 @@ const offenceTests = [
   {
     code: TriggerCode.TRPR0017,
     resultCode: 2007,
-    recordable: TriggerRecordable.No
+    recordable: TriggerRecordable.Yes
   },
   {
     code: TriggerCode.TRPR0021,
@@ -33,9 +33,6 @@ const offenceTests = [
     recordable: TriggerRecordable.Both
   }
 ]
-
-const recordableOffenceTests = offenceTests.filter((x) => x.recordable !== "NO")
-const nonRecordableOffenceTests = offenceTests.filter((x) => x.recordable === "NO")
 
 describe("Generic offence triggers", () => {
   afterAll(() => {
@@ -75,24 +72,7 @@ describe("Generic offence triggers", () => {
         { code, offenceSequenceNumber: 3 }
       ])
     })
-  })
 
-  describe.each(nonRecordableOffenceTests)("Testing generic non-recordable trigger $code", ({ resultCode }) => {
-    it("should not generate a trigger when record is not recordable", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }], recordable: false }]
-      })
-
-      // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false, false)
-
-      // Check the right triggers are generated
-      expect(triggers).toHaveLength(0)
-    })
-  })
-
-  describe.each(recordableOffenceTests)("Testing generic recordable trigger $code", ({ code, resultCode }) => {
     it("should generate a trigger when record is recordable", async () => {
       // Generate a mock message
       const inputMessage = generateMessage({
