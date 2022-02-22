@@ -36,17 +36,14 @@ commands:
           name: Clone bichard7-next
           command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
 
-  fetch_docker_images:
-    description: Fetch all of the required docker images from ECR
+  fetch_docker_image:
+    parameters:
+      image:
+        type: string
     steps:
       - run:
-          name: Fetch the BeanConnect image
-          working_directory: ~/bichard7-next
-          command: bash scripts/fetch_beanconnect_docker.sh
-      - run:
-          name: Fetch the PNC Emulator image
-          working_directory: ~/bichard7-next
-          command: bash scripts/fetch_pncemulator_docker.sh
+          name: Fetch the <<parameters.image>> image
+          command: bash scripts/fetch_docker_image.sh <<parameters.image>>
 
 jobs:
   build:
@@ -87,7 +84,10 @@ jobs:
       - attach_workspace:
           at: .
       - clone_bichard_repo
-      - fetch_docker_images
+      - fetch_docker_image:
+          image: beanconnect
+      - fetch_docker_image:
+          image: pncemulator
       - run:
           name: Run Bichard stack
           working_directory: ~/bichard7-next
