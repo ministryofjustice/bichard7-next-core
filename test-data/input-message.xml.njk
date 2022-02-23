@@ -91,7 +91,7 @@
                 <DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
               </DC:BaseOffenceDetails>
               <DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
-              <DC:Plea>2</DC:Plea>
+              <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
               <DC:ModeOfTrial>01</DC:ModeOfTrial>
               <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
               <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>

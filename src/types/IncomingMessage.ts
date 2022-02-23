@@ -1,3 +1,5 @@
+import type { Plea } from "./Plea"
+
 export type ResultParsedXml = {
   ResultCode: number
   ResultText: string
@@ -26,7 +28,7 @@ export type GenericOffenceParsedXml<T> = {
     }
   }
   InitiatedDate: string
-  Plea: number
+  Plea: Plea
   ModeOfTrial: number
   FinalDisposalIndicator: string
   ConvictionDate: string

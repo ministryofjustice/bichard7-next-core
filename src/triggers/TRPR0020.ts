@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { Guilt } from "src/types/Guilt"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
@@ -7,6 +8,7 @@ import findResultCode from "src/use-cases/findResultCode"
 const triggerCode = TriggerCode.TRPR0020
 const resultCodes = [1029, 1030, 1031, 1032, 3501]
 const excludedResultCodes = [1000, 1040]
+// prettier-ignore
 const offenceCodes = [
   "CD98001", "CD98019", "CD98020", "CD98021", "CD98058", "CJ03506", "CJ03507", "CJ03510", "CJ03511", 
   "CJ03522", "CJ03523", "CJ08507", "CJ08512", "CJ08519", "CJ08521", "CJ08526", "CJ91001", "CJ91002", 
@@ -18,9 +20,13 @@ const offenceCodes = [
   "SO59501", "SX03202", "SX03220", "SX03221", "SX03222", "SX03223"
 ]
 
+const resultCodeIsExcluded = (resultCode: number): boolean => excludedResultCodes.includes(resultCode)
+
+const resultCodeIsFinal = (resultCode: number): boolean => findResultCode(resultCode).type === "F"
+
 const containsOffenceCode = (offence: OffenceParsedXml) =>
-  (offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode) &&
-    offence.Result.some((result) => !excludedResultCodes.includes(result.ResultCode) && findResultCode(result.ResultCode).type === "F"))
+  offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode) &&
+  offence.Result.some((result) => !resultCodeIsExcluded(result.ResultCode) && resultCodeIsFinal(result.ResultCode))
 
 const containsResultCode = (offence: OffenceParsedXml) =>
   offence.Result.some((result) => resultCodes.includes(result.ResultCode))
@@ -28,7 +34,7 @@ const containsResultCode = (offence: OffenceParsedXml) =>
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] => {
   return courtResult.Session.Case.Defendant.Offence.reduce((acc: Trigger[], offence) => {
-    if (offence.Finding !== "NG" && (containsOffenceCode(offence) || containsResultCode(offence))) {
+    if (offence.Finding !== Guilt.NotGuilty && (containsOffenceCode(offence) || containsResultCode(offence))) {
       acc.push({ code: triggerCode, offenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber })
     }
 
