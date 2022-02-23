@@ -1,7 +1,8 @@
 jest.setTimeout(30000)
 
+import { Guilt } from "../src/types/Guilt"
 import { TriggerCode } from "../src/types/TriggerCode"
-import generateMessage, { Guilt } from "./helpers/generateMessage"
+import generateMessage from "./helpers/generateMessage"
 import PostgresHelper from "./helpers/PostgresHelper"
 import processMessage from "./helpers/processMessage"
 
