@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`populateDefendant should transform SPI Offences to Hearing Outcome Offences 1`] = `
+Array [
+  Object {
+    "ActualOffenceDateCode": Object {
+      "attributes": undefined,
+      "value": "1",
+    },
+    "ActualOffenceEndDate": Object {
+      "EndDate": Object {
+        "attributes": undefined,
+        "value": undefined,
+      },
+    },
+    "ActualOffenceStartDate": Object {
+      "StartDate": Object {
+        "attributes": undefined,
+        "value": "2010-11-28",
+      },
+    },
+    "ActualOffenceWording": Object {
+      "attributes": undefined,
+      "value": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
+    },
+    "ArrestDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-01",
+    },
+    "ChargeDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-02",
+    },
+    "CommittedOnBail": Object {
+      "attributes": undefined,
+      "value": "D",
+    },
+    "ConvictionDate": Object {
+      "attributes": undefined,
+      "value": "2011-09-26",
+    },
+    "CourtOffenceSequenceNumber": Object {
+      "attributes": undefined,
+      "value": "1",
+    },
+    "CriminalProsecutionReference": Object {
+      "OffenceReason": Object {
+        "OffenceCode": Object {
+          "ActOrSource": Object {
+            "attributes": undefined,
+            "value": "SX",
+          },
+          "Qualifier": Object {
+            "attributes": undefined,
+            "value": "A",
+          },
+          "Reason": Object {
+            "attributes": undefined,
+            "value": "001",
+          },
+          "Year": Object {
+            "attributes": undefined,
+            "value": "03",
+          },
+        },
+      },
+    },
+    "LocationOfOffence": Object {
+      "attributes": undefined,
+      "value": "Kingston High Street",
+    },
+  },
+  Object {
+    "ActualOffenceDateCode": Object {
+      "attributes": undefined,
+      "value": "1",
+    },
+    "ActualOffenceEndDate": Object {
+      "EndDate": Object {
+        "attributes": undefined,
+        "value": undefined,
+      },
+    },
+    "ActualOffenceStartDate": Object {
+      "StartDate": Object {
+        "attributes": undefined,
+        "value": "2010-11-28",
+      },
+    },
+    "ActualOffenceWording": Object {
+      "attributes": undefined,
+      "value": "Rape of a Female",
+    },
+    "ArrestDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-01",
+    },
+    "ChargeDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-02",
+    },
+    "CommittedOnBail": Object {
+      "attributes": undefined,
+      "value": "D",
+    },
+    "ConvictionDate": Object {
+      "attributes": undefined,
+      "value": "2011-09-26",
+    },
+    "CourtOffenceSequenceNumber": Object {
+      "attributes": undefined,
+      "value": "2",
+    },
+    "CriminalProsecutionReference": Object {
+      "OffenceReason": Object {
+        "OffenceCode": Object {
+          "ActOrSource": Object {
+            "attributes": undefined,
+            "value": "SX",
+          },
+          "Reason": Object {
+            "attributes": undefined,
+            "value": "001",
+          },
+          "Year": Object {
+            "attributes": undefined,
+            "value": "03",
+          },
+        },
+      },
+    },
+    "LocationOfOffence": Object {
+      "attributes": undefined,
+      "value": "Kingston High Street",
+    },
+  },
+  Object {
+    "ActualOffenceDateCode": Object {
+      "attributes": undefined,
+      "value": "1",
+    },
+    "ActualOffenceEndDate": Object {
+      "EndDate": Object {
+        "attributes": undefined,
+        "value": undefined,
+      },
+    },
+    "ActualOffenceStartDate": Object {
+      "StartDate": Object {
+        "attributes": undefined,
+        "value": "2010-11-28",
+      },
+    },
+    "ActualOffenceWording": Object {
+      "attributes": undefined,
+      "value": "Use a motor vehicle without third party insurance.",
+    },
+    "ArrestDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-01",
+    },
+    "ChargeDate": Object {
+      "attributes": undefined,
+      "value": "2010-12-02",
+    },
+    "CommittedOnBail": Object {
+      "attributes": undefined,
+      "value": "D",
+    },
+    "ConvictionDate": Object {
+      "attributes": undefined,
+      "value": "2011-09-26",
+    },
+    "CourtOffenceSequenceNumber": Object {
+      "attributes": undefined,
+      "value": "3",
+    },
+    "CriminalProsecutionReference": Object {
+      "OffenceReason": Object {
+        "OffenceCode": Object {
+          "ActOrSource": Object {
+            "attributes": undefined,
+            "value": "RT",
+          },
+          "Reason": Object {
+            "attributes": undefined,
+            "value": "191",
+          },
+          "Year": Object {
+            "attributes": undefined,
+            "value": "88",
+          },
+        },
+      },
+    },
+    "LocationOfOffence": Object {
+      "attributes": undefined,
+      "value": "Kingston High Street",
+    },
+  },
+]
+`;

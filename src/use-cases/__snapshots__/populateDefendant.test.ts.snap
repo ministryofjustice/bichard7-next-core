@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`populateDefendant should transform SPI Defendant to Hearing Outcome Defendant for individual defendant 1`] = `
+Object {
+  "Address": Object {
+    "AddressLine1": Object {
+      "attributes": undefined,
+      "value": "Scenario1 Address Line 1",
+    },
+    "AddressLine2": Object {
+      "attributes": undefined,
+      "value": "Scenario1 Address Line 2",
+    },
+    "AddressLine3": Object {
+      "attributes": undefined,
+      "value": "Scenario1 Address Line 3",
+    },
+    "AddressLine4": Object {
+      "attributes": undefined,
+      "value": undefined,
+    },
+    "AddressLine5": Object {
+      "attributes": undefined,
+      "value": undefined,
+    },
+  },
+  "ArrestSummonsNumber": Object {
+    "attributes": undefined,
+    "value": "1101ZD0100000448754K",
+  },
+  "BailConditions": Array [],
+  "CourtPNCIdentifier": Object {
+    "attributes": undefined,
+    "value": undefined,
+  },
+  "DefendantDetail": Object {
+    "BirthDate": Object {
+      "attributes": undefined,
+      "value": "1948-11-11",
+    },
+    "Gender": Object {
+      "attributes": undefined,
+      "value": 1,
+    },
+    "PersonName": Object {
+      "FamilyName": Object {
+        "attributes": Object {
+          "NameSequence": "1",
+        },
+        "value": "SEXOFFENCE",
+      },
+      "GivenName": Array [
+        Object {
+          "attributes": Object {
+            "NameSequence": "1",
+          },
+          "value": "TRPRFOUR",
+        },
+      ],
+      "Title": Object {
+        "attributes": undefined,
+        "value": "Mr",
+      },
+    },
+  },
+  "ReasonForBailConditions": Object {
+    "attributes": undefined,
+    "value": undefined,
+  },
+  "RemandStatus": Object {
+    "attributes": undefined,
+    "value": "U: RemandStatus <- BailStatus ?",
+  },
+}
+`;

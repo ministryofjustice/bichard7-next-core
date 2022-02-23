@@ -15,6 +15,11 @@ export type GenericOffenceParsedXml<T> = {
     ChargeDate: string
     ArrestDate: string
     LocationOfOffence: string
+    ConvictionDate: string
+    AlcoholRelatedOffence: {
+      AlcoholLevelAmount: number
+      AlcoholLevelMethod: string
+    }
     OffenceTiming: {
       OffenceDateCode: number
       OffenceStart: {
@@ -34,6 +39,25 @@ export type GenericOffenceParsedXml<T> = {
   Result: T
 }
 
+export interface SpiAddress {
+  SimpleAddress: {
+    AddressLine1: string
+    AddressLine2: string
+    AddressLine3: string
+    AddressLine4: string
+    AddressLine5: string
+  }
+  ComplexAddress: {
+    PAON: string
+    StreetDescription: string
+    Locality: string
+    Town: string
+    UniqueStreetReferenceNumber: number
+    AdministrativeArea: string
+    PostCode: string
+  }
+}
+
 export type GenericResultedCaseMessageParsedXml<T> = {
   Session: {
     Case: {
@@ -42,17 +66,44 @@ export type GenericResultedCaseMessageParsedXml<T> = {
         Offence: T
         ProsecutorReference: string
         CourtIndividualDefendant: {
+          PresentAtHearing: string
+          BailStatus: string
           PersonDefendant: {
+            PNCidentifier: string
+            BailConditions: string
+            ReasonForBailConditionsOrCustody: string
             BasePersonDetails: {
+              Birthdate: string
+              Gender: string
               PersonName: {
                 PersonTitle: string
                 PersonGivenName1: string
+                PersonGivenName2?: string
+                PersonGivenName3?: string
                 PersonFamilyName: string
               }
             }
           }
+          Address: SpiAddress
+        }
+        CourtCorporateDefendant: {
+          PNCidentifier: string
+          PresentAtHearing: string
+          BailStatus: string
+          OrganisationName: {
+            OrganisationName: string
+          }
+          Address: SpiAddress
         }
       }
+    }
+    CourtHearing: {
+      Hearing: {
+        CourtHearingLocation: string
+        DateOfHearing: string
+        TimeOfHearing: string
+      }
+      PSAcode: number
     }
   }
 }
