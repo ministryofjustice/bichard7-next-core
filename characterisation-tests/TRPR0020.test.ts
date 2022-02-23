@@ -1,7 +1,8 @@
 jest.setTimeout(30000)
 
+import { Guilt } from "../src/types/Guilt"
 import { TriggerCode } from "../src/types/TriggerCode"
-import generateMessage, { Guilt } from "./helpers/generateMessage"
+import generateMessage from "./helpers/generateMessage"
 import PostgresHelper from "./helpers/PostgresHelper"
 import processMessage from "./helpers/processMessage"
 
@@ -88,14 +89,33 @@ describe("TRPR0020", () => {
     ])
   })
 
-  it("should not generate trigger for offence when not guilty", async () => {
+  it("should not generate trigger for matching offence code when not guilty", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
       offences: [
         {
-          code: "MC80515",
-          results: [{ code: resultCode }],
+          code: offenceCode,
+          results: [{ code: 1015 }],
           finding: Guilt.NotGuilty
+        }
+      ]
+    })
+
+    // Process the mock message
+    const { triggers } = await processMessage(inputMessage, true, false)
+
+    // Check the right triggers are generated
+    expect(triggers).toHaveLength(0)
+  })
+
+  it("should not generate trigger for matching offence code when result is not final", async () => {
+    // Generate a mock message (1085 is a non-final result code)
+    const inputMessage = generateMessage({
+      offences: [
+        {
+          code: offenceCode,
+          results: [{ code: 1085 }],
+          finding: Guilt.Guilty
         }
       ]
     })

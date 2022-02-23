@@ -1,10 +1,7 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
-
-export enum Guilt {
-  Guilty = "G",
-  NotGuilty = "NG"
-}
+import type { Plea } from "../../src/types/Plea"
+import type { Guilt } from "../../src/types/Guilt"
 
 type Result = {
   code: number
@@ -17,6 +14,7 @@ type Offence = {
   finding?: Guilt
   results: Result[]
   recordable?: boolean
+  plea?: Plea
 }
 
 type GenerateMessageOptions = {
