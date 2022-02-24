@@ -43,19 +43,22 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
   hearingOutcomeHearing.HearingLanguage = createElement("D")
   hearingOutcomeHearing.HearingDocumentationLanguage = createElement("D")
 
-  const spiPresentAtHearing = spiDefendant.CourtIndividualDefendant
-    ? spiDefendant.CourtIndividualDefendant.PresentAtHearing
-    : spiDefendant.CourtCorporateDefendant.PresentAtHearing
-  hearingOutcomeHearing.DefendantPresentAtHearing = createElement(spiPresentAtHearing)
-
   let name = ""
   if (spiDefendant.CourtIndividualDefendant) {
     const {
-      PersonName: { PersonGivenName1: givenName, PersonFamilyName: familyName }
-    } = spiDefendant.CourtIndividualDefendant.PersonDefendant.BasePersonDetails
+      CourtIndividualDefendant: {
+        PresentAtHearing: spiPresentAtHearing,
+        PersonDefendant: {
+          BasePersonDetails: {
+            PersonName: { PersonGivenName1: givenName, PersonFamilyName: familyName }
+          }
+        }
+      }
+    } = spiDefendant
 
+    hearingOutcomeHearing.DefendantPresentAtHearing = createElement(spiPresentAtHearing)
     name = [givenName, familyName].filter((namePart) => namePart).join(" ")
-  } else {
+  } else if (spiDefendant.CourtCorporateDefendant) {
     name = spiDefendant.CourtCorporateDefendant.OrganisationName.OrganisationName
   }
   hearingOutcomeHearing.SourceReference = {

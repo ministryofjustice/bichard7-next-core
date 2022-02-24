@@ -40,7 +40,7 @@ Object {
     },
     "Gender": Object {
       "attributes": undefined,
-      "value": 1,
+      "value": "1",
     },
     "PersonName": Object {
       "FamilyName": Object {
