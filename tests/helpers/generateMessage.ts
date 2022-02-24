@@ -19,6 +19,7 @@ type Offence = {
 
 type GenerateMessageOptions = {
   offences: Offence[]
+  PTIURN?: string
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string) {

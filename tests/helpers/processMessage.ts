@@ -6,6 +6,7 @@ import defaults from "./defaults"
 import { mockRecordInPnc, mockEnquiryErrorInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
 import promisePoller from "promise-poller"
+import extractExceptionsFromAho from "./extractExceptionsFromAho"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -18,17 +19,25 @@ const pgHelper = new PostgresHelper({
 
 const realPnc = process.env.REAL_PNC === "true"
 
-const processMessageCore = (messageXml: string, recordable: boolean): BichardResultType => {
+const processMessageCore = (messageXml: string, { recordable = true }: ProcessMessageOptions): BichardResultType => {
   return CoreHandler(messageXml, recordable)
+}
+
+type ProcessMessageOptions = {
+  expectRecord?: boolean
+  expectTriggers?: boolean
+  recordable?: boolean
 }
 
 const processMessageBichard = async (
   messageXml: string,
-  recordable: boolean,
-  expectResult: boolean
+  { expectRecord = true, expectTriggers = true, recordable = true }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
+  if (expectTriggers && !expectRecord) {
+    throw new Error("You can't expect triggers without a record.")
+  }
 
   if (!realPnc) {
     if (recordable) {
@@ -48,40 +57,49 @@ const processMessageBichard = async (
   await mq.sendMessage("COURT_RESULT_INPUT_QUEUE", messageXmlWithUuid)
 
   // Wait for the record to appear in Postgres
-  const query = `SELECT t.trigger_code, t.trigger_item_identity FROM br7own.error_list AS e
-    INNER JOIN br7own.error_list_triggers AS t ON t.error_id = e.error_id
-    WHERE message_id = '${correlationId}'
-    ORDER BY t.trigger_item_identity ASC`
+  const recordQuery = `SELECT annotated_msg FROM br7own.error_list WHERE message_id = '${correlationId}'`
 
-  if (!expectResult) {
-    await new Promise((resolve) => setTimeout(resolve, 3_000))
-  }
+  const fetchRecords = () => (expectRecord ? pgHelper.pg.one(recordQuery) : pgHelper.pg.none(recordQuery))
 
-  const fetchRecord = () => (expectResult ? pgHelper.pg.many(query) : pgHelper.pg.none(query))
-
-  const queryResult = await promisePoller({
-    taskFn: fetchRecord,
+  const recordResult = await promisePoller({
+    taskFn: fetchRecords,
     interval: 100,
     retries: 200
   })
 
-  // Return record data
-  if (!queryResult) {
-    return { triggers: [], exceptions: [] }
+  const exceptions = recordResult ? extractExceptionsFromAho(recordResult.annotated_msg) : []
+
+  // Wait for the record to appear in Postgres
+  const triggerQuery = `SELECT t.trigger_code, t.trigger_item_identity FROM br7own.error_list AS e
+    INNER JOIN br7own.error_list_triggers AS t ON t.error_id = e.error_id
+    WHERE message_id = '${correlationId}'
+    ORDER BY t.trigger_item_identity ASC`
+
+  if (!expectTriggers && !(expectRecord && recordResult)) {
+    await new Promise((resolve) => setTimeout(resolve, 3_000))
   }
 
-  const triggers = queryResult.map((record) => ({
+  const fetchTriggers = () => (expectTriggers ? pgHelper.pg.many(triggerQuery) : pgHelper.pg.none(triggerQuery))
+
+  const triggerResult =
+    (await promisePoller({
+      taskFn: fetchTriggers,
+      interval: 100,
+      retries: 200
+    })) ?? []
+
+  const triggers = triggerResult.map((record) => ({
     code: record.trigger_code,
     ...(record.trigger_item_identity ? { offenceSequenceNumber: parseInt(record.trigger_item_identity, 10) } : {})
   }))
 
-  return { triggers, exceptions: [] }
+  return { triggers, exceptions }
 }
 
-export default (messageXml: string, recordable = true, expectResult = true): Promise<BichardResultType> => {
+export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<BichardResultType> => {
   if (process.env.USE_BICHARD === "true") {
-    return processMessageBichard(messageXml, recordable, expectResult)
+    return processMessageBichard(messageXml, options)
   }
 
-  return Promise.resolve(processMessageCore(messageXml, recordable))
+  return Promise.resolve(processMessageCore(messageXml, options))
 }

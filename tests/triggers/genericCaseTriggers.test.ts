@@ -82,7 +82,7 @@ describe("Generic case triggers", () => {
       })
 
       // Process the mock message
-      const { triggers } = await processMessage(inputMessage, true)
+      const { triggers } = await processMessage(inputMessage)
 
       // Check the right triggers are generated
       expect(triggers).toStrictEqual([{ code }])

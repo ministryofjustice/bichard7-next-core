@@ -20,7 +20,7 @@ describe("TRPR0030", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, false, true)
+    const { triggers } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
     expect(triggers).toStrictEqual([{ code }])
@@ -37,7 +37,7 @@ describe("TRPR0030", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, false)
+    const { triggers } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
     expect(triggers).toStrictEqual([{ code }])
@@ -50,7 +50,7 @@ describe("TRPR0030", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, true, false)
+    const { triggers } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)

@@ -70,7 +70,7 @@ describe("Generic offence triggers", () => {
       })
 
       // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false, true)
+      const { triggers } = await processMessage(inputMessage, { recordable: false })
 
       // Check the right triggers are generated
       expect(triggers).toStrictEqual([{ code }])

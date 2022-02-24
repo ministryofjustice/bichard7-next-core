@@ -102,7 +102,7 @@ describe("TRPR0020", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, true, false)
+    const { triggers } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)
@@ -121,7 +121,7 @@ describe("TRPR0020", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, true, false)
+    const { triggers } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)
@@ -139,7 +139,7 @@ describe("TRPR0020", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, false, true)
+    const { triggers } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
     expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
