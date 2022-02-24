@@ -1,12 +1,12 @@
 import { readFileSync } from "fs"
 import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
-import parseMessage from "./parseMessage"
+import parseSpiResult from "./parseSpiResult"
 import populateCase from "./populateCase"
 jest.mock("src/use-cases/populateDefendant")
 import populateDefendant from "./populateDefendant"
 
 const message = readFileSync("test-data/input-message-001.xml", "utf-8")
-const courtResult = parseMessage(message)
+const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
 describe("populateCase", () => {
   beforeAll(() => {

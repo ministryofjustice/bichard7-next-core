@@ -1,16 +1,20 @@
 import type BichardResultType from "./types/BichardResultType"
 import generateTriggers from "./use-cases/generateTriggers"
-import parseMessage from "./use-cases/parseMessage"
-// import transformSpiToAnnotatedHearingOutcome from "./use-cases/transformSpiToAnnotatedHearingOutcome"
+import generateExceptions from "./use-cases/generateExceptions"
+import parseSpiResult from "./use-cases/parseSpiResult"
+import transformSpiToAnnotatedHearingOutcome from "./use-cases/transformSpiToAnnotatedHearingOutcome"
 
 export default (message: string, recordable: boolean): BichardResultType => {
-  // const annotatedHearingOutcome = transformSpiToAnnotatedHearingOutcome(message)
-  const courtResult = parseMessage(message)
+  const spiResult = parseSpiResult(message)
 
-  const triggers = generateTriggers(courtResult, recordable)
+  const triggers = generateTriggers(spiResult.DeliverRequest.Message.ResultedCaseMessage, recordable)
+
+  const annotatedHearingOutcome = transformSpiToAnnotatedHearingOutcome(spiResult)
+
+  const exceptions = generateExceptions(annotatedHearingOutcome)
 
   return {
     triggers,
-    exceptions: []
+    exceptions
   }
 }

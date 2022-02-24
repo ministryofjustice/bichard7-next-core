@@ -1,12 +1,12 @@
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import parseMessage from "./parseMessage"
+import parseSpiResult from "./parseSpiResult"
 import generateTriggers from "./generateTriggers"
 import fs from "fs"
 import { TriggerCode } from "src/types/TriggerCode"
 
 const parseFile = (file: string): ResultedCaseMessageParsedXml => {
   const inputMessage = fs.readFileSync(`test-data/${file}`).toString()
-  return parseMessage(inputMessage)
+  return parseSpiResult(inputMessage).DeliverRequest.Message.ResultedCaseMessage
 }
 
 describe("generateTriggers", () => {

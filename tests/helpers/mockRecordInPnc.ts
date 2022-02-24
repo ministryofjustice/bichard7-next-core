@@ -1,5 +1,5 @@
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
-import parseMessage from "../../src/use-cases/parseMessage"
+import type { OffenceParsedXml } from "../../src/types/IncomingMessage"
+import parseSpiResult from "../../src/use-cases/parseSpiResult"
 import axios from "axios"
 import defaults from "./defaults"
 
@@ -28,7 +28,7 @@ const extractDates = (offence: OffenceParsedXml) => {
 }
 
 const mockEnquiry = (messageXml: string) => {
-  const parsed: ResultedCaseMessageParsedXml = parseMessage(messageXml)
+  const parsed = parseSpiResult(messageXml).DeliverRequest.Message.ResultedCaseMessage
   const prosecutorRef = parsed.Session.Case.Defendant.ProsecutorReference.slice(-7)
   const personFamilyName =
     parsed.Session.Case.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
