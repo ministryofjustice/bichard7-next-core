@@ -62,7 +62,7 @@ module.exports = {
       }
     },
     {
-      files: ["characterisation-tests/**/*.ts"],
+      files: ["tests/**/*.ts"],
       rules: {
         "import/no-extraneous-dependencies": "off"
       }

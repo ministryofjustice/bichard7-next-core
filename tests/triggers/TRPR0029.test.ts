@@ -1,9 +1,9 @@
 jest.setTimeout(30000)
 
-import { TriggerCode } from "../src/types/TriggerCode"
-import generateMessage from "./helpers/generateMessage"
-import PostgresHelper from "./helpers/PostgresHelper"
-import processMessage from "./helpers/processMessage"
+import { TriggerCode } from "../../src/types/TriggerCode"
+import generateMessage from "../helpers/generateMessage"
+import PostgresHelper from "../helpers/PostgresHelper"
+import processMessage from "../helpers/processMessage"
 
 const code = TriggerCode.TRPR0029
 const offenceCode = "AS14511"
