@@ -1,7 +1,5 @@
-import type { Offence, OffenceCode } from "src/types/HearingOutcome"
+import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml } from "src/types/IncomingMessage"
-import { createElement } from "src/types/XmlElement"
-import formatXmlDate from "src/utils/formatXmlDate"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [
@@ -24,10 +22,8 @@ export default class {
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length
     const offenceCode = {
-      Reason: createElement(
-        spiOffenceCodeLength > 4 ? spiOffenceCode.substring(4, Math.min(7, spiOffenceCodeLength)) : ""
-      ),
-      ...(spiOffenceCodeLength > 7 ? { Qualifier: createElement(spiOffenceCode.substring(7)) } : {})
+      Reason: spiOffenceCodeLength > 4 ? spiOffenceCode.substring(4, Math.min(7, spiOffenceCodeLength)) : "",
+      ...(spiOffenceCodeLength > 7 ? { Qualifier: spiOffenceCode.substring(7) } : {})
     } as OffenceCode
 
     if (spiOffenceCode.startsWith(COMMON_LAWS)) {
@@ -35,12 +31,9 @@ export default class {
     } else if (spiOffenceCode.startsWith(INDICTMENT)) {
       offenceCode.Indictment = INDICTMENT
     } else {
-      offenceCode.ActOrSource = createElement(
-        spiOffenceCodeLength < 2 ? spiOffenceCode : spiOffenceCode.substring(0, 2)
-      )
-      offenceCode.Year = createElement(
-        spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
-      )
+      offenceCode.ActOrSource = spiOffenceCodeLength < 2 ? spiOffenceCode : spiOffenceCode.substring(0, 2)
+
+      offenceCode.Year = spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
     }
 
     return offenceCode
@@ -77,28 +70,28 @@ export default class {
       }
     }
 
-    offence.ArrestDate = createElement(formatXmlDate(spiArrestDate))
-    offence.ChargeDate = createElement(formatXmlDate(spiChargeDate))
-    offence.ActualOffenceDateCode = createElement(spiOffenceDateCode?.toString())
+    offence.ArrestDate = spiArrestDate
+    offence.ChargeDate = spiChargeDate
+    offence.ActualOffenceDateCode = spiOffenceDateCode?.toString()
     offence.ActualOffenceStartDate = {
-      StartDate: createElement(formatXmlDate(spiOffenceStart?.OffenceDateStartDate))
+      StartDate: spiOffenceStart?.OffenceDateStartDate
     }
     offence.ActualOffenceEndDate = {
-      EndDate: createElement(formatXmlDate(spiOffenceEnd?.OffenceEndDate))
+      EndDate: spiOffenceEnd?.OffenceEndDate
     }
-    offence.LocationOfOffence = createElement(spiLocationOfOffence)
-    offence.ActualOffenceWording = createElement(spiOffenceWording)
+    offence.LocationOfOffence = spiLocationOfOffence
+    offence.ActualOffenceWording = spiOffenceWording
 
     if (spiAlcoholRelatedOffence) {
       offence.AlcoholLevel = {
-        Amount: createElement(spiAlcoholRelatedOffence.AlcoholLevelAmount.toString()),
-        Method: createElement("?????")
+        Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount.toString(),
+        Method: "?????"
       }
     }
 
-    offence.ConvictionDate = createElement(formatXmlDate(spiConvictionDate))
-    offence.CommittedOnBail = createElement(DONT_KNOW_VALUE)
-    offence.CourtOffenceSequenceNumber = createElement(spiOffenceSequenceNumber?.toString())
+    offence.ConvictionDate = spiConvictionDate
+    offence.CommittedOnBail = DONT_KNOW_VALUE
+    offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber?.toString()
 
     if (!spiConvictionDate) {
       const a2007ResultFound = spiResults.some(
@@ -111,7 +104,7 @@ export default class {
       }
 
       if (this.adjournmentSineDieConditionMet) {
-        offence.ConvictionDate = createElement(formatXmlDate(this.spiDateOfHearing))
+        offence.ConvictionDate = this.spiDateOfHearing
       }
     }
 

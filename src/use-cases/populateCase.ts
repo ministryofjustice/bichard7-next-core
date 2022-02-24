@@ -1,6 +1,5 @@
-import type { Case } from "src/types/HearingOutcome"
+import type { Case } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import { createElement } from "src/types/XmlElement"
 import populateDefendant from "./populateDefendant"
 
 export default (courtResult: ResultedCaseMessageParsedXml): Case => {
@@ -11,10 +10,10 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
   } = courtResult
 
   return {
-    PTIURN: createElement(PTIURN?.toUpperCase()),
-    PreChargeDecisionIndicator: createElement("N", { Literal: "No" }),
+    PTIURN: PTIURN?.toUpperCase(),
+    PreChargeDecisionIndicator: "N",
     CourtReference: {
-      MagistratesCourtReference: createElement(PTIURN)
+      MagistratesCourtReference: PTIURN
     },
     HearingDefendant: populateDefendant(courtResult)
   }

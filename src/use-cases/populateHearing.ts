@@ -1,8 +1,6 @@
 import { format } from "date-fns"
-import type { Hearing } from "src/types/HearingOutcome"
+import type { Hearing } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import { createElement } from "src/types/XmlElement"
-import formatXmlDate from "src/utils/formatXmlDate"
 
 const formatTime = (time: string) => {
   const date = new Date()
@@ -35,13 +33,13 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
     SecondLevelCode: spiCourtHearingLocation?.substring(1, 3),
     ThirdLevelCode: spiCourtHearingLocation?.substring(3, 5),
     BottomLevelCode: spiCourtHearingLocation?.substring(5, 7),
-    OrganisationUnitCode: createElement(spiCourtHearingLocation)
+    OrganisationUnitCode: spiCourtHearingLocation
   }
 
-  hearingOutcomeHearing.DateOfHearing = createElement(formatXmlDate(spiDateOfHearing))
-  hearingOutcomeHearing.TimeOfHearing = createElement(formatTime(spiTimeOfHearing))
-  hearingOutcomeHearing.HearingLanguage = createElement("D")
-  hearingOutcomeHearing.HearingDocumentationLanguage = createElement("D")
+  hearingOutcomeHearing.DateOfHearing = spiDateOfHearing
+  hearingOutcomeHearing.TimeOfHearing = formatTime(spiTimeOfHearing)
+  hearingOutcomeHearing.HearingLanguage = "D"
+  hearingOutcomeHearing.HearingDocumentationLanguage = "D"
 
   let name = ""
   if (spiDefendant.CourtIndividualDefendant) {
@@ -56,18 +54,18 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
       }
     } = spiDefendant
 
-    hearingOutcomeHearing.DefendantPresentAtHearing = createElement(spiPresentAtHearing)
+    hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
     name = [givenName, familyName].filter((namePart) => namePart).join(" ")
   } else if (spiDefendant.CourtCorporateDefendant) {
     name = spiDefendant.CourtCorporateDefendant.OrganisationName.OrganisationName
   }
   hearingOutcomeHearing.SourceReference = {
-    DocumentName: createElement(`SPI ${name}`),
-    DocumentType: createElement("SPI Case Result"),
-    UniqueID: createElement(messageId)
+    DocumentName: `SPI ${name}`,
+    DocumentType: "SPI Case Result",
+    UniqueID: messageId
   }
 
-  hearingOutcomeHearing.CourtHouseCode = createElement(spiPsaCode)
+  hearingOutcomeHearing.CourtHouseCode = spiPsaCode
 
   return hearingOutcomeHearing
 }

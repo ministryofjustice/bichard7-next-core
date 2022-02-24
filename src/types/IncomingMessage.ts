@@ -3,7 +3,7 @@ import { z } from "zod"
 
 const toArray = <T>(element: unknown): T[] => (!element ? [] : !Array.isArray(element) ? [element] : element)
 
-const resultParsedXml = z.object({
+const resultParsedXmlSchema = z.object({
   ResultCode: z.number(),
   ResultText: z.string(),
   ResultCodeQualifier: z.string().optional(),
@@ -14,9 +14,7 @@ const resultParsedXml = z.object({
     .optional()
 })
 
-export type ResultParsedXml = z.infer<typeof resultParsedXml>
-
-const offenceParsedXml = z.object({
+const offenceParsedXmlSchema = z.object({
   BaseOffenceDetails: z.object({
     OffenceSequenceNumber: z.number(),
     OffenceCode: z.string(),
@@ -49,12 +47,10 @@ const offenceParsedXml = z.object({
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),
   Finding: z.string().optional(),
-  Result: z.preprocess(toArray, resultParsedXml.array().min(0))
+  Result: z.preprocess(toArray, resultParsedXmlSchema.array().min(0))
 })
 
-export type OffenceParsedXml = z.infer<typeof offenceParsedXml>
-
-const simpleAddress = z.object({
+const simpleAddressSchema = z.object({
   SimpleAddress: z.object({
     AddressLine1: z.string(),
     AddressLine2: z.string().optional(),
@@ -64,7 +60,7 @@ const simpleAddress = z.object({
   })
 })
 
-const complexAddress = z.object({
+const complexAddressSchema = z.object({
   ComplexAddress: z.object({
     PAON: z.string().optional(),
     StreetDescription: z.string().optional(),
@@ -76,11 +72,9 @@ const complexAddress = z.object({
   })
 })
 
-const spiAddress = z.union([simpleAddress, complexAddress])
+const spiAddressSchema = z.union([simpleAddressSchema, complexAddressSchema])
 
-export type SpiAddress = z.infer<typeof spiAddress>
-
-const spiCourtIndividualDefendant = z.object({
+const spiCourtIndividualDefendantSchema = z.object({
   PresentAtHearing: z.string(),
   BailStatus: z.string(),
   PersonDefendant: z.object({
@@ -99,26 +93,24 @@ const spiCourtIndividualDefendant = z.object({
       })
     })
   }),
-  Address: spiAddress
+  Address: spiAddressSchema
 })
 
-const spiCourtCorporateDefendant = z.object({
+const spiCourtCorporateDefendantSchema = z.object({
   PNCidentifier: z.string().optional(),
   PresentAtHearing: z.string(),
   BailStatus: z.string(),
   OrganisationName: z.object({
     OrganisationName: z.string()
   }),
-  Address: spiAddress
+  Address: spiAddressSchema
 })
 
-export type SpiCourtIndividualDefendant = z.infer<typeof spiCourtIndividualDefendant>
-
-const defendant = z
+const defendantSchema = z
   .object({
-    CourtIndividualDefendant: spiCourtIndividualDefendant.optional(),
-    CourtCorporateDefendant: spiCourtCorporateDefendant.optional(),
-    Offence: z.preprocess(toArray, offenceParsedXml.array().min(0)),
+    CourtIndividualDefendant: spiCourtIndividualDefendantSchema.optional(),
+    CourtCorporateDefendant: spiCourtCorporateDefendantSchema.optional(),
+    Offence: z.preprocess(toArray, offenceParsedXmlSchema.array().min(0)),
     ProsecutorReference: z.string()
   })
   .refine(
@@ -130,11 +122,11 @@ const defendant = z
     "Either CourtIndividualDefendant or CourtCorporateDefendant should exist."
   )
 
-const resultedCaseMessageParsedXml = z.object({
+const resultedCaseMessageParsedXmlSchema = z.object({
   Session: z.object({
     Case: z.object({
       PTIURN: z.string(),
-      Defendant: defendant
+      Defendant: defendantSchema
     }),
     CourtHearing: z.object({
       Hearing: z.object({
@@ -147,16 +139,19 @@ const resultedCaseMessageParsedXml = z.object({
   })
 })
 
-export type ResultedCaseMessageParsedXml = z.infer<typeof resultedCaseMessageParsedXml>
-
-const incomingMessageParsedXml = z.object({
+const incomingMessageParsedXmlSchema = z.object({
   DeliverRequest: z.object({
     Message: z.object({
-      ResultedCaseMessage: resultedCaseMessageParsedXml
+      ResultedCaseMessage: resultedCaseMessageParsedXmlSchema
     })
   })
 })
 
-export type IncomingMessageParsedXml = z.infer<typeof incomingMessageParsedXml>
+export type ResultParsedXml = z.infer<typeof resultParsedXmlSchema>
+export type OffenceParsedXml = z.infer<typeof offenceParsedXmlSchema>
+export type SpiAddress = z.infer<typeof spiAddressSchema>
+export type SpiCourtIndividualDefendant = z.infer<typeof spiCourtIndividualDefendantSchema>
+export type ResultedCaseMessageParsedXml = z.infer<typeof resultedCaseMessageParsedXmlSchema>
+export type IncomingMessageParsedXml = z.infer<typeof incomingMessageParsedXmlSchema>
 
-export { incomingMessageParsedXml }
+export { incomingMessageParsedXmlSchema }

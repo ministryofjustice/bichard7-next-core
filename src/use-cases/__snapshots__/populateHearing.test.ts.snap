@@ -4,51 +4,21 @@ exports[`populateHearing should transform SPI Hearing to Hearing Outcome Hearing
 Object {
   "CourtHearingLocation": Object {
     "BottomLevelCode": "01",
-    "OrganisationUnitCode": Object {
-      "attributes": undefined,
-      "value": "B01EF01",
-    },
+    "OrganisationUnitCode": "B01EF01",
     "SecondLevelCode": "01",
     "ThirdLevelCode": "EF",
     "TopLevelCode": "B",
   },
-  "CourtHouseCode": Object {
-    "attributes": undefined,
-    "value": 2576,
-  },
-  "DateOfHearing": Object {
-    "attributes": undefined,
-    "value": "2011-09-26",
-  },
-  "DefendantPresentAtHearing": Object {
-    "attributes": undefined,
-    "value": "A",
-  },
-  "HearingDocumentationLanguage": Object {
-    "attributes": undefined,
-    "value": "D",
-  },
-  "HearingLanguage": Object {
-    "attributes": undefined,
-    "value": "D",
-  },
+  "CourtHouseCode": 2576,
+  "DateOfHearing": "2011-09-26",
+  "DefendantPresentAtHearing": "A",
+  "HearingDocumentationLanguage": "D",
+  "HearingLanguage": "D",
   "SourceReference": Object {
-    "DocumentName": Object {
-      "attributes": undefined,
-      "value": "SPI TRPRFOUR SEXOFFENCE",
-    },
-    "DocumentType": Object {
-      "attributes": undefined,
-      "value": "SPI Case Result",
-    },
-    "UniqueID": Object {
-      "attributes": undefined,
-      "value": "DUMMY_MESSAGE_ID",
-    },
+    "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
+    "DocumentType": "SPI Case Result",
+    "UniqueID": "DUMMY_MESSAGE_ID",
   },
-  "TimeOfHearing": Object {
-    "attributes": undefined,
-    "value": "10:00",
-  },
+  "TimeOfHearing": "10:00",
 }
 `;

@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import type { HearingDefendant } from "src/types/HearingOutcome"
+import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
 import parseMessage from "./parseMessage"
 import populateCase from "./populateCase"
 jest.mock("src/use-cases/populateDefendant")
@@ -18,13 +18,6 @@ describe("populateCase", () => {
     const result = populateCase(courtResult)
 
     expect(result).toBeDefined()
-    expect(result).toStrictEqual({
-      PTIURN: { value: "01ZD0303208", attributes: undefined },
-      PreChargeDecisionIndicator: { value: "N", attributes: { Literal: "No" } },
-      CourtReference: {
-        MagistratesCourtReference: { value: "01ZD0303208", attributes: undefined }
-      },
-      HearingDefendant: {}
-    })
+    expect(result).toMatchSnapshot()
   })
 })
