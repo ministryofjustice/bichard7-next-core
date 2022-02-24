@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import { incomingMessageParsedXml } from "src/types/IncomingMessage"
+import { incomingMessageParsedXmlSchema } from "src/types/IncomingMessage"
 
 export default (message: string): ResultedCaseMessageParsedXml => {
   const options = {
@@ -10,7 +10,7 @@ export default (message: string): ResultedCaseMessageParsedXml => {
 
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(message) as unknown
-  const parsedObj = incomingMessageParsedXml.parse(rawParsedObj)
+  const parsedObj = incomingMessageParsedXmlSchema.parse(rawParsedObj)
   const rcm = parsedObj.DeliverRequest.Message.ResultedCaseMessage
   // if (!rcm.Session.Case.Defendant.Offence) {
   //   rcm.Session.Case.Defendant.Offence = []
