@@ -1,7 +1,5 @@
-import type { Address, DefendantDetail, HearingDefendant } from "src/types/HearingOutcome"
+import type { Address, DefendantDetail, HearingDefendant } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "src/types/IncomingMessage"
-import type { ErrorAttribute } from "src/types/XmlElement"
-import { createElement } from "src/types/XmlElement"
 import PopulateOffences from "./PopulateOffences"
 
 const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndividualDefendant): DefendantDetail => {
@@ -21,35 +19,35 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
     }
   } = spiCourtIndividualDefendant
 
-  const spiGivenNames = [spiPersonGivenName1, spiPersonGivenName2, spiPersonGivenName3].filter((name) => !!name)
+  const spiGivenNames = [spiPersonGivenName1, spiPersonGivenName2, spiPersonGivenName3]
+    .filter((name) => !!name)
+    .map((name) => name!.trim())
 
   return {
     PersonName: {
-      Title: createElement(spiPersonTitle?.trim()),
-      GivenName: spiGivenNames.map((name, index) =>
-        createElement((name as string).trim(), { NameSequence: `${index + 1}` })
-      ),
-      FamilyName: createElement(spiPersonFamilyName, { NameSequence: "1" })
+      Title: spiPersonTitle?.trim(),
+      GivenName: spiGivenNames,
+      FamilyName: spiPersonFamilyName
     },
-    BirthDate: createElement(spiBirthDate),
-    Gender: createElement(spiGender.toString())
+    BirthDate: spiBirthDate,
+    Gender: spiGender.toString()
   }
 }
 
-const populateAddress = (spiAddress: SpiAddress): Address | undefined => {
+const populateAddress = (spiAddress: SpiAddress): Address => {
   if ("SimpleAddress" in spiAddress) {
     const {
       SimpleAddress: { AddressLine1, AddressLine2, AddressLine3, AddressLine4, AddressLine5 }
     } = spiAddress
 
     return {
-      AddressLine1: createElement(AddressLine1),
-      AddressLine2: createElement(AddressLine2),
-      AddressLine3: createElement(AddressLine3),
-      AddressLine4: createElement(AddressLine4),
-      AddressLine5: createElement(AddressLine5)
+      AddressLine1: AddressLine1,
+      AddressLine2: AddressLine2,
+      AddressLine3: AddressLine3,
+      AddressLine4: AddressLine4,
+      AddressLine5: AddressLine5
     }
-  } else if ("ComplexAddress" in spiAddress) {
+  } else {
     const {
       ComplexAddress: { Locality, StreetDescription, Town, AdministrativeArea, UniqueStreetReferenceNumber }
     } = spiAddress
@@ -63,16 +61,12 @@ const populateAddress = (spiAddress: SpiAddress): Address | undefined => {
     ]
       .filter((x) => !!x)
       .reduce((acc: any, addressPart, index) => {
-        acc[`AddressLine${index + 1}`] = createElement<string, ErrorAttribute>(addressPart!)
+        acc[`AddressLine${index + 1}`] = addressPart!
         return acc
       }, {})
 
-    return {
-      ...hearingOutcomeAddress
-    }
+    return hearingOutcomeAddress
   }
-
-  return undefined
 }
 
 const populateRemandStatus = (spiBailStatus: string): string => {
@@ -88,23 +82,23 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     }
   } = courtResult
 
-  hearingDefendant.ArrestSummonsNumber = createElement(spiDefendant.ProsecutorReference)
+  hearingDefendant.ArrestSummonsNumber = spiDefendant.ProsecutorReference
 
   if (spiDefendant.CourtIndividualDefendant) {
     const {
       CourtIndividualDefendant: { PersonDefendant: spiPersonDefendant, BailStatus: spiBailStatus, Address: spiAddress }
     } = spiDefendant
-    hearingDefendant.CourtPNCIdentifier = createElement(spiPersonDefendant.PNCidentifier)
+    hearingDefendant.CourtPNCIdentifier = spiPersonDefendant.PNCidentifier
     hearingDefendant.DefendantDetail = populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant)
     hearingDefendant.Address = populateAddress(spiAddress)
 
     // RemandStatus <- BailStatus ?
-    hearingDefendant.RemandStatus = createElement(populateRemandStatus(spiBailStatus))
+    hearingDefendant.RemandStatus = populateRemandStatus(spiBailStatus)
 
     hearingDefendant.BailConditions =
-      spiPersonDefendant.BailConditions?.split(";").map((bailCondition) => createElement(bailCondition)) || []
+      spiPersonDefendant.BailConditions?.split(";").map((bailCondition) => bailCondition) || []
 
-    hearingDefendant.ReasonForBailConditions = createElement(spiPersonDefendant.ReasonForBailConditionsOrCustody)
+    hearingDefendant.ReasonForBailConditions = spiPersonDefendant.ReasonForBailConditionsOrCustody
   } else if (spiDefendant.CourtCorporateDefendant) {
     // Corporate Defendant
     const {
@@ -114,12 +108,12 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
       BailStatus: spiBailStatus
     } = spiDefendant.CourtCorporateDefendant
 
-    hearingDefendant.CourtPNCIdentifier = createElement(spiPNCidentifier)
-    hearingDefendant.OrganisationName = createElement(spiOrganisationName)
+    hearingDefendant.CourtPNCIdentifier = spiPNCidentifier
+    hearingDefendant.OrganisationName = spiOrganisationName
     hearingDefendant.Address = populateAddress(spiAddress)
 
     // RemandStatus <- BailStatus ?
-    hearingDefendant.RemandStatus = createElement(populateRemandStatus(spiBailStatus))
+    hearingDefendant.RemandStatus = populateRemandStatus(spiBailStatus)
 
     const spiDateOfHearing = courtResult.Session.CourtHearing.Hearing.DateOfHearing
     hearingDefendant.Offence = new PopulateOffences(spiDefendant.Offence, spiDateOfHearing).execute()

@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import type { Offence } from "src/types/HearingOutcome"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import parseMessage from "./parseMessage"
 import populateDefendant from "./populateDefendant"
 import PopulateOffences from "./PopulateOffences"
