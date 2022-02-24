@@ -31,7 +31,7 @@ const mockEnquiry = (messageXml: string) => {
   const parsed: ResultedCaseMessageParsedXml = parseMessage(messageXml)
   const prosecutorRef = parsed.Session.Case.Defendant.ProsecutorReference.slice(-7)
   const personFamilyName =
-    parsed.Session.Case.Defendant.CourtIndividualDefendant.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
+    parsed.Session.Case.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
       0,
       12
     ).padEnd(12, " ")

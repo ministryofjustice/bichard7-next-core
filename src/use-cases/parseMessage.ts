@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
-import type { RawIncomingMessageParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import { incomingMessageParsedXml } from "src/types/IncomingMessage"
 
 export default (message: string): ResultedCaseMessageParsedXml => {
   const options = {
@@ -8,21 +9,22 @@ export default (message: string): ResultedCaseMessageParsedXml => {
   }
 
   const parser = new XMLParser(options)
-  const parsedObj = parser.parse(message) as RawIncomingMessageParsedXml
+  const rawParsedObj = parser.parse(message) as unknown
+  const parsedObj = incomingMessageParsedXml.parse(rawParsedObj)
   const rcm = parsedObj.DeliverRequest.Message.ResultedCaseMessage
-  if (!rcm.Session.Case.Defendant.Offence) {
-    rcm.Session.Case.Defendant.Offence = []
-  }
-  if (!Array.isArray(rcm.Session.Case.Defendant.Offence)) {
-    rcm.Session.Case.Defendant.Offence = [rcm.Session.Case.Defendant.Offence]
-  }
-  rcm.Session.Case.Defendant.Offence.forEach((offence) => {
-    if (!offence.Result) {
-      offence.Result = []
-    }
-    if (!Array.isArray(offence.Result)) {
-      offence.Result = [offence.Result]
-    }
-  })
-  return rcm as ResultedCaseMessageParsedXml
+  // if (!rcm.Session.Case.Defendant.Offence) {
+  //   rcm.Session.Case.Defendant.Offence = []
+  // }
+  // if (!Array.isArray(rcm.Session.Case.Defendant.Offence)) {
+  //   rcm.Session.Case.Defendant.Offence = [rcm.Session.Case.Defendant.Offence]
+  // }
+  // rcm.Session.Case.Defendant.Offence.forEach((offence) => {
+  //   if (!offence.Result) {
+  //     offence.Result = []
+  //   }
+  //   if (!Array.isArray(offence.Result)) {
+  //     offence.Result = [offence.Result]
+  //   }
+  // })
+  return rcm
 }
