@@ -77,7 +77,7 @@ const addressSchema = z.object({
 })
 
 const personNameSchema = z.object({
-  Title: z.string().optional(),
+  Title: z.string().min(1, ExceptionCode.HO100212).max(35, ExceptionCode.HO100212).optional(),
   GivenName: z.string().array(),
   RequestedName: z.string().optional(),
   FamilyName: z.string(),

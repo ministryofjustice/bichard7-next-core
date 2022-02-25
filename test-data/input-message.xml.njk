@@ -56,7 +56,7 @@
               <DC:PersonDefendant>
                 <DC:BasePersonDetails>
                   <DC:PersonName>
-                    <DC:PersonTitle>Mr</DC:PersonTitle>
+                    <DC:PersonTitle>{{ person.title if person and person.title else "Mr" }}</DC:PersonTitle>
                     <DC:PersonGivenName1>TRPRTWELVE</DC:PersonGivenName1>
                     <DC:PersonFamilyName>TRTHREE</DC:PersonFamilyName>
                   </DC:PersonName>

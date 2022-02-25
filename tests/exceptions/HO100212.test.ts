@@ -4,16 +4,17 @@ import generateMessage from "../helpers/generateMessage"
 import PostgresHelper from "../helpers/PostgresHelper"
 import processMessage from "../helpers/processMessage"
 
-describe("HO100200", () => {
+describe("HO100212", () => {
   afterAll(() => {
     PostgresHelper.closeConnection()
   })
 
-  // Won't pass when running against Bichard as HO100200 is overridden by HO100300 "OU Code is not recognised" exception
-  it.skip("should create an exception if the Court Hearing Location value is invalid", async () => {
+  // Won't pass when running against Bichard as HO100212 is never generated
+  // If the person's title is too long, it fails schema validation and thus fails to parse the XML
+  // so no exceptions are raised!
+  it.skip("should create an exception if the Person's title is too many characters", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
-      courtHearingLocation: "invalid",
       offences: [{ results: [{ code: 1015 }] }]
     })
 
@@ -25,8 +26,16 @@ describe("HO100200", () => {
     // Check the right triggers are generated
     expect(exceptions).toStrictEqual([
       {
-        code: "HO100200",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+        code: "HO100212",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "DefendantDetail",
+          "PersonName",
+          "Title"
+        ]
       }
     ])
   })
