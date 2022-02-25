@@ -42,27 +42,30 @@
       <DC:Session>
         <DC:CourtHearing>
           <DC:Hearing>
-            <DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
+            <DC:CourtHearingLocation>{{ courtHearingLocation if courtHearingLocation else "B01EF01" }}</DC:CourtHearingLocation>
             <DC:DateOfHearing>2011-09-26</DC:DateOfHearing>
             <DC:TimeOfHearing>10:00:00</DC:TimeOfHearing>
           </DC:Hearing>
           <DC:PSAcode>2576</DC:PSAcode>
         </DC:CourtHearing>
         <DC:Case>
-          <DC:PTIURN>01ZD0303908</DC:PTIURN>
+          <DC:PTIURN>{{ PTIURN if PTIURN else "01ZD0303908" }}</DC:PTIURN>
           <DC:Defendant>
-            <DC:ProsecutorReference>1101ZD0100000410769X</DC:ProsecutorReference>
+            <DC:ProsecutorReference>1101ZD0100000448754K</DC:ProsecutorReference>
             <DC:CourtIndividualDefendant>
               <DC:PersonDefendant>
                 <DC:BasePersonDetails>
                   <DC:PersonName>
-                    <DC:PersonTitle>Mr</DC:PersonTitle>
+                    <DC:PersonTitle>{{ person.title if person and person.title else "Mr" }}</DC:PersonTitle>
                     <DC:PersonGivenName1>TRPRTWELVE</DC:PersonGivenName1>
                     <DC:PersonFamilyName>TRTHREE</DC:PersonFamilyName>
                   </DC:PersonName>
                   <DC:Birthdate>1948-11-11</DC:Birthdate>
                   <DC:Gender>1</DC:Gender>
                 </DC:BasePersonDetails>
+                {% if courtPncIdentifier %}
+                  <DC:PNCidentifier>{{ courtPncIdentifier }}</DC:PNCidentifier>
+                {% endif %}
               </DC:PersonDefendant>
               <DC:BailStatus>U</DC:BailStatus>
               <DC:Address>
@@ -74,39 +77,39 @@
               </DC:Address>
               <DC:PresentAtHearing>A</DC:PresentAtHearing>
             </DC:CourtIndividualDefendant>
-              {% for offence in offences %}
-            <DC:Offence>
-              <DC:BaseOffenceDetails>
-                <DC:OffenceSequenceNumber>{{ loop.index | string | padStart(3, "0") }}</DC:OffenceSequenceNumber>
-                <DC:OffenceCode>{{ offence.code if offence.code else ( "TH68006" if offence.recordable else "TH68046C" ) }}</DC:OffenceCode>
-                <DC:OffenceWording>Theft of pedal cycle.</DC:OffenceWording>
-                <DC:OffenceTiming>
-                  <DC:OffenceDateCode>1</DC:OffenceDateCode>
-                  <DC:OffenceStart>
-                    <DC:OffenceDateStartDate>2010-11-28</DC:OffenceDateStartDate>
-                  </DC:OffenceStart>
-                </DC:OffenceTiming>
-                <DC:ChargeDate>2010-12-02</DC:ChargeDate>
-                <DC:ArrestDate>2010-12-01</DC:ArrestDate>
-                <DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
-              </DC:BaseOffenceDetails>
-              <DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
-              <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
-              <DC:ModeOfTrial>01</DC:ModeOfTrial>
-              <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
-              <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
-              <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
-                  {% for result in offence.results %}
-              <DC:Result>
-                <DC:ResultCode>{{ result.code }}</DC:ResultCode>
-                <DC:ResultText>{{ result.text if result.text else "RESULT_TEXT" }}</DC:ResultText>
-                      {% if result.qualifier %}
-                <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
-                      {% endif %}
-              </DC:Result>
-                  {% endfor %}
-            </DC:Offence>
-              {% endfor %}
+            {% for offence in offences %}
+              <DC:Offence>
+                <DC:BaseOffenceDetails>
+                  <DC:OffenceSequenceNumber>{{ loop.index | string | padStart(3, "0") }}</DC:OffenceSequenceNumber>
+                  <DC:OffenceCode>{{ offence.code if offence.code else ( "TH68006" if offence.recordable else "TH68046C" ) }}</DC:OffenceCode>
+                  <DC:OffenceWording>Theft of pedal cycle.</DC:OffenceWording>
+                  <DC:OffenceTiming>
+                    <DC:OffenceDateCode>1</DC:OffenceDateCode>
+                    <DC:OffenceStart>
+                      <DC:OffenceDateStartDate>2010-11-28</DC:OffenceDateStartDate>
+                    </DC:OffenceStart>
+                  </DC:OffenceTiming>
+                  <DC:ChargeDate>2010-12-02</DC:ChargeDate>
+                  <DC:ArrestDate>2010-12-01</DC:ArrestDate>
+                  <DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
+                </DC:BaseOffenceDetails>
+                <DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
+                <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
+                <DC:ModeOfTrial>01</DC:ModeOfTrial>
+                <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
+                <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
+                <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
+                {% for result in offence.results %}
+                  <DC:Result>
+                    <DC:ResultCode>{{ result.code }}</DC:ResultCode>
+                    <DC:ResultText>{{ result.text if result.text else "RESULT_TEXT" }}</DC:ResultText>
+                    {% if result.qualifier %}
+                      <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
+                    {% endif %}
+                  </DC:Result>
+                {% endfor %}
+              </DC:Offence>
+            {% endfor %}
           </DC:Defendant>
         </DC:Case>
       </DC:Session>

@@ -23,6 +23,84 @@ Object {
       "Title": "Mr",
     },
   },
+  "Offence": Array [
+    Object {
+      "ActualOffenceDateCode": "1",
+      "ActualOffenceEndDate": Object {
+        "EndDate": undefined,
+      },
+      "ActualOffenceStartDate": Object {
+        "StartDate": "2010-11-28",
+      },
+      "ActualOffenceWording": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
+      "ArrestDate": "2010-12-01",
+      "ChargeDate": "2010-12-02",
+      "CommittedOnBail": "D",
+      "ConvictionDate": "2011-09-26",
+      "CourtOffenceSequenceNumber": "1",
+      "CriminalProsecutionReference": Object {
+        "OffenceReason": Object {
+          "OffenceCode": Object {
+            "ActOrSource": "SX",
+            "Qualifier": "A",
+            "Reason": "001",
+            "Year": "03",
+          },
+        },
+      },
+      "LocationOfOffence": "Kingston High Street",
+    },
+    Object {
+      "ActualOffenceDateCode": "1",
+      "ActualOffenceEndDate": Object {
+        "EndDate": undefined,
+      },
+      "ActualOffenceStartDate": Object {
+        "StartDate": "2010-11-28",
+      },
+      "ActualOffenceWording": "Rape of a Female",
+      "ArrestDate": "2010-12-01",
+      "ChargeDate": "2010-12-02",
+      "CommittedOnBail": "D",
+      "ConvictionDate": "2011-09-26",
+      "CourtOffenceSequenceNumber": "2",
+      "CriminalProsecutionReference": Object {
+        "OffenceReason": Object {
+          "OffenceCode": Object {
+            "ActOrSource": "SX",
+            "Reason": "001",
+            "Year": "03",
+          },
+        },
+      },
+      "LocationOfOffence": "Kingston High Street",
+    },
+    Object {
+      "ActualOffenceDateCode": "1",
+      "ActualOffenceEndDate": Object {
+        "EndDate": undefined,
+      },
+      "ActualOffenceStartDate": Object {
+        "StartDate": "2010-11-28",
+      },
+      "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+      "ArrestDate": "2010-12-01",
+      "ChargeDate": "2010-12-02",
+      "CommittedOnBail": "D",
+      "ConvictionDate": "2011-09-26",
+      "CourtOffenceSequenceNumber": "3",
+      "CriminalProsecutionReference": Object {
+        "OffenceReason": Object {
+          "OffenceCode": Object {
+            "ActOrSource": "RT",
+            "Reason": "191",
+            "Year": "88",
+          },
+        },
+      },
+      "LocationOfOffence": "Kingston High Street",
+    },
+  ],
   "ReasonForBailConditions": undefined,
   "RemandStatus": "U: RemandStatus <- BailStatus ?",
 }

@@ -1,9 +1,9 @@
 import { readFileSync } from "fs"
-import parseMessage from "./parseMessage"
+import parseSpiResult from "./parseSpiResult"
 import populateHearing from "./populateHearing"
 
 const message = readFileSync("test-data/input-message-001.xml", "utf-8")
-const courtResult = parseMessage(message)
+const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
 describe("populateHearing", () => {
   it("should transform SPI Hearing to Hearing Outcome Hearing", () => {

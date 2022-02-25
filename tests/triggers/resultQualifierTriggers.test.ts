@@ -1,10 +1,10 @@
 jest.setTimeout(30000)
 
-import { TriggerCode } from "../src/types/TriggerCode"
-import generateMessage from "./helpers/generateMessage"
-import PostgresHelper from "./helpers/PostgresHelper"
-import processMessage from "./helpers/processMessage"
-import TriggerRecordable from "../src/types/TriggerRecordable"
+import { TriggerCode } from "../../src/types/TriggerCode"
+import generateMessage from "../helpers/generateMessage"
+import PostgresHelper from "../helpers/PostgresHelper"
+import processMessage from "../helpers/processMessage"
+import TriggerRecordable from "../../src/types/TriggerRecordable"
 
 const offenceTests = [
   {
@@ -70,7 +70,7 @@ describe("Generic offence triggers", () => {
       })
 
       // Process the mock message
-      const { triggers } = await processMessage(inputMessage, false, true)
+      const { triggers } = await processMessage(inputMessage, { recordable: false })
 
       // Check the right triggers are generated
       expect(triggers).toStrictEqual([{ code }])

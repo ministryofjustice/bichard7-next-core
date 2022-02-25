@@ -1,9 +1,9 @@
 jest.setTimeout(30000)
 
-import { TriggerCode } from "../src/types/TriggerCode"
-import generateMessage from "./helpers/generateMessage"
-import PostgresHelper from "./helpers/PostgresHelper"
-import processMessage from "./helpers/processMessage"
+import { TriggerCode } from "../../src/types/TriggerCode"
+import generateMessage from "../helpers/generateMessage"
+import PostgresHelper from "../helpers/PostgresHelper"
+import processMessage from "../helpers/processMessage"
 
 const code = TriggerCode.TRPR0025
 const offenceCode = "MC80524"
@@ -44,7 +44,7 @@ describe("TRPR0025", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, true, false)
+    const { triggers } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)
@@ -61,7 +61,7 @@ describe("TRPR0025", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, true, false)
+    const { triggers } = await processMessage(inputMessage, { expectTriggers: false })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)
@@ -102,7 +102,7 @@ describe("TRPR0025", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, false, true)
+    const { triggers } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
     expect(triggers).toStrictEqual([{ code }])

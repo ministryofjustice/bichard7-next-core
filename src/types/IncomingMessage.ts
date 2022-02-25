@@ -141,6 +141,7 @@ const resultedCaseMessageParsedXmlSchema = z.object({
 
 const incomingMessageParsedXmlSchema = z.object({
   DeliverRequest: z.object({
+    MessageIdentifier: z.string(),
     Message: z.object({
       ResultedCaseMessage: resultedCaseMessageParsedXmlSchema
     })

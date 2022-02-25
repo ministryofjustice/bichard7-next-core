@@ -17,8 +17,16 @@ type Offence = {
   plea?: Plea
 }
 
+type Person = {
+  title?: string
+}
+
 type GenerateMessageOptions = {
   offences: Offence[]
+  PTIURN?: string
+  courtHearingLocation?: string
+  courtPncIdentifier?: string
+  person?: Person
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string) {

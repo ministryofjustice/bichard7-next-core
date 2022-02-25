@@ -1,12 +1,12 @@
 import { readFileSync } from "fs"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import parseMessage from "./parseMessage"
+import parseSpiResult from "./parseSpiResult"
 import populateDefendant from "./populateDefendant"
 import PopulateOffences from "./PopulateOffences"
 
 describe("populateDefendant", () => {
   const message = readFileSync("test-data/input-message-001.xml", "utf-8")
-  const courtResult = parseMessage(message)
+  const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
   it("should transform SPI Defendant to Hearing Outcome Defendant for individual defendant", () => {
     const result = populateDefendant(courtResult)

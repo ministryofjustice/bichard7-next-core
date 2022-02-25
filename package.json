@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "test": "jest",
+    "test:update": "jest -u",
     "test:bichard": "USE_BICHARD=true jest --runInBand",
     "test:watch": "jest --watch",
     "clean": "rimraf build",
