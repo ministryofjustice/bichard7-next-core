@@ -1,13 +1,6 @@
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
 
-const forceOwnerSchema = z.object({
-  SecondLevelCode: z.string(),
-  ThirdLevelCode: z.string(),
-  BottomLevelCode: z.string(),
-  OrganisationUnitCode: z.string()
-})
-
 const alcoholLevelSchema = z.object({
   Amount: z.string(),
   Method: z.string()
@@ -19,13 +12,6 @@ const actualOffenceEndDateSchema = z.object({
 
 const actualOffenceStartDateSchema = z.object({
   StartDate: z.string()
-})
-
-const organisationUnitIdentifierCodeSchema = z.object({
-  SecondLevelCode: z.string(),
-  ThirdLevelCode: z.string(),
-  BottomLevelCode: z.string(),
-  OrganisationUnitCode: z.string()
 })
 
 const localOffenceCodeSchema = z.object({
@@ -47,9 +33,17 @@ const offenceReasonSchema = z.object({
   OffenceCode: offenceCodeSchema
 })
 
+const organisationUnitSchema = z.object({
+  TopLevelCode: z.string().optional(),
+  SecondLevelCode: z.string(),
+  ThirdLevelCode: z.string(),
+  BottomLevelCode: z.string(),
+  OrganisationUnitCode: z.string().regex(/[A-JZ0-9]{0,1}[A-Z0-9]{6}/, ExceptionCode.HO100200)
+})
+
 const defendantOrOffenderSchema = z.object({
   Year: z.string(),
-  OrganisationUnitIdentifierCode: organisationUnitIdentifierCodeSchema,
+  OrganisationUnitIdentifierCode: organisationUnitSchema,
   DefendantOrOffenderSequenceNumber: z.string(),
   CheckDigit: z.string()
 })
@@ -100,14 +94,6 @@ const defendantDetailSchema = z.object({
 const courtReferenceSchema = z.object({
   CrownCourtReference: z.string().optional(),
   MagistratesCourtReference: z.string()
-})
-
-const organisationUnitSchema = z.object({
-  TopLevelCode: z.string(),
-  SecondLevelCode: z.string(),
-  ThirdLevelCode: z.string(),
-  BottomLevelCode: z.string(),
-  OrganisationUnitCode: z.string()
 })
 
 const sourceReferenceSchema = z.object({
@@ -221,7 +207,7 @@ const caseSchema = z.object({
   PreChargeDecisionIndicator: z.string(),
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),
-  ForceOwner: forceOwnerSchema.optional(),
+  ForceOwner: organisationUnitSchema.optional(),
   RecordableOnPNCindicator: z.string().optional(),
   HearingDefendant: hearingDefendantSchema.optional()
 })

@@ -20,6 +20,7 @@ type Offence = {
 type GenerateMessageOptions = {
   offences: Offence[]
   PTIURN?: string
+  courtHearingLocation?: string
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string) {
