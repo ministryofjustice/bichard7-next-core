@@ -183,18 +183,20 @@ const offenceSchema = z.object({
   Result: resultSchema.optional()
 })
 
+const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
+
 const hearingDefendantSchema = z.object({
   ArrestSummonsNumber: z.string(),
   DriverNumber: z.string().optional(),
   CRONumber: z.string().optional(),
-  PNCIdentifier: z.string().optional(),
+  PNCIdentifier: pncIdentifierSchema.optional(),
   PNCCheckname: z.string().optional(),
   DefendantDetail: defendantDetailSchema,
   Address: addressSchema,
   RemandStatus: z.string(),
   BailConditions: z.string().array(),
   ReasonForBailConditions: z.string().optional(),
-  CourtPNCIdentifier: z.string().optional(),
+  CourtPNCIdentifier: pncIdentifierSchema.optional(),
   OrganisationName: z.string().optional(),
   Offence: offenceSchema.array().min(0),
   Result: resultSchema.optional()
