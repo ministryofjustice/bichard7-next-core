@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { ExceptionCode } from "./ExceptionCode"
 
 const forceOwnerSchema = z.object({
   SecondLevelCode: z.string(),
@@ -33,8 +34,8 @@ const localOffenceCodeSchema = z.object({
 })
 
 const offenceCodeSchema = z.object({
-  Indictment: z.string(),
-  CommonLawOffence: z.string(),
+  Indictment: z.string().optional(),
+  CommonLawOffence: z.string().optional(),
   ActOrSource: z.string(),
   Year: z.string(),
   Reason: z.string(),
@@ -127,12 +128,12 @@ const hearingSchema = z.object({
   HearingLanguage: z.string(),
   HearingDocumentationLanguage: z.string(),
   DefendantPresentAtHearing: z.string(),
-  ReportRequestedDate: z.string(),
-  ReportCompletedDate: z.string(),
+  ReportRequestedDate: z.string().optional(),
+  ReportCompletedDate: z.string().optional(),
   SourceReference: sourceReferenceSchema,
-  CourtType: z.string(),
+  CourtType: z.string().optional(),
   CourtHouseCode: z.number(),
-  CourtHouseName: z.string()
+  CourtHouseName: z.string().optional()
 })
 
 const resultSchema = z.object({
@@ -169,52 +170,52 @@ const resultSchema = z.object({
 
 const offenceSchema = z.object({
   CriminalProsecutionReference: criminalProsecutionReferenceSchema,
-  OffenceInitiationCode: z.string(),
-  SummonsCode: z.string(),
-  Informant: z.string(),
+  OffenceInitiationCode: z.string().optional(),
+  SummonsCode: z.string().optional(),
+  Informant: z.string().optional(),
   ArrestDate: z.string().optional(),
   ChargeDate: z.string().optional(),
   ActualOffenceDateCode: z.string(),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
   ActualOffenceEndDate: actualOffenceEndDateSchema,
   LocationOfOffence: z.string(),
-  OffenceWelshTitle: z.string(),
+  OffenceWelshTitle: z.string().optional(),
   ActualOffenceWording: z.string(),
-  ActualWelshOffenceWording: z.string(),
-  ActualIndictmentWording: z.string(),
-  ActualWelshIndictmentWording: z.string(),
-  ActualStatementOfFacts: z.string(),
-  ActualWelshStatementOfFacts: z.string(),
-  AlcoholLevel: alcoholLevelSchema,
-  VehicleCode: z.string(),
-  VehicleRegistrationMark: z.string(),
-  StartTime: z.string(),
-  OffenceEndTime: z.string(),
+  ActualWelshOffenceWording: z.string().optional(),
+  ActualIndictmentWording: z.string().optional(),
+  ActualWelshIndictmentWording: z.string().optional(),
+  ActualStatementOfFacts: z.string().optional(),
+  ActualWelshStatementOfFacts: z.string().optional(),
+  AlcoholLevel: alcoholLevelSchema.optional(),
+  VehicleCode: z.string().optional(),
+  VehicleRegistrationMark: z.string().optional(),
+  StartTime: z.string().optional(),
+  OffenceEndTime: z.string().optional(),
   ConvictionDate: z.string().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.string(),
-  Result: resultSchema
+  Result: resultSchema.optional()
 })
 
 const hearingDefendantSchema = z.object({
   ArrestSummonsNumber: z.string(),
-  DriverNumber: z.string(),
-  CRONumber: z.string(),
-  PNCIdentifier: z.string(),
-  PNCCheckname: z.string(),
+  DriverNumber: z.string().optional(),
+  CRONumber: z.string().optional(),
+  PNCIdentifier: z.string().optional(),
+  PNCCheckname: z.string().optional(),
   DefendantDetail: defendantDetailSchema,
   Address: addressSchema,
   RemandStatus: z.string(),
   BailConditions: z.string().array(),
   ReasonForBailConditions: z.string().optional(),
   CourtPNCIdentifier: z.string().optional(),
-  OrganisationName: z.string(),
-  Offence: offenceSchema.array(),
-  Result: resultSchema
+  OrganisationName: z.string().optional(),
+  Offence: offenceSchema.array().min(0),
+  Result: resultSchema.optional()
 })
 
 const caseSchema = z.object({
-  PTIURN: z.string(),
+  PTIURN: z.string().regex(/[A-Z0-9]{4}[0-9]{3,7}/, ExceptionCode.HO100201),
   CaseMarker: z.string().optional(),
   CPSOrganisation: organisationUnitSchema.optional(),
   PreChargeDecisionIndicator: z.string(),
@@ -231,8 +232,12 @@ const hearingOutcomeSchema = z.object({
 })
 
 const annotatedHearingOutcomeSchema = z.object({
-  HearingOutcome: hearingOutcomeSchema
+  AnnotatedHearingOutcome: z.object({
+    HearingOutcome: hearingOutcomeSchema
+  })
 })
+
+export { annotatedHearingOutcomeSchema }
 
 export type AnnotatedHearingOutcome = z.infer<typeof annotatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>

@@ -4,11 +4,13 @@ import populateCase from "./populateCase"
 import populateHearing from "./populateHearing"
 
 export default (spiResult: IncomingMessageParsedXml): AnnotatedHearingOutcome => ({
-  HearingOutcome: {
-    Hearing: populateHearing(
-      spiResult.DeliverRequest.MessageIdentifier,
-      spiResult.DeliverRequest.Message.ResultedCaseMessage
-    ),
-    Case: populateCase(spiResult.DeliverRequest.Message.ResultedCaseMessage)
+  AnnotatedHearingOutcome: {
+    HearingOutcome: {
+      Hearing: populateHearing(
+        spiResult.DeliverRequest.MessageIdentifier,
+        spiResult.DeliverRequest.Message.ResultedCaseMessage
+      ),
+      Case: populateCase(spiResult.DeliverRequest.Message.ResultedCaseMessage)
+    }
   }
 })
