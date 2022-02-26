@@ -1,5 +1,6 @@
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml } from "src/types/IncomingMessage"
+import removeSeconds from "src/utils/removeSeconds"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [
@@ -11,6 +12,13 @@ const COMMON_LAWS = "COML"
 const INDICTMENT = "XX00"
 const DONT_KNOW_VALUE = "D"
 const ADJOURNMENT_SINE_DIE_RESULT_CODE_STRING = "2007"
+
+const ON_OR_IN = 1
+const BEFORE = 2
+const AFTER = 3
+const BETWEEN = 4
+const ON_OR_ABOUT = 5
+const ON_OR_BEFORE = 6
 
 export default class {
   adjournmentSineDieConditionMet: boolean
@@ -87,6 +95,20 @@ export default class {
         Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount.toString(),
         Method: "?????"
       }
+    }
+
+    if (spiOffenceStart?.OffenceStartTime) {
+      const spiOffenceStartTime = removeSeconds(spiOffenceStart.OffenceStartTime)
+
+      if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(spiOffenceDateCode)) {
+        offence.OffenceTime = spiOffenceStartTime
+      } else if (spiOffenceDateCode === BETWEEN) {
+        offence.StartTime = spiOffenceStartTime
+      }
+    }
+
+    if (spiOffenceEnd?.OffenceEndTime) {
+      offence.OffenceEndTime = removeSeconds(spiOffenceEnd.OffenceEndTime)
     }
 
     offence.ConvictionDate = spiConvictionDate

@@ -32,11 +32,13 @@ const offenceParsedXmlSchema = z.object({
     OffenceTiming: z.object({
       OffenceDateCode: z.number(),
       OffenceStart: z.object({
-        OffenceDateStartDate: z.string()
+        OffenceDateStartDate: z.string(),
+        OffenceStartTime: z.string().optional()
       }),
       OffenceEnd: z
         .object({
-          OffenceEndDate: z.string()
+          OffenceEndDate: z.string(),
+          OffenceEndTime: z.string()
         })
         .optional()
     })

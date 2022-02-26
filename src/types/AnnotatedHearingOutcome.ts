@@ -177,6 +177,7 @@ const offenceSchema = z.object({
   VehicleRegistrationMark: z.string().optional(),
   StartTime: z.string().optional(),
   OffenceEndTime: z.string().optional(),
+  OffenceTime: z.string().optional(),
   ConvictionDate: z.string().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.string(),
