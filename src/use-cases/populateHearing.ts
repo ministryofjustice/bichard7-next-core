@@ -1,6 +1,7 @@
 import type { Hearing } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import removeSeconds from "src/utils/removeSeconds"
+import getOrganisationUnit from "./getOrganisationUnit"
 
 export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {
@@ -19,13 +20,7 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
 
   const hearingOutcomeHearing = {} as Hearing
 
-  hearingOutcomeHearing.CourtHearingLocation = {
-    TopLevelCode: spiCourtHearingLocation?.substring(0, 1),
-    SecondLevelCode: spiCourtHearingLocation?.substring(1, 3),
-    ThirdLevelCode: spiCourtHearingLocation?.substring(3, 5),
-    BottomLevelCode: spiCourtHearingLocation?.substring(5, 7),
-    OrganisationUnitCode: spiCourtHearingLocation
-  }
+  hearingOutcomeHearing.CourtHearingLocation = getOrganisationUnit(spiCourtHearingLocation)
 
   hearingOutcomeHearing.DateOfHearing = spiDateOfHearing
   hearingOutcomeHearing.TimeOfHearing = removeSeconds(spiTimeOfHearing)

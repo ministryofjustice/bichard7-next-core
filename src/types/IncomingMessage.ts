@@ -3,15 +3,27 @@ import { z } from "zod"
 
 const toArray = <T>(element: unknown): T[] => (!element ? [] : !Array.isArray(element) ? [element] : element)
 
+const nextHearingDetailsSchema = z.object({
+  CourtHearingLocation: z.string(),
+  DateOfHearing: z.string(),
+  TimeOfHearing: z.string()
+})
+
+const nextHearingSchema = z.object({
+  BailStatusOffence: z.string().optional(),
+  NextHearingDetails: nextHearingDetailsSchema
+})
+
 const resultParsedXmlSchema = z.object({
   ResultCode: z.number(),
   ResultText: z.string(),
-  ResultCodeQualifier: z.string().optional(),
+  ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
   Outcome: z
     .object({
       ResultAmountSterling: z.number().optional()
     })
-    .optional()
+    .optional(),
+  NextHearing: nextHearingSchema.optional()
 })
 
 const offenceParsedXmlSchema = z.object({
@@ -48,6 +60,7 @@ const offenceParsedXmlSchema = z.object({
   ModeOfTrial: z.number(),
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),
+  ConvictingCourt: z.string().optional(),
   Finding: z.string().optional(),
   Result: z.preprocess(toArray, resultParsedXmlSchema.array().min(0))
 })
@@ -95,7 +108,8 @@ const spiCourtIndividualDefendantSchema = z.object({
       })
     })
   }),
-  Address: spiAddressSchema
+  Address: spiAddressSchema,
+  ReasonForBailConditionsOrCustody: z.string().optional()
 })
 
 const spiCourtCorporateDefendantSchema = z.object({
@@ -154,6 +168,8 @@ export type ResultParsedXml = z.infer<typeof resultParsedXmlSchema>
 export type OffenceParsedXml = z.infer<typeof offenceParsedXmlSchema>
 export type SpiAddress = z.infer<typeof spiAddressSchema>
 export type SpiCourtIndividualDefendant = z.infer<typeof spiCourtIndividualDefendantSchema>
+export type SpiOffence = z.infer<typeof offenceParsedXmlSchema>
+export type SpiResult = z.infer<typeof resultParsedXmlSchema>
 export type ResultedCaseMessageParsedXml = z.infer<typeof resultedCaseMessageParsedXmlSchema>
 export type IncomingMessageParsedXml = z.infer<typeof incomingMessageParsedXmlSchema>
 

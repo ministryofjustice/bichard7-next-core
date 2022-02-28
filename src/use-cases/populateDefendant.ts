@@ -126,8 +126,10 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     hearingDefendant.RemandStatus = populateRemandStatus(spiBailStatus)
   }
 
-  const spiDateOfHearing = courtResult.Session.CourtHearing.Hearing.DateOfHearing
-  hearingDefendant.Offence = new PopulateOffences(spiDefendant.Offence, spiDateOfHearing).execute()
+  const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute()
+
+  hearingDefendant.Offence = offences
+  hearingDefendant.BailConditions = bailConditions
 
   return hearingDefendant
 }

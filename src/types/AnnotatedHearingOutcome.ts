@@ -61,9 +61,9 @@ const durationSchema = z.object({
 
 const resultQualifierVariableSchema = z.object({
   Code: z.string(),
-  Duration: durationSchema,
-  DateSpecifiedInResult: z.string(),
-  Text: z.string()
+  Duration: durationSchema.optional(),
+  DateSpecifiedInResult: z.string().optional(),
+  Text: z.string().optional()
 })
 
 const addressSchema = z.object({
@@ -124,34 +124,35 @@ const hearingSchema = z.object({
 
 const resultSchema = z.object({
   CJSresultCode: z.string(),
-  OffenceRemandStatus: z.string(),
+  OffenceRemandStatus: z.string().optional(),
   SourceOrganisation: organisationUnitSchema,
-  CourtType: z.string(),
-  ResultHearingType: z.string(),
-  ResultHearingDate: z.string(),
-  Duration: durationSchema,
-  DateSpecifiedInResult: z.string(),
-  TimeSpecifiedInResult: z.string(),
-  AmountSpecifiedInResult: z.string(),
-  NumberSpecifiedInResult: z.string(),
-  NextResultSourceOrganisation: organisationUnitSchema,
-  NextHearingType: z.string(),
-  NextHearingDate: z.string(),
-  NextHearingTime: z.string(),
-  NextCourtType: z.string(),
-  PleaStatus: z.string(),
-  Verdict: z.string(),
-  ResultVariableText: z.string(),
-  TargetCourtType: z.string(),
-  WarrantIssueDate: z.string(),
-  CRESTDisposalCode: z.string(),
-  ModeOfTrialReason: z.string(),
-  RecordableOnPNCindicator: z.string(),
-  PNCDisposalType: z.string(),
-  ResultClass: z.string(),
-  NumberOfOffencesTIC: z.string(),
-  ReasonForOffenceBailConditions: z.string(),
-  ResultQualifierVariable: resultQualifierVariableSchema
+  CourtType: z.string().optional(),
+  ConvictingCourt: z.string().optional(),
+  ResultHearingType: z.string().optional(),
+  ResultHearingDate: z.string().optional(),
+  Duration: durationSchema.optional(),
+  DateSpecifiedInResult: z.string().optional(),
+  TimeSpecifiedInResult: z.string().optional(),
+  AmountSpecifiedInResult: z.string().optional(),
+  NumberSpecifiedInResult: z.string().optional(),
+  NextResultSourceOrganisation: organisationUnitSchema.optional(),
+  NextHearingType: z.string().optional(),
+  NextHearingDate: z.string().optional(),
+  NextHearingTime: z.string().optional(),
+  NextCourtType: z.string().optional(),
+  PleaStatus: z.string().optional(),
+  Verdict: z.string().optional(),
+  ResultVariableText: z.string().optional(),
+  TargetCourtType: z.string().optional(),
+  WarrantIssueDate: z.string().optional(),
+  CRESTDisposalCode: z.string().optional(),
+  ModeOfTrialReason: z.string().optional(),
+  RecordableOnPNCindicator: z.string().optional(),
+  PNCDisposalType: z.string().optional(),
+  ResultClass: z.string().optional(),
+  NumberOfOffencesTIC: z.string().optional(),
+  ReasonForOffenceBailConditions: z.string().optional(),
+  ResultQualifierVariable: resultQualifierVariableSchema.array()
 })
 
 const offenceSchema = z.object({
@@ -181,7 +182,7 @@ const offenceSchema = z.object({
   ConvictionDate: z.string().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.string(),
-  Result: resultSchema.optional()
+  Result: resultSchema.array().optional()
 })
 
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
@@ -237,3 +238,5 @@ export type Hearing = z.infer<typeof hearingSchema>
 export type Address = z.infer<typeof addressSchema>
 export type DefendantDetail = z.infer<typeof defendantDetailSchema>
 export type HearingDefendant = z.infer<typeof hearingDefendantSchema>
+export type Result = z.infer<typeof resultSchema>
+export type OrganisationUnit = z.infer<typeof organisationUnitSchema>

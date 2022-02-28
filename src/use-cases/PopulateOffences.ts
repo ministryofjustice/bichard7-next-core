@@ -1,6 +1,8 @@
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml } from "src/types/IncomingMessage"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import removeSeconds from "src/utils/removeSeconds"
+import { lookupResultQualifierCodeByCjsCode } from "./dataLookup"
+import PopulateOffenceResults from "./PopulateOffenceResults"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [
@@ -20,12 +22,17 @@ const BETWEEN = 4
 const ON_OR_ABOUT = 5
 const ON_OR_BEFORE = 6
 
+export interface OffencesResult {
+  offences: Offence[]
+  bailConditions: string[]
+}
+
 export default class {
-  adjournmentSineDieConditionMet: boolean
+  adjournmentSineDieConditionMet = false
 
-  bailQualifiers: []
+  bailConditions: string[] = []
 
-  constructor(private spiOffences: OffenceParsedXml[], private spiDateOfHearing: string) {}
+  constructor(private courtResult: ResultedCaseMessageParsedXml, private hearingDefendantBailConditions: string[]) {}
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length
@@ -126,16 +133,31 @@ export default class {
       }
 
       if (this.adjournmentSineDieConditionMet) {
-        offence.ConvictionDate = this.spiDateOfHearing
+        offence.ConvictionDate = this.courtResult.Session.CourtHearing.Hearing.DateOfHearing
       }
+    }
+
+    const { results, bailQualifiers } = new PopulateOffenceResults(this.courtResult, spiOffence).execute()
+    offence.Result = results
+
+    if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
+      bailQualifiers.forEach((bailQualifier) => {
+        const resultQualifierCode = lookupResultQualifierCodeByCjsCode(bailQualifier)
+        const description = resultQualifierCode.isPresent ? resultQualifierCode.description : undefined
+        if (description) {
+          this.bailConditions.push(description)
+        }
+      })
     }
 
     return offence
   }
 
-  execute(): Offence[] {
-    this.adjournmentSineDieConditionMet = false
-    this.bailQualifiers = []
-    return this.spiOffences.map(this.populateOffence).filter((offence) => !!offence) as Offence[]
+  execute(): OffencesResult {
+    const spiOffences = this.courtResult.Session.Case.Defendant.Offence
+    const offences = spiOffences.map(this.populateOffence).filter((offence) => !!offence) as Offence[]
+    this.bailConditions = this.hearingDefendantBailConditions.concat(this.bailConditions)
+
+    return { offences, bailConditions: this.bailConditions }
   }
 }

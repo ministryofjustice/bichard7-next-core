@@ -10,7 +10,7 @@ const resultQualifier = "EO"
 export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] => {
   const shouldRaiseTrigger = courtResult.Session.Case.Defendant.Offence.some((offence) =>
     offence.Result.some(
-      (result) => resultCodes.includes(result.ResultCode) && result.ResultCodeQualifier !== resultQualifier
+      (result) => resultCodes.includes(result.ResultCode) && !result.ResultCodeQualifier.includes(resultQualifier)
     )
   )
 
