@@ -1,6 +1,20 @@
+import {
+  BAIL_QUALIFIER_CODE,
+  CROWN_COURT_NAME_MAPPING_OVERRIDES,
+  FREE_TEXT_RESULT_CODE,
+  LIBRA_ELECTRONIC_TAGGING_TEXT,
+  LIBRA_MAX_QUALIFIERS,
+  OFFENCES_TIC_RESULT_CODE,
+  OFFENCES_TIC_RESULT_TEXT,
+  OTHER_VALUE,
+  RESULT_TEXT_PATTERN_CODES,
+  RESULT_TEXT_PATTERN_REGEX,
+  TAGGING_FIX_ADD,
+  TAGGING_FIX_REMOVE,
+  WARRANT_ISSUE_DATE_RESULT_CODES
+} from "src/lib/properties"
 import type { Result } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
-import type { KeyValue } from "src/types/KeyValue"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupPleaStatusBySpiCode,
@@ -9,60 +23,6 @@ import {
   lookupVerdictBySpiCode
 } from "./dataLookup"
 import getOrganisationUnit from "./getOrganisationUnit"
-
-const FREE_TEXT_RESULT_CODE = 1000
-const OTHER_VALUE = "OTHER"
-const WARRANT_ISSUE_DATE_RESULT_CODES = [4505, 4575, 4576, 4577, 4585, 4586]
-// offencesTICResultText in "bichard-backend/src/main/resources/inputFormatTranslator.properties"
-const OFFENCES_TIC_RESULT_TEXT = "other offences admitted and taken into consideration"
-const OFFENCES_TIC_RESULT_CODE = -1
-const LIBRA_MAX_QUALIFIERS = 4
-const LIBRA_ELECTRONIC_TAGGING_TEXT = "to be electronically monitored"
-const TAGGING_FIX_REMOVE = [1115, 1116, 1141, 1142, 1143]
-const BAIL_QUALIFIER_CODE = "BA"
-const RESULT_TEXT_PATTERN_CODES: KeyValue<string[]> = {
-  "4025": ["1"],
-  "4027": ["2ab", "2c3b"],
-  "4028": ["3a", "2c3b"],
-  "4029": ["3a", "2c3b"],
-  "4030": ["3a", "2c3b"],
-  "4046": ["3a", "2c3b"],
-  "4047": ["2ab"],
-  "4048": ["1", "4"],
-  "4053": ["1"],
-  "4570": ["1"],
-  "4571": ["1"],
-  "4530": ["2ab", "2c3b"],
-  "4542": ["2ab"],
-  "4531": ["3a", "2c3b"],
-  "4533": ["3a", "2c3b"],
-  "4537": ["3a", "2c3b"],
-  "4539": ["3a", "2c3b"],
-  "4558": ["4"],
-  "4559": ["4"],
-  "4560": ["4"],
-  "4561": ["4"],
-  "4562": ["4"],
-  "4563": ["4"],
-  "4564": ["4"],
-  "4565": ["1", "4"],
-  "4566": ["1"],
-  "4567": ["4"]
-}
-const CROWN_COURT_NAME_MAPPING_OVERRIDES: KeyValue<string> = {
-  "Newport (South Wales) Crown Court": "0441",
-  "Great Grimsby Crown Court": "0425"
-}
-const TAGGING_FIX_ADD = "3105"
-
-const RESULT_TEXT_PATTERN_REGEX: KeyValue<RegExp> = {
-  "1": /[Cc]ommitted to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "2ab": /to appear (?:at|before) (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "4": /Act \\d{4} to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "3a": /[tT]o be brought before (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "2c3b":
-    /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/
-}
 
 interface RemandDetails {
   location?: string
@@ -194,7 +154,7 @@ export default class {
     }
 
     if (
-      new RegExp(OFFENCES_TIC_RESULT_TEXT, "i").test(spiResult.ResultText) ||
+      OFFENCES_TIC_RESULT_TEXT.toLowerCase() === spiResult.ResultText.toLowerCase() ||
       spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE
     ) {
       result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10).toString()
@@ -203,7 +163,7 @@ export default class {
     if (
       spiResultCodeQualifier.length === LIBRA_MAX_QUALIFIERS &&
       !spiResultCodeQualifier.some((resultCodeQualifier) => /BA/i.test(resultCodeQualifier)) &&
-      new RegExp(LIBRA_ELECTRONIC_TAGGING_TEXT, "i").test(spiResult.ResultText)
+      LIBRA_ELECTRONIC_TAGGING_TEXT.toLowerCase() === spiResult.ResultText.toLocaleLowerCase()
     ) {
       if (TAGGING_FIX_REMOVE.includes(spiResultCodeNumber)) {
         this.baResultCodeQualifierHasBeenExcluded = true
