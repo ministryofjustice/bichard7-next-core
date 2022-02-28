@@ -1,0 +1,32 @@
+[
+  {
+    "cjsCode": "",
+    "description": "Caution",
+    "pncCode": "",
+    "spiCode": "C"
+  },
+  {
+    "cjsCode": "G",
+    "description": "Guilty",
+    "pncCode": "GUILTY",
+    "spiCode": "G"
+  },
+  {
+    "cjsCode": "NA",
+    "description": "Guilty of Alternative Offence",
+    "pncCode": "NOT GUILTY",
+    "spiCode": "A"
+  },
+  {
+    "cjsCode": "NC",
+    "description": "No Conviction",
+    "pncCode": "NON-CONVICTION",
+    "spiCode": "O"
+  },
+  {
+    "cjsCode": "NG",
+    "description": "Not Guilty",
+    "pncCode": "NOT GUILTY",
+    "spiCode": "N"
+  }
+]

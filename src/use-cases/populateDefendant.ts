@@ -98,7 +98,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
     hearingDefendant.DefendantDetail = populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant)
     hearingDefendant.Address = populateAddress(spiAddress)
-    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.CjsCode ?? spiBailStatus
+    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
     hearingDefendant.BailConditions = spiBailConditions?.split(";").map((bailCondition) => bailCondition) || []
     hearingDefendant.ReasonForBailConditions = spiReasonForBailConditionsOrCustody
   } else if (spiDefendant.CourtCorporateDefendant) {
@@ -113,7 +113,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
     hearingDefendant.OrganisationName = spiOrganisationName
     hearingDefendant.Address = populateAddress(spiAddress)
-    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.CjsCode ?? spiBailStatus
+    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
   }
 
   const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute()

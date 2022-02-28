@@ -1,46 +1,41 @@
 import type { Plea } from "src/types/Plea"
+import remandStatus from "../../data/remand-status.json"
+import pleaStatus from "../../data/plea-status.json"
+import verdicts from "../../data/verdict.json"
+import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
+import qualifiers from "../../data/qualifier.json"
+import alcoholLevelMethods from "../../data/alcohol-level-method.json"
 
-const lookupRemandStatusBySpiCode = (spiCode: string): any => {
-  console.log(spiCode)
-  return spiCode
+interface DataLookupResult {
+  cjsCode: string
+  description: string
+  pncCode?: string
+  spiCode?: string
 }
 
-const lookupPleaStatusBySpiCode = (plea: Plea): any => {
-  console.log(plea)
-  return plea
-}
+const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
+  remandStatus.find((x) => x.spiCode === spiCode)
 
-const lookupVerdictBySpiCode = (spiCode: string): any => {
-  console.log(spiCode)
-  return spiCode
-}
+const lookupPleaStatusBySpiCode = (plea: Plea): DataLookupResult | undefined =>
+  pleaStatus.find((x) => x.spiCode === plea?.toString())
 
-const lookupModeOfTrialReasonBySpiCode = (spiCode: string): any => {
-  console.log(spiCode)
-  return spiCode
-}
+const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
+  verdicts.find((x) => x.spiCode === spiCode)
 
-const lookupPSACodeByCrownCourtName = (courtName: string): string | undefined => {
-  console.log(courtName)
-  return courtName
-}
+const lookupModeOfTrialReasonBySpiCode = (spiCode: string): DataLookupResult | undefined =>
+  modeOfTrialReasons.find((x) => x.spiCode === spiCode)
 
-const lookupResultQualifierCodeByCjsCode = (cjsCode: string): any => {
-  console.log(cjsCode)
-  return cjsCode
-}
+const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+  qualifiers.find((x) => x.cjsCode === cjsCode)
 
-const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): any => {
-  console.log(spiCode)
-  return spiCode
-}
+const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
+  alcoholLevelMethods.find((x) => x.spiCode === spiCode)
 
 export {
   lookupRemandStatusBySpiCode,
   lookupPleaStatusBySpiCode,
   lookupVerdictBySpiCode,
   lookupModeOfTrialReasonBySpiCode,
-  lookupPSACodeByCrownCourtName,
   lookupResultQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode
 }

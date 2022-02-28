@@ -18,11 +18,11 @@ import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/ty
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupPleaStatusBySpiCode,
-  lookupPSACodeByCrownCourtName,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "./dataLookup"
 import getOrganisationUnit from "./getOrganisationUnit"
+import { lookupPsaCodeByCrownCourtName } from "./organisationUnitLookup"
 
 interface RemandDetails {
   location?: string
@@ -83,7 +83,7 @@ export default class {
       if (result.ResultVariableText) {
         const { courtName, date: extractedDate } = this.extractResultTextData(patterns, result.ResultVariableText)
         if (courtName) {
-          psaCode = CROWN_COURT_NAME_MAPPING_OVERRIDES[courtName] ?? lookupPSACodeByCrownCourtName(courtName)
+          psaCode = CROWN_COURT_NAME_MAPPING_OVERRIDES[courtName] ?? lookupPsaCodeByCrownCourtName(courtName)
         }
         date = extractedDate
       }
@@ -115,7 +115,7 @@ export default class {
 
     if (spiNextHearing?.BailStatusOffence) {
       result.OffenceRemandStatus =
-        lookupRemandStatusBySpiCode(spiNextHearing.BailStatusOffence)?.CjsCode ?? spiNextHearing.BailStatusOffence
+        lookupRemandStatusBySpiCode(spiNextHearing.BailStatusOffence)?.cjsCode ?? spiNextHearing.BailStatusOffence
     }
 
     result.SourceOrganisation = getOrganisationUnit(this.courtResult.Session.CourtHearing.Hearing.CourtHearingLocation)
@@ -129,7 +129,7 @@ export default class {
     }
 
     if (this.spiOffence.Plea) {
-      result.PleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.CjsCode ?? this.spiOffence.Plea.toString()
+      result.PleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.cjsCode ?? this.spiOffence.Plea.toString()
     }
 
     if (this.spiOffence.Finding) {
