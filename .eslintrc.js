@@ -58,13 +58,15 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "off",
         "import/first": "off",
         "import/no-extraneous-dependencies": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     },
     {
       files: ["tests/**/*.ts"],
       rules: {
-        "import/no-extraneous-dependencies": "off"
+        "import/no-extraneous-dependencies": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$" }]
       }
     }
   ]
