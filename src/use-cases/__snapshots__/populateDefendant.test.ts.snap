@@ -162,6 +162,6 @@ Object {
     },
   ],
   "ReasonForBailConditions": undefined,
-  "RemandStatus": "U: RemandStatus <- BailStatus ?",
+  "RemandStatus": "U",
 }
 `;
