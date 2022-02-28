@@ -10,7 +10,7 @@ import {
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import removeSeconds from "src/utils/removeSeconds"
-import { lookupResultQualifierCodeByCjsCode } from "./dataLookup"
+import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "./dataLookup"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -91,7 +91,9 @@ export default class {
     if (spiAlcoholRelatedOffence) {
       offence.AlcoholLevel = {
         Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount.toString(),
-        Method: "?????"
+        Method:
+          lookupAlcoholLevelMethodBySpiCode(spiAlcoholRelatedOffence.AlcoholLevelMethod)?.cjsCode ??
+          spiAlcoholRelatedOffence.AlcoholLevelMethod
       }
     }
 
@@ -134,8 +136,7 @@ export default class {
 
     if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
       bailQualifiers.forEach((bailQualifier) => {
-        const resultQualifierCode = lookupResultQualifierCodeByCjsCode(bailQualifier)
-        const description = resultQualifierCode.isPresent ? resultQualifierCode.description : undefined
+        const description = lookupResultQualifierCodeByCjsCode(bailQualifier)?.description
         if (description) {
           this.bailConditions.push(description)
         }

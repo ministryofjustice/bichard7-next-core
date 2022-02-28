@@ -114,8 +114,8 @@ export default class {
     result.CJSresultCode = String(spiResultCodeNumber)
 
     if (spiNextHearing?.BailStatusOffence) {
-      const remandStatus = lookupRemandStatusBySpiCode(spiNextHearing.BailStatusOffence)
-      result.OffenceRemandStatus = remandStatus.isPresent ? remandStatus.CjsCode : spiNextHearing.BailStatusOffence
+      result.OffenceRemandStatus =
+        lookupRemandStatusBySpiCode(spiNextHearing.BailStatusOffence)?.CjsCode ?? spiNextHearing.BailStatusOffence
     }
 
     result.SourceOrganisation = getOrganisationUnit(this.courtResult.Session.CourtHearing.Hearing.CourtHearingLocation)
@@ -129,20 +129,17 @@ export default class {
     }
 
     if (this.spiOffence.Plea) {
-      const pleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)
-      result.PleaStatus = pleaStatus.isPresent ? pleaStatus.CjsCode : this.spiOffence.Plea.toString()
+      result.PleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.CjsCode ?? this.spiOffence.Plea.toString()
     }
 
     if (this.spiOffence.Finding) {
-      const verdict = lookupVerdictBySpiCode(this.spiOffence.Finding)
-      result.PleaStatus = verdict.isPresent ? verdict.cjsCode : this.spiOffence.Finding
+      result.PleaStatus = lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode ?? this.spiOffence.Finding
     }
 
     if (this.spiOffence.ModeOfTrial) {
-      const modeOfTrialReason = lookupModeOfTrialReasonBySpiCode(this.spiOffence.ModeOfTrial.toString())
-      result.ModeOfTrialReason = modeOfTrialReason.isPresent
-        ? modeOfTrialReason.cjsCode
-        : this.spiOffence.ModeOfTrial.toString()
+      result.ModeOfTrialReason =
+        lookupModeOfTrialReasonBySpiCode(this.spiOffence.ModeOfTrial.toString())?.cjsCode ??
+        this.spiOffence.ModeOfTrial.toString()
     }
 
     if (spiResult.ResultText?.length > 0) {

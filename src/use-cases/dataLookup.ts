@@ -30,11 +30,17 @@ const lookupResultQualifierCodeByCjsCode = (cjsCode: string): any => {
   return cjsCode
 }
 
+const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): any => {
+  console.log(spiCode)
+  return spiCode
+}
+
 export {
   lookupRemandStatusBySpiCode,
   lookupPleaStatusBySpiCode,
   lookupVerdictBySpiCode,
   lookupModeOfTrialReasonBySpiCode,
   lookupPSACodeByCrownCourtName,
-  lookupResultQualifierCodeByCjsCode
+  lookupResultQualifierCodeByCjsCode,
+  lookupAlcoholLevelMethodBySpiCode
 }
