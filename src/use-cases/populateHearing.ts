@@ -1,15 +1,7 @@
-import { format } from "date-fns"
 import type { Hearing } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-
-const formatTime = (time: string) => {
-  const date = new Date()
-  const timeParts = time.split(":")
-  date.setHours(parseInt(timeParts[0], 10))
-  date.setMinutes(parseInt(timeParts[1], 10))
-
-  return format(date, "HH:mm")
-}
+import removeSeconds from "src/utils/removeSeconds"
+import getOrganisationUnit from "./getOrganisationUnit"
 
 export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {
@@ -28,16 +20,10 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
 
   const hearingOutcomeHearing = {} as Hearing
 
-  hearingOutcomeHearing.CourtHearingLocation = {
-    TopLevelCode: spiCourtHearingLocation?.substring(0, 1),
-    SecondLevelCode: spiCourtHearingLocation?.substring(1, 3),
-    ThirdLevelCode: spiCourtHearingLocation?.substring(3, 5),
-    BottomLevelCode: spiCourtHearingLocation?.substring(5, 7),
-    OrganisationUnitCode: spiCourtHearingLocation
-  }
+  hearingOutcomeHearing.CourtHearingLocation = getOrganisationUnit(spiCourtHearingLocation)
 
   hearingOutcomeHearing.DateOfHearing = spiDateOfHearing
-  hearingOutcomeHearing.TimeOfHearing = formatTime(spiTimeOfHearing)
+  hearingOutcomeHearing.TimeOfHearing = removeSeconds(spiTimeOfHearing)
   hearingOutcomeHearing.HearingLanguage = "D"
   hearingOutcomeHearing.HearingDocumentationLanguage = "D"
 

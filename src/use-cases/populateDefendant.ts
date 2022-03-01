@@ -1,6 +1,10 @@
 import type { Address, DefendantDetail, HearingDefendant } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "src/types/IncomingMessage"
+import { lookupRemandStatusBySpiCode } from "./dataLookup"
 import PopulateOffences from "./PopulateOffences"
+
+const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>
+  spiPNCIdentifier ? spiPNCIdentifier.substring(0, 4) + "/" + spiPNCIdentifier.substring(4) : undefined
 
 const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndividualDefendant): DefendantDetail => {
   const {
@@ -69,11 +73,6 @@ const populateAddress = (spiAddress: SpiAddress): Address => {
   }
 }
 
-const populateRemandStatus = (spiBailStatus: string): string => {
-  // RemandStatus <- BailStatus ?
-  return `${spiBailStatus}: RemandStatus <- BailStatus ?`
-}
-
 export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => {
   const hearingDefendant = {} as HearingDefendant
   const {
@@ -86,19 +85,22 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
 
   if (spiDefendant.CourtIndividualDefendant) {
     const {
-      CourtIndividualDefendant: { PersonDefendant: spiPersonDefendant, BailStatus: spiBailStatus, Address: spiAddress }
+      CourtIndividualDefendant: {
+        PersonDefendant: {
+          PNCidentifier: spiPNCidentifier,
+          BailConditions: spiBailConditions,
+          ReasonForBailConditionsOrCustody: spiReasonForBailConditionsOrCustody
+        },
+        BailStatus: spiBailStatus,
+        Address: spiAddress
+      }
     } = spiDefendant
-    hearingDefendant.CourtPNCIdentifier = spiPersonDefendant.PNCidentifier
+    hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
     hearingDefendant.DefendantDetail = populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant)
     hearingDefendant.Address = populateAddress(spiAddress)
-
-    // RemandStatus <- BailStatus ?
-    hearingDefendant.RemandStatus = populateRemandStatus(spiBailStatus)
-
-    hearingDefendant.BailConditions =
-      spiPersonDefendant.BailConditions?.split(";").map((bailCondition) => bailCondition) || []
-
-    hearingDefendant.ReasonForBailConditions = spiPersonDefendant.ReasonForBailConditionsOrCustody
+    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
+    hearingDefendant.BailConditions = spiBailConditions?.split(";").map((bailCondition) => bailCondition) || []
+    hearingDefendant.ReasonForBailConditions = spiReasonForBailConditionsOrCustody
   } else if (spiDefendant.CourtCorporateDefendant) {
     // Corporate Defendant
     const {
@@ -108,16 +110,16 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
       BailStatus: spiBailStatus
     } = spiDefendant.CourtCorporateDefendant
 
-    hearingDefendant.CourtPNCIdentifier = spiPNCidentifier
+    hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
     hearingDefendant.OrganisationName = spiOrganisationName
     hearingDefendant.Address = populateAddress(spiAddress)
-
-    // RemandStatus <- BailStatus ?
-    hearingDefendant.RemandStatus = populateRemandStatus(spiBailStatus)
+    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
   }
 
-  const spiDateOfHearing = courtResult.Session.CourtHearing.Hearing.DateOfHearing
-  hearingDefendant.Offence = new PopulateOffences(spiDefendant.Offence, spiDateOfHearing).execute()
+  const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute()
+
+  hearingDefendant.Offence = offences
+  hearingDefendant.BailConditions = bailConditions
 
   return hearingDefendant
 }

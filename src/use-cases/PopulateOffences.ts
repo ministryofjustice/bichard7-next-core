@@ -1,23 +1,29 @@
+import {
+  ADJOURNMENT_SINE_DIE_RESULT_CODE_STRING,
+  COMMON_LAWS,
+  DONT_KNOW_VALUE,
+  ENTERED_IN_ERROR_RESULT_CODE,
+  INDICTMENT,
+  STOP_LIST,
+  TIME_RANGE
+} from "src/lib/properties"
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml } from "src/types/IncomingMessage"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import removeSeconds from "src/utils/removeSeconds"
+import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "./dataLookup"
+import PopulateOffenceResults from "./PopulateOffenceResults"
 
-const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
-const STOP_LIST = [
-  1000, 1505, 1509, 1510, 1511, 1513, 1514, 2069, 2501, 2505, 2507, 2508, 2509, 2511, 2514, 3501, 3502, 3503, 3504,
-  3508, 3509, 3510, 3512, 3514, 4049, 4505, 4507, 4509, 4510, 4532, 4534, 4544, 4584, 4585, 4586, 3118, 4592, 4593,
-  4594, 4595, 4596, 4597
-]
-const COMMON_LAWS = "COML"
-const INDICTMENT = "XX00"
-const DONT_KNOW_VALUE = "D"
-const ADJOURNMENT_SINE_DIE_RESULT_CODE_STRING = "2007"
+export interface OffencesResult {
+  offences: Offence[]
+  bailConditions: string[]
+}
 
 export default class {
-  adjournmentSineDieConditionMet: boolean
+  adjournmentSineDieConditionMet = false
 
-  bailQualifiers: []
+  bailConditions: string[] = []
 
-  constructor(private spiOffences: OffenceParsedXml[], private spiDateOfHearing: string) {}
+  constructor(private courtResult: ResultedCaseMessageParsedXml, private hearingDefendantBailConditions: string[]) {}
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length
@@ -85,8 +91,25 @@ export default class {
     if (spiAlcoholRelatedOffence) {
       offence.AlcoholLevel = {
         Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount.toString(),
-        Method: "?????"
+        Method:
+          lookupAlcoholLevelMethodBySpiCode(spiAlcoholRelatedOffence.AlcoholLevelMethod)?.cjsCode ??
+          spiAlcoholRelatedOffence.AlcoholLevelMethod
       }
+    }
+
+    if (spiOffenceStart?.OffenceStartTime) {
+      const spiOffenceStartTime = removeSeconds(spiOffenceStart.OffenceStartTime)
+
+      const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = TIME_RANGE
+      if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(spiOffenceDateCode)) {
+        offence.OffenceTime = spiOffenceStartTime
+      } else if (spiOffenceDateCode === BETWEEN) {
+        offence.StartTime = spiOffenceStartTime
+      }
+    }
+
+    if (spiOffenceEnd?.OffenceEndTime) {
+      offence.OffenceEndTime = removeSeconds(spiOffenceEnd.OffenceEndTime)
     }
 
     offence.ConvictionDate = spiConvictionDate
@@ -104,16 +127,30 @@ export default class {
       }
 
       if (this.adjournmentSineDieConditionMet) {
-        offence.ConvictionDate = this.spiDateOfHearing
+        offence.ConvictionDate = this.courtResult.Session.CourtHearing.Hearing.DateOfHearing
       }
+    }
+
+    const { results, bailQualifiers } = new PopulateOffenceResults(this.courtResult, spiOffence).execute()
+    offence.Result = results
+
+    if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
+      bailQualifiers.forEach((bailQualifier) => {
+        const description = lookupResultQualifierCodeByCjsCode(bailQualifier)?.description
+        if (description) {
+          this.bailConditions.push(description)
+        }
+      })
     }
 
     return offence
   }
 
-  execute(): Offence[] {
-    this.adjournmentSineDieConditionMet = false
-    this.bailQualifiers = []
-    return this.spiOffences.map(this.populateOffence).filter((offence) => !!offence) as Offence[]
+  execute(): OffencesResult {
+    const spiOffences = this.courtResult.Session.Case.Defendant.Offence
+    const offences = spiOffences.map(this.populateOffence).filter((offence) => !!offence) as Offence[]
+    this.bailConditions = this.hearingDefendantBailConditions.concat(this.bailConditions)
+
+    return { offences, bailConditions: this.bailConditions }
   }
 }

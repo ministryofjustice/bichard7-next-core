@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PopulateOffenceResults should transform SPI Offences to Hearing Outcome Offences 1`] = `
+Object {
+  "bailQualifiers": Array [],
+  "results": Array [
+    Object {
+      "CJSresultCode": "1000",
+      "ConvictingCourt": undefined,
+      "ModeOfTrialReason": "SUM",
+      "NextHearingDate": undefined,
+      "PleaStatus": "G",
+      "ResultHearingDate": "2011-09-26",
+      "ResultHearingType": "OTHER",
+      "ResultQualifierVariable": Array [],
+      "ResultVariableText": "Travel Restriction Order",
+      "SourceOrganisation": Object {
+        "BottomLevelCode": "01",
+        "OrganisationUnitCode": "B01EF01",
+        "SecondLevelCode": "01",
+        "ThirdLevelCode": "EF",
+        "TopLevelCode": "B",
+      },
+    },
+  ],
+}
+`;

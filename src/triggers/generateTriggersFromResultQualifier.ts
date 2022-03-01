@@ -8,7 +8,7 @@ export default (
 ): Trigger[] => {
   if (
     courtResult.Session.Case.Defendant.Offence.some((offence) =>
-      offence.Result.some((r) => r.ResultCodeQualifier === resultCodeQualifier)
+      offence.Result.some((r) => resultCodeQualifier && r.ResultCodeQualifier.includes(resultCodeQualifier))
     )
   ) {
     return [{ code: triggerCode }]

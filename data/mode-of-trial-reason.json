@@ -1,0 +1,47 @@
+[
+  {
+    "cjsCode": "EST",
+    "description": "Defendant Elects Summary Trial",
+    "spiCode": "3"
+  },
+  {
+    "cjsCode": "ETJ",
+    "description": "Defendant Elects Trial by Jury",
+    "spiCode": "4"
+  },
+  {
+    "cjsCode": "I",
+    "description": "Indictable only",
+    "spiCode": "2"
+  },
+  {
+    "cjsCode": "IPR",
+    "description": "Indictable only because of previous record",
+    "spiCode": "5"
+  },
+  {
+    "cjsCode": "NOMOT",
+    "description": "No Mode of Trial",
+    "spiCode": "7"
+  },
+  {
+    "cjsCode": "NOMOT",
+    "description": "No Mode of Trial",
+    "spiCode": "8"
+  },
+  {
+    "cjsCode": "NOMOT",
+    "description": "No Mode of Trial",
+    "spiCode": "9"
+  },
+  {
+    "cjsCode": "SUM",
+    "description": "Summary only",
+    "spiCode": "1"
+  },
+  {
+    "cjsCode": "U",
+    "description": "Under appropriate value",
+    "spiCode": "6"
+  }
+]
