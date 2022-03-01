@@ -1,8 +1,9 @@
-import type { OffenceParsedXml } from "../../src/types/IncomingMessage"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 import parseSpiResult from "../../src/use-cases/parseSpiResult"
 import axios from "axios"
 import defaults from "./defaults"
 import reformatDate from "./reformatDate"
+import merge from "lodash.merge"
 
 const extractDates = (offence: OffenceParsedXml) => {
   const startDate = reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
@@ -19,20 +20,22 @@ const extractDates = (offence: OffenceParsedXml) => {
   return { startDate, endDate }
 }
 
-const mockEnquiry = (messageXml: string) => {
+const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}) => {
   const parsed = parseSpiResult(messageXml).DeliverRequest.Message.ResultedCaseMessage
-  const prosecutorRef = parsed.Session.Case.Defendant.ProsecutorReference.slice(-7)
+  const result = merge(parsed, pncOverrides)
+
+  const prosecutorRef = result.Session.Case.Defendant.ProsecutorReference.slice(-7)
   const personFamilyName =
-    parsed.Session.Case.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
+    result.Session.Case.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
       0,
       12
     ).padEnd(12, " ")
-  const offences = parsed.Session.Case.Defendant.Offence.map((offence) => ({
+  const offences = result.Session.Case.Defendant.Offence.map((offence) => ({
     code: offence.BaseOffenceDetails.OffenceCode.padEnd(8, " "),
     sequenceNo: offence.BaseOffenceDetails.OffenceSequenceNumber.toString().padStart(3, "0"),
     ...extractDates(offence)
   }))
-  const forceStationCode = parsed.Session.Case.PTIURN.substr(0, 4)
+  const forceStationCode = result.Session.Case.PTIURN.substr(0, 4)
 
   const cofString = offences
     .map(
@@ -79,8 +82,11 @@ const clearMocks = async (): Promise<void> => {
   }
 }
 
-const mockRecordInPnc = async (messageXml: string): Promise<void> => {
-  const enquiry = mockEnquiry(messageXml)
+const mockRecordInPnc = async (
+  messageXml: string,
+  pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}
+): Promise<void> => {
+  const enquiry = mockEnquiry(messageXml, pncOverrides)
   await clearMocks()
   await addMock(enquiry.matchRegex, enquiry.response)
 }

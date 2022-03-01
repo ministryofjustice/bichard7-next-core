@@ -86,8 +86,13 @@
                   <DC:OffenceTiming>
                     <DC:OffenceDateCode>1</DC:OffenceDateCode>
                     <DC:OffenceStart>
-                      <DC:OffenceDateStartDate>2010-11-28</DC:OffenceDateStartDate>
+                      <DC:OffenceDateStartDate>{{ offence.startDate | formatDate if offence.startDate else "2010-11-28" }}</DC:OffenceDateStartDate>
                     </DC:OffenceStart>
+                    {% if offence.endDate %}
+                      <DC:OffenceEnd>
+                        <DC:OffenceEndDate>{{ offence.endDate | formatDate }}</DC:OffenceEndDate>
+                      </DC:OffenceEnd>
+                    {% endif %}
                   </DC:OffenceTiming>
                   <DC:ChargeDate>2010-12-02</DC:ChargeDate>
                   <DC:ArrestDate>2010-12-01</DC:ArrestDate>

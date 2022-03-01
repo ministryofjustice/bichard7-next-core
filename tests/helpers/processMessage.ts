@@ -9,6 +9,7 @@ import promisePoller from "promise-poller"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
 import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
+import type { ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -31,11 +32,12 @@ type ProcessMessageOptions = {
   expectRecord?: boolean
   expectTriggers?: boolean
   recordable?: boolean
+  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
 }
 
 const processMessageBichard = async (
   messageXml: string,
-  { expectRecord = true, expectTriggers = true, recordable = true }: ProcessMessageOptions
+  { expectRecord = true, expectTriggers = true, recordable = true, pncOverrides = {} }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
@@ -46,7 +48,7 @@ const processMessageBichard = async (
   if (!realPnc) {
     if (recordable) {
       // Insert matching record in PNC
-      await mockRecordInPnc(messageXml)
+      await mockRecordInPnc(messageXml, pncOverrides)
     } else {
       await mockEnquiryErrorInPnc()
     }
@@ -90,7 +92,7 @@ const processMessageBichard = async (
       taskFn: fetchTriggers,
       interval: 100,
       retries: 200
-    })) ?? []
+    }).catch(() => [])) ?? []
 
   const triggers = triggerResult.map((record) => ({
     code: record.trigger_code,

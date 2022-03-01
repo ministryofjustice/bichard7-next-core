@@ -15,6 +15,8 @@ type Offence = {
   results: Result[]
   recordable?: boolean
   plea?: SpiPlea
+  startDate?: Date
+  endDate?: Date
 }
 
 type Person = {
@@ -29,12 +31,19 @@ type GenerateMessageOptions = {
   person?: Person
 }
 
-const padStart = function (str: string, maxLength: number, fillString?: string) {
+const padStart = function (str: string, maxLength: number, fillString?: string): string {
   return str.padStart(maxLength, fillString)
+}
+
+const formatDate = function (date: Date): string {
+  return date.toISOString().split("T")[0]
 }
 
 export default (options: GenerateMessageOptions): string => {
   const template = readFileSync("test-data/input-message.xml.njk", "utf-8")
 
-  return new nunjucks.Environment().addFilter("padStart", padStart).renderString(template, options)
+  return new nunjucks.Environment()
+    .addFilter("padStart", padStart)
+    .addFilter("formatDate", formatDate)
+    .renderString(template, options)
 }
