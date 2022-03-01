@@ -9,9 +9,8 @@ import type PncGateway from "./types/PncGateway"
 export default (message: string, recordable: boolean, pncGateway: PncGateway): BichardResultType => {
   const spiResult = parseSpiResult(message)
 
-  const triggers = generateTriggers(spiResult.DeliverRequest.Message.ResultedCaseMessage, recordable)
-
   let annotatedHearingOutcome = transformSpiToAnnotatedHearingOutcome(spiResult)
+  const triggers = generateTriggers(annotatedHearingOutcome, recordable)
   annotatedHearingOutcome = augmentWithPncQuery(annotatedHearingOutcome, pncGateway)
 
   const exceptions = generateExceptions(annotatedHearingOutcome)

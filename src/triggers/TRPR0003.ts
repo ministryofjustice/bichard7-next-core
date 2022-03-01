@@ -1,6 +1,6 @@
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0003
 const mainResultCodes = [
@@ -10,18 +10,26 @@ const mainResultCodes = [
 const yroResultCodes = [1141, 1142, 1143]
 const yroSpeceficRequirementResultCodes = [3104, 3105, 3107]
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] =>
-  courtResult.Session.Case.Defendant.Offence.reduce((acc: Trigger[], offence) => {
-    const containsMainResultCode = offence.Result.some((result) => mainResultCodes.includes(result.ResultCode))
-    const containsYroResultCode = offence.Result.some((result) => yroResultCodes.includes(result.ResultCode))
-    const containsYroSpeceficRequirementResultCode = offence.Result.some((result) =>
-      yroSpeceficRequirementResultCodes.includes(result.ResultCode)
-    )
+const generator: TriggerGenerator = (hearingOutcome, _) =>
+  hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    (acc: Trigger[], offence) => {
+      const containsMainResultCode = offence.Result.some((result) =>
+        mainResultCodes.includes(parseInt(result.CJSresultCode, 10))
+      )
+      const containsYroResultCode = offence.Result.some((result) =>
+        yroResultCodes.includes(parseInt(result.CJSresultCode, 10))
+      )
+      const containsYroSpeceficRequirementResultCode = offence.Result.some((result) =>
+        yroSpeceficRequirementResultCodes.includes(parseInt(result.CJSresultCode, 10))
+      )
 
-    if (containsMainResultCode || (containsYroResultCode && containsYroSpeceficRequirementResultCode)) {
-      acc.push({ code: triggerCode, offenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber })
-    }
+      if (containsMainResultCode || (containsYroResultCode && containsYroSpeceficRequirementResultCode)) {
+        acc.push({ code: triggerCode, offenceSequenceNumber: parseInt(offence.CourtOffenceSequenceNumber, 10) })
+      }
 
-    return acc
-  }, [])
+      return acc
+    },
+    []
+  )
+
+export default generator

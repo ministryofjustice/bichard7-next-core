@@ -1,4 +1,4 @@
-import type { ResultedCaseMessageParsedXml } from "./IncomingMessage"
+import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
 import type { Trigger } from "./Trigger"
 
-export type TriggerGenerator = (messageXml: ResultedCaseMessageParsedXml, recordable: boolean) => Trigger[]
+export type TriggerGenerator = (hearingOutcome: AnnotatedHearingOutcome, recordable: boolean) => Trigger[]

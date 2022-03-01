@@ -1,4 +1,4 @@
-import type { Plea } from "src/types/Plea"
+import type { SpiPlea } from "src/types/Plea"
 import remandStatus from "../../data/remand-status.json"
 import pleaStatus from "../../data/plea-status.json"
 import verdicts from "../../data/verdict.json"
@@ -16,7 +16,7 @@ interface DataLookupResult {
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   remandStatus.find((x) => x.spiCode === spiCode)
 
-const lookupPleaStatusBySpiCode = (plea: Plea): DataLookupResult | undefined =>
+const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined =>
   pleaStatus.find((x) => x.spiCode === plea?.toString())
 
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>

@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Guilt } from "src/types/Guilt"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import { CjsVerdict } from "src/types/Verdict"
 import findResultCode from "src/use-cases/findResultCode"
 
 const triggerCode = TriggerCode.TRPR0020
@@ -24,20 +25,30 @@ const resultCodeIsExcluded = (resultCode: number): boolean => excludedResultCode
 
 const resultCodeIsFinal = (resultCode: number): boolean => findResultCode(resultCode).type === "F"
 
-const containsOffenceCode = (offence: OffenceParsedXml) =>
-  offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode) &&
-  offence.Result.some((result) => !resultCodeIsExcluded(result.ResultCode) && resultCodeIsFinal(result.ResultCode))
+const containsOffenceCode = (offence: Offence) =>
+  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
+  offence.Result.some(
+    (result) =>
+      !resultCodeIsExcluded(parseInt(result.CJSresultCode, 10)) && resultCodeIsFinal(parseInt(result.CJSresultCode, 10))
+  )
 
-const containsResultCode = (offence: OffenceParsedXml) =>
-  offence.Result.some((result) => resultCodes.includes(result.ResultCode))
+const containsResultCode = (offence: Offence) =>
+  offence.Result.some((result) => resultCodes.includes(parseInt(result.CJSresultCode, 10)))
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] => {
-  return courtResult.Session.Case.Defendant.Offence.reduce((acc: Trigger[], offence) => {
-    if (offence.Finding !== Guilt.NotGuilty && (containsOffenceCode(offence) || containsResultCode(offence))) {
-      acc.push({ code: triggerCode, offenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber })
-    }
+const generator: TriggerGenerator = (hearingOutcome, _) => {
+  return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    (acc: Trigger[], offence) => {
+      if (
+        offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty) &&
+        (containsOffenceCode(offence) || containsResultCode(offence))
+      ) {
+        acc.push({ code: triggerCode, offenceSequenceNumber: parseInt(offence.CourtOffenceSequenceNumber, 10) })
+      }
 
-    return acc
-  }, [])
+      return acc
+    },
+    []
+  )
 }
+
+export default generator

@@ -15,6 +15,8 @@ import {
 } from "src/lib/properties"
 import type { Result } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
+import type { CjsPlea } from "src/types/Plea"
+import type { CjsVerdict } from "src/types/Verdict"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupPleaStatusBySpiCode,
@@ -112,7 +114,7 @@ export default class {
       ResultCodeQualifier: spiResultCodeQualifier
     } = spiResult
     const result = {} as Result
-    const spiResultCodeNumber = spiResultCode ? FREE_TEXT_RESULT_CODE : spiResultCode
+    const spiResultCodeNumber = spiResultCode ?? FREE_TEXT_RESULT_CODE
     result.CJSresultCode = String(spiResultCodeNumber)
 
     if (spiNextHearing?.BailStatusOffence) {
@@ -131,11 +133,13 @@ export default class {
     }
 
     if (this.spiOffence.Plea) {
-      result.PleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.cjsCode ?? this.spiOffence.Plea.toString()
+      result.PleaStatus =
+        (lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.cjsCode as CjsPlea) ?? this.spiOffence.Plea.toString()
     }
 
     if (this.spiOffence.Finding) {
-      result.PleaStatus = lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode ?? this.spiOffence.Finding
+      result.Verdict =
+        (lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode as CjsVerdict) ?? this.spiOffence.Finding
     }
 
     if (this.spiOffence.ModeOfTrial) {

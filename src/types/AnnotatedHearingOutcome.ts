@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
+import { cjsPleaSchema } from "./Plea"
 import { pncQueryResultSchema } from "./PncQueryResult"
 
 const alcoholLevelSchema = z.object({
@@ -26,7 +27,8 @@ const offenceCodeSchema = z.object({
   ActOrSource: z.string(),
   Year: z.string(),
   Reason: z.string(),
-  Qualifier: z.string()
+  Qualifier: z.string(),
+  FullCode: z.string()
 })
 
 const offenceReasonSchema = z.object({
@@ -141,7 +143,7 @@ const resultSchema = z.object({
   NextHearingDate: z.string().optional(),
   NextHearingTime: z.string().optional(),
   NextCourtType: z.string().optional(),
-  PleaStatus: z.string().optional(),
+  PleaStatus: cjsPleaSchema.optional(),
   Verdict: z.string().optional(),
   ResultVariableText: z.string().optional(),
   TargetCourtType: z.string().optional(),
@@ -183,7 +185,7 @@ const offenceSchema = z.object({
   ConvictionDate: z.string().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.string(),
-  Result: resultSchema.array().optional()
+  Result: resultSchema.array().min(0)
 })
 
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)

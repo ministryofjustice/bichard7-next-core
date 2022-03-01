@@ -1,12 +1,13 @@
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import parseSpiResult from "./parseSpiResult"
-import generateTriggers from "./generateTriggers"
 import fs from "fs"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { TriggerCode } from "src/types/TriggerCode"
+import generateTriggers from "./generateTriggers"
+import parseSpiResult from "./parseSpiResult"
+import transformSpiToAho from "./transformSpiToAho"
 
-const parseFile = (file: string): ResultedCaseMessageParsedXml => {
+const parseFile = (file: string): AnnotatedHearingOutcome => {
   const inputMessage = fs.readFileSync(`test-data/${file}`).toString()
-  return parseSpiResult(inputMessage).DeliverRequest.Message.ResultedCaseMessage
+  return transformSpiToAho(parseSpiResult(inputMessage))
 }
 
 describe("generateTriggers", () => {

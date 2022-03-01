@@ -1,7 +1,7 @@
 jest.setTimeout(30000)
 
-import { Guilt } from "../../src/types/Guilt"
-import { Plea } from "../../src/types/Plea"
+import { SpiVerdict } from "../../src/types/Verdict"
+import { SpiPlea } from "../../src/types/Plea"
 import { TriggerCode } from "../../src/types/TriggerCode"
 import generateMessage from "../helpers/generateMessage"
 import PostgresHelper from "../helpers/PostgresHelper"
@@ -21,7 +21,7 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.Guilty,
+          finding: SpiVerdict.Guilty,
           results: [{ code: 1015 }]
         }
       ]
@@ -40,9 +40,9 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.NotGuilty,
+          finding: SpiVerdict.NotGuilty,
           results: [{ code: 1015 }],
-          plea: Plea.Admits
+          plea: SpiPlea.Admits
         }
       ]
     })
@@ -60,7 +60,7 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.NotGuilty,
+          finding: SpiVerdict.NotGuilty,
           results: [{ code: 1015 }]
         }
       ]
@@ -79,12 +79,12 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.NotGuilty,
+          finding: SpiVerdict.NotGuilty,
           results: [{ code: 1015 }]
         },
         {
           code: "CJ88116",
-          finding: Guilt.Guilty,
+          finding: SpiVerdict.Guilty,
           results: [{ code: 1015 }]
         }
       ]
@@ -103,7 +103,7 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.NotGuilty,
+          finding: SpiVerdict.NotGuilty,
           results: []
         }
       ]
@@ -122,12 +122,12 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.Guilty,
+          finding: SpiVerdict.Guilty,
           results: [{ code: 1015 }]
         },
         {
           code: matchingOffenceCode,
-          finding: Guilt.Guilty,
+          finding: SpiVerdict.Guilty,
           results: [{ code: 1015 }]
         }
       ]
@@ -146,7 +146,7 @@ describe("TRPR0008", () => {
       offences: [
         {
           code: matchingOffenceCode,
-          finding: Guilt.Guilty,
+          finding: SpiVerdict.Guilty,
           results: [{ code: 1015 }],
           recordable: false
         }

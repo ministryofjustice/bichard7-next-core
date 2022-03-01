@@ -41,6 +41,7 @@ export default class {
 
       offenceCode.Year = spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
     }
+    offenceCode.FullCode = spiOffenceCode
 
     return offenceCode
   }

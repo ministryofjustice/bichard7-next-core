@@ -49,7 +49,8 @@ module.exports = {
         "@typescript-eslint/no-non-null-assertion": "off",
         "no-plusplus": "off",
         curly: [2, "all"],
-        "require-await": "error"
+        "require-await": "error",
+        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$" }]
       }
     },
     {
@@ -65,8 +66,7 @@ module.exports = {
     {
       files: ["tests/**/*.ts"],
       rules: {
-        "import/no-extraneous-dependencies": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$" }]
+        "import/no-extraneous-dependencies": "off"
       }
     }
   ]
