@@ -22,7 +22,7 @@ import {
   lookupVerdictBySpiCode
 } from "./dataLookup"
 import getOrganisationUnit from "./getOrganisationUnit"
-import { lookupPsaCodeByCrownCourtName } from "./organisationUnitLookup"
+import lookupPsaCodeByCrownCourtName from "./lookupPsaCodeByCrownCourtName"
 
 interface RemandDetails {
   location?: string
@@ -43,6 +43,8 @@ export default class {
   baResultCodeQualifierHasBeenExcluded = false
 
   bailQualifiers = new Set<string>()
+
+  baQualifierAdded = false
 
   results: Result[] = []
 
@@ -182,6 +184,14 @@ export default class {
       }
     })
 
+    if (
+      result.CJSresultCode === TAGGING_FIX_ADD &&
+      !result.ResultQualifierVariable.some((r) => r.Code === BAIL_QUALIFIER_CODE)
+    ) {
+      result.ResultQualifierVariable.push({ Code: BAIL_QUALIFIER_CODE })
+      this.baQualifierAdded = true
+    }
+
     if (!result.NextResultSourceOrganisation || !result.NextHearingDate) {
       const remandDetails = this.getRemandDetailsFromResultText(result)
       if (remandDetails.location && !result.NextResultSourceOrganisation) {
@@ -193,28 +203,12 @@ export default class {
     return result
   }
 
-  private reapplyBaResultQualifier(): boolean {
-    let qualifierReadded = false
-    for (let i = 0; i < this.results.length; i++) {
-      const result = this.results[i]
-      if (
-        result.CJSresultCode === TAGGING_FIX_ADD &&
-        !result.ResultQualifierVariable.some((r) => r.Code === BAIL_QUALIFIER_CODE)
-      ) {
-        this.results[i].ResultQualifierVariable.push({ Code: BAIL_QUALIFIER_CODE })
-        qualifierReadded = true
-      }
-    }
-
-    return qualifierReadded
-  }
-
   execute(): OffenceResultsResult {
     const { Result: spiResults } = this.spiOffence
 
     this.results = spiResults.map((spiResult) => this.populateResult(spiResult))
 
-    if (this.baResultCodeQualifierHasBeenExcluded && this.reapplyBaResultQualifier()) {
+    if (this.baResultCodeQualifierHasBeenExcluded && this.baQualifierAdded) {
       this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
     }
 

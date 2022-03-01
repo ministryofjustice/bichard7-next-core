@@ -12,7 +12,7 @@ const matchCourtNames = (courtNameA: string, courtNameB: string): boolean =>
   !!courtNameB &&
   (matchCourtNamesRegex(courtNameA, courtNameB) || matchCourtNamesRegex(courtNameB, courtNameA))
 
-const lookupPsaCodeByCrownCourtName = (courtName: string): string | undefined => {
+export default (courtName: string): string | undefined => {
   const trimmedCourtName = courtName.split(/\s*Crown Court\z/)[0].trim()
   return organisationUnits.find(
     (unit) =>
@@ -20,5 +20,3 @@ const lookupPsaCodeByCrownCourtName = (courtName: string): string | undefined =>
       matchCourtNames(unit.thirdLevelName.trim(), trimmedCourtName)
   )?.thirdLevelPsaCode
 }
-
-export { lookupPsaCodeByCrownCourtName }
