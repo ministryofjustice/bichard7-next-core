@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
+import { pncQueryResultSchema } from "./PncQueryResult"
 
 const alcoholLevelSchema = z.object({
   Amount: z.string(),
@@ -213,7 +214,7 @@ const caseSchema = z.object({
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),
   RecordableOnPNCindicator: z.string().optional(),
-  HearingDefendant: hearingDefendantSchema.optional()
+  HearingDefendant: hearingDefendantSchema
 })
 
 const hearingOutcomeSchema = z.object({
@@ -224,7 +225,8 @@ const hearingOutcomeSchema = z.object({
 const annotatedHearingOutcomeSchema = z.object({
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
-  })
+  }),
+  PncQuery: pncQueryResultSchema.optional()
 })
 
 export { annotatedHearingOutcomeSchema }

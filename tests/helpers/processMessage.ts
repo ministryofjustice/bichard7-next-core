@@ -7,6 +7,8 @@ import { mockRecordInPnc, mockEnquiryErrorInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
 import promisePoller from "promise-poller"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
+import MockPncGateway from "./MockPncGateway"
+import generateMockPncQueryResult from "./generateMockPncQueryResult"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -20,7 +22,9 @@ const pgHelper = new PostgresHelper({
 const realPnc = process.env.REAL_PNC === "true"
 
 const processMessageCore = (messageXml: string, { recordable = true }: ProcessMessageOptions): BichardResultType => {
-  return CoreHandler(messageXml, recordable)
+  const response = generateMockPncQueryResult(messageXml)
+  const pncGateway = new MockPncGateway(response)
+  return CoreHandler(messageXml, recordable, pncGateway)
 }
 
 type ProcessMessageOptions = {

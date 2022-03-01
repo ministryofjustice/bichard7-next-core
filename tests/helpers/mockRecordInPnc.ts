@@ -2,15 +2,7 @@ import type { OffenceParsedXml } from "../../src/types/IncomingMessage"
 import parseSpiResult from "../../src/use-cases/parseSpiResult"
 import axios from "axios"
 import defaults from "./defaults"
-
-const reformatDate = (input: string): string => {
-  const res = input.match(/(\d{4})-(\d{2})-(\d{2})/)
-  if (res && res[1] && res[2] && res[3]) {
-    return `${res[3]}${res[2]}${res[1]}`.padEnd(12, "0")
-  }
-
-  throw new Error("Error formatting date")
-}
+import reformatDate from "./reformatDate"
 
 const extractDates = (offence: OffenceParsedXml) => {
   const startDate = reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
@@ -99,4 +91,4 @@ const mockEnquiryErrorInPnc = async (): Promise<void> => {
   await addMock("CXE01", enquiryError)
 }
 
-export { mockRecordInPnc, mockEnquiryErrorInPnc }
+export { mockRecordInPnc, mockEnquiryErrorInPnc, mockEnquiry }
