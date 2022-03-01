@@ -1,14 +1,16 @@
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import type TriggerConfig from "src/types/TriggerConfig"
 
 export default (
-  courtResult: ResultedCaseMessageParsedXml,
+  hearingOutcome: AnnotatedHearingOutcome,
   { triggerCode, resultCodeQualifier }: TriggerConfig
 ): Trigger[] => {
   if (
-    courtResult.Session.Case.Defendant.Offence.some((offence) =>
-      offence.Result.some((r) => resultCodeQualifier && r.ResultCodeQualifier.includes(resultCodeQualifier))
+    hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some((offence) =>
+      offence.Result.some(
+        (r) => resultCodeQualifier && r.ResultQualifierVariable.some((qual) => qual.Code === resultCodeQualifier)
+      )
     )
   ) {
     return [{ code: triggerCode }]

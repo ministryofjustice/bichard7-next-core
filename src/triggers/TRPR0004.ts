@@ -1,6 +1,7 @@
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0004
 const resultCodes = [3052, 3081, 3085, 3086, 3087, 3088, 3089, 3090, 3091, 1179, 1181, 3281, 3282]
@@ -36,23 +37,28 @@ const offenceCodes = [
 ]
 const sexualOffenceRegexes = [/sex(ual)? off?ender/i, /sex(ual)? off?en[cs]es act/i]
 
-const resultCodeMatches = (offence: OffenceParsedXml): boolean =>
-  offence.Result.some((result) => resultCodes.includes(result.ResultCode))
+const resultCodeMatches = (offence: Offence): boolean =>
+  offence.Result.some((result) => resultCodes.includes(result.CJSresultCode))
 
-const guiltyAndOffenceCodeMatches = (offence: OffenceParsedXml): boolean =>
-  offence.Finding === guiltyCode && offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode)
+const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
+  offence.Result.some((result) => result.PleaStatus === guiltyCode) &&
+  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode)
 
-const offenceresultTextMatches = (offence: OffenceParsedXml): boolean =>
-  offence.Result.some((result) => sexualOffenceRegexes.some((regex) => result.ResultText.match(regex)))
+const offenceresultTextMatches = (offence: Offence): boolean =>
+  offence.Result.some((result) => sexualOffenceRegexes.some((regex) => result.ResultVariableText?.match(regex)))
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] =>
-  courtResult.Session.Case.Defendant.Offence.reduce((acc: Trigger[], offence: OffenceParsedXml): Trigger[] => {
-    const offenceSequenceNumber = offence.BaseOffenceDetails.OffenceSequenceNumber
+const generator: TriggerGenerator = (hearingOutcome, _) =>
+  hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    (acc: Trigger[], offence: Offence): Trigger[] => {
+      const offenceSequenceNumber = offence.CourtOffenceSequenceNumber
 
-    if (resultCodeMatches(offence) || guiltyAndOffenceCodeMatches(offence) || offenceresultTextMatches(offence)) {
-      acc.push({ code: triggerCode, offenceSequenceNumber })
-    }
+      if (resultCodeMatches(offence) || guiltyAndOffenceCodeMatches(offence) || offenceresultTextMatches(offence)) {
+        acc.push({ code: triggerCode, offenceSequenceNumber })
+      }
 
-    return acc
-  }, [])
+      return acc
+    },
+    []
+  )
+
+export default generator

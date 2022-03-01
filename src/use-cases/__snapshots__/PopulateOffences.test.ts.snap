@@ -17,11 +17,12 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "1",
+      "CourtOffenceSequenceNumber": 1,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
             "ActOrSource": "SX",
+            "FullCode": "SX03001A",
             "Qualifier": "A",
             "Reason": "001",
             "Year": "03",
@@ -31,11 +32,11 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "1000",
+          "CJSresultCode": 3078,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,
-          "PleaStatus": "G",
+          "PleaStatus": "NG",
           "ResultHearingDate": "2011-09-26",
           "ResultHearingType": "OTHER",
           "ResultQualifierVariable": Array [],
@@ -47,6 +48,7 @@ Object {
             "ThirdLevelCode": "EF",
             "TopLevelCode": "B",
           },
+          "Verdict": "G",
         },
       ],
     },
@@ -63,11 +65,12 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "2",
+      "CourtOffenceSequenceNumber": 2,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
             "ActOrSource": "SX",
+            "FullCode": "SX03001",
             "Reason": "001",
             "Year": "03",
           },
@@ -76,11 +79,11 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "1000",
+          "CJSresultCode": 3052,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,
-          "PleaStatus": "G",
+          "PleaStatus": "NG",
           "ResultHearingDate": "2011-09-26",
           "ResultHearingType": "OTHER",
           "ResultQualifierVariable": Array [],
@@ -92,6 +95,7 @@ Object {
             "ThirdLevelCode": "EF",
             "TopLevelCode": "B",
           },
+          "Verdict": "G",
         },
       ],
     },
@@ -108,11 +112,12 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "3",
+      "CourtOffenceSequenceNumber": 3,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
             "ActOrSource": "RT",
+            "FullCode": "RT88191",
             "Reason": "191",
             "Year": "88",
           },
@@ -121,11 +126,11 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "1000",
+          "CJSresultCode": 1015,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,
-          "PleaStatus": "G",
+          "PleaStatus": "NG",
           "ResultHearingDate": "2011-09-26",
           "ResultHearingType": "OTHER",
           "ResultQualifierVariable": Array [],
@@ -137,6 +142,7 @@ Object {
             "ThirdLevelCode": "EF",
             "TopLevelCode": "B",
           },
+          "Verdict": "G",
         },
       ],
     },

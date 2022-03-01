@@ -1,6 +1,6 @@
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import type { Trigger } from "src/types/Trigger"
+import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0025
 const validMatches = [
@@ -9,25 +9,29 @@ const validMatches = [
   { offenceCode: "MC80528", resultCode: 3049 }
 ]
 
-const offenceMatches = (offence: OffenceParsedXml, offenceCode: string, resultCode: number) =>
-  offence.BaseOffenceDetails.OffenceCode === offenceCode &&
-  offence.Result.some((result) => result.ResultCode === resultCode)
+const offenceMatches = (offence: Offence, offenceCode: string, resultCode: number) =>
+  offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode === offenceCode &&
+  offence.Result.some((result) => result.CJSresultCode === resultCode)
 
 const matchingOffenceCodeAndResultCode = (
-  courtResult: ResultedCaseMessageParsedXml,
+  hearingOutcome: AnnotatedHearingOutcome,
   offenceCode: string,
   resultCode: number
-) => courtResult.Session.Case.Defendant.Offence.some((offence) => offenceMatches(offence, offenceCode, resultCode))
-
-const matches = (courtResult: ResultedCaseMessageParsedXml): boolean =>
-  validMatches.some(({ offenceCode, resultCode }) =>
-    matchingOffenceCodeAndResultCode(courtResult, offenceCode, resultCode)
+) =>
+  hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some((offence) =>
+    offenceMatches(offence, offenceCode, resultCode)
   )
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] => {
-  if (matches(courtResult)) {
+const matches = (hearingOutcome: AnnotatedHearingOutcome): boolean =>
+  validMatches.some(({ offenceCode, resultCode }) =>
+    matchingOffenceCodeAndResultCode(hearingOutcome, offenceCode, resultCode)
+  )
+
+const generator: TriggerGenerator = (hearingOutcome, _) => {
+  if (matches(hearingOutcome)) {
     return [{ code: triggerCode }]
   }
   return []
 }
+
+export default generator

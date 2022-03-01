@@ -5,11 +5,11 @@ Object {
   "bailQualifiers": Array [],
   "results": Array [
     Object {
-      "CJSresultCode": "1000",
+      "CJSresultCode": 3078,
       "ConvictingCourt": undefined,
       "ModeOfTrialReason": "SUM",
       "NextHearingDate": undefined,
-      "PleaStatus": "G",
+      "PleaStatus": "NG",
       "ResultHearingDate": "2011-09-26",
       "ResultHearingType": "OTHER",
       "ResultQualifierVariable": Array [],
@@ -21,6 +21,7 @@ Object {
         "ThirdLevelCode": "EF",
         "TopLevelCode": "B",
       },
+      "Verdict": "G",
     },
   ],
 }

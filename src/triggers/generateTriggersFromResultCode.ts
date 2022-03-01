@@ -1,10 +1,10 @@
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import type TriggerConfig from "src/types/TriggerConfig"
 import TriggerRecordable from "src/types/TriggerRecordable"
 
 export default (
-  courtResult: ResultedCaseMessageParsedXml,
+  hearingOutcome: AnnotatedHearingOutcome,
   { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig,
   recordable: boolean
 ): Trigger[] => {
@@ -19,20 +19,23 @@ export default (
     return []
   }
 
-  const shouldTrigger = (offence: OffenceParsedXml): boolean =>
-    offence.Result.some((result) => resultCodesForTrigger.includes(result.ResultCode))
+  const shouldTrigger = (offence: Offence): boolean =>
+    offence.Result.some((result) => resultCodesForTrigger.includes(result.CJSresultCode))
 
-  const generateTriggers = (acc: Trigger[], offence: OffenceParsedXml): Trigger[] => {
+  const generateTriggers = (acc: Trigger[], offence: Offence): Trigger[] => {
     if (shouldTrigger(offence)) {
       acc.push({
         code: triggerCode,
-        offenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber
+        offenceSequenceNumber: offence.CourtOffenceSequenceNumber
       })
     }
     return acc
   }
 
-  const triggers = courtResult.Session.Case.Defendant.Offence.reduce(generateTriggers, [])
+  const triggers = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    generateTriggers,
+    []
+  )
   if (caseLevelTrigger) {
     return triggers.length > 0 ? [{ code: triggerCode }] : []
   }

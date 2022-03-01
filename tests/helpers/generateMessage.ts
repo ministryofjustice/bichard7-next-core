@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
-import type { Plea } from "../../src/types/Plea"
-import type { Guilt } from "../../src/types/Guilt"
+import type { SpiPlea } from "../../src/types/Plea"
+import type { SpiVerdict } from "../../src/types/Verdict"
 
 type Result = {
   code: number
@@ -11,10 +11,10 @@ type Result = {
 
 type Offence = {
   code?: string
-  finding?: Guilt
+  finding?: SpiVerdict
   results: Result[]
   recordable?: boolean
-  plea?: Plea
+  plea?: SpiPlea
 }
 
 type Person = {

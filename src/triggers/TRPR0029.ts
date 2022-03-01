@@ -1,14 +1,16 @@
 /* eslint-disable prettier/prettier */
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import type { Trigger } from "src/types/Trigger"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0029
+// prettier-ignore
 const offenceCodes = [
   "AS14504", "AS14509", "AS14511", "CD98501", "CD98502", "CD98503", "CD98517", "CD98519", "CD98525",
   "CD98529", "CJ08503", "CJ08504", "CJ08505", "CS10501", "FB89501", "FB89506", "MS15501", "MS15502",
   "MS15503", "MS15504,PC00503", "PC00506", "PC09504", "PC09505", "PC09510", "PH97503"
 ]
+// prettier-ignore
 const offenceCodesForGrantedResultText = [
   "AS14501", "AS14502", "AS14503", "AS14505", "AS14506", "AS14507", "AS14508", "AS14510", "AS14512",
   "AS14513", "CC81501", "CD98510", "CD98516", "CD98518", "CD98527", "CD98528", "CJ03509", "CJ03513",
@@ -21,17 +23,20 @@ const offenceCodesForGrantedResultText = [
   "VC06502", "VC06503", "VC06504", "VC06505", "YJ99501", "YJ99503"
 ]
 
-const containsOffenceCodeForGranted = (offence: OffenceParsedXml) =>
-  offenceCodesForGrantedResultText.includes(offence.BaseOffenceDetails.OffenceCode) &&
-  offence.Result.some((result) => /granted/i.test(result.ResultText))
+const containsOffenceCodeForGranted = (offence: Offence) =>
+  offenceCodesForGrantedResultText.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
+  offence.Result.some((result) => result.ResultVariableText && /granted/i.test(result.ResultVariableText))
 
-export default (courtResult: ResultedCaseMessageParsedXml, recordable: boolean): Trigger[] => {
+const generator: TriggerGenerator = (hearingOutcome, recordable) => {
   const shouldRaiseTrigger =
     !recordable &&
-    courtResult.Session.Case.Defendant.Offence.some(
+    hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
       (offence) =>
-        offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode) || containsOffenceCodeForGranted(offence)
+        offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) ||
+        containsOffenceCodeForGranted(offence)
     )
 
   return shouldRaiseTrigger ? [{ code: triggerCode }] : []
 }
+
+export default generator

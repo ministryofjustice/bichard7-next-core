@@ -1,20 +1,21 @@
-import { Guilt } from "src/types/Guilt"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import { Plea } from "src/types/Plea"
-import type { Trigger } from "src/types/Trigger"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import { CjsVerdict } from "src/types/Verdict"
+import { CjsPlea } from "src/types/Plea"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0008
 const offenceCodes = ["BA76004", "BA76005"]
 
-const isMatchingOffence = (offence: OffenceParsedXml) =>
-  offenceCodes.includes(offence.BaseOffenceDetails.OffenceCode) &&
-  (offence.Finding === Guilt.Guilty || offence.Plea === Plea.Admits)
+const isMatchingOffence = (offence: Offence) =>
+  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
+  offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty || result.PleaStatus === CjsPlea.Admits)
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (courtResult: ResultedCaseMessageParsedXml, _: boolean): Trigger[] => {
-  if (courtResult.Session.Case.Defendant.Offence.some(isMatchingOffence)) {
+const generator: TriggerGenerator = (hearingOutcome, _) => {
+  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(isMatchingOffence)) {
     return [{ code: triggerCode }]
   }
   return []
 }
+
+export default generator

@@ -1,6 +1,6 @@
 jest.setTimeout(30000)
 
-import { Guilt } from "../../src/types/Guilt"
+import { SpiVerdict } from "../../src/types/Verdict"
 import { TriggerCode } from "../../src/types/TriggerCode"
 import generateMessage from "../helpers/generateMessage"
 import PostgresHelper from "../helpers/PostgresHelper"
@@ -39,7 +39,7 @@ describe("TRPR0020", () => {
         {
           code: offenceCode,
           results: [{ code: 3502 }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         }
       ]
     })
@@ -58,22 +58,22 @@ describe("TRPR0020", () => {
         {
           code: "MC80515",
           results: [{ code: resultCode }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         },
         {
           code: "MC80515",
           results: [{ code: 3502 }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         },
         {
           code: "MC80515",
           results: [{ code: resultCode }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         },
         {
           code: offenceCode,
           results: [{ code: 3502 }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         }
       ]
     })
@@ -96,7 +96,7 @@ describe("TRPR0020", () => {
         {
           code: offenceCode,
           results: [{ code: 1015 }],
-          finding: Guilt.NotGuilty
+          finding: SpiVerdict.NotGuilty
         }
       ]
     })
@@ -115,7 +115,7 @@ describe("TRPR0020", () => {
         {
           code: offenceCode,
           results: [{ code: 1085 }],
-          finding: Guilt.Guilty
+          finding: SpiVerdict.Guilty
         }
       ]
     })

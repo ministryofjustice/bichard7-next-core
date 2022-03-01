@@ -41,6 +41,7 @@ export default class {
 
       offenceCode.Year = spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
     }
+    offenceCode.FullCode = spiOffenceCode
 
     return offenceCode
   }
@@ -114,7 +115,7 @@ export default class {
 
     offence.ConvictionDate = spiConvictionDate
     offence.CommittedOnBail = DONT_KNOW_VALUE
-    offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber?.toString()
+    offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber
 
     if (!spiConvictionDate) {
       const a2007ResultFound = spiResults.some(

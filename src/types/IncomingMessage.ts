@@ -1,5 +1,5 @@
-import { pleaSchema } from "./Plea"
 import { z } from "zod"
+import { spiPleaSchema } from "./Plea"
 
 const toArray = <T>(element: unknown): T[] => (!element ? [] : !Array.isArray(element) ? [element] : element)
 
@@ -56,7 +56,7 @@ const offenceParsedXmlSchema = z.object({
     })
   }),
   InitiatedDate: z.string(),
-  Plea: pleaSchema,
+  Plea: spiPleaSchema,
   ModeOfTrial: z.number(),
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),

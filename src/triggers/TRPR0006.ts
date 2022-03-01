@@ -1,7 +1,6 @@
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
 import type TriggerConfig from "src/types/TriggerConfig"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 import TriggerRecordable from "src/types/TriggerRecordable"
 import generateTriggersFromResultCode from "./generateTriggersFromResultCode"
 
@@ -15,5 +14,7 @@ const config: TriggerConfig = {
   triggerRecordable: TriggerRecordable.Both
 }
 
-export default (courtResult: ResultedCaseMessageParsedXml, recordable: boolean): Trigger[] =>
+const generator: TriggerGenerator = (courtResult, recordable) =>
   generateTriggersFromResultCode(courtResult, config, recordable)
+
+export default generator

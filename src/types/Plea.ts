@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export enum Plea {
+export enum SpiPlea {
   Guilty = 1,
   NotGuilty = 2,
   Consents = 4,
@@ -9,7 +9,19 @@ export enum Plea {
   Denies = 8
 }
 
-const pleaSchema = z.nativeEnum(Plea)
+export enum CjsPlea {
+  Guilty = "G",
+  NotGuilty = "NG",
+  Consents = "CON",
+  Admits = "ADM",
+  Denies = "DEN",
+  None = "NONE",
+  Opposed = "OPP"
+}
 
-export type PleaType = z.infer<typeof pleaSchema>
-export { pleaSchema }
+const spiPleaSchema = z.nativeEnum(SpiPlea)
+const cjsPleaSchema = z.nativeEnum(CjsPlea)
+
+export type SpiPleaType = z.infer<typeof spiPleaSchema>
+export type CjsPleaType = z.infer<typeof cjsPleaSchema>
+export { spiPleaSchema, cjsPleaSchema }

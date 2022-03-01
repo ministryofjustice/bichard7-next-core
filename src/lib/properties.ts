@@ -70,7 +70,7 @@ const CROWN_COURT_NAME_MAPPING_OVERRIDES: KeyValue<string> = {
   "Newport (South Wales) Crown Court": "0441",
   "Great Grimsby Crown Court": "0425"
 }
-const TAGGING_FIX_ADD = "3105"
+const TAGGING_FIX_ADD = 3105
 const CROWN_COURT_TOP_LEVEL_CODE = "C"
 
 export {
