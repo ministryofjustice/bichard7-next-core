@@ -10,7 +10,7 @@ const generator: TriggerGenerator = (hearingOutcome, _) => {
     (offence) =>
       offence.Result.some(
         (result) =>
-          resultCodes.includes(parseInt(result.CJSresultCode, 10)) &&
+          resultCodes.includes(result.CJSresultCode) &&
           !result.ResultQualifierVariable.some((qual) => qual.Code === resultQualifier)
       )
   )

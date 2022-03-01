@@ -126,7 +126,7 @@ const hearingSchema = z.object({
 })
 
 const resultSchema = z.object({
-  CJSresultCode: z.string(),
+  CJSresultCode: z.number(),
   OffenceRemandStatus: z.string().optional(),
   SourceOrganisation: organisationUnitSchema,
   CourtType: z.string().optional(),
@@ -184,7 +184,7 @@ const offenceSchema = z.object({
   OffenceTime: z.string().optional(),
   ConvictionDate: z.string().optional(),
   CommittedOnBail: z.string(),
-  CourtOffenceSequenceNumber: z.string(),
+  CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0)
 })
 

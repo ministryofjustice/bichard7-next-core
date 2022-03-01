@@ -5,7 +5,7 @@ Object {
   "bailQualifiers": Array [],
   "results": Array [
     Object {
-      "CJSresultCode": "3078",
+      "CJSresultCode": 3078,
       "ConvictingCourt": undefined,
       "ModeOfTrialReason": "SUM",
       "NextHearingDate": undefined,

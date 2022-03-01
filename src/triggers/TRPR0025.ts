@@ -11,7 +11,7 @@ const validMatches = [
 
 const offenceMatches = (offence: Offence, offenceCode: string, resultCode: number) =>
   offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode === offenceCode &&
-  offence.Result.some((result) => parseInt(result.CJSresultCode, 10) === resultCode)
+  offence.Result.some((result) => result.CJSresultCode === resultCode)
 
 const matchingOffenceCodeAndResultCode = (
   hearingOutcome: AnnotatedHearingOutcome,

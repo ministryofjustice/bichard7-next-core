@@ -115,7 +115,7 @@ export default class {
     } = spiResult
     const result = {} as Result
     const spiResultCodeNumber = spiResultCode ?? FREE_TEXT_RESULT_CODE
-    result.CJSresultCode = String(spiResultCodeNumber)
+    result.CJSresultCode = spiResultCodeNumber
 
     if (spiNextHearing?.BailStatusOffence) {
       result.OffenceRemandStatus =

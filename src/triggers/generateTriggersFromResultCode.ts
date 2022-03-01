@@ -20,13 +20,13 @@ export default (
   }
 
   const shouldTrigger = (offence: Offence): boolean =>
-    offence.Result.some((result) => resultCodesForTrigger.includes(parseInt(result.CJSresultCode, 10)))
+    offence.Result.some((result) => resultCodesForTrigger.includes(result.CJSresultCode))
 
   const generateTriggers = (acc: Trigger[], offence: Offence): Trigger[] => {
     if (shouldTrigger(offence)) {
       acc.push({
         code: triggerCode,
-        offenceSequenceNumber: parseInt(offence.CourtOffenceSequenceNumber, 10)
+        offenceSequenceNumber: offence.CourtOffenceSequenceNumber
       })
     }
     return acc

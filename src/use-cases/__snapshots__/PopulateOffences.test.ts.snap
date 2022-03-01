@@ -17,7 +17,7 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "1",
+      "CourtOffenceSequenceNumber": 1,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
@@ -32,7 +32,7 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "3078",
+          "CJSresultCode": 3078,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,
@@ -65,7 +65,7 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "2",
+      "CourtOffenceSequenceNumber": 2,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
@@ -79,7 +79,7 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "3052",
+          "CJSresultCode": 3052,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,
@@ -112,7 +112,7 @@ Object {
       "ChargeDate": "2010-12-02",
       "CommittedOnBail": "D",
       "ConvictionDate": "2011-09-26",
-      "CourtOffenceSequenceNumber": "3",
+      "CourtOffenceSequenceNumber": 3,
       "CriminalProsecutionReference": Object {
         "OffenceReason": Object {
           "OffenceCode": Object {
@@ -126,7 +126,7 @@ Object {
       "LocationOfOffence": "Kingston High Street",
       "Result": Array [
         Object {
-          "CJSresultCode": "1015",
+          "CJSresultCode": 1015,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "NextHearingDate": undefined,

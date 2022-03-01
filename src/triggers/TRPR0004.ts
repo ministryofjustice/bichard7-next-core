@@ -38,7 +38,7 @@ const offenceCodes = [
 const sexualOffenceRegexes = [/sex(ual)? off?ender/i, /sex(ual)? off?en[cs]es act/i]
 
 const resultCodeMatches = (offence: Offence): boolean =>
-  offence.Result.some((result) => resultCodes.includes(parseInt(result.CJSresultCode, 10)))
+  offence.Result.some((result) => resultCodes.includes(result.CJSresultCode))
 
 const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => result.PleaStatus === guiltyCode) &&
@@ -50,7 +50,7 @@ const offenceresultTextMatches = (offence: Offence): boolean =>
 const generator: TriggerGenerator = (hearingOutcome, _) =>
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence: Offence): Trigger[] => {
-      const offenceSequenceNumber = parseInt(offence.CourtOffenceSequenceNumber, 10)
+      const offenceSequenceNumber = offence.CourtOffenceSequenceNumber
 
       if (resultCodeMatches(offence) || guiltyAndOffenceCodeMatches(offence) || offenceresultTextMatches(offence)) {
         acc.push({ code: triggerCode, offenceSequenceNumber })

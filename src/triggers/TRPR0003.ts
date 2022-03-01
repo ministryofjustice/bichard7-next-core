@@ -13,18 +13,14 @@ const yroSpeceficRequirementResultCodes = [3104, 3105, 3107]
 const generator: TriggerGenerator = (hearingOutcome, _) =>
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence) => {
-      const containsMainResultCode = offence.Result.some((result) =>
-        mainResultCodes.includes(parseInt(result.CJSresultCode, 10))
-      )
-      const containsYroResultCode = offence.Result.some((result) =>
-        yroResultCodes.includes(parseInt(result.CJSresultCode, 10))
-      )
+      const containsMainResultCode = offence.Result.some((result) => mainResultCodes.includes(result.CJSresultCode))
+      const containsYroResultCode = offence.Result.some((result) => yroResultCodes.includes(result.CJSresultCode))
       const containsYroSpeceficRequirementResultCode = offence.Result.some((result) =>
-        yroSpeceficRequirementResultCodes.includes(parseInt(result.CJSresultCode, 10))
+        yroSpeceficRequirementResultCodes.includes(result.CJSresultCode)
       )
 
       if (containsMainResultCode || (containsYroResultCode && containsYroSpeceficRequirementResultCode)) {
-        acc.push({ code: triggerCode, offenceSequenceNumber: parseInt(offence.CourtOffenceSequenceNumber, 10) })
+        acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
 
       return acc
