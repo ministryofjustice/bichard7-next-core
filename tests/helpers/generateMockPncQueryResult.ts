@@ -4,16 +4,16 @@ import parseSpiResult from "../../src/use-cases/parseSpiResult"
 import reformatDate from "./reformatDate"
 
 type OffenceDates = {
-  startDate: string
-  endDate?: string
+  startDate: Date
+  endDate?: Date
 }
 
 const extractDates = (offence: OffenceParsedXml) => {
   const dates: OffenceDates = {
-    startDate: reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
+    startDate: new Date(reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate))
   }
   if (offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndDate) {
-    dates.endDate = reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceEnd.OffenceEndDate)
+    dates.endDate = new Date(reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceEnd.OffenceEndDate))
   }
 
   return dates

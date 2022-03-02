@@ -1,16 +1,38 @@
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import type { Trigger } from "src/types/Trigger"
+import { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
+import { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
-import type TriggerConfig from "src/types/TriggerConfig"
-import TriggerRecordable from "src/types/TriggerRecordable"
-import generateTriggersFromResultCode from "./generateTriggersFromResultCode"
+import { TriggerGenerator } from "src/types/TriggerGenerator"
 
-const config: TriggerConfig = {
-  triggerCode: TriggerCode.TRPR0018,
-  resultCodesForTrigger: [2007],
-  caseLevelTrigger: false,
-  triggerRecordable: TriggerRecordable.Yes
+const triggerCode = TriggerCode.TRPR0018
+
+const findMatchingPncOffence = (
+  pncQuery: PncQueryResult,
+  caseReference: string,
+  sequenceNumber: number
+): PncOffence | undefined =>
+  pncQuery.cases
+    .find((c) => c.courtCaseReference === caseReference)
+    ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
+
+const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) => {
+  if (!PncQuery) {
+    return []
+  }
+  return AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce((acc: Trigger[], offence) => {
+    const pncOffence = findMatchingPncOffence(
+      PncQuery,
+      AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.MagistratesCourtReference,
+      offence.CourtOffenceSequenceNumber
+    )
+    if (!pncOffence) {
+      return acc
+    }
+    const offenceStart = offence.ActualOffenceStartDate.StartDate
+    const pncStart = pncOffence.offence.startDate
+    if()
+    acc.push({ code: triggerCode })
+    return acc
+  }, [])
 }
 
-export default (courtResult: ResultedCaseMessageParsedXml, recordable: boolean): Trigger[] =>
-  generateTriggersFromResultCode(courtResult, config, recordable)
+export default generator
