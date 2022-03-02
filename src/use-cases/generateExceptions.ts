@@ -15,6 +15,8 @@ const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
 export default (aho: AnnotatedHearingOutcome): Exception[] => {
   const parseResults = annotatedHearingOutcomeSchema.safeParse(aho)
 
+  console.log(JSON.stringify(parseResults, null, 2))
+
   if (!parseResults.success) {
     return parseResults.error.issues.map((issue) => ({
       code: getExceptionCodeFromZod(issue),

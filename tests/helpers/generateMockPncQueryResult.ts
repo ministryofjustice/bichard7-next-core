@@ -1,26 +1,26 @@
-import type { OffenceParsedXml } from "../../src/types/IncomingMessage"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 import type { PncQueryResult, PncOffence } from "../../src/types/PncQueryResult"
 import parseSpiResult from "../../src/use-cases/parseSpiResult"
-import reformatDate from "./reformatDate"
+import merge from "lodash.merge"
 
 type OffenceDates = {
   startDate: Date
   endDate?: Date
 }
 
-const extractDates = (offence: OffenceParsedXml) => {
+const extractDates = (offence: OffenceParsedXml): OffenceDates => {
   const dates: OffenceDates = {
-    startDate: new Date(reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate))
+    startDate: new Date(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
   }
   if (offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndDate) {
-    dates.endDate = new Date(reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceEnd.OffenceEndDate))
+    dates.endDate = new Date(offence.BaseOffenceDetails.OffenceTiming.OffenceEnd.OffenceEndDate)
   }
 
   return dates
 }
 
-export default (xml: string): PncQueryResult => {
-  const spi = parseSpiResult(xml)
+export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml>): PncQueryResult => {
+  const spi = merge(parseSpiResult(xml), pncOverrides)
   const spiCase = spi.DeliverRequest.Message.ResultedCaseMessage.Session.Case
   const checkName =
     spiCase.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(

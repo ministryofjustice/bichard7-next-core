@@ -22,8 +22,11 @@ const pgHelper = new PostgresHelper({
 
 const realPnc = process.env.REAL_PNC === "true"
 
-const processMessageCore = (messageXml: string, { recordable = true }: ProcessMessageOptions): BichardResultType => {
-  const response = generateMockPncQueryResult(messageXml)
+const processMessageCore = (
+  messageXml: string,
+  { recordable = true, pncOverrides = {} }: ProcessMessageOptions
+): BichardResultType => {
+  const response = generateMockPncQueryResult(messageXml, pncOverrides)
   const pncGateway = new MockPncGateway(response)
   return CoreHandler(messageXml, recordable, pncGateway)
 }
