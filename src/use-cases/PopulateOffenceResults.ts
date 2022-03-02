@@ -42,13 +42,11 @@ export interface OffenceResultsResult {
 }
 
 export default class {
-  baResultCodeQualifierHasBeenExcluded = false
+  private baResultCodeQualifierHasBeenExcluded = false
 
-  bailQualifiers = new Set<string>()
+  private bailQualifiers = new Set<string>()
 
-  baQualifierAdded = false
-
-  results: Result[] = []
+  private baQualifierAdded = false
 
   constructor(private courtResult: ResultedCaseMessageParsedXml, private spiOffence: SpiOffence) {}
 
@@ -62,10 +60,10 @@ export default class {
 
     patterns.forEach((pattern) => {
       const patternRegex = RESULT_TEXT_PATTERN_REGEX[pattern]
-      const matcheGroups = resultText.match(patternRegex)?.groups
+      const matchedGroups = resultText.match(patternRegex)?.groups
 
-      if (matcheGroups) {
-        const { Court, Court2, Date } = matcheGroups
+      if (matchedGroups) {
+        const { Court, Court2, Date } = matchedGroups
 
         courtName = courtName ?? Court ?? Court2
         date = date ?? Date
@@ -212,12 +210,12 @@ export default class {
   execute(): OffenceResultsResult {
     const { Result: spiResults } = this.spiOffence
 
-    this.results = spiResults.map((spiResult) => this.populateResult(spiResult))
+    const results = spiResults.map((spiResult) => this.populateResult(spiResult))
 
     if (this.baResultCodeQualifierHasBeenExcluded && this.baQualifierAdded) {
       this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
     }
 
-    return { results: this.results, bailQualifiers: Array.from(this.bailQualifiers) }
+    return { results, bailQualifiers: Array.from(this.bailQualifiers) }
   }
 }

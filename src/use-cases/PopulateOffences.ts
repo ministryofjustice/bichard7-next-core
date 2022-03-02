@@ -19,9 +19,9 @@ export interface OffencesResult {
 }
 
 export default class {
-  adjournmentSineDieConditionMet = false
+  private adjournmentSineDieConditionMet = false
 
-  bailConditions: string[] = []
+  private bailConditions: string[] = []
 
   constructor(private courtResult: ResultedCaseMessageParsedXml, private hearingDefendantBailConditions: string[]) {}
 
