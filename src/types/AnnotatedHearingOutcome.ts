@@ -9,11 +9,11 @@ const alcoholLevelSchema = z.object({
 })
 
 const actualOffenceEndDateSchema = z.object({
-  EndDate: z.string().optional()
+  EndDate: z.date().optional()
 })
 
 const actualOffenceStartDateSchema = z.object({
-  StartDate: z.string()
+  StartDate: z.date()
 })
 
 const localOffenceCodeSchema = z.object({
@@ -65,7 +65,7 @@ const durationSchema = z.object({
 const resultQualifierVariableSchema = z.object({
   Code: z.string(),
   Duration: durationSchema.optional(),
-  DateSpecifiedInResult: z.string().optional(),
+  DateSpecifiedInResult: z.date().optional(),
   Text: z.string().optional()
 })
 
@@ -90,7 +90,7 @@ const personNameSchema = z.object({
 const defendantDetailSchema = z.object({
   PersonName: personNameSchema,
   GeneratedPNCFilename: z.string().optional(),
-  BirthDate: z.string(),
+  BirthDate: z.date(),
   Gender: z.string()
 })
 
@@ -106,19 +106,19 @@ const sourceReferenceSchema = z.object({
   TimeStamp: z.string().optional(),
   Version: z.string().optional(),
   SecurityClassification: z.string().optional(),
-  SellByDate: z.string().optional(),
+  SellByDate: z.date().optional(),
   XSLstylesheetURL: z.string().optional()
 })
 
 const hearingSchema = z.object({
   CourtHearingLocation: organisationUnitSchema,
-  DateOfHearing: z.string(),
+  DateOfHearing: z.date(),
   TimeOfHearing: z.string(),
   HearingLanguage: z.string(),
   HearingDocumentationLanguage: z.string(),
   DefendantPresentAtHearing: z.string(),
-  ReportRequestedDate: z.string().optional(),
-  ReportCompletedDate: z.string().optional(),
+  ReportRequestedDate: z.date().optional(),
+  ReportCompletedDate: z.date().optional(),
   SourceReference: sourceReferenceSchema,
   CourtType: z.string().optional(),
   CourtHouseCode: z.number(),
@@ -132,22 +132,22 @@ const resultSchema = z.object({
   CourtType: z.string().optional(),
   ConvictingCourt: z.string().optional(),
   ResultHearingType: z.string().optional(),
-  ResultHearingDate: z.string().optional(),
+  ResultHearingDate: z.date().optional(),
   Duration: durationSchema.optional(),
-  DateSpecifiedInResult: z.string().optional(),
+  DateSpecifiedInResult: z.date().optional(),
   TimeSpecifiedInResult: z.string().optional(),
   AmountSpecifiedInResult: z.string().optional(),
   NumberSpecifiedInResult: z.string().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().optional(),
-  NextHearingDate: z.string().optional(),
+  NextHearingDate: z.date().optional(),
   NextHearingTime: z.string().optional(),
   NextCourtType: z.string().optional(),
   PleaStatus: cjsPleaSchema.optional(),
   Verdict: z.string().optional(),
   ResultVariableText: z.string().optional(),
   TargetCourtType: z.string().optional(),
-  WarrantIssueDate: z.string().optional(),
+  WarrantIssueDate: z.date().optional(),
   CRESTDisposalCode: z.string().optional(),
   ModeOfTrialReason: z.string().optional(),
   RecordableOnPNCindicator: z.string().optional(),
@@ -163,8 +163,8 @@ const offenceSchema = z.object({
   OffenceInitiationCode: z.string().optional(),
   SummonsCode: z.string().optional(),
   Informant: z.string().optional(),
-  ArrestDate: z.string().optional(),
-  ChargeDate: z.string().optional(),
+  ArrestDate: z.date().optional(),
+  ChargeDate: z.date().optional(),
   ActualOffenceDateCode: z.string(),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
   ActualOffenceEndDate: actualOffenceEndDateSchema,
@@ -182,7 +182,7 @@ const offenceSchema = z.object({
   StartTime: z.string().optional(),
   OffenceEndTime: z.string().optional(),
   OffenceTime: z.string().optional(),
-  ConvictionDate: z.string().optional(),
+  ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0)
