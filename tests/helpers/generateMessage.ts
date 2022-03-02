@@ -27,6 +27,8 @@ type GenerateMessageOptions = {
   courtHearingLocation?: string
   courtPncIdentifier?: string
   person?: Person
+  bailConditions?: string
+  bailStatus?: string
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string) {

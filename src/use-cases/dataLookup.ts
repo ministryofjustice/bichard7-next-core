@@ -16,6 +16,9 @@ interface DataLookupResult {
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   remandStatus.find((x) => x.spiCode === spiCode)
 
+const lookupRemandStatusByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+  remandStatus.find((x) => x.cjsCode === cjsCode)
+
 const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined =>
   pleaStatus.find((x) => x.spiCode === plea?.toString())
 
@@ -33,6 +36,7 @@ const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | 
 
 export {
   lookupRemandStatusBySpiCode,
+  lookupRemandStatusByCjsCode,
   lookupPleaStatusBySpiCode,
   lookupVerdictBySpiCode,
   lookupModeOfTrialReasonBySpiCode,
