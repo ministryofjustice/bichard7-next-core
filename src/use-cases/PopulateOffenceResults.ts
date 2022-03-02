@@ -126,7 +126,7 @@ export default class {
 
     result.ConvictingCourt = spiConvictingCourt
     result.ResultHearingType = OTHER_VALUE
-    result.ResultHearingDate = spiConvictionDate ?? spiDateOfHearing
+    result.ResultHearingDate = new Date(spiConvictionDate ?? spiDateOfHearing)
 
     if (spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody) {
       result.ReasonForOffenceBailConditions = spiCourtIndividualDefendant.ReasonForBailConditionsOrCustody
@@ -153,7 +153,7 @@ export default class {
     }
 
     if (WARRANT_ISSUE_DATE_RESULT_CODES.includes(spiResultCodeNumber)) {
-      result.WarrantIssueDate = spiDateOfHearing
+      result.WarrantIssueDate = new Date(spiDateOfHearing)
     }
 
     if (
@@ -201,7 +201,9 @@ export default class {
       if (remandDetails.location && !result.NextResultSourceOrganisation) {
         result.NextResultSourceOrganisation = getOrganisationUnit(remandDetails.location)
       }
-      result.NextHearingDate = result.NextHearingDate ?? remandDetails.date
+      if (!result.NextHearingDate && remandDetails.date) {
+        result.NextHearingDate = new Date(remandDetails.date)
+      }
     }
 
     return result

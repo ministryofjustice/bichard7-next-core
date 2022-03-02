@@ -10,7 +10,7 @@ Object {
     "TopLevelCode": "B",
   },
   "CourtHouseCode": 2576,
-  "DateOfHearing": "2011-09-26",
+  "DateOfHearing": 2011-09-26T00:00:00.000Z,
   "DefendantPresentAtHearing": "A",
   "HearingDocumentationLanguage": "D",
   "HearingLanguage": "D",

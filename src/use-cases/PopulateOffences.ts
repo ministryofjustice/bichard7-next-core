@@ -77,14 +77,14 @@ export default class {
       }
     }
 
-    offence.ArrestDate = spiArrestDate
-    offence.ChargeDate = spiChargeDate
+    offence.ArrestDate = spiArrestDate ? new Date(spiArrestDate) : undefined
+    offence.ChargeDate = spiChargeDate ? new Date(spiChargeDate) : undefined
     offence.ActualOffenceDateCode = spiOffenceDateCode?.toString()
     offence.ActualOffenceStartDate = {
-      StartDate: spiOffenceStart?.OffenceDateStartDate
+      StartDate: new Date(spiOffenceStart.OffenceDateStartDate)
     }
     offence.ActualOffenceEndDate = {
-      EndDate: spiOffenceEnd?.OffenceEndDate
+      EndDate: spiOffenceEnd ? new Date(spiOffenceEnd.OffenceEndDate) : undefined
     }
     offence.LocationOfOffence = spiLocationOfOffence
     offence.ActualOffenceWording = spiOffenceWording
@@ -113,7 +113,7 @@ export default class {
       offence.OffenceEndTime = removeSeconds(spiOffenceEnd.OffenceEndTime)
     }
 
-    offence.ConvictionDate = spiConvictionDate
+    offence.ConvictionDate = spiConvictionDate ? new Date(spiConvictionDate) : undefined
     offence.CommittedOnBail = DONT_KNOW_VALUE
     offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber
 
@@ -128,7 +128,7 @@ export default class {
       }
 
       if (this.adjournmentSineDieConditionMet) {
-        offence.ConvictionDate = this.courtResult.Session.CourtHearing.Hearing.DateOfHearing
+        offence.ConvictionDate = new Date(this.courtResult.Session.CourtHearing.Hearing.DateOfHearing)
       }
     }
 

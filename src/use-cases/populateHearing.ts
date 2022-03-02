@@ -22,7 +22,7 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
 
   hearingOutcomeHearing.CourtHearingLocation = getOrganisationUnit(spiCourtHearingLocation)
 
-  hearingOutcomeHearing.DateOfHearing = spiDateOfHearing
+  hearingOutcomeHearing.DateOfHearing = new Date(spiDateOfHearing)
   hearingOutcomeHearing.TimeOfHearing = removeSeconds(spiTimeOfHearing)
   hearingOutcomeHearing.HearingLanguage = "D"
   hearingOutcomeHearing.HearingDocumentationLanguage = "D"
