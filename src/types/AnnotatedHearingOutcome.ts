@@ -27,7 +27,7 @@ const offenceCodeSchema = z.object({
   ActOrSource: z.string(),
   Year: z.string(),
   Reason: z.string(),
-  Qualifier: z.string(),
+  Qualifier: z.string().optional(),
   FullCode: z.string()
 })
 
