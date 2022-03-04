@@ -12,7 +12,7 @@ const findMatchingPncOffence = (
 ): PncOffence | undefined =>
   pncQuery.cases
     .find((c) => c.courtCaseReference === caseReference)
-    ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
+    ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber) //TODO: c.courtCaseReference isn't matching up with caseReference in test
 
 const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) => {
   if (!PncQuery) {

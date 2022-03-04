@@ -19,8 +19,9 @@ const extractDates = (offence: OffenceParsedXml): OffenceDates => {
   return dates
 }
 
-export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml>): PncQueryResult => {
+export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}): PncQueryResult => {
   const spi = merge(parseSpiResult(xml), pncOverrides)
+
   const spiCase = spi.DeliverRequest.Message.ResultedCaseMessage.Session.Case
   const checkName =
     spiCase.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonFamilyName.substr(
