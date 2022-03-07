@@ -33,16 +33,26 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
     const offenceEnd = offence.ActualOffenceEndDate.EndDate
     const pncEnd = pncOffence.offence.endDate
 
+    const addTrigger = () =>
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+
+    const isOffenceEndUndefinedAndStartDateMatches = !offenceEnd && offenceStart.getTime() == pncStart.getTime()
+    const isOffenceStartGreaterThanOrEqualToPncStart = offenceStart >= pncStart
+
+    if (isOffenceEndUndefinedAndStartDateMatches) {
+      addTrigger()
+    }
+
     if (!offenceEnd || !pncEnd) {
       return triggers
     }
 
-    // Offence is fully contained by dates
-    if (offenceStart >= pncStart && offenceEnd <= pncEnd) {
-      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+    const isOffenceEndLessThanOrEqualToPncEnd = offenceEnd <= pncEnd
+
+    if (isOffenceStartGreaterThanOrEqualToPncStart && isOffenceEndLessThanOrEqualToPncEnd) {
+      addTrigger()
     }
 
-    // triggers.push({ code: triggerCode })
     return triggers
   }, [])
 }
