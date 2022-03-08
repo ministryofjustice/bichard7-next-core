@@ -16,22 +16,28 @@ type PncOffenceDateOverride = {
 
 const pncOffenceDateOverrides = (dates: PncOffenceDateOverride[]) => ({
   pncOverrides: {
-    Session: {
-      Case: {
-        Defendant: {
-          Offence: dates.map((date) => ({
-            BaseOffenceDetails: {
-              OffenceTiming: {
-                OffenceDateCode: 1,
-                OffenceStart: {
-                  OffenceDateStartDate: date.startDate
-                },
-                OffenceEnd: {
-                  OffenceEndDate: date.endDate
-                }
+    DeliverRequest: {
+      Message: {
+        ResultedCaseMessage: {
+          Session: {
+            Case: {
+              Defendant: {
+                Offence: dates.map((date) => ({
+                  BaseOffenceDetails: {
+                    OffenceTiming: {
+                      OffenceDateCode: 1,
+                      OffenceStart: {
+                        OffenceDateStartDate: date.startDate
+                      },
+                      OffenceEnd: {
+                        OffenceEndDate: date.endDate
+                      }
+                    }
+                  }
+                }))
               }
             }
-          }))
+          }
         }
       }
     }
@@ -106,6 +112,24 @@ describe("TRPR0018", () => {
         { code, offenceSequenceNumber: 1 },
         { code, offenceSequenceNumber: 2 }
       ]
+    })
+  })
+
+  it("should not generate triggers when the start dates match and offence end date and pnc end date is missing", async () => {
+    const inputMessage = generateMessage({
+      offences: [
+        {
+          startDate: new Date("2021-02-28"),
+          results: [{ code: resultCode }]
+        }
+      ]
+    })
+
+    const result = await processMessage(inputMessage)
+
+    expect(result).toStrictEqual({
+      exceptions: [],
+      triggers: []
     })
   })
 })

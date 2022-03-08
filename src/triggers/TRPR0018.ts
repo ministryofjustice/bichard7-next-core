@@ -27,30 +27,23 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
     if (!pncOffence) {
       return triggers
     }
-    const offenceStart = offence.ActualOffenceStartDate.StartDate
+    const courtStart = offence.ActualOffenceStartDate.StartDate
     const pncStart = pncOffence.offence.startDate
 
-    const offenceEnd = offence.ActualOffenceEndDate.EndDate
+    const courtEnd = offence.ActualOffenceEndDate.EndDate
     const pncEnd = pncOffence.offence.endDate
 
-    const addTrigger = () =>
-      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
-
-    const isOffenceEndUndefinedAndStartDateMatches = !offenceEnd && offenceStart.getTime() == pncStart.getTime()
-    const isOffenceStartGreaterThanOrEqualToPncStart = offenceStart >= pncStart
-
-    if (isOffenceEndUndefinedAndStartDateMatches) {
-      addTrigger()
-    }
-
-    if (!offenceEnd || !pncEnd) {
+    if (!courtStart || !pncStart) {
       return triggers
     }
-
-    const isOffenceEndLessThanOrEqualToPncEnd = offenceEnd <= pncEnd
-
-    if (isOffenceStartGreaterThanOrEqualToPncStart && isOffenceEndLessThanOrEqualToPncEnd) {
-      addTrigger()
+    if (!courtEnd && !pncEnd && courtStart.getTime() === pncStart.getTime()) {
+      return triggers
+    }
+    if (
+      (courtStart >= pncStart && !courtEnd && pncEnd) ||
+      (courtEnd && pncEnd && (courtStart >= pncStart || courtEnd <= pncEnd))
+    ) {
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
     }
 
     return triggers
