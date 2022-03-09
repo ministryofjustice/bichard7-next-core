@@ -22,21 +22,24 @@ const hasMatchingOffence = (offences: Offence[]): boolean =>
 const defendantInCustody = (remandStatus: string) =>
   lookupRemandStatusByCjsCode(remandStatus)?.pncCode === pncRemandStatus
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
-  const {
-    AnnotatedHearingOutcome: {
-      HearingOutcome: {
-        Case: {
-          HearingDefendant: { Offence: offences, BailConditions: bailConditions, RemandStatus: remandStatus }
+const generator: TriggerGenerator = {
+  independent: true,
+  generate: (hearingOutcome, _) => {
+    const {
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: { Offence: offences, BailConditions: bailConditions, RemandStatus: remandStatus }
+          }
         }
       }
-    }
-  } = hearingOutcome
+    } = hearingOutcome
 
-  if (!defendantInCustody(remandStatus) && (hasBailConditions(bailConditions) || hasMatchingOffence(offences))) {
-    return [{ code: triggerCode }]
+    if (!defendantInCustody(remandStatus) && (hasBailConditions(bailConditions) || hasMatchingOffence(offences))) {
+      return [{ code: triggerCode }]
+    }
+    return []
   }
-  return []
 }
 
 export default generator

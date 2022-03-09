@@ -34,20 +34,23 @@ const containsOffenceCode = (offence: Offence) =>
 const containsResultCode = (offence: Offence) =>
   offence.Result.some((result) => resultCodes.includes(result.CJSresultCode))
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
-  return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
-    (acc: Trigger[], offence) => {
-      if (
-        offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty) &&
-        (containsOffenceCode(offence) || containsResultCode(offence))
-      ) {
-        acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
-      }
+const generator: TriggerGenerator = {
+  independent: true,
+  generate: (hearingOutcome, _) => {
+    return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+      (acc: Trigger[], offence) => {
+        if (
+          offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty) &&
+          (containsOffenceCode(offence) || containsResultCode(offence))
+        ) {
+          acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+        }
 
-      return acc
-    },
-    []
-  )
+        return acc
+      },
+      []
+    )
+  }
 }
 
 export default generator
