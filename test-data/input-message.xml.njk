@@ -66,8 +66,11 @@
                 {% if courtPncIdentifier %}
                   <DC:PNCidentifier>{{ courtPncIdentifier }}</DC:PNCidentifier>
                 {% endif %}
+                {% if bailConditions %}
+                  <DC:BailConditions>{{ bailConditions }}</DC:BailConditions>
+                {% endif %}
               </DC:PersonDefendant>
-              <DC:BailStatus>U</DC:BailStatus>
+              <DC:BailStatus>{{ bailStatus if bailStatus else "U" }}</DC:BailStatus>
               <DC:Address>
                 <DC:SimpleAddress>
                   <DC:AddressLine1>ScenarioD Address Line 1</DC:AddressLine1>
