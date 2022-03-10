@@ -109,8 +109,7 @@ describe("TRPR0018", () => {
     })
   })
 
-  // TODO: Fix QueryResultError: No data returned from the query -> unable to stub undefined end date when running old Bichard
-  it.skip("should not generate triggers when the start dates match and offence end date and pnc end date is missing", async () => {
+  it("should not generate triggers when the start dates match and offence end date and pnc end date is missing", async () => {
     const inputMessage = generateMessage({
       offences: [
         {
@@ -121,7 +120,11 @@ describe("TRPR0018", () => {
       ]
     })
 
-    const result = await processMessage(inputMessage, pncOffenceDateOverrides([{ startDate: "2021-02-28" }]))
+    const result = await processMessage(inputMessage, {
+      expectRecord: false,
+      expectTriggers: false,
+      ...pncOffenceDateOverrides([{ startDate: "2021-02-28" }])
+    })
 
     expect(result).toStrictEqual({
       exceptions: [],
