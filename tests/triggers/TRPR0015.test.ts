@@ -15,66 +15,62 @@ describe("TRPR0015", () => {
     PostgresHelper.closeConnection()
   })
 
-  describe("when the case is recordable", () => {
-    it("should generate a case level trigger if another trigger is generated", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }] }, { results: [{ code: otherResultCode }] }]
-      })
-
-      // Process the mock message
-      const result = await processMessage(inputMessage)
-
-      // Check the right triggers are generated
-      expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
+  it("should generate a case level trigger if another trigger is generated when the case is recordable", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [{ results: [{ code: resultCode }] }, { results: [{ code: otherResultCode }] }]
     })
 
-    it("should generate a case level trigger if another trigger is not generated", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }] }]
-      })
+    // Process the mock message
+    const result = await processMessage(inputMessage)
 
-      // Process the mock message
-      const result = await processMessage(inputMessage)
-
-      // Check the right triggers are generated
-      expect(result).toStrictEqual({ exceptions: [], triggers: [{ code }] })
-    })
+    // Check the right triggers are generated
+    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
   })
 
-  describe("when the case is not recordable", () => {
-    it("should generate a case level trigger if another trigger is generated", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [
-          { results: [{ code: resultCode }], recordable: false },
-          { results: [{ code: otherResultCode }], recordable: false }
-        ]
-      })
-
-      // Process the mock message
-      const result = await processMessage(inputMessage, { recordable: false })
-
-      // Check the right triggers are generated
-      expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
+  it("should generate a case level trigger if another trigger is not generated when the case is recordable", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [{ results: [{ code: resultCode }] }]
     })
 
-    it("should not generate a case level trigger if another trigger is not generated", async () => {
-      // Generate a mock message
-      const inputMessage = generateMessage({
-        offences: [{ results: [{ code: resultCode }], recordable: false }]
-      })
+    // Process the mock message
+    const result = await processMessage(inputMessage)
 
-      // Process the mock message
-      const result = await processMessage(inputMessage, {
-        recordable: false,
-        expectTriggers: false,
-        expectRecord: false
-      })
+    // Check the right triggers are generated
+    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code }] })
+  })
 
-      // Check the right triggers are generated
-      expect(result).toStrictEqual({ exceptions: [], triggers: [] })
+  it("should generate a case level trigger if another trigger is generated when the case is not recordable", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [
+        { results: [{ code: resultCode }], recordable: false },
+        { results: [{ code: otherResultCode }], recordable: false }
+      ]
     })
+
+    // Process the mock message
+    const result = await processMessage(inputMessage, { recordable: false })
+
+    // Check the right triggers are generated
+    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
+  })
+
+  it("should not generate a case level trigger if another trigger is not generated when the case is not recordable", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [{ results: [{ code: resultCode }], recordable: false }]
+    })
+
+    // Process the mock message
+    const result = await processMessage(inputMessage, {
+      recordable: false,
+      expectTriggers: false,
+      expectRecord: false
+    })
+
+    // Check the right triggers are generated
+    expect(result).toStrictEqual({ exceptions: [], triggers: [] })
   })
 })
