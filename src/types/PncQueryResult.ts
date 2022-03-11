@@ -14,9 +14,9 @@ const pncOffenceSchema = z.object({
   offence: z.object({
     acpoOffenceCode: z.string(),
     cjsOffenceCode: z.string(),
-    startDate: z.string(),
+    startDate: z.date(),
     startTime: z.string().optional(),
-    endDate: z.string().optional(),
+    endDate: z.date().optional(),
     endTime: z.string().optional(),
     qualifier1: z.string().optional(),
     qualifier2: z.string().optional(),

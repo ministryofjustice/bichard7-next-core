@@ -10,9 +10,9 @@ export default (message: string, recordable: boolean, pncGateway: PncGateway): B
   const spiResult = parseSpiResult(message)
 
   let annotatedHearingOutcome = transformSpiToAnnotatedHearingOutcome(spiResult)
-  const triggers = generateTriggers(annotatedHearingOutcome, recordable)
   annotatedHearingOutcome = augmentWithPncQuery(annotatedHearingOutcome, pncGateway)
 
+  const triggers = generateTriggers(annotatedHearingOutcome, recordable)
   const exceptions = generateExceptions(annotatedHearingOutcome)
 
   return {
