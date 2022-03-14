@@ -2,14 +2,19 @@ import stompit from "stompit"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import CoreHandler from "../src/index"
+import type { Trigger } from "../src/types/Trigger"
+import type Exception from "../src/types/Exception"
+import differenceWith from "lodash.differencewith"
+import isEqual from "lodash.isEqual"
 
 interface BichardResult {
   incomingMessage: string
   annotatedHearingOutcome: string
-  triggers?: object[]
-  exceptions?: object[]
+  triggers?: Trigger[]
+  exceptions?: Exception[]
 }
 
+//TODO: Use envvars for these and sensible defaults
 const connectOptions = {
   host: "localhost",
   port: 61613,
@@ -34,10 +39,30 @@ const exitHandler = (client: stompit.Client) => {
   process.exit()
 }
 
+const getCodes = (a: Trigger[] | Exception[]): string[] => a.map((obj: Trigger | Exception) => obj.code)
+
+const areArraysEqual = (received: Trigger[] | Exception[], expected: Trigger[] | Exception[]): boolean => {
+  const receivedCodes = getCodes(received)
+  const expectedCodes = getCodes(expected)
+
+  const extraReceived = differenceWith(receivedCodes, expectedCodes, isEqual)
+  const extraExpected = differenceWith(expectedCodes, receivedCodes, isEqual)
+
+  if (extraExpected.length > 0) {
+    console.log("Expected extra codes from Bichard:")
+    console.log(extraExpected)
+  }
+  if (extraReceived.length > 0) {
+    console.log("Received extra codes from Bichard:")
+    console.log(extraReceived)
+  }
+  return extraExpected.length === 0 && extraReceived.length === 0
+}
+
 const handleMessage = (message: string): void => {
   const bichardResult: BichardResult = JSON.parse(message)
 
-  //TODO: Implement
+  // This is hardcoded for now. This value is determined by comparing the disposalCode against the stopList in the standing data
   const recordable = true
 
   const response = generateMockPncQueryResult(bichardResult.incomingMessage)
@@ -49,13 +74,12 @@ const handleMessage = (message: string): void => {
   const expectedTriggers = bichardResult.triggers || []
   const expectedExceptions = bichardResult.exceptions || []
 
-  if (triggers.length !== expectedTriggers.length || exceptions.length !== expectedExceptions.length) {
-    results.failed++
-    return
-  } else {
-    //TODO: Check all triggers/exceptions are present
-
+  if (areArraysEqual(triggers, expectedTriggers) && areArraysEqual(exceptions, expectedExceptions)) {
     results.passed++
+    console.log("Result passed")
+  } else {
+    results.failed++
+    console.log("Result failed")
   }
 }
 
@@ -64,7 +88,6 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
   process.on("SIGINT", exitHandler.bind(null, client))
   process.on("SIGUSR1", exitHandler.bind(null, client))
   process.on("SIGUSR2", exitHandler.bind(null, client))
-  process.on("uncaughtException", exitHandler.bind(null, client))
 
   if (connectError) {
     console.log("connect error " + connectError.message)
@@ -89,15 +112,12 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
       }
 
       if (body) {
-        console.log("new message " + body)
         try {
           handleMessage(body)
         } catch (e) {
           console.error("handleMessage err " + e)
         }
       }
-
-      console.log("before ack " + message)
 
       client.ack(message)
     })
