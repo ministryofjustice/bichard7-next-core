@@ -6,10 +6,10 @@ import {
   INDICTMENT,
   STOP_LIST,
   TIME_RANGE
-} from "src/lib/properties"
-import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import removeSeconds from "src/utils/removeSeconds"
+} from "../lib/properties"
+import type { Offence, OffenceCode } from "../types/AnnotatedHearingOutcome"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
+import removeSeconds from "../utils/removeSeconds"
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "./dataLookup"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 

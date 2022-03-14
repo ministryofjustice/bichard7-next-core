@@ -60,7 +60,7 @@ const offenceParsedXmlSchema = z.object({
   ModeOfTrial: z.number(),
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),
-  ConvictingCourt: z.string().optional(),
+  ConvictingCourt: z.preprocess((s) => (s ? String(s) : undefined), z.string().optional()),
   Finding: z.string().optional(),
   Result: z.preprocess(toArray, resultParsedXmlSchema.array().min(0))
 })

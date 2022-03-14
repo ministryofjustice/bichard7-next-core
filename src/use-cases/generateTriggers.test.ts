@@ -1,6 +1,6 @@
 import fs from "fs"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import { TriggerCode } from "src/types/TriggerCode"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import { TriggerCode } from "../types/TriggerCode"
 import generateTriggers from "./generateTriggers"
 import parseSpiResult from "./parseSpiResult"
 import transformSpiToAho from "./transformSpiToAho"

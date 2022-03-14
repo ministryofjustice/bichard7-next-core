@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
-import { CjsVerdict } from "src/types/Verdict"
-import findResultCode from "src/use-cases/findResultCode"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
+import { CjsVerdict } from "../types/Verdict"
+import findResultCode from "../use-cases/findResultCode"
 
 const triggerCode = TriggerCode.TRPR0020
 const resultCodes = [1029, 1030, 1031, 1032, 3501]

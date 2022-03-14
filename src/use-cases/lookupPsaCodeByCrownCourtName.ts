@@ -1,5 +1,5 @@
 import organisationUnits from "../../data/organisation-unit.json"
-import { CROWN_COURT_TOP_LEVEL_CODE } from "src/lib/properties"
+import { CROWN_COURT_TOP_LEVEL_CODE } from "../lib/properties"
 
 const matchCourtNamesRegex = (courtNameA: string, courtNameB: string): boolean => {
   const notAlphabetic = /[^\\p{L}]+/i

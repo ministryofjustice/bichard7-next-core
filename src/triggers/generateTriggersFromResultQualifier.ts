@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import type TriggerConfig from "src/types/TriggerConfig"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import type TriggerConfig from "../types/TriggerConfig"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,

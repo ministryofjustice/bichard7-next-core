@@ -1,7 +1,7 @@
-import type { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0018
 

@@ -1,4 +1,4 @@
-import type ResultCode from "src/types/ResultCode"
+import type ResultCode from "../types/ResultCode"
 import resultCodes from "../../data/result-codes.json"
 
 export default (code: number): ResultCode => {

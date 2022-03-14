@@ -1,7 +1,7 @@
-import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import type TriggerConfig from "src/types/TriggerConfig"
-import TriggerRecordable from "src/types/TriggerRecordable"
+import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import type TriggerConfig from "../types/TriggerConfig"
+import TriggerRecordable from "../types/TriggerRecordable"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,

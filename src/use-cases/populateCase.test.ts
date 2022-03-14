@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
+import type { HearingDefendant } from "../types/AnnotatedHearingOutcome"
 import parseSpiResult from "./parseSpiResult"
 import populateCase from "./populateCase"
 jest.mock("src/use-cases/populateDefendant")
