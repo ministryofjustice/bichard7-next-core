@@ -27,16 +27,19 @@ const containsOffenceCodeForGranted = (offence: Offence) =>
   offenceCodesForGrantedResultText.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
   offence.Result.some((result) => result.ResultVariableText && /granted/i.test(result.ResultVariableText))
 
-const generator: TriggerGenerator = (hearingOutcome, recordable) => {
-  const shouldRaiseTrigger =
-    !recordable &&
-    hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
-      (offence) =>
-        offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) ||
-        containsOffenceCodeForGranted(offence)
-    )
+const generator: TriggerGenerator = {
+  independent: true,
+  generate: (hearingOutcome, recordable) => {
+    const shouldRaiseTrigger =
+      !recordable &&
+      hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
+        (offence) =>
+          offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) ||
+          containsOffenceCodeForGranted(offence)
+      )
 
-  return shouldRaiseTrigger ? [{ code: triggerCode }] : []
+    return shouldRaiseTrigger ? [{ code: triggerCode }] : []
+  }
 }
 
 export default generator
