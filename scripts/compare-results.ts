@@ -14,20 +14,18 @@ interface BichardResult {
   exceptions?: Exception[]
 }
 
-//TODO: Use envvars for these and sensible defaults
 const connectOptions = {
-  host: "localhost",
-  port: 61613,
+  host: process.env.HOST || "localhost",
+  port: Number(process.env.PORT) || 61613,
   connectHeaders: {
-    host: "/",
-    login: "admin",
-    passcode: "admin",
-    "heart-beat": "0,0"
+    host: process.env.CONNECTION_HOST || "/",
+    login: process.env.CONNECTION_LOGIN || "admin",
+    passcode: process.env.CONNECTION_PASSCODE || "admin"
   }
 }
 
 let needToPrintStats = true
-const results = { passed: 0, failed: 0, total: 0 }
+const results = { passed: 0, failed: 0, skipped: 0, total: 0 }
 
 const exitHandler = (client: stompit.Client) => {
   if (needToPrintStats) {
@@ -60,7 +58,15 @@ const areArraysEqual = (received: Trigger[] | Exception[], expected: Trigger[] |
 }
 
 const handleMessage = (message: string): void => {
-  const bichardResult: BichardResult = JSON.parse(message)
+  let bichardResult: BichardResult
+
+  try {
+    bichardResult = JSON.parse(message)
+  } catch (e) {
+    results.failed++
+    console.error(e)
+    return
+  }
 
   // This is hardcoded for now. This value is determined by comparing the disposalCode against the stopList in the standing data
   const recordable = true
@@ -68,8 +74,6 @@ const handleMessage = (message: string): void => {
   const response = generateMockPncQueryResult(bichardResult.incomingMessage)
   const pncGateway = new MockPncGateway(response)
   const { triggers, exceptions } = CoreHandler(bichardResult.incomingMessage, recordable, pncGateway)
-
-  results.total++
 
   const expectedTriggers = bichardResult.triggers || []
   const expectedExceptions = bichardResult.exceptions || []
@@ -110,8 +114,11 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
     }
 
     message.readString("utf-8", (readError: Error | null, body?: string) => {
+      results.total++
+
       if (readError) {
         console.log("read message error " + readError.message)
+        results.skipped++
         return
       }
 
@@ -123,6 +130,7 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
         }
       } else {
         console.log("no message body, skipping")
+        results.skipped++
       }
 
       client.ack(message)
