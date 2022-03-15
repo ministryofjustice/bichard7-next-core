@@ -22,7 +22,7 @@ const connectOptions = {
     host: "/",
     login: "admin",
     passcode: "admin",
-    "heart-beat": "5000,5000"
+    "heart-beat": "0,0"
   }
 }
 
@@ -94,6 +94,10 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
     return
   }
 
+  client.on("error", function (error) {
+    console.error(error)
+  })
+
   const subscribeHeaders = {
     destination: "/queue/PROCESSING_VALIDATION_QUEUE",
     ack: "client-individual"
@@ -117,6 +121,8 @@ stompit.connect(connectOptions, (connectError: Error | null, client: stompit.Cli
         } catch (e) {
           console.error("handleMessage err " + e)
         }
+      } else {
+        console.log("no message body, skipping")
       }
 
       client.ack(message)
