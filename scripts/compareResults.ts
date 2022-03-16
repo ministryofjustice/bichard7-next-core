@@ -82,10 +82,10 @@ const areTriggerOrExceptionArraysEqual = (
   const extraExpected = differenceWith(expectedCodes, receivedCodes, isEqual)
 
   if (extraExpected.length > 0) {
-    logger.info(`Expected extra codes from Bichard: ${extraExpected}`)
+    logger.warn(`Expected extra codes from Bichard: ${extraExpected}`)
   }
   if (extraReceived.length > 0) {
-    logger.info(`Received extra codes from Bichard: ${extraReceived}`)
+    logger.warn(`Received extra codes from Bichard: ${extraReceived}`)
   }
   return extraExpected.length === 0 && extraReceived.length === 0
 }
