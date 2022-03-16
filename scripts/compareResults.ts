@@ -40,14 +40,14 @@ const SUBSCRIPTION_CONFIG = {
 let needToPrintStats = true
 const results = { passed: 0, failed: 0, skipped: 0, total: 0 }
 
-const exitHandler = (client: stompit.Client) => {
+const exitHandler = (client: stompit.Client): void => {
   if (needToPrintStats) {
     logger.info(results)
     needToPrintStats = false
   }
 
   client.disconnect()
-  process.exit(results.failed ? 1 : 0)
+  process.exit(results.failed || results.skipped ? 1 : 0)
 }
 
 const registerExitHandler = (client: stompit.Client): void => {
