@@ -29,7 +29,7 @@ npm run compare
 
 This requires the [old Bichard](https://github.com/ministryofjustice/bichard7-next) stack to be running. Outputs from old Bichard can be driven onto the queue by running either `make pushq` in the [old Bichard repo](https://github.com/ministryofjustice/bichard7-next), or by running `npm t` in the [e2e testing repo](https://github.com/ministryofjustice/bichard7-next-tests).
 
-This will run the `scripts/compareResults.ts` script to check the output of old Bichard against new Bichard. A tally is kept of the results and can be seen by exiting the script with `Ctrl-C`. If `compareResults.ts` can't process any messages off the queue (empty messages, ActiveMQ errors ect), these are recorded as `skipped` and will be counted seperatly.
+`npm run compare` runs the `scripts/compareResults.ts` script to check the output of old Bichard against new Bichard. A tally is kept of the results and can be seen by exiting the script with `Ctrl-C`. If `compareResults.ts` can't process any messages off the queue (empty messages, ActiveMQ errors ect), these are recorded as `skipped` and will be counted seperatly.
 
 If all comparisons between the new and old Bichard are successful, `compareResults.ts` will exit with a `0` code. If any comparisions have failed or messages have been skipped, it will exit with a code of `1`.
 

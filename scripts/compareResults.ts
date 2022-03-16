@@ -4,7 +4,7 @@ import MockPncGateway from "../tests/helpers/MockPncGateway"
 import CoreHandler from "../src/index"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isEqual"
-import Pino from "pino"
+import logger from "../src/utils/logging"
 import type { Trigger } from "../src/types/Trigger"
 import type Exception from "../src/types/Exception"
 import type BichardResultType from "../src/types/BichardResultType"
@@ -15,12 +15,6 @@ interface BichardResult {
   triggers?: Trigger[]
   exceptions?: Exception[]
 }
-
-const logger: Pino.Logger = Pino({
-  level: process.env.PINO_LOG_LEVEL || "info",
-  timestamp: false,
-  messageKey: "message"
-})
 
 const CONNECTION_CONFIG = {
   host: process.env.MQ_HOST || "localhost",
