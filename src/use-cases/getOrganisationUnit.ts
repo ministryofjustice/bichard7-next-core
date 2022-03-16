@@ -1,4 +1,4 @@
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnit } from "../types/AnnotatedHearingOutcome"
 
 export default (spiOrganisationUnitCode: string): OrganisationUnit => ({
   TopLevelCode: spiOrganisationUnitCode.substring(0, 1),

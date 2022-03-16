@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
-import type { IncomingMessageParsedXml } from "src/types/IncomingMessage"
-import { incomingMessageParsedXmlSchema } from "src/types/IncomingMessage"
+import type { IncomingMessageParsedXml } from "../types/IncomingMessage"
+import { incomingMessageParsedXmlSchema } from "../types/IncomingMessage"
 
 export default (message: string): IncomingMessageParsedXml => {
   const options = {

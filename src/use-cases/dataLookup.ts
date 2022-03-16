@@ -1,4 +1,4 @@
-import type { SpiPlea } from "src/types/Plea"
+import type { SpiPlea } from "../types/Plea"
 import remandStatus from "../../data/remand-status.json"
 import pleaStatus from "../../data/plea-status.json"
 import verdicts from "../../data/verdict.json"

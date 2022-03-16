@@ -1,7 +1,7 @@
-import triggers from "src/triggers"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import triggers from "../triggers"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 export default (courtResult: AnnotatedHearingOutcome, recordable: boolean): Trigger[] => {
   const independentTriggers = Object.values(triggers)

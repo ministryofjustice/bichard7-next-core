@@ -1,7 +1,7 @@
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0004
 const resultCodes = [3052, 3081, 3085, 3086, 3087, 3088, 3089, 3090, 3091, 1179, 1181, 3281, 3282]
