@@ -2,11 +2,11 @@ import stompit from "stompit"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import CoreHandler from "../src/index"
-import type { Trigger } from "../src/types/Trigger"
-import type Exception from "../src/types/Exception"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isEqual"
 import Pino from "pino"
+import type { Trigger } from "../src/types/Trigger"
+import type Exception from "../src/types/Exception"
 import type BichardResultType from "../src/types/BichardResultType"
 
 interface BichardResult {
@@ -90,14 +90,20 @@ const areTriggerOrExceptionArraysEqual = (
   return extraExpected.length === 0 && extraReceived.length === 0
 }
 
-const processResultCore = (incomingMessage: string): BichardResultType => {
-  // This is hardcoded for now. This value is determined by comparing the disposalCode against the stopList in the standing data
+const processResultCore = (incomingMessage: string): BichardResultType | undefined => {
+  // This is hardcoded for now. This value is determined by comparing the disposalCode against the stopList in the standing data,
+  // and will eventually be handled by new Bichard.
   const recordable = true
 
-  //TODO: Put a try/catch around this logic incase the app throws errors
-  const response = generateMockPncQueryResult(incomingMessage)
-  const pncGateway = new MockPncGateway(response)
-  return CoreHandler(incomingMessage, recordable, pncGateway)
+  try {
+    const response = generateMockPncQueryResult(incomingMessage)
+    const pncGateway = new MockPncGateway(response)
+    return CoreHandler(incomingMessage, recordable, pncGateway)
+  } catch (e) {
+    results.failed++
+    logger.warn(`Application failed to process message: ${e}`)
+    return undefined
+  }
 }
 
 const processMessage = (message: string): void => {
@@ -106,11 +112,14 @@ const processMessage = (message: string): void => {
     return
   }
 
-  const { triggers, exceptions } = processResultCore(bichardResult.incomingMessage)
+  const coreResult = processResultCore(bichardResult.incomingMessage)
+  if (!coreResult) {
+    return
+  }
 
   if (
-    areTriggerOrExceptionArraysEqual(triggers, bichardResult.triggers || []) &&
-    areTriggerOrExceptionArraysEqual(exceptions, bichardResult.exceptions || [])
+    areTriggerOrExceptionArraysEqual(coreResult.triggers, bichardResult.triggers || []) &&
+    areTriggerOrExceptionArraysEqual(coreResult.exceptions, bichardResult.exceptions || [])
   ) {
     results.passed++
     logger.info(`Result ${results.total} passed`)
@@ -120,7 +129,7 @@ const processMessage = (message: string): void => {
   }
 }
 
-const handleMessage = (readError: Error | null, body?: string): void => {
+const onMessage = (readError: Error | null, body?: string): void => {
   results.total++
 
   if (readError) {
@@ -155,7 +164,7 @@ const compareResultsFromMQ = (): void => {
       }
 
       message.readString("utf-8", (readError: Error | null, body?: string) => {
-        handleMessage(readError, body)
+        onMessage(readError, body)
         client.ack(message)
       })
     })
