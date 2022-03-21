@@ -28,11 +28,12 @@ const resultCodeIsFinal = (resultCode: number): boolean => findResultCode(result
 const containsOffenceCode = (offence: Offence) =>
   offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
   offence.Result.some(
-    (result) => !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
+    (result) =>
+      result.CJSresultCode && !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
   )
 
 const containsResultCode = (offence: Offence) =>
-  offence.Result.some((result) => resultCodes.includes(result.CJSresultCode))
+  offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
 const generator: TriggerGenerator = {
   independent: true,

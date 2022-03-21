@@ -15,7 +15,7 @@ const nextHearingSchema = z.object({
 })
 
 const resultParsedXmlSchema = z.object({
-  ResultCode: z.number(),
+  ResultCode: z.number().optional(),
   ResultText: z.string(),
   ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
   Outcome: z

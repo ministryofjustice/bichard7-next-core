@@ -20,7 +20,7 @@ export default (
   }
 
   const shouldTrigger = (offence: Offence): boolean =>
-    offence.Result.some((result) => resultCodesForTrigger.includes(result.CJSresultCode))
+    offence.Result.some((result) => result.CJSresultCode && resultCodesForTrigger.includes(result.CJSresultCode))
 
   const generateTriggers = (acc: Trigger[], offence: Offence): Trigger[] => {
     if (shouldTrigger(offence)) {

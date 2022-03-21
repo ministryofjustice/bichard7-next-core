@@ -15,10 +15,14 @@ const generator: TriggerGenerator = {
   generate: (hearingOutcome, _) =>
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
       (acc: Trigger[], offence) => {
-        const containsMainResultCode = offence.Result.some((result) => mainResultCodes.includes(result.CJSresultCode))
-        const containsYroResultCode = offence.Result.some((result) => yroResultCodes.includes(result.CJSresultCode))
-        const containsYroSpeceficRequirementResultCode = offence.Result.some((result) =>
-          yroSpeceficRequirementResultCodes.includes(result.CJSresultCode)
+        const containsMainResultCode = offence.Result.some(
+          (result) => result.CJSresultCode && mainResultCodes.includes(result.CJSresultCode)
+        )
+        const containsYroResultCode = offence.Result.some(
+          (result) => result.CJSresultCode && yroResultCodes.includes(result.CJSresultCode)
+        )
+        const containsYroSpeceficRequirementResultCode = offence.Result.some(
+          (result) => result.CJSresultCode && yroSpeceficRequirementResultCodes.includes(result.CJSresultCode)
         )
 
         if (containsMainResultCode || (containsYroResultCode && containsYroSpeceficRequirementResultCode)) {

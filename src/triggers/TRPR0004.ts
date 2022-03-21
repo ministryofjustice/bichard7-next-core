@@ -38,7 +38,7 @@ const offenceCodes = [
 const sexualOffenceRegexes = [/sex(ual)? off?ender/i, /sex(ual)? off?en[cs]es act/i]
 
 const resultCodeMatches = (offence: Offence): boolean =>
-  offence.Result.some((result) => resultCodes.includes(result.CJSresultCode))
+  offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
 const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => result.PleaStatus === guiltyCode) &&

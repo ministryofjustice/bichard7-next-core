@@ -12,6 +12,7 @@ const generator: TriggerGenerator = {
       (offence) =>
         offence.Result.some(
           (result) =>
+            result.CJSresultCode &&
             resultCodes.includes(result.CJSresultCode) &&
             !result.ResultQualifierVariable.some((qual) => qual.Code === resultQualifier)
         )
