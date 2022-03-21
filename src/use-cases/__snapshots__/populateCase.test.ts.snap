@@ -5,6 +5,12 @@ Object {
   "CourtReference": Object {
     "MagistratesCourtReference": "01ZD0303208",
   },
+  "ForceOwner": Object {
+    "BottomLevelCode": "",
+    "OrganisationUnitCode": "0000000",
+    "SecondLevelCode": "01",
+    "ThirdLevelCode": "",
+  },
   "HearingDefendant": Object {},
   "PTIURN": "01ZD0303208",
   "PreChargeDecisionIndicator": "N",

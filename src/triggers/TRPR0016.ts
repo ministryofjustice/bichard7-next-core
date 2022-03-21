@@ -11,9 +11,7 @@ const config: TriggerConfig = {
   triggerRecordable: TriggerRecordable.Yes
 }
 
-const generator: TriggerGenerator = {
-  independent: true,
-  generate: (courtResult, recordable) => generateTriggersFromResultCode(courtResult, config, recordable)
-}
+const generator: TriggerGenerator = (courtResult, recordable) =>
+  generateTriggersFromResultCode(courtResult, config, recordable)
 
 export default generator

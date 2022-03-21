@@ -27,14 +27,11 @@ const matches = (hearingOutcome: AnnotatedHearingOutcome): boolean =>
     matchingOffenceCodeAndResultCode(hearingOutcome, offenceCode, resultCode)
   )
 
-const generator: TriggerGenerator = {
-  independent: true,
-  generate: (hearingOutcome, _) => {
-    if (matches(hearingOutcome)) {
-      return [{ code: triggerCode }]
-    }
-    return []
+const generator: TriggerGenerator = (hearingOutcome, _) => {
+  if (matches(hearingOutcome)) {
+    return [{ code: triggerCode }]
   }
+  return []
 }
 
 export default generator
