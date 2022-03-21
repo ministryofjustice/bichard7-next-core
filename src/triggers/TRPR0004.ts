@@ -47,21 +47,18 @@ const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
 const offenceresultTextMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => sexualOffenceRegexes.some((regex) => result.ResultVariableText?.match(regex)))
 
-const generator: TriggerGenerator = {
-  independent: true,
-  generate: (hearingOutcome, _) =>
-    hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
-      (acc: Trigger[], offence: Offence): Trigger[] => {
-        const offenceSequenceNumber = offence.CourtOffenceSequenceNumber
+const generator: TriggerGenerator = (hearingOutcome, _) =>
+  hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    (acc: Trigger[], offence: Offence): Trigger[] => {
+      const offenceSequenceNumber = offence.CourtOffenceSequenceNumber
 
-        if (resultCodeMatches(offence) || guiltyAndOffenceCodeMatches(offence) || offenceresultTextMatches(offence)) {
-          acc.push({ code: triggerCode, offenceSequenceNumber })
-        }
+      if (resultCodeMatches(offence) || guiltyAndOffenceCodeMatches(offence) || offenceresultTextMatches(offence)) {
+        acc.push({ code: triggerCode, offenceSequenceNumber })
+      }
 
-        return acc
-      },
-      []
-    )
-}
+      return acc
+    },
+    []
+  )
 
 export default generator
