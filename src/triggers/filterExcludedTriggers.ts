@@ -1,11 +1,7 @@
+import excludedTriggerConfig from "src/lib/excludedTriggerConfig"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import type { TriggerCode } from "src/types/TriggerCode"
-import config from "../../data/excluded-trigger-config.json"
-
-interface ExcludedTriggerConfig {
-  [key: string]: TriggerCode[]
-}
 
 const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome, triggers: Trigger[]): Trigger[] => {
   const court =
@@ -15,7 +11,6 @@ const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome
     throw Error("Force not found")
   }
 
-  const excludedTriggerConfig = config as ExcludedTriggerConfig
   const matchingCourtKeys = Object.keys(excludedTriggerConfig).filter((key) => court.startsWith(key))
 
   const forceExcludesTrigger = (code: TriggerCode) =>
