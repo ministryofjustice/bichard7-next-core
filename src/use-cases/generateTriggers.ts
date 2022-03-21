@@ -1,9 +1,11 @@
+import filterTriggersByForce from "src/triggers/filterTriggersByForce"
 import { TriggerCode } from "src/types/TriggerCode"
+import forceTriggerConfig from "../../data/force-trigger-config.json"
 import triggers from "../triggers"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 
-export default (courtResult: AnnotatedHearingOutcome, recordable: boolean): Trigger[] => {
+export default (annotatedHearingOutcome: AnnotatedHearingOutcome, recordable: boolean): Trigger[] => {
   /* 
     Run independant triggers first
     Run trigger 15(?), pass it the independent triggers that have already been generated (and AHO probs)
@@ -20,10 +22,20 @@ export default (courtResult: AnnotatedHearingOutcome, recordable: boolean): Trig
   const independentTriggers = Object.entries(triggers)
     .filter(([triggerCode]) => triggerCode != TriggerCode.TRPR0015 && triggerCode != TriggerCode.TRPR0027)
     .reduce((acc: Trigger[], [_, trigger]) => {
-      return acc.concat(trigger.generate(courtResult, recordable))
+      return acc.concat(trigger.generate(annotatedHearingOutcome, recordable))
     }, [])
 
-  const trigger15 = triggers.TRPR0015.generate(courtResult, recordable, independentTriggers)
+  const trigger15 = triggers.TRPR0015.generate(annotatedHearingOutcome, recordable, independentTriggers)
   const allTriggers = independentTriggers.concat(trigger15)
-  return allTriggers
+
+  const force = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
+  if (!force) {
+    throw Error("Force not found")
+  }
+
+  const forceFilteredTriggers = filterTriggersByForce(force, allTriggers, forceTriggerConfig)
+  const triggersIgnored = forceFilteredTriggers.length !== allTriggers.length
+  const trigger27 = triggers.TRPR0027.generate(annotatedHearingOutcome, triggersIgnored)
+
+  return forceFilteredTriggers.concat(trigger27)
 }

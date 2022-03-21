@@ -7,7 +7,7 @@ import processMessage from "../helpers/processMessage"
 
 const trigger5ResultCode = 4012
 
-describe("TRPR0002", () => {
+describe("TRPR0027", () => {
   afterAll(() => {
     PostgresHelper.closeConnection()
   })

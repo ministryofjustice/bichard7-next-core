@@ -1,15 +1,7 @@
 import type { Trigger } from "../../src/types/Trigger"
 import filterTriggersByForce from "../../src/triggers/filterTriggersByForce"
 import { TriggerCode } from "../../src/types/TriggerCode"
-import type { OrganisationUnit } from "../../src/types/AnnotatedHearingOutcome"
 import type ForceTriggerConfig from "../../src/types/ForceTriggerConfig"
-
-const generateForce = (force: string): OrganisationUnit => ({
-  SecondLevelCode: force,
-  ThirdLevelCode: "",
-  BottomLevelCode: "",
-  OrganisationUnitCode: "0000000"
-})
 
 const forceTriggerConfig: ForceTriggerConfig = {
   "02": {
@@ -37,7 +29,7 @@ describe("Filter triggers by force", () => {
       }
     ]
 
-    const resultTriggers = filterTriggersByForce(generateForce("01"), inputTriggers, forceTriggerConfig)
+    const resultTriggers = filterTriggersByForce("01", inputTriggers, forceTriggerConfig)
 
     expect(resultTriggers).toStrictEqual(expectedTriggers)
   })
@@ -58,7 +50,7 @@ describe("Filter triggers by force", () => {
       }
     ]
 
-    const resultTriggers = filterTriggersByForce(generateForce("02"), inputTriggers, forceTriggerConfig)
+    const resultTriggers = filterTriggersByForce("02", inputTriggers, forceTriggerConfig)
 
     expect(resultTriggers).toStrictEqual(expectedTriggers)
   })
