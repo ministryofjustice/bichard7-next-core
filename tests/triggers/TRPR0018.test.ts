@@ -131,4 +131,50 @@ describe("TRPR0018", () => {
       triggers: []
     })
   })
+
+  it("should not generate triggers when all of the dates match", async () => {
+    const inputMessage = generateMessage({
+      offences: [
+        {
+          startDate: new Date("2021-01-28"),
+          endDate: new Date("2021-02-28"),
+          results: [{ code: resultCode }]
+        }
+      ]
+    })
+
+    const result = await processMessage(inputMessage, {
+      expectRecord: false,
+      expectTriggers: false,
+      ...pncOffenceDateOverrides([{ startDate: "2021-01-28", endDate: "2021-02-28" }])
+    })
+
+    expect(result).toStrictEqual({
+      exceptions: [],
+      triggers: []
+    })
+  })
+
+  it("should not generate triggers when all of the dates are the same", async () => {
+    const inputMessage = generateMessage({
+      offences: [
+        {
+          startDate: new Date("2021-02-28"),
+          endDate: new Date("2021-02-28"),
+          results: [{ code: resultCode }]
+        }
+      ]
+    })
+
+    const result = await processMessage(inputMessage, {
+      expectRecord: false,
+      expectTriggers: false,
+      ...pncOffenceDateOverrides([{ startDate: "2021-02-28", endDate: "2021-02-28" }])
+    })
+
+    expect(result).toStrictEqual({
+      exceptions: [],
+      triggers: []
+    })
+  })
 })

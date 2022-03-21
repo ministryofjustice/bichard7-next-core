@@ -41,7 +41,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
     }
     if (
       (courtStart >= pncStart && !courtEnd && pncEnd) ||
-      (courtEnd && pncEnd && (courtStart >= pncStart || courtEnd <= pncEnd))
+      (courtEnd && pncEnd && (courtStart > pncStart || courtEnd < pncEnd))
     ) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
     }
