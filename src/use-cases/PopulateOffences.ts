@@ -121,7 +121,9 @@ export default class {
       const a2007ResultFound = spiResults.some(
         (spiResult) => spiResult.ResultCode?.toString() === ADJOURNMENT_SINE_DIE_RESULT_CODE_STRING
       )
-      const aFailConditionResultFound = spiResults.some((spiResult) => STOP_LIST.includes(spiResult.ResultCode))
+      const aFailConditionResultFound = spiResults.some(
+        (spiResult) => spiResult.ResultCode && STOP_LIST.includes(spiResult.ResultCode)
+      )
 
       if (a2007ResultFound && !aFailConditionResultFound) {
         this.adjournmentSineDieConditionMet = true
