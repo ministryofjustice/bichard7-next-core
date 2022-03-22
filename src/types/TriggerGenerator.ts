@@ -3,6 +3,8 @@ import type { Trigger } from "./Trigger"
 
 export type TriggerGenerator = (
   hearingOutcome: AnnotatedHearingOutcome,
-  recordable: boolean,
-  triggers?: Trigger[]
+  options?: {
+    triggers?: Trigger[]
+    triggersExcluded?: boolean
+  }
 ) => Trigger[]

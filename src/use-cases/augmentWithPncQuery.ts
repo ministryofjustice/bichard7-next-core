@@ -5,5 +5,6 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
   annotatedHearingOutcome.PncQuery = pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
+
   return annotatedHearingOutcome
 }

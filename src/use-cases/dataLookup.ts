@@ -1,16 +1,18 @@
-import type { SpiPlea } from "../types/Plea"
-import remandStatus from "../../data/remand-status.json"
-import pleaStatus from "../../data/plea-status.json"
-import verdicts from "../../data/verdict.json"
-import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
-import qualifiers from "../../data/qualifier.json"
 import alcoholLevelMethods from "../../data/alcohol-level-method.json"
+import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
+import offenceCode from "../../data/offence-code.json"
+import pleaStatus from "../../data/plea-status.json"
+import qualifiers from "../../data/qualifier.json"
+import remandStatus from "../../data/remand-status.json"
+import verdicts from "../../data/verdict.json"
+import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
   cjsCode: string
   description: string
   pncCode?: string
   spiCode?: string
+  recordableOnPnc?: string
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -34,6 +36,9 @@ const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult |
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   alcoholLevelMethods.find((x) => x.spiCode === spiCode)
 
+const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+  offenceCode.find((x) => x.cjsCode === cjsCode)
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -41,5 +46,6 @@ export {
   lookupVerdictBySpiCode,
   lookupModeOfTrialReasonBySpiCode,
   lookupResultQualifierCodeByCjsCode,
-  lookupAlcoholLevelMethodBySpiCode
+  lookupAlcoholLevelMethodBySpiCode,
+  lookupOffenceCodeByCjsCode
 }

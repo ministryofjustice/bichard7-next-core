@@ -50,7 +50,10 @@ describe("TRPR0030", () => {
     })
 
     // Process the mock message
-    const { triggers } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
+    const { triggers } = await processMessage(inputMessage, {
+      expectTriggers: false,
+      expectRecord: false
+    })
 
     // Check the right triggers are generated
     expect(triggers).toHaveLength(0)

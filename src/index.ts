@@ -6,13 +6,13 @@ import generateTriggers from "./use-cases/generateTriggers"
 import parseSpiResult from "./use-cases/parseSpiResult"
 import transformSpiToAnnotatedHearingOutcome from "./use-cases/transformSpiToAho"
 
-export default (message: string, recordable: boolean, pncGateway: PncGateway): BichardResultType => {
+export default (message: string, pncGateway: PncGateway): BichardResultType => {
   const spiResult = parseSpiResult(message)
 
   let annotatedHearingOutcome = transformSpiToAnnotatedHearingOutcome(spiResult)
   annotatedHearingOutcome = augmentWithPncQuery(annotatedHearingOutcome, pncGateway)
 
-  const triggers = generateTriggers(annotatedHearingOutcome, recordable)
+  const triggers = generateTriggers(annotatedHearingOutcome)
   const exceptions = generateExceptions(annotatedHearingOutcome)
 
   return {

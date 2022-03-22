@@ -1,13 +1,13 @@
-import stompit from "stompit"
-import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
-import CoreHandler from "../src/index"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isEqual"
-import logger from "../src/utils/logging"
-import type { Trigger } from "../src/types/Trigger"
-import type Exception from "../src/types/Exception"
+import stompit from "stompit"
+import CoreHandler from "../src/index"
 import type BichardResultType from "../src/types/BichardResultType"
+import type Exception from "../src/types/Exception"
+import type { Trigger } from "../src/types/Trigger"
+import logger from "../src/utils/logging"
+import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
+import MockPncGateway from "../tests/helpers/MockPncGateway"
 
 interface BichardResult {
   incomingMessage: string
@@ -85,14 +85,10 @@ const areTriggerOrExceptionArraysEqual = (
 }
 
 const processResultCore = (incomingMessage: string): BichardResultType | undefined => {
-  // This is hardcoded for now. This value is determined by comparing the disposalCode against the stopList in the standing data,
-  // and will eventually be handled by new Bichard.
-  const recordable = true
-
   try {
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
-    return CoreHandler(incomingMessage, recordable, pncGateway)
+    return CoreHandler(incomingMessage, pncGateway)
   } catch (e) {
     results.failed++
     logger.warn(`Application failed to process message: ${e}`)

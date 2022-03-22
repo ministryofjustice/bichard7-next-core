@@ -150,7 +150,6 @@ const resultSchema = z.object({
   WarrantIssueDate: z.date().optional(),
   CRESTDisposalCode: z.string().optional(),
   ModeOfTrialReason: z.string().optional(),
-  RecordableOnPNCindicator: z.string().optional(),
   PNCDisposalType: z.string().optional(),
   ResultClass: z.string().optional(),
   NumberOfOffencesTIC: z.string().optional(),
@@ -185,7 +184,8 @@ const offenceSchema = z.object({
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.number(),
-  Result: resultSchema.array().min(0)
+  Result: resultSchema.array().min(0),
+  RecordableOnPNCindicator: z.boolean().optional()
 })
 
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
@@ -215,7 +215,7 @@ const caseSchema = z.object({
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),
-  RecordableOnPNCindicator: z.string().optional(),
+  RecordableOnPNCindicator: z.boolean().optional(),
   HearingDefendant: hearingDefendantSchema
 })
 

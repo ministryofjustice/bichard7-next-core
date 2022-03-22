@@ -5,7 +5,7 @@ const triggerCode = TriggerCode.TRPR0002
 const resultCodes = [4575, 4576, 4577, 4585, 4586]
 const resultQualifier = "EO"
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
   const shouldRaiseTrigger = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
     (offence) =>
       offence.Result.some(
