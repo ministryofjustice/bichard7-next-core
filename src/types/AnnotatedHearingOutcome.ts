@@ -90,7 +90,7 @@ const personNameSchema = z.object({
 const defendantDetailSchema = z.object({
   PersonName: personNameSchema,
   GeneratedPNCFilename: z.string().optional(),
-  BirthDate: z.date(),
+  BirthDate: z.date().optional(),
   Gender: z.string()
 })
 
