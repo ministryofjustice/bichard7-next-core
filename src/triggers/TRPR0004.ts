@@ -1,3 +1,4 @@
+import { CjsVerdict } from "src/types/Verdict"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import { TriggerCode } from "../types/TriggerCode"
@@ -5,7 +6,7 @@ import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0004
 const resultCodes = [3052, 3081, 3085, 3086, 3087, 3088, 3089, 3090, 3091, 1179, 1181, 3281, 3282]
-const guiltyCode = "G"
+
 // prettier-ignore
 const offenceCodes = [
   "SX56001", "SX56005", "SX56006", "SX56010", "SX56013", "SX56014", "SX56015", "SX56021", "SX56022",
@@ -41,8 +42,8 @@ const resultCodeMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
 const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
-  offence.Result.some((result) => result.PleaStatus === guiltyCode) &&
-  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode)
+  offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty) &&
+  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode.substring(0, 7))
 
 const offenceresultTextMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => sexualOffenceRegexes.some((regex) => result.ResultVariableText?.match(regex)))
