@@ -9,15 +9,18 @@ const resultCode = 4592
 const hasMatchingResultCode = (offence: Offence): boolean =>
   offence.Result.some((code) => code.CJSresultCode === resultCode)
 
-const generator: TriggerGenerator = (hearingOutcome, recordable, triggers = []) =>
-  hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+const generator: TriggerGenerator = (hearingOutcome, options = {}) => {
+  const triggers = options?.triggers
+  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+  return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence: Offence) => {
-      if (hasMatchingResultCode(offence) && (recordable || triggers?.length > 0)) {
+      if (hasMatchingResultCode(offence) && (recordable || (triggers && triggers?.length > 0))) {
         acc.push({ code: triggerCode })
       }
       return acc
     },
     []
   )
+}
 
 export default generator

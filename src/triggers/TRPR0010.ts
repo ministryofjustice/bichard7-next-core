@@ -22,7 +22,7 @@ const hasMatchingOffence = (offences: Offence[]): boolean =>
 const defendantInCustody = (remandStatus: string) =>
   lookupRemandStatusByCjsCode(remandStatus)?.pncCode === pncRemandStatus
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
   const {
     AnnotatedHearingOutcome: {
       HearingOutcome: {

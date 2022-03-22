@@ -1,15 +1,15 @@
-import type BichardResultType from "../../src/types/BichardResultType"
-import CoreHandler from "../../src"
+import promisePoller from "promise-poller"
 import { v4 as uuid } from "uuid"
+import CoreHandler from "../../src"
+import type BichardResultType from "../../src/types/BichardResultType"
+import type { ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 import ActiveMqHelper from "./ActiveMqHelper"
 import defaults from "./defaults"
-import { mockRecordInPnc, mockEnquiryErrorInPnc } from "./mockRecordInPnc"
-import PostgresHelper from "./PostgresHelper"
-import promisePoller from "promise-poller"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
-import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
-import type { ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
+import MockPncGateway from "./MockPncGateway"
+import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
+import PostgresHelper from "./PostgresHelper"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -22,13 +22,10 @@ const pgHelper = new PostgresHelper({
 
 const realPnc = process.env.REAL_PNC === "true"
 
-const processMessageCore = (
-  messageXml: string,
-  { recordable = true, pncOverrides = {} }: ProcessMessageOptions
-): BichardResultType => {
+const processMessageCore = (messageXml: string, { pncOverrides = {} }: ProcessMessageOptions): BichardResultType => {
   const response = generateMockPncQueryResult(messageXml, pncOverrides)
   const pncGateway = new MockPncGateway(response)
-  return CoreHandler(messageXml, recordable, pncGateway)
+  return CoreHandler(messageXml, pncGateway)
 }
 
 type ProcessMessageOptions = {

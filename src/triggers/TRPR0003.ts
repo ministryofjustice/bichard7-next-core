@@ -10,7 +10,7 @@ const mainResultCodes = [
 const yroResultCodes = [1141, 1142, 1143]
 const yroSpeceficRequirementResultCodes = [3104, 3105, 3107]
 
-const generator: TriggerGenerator = (hearingOutcome, _) =>
+const generator: TriggerGenerator = (hearingOutcome) =>
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence) => {
       const containsMainResultCode = offence.Result.some(

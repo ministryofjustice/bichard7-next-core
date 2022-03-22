@@ -11,7 +11,7 @@ const isMatchingOffence = (offence: Offence) =>
   offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
   offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty || result.PleaStatus === CjsPlea.Admits)
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
   if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(isMatchingOffence)) {
     return [{ code: triggerCode }]
   }

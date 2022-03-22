@@ -8,7 +8,8 @@ const offenceCodes = ["PL84504", "PL84505", "PL84506"]
 const isMatchingOffence = (offence: Offence) =>
   offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode)
 
-const generator: TriggerGenerator = (hearingOutcome, recordable) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
+  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
   if (
     !recordable &&
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(isMatchingOffence)

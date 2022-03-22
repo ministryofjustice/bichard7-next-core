@@ -5,12 +5,13 @@ import TriggerRecordable from "../types/TriggerRecordable"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,
-  { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig,
-  recordable: boolean
+  { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig
 ): Trigger[] => {
   if (!resultCodesForTrigger) {
     throw new Error("resultCodesForTrigger is undefined")
   }
+
+  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
 
   if (
     (!recordable && triggerRecordable === TriggerRecordable.Yes) ||

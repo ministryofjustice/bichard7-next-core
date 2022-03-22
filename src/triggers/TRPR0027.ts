@@ -1,8 +1,10 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
 
-const generator = (annotatedHearingOutcome: AnnotatedHearingOutcome, triggersExcluded: boolean): Trigger[] => {
+const generator: TriggerGenerator = (annotatedHearingOutcome, options): Trigger[] => {
+  const triggersExcluded = options?.triggersExcluded
+
   const forceCode = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
   const courtCode =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.SecondLevelCode

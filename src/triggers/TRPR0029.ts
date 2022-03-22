@@ -27,7 +27,8 @@ const containsOffenceCodeForGranted = (offence: Offence) =>
   offenceCodesForGrantedResultText.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
   offence.Result.some((result) => result.ResultVariableText && /granted/i.test(result.ResultVariableText))
 
-const generator: TriggerGenerator = (hearingOutcome, recordable) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
+  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
   const shouldRaiseTrigger =
     !recordable &&
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(

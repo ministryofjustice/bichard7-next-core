@@ -35,7 +35,7 @@ const containsOffenceCode = (offence: Offence) =>
 const containsResultCode = (offence: Offence) =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
-const generator: TriggerGenerator = (hearingOutcome, _) => {
+const generator: TriggerGenerator = (hearingOutcome) => {
   return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence) => {
       if (
