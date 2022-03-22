@@ -10,7 +10,11 @@ import {
 import type { Offence, OffenceCode } from "../types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
 import removeSeconds from "../utils/removeSeconds"
-import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "./dataLookup"
+import {
+  lookupAlcoholLevelMethodBySpiCode,
+  lookupOffenceCodeByCjsCode,
+  lookupResultQualifierCodeByCjsCode
+} from "./dataLookup"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -144,6 +148,11 @@ export default class {
           this.bailConditions.push(description)
         }
       })
+    }
+
+    const offenceCode = lookupOffenceCodeByCjsCode(spiOffenceCode)
+    if (offenceCode) {
+      offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc === "Y"
     }
 
     return offence
