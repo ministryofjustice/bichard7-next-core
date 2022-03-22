@@ -57,7 +57,7 @@ const offenceParsedXmlSchema = z.object({
   }),
   InitiatedDate: z.string(),
   Plea: spiPleaSchema,
-  ModeOfTrial: z.number(),
+  ModeOfTrial: z.number().optional(),
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),
   ConvictingCourt: z.preprocess((s) => (s ? String(s) : undefined), z.string().optional()),
@@ -97,7 +97,7 @@ const spiCourtIndividualDefendantSchema = z.object({
     BailConditions: z.string().optional(),
     ReasonForBailConditionsOrCustody: z.string().optional(),
     BasePersonDetails: z.object({
-      Birthdate: z.string(),
+      Birthdate: z.string().optional(),
       Gender: z.number(),
       PersonName: z.object({
         PersonTitle: z.string().optional(),
