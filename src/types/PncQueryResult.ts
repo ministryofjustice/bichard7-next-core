@@ -46,7 +46,7 @@ const pncQueryResultSchema = z.object({
   croNumber: z.string().optional(),
   checkName: z.string(),
   pncId: z.string(),
-  cases: z.array(pncCaseSchema)
+  cases: z.array(pncCaseSchema).optional()
 })
 
 export type PncOffence = z.infer<typeof pncOffenceSchema>

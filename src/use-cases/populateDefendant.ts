@@ -33,7 +33,7 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
       GivenName: spiGivenNames,
       FamilyName: spiPersonFamilyName
     },
-    BirthDate: new Date(spiBirthDate),
+    BirthDate: spiBirthDate ? new Date(spiBirthDate) : undefined,
     Gender: spiGender.toString()
   }
 }
