@@ -21,7 +21,7 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => 
 
   // Generate TRPR0027 which depends on whether triggers have been excluded or not
   const triggersExcluded = filteredTriggers.length !== allTriggers.length
-  const trigger27 = triggers.TRPR0027(annotatedHearingOutcome, { triggersExcluded: triggersExcluded })
+  const trigger27 = triggers.TRPR0027(annotatedHearingOutcome, { triggersExcluded })
 
   return filteredTriggers.concat(trigger27)
 }

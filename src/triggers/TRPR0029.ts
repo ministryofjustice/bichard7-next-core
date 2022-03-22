@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import isCaseRecordable from "src/lib/isCaseRecordable"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
@@ -8,7 +9,7 @@ const triggerCode = TriggerCode.TRPR0029
 const offenceCodes = [
   "AS14504", "AS14509", "AS14511", "CD98501", "CD98502", "CD98503", "CD98517", "CD98519", "CD98525",
   "CD98529", "CJ08503", "CJ08504", "CJ08505", "CS10501", "FB89501", "FB89506", "MS15501", "MS15502",
-  "MS15503", "MS15504,PC00503", "PC00506", "PC09504", "PC09505", "PC09510", "PH97503"
+  "MS15503", "MS15504", "PC00503", "PC00506", "PC09504", "PC09505", "PC09510", "PH97503"
 ]
 // prettier-ignore
 const offenceCodesForGrantedResultText = [
@@ -28,7 +29,7 @@ const containsOffenceCodeForGranted = (offence: Offence) =>
   offence.Result.some((result) => result.ResultVariableText && /granted/i.test(result.ResultVariableText))
 
 const generator: TriggerGenerator = (hearingOutcome) => {
-  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+  const recordable = isCaseRecordable(hearingOutcome)
   const shouldRaiseTrigger =
     !recordable &&
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(

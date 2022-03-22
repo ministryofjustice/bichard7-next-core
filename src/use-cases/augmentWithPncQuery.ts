@@ -6,8 +6,5 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
-  annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator =
-    !!annotatedHearingOutcome.PncQuery
-
   return annotatedHearingOutcome
 }

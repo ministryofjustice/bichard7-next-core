@@ -11,6 +11,6 @@ const config: TriggerConfig = {
   triggerRecordable: TriggerRecordable.Yes
 }
 
-const generator: TriggerGenerator = (courtResult) => generateTriggersFromResultCode(courtResult, config)
+const generator: TriggerGenerator = (hearingOutcome) => generateTriggersFromResultCode(hearingOutcome, config)
 
 export default generator

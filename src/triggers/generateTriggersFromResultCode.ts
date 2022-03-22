@@ -1,3 +1,4 @@
+import isCaseRecordable from "src/lib/isCaseRecordable"
 import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import type TriggerConfig from "../types/TriggerConfig"
@@ -11,7 +12,7 @@ export default (
     throw new Error("resultCodesForTrigger is undefined")
   }
 
-  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+  const recordable = isCaseRecordable(hearingOutcome)
 
   if (
     (!recordable && triggerRecordable === TriggerRecordable.Yes) ||

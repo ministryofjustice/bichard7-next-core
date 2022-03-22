@@ -1,3 +1,4 @@
+import isCaseRecordable from "src/lib/isCaseRecordable"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
@@ -9,7 +10,7 @@ const isMatchingOffence = (offence: Offence) =>
   offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode)
 
 const generator: TriggerGenerator = (hearingOutcome) => {
-  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+  const recordable = isCaseRecordable(hearingOutcome)
   if (
     !recordable &&
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(isMatchingOffence)

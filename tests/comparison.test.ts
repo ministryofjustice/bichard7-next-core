@@ -23,7 +23,7 @@ describe("Comparison testing", () => {
     try {
       const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
       const pncGateway = new MockPncGateway(response)
-      const coreResult = CoreHandler(incomingMessage, true, pncGateway)
+      const coreResult = CoreHandler(incomingMessage, pncGateway)
       const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
 
       it("should match triggers", () => {

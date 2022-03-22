@@ -1,3 +1,4 @@
+import isCaseRecordable from "src/lib/isCaseRecordable"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import { TriggerCode } from "../types/TriggerCode"
@@ -11,7 +12,7 @@ const hasMatchingResultCode = (offence: Offence): boolean =>
 
 const generator: TriggerGenerator = (hearingOutcome, options = {}) => {
   const triggers = options?.triggers
-  const recordable = !!hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+  const recordable = isCaseRecordable(hearingOutcome)
   return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence: Offence) => {
       if (hasMatchingResultCode(offence) && (recordable || (triggers && triggers?.length > 0))) {
