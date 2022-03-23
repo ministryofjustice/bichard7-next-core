@@ -109,7 +109,7 @@
                 <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
                 {% for result in offence.results %}
                   <DC:Result>
-                    <DC:ResultCode>{{ result.code }}</DC:ResultCode>
+                    <DC:ResultCode>{{ result.code if result.code else "1015" }}</DC:ResultCode>
                     <DC:ResultText>{{ result.text if result.text else "RESULT_TEXT" }}</DC:ResultText>
                     {% if result.qualifier %}
                       <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
