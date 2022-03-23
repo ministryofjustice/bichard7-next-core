@@ -35,13 +35,12 @@ const containsOffenceCode = (offence: Offence) =>
 const containsResultCode = (offence: Offence) =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
+const hasGuiltyResults = (offence: Offence) => offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty)
+
 const generator: TriggerGenerator = (hearingOutcome) => {
   return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence) => {
-      if (
-        offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty) &&
-        (containsOffenceCode(offence) || containsResultCode(offence))
-      ) {
+      if (containsResultCode(offence) || (hasGuiltyResults(offence) && containsOffenceCode(offence))) {
         acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
 
