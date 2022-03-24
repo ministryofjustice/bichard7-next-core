@@ -1,12 +1,14 @@
+import { TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "src/lib/properties"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
+import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup"
 import logger from "src/utils/logging"
 
 const populateOrganisation = (organisationUnit: OrganisationUnit): OrganisationUnit => {
   const { OrganisationUnitCode, TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode } = organisationUnit
   if (!OrganisationUnitCode) {
     organisationUnit.OrganisationUnitCode = [TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode]
-      .filter((x) => !x)
+      .filter((x) => x)
       .join()
   } else {
     let offset = 1
@@ -33,11 +35,31 @@ const populateOrganisation = (organisationUnit: OrganisationUnit): OrganisationU
 }
 
 const populateCourt: EnrichAhoFunction = (hearingOutcome) => {
-  const courtHearingLocation = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation
-  if (courtHearingLocation) {
-    hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation =
-      populateOrganisation(courtHearingLocation)
+  let { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+  const { Hearing } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome
+
+  let organisationUnitData
+  if (CourtHearingLocation) {
+    CourtHearingLocation = populateOrganisation(CourtHearingLocation)
+    organisationUnitData = lookupOrganisationUnitByCode(CourtHearingLocation)
   }
+
+  if (!organisationUnitData && Hearing.CourtHouseCode) {
+    organisationUnitData = lookupOrganisationUnitByThirdLevelPsaCode(Hearing.CourtHouseCode)
+  }
+
+  if (organisationUnitData) {
+    const { topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode } = organisationUnitData
+    const courtName = [topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode].filter((x) => x).join(" ")
+    
+    if(topLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
+      if(courtName.toUpperCase().includes(YOUTH_COURT)) {
+        
+      }
+    }
+    Hearing.CourtType = 
+  }
+
   return hearingOutcome
 }
 

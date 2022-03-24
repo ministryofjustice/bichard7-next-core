@@ -1,3 +1,4 @@
+import { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import alcoholLevelMethods from "../../data/alcohol-level-method.json"
 import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
 import offenceCode from "../../data/offence-code.json"
@@ -5,6 +6,7 @@ import pleaStatus from "../../data/plea-status.json"
 import qualifiers from "../../data/qualifier.json"
 import remandStatus from "../../data/remand-status.json"
 import verdicts from "../../data/verdict.json"
+import organisationUnits from "../../data/organisation-unit.json"
 import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
@@ -39,6 +41,27 @@ const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | 
 const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
+const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit) => {
+  if (!organisationUnit) {
+    return undefined
+  }
+
+  const result = organisationUnits.filter(
+    (unit) =>
+      unit.topLevelCode.toUpperCase() === organisationUnit.TopLevelCode?.toUpperCase() &&
+      unit.secondLevelCode.toUpperCase() === organisationUnit.SecondLevelCode?.toUpperCase() &&
+      unit.thirdLevelCode.toUpperCase() === organisationUnit.ThirdLevelCode?.toUpperCase()
+  )
+
+  return result.find((unit) => unit.bottomLevelCode === organisationUnit.BottomLevelCode) ?? result?.[0]
+}
+
+const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number) =>
+  organisationUnits.find(
+    (organisationUnit) =>
+      organisationUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
+  )
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -47,5 +70,7 @@ export {
   lookupModeOfTrialReasonBySpiCode,
   lookupResultQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceCodeByCjsCode
+  lookupOffenceCodeByCjsCode,
+  lookupOrganisationUnitByCode,
+  lookupOrganisationUnitByThirdLevelPsaCode
 }
