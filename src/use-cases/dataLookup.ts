@@ -1,4 +1,4 @@
-import { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import alcoholLevelMethods from "../../data/alcohol-level-method.json"
 import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
 import offenceCode from "../../data/offence-code.json"
