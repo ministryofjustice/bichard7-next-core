@@ -4,7 +4,7 @@ import type { SpiPlea } from "../../src/types/Plea"
 import type { SpiVerdict } from "../../src/types/Verdict"
 
 type Result = {
-  code: number
+  code?: number
   qualifier?: string
   text?: string
 }
