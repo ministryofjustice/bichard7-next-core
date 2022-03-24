@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`populate court should return enriched AHO with court populated 1`] = `
+exports[`enrich court should return AHO enriched with court 1`] = `
 Object {
   "AnnotatedHearingOutcome": Object {
     "HearingOutcome": Object {
@@ -195,6 +195,8 @@ Object {
           "TopLevelCode": "B",
         },
         "CourtHouseCode": 2576,
+        "CourtHouseName": "B 01 EF 00",
+        "CourtType": "MCA",
         "DateOfHearing": 2011-09-26T00:00:00.000Z,
         "DefendantPresentAtHearing": "A",
         "HearingDocumentationLanguage": "D",

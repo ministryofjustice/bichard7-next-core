@@ -34,7 +34,7 @@ const populateOrganisation = (organisationUnit: OrganisationUnit): OrganisationU
   return organisationUnit
 }
 
-const populateCourt: EnrichAhoFunction = (hearingOutcome) => {
+const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
   let { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const { Hearing } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome
 
@@ -64,4 +64,4 @@ const populateCourt: EnrichAhoFunction = (hearingOutcome) => {
   return hearingOutcome
 }
 
-export default populateCourt
+export default enrichCourt
