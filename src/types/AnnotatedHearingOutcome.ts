@@ -192,8 +192,7 @@ const offenceSchema = z.object({
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
-  RecordableOnPNCindicator: z.boolean().optional(),
-  ResultHalfLifeHours: z.number().optional()
+  RecordableOnPNCindicator: z.boolean().optional()
 })
 
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
