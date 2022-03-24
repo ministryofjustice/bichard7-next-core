@@ -185,6 +185,11 @@ Object {
         },
         "PTIURN": "01ZD0303208",
         "PreChargeDecisionIndicator": "N",
+        "RecordableOnPNCindicator": true,
+        "Urgent": Object {
+          "urgency": 1,
+          "urgent": "Y",
+        },
       },
       "Hearing": Object {
         "CourtHearingLocation": Object {
