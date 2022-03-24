@@ -1,4 +1,4 @@
-import { TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "src/lib/properties"
+import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "src/lib/properties"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup"
@@ -51,13 +51,14 @@ const populateCourt: EnrichAhoFunction = (hearingOutcome) => {
   if (organisationUnitData) {
     const { topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode } = organisationUnitData
     const courtName = [topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode].filter((x) => x).join(" ")
-    
-    if(topLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
-      if(courtName.toUpperCase().includes(YOUTH_COURT)) {
-        
-      }
+
+    if (topLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
+      Hearing.CourtType = courtName.toUpperCase().includes(YOUTH_COURT) ? MC_YOUTH : MC_ADULT
+    } else {
+      Hearing.CourtType = CROWN_COURT
     }
-    Hearing.CourtType = 
+
+    Hearing.CourtHouseName = courtName
   }
 
   return hearingOutcome
