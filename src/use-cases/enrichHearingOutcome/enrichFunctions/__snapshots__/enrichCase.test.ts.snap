@@ -138,7 +138,7 @@ Object {
           "RemandStatus": "UB",
         },
         "PTIURN": "01ZD0303908",
-        "PreChargeDecisionIndicator": "N",
+        "PreChargeDecisionIndicator": false,
         "RecordableOnPNCindicator": false,
       },
       "Hearing": Object {

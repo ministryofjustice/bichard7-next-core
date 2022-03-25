@@ -127,7 +127,7 @@ const hearingSchema = z.object({
 
 const urgentSchema = z.object({
   urgent: z.boolean(),
-  urgency: z.number()
+  urgency: z.number().min(0, ExceptionCode.HO100109).max(999, ExceptionCode.HO100110)
 })
 
 const resultSchema = z.object({
@@ -216,9 +216,13 @@ const hearingDefendantSchema = z.object({
 
 const caseSchema = z.object({
   PTIURN: z.string().regex(/[A-Z0-9]{4}[0-9]{3,7}/, ExceptionCode.HO100201),
-  CaseMarker: z.string().optional(),
+  CaseMarker: z.string().min(0, ExceptionCode.HO100202).max(255, ExceptionCode.HO100202).optional(), // Note: This doesn't seem to ever be set in the original code
   CPSOrganisation: organisationUnitSchema.optional(),
-  PreChargeDecisionIndicator: z.string(),
+  PreChargeDecisionIndicator: z.boolean(),
+  CourtCaseReferenceNumber: z
+    .string()
+    .regex(/[0-9]{2}\/[0-9]{4}\/[0-9]{6}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100203)
+    .optional(),
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),
