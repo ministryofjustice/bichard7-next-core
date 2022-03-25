@@ -224,12 +224,7 @@ const caseSchema = z.object({
   ForceOwner: organisationUnitSchema.optional(),
   RecordableOnPNCindicator: z.boolean().optional(),
   HearingDefendant: hearingDefendantSchema,
-  Urgent: z
-    .object({
-      urgent: z.string(),
-      urgency: z.number()
-    })
-    .optional()
+  Urgent: urgentSchema.optional()
 })
 
 const hearingOutcomeSchema = z.object({
@@ -257,3 +252,4 @@ export type DefendantDetail = z.infer<typeof defendantDetailSchema>
 export type HearingDefendant = z.infer<typeof hearingDefendantSchema>
 export type Result = z.infer<typeof resultSchema>
 export type OrganisationUnit = z.infer<typeof organisationUnitSchema>
+export type Urgent = z.infer<typeof urgentSchema>

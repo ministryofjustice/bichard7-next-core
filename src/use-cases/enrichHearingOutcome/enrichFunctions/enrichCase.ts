@@ -12,16 +12,15 @@ const enrichCase: EnrichAhoFunction = (hearingOutcome) => {
     ahoCase.RecordableOnPNCindicator = ahoCase.HearingDefendant?.Offence.some((offence) => recordable(offence))
 
     const mostUrgentResult = Math.min(
-      ahoCase.HearingDefendant.Offence.map((offence) => offence.Result.map((result) => result.Urgent?.urgency))
-        .flat()
-        .filter((x) => x)
-        .push(Number.MAX_SAFE_INTEGER)
+      ...ahoCase.HearingDefendant.Offence.map((offence) =>
+        offence.Result.map((result) => result.Urgent?.urgency ?? Number.MAX_SAFE_INTEGER)
+      ).flat()
     )
 
     if (mostUrgentResult < HALF_LIFE_HOURS_URGENT_THRESHOLD) {
       ahoCase.Urgent = {
         urgency: mostUrgentResult,
-        urgent: "Y"
+        urgent: true
       }
     }
 
