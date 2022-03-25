@@ -23,7 +23,7 @@ type Person = {
   title?: string
 }
 
-type GenerateMessageOptions = {
+export type GenerateMessageOptions = {
   offences: Offence[]
   PTIURN?: string
   courtHearingLocation?: string

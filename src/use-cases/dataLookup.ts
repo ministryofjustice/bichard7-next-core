@@ -2,11 +2,12 @@ import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import alcoholLevelMethods from "../../data/alcohol-level-method.json"
 import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
 import offenceCode from "../../data/offence-code.json"
+import organisationUnits from "../../data/organisation-unit.json"
 import pleaStatus from "../../data/plea-status.json"
 import qualifiers from "../../data/qualifier.json"
 import remandStatus from "../../data/remand-status.json"
+import resultCodes from "../../data/result-codes.json"
 import verdicts from "../../data/verdict.json"
-import organisationUnits from "../../data/organisation-unit.json"
 import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
@@ -15,6 +16,7 @@ interface DataLookupResult {
   pncCode?: string
   spiCode?: string
   recordableOnPnc?: string
+  resultHalfLifeHours?: string | null
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -62,6 +64,10 @@ const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number) =>
       organisationUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
+const lookupResultCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined => {
+  return resultCodes.find((x) => x.cjsCode === cjsCode)
+}
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -72,5 +78,6 @@ export {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
   lookupOrganisationUnitByCode,
-  lookupOrganisationUnitByThirdLevelPsaCode
+  lookupOrganisationUnitByThirdLevelPsaCode,
+  lookupResultCodeByCjsCode
 }

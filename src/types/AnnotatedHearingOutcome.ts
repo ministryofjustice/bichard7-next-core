@@ -125,6 +125,11 @@ const hearingSchema = z.object({
   CourtHouseName: z.string().optional()
 })
 
+const urgentSchema = z.object({
+  urgent: z.boolean(),
+  urgency: z.number()
+})
+
 const resultSchema = z.object({
   CJSresultCode: z.number().optional(),
   OffenceRemandStatus: z.string().optional(),
@@ -154,7 +159,9 @@ const resultSchema = z.object({
   ResultClass: z.string().optional(),
   NumberOfOffencesTIC: z.string().optional(),
   ReasonForOffenceBailConditions: z.string().optional(),
-  ResultQualifierVariable: resultQualifierVariableSchema.array()
+  ResultQualifierVariable: resultQualifierVariableSchema.array(),
+  ResultHalfLifeHours: z.number().optional(),
+  Urgent: urgentSchema.optional()
 })
 
 const offenceSchema = z.object({
