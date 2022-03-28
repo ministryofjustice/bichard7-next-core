@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { string, z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
 import { cjsPleaSchema } from "./Plea"
 import { pncQueryResultSchema } from "./PncQueryResult"
@@ -138,7 +138,7 @@ const resultSchema = z.object({
   ConvictingCourt: z.string().optional(),
   ResultHearingType: z.string().optional(),
   ResultHearingDate: z.date().optional(),
-  Duration: durationSchema.optional(),
+  Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: z.date().optional(),
   TimeSpecifiedInResult: z.string().optional(),
   AmountSpecifiedInResult: z.string().optional(),
@@ -161,7 +161,8 @@ const resultSchema = z.object({
   ReasonForOffenceBailConditions: z.string().optional(),
   ResultQualifierVariable: resultQualifierVariableSchema.array(),
   ResultHalfLifeHours: z.number().optional(),
-  Urgent: urgentSchema.optional()
+  Urgent: urgentSchema.optional(),
+  ResultApplicableQualifierCode: z.string().array()
 })
 
 const offenceSchema = z.object({
@@ -192,7 +193,8 @@ const offenceSchema = z.object({
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
-  RecordableOnPNCindicator: z.boolean().optional()
+  RecordableOnPNCindicator: z.boolean().optional(),
+  AddedByTheCourt: string().optional()
 })
 
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)

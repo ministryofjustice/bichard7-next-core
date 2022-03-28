@@ -1,4 +1,5 @@
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import alcoholLevelMethods from "../../data/alcohol-level-method.json"
 import modeOfTrialReasons from "../../data/mode-of-trial-reason.json"
 import offenceCode from "../../data/offence-code.json"
@@ -43,7 +44,7 @@ const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | 
 const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit) => {
+const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit): OrganisationUnitData | undefined => {
   if (!organisationUnit) {
     return undefined
   }
@@ -58,7 +59,7 @@ const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit) => {
   return result.find((unit) => unit.bottomLevelCode === organisationUnit.BottomLevelCode) ?? result?.[0]
 }
 
-const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number) =>
+const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number): OrganisationUnitData | undefined =>
   organisationUnits.find(
     (organisationUnit) =>
       organisationUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
