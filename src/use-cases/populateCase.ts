@@ -11,7 +11,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
 
   return {
     PTIURN: PTIURN?.toUpperCase(),
-    PreChargeDecisionIndicator: "N",
+    PreChargeDecisionIndicator: false,
     CourtReference: {
       MagistratesCourtReference: PTIURN
     },

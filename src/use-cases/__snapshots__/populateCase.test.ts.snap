@@ -13,6 +13,6 @@ Object {
   },
   "HearingDefendant": Object {},
   "PTIURN": "01ZD0303208",
-  "PreChargeDecisionIndicator": "N",
+  "PreChargeDecisionIndicator": false,
 }
 `;
