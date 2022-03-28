@@ -1,3 +1,4 @@
+import { validateASN, validateRemandStatus } from "src/use-cases/validations"
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
 import { cjsPleaSchema } from "./Plea"
@@ -195,21 +196,24 @@ const offenceSchema = z.object({
   RecordableOnPNCindicator: z.boolean().optional()
 })
 
+const asnSchema = z.string().refine(validateASN, ExceptionCode.HO100206)
+const croNumberSchema = z.string().regex(/[0-9]{1,6}\/[0-9]{2}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100207)
+const driverNumberSchema = z.string().regex(/[A-Z0-9]{5}[0-9]{6}[A-Z0-9]{3}[A-Z]{2}/, ExceptionCode.HO100208)
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
 
 const hearingDefendantSchema = z.object({
-  ArrestSummonsNumber: z.string(),
-  DriverNumber: z.string().optional(),
-  CRONumber: z.string().optional(),
+  ArrestSummonsNumber: asnSchema,
+  DriverNumber: driverNumberSchema.optional(),
+  CRONumber: croNumberSchema.optional(),
   PNCIdentifier: pncIdentifierSchema.optional(),
-  PNCCheckname: z.string().optional(),
+  PNCCheckname: z.string().max(54, ExceptionCode.HO100210).optional(),
   DefendantDetail: defendantDetailSchema,
   Address: addressSchema,
-  RemandStatus: z.string(),
+  RemandStatus: z.string().refine(validateRemandStatus, ExceptionCode.HO100108),
   BailConditions: z.string().array(),
-  ReasonForBailConditions: z.string().optional(),
+  ReasonForBailConditions: z.string().min(1, ExceptionCode.HO100220).max(2500, ExceptionCode.HO100220).optional(),
   CourtPNCIdentifier: pncIdentifierSchema.optional(),
-  OrganisationName: z.string().optional(),
+  OrganisationName: z.string().min(1, ExceptionCode.HO100211).max(255, ExceptionCode.HO100211).optional(),
   Offence: offenceSchema.array().min(0),
   Result: resultSchema.optional()
 })
