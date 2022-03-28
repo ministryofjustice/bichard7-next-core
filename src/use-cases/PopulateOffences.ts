@@ -12,7 +12,7 @@ import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/I
 import removeSeconds from "src/utils/removeSeconds"
 import {
   lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceCodeByCjsCode,
+  lookupOffenceByCjsCode,
   lookupResultQualifierCodeByCjsCode
 } from "./dataLookup"
 
@@ -162,7 +162,7 @@ export default class {
       })
     }
 
-    const offenceCode = lookupOffenceCodeByCjsCode(spiOffenceCode)
+    const offenceCode = lookupOffenceByCjsCode(spiOffenceCode)
     if (offenceCode) {
       offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc === "Y"
     }

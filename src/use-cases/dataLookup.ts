@@ -19,6 +19,7 @@ interface DataLookupResult {
   spiCode?: string
   recordableOnPnc?: string
   resultHalfLifeHours?: string | null
+  offenceTitle?: string
 }
 
 interface PncDisposalDataLookupResult {
@@ -49,7 +50,7 @@ const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult |
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   alcoholLevelMethods.find((x) => x.spiCode === spiCode)
 
-const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+const lookupOffenceByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit): OrganisationUnitData | undefined => {
@@ -87,7 +88,7 @@ export {
   lookupModeOfTrialReasonBySpiCode,
   lookupResultQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceCodeByCjsCode,
+  lookupOffenceByCjsCode,
   lookupOrganisationUnitByCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupResultCodeByCjsCode,
