@@ -1,4 +1,4 @@
-import type { OrganisationUnit, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { OrganisationUnit, Result } from "src/types/AnnotatedHearingOutcome"
 import {
   ADJOURNMENT_NO_NEXT_HEARING_RANGES,
   ADJOURNMENT_RANGES,

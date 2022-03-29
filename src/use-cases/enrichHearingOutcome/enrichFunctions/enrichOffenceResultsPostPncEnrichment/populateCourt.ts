@@ -1,8 +1,8 @@
-import getCourtDetails from "../../../../lib/getCourtDetails"
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "../../../dataLookup"
+import getCourtDetails from "src/lib/getCourtDetails"
+import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import populateSourceOrganisation from "./populateSourceOrganisation"
-import populateOrganisationUnitFields from "../../../populateOrganisationUnitFields"
+import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
 const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
   populateSourceOrganisation(result, hearingOutcome)
