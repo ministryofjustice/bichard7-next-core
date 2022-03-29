@@ -1,10 +1,10 @@
 jest.setTimeout(30000)
 
-import { TriggerCode } from "../../src/types/TriggerCode"
-import generateMessage from "../helpers/generateMessage"
-import PostgresHelper from "../helpers/PostgresHelper"
-import processMessage from "../helpers/processMessage"
-import TriggerRecordable from "../../src/types/TriggerRecordable"
+import { TriggerCode } from "src/types/TriggerCode"
+import TriggerRecordable from "src/types/TriggerRecordable"
+import generateMessage from "tests/helpers/generateMessage"
+import PostgresHelper from "tests/helpers/PostgresHelper"
+import processMessage from "tests/helpers/processMessage"
 
 const offenceTests = [
   {

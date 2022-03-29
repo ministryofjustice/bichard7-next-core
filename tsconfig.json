@@ -11,6 +11,9 @@
       "jest"
     ],
     "baseUrl": "./",
+    "paths": {
+      "data": ["data"],
+    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noImplicitAny": true,

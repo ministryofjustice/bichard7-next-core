@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
-import type { PncOffence, PncQueryResult } from "../../src/types/PncQueryResult"
+import type { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 
 type OffenceDates = {
   startDate: Date

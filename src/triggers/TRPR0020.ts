@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import type { Offence } from "../types/AnnotatedHearingOutcome"
-import type { Trigger } from "../types/Trigger"
-import { TriggerCode } from "../types/TriggerCode"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
-import { CjsVerdict } from "../types/Verdict"
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import type { Trigger } from "src/types/Trigger"
+import { TriggerCode } from "src/types/TriggerCode"
+import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import { CjsVerdict } from "src/types/Verdict"
+import findResultCode from "src/use-cases/findResultCode"
 import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
-import findResultCode from "../use-cases/findResultCode"
 
 const triggerCode = TriggerCode.TRPR0020
 const resultCodes = [1029, 1030, 1031, 1032, 3501]
@@ -28,12 +28,14 @@ const resultCodeIsFinal = (resultCode: number): boolean => findResultCode(result
 
 const containsOffenceCode = (offence: Offence) => {
   const fullCode = getOffenceFullCode(offence)
-  return fullCode && offenceCodes.includes(fullCode) &&
-  offence.Result.some(
-    (result) =>
-      result.CJSresultCode && !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
+  return (
+    fullCode &&
+    offenceCodes.includes(fullCode) &&
+    offence.Result.some(
+      (result) =>
+        result.CJSresultCode && !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
+    )
   )
-
 }
 
 const containsResultCode = (offence: Offence) =>

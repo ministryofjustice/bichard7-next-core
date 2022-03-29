@@ -1,9 +1,10 @@
 import { readFileSync } from "fs"
-import type { HearingDefendant } from "../types/AnnotatedHearingOutcome"
+import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
 import parseSpiResult from "./parseSpiResult"
 import populateCase from "./populateCase"
-jest.mock("src/use-cases/populateDefendant")
 import populateDefendant from "./populateDefendant"
+
+jest.mock("src/use-cases/populateDefendant")
 
 const message = readFileSync("test-data/input-message-001.xml", "utf-8")
 const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage

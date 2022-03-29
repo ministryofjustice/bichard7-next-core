@@ -1,11 +1,11 @@
 jest.setTimeout(30000)
 
-import { SpiVerdict } from "../../src/types/Verdict"
-import { SpiPlea } from "../../src/types/Plea"
-import { TriggerCode } from "../../src/types/TriggerCode"
-import generateMessage from "../helpers/generateMessage"
-import PostgresHelper from "../helpers/PostgresHelper"
-import processMessage from "../helpers/processMessage"
+import { SpiPlea } from "src/types/Plea"
+import { TriggerCode } from "src/types/TriggerCode"
+import { SpiVerdict } from "src/types/Verdict"
+import generateMessage from "tests/helpers/generateMessage"
+import PostgresHelper from "tests/helpers/PostgresHelper"
+import processMessage from "tests/helpers/processMessage"
 
 const code = TriggerCode.TRPR0008
 const matchingOffenceCode = "BA76004"

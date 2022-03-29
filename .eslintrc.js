@@ -26,7 +26,7 @@ module.exports = {
         project: "tsconfig.eslint.json",
         tsconfigRootDir: __dirname
       },
-      plugins: ["@typescript-eslint", "jest"],
+      plugins: ["@typescript-eslint", "jest", "import"],
       extends: [
         "airbnb-typescript/base",
         "plugin:@typescript-eslint/recommended",
@@ -41,6 +41,8 @@ module.exports = {
         semi: ["error", "never"],
         "no-plusplus": "off",
         "require-await": "error",
+        "import/no-relative-packages": "error",
+        "import/no-relative-parent-imports": "error",
         "prettier/prettier": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",
@@ -54,6 +56,15 @@ module.exports = {
       rules: {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      // Just the TypeScript script files
+      // These settings will only affect the scripts
+      files: ["scripts/**/*.ts"],
+      rules: {
+        "import/no-relative-packages": "off",
+        "import/no-relative-parent-imports": "off"
       }
     }
   ]

@@ -1,8 +1,8 @@
 jest.setTimeout(30000)
 
-import generateMessage from "../helpers/generateMessage"
-import PostgresHelper from "../helpers/PostgresHelper"
-import processMessage from "../helpers/processMessage"
+import generateMessage from "tests/helpers/generateMessage"
+import PostgresHelper from "tests/helpers/PostgresHelper"
+import processMessage from "tests/helpers/processMessage"
 
 describe("HO100220", () => {
   afterAll(() => {

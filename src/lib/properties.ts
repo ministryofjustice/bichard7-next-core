@@ -1,4 +1,4 @@
-import type { KeyValue } from "../types/KeyValue"
+import type { KeyValue } from "src/types/KeyValue"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [

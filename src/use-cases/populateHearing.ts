@@ -1,6 +1,6 @@
-import type { Hearing } from "../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
-import removeSeconds from "../utils/removeSeconds"
+import type { Hearing } from "src/types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import removeSeconds from "src/utils/removeSeconds"
 import getOrganisationUnit from "./getOrganisationUnit"
 
 export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {

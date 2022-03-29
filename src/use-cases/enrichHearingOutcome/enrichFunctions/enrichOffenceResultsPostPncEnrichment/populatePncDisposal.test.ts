@@ -1,14 +1,14 @@
 jest.mock("src/use-cases/dataLookup")
-import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import populatePncDisposal from "./populatePncDisposal"
 import {
   GUILTY_OF_ALTERNATIVE,
   PNC_DISPOSAL_TYPE,
   RESULT_ADJOURNMENT_WITH_JUDGEMENT,
   RESULT_JUDGEMENT_WITH_FINAL_RESULT,
   VICTIM_SURCHARGE_AMOUNT_IN_POUNDS
-} from "../../../../lib/properties"
+} from "src/lib/properties"
+import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
 import { lookupPncDisposalByCjsCode } from "src/use-cases/dataLookup"
+import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {
   it("should set PNCDisposalType to VICTIM_SURCHARGE", () => {

@@ -1,8 +1,8 @@
+import triggers from "src/triggers"
 import filterExcludedTriggers from "src/triggers/filterExcludedTriggers"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
-import triggers from "../triggers"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import type { Trigger } from "../types/Trigger"
 
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => {
   // Run triggers which don't depend on any other triggers
