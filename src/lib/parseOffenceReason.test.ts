@@ -49,13 +49,13 @@ describe("GIVEN parseOffence", () => {
     })
 
     it('THEN parse a "Reason" for offenceCode.length > 4', () => {
-      const nonMatchingOffenceCode = `CO88013`
+      const nonMatchingOffenceCode = "CO88013"
       const res = parseOffenceReason(nonMatchingOffenceCode, "01")
       expect(res && "OffenceCode" in res && res.OffenceCode.Reason).toBe("88013")
     })
 
     it('THEN parse "Qualifier" for offenceCode.length > 7', () => {
-      const nonMatchingOffenceCode = `CO88013I`
+      const nonMatchingOffenceCode = "CO88013I"
       const parsedOffenceReason = parseOffenceReason(nonMatchingOffenceCode, "01")
       expect(
         parsedOffenceReason && "OffenceCode" in parsedOffenceReason && parsedOffenceReason.OffenceCode.Qualifier
@@ -78,7 +78,7 @@ describe("GIVEN parseOffence", () => {
     })
 
     it('THEN parse "Qualifier" for offenceCode.length < 7', () => {
-      const nonMatchingOffenceCode = `07DOG1`
+      const nonMatchingOffenceCode = "07DOG1"
       const parsedOffenceReason = parseOffenceReason(nonMatchingOffenceCode, "01")
       expect(
         parsedOffenceReason &&

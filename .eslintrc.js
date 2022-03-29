@@ -1,32 +1,31 @@
 module.exports = {
   root: true,
-  env: {
-    es6: true
-  },
-  rules: {
-    semi: [2, "never"],
-    quotes: [
-      2,
-      "double",
-      {
-        avoidEscape: true
-      }
-    ],
-    "comma-dangle": "off"
-  },
+  env: { es6: true },
   ignorePatterns: ["build/*"],
   overrides: [
     {
+      // Plain JavaScript files
       files: ["**/*.js"],
       extends: ["airbnb-base", "prettier", "plugin:prettier/recommended"],
       rules: {
-        "@typescript-eslint/no-var-requires": "off",
-        curly: [2, "all"]
+        curly: ["error", "all"],
+        quotes: ["error", "double", { avoidEscape: true }],
+        semi: ["error", "never"],
+        "no-plusplus": "off",
+        "require-await": "error",
+        "prettier/prettier": ["error"]
       }
     },
     {
+      // All TypeScript files
+      // These settings will also affect test and script files
       files: ["**/*.ts"],
       parser: "@typescript-eslint/parser",
+      parserOptions: {
+        ecmaVersion: 2020,
+        project: "tsconfig.eslint.json",
+        tsconfigRootDir: __dirname
+      },
       plugins: ["@typescript-eslint", "jest"],
       extends: [
         "airbnb-typescript/base",
@@ -36,37 +35,25 @@ module.exports = {
         "prettier",
         "plugin:prettier/recommended"
       ],
-      parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: "module",
-        project: "tsconfig.eslint.json",
-        tsconfigRootDir: __dirname
-      },
       rules: {
+        curly: ["error", "all"],
+        quotes: ["error", "double", { avoidEscape: true }],
+        semi: ["error", "never"],
+        "no-plusplus": "off",
+        "require-await": "error",
         "prettier/prettier": ["error"],
-        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",
-        "no-plusplus": "off",
-        curly: [2, "all"],
-        "require-await": "error",
         "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$" }]
       }
     },
     {
-      files: ["*.test.ts"],
+      // Just the TypeScript test files
+      // These settings will only affect the tests
+      files: ["*.test.ts", "tests/**/*.ts"],
       rules: {
-        "@typescript-eslint/no-var-requires": "off",
-        "import/first": "off",
-        "import/no-extraneous-dependencies": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-explicit-any": "off"
-      }
-    },
-    {
-      files: ["tests/**/*.ts"],
-      rules: {
-        "import/no-extraneous-dependencies": "off"
       }
     }
   ]

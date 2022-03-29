@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import generateMockAho from "tests/helpers/generateMockAho"
 import enrichOffences from "./enrichOffences"
 

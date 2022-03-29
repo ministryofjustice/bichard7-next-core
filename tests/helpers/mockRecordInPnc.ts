@@ -1,9 +1,9 @@
+import axios from "axios"
+import merge from "lodash.merge"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
 import parseSpiResult from "../../src/use-cases/parseSpiResult"
-import axios from "axios"
 import defaults from "./defaults"
 import reformatDate from "./reformatDate"
-import merge from "lodash.merge"
 
 const extractDates = (offence: OffenceParsedXml) => {
   const startDate = reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
@@ -63,7 +63,7 @@ const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessa
 }
 
 const mockEnquiryError = (): string => {
-  return `<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>`
+  return '<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>'
 }
 
 const addMock = async (matchRegex: string, response: string, count: number | null = null): Promise<string> => {
