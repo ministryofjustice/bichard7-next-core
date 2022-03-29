@@ -31,6 +31,7 @@ export type GenerateMessageOptions = {
   person?: Person
   bailConditions?: string
   bailStatus?: string
+  ASN?: string
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string): string {
