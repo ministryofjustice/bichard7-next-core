@@ -6,7 +6,7 @@ const populateOrganisationUnitFields = (organisationUnit: OrganisationUnit): Org
   if (!OrganisationUnitCode) {
     organisationUnit.OrganisationUnitCode = [TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode]
       .filter((x) => x)
-      .join()
+      .join("")
   } else {
     let offset = 1
     if (OrganisationUnitCode.length > 6) {
