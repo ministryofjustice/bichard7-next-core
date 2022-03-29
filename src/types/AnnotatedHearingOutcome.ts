@@ -163,7 +163,7 @@ const resultSchema = z.object({
   ResultQualifierVariable: resultQualifierVariableSchema.array(),
   ResultHalfLifeHours: z.number().optional(),
   Urgent: urgentSchema.optional(),
-  ResultApplicableQualifierCode: z.string().array()
+  ResultApplicableQualifierCode: z.string().array().min(0).optional()
 })
 
 const offenceSchema = z.object({
