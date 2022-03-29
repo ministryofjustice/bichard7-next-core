@@ -3,7 +3,6 @@ import {
   ADJOURNMENT_NO_NEXT_HEARING_RANGES,
   ADJOURNMENT_RANGES,
   CROWN_COURT,
-  NON_RECORDABLE_RESULT_CODES,
   RESULT_ADJOURNMENT_POST_JUDGEMENT,
   RESULT_ADJOURNMENT_PRE_JUDGEMENT,
   RESULT_ADJOURNMENT_WITH_JUDGEMENT,
@@ -14,7 +13,7 @@ import {
   RESULT_SENTENCE,
   RESULT_UNRESULTED,
   WARRANT_ISSUED_CODES
-} from "../../../../lib/properties"
+} from "src/lib/properties"
 
 const isInRanges = (ranges: number[][], value: number) => ranges.some((range) => value >= range[0] && value <= range[1])
 
@@ -22,8 +21,7 @@ const populateResultClass = (
   result: Result,
   convictionDate: Date | undefined,
   dateOfHearing: Date,
-  courtType: string | undefined,
-  addedByTheCourt: boolean
+  courtType: string | undefined
 ) => {
   const nextHearingPresent = !!result.NextResultSourceOrganisation?.OrganisationUnitCode
   if (courtType === CROWN_COURT) {
@@ -43,20 +41,17 @@ const populateResultClass = (
   const { Verdict, PleaStatus, CJSresultCode } = result
 
   let resultClass = RESULT_UNRESULTED
-  if (convictionDate && dateOfHearing && convictionDate < dateOfHearing) {
+  if (convictionDate && dateOfHearing && convictionDate.getTime() < dateOfHearing.getTime()) {
     resultClass = adjournment ? RESULT_ADJOURNMENT_POST_JUDGEMENT : RESULT_SENTENCE
-  } else if (convictionDate && dateOfHearing && convictionDate === dateOfHearing) {
+  } else if (convictionDate && dateOfHearing && convictionDate.getTime() === dateOfHearing.getTime()) {
     resultClass = adjournment ? RESULT_ADJOURNMENT_WITH_JUDGEMENT : RESULT_JUDGEMENT_WITH_FINAL_RESULT
   } else if (RESULT_CLASS_PLEAS.includes(PleaStatus?.toString() ?? "") && !adjournment) {
     resultClass = RESULT_JUDGEMENT_WITH_FINAL_RESULT
   } else if (RESULT_CLASS_RESULT_CODES.includes(CJSresultCode ?? 0) || RESULT_CLASS_VERDICTS.includes(Verdict ?? "")) {
+    console.log("here", adjournment ? RESULT_UNRESULTED : RESULT_JUDGEMENT_WITH_FINAL_RESULT)
     resultClass = adjournment ? RESULT_UNRESULTED : RESULT_JUDGEMENT_WITH_FINAL_RESULT
   } else if (!Verdict && adjournment) {
     resultClass = RESULT_ADJOURNMENT_PRE_JUDGEMENT
-  } else if (NON_RECORDABLE_RESULT_CODES.includes(CJSresultCode ?? 0) || addedByTheCourt) {
-    resultClass = RESULT_UNRESULTED
-  } else {
-    resultClass = RESULT_UNRESULTED
   }
 
   result.ResultClass = resultClass

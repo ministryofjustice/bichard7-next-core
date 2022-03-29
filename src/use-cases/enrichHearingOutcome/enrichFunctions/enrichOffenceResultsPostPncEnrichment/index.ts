@@ -24,7 +24,7 @@ const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome
       populateCourt(result, hearingOutcome)
 
       if (isCaseRecordable(hearingOutcome)) {
-        populateResultClass(result, offence.ConvictionDate, DateOfHearing, CourtType, !!offence.AddedByTheCourt)
+        populateResultClass(result, offence.ConvictionDate, DateOfHearing, CourtType)
         populatePncDisposal(hearingOutcome, result)
       }
     })
