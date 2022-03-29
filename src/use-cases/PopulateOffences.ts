@@ -6,15 +6,16 @@ import {
   INDICTMENT,
   STOP_LIST,
   TIME_RANGE
-} from "../lib/properties"
-import type { Offence, OffenceCode } from "../types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
-import removeSeconds from "../utils/removeSeconds"
+} from "src/lib/properties"
+import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import removeSeconds from "src/utils/removeSeconds"
 import {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
   lookupResultQualifierCodeByCjsCode
 } from "./dataLookup"
+
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -31,23 +32,33 @@ export default class {
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length
-    const offenceCode = {
+    const offenceCode: Partial<OffenceCode> = {
       Reason: spiOffenceCodeLength > 4 ? spiOffenceCode.substring(4, Math.min(7, spiOffenceCodeLength)) : "",
-      ...(spiOffenceCodeLength > 7 ? { Qualifier: spiOffenceCode.substring(7) } : {})
-    } as OffenceCode
+      ...(spiOffenceCodeLength > 7 ? { Qualifier: spiOffenceCode.substring(7) } : {}),
+      FullCode: spiOffenceCode
+    }
 
     if (spiOffenceCode.startsWith(COMMON_LAWS)) {
-      offenceCode.CommonLawOffence = COMMON_LAWS
+      offenceCode.__type = "CommonLawOffenceCode"
+      if (offenceCode.__type === "CommonLawOffenceCode") {
+        offenceCode.CommonLawOffence = COMMON_LAWS
+      }
     } else if (spiOffenceCode.startsWith(INDICTMENT)) {
-      offenceCode.Indictment = INDICTMENT
+      offenceCode.__type = "IndictmentOffenceCode"
+      if (offenceCode.__type === "IndictmentOffenceCode") {
+        offenceCode.Indictment = INDICTMENT
+      }
     } else {
-      offenceCode.ActOrSource = spiOffenceCodeLength < 2 ? spiOffenceCode : spiOffenceCode.substring(0, 2)
+      offenceCode.__type = "NonMatchingOffenceCode"
+      if (offenceCode.__type === "NonMatchingOffenceCode") {
+        offenceCode.ActOrSource = spiOffenceCodeLength < 2 ? spiOffenceCode : spiOffenceCode.substring(0, 2)
 
-      offenceCode.Year = spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
+        offenceCode.Year =
+          spiOffenceCodeLength > 2 ? spiOffenceCode.substring(2, Math.min(4, spiOffenceCodeLength)) : ""
+      }
     }
-    offenceCode.FullCode = spiOffenceCode
 
-    return offenceCode
+    return offenceCode as OffenceCode
   }
 
   private populateOffence = (spiOffence: OffenceParsedXml): Offence | undefined => {
@@ -77,7 +88,8 @@ export default class {
     const OffenceCode = this.getOffenceReason(spiOffenceCode ?? "")
     offence.CriminalProsecutionReference = {
       OffenceReason: {
-        OffenceCode
+        OffenceCode,
+        __type: "NationalOffenceReason"
       }
     }
 
