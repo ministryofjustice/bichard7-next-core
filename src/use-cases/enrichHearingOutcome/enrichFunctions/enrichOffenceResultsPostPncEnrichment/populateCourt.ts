@@ -7,14 +7,17 @@ import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUn
 const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
   populateSourceOrganisation(result, hearingOutcome)
 
-  const sourceOrganisationUnitData = lookupOrganisationUnitByCode(result.SourceOrganisation)
+  const { SourceOrganisation, NextHearingDate } = result
+  const sourceOrganisationUnitData = lookupOrganisationUnitByCode(SourceOrganisation)
   result.CourtType = sourceOrganisationUnitData ? getCourtDetails(sourceOrganisationUnitData).courtType : undefined
 
   result.NextCourtType = undefined
   if (result.NextResultSourceOrganisation) {
     populateOrganisationUnitFields(result.NextResultSourceOrganisation)
 
-    if (result.NextResultSourceOrganisation.OrganisationUnitCode || result.NextHearingDate) {
+    if (!result.NextResultSourceOrganisation.OrganisationUnitCode && !NextHearingDate) {
+      result.NextResultSourceOrganisation = undefined
+    } else {
       const nextResultSourceOrganisationUnitData = lookupOrganisationUnitByCode(result.NextResultSourceOrganisation)
       if (nextResultSourceOrganisationUnitData) {
         result.NextCourtType = getCourtDetails(nextResultSourceOrganisationUnitData).courtType

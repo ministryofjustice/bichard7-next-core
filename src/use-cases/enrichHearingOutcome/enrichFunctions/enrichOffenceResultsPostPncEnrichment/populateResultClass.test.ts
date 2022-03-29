@@ -123,7 +123,7 @@ describe("populateResultClass", () => {
     expect(result.ResultClass).toBe(RESULT_JUDGEMENT_WITH_FINAL_RESULT)
   })
 
-  it("should set the result class to Unresulted when adjourned and CJSE result code is in result codes list", () => {
+  it("should set the result class to Unresulted when adjourned and CJS result code is in result codes list", () => {
     const result = {
       ResultClass: "Dummy Result Class",
       CJSresultCode: RESULT_CLASS_RESULT_CODES[0],
@@ -149,7 +149,7 @@ describe("populateResultClass", () => {
     expect(result.ResultClass).toBe(RESULT_UNRESULTED)
   })
 
-  it("should set the result class to Judgement with final result when not adjourned and CJSE result code is in result codes list", () => {
+  it("should set the result class to Judgement with final result when not adjourned and CJS result code is in result codes list", () => {
     const result = {
       ResultClass: "Dummy Result Class",
       CJSresultCode: RESULT_CLASS_RESULT_CODES[0]
