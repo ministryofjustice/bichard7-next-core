@@ -2,7 +2,11 @@ import getCourtDetails from "src/lib/getCourtDetails"
 import { CROWN_COURT } from "src/lib/properties"
 import type { AnnotatedHearingOutcome, OrganisationUnit, Result } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
-import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup"
+import {
+  lookupOrganisationUnitByCode,
+  lookupOrganisationUnitByThirdLevelPsaCode,
+  lookupPncDisposalByCjsCode
+} from "src/use-cases/dataLookup"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 
@@ -15,23 +19,23 @@ const RESULT_ADJOURNMENT_WITH_JUDGEMENT = "Adjournment with Judgement"
 const RESULT_JUDGEMENT_WITH_FINAL_RESULT = "Judgement with final result"
 const RESULT_ADJOURNMENT_PRE_JUDGEMENT = "Adjournment pre Judgement"
 const ADJOURNMENT_RANGES = [
-  { start: 4001, end: 4009 },
-  { start: 4011, end: 4017 },
-  { start: 4020, end: 4021 },
-  { start: 4023, end: 4025 },
-  { start: 4027, end: 4035 },
-  { start: 4046, end: 4048 },
-  { start: 4050, end: 4050 },
-  { start: 4051, end: 4051 },
-  { start: 4053, end: 4058 },
-  { start: 4506, end: 4506 },
-  { start: 4508, end: 4508 },
-  { start: 4541, end: 4572 },
-  { start: 4574, end: 4574 },
-  { start: 4587, end: 4589 }
+  [4001, 4009],
+  [4011, 4017],
+  [4020, 4021],
+  [4023, 4025],
+  [4027, 4035],
+  [4046, 4048],
+  [4050, 4050],
+  [4051, 4051],
+  [4053, 4058],
+  [4506, 4506],
+  [4508, 4508],
+  [4541, 4572],
+  [4574, 4574],
+  [4587, 4589]
 ]
-const WARRANT_ISSUED_CODES = [{ start: 4575, end: 4577 }]
-const ADJOURNMENT_NO_NEXT_HEARING_RANGES = [{ start: 0, end: 0 }]
+const WARRANT_ISSUED_CODES = [[4575, 4577]]
+const ADJOURNMENT_NO_NEXT_HEARING_RANGES = [[0, 0]]
 const RESULT_CLASS_PLEAS = ["ADM"]
 const RESULT_CLASS_VERDICTS = ["NG", "NC", "NA"]
 const RESULT_CLASS_RESULT_CODES = [
@@ -52,10 +56,26 @@ const NON_RECORDABLE_RESULT_CODES = [
   // eslint-disable-next-line prettier/prettier
   4585, 4586, 3118, 4592, 4593, 4594, 4595, 4596, 4597
 ]
-type NumberRange = { start: number; end: number }
+const VICTIM_SURCHARGE_CREST_CODES = [
+  "COM",
+  "COMINST",
+  "COMTIME",
+  "FD",
+  "FDINST",
+  "FDTIME",
+  "FINE",
+  "PC",
+  "PCINST",
+  "PCTIME"
+]
+const VICTIM_SURCHARGE_AMOUNT_IN_POUNDS = 15
+const GUILTY_OF_ALTERNATIVE = "NA"
+const PNC_DISPOSAL_TYPE = {
+  VICTIM_SURCHARGE: "3117",
+  GUILTY_OF_ALTERNATIVE: "2060"
+}
 
-const isInRanges = (ranges: NumberRange[], value: number) =>
-  ranges.some((adjournmentRange) => value >= adjournmentRange.start && value <= adjournmentRange.end)
+const isInRanges = (ranges: number[][], value: number) => ranges.some((range) => value >= range[0] && value <= range[1])
 
 const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
   const { CourtHearingLocation, CourtHouseCode } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
@@ -104,7 +124,7 @@ const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) 
   }
 }
 
-const enruchResult = (
+const populateResultClass = (
   result: Result,
   convictionDate: Date | undefined,
   dateOfHearing: Date,
@@ -148,16 +168,36 @@ const enruchResult = (
   result.ResultClass = resultClass
 }
 
+const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Result) => {
+  const { CJSresultCode, ResultClass } = result
+  const { CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+
+  if (
+    CourtType?.startsWith("M") &&
+    VICTIM_SURCHARGE_CREST_CODES.includes(result.CRESTDisposalCode ?? "") &&
+    result.ResultVariableText?.match(/victim\s*surcharge/i) &&
+    result.AmountSpecifiedInResult?.some((amount) => amount === VICTIM_SURCHARGE_AMOUNT_IN_POUNDS)
+  ) {
+    result.PNCDisposalType = PNC_DISPOSAL_TYPE.VICTIM_SURCHARGE
+  } else if (result.Verdict === GUILTY_OF_ALTERNATIVE) {
+    result.PNCDisposalType = PNC_DISPOSAL_TYPE.GUILTY_OF_ALTERNATIVE
+  } else {
+    const adjudicationIndicator =
+      ResultClass === RESULT_ADJOURNMENT_WITH_JUDGEMENT || ResultClass == RESULT_JUDGEMENT_WITH_FINAL_RESULT
+
+    const pncDisposal = lookupPncDisposalByCjsCode(CJSresultCode ?? 0)
+    result.PNCDisposalType =
+      (adjudicationIndicator ? pncDisposal?.pncAdjudication : pncDisposal?.pncNonAdjudication) ??
+      CJSresultCode?.toString()
+  }
+}
+
 const enrichOffenceResults: EnrichAhoFunction = (hearingOutcome) => {
   const { DateOfHearing, CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence) => {
-    const additionalResults: Result[] = []
-
     offence.Result.forEach((result) => {
       result.ResultApplicableQualifierCode = []
-
-      // enrich Result
       result.ResultHearingDate = offence.ConvictionDate ?? DateOfHearing
       if (
         result.CJSresultCode &&
@@ -171,12 +211,10 @@ const enrichOffenceResults: EnrichAhoFunction = (hearingOutcome) => {
       populateCourt(result, hearingOutcome)
 
       if (isCaseRecordable(hearingOutcome)) {
-        enruchResult(result, offence.ConvictionDate, DateOfHearing, CourtType, !!offence.AddedByTheCourt)
-        // const additionalResult = enrich(hearingOutcome, result)
+        populateResultClass(result, offence.ConvictionDate, DateOfHearing, CourtType, !!offence.AddedByTheCourt)
+        populatePncDisposal(hearingOutcome, result)
       }
     })
-
-    offence.Result = offence.Result.concat(additionalResults)
   })
 
   return hearingOutcome

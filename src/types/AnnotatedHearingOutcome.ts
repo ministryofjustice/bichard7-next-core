@@ -142,7 +142,7 @@ const resultSchema = z.object({
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: z.date().optional(),
   TimeSpecifiedInResult: z.string().optional(),
-  AmountSpecifiedInResult: z.string().optional(),
+  AmountSpecifiedInResult: z.number().array().optional(),
   NumberSpecifiedInResult: z.string().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().optional(),
