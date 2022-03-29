@@ -9,6 +9,7 @@ import qualifiers from "../../data/qualifier.json"
 import remandStatus from "../../data/remand-status.json"
 import resultCodes from "../../data/result-codes.json"
 import verdicts from "../../data/verdict.json"
+import pncDisposals from "../../data/pnc-disposal.json"
 import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
@@ -18,6 +19,13 @@ interface DataLookupResult {
   spiCode?: string
   recordableOnPnc?: string
   resultHalfLifeHours?: string | null
+}
+
+interface PncDisposalDataLookupResult {
+  cjsCode: string
+  description: string
+  pncAdjudication: string
+  pncNonAdjudication: string
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -65,9 +73,11 @@ const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number): O
       organisationUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
-const lookupResultCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined => {
-  return resultCodes.find((x) => x.cjsCode === cjsCode)
-}
+const lookupResultCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+  resultCodes.find((x) => x.cjsCode === cjsCode)
+
+const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposalDataLookupResult | undefined =>
+  pncDisposals.find((x) => x.cjsCode === cjsCode.toString())
 
 export {
   lookupRemandStatusBySpiCode,
@@ -80,5 +90,6 @@ export {
   lookupOffenceCodeByCjsCode,
   lookupOrganisationUnitByCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
-  lookupResultCodeByCjsCode
+  lookupResultCodeByCjsCode,
+  lookupPncDisposalByCjsCode
 }

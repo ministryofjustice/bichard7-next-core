@@ -1,0 +1,398 @@
+[
+  {
+    "cjsCode": "1507",
+    "description": "1507",
+    "pncAdjudication": "1002",
+    "pncNonAdjudication": "1002"
+  },
+  {
+    "cjsCode": "2503",
+    "description": "2503",
+    "pncAdjudication": "2065",
+    "pncNonAdjudication": "2065"
+  },
+  {
+    "cjsCode": "4020",
+    "description": "4020",
+    "pncAdjudication": "4015",
+    "pncNonAdjudication": "4015"
+  },
+  {
+    "cjsCode": "4021",
+    "description": "4021",
+    "pncAdjudication": "4016",
+    "pncNonAdjudication": "4016"
+  },
+  {
+    "cjsCode": "4025",
+    "description": "4025",
+    "pncAdjudication": "4001",
+    "pncNonAdjudication": "4001"
+  },
+  {
+    "cjsCode": "4027",
+    "description": "4027",
+    "pncAdjudication": "4027",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4028",
+    "description": "4028",
+    "pncAdjudication": "4028",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4029",
+    "description": "4029",
+    "pncAdjudication": "4029",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4030",
+    "description": "4030",
+    "pncAdjudication": "4030",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4031",
+    "description": "4031",
+    "pncAdjudication": "4031",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4032",
+    "description": "4032",
+    "pncAdjudication": "4032",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4033",
+    "description": "4033",
+    "pncAdjudication": "4033",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4034",
+    "description": "4034",
+    "pncAdjudication": "4034",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4035",
+    "description": "4035",
+    "pncAdjudication": "4035",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4046",
+    "description": "4046",
+    "pncAdjudication": "4046",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4047",
+    "description": "4047",
+    "pncAdjudication": "4047",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4048",
+    "description": "4048",
+    "pncAdjudication": "4048",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4050",
+    "description": "4050",
+    "pncAdjudication": "4050",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4051",
+    "description": "4051",
+    "pncAdjudication": "4051",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4053",
+    "description": "4053",
+    "pncAdjudication": "4053",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4502",
+    "description": "4502",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4506",
+    "description": "4506",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4508",
+    "description": "4508",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4529",
+    "description": "4529",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4530",
+    "description": "4530",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4531",
+    "description": "4531",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4533",
+    "description": "4533",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4535",
+    "description": "4535",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4536",
+    "description": "4536",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4537",
+    "description": "4537",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4538",
+    "description": "4538",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4539",
+    "description": "4539",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4541",
+    "description": "4541",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4542",
+    "description": "4542",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4543",
+    "description": "4543",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4548",
+    "description": "4548",
+    "pncAdjudication": "4011",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4549",
+    "description": "4549",
+    "pncAdjudication": "4012",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4550",
+    "description": "4550",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4551",
+    "description": "4551",
+    "pncAdjudication": "4012",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4552",
+    "description": "4552",
+    "pncAdjudication": "4013",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4553",
+    "description": "4553",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4554",
+    "description": "4554",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4555",
+    "description": "4555",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4556",
+    "description": "4556",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4557",
+    "description": "4557",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4558",
+    "description": "4558",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4559",
+    "description": "4559",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4560",
+    "description": "4560",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4561",
+    "description": "4561",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4562",
+    "description": "4562",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4563",
+    "description": "4563",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4564",
+    "description": "4564",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4565",
+    "description": "4565",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4566",
+    "description": "4566",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4570",
+    "description": "4570",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4571",
+    "description": "4571",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4572",
+    "description": "4572",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4573",
+    "description": "4573",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4574",
+    "description": "4574",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4575",
+    "description": "4575",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4576",
+    "description": "4576",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4577",
+    "description": "4577",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4582",
+    "description": "4582",
+    "pncAdjudication": "4004",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4587",
+    "description": "4587",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4588",
+    "description": "4588",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  },
+  {
+    "cjsCode": "4589",
+    "description": "4589",
+    "pncAdjudication": "2059",
+    "pncNonAdjudication": "2059"
+  }
+]
