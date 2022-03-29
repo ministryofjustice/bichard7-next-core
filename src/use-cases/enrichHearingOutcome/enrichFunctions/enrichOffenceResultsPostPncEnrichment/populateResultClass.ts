@@ -48,7 +48,6 @@ const populateResultClass = (
   } else if (RESULT_CLASS_PLEAS.includes(PleaStatus?.toString() ?? "") && !adjournment) {
     resultClass = RESULT_JUDGEMENT_WITH_FINAL_RESULT
   } else if (RESULT_CLASS_RESULT_CODES.includes(CJSresultCode ?? 0) || RESULT_CLASS_VERDICTS.includes(Verdict ?? "")) {
-    console.log("here", adjournment ? RESULT_UNRESULTED : RESULT_JUDGEMENT_WITH_FINAL_RESULT)
     resultClass = adjournment ? RESULT_UNRESULTED : RESULT_JUDGEMENT_WITH_FINAL_RESULT
   } else if (!Verdict && adjournment) {
     resultClass = RESULT_ADJOURNMENT_PRE_JUDGEMENT
