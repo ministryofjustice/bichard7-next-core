@@ -12,11 +12,11 @@ import {
   TAGGING_FIX_ADD,
   TAGGING_FIX_REMOVE,
   WARRANT_ISSUE_DATE_RESULT_CODES
-} from "../lib/properties"
-import type { Result } from "../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "../types/IncomingMessage"
-import type { CjsPlea } from "../types/Plea"
-import type { CjsVerdict } from "../types/Verdict"
+} from "src/lib/properties"
+import type { Result } from "src/types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
+import type { CjsPlea } from "src/types/Plea"
+import type { CjsVerdict } from "src/types/Verdict"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupPleaStatusBySpiCode,

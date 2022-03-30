@@ -4,6 +4,7 @@ import type { Trigger } from "../types/Trigger"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 import { CjsVerdict } from "../types/Verdict"
+import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 import findResultCode from "../use-cases/findResultCode"
 
 const triggerCode = TriggerCode.TRPR0020
@@ -25,12 +26,15 @@ const resultCodeIsExcluded = (resultCode: number): boolean => excludedResultCode
 
 const resultCodeIsFinal = (resultCode: number): boolean => findResultCode(resultCode).type === "F"
 
-const containsOffenceCode = (offence: Offence) =>
-  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
+const containsOffenceCode = (offence: Offence) => {
+  const fullCode = getOffenceFullCode(offence)
+  return fullCode && offenceCodes.includes(fullCode) &&
   offence.Result.some(
     (result) =>
       result.CJSresultCode && !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
   )
+
+}
 
 const containsResultCode = (offence: Offence) =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))

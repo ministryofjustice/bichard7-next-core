@@ -4,7 +4,7 @@
   "description": "The code to replace the processing logic of Bichard 7",
   "main": "build/index.js",
   "scripts": {
-    "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison'",
+    "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison' --testNamePattern",
     "test:update": "jest -u --testPathIgnorePatterns='comparison'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison'",
     "test:watch": "jest --watch --testPathIgnorePatterns='comparison'",

@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import isCaseRecordable from "src/lib/isCaseRecordable"
+import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
@@ -24,18 +25,23 @@ const offenceCodesForGrantedResultText = [
   "VC06502", "VC06503", "VC06504", "VC06505", "YJ99501", "YJ99503"
 ]
 
-const containsOffenceCodeForGranted = (offence: Offence) =>
-  offenceCodesForGrantedResultText.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) &&
+const containsOffenceCodeForGranted = (offence: Offence) => {
+  const fullCode = getOffenceFullCode(offence)
+  return fullCode && offenceCodesForGrantedResultText.includes(fullCode) &&
   offence.Result.some((result) => result.ResultVariableText && /granted/i.test(result.ResultVariableText))
+}
 
 const generator: TriggerGenerator = (hearingOutcome) => {
   const recordable = isCaseRecordable(hearingOutcome)
   const shouldRaiseTrigger =
     !recordable &&
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
-      (offence) =>
-        offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode) ||
+      (offence) => {
+
+        const fullCode = getOffenceFullCode(offence)
+        return (fullCode && offenceCodes.includes(fullCode)) ||
         containsOffenceCodeForGranted(offence)
+      }
     )
 
   return shouldRaiseTrigger ? [{ code: triggerCode }] : []

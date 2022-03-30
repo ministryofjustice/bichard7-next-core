@@ -22,20 +22,41 @@ const localOffenceCodeSchema = z.object({
   OffenceCode: z.string()
 })
 
-const offenceCodeSchema = z.object({
-  Indictment: z.string().optional(),
-  CommonLawOffence: z.string().optional(),
-  ActOrSource: z.string(),
-  Year: z.string(),
-  Reason: z.string(),
-  Qualifier: z.string().optional(),
-  FullCode: z.string()
-})
+const offenceCodeSchema = z.discriminatedUnion("__type", [
+  z.object({
+    __type: z.literal("NonMatchingOffenceCode"),
+    ActOrSource: z.string(),
+    Year: z.string().optional(),
+    Reason: z.string(),
+    Qualifier: z.string().optional(),
+    FullCode: z.string()
+  }),
+  z.object({
+    __type: z.literal("CommonLawOffenceCode"),
+    CommonLawOffence: z.string(),
+    Reason: z.string(),
+    Qualifier: z.string().optional(),
+    FullCode: z.string()
+  }),
+  z.object({
+    __type: z.literal("IndictmentOffenceCode"),
+    Indictment: z.string(),
+    Reason: z.string(),
+    Qualifier: z.string().optional(),
+    FullCode: z.string()
+  })
+])
 
-const offenceReasonSchema = z.object({
-  LocalOffenceCode: localOffenceCodeSchema.optional(),
-  OffenceCode: offenceCodeSchema
-})
+const offenceReasonSchema = z.discriminatedUnion("__type", [
+  z.object({
+    __type: z.literal("LocalOffenceReason"),
+    LocalOffenceCode: localOffenceCodeSchema
+  }),
+  z.object({
+    __type: z.literal("NationalOffenceReason"),
+    OffenceCode: offenceCodeSchema
+  })
+])
 
 const organisationUnitSchema = z.object({
   TopLevelCode: z.string().optional(),
@@ -53,8 +74,8 @@ const defendantOrOffenderSchema = z.object({
 })
 
 const criminalProsecutionReferenceSchema = z.object({
-  DefendantOrOffender: defendantOrOffenderSchema.array().optional(),
-  OffenceReason: offenceReasonSchema
+  DefendantOrOffender: defendantOrOffenderSchema.optional(),
+  OffenceReason: offenceReasonSchema.optional()
 })
 
 const durationSchema = z.object({
@@ -249,13 +270,15 @@ const annotatedHearingOutcomeSchema = z.object({
   PncQuery: pncQueryResultSchema.optional()
 })
 
-export { annotatedHearingOutcomeSchema }
+export { annotatedHearingOutcomeSchema, offenceReasonSchema }
 
 export type AnnotatedHearingOutcome = z.infer<typeof annotatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>
 export type Case = z.infer<typeof caseSchema>
 export type Offence = z.infer<typeof offenceSchema>
+export type OffenceReason = z.infer<typeof offenceReasonSchema>
 export type OffenceCode = z.infer<typeof offenceCodeSchema>
+export type LocalOffenceCode = z.infer<typeof localOffenceCodeSchema>
 export type Hearing = z.infer<typeof hearingSchema>
 export type Address = z.infer<typeof addressSchema>
 export type DefendantDetail = z.infer<typeof defendantDetailSchema>
@@ -263,3 +286,4 @@ export type HearingDefendant = z.infer<typeof hearingDefendantSchema>
 export type Result = z.infer<typeof resultSchema>
 export type OrganisationUnit = z.infer<typeof organisationUnitSchema>
 export type Urgent = z.infer<typeof urgentSchema>
+export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionReferenceSchema>

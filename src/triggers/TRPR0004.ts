@@ -1,4 +1,5 @@
 import { CjsVerdict } from "src/types/Verdict"
+import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import { TriggerCode } from "../types/TriggerCode"
@@ -41,9 +42,14 @@ const sexualOffenceRegexes = [/sex(ual)? off?ender/i, /sex(ual)? off?en[cs]es ac
 const resultCodeMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
-const guiltyAndOffenceCodeMatches = (offence: Offence): boolean =>
-  offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty) &&
-  offenceCodes.includes(offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode.substring(0, 7))
+const guiltyAndOffenceCodeMatches = (offence: Offence): boolean => {
+  const fullCode = getOffenceFullCode(offence)
+  return Boolean(
+    offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty) &&
+      fullCode &&
+      offenceCodes.includes(fullCode.substring(0, 7))
+  )
+}
 
 const offenceresultTextMatches = (offence: Offence): boolean =>
   offence.Result.some((result) => sexualOffenceRegexes.some((regex) => result.ResultVariableText?.match(regex)))

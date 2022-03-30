@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
+import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 
 const triggerCode = TriggerCode.TRPR0025
 const validMatches = [
@@ -10,8 +11,7 @@ const validMatches = [
 ]
 
 const offenceMatches = (offence: Offence, offenceCode: string, resultCode: number) =>
-  offence.CriminalProsecutionReference.OffenceReason.OffenceCode.FullCode === offenceCode &&
-  offence.Result.some((result) => result.CJSresultCode === resultCode)
+  getOffenceFullCode(offence) === offenceCode && offence.Result.some((result) => result.CJSresultCode === resultCode)
 
 const matchingOffenceCodeAndResultCode = (
   hearingOutcome: AnnotatedHearingOutcome,
