@@ -1,7 +1,7 @@
-import remandStatus from "data/remand-status.json"
+import nextData from "@ministryofjustice/bichard7-next-data"
 import ASN from "src/lib/asn"
 
-const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
+const validateRemandStatus = (data: string): boolean => nextData.remandStatus.some((el) => el.cjsCode === data)
 
 const validateASN = (data: string): boolean => {
   const asn = new ASN(data)

@@ -1,7 +1,7 @@
-import offenceCodeData from "data/offence-code.json"
+import nextData from "@ministryofjustice/bichard7-next-data"
 import { OffenceCodeType } from "./consts"
 
-const offenceCodes = offenceCodeData as { cjsCode: string }[]
+const offenceCodes = nextData.offenceCode as { cjsCode: string }[]
 
 export default (offenceCode: string, areaCode: string): OffenceCodeType => {
   const offenceCodeNoQualifier = offenceCode.match(/^[A-Z0-9]{1,7}/g)

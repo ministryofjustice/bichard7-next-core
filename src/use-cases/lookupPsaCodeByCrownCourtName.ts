@@ -1,4 +1,4 @@
-import organisationUnits from "data/organisation-unit.json"
+import data from "@ministryofjustice/bichard7-next-data"
 import { CROWN_COURT_TOP_LEVEL_CODE } from "src/lib/properties"
 
 const matchCourtNamesRegex = (courtNameA: string, courtNameB: string): boolean => {
@@ -14,7 +14,7 @@ const matchCourtNames = (courtNameA: string, courtNameB: string): boolean =>
 
 export default (courtName: string): string | undefined => {
   const trimmedCourtName = courtName.split(/\s*Crown Court\z/)[0].trim()
-  return organisationUnits.find(
+  return data.organisationUnit.find(
     (unit) =>
       unit.topLevelCode.toLowerCase() === CROWN_COURT_TOP_LEVEL_CODE.toLowerCase() &&
       matchCourtNames(unit.thirdLevelName.trim(), trimmedCourtName)
