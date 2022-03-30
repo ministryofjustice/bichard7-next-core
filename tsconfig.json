@@ -1,29 +1,29 @@
 {
   "compilerOptions": {
+    "lib": ["ES2020"],
     "module": "CommonJS",
-    "moduleResolution": "node",
     "target": "ES2020",
-    "noImplicitAny": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
     "strict": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
+    "sourceMap": true,
     "outDir": "build",
     "types": [
       "node",
       "jest"
     ],
-    "baseUrl": ".",
-    "preserveSymlinks": false,
-    "paths": {}
+    "baseUrl": "./",
+    "paths": {
+      "data": ["data"],
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
   },
-  "compileOnSave": true,
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "tests/**/*.ts"
   ]
 }

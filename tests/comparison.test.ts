@@ -1,5 +1,5 @@
 import fs from "fs"
-import CoreHandler from "../src/index"
+import CoreHandler from "src/index"
 import extractExceptionsFromAho from "./helpers/extractExceptionsFromAho"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
 import MockPncGateway from "./helpers/MockPncGateway"

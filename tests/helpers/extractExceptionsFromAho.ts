@@ -1,5 +1,5 @@
-import type Exception from "../../src/types/Exception"
 import { XMLParser } from "fast-xml-parser"
+import type Exception from "src/types/Exception"
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extract = (el: any, path: string[] = []): Exception[] => {

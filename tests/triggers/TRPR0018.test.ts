@@ -1,10 +1,10 @@
 jest.setTimeout(30000)
 
-import type { ResultedCaseMessageParsedXml } from "../../src/types/IncomingMessage"
-import { TriggerCode } from "../../src/types/TriggerCode"
-import generateMessage from "../helpers/generateMessage"
-import PostgresHelper from "../helpers/PostgresHelper"
-import processMessage from "../helpers/processMessage"
+import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import { TriggerCode } from "src/types/TriggerCode"
+import generateMessage from "tests/helpers/generateMessage"
+import PostgresHelper from "tests/helpers/PostgresHelper"
+import processMessage from "tests/helpers/processMessage"
 
 const code = TriggerCode.TRPR0018
 const resultCode = 1015

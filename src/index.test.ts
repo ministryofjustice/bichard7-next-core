@@ -1,6 +1,6 @@
 import fs from "fs"
-import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
+import generateMockPncQueryResult from "tests/helpers/generateMockPncQueryResult"
+import MockPncGateway from "tests/helpers/MockPncGateway"
 import handler from "./index"
 
 describe("Bichard Core processing logic", () => {

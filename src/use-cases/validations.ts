@@ -1,5 +1,5 @@
+import remandStatus from "data/remand-status.json"
 import ASN from "src/lib/asn"
-import remandStatus from "../../data/remand-status.json"
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
