@@ -3,6 +3,7 @@ import { annotatedHearingOutcomeSchema } from "../types/AnnotatedHearingOutcome"
 import type Exception from "../types/Exception"
 import { ExceptionCode } from "../types/ExceptionCode"
 import type { ZodIssue } from "zod"
+import exceptions from "src/exceptions"
 
 const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
   if (issue.message in ExceptionCode) {
@@ -13,14 +14,22 @@ const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
 }
 
 export default (aho: AnnotatedHearingOutcome): Exception[] => {
+  let generatedExceptions: Exception[] = []
+
   const parseResults = annotatedHearingOutcomeSchema.safeParse(aho)
 
   if (!parseResults.success) {
-    return parseResults.error.issues.map((issue) => ({
+    generatedExceptions = parseResults.error.issues.map((issue) => ({
       code: getExceptionCodeFromZod(issue),
       path: issue.path
     }))
   }
 
-  return []
+  generatedExceptions = Object.entries(exceptions)
+    .reduce((acc: Exception[], [_, exception]) => {
+      return acc.concat(exception(aho))
+    }, [])
+    .concat(generatedExceptions)
+
+  return generatedExceptions
 }

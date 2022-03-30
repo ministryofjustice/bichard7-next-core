@@ -160,10 +160,10 @@ const resultSchema = z.object({
   ConvictingCourt: z.string().optional(),
   ResultHearingType: z.string().optional(),
   ResultHearingDate: z.date().optional(),
-  Duration: durationSchema.optional(),
+  Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: z.date().optional(),
   TimeSpecifiedInResult: z.string().optional(),
-  AmountSpecifiedInResult: z.string().optional(),
+  AmountSpecifiedInResult: z.number().array().optional(),
   NumberSpecifiedInResult: z.string().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().optional(),
@@ -183,7 +183,8 @@ const resultSchema = z.object({
   ReasonForOffenceBailConditions: z.string().optional(),
   ResultQualifierVariable: resultQualifierVariableSchema.array(),
   ResultHalfLifeHours: z.number().optional(),
-  Urgent: urgentSchema.optional()
+  Urgent: urgentSchema.optional(),
+  ResultApplicableQualifierCode: z.string().array().min(0).optional()
 })
 
 const offenceSchema = z.object({
@@ -214,7 +215,8 @@ const offenceSchema = z.object({
   CommittedOnBail: z.string(),
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
-  RecordableOnPNCindicator: z.boolean().optional()
+  RecordableOnPNCindicator: z.boolean().optional(),
+  AddedByTheCourt: z.string().optional()
 })
 
 const asnSchema = z.string().refine(validateASN, ExceptionCode.HO100206)
