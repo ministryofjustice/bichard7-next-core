@@ -190,6 +190,7 @@ const resultSchema = z.object({
 const offenceSchema = z.object({
   CriminalProsecutionReference: criminalProsecutionReferenceSchema,
   OffenceInitiationCode: z.string().optional(),
+  OffenceCategory: z.string().optional(),
   SummonsCode: z.string().optional(),
   Informant: z.string().optional(),
   ArrestDate: z.date().optional(),

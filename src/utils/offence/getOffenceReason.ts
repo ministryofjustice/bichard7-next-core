@@ -1,5 +1,5 @@
-import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
+import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import { isCommonLaw, isIndictment } from "./isOffenceType"
 
 const createReasonProp = (offenceCode: string): { Reason: string } => ({

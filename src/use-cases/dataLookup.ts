@@ -20,6 +20,7 @@ interface DataLookupResult {
   recordableOnPnc?: string
   resultHalfLifeHours?: string | null
   offenceTitle?: string
+  offenceCategory?: string
 }
 
 interface PncDisposalDataLookupResult {
