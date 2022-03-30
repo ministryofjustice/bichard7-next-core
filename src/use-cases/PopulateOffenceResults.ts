@@ -182,7 +182,7 @@ export default class {
           this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
         }
 
-        result.ResultQualifierVariable.push({ Code: resultCodeQualifier })
+        result.ResultQualifierVariable?.push({ Code: resultCodeQualifier })
       }
     })
 

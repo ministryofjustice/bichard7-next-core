@@ -2,9 +2,9 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
 import parseSpiResult from "src/use-cases/parseSpiResult"
 import transformSpiToAho from "src/use-cases/transformSpiToAho"
-import generateMessage from "../../../../tests/helpers/generateMessage"
-import generateMockPncQueryResult from "../../../../tests/helpers/generateMockPncQueryResult"
-import MockPncGateway from "../../../../tests/helpers/MockPncGateway"
+import generateMessage from "tests/helpers/generateMessage"
+import generateMockPncQueryResult from "tests/helpers/generateMockPncQueryResult"
+import MockPncGateway from "tests/helpers/MockPncGateway"
 import enrichWithPncQuery from "./enrichWithPncQuery"
 
 describe("enrichWithQuery()", () => {
@@ -29,8 +29,9 @@ describe("enrichWithQuery()", () => {
   })
 
   it("should enrich AHO with results from PNC query", () => {
-    const result = enrichWithPncQuery(aho, pncGateway)
-    expect(result.PncQuery).toMatchSnapshot()
+    expect(aho.PncQuery).toBeUndefined()
+    const resultAho = enrichWithPncQuery(aho, pncGateway)
+    expect(resultAho.PncQuery).toBe(pncGateway.query("MockASN"))
   })
 
   it("should populate the offence titles from PNC query", () => {
@@ -40,5 +41,11 @@ describe("enrichWithQuery()", () => {
     expect(offences).toHaveLength(2)
     expect(offences![0].offence.title).toBe("POSSESSING PART OF DEAD BADGER")
     expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
+  })
+
+  it("should set the PNC query date element to a date", () => {
+    expect(aho.PncQueryDate).toBeUndefined()
+    const resultAho = enrichWithPncQuery(aho, pncGateway)
+    expect(resultAho.PncQueryDate).toBeInstanceOf(Date)
   })
 })

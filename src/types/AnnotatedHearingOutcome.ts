@@ -267,7 +267,8 @@ const annotatedHearingOutcomeSchema = z.object({
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),
-  PncQuery: pncQueryResultSchema.optional()
+  PncQuery: pncQueryResultSchema.optional(),
+  PncQueryDate: z.date().optional()
 })
 
 export { annotatedHearingOutcomeSchema, offenceReasonSchema }
