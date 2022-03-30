@@ -1,16 +1,20 @@
-import alcoholLevelMethods from "data/alcohol-level-method.json"
-import modeOfTrialReasons from "data/mode-of-trial-reason.json"
-import offenceCode from "data/offence-code.json"
-import organisationUnits from "data/organisation-unit.json"
-import pleaStatus from "data/plea-status.json"
-import pncDisposals from "data/pnc-disposal.json"
-import qualifiers from "data/qualifier.json"
-import remandStatus from "data/remand-status.json"
-import resultCodes from "data/result-codes.json"
-import verdicts from "data/verdict.json"
+import nextData from "@ministryofjustice/bichard7-next-data"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
+
+const {
+  alcoholLevelMethod,
+  modeOfTrialReason,
+  organisationUnit,
+  pleaStatus,
+  pncDisposal,
+  qualifier,
+  remandStatus,
+  resultCode,
+  offenceCode,
+  verdict
+} = nextData
 
 interface DataLookupResult {
   cjsCode: string
@@ -38,46 +42,45 @@ const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined 
   pleaStatus.find((x) => x.spiCode === plea?.toString())
 
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  verdicts.find((x) => x.spiCode === spiCode)
+  verdict.find((x) => x.spiCode === spiCode)
 
 const lookupModeOfTrialReasonBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  modeOfTrialReasons.find((x) => x.spiCode === spiCode)
+  modeOfTrialReason.find((x) => x.spiCode === spiCode)
 
 const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
-  qualifiers.find((x) => x.cjsCode === cjsCode)
+  qualifier.find((x) => x.cjsCode === cjsCode)
 
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  alcoholLevelMethods.find((x) => x.spiCode === spiCode)
+  alcoholLevelMethod.find((x) => x.spiCode === spiCode)
 
 const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupOrganisationUnitByCode = (organisationUnit: OrganisationUnit): OrganisationUnitData | undefined => {
-  if (!organisationUnit) {
+const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUnitData | undefined => {
+  if (!orgUnit) {
     return undefined
   }
 
-  const result = organisationUnits.filter(
+  const result = organisationUnit.filter(
     (unit) =>
-      unit.topLevelCode.toUpperCase() === organisationUnit.TopLevelCode?.toUpperCase() &&
-      unit.secondLevelCode.toUpperCase() === organisationUnit.SecondLevelCode?.toUpperCase() &&
-      unit.thirdLevelCode.toUpperCase() === organisationUnit.ThirdLevelCode?.toUpperCase()
+      unit.topLevelCode.toUpperCase() === orgUnit.TopLevelCode?.toUpperCase() &&
+      unit.secondLevelCode.toUpperCase() === orgUnit.SecondLevelCode?.toUpperCase() &&
+      unit.thirdLevelCode.toUpperCase() === orgUnit.ThirdLevelCode?.toUpperCase()
   )
 
-  return result.find((unit) => unit.bottomLevelCode === organisationUnit.BottomLevelCode) ?? result?.[0]
+  return result.find((unit) => unit.bottomLevelCode === orgUnit.BottomLevelCode) ?? result?.[0]
 }
 
 const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number): OrganisationUnitData | undefined =>
-  organisationUnits.find(
-    (organisationUnit) =>
-      organisationUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
+  organisationUnit.find(
+    (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
 const lookupResultCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
-  resultCodes.find((x) => x.cjsCode === cjsCode)
+  resultCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposalDataLookupResult | undefined =>
-  pncDisposals.find((x) => x.cjsCode === cjsCode.toString())
+  pncDisposal.find((x) => x.cjsCode === cjsCode.toString())
 
 export {
   lookupRemandStatusBySpiCode,
