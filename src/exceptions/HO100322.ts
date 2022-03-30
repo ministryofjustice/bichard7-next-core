@@ -1,8 +1,6 @@
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 
-const HO100322: ExceptionGenerator = (hearingOutcome) => {
-  console.log(hearingOutcome)
-
+const HO100322: ExceptionGenerator = (_) => {
   return []
 }
 

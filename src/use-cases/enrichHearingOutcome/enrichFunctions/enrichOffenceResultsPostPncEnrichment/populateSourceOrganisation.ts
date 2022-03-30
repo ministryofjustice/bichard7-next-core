@@ -15,7 +15,6 @@ const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHea
 
   if (!result.SourceOrganisation && CourtHouseCode) {
     const organisationUnitData = lookupOrganisationUnitByThirdLevelPsaCode(CourtHouseCode)
-    console.log(organisationUnitData)
     if (organisationUnitData) {
       const { topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode } = organisationUnitData
       result.SourceOrganisation = {
