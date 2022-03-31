@@ -1,4 +1,4 @@
-import nextData from "@ministryofjustice/bichard7-next-data"
+import nextData from "@moj-bichard7-developers/bichard7-next-data"
 import ASN from "src/lib/asn"
 
 const validateRemandStatus = (data: string): boolean => nextData.remandStatus.some((el) => el.cjsCode === data)

@@ -1,4 +1,4 @@
-import nextData from "@ministryofjustice/bichard7-next-data"
+import nextData from "@moj-bichard7-developers/bichard7-next-data"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
