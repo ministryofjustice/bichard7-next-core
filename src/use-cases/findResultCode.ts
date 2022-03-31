@@ -1,4 +1,4 @@
-import data from "@ministryofjustice/bichard7-next-data"
+import data from "@moj-bichard7-developers/bichard7-next-data"
 import type ResultCode from "src/types/ResultCode"
 
 export default (code: number): ResultCode => {

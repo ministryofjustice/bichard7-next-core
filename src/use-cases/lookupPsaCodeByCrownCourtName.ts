@@ -1,4 +1,4 @@
-import data from "@ministryofjustice/bichard7-next-data"
+import data from "@moj-bichard7-developers/bichard7-next-data"
 import { CROWN_COURT_TOP_LEVEL_CODE } from "src/lib/properties"
 
 const matchCourtNamesRegex = (courtNameA: string, courtNameB: string): boolean => {

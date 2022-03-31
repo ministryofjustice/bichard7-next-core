@@ -1,4 +1,4 @@
-import nextData from "@ministryofjustice/bichard7-next-data"
+import nextData from "@moj-bichard7-developers/bichard7-next-data"
 import { OffenceCodeType } from "./consts"
 
 const offenceCodes = nextData.offenceCode as { cjsCode: string }[]
