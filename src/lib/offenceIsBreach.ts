@@ -1,4 +1,5 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import getOffenceCode from "src/utils/offence/getOffenceCode"
 
 // These are empty in Bichard, but the logic is still valid
 // (We might want to add offence codes here in the future)
@@ -6,11 +7,6 @@ const breachOffenceCodes: string[] = []
 const nonBreachOffenceCodes: string[] = []
 
 const breachOffenceCategories = ["CB"]
-
-const getOffenceCode = (offence: Offence): string | undefined => {
-  const reason = offence.CriminalProsecutionReference.OffenceReason
-  return reason?.__type === "NationalOffenceReason" ? reason.OffenceCode.FullCode : reason?.LocalOffenceCode.OffenceCode
-}
 
 const offenceCodeIsBreach = (offenceCode: string): boolean => {
   return breachOffenceCodes.includes(offenceCode)

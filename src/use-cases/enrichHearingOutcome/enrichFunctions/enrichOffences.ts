@@ -15,9 +15,7 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
   const areaCode = getAreaCode(hearingOutCome)
 
   hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence: Offence) => {
-    const offenceCode = offence.CriminalProsecutionReference.OffenceReason
-      ? getOffenceCode(offence.CriminalProsecutionReference.OffenceReason)
-      : undefined
+    const offenceCode = getOffenceCode(offence)
     const parsedOffenceReason = offenceCode ? parseOffenceReason(offenceCode, areaCode) : undefined
 
     offence.CriminalProsecutionReference = {
