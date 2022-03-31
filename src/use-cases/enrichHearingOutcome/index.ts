@@ -2,12 +2,13 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import type PncGateway from "src/types/PncGateway"
 import {
+  enrichCase,
   enrichCourt,
   enrichDefendant,
   enrichOffenceResults,
-  enrichCase,
-  enrichWithPncQuery,
-  enrichOffenceResultsPostPncEnrichment
+  enrichOffenceResultsPostPncEnrichment,
+  enrichOffences,
+  enrichWithPncQuery
 } from "./enrichFunctions"
 
 const enrichHearingOutcome = (
@@ -19,6 +20,7 @@ const enrichHearingOutcome = (
   const enrichSteps: EnrichAhoFunction[] = [
     enrichCourt,
     enrichDefendant,
+    enrichOffences,
     enrichOffenceResults,
     enrichCase,
     pncEnrich,

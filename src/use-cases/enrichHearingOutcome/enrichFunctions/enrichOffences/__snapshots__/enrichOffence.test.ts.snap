@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`enrichOffence() should add the data from the looked up offence 1`] = `
+Object {
+  "CriminalProsecutionReference": Object {
+    "OffenceReason": Object {
+      "LocalOffenceCode": Object {
+        "AreaCode": "05",
+        "OffenceCode": "BG73006",
+      },
+      "__type": "LocalOffenceReason",
+    },
+  },
+  "HomeOfficeClassification": "000/00",
+  "NotifiableToHOindicator": false,
+  "OffenceCategory": "CE",
+  "OffenceTitle": "POSSESSING THING DERIVED FROM DEAD BADGER",
+  "RecordableOnPNCindicator": false,
+}
+`;

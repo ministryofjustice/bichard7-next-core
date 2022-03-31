@@ -1,4 +1,5 @@
 import nextData from "@moj-bichard7-developers/bichard7-next-data"
+import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
@@ -53,7 +54,7 @@ const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult |
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   alcoholLevelMethod.find((x) => x.spiCode === spiCode)
 
-const lookupOffenceCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+const lookupOffenceCodeByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUnitData | undefined => {

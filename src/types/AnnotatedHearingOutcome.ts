@@ -189,7 +189,9 @@ const resultSchema = z.object({
 
 const offenceSchema = z.object({
   CriminalProsecutionReference: criminalProsecutionReferenceSchema,
+  OffenceCategory: z.string().optional(),
   OffenceInitiationCode: z.string().optional(),
+  OffenceTitle: z.string().optional(),
   SummonsCode: z.string().optional(),
   Informant: z.string().optional(),
   ArrestDate: z.date().optional(),
@@ -216,6 +218,9 @@ const offenceSchema = z.object({
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
+  NotifiableToHOindicator: z.boolean().optional(),
+  HomeOfficeClassification: z.string().optional(),
+  ResultHalfLifeHours: z.number().optional(),
   AddedByTheCourt: z.string().optional()
 })
 
