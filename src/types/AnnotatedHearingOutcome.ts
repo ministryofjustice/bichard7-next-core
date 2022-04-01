@@ -264,9 +264,14 @@ const hearingOutcomeSchema = z.object({
   Case: caseSchema
 })
 
+const CXE01Schema = z.object({
+  FSCode: z.string().optional()
+})
+
 const annotatedHearingOutcomeSchema = z.object({
   AnnotatedHearingOutcome: z.object({
-    HearingOutcome: hearingOutcomeSchema
+    HearingOutcome: hearingOutcomeSchema,
+    CXE01: CXE01Schema.optional()
   }),
   PncQuery: pncQueryResultSchema.optional()
 })
