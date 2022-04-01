@@ -26,14 +26,37 @@ describe("enrichForceOwner", () => {
     OrganisationUnitCode is second + third + bottom
   */
 
-  it("should update organisational unit from the PNC response", () => {
-    const expected: OrganisationUnit = {
-      SecondLevelCode: "00",
-      ThirdLevelCode: "00",
-      BottomLevelCode: "00",
-      OrganisationUnitCode: "000000"
-    }
-    const result = enrichForceOwner(aho)
-    expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual(expected)
+  describe("when there is an FSCode in the CXE01", () => {
+    it("should return a organisation unit from a valid station code", () => {
+      aho.AnnotatedHearingOutcome.CXE01 = {
+        FSCode: "01VK"
+      }
+
+      const expected: OrganisationUnit = {
+        SecondLevelCode: "01",
+        ThirdLevelCode: "VK",
+        BottomLevelCode: "00",
+        OrganisationUnitCode: "01VK00"
+      }
+
+      const result = enrichForceOwner(aho)
+      expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual(expected)
+    })
+
+    it("should return a organisation unit from a valid force code", () => {
+      aho.AnnotatedHearingOutcome.CXE01 = {
+        FSCode: "01"
+      }
+
+      const expected: OrganisationUnit = {
+        SecondLevelCode: "01",
+        ThirdLevelCode: "00",
+        BottomLevelCode: "00",
+        OrganisationUnitCode: "010000"
+      }
+
+      const result = enrichForceOwner(aho)
+      expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual(expected)
+    })
   })
 })
