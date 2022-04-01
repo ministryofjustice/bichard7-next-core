@@ -1,9 +1,9 @@
+import isCaseRecordable from "src/lib/isCaseRecordable"
 import { SUSPENDED, SUSPENDED_2ND_DURATION_RESULTS } from "src/lib/properties"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
-import isCaseRecordable from "src/lib/isCaseRecordable"
 import populateCourt from "./populateCourt"
-import populateResultClass from "./populateResultClass"
 import populatePncDisposal from "./populatePncDisposal"
+import populateResultClass from "./populateResultClass"
 
 const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome) => {
   const { DateOfHearing, CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
@@ -21,12 +21,12 @@ const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome
         result.Duration[1].DurationType = SUSPENDED
       }
 
-      populateCourt(result, hearingOutcome)
-
       if (isCaseRecordable(hearingOutcome)) {
         populateResultClass(result, offence.ConvictionDate, DateOfHearing, CourtType)
         populatePncDisposal(hearingOutcome, result)
       }
+
+      populateCourt(result, hearingOutcome)
     })
   })
 
