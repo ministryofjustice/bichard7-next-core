@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Case } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import generateMockAho from "tests/helpers/generateMockAho"
 import enrichForceOwner from "./enrichForceOwner"
 
@@ -12,6 +12,7 @@ describe("enrichForceOwner", () => {
   /* TODO:
     Tests for:
       Get force/station code from PNC response (unsure how/where in PNC response atm)
+
       Failing that, from PTIURN
       Failing that, from ASN
       Failing that, from CourtHearingLocation
@@ -26,15 +27,13 @@ describe("enrichForceOwner", () => {
   */
 
   it("should update organisational unit from the PNC response", () => {
-    const c: Case = aho.AnnotatedHearingOutcome.HearingOutcome.Case
-
-    c.ForceOwner = {
+    const expected: OrganisationUnit = {
       SecondLevelCode: "00",
       ThirdLevelCode: "00",
       BottomLevelCode: "00",
       OrganisationUnitCode: "000000"
     }
     const result = enrichForceOwner(aho)
-    expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual(c.ForceOwner)
+    expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual(expected)
   })
 })

@@ -19,7 +19,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
     ForceOwner: {
       SecondLevelCode: PTIURN.substring(0, 2),
       ThirdLevelCode: "",
-      BottomLevelCode: "",
+      BottomLevelCode: "00",
       OrganisationUnitCode: "0000000"
     }
   }

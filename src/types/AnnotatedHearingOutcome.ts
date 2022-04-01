@@ -255,7 +255,8 @@ const caseSchema = z.object({
   ForceOwner: organisationUnitSchema.optional(),
   RecordableOnPNCindicator: z.boolean().optional(),
   HearingDefendant: hearingDefendantSchema,
-  Urgent: urgentSchema.optional()
+  Urgent: urgentSchema.optional(),
+  ManualForceOwner: z.boolean().optional()
 })
 
 const hearingOutcomeSchema = z.object({
