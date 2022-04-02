@@ -20,7 +20,13 @@ const resultParsedXmlSchema = z.object({
   ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
   Outcome: z
     .object({
-      ResultAmountSterling: z.number().optional()
+      ResultAmountSterling: z.number().optional(),
+      Duration: z
+        .object({
+          DurationValue: z.number(),
+          DurationUnit: z.string()
+        })
+        .optional()
     })
     .optional(),
   NextHearing: nextHearingSchema.optional()

@@ -13,9 +13,8 @@ import removeSeconds from "src/utils/removeSeconds"
 import {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
-  lookupResultQualifierCodeByCjsCode
+  lookupQualifierCodeByCjsCode
 } from "./dataLookup"
-
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -155,7 +154,7 @@ export default class {
 
     if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
       bailQualifiers.forEach((bailQualifier) => {
-        const description = lookupResultQualifierCodeByCjsCode(bailQualifier)?.description
+        const description = lookupQualifierCodeByCjsCode(bailQualifier)?.description
         if (description) {
           this.bailConditions.push(description)
         }

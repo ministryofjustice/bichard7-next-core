@@ -66,7 +66,7 @@ describe("populatePncDisposal", () => {
     mockedLookupPncDisposalByCjsCode.mockReturnValue({
       cjsCode: "",
       description: "",
-      pncAdjudication: "PNC Adjudication",
+      pncAdjudication: "2000",
       pncNonAdjudication: ""
     })
 
@@ -90,7 +90,7 @@ describe("populatePncDisposal", () => {
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe("PNC Adjudication")
+    expect(result.PNCDisposalType).toBe(2000)
   })
 
   it("should set PNCDisposalType to PNC Adjudication when result class is RESULT_ADJOURNMENT_WITH_JUDGEMENT", () => {
@@ -100,7 +100,7 @@ describe("populatePncDisposal", () => {
     mockedLookupPncDisposalByCjsCode.mockReturnValue({
       cjsCode: "",
       description: "",
-      pncAdjudication: "PNC Adjudication 2",
+      pncAdjudication: "3000",
       pncNonAdjudication: ""
     })
 
@@ -124,7 +124,7 @@ describe("populatePncDisposal", () => {
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe("PNC Adjudication 2")
+    expect(result.PNCDisposalType).toBe(3000)
   })
 
   it("should set PNCDisposalType to PNC Non-Adjudication", () => {
@@ -135,7 +135,7 @@ describe("populatePncDisposal", () => {
       cjsCode: "",
       description: "",
       pncAdjudication: "",
-      pncNonAdjudication: "PNC Non Adjudication"
+      pncNonAdjudication: "4000"
     })
 
     const hearingOutcome = {
@@ -158,7 +158,7 @@ describe("populatePncDisposal", () => {
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe("PNC Non Adjudication")
+    expect(result.PNCDisposalType).toBe(4000)
   })
 
   it("should set PNCDisposalType to CJS Result Code", () => {
@@ -187,6 +187,6 @@ describe("populatePncDisposal", () => {
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe("999")
+    expect(result.PNCDisposalType).toBe(999)
   })
 })
