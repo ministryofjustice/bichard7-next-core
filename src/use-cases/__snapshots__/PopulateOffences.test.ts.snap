@@ -133,9 +133,14 @@ Object {
       "RecordableOnPNCindicator": false,
       "Result": Array [
         Object {
+          "AmountSpecifiedInResult": Array [
+            100,
+          ],
           "CJSresultCode": 1015,
           "ConvictingCourt": undefined,
+          "Duration": Array [],
           "ModeOfTrialReason": "SUM",
+          "NumberSpecifiedInResult": Array [],
           "PleaStatus": "NG",
           "ResultHearingDate": 2011-09-26T00:00:00.000Z,
           "ResultHearingType": "OTHER",
