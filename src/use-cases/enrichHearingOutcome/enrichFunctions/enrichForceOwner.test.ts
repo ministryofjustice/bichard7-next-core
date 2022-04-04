@@ -26,11 +26,16 @@ describe("enrichForceOwner", () => {
     OrganisationUnitCode is second + third + bottom
   */
 
-  describe("when there is an FSCode in the CXE01", () => {
+  // Might need to modify comparison logic for returned xml
+  // We'll need to pull out the rest of the aho from the old bichard database
+
+  describe("when there is an FSCode in the PNC query", () => {
     it("should return a organisation unit from a valid station code", () => {
       aho.AnnotatedHearingOutcome.CXE01 = {
         FSCode: "01VK"
       }
+
+      // aho.PncQuery?.forceStationCode
 
       const expected: OrganisationUnit = {
         SecondLevelCode: "01",
