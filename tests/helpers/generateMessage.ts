@@ -7,6 +7,7 @@ type Result = {
   code?: number
   qualifier?: string
   text?: string
+  bailStatus?: string
 }
 
 type Offence = {
@@ -17,6 +18,7 @@ type Offence = {
   plea?: SpiPlea
   startDate?: Date
   endDate?: Date
+  modeOfTrial?: string
 }
 
 type Person = {

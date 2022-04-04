@@ -1,8 +1,23 @@
-import { validateASN, validateRemandStatus } from "src/use-cases/validations"
+import {
+  validateASN,
+  validateCourtType,
+  validateDurationType,
+  validateDurationUnit,
+  validateModeOfTrialReason,
+  validateRemandStatus,
+  validateResultClass,
+  validateResultCode,
+  validateResultQualifierCode,
+  validateTargetCourtType,
+  validateTypeOfHearing,
+  validateVerdict
+} from "src/use-cases/validations"
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
 import { cjsPleaSchema } from "./Plea"
 import { pncQueryResultSchema } from "./PncQueryResult"
+
+const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
 
 const alcoholLevelSchema = z.object({
   Amount: z.string(),
@@ -79,13 +94,17 @@ const criminalProsecutionReferenceSchema = z.object({
 })
 
 const durationSchema = z.object({
-  DurationType: z.string(),
-  DurationUnit: z.string(),
-  DurationLength: z.string()
+  DurationType: z.string().refine(validateDurationType, ExceptionCode.HO100108),
+  DurationUnit: z.string().refine(validateDurationUnit, ExceptionCode.HO100108),
+  DurationLength: z.number().min(1, ExceptionCode.HO100242).max(999, ExceptionCode.HO100242)
 })
 
 const resultQualifierVariableSchema = z.object({
-  Code: z.string(),
+  Code: z
+    .string()
+    .min(1, ExceptionCode.HO100247)
+    .max(2, ExceptionCode.HO100247)
+    .refine(validateResultQualifierCode, ExceptionCode.HO100309), // HO100309 is tested but HO100247 is masked by XML parsing
   Duration: durationSchema.optional(),
   DateSpecifiedInResult: z.date().optional(),
   Text: z.string().optional()
@@ -142,7 +161,7 @@ const hearingSchema = z.object({
   ReportRequestedDate: z.date().optional(),
   ReportCompletedDate: z.date().optional(),
   SourceReference: sourceReferenceSchema,
-  CourtType: z.string().optional(),
+  CourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Can't test this in Bichard because it is always set to a valid value
   CourtHouseCode: z.number(),
   CourtHouseName: z.string().optional()
 })
@@ -153,38 +172,50 @@ const urgentSchema = z.object({
 })
 
 const resultSchema = z.object({
-  CJSresultCode: z.number().optional(),
-  OffenceRemandStatus: z.string().optional(),
+  CJSresultCode: z.number().superRefine(validateResultCode),
+  OffenceRemandStatus: z.string().refine(validateRemandStatus, ExceptionCode.HO100108).optional(), // Tested in HO100108
   SourceOrganisation: organisationUnitSchema,
-  CourtType: z.string().optional(),
+  CourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Always set to a valid court so unable to test
   ConvictingCourt: z.string().optional(),
-  ResultHearingType: z.string().optional(),
+  ResultHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Always set to OTHER so can't test exception
   ResultHearingDate: z.date().optional(),
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: z.date().optional(),
-  TimeSpecifiedInResult: z.string().optional(),
+  TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: z.number().array().optional(),
   NumberSpecifiedInResult: z.string().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
-  NextHearingType: z.string().optional(),
+  NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
   NextHearingDate: z.date().optional(),
-  NextHearingTime: z.string().optional(),
-  NextCourtType: z.string().optional(),
+  NextHearingTime: timeSchema.optional(),
+  NextCourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Always set to a valid value
   PleaStatus: cjsPleaSchema.optional(),
-  Verdict: z.string().optional(),
-  ResultVariableText: z.string().optional(),
-  TargetCourtType: z.string().optional(),
+  Verdict: z.string().refine(validateVerdict, ExceptionCode.HO100108).optional(), // Tested in HO100108
+  ResultVariableText: z.string().min(1, ExceptionCode.HO100245).max(2500, ExceptionCode.HO100245).optional(), // Can't test because it is masked by XML parser
+  TargetCourtType: z.string().refine(validateTargetCourtType, ExceptionCode.HO100108).optional(), // Never set
   WarrantIssueDate: z.date().optional(),
   CRESTDisposalCode: z.string().optional(),
-  ModeOfTrialReason: z.string().optional(),
-  PNCDisposalType: z.string().optional(),
-  ResultClass: z.string().optional(),
+  ModeOfTrialReason: z.string().refine(validateModeOfTrialReason, ExceptionCode.HO100108).optional(), // Tested in HO100108
+  PNCDisposalType: z.number().min(1000, ExceptionCode.HO100246).max(9999, ExceptionCode.HO100246).optional(),
+  PNCAdjudicationExists: z.boolean().optional(),
+  ResultClass: z.string().refine(validateResultClass, ExceptionCode.HO100108).optional(), // Always set to a valid value
   NumberOfOffencesTIC: z.string().optional(),
-  ReasonForOffenceBailConditions: z.string().optional(),
+  ReasonForOffenceBailConditions: z
+    .string()
+    .min(1, ExceptionCode.HO100106)
+    .max(2500, ExceptionCode.HO100107)
+    .optional(), // Can't test because it is masked by XML parser
   ResultQualifierVariable: resultQualifierVariableSchema.array(),
-  ResultHalfLifeHours: z.number().optional(),
+  ResultHalfLifeHours: z.number().min(1, ExceptionCode.HO100109).max(999, ExceptionCode.HO100110).optional(), // Can't test because all values come from standing data
   Urgent: urgentSchema.optional(),
-  ResultApplicableQualifierCode: z.string().array().min(0).optional()
+  ResultApplicableQualifierCode: z
+    .string()
+    .min(1, ExceptionCode.HO100241)
+    .min(2, ExceptionCode.HO100241)
+    .array()
+    .min(0)
+    .optional(), // Can't test as this is always set to an empty arrays
+  BailCondition: z.string().min(1, ExceptionCode.HO100219).max(2500, ExceptionCode.HO100219).array().min(0).optional()
 })
 
 const offenceSchema = z.object({
@@ -292,3 +323,4 @@ export type Result = z.infer<typeof resultSchema>
 export type OrganisationUnit = z.infer<typeof organisationUnitSchema>
 export type Urgent = z.infer<typeof urgentSchema>
 export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionReferenceSchema>
+export type Duration = z.infer<typeof durationSchema>

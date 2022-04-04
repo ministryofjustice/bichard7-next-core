@@ -106,17 +106,17 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
           ResultApplicableQualifierCode: ["A", "B"],
           Duration: [
             {
-              DurationLength: "Duration length should not change",
+              DurationLength: 1,
               DurationType: "Duration type should not change",
               DurationUnit: "Duration unit should not change"
             },
             {
-              DurationLength: "Duration length should not change",
+              DurationLength: 2,
               DurationType: "Should change",
               DurationUnit: "Duration unit should not change"
             },
             {
-              DurationLength: "Duration length should not change",
+              DurationLength: 3,
               DurationType: "Duration type should not change",
               DurationUnit: "Duration unit should not change"
             }
@@ -149,13 +149,13 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     expect(isCaseRecordable).toHaveBeenCalledTimes(1)
     expect(populateResultClass).not.toHaveBeenCalled()
     expect(populatePncDisposal).not.toHaveBeenCalled()
-    expect(Duration?.[0].DurationLength).toBe("Duration length should not change")
+    expect(Duration?.[0].DurationLength).toBe(1)
     expect(Duration?.[0].DurationType).toBe("Duration type should not change")
     expect(Duration?.[0].DurationUnit).toBe("Duration unit should not change")
-    expect(Duration?.[1].DurationLength).toBe("Duration length should not change")
+    expect(Duration?.[1].DurationLength).toBe(2)
     expect(Duration?.[1].DurationType).toBe(SUSPENDED)
     expect(Duration?.[1].DurationUnit).toBe("Duration unit should not change")
-    expect(Duration?.[2].DurationLength).toBe("Duration length should not change")
+    expect(Duration?.[2].DurationLength).toBe(3)
     expect(Duration?.[2].DurationType).toBe("Duration type should not change")
     expect(Duration?.[2].DurationUnit).toBe("Duration unit should not change")
   })
