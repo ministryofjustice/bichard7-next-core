@@ -28,7 +28,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
     const courtStart = offence.ActualOffenceStartDate.StartDate
     const pncStart = pncOffence.offence.startDate
 
-    const courtEnd = offence.ActualOffenceEndDate.EndDate
+    const courtEnd = offence.ActualOffenceEndDate?.EndDate
     const pncEnd = pncOffence.offence.endDate
 
     if (!courtStart || !pncStart) {

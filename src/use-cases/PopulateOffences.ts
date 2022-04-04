@@ -15,7 +15,6 @@ import {
   lookupOffenceByCjsCode,
   lookupResultQualifierCodeByCjsCode
 } from "./dataLookup"
-
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -99,9 +98,7 @@ export default class {
     offence.ActualOffenceStartDate = {
       StartDate: new Date(spiOffenceStart.OffenceDateStartDate)
     }
-    offence.ActualOffenceEndDate = {
-      EndDate: spiOffenceEnd ? new Date(spiOffenceEnd.OffenceEndDate) : undefined
-    }
+    offence.ActualOffenceEndDate = spiOffenceEnd ? { EndDate: new Date(spiOffenceEnd.OffenceEndDate) } : undefined
     offence.LocationOfOffence = spiLocationOfOffence
     offence.ActualOffenceWording = spiOffenceWording
 

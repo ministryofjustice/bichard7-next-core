@@ -1,7 +1,7 @@
+import parsePncDate from "src/lib/parsePncDate"
 import type { Offence, Result } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import { matchOffences } from "./offenceMatcher"
-import parsePncDate from "./parsePncDate"
 
 const createHOOffence = (
   actOrSource: string,
@@ -68,6 +68,21 @@ const createPNCCourtCaseOffence = (offenceCode: string, startDate: string, endDa
 }
 
 describe("Offence Matcher", () => {
+  it("successfully matches a single matching offence on PNC and HO with sequence numbers", () => {
+    const hoOffences: Offence[] = [createHOOffence("VG", "24", "030", "2009-09-08", null, ["1002"])]
+    hoOffences[0].CriminalProsecutionReference.OffenceReasonSequence = 1
+
+    const pncOffences: PncOffence[] = [createPNCCourtCaseOffence("VG24030", "08092009", "")]
+    pncOffences[0].offence.sequenceNumber = 1
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
+  })
+
   it.skip("successfully match matching offences on PNC and HO", () => {
     const hoOffences: Offence[] = [
       createHOOffence("VG", "24", "030", "2009-09-08", null, ["1002"]),
@@ -83,9 +98,9 @@ describe("Offence Matcher", () => {
       createPNCCourtCaseOffence("VG24030", "08092009", "")
     ]
 
-    const outcome = matchOffences(hoOffences, pncOffences, true)
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
-    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.duplicateHoOffences).toHaveLength(0)
     expect(outcome.matchedOffences).toHaveLength(4)
 

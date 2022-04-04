@@ -20,7 +20,7 @@ const offencesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const pncStartDate = pncOffence.offence.startDate
   const startDatesAreEqual = hoStartDate.getTime() === pncStartDate.getTime()
 
-  const hoEndDate = hoOffence.ActualOffenceEndDate.EndDate
+  const hoEndDate = hoOffence.ActualOffenceEndDate?.EndDate
   const pncEndDate = pncOffence.offence.endDate
   const endDatesAreEqual = hoEndDate?.getTime() === pncEndDate?.getTime()
 

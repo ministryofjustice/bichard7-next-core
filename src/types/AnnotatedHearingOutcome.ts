@@ -10,7 +10,7 @@ const alcoholLevelSchema = z.object({
 })
 
 const actualOffenceEndDateSchema = z.object({
-  EndDate: z.date().optional()
+  EndDate: z.date()
 })
 
 const actualOffenceStartDateSchema = z.object({
@@ -75,7 +75,8 @@ const defendantOrOffenderSchema = z.object({
 
 const criminalProsecutionReferenceSchema = z.object({
   DefendantOrOffender: defendantOrOffenderSchema.optional(),
-  OffenceReason: offenceReasonSchema.optional()
+  OffenceReason: offenceReasonSchema.optional(),
+  OffenceReasonSequence: z.number().optional()
 })
 
 const durationSchema = z.object({
@@ -197,7 +198,7 @@ const offenceSchema = z.object({
   ChargeDate: z.date().optional(),
   ActualOffenceDateCode: z.string(),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
-  ActualOffenceEndDate: actualOffenceEndDateSchema,
+  ActualOffenceEndDate: actualOffenceEndDateSchema.optional(),
   LocationOfOffence: z.string(),
   OffenceWelshTitle: z.string().optional(),
   ActualOffenceWording: z.string(),
@@ -214,6 +215,7 @@ const offenceSchema = z.object({
   OffenceTime: z.string().optional(),
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string(),
+  CourtCaseReferenceNumber: z.string().optional(),
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
