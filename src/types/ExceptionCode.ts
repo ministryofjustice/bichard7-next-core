@@ -17,5 +17,6 @@ export enum ExceptionCode {
   HO100211 = "HO100211",
   HO100212 = "HO100212",
   HO100220 = "HO100220",
+  HO100300 = "HO100300",
   HO100322 = "HO100322"
 }

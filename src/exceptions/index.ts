@@ -3,7 +3,7 @@ import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 import type { KeyValue } from "src/types/KeyValue"
 
-const exceptionCodes = [ExceptionCode.HO100322]
+const exceptionCodes = [ExceptionCode.HO100300, ExceptionCode.HO100322]
 
 const modules = exceptionCodes.reduce((acc: KeyValue<ExceptionGenerator>, code) => {
   acc[code] = require(`./${code}`).default

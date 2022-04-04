@@ -26,10 +26,14 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   }
 
   generatedExceptions = Object.entries(exceptions)
+    .filter(([exceptionCode]) => exceptionCode != ExceptionCode.HO100300)
     .reduce((acc: Exception[], [_, exception]) => {
       return acc.concat(exception(aho))
     }, [])
     .concat(generatedExceptions)
 
-  return generatedExceptions
+  // Generate HO100300 which depends on other exceptions generated
+  const ho100300 = exceptions.HO100300(aho, { exceptions: generatedExceptions })
+
+  return generatedExceptions.concat(ho100300)
 }
