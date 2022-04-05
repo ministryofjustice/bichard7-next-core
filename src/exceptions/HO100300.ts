@@ -24,9 +24,6 @@ const getResultPath = (offenceIndex: number, resultIndex: number): FieldPath => 
   resultIndex
 ]
 
-const getResultCourtTypePath = (offenceIndex: number, resultIndex: number): FieldPath =>
-  getResultPath(offenceIndex, resultIndex).concat(["CourtType"])
-
 const getResultNextResultSourceOrganisationPath = (offenceIndex: number, resultIndex: number): FieldPath =>
   getResultPath(offenceIndex, resultIndex).concat(["NextResultSourceOrganisation", "OrganisationUnitCode"])
 
@@ -67,19 +64,6 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence, offenceIndex) =>
     offence.Result.forEach((result, resultIndex) => {
-      // Validate Court Type
-      if (
-        result.SourceOrganisation &&
-        !lookupOrganisationUnitByCode(result.SourceOrganisation) &&
-        !CourtHearingLocation &&
-        !findException(exceptions!, generatedExceptions, COURT_HEARING_LOCATION_PATH, ExceptionCode.HO100300)
-      ) {
-        generatedExceptions.push({
-          code: ExceptionCode.HO100300,
-          path: getResultCourtTypePath(offenceIndex, resultIndex)
-        })
-      }
-
       if (result.NextResultSourceOrganisation && !isOrganisationUnitValid(result.NextResultSourceOrganisation)) {
         generatedExceptions.push({
           code: ExceptionCode.HO100300,
