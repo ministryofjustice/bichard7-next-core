@@ -180,10 +180,10 @@ const resultSchema = z.object({
   ResultHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Always set to OTHER so can't test exception
   ResultHearingDate: z.date().optional(),
   Duration: durationSchema.array().optional(),
-  DateSpecifiedInResult: z.date().optional(),
+  DateSpecifiedInResult: z.date().array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: z.number().array().optional(),
-  NumberSpecifiedInResult: z.string().optional(),
+  NumberSpecifiedInResult: z.string().array().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
   NextHearingDate: z.date().optional(),

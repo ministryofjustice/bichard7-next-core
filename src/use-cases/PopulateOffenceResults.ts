@@ -1,24 +1,30 @@
 import {
   BAIL_QUALIFIER_CODE,
   CROWN_COURT_NAME_MAPPING_OVERRIDES,
+  DURATION_TYPES,
+  DURATION_UNITS,
   FREE_TEXT_RESULT_CODE,
   LIBRA_ELECTRONIC_TAGGING_TEXT,
   LIBRA_MAX_QUALIFIERS,
   OFFENCES_TIC_RESULT_CODE,
   OFFENCES_TIC_RESULT_TEXT,
   OTHER_VALUE,
+  RESULT_CURFEW1,
+  RESULT_CURFEW2,
+  RESULT_PENALTY_POINTS,
   RESULT_TEXT_PATTERN_CODES,
   RESULT_TEXT_PATTERN_REGEX,
   TAGGING_FIX_ADD,
   TAGGING_FIX_REMOVE,
   WARRANT_ISSUE_DATE_RESULT_CODES
 } from "src/lib/properties"
-import type { Result } from "src/types/AnnotatedHearingOutcome"
+import type { Result, OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
 import type { CjsPlea } from "src/types/Plea"
 import type { CjsVerdict } from "src/types/Verdict"
 import {
   lookupModeOfTrialReasonBySpiCode,
+  lookupOrganisationUnitByThirdLevelPsaCode,
   lookupPleaStatusBySpiCode,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
@@ -40,6 +46,12 @@ export interface OffenceResultsResult {
   results: Result[]
   bailQualifiers: string[]
 }
+
+const createDuration = (durationUnit?: string, durationValue?: number) => ({
+  DurationType: DURATION_TYPES.DURATION,
+  DurationUnit: !durationUnit || durationUnit === "." ? DURATION_UNITS.SESSIONS : durationUnit,
+  DurationLength: parseInt(durationValue?.toString() ?? "", 10)
+})
 
 export default class {
   private baResultCodeQualifierHasBeenExcluded = false
@@ -109,7 +121,8 @@ export default class {
     const {
       ResultCode: spiResultCode,
       NextHearing: spiNextHearing,
-      ResultCodeQualifier: spiResultCodeQualifier
+      ResultCodeQualifier: spiResultCodeQualifier,
+      Outcome: spiOutcome
     } = spiResult
     const result = {} as Result
     const spiResultCodeNumber = spiResultCode ?? FREE_TEXT_RESULT_CODE
@@ -128,6 +141,76 @@ export default class {
 
     if (spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody) {
       result.ReasonForOffenceBailConditions = spiCourtIndividualDefendant.ReasonForBailConditionsOrCustody
+    }
+
+    if (spiOutcome) {
+      const {
+        Duration: spiDuration,
+        ResultAmountSterling: spiResultAmountSterling,
+        PenaltyPoints: spiPenaltyPoints
+      } = spiOutcome
+      result.Duration = result.Duration ?? []
+      if (spiDuration) {
+        const {
+          DurationUnit: spiDurationUnit,
+          DurationValue: spiDurationValue,
+          SecondaryDurationValue: spiSecondaryDurationValue,
+          SecondaryDurationUnit: spiSecondaryDurationUnit,
+          DurationStartDate: spiDurationStartDate,
+          DurationEndDate: spiDurationEndDate
+        } = spiDuration
+        result.Duration?.push(createDuration(spiDurationUnit, spiDurationValue))
+
+        if (spiSecondaryDurationValue) {
+          result.Duration?.push(createDuration(spiSecondaryDurationUnit, spiSecondaryDurationValue))
+        }
+
+        result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
+        spiDurationStartDate.forEach((durationStartDate, index) => {
+          result.DateSpecifiedInResult?.push(new Date(durationStartDate))
+          if (spiDurationEndDate[index]) {
+            result.DateSpecifiedInResult?.push(new Date(spiDurationEndDate[index]))
+          }
+        })
+      }
+
+      if (spiResultAmountSterling) {
+        result.AmountSpecifiedInResult = result.AmountSpecifiedInResult ?? []
+        result.AmountSpecifiedInResult.push(spiResultAmountSterling)
+      }
+
+      if (spiResultCode) {
+        result.NumberSpecifiedInResult = result.NumberSpecifiedInResult ?? []
+        if (spiResultCode === RESULT_PENALTY_POINTS && spiPenaltyPoints) {
+          result.NumberSpecifiedInResult.push(spiPenaltyPoints.toString())
+        } else if (
+          (spiResultCode === RESULT_CURFEW1 || spiResultCode === RESULT_CURFEW2) &&
+          spiDuration?.SecondaryDurationUnit === DURATION_UNITS.HOURS &&
+          spiDuration?.SecondaryDurationValue
+        ) {
+          result.NumberSpecifiedInResult.push(spiDuration.SecondaryDurationValue.toString())
+        }
+      }
+    }
+
+    if (spiNextHearing) {
+      const {
+        NextHearingDetails: {
+          CourtHearingLocation: spiNextCourtHearingLocation,
+          DateOfHearing: spiNextDateOfHearing,
+          TimeOfHearing: spiNextTimeOfHearing
+        }
+      } = spiNextHearing
+      if (spiNextCourtHearingLocation) {
+        result.NextResultSourceOrganisation = {
+          OrganisationUnitCode:
+            lookupOrganisationUnitByThirdLevelPsaCode(spiNextCourtHearingLocation)?.thirdLevelCode ??
+            spiNextCourtHearingLocation
+        } as OrganisationUnit
+
+        result.NextHearingDate = new Date(spiNextDateOfHearing)
+        result.NextHearingTime = spiNextTimeOfHearing
+      }
     }
 
     if (this.spiOffence.Plea) {
