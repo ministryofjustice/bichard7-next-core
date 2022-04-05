@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import parseSpiResult from "./parseSpiResult"
+import parseSpiResult from "src/use-cases/parseSpiResult"
 import populateDefendant from "./populateDefendant"
 import type { OffencesResult } from "./PopulateOffences"
 import PopulateOffences from "./PopulateOffences"

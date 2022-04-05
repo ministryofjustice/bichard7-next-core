@@ -1,13 +1,13 @@
 import { readFileSync } from "fs"
-import parseSpiResult from "./parseSpiResult"
-import PopulateOffenceResults from "./PopulateOffenceResults"
+import parseSpiResult from "src/use-cases/parseSpiResult"
+import PopulateOffences from "./PopulateOffences"
 
-describe("PopulateOffenceResults", () => {
+describe("PopulateOffences", () => {
   const message = readFileSync("test-data/input-message-001.xml", "utf-8")
   const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
   it("should transform SPI Offences to Hearing Outcome Offences", () => {
-    const result = new PopulateOffenceResults(courtResult, courtResult.Session.Case.Defendant.Offence[0]).execute()
+    const result = new PopulateOffences(courtResult, []).execute()
 
     expect(result).toBeDefined()
     expect(result).toMatchSnapshot()

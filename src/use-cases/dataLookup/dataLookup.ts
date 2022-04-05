@@ -13,7 +13,6 @@ import type {
   TypeOfHearing,
   Verdict
 } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
 
@@ -75,21 +74,6 @@ const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | 
 const lookupOffenceCodeByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUnitData | undefined => {
-  if (!orgUnit) {
-    return undefined
-  }
-
-  const result = organisationUnit.filter(
-    (unit) =>
-      unit.topLevelCode.toUpperCase() === (orgUnit.TopLevelCode?.toUpperCase() ?? "") &&
-      unit.secondLevelCode.toUpperCase() === orgUnit.SecondLevelCode?.toUpperCase() &&
-      unit.thirdLevelCode.toUpperCase() === orgUnit.ThirdLevelCode?.toUpperCase()
-  )
-
-  return result.find((unit) => unit.bottomLevelCode === orgUnit.BottomLevelCode) ?? result?.[0]
-}
-
 const lookupOrganisationUnitByThirdLevelPsaCode = (
   thirdLevelPsaCode: number | string
 ): OrganisationUnitData | undefined =>
@@ -135,7 +119,6 @@ export {
   lookupQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
-  lookupOrganisationUnitByCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupResultCodeByCjsCode,
   lookupPncDisposalByCjsCode,
