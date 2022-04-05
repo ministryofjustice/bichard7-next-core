@@ -1,5 +1,18 @@
 import nextData from "@moj-bichard7-developers/bichard7-next-data"
-import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type {
+  CourtType,
+  DurationType,
+  DurationUnit,
+  ModeOfTrialReason,
+  OffenceCode,
+  PncDisposal,
+  ResultClass,
+  ResultCode,
+  ResultQualifierCode,
+  TargetCourtType,
+  TypeOfHearing,
+  Verdict
+} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
@@ -14,7 +27,14 @@ const {
   remandStatus,
   resultCode,
   offenceCode,
-  verdict
+  verdict,
+  courtType,
+  typeOfHearing,
+  targetCourtType,
+  resultClass,
+  resultQualifierCode,
+  durationType,
+  durationUnit
 } = nextData
 
 interface DataLookupResult {
@@ -24,13 +44,6 @@ interface DataLookupResult {
   spiCode?: string
   recordableOnPnc?: string
   resultHalfLifeHours?: string | null
-}
-
-interface PncDisposalDataLookupResult {
-  cjsCode: string
-  description: string
-  pncAdjudication: string
-  pncNonAdjudication: string
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -45,10 +58,15 @@ const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined 
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   verdict.find((x) => x.spiCode === spiCode)
 
-const lookupModeOfTrialReasonBySpiCode = (spiCode: string): DataLookupResult | undefined =>
+const lookupVerdictByCjsCode = (cjsCode: string): Verdict | undefined => verdict.find((x) => x.cjsCode === cjsCode)
+
+const lookupModeOfTrialReasonBySpiCode = (spiCode: string): ModeOfTrialReason | undefined =>
   modeOfTrialReason.find((x) => x.spiCode === spiCode)
 
-const lookupResultQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+const lookupModeOfTrialReasonByCjsCode = (cjsCode: string): ModeOfTrialReason | undefined =>
+  modeOfTrialReason.find((x) => x.cjsCode === cjsCode)
+
+const lookupQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   qualifier.find((x) => x.cjsCode === cjsCode)
 
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -79,23 +97,53 @@ const lookupOrganisationUnitByThirdLevelPsaCode = (
     (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
-const lookupResultCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+const lookupResultCodeByCjsCode = (cjsCode: string): ResultCode | undefined =>
   resultCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposalDataLookupResult | undefined =>
+const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposal | undefined =>
   pncDisposal.find((x) => x.cjsCode === cjsCode.toString())
+
+const lookupCourtTypeByCjsCode = (cjsCode: string): CourtType | undefined =>
+  courtType.find((x) => x.cjsCode === cjsCode.toString())
+
+const lookupTypeOfHearingByCjsCode = (cjsCode: string): TypeOfHearing | undefined =>
+  typeOfHearing.find((x) => x.cjsCode === cjsCode.toString())
+
+const lookupTargetCourtTypeByCjsCode = (cjsCode: string): TargetCourtType | undefined =>
+  targetCourtType.find((x) => x.cjsCode === cjsCode.toString())
+
+const lookupResultClassByCjsCode = (cjsCode: string): ResultClass | undefined =>
+  resultClass.find((x) => x.cjsCode === cjsCode.toString())
+
+const lookupResultQualifierCodeByCjsCode = (cjsCode: string): ResultQualifierCode | undefined =>
+  resultQualifierCode.find((x) => x.cjsCode === cjsCode)
+
+const lookupDurationTypeByCjsCode = (cjsCode: string): DurationType | undefined =>
+  durationType.find((x) => x.cjsCode === cjsCode)
+
+const lookupDurationUnitByCjsCode = (cjsCode: string): DurationUnit | undefined =>
+  durationUnit.find((x) => x.cjsCode === cjsCode)
 
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
   lookupPleaStatusBySpiCode,
   lookupVerdictBySpiCode,
+  lookupVerdictByCjsCode,
   lookupModeOfTrialReasonBySpiCode,
-  lookupResultQualifierCodeByCjsCode,
+  lookupModeOfTrialReasonByCjsCode,
+  lookupQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
   lookupOrganisationUnitByCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupResultCodeByCjsCode,
-  lookupPncDisposalByCjsCode
+  lookupPncDisposalByCjsCode,
+  lookupCourtTypeByCjsCode,
+  lookupTypeOfHearingByCjsCode,
+  lookupTargetCourtTypeByCjsCode,
+  lookupResultClassByCjsCode,
+  lookupResultQualifierCodeByCjsCode,
+  lookupDurationTypeByCjsCode,
+  lookupDurationUnitByCjsCode
 }

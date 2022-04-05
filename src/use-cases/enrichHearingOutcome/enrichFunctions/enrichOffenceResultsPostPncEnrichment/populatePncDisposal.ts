@@ -27,9 +27,12 @@ const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Re
       ResultClass === RESULT_ADJOURNMENT_WITH_JUDGEMENT || ResultClass == RESULT_JUDGEMENT_WITH_FINAL_RESULT
 
     const pncDisposal = lookupPncDisposalByCjsCode(CJSresultCode ?? 0)
-    result.PNCDisposalType =
-      (adjudicationIndicator ? pncDisposal?.pncAdjudication : pncDisposal?.pncNonAdjudication) ??
-      CJSresultCode?.toString()
+    const pncDisposalType = adjudicationIndicator ? pncDisposal?.pncAdjudication : pncDisposal?.pncNonAdjudication
+    if (pncDisposalType) {
+      result.PNCDisposalType = parseInt(pncDisposalType, 10)
+    } else {
+      result.PNCDisposalType = CJSresultCode
+    }
   }
 }
 

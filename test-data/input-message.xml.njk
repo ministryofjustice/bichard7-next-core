@@ -103,7 +103,7 @@
                 </DC:BaseOffenceDetails>
                 <DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
                 <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
-                <DC:ModeOfTrial>01</DC:ModeOfTrial>
+                <DC:ModeOfTrial>{{ offence.modeOfTrial if offence.modeOfTrial else "01" }}</DC:ModeOfTrial>
                 <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
                 <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
                 <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
@@ -126,6 +126,31 @@
                         <DC:NextHearingReason>{{ result.nextHearing.nextHearingReason if result.nextHearing.nextHearingReason else "Adjourned for Defendant to attend" }}</DC:NextHearingReason>
                         <DC:BailStatusOffence>{{ result.nextHearing.bailStatusOffence if result.nextHearing.bailStatusOffence else "U" }}</DC:BailStatusOffence>
                       </DC:NextHearing>
+                    {% endif %}
+                    {% if result.bailStatus %}
+                    <DC:NextHearing>
+                      <DC:NextHearingDetails>
+                        <DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
+                        <DC:DateOfHearing>2011-10-08</DC:DateOfHearing>
+                        <DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
+                      </DC:NextHearingDetails>
+                      <DC:NextHearingReason>Adjourned for Defendant to attend</DC:NextHearingReason>
+                      <DC:BailStatusOffence>{{ result.bailStatus }}</DC:BailStatusOffence>
+                    </DC:NextHearing>
+                    {% endif %}
+                    {% if result.outcome %}
+                    <DC:Outcome>
+                      {% if result.outcome.duration %}
+                      <DC:Duration>
+                        {% if result.outcome.duration.value %}
+                        <DC:DurationValue>2</DC:DurationValue>
+                        {% endif %}
+                        {% if result.outcome.duration.unit %}
+                        <DC:DurationUnit>Y</DC:DurationUnit>
+                        {% endif %}
+                      </DC:Duration>
+                      {% endif %}
+                    </DC:Outcome>
                     {% endif %}
                   </DC:Result>
                 {% endfor %}

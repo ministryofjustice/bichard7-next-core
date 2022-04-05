@@ -50,7 +50,7 @@ export interface OffenceResultsResult {
 const createDuration = (durationUnit?: string, durationValue?: number) => ({
   DurationType: DURATION_TYPES.DURATION,
   DurationUnit: !durationUnit || durationUnit === "." ? DURATION_UNITS.SESSIONS : durationUnit,
-  DurationLength: durationValue?.toString() ?? ""
+  DurationLength: parseInt(durationValue?.toString() ?? "", 10)
 })
 
 export default class {
@@ -223,7 +223,7 @@ export default class {
         (lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode as CjsVerdict) ?? this.spiOffence.Finding
     }
 
-    if (this.spiOffence.ModeOfTrial) {
+    if (this.spiOffence.ModeOfTrial !== undefined) {
       result.ModeOfTrialReason =
         lookupModeOfTrialReasonBySpiCode(this.spiOffence.ModeOfTrial.toString())?.cjsCode ??
         this.spiOffence.ModeOfTrial.toString()
