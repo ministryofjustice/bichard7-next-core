@@ -3,10 +3,23 @@ import nunjucks from "nunjucks"
 import type { SpiPlea } from "src/types/Plea"
 import type { SpiVerdict } from "src/types/Verdict"
 
+type NextHearingDetails = {
+  courtHearingLocation?: string
+  dateOfHearing?: string
+  timeOfHearing?: string
+}
+
+type NextHearing = {
+  nextHearingDetails?: NextHearingDetails
+  nextHearingReason?: string
+  bailStatusOffence?: string
+}
+
 type Result = {
   code?: number
   qualifier?: string
   text?: string
+  nextHearing?: NextHearing
 }
 
 type Offence = {

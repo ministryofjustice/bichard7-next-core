@@ -64,7 +64,7 @@ const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUn
 
   const result = organisationUnit.filter(
     (unit) =>
-      unit.topLevelCode.toUpperCase() === orgUnit.TopLevelCode?.toUpperCase() &&
+      unit.topLevelCode.toUpperCase() === (orgUnit.TopLevelCode?.toUpperCase() ?? "") &&
       unit.secondLevelCode.toUpperCase() === orgUnit.SecondLevelCode?.toUpperCase() &&
       unit.thirdLevelCode.toUpperCase() === orgUnit.ThirdLevelCode?.toUpperCase()
   )
@@ -72,7 +72,9 @@ const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUn
   return result.find((unit) => unit.bottomLevelCode === orgUnit.BottomLevelCode) ?? result?.[0]
 }
 
-const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number): OrganisationUnitData | undefined =>
+const lookupOrganisationUnitByThirdLevelPsaCode = (
+  thirdLevelPsaCode: number | string
+): OrganisationUnitData | undefined =>
   organisationUnit.find(
     (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )

@@ -64,6 +64,7 @@ const populateAddress = (spiAddress: SpiAddress): Address => {
       AdministrativeArea
     ]
       .filter((x) => !!x)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .reduce((acc: any, addressPart, index) => {
         acc[`AddressLine${index + 1}`] = addressPart!
         return acc

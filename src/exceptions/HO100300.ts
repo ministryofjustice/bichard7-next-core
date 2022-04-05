@@ -6,23 +6,34 @@ import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
-const ARREST_SOMMONS_NUMBER_PATH =
+type FieldPath = (string | number)[]
+
+const ARREST_SOMMONS_NUMBER_PATH: FieldPath =
   "AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber".split(".")
-const COURT_HEARING_LOCATION_PATH =
+const COURT_HEARING_LOCATION_PATH: FieldPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
 
-const getResultPath = (offenceIndex: number, resultIndex: number) =>
-  `AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.${offenceIndex}.Result.${resultIndex}`.split(
-    "."
-  )
+const getResultPath = (offenceIndex: number, resultIndex: number): FieldPath => [
+  "AnnotatedHearingOutcome",
+  "HearingOutcome",
+  "Case",
+  "HearingDefendant",
+  "Offence",
+  offenceIndex,
+  "Result",
+  resultIndex
+]
 
-const getResultCourtTypePath = (offenceIndex: number, resultIndex: number): string[] =>
+const getResultCourtTypePath = (offenceIndex: number, resultIndex: number): FieldPath =>
   getResultPath(offenceIndex, resultIndex).concat(["CourtType"])
+
+const getResultNextResultSourceOrganisationPath = (offenceIndex: number, resultIndex: number): FieldPath =>
+  getResultPath(offenceIndex, resultIndex).concat(["NextResultSourceOrganisation", "OrganisationUnitCode"])
 
 const findException = (
   exceptions: Exception[],
   generatedExceptions: Exception[],
-  path: string[],
+  path: FieldPath,
   exceptionCode?: string
 ) => {
   const pathString = JSON.stringify(path)
@@ -39,7 +50,7 @@ const isAsnValid = (asn?: string): boolean => !!asn && isOrganisationUnitValid(c
 const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
   const { exceptions } = options!
   const { ArrestSummonsNumber } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  const { CourtHearingLocation, CourtHouseCode } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+  const { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const generatedExceptions: Exception[] = []
 
   // Validate ASN
@@ -50,7 +61,7 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
 
   // Validate Court Hearing Location
   const isCourtHearingLocationValid = CourtHearingLocation && isOrganisationUnitValid(CourtHearingLocation)
-  if (!isCourtHearingLocationValid && !CourtHouseCode) {
+  if (!isCourtHearingLocationValid) {
     generatedExceptions.push({ code: ExceptionCode.HO100300, path: COURT_HEARING_LOCATION_PATH })
   }
 
@@ -66,6 +77,13 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
         generatedExceptions.push({
           code: ExceptionCode.HO100300,
           path: getResultCourtTypePath(offenceIndex, resultIndex)
+        })
+      }
+
+      if (result.NextResultSourceOrganisation && !isOrganisationUnitValid(result.NextResultSourceOrganisation)) {
+        generatedExceptions.push({
+          code: ExceptionCode.HO100300,
+          path: getResultNextResultSourceOrganisationPath(offenceIndex, resultIndex)
         })
       }
     })

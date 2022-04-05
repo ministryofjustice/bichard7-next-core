@@ -114,6 +114,19 @@
                     {% if result.qualifier %}
                       <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
                     {% endif %}
+                    {% if result.nextHearing %}
+                      <DC:NextHearing>
+                        {% if result.nextHearing.nextHearingDetails %}
+                          <DC:NextHearingDetails>
+                            <DC:CourtHearingLocation>{{ result.nextHearing.nextHearingDetails.courtHearingLocation if result.nextHearing.nextHearingDetails.courtHearingLocation else "B01NI01" }}</DC:CourtHearingLocation>
+                            <DC:DateOfHearing>{{ result.nextHearing.nextHearingDetails.dateOfHearing if result.nextHearing.nextHearingDetails.dateOfHearing else "2011-10-08" }}</DC:DateOfHearing>
+                            <DC:TimeOfHearing>{{ result.nextHearing.nextHearingDetails.timeOfHearing if result.nextHearing.nextHearingDetails.timeOfHearing else "14:00:00" }}</DC:TimeOfHearing>
+                          </DC:NextHearingDetails>
+                        {% endif %}
+                        <DC:NextHearingReason>{{ result.nextHearing.nextHearingReason if result.nextHearing.nextHearingReason else "Adjourned for Defendant to attend" }}</DC:NextHearingReason>
+                        <DC:BailStatusOffence>{{ result.nextHearing.bailStatusOffence if result.nextHearing.bailStatusOffence else "U" }}</DC:BailStatusOffence>
+                      </DC:NextHearing>
+                    {% endif %}
                   </DC:Result>
                 {% endfor %}
               </DC:Offence>
