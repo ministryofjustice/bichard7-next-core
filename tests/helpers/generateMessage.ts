@@ -32,6 +32,9 @@ type Offence = {
   startDate?: Date
   endDate?: Date
   modeOfTrial?: string
+  location?: string
+  offenceWording?: string
+  offenceSequenceNumber?: number
 }
 
 type Person = {

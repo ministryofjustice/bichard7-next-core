@@ -15,15 +15,15 @@ const enrichOffence = (offence: Offence): Offence => {
 
   if (offenceIgnored) {
     offence.OffenceCategory = "B7"
-    offence.RecordableOnPNCindicator = false
+    offence.RecordableOnPNCindicator = "N" // other possible options are "D" (don't know), "NA" (not applicable)
   } else if (offenceCodeLookup?.offenceCategory) {
     offence.OffenceCategory = offenceCodeLookup.offenceCategory
-    offence.RecordableOnPNCindicator = offenceCodeLookup.recordableOnPnc === "Y"
+    offence.RecordableOnPNCindicator = offenceCodeLookup.recordableOnPnc
   }
 
   if (offenceCodeLookup) {
     offence.OffenceTitle = offenceCodeLookup.offenceTitle
-    offence.NotifiableToHOindicator = offenceCodeLookup.notifiableToHo === "Y"
+    offence.NotifiableToHOindicator = offenceCodeLookup.notifiableToHo
     offence.HomeOfficeClassification = offenceCodeLookup.homeOfficeClassification
     if (offenceCodeLookup.resultHalfLifeHours) {
       offence.ResultHalfLifeHours = parseInt(offenceCodeLookup.resultHalfLifeHours, 10)

@@ -19,15 +19,15 @@ describe("enrich case", () => {
   it("sets the case RecordableOnPNCindicator when there is an offence with RecordableOnPNCindicator", () => {
     aho = generateMockAho()
 
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].RecordableOnPNCindicator = false
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[1].RecordableOnPNCindicator = false
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].RecordableOnPNCindicator = "N"
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[1].RecordableOnPNCindicator = "N"
 
     const resultWithoutRecordableOnPNCindicator = enrichCase(aho)
     expect(
       resultWithoutRecordableOnPNCindicator.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
     ).toBe(false)
 
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].RecordableOnPNCindicator = true
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].RecordableOnPNCindicator = "Y"
 
     const resultWithRecordableOnPNCindicator = enrichCase(aho)
     expect(
