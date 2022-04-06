@@ -3,14 +3,29 @@ import type { Offence, Result } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import { matchOffences } from "./offenceMatcher"
 
-const createHOOffence = (
-  actOrSource: string,
-  year: string,
-  reason: string,
-  startDate: string,
-  endDate: string | null,
-  resultCodes: string[]
-): Offence => {
+type CreateHoOffenceOptions = {
+  actOrSource?: string
+  year?: string
+  reason?: string
+  startDate: string
+  endDate?: string
+  resultCodes?: string[]
+  offenceCategory?: string
+  sequenceNumber?: number
+  courtCaseReferenceNumber?: string
+}
+
+const createHOOffence = ({
+  actOrSource = "VG",
+  year = "24",
+  reason = "030",
+  startDate,
+  endDate,
+  resultCodes,
+  offenceCategory,
+  sequenceNumber,
+  courtCaseReferenceNumber
+}: CreateHoOffenceOptions): Offence => {
   const offence: Partial<Offence> = {
     CriminalProsecutionReference: {
       OffenceReason: {
@@ -22,12 +37,13 @@ const createHOOffence = (
           Reason: reason,
           FullCode: `${actOrSource}${year}${reason}`
         }
-      }
+      },
+      OffenceReasonSequence: sequenceNumber
     },
     ActualOffenceStartDate: {
       StartDate: new Date(startDate)
     },
-    Result: resultCodes.map(
+    Result: resultCodes?.map(
       (code): Result => ({
         CJSresultCode: parseInt(code, 10),
         SourceOrganisation: {
@@ -38,10 +54,12 @@ const createHOOffence = (
         },
         ResultQualifierVariable: [{ Code: "A" }]
       })
-    )
+    ),
+    OffenceCategory: offenceCategory,
+    CourtCaseReferenceNumber: courtCaseReferenceNumber
   }
 
-  if (endDate !== null) {
+  if (!!endDate) {
     offence.ActualOffenceEndDate = {
       EndDate: new Date(endDate)
     }
@@ -50,13 +68,27 @@ const createHOOffence = (
   return offence as Offence
 }
 
-const createPNCCourtCaseOffence = (offenceCode: string, startDate: string, endDate: string): PncOffence => {
+type CreatePNCCourtCaseOffenceOptions = {
+  offenceCode: string
+  startDate: string
+  endDate?: string
+  disposalCodes?: number[]
+  sequenceNumber?: number
+}
+
+const createPNCCourtCaseOffence = ({
+  offenceCode,
+  startDate,
+  endDate,
+  disposalCodes,
+  sequenceNumber = 1
+}: CreatePNCCourtCaseOffenceOptions): PncOffence => {
   const offence: PncOffence = {
     offence: {
       acpoOffenceCode: offenceCode,
       cjsOffenceCode: offenceCode,
       startDate: parsePncDate(startDate),
-      sequenceNumber: 1
+      sequenceNumber
     }
   }
 
@@ -64,16 +96,20 @@ const createPNCCourtCaseOffence = (offenceCode: string, startDate: string, endDa
     offence.offence.endDate = parsePncDate(endDate)
   }
 
+  if (disposalCodes) {
+    offence.disposals = disposalCodes.map((disposalCode) => ({ type: disposalCode }))
+  }
+
   return offence
 }
 
 describe("Offence Matcher", () => {
   it("successfully matches a single matching offence on PNC and HO with sequence numbers", () => {
-    const hoOffences: Offence[] = [createHOOffence("VG", "24", "030", "2009-09-08", null, ["1002"])]
-    hoOffences[0].CriminalProsecutionReference.OffenceReasonSequence = 1
+    const hoOffences = [createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"], sequenceNumber: 1 })]
 
-    const pncOffences: PncOffence[] = [createPNCCourtCaseOffence("VG24030", "08092009", "")]
-    pncOffences[0].offence.sequenceNumber = 1
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009", sequenceNumber: 1 })
+    ]
 
     const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
@@ -83,30 +119,610 @@ describe("Offence Matcher", () => {
     expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
   })
 
-  it.skip("successfully match matching offences on PNC and HO", () => {
-    const hoOffences: Offence[] = [
-      createHOOffence("VG", "24", "030", "2009-09-08", null, ["1002"]),
-      createHOOffence("VG", "24", "030", "2009-09-15", null, ["1002"]),
-      createHOOffence("VG", "24", "030", "2009-09-22", null, ["1002"]),
-      createHOOffence("VG", "24", "030", "2009-09-29", null, ["1002"])
+  it("should testMatchOffencesAllWithSameOffenceCodeMatchesFoundPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-15", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-22", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-29", resultCodes: ["1002"] })
     ]
 
-    const pncOffences: PncOffence[] = [
-      createPNCCourtCaseOffence("VG24030", "29092009", ""),
-      createPNCCourtCaseOffence("VG24030", "22092009", ""),
-      createPNCCourtCaseOffence("VG24030", "15092009", ""),
-      createPNCCourtCaseOffence("VG24030", "08092009", "")
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "29092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "22092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "15092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009" })
     ]
 
     const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
     expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.duplicateHoOffences).toHaveLength(0)
-    expect(outcome.matchedOffences).toHaveLength(4)
+    expect(outcome.matchedOffences.length).toHaveLength(4)
 
     outcome.matchedOffences.forEach((match) => {
       const hoOffenceIndex = hoOffences.indexOf(match.hoOffence)
       expect(match.pncOffence).toStrictEqual(pncOffences[3 - hoOffenceIndex])
     })
+  })
+
+  it("should testMatchOffencesAllWithSameOffenceCodeNoMatchesFoundPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-15", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-22", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-29", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences: PncOffence[] = []
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("should testMatchOffencesAllWithSameOffenceCodeUnmatchedPNCOffencesPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] })]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "29092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "22092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "15092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(outcome.matchedOffences).toStrictEqual([{ pncOffence: pncOffences[3], hoOffence: hoOffences[0] }])
+  })
+
+  it("should testMatchOffencesAllWithSameOffenceCodeUnmatchedPNCOffenceWithFinalResult", () => {
+    const hoOffences = [createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] })]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24031", startDate: "08092009", disposalCodes: [4321] }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(outcome.matchedOffences).toStrictEqual([{ pncOffence: pncOffences[1], hoOffence: hoOffences[0] }])
+  })
+
+  it("should testMatchOffencesAllWithSameOffenceCodeDuplicateHOOffencesPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1003"] })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "15092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.duplicateHoOffences).toHaveLength(2)
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[0])
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[1])
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("should testMatchOffencesDifferentOffenceCodesAllOutcomesFoundPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1003"] }),
+      createHOOffence({ reason: "031", startDate: "2009-09-08", resultCodes: ["1003"] })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24031", startDate: "08092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24028", startDate: "08092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.duplicateHoOffences).toHaveLength(2)
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[0])
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[1])
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(pncOffences[1]).toStrictEqual(hoOffences[2])
+  })
+
+  it("should testMatchIdenticalOffencesPreservingPreviousMatchPNCOffencesAreCourtOnesPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        sequenceNumber: 1
+      }),
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        sequenceNumber: 2
+      }),
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        sequenceNumber: 3
+      })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009", sequenceNumber: 3 }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009", sequenceNumber: 2 }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "08092009", sequenceNumber: 1 })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(3)
+
+    outcome.matchedOffences.forEach((match) => {
+      expect(match.hoOffence.CourtOffenceSequenceNumber).toEqual(match.pncOffence.offence.sequenceNumber)
+    })
+  })
+
+  it.skip("should testMatchIdenticalOffencesPreservingPreviousMatchPNCOffencesAreCourtOnesPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]})
+    // };
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", "")
+    // };
+    // final NumberFormat nf = new DecimalFormat("000");
+    // for (int i = 0, j = pncOffence.length - 1; i < hoOffence.length; i++, j--) {
+    //   int sequenceNumber = i + 1;
+    //   CriminalProsecutionReferenceStructure cpr = hoOffence[i].getCriminalProsecutionReference();
+    //   OffenceReasonSequenceType offenceReasonSequence =
+    //       HO_FACTORY.createCriminalProsecutionReferenceStructureOffenceReasonSequenceType();
+    //   cpr.setOffenceReasonSequence(offenceReasonSequence);
+    //   offenceReasonSequence.setValue("" + sequenceNumber);
+    //   pncOffence[j].getCOF().setReferenceNumber(nf.format(sequenceNumber));
+    // }
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    // expect(outcome.duplicateHoOffences).toHaveLength(0);
+    // expect(ength, outcome.matchedOffences).toHaveLength(hoOffence);
+    // for (Iterator it = outcome.matchedOffences.entrySet().iterator(); it.hasNext(); ) {
+    //   Map.Entry me = (Map.Entry) it.next();
+    //   Offence hoOff = (Offence) me.getKey();
+    //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //           .PenaltyCaseType.OffencesType.OffenceType
+    //       pncOff =
+    //           (uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //                   .PenaltyCaseType.OffencesType.OffenceType)
+    //               me.getValue();
+    //   Pattern pattern = Pattern.compile("0*(\\d+)");
+    //   Matcher hoMatcher =
+    //       pattern.matcher(
+    //           hoOff.getCriminalProsecutionReference().getOffenceReasonSequence().getValue());
+    //   expect(hoMatcher.matches()).toBe(true)
+    //   Matcher pncMatcher = pattern.matcher(pncOff.getCOF().getReferenceNumber());
+    //   expect(pncMatcher.matches()).toBe(true)
+    //   expect(roup(1), pncMatcher.group(1), hoMatcher);
+    // }
+  })
+
+  it.skip("should testMatchOffencesAllWithSameOffenceCodeDuplicateHOOffencesPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-08", null, resultCodes: ["1003"]})
+    // ];
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {
+    //   createPNCPenaltyCaseOffence("VG24030", "15092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", "")
+    // };
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(false)
+    // expect(outcome.duplicateHoOffences).toHaveLength(2);
+    // for (int i = 0; i < hoOffence.length; i++) {
+    //   expect(outcome.duplicateHoOffences.contains(hoOffence[i])).toBe(true)
+    // }
+    // expect(outcome.matchedOffences).toHaveLength(0);
+  })
+
+  it.skip("should testMatchOffencesAllWithSameOffenceCodeMatchesFoundPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-15", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-22", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-29", null,resultCodes: ["1002"]})
+    // };
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {
+    //   createPNCPenaltyCaseOffence("VG24030", "29092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "22092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "15092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", "")
+    // };
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    // expect(outcome.duplicateHoOffences).toHaveLength(0);
+    // expect(outcome.matchedOffences).toHaveLength(4);
+    // for (int i = 0; i < hoOffence.length; i++) {
+    //   assertSame(pncOffence[3 - i], outcome.matchedOffences.get(hoOffence[i]));
+    // }
+  })
+
+  it.skip("should testMatchOffencesAllWithSameOffenceCodeNoMatchesFoundPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-15", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-22", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-29", null,resultCodes: ["1002"]})
+    // };
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {};
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    // expect(outcome.duplicateHoOffences).toHaveLength(0);
+    // expect(outcome.matchedOffences).toHaveLength(0);
+  })
+
+  it.skip("should testMatchOffencesAllWithSameOffenceCodeUnmatchedPNCOffencesPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]})
+    // };
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {
+    //   createPNCPenaltyCaseOffence("VG24030", "29092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "22092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "15092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", "")
+    // };
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(false)
+    // expect(outcome.duplicateHoOffences).toHaveLength(0);
+    // expect(outcome.matchedOffences).toHaveLength(1);
+    // expect(], outcome.matchedOffences.get(hoOffence[0]), pncOffence);
+  })
+
+  it.skip("should testMatchOffencesDifferentOffenceCodesAllOutcomesFoundPNCOffencesArePenaltyOnes", () => {
+    // const hoOffences = [
+    //   createHOOffence({    startDate: "2009-09-08", null,resultCodes: ["1002"]}),
+    //   createHOOffence({    startDate: "2009-09-08", null, resultCodes: ["1003"]}),
+    //   createHOOffence({   reason: "031", startDate: "2009-09-08", null, resultCodes: ["1003"]})
+    // };
+    // uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
+    //         .PenaltyCaseType.OffencesType.OffenceType[]
+    //     pncOffence = {
+    //   createPNCPenaltyCaseOffence("VG24030", "08092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24031", "08092009", ""),
+    //   createPNCPenaltyCaseOffence("VG24028", "08092009", "")
+    // };
+    // const outcome =
+    //     matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    // expect(outcome.allPncOffencesMatched).toBe(false)
+    // expect(outcome.duplicateHoOffences).toHaveLength(2);
+    // for (int i = 0; i < 2; i++) {
+    //   expect(outcome.duplicateHoOffences.contains(hoOffence[i])).toBe(true)
+    // }
+    // expect(outcome.matchedOffences).toHaveLength(1);
+    // assertSame(pncOffence[1], outcome.matchedOffences.get(hoOffence[2]));
+  })
+
+  it("should testMatchOffencesSingleBreachButNotSingleCourtCaseDatesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })]
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
+    // dates into account.
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(1)
+  })
+
+  it("should testMatchOffencesSingleBreachAndSingleCourtCaseDatesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(outcome.matchedOffences).toStrictEqual([{ pncOffence: pncOffences[0], hoOffence: hoOffences[0] }])
+  })
+
+  it("should testMatchOffencesBreachButMoreHOOffencesAndSingleCourtCaseDatesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      }),
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
+    // dates into account.
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(1)
+  })
+
+  it("should testMatchOffencesBreachButMorePNCOffencesAndSingleCourtCaseDatesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
+    // dates into account.
+    expect(outcome.matchedOffences).toHaveLength(1)
+  })
+
+  it("should testMatchOffencesBreachButMultipleHOAndPNCOffencesAndSingleCourtCaseDatesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      }),
+      createHOOffence({
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" }),
+      createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+
+    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
+    // dates into account.
+    expect(outcome.matchedOffences).toHaveLength(2)
+    expect(outcome.allPncOffencesMatched).toBe(true)
+  })
+
+  it("should testMatchOffencesSingleBreachAndSingleCourtCaseOffencesDoNotMatch", () => {
+    const hoOffences = [
+      createHOOffence({
+        reason: "031",
+        startDate: "2009-09-08",
+        resultCodes: ["1002"],
+        offenceCategory: "CB"
+      })
+    ]
+
+    const pncOffences = [createPNCCourtCaseOffence({ offenceCode: "VG24030", startDate: "12092009" })]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(false)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+    // RCD470
+    // expect(outcome.isSingleBreachOffence()).toBe(true)
+  })
+
+  // RCD494 - Behaviour now changed so that one an arbitary match is applied where Ho
+  // offences match approximately with at least one pnc offence and the results are the same.
+  // This case has one ho offence that approximately matches one PNC offence and the other matches
+  // both.
+
+  it("should testMatchOffencesForDefectRCD494PartialApproximateMatch", () => {
+    const hoOffences = [
+      createHOOffence({ actOrSource: "RT", year: "88", reason: "347", startDate: "1996-12-15", endDate: "2010-10-10" }),
+      createHOOffence({ actOrSource: "RT", year: "88", reason: "347", startDate: "1996-12-18", endDate: "1996-12-23" })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "14121996", endDate: "10102010" }),
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(2)
+  })
+
+  // RCD494 - Behaviour now changed so that one an arbitary match is applied where Ho
+  // offences match approximately with at least one pnc offence and the results are the same.
+  // This case has one ho offence that approximately matches one PNC offence and the other matches
+  // both.
+  // Order of PNC offences swapped from previous test to make sure that both offences are still
+  // matched.
+
+  it("should testMatchOffencesForDefectRCD494PartialApproximateMatchPNCOffencesSwapped", () => {
+    const hoOffences = [
+      createHOOffence({ actOrSource: "RT", year: "88", reason: "347", startDate: "1996-12-18", endDate: "1996-12-23" }),
+      createHOOffence({ actOrSource: "RT", year: "88", reason: "347", startDate: "1996-12-15", endDate: "2010-10-10" })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" }),
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "14121996", endDate: "10102010" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(2)
+  })
+
+  // RCD494 - Behaviour now changed so that one an arbitary match is applied where multiple Ho
+  // offences match approximately with at least one pnc offence and the results are the same. In
+  // this
+  // test both offences should match and as a result all offences should be matched.
+
+  it("should testMatchOffencesForRCD494MultipleApproximateMatchesWithSameResults", () => {
+    const hoOffences = [
+      createHOOffence({
+        actOrSource: "RT",
+        year: "88",
+        reason: "347",
+        startDate: "1996-12-18",
+        endDate: "1996-12-23",
+        resultCodes: ["1002"]
+      }),
+      createHOOffence({
+        actOrSource: "RT",
+        year: "88",
+        reason: "347",
+        startDate: "1996-12-18",
+        endDate: "1996-12-23",
+        resultCodes: ["1002"]
+      })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" }),
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(2)
+  })
+
+  // RCD494 - Behaviour now changed so that one an arbitary match is applied where multiple Ho
+  // offences match approximately with at least one pnc offence and the results are the same. In
+  // this
+  // test the offences won't match because the results are different in the ho offences.
+
+  it("should testMatchOffencesForRCD494MatchesWithDifferentResults", () => {
+    const hoOffences = [
+      createHOOffence({
+        actOrSource: "RT",
+        year: "88",
+        reason: "347",
+        startDate: "1996-12-18",
+        endDate: "1996-12-23",
+        resultCodes: ["1002"]
+      }),
+      createHOOffence({
+        actOrSource: "RT",
+        year: "88",
+        reason: "347",
+        startDate: "1996-12-18",
+        endDate: "1996-12-23",
+        resultCodes: ["1003"]
+      })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" }),
+      createPNCCourtCaseOffence({ offenceCode: "RT88347", startDate: "18121996", endDate: "24121996" })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
+    // Note in this scenario the pnc offences will be set as matched, with no matches, but in the
+    // list of duplicate matches
+    expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.matchedOffences).toHaveLength(0)
+    expect(outcome.pncOffencesMatchedIncludingDuplicates).toHaveLength(2)
+  })
+
+  it.skip("should testMatchingAllHOOffencesAddedByCourtAllPNCOffencesHaveFinalResult", () => {
+    // final String inputFile =
+    //     TestOffenceMatcher.class.getResource("/HOValidatorAmender/Test_Data/").getPath()
+    //         + "AnnotatedHO1.xml";
+    // XmlConverterTool xct = new XmlConverterTool();
+    // FileReader r = null;
+    // try {
+    //   r = new FileReader(inputFile);
+    //   AnnotatedHearingOutcomeStructure aho = xct.convertAnnotatedHOXMLToAnnotatedHO(r);
+    //   List hoOffences = aho.getHearingOutcome().getCase().getHearingDefendant().getOffence();
+    //   List pncCases = aho.getCXE01().getCourtCases().getCourtCase();
+    //   CourtCaseType courtCase = (CourtCaseType) pncCases.get(0);
+    //   List pncOffences = courtCase.getOffences().getOffence();
+    //   const outcome =
+    //       matchOffences(hoOffences, pncOffences, { attemptManualMatch: true });
+    //   expect(outcome.allPncOffencesMatched).toBe(true)
+    // } finally {
+    //   if (r != null) {
+    //     r.close();
+    //   }
+    // }
+  })
+
+  it("should testMatchingOfExplicitMatchWhereHOOffencesHaveSameSequenceNumberDifferentCases", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2010-10-10" }),
+      createHOOffence({ reason: "031", startDate: "2010-10-11", courtCaseReferenceNumber: "CCR1", sequenceNumber: 1 }),
+      createHOOffence({ reason: "032", startDate: "2010-10-11", courtCaseReferenceNumber: "CCR2", sequenceNumber: 1 })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ offenceCode: "VG24031", startDate: "11102010", sequenceNumber: 1 })
+    ]
+
+    const outcome = matchOffences(hoOffences, pncOffences, { caseReference: "CCR1", attemptManualMatch: true })
+
+    expect(outcome.matchedOffences).toHaveLength(1)
+    expect(outcome.matchedOffences).toStrictEqual([{ pncOffence: pncOffences[0], hoOffence: hoOffences[1] }])
   })
 })
