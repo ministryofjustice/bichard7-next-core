@@ -28,9 +28,9 @@ import {
   lookupPleaStatusBySpiCode,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
-} from "./dataLookup"
-import getOrganisationUnit from "./getOrganisationUnit"
-import lookupPsaCodeByCrownCourtName from "./lookupPsaCodeByCrownCourtName"
+} from "src/use-cases/dataLookup"
+import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
+import { lookupPsaCodeByCrownCourtName } from "src/use-cases/dataLookup"
 
 interface RemandDetails {
   location?: string

@@ -14,7 +14,7 @@ import {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceCodeByCjsCode,
   lookupQualifierCodeByCjsCode
-} from "./dataLookup"
+} from "src/use-cases/dataLookup"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
