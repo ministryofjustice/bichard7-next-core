@@ -178,6 +178,7 @@ const resultSchema = z.object({
   WarrantIssueDate: z.date().optional(),
   CRESTDisposalCode: z.string().optional(),
   ModeOfTrialReason: z.string().optional(),
+  PNCAdjudicationExists: z.boolean().optional(),
   PNCDisposalType: z.string().optional(),
   ResultClass: z.string().optional(),
   NumberOfOffencesTIC: z.string().optional(),
