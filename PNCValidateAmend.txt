@@ -1,0 +1,85 @@
+
+
+pncEnrichment.validateAmend(correlationId, aho)
+    - do some ASN checks
+    - query the PNC
+    - put query results in AHO
+    - enrich AHO from PNC results
+      EnrichHearingOutcomeFromCXE01(aho, pncQueryResult)
+        - match cases between aho and query result
+          CaseMatcher.match(hoOffences, pncQueryResult)
+            - loop through PNC response cases, find the one that matches HO offences
+              OffenceMatcher.matchOffences(hoOffences, pncOffences, pncCaseReference, hearingDate, attemptManualMatch)
+                - if no case reference passed in and hearing date supplied, then we want to use multiple court matching logic
+
+                # try and match offences using sequence number, offence code and dates
+                - loop through PNC offences
+                    - loop through HO offences
+                        - ignore HO offences that are explicitly from a different court case
+                        - if sequence numbers match
+                            - check if offences match
+                            offenceService.offencesMatch(hoOffence, pncOffence, ignoreDates)
+                                - check if offence code matches and optionally if the start/end dates match
+                            - if ^ is true, add "matchingExplicitMatch"
+                            - else add "nonMatchingExplicitMatch"
+                        - else if we are using multiple court matching logic
+                            - if the offences match and adjudication matches
+                                - say the pnc adjudication matches
+                - if no match found and applying multiple court matching logic and the pnc adjudication doesn't match
+                    - ignore the PNC offence in future checks
+
+                - raise an error if there are duplicate sequence numbers in the PNC response
+
+                # try and match unmatched offences using offence code
+                - loop through all unique offence codes
+                    - check if HO offences and PNC offences with that code match
+                      OffenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, applyMultipleCourtCaseMatchingLogic)
+
+                        # Match offences using same offence code, start date, end date and results
+                        - loop through all distinct HO start dates
+                            - check if HO offences and PNC offences with same offence code and start date match
+                            OffenceCodeMatcher.matchOffencesWithSameOffenceCodeAndStartDate(hoOffences, pncOffences, applyMultipleCourtCaseMatchingLogic)
+                                - loop through all distinct HO offence end dates
+                                    - get all PNC offences with that end date
+                                    - if there aren't any
+                                        - do nothing
+                                    - else if there's more than one HO offence with that end date and they all have non-matching results
+                                        - mark them as duplicates
+                                    - else if we're applying multiple court matching logic and the number of HO offences with that end date is different from the PNC offences with that end date
+                                        - mark them as duplicates
+                                    - else
+                                        - mark them as matched
+
+                        # Match offence using same offence code, results and approximate dates
+                        - check if dates match approximately
+                        - loop through PNC offences
+                            - if more than 1 HO offence matched approximately and all of those HO offences have different results
+                                - say they're duplicate matches
+                            - else
+                                - say they're matches
+
+                # If there are breach offences, match those without dates
+                - if case contains breach offences and there are unmatched PNC offences
+                    - match unmatched offences without using dates
+                      OffenceMatcher.matchUnmatchedBreachesWithoutUsingDates(answer, hoOffences, pncOffences, applyMultipleCourtCaseMatchingLogic)
+
+                        - loop through all HO breach offences as long as there are PNC breach offences with the same code
+                            - if there's one HO offence and one PNC offence with the same code
+                                - mark them as matched
+                            - else if there's more than one HO offence with the same code and they all have different results
+                                - mark them as duplicates
+                            - else if we're applying multiple court matching logic and there are different numbers of HO and PNC offences with the same code
+                                - mark them as duplicates
+                            - else
+                                - match as many HO offences and PNC offences as can be matched
+
+                # Map offence matching results on to case matches
+                - if there are PNC offences matched (including duplicates)
+                    - say the court cases match
+                - else
+                    - if there are "non matching explicit matches" (the sequence numbers match, but the rest of the stuff doesn't)
+                        - re-run the matching algorithm excluding manual matching
+                        - if there are now PNC offences matched (including duplicates)
+                            - say the court cases match
+
+            # Repeat the above for penalty cases
