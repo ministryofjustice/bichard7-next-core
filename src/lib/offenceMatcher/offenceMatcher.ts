@@ -1,5 +1,7 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
+import getOffenceCode from "src/utils/offence/getOffenceCode"
+import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
 import offencesMatch from "./offencesMatch"
 
 type OffenceMatcherOptions = {
@@ -39,6 +41,38 @@ const hoOffenceAlreadyMatched = (offence: Offence, outcome: OffenceMatcherOutcom
 const pncOffenceAlreadyMatched = (offence: PncOffence, outcome: OffenceMatcherOutcome): boolean =>
   outcome.matchedOffences.some(({ pncOffence }) => pncOffence === offence)
 
+const getHoOffencesByOffenceCode = (hoOffences: Offence[]) =>
+  hoOffences.reduce((acc: { [key: string]: Offence[] }, hoOffence) => {
+    const offenceCode = getOffenceCode(hoOffence)
+    if (!offenceCode) {
+      return acc
+    }
+
+    if (!acc[offenceCode]) {
+      acc[offenceCode] = []
+    }
+
+    acc[offenceCode].push(hoOffence)
+
+    return acc
+  }, {})
+
+const getPncOffencesByOffenceCode = (pncOffences: PncOffence[]) =>
+  pncOffences.reduce((acc: { [key: string]: PncOffence[] }, pncOffence) => {
+    const offenceCode = pncOffence.offence.cjsOffenceCode
+    if (!offenceCode) {
+      return acc
+    }
+
+    if (!acc[offenceCode]) {
+      acc[offenceCode] = []
+    }
+
+    acc[offenceCode].push(pncOffence)
+
+    return acc
+  }, {})
+
 const matchOffences = (
   hoOffences: Offence[],
   pncOffences: PncOffence[],
@@ -54,7 +88,7 @@ const matchOffences = (
 
   console.log(pncOffenceAlreadyMatched, attemptManualMatch)
 
-  const applyMultipleCourtCaseMatchingLogic = !caseReference && hearingDate
+  const applyMultipleCourtCaseMatchingLogic = !caseReference && !!hearingDate
   const filteredHoOffences = hoOffences
 
   if (caseReference) {
@@ -95,6 +129,18 @@ const matchOffences = (
         outcome.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
       }
     })
+  })
+
+  const hoOffencesByCode = getHoOffencesByOffenceCode(hoOffences)
+  const pncOffencesByCode = getPncOffencesByOffenceCode(pncOffences)
+  const offenceCodes = new Set(Object.keys(hoOffencesByCode).concat(Object.keys(pncOffencesByCode)))
+
+  offenceCodes.forEach((offenceCode) => {
+    const matchOffencesOutcome = matchOffencesWithSameOffenceCode(
+      hoOffencesByCode[offenceCode],
+      pncOffencesByCode[offenceCode],
+      applyMultipleCourtCaseMatchingLogic
+    )
   })
 
   // Remember to skip PNC offences that haven't been matched but have been removed
