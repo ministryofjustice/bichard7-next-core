@@ -10,7 +10,7 @@ describe("HO100245", () => {
   })
 
   // This should be raised but is currently masked by a parse error
-  it.skip("should be raised if the result text is too long", async () => {
+  it.ifNewBichard("should be raised if the result text is too long", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
       offences: [{ results: [{ text: "X".repeat(2501) }] }]

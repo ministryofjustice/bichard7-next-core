@@ -56,7 +56,7 @@ describe("HO100240 and HO100246", () => {
   })
 
   // Masked by XML parsing error
-  it.skip("should create exceptions if the result code is too high", async () => {
+  it.ifNewBichard("should create exceptions if the result code is too high", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
       offences: [{ results: [{ code: 10000 }] }]
