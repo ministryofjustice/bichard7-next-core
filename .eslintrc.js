@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: { es6: true },
-  ignorePatterns: ["build/*"],
+  ignorePatterns: ["build/*", "jest.setup.ts"],
   overrides: [
     {
       // Plain JavaScript files
@@ -55,7 +55,8 @@ module.exports = {
       files: ["*.test.ts", "tests/**/*.ts"],
       rules: {
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "jest/no-standalone-expect": "off"
       }
     },
     {
