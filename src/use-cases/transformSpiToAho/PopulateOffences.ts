@@ -163,7 +163,7 @@ export default class {
 
     const offenceCode = lookupOffenceCodeByCjsCode(spiOffenceCode)
     if (offenceCode) {
-      offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc === "Y"
+      offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc
     }
 
     return offence

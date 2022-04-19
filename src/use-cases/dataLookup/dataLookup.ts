@@ -4,6 +4,7 @@ import type {
   DurationType,
   DurationUnit,
   ModeOfTrialReason,
+  OffenceCategory,
   OffenceCode,
   PncDisposal,
   ResultClass,
@@ -11,7 +12,12 @@ import type {
   ResultQualifierCode,
   TargetCourtType,
   TypeOfHearing,
-  Verdict
+  Verdict,
+  OffenceInitiation,
+  Summons,
+  ActualOffenceDate,
+  YesNo,
+  VehicleCode
 } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
@@ -33,7 +39,13 @@ const {
   resultClass,
   resultQualifierCode,
   durationType,
-  durationUnit
+  durationUnit,
+  offenceCategory,
+  offenceInitiation,
+  summons,
+  actualOffenceDate,
+  yesNo,
+  vehicleCode
 } = nextData
 
 interface DataLookupResult {
@@ -108,6 +120,22 @@ const lookupDurationTypeByCjsCode = (cjsCode: string): DurationType | undefined 
 const lookupDurationUnitByCjsCode = (cjsCode: string): DurationUnit | undefined =>
   durationUnit.find((x) => x.cjsCode === cjsCode)
 
+const lookupOffenceCategoryByCjsCode = (cjsCode: string): OffenceCategory | undefined =>
+  offenceCategory.find((x) => x.cjsCode === cjsCode)
+
+const lookupOffenceInitiationCodeByCjsCode = (cjsCode: string): OffenceInitiation | undefined =>
+  offenceInitiation.find((x) => x.cjsCode === cjsCode)
+
+const lookupSummonsCodeByCjsCode = (cjsCode: string): Summons | undefined => summons.find((x) => x.cjsCode === cjsCode)
+
+const lookupOffenceDateCodeByCjsCode = (cjsCode: string): ActualOffenceDate | undefined =>
+  actualOffenceDate.find((x) => x.cjsCode === cjsCode)
+
+const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined => yesNo.find((x) => x.cjsCode === cjsCode)
+
+const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
+  vehicleCode.find((x) => x.cjsCode === cjsCode)
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -128,5 +156,11 @@ export {
   lookupResultClassByCjsCode,
   lookupResultQualifierCodeByCjsCode,
   lookupDurationTypeByCjsCode,
-  lookupDurationUnitByCjsCode
+  lookupDurationUnitByCjsCode,
+  lookupOffenceCategoryByCjsCode,
+  lookupOffenceInitiationCodeByCjsCode,
+  lookupSummonsCodeByCjsCode,
+  lookupVehicleCodeByCjsCode,
+  lookupYesNoByCjsCode,
+  lookupOffenceDateCodeByCjsCode
 }

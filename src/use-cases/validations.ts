@@ -7,12 +7,18 @@ import {
   lookupDurationTypeByCjsCode,
   lookupDurationUnitByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
+  lookupOffenceCategoryByCjsCode,
+  lookupOffenceInitiationCodeByCjsCode,
   lookupResultClassByCjsCode,
   lookupResultCodeByCjsCode,
   lookupResultQualifierCodeByCjsCode,
   lookupTargetCourtTypeByCjsCode,
   lookupTypeOfHearingByCjsCode,
-  lookupVerdictByCjsCode
+  lookupVerdictByCjsCode,
+  lookupSummonsCodeByCjsCode,
+  lookupOffenceDateCodeByCjsCode,
+  lookupYesNoByCjsCode,
+  lookupVehicleCodeByCjsCode
 } from "./dataLookup"
 
 const validateRemandStatus = (data: string): boolean => nextData.remandStatus.some((el) => el.cjsCode === data)
@@ -48,6 +54,18 @@ const validateDurationUnit = (data: string): boolean => !!lookupDurationUnitByCj
 
 const validateDurationType = (data: string): boolean => !!lookupDurationTypeByCjsCode(data.toString())
 
+const validateOffenceCategory = (data: string): boolean => !!lookupOffenceCategoryByCjsCode(data)
+
+const validateOffenceInitiationCode = (data: string): boolean => !!lookupOffenceInitiationCodeByCjsCode(data)
+
+const validateSummonsCode = (data: string): boolean => !!lookupSummonsCodeByCjsCode(data)
+
+const validateActualOffenceDateCode = (data: string): boolean => !!lookupOffenceDateCodeByCjsCode(data)
+
+const validateYesNo = (data: string): boolean => !!lookupYesNoByCjsCode(data)
+
+const validateVehicleCode = (data: string): boolean => !!lookupVehicleCodeByCjsCode(data)
+
 export {
   validateRemandStatus,
   validateASN,
@@ -60,5 +78,11 @@ export {
   validateResultClass,
   validateResultQualifierCode,
   validateDurationUnit,
-  validateDurationType
+  validateDurationType,
+  validateOffenceCategory,
+  validateOffenceInitiationCode,
+  validateSummonsCode,
+  validateVehicleCode,
+  validateYesNo,
+  validateActualOffenceDateCode
 }

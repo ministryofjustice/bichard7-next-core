@@ -10,7 +10,13 @@ import {
   validateResultQualifierCode,
   validateTargetCourtType,
   validateTypeOfHearing,
-  validateVerdict
+  validateOffenceCategory,
+  validateVerdict,
+  validateOffenceInitiationCode,
+  validateSummonsCode,
+  validateVehicleCode,
+  validateActualOffenceDateCode,
+  validateYesNo
 } from "src/use-cases/validations"
 import { z } from "zod"
 import { ExceptionCode } from "./ExceptionCode"
@@ -220,38 +226,41 @@ const resultSchema = z.object({
 
 const offenceSchema = z.object({
   CriminalProsecutionReference: criminalProsecutionReferenceSchema,
-  OffenceCategory: z.string().optional(),
-  OffenceInitiationCode: z.string().optional(),
-  OffenceTitle: z.string().optional(),
-  SummonsCode: z.string().optional(),
+  OffenceCategory: z.string().refine(validateOffenceCategory).optional(),
+  OffenceInitiationCode: z.string().refine(validateOffenceInitiationCode).optional(),
+  OffenceTitle: z.string().min(1, ExceptionCode.HO100233).max(120, ExceptionCode.HO100233).optional(),
+  SummonsCode: z.string().refine(validateSummonsCode).optional(),
   Informant: z.string().optional(),
   ArrestDate: z.date().optional(),
   ChargeDate: z.date().optional(),
-  ActualOffenceDateCode: z.string(),
+  ActualOffenceDateCode: z.string().refine(validateActualOffenceDateCode),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
   ActualOffenceEndDate: actualOffenceEndDateSchema,
-  LocationOfOffence: z.string(),
+  LocationOfOffence: z.string().min(1, ExceptionCode.HO100232).max(80, ExceptionCode.HO100232),
   OffenceWelshTitle: z.string().optional(),
-  ActualOffenceWording: z.string(),
+  ActualOffenceWording: z.string().min(1, ExceptionCode.HO100234).max(2500, ExceptionCode.HO100234),
   ActualWelshOffenceWording: z.string().optional(),
   ActualIndictmentWording: z.string().optional(),
   ActualWelshIndictmentWording: z.string().optional(),
   ActualStatementOfFacts: z.string().optional(),
   ActualWelshStatementOfFacts: z.string().optional(),
   AlcoholLevel: alcoholLevelSchema.optional(),
-  VehicleCode: z.string().optional(),
-  VehicleRegistrationMark: z.string().optional(),
+  VehicleCode: z.string().refine(validateVehicleCode).optional(),
+  VehicleRegistrationMark: z.string().min(11).max(11).optional(),
   StartTime: z.string().optional(),
   OffenceEndTime: z.string().optional(),
   OffenceTime: z.string().optional(),
   ConvictionDate: z.date().optional(),
-  CommittedOnBail: z.string(),
-  CourtOffenceSequenceNumber: z.number(),
+  CommittedOnBail: z.string().refine(validateYesNo),
+  CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
   Result: resultSchema.array().min(0),
-  RecordableOnPNCindicator: z.boolean().optional(),
-  NotifiableToHOindicator: z.boolean().optional(),
-  HomeOfficeClassification: z.string().optional(),
-  ResultHalfLifeHours: z.number().optional(),
+  RecordableOnPNCindicator: z.string().refine(validateYesNo).optional(),
+  NotifiableToHOindicator: z.string().refine(validateYesNo).optional(),
+  HomeOfficeClassification: z
+    .string()
+    .regex(/^([0-9]{3})\/([0-9]{2})$/, ExceptionCode.HO100236)
+    .optional(),
+  ResultHalfLifeHours: z.number().min(1).max(999).optional(),
   AddedByTheCourt: z.string().optional()
 })
 
