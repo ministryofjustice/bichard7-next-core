@@ -24,10 +24,10 @@ describe("HO100233", () => {
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "Application to reopen case",
-      recordableOnPnc: "N",
+      recordableOnPnc: false,
       description: "blah",
       homeOfficeClassification: "123/45",
-      notifiableToHo: "Y",
+      notifiableToHo: true,
       resultHalfLifeHours: null
     })
 
@@ -48,10 +48,10 @@ describe("HO100233", () => {
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "valid",
-      recordableOnPnc: "N",
+      recordableOnPnc: false,
       description: "blah",
       homeOfficeClassification: "",
-      notifiableToHo: "Y",
+      notifiableToHo: true,
       resultHalfLifeHours: null
     })
 
@@ -90,10 +90,10 @@ describe("HO100233", () => {
           cjsCode: "MC8080524",
           offenceCategory: "CB",
           offenceTitle: "valid",
-          recordableOnPnc: "N",
+          recordableOnPnc: false,
           description: "blah",
           homeOfficeClassification: "467/123",
-          notifiableToHo: "Y",
+          notifiableToHo: true,
           resultHalfLifeHours: null
         })
       )
