@@ -52,7 +52,7 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "RecordableOnPNCindicator": "Y",
+      "RecordableOnPNCindicator": true,
       "Result": Array [
         Object {
           "CJSresultCode": 3078,
@@ -101,7 +101,7 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "RecordableOnPNCindicator": "Y",
+      "RecordableOnPNCindicator": true,
       "Result": Array [
         Object {
           "CJSresultCode": 3052,
@@ -150,7 +150,7 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "RecordableOnPNCindicator": "N",
+      "RecordableOnPNCindicator": false,
       "Result": Array [
         Object {
           "AmountSpecifiedInResult": Array [
