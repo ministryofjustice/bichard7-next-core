@@ -15,7 +15,7 @@ const enrichOffence = (offence: Offence): Offence => {
 
   if (offenceIgnored) {
     offence.OffenceCategory = "B7"
-    offence.RecordableOnPNCindicator = false // other possible options are "D" (don't know), "NA" (not applicable)
+    offence.RecordableOnPNCindicator = false
   } else if (offenceCodeLookup?.offenceCategory) {
     offence.OffenceCategory = offenceCodeLookup.offenceCategory
     offence.RecordableOnPNCindicator = offenceCodeLookup.recordableOnPnc
