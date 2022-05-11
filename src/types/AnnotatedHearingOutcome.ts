@@ -254,8 +254,8 @@ const offenceSchema = z.object({
   CommittedOnBail: z.string().refine(validateYesNo),
   CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
   Result: resultSchema.array().min(0),
-  RecordableOnPNCindicator: z.string().refine(validateYesNo).optional(),
-  NotifiableToHOindicator: z.string().refine(validateYesNo).optional(),
+  RecordableOnPNCindicator: z.boolean().optional(),
+  NotifiableToHOindicator: z.boolean().optional(),
   HomeOfficeClassification: z
     .string()
     .regex(/^([0-9]{3})\/([0-9]{2})$/, ExceptionCode.HO100236)

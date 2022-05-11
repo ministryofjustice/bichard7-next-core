@@ -12,9 +12,9 @@ Object {
     },
   },
   "HomeOfficeClassification": "000/00",
-  "NotifiableToHOindicator": "N",
+  "NotifiableToHOindicator": false,
   "OffenceCategory": "CE",
   "OffenceTitle": "POSSESSING THING DERIVED FROM DEAD BADGER",
-  "RecordableOnPNCindicator": "N",
+  "RecordableOnPNCindicator": false,
 }
 `;

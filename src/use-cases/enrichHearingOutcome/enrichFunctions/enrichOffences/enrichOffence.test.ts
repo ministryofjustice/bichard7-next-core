@@ -36,9 +36,9 @@ describe("enrichOffence()", () => {
           LocalOffenceCode: { AreaCode: "05", OffenceCode: "05MC001" }
         }
       },
-      RecordableOnPNCindicator: "Y"
+      RecordableOnPNCindicator: true
     } as Offence
     const result = enrichOffence(offence)
-    expect(result.RecordableOnPNCindicator).toBe("N")
+    expect(result.RecordableOnPNCindicator).toBe(false)
   })
 })

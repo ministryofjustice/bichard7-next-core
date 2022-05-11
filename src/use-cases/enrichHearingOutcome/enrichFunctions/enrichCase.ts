@@ -3,7 +3,7 @@ import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 const HALF_LIFE_HOURS_URGENT_THRESHOLD = 48
 
 const recordable = (offence: Offence) => {
-  return offence.RecordableOnPNCindicator === "Y"
+  return offence.RecordableOnPNCindicator
 }
 
 const enrichCase: EnrichAhoFunction = (hearingOutcome) => {

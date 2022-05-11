@@ -4,7 +4,7 @@ const isCaseRecordable = (annotatedHearingOutcome: AnnotatedHearingOutcome): boo
   const isPncQuery = annotatedHearingOutcome.PncQuery !== undefined
   const isThereARecordableOffence =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
-      (offence) => offence.RecordableOnPNCindicator === "Y"
+      (offence) => offence.RecordableOnPNCindicator
     )
   return isPncQuery || isThereARecordableOffence
 }
