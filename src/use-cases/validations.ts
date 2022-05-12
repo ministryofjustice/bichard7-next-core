@@ -1,4 +1,4 @@
-import nextData from "@moj-bichard7-developers/bichard7-next-data"
+import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
 import ASN from "src/lib/asn"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { z } from "zod"
@@ -8,20 +8,20 @@ import {
   lookupDurationUnitByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
+  lookupOffenceDateCodeByCjsCode,
   lookupOffenceInitiationCodeByCjsCode,
   lookupResultClassByCjsCode,
   lookupResultCodeByCjsCode,
   lookupResultQualifierCodeByCjsCode,
+  lookupSummonsCodeByCjsCode,
   lookupTargetCourtTypeByCjsCode,
   lookupTypeOfHearingByCjsCode,
+  lookupVehicleCodeByCjsCode,
   lookupVerdictByCjsCode,
-  lookupSummonsCodeByCjsCode,
-  lookupOffenceDateCodeByCjsCode,
-  lookupYesNoByCjsCode,
-  lookupVehicleCodeByCjsCode
+  lookupYesNoByCjsCode
 } from "./dataLookup"
 
-const validateRemandStatus = (data: string): boolean => nextData.remandStatus.some((el) => el.cjsCode === data)
+const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
 const validateASN = (data: string): boolean => {
   const asn = new ASN(data)

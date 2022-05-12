@@ -1,52 +1,50 @@
-import nextData from "@moj-bichard7-developers/bichard7-next-data"
+import {
+  actualOffenceDate,
+  alcoholLevelMethod,
+  courtType,
+  durationType,
+  durationUnit,
+  modeOfTrialReason,
+  offenceCategory,
+  offenceCode,
+  offenceInitiation,
+  organisationUnit,
+  pleaStatus,
+  pncDisposal,
+  qualifier,
+  remandStatus,
+  resultClass,
+  resultCode,
+  resultQualifierCode,
+  summons,
+  targetCourtType,
+  typeOfHearing,
+  vehicleCode,
+  verdict,
+  yesNo
+} from "@moj-bichard7-developers/bichard7-next-data"
 import type {
+  ActualOffenceDate,
   CourtType,
   DurationType,
   DurationUnit,
   ModeOfTrialReason,
   OffenceCategory,
   OffenceCode,
+  OffenceInitiation,
   PncDisposal,
   ResultClass,
   ResultCode,
   ResultQualifierCode,
+  Summons,
   TargetCourtType,
   TypeOfHearing,
+  VehicleCode,
   Verdict,
-  OffenceInitiation,
-  Summons,
-  ActualOffenceDate,
-  YesNo,
-  VehicleCode
+  YesNo
 } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import type { SpiPlea } from "src/types/Plea"
-
-const {
-  alcoholLevelMethod,
-  modeOfTrialReason,
-  organisationUnit,
-  pleaStatus,
-  pncDisposal,
-  qualifier,
-  remandStatus,
-  resultCode,
-  offenceCode,
-  verdict,
-  courtType,
-  typeOfHearing,
-  targetCourtType,
-  resultClass,
-  resultQualifierCode,
-  durationType,
-  durationUnit,
-  offenceCategory,
-  offenceInitiation,
-  summons,
-  actualOffenceDate,
-  yesNo,
-  vehicleCode
-} = nextData
 
 interface DataLookupResult {
   cjsCode: string
