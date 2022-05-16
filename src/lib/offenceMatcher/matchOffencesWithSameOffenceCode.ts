@@ -47,6 +47,7 @@ const matchOffencesWithSameOffenceCode = (
       pncOffencesByStartDate[startDate],
       applyMultipleCourtCaseMatchingLogic
     )
+    console.log(outcome)
   })
 }
 

@@ -78,6 +78,8 @@ const matchOffences = (
   pncOffences: PncOffence[],
   { attemptManualMatch, caseReference, hearingDate }: OffenceMatcherOptions
 ): OffenceMatcherOutcome => {
+  console.log(attemptManualMatch)
+  console.log(pncOffenceAlreadyMatched)
   const outcome: OffenceMatcherOutcome = {
     allPncOffencesMatched: false,
     duplicateHoOffences: [],
@@ -85,8 +87,6 @@ const matchOffences = (
     pncOffencesMatchedIncludingDuplicates: [],
     nonMatchingExplicitMatches: []
   }
-
-  console.log(pncOffenceAlreadyMatched, attemptManualMatch)
 
   const applyMultipleCourtCaseMatchingLogic = !caseReference && !!hearingDate
   const filteredHoOffences = hoOffences
@@ -141,6 +141,7 @@ const matchOffences = (
       pncOffencesByCode[offenceCode],
       applyMultipleCourtCaseMatchingLogic
     )
+    console.log(matchOffencesOutcome)
   })
 
   // Remember to skip PNC offences that haven't been matched but have been removed
