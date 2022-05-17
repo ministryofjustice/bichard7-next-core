@@ -1,6 +1,8 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import matchOffencesWithSameOffenceCodeAndStartDate from "./matchOffencesWithSameOffenceCodeAndStartDate"
+import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
+import type { OffenceMatcherOutcome } from "./offenceMatcher"
 
 const getHoOffencesByStartDate = (hoOffences: Offence[]) =>
   hoOffences.reduce((acc: { [key: string]: Offence[] }, hoOffence) => {
@@ -32,9 +34,17 @@ const matchOffencesWithSameOffenceCode = (
   hoOffences: Offence[],
   pncOffences: PncOffence[],
   applyMultipleCourtCaseMatchingLogic: boolean
-) => {
+): OffenceMatcherOutcome => {
+  let result: OffenceMatcherOutcome = {
+    allPncOffencesMatched: false,
+    duplicateHoOffences: [],
+    matchedOffences: [],
+    pncOffencesMatchedIncludingDuplicates: [],
+    nonMatchingExplicitMatches: []
+  }
+
   if (hoOffences.length === 0 || pncOffences.length === 0) {
-    return
+    return result
   }
 
   const hoOffencesByStartDate = getHoOffencesByStartDate(hoOffences)
@@ -47,8 +57,13 @@ const matchOffencesWithSameOffenceCode = (
       pncOffencesByStartDate[startDate],
       applyMultipleCourtCaseMatchingLogic
     )
-    console.log(outcome)
+
+    result = mergeOffenceMatcherOutcomes(result, outcome)
   })
+
+  // Remove PNC offences that were matched
+
+  return result
 }
 
 export default matchOffencesWithSameOffenceCode

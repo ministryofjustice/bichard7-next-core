@@ -2,6 +2,7 @@ import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import getOffenceCode from "src/utils/offence/getOffenceCode"
 import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
+import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
 import offencesMatch from "./offencesMatch"
 
 type OffenceMatcherOptions = {
@@ -80,7 +81,7 @@ const matchOffences = (
 ): OffenceMatcherOutcome => {
   console.log(attemptManualMatch)
   console.log(pncOffenceAlreadyMatched)
-  const outcome: OffenceMatcherOutcome = {
+  let result: OffenceMatcherOutcome = {
     allPncOffencesMatched: false,
     duplicateHoOffences: [],
     matchedOffences: [],
@@ -103,7 +104,7 @@ const matchOffences = (
     let pncAdjudicationMatches = false
 
     filteredHoOffences.forEach((hoOffence) => {
-      if (hoOffenceAlreadyMatched(hoOffence, outcome)) {
+      if (hoOffenceAlreadyMatched(hoOffence, result)) {
         return
       }
 
@@ -112,7 +113,7 @@ const matchOffences = (
         if (offencesMatch(hoOffence, pncOffence)) {
           matchingExplicitMatch = hoOffence
         } else {
-          outcome.nonMatchingExplicitMatches.push({ hoOffence, pncOffence })
+          result.nonMatchingExplicitMatches.push({ hoOffence, pncOffence })
         }
       } else if (
         applyMultipleCourtCaseMatchingLogic &&
@@ -125,8 +126,8 @@ const matchOffences = (
       }
 
       if (matchingExplicitMatch) {
-        outcome.matchedOffences.push({ hoOffence, pncOffence })
-        outcome.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+        result.matchedOffences.push({ hoOffence, pncOffence })
+        result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
       }
     })
   })
@@ -141,14 +142,15 @@ const matchOffences = (
       pncOffencesByCode[offenceCode],
       applyMultipleCourtCaseMatchingLogic
     )
-    console.log(matchOffencesOutcome)
+
+    result = mergeOffenceMatcherOutcomes(result, matchOffencesOutcome)
   })
 
   // Remember to skip PNC offences that haven't been matched but have been removed
 
-  outcome.allPncOffencesMatched = outcome.matchedOffences.length === pncOffences.length
+  result.allPncOffencesMatched = result.matchedOffences.length === pncOffences.length
 
-  return outcome
+  return result
 }
 
 export { matchOffences, OffenceMatch, OffenceMatcherOutcome }

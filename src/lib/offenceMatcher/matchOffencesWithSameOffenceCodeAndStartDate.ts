@@ -42,7 +42,7 @@ const matchOffencesWithSameOffenceCodeAndStartDate = (
     nonMatchingExplicitMatches: []
   }
 
-  if (hoOffences.length === 0 || pncOffences.length === 0) {
+  if (!hoOffences || !pncOffences || hoOffences.length === 0 || pncOffences.length === 0) {
     return outcome
   }
 
