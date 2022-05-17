@@ -101,3 +101,5 @@ export const createPNCCourtCaseOffence = ({
 
   return offence
 }
+
+export const createPNCPenaltyCaseOffence = createPNCCourtCaseOffence

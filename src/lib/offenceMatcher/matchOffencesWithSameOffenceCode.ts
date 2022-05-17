@@ -1,8 +1,11 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
+import datesMatchApproximately from "./datesMatchApproximately"
 import matchOffencesWithSameOffenceCodeAndStartDate from "./matchOffencesWithSameOffenceCodeAndStartDate"
 import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
 import type { OffenceMatcherOutcome } from "./offenceMatcher"
+import { hoOffenceAlreadyMatched, pncOffenceAlreadyMatched } from "./offenceMatcher"
+import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 const getHoOffencesByStartDate = (hoOffences: Offence[]) =>
   hoOffences.reduce((acc: { [key: string]: Offence[] }, hoOffence) => {
@@ -47,21 +50,50 @@ const matchOffencesWithSameOffenceCode = (
     return result
   }
 
+  // Use the start and end date to exactly match offences
   const hoOffencesByStartDate = getHoOffencesByStartDate(hoOffences)
   const pncOffencesByStartDate = getPncOffencesByStartDate(pncOffences)
   const startDates = new Set(Object.keys(hoOffencesByStartDate).concat(Object.keys(pncOffencesByStartDate)))
 
   startDates.forEach((startDate) => {
+    const unmatchedPncOffences = pncOffencesByStartDate[startDate]?.filter(
+      (pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result)
+    )
+
     const outcome = matchOffencesWithSameOffenceCodeAndStartDate(
       hoOffencesByStartDate[startDate],
-      pncOffencesByStartDate[startDate],
+      unmatchedPncOffences,
       applyMultipleCourtCaseMatchingLogic
     )
 
     result = mergeOffenceMatcherOutcomes(result, outcome)
   })
 
-  // Remove PNC offences that were matched
+  if (result.duplicateHoOffences.length > 0) {
+    return result
+  }
+
+  // Use approximate date matching to match remaining offences
+  pncOffences.forEach((pncOffence) => {
+    if (pncOffenceAlreadyMatched(pncOffence, result)) {
+      return
+    }
+
+    const matchingHoOffences = hoOffences
+      .filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
+      .filter((hoOffence) => datesMatchApproximately(hoOffence, pncOffence))
+
+    if (matchingHoOffences.length === 0) {
+      return
+    }
+
+    if (matchingHoOffences.length > 1 && !offencesHaveEqualResults(matchingHoOffences)) {
+      result.duplicateHoOffences = result.duplicateHoOffences.concat(matchingHoOffences)
+      result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+    }
+
+    result.matchedOffences.push({ hoOffence: matchingHoOffences[0], pncOffence })
+  })
 
   return result
 }

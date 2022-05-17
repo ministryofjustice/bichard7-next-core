@@ -1,6 +1,7 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import type { OffenceMatcherOutcome } from "./offenceMatcher"
+import { hoOffenceAlreadyMatched, pncOffenceAlreadyMatched } from "./offenceMatcher"
 import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 const getHoOffencesByEndDate = (hoOffences: Offence[]) =>
@@ -51,8 +52,12 @@ const matchOffencesWithSameOffenceCodeAndStartDate = (
   const endDates = new Set(Object.keys(hoOffencesByEndDate).concat(Object.keys(pncOffencesByEndDate)))
 
   endDates.forEach((endDate) => {
-    const hoOffencesForEndDate = hoOffencesByEndDate[endDate]
-    const pncOffencesForEndDate = pncOffencesByEndDate[endDate]
+    const hoOffencesForEndDate = hoOffencesByEndDate[endDate].filter(
+      (hoOffence) => !hoOffenceAlreadyMatched(hoOffence, outcome)
+    )
+    const pncOffencesForEndDate = pncOffencesByEndDate[endDate].filter(
+      (pncOffence) => !pncOffenceAlreadyMatched(pncOffence, outcome)
+    )
 
     if (
       hoOffencesForEndDate &&

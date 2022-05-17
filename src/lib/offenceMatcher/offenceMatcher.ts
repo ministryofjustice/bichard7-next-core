@@ -36,10 +36,11 @@ const hoResultMatchesPncAdjudication = (hoOffence: Offence, pncOffence: PncOffen
   )
 }
 
-const hoOffenceAlreadyMatched = (offence: Offence, outcome: OffenceMatcherOutcome): boolean =>
-  outcome.matchedOffences.some(({ hoOffence }) => hoOffence === offence)
+export const hoOffenceAlreadyMatched = (offence: Offence, outcome: OffenceMatcherOutcome): boolean =>
+  outcome.matchedOffences.some(({ hoOffence }) => hoOffence === offence) &&
+  !outcome.duplicateHoOffences.some((hoOffence) => hoOffence === offence)
 
-const pncOffenceAlreadyMatched = (offence: PncOffence, outcome: OffenceMatcherOutcome): boolean =>
+export const pncOffenceAlreadyMatched = (offence: PncOffence, outcome: OffenceMatcherOutcome): boolean =>
   outcome.matchedOffences.some(({ pncOffence }) => pncOffence === offence)
 
 const getHoOffencesByOffenceCode = (hoOffences: Offence[]) =>

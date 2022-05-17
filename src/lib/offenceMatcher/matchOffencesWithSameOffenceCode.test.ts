@@ -1,4 +1,8 @@
-import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
+import {
+  createHOOffence,
+  createPNCCourtCaseOffence,
+  createPNCPenaltyCaseOffence
+} from "tests/helpers/generateMockOffences"
 import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
 
 describe("matchOffencesWithSameOffenceCode()", () => {
@@ -36,7 +40,7 @@ describe("matchOffencesWithSameOffenceCode()", () => {
     expect(outcome.matchedOffences).toStrictEqual([{ hoOffence, pncOffence }])
   })
 
-  it.skip("OneOfEachMatchingApproximatelyPNCOffencesAreCourtOnes", () => {
+  it("OneOfEachMatchingApproximatelyPNCOffencesAreCourtOnes", () => {
     const hoOffence = createHOOffence({
       startDate: "2009-09-10",
       endDate: "2010-10-10"
@@ -51,386 +55,253 @@ describe("matchOffencesWithSameOffenceCode()", () => {
     expect(outcome.matchedOffences).toStrictEqual([{ hoOffence, pncOffence }])
   })
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOneOfEachMatchingApproximatelyPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-10", "2010-10-10", new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "09092009", "10102010")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertSame(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+  it("OneOfEachNotMatchingPNCOffencesAreCourtOnes", () => {
+    const hoOffence = createHOOffence({
+      startDate: "2009-09-08"
+    })
 
-  // @Test
-  // public void testMatchOffencesWithSameOffenceCodeOneOfEachNotMatchingPNCOffencesAreCourtOnes()
-  //     throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "09092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    const pncOffence = createPNCCourtCaseOffence({ startDate: "09092009" })
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeTwoOfEachBothPNCsExactlyMatchSameHOPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-05-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "08092009", ""),
-  //     createPNCCourtCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertEquals(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+    const outcome = matchOffencesWithSameOffenceCode([hoOffence], [pncOffence], true)
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCExactlyMatchingTwoHOsWithDifferentResultsPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1003"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(2, outcome.getDuplicateHOOffences().size());
-  //   for (int i = 0; i < hoOffence.length; i++) {
-  //     assertTrue(outcome.getDuplicateHOOffences().contains(hoOffence[i]));
-  //   }
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCExactlyMatchingTwoHOsWithSameResultsPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertSame(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+  it("TwoOfEachBothPNCsExactlyMatchSameHOPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-05-08", resultCodes: ["1002"] })
+    ]
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCApproximatelyMatchingTwoHOsPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "03092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    const pncOffences = [
+      createPNCCourtCaseOffence({ startDate: "08092009" }),
+      createPNCCourtCaseOffence({ startDate: "08092009" })
+    ]
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeFourOffencesOnEachWithDifferentStartDatesInDifferentOrderPNCOffencesAreCourtOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-15", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-22", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-29", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   CourtCasesType.CourtCaseType.OffencesType.OffenceType[] pncOffence = {
-  //     createPNCCourtCaseOffence("VG24030", "29092009", ""),
-  //     createPNCCourtCaseOffence("VG24030", "22092009", ""),
-  //     createPNCCourtCaseOffence("VG24030", "15092009", ""),
-  //     createPNCCourtCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(4, outcome.getMatchedOffences().size());
-  //   for (int i = 0; i < hoOffence.length; i++) {
-  //     assertSame(pncOffence[3 - i], outcome.getMatchedOffences().get(hoOffence[i]));
-  //   }
-  // }
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false)
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeFourOffencesOnEachWithDifferentStartDatesInDifferentOrderPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-15", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-22", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-29", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {
-  //     createPNCPenaltyCaseOffence("VG24030", "29092009", ""),
-  //     createPNCPenaltyCaseOffence("VG24030", "22092009", ""),
-  //     createPNCPenaltyCaseOffence("VG24030", "15092009", ""),
-  //     createPNCPenaltyCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(4, outcome.getMatchedOffences().size());
-  //   for (int i = 0; i < hoOffence.length; i++) {
-  //     assertSame(pncOffence[3 - i], outcome.getMatchedOffences().get(hoOffence[i]));
-  //   }
-  // }
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
+  })
 
-  // @Test
-  // public void testMatchOffencesWithSameOffenceCodeMorePNCOffencesPNCOffencesArePenaltyOnes()
-  //     throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   final List pncOffences = new ArrayList();
-  //   pncOffences.add("");
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+  it("OnePNCExactlyMatchingTwoHOsWithDifferentResultsPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1003"] })
+    ]
 
-  // @Test
-  // public void testMatchOffencesWithSameOffenceCodeNoPNCOffencesPNCOffencesArePenaltyOnes()
-  //     throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   final List pncOffences = new ArrayList();
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    const pncOffences = [createPNCCourtCaseOffence({ startDate: "08092009" })]
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOneOfEachMatchingApproximatelyPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-10", "2010-10-10", new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "09092009", "10102010")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertSame(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOneOfEachMatchingExactlyPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-09", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "09092009", "")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertSame(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(2)
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[0])
+    expect(outcome.duplicateHoOffences).toContain(hoOffences[1])
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
 
-  // @Test
-  // public void testMatchOffencesWithSameOffenceCodeOneOfEachNotMatchingPNCOffencesArePenaltyOnes()
-  //     throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "09092009", "")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+  it("OnePNCExactlyMatchingTwoHOsWithSameResultsPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1003"] })
+    ]
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCApproximatelyMatchingTwoHOsPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "03092009", "")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    const pncOffences = [createPNCCourtCaseOffence({ startDate: "08092009" })]
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCExactlyMatchingTwoHOsWithDifferentResultsPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1003"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "08092009", "")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(2, outcome.getDuplicateHOOffences().size());
-  //   for (int i = 0; i < hoOffence.length; i++) {
-  //     assertTrue(outcome.getDuplicateHOOffences().contains(hoOffence[i]));
-  //   }
-  //   assertEquals(0, outcome.getMatchedOffences().size());
-  // }
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeOnePNCExactlyMatchingTwoHOsWithSameResultsPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {createPNCPenaltyCaseOffence("VG24030", "08092009", "")};
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertSame(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(2)
+    expect(outcome.duplicateHoOffences).toContainEqual(hoOffences[0])
+    expect(outcome.duplicateHoOffences).toContainEqual(hoOffences[1])
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
 
-  // @Test
-  // public void
-  //     testMatchOffencesWithSameOffenceCodeTwoOfEachBothPNCsExactlyMatchSameHOPNCOffencesArePenaltyOnes()
-  //         throws Exception {
-  //   final List hoOffences = new ArrayList();
-  //   HearingOutcomeStructure.CaseType.HearingDefendantType.Offence[] hoOffence = {
-  //     createHOOffence("VG", "24", "030", "2009-09-08", null, new String[] {"1002"}),
-  //     createHOOffence("VG", "24", "030", "2009-05-08", null, new String[] {"1002"})
-  //   };
-  //   hoOffences.addAll(Arrays.asList(hoOffence));
-  //   final List pncOffences = new ArrayList();
-  //   uk.gov.ocjr.mtu.br7.xmlconverter.jaxb.objects.nspispnc.attributed.PenaltyCasesType
-  //           .PenaltyCaseType.OffencesType.OffenceType[]
-  //       pncOffence = {
-  //     createPNCPenaltyCaseOffence("VG24030", "08092009", ""),
-  //     createPNCPenaltyCaseOffence("VG24030", "08092009", "")
-  //   };
-  //   pncOffences.addAll(Arrays.asList(pncOffence));
-  //   OffenceMatcherOutcome outcome =
-  //       offenceCodeMatcher.matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false);
-  //   assertTrue(outcome.allPNCOffencesMatched());
-  //   assertEquals(0, outcome.getDuplicateHOOffences().size());
-  //   assertEquals(1, outcome.getMatchedOffences().size());
-  //   assertEquals(pncOffence[0], outcome.getMatchedOffences().get(hoOffence[0]));
-  // }
+  it("OnePNCApproximatelyMatchingTwoHOsPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [createPNCCourtCaseOffence({ startDate: "03092009" })]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("FourOffencesOnEachWithDifferentStartDatesInDifferentOrderPNCOffencesAreCourtOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-15", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-22", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-29", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ startDate: "29092009" }),
+      createPNCCourtCaseOffence({ startDate: "22092009" }),
+      createPNCCourtCaseOffence({ startDate: "15092009" }),
+      createPNCCourtCaseOffence({ startDate: "08092009" })
+    ]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(4)
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[0], pncOffence: pncOffences[3] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[1], pncOffence: pncOffences[2] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[2], pncOffence: pncOffences[1] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[3], pncOffence: pncOffences[0] })
+  })
+
+  it("FourOffencesOnEachWithDifferentStartDatesInDifferentOrderPNCOffencesArePenaltyOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-15", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-22", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-29", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [
+      createPNCCourtCaseOffence({ startDate: "29092009" }),
+      createPNCCourtCaseOffence({ startDate: "22092009" }),
+      createPNCCourtCaseOffence({ startDate: "15092009" }),
+      createPNCCourtCaseOffence({ startDate: "08092009" })
+    ]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(4)
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[0], pncOffence: pncOffences[3] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[1], pncOffence: pncOffences[2] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[2], pncOffence: pncOffences[1] })
+    expect(outcome.matchedOffences).toContainEqual({ hoOffence: hoOffences[3], pncOffence: pncOffences[0] })
+  })
+
+  it("MorePNCOffencesPNCOffencesArePenaltyOnes", () => {
+    const pncOffence = createPNCCourtCaseOffence({ startDate: "08092009", endDate: "10102010" })
+    const outcome = matchOffencesWithSameOffenceCode([], [pncOffence], true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("NoPNCOffencesPNCOffencesArePenaltyOnes", () => {
+    const outcome = matchOffencesWithSameOffenceCode([], [], true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("OneOfEachMatchingApproximatelyPNCOffencesArePenaltyOnes", () => {
+    const hoOffence = createHOOffence({
+      startDate: "2009-09-09",
+      endDate: "2010-10-10"
+    })
+
+    const pncOffence = createPNCPenaltyCaseOffence({ startDate: "09092009", endDate: "10102010" })
+
+    const outcome = matchOffencesWithSameOffenceCode([hoOffence], [pncOffence], true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence, pncOffence }])
+  })
+
+  it("OneOfEachMatchingExactlyPNCOffencesArePenaltyOnes", () => {
+    const hoOffence = createHOOffence({ startDate: "2009-09-09" })
+
+    const pncOffence = createPNCPenaltyCaseOffence({ startDate: "09092009" })
+
+    const outcome = matchOffencesWithSameOffenceCode([hoOffence], [pncOffence], true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence, pncOffence }])
+  })
+
+  it("OneOfEachNotMatchingPNCOffencesArePenaltyOnes", () => {
+    const hoOffence = createHOOffence({ startDate: "2009-09-08" })
+
+    const pncOffence = createPNCPenaltyCaseOffence({ startDate: "09092009" })
+
+    const outcome = matchOffencesWithSameOffenceCode([hoOffence], [pncOffence], true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("OnePNCApproximatelyMatchingTwoHOsPNCOffencesArePenaltyOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [createPNCPenaltyCaseOffence({ startDate: "03092009" })]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("OnePNCExactlyMatchingTwoHOsWithDifferentResultsPNCOffencesArePenaltyOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1003"] })
+    ]
+
+    const pncOffences = [createPNCPenaltyCaseOffence({ startDate: "08092009" })]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, true)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(2)
+    expect(outcome.duplicateHoOffences).toContainEqual(hoOffences[0])
+    expect(outcome.duplicateHoOffences).toContainEqual(hoOffences[1])
+    expect(outcome.matchedOffences).toHaveLength(0)
+  })
+
+  it("OnePNCExactlyMatchingTwoHOsWithSameResultsPNCOffencesArePenaltyOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [createPNCPenaltyCaseOffence({ startDate: "08092009" })]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
+  })
+
+  it("TwoOfEachBothPNCsExactlyMatchSameHOPNCOffencesArePenaltyOnes", () => {
+    const hoOffences = [
+      createHOOffence({ startDate: "2009-09-08", resultCodes: ["1002"] }),
+      createHOOffence({ startDate: "2009-05-08", resultCodes: ["1002"] })
+    ]
+
+    const pncOffences = [
+      createPNCPenaltyCaseOffence({ startDate: "08092009" }),
+      createPNCPenaltyCaseOffence({ startDate: "08092009" })
+    ]
+
+    const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false)
+
+    // expect(outcome.allPncOffencesMatched).toBe(true)
+    expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
+  })
 })
