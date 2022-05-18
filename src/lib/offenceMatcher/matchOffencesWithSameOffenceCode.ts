@@ -4,7 +4,7 @@ import datesMatchApproximately from "./datesMatchApproximately"
 import matchOffencesWithSameOffenceCodeAndStartDate from "./matchOffencesWithSameOffenceCodeAndStartDate"
 import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
 import type { OffenceMatcherOutcome } from "./offenceMatcher"
-import { hoOffenceAlreadyMatched, pncOffenceAlreadyMatched } from "./offenceMatcher"
+import { pncOffenceAlreadyMatched } from "./offenceMatcher"
 import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 const getHoOffencesByStartDate = (hoOffences: Offence[]) =>
@@ -46,7 +46,7 @@ const matchOffencesWithSameOffenceCode = (
     nonMatchingExplicitMatches: []
   }
 
-  if (hoOffences.length === 0 || pncOffences.length === 0) {
+  if (!hoOffences || !pncOffences || hoOffences.length === 0 || pncOffences.length === 0) {
     return result
   }
 
@@ -79,9 +79,7 @@ const matchOffencesWithSameOffenceCode = (
       return
     }
 
-    const matchingHoOffences = hoOffences
-      .filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
-      .filter((hoOffence) => datesMatchApproximately(hoOffence, pncOffence))
+    const matchingHoOffences = hoOffences.filter((hoOffence) => datesMatchApproximately(hoOffence, pncOffence))
 
     if (matchingHoOffences.length === 0) {
       return
@@ -89,7 +87,12 @@ const matchOffencesWithSameOffenceCode = (
 
     if (matchingHoOffences.length > 1 && !offencesHaveEqualResults(matchingHoOffences)) {
       result.duplicateHoOffences = result.duplicateHoOffences.concat(matchingHoOffences)
-      result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+
+      if (!result.pncOffencesMatchedIncludingDuplicates.includes(pncOffence)) {
+        result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+      }
+
+      return
     }
 
     result.matchedOffences.push({ hoOffence: matchingHoOffences[0], pncOffence })

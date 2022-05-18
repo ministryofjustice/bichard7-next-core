@@ -42,8 +42,12 @@ const offencesHaveEqualResults = (offences: Offence[]): boolean => {
 
   let offence1 = offences[0]
   return offences.slice(1).every((offence2) => {
-    const results1 = offence1.Result.filter(resultIsRecordable)
-    const results2 = offence2.Result.filter(resultIsRecordable)
+    const results1 = offence1.Result?.filter(resultIsRecordable)
+    const results2 = offence2.Result?.filter(resultIsRecordable)
+
+    if (!results1 && !results2) {
+      return true
+    }
 
     if (results1.length !== results2.length) {
       return false

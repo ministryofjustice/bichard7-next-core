@@ -2,7 +2,9 @@ import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 import getOffenceCode from "src/utils/offence/getOffenceCode"
 import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
+import matchUnmatchedBreachesWithoutUsingDates from "./matchUnmatchedBreachesWithoutUsingDates"
 import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
+import offenceIsBreach from "./offenceIsBreach"
 import offencesMatch from "./offencesMatch"
 
 type OffenceMatcherOptions = {
@@ -37,13 +39,14 @@ const hoResultMatchesPncAdjudication = (hoOffence: Offence, pncOffence: PncOffen
 }
 
 export const hoOffenceAlreadyMatched = (offence: Offence, outcome: OffenceMatcherOutcome): boolean =>
-  outcome.matchedOffences.some(({ hoOffence }) => hoOffence === offence) &&
-  !outcome.duplicateHoOffences.some((hoOffence) => hoOffence === offence)
+  outcome.matchedOffences.some(({ hoOffence }) => hoOffence === offence) ||
+  outcome.duplicateHoOffences.some((hoOffence) => hoOffence === offence)
 
 export const pncOffenceAlreadyMatched = (offence: PncOffence, outcome: OffenceMatcherOutcome): boolean =>
-  outcome.matchedOffences.some(({ pncOffence }) => pncOffence === offence)
+  outcome.matchedOffences.some(({ pncOffence }) => pncOffence === offence) ||
+  outcome.pncOffencesMatchedIncludingDuplicates.some((pncOffence) => pncOffence === offence)
 
-const getHoOffencesByOffenceCode = (hoOffences: Offence[]) =>
+export const getHoOffencesByOffenceCode = (hoOffences: Offence[]) =>
   hoOffences.reduce((acc: { [key: string]: Offence[] }, hoOffence) => {
     const offenceCode = getOffenceCode(hoOffence)
     if (!offenceCode) {
@@ -59,7 +62,7 @@ const getHoOffencesByOffenceCode = (hoOffences: Offence[]) =>
     return acc
   }, {})
 
-const getPncOffencesByOffenceCode = (pncOffences: PncOffence[]) =>
+export const getPncOffencesByOffenceCode = (pncOffences: PncOffence[]) =>
   pncOffences.reduce((acc: { [key: string]: PncOffence[] }, pncOffence) => {
     const offenceCode = pncOffence.offence.cjsOffenceCode
     if (!offenceCode) {
@@ -80,8 +83,6 @@ const matchOffences = (
   pncOffences: PncOffence[],
   { attemptManualMatch, caseReference, hearingDate }: OffenceMatcherOptions
 ): OffenceMatcherOutcome => {
-  console.log(attemptManualMatch)
-  console.log(pncOffenceAlreadyMatched)
   let result: OffenceMatcherOutcome = {
     allPncOffencesMatched: false,
     duplicateHoOffences: [],
@@ -91,50 +92,55 @@ const matchOffences = (
   }
 
   const applyMultipleCourtCaseMatchingLogic = !caseReference && !!hearingDate
-  const filteredHoOffences = hoOffences
+  let filteredHoOffences = hoOffences
 
   if (caseReference) {
-    hoOffences = hoOffences.filter(
+    filteredHoOffences = hoOffences.filter(
       (hoOffence) => hoOffence.CourtCaseReferenceNumber && hoOffence.CourtCaseReferenceNumber === caseReference
     )
   }
 
-  pncOffences.forEach((pncOffence) => {
-    const pncSequence = pncOffence.offence.sequenceNumber
-    let matchingExplicitMatch: Offence
-    let pncAdjudicationMatches = false
+  if (attemptManualMatch) {
+    pncOffences.forEach((pncOffence) => {
+      const pncSequence = pncOffence.offence.sequenceNumber
+      let matchingExplicitMatch: Offence | undefined
+      let pncAdjudicationMatches = false
 
-    filteredHoOffences.forEach((hoOffence) => {
-      if (hoOffenceAlreadyMatched(hoOffence, result)) {
-        return
-      }
-
-      const hoSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-      if (hoSequence !== undefined && hoSequence === pncSequence && !matchingExplicitMatch) {
-        if (offencesMatch(hoOffence, pncOffence)) {
-          matchingExplicitMatch = hoOffence
-        } else {
-          result.nonMatchingExplicitMatches.push({ hoOffence, pncOffence })
+      for (const hoOffence of filteredHoOffences) {
+        if (matchingExplicitMatch || hoOffenceAlreadyMatched(hoOffence, result)) {
+          return
         }
-      } else if (
-        applyMultipleCourtCaseMatchingLogic &&
-        !matchingExplicitMatch &&
-        !pncAdjudicationMatches &&
-        offencesMatch(hoOffence, pncOffence) &&
-        hoResultMatchesPncAdjudication(hoOffence, pncOffence, hearingDate)
-      ) {
-        pncAdjudicationMatches = true
-      }
 
-      if (matchingExplicitMatch) {
-        result.matchedOffences.push({ hoOffence, pncOffence })
-        result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+        const hoSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        if (hoSequence !== undefined && hoSequence === pncSequence && !matchingExplicitMatch) {
+          if (offencesMatch(hoOffence, pncOffence)) {
+            matchingExplicitMatch = hoOffence
+          } else {
+            result.nonMatchingExplicitMatches.push({ hoOffence, pncOffence })
+          }
+        } else if (
+          applyMultipleCourtCaseMatchingLogic &&
+          !matchingExplicitMatch &&
+          !pncAdjudicationMatches &&
+          offencesMatch(hoOffence, pncOffence) &&
+          hoResultMatchesPncAdjudication(hoOffence, pncOffence, hearingDate)
+        ) {
+          pncAdjudicationMatches = true
+        }
+
+        if (matchingExplicitMatch) {
+          result.matchedOffences.push({ hoOffence, pncOffence })
+          result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+          break
+        }
       }
     })
-  })
+  }
 
-  const hoOffencesByCode = getHoOffencesByOffenceCode(hoOffences)
-  const pncOffencesByCode = getPncOffencesByOffenceCode(pncOffences)
+  const remainingHoOffences = hoOffences.filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
+  const remainingPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+  const hoOffencesByCode = getHoOffencesByOffenceCode(remainingHoOffences)
+  const pncOffencesByCode = getPncOffencesByOffenceCode(remainingPncOffences)
   const offenceCodes = new Set(Object.keys(hoOffencesByCode).concat(Object.keys(pncOffencesByCode)))
 
   offenceCodes.forEach((offenceCode) => {
@@ -147,7 +153,22 @@ const matchOffences = (
     result = mergeOffenceMatcherOutcomes(result, matchOffencesOutcome)
   })
 
-  // Remember to skip PNC offences that haven't been matched but have been removed
+  const breachOffences = hoOffences
+    .filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
+    .filter(offenceIsBreach)
+
+  const unmatchedPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+
+  if (breachOffences.length > 0 && unmatchedPncOffences.length > 0) {
+    const breachOutcome = matchUnmatchedBreachesWithoutUsingDates(
+      result,
+      breachOffences,
+      unmatchedPncOffences,
+      applyMultipleCourtCaseMatchingLogic
+    )
+
+    result = mergeOffenceMatcherOutcomes(result, breachOutcome)
+  }
 
   result.allPncOffencesMatched = result.matchedOffences.length === pncOffences.length
 

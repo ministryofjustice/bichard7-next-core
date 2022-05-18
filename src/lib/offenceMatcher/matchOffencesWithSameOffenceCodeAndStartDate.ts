@@ -52,10 +52,10 @@ const matchOffencesWithSameOffenceCodeAndStartDate = (
   const endDates = new Set(Object.keys(hoOffencesByEndDate).concat(Object.keys(pncOffencesByEndDate)))
 
   endDates.forEach((endDate) => {
-    const hoOffencesForEndDate = hoOffencesByEndDate[endDate].filter(
+    const hoOffencesForEndDate = hoOffencesByEndDate[endDate]?.filter(
       (hoOffence) => !hoOffenceAlreadyMatched(hoOffence, outcome)
     )
-    const pncOffencesForEndDate = pncOffencesByEndDate[endDate].filter(
+    const pncOffencesForEndDate = pncOffencesByEndDate[endDate]?.filter(
       (pncOffence) => !pncOffenceAlreadyMatched(pncOffence, outcome)
     )
 
