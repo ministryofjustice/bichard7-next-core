@@ -302,6 +302,7 @@ describe("matchOffencesWithSameOffenceCode()", () => {
 
     // expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.duplicateHoOffences).toHaveLength(0)
+    expect(outcome.matchedOffences).toHaveLength(1)
     expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
   })
 })
