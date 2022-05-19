@@ -1,11 +1,8 @@
-import type { PncCase, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
-import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
-import caseMatcher from "./caseMatcher"
+import type { PncCase, PncQueryResult } from "src/types/PncQueryResult"
+import createPNCCourtCase from "tests/helpers/generateMockPncCase"
 
-const createPNCCourtCase = (courtCaseReference: string, offences: PncOffence[]): PncCase => ({
-  courtCaseReference,
-  offences
-})
+import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
+import matchCases from "./caseMatcher"
 
 const createPNCMessage = (cases: PncCase[]): PncQueryResult => ({ cases } as PncQueryResult)
 
@@ -24,7 +21,7 @@ describe("caseMatcher", () => {
     const pncCases = [createPNCCourtCase("09/11FG/568235X", pncOffences)]
     const pncMessage = createPNCMessage(pncCases)
 
-    const outcome = caseMatcher(hoOffences, pncMessage)
+    const outcome = matchCases(hoOffences, pncMessage)
 
     expect(outcome.courtCaseMatches).toHaveLength(0)
     expect(outcome.penaltyCaseMatches).toHaveLength(0)

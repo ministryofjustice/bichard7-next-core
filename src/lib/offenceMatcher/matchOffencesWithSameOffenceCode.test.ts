@@ -81,7 +81,6 @@ describe("matchOffencesWithSameOffenceCode()", () => {
     ]
 
     const outcome = matchOffencesWithSameOffenceCode(hoOffences, pncOffences, false)
-    console.log(JSON.stringify(outcome, null, 2))
     // expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.duplicateHoOffences).toHaveLength(0)
     expect(outcome.matchedOffences).toStrictEqual([{ hoOffence: hoOffences[0], pncOffence: pncOffences[0] }])
