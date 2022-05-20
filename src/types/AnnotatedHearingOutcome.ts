@@ -1,5 +1,6 @@
 import { validateASN, validateRemandStatus } from "src/use-cases/validations"
 import { z } from "zod"
+import { exceptionSchema } from "./Exception"
 import { ExceptionCode } from "./ExceptionCode"
 import { cjsPleaSchema } from "./Plea"
 import { pncQueryResultSchema } from "./PncQueryResult"
@@ -268,6 +269,7 @@ const hearingOutcomeSchema = z.object({
 })
 
 const annotatedHearingOutcomeSchema = z.object({
+  Exceptions: z.array(exceptionSchema).optional(),
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),
