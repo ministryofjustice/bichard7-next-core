@@ -1,6 +1,6 @@
 import { createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
 import createPNCCourtCase from "tests/helpers/generateMockPncCase"
-import { sortCourtCasesByAge } from "./sortCourtCases"
+import sortCourtCasesByAge from "./sortCourtCasesByAge"
 
 describe("sortCourtCasesByAge", () => {
   it("Should sort two cases and put the case with the earliest year first", () => {
