@@ -18,7 +18,7 @@ export const getCourtCaseSortKey = (pncCase: PncCase): string => {
 }
 
 export const sortCourtCasesByAge = (cases: PncCase[]): PncCase[] => {
-  return cases.sort((case1: PncCase, case2: PncCase) => {
+  return [...cases].sort((case1: PncCase, case2: PncCase) => {
     const case1SortKey = getCourtCaseSortKey(case1)
     const case2SortKey = getCourtCaseSortKey(case2)
     return case1SortKey.localeCompare(case2SortKey)
