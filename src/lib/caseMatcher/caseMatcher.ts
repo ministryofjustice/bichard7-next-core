@@ -9,7 +9,7 @@ type CaseMatch = {
   offenceMatcherOutcome: OffenceMatcherOutcome
 }
 
-type CaseMatcherOutcome = {
+export type CaseMatcherOutcome = {
   courtCaseMatches: CaseMatch[]
   penaltyCaseMatches: CaseMatch[]
 }

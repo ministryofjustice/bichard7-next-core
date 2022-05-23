@@ -68,7 +68,9 @@ const offencesHaveEqualResults = (offences: Offence[]): boolean => {
           resultMatchFound = compareTwoResults(result1, result2, includeResultText)
         }
 
-        result2Matched[j] = resultMatchFound
+        if (resultMatchFound) {
+          result2Matched[j] = resultMatchFound
+        }
       })
     })
 
