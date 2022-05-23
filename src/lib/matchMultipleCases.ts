@@ -6,13 +6,14 @@ import offencesAreEqual from "src/lib/offenceMatcher/offencesAreEqual"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 
-type MultipleCaseMatcherOutcome = {
+export type MultipleCaseMatcherOutcome = {
   ambiguousHoOffences: Offence[]
   matchedOffences: Map<Offence, PncOffence>
   duplicateHoOffences: Map<Offence, OffenceMatcherOutcome[]>
   unmatchedPNCOffences: boolean
 }
-const multipleCaseMatcher = (
+
+const matchMultipleCases = (
   hoOffences: Offence[],
   caseMatcherOutcome: CaseMatcherOutcome,
   hearingDate: Date
@@ -209,4 +210,4 @@ const multipleCaseMatcher = (
   return result
 }
 
-export default multipleCaseMatcher
+export default matchMultipleCases
