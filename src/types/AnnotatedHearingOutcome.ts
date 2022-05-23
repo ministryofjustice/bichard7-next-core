@@ -221,7 +221,7 @@ const offenceSchema = z.object({
   CourtOffenceSequenceNumber: z.number(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
-  AddedByTheCourt: z.string().optional()
+  AddedByTheCourt: z.boolean().optional()
 })
 
 const asnSchema = z.string().refine(validateASN, ExceptionCode.HO100206)

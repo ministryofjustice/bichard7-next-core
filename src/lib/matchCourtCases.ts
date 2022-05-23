@@ -6,17 +6,90 @@ import type { MultipleCaseMatcherOutcome } from "./matchMultipleCases"
 import matchMultipleCases from "./matchMultipleCases"
 import type { OffenceMatcherOutcome } from "./offenceMatcher/offenceMatcher"
 
-const enrichOffencesFromCourtCasesAndMatcherOutcome = (
-  hoOffences: Offence[],
-  cases: PncCase[] | undefined,
-  multipleMatchingOutcome: MultipleCaseMatcherOutcome
-) => {
-  console.log(hoOffences, cases, multipleMatchingOutcome)
+const nonRecordableOffenceCategories = [
+  "B7",
+  "EF",
+  "EM",
+  "EX",
+  "FC",
+  "FL",
+  "FO",
+  "FP",
+  "FV",
+  "LB",
+  "LC",
+  "LG",
+  "LL",
+  "LM",
+  "VA",
+  "VP"
+]
+
+const offenceCategoryIsNonRecordable = (offence: Offence): boolean =>
+  !!offence.OffenceCategory && nonRecordableOffenceCategories.includes(offence.OffenceCategory)
+
+const getFirstMatchingCourtCaseWith2060Result = (
+  pncCases: PncCase[],
+  matcherOutcome: MultipleCaseMatcherOutcome
+): string | undefined => {
+  for (const pncCase of pncCases) {
+    for (const pncOffence of pncCase.offences) {
+      for (const matchedOffence of matcherOutcome.matchedOffences.keys()) {
+        if (matcherOutcome.matchedOffences.get(matchedOffence) === pncOffence) {
+          for (const result of matchedOffence.Result) {
+            if (result.CJSresultCode === 2060) {
+              return pncCase.courtCaseReference
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-const enrichOffencesFromMatcherOutcome = (hoOffences: Offence[], matcherOutcome: OffenceMatcherOutcome) => {
-  console.log(hoOffences, matcherOutcome)
+const enrichOffencesFromCourtCasesAndMatcherOutcome = (
+  aho: AnnotatedHearingOutcome,
+  cases: PncCase[],
+  matcherOutcome: MultipleCaseMatcherOutcome
+) => {
+  const hoOffences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  let matchingCCR: string
+
+  hoOffences.forEach((hoOffence) => {
+    let offenceHasError = false
+
+    const pncOffence = matcherOutcome.matchedOffences.get(hoOffence)
+
+    if (!pncOffence) {
+      const duplicateCases = matcherOutcome.duplicateHoOffences.get(hoOffence)
+      if (duplicateCases && duplicateCases.length === 1) {
+        addError(aho, ExceptionCode.HO100310, ["path", "to", "duplicate"])
+        offenceHasError = true
+      } else if (
+        matcherOutcome.ambiguousHoOffences.includes(hoOffence) ||
+        (duplicateCases && duplicateCases.length > 1)
+      ) {
+        addError(aho, ExceptionCode.HO100332, ["path", "to", "duplicate"])
+        offenceHasError = true
+      } else if (!duplicateCases) {
+        if (offenceCategoryIsNonRecordable(hoOffence)) {
+          const courtCase = cases[0]
+          const courtCaseRef = courtCase.courtCaseReference
+          hoOffence.CourtCaseReferenceNumber = courtCaseRef
+          hoOffence.AddedByTheCourt = true
+          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+        } else {
+          if (!matchingCCR) {
+            // TODO
+            // matchingCCR =
+          }
+        }
+      }
+    }
+  })
 }
+
+const enrichOffencesFromMatcherOutcome = (hoOffences: Offence[], matcherOutcome: OffenceMatcherOutcome) => {}
 
 const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCase) => {
   console.log(hoCase, pncCase)
@@ -59,7 +132,7 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   if (outcome.courtCaseMatches.length > 1) {
     const hearingDate = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
     const multipleMatchingOutcome = matchMultipleCases(hoOffences, outcome, hearingDate)
-    enrichOffencesFromCourtCasesAndMatcherOutcome(hoOffences, pncQueryResult.cases, multipleMatchingOutcome)
+    enrichOffencesFromCourtCasesAndMatcherOutcome(aho, pncQueryResult.cases ?? [], multipleMatchingOutcome)
     allPncOffencesMatched = !multipleMatchingOutcome.unmatchedPNCOffences
   }
 
