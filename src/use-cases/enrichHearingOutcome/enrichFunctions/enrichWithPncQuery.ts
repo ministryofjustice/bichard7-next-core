@@ -1,4 +1,4 @@
-import matchCourtCases from "src/lib/matchCourtCases"
+import enrichCourtCases from "src/lib/enrichCourtCases/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
 import type { PncOffence } from "src/types/PncQueryResult"
@@ -20,7 +20,7 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
     pncCase.offences = pncCase.offences.map(addTitle)
   })
 
-  annotatedHearingOutcome = matchCourtCases(annotatedHearingOutcome)
+  annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
 
   return annotatedHearingOutcome
 }

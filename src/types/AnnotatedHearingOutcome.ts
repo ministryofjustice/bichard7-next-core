@@ -218,7 +218,9 @@ const offenceSchema = z.object({
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string(),
   CourtCaseReferenceNumber: z.string().optional(),
+  ManualCourtCaseReferenceNumber: z.string().optional(),
   CourtOffenceSequenceNumber: z.number(),
+  ManualSequenceNumber: z.number().optional(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
   AddedByTheCourt: z.boolean().optional()
