@@ -16,7 +16,7 @@ export type MultipleCaseMatcherOutcome = {
 const matchMultipleCases = (
   hoOffences: Offence[],
   caseMatcherOutcome: CaseMatcherOutcome,
-  hearingDate: Date
+  hearingDate?: Date
 ): MultipleCaseMatcherOutcome => {
   const result: MultipleCaseMatcherOutcome = {
     ambiguousHoOffences: [],

@@ -1,9 +1,7 @@
-import type { PncCase, PncQueryResult } from "src/types/PncQueryResult"
+import createPNCMessage from "tests/helpers/createPncMessage"
 import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
 import createPNCCourtCase from "tests/helpers/generateMockPncCase"
 import matchCases from "./caseMatcher"
-
-const createPNCMessage = (cases: PncCase[]): PncQueryResult => ({ cases } as PncQueryResult)
 
 describe("caseMatcher", () => {
   it("should testMatchNoActualMatchesNoNonMatchingExplicitMatchesNoCCRWithAllFinalResults", () => {
