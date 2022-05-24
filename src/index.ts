@@ -1,3 +1,4 @@
+import convertAhoToXml from "./lib/convertAhoToXml"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
 import enrichHearingOutcome from "./use-cases/enrichHearingOutcome"
@@ -14,9 +15,11 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
 
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
+  const ahoXml = convertAhoToXml(hearingOutcome)
 
   return {
     triggers,
-    exceptions
+    exceptions,
+    ahoXml
   }
 }

@@ -1,24 +1,25 @@
 import {
+  validateActualOffenceDateCode,
   validateASN,
   validateCourtType,
   validateDurationType,
   validateDurationUnit,
   validateModeOfTrialReason,
+  validateOffenceCategory,
+  validateOffenceInitiationCode,
   validateRemandStatus,
   validateResultClass,
   validateResultCode,
   validateResultQualifierCode,
+  validateSummonsCode,
   validateTargetCourtType,
   validateTypeOfHearing,
-  validateOffenceCategory,
-  validateVerdict,
-  validateOffenceInitiationCode,
-  validateSummonsCode,
   validateVehicleCode,
-  validateActualOffenceDateCode,
+  validateVerdict,
   validateYesNo
 } from "src/use-cases/validations"
 import { z } from "zod"
+import { exceptionSchema } from "./Exception"
 import { ExceptionCode } from "./ExceptionCode"
 import { cjsPleaSchema } from "./Plea"
 import { pncQueryResultSchema } from "./PncQueryResult"
@@ -312,7 +313,8 @@ const annotatedHearingOutcomeSchema = z.object({
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),
-  PncQuery: pncQueryResultSchema.optional()
+  PncQuery: pncQueryResultSchema.optional(),
+  Exceptions: z.array(exceptionSchema).optional()
 })
 
 export { annotatedHearingOutcomeSchema, offenceReasonSchema }
