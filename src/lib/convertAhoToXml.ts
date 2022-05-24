@@ -1,11 +1,15 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import xml2js = require("xml2js")
+import { XMLBuilder } from "fast-xml-parser"
 
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
-  const builder = new xml2js.Builder()
-  const xml = builder.buildObject(hearingOutcome)
+  const options = {
+    ignoreAttributes : false
+};
 
-  return JSON.stringify(xml)
+  const builder = new XMLBuilder(options);
+  let xml = builder.build(hearingOutcome);
+
+  return xml
 }
 
 export default convertAhoToXml
