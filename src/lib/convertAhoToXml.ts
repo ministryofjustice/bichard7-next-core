@@ -1,6 +1,11 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import xml2js = require("xml2js")
 
-export default (hearingOutcome: AnnotatedHearingOutcome): string => {
-  // TODO: Convert aho to xml without namespaces (for now)
-  return "hearingOutcome"
+const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
+  const builder = new xml2js.Builder()
+  const xml = builder.buildObject(hearingOutcome)
+
+  return JSON.stringify(xml)
 }
+
+export default convertAhoToXml

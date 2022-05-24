@@ -39,6 +39,7 @@ describe("Comparison testing", () => {
       it("should match aho xml", () => {
         // TODO: Write custom matcher to compare xml structures without caring about namespaces
         // coreResult.ahoXml "to match" annotatedHearingOutcome
+        expect(coreResult.ahoXml).toBe(annotatedHearingOutcome)
       })
     } catch (e) {
       it("should not error", () => {

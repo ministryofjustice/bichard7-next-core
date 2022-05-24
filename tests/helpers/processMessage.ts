@@ -102,7 +102,9 @@ const processMessageBichard = async (
     ...(record.trigger_item_identity ? { offenceSequenceNumber: parseInt(record.trigger_item_identity, 10) } : {})
   }))
 
-  return { triggers, exceptions }
+  const ahoXml = "Dummy"
+
+  return { triggers, exceptions, ahoXml }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<BichardResultType> => {
