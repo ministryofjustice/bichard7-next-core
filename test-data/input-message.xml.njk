@@ -83,9 +83,9 @@
             {% for offence in offences %}
               <DC:Offence>
                 <DC:BaseOffenceDetails>
-                  <DC:OffenceSequenceNumber>{{ loop.index | string | padStart(3, "0") }}</DC:OffenceSequenceNumber>
+                  <DC:OffenceSequenceNumber>{{ offence.offenceSequenceNumber if offence.offenceSequenceNumber else loop.index | string | padStart(3, "0") }}</DC:OffenceSequenceNumber>
                   <DC:OffenceCode>{{ offence.code if offence.code else ( "TH68006" if offence.recordable else "TH68046C" ) }}</DC:OffenceCode>
-                  <DC:OffenceWording>Theft of pedal cycle.</DC:OffenceWording>
+                  <DC:OffenceWording>{{ offence.offenceWording if offence.offenceWording === "" or offence.offenceWording else "Theft of pedal cycle." }}</DC:OffenceWording>
                   <DC:OffenceTiming>
                     <DC:OffenceDateCode>1</DC:OffenceDateCode>
                     <DC:OffenceStart>
@@ -99,11 +99,14 @@
                   </DC:OffenceTiming>
                   <DC:ChargeDate>2010-12-02</DC:ChargeDate>
                   <DC:ArrestDate>2010-12-01</DC:ArrestDate>
-                  <DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
+                  {% if offence.offenceTitle === "" or offence.offenceTitle %}
+                  <DC:OffenceTitle>{{ offence.offenceTitle }}</DC:OffenceTitle>
+                  {% endif %}
+                  <DC:LocationOfOffence>{{ offence.location if offence.location === "" or offence.location else "Kingston High Street" }}</DC:LocationOfOffence>
                 </DC:BaseOffenceDetails>
                 <DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
                 <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
-                <DC:ModeOfTrial>01</DC:ModeOfTrial>
+                <DC:ModeOfTrial>{{ offence.modeOfTrial if offence.modeOfTrial else "01" }}</DC:ModeOfTrial>
                 <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
                 <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
                 <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
@@ -113,6 +116,44 @@
                     <DC:ResultText>{{ result.text if result.text else "RESULT_TEXT" }}</DC:ResultText>
                     {% if result.qualifier %}
                       <DC:ResultCodeQualifier>{{ result.qualifier }}</DC:ResultCodeQualifier>
+                    {% endif %}
+                    {% if result.nextHearing %}
+                      <DC:NextHearing>
+                        {% if result.nextHearing.nextHearingDetails %}
+                          <DC:NextHearingDetails>
+                            <DC:CourtHearingLocation>{{ result.nextHearing.nextHearingDetails.courtHearingLocation if result.nextHearing.nextHearingDetails.courtHearingLocation else "B01NI01" }}</DC:CourtHearingLocation>
+                            <DC:DateOfHearing>{{ result.nextHearing.nextHearingDetails.dateOfHearing if result.nextHearing.nextHearingDetails.dateOfHearing else "2011-10-08" }}</DC:DateOfHearing>
+                            <DC:TimeOfHearing>{{ result.nextHearing.nextHearingDetails.timeOfHearing if result.nextHearing.nextHearingDetails.timeOfHearing else "14:00:00" }}</DC:TimeOfHearing>
+                          </DC:NextHearingDetails>
+                        {% endif %}
+                        <DC:NextHearingReason>{{ result.nextHearing.nextHearingReason if result.nextHearing.nextHearingReason else "Adjourned for Defendant to attend" }}</DC:NextHearingReason>
+                        <DC:BailStatusOffence>{{ result.nextHearing.bailStatusOffence if result.nextHearing.bailStatusOffence else "U" }}</DC:BailStatusOffence>
+                      </DC:NextHearing>
+                    {% endif %}
+                    {% if result.bailStatus %}
+                    <DC:NextHearing>
+                      <DC:NextHearingDetails>
+                        <DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
+                        <DC:DateOfHearing>2011-10-08</DC:DateOfHearing>
+                        <DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
+                      </DC:NextHearingDetails>
+                      <DC:NextHearingReason>Adjourned for Defendant to attend</DC:NextHearingReason>
+                      <DC:BailStatusOffence>{{ result.bailStatus }}</DC:BailStatusOffence>
+                    </DC:NextHearing>
+                    {% endif %}
+                    {% if result.outcome %}
+                    <DC:Outcome>
+                      {% if result.outcome.duration %}
+                      <DC:Duration>
+                        {% if result.outcome.duration.value %}
+                        <DC:DurationValue>2</DC:DurationValue>
+                        {% endif %}
+                        {% if result.outcome.duration.unit %}
+                        <DC:DurationUnit>Y</DC:DurationUnit>
+                        {% endif %}
+                      </DC:Duration>
+                      {% endif %}
+                    </DC:Outcome>
                     {% endif %}
                   </DC:Result>
                 {% endfor %}

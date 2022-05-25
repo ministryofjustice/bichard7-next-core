@@ -14,15 +14,26 @@ const nextHearingSchema = z.object({
   NextHearingDetails: nextHearingDetailsSchema
 })
 
+const durationSchema = z.object({
+  DurationValue: z.number().optional(),
+  DurationUnit: z.string().optional(),
+  SecondaryDurationValue: z.number().optional(),
+  SecondaryDurationUnit: z.string().optional(),
+  DurationStartDate: z.preprocess(toArray, z.string().array().min(0)),
+  DurationEndDate: z.preprocess(toArray, z.string().array().min(0))
+})
+
+const outcomeSchema = z.object({
+  ResultAmountSterling: z.number().optional(),
+  PenaltyPoints: z.number().optional(),
+  Duration: durationSchema.optional()
+})
+
 const resultParsedXmlSchema = z.object({
   ResultCode: z.number().optional(),
   ResultText: z.string(),
   ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
-  Outcome: z
-    .object({
-      ResultAmountSterling: z.number().optional()
-    })
-    .optional(),
+  Outcome: outcomeSchema.optional(),
   NextHearing: nextHearingSchema.optional()
 })
 
@@ -34,6 +45,7 @@ const offenceParsedXmlSchema = z.object({
     ChargeDate: z.string().optional(),
     ArrestDate: z.string().optional(),
     LocationOfOffence: z.string(),
+    OffenceTitle: z.string().optional(),
     ConvictionDate: z.string().optional(),
     AlcoholRelatedOffence: z
       .object({
