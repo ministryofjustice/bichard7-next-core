@@ -24,7 +24,9 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
     DocumentName: xmlHearing["br7:SourceReference"]["br7:DocumentName"],
     UniqueID: xmlHearing["br7:SourceReference"]["br7:UniqueID"],
     DocumentType: xmlHearing["br7:SourceReference"]["br7:DocumentType"]
-  }
+  },
+  CourtType: xmlHearing["br7:CourtType"]["#text"],
+  CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
 const mapXmlToAho = (aho: AhoParsedXml): AnnotatedHearingOutcome => ({
@@ -62,7 +64,9 @@ const mapXmlToAho = (aho: AhoParsedXml): AnnotatedHearingOutcome => ({
 
 export default (xml: string): AnnotatedHearingOutcome => {
   const options = {
-    ignoreAttributes: false
+    ignoreAttributes: false,
+    parseTagValue: false,
+    parseAttributeValue: false
   }
 
   const parser = new XMLParser(options)

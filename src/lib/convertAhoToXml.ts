@@ -227,11 +227,13 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
   const options = {
     ignoreAttributes: false,
-    suppressEmptyNode: true
+    suppressEmptyNode: true,
+    processEntities: false
   }
 
   const builder = new XMLBuilder(options)
-  const xml = builder.build(mapAhoToXml(hearingOutcome))
+  const xmlAho = mapAhoToXml(hearingOutcome)
+  const xml = builder.build(xmlAho)
 
   return xml
 }
