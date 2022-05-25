@@ -1,27 +1,39 @@
 import matchCases from "src/lib/caseMatcher/caseMatcher"
 import matchMultipleCases from "src/lib/matchMultipleCases"
-import type { OffenceMatcherOutcome } from "src/lib/offenceMatcher/offenceMatcher"
-import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Case } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCase } from "src/types/PncQueryResult"
 import addError from "./addError"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
-
-const enrichOffencesFromMatcherOutcome = (hoOffences: Offence[], matcherOutcome: OffenceMatcherOutcome) => {
-  console.log(hoOffences, matcherOutcome)
-}
+import enrichOffencesFromMatcherOutcome from "./enrichOffencesFromMatcherOutcome"
 
 const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCase) => {
-  console.log(hoCase, pncCase)
+  const cprCourtCaseRef = pncCase.courtCaseReference
+  if (cprCourtCaseRef) {
+    hoCase.CourtCaseReferenceNumber = cprCourtCaseRef
+  }
 }
 
 const enrichCaseTypeFromPenaltyCase = (hoCase: Case, pncCase: PncCase) => {
-  console.log(hoCase, pncCase)
+  // TODO: This needs updating to actually use penalty cases once they are implemented
+  const cprCourtCaseRef = pncCase.courtCaseReference
+  if (cprCourtCaseRef) {
+    hoCase.CourtCaseReferenceNumber = cprCourtCaseRef
+  }
 }
 
 const enrichHearingDefendantFromPncResult = (aho: AnnotatedHearingOutcome) => {
-  console.log(aho)
+  const defendant = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  // Set HO PNCCheckname
+  defendant.PNCCheckname = aho.PncQuery?.checkName
+  // Set HO CRONumber if IDS.CRONumber is present
+  defendant.CRONumber = aho.PncQuery?.croNumber
+  // Set HO PNCIdentifier if IDS.PNCID is present
+  defendant.PNCIdentifier = aho.PncQuery?.pncId
 }
+
+const anyOffenceHasAmbiguousError = (aho: AnnotatedHearingOutcome): boolean =>
+  !!aho.Exceptions?.some((exception) => exception.code === ExceptionCode.HO100332)
 
 const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   if (!aho.PncQuery) {
@@ -55,7 +67,7 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
 
   if (outcome.courtCaseMatches.length === 1) {
     const { courtCase, offenceMatcherOutcome } = outcome.courtCaseMatches[0]
-    enrichOffencesFromMatcherOutcome(hoOffences, offenceMatcherOutcome)
+    enrichOffencesFromMatcherOutcome(aho, offenceMatcherOutcome)
     allPncOffencesMatched = offenceMatcherOutcome.allPncOffencesMatched
 
     if (allPncOffencesMatched) {
@@ -63,18 +75,24 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
     }
   }
 
-  if (outcome.courtCaseMatches.length === 0 && outcome.penaltyCaseMatches.length > 0) {
-    const { courtCase, offenceMatcherOutcome } = outcome.penaltyCaseMatches[0]
-    enrichOffencesFromMatcherOutcome(hoOffences, offenceMatcherOutcome)
-    allPncOffencesMatched = offenceMatcherOutcome.allPncOffencesMatched
+  if (outcome.courtCaseMatches.length === 0) {
+    if (outcome.penaltyCaseMatches.length > 0) {
+      const { courtCase, offenceMatcherOutcome } = outcome.penaltyCaseMatches[0]
+      enrichOffencesFromMatcherOutcome(aho, offenceMatcherOutcome)
+      allPncOffencesMatched = offenceMatcherOutcome.allPncOffencesMatched
 
-    if (allPncOffencesMatched) {
-      enrichCaseTypeFromPenaltyCase(aho.AnnotatedHearingOutcome.HearingOutcome.Case, courtCase)
+      if (allPncOffencesMatched) {
+        enrichCaseTypeFromPenaltyCase(aho.AnnotatedHearingOutcome.HearingOutcome.Case, courtCase)
+      }
+    } else {
+      enrichOffencesFromMatcherOutcome(aho)
     }
   }
 
   if (allPncOffencesMatched) {
     enrichHearingDefendantFromPncResult(aho)
+  } else if (!anyOffenceHasAmbiguousError(aho)) {
+    addError(aho, ExceptionCode.HO100304, ["path", "to", "asn"])
   }
 
   return aho

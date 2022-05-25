@@ -44,7 +44,7 @@ const matchCases = (hoOffences: Offence[], pncResponse: PncQueryResult): CaseMat
             attemptManualMatch: false
           })
           if (matchingOutcome2.pncOffencesMatchedIncludingDuplicates.length > 0) {
-            nonMatchingExplicitMatch = { courtCase, offenceMatcherOutcome: matchingOutcome2 }
+            nonMatchingExplicitMatch = { courtCase, offenceMatcherOutcome: matchingOutcome1 }
           }
         }
       }
