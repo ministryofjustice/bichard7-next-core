@@ -18,9 +18,9 @@ describe("convertAhoToXml", () => {
         }
       },
       PncQuery: {
-        forceStationCode: '01ZD',
-        checkName: 'SEXOFFENCE',
-        pncId: '2000/0448754K',
+        forceStationCode: "01ZD",
+        checkName: "SEXOFFENCE",
+        pncId: "2000/0448754K",
         cases: {}
       }
     } as AnnotatedHearingOutcome
