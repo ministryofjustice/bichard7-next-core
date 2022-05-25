@@ -21,7 +21,14 @@ if (filter) {
 }
 
 const stripXmlNamespaces = (xml: string): string => {
-  return xml.replace(/<\S*:/g, "<").replace(/<\/\S*:/g, "</")
+  ;["br7:", "ds:"].forEach((namespace) => {
+    const find = namespace
+    const regex = new RegExp(find, "g")
+
+    xml = xml.replace(regex, "")
+  })
+
+  return xml
 }
 
 const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
@@ -45,7 +52,7 @@ const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
     parsedExpected = result as AnnotatedHearingOutcome
   })
 
-  return parsedResult === parsedExpected
+  return parsedResult?.AnnotatedHearingOutcome.HearingOutcome === parsedExpected?.AnnotatedHearingOutcome.HearingOutcome
 }
 
 describe("Comparison testing", () => {
