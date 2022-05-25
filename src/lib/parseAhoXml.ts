@@ -1,29 +1,36 @@
 import { XMLParser } from "fast-xml-parser"
-import type { AhoParsedXml } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { AhoParsedXml, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
+import type { AnnotatedHearingOutcome, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
 
-const mapXmlToAho = (_: AhoParsedXml): AnnotatedHearingOutcome => ({
+const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
+  return xmlOffences.map((_) => ({} as Offence))
+}
+
+const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
+  CourtHearingLocation: {
+    TopLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:TopLevelCode"],
+    SecondLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:SecondLevelCode"],
+    ThirdLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:ThirdLevelCode"],
+    BottomLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:BottomLevelCode"],
+    OrganisationUnitCode: xmlHearing["ds:CourtHearingLocation"]["ds:OrganisationUnitCode"]
+  },
+  DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]),
+  TimeOfHearing: xmlHearing["ds:TimeOfHearing"],
+  HearingLanguage: xmlHearing["ds:HearingLanguage"]["#text"],
+  HearingDocumentationLanguage: xmlHearing["ds:HearingDocumentationLanguage"]["#text"],
+  DefendantPresentAtHearing: xmlHearing["ds:DefendantPresentAtHearing"]["#text"],
+  CourtHouseCode: xmlHearing["br7:CourtHouseCode"],
+  SourceReference: {
+    DocumentName: xmlHearing["br7:SourceReference"]["br7:DocumentName"],
+    UniqueID: xmlHearing["br7:SourceReference"]["br7:UniqueID"],
+    DocumentType: xmlHearing["br7:SourceReference"]["br7:DocumentType"]
+  }
+})
+
+const mapXmlToAho = (aho: AhoParsedXml): AnnotatedHearingOutcome => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
-      Hearing: {
-        CourtHearingLocation: {
-          SecondLevelCode: "",
-          ThirdLevelCode: "",
-          BottomLevelCode: "",
-          OrganisationUnitCode: ""
-        },
-        DateOfHearing: new Date(),
-        TimeOfHearing: "",
-        HearingLanguage: "",
-        HearingDocumentationLanguage: "",
-        DefendantPresentAtHearing: "",
-        CourtHouseCode: 0,
-        SourceReference: {
-          DocumentName: "",
-          UniqueID: "",
-          DocumentType: ""
-        }
-      },
+      Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
       Case: {
         PTIURN: "",
         PreChargeDecisionIndicator: true,
@@ -44,9 +51,9 @@ const mapXmlToAho = (_: AhoParsedXml): AnnotatedHearingOutcome => ({
           },
           RemandStatus: "",
           BailConditions: [""],
-          Offence: [
-            // TODO: Offence
-          ]
+          Offence: mapXmlOffencesToAho(
+            aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["br7:Offence"]
+          )
         }
       }
     }
@@ -55,8 +62,7 @@ const mapXmlToAho = (_: AhoParsedXml): AnnotatedHearingOutcome => ({
 
 export default (xml: string): AnnotatedHearingOutcome => {
   const options = {
-    ignoreAttributes: false,
-    removeNSPrefix: true
+    ignoreAttributes: false
   }
 
   const parser = new XMLParser(options)

@@ -1,43 +1,39 @@
 import { XMLBuilder } from "fast-xml-parser"
-import type { AhoParsedXml } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { AhoParsedXml, Br7Hearing } from "src/types/AhoParsedXml"
+import type { AnnotatedHearingOutcome, Hearing } from "src/types/AnnotatedHearingOutcome"
 
-/* 
+const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
+  "ds:CourtHearingLocation": {
+    "ds:TopLevelCode": hearing.CourtHearingLocation.TopLevelCode,
+    "ds:SecondLevelCode": hearing.CourtHearingLocation.SecondLevelCode,
+    "ds:ThirdLevelCode": hearing.CourtHearingLocation.ThirdLevelCode,
+    "ds:BottomLevelCode": hearing.CourtHearingLocation.BottomLevelCode,
+    "ds:OrganisationUnitCode": hearing.CourtHearingLocation.OrganisationUnitCode,
+    "@_SchemaVersion": "2.0"
+  },
+  "ds:DateOfHearing": hearing.DateOfHearing.toISOString(),
+  "ds:TimeOfHearing": hearing.TimeOfHearing,
+  "ds:HearingLanguage": { "#text": hearing.HearingLanguage, "@_Literal": "Don't Know" },
+  "ds:HearingDocumentationLanguage": { "#text": hearing.HearingDocumentationLanguage, "@_Literal": "Don't Know" },
+  "ds:DefendantPresentAtHearing": { "#text": hearing.DefendantPresentAtHearing, "@_Literal": "Yes" },
+  "br7:SourceReference": {
+    "br7:DocumentName": hearing.SourceReference.DocumentName,
+    "br7:UniqueID": hearing.SourceReference.UniqueID,
+    "br7:DocumentType": hearing.SourceReference.DocumentType
+  },
+  "br7:CourtType": { "#text": hearing.CourtType ?? "", "@_Literal": "MC adult" },
+  "br7:CourtHouseCode": hearing.CourtHouseCode,
+  "br7:CourtHouseName": hearing.CourtHouseName ?? "",
+  "@_hasError": "false",
+  "@_SchemaVersion": "4.0"
+})
 
-  Xml Aho from file -> JSON -> Types -> Easy street
-
-*/
-
-const mapAhoToXml = (_: AnnotatedHearingOutcome): AhoParsedXml => {
+const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
     "br7:AnnotatedHearingOutcome": {
       "br7:HearingOutcome": {
-        "br7:Hearing": {
-          "ds:CourtHearingLocation": {
-            "ds:TopLevelCode": "B",
-            "ds:SecondLevelCode": "4",
-            "ds:ThirdLevelCode": "KO",
-            "ds:BottomLevelCode": "0",
-            "ds:OrganisationUnitCode": "B04KO00",
-            "@_SchemaVersion": "2.0"
-          },
-          "ds:DateOfHearing": "2008-05-07",
-          "ds:TimeOfHearing": "15:01",
-          "ds:HearingLanguage": { "#text": "D", "@_Literal": "Don't Know" },
-          "ds:HearingDocumentationLanguage": { "#text": "D", "@_Literal": "Don't Know" },
-          "ds:DefendantPresentAtHearing": { "#text": "Y", "@_Literal": "Yes" },
-          "br7:SourceReference": {
-            "br7:DocumentName": "SPI NUALA MALLON",
-            "br7:UniqueID": "02-12-201014:35ID:414d51204252375f514d202020202020cf67174c013b0320",
-            "br7:DocumentType": "SPI Case Result"
-          },
-          "br7:CourtType": { "#text": "MCA", "@_Literal": "MC adult" },
-          "br7:CourtHouseCode": 2014,
-          "br7:CourtHouseName": "Magistrates' Courts Lancashire Preston",
-          "@_hasError": "false",
-          "@_SchemaVersion": "4.0"
-        },
+        "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing),
         "br7:Case": {
           "ds:PTIURN": "01KY0370016",
           "ds:PreChargeDecisionIndicator": { "#text": "N", "@_Literal": "No" },
