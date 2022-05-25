@@ -31,32 +31,29 @@ const stripXmlNamespaces = (xml: string): string => {
   return xml
 }
 
-const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
+const parseXML = (xml: string): AnnotatedHearingOutcome => {
   let parsedResult: AnnotatedHearingOutcome | undefined
-  parseString(resultXml, (err, result) => {
+  parseString(xml, (err, result) => {
     if (err) {
       console.error(err)
-      return false
+      return undefined
     }
 
-    parsedResult = result as AnnotatedHearingOutcome
+    parsedResult = result
   })
 
-  let parsedExpected: AnnotatedHearingOutcome | undefined
-  parseString(stripXmlNamespaces(expectedXml), (err, result) => {
-    if (err) {
-      console.error(err)
-      return false
-    }
-
-    parsedExpected = result as AnnotatedHearingOutcome
-  })
-
-  return parsedResult?.AnnotatedHearingOutcome.HearingOutcome === parsedExpected?.AnnotatedHearingOutcome.HearingOutcome
+  return parsedResult as AnnotatedHearingOutcome
 }
 
+// const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
+//   const result = parseXML(resultXml)
+//   const expected = parseXML(stripXmlNamespaces(expectedXml))
+
+//   return result === expected
+// }
+
 describe("Comparison testing", () => {
-  describe.each([tests])("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
+  describe.each(tests)("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
     try {
       const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
       const pncGateway = new MockPncGateway(response)
@@ -74,7 +71,13 @@ describe("Comparison testing", () => {
       })
 
       it("should match aho xml", () => {
-        expect(xmlEquals(coreResult.ahoXml, annotatedHearingOutcome)).toBe(true)
+        const result = parseXML(coreResult.ahoXml)
+        const expected = parseXML(stripXmlNamespaces(annotatedHearingOutcome))
+
+        expect(result.AnnotatedHearingOutcome.HearingOutcome).toStrictEqual(
+          expected.AnnotatedHearingOutcome.HearingOutcome
+        )
+        // expect(xmlEquals(coreResult.ahoXml, annotatedHearingOutcome)).toBe(true)
       })
     } catch (e) {
       it("should not error", () => {
