@@ -20,6 +20,10 @@ if (filter) {
   tests = tests.filter((t) => t.file.includes(filter))
 }
 
+const stripXmlNamespaces = (xml: string): string => {
+  return xml.replace(/<\S*:/g, "<").replace(/<\/\S*:/g, "</")
+}
+
 const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
   let parsedResult: AnnotatedHearingOutcome | undefined
   parseString(resultXml, (err, result) => {
@@ -32,7 +36,7 @@ const xmlEquals = (resultXml: string, expectedXml: string): boolean => {
   })
 
   let parsedExpected: AnnotatedHearingOutcome | undefined
-  parseString(expectedXml, (err, result) => {
+  parseString(stripXmlNamespaces(expectedXml), (err, result) => {
     if (err) {
       console.error(err)
       return false
@@ -63,7 +67,6 @@ describe("Comparison testing", () => {
       })
 
       it("should match aho xml", () => {
-        // TODO: Use regex to strip out namespaces for xml comparison
         expect(xmlEquals(coreResult.ahoXml, annotatedHearingOutcome)).toBe(true)
       })
     } catch (e) {
