@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser"
 import type { AhoParsedXml } from "src/types/AhoParsedXml"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 
-const mapXmlToAho = (xml: AhoParsedXml): AnnotatedHearingOutcome => ({
+const mapXmlToAho = (_: AhoParsedXml): AnnotatedHearingOutcome => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
       Hearing: {
@@ -60,7 +60,6 @@ export default (xml: string): AnnotatedHearingOutcome => {
   }
 
   const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(xml) as AhoParsedXml
-  return rawParsedObj as AhoParsedXml
-  // return incomingMessageParsedXmlSchema.parse(rawParsedObj)
+  const rawParsedObj = parser.parse(xml)
+  return mapXmlToAho(rawParsedObj)
 }

@@ -1,6 +1,6 @@
-export type AhoParsedXml = {
+export interface AhoParsedXml {
   "?xml": XML
-  AnnotatedHearingOutcome: AnnotatedHearingOutcome
+  "br7:AnnotatedHearingOutcome": Br7AnnotatedHearingOutcome
 }
 
 export interface XML {
@@ -9,11 +9,14 @@ export interface XML {
   "@_standalone": string
 }
 
-export interface AnnotatedHearingOutcome {
-  HearingOutcome: HearingOutcome
-  HasError: boolean
+export interface Br7AnnotatedHearingOutcome {
+  "br7:HearingOutcome": Br7HearingOutcome
+  "br7:HasError": boolean
   CXE01: Cxe01
-  PNCQueryDate: Date
+  "br7:PNCQueryDate": string
+  "@_xmlns:ds": string
+  "@_xmlns:xsi": string
+  "@_xmlns:br7": string
 }
 
 export interface Cxe01 {
@@ -38,10 +41,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: OffencesOffence[]
+  Offence: Offence[]
 }
 
-export interface OffencesOffence {
+export interface Offence {
   COF: Cof
   ADJ: Adj
   DISList: DISList
@@ -97,180 +100,172 @@ export interface IDS {
   "@_PNCID": string
 }
 
-export interface HearingOutcome {
-  Hearing: Hearing
-  Case: Case
+export interface Br7HearingOutcome {
+  "br7:Hearing": Br7Hearing
+  "br7:Case": Br7Case
 }
 
-export interface Case {
-  PTIURN: string
-  PreChargeDecisionIndicator: PreChargeDecisionIndicator
-  CourtReference: CourtReference
-  RecordableOnPNCindicator: PreChargeDecisionIndicator
-  ForceOwner: ForceOwner
-  HearingDefendant: HearingDefendant
+export interface Br7Case {
+  "ds:PTIURN": string
+  "ds:PreChargeDecisionIndicator": Br7RecordableOnPnCindicator
+  "br7:CourtReference": Br7CourtReference
+  "br7:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
+  "br7:ForceOwner": Ds
+  "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
-export interface CourtReference {
-  MagistratesCourtReference: string
+export interface Br7CourtReference {
+  "ds:MagistratesCourtReference": string
 }
 
-export interface ForceOwner {
-  SecondLevelCode: number
-  ThirdLevelCode: number
-  BottomLevelCode: number
-  OrganisationUnitCode: number
-  "@_SchemaVersion": string
-}
-
-export interface HearingDefendant {
-  ArrestSummonsNumber: ArrestSummonsNumber
-  DefendantDetail: DefendantDetail
-  Address: Address
-  RemandStatus: PreChargeDecisionIndicator
-  CourtPNCIdentifier: string
-  Offence: HearingDefendantOffence[]
+export interface Br7HearingDefendant {
+  "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber
+  "br7:DefendantDetail": Br7DefendantDetail
+  "br7:Address": Br7Address
+  "br7:RemandStatus": Br7RecordableOnPnCindicator
+  "br7:CourtPNCIdentifier": string
+  "br7:Offence": Br7Offence[]
   "@_hasError": string
 }
 
-export interface Address {
-  AddressLine1: string
-  AddressLine2: string
-  AddressLine3: string
+export interface Br7Address {
+  "ds:AddressLine1": string
+  "ds:AddressLine2": string
+  "ds:AddressLine3": string
 }
 
-export interface ArrestSummonsNumber {
+export interface Br7ArrestSummonsNumber {
   "#text": string
   "@_Error": string
 }
 
-export interface DefendantDetail {
-  PersonName: PersonName
-  GeneratedPNCFilename: string
-  BirthDate: Date
-  Gender: Gender
+export interface Br7DefendantDetail {
+  "br7:PersonName": Br7PersonName
+  "br7:GeneratedPNCFilename": string
+  "br7:BirthDate": string
+  "br7:Gender": Br7Gender
 }
 
-export interface Gender {
+export interface Br7Gender {
   "#text": number
   "@_Literal": string
 }
 
-export interface PersonName {
-  Title: string
-  GivenName: Name
-  FamilyName: Name
+export interface Br7PersonName {
+  "ds:Title": string
+  "ds:GivenName": DsName
+  "ds:FamilyName": DsName
 }
 
-export interface Name {
+export interface DsName {
   "#text": string
   "@_NameSequence": string
 }
 
-export interface HearingDefendantOffence {
-  CriminalProsecutionReference: CriminalProsecutionReference
-  OffenceCategory: PreChargeDecisionIndicator
-  ArrestDate: Date
-  ChargeDate: Date
-  ActualOffenceDateCode: Gender
-  ActualOffenceStartDate: ActualOffenceStartDate
-  ActualOffenceEndDate: ActualOffenceEndDate
-  LocationOfOffence: string
-  OffenceTitle: string
-  ActualOffenceWording: string
-  RecordableOnPNCindicator: PreChargeDecisionIndicator
-  NotifiableToHOindicator: PreChargeDecisionIndicator
-  HomeOfficeClassification: string
-  ConvictionDate: Date
-  CommittedOnBail: PreChargeDecisionIndicator
-  CourtOffenceSequenceNumber: number
-  AddedByTheCourt: PreChargeDecisionIndicator
-  Result: Result
+export interface Br7Offence {
+  "ds:CriminalProsecutionReference": DsCriminalProsecutionReference
+  "ds:OffenceCategory": Br7RecordableOnPnCindicator
+  "ds:ArrestDate": string
+  "ds:ChargeDate": string
+  "ds:ActualOffenceDateCode": Br7Gender
+  "ds:ActualOffenceStartDate": DsActualOffenceStartDate
+  "ds:ActualOffenceEndDate": DsActualOffenceEndDate
+  "ds:LocationOfOffence": string
+  "ds:OffenceTitle": string
+  "ds:ActualOffenceWording": string
+  "ds:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
+  "ds:NotifiableToHOindicator": Br7RecordableOnPnCindicator
+  "ds:HomeOfficeClassification": string
+  "ds:ConvictionDate": string
+  "br7:CommittedOnBail": Br7RecordableOnPnCindicator
+  "br7:CourtOffenceSequenceNumber": number
+  "br7:AddedByTheCourt": Br7RecordableOnPnCindicator
+  "br7:Result": Br7Result
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
-export interface ActualOffenceEndDate {
-  EndDate: Date
-}
-
-export interface ActualOffenceStartDate {
-  StartDate: Date
-}
-
-export interface PreChargeDecisionIndicator {
+export interface Br7RecordableOnPnCindicator {
   "#text": string
   "@_Literal": string
 }
 
-export interface CriminalProsecutionReference {
-  DefendantOrOffender: DefendantOrOffender
-  OffenceReason: OffenceReason
-  "@_SchemaVersion": string
-}
-
-export interface DefendantOrOffender {
-  Year: number
-  OrganisationUnitIdentifierCode: CourtHearingLocation
-  DefendantOrOffenderSequenceNumber: number
-  CheckDigit: string
-}
-
-export interface CourtHearingLocation {
-  SecondLevelCode: string
-  ThirdLevelCode: string
-  BottomLevelCode: string
-  OrganisationUnitCode: string
-  "@_SchemaVersion": string
-  TopLevelCode?: string
-}
-
-export interface OffenceReason {
-  OffenceCode: OffenceCode
-}
-
-export interface OffenceCode {
-  ActOrSource: string
-  Year: number
-  Reason: number
-}
-
-export interface Result {
-  CJSresultCode: number
-  SourceOrganisation: CourtHearingLocation
-  CourtType: string
-  ResultHearingType: PreChargeDecisionIndicator
-  ResultHearingDate: Date
-  PleaStatus: PreChargeDecisionIndicator
-  ModeOfTrialReason: PreChargeDecisionIndicator
-  ResultVariableText: string
-  ResultHalfLifeHours: number
-  PNCDisposalType: number
-  ResultClass: string
-  ConvictingCourt: number
+export interface Br7Result {
+  "ds:CJSresultCode": number
+  "ds:SourceOrganisation": Ds
+  "ds:CourtType": string
+  "ds:ResultHearingType": Br7RecordableOnPnCindicator
+  "ds:ResultHearingDate": string
+  "ds:PleaStatus": Br7RecordableOnPnCindicator
+  "ds:ModeOfTrialReason": Br7RecordableOnPnCindicator
+  "ds:ResultVariableText": string
+  "ds:ResultHalfLifeHours": number
+  "br7:PNCDisposalType": number
+  "br7:ResultClass": string
+  "br7:ConvictingCourt": number
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
-export interface Hearing {
-  CourtHearingLocation: CourtHearingLocation
-  DateOfHearing: Date
-  TimeOfHearing: string
-  HearingLanguage: PreChargeDecisionIndicator
-  HearingDocumentationLanguage: PreChargeDecisionIndicator
-  DefendantPresentAtHearing: PreChargeDecisionIndicator
-  SourceReference: SourceReference
-  CourtType: PreChargeDecisionIndicator
-  CourtHouseCode: number
-  CourtHouseName: string
+export interface Ds {
+  "ds:TopLevelCode"?: string
+  "ds:SecondLevelCode": string
+  "ds:ThirdLevelCode": string
+  "ds:BottomLevelCode": string
+  "ds:OrganisationUnitCode": string
+  "@_SchemaVersion": string
+}
+
+export interface DsActualOffenceEndDate {
+  "ds:EndDate": string
+}
+
+export interface DsActualOffenceStartDate {
+  "ds:StartDate": string
+}
+
+export interface DsCriminalProsecutionReference {
+  "ds:DefendantOrOffender": DsDefendantOrOffender
+  "ds:OffenceReason": DsOffenceReason
+  "@_SchemaVersion": string
+}
+
+export interface DsDefendantOrOffender {
+  "ds:Year": number
+  "ds:OrganisationUnitIdentifierCode": Ds
+  "ds:DefendantOrOffenderSequenceNumber": number
+  "ds:CheckDigit": string
+}
+
+export interface DsOffenceReason {
+  "ds:OffenceCode": DsOffenceCode
+}
+
+export interface DsOffenceCode {
+  "ds:ActOrSource": string
+  "ds:Year": number
+  "ds:Reason": number
+}
+
+export interface Br7Hearing {
+  "ds:CourtHearingLocation": Ds
+  "ds:DateOfHearing": string
+  "ds:TimeOfHearing": string
+  "ds:HearingLanguage": Br7RecordableOnPnCindicator
+  "ds:HearingDocumentationLanguage": Br7RecordableOnPnCindicator
+  "ds:DefendantPresentAtHearing": Br7RecordableOnPnCindicator
+  "br7:SourceReference": Br7SourceReference
+  "br7:CourtType": Br7RecordableOnPnCindicator
+  "br7:CourtHouseCode": number
+  "br7:CourtHouseName": string
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
-export interface SourceReference {
-  DocumentName: string
-  UniqueID: string
-  DocumentType: string
+export interface Br7SourceReference {
+  "br7:DocumentName": string
+  "br7:UniqueID": string
+  "br7:DocumentType": string
 }
