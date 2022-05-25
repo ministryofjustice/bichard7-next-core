@@ -165,7 +165,7 @@ it("should testResultsEqualListVariantTwoUnequalEntries()", () => {
   expect(result).toBe(false)
 })
 
-// br700002703 - RCD497 - Check that order of results is not significant - all results recordable
+// Check that order of results is not significant - all results recordable
 it("should testResultsEqualListVariantTwoEntriesWithIdenticalResultsInDifferentOrder()", () => {
   const input = [
     createOffenceWithResults([
@@ -181,7 +181,7 @@ it("should testResultsEqualListVariantTwoEntriesWithIdenticalResultsInDifferentO
   expect(result).toBe(true)
 })
 
-// br700002703 - RCD497 - Check that non-recordable results are ignored during matching
+// Check that non-recordable results are ignored during matching
 it("should testResultsEqualListVariantTwoEntriesMatchWhenNonRecordableResultsAreDiscounted1()", () => {
   const input = [
     createOffenceWithResults([
@@ -194,7 +194,7 @@ it("should testResultsEqualListVariantTwoEntriesMatchWhenNonRecordableResultsAre
   expect(result).toBe(true)
 })
 
-// br700002703 - RCD497 - Check that non-recordable results are ignored during matching
+// Check that non-recordable results are ignored during matching
 it("should testResultsEqualListVariantTwoEntriesMatchWhenNonRecordableResultsAreDiscounted2()", () => {
   const input = [
     createOffenceWithResults([{ CJSresultCode: 4562, ResultHearingDate: new Date("2010-10-10") }]),
@@ -207,8 +207,7 @@ it("should testResultsEqualListVariantTwoEntriesMatchWhenNonRecordableResultsAre
   expect(result).toBe(true)
 })
 
-// br700002703 - RCD497 - Check that non-recordable results are ignored during matching (all
-// results non-recordable)
+// Check that non-recordable results are ignored during matching (all results non-recordable)
 it("should testResultsEqualListVariantTwoEntriesMatchWhenNonRecordableResultsAreDiscounted3()", () => {
   const input = [
     createOffenceWithResults([{ CJSresultCode: 1000, ResultHearingDate: new Date("2010-10-10") }]),

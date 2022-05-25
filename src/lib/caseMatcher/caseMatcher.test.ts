@@ -44,8 +44,7 @@ describe("caseMatcher", () => {
     const pncCase = createPNCCourtCase("09/11FG/568235X", [pncOffence])
     const pncMessage = createPNCMessage([pncCase])
     const outcome = matchCases(hoOffences, pncMessage)
-    // br700002933 - RCD 671 - No longer any matches as manual matches do not match any offences in
-    // either the CCR or PCR.
+
     expect(outcome.courtCaseMatches).toHaveLength(0)
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })
@@ -63,9 +62,7 @@ describe("caseMatcher", () => {
     ]
     const pncMessage = createPNCMessage(pncCases)
     const outcome = matchCases(hoOffences, pncMessage)
-    // br700002724 Note that matches against 2 CCR groups now found as automatic matching still
-    // attempted even
-    // if a non-matching explicit match is detected.
+
     expect(outcome.courtCaseMatches).toHaveLength(2)
     expect(outcome.courtCaseMatches[0].courtCase).toStrictEqual(pncCases[0])
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
@@ -85,9 +82,6 @@ describe("caseMatcher", () => {
     const pncMessage = createPNCMessage(pncCases)
     const outcome = matchCases(hoOffences, pncMessage)
 
-    // br700002663: A case with no actual offence matches and where all offences have final results
-    // is no longer regarded
-    // as a match, therefore courtCaseMatches map should be empty (i.e. size = 0)
     expect(outcome.courtCaseMatches).toHaveLength(0)
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })
@@ -136,8 +130,7 @@ describe("caseMatcher", () => {
     ]
     const pncMessage = createPNCMessage(pncCases)
     const outcome = matchCases(hoOffences, pncMessage)
-    // br700002933 - RCD 671 - No longer any matches as manual matches do not match any offences in
-    // either the CCR or PCR.
+
     expect(outcome.courtCaseMatches).toHaveLength(0)
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })
@@ -164,9 +157,7 @@ describe("caseMatcher", () => {
     ]
     const pncMessage = createPNCMessage(pncCases)
     const outcome = matchCases(hoOffences, pncMessage)
-    // br700002724 Note that matches against 2 CCR groups now found as automatic matching still
-    // attempted even
-    // if a non-matching explicit match is detected.
+
     expect(outcome.courtCaseMatches).toHaveLength(2)
     expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[0])
     expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[1])
@@ -218,8 +209,7 @@ describe("caseMatcher", () => {
     ]
 
     const outcome = matchCases(hoOffences, createPNCMessage(cases))
-    // br700002933 - RCD 671 - No longer any matches as manual matches do not match any offences in
-    // either the CCR or PCR.
+
     expect(outcome.courtCaseMatches).toHaveLength(0)
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })

@@ -1,5 +1,5 @@
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import { lookupOffenceCodeByCjsCode } from "src/use-cases/dataLookup"
+import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
 import isOffenceIgnored from "src/use-cases/isOffenceIgnored"
 import getOffenceCode from "src/utils/offence/getOffenceCode"
 
@@ -9,9 +9,9 @@ const enrichOffence = (offence: Offence): Offence => {
     return offence
   }
 
-  const offenceCode = getOffenceCode(reason)
+  const offenceCode = getOffenceCode(offence)
   const offenceIgnored = isOffenceIgnored(offence)
-  const offenceCodeLookup = lookupOffenceCodeByCjsCode(offenceCode)
+  const offenceCodeLookup = offenceCode ? lookupOffenceByCjsCode(offenceCode) : undefined
 
   if (offenceIgnored) {
     offence.OffenceCategory = "B7"

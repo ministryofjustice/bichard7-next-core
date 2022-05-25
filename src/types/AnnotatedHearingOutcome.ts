@@ -254,7 +254,10 @@ const offenceSchema = z.object({
   OffenceTime: z.string().optional(),
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string().refine(validateYesNo),
+  CourtCaseReferenceNumber: z.string().optional(),
+  ManualCourtCaseReferenceNumber: z.string().optional(),
   CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
+  ManualSequenceNumber: z.number().optional(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
   NotifiableToHOindicator: z.boolean().optional(),
@@ -263,7 +266,7 @@ const offenceSchema = z.object({
     .regex(/^([0-9]{3})\/([0-9]{2})$/, ExceptionCode.HO100236)
     .optional(),
   ResultHalfLifeHours: z.number().min(1).max(999).optional(),
-  AddedByTheCourt: z.string().optional()
+  AddedByTheCourt: z.boolean().optional()
 })
 
 const asnSchema = z.string().refine(validateASN, ExceptionCode.HO100206)

@@ -353,9 +353,7 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: HO offence start and end dates, and PNC start date, are all equal - this is a
-  // match.
-
+  // HO offence start and end dates, and PNC start date, are all equal - this is a match.
   it("testDatesMatchApproximatelySameHOStartAndHOEndAndPNCStart", () => {
     const hoStart = "2011-04-17"
     const hoEnd = "2011-04-17"
@@ -366,10 +364,8 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: PNC offence start date is earlier than HO offence start and end dates - no match,
-  // despite
-  // HO offence start and end dates being equal
-
+  // PNC offence start date is earlier than HO offence start and end dates - no match,
+  // despite HO offence start and end dates being equal
   it("testDatesMatchApproximatelyPNCStartEarlierThanHOStartAndHOEnd", () => {
     const hoStart = "2011-04-17"
     const hoEnd = "2011-04-17"
@@ -380,10 +376,8 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: PNC offence start date is later than HO offence start and end dates - no match,
-  // despite
-  // HO offence start and end dates being equal
-
+  // PNC offence start date is later than HO offence start and end dates - no match,
+  // despite HO offence start and end dates being equal
   it("testDatesMatchApproximatelyPNCStartLaterThanHOStartAndHOEnd", () => {
     const hoStart = "2011-04-17"
     const hoEnd = "2011-04-17"
@@ -394,10 +388,8 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: HO offence start date is earlier than PNC offence start date and HO offence end
-  // date - no match, despite
-  // PNC offence start date and HO offence end date being equal
-
+  // HO offence start date is earlier than PNC offence start date and HO offence end
+  // date - no match, despite PNC offence start date and HO offence end date being equal
   it("testDatesMatchApproximatelyHOStartEarlierThanPNCStartAndHOEnd", () => {
     const hoStart = "2010-03-16"
     const hoEnd = "2011-04-17"
@@ -408,10 +400,8 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: HO offence start date is later than PNC offence start date and HO offence end date
-  // - no match, despite
-  // PNC offence start date and HO offence end date being equal
-
+  // HO offence start date is later than PNC offence start date and HO offence end date
+  // - no match, despite PNC offence start date and HO offence end date being equal
   it("testDatesMatchApproximatelyHOStartLaterThanPNCStartAndHOEnd", () => {
     const hoStart = "2012-05-18"
     const hoEnd = "2011-04-17"
@@ -422,10 +412,8 @@ describe("datesMatchApproximately()", () => {
     expect(actualResult).toBe(expectedResult)
   })
 
-  // br700002661: HO offence end date is earlier than PNC offence start date and HO offence start
-  // date - no match, despite
-  // PNC offence start date and HO offence start date being equal
-
+  // HO offence end date is earlier than PNC offence start date and HO offence start
+  // date - no match, despite PNC offence start date and HO offence start date being equal
   it("testDatesMatchApproximatelyHOEndEarlierThanPNCStartAndHOStart", () => {
     const hoStart = "2011-04-17"
     const hoEnd = "2010-03-16"

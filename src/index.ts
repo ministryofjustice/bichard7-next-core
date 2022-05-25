@@ -1,10 +1,10 @@
-import type BichardResultType from "src/types/BichardResultType"
-import type PncGateway from "src/types/PncGateway"
-import enrichHearingOutcome from "src/use-cases/enrichHearingOutcome"
-import generateExceptions from "src/use-cases/generateExceptions"
-import generateTriggers from "src/use-cases/generateTriggers"
-import parseSpiResult from "src/use-cases/parseSpiResult"
-import transformSpiToAho from "src/use-cases/transformSpiToAho"
+import type BichardResultType from "./types/BichardResultType"
+import type PncGateway from "./types/PncGateway"
+import enrichHearingOutcome from "./use-cases/enrichHearingOutcome"
+import generateExceptions from "./use-cases/generateExceptions"
+import generateTriggers from "./use-cases/generateTriggers"
+import parseSpiResult from "./use-cases/parseSpiResult"
+import transformSpiToAho from "./use-cases/transformSpiToAho"
 
 export default (message: string, pncGateway: PncGateway): BichardResultType => {
   const spiResult = parseSpiResult(message)

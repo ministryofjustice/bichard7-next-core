@@ -319,8 +319,7 @@ describe("Offence Matcher", () => {
     const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
     expect(outcome.duplicateHoOffences).toHaveLength(0)
-    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
-    // dates into account.
+    // Expect the offence to be in the list which were matched without taking dates into account.
     expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.matchedOffences).toHaveLength(1)
   })
@@ -363,8 +362,7 @@ describe("Offence Matcher", () => {
     const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
     expect(outcome.duplicateHoOffences).toHaveLength(0)
-    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
-    // dates into account.
+    // Expect the offence to be in the list which were matched without taking dates into account.
     expect(outcome.allPncOffencesMatched).toBe(true)
     expect(outcome.matchedOffences).toHaveLength(1)
   })
@@ -387,8 +385,7 @@ describe("Offence Matcher", () => {
 
     expect(outcome.allPncOffencesMatched).toBe(false)
     expect(outcome.duplicateHoOffences).toHaveLength(0)
-    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
-    // dates into account.
+    // Expect the offence to be in the list which were matched without taking dates into account.
     expect(outcome.matchedOffences).toHaveLength(1)
   })
 
@@ -414,9 +411,7 @@ describe("Offence Matcher", () => {
     const outcome = matchOffences(hoOffences, pncOffences, { attemptManualMatch: true })
 
     expect(outcome.duplicateHoOffences).toHaveLength(0)
-
-    // br700004675 - RCD 470 Expect the offence to be in the list which were matched without taking
-    // dates into account.
+    // Expect the offence to be in the list which were matched without taking dates into account.
     expect(outcome.matchedOffences).toHaveLength(2)
     expect(outcome.allPncOffencesMatched).toBe(true)
   })

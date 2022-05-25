@@ -9,8 +9,11 @@ import {
 } from "src/lib/properties"
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import { lookupAlcoholLevelMethodBySpiCode, lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
-import { lookupQualifierCodeByCjsCode } from "src/use-cases/dataLookup/dataLookup"
+import {
+  lookupAlcoholLevelMethodBySpiCode,
+  lookupOffenceByCjsCode,
+  lookupQualifierCodeByCjsCode
+} from "src/use-cases/dataLookup"
 import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
