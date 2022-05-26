@@ -83,36 +83,40 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
 }
 
 const mapAhoCaseToXml = (c: Case): Br7Case => ({
-  "ds:PTIURN": "01KY0370016",
-  "ds:PreChargeDecisionIndicator": { "#text": "N", "@_Literal": "No" },
-  "br7:CourtReference": { "ds:MagistratesCourtReference": "01KY0370016" },
-  "br7:RecordableOnPNCindicator": { "#text": "Y", "@_Literal": "Yes" },
+  "ds:PTIURN": c.PTIURN,
+  "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
+  "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
+  "br7:RecordableOnPNCindicator": { "#text": c.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
   "br7:ForceOwner": {
-    "ds:SecondLevelCode": "1",
-    "ds:ThirdLevelCode": "0",
-    "ds:BottomLevelCode": "0",
-    "ds:OrganisationUnitCode": "10000",
+    "ds:TopLevelCode": c.ForceOwner?.TopLevelCode,
+    "ds:SecondLevelCode": c.ForceOwner?.SecondLevelCode ?? "",
+    "ds:ThirdLevelCode": c.ForceOwner?.ThirdLevelCode ?? "",
+    "ds:BottomLevelCode": c.ForceOwner?.BottomLevelCode ?? "",
+    "ds:OrganisationUnitCode": c.ForceOwner?.OrganisationUnitCode ?? "",
     "@_SchemaVersion": "2.0"
   },
   "br7:HearingDefendant": {
-    "br7:ArrestSummonsNumber": { "#text": "0873B71200000012001C", "@_Error": "HO100304" },
+    "br7:ArrestSummonsNumber": { "#text": c.HearingDefendant.ArrestSummonsNumber, "@_Error": "HO100304" },
     "br7:DefendantDetail": {
       "br7:PersonName": {
-        "ds:Title": "Mr",
-        "ds:GivenName": { "#text": "NUALA", "@_NameSequence": "1" },
-        "ds:FamilyName": { "#text": "MALLON", "@_NameSequence": "1" }
+        "ds:Title": c.HearingDefendant.DefendantDetail.PersonName.Title ?? "",
+        "ds:GivenName": {
+          "#text": c.HearingDefendant.DefendantDetail.PersonName.GivenName.join(" "),
+          "@_NameSequence": "1"
+        },
+        "ds:FamilyName": { "#text": c.HearingDefendant.DefendantDetail.PersonName.FamilyName, "@_NameSequence": "1" }
       },
-      "br7:GeneratedPNCFilename": "MALLON/NUALA",
-      "br7:BirthDate": "1998-08-06",
-      "br7:Gender": { "#text": 1, "@_Literal": "male" }
+      "br7:GeneratedPNCFilename": c.HearingDefendant.DefendantDetail.GeneratedPNCFilename ?? "",
+      "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate?.toISOString() ?? "",
+      "br7:Gender": { "#text": Number(c.HearingDefendant.DefendantDetail.Gender), "@_Literal": "male" }
     },
     "br7:Address": {
-      "ds:AddressLine1": "person addline1",
-      "ds:AddressLine2": "person addline2",
-      "ds:AddressLine3": "person addline3"
+      "ds:AddressLine1": c.HearingDefendant.Address.AddressLine1,
+      "ds:AddressLine2": c.HearingDefendant.Address.AddressLine2 ?? "",
+      "ds:AddressLine3": c.HearingDefendant.Address.AddressLine3 ?? ""
     },
-    "br7:RemandStatus": { "#text": "UB", "@_Literal": "Unconditional Bail" },
-    "br7:CourtPNCIdentifier": "2001/0000837Z",
+    "br7:RemandStatus": { "#text": c.HearingDefendant.RemandStatus, "@_Literal": "Unconditional Bail" },
+    "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier ?? "",
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence),
     "@_hasError": "true"
   },

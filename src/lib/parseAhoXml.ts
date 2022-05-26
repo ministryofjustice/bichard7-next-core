@@ -56,7 +56,8 @@ const mapXmlCaseToAho = (xmlCase: Br7Case) => ({
     ArrestSummonsNumber: "",
     DefendantDetail: {
       PersonName: {
-        GivenName: [],
+        GivenName:
+          xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]["#text"].split(" "),
         FamilyName: ""
       },
       Gender: ""
