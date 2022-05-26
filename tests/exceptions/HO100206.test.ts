@@ -12,7 +12,7 @@ describe("HO100206", () => {
   it("should be raised if the ASN is in an incorrect format", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
-      ASN: "ABCDEFGHXXXXXX",
+      ASN: "ABCDEFG1234567Q",
       offences: [{ results: [{}] }]
     })
 

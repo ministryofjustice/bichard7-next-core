@@ -39,9 +39,7 @@ Object {
           "Offence": Array [
             Object {
               "ActualOffenceDateCode": "1",
-              "ActualOffenceEndDate": Object {
-                "EndDate": undefined,
-              },
+              "ActualOffenceEndDate": undefined,
               "ActualOffenceStartDate": Object {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
@@ -89,9 +87,7 @@ Object {
             },
             Object {
               "ActualOffenceDateCode": "1",
-              "ActualOffenceEndDate": Object {
-                "EndDate": undefined,
-              },
+              "ActualOffenceEndDate": undefined,
               "ActualOffenceStartDate": Object {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
@@ -138,9 +134,7 @@ Object {
             },
             Object {
               "ActualOffenceDateCode": "1",
-              "ActualOffenceEndDate": Object {
-                "EndDate": undefined,
-              },
+              "ActualOffenceEndDate": undefined,
               "ActualOffenceStartDate": Object {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },

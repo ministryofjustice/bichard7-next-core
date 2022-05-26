@@ -9,12 +9,12 @@ import {
 } from "src/lib/properties"
 import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import removeSeconds from "src/utils/removeSeconds"
 import {
   lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceCodeByCjsCode,
+  lookupOffenceByCjsCode,
   lookupQualifierCodeByCjsCode
 } from "src/use-cases/dataLookup"
+import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
 export interface OffencesResult {
@@ -98,9 +98,7 @@ export default class {
     offence.ActualOffenceStartDate = {
       StartDate: new Date(spiOffenceStart.OffenceDateStartDate)
     }
-    offence.ActualOffenceEndDate = {
-      EndDate: spiOffenceEnd ? new Date(spiOffenceEnd.OffenceEndDate) : undefined
-    }
+    offence.ActualOffenceEndDate = spiOffenceEnd ? { EndDate: new Date(spiOffenceEnd.OffenceEndDate) } : undefined
     offence.LocationOfOffence = spiLocationOfOffence
     offence.ActualOffenceWording = spiOffenceWording
 
@@ -161,7 +159,7 @@ export default class {
       })
     }
 
-    const offenceCode = lookupOffenceCodeByCjsCode(spiOffenceCode)
+    const offenceCode = lookupOffenceByCjsCode(spiOffenceCode)
     if (offenceCode) {
       offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc
     }

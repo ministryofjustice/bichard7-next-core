@@ -28,14 +28,14 @@ export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml>
       0,
       12
     )
-  const prosecutorRef = spiCase.Defendant.ProsecutorReference.slice(-7)
+  const prosecutorRef = spiCase.Defendant.ProsecutorReference.slice(-8)
   const result: PncQueryResult = {
     forceStationCode: spiCase.PTIURN.substring(0, 3),
     checkName,
     pncId: `2000/${prosecutorRef}`,
     cases: [
       {
-        courtCaseReference: spiCase.PTIURN,
+        courtCaseReference: "12/3456/789012Q",
         offences: spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PncOffence => {
           const dates = extractDates(offence)
           return {

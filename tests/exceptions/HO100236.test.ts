@@ -1,13 +1,13 @@
 jest.setTimeout(30000)
 
+import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
 import generateMessage from "tests/helpers/generateMessage"
 import PostgresHelper from "tests/helpers/PostgresHelper"
 import processMessage from "tests/helpers/processMessage"
-import { lookupOffenceCodeByCjsCode } from "src/use-cases/dataLookup"
 
 jest.mock("../../src/use-cases/dataLookup", () => ({
   ...jest.requireActual("../../src/use-cases/dataLookup"),
-  lookupOffenceCodeByCjsCode: jest.fn()
+  lookupOffenceByCjsCode: jest.fn()
 }))
 
 describe("HO100233", () => {
@@ -20,7 +20,7 @@ describe("HO100233", () => {
   })
 
   it.ifNewBichard("should not throw an exception for a valid home Office Classification", async () => {
-    ;(lookupOffenceCodeByCjsCode as jest.MockedFunction<typeof lookupOffenceCodeByCjsCode>).mockReturnValue({
+    ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "Application to reopen case",
@@ -40,11 +40,11 @@ describe("HO100233", () => {
     })
 
     expect(exceptions).toHaveLength(0)
-    expect(lookupOffenceCodeByCjsCode).toHaveBeenCalledTimes(2)
+    expect(lookupOffenceByCjsCode).toHaveBeenCalled()
   })
 
   it.ifNewBichard("should create an exception if the home office classifcation is an empty string", async () => {
-    ;(lookupOffenceCodeByCjsCode as jest.MockedFunction<typeof lookupOffenceCodeByCjsCode>).mockReturnValue({
+    ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "valid",
@@ -85,18 +85,16 @@ describe("HO100233", () => {
   it.ifNewBichard(
     "should create an exception if the home office classification doesn't match the specified regex",
     async () => {
-      ;(lookupOffenceCodeByCjsCode as jest.MockedFunction<typeof lookupOffenceCodeByCjsCode>).mockImplementation(
-        () => ({
-          cjsCode: "MC8080524",
-          offenceCategory: "CB",
-          offenceTitle: "valid",
-          recordableOnPnc: false,
-          description: "blah",
-          homeOfficeClassification: "467/123",
-          notifiableToHo: true,
-          resultHalfLifeHours: null
-        })
-      )
+      ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockImplementation(() => ({
+        cjsCode: "MC8080524",
+        offenceCategory: "CB",
+        offenceTitle: "valid",
+        recordableOnPnc: false,
+        description: "blah",
+        homeOfficeClassification: "467/123",
+        notifiableToHo: true,
+        resultHalfLifeHours: null
+      }))
       // Generate a mock message
       const inputMessage = generateMessage({
         offences: [{ results: [{ code: 1015 }] }]
