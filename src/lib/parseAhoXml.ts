@@ -1,10 +1,34 @@
 import { XMLParser } from "fast-xml-parser"
-import type { AhoParsedXml, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
+import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
 import type { AnnotatedHearingOutcome, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   return xmlOffences.map((_) => ({} as Offence))
 }
+
+const mapXmlCaseToAho = (xmlCase: Br7Case) => ({
+  PTIURN: "",
+  PreChargeDecisionIndicator: true,
+  CourtReference: {
+    MagistratesCourtReference: ""
+  },
+  HearingDefendant: {
+    ArrestSummonsNumber: "",
+    DefendantDetail: {
+      PersonName: {
+        GivenName: [],
+        FamilyName: ""
+      },
+      Gender: ""
+    },
+    Address: {
+      AddressLine1: ""
+    },
+    RemandStatus: "",
+    BailConditions: [""],
+    Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
+  }
+})
 
 const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHearingLocation: {
@@ -33,31 +57,7 @@ const mapXmlToAho = (aho: AhoParsedXml): AnnotatedHearingOutcome => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
       Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
-      Case: {
-        PTIURN: "",
-        PreChargeDecisionIndicator: true,
-        CourtReference: {
-          MagistratesCourtReference: ""
-        },
-        HearingDefendant: {
-          ArrestSummonsNumber: "",
-          DefendantDetail: {
-            PersonName: {
-              GivenName: [],
-              FamilyName: ""
-            },
-            Gender: ""
-          },
-          Address: {
-            AddressLine1: ""
-          },
-          RemandStatus: "",
-          BailConditions: [""],
-          Offence: mapXmlOffencesToAho(
-            aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["br7:Offence"]
-          )
-        }
-      }
+      Case: mapXmlCaseToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"])
     }
   }
 })
