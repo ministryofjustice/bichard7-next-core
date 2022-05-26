@@ -96,7 +96,9 @@ const matchOffences = (
 
   if (caseReference) {
     filteredHoOffences = hoOffences.filter(
-      (hoOffence) => hoOffence.CourtCaseReferenceNumber && hoOffence.CourtCaseReferenceNumber === caseReference
+      (hoOffence) =>
+        !hoOffence.CourtCaseReferenceNumber ||
+        (hoOffence.CourtCaseReferenceNumber && hoOffence.CourtCaseReferenceNumber === caseReference)
     )
   }
 
