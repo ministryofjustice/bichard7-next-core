@@ -62,9 +62,11 @@ const extractDates = (offence: AhoPncOffence): OffenceDates => {
   const dates: OffenceDates = {
     startDate
   }
-  const endDate = parsePncDate(offence.COF["@_OffEndDate"])
-  if (endDate) {
-    dates.endDate = endDate
+  if (offence.COF["@_OffEndDate"] && offence.COF["@_OffEndDate"] !== "") {
+    const endDate = parsePncDate(offence.COF["@_OffEndDate"])
+    if (endDate) {
+      dates.endDate = endDate
+    }
   }
 
   return dates

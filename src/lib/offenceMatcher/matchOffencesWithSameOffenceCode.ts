@@ -4,8 +4,7 @@ import datesMatchApproximately from "./datesMatchApproximately"
 import matchOffencesWithSameOffenceCodeAndStartDate from "./matchOffencesWithSameOffenceCodeAndStartDate"
 import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
 import type { OffenceMatcherOutcome } from "./offenceMatcher"
-import { hoOffenceAlreadyMatched } from "./offenceMatcher"
-import { pncOffenceAlreadyMatched } from "./offenceMatcher"
+import { hoOffenceAlreadyMatched, pncOffenceAlreadyMatched } from "./offenceMatcher"
 import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 const getHoOffencesByStartDate = (hoOffences: Offence[]) =>
@@ -98,6 +97,7 @@ const matchOffencesWithSameOffenceCode = (
     }
 
     result.matchedOffences.push({ hoOffence: matchingHoOffences[0], pncOffence })
+    result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
   })
 
   return result
