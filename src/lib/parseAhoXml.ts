@@ -3,7 +3,47 @@ import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence } from "src/types/Ah
 import type { AnnotatedHearingOutcome, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
-  return xmlOffences.map((_) => ({} as Offence))
+  return xmlOffences.map(
+    (xmlOffence) =>
+      ({
+        CriminalProsecutionReference: {},
+        OffenceCategory: xmlOffence["ds:OffenceCategory"]["#text"],
+        // OffenceInitiationCode: xmlOffence.
+        OffenceTitle: xmlOffence["ds:OffenceTitle"],
+        // SummonsCode: xmlOffence.Sum
+        // Informant: xmlOffence.inform
+        ArrestDate: new Date(xmlOffence["ds:ArrestDate"]),
+        ChargeDate: new Date(xmlOffence["ds:ChargeDate"]),
+        ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
+        ActualOffenceStartDate: {
+          StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"])
+        },
+        ActualOffenceEndDate: xmlOffence["ds:ActualOffenceEndDate"],
+        LocationOfOffence: xmlOffence["ds:LocationOfOffence"],
+        // OffenceWelshTitle: xmlOffence
+        ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"],
+        // ActualWelshOffenceWording: xmlOffence.
+        // ActualIndictmentWording: xmlOffence.actu
+        // ActualWelshIndictmentWording: xmlOffence.Actr
+        // ActualStatementOfFacts: xmlOffence.actual
+        // ActualWelshStatementOfFacts:
+        // AlcoholLevel: alcoholLevelSchema.optional(),
+        // VehicleCode:
+        // VehicleRegistrationMark:
+        // StartTime:
+        // OffenceEndTime: xmlOffence.
+        // OffenceTime: xmlOffence.Offence
+        ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"]),
+        CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
+        CourtOffenceSequenceNumber: xmlOffence["br7:CourtOffenceSequenceNumber"],
+        Result: [],
+        RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
+        // NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"],
+        HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"],
+        // ResultHalfLifeHours: xmlOffence.Res
+        AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]["#text"]
+      } as Offence)
+  )
 }
 
 const mapXmlCaseToAho = (xmlCase: Br7Case) => ({

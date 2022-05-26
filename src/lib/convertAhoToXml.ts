@@ -1,6 +1,7 @@
 import { XMLBuilder } from "fast-xml-parser"
-import type { AhoParsedXml, Br7Case, Br7Hearing } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome, Case, Hearing } from "src/types/AnnotatedHearingOutcome"
+import { off } from "process"
+import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
+import type { AnnotatedHearingOutcome, Case, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
 
 const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:PTIURN": "01KY0370016",
@@ -33,70 +34,11 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
     },
     "br7:RemandStatus": { "#text": "UB", "@_Literal": "Unconditional Bail" },
     "br7:CourtPNCIdentifier": "2001/0000837Z",
-    "br7:Offence": [
-      {
-        "ds:CriminalProsecutionReference": {
-          "ds:DefendantOrOffender": {
-            "ds:Year": 8,
-            "ds:OrganisationUnitIdentifierCode": {
-              "ds:SecondLevelCode": "73",
-              "ds:ThirdLevelCode": "B7",
-              "ds:BottomLevelCode": "12",
-              "ds:OrganisationUnitCode": "73B712",
-              "@_SchemaVersion": "2.0"
-            },
-            "ds:DefendantOrOffenderSequenceNumber": 12001,
-            "ds:CheckDigit": "C"
-          },
-          "ds:OffenceReason": { "ds:OffenceCode": { "ds:ActOrSource": "TH", "ds:Year": 68, "ds:Reason": 59 } },
-          "@_SchemaVersion": "2.0"
-        },
-        "ds:OffenceCategory": { "#text": "CE", "@_Literal": "Either Way" },
-        "ds:ArrestDate": "2008-04-06",
-        "ds:ChargeDate": "2008-04-09",
-        "ds:ActualOffenceDateCode": { "#text": 4, "@_Literal": "between" },
-        "ds:ActualOffenceStartDate": { "ds:StartDate": "2002-04-12" },
-        "ds:ActualOffenceEndDate": { "ds:EndDate": "2002-04-12" },
-        "ds:LocationOfOffence": "offence 1 location",
-        "ds:OffenceTitle": "Obtain property by deception",
-        "ds:ActualOffenceWording": "long text talking about offence 1",
-        "ds:RecordableOnPNCindicator": { "#text": "Y", "@_Literal": "Yes" },
-        "ds:NotifiableToHOindicator": { "#text": "Y", "@_Literal": "Yes" },
-        "ds:HomeOfficeClassification": "053/01",
-        "ds:ConvictionDate": "2008-05-02",
-        "br7:CommittedOnBail": { "#text": "D", "@_Literal": "Don't Know" },
-        "br7:CourtOffenceSequenceNumber": 1,
-        "br7:AddedByTheCourt": { "#text": "Y", "@_Literal": "Yes" },
-        "br7:Result": {
-          "ds:CJSresultCode": 1044,
-          "ds:SourceOrganisation": {
-            "ds:TopLevelCode": "B",
-            "ds:SecondLevelCode": "4",
-            "ds:ThirdLevelCode": "KO",
-            "ds:BottomLevelCode": "0",
-            "ds:OrganisationUnitCode": "B04KO00",
-            "@_SchemaVersion": "2.0"
-          },
-          "ds:CourtType": "MCA",
-          "ds:ResultHearingType": { "#text": "OTHER", "@_Literal": "Other" },
-          "ds:ResultHearingDate": "2008-05-02",
-          "ds:PleaStatus": { "#text": "NG", "@_Literal": "Not Guilty" },
-          "ds:ModeOfTrialReason": { "#text": "NOMOT", "@_Literal": "No Mode of Trial" },
-          "ds:ResultVariableText": "result text for result code 1044",
-          "ds:ResultHalfLifeHours": 72,
-          "br7:PNCDisposalType": 1044,
-          "br7:ResultClass": "Sentence",
-          "br7:ConvictingCourt": 1375,
-          "@_hasError": "false",
-          "@_SchemaVersion": "2.0"
-        },
-        "@_hasError": "false",
-        "@_SchemaVersion": "4.0"
-      }
+    
     ],
-    "@_hasError": "true"
+"@_hasError": "true"
   },
-  "@_hasError": "false",
+"@_hasError": "false",
   "@_SchemaVersion": "4.0"
 })
 
@@ -125,6 +67,68 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
   "@_hasError": "false",
   "@_SchemaVersion": "4.0"
 })
+
+const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => (
+  offences.map((offence) => {
+    "ds:CriminalProsecutionReference": {
+      "ds:DefendantOrOffender": {
+        "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
+          "ds:OrganisationUnitIdentifierCode": {
+          "ds:SecondLevelCode": offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
+            "ds:ThirdLevelCode": offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
+              "ds:BottomLevelCode": offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
+                "ds:OrganisationUnitCode": offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.OrganisationUnitCode,
+                  "@_SchemaVersion": "2.0"
+        },
+        "ds:DefendantOrOffenderSequenceNumber": offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber,
+          "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit 
+      },
+      "ds:OffenceReason": { "ds:OffenceCode": { "ds:ActOrSource": "TH", "ds:Year": 68, "ds:Reason": 59 } },
+      "@_SchemaVersion": "2.0"
+    },
+    "ds:OffenceCategory": { "#text": "CE", "@_Literal": "Either Way" },
+    "ds:ArrestDate": offence.ArrestDate,
+      "ds:ChargeDate": offence.ChargeDate,
+        "ds:ActualOffenceDateCode": { "#text": offenceac, "@_Literal": "between" },
+    "ds:ActualOffenceStartDate": { "ds:StartDate": offence.ActualOffenceStartDate.StartDate },
+    "ds:ActualOffenceEndDate": { "ds:EndDate": offence.ActualOffenceEndDate.EndDate },
+    "ds:LocationOfOffence": offence.LocationOfOffence,
+      "ds:OffenceTitle": offence.OffenceTitle,
+        "ds:ActualOffenceWording": offence.ActualOffenceWording,
+          "ds:RecordableOnPNCindicator": { "#text": "Y", "@_Literal": "Yes" },
+    "ds:NotifiableToHOindicator": { "#text": "Y", "@_Literal": "Yes" },
+    "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
+      "ds:ConvictionDate": offence.ConvictionDate,
+        "br7:CommittedOnBail": { "#text": "D", "@_Literal": "Don't Know" },
+    "br7:CourtOffenceSequenceNumber": 1,
+      "br7:AddedByTheCourt": { "#text": "Y", "@_Literal": "Yes" },
+    "br7:Result": {
+      "ds:CJSresultCode": 1044,
+        "ds:SourceOrganisation": {
+        "ds:TopLevelCode": "B",
+          "ds:SecondLevelCode": "4",
+            "ds:ThirdLevelCode": "KO",
+              "ds:BottomLevelCode": "0",
+                "ds:OrganisationUnitCode": "B04KO00",
+                  "@_SchemaVersion": "2.0"
+      },
+      "ds:CourtType": "MCA",
+        "ds:ResultHearingType": { "#text": "OTHER", "@_Literal": "Other" },
+      "ds:ResultHearingDate": "2008-05-02",
+        "ds:PleaStatus": { "#text": "NG", "@_Literal": "Not Guilty" },
+      "ds:ModeOfTrialReason": { "#text": "NOMOT", "@_Literal": "No Mode of Trial" },
+      "ds:ResultVariableText": "result text for result code 1044",
+        "ds:ResultHalfLifeHours": 72,
+          "br7:PNCDisposalType": 1044,
+            "br7:ResultClass": "Sentence",
+              "br7:ConvictingCourt": 1375,
+                "@_hasError": "false",
+                  "@_SchemaVersion": "2.0"
+    },
+    "@_hasError": "false",
+      "@_SchemaVersion": "4.0"
+  } as Br7Offence)
+)
 
 const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
   return {
