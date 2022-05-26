@@ -69,7 +69,7 @@ export interface Cof {
   "@_OffStartTime": string
   "@_OffenceQualifier1": string
   "@_OffenceQualifier2": string
-  "@_OffenceTitle": string
+  "@_OffenceTitle"?: string
   "@_ReferenceNumber": string
 }
 
@@ -125,15 +125,15 @@ export interface Br7HearingDefendant {
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7RecordableOnPnCindicator
-  "br7:CourtPNCIdentifier": string
+  "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": string
 }
 
 export interface Br7Address {
   "ds:AddressLine1": string
-  "ds:AddressLine2": string
-  "ds:AddressLine3": string
+  "ds:AddressLine2"?: string
+  "ds:AddressLine3"?: string
 }
 
 export interface Br7ArrestSummonsNumber {
@@ -143,8 +143,8 @@ export interface Br7ArrestSummonsNumber {
 
 export interface Br7DefendantDetail {
   "br7:PersonName": Br7PersonName
-  "br7:GeneratedPNCFilename": string
-  "br7:BirthDate": string
+  "br7:GeneratedPNCFilename"?: string
+  "br7:BirthDate"?: string
   "br7:Gender": Br7Gender
 }
 
@@ -154,7 +154,7 @@ export interface Br7Gender {
 }
 
 export interface Br7PersonName {
-  "ds:Title": string
+  "ds:Title"?: string
   "ds:GivenName": DsName
   "ds:FamilyName": DsName
 }
@@ -173,48 +173,48 @@ export interface Br7Offence {
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate": DsActualOffenceEndDate
   "ds:LocationOfOffence": string
-  "ds:OffenceTitle": string
+  "ds:OffenceTitle"?: string
   "ds:ActualOffenceWording": string
   "ds:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
   "ds:NotifiableToHOindicator": Br7RecordableOnPnCindicator
-  "ds:HomeOfficeClassification": string
+  "ds:HomeOfficeClassification"?: string
   "ds:ConvictionDate": string
   "br7:CommittedOnBail": Br7RecordableOnPnCindicator
   "br7:CourtOffenceSequenceNumber": number
   "br7:AddedByTheCourt": Br7RecordableOnPnCindicator
-  "br7:Result": Br7Result
+  "br7:Result": Br7Result | Br7Result[]
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
 export interface Br7RecordableOnPnCindicator {
-  "#text": string
+  "#text"?: string
   "@_Literal": string
 }
 
 export interface Br7Result {
   "ds:CJSresultCode": number
   "ds:SourceOrganisation": Ds
-  "ds:CourtType": string
-  "ds:ResultHearingType": Br7RecordableOnPnCindicator
-  "ds:ResultHearingDate": string
-  "ds:PleaStatus": Br7RecordableOnPnCindicator
-  "ds:ModeOfTrialReason": Br7RecordableOnPnCindicator
-  "ds:ResultVariableText": string
-  "ds:ResultHalfLifeHours": number
-  "br7:PNCDisposalType": number
-  "br7:ResultClass": string
-  "br7:ConvictingCourt": number
+  "ds:CourtType"?: string
+  "ds:ResultHearingType"?: Br7RecordableOnPnCindicator
+  "ds:ResultHearingDate"?: string
+  "ds:PleaStatus"?: Br7RecordableOnPnCindicator
+  "ds:ModeOfTrialReason"?: Br7RecordableOnPnCindicator
+  "ds:ResultVariableText"?: string
+  "ds:ResultHalfLifeHours"?: number
+  "br7:PNCDisposalType"?: number
+  "br7:ResultClass"?: string
+  "br7:ConvictingCourt"?: string
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
 export interface Ds {
   "ds:TopLevelCode"?: string
-  "ds:SecondLevelCode": string
-  "ds:ThirdLevelCode": string
-  "ds:BottomLevelCode": string
-  "ds:OrganisationUnitCode": string
+  "ds:SecondLevelCode"?: string
+  "ds:ThirdLevelCode"?: string
+  "ds:BottomLevelCode"?: string
+  "ds:OrganisationUnitCode"?: string
   "@_SchemaVersion": string
 }
 
@@ -236,7 +236,7 @@ export interface DsDefendantOrOffender {
   "ds:Year": number
   "ds:OrganisationUnitIdentifierCode": Ds
   "ds:DefendantOrOffenderSequenceNumber": number
-  "ds:CheckDigit": string
+  "ds:CheckDigit"?: string
 }
 
 export interface DsOffenceReason {
@@ -257,9 +257,9 @@ export interface Br7Hearing {
   "ds:HearingDocumentationLanguage": Br7RecordableOnPnCindicator
   "ds:DefendantPresentAtHearing": Br7RecordableOnPnCindicator
   "br7:SourceReference": Br7SourceReference
-  "br7:CourtType": Br7RecordableOnPnCindicator
+  "br7:CourtType"?: Br7RecordableOnPnCindicator
   "br7:CourtHouseCode": number
-  "br7:CourtHouseName": string
+  "br7:CourtHouseName"?: string
   "@_hasError": string
   "@_SchemaVersion": string
 }
