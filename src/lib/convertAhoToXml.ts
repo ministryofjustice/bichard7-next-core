@@ -1,7 +1,14 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
-import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence, Br7Result } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome, Case, Hearing, Offence, Result } from "src/types/AnnotatedHearingOutcome"
+import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence, Br7OffenceReason, Br7Result } from "src/types/AhoParsedXml"
+import type {
+  AnnotatedHearingOutcome,
+  Case,
+  Hearing,
+  Offence,
+  OffenceReason,
+  Result
+} from "src/types/AnnotatedHearingOutcome"
 
 const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
   results.map((result) => ({
@@ -28,61 +35,82 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "@_SchemaVersion": "2.0"
   }))
 
-const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
-  const xmlOffences: Br7Offence[] = []
-
-  for (const offence of offences) {
-    xmlOffences.push({
-      "ds:CriminalProsecutionReference": {
-        "ds:DefendantOrOffender": {
-          "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year ?? "",
-          "ds:OrganisationUnitIdentifierCode": {
-            "ds:SecondLevelCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
-            "ds:ThirdLevelCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
-            "ds:BottomLevelCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
-            "ds:OrganisationUnitCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
-                .OrganisationUnitCode,
-            "@_SchemaVersion": "2.0"
-          },
-          "ds:DefendantOrOffenderSequenceNumber":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber ?? "",
-          "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
-        },
-        "ds:OffenceReason": { "ds:OffenceCode": { "ds:ActOrSource": "TH", "ds:Year": "68", "ds:Reason": 59 } },
-        "@_SchemaVersion": "2.0"
-      },
-      "ds:OffenceCategory": { "#text": String(offence.OffenceCategory), "@_Literal": "Either Way" },
-      "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
-      "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
-      "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
-      "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
-      "ds:ActualOffenceEndDate": {
-        "ds:EndDate": offence.ActualOffenceEndDate.EndDate
-          ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
-          : ""
-      },
-      "ds:LocationOfOffence": offence.LocationOfOffence,
-      "ds:OffenceTitle": offence.OffenceTitle,
-      "ds:ActualOffenceWording": offence.ActualOffenceWording,
-      "ds:RecordableOnPNCindicator": { "#text": offence.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
-      "ds:NotifiableToHOindicator": { "#text": offence.NotifiableToHOindicator ? "Y" : "N", "@_Literal": "Yes" },
-      "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
-      "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
-      "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
-      "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
-      "br7:AddedByTheCourt": { "#text": String(offence.AddedByTheCourt), "@_Literal": "Yes" },
-      "br7:Result": mapAhoResultsToXml(offence.Result),
-      "@_hasError": "false",
-      "@_SchemaVersion": "4.0"
-    })
+const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReason => {
+  // if (offenceReason.__type === "LocalOffenceReason") {
+  //   return {
+  //     "ds:LocalOffenceCode": {
+  //       "ds:AreaCode": offenceReason.LocalOffenceCode.AreaCode,
+  //       "ds:OffenceCode": offenceReason.LocalOffenceCode.OffenceCode
+  //     }
+  //   }
+  // }
+  if (offenceReason.__type === "NationalOffenceReason") {
+    switch (offenceReason.OffenceCode.__type) {
+      case "NonMatchingOffenceCode":
+        return {
+          "ds:OffenceCode": {
+            "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
+            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Year": offenceReason.OffenceCode.Year ?? ""
+          }
+        }
+      // case "CommonLawOffenceCode":
+      //   break
+      // case "IndictmentOffenceCode":
+      //   break
+    }
   }
-
-  return xmlOffences
+  return { "ds:OffenceCode": { "ds:ActOrSource": "", "ds:Reason": 0, "ds:Year": "" } }
 }
+
+const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
+  offences.map((offence) => ({
+    "ds:CriminalProsecutionReference": {
+      "ds:DefendantOrOffender": {
+        "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year ?? "",
+        "ds:OrganisationUnitIdentifierCode": {
+          "ds:SecondLevelCode":
+            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
+          "ds:ThirdLevelCode":
+            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
+          "ds:BottomLevelCode":
+            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
+          "ds:OrganisationUnitCode":
+            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
+              .OrganisationUnitCode,
+          "@_SchemaVersion": "2.0"
+        },
+        "ds:DefendantOrOffenderSequenceNumber":
+          offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber ?? "",
+        "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
+      },
+      "ds:OffenceReason": mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason!),
+      "@_SchemaVersion": "2.0"
+    },
+    "ds:OffenceCategory": { "#text": String(offence.OffenceCategory), "@_Literal": "Either Way" },
+    "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
+    "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
+    "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
+    "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
+    "ds:ActualOffenceEndDate": {
+      "ds:EndDate": offence.ActualOffenceEndDate.EndDate
+        ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
+        : ""
+    },
+    "ds:LocationOfOffence": offence.LocationOfOffence,
+    "ds:OffenceTitle": offence.OffenceTitle,
+    "ds:ActualOffenceWording": offence.ActualOffenceWording,
+    "ds:RecordableOnPNCindicator": { "#text": offence.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
+    "ds:NotifiableToHOindicator": { "#text": offence.NotifiableToHOindicator ? "Y" : "N", "@_Literal": "Yes" },
+    "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
+    "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
+    "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
+    "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
+    "br7:AddedByTheCourt": { "#text": String(offence.AddedByTheCourt), "@_Literal": "Yes" },
+    "br7:Result": mapAhoResultsToXml(offence.Result),
+    "@_hasError": "false",
+    "@_SchemaVersion": "4.0"
+  }))
 
 const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:PTIURN": c.PTIURN,

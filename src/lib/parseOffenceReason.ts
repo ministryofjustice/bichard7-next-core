@@ -1,10 +1,10 @@
 import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import { OffenceCodeType } from "src/utils/offence/consts"
-import validateOffenceCode from "src/utils/offence/validateOffenceCode"
-import { getNationalOffenceReason, getLocalOffenceReason } from "src/utils/offence/getOffenceReason"
+import { getLocalOffenceReason, getNationalOffenceReason } from "src/utils/offence/getOffenceReason"
 import regexTestNationalOffenceCode from "src/utils/offence/regexTestNationalOffenceCode"
+import validateOffenceCode from "src/utils/offence/validateOffenceCode"
 
-// parse a offence code into an national offence reason or a local offence reason if the national reason isn't valid
+// parse an offence code into an national offence reason or a local offence reason if the national reason isn't valid
 export default (offenceCode: string, areaCode: string): OffenceReason | undefined => {
   const result = validateOffenceCode(offenceCode, areaCode)
   if (result === OffenceCodeType.NATIONAL_CODE) {

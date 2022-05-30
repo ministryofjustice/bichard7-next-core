@@ -1,4 +1,4 @@
-import type { OffenceCode, LocalOffenceCode, OffenceReason } from "src/types/AnnotatedHearingOutcome"
+import type { LocalOffenceCode, OffenceCode, OffenceReason } from "src/types/AnnotatedHearingOutcome"
 
 const getOffenceCodeFromActOrSource = (offenceCode: OffenceCode): string =>
   offenceCode.__type === "NonMatchingOffenceCode" ? `${offenceCode.ActOrSource}${offenceCode.Year}` : ""
