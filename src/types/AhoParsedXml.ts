@@ -228,24 +228,24 @@ export interface DsActualOffenceStartDate {
 
 export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
-  "ds:OffenceReason": DsOffenceReason
+  "ds:OffenceReason": Br7OffenceReason
   "@_SchemaVersion": string
 }
 
 export interface DsDefendantOrOffender {
-  "ds:Year": number
+  "ds:Year": string
   "ds:OrganisationUnitIdentifierCode": Br7OrganisationUnit
-  "ds:DefendantOrOffenderSequenceNumber": number
+  "ds:DefendantOrOffenderSequenceNumber": string
   "ds:CheckDigit"?: string
 }
 
-export interface DsOffenceReason {
+export interface Br7OffenceReason {
   "ds:OffenceCode": DsOffenceCode
 }
 
 export interface DsOffenceCode {
   "ds:ActOrSource": string
-  "ds:Year": number
+  "ds:Year": string
   "ds:Reason": number
 }
 

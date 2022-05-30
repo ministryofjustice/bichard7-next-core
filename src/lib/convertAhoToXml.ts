@@ -35,7 +35,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
     xmlOffences.push({
       "ds:CriminalProsecutionReference": {
         "ds:DefendantOrOffender": {
-          "ds:Year": Number(offence.CriminalProsecutionReference.DefendantOrOffender?.Year),
+          "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year ?? "",
           "ds:OrganisationUnitIdentifierCode": {
             "ds:SecondLevelCode":
               offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
@@ -48,12 +48,11 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
                 .OrganisationUnitCode,
             "@_SchemaVersion": "2.0"
           },
-          "ds:DefendantOrOffenderSequenceNumber": Number(
-            offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber
-          ),
+          "ds:DefendantOrOffenderSequenceNumber":
+            offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber ?? "",
           "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
         },
-        "ds:OffenceReason": { "ds:OffenceCode": { "ds:ActOrSource": "TH", "ds:Year": 68, "ds:Reason": 59 } },
+        "ds:OffenceReason": { "ds:OffenceCode": { "ds:ActOrSource": "TH", "ds:Year": "68", "ds:Reason": 59 } },
         "@_SchemaVersion": "2.0"
       },
       "ds:OffenceCategory": { "#text": String(offence.OffenceCategory), "@_Literal": "Either Way" },
