@@ -1,12 +1,91 @@
 import { XMLParser } from "fast-xml-parser"
-import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome, Case, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
+import type {
+  AhoParsedXml,
+  Br7Case,
+  Br7CriminalProsecutionReference,
+  Br7Hearing,
+  Br7Offence,
+  Br7OrganisationUnit,
+  Br7Result
+} from "src/types/AhoParsedXml"
+import type {
+  AnnotatedHearingOutcome,
+  Case,
+  CriminalProsecutionReference,
+  Hearing,
+  Offence,
+  OrganisationUnit,
+  Result
+} from "src/types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "src/types/Plea"
+
+const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnit => ({
+  TopLevelCode: xmlOrgUnit["ds:TopLevelCode"],
+  SecondLevelCode: xmlOrgUnit["ds:SecondLevelCode"] ?? "",
+  ThirdLevelCode: xmlOrgUnit["ds:ThirdLevelCode"] ?? "",
+  BottomLevelCode: xmlOrgUnit["ds:BottomLevelCode"] ?? "",
+  OrganisationUnitCode: xmlOrgUnit["ds:OrganisationUnitCode"] ?? ""
+})
+
+const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
+  CJSresultCode: xmlResult["ds:CJSresultCode"],
+  // OffenceRemandStatus: xmlResult.
+  SourceOrganisation: mapXmlOrganisationalUnitToAho(xmlResult["ds:SourceOrganisation"]),
+  CourtType: xmlResult["ds:CourtType"],
+  ConvictingCourt: xmlResult["br7:ConvictingCourt"],
+  ResultHearingType: xmlResult["ds:ResultHearingType"]?.["#text"],
+  ResultHearingDate: new Date(xmlResult["ds:ResultHearingDate"] ?? ""),
+  Duration: [],
+  DateSpecifiedInResult: [],
+  // TimeSpecifiedInResult: xmlResult,
+  // AmountSpecifiedInResult: xmlResult.
+  // NumberSpecifiedInResult: xmlResult.
+  // NextResultSourceOrganisation: {},
+  // NextHearingType: xmlResult.
+  // NextHearingDate: xmlResult.nex
+  // NextHearingTime: {},
+  // NextCourtType: xmlResult
+  PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
+  // Verdict: xmlResult.v
+  ResultVariableText: xmlResult["ds:ResultVariableText"],
+  // TargetCourtType: xmlResult.
+  // WarrantIssueDate: xmlResult.
+  // CRESTDisposalCode: xmlResult.
+  ModeOfTrialReason: xmlResult["ds:ModeOfTrialReason"]?.["#text"],
+  PNCDisposalType: xmlResult["br7:PNCDisposalType"],
+  // PNCAdjudicationExists: xmlResult.p
+  ResultClass: xmlResult["br7:ResultClass"],
+  // NumberOfOffencesTIC: xmlResult.
+  // ReasonForOffenceBailConditions: xmlResult
+  ResultQualifierVariable: [],
+  ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"],
+  // Urgent: {},
+  ResultApplicableQualifierCode: []
+  // BailCondition: xmlResult.
+})
+
+const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
+  Array.isArray(xmlResults)
+    ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
+    : [mapXmlResultToAho(xmlResults)]
+
+const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
+  DefendantOrOffender: {
+    Year: String(xmlCPR["ds:DefendantOrOffender"]["ds:Year"]),
+    OrganisationUnitIdentifierCode: mapXmlOrganisationalUnitToAho(
+      xmlCPR["ds:DefendantOrOffender"]["ds:OrganisationUnitIdentifierCode"]
+    ),
+    DefendantOrOffenderSequenceNumber: String(xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"]),
+    CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"] ?? ""
+  }
+  // OffenceReason: {}
+})
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   return xmlOffences.map(
     (xmlOffence) =>
       ({
-        CriminalProsecutionReference: {},
+        CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
         OffenceCategory: xmlOffence["ds:OffenceCategory"]["#text"],
         // OffenceInitiationCode: xmlOffence.
         OffenceTitle: xmlOffence["ds:OffenceTitle"],
@@ -36,7 +115,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"]),
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: xmlOffence["br7:CourtOffenceSequenceNumber"],
-        Result: [],
+        Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
         // NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"],
         HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"],
@@ -50,13 +129,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"],
   RecordableOnPNCindicator: xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y",
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
-  ForceOwner: {
-    TopLevelCode: xmlCase["br7:ForceOwner"]["ds:TopLevelCode"],
-    SecondLevelCode: xmlCase["br7:ForceOwner"]["ds:SecondLevelCode"] ?? "",
-    ThirdLevelCode: xmlCase["br7:ForceOwner"]["ds:ThirdLevelCode"] ?? "",
-    BottomLevelCode: xmlCase["br7:ForceOwner"]["ds:BottomLevelCode"] ?? "",
-    OrganisationUnitCode: xmlCase["br7:ForceOwner"]["ds:OrganisationUnitCode"] ?? ""
-  },
+  ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]),
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
@@ -86,13 +159,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
 })
 
 const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
-  CourtHearingLocation: {
-    TopLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:TopLevelCode"],
-    SecondLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:SecondLevelCode"] ?? "",
-    ThirdLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:ThirdLevelCode"] ?? "",
-    BottomLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:BottomLevelCode"] ?? "",
-    OrganisationUnitCode: xmlHearing["ds:CourtHearingLocation"]["ds:OrganisationUnitCode"] ?? ""
-  },
+  CourtHearingLocation: mapXmlOrganisationalUnitToAho(xmlHearing["ds:CourtHearingLocation"]),
   DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]),
   TimeOfHearing: xmlHearing["ds:TimeOfHearing"],
   HearingLanguage: xmlHearing["ds:HearingLanguage"]["#text"] ?? "",

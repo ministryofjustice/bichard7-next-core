@@ -110,7 +110,7 @@ export interface Br7Case {
   "ds:PreChargeDecisionIndicator": Br7RecordableOnPnCindicator
   "br7:CourtReference": Br7CourtReference
   "br7:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
-  "br7:ForceOwner": Ds
+  "br7:ForceOwner": Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError": string
   "@_SchemaVersion": string
@@ -165,7 +165,7 @@ export interface DsName {
 }
 
 export interface Br7Offence {
-  "ds:CriminalProsecutionReference": DsCriminalProsecutionReference
+  "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
   "ds:OffenceCategory": Br7RecordableOnPnCindicator
   "ds:ArrestDate": string
   "ds:ChargeDate": string
@@ -194,7 +194,7 @@ export interface Br7RecordableOnPnCindicator {
 
 export interface Br7Result {
   "ds:CJSresultCode": number
-  "ds:SourceOrganisation": Ds
+  "ds:SourceOrganisation": Br7OrganisationUnit
   "ds:CourtType"?: string
   "ds:ResultHearingType"?: Br7RecordableOnPnCindicator
   "ds:ResultHearingDate"?: string
@@ -209,7 +209,7 @@ export interface Br7Result {
   "@_SchemaVersion": string
 }
 
-export interface Ds {
+export interface Br7OrganisationUnit {
   "ds:TopLevelCode"?: string
   "ds:SecondLevelCode"?: string
   "ds:ThirdLevelCode"?: string
@@ -226,7 +226,7 @@ export interface DsActualOffenceStartDate {
   "ds:StartDate": string
 }
 
-export interface DsCriminalProsecutionReference {
+export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
   "ds:OffenceReason": DsOffenceReason
   "@_SchemaVersion": string
@@ -234,7 +234,7 @@ export interface DsCriminalProsecutionReference {
 
 export interface DsDefendantOrOffender {
   "ds:Year": number
-  "ds:OrganisationUnitIdentifierCode": Ds
+  "ds:OrganisationUnitIdentifierCode": Br7OrganisationUnit
   "ds:DefendantOrOffenderSequenceNumber": number
   "ds:CheckDigit"?: string
 }
@@ -250,7 +250,7 @@ export interface DsOffenceCode {
 }
 
 export interface Br7Hearing {
-  "ds:CourtHearingLocation": Ds
+  "ds:CourtHearingLocation": Br7OrganisationUnit
   "ds:DateOfHearing": string
   "ds:TimeOfHearing": string
   "ds:HearingLanguage": Br7RecordableOnPnCindicator

@@ -16,7 +16,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     },
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
-    "ds:ResultHearingDate": result.ResultHearingDate?.toISOString(),
+    "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : "",
     "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
     "ds:ModeOfTrialReason": { "#text": result.ModeOfTrialReason, "@_Literal": "No Mode of Trial" },
     "ds:ResultVariableText": result.ResultVariableText,
@@ -57,20 +57,22 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
         "@_SchemaVersion": "2.0"
       },
       "ds:OffenceCategory": { "#text": String(offence.OffenceCategory), "@_Literal": "Either Way" },
-      "ds:ArrestDate": offence.ArrestDate ? offence.ArrestDate.toISOString() : "",
-      "ds:ChargeDate": offence.ChargeDate ? offence.ChargeDate.toISOString() : "",
+      "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
+      "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
       "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
-      "ds:ActualOffenceStartDate": { "ds:StartDate": offence.ActualOffenceStartDate.StartDate.toISOString() },
+      "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
       "ds:ActualOffenceEndDate": {
-        "ds:EndDate": offence.ActualOffenceEndDate.EndDate ? offence.ActualOffenceEndDate.EndDate.toISOString() : ""
+        "ds:EndDate": offence.ActualOffenceEndDate.EndDate
+          ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
+          : ""
       },
       "ds:LocationOfOffence": offence.LocationOfOffence,
       "ds:OffenceTitle": offence.OffenceTitle,
       "ds:ActualOffenceWording": offence.ActualOffenceWording,
-      "ds:RecordableOnPNCindicator": { "#text": String(offence.RecordableOnPNCindicator), "@_Literal": "Yes" },
-      "ds:NotifiableToHOindicator": { "#text": String(offence.NotifiableToHOindicator), "@_Literal": "Yes" },
+      "ds:RecordableOnPNCindicator": { "#text": offence.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
+      "ds:NotifiableToHOindicator": { "#text": offence.NotifiableToHOindicator ? "Y" : "N", "@_Literal": "Yes" },
       "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
-      "ds:ConvictionDate": offence.ConvictionDate ? offence.ConvictionDate.toISOString() : "",
+      "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
       "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
       "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
       "br7:AddedByTheCourt": { "#text": String(offence.AddedByTheCourt), "@_Literal": "Yes" },
