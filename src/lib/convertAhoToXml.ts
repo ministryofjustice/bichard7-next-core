@@ -1,3 +1,4 @@
+import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
 import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence, Br7Result } from "src/types/AhoParsedXml"
 import type { AnnotatedHearingOutcome, Case, Hearing, Offence, Result } from "src/types/AnnotatedHearingOutcome"
@@ -107,7 +108,9 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
         "ds:FamilyName": { "#text": c.HearingDefendant.DefendantDetail.PersonName.FamilyName, "@_NameSequence": "1" }
       },
       "br7:GeneratedPNCFilename": c.HearingDefendant.DefendantDetail.GeneratedPNCFilename,
-      "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate?.toISOString(),
+      "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate
+        ? format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd")
+        : "",
       "br7:Gender": { "#text": Number(c.HearingDefendant.DefendantDetail.Gender), "@_Literal": "male" }
     },
     "br7:Address": {
@@ -133,7 +136,7 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
     "ds:OrganisationUnitCode": hearing.CourtHearingLocation.OrganisationUnitCode,
     "@_SchemaVersion": "2.0"
   },
-  "ds:DateOfHearing": hearing.DateOfHearing.toISOString(),
+  "ds:DateOfHearing": format(hearing.DateOfHearing, "yyyy-MM-dd"),
   "ds:TimeOfHearing": hearing.TimeOfHearing,
   "ds:HearingLanguage": { "#text": hearing.HearingLanguage, "@_Literal": "Don't Know" },
   "ds:HearingDocumentationLanguage": { "#text": hearing.HearingDocumentationLanguage, "@_Literal": "Don't Know" },

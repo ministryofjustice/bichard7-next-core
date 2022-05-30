@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence } from "src/types/AhoParsedXml"
-import type { AnnotatedHearingOutcome, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Case, Hearing, Offence } from "src/types/AnnotatedHearingOutcome"
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   return xmlOffences.map(
@@ -46,26 +46,40 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   )
 }
 
-const mapXmlCaseToAho = (xmlCase: Br7Case) => ({
-  PTIURN: "",
-  PreChargeDecisionIndicator: true,
+const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
+  PTIURN: xmlCase["ds:PTIURN"],
+  RecordableOnPNCindicator: xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y",
+  PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
+  ForceOwner: {
+    TopLevelCode: xmlCase["br7:ForceOwner"]["ds:TopLevelCode"],
+    SecondLevelCode: xmlCase["br7:ForceOwner"]["ds:SecondLevelCode"] ?? "",
+    ThirdLevelCode: xmlCase["br7:ForceOwner"]["ds:ThirdLevelCode"] ?? "",
+    BottomLevelCode: xmlCase["br7:ForceOwner"]["ds:BottomLevelCode"] ?? "",
+    OrganisationUnitCode: xmlCase["br7:ForceOwner"]["ds:OrganisationUnitCode"] ?? ""
+  },
   CourtReference: {
-    MagistratesCourtReference: ""
+    MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
   HearingDefendant: {
-    ArrestSummonsNumber: "",
+    ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
     DefendantDetail: {
       PersonName: {
+        Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"],
         GivenName:
           xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]["#text"].split(" "),
-        FamilyName: ""
+        FamilyName: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
       },
-      Gender: ""
+      GeneratedPNCFilename: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"],
+      BirthDate: new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"] ?? ""),
+      Gender: String(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
     },
     Address: {
-      AddressLine1: ""
+      AddressLine1: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine1"],
+      AddressLine2: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine2"],
+      AddressLine3: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine3"]
     },
-    RemandStatus: "",
+    RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"] ?? "",
+    CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"],
     BailConditions: [""],
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
   }
