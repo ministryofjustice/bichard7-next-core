@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import convertAhoToXml from "./convertAhoToXml"
+import convertAhoToXml from "./generateAhoXml"
 
 describe("convertAhoToXml", () => {
   it("converts an AHO object into the correct XML format", () => {

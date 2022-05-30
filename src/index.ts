@@ -1,4 +1,4 @@
-import convertAhoToXml from "./lib/convertAhoToXml"
+import convertAhoToXml from "./lib/generateAhoXml"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
 import enrichHearingOutcome from "./use-cases/enrichHearingOutcome"

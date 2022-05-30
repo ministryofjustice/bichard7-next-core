@@ -206,5 +206,6 @@ export default (xml: string): AnnotatedHearingOutcome => {
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
   const x = mapXmlToAho(rawParsedObj)
+  // TODO: Zod.parse
   return x
 }
