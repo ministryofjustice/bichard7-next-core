@@ -2,29 +2,30 @@ import { XMLBuilder } from "fast-xml-parser"
 import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence, Br7Result } from "src/types/AhoParsedXml"
 import type { AnnotatedHearingOutcome, Case, Hearing, Offence, Result } from "src/types/AnnotatedHearingOutcome"
 
-const mapAhoResultsToXml = (results: Result[]): Br7Result[] => results.map((result) => ({
-  "ds:CJSresultCode": result.CJSresultCode,
-  "ds:SourceOrganisation": {
-    "ds:TopLevelCode": result.SourceOrganisation.TopLevelCode,
-    "ds:SecondLevelCode": result.SourceOrganisation.SecondLevelCode,
-    "ds:ThirdLevelCode": result.SourceOrganisation.ThirdLevelCode,
-    "ds:BottomLevelCode": result.SourceOrganisation.BottomLevelCode,
-    "ds:OrganisationUnitCode": result.SourceOrganisation.OrganisationUnitCode,
+const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
+  results.map((result) => ({
+    "ds:CJSresultCode": result.CJSresultCode,
+    "ds:SourceOrganisation": {
+      "ds:TopLevelCode": result.SourceOrganisation.TopLevelCode,
+      "ds:SecondLevelCode": result.SourceOrganisation.SecondLevelCode,
+      "ds:ThirdLevelCode": result.SourceOrganisation.ThirdLevelCode,
+      "ds:BottomLevelCode": result.SourceOrganisation.BottomLevelCode,
+      "ds:OrganisationUnitCode": result.SourceOrganisation.OrganisationUnitCode,
+      "@_SchemaVersion": "2.0"
+    },
+    "ds:CourtType": result.CourtType,
+    "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
+    "ds:ResultHearingDate": result.ResultHearingDate?.toISOString(),
+    "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
+    "ds:ModeOfTrialReason": { "#text": result.ModeOfTrialReason, "@_Literal": "No Mode of Trial" },
+    "ds:ResultVariableText": result.ResultVariableText,
+    "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
+    "br7:PNCDisposalType": result.PNCDisposalType,
+    "br7:ResultClass": result.ResultClass,
+    "br7:ConvictingCourt": result.ConvictingCourt,
+    "@_hasError": "false",
     "@_SchemaVersion": "2.0"
-  },
-  "ds:CourtType": result.CourtType,
-  "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
-  "ds:ResultHearingDate": result.ResultHearingDate?.toISOString(),
-  "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
-  "ds:ModeOfTrialReason": { "#text": result.ModeOfTrialReason, "@_Literal": "No Mode of Trial"},
-  "ds:ResultVariableText": result.ResultVariableText,
-  "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
-  "br7:PNCDisposalType": result.PNCDisposalType,
-  "br7:ResultClass": result.ResultClass,
-  "br7:ConvictingCourt": result.ConvictingCourt,
-  "@_hasError": "false",
-  "@_SchemaVersion": "2.0"
-})
+  }))
 
 const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
   const xmlOffences: Br7Offence[] = []
@@ -36,13 +37,11 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
           "ds:Year": Number(offence.CriminalProsecutionReference.DefendantOrOffender?.Year),
           "ds:OrganisationUnitIdentifierCode": {
             "ds:SecondLevelCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
-                .SecondLevelCode,
+              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
             "ds:ThirdLevelCode":
               offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
             "ds:BottomLevelCode":
-              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
-                .BottomLevelCode,
+              offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
             "ds:OrganisationUnitCode":
               offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
                 .OrganisationUnitCode,
@@ -79,16 +78,9 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] => {
       "@_SchemaVersion": "4.0"
     })
   }
-  
+
   return xmlOffences
 }
-
-
-
-
-
-
-
 
 const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:PTIURN": c.PTIURN,

@@ -74,23 +74,23 @@ const mapXmlCaseToAho = (xmlCase: Br7Case) => ({
 const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHearingLocation: {
     TopLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:TopLevelCode"],
-    SecondLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:SecondLevelCode"],
-    ThirdLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:ThirdLevelCode"],
-    BottomLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:BottomLevelCode"],
-    OrganisationUnitCode: xmlHearing["ds:CourtHearingLocation"]["ds:OrganisationUnitCode"]
+    SecondLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:SecondLevelCode"] ?? "",
+    ThirdLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:ThirdLevelCode"] ?? "",
+    BottomLevelCode: xmlHearing["ds:CourtHearingLocation"]["ds:BottomLevelCode"] ?? "",
+    OrganisationUnitCode: xmlHearing["ds:CourtHearingLocation"]["ds:OrganisationUnitCode"] ?? ""
   },
   DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]),
   TimeOfHearing: xmlHearing["ds:TimeOfHearing"],
-  HearingLanguage: xmlHearing["ds:HearingLanguage"]["#text"],
-  HearingDocumentationLanguage: xmlHearing["ds:HearingDocumentationLanguage"]["#text"],
-  DefendantPresentAtHearing: xmlHearing["ds:DefendantPresentAtHearing"]["#text"],
+  HearingLanguage: xmlHearing["ds:HearingLanguage"]["#text"] ?? "",
+  HearingDocumentationLanguage: xmlHearing["ds:HearingDocumentationLanguage"]["#text"] ?? "",
+  DefendantPresentAtHearing: xmlHearing["ds:DefendantPresentAtHearing"]["#text"] ?? "",
   CourtHouseCode: xmlHearing["br7:CourtHouseCode"],
   SourceReference: {
     DocumentName: xmlHearing["br7:SourceReference"]["br7:DocumentName"],
     UniqueID: xmlHearing["br7:SourceReference"]["br7:UniqueID"],
     DocumentType: xmlHearing["br7:SourceReference"]["br7:DocumentType"]
   },
-  CourtType: xmlHearing["br7:CourtType"]["#text"],
+  CourtType: xmlHearing["br7:CourtType"] ? xmlHearing["br7:CourtType"]["#text"] : "",
   CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
