@@ -2,6 +2,7 @@ import {
   actualOffenceDate,
   alcoholLevelMethod,
   courtType,
+  defendantPresentAtHearing,
   durationType,
   durationUnit,
   modeOfTrialReason,
@@ -26,6 +27,7 @@ import {
 import type {
   ActualOffenceDate,
   CourtType,
+  DefendantPresentAtHearing,
   DurationType,
   DurationUnit,
   ModeOfTrialReason,
@@ -134,6 +136,9 @@ const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
 const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
+const lookupDefendantPresentAtHearingByCjsCode = (cjsCode: string): DefendantPresentAtHearing | undefined =>
+  defendantPresentAtHearing.find((x) => x.cjsCode === cjsCode)
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -160,5 +165,6 @@ export {
   lookupVehicleCodeByCjsCode,
   lookupYesNoByCjsCode,
   lookupOffenceDateCodeByCjsCode,
-  lookupOffenceByCjsCode
+  lookupOffenceByCjsCode,
+  lookupDefendantPresentAtHearingByCjsCode
 }

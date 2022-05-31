@@ -108,7 +108,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
           StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"])
         },
         ActualOffenceEndDate: {
-          EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"])
+          EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]!["ds:EndDate"])
         },
         LocationOfOffence: xmlOffence["ds:LocationOfOffence"],
         // OffenceWelshTitle: xmlOffence
@@ -141,7 +141,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"],
   RecordableOnPNCindicator: xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y",
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
-  ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]),
+  ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },

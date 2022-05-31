@@ -26,7 +26,7 @@ export interface Cxe01 {
 }
 
 export interface CourtCases {
-  CourtCase: CourtCase
+  CourtCase: CourtCase[]
 }
 
 export interface CourtCase {
@@ -111,10 +111,16 @@ export interface Br7Case {
   "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
   "br7:RecordableOnPNCindicator": Br7LiteralTextString
-  "br7:ForceOwner": Br7OrganisationUnit
+  "br7:Urgent"?: Br7Urgent
+  "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError": string
   "@_SchemaVersion": string
+}
+
+export interface Br7Urgent {
+  "br7:urgent": Br7LiteralTextString
+  "br7:urgency": number
 }
 
 export interface Br7CourtReference {
@@ -123,6 +129,8 @@ export interface Br7CourtReference {
 
 export interface Br7HearingDefendant {
   "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber
+  "br7:PNCIdentifier"?: string
+  "br7:PNCCheckname"?: string
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
@@ -172,7 +180,7 @@ export interface Br7Offence {
   "ds:ChargeDate": string
   "ds:ActualOffenceDateCode": Br7Gender
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
-  "ds:ActualOffenceEndDate": DsActualOffenceEndDate
+  "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
   "ds:LocationOfOffence": string
   "ds:OffenceTitle"?: string
   "ds:ActualOffenceWording": string

@@ -1,15 +1,29 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
-import type { AhoParsedXml, Br7Case, Br7Hearing, Br7Offence, Br7OffenceReason, Br7Result } from "src/types/AhoParsedXml"
+import type {
+  AhoParsedXml,
+  Br7Case,
+  Br7Hearing,
+  Br7Offence,
+  Br7OffenceReason,
+  Br7OrganisationUnit,
+  Br7Result,
+  Br7Urgent,
+  Cxe01
+} from "src/types/AhoParsedXml"
 import type {
   AnnotatedHearingOutcome,
   Case,
   Hearing,
   Offence,
   OffenceReason,
-  Result
+  OrganisationUnit,
+  Result,
+  Urgent
 } from "src/types/AnnotatedHearingOutcome"
+import type { PncQueryResult } from "src/types/PncQueryResult"
 import {
+  lookupDefendantPresentAtHearingByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
@@ -17,17 +31,24 @@ import {
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
 
+const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnit): Br7OrganisationUnit => ({
+  "ds:TopLevelCode": orgUnit.TopLevelCode,
+  "ds:SecondLevelCode": orgUnit.SecondLevelCode,
+  "ds:ThirdLevelCode": orgUnit.ThirdLevelCode,
+  "ds:BottomLevelCode": orgUnit.BottomLevelCode,
+  "ds:OrganisationUnitCode": orgUnit.OrganisationUnitCode,
+  "@_SchemaVersion": "2.0"
+})
+
+const mapAhoUrgentToXml = (urgent: Urgent): Br7Urgent => ({
+  "br7:urgent": { "#text": urgent.urgent ? "Y" : "N", "@_Literal": urgent.urgent ? "Yes" : "No" },
+  "br7:urgency": urgent.urgency
+})
+
 const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
   results.map((result) => ({
     "ds:CJSresultCode": result.CJSresultCode,
-    "ds:SourceOrganisation": {
-      "ds:TopLevelCode": result.SourceOrganisation.TopLevelCode,
-      "ds:SecondLevelCode": result.SourceOrganisation.SecondLevelCode,
-      "ds:ThirdLevelCode": result.SourceOrganisation.ThirdLevelCode,
-      "ds:BottomLevelCode": result.SourceOrganisation.BottomLevelCode,
-      "ds:OrganisationUnitCode": result.SourceOrganisation.OrganisationUnitCode,
-      "@_SchemaVersion": "2.0"
-    },
+    "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : "",
@@ -47,6 +68,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
+    "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
     "br7:ConvictingCourt": result.ConvictingCourt,
     "@_hasError": "false",
@@ -107,7 +129,9 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     },
     "ds:OffenceCategory": {
       "#text": String(offence.OffenceCategory),
-      "@_Literal": offence.OffenceCategory ? lookupOffenceCategoryByCjsCode(offence.OffenceCategory)?.description : ""
+      "@_Literal": offence.OffenceCategory
+        ? lookupOffenceCategoryByCjsCode(offence.OffenceCategory)?.description
+        : undefined
     },
     "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
     "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
@@ -115,14 +139,17 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
       "#text": Number(offence.ActualOffenceDateCode),
       "@_Literal": offence.ActualOffenceDateCode
         ? lookupOffenceDateCodeByCjsCode(offence.ActualOffenceDateCode)?.description
-        : ""
+        : undefined
     },
     "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
-    "ds:ActualOffenceEndDate": {
-      "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
-        ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
-        : ""
-    },
+    "ds:ActualOffenceEndDate":
+      offence.ActualOffenceEndDate && offence.ActualOffenceEndDate.EndDate
+        ? {
+            "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
+              ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
+              : ""
+          }
+        : undefined,
     "ds:LocationOfOffence": offence.LocationOfOffence,
     "ds:OffenceTitle": offence.OffenceTitle,
     "ds:ActualOffenceWording": offence.ActualOffenceWording,
@@ -150,14 +177,8 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
   "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
   "br7:RecordableOnPNCindicator": { "#text": c.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
-  "br7:ForceOwner": {
-    "ds:TopLevelCode": c.ForceOwner?.TopLevelCode,
-    "ds:SecondLevelCode": c.ForceOwner?.SecondLevelCode,
-    "ds:ThirdLevelCode": c.ForceOwner?.ThirdLevelCode,
-    "ds:BottomLevelCode": c.ForceOwner?.BottomLevelCode,
-    "ds:OrganisationUnitCode": c.ForceOwner?.OrganisationUnitCode,
-    "@_SchemaVersion": "2.0"
-  },
+  "br7:Urgent": c.Urgent ? mapAhoUrgentToXml(c.Urgent) : undefined,
+  "br7:ForceOwner": c.ForceOwner ? mapAhoOrgUnitToXml(c.ForceOwner) : undefined,
   "br7:HearingDefendant": {
     "br7:ArrestSummonsNumber": {
       "#text": c.HearingDefendant.ArrestSummonsNumber,
@@ -165,6 +186,8 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
         ? lookupSummonsCodeByCjsCode(c.HearingDefendant.ArrestSummonsNumber)?.description
         : undefined
     },
+    "br7:PNCIdentifier": c.HearingDefendant.PNCIdentifier,
+    "br7:PNCCheckname": c.HearingDefendant.PNCCheckname,
     "br7:DefendantDetail": {
       "br7:PersonName": {
         "ds:Title": c.HearingDefendant.DefendantDetail.PersonName.Title,
@@ -195,19 +218,15 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
 })
 
 const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
-  "ds:CourtHearingLocation": {
-    "ds:TopLevelCode": hearing.CourtHearingLocation.TopLevelCode,
-    "ds:SecondLevelCode": hearing.CourtHearingLocation.SecondLevelCode,
-    "ds:ThirdLevelCode": hearing.CourtHearingLocation.ThirdLevelCode,
-    "ds:BottomLevelCode": hearing.CourtHearingLocation.BottomLevelCode,
-    "ds:OrganisationUnitCode": hearing.CourtHearingLocation.OrganisationUnitCode,
-    "@_SchemaVersion": "2.0"
-  },
+  "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
   "ds:DateOfHearing": format(hearing.DateOfHearing, "yyyy-MM-dd"),
   "ds:TimeOfHearing": hearing.TimeOfHearing,
   "ds:HearingLanguage": { "#text": hearing.HearingLanguage, "@_Literal": "Don't Know" },
   "ds:HearingDocumentationLanguage": { "#text": hearing.HearingDocumentationLanguage, "@_Literal": "Don't Know" },
-  "ds:DefendantPresentAtHearing": { "#text": hearing.DefendantPresentAtHearing, "@_Literal": "Yes" },
+  "ds:DefendantPresentAtHearing": {
+    "#text": hearing.DefendantPresentAtHearing,
+    "@_Literal": lookupDefendantPresentAtHearingByCjsCode(hearing.DefendantPresentAtHearing)?.description
+  },
   "br7:SourceReference": {
     "br7:DocumentName": hearing.SourceReference.DocumentName,
     "br7:UniqueID": hearing.SourceReference.UniqueID,
@@ -220,6 +239,97 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
   "@_SchemaVersion": "4.0"
 })
 
+const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
+  FSC: { "@_FSCode": pncQuery.forceStationCode, "@_IntfcUpdateType": "K" },
+  IDS: {
+    "@_CRONumber": pncQuery.croNumber ?? "",
+    "@_Checkname": pncQuery.checkName,
+    "@_IntfcUpdateType": "K",
+    "@_PNCID": pncQuery.pncId
+  },
+  CourtCases: {
+    CourtCase: [
+      {
+        CCR: { "@_CourtCaseRefNo": "", "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
+        Offences: {
+          Offence: [
+            {
+              COF: {
+                "@_ACPOOffenceCode": "1:9:2:1",
+                "@_CJSOffenceCode": "OF61102",
+                "@_IntfcUpdateType": "K",
+                "@_OffEndDate": "12052006",
+                "@_OffEndTime": "",
+                "@_OffStartDate": "12052006",
+                "@_OffStartTime": "",
+                "@_OffenceQualifier1": "",
+                "@_OffenceQualifier2": "",
+                "@_OffenceTitle": "Section 47 - assault    occasioning actual bodily harm",
+                "@_ReferenceNumber": "001"
+              },
+              ADJ: {
+                "@_Adjudication1": "GUILTY",
+                "@_DateOfSentence": "12112008",
+                "@_IntfcUpdateType": "I",
+                "@_OffenceTICNumber": "0000",
+                "@_Plea": "NO PLEA TAKEN",
+                "@_WeedFlag": ""
+              },
+              DISList: {
+                DIS: {
+                  "@_IntfcUpdateType": "I",
+                  "@_QtyDate": "",
+                  "@_QtyDuration": "M3",
+                  "@_QtyMonetaryValue": "",
+                  "@_QtyUnitsFined": "",
+                  "@_Qualifiers": "",
+                  "@_Text": "",
+                  "@_Type": "1115"
+                }
+              }
+            },
+            {
+              COF: {
+                "@_ACPOOffenceCode": "7:1:7:1",
+                "@_CJSOffenceCode": "PU86002",
+                "@_IntfcUpdateType": "K",
+                "@_OffEndDate": "12052006",
+                "@_OffEndTime": "",
+                "@_OffStartDate": "12052006",
+                "@_OffStartTime": "",
+                "@_OffenceQualifier1": "",
+                "@_OffenceQualifier2": "",
+                "@_OffenceTitle": "Public order - violent disorder",
+                "@_ReferenceNumber": "002"
+              },
+              ADJ: {
+                "@_Adjudication1": "GUILTY",
+                "@_DateOfSentence": "12112008",
+                "@_IntfcUpdateType": "I",
+                "@_OffenceTICNumber": "0000",
+                "@_Plea": "NO PLEA TAKEN",
+                "@_WeedFlag": ""
+              },
+              DISList: {
+                DIS: {
+                  "@_IntfcUpdateType": "I",
+                  "@_QtyDate": "",
+                  "@_QtyDuration": "M3",
+                  "@_QtyMonetaryValue": "",
+                  "@_QtyUnitsFined": "",
+                  "@_Qualifiers": "",
+                  "@_Text": "",
+                  "@_Type": "1115"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+})
+
 const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
@@ -229,89 +339,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
         "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case)
       },
       "br7:HasError": true,
-      CXE01: {
-        FSC: { "@_FSCode": "", "@_IntfcUpdateType": "K" },
-        IDS: { "@_CRONumber": "", "@_Checkname": "PERKINS", "@_IntfcUpdateType": "K", "@_PNCID": "2009/0000231M" },
-        CourtCases: {
-          CourtCase: {
-            CCR: { "@_CourtCaseRefNo": "09/0473/000231R", "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
-            Offences: {
-              Offence: [
-                {
-                  COF: {
-                    "@_ACPOOffenceCode": "1:9:2:1",
-                    "@_CJSOffenceCode": "OF61102",
-                    "@_IntfcUpdateType": "K",
-                    "@_OffEndDate": "12052006",
-                    "@_OffEndTime": "",
-                    "@_OffStartDate": "12052006",
-                    "@_OffStartTime": "",
-                    "@_OffenceQualifier1": "",
-                    "@_OffenceQualifier2": "",
-                    "@_OffenceTitle": "Section 47 - assault    occasioning actual bodily harm",
-                    "@_ReferenceNumber": "001"
-                  },
-                  ADJ: {
-                    "@_Adjudication1": "GUILTY",
-                    "@_DateOfSentence": "12112008",
-                    "@_IntfcUpdateType": "I",
-                    "@_OffenceTICNumber": "0000",
-                    "@_Plea": "NO PLEA TAKEN",
-                    "@_WeedFlag": ""
-                  },
-                  DISList: {
-                    DIS: {
-                      "@_IntfcUpdateType": "I",
-                      "@_QtyDate": "",
-                      "@_QtyDuration": "M3",
-                      "@_QtyMonetaryValue": "",
-                      "@_QtyUnitsFined": "",
-                      "@_Qualifiers": "",
-                      "@_Text": "",
-                      "@_Type": "1115"
-                    }
-                  }
-                },
-                {
-                  COF: {
-                    "@_ACPOOffenceCode": "7:1:7:1",
-                    "@_CJSOffenceCode": "PU86002",
-                    "@_IntfcUpdateType": "K",
-                    "@_OffEndDate": "12052006",
-                    "@_OffEndTime": "",
-                    "@_OffStartDate": "12052006",
-                    "@_OffStartTime": "",
-                    "@_OffenceQualifier1": "",
-                    "@_OffenceQualifier2": "",
-                    "@_OffenceTitle": "Public order - violent disorder",
-                    "@_ReferenceNumber": "002"
-                  },
-                  ADJ: {
-                    "@_Adjudication1": "GUILTY",
-                    "@_DateOfSentence": "12112008",
-                    "@_IntfcUpdateType": "I",
-                    "@_OffenceTICNumber": "0000",
-                    "@_Plea": "NO PLEA TAKEN",
-                    "@_WeedFlag": ""
-                  },
-                  DISList: {
-                    DIS: {
-                      "@_IntfcUpdateType": "I",
-                      "@_QtyDate": "",
-                      "@_QtyDuration": "M3",
-                      "@_QtyMonetaryValue": "",
-                      "@_QtyUnitsFined": "",
-                      "@_Qualifiers": "",
-                      "@_Text": "",
-                      "@_Type": "1115"
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      },
+      CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
       "br7:PNCQueryDate": aho.PncQueryDate ? format(aho.PncQueryDate, "yyyy-MM-dd") : undefined,
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
       "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
