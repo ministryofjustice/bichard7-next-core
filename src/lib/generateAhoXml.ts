@@ -9,6 +9,7 @@ import type {
   OffenceReason,
   Result
 } from "src/types/AnnotatedHearingOutcome"
+import { lookupModeOfTrialReasonByCjsCode, lookupVerdictByCjsCode } from "src/use-cases/dataLookup"
 
 const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
   results.map((result) => ({
@@ -24,12 +25,23 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : "",
+    // "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult,
     "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
-    "ds:ModeOfTrialReason": { "#text": result.ModeOfTrialReason, "@_Literal": "No Mode of Trial" },
+    "ds:Verdict": {
+      "#text": result.Verdict,
+      "@_Literal": result.Verdict ? lookupVerdictByCjsCode(result.Verdict)?.description : undefined
+    },
+    "ds:ModeOfTrialReason": {
+      "#text": result.ModeOfTrialReason,
+      "@_Literal": result.ModeOfTrialReason
+        ? lookupModeOfTrialReasonByCjsCode(result.ModeOfTrialReason)?.description
+        : undefined
+    },
     "ds:ResultVariableText": result.ResultVariableText,
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
+    "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
     "br7:ConvictingCourt": result.ConvictingCourt,
     "@_hasError": "false",
     "@_SchemaVersion": "2.0"
@@ -93,15 +105,21 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
     "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
     "ds:ActualOffenceEndDate": {
-      "ds:EndDate": offence.ActualOffenceEndDate.EndDate
+      "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
         ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
         : ""
     },
     "ds:LocationOfOffence": offence.LocationOfOffence,
     "ds:OffenceTitle": offence.OffenceTitle,
     "ds:ActualOffenceWording": offence.ActualOffenceWording,
-    "ds:RecordableOnPNCindicator": { "#text": offence.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
-    "ds:NotifiableToHOindicator": { "#text": offence.NotifiableToHOindicator ? "Y" : "N", "@_Literal": "Yes" },
+    "ds:RecordableOnPNCindicator": {
+      "#text": offence.RecordableOnPNCindicator ? "Y" : "N",
+      "@_Literal": offence.RecordableOnPNCindicator ? "Yes" : "No"
+    },
+    "ds:NotifiableToHOindicator": {
+      "#text": offence.NotifiableToHOindicator ? "Y" : "N",
+      "@_Literal": offence.NotifiableToHOindicator ? "Yes" : "No"
+    },
     "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
     "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
@@ -115,8 +133,8 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
 const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:PTIURN": c.PTIURN,
   "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
-  "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
   "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
+  "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
   "br7:RecordableOnPNCindicator": { "#text": c.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
   "br7:ForceOwner": {
     "ds:TopLevelCode": c.ForceOwner?.TopLevelCode,
@@ -275,7 +293,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
           }
         }
       },
-      "br7:PNCQueryDate": "2010-12-02",
+      "br7:PNCQueryDate": aho.PncQueryDate ? format(aho.PncQueryDate, "yyyy-MM-dd") : undefined,
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
       "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
       "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12"

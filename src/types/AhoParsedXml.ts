@@ -13,7 +13,7 @@ export interface Br7AnnotatedHearingOutcome {
   "br7:HearingOutcome": Br7HearingOutcome
   "br7:HasError": boolean
   CXE01: Cxe01
-  "br7:PNCQueryDate": string
+  "br7:PNCQueryDate"?: string
   "@_xmlns:ds": string
   "@_xmlns:xsi": string
   "@_xmlns:br7": string
@@ -108,9 +108,9 @@ export interface Br7HearingOutcome {
 export interface Br7Case {
   "ds:PTIURN": string
   "ds:CourtCaseReferenceNumber"?: string
-  "ds:PreChargeDecisionIndicator": Br7RecordableOnPnCindicator
+  "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
-  "br7:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
+  "br7:RecordableOnPNCindicator": Br7LiteralTextString
   "br7:ForceOwner": Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError": string
@@ -125,7 +125,7 @@ export interface Br7HearingDefendant {
   "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
-  "br7:RemandStatus": Br7RecordableOnPnCindicator
+  "br7:RemandStatus": Br7LiteralTextString
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": string
@@ -167,7 +167,7 @@ export interface DsName {
 
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
-  "ds:OffenceCategory": Br7RecordableOnPnCindicator
+  "ds:OffenceCategory": Br7LiteralTextString
   "ds:ArrestDate": string
   "ds:ChargeDate": string
   "ds:ActualOffenceDateCode": Br7Gender
@@ -176,35 +176,38 @@ export interface Br7Offence {
   "ds:LocationOfOffence": string
   "ds:OffenceTitle"?: string
   "ds:ActualOffenceWording": string
-  "ds:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
-  "ds:NotifiableToHOindicator": Br7RecordableOnPnCindicator
+  "ds:RecordableOnPNCindicator": Br7LiteralTextString
+  "ds:NotifiableToHOindicator": Br7LiteralTextString
   "ds:HomeOfficeClassification"?: string
   "ds:ConvictionDate": string
-  "br7:CommittedOnBail": Br7RecordableOnPnCindicator
+  "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
-  "br7:AddedByTheCourt": Br7RecordableOnPnCindicator
+  "br7:AddedByTheCourt": Br7LiteralTextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": string
   "@_SchemaVersion": string
 }
 
-export interface Br7RecordableOnPnCindicator {
+export interface Br7LiteralTextString {
   "#text"?: string
-  "@_Literal": string
+  "@_Literal"?: string
 }
 
 export interface Br7Result {
   "ds:CJSresultCode": number
   "ds:SourceOrganisation": Br7OrganisationUnit
   "ds:CourtType"?: string
-  "ds:ResultHearingType"?: Br7RecordableOnPnCindicator
+  "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
-  "ds:PleaStatus"?: Br7RecordableOnPnCindicator
-  "ds:ModeOfTrialReason"?: Br7RecordableOnPnCindicator
+  // "ds:AmountSpecifiedInResult": string
+  "ds:PleaStatus"?: Br7LiteralTextString
+  "ds:Verdict": Br7LiteralTextString
+  "ds:ModeOfTrialReason"?: Br7LiteralTextString
   "ds:ResultVariableText"?: string
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
+  "br7:PNCAdjudicationExists": Br7LiteralTextString
   "br7:ConvictingCourt"?: string
   "@_hasError": string
   "@_SchemaVersion": string
@@ -254,11 +257,11 @@ export interface Br7Hearing {
   "ds:CourtHearingLocation": Br7OrganisationUnit
   "ds:DateOfHearing": string
   "ds:TimeOfHearing": string
-  "ds:HearingLanguage": Br7RecordableOnPnCindicator
-  "ds:HearingDocumentationLanguage": Br7RecordableOnPnCindicator
-  "ds:DefendantPresentAtHearing": Br7RecordableOnPnCindicator
+  "ds:HearingLanguage": Br7LiteralTextString
+  "ds:HearingDocumentationLanguage": Br7LiteralTextString
+  "ds:DefendantPresentAtHearing": Br7LiteralTextString
   "br7:SourceReference": Br7SourceReference
-  "br7:CourtType"?: Br7RecordableOnPnCindicator
+  "br7:CourtType"?: Br7LiteralTextString
   "br7:CourtHouseCode": number
   "br7:CourtHouseName"?: string
   "@_hasError": string
