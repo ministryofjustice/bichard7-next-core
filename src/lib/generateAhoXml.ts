@@ -116,6 +116,7 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "ds:PTIURN": c.PTIURN,
   "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
   "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
+  "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
   "br7:RecordableOnPNCindicator": { "#text": c.RecordableOnPNCindicator ? "Y" : "N", "@_Literal": "Yes" },
   "br7:ForceOwner": {
     "ds:TopLevelCode": c.ForceOwner?.TopLevelCode,

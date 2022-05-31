@@ -107,6 +107,7 @@ export interface Br7HearingOutcome {
 
 export interface Br7Case {
   "ds:PTIURN": string
+  "ds:CourtCaseReferenceNumber"?: string
   "ds:PreChargeDecisionIndicator": Br7RecordableOnPnCindicator
   "br7:CourtReference": Br7CourtReference
   "br7:RecordableOnPNCindicator": Br7RecordableOnPnCindicator
