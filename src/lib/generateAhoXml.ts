@@ -13,6 +13,7 @@ import {
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
+  lookupSummonsCodeByCjsCode,
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
 
@@ -158,7 +159,12 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
     "@_SchemaVersion": "2.0"
   },
   "br7:HearingDefendant": {
-    "br7:ArrestSummonsNumber": { "#text": c.HearingDefendant.ArrestSummonsNumber, "@_Error": "HO100304" },
+    "br7:ArrestSummonsNumber": {
+      "#text": c.HearingDefendant.ArrestSummonsNumber,
+      "@_Error": c.HearingDefendant.ArrestSummonsNumber
+        ? lookupSummonsCodeByCjsCode(c.HearingDefendant.ArrestSummonsNumber)?.description
+        : undefined
+    },
     "br7:DefendantDetail": {
       "br7:PersonName": {
         "ds:Title": c.HearingDefendant.DefendantDetail.PersonName.Title,

@@ -139,7 +139,7 @@ export interface Br7Address {
 
 export interface Br7ArrestSummonsNumber {
   "#text": string
-  "@_Error": string
+  "@_Error"?: string
 }
 
 export interface Br7DefendantDetail {
