@@ -12,11 +12,11 @@ import type {
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
-  Hearing,
   Offence,
   OrganisationUnit,
   Result
 } from "src/types/AnnotatedHearingOutcome"
+import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnit => ({
@@ -170,14 +170,14 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   }
 })
 
-const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
+const mapXmlHearingToAho = (xmlHearing: Br7Hearing): unknown => ({
   CourtHearingLocation: mapXmlOrganisationalUnitToAho(xmlHearing["ds:CourtHearingLocation"]),
   DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]),
   TimeOfHearing: xmlHearing["ds:TimeOfHearing"],
   HearingLanguage: xmlHearing["ds:HearingLanguage"]["#text"] ?? "",
   HearingDocumentationLanguage: xmlHearing["ds:HearingDocumentationLanguage"]["#text"] ?? "",
   DefendantPresentAtHearing: xmlHearing["ds:DefendantPresentAtHearing"]["#text"] ?? "",
-  CourtHouseCode: xmlHearing["br7:CourtHouseCode"],
+  CourtHouseCode: Number(xmlHearing["br7:CourtHouseCode"]),
   SourceReference: {
     DocumentName: xmlHearing["br7:SourceReference"]["br7:DocumentName"],
     UniqueID: xmlHearing["br7:SourceReference"]["br7:UniqueID"],
@@ -187,7 +187,7 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
-const mapXmlToAho = (aho: AhoParsedXml): AnnotatedHearingOutcome => ({
+const mapXmlToAho = (aho: AhoParsedXml): unknown => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
       Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
@@ -205,7 +205,7 @@ export default (xml: string): AnnotatedHearingOutcome => {
 
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
-  const x = mapXmlToAho(rawParsedObj)
-  // TODO: Zod.parse
+  const rawAho = mapXmlToAho(rawParsedObj)
+  const x = annotatedHearingOutcomeSchema.parse(rawAho)
   return x
 }
