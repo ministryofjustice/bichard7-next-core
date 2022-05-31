@@ -151,7 +151,7 @@ export interface Br7DefendantDetail {
 
 export interface Br7Gender {
   "#text": number
-  "@_Literal": string
+  "@_Literal"?: string
 }
 
 export interface Br7PersonName {

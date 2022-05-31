@@ -12,6 +12,7 @@ import type {
 import {
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
+  lookupOffenceDateCodeByCjsCode,
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
 
@@ -109,7 +110,12 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     },
     "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
     "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
-    "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
+    "ds:ActualOffenceDateCode": {
+      "#text": Number(offence.ActualOffenceDateCode),
+      "@_Literal": offence.ActualOffenceDateCode
+        ? lookupOffenceDateCodeByCjsCode(offence.ActualOffenceDateCode)?.description
+        : ""
+    },
     "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
     "ds:ActualOffenceEndDate": {
       "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
@@ -131,7 +137,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
-    "br7:AddedByTheCourt": { "#text": String(offence.AddedByTheCourt), "@_Literal": "Yes" },
+    "br7:AddedByTheCourt": { "#text": offence.AddedByTheCourt ? "Y" : "N", "@_Literal": "Yes" },
     "br7:Result": mapAhoResultsToXml(offence.Result),
     "@_hasError": "false",
     "@_SchemaVersion": "4.0"
