@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
+import parsePncDate from "src/lib/parsePncDate"
 import type { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 
 type OffenceDates = {
@@ -53,20 +54,6 @@ type ParsedAHO = {
   }
 }
 
-const parsePncDate = (pncDate: string): Date | null => {
-  if (!pncDate || pncDate === "") {
-    return null
-  }
-  const parsedDate = pncDate.match(/(\d{2})(\d{2})(\d{4})/)
-  if (!parsedDate) {
-    return null
-  }
-  const day = parseInt(parsedDate[1], 10)
-  const month = parseInt(parsedDate[2], 10)
-  const year = parseInt(parsedDate[3], 10)
-  return new Date(Date.UTC(year, month - 1, day))
-}
-
 const extractDates = (offence: AhoPncOffence): OffenceDates => {
   const startDate = parsePncDate(offence.COF["@_OffStartDate"])
   if (!startDate) {
@@ -75,9 +62,11 @@ const extractDates = (offence: AhoPncOffence): OffenceDates => {
   const dates: OffenceDates = {
     startDate
   }
-  const endDate = parsePncDate(offence.COF["@_OffEndDate"])
-  if (endDate) {
-    dates.endDate = endDate
+  if (offence.COF["@_OffEndDate"] && offence.COF["@_OffEndDate"] !== "") {
+    const endDate = parsePncDate(offence.COF["@_OffEndDate"])
+    if (endDate) {
+      dates.endDate = endDate
+    }
   }
 
   return dates

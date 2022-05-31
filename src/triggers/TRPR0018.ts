@@ -7,10 +7,14 @@ const triggerCode = TriggerCode.TRPR0018
 
 const findMatchingPncOffence = (
   pncQuery: PncQueryResult,
-  // caseReference: string,
+  caseReference: string | undefined,
   sequenceNumber: number
 ): PncOffence | undefined =>
-  pncQuery.cases ? pncQuery.cases[0].offences.find((o) => o.offence.sequenceNumber === sequenceNumber) : undefined
+  pncQuery.cases
+    ? pncQuery.cases
+        .find((c) => c.courtCaseReference === caseReference)
+        ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
+    : undefined
 
 const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) => {
   if (!PncQuery) {
@@ -19,7 +23,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
   return AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce((triggers: Trigger[], offence) => {
     const pncOffence = findMatchingPncOffence(
       PncQuery,
-      // AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.MagistratesCourtReference,
+      AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber,
       offence.CourtOffenceSequenceNumber
     )
     if (!pncOffence) {
@@ -28,7 +32,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
     const courtStart = offence.ActualOffenceStartDate.StartDate
     const pncStart = pncOffence.offence.startDate
 
-    const courtEnd = offence.ActualOffenceEndDate.EndDate
+    const courtEnd = offence.ActualOffenceEndDate?.EndDate
     const pncEnd = pncOffence.offence.endDate
 
     if (!courtStart || !pncStart) {

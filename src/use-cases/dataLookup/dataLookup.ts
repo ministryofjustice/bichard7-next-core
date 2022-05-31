@@ -81,9 +81,6 @@ const lookupQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undef
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   alcoholLevelMethod.find((x) => x.spiCode === spiCode)
 
-const lookupOffenceCodeByCjsCode = (cjsCode: string): OffenceCode | undefined =>
-  offenceCode.find((x) => x.cjsCode === cjsCode)
-
 const lookupOrganisationUnitByThirdLevelPsaCode = (
   thirdLevelPsaCode: number | string
 ): OrganisationUnitData | undefined =>
@@ -134,6 +131,9 @@ const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined => yesNo.find(
 const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
   vehicleCode.find((x) => x.cjsCode === cjsCode)
 
+const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
+  offenceCode.find((x) => x.cjsCode === cjsCode)
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -144,7 +144,6 @@ export {
   lookupModeOfTrialReasonByCjsCode,
   lookupQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceCodeByCjsCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupResultCodeByCjsCode,
   lookupPncDisposalByCjsCode,
@@ -160,5 +159,6 @@ export {
   lookupSummonsCodeByCjsCode,
   lookupVehicleCodeByCjsCode,
   lookupYesNoByCjsCode,
-  lookupOffenceDateCodeByCjsCode
+  lookupOffenceDateCodeByCjsCode,
+  lookupOffenceByCjsCode
 }

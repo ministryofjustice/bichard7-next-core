@@ -50,7 +50,7 @@ const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessa
     <ASI>
       <FSC>K${forceStationCode}</FSC>
       <IDS>K00/${prosecutorRef} ${personFamilyName}            </IDS>
-      <CCR>K97/1626/8395Q                 </CCR>
+      <CCR>K97/1626/839512Q               </CCR>
       ${cofString}
     </ASI>
     <GMT>000008073ENQR004540S</GMT>
