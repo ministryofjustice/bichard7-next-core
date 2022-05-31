@@ -9,7 +9,11 @@ import type {
   OffenceReason,
   Result
 } from "src/types/AnnotatedHearingOutcome"
-import { lookupModeOfTrialReasonByCjsCode, lookupVerdictByCjsCode } from "src/use-cases/dataLookup"
+import {
+  lookupModeOfTrialReasonByCjsCode,
+  lookupOffenceCategoryByCjsCode,
+  lookupVerdictByCjsCode
+} from "src/use-cases/dataLookup"
 
 const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
   results.map((result) => ({
@@ -99,7 +103,10 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
       "ds:OffenceReason": mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason!),
       "@_SchemaVersion": "2.0"
     },
-    "ds:OffenceCategory": { "#text": String(offence.OffenceCategory), "@_Literal": "Either Way" },
+    "ds:OffenceCategory": {
+      "#text": String(offence.OffenceCategory),
+      "@_Literal": offence.OffenceCategory ? lookupOffenceCategoryByCjsCode(offence.OffenceCategory)?.description : ""
+    },
     "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
     "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
     "ds:ActualOffenceDateCode": { "#text": Number(offence.ActualOffenceDateCode), "@_Literal": "between" },
