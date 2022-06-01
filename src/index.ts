@@ -8,9 +8,10 @@ import generateTriggers from "./use-cases/generateTriggers"
 import parseSpiResult from "./use-cases/parseSpiResult"
 import transformSpiToAho from "./use-cases/transformSpiToAho"
 
-export default (message: string, pncGateway: PncGateway): BichardResultType => {
+export default (message: string, pncGateway: PncGateway, isAhoXml = false): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome
 
+  // TODO: Put if statement for type of message (aho or spi, both are xml files) in here
   const spiResult = parseSpiResult(message)
   hearingOutcome = transformSpiToAho(spiResult)
 

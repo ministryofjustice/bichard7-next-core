@@ -124,7 +124,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         // StartTime:
         // OffenceEndTime: xmlOffence.
         // OffenceTime: xmlOffence.Offence
-        ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"]),
+        ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"] ?? ""),
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: xmlOffence["br7:CourtOffenceSequenceNumber"],
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
@@ -204,8 +204,8 @@ export default (xml: string): AnnotatedHearingOutcome => {
   }
 
   const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(xml)
-  const rawAho = mapXmlToAho(rawParsedObj)
-  const x = annotatedHearingOutcomeSchema.parse(rawAho)
+  const rawParsedObj = parser.parse(xml) // JSONify XML file
+  const rawAho = mapXmlToAho(rawParsedObj) // Map anything extra that's awkward
+  const x = annotatedHearingOutcomeSchema.parse(rawAho) // Validate/build with zod
   return x
 }
