@@ -75,32 +75,43 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "@_SchemaVersion": "2.0"
   }))
 
-const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReason => {
-  // if (offenceReason.__type === "LocalOffenceReason") {
-  //   return {
-  //     "ds:LocalOffenceCode": {
-  //       "ds:AreaCode": offenceReason.LocalOffenceCode.AreaCode,
-  //       "ds:OffenceCode": offenceReason.LocalOffenceCode.OffenceCode
-  //     }
-  //   }
-  // }
+const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReason | undefined => {
+  if (offenceReason.__type === "LocalOffenceReason") {
+    return {
+      "ds:LocalOffenceCode": {
+        "ds:AreaCode": offenceReason.LocalOffenceCode.AreaCode,
+        "ds:OffenceCode": { "#text": offenceReason.LocalOffenceCode.OffenceCode }
+      }
+    }
+  }
   if (offenceReason.__type === "NationalOffenceReason") {
     switch (offenceReason.OffenceCode.__type) {
       case "NonMatchingOffenceCode":
         return {
           "ds:OffenceCode": {
             "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
+            "ds:Year": offenceReason.OffenceCode.Year ?? "",
             "ds:Reason": Number(offenceReason.OffenceCode.Reason),
-            "ds:Year": offenceReason.OffenceCode.Year ?? ""
+            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
-      // case "CommonLawOffenceCode":
-      //   break
-      // case "IndictmentOffenceCode":
-      //   break
+      case "CommonLawOffenceCode":
+        return {
+          "ds:OffenceCode": {
+            "ds:CommonLawOffence": offenceReason.OffenceCode.CommonLawOffence,
+            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
+          }
+        }
+      case "IndictmentOffenceCode":
+        return {
+          "ds:OffenceCode": {
+            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
+          }
+        }
     }
   }
-  return { "ds:OffenceCode": { "ds:ActOrSource": "", "ds:Reason": 0, "ds:Year": "" } }
 }
 
 const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
@@ -125,6 +136,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
         "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
       },
       "ds:OffenceReason": mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason!),
+      "ds:OffenceReasonSequence": offence.CriminalProsecutionReference.OffenceReasonSequence,
       "@_SchemaVersion": "2.0"
     },
     "ds:OffenceCategory": {
@@ -165,7 +177,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
-    "br7:AddedByTheCourt": { "#text": offence.AddedByTheCourt ? "Y" : "N", "@_Literal": "Yes" },
+    // "br7:AddedByTheCourt": { "#text": offence.AddedByTheCourt ? "Y" : "N", "@_Literal": "Yes" },
     "br7:Result": mapAhoResultsToXml(offence.Result),
     "@_hasError": "false",
     "@_SchemaVersion": "4.0"

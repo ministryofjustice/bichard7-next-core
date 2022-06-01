@@ -190,15 +190,10 @@ export interface Br7Offence {
   "ds:ConvictionDate": string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
-  "br7:AddedByTheCourt": Br7LiteralTextString
+  // "br7:AddedByTheCourt": Br7LiteralTextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": string
   "@_SchemaVersion": string
-}
-
-export interface Br7LiteralTextString {
-  "#text"?: string
-  "@_Literal"?: string
 }
 
 export interface Br7Result {
@@ -240,7 +235,8 @@ export interface DsActualOffenceStartDate {
 
 export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
-  "ds:OffenceReason": Br7OffenceReason
+  "ds:OffenceReason"?: Br7OffenceReason
+  "ds:OffenceReasonSequence"?: number
   "@_SchemaVersion": string
 }
 
@@ -252,13 +248,31 @@ export interface DsDefendantOrOffender {
 }
 
 export interface Br7OffenceReason {
-  "ds:OffenceCode": DsOffenceCode
+  "ds:OffenceCode"?: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
+  "ds:LocalOffenceCode"?: DsLocalOffenceCode
 }
 
-export interface DsOffenceCode {
+export interface NonMatchingOffenceCode {
   "ds:ActOrSource": string
   "ds:Year": string
   "ds:Reason": number
+  "ds:Qualifier"?: string
+}
+
+export interface CommonLawOffenceCode {
+  "ds:CommonLawOffence": string
+  "ds:Reason": number
+  "ds:Qualifier"?: string
+}
+
+export interface IndictmentOffenceCode {
+  "ds:Reason": number
+  "ds:Qualifier"?: string
+}
+
+export interface DsLocalOffenceCode {
+  "ds:AreaCode": string
+  "ds:OffenceCode": Br7ErrorTextString
 }
 
 export interface Br7Hearing {
@@ -280,4 +294,14 @@ export interface Br7SourceReference {
   "br7:DocumentName": string
   "br7:UniqueID": string
   "br7:DocumentType": string
+}
+
+export interface Br7LiteralTextString {
+  "#text"?: string
+  "@_Literal"?: string
+}
+
+export interface Br7ErrorTextString {
+  "#text"?: string
+  "@_Error"?: string
 }

@@ -130,9 +130,9 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",
-        HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"],
+        HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]
         // ResultHalfLifeHours: xmlOffence.
-        AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]["#text"]
+        // AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]["#text"]
       } as Offence)
   )
 }
