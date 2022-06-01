@@ -353,9 +353,9 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
       "br7:HasError": true,
       CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
       "br7:PNCQueryDate": aho.PncQueryDate ? format(aho.PncQueryDate, "yyyy-MM-dd") : undefined,
+      "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
-      "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12"
+      "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
     }
   } as AhoParsedXml
 }
