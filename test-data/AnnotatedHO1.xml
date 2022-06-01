@@ -37,7 +37,7 @@
                 <ds:OrganisationUnitCode>010000</ds:OrganisationUnitCode>
             </br7:ForceOwner>
             <br7:HearingDefendant hasError="true">
-                <br7:ArrestSummonsNumber Error="HO100304">0873B71200000012001C</br7:ArrestSummonsNumber>
+                <br7:ArrestSummonsNumber Error="HO100304">1101ZD0100000410770Y</br7:ArrestSummonsNumber>
                 <br7:DefendantDetail>
                     <br7:PersonName>
                         <ds:Title>Mr</ds:Title>

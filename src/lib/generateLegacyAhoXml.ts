@@ -149,7 +149,9 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
           offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber,
         "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
       },
-      "ds:OffenceReason": mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason!),
+      "ds:OffenceReason": offence.CriminalProsecutionReference.OffenceReason
+        ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
+        : undefined,
       "ds:OffenceReasonSequence": offence.CriminalProsecutionReference.OffenceReasonSequence,
       "@_SchemaVersion": "2.0"
     },
