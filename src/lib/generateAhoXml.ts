@@ -4,6 +4,7 @@ import type {
   Adj,
   AhoParsedXml,
   Br7Case,
+  Br7Duration,
   Br7Hearing,
   Br7Offence,
   Br7OffenceReason,
@@ -16,6 +17,7 @@ import type {
 import type {
   AnnotatedHearingOutcome,
   Case,
+  Duration,
   Hearing,
   Offence,
   OffenceReason,
@@ -47,6 +49,13 @@ const mapAhoUrgentToXml = (urgent: Urgent): Br7Urgent => ({
   "br7:urgency": urgent.urgency
 })
 
+const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
+  duration.map((d) => ({
+    "ds:DurationType": d.DurationType,
+    "ds:DurationUnit": d.DurationUnit,
+    "ds:DurationLength": d.DurationLength
+  }))
+
 const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
   results.map((result) => ({
     "ds:CJSresultCode": result.CJSresultCode,
@@ -54,12 +63,15 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : "",
+    "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     // "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult,
     "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
-    "ds:Verdict": {
-      "#text": result.Verdict,
-      "@_Literal": result.Verdict ? lookupVerdictByCjsCode(result.Verdict)?.description : undefined
-    },
+    "ds:Verdict": result.Verdict
+      ? {
+          "#text": result.Verdict,
+          "@_Literal": result.Verdict ? lookupVerdictByCjsCode(result.Verdict)?.description : undefined
+        }
+      : undefined,
     "ds:ModeOfTrialReason": {
       "#text": result.ModeOfTrialReason,
       "@_Literal": result.ModeOfTrialReason
@@ -176,7 +188,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
       "@_Literal": offence.NotifiableToHOindicator ? "Yes" : "No"
     },
     "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
-    "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : "",
+    "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : undefined,
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
     // "br7:AddedByTheCourt": { "#text": offence.AddedByTheCourt ? "Y" : "N", "@_Literal": "Yes" },

@@ -77,6 +77,11 @@ export interface DISList {
   DIS: Dis[]
 }
 
+export interface Br7Duration {
+  "ds:DurationType": string
+  "ds:DurationUnit": string
+  "ds:DurationLength": number
+}
 export interface Dis {
   "@_IntfcUpdateType": string
   "@_QtyDate"?: string
@@ -187,7 +192,7 @@ export interface Br7Offence {
   "ds:RecordableOnPNCindicator": Br7LiteralTextString
   "ds:NotifiableToHOindicator": Br7LiteralTextString
   "ds:HomeOfficeClassification"?: string
-  "ds:ConvictionDate": string
+  "ds:ConvictionDate"?: string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
   // "br7:AddedByTheCourt": Br7LiteralTextString
@@ -204,7 +209,7 @@ export interface Br7Result {
   "ds:ResultHearingDate"?: string
   // "ds:AmountSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString
-  "ds:Verdict": Br7LiteralTextString
+  "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
   "ds:ResultVariableText"?: string
   "ds:ResultHalfLifeHours"?: number
