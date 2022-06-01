@@ -28,7 +28,7 @@ const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): Organis
 })
 
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
-  CJSresultCode: xmlResult["ds:CJSresultCode"],
+  CJSresultCode: Number(xmlResult["ds:CJSresultCode"]),
   // OffenceRemandStatus: xmlResult.
   SourceOrganisation: mapXmlOrganisationalUnitToAho(xmlResult["ds:SourceOrganisation"]),
   CourtType: xmlResult["ds:CourtType"],
@@ -52,13 +52,13 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   // WarrantIssueDate: xmlResult.
   // CRESTDisposalCode: xmlResult.
   ModeOfTrialReason: xmlResult["ds:ModeOfTrialReason"]?.["#text"],
-  PNCDisposalType: xmlResult["br7:PNCDisposalType"],
+  PNCDisposalType: Number(xmlResult["br7:PNCDisposalType"]),
   // PNCAdjudicationExists: xmlResult.p
   ResultClass: xmlResult["br7:ResultClass"],
   // NumberOfOffencesTIC: xmlResult.
   // ReasonForOffenceBailConditions: xmlResult
   ResultQualifierVariable: [],
-  ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"],
+  ResultHalfLifeHours: Number(xmlResult["ds:ResultHalfLifeHours"]),
   // Urgent: {},
   ResultApplicableQualifierCode: []
   // BailCondition: xmlResult.
@@ -126,7 +126,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         // OffenceTime: xmlOffence.Offence
         ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"] ?? ""),
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
-        CourtOffenceSequenceNumber: xmlOffence["br7:CourtOffenceSequenceNumber"],
+        CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",
