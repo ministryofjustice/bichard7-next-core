@@ -26,7 +26,7 @@ export interface Cxe01 {
 }
 
 export interface CourtCases {
-  CourtCase: CourtCase[]
+  CourtCase?: CourtCase[]
 }
 
 export interface CourtCase {
@@ -46,8 +46,8 @@ export interface Offences {
 
 export interface Offence {
   COF: Cof
-  ADJ: Adj
-  DISList: DISList
+  ADJ?: Adj
+  DISList?: DISList
 }
 
 export interface Adj {
@@ -69,22 +69,22 @@ export interface Cof {
   "@_OffStartTime": string
   "@_OffenceQualifier1": string
   "@_OffenceQualifier2": string
-  "@_OffenceTitle"?: string
+  "@_OffenceTitle": string
   "@_ReferenceNumber": string
 }
 
 export interface DISList {
-  DIS: Dis
+  DIS: Dis[]
 }
 
 export interface Dis {
   "@_IntfcUpdateType": string
-  "@_QtyDate": string
-  "@_QtyDuration": string
+  "@_QtyDate"?: string
+  "@_QtyDuration"?: string
   "@_QtyMonetaryValue": string
-  "@_QtyUnitsFined": string
-  "@_Qualifiers": string
-  "@_Text": string
+  "@_QtyUnitsFined"?: string
+  "@_Qualifiers"?: string
+  "@_Text"?: string
   "@_Type": string
 }
 

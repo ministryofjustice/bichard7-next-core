@@ -1,6 +1,7 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
 import type {
+  Adj,
   AhoParsedXml,
   Br7Case,
   Br7Hearing,
@@ -9,7 +10,8 @@ import type {
   Br7OrganisationUnit,
   Br7Result,
   Br7Urgent,
-  Cxe01
+  Cxe01,
+  DISList
 } from "src/types/AhoParsedXml"
 import type {
   AnnotatedHearingOutcome,
@@ -21,7 +23,7 @@ import type {
   Result,
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "src/types/PncQueryResult"
+import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
 import {
   lookupDefendantPresentAtHearingByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
@@ -229,6 +231,34 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
   "@_SchemaVersion": "4.0"
 })
 
+const mapOffenceADJ = (adjudication: {
+  verdict: string
+  sentenceDate: string
+  offenceTICNumber: number
+  plea: string
+  weedFlag?: string
+}): Adj => ({
+  "@_Adjudication1": adjudication.verdict,
+  "@_DateOfSentence": adjudication.sentenceDate,
+  "@_IntfcUpdateType": "",
+  "@_OffenceTICNumber": String(adjudication.offenceTICNumber),
+  "@_Plea": adjudication.plea,
+  "@_WeedFlag": adjudication.weedFlag ?? ""
+})
+
+const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
+  DIS: disposals.map((d) => ({
+    "@_IntfcUpdateType": "I",
+    "@_QtyDate": d.qtyDate,
+    "@_QtyDuration": d.qtyDuration,
+    "@_QtyMonetaryValue": d.qtyMonetaryValue ?? "",
+    "@_QtyUnitsFined": d.qtyUnitsFined,
+    "@_Qualifiers": d.qualifiers,
+    "@_Text": d.text,
+    "@_Type": String(d.type)
+  }))
+})
+
 const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
   "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
   "ds:DateOfHearing": format(hearing.DateOfHearing, "yyyy-MM-dd"),
@@ -260,85 +290,28 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     "@_PNCID": pncQuery.pncId
   },
   CourtCases: {
-    CourtCase: [
-      {
-        CCR: { "@_CourtCaseRefNo": "", "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
-        Offences: {
-          Offence: [
-            {
-              COF: {
-                "@_ACPOOffenceCode": "1:9:2:1",
-                "@_CJSOffenceCode": "OF61102",
-                "@_IntfcUpdateType": "K",
-                "@_OffEndDate": "12052006",
-                "@_OffEndTime": "",
-                "@_OffStartDate": "12052006",
-                "@_OffStartTime": "",
-                "@_OffenceQualifier1": "",
-                "@_OffenceQualifier2": "",
-                "@_OffenceTitle": "Section 47 - assault    occasioning actual bodily harm",
-                "@_ReferenceNumber": "001"
-              },
-              ADJ: {
-                "@_Adjudication1": "GUILTY",
-                "@_DateOfSentence": "12112008",
-                "@_IntfcUpdateType": "I",
-                "@_OffenceTICNumber": "0000",
-                "@_Plea": "NO PLEA TAKEN",
-                "@_WeedFlag": ""
-              },
-              DISList: {
-                DIS: {
-                  "@_IntfcUpdateType": "I",
-                  "@_QtyDate": "",
-                  "@_QtyDuration": "M3",
-                  "@_QtyMonetaryValue": "",
-                  "@_QtyUnitsFined": "",
-                  "@_Qualifiers": "",
-                  "@_Text": "",
-                  "@_Type": "1115"
-                }
-              }
-            },
-            {
-              COF: {
-                "@_ACPOOffenceCode": "7:1:7:1",
-                "@_CJSOffenceCode": "PU86002",
-                "@_IntfcUpdateType": "K",
-                "@_OffEndDate": "12052006",
-                "@_OffEndTime": "",
-                "@_OffStartDate": "12052006",
-                "@_OffStartTime": "",
-                "@_OffenceQualifier1": "",
-                "@_OffenceQualifier2": "",
-                "@_OffenceTitle": "Public order - violent disorder",
-                "@_ReferenceNumber": "002"
-              },
-              ADJ: {
-                "@_Adjudication1": "GUILTY",
-                "@_DateOfSentence": "12112008",
-                "@_IntfcUpdateType": "I",
-                "@_OffenceTICNumber": "0000",
-                "@_Plea": "NO PLEA TAKEN",
-                "@_WeedFlag": ""
-              },
-              DISList: {
-                DIS: {
-                  "@_IntfcUpdateType": "I",
-                  "@_QtyDate": "",
-                  "@_QtyDuration": "M3",
-                  "@_QtyMonetaryValue": "",
-                  "@_QtyUnitsFined": "",
-                  "@_Qualifiers": "",
-                  "@_Text": "",
-                  "@_Type": "1115"
-                }
-              }
-            }
-          ]
-        }
+    CourtCase: pncQuery.cases?.map((c) => ({
+      CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
+      Offences: {
+        Offence: c.offences.map((offence) => ({
+          COF: {
+            "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
+            "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
+            "@_IntfcUpdateType": "K",
+            "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
+            "@_OffEndTime": offence.offence.endTime ?? "",
+            "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
+            "@_OffStartTime": offence.offence.startTime ?? "0000",
+            "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
+            "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
+            "@_OffenceTitle": offence.offence.title ?? "",
+            "@_ReferenceNumber": String(offence.offence.sequenceNumber).padStart(3, "0")
+          },
+          ADJ: offence.adjudication ? mapOffenceADJ(offence.adjudication) : undefined,
+          DISList: offence.disposals ? mapOffenceDIS(offence.disposals) : undefined
+        }))
       }
-    ]
+    }))
   }
 })
 
