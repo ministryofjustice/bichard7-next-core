@@ -70,7 +70,8 @@ describe("TRPR0018", () => {
     )
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code, offenceSequenceNumber: 1 }] })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
   })
 
   it("should generate multiple triggers for multiple matching offences", async () => {
@@ -100,13 +101,11 @@ describe("TRPR0018", () => {
     )
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({
-      exceptions: [],
-      triggers: [
-        { code, offenceSequenceNumber: 1 },
-        { code, offenceSequenceNumber: 2 }
-      ]
-    })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toStrictEqual([
+      { code, offenceSequenceNumber: 1 },
+      { code, offenceSequenceNumber: 2 }
+    ])
   })
 
   it("should not generate triggers when the start dates match and offence end date and pnc end date is missing", async () => {
@@ -126,10 +125,8 @@ describe("TRPR0018", () => {
       ...pncOffenceDateOverrides([{ startDate: "2021-02-28" }])
     })
 
-    expect(result).toStrictEqual({
-      exceptions: [],
-      triggers: []
-    })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toHaveLength(0)
   })
 
   it("should not generate triggers when all of the dates match", async () => {
@@ -149,10 +146,8 @@ describe("TRPR0018", () => {
       ...pncOffenceDateOverrides([{ startDate: "2021-01-28", endDate: "2021-02-28" }])
     })
 
-    expect(result).toStrictEqual({
-      exceptions: [],
-      triggers: []
-    })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toHaveLength(0)
   })
 
   it("should not generate triggers when all of the dates are the same", async () => {
@@ -172,9 +167,7 @@ describe("TRPR0018", () => {
       ...pncOffenceDateOverrides([{ startDate: "2021-02-28", endDate: "2021-02-28" }])
     })
 
-    expect(result).toStrictEqual({
-      exceptions: [],
-      triggers: []
-    })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toHaveLength(0)
   })
 })

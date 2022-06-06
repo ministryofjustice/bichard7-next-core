@@ -25,7 +25,8 @@ describe("TRPR0015", () => {
     const result = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
   })
 
   it("should generate a case level trigger if another trigger is not generated when the case is recordable", async () => {
@@ -38,7 +39,8 @@ describe("TRPR0015", () => {
     const result = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code }] })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toStrictEqual([{ code }])
   })
 
   it("should generate a case level trigger if another trigger is generated when the case is not recordable", async () => {
@@ -54,7 +56,8 @@ describe("TRPR0015", () => {
     const result = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({ exceptions: [], triggers: [{ code: otherTriggerCode }, { code }] })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
   })
 
   it("should not generate a case level trigger if another trigger is not generated when the case is not recordable", async () => {
@@ -71,6 +74,7 @@ describe("TRPR0015", () => {
     })
 
     // Check the right triggers are generated
-    expect(result).toStrictEqual({ exceptions: [], triggers: [] })
+    expect(result.exceptions).toHaveLength(0)
+    expect(result.triggers).toHaveLength(0)
   })
 })

@@ -52,5 +52,6 @@ const pncQueryResultSchema = z.object({
 export type PncOffence = z.infer<typeof pncOffenceSchema>
 export type PncQueryResult = z.infer<typeof pncQueryResultSchema>
 export type PncCase = z.infer<typeof pncCaseSchema>
+export type PNCDisposal = z.infer<typeof pncDisposalSchema>
 
 export { pncQueryResultSchema }

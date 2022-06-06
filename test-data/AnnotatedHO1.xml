@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<br7:AnnotatedHearingOutcome xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12">
+    <br7:HearingOutcome>
+        <br7:Hearing hasError="false" SchemaVersion="4.0">
+            <ds:CourtHearingLocation SchemaVersion="2.0">
+                <ds:TopLevelCode>B</ds:TopLevelCode>
+                <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+            </ds:CourtHearingLocation>
+            <ds:DateOfHearing>2008-05-07</ds:DateOfHearing>
+            <ds:TimeOfHearing>15:01</ds:TimeOfHearing>
+            <ds:HearingLanguage Literal="Don't Know">D</ds:HearingLanguage>
+            <ds:HearingDocumentationLanguage Literal="Don't Know">D</ds:HearingDocumentationLanguage>
+            <ds:DefendantPresentAtHearing Literal="Yes">Y</ds:DefendantPresentAtHearing>
+            <br7:SourceReference>
+                <br7:DocumentName>SPI NUALA MALLON</br7:DocumentName>
+                <br7:UniqueID>02-12-201014:35ID:414d51204252375f514d202020202020cf67174c013b0320</br7:UniqueID>
+                <br7:DocumentType>SPI Case Result</br7:DocumentType>
+            </br7:SourceReference>
+            <br7:CourtType Literal="MC adult">MCA</br7:CourtType>
+            <br7:CourtHouseCode>2014</br7:CourtHouseCode>
+            <br7:CourtHouseName>Magistrates' Courts Lancashire Preston</br7:CourtHouseName>
+        </br7:Hearing>
+        <br7:Case hasError="false" SchemaVersion="4.0">
+            <ds:PTIURN>01KY0370016</ds:PTIURN>
+            <ds:PreChargeDecisionIndicator Literal="No">N</ds:PreChargeDecisionIndicator>
+            <br7:CourtReference>
+                <ds:MagistratesCourtReference>01KY0370016</ds:MagistratesCourtReference>
+            </br7:CourtReference>
+            <br7:RecordableOnPNCindicator Literal="Yes">Y</br7:RecordableOnPNCindicator>
+            <br7:ForceOwner SchemaVersion="2.0">
+                <ds:SecondLevelCode>01</ds:SecondLevelCode>
+                <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
+                <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                <ds:OrganisationUnitCode>010000</ds:OrganisationUnitCode>
+            </br7:ForceOwner>
+            <br7:HearingDefendant hasError="true">
+                <br7:ArrestSummonsNumber Error="HO100304">0873B71200000012001C</br7:ArrestSummonsNumber>
+                <br7:DefendantDetail>
+                    <br7:PersonName>
+                        <ds:Title>Mr</ds:Title>
+                        <ds:GivenName NameSequence="1">NUALA</ds:GivenName>
+                        <ds:FamilyName NameSequence="1">MALLON</ds:FamilyName>
+                    </br7:PersonName>
+                    <br7:GeneratedPNCFilename>MALLON/NUALA</br7:GeneratedPNCFilename>
+                    <br7:BirthDate>1998-08-06</br7:BirthDate>
+                    <br7:Gender Literal="male">1</br7:Gender>
+                </br7:DefendantDetail>
+                <br7:Address>
+                    <ds:AddressLine1>person addline1</ds:AddressLine1>
+                    <ds:AddressLine2>person addline2</ds:AddressLine2>
+                    <ds:AddressLine3>person addline3</ds:AddressLine3>
+                </br7:Address>
+                <br7:RemandStatus Literal="Unconditional Bail">UB</br7:RemandStatus>
+                <br7:CourtPNCIdentifier>2001/0000837Z</br7:CourtPNCIdentifier>
+                <br7:Offence hasError="false" SchemaVersion="4.0">
+                    <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                        <ds:DefendantOrOffender>
+                            <ds:Year>08</ds:Year>
+                            <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                <ds:SecondLevelCode>73</ds:SecondLevelCode>
+                                <ds:ThirdLevelCode>B7</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>12</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>73B712</ds:OrganisationUnitCode>
+                            </ds:OrganisationUnitIdentifierCode>
+                            <ds:DefendantOrOffenderSequenceNumber>00000012001</ds:DefendantOrOffenderSequenceNumber>
+                            <ds:CheckDigit>C</ds:CheckDigit>
+                        </ds:DefendantOrOffender>
+                        <ds:OffenceReason>
+                            <ds:OffenceCode>
+                                <ds:ActOrSource>TH</ds:ActOrSource>
+                                <ds:Year>68</ds:Year>
+                                <ds:Reason>059</ds:Reason>
+                            </ds:OffenceCode>
+                        </ds:OffenceReason>
+                    </ds:CriminalProsecutionReference>
+                    <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                    <ds:ArrestDate>2008-04-06</ds:ArrestDate>
+                    <ds:ChargeDate>2008-04-09</ds:ChargeDate>
+                    <ds:ActualOffenceDateCode Literal="between">4</ds:ActualOffenceDateCode>
+                    <ds:ActualOffenceStartDate>
+                        <ds:StartDate>2002-04-12</ds:StartDate>
+                    </ds:ActualOffenceStartDate>
+                    <ds:ActualOffenceEndDate>
+                        <ds:EndDate>2002-04-12</ds:EndDate>
+                    </ds:ActualOffenceEndDate>
+                    <ds:LocationOfOffence>offence 1 location</ds:LocationOfOffence>
+                    <ds:OffenceTitle>Obtain property by deception</ds:OffenceTitle>
+                    <ds:ActualOffenceWording>long text talking about offence 1</ds:ActualOffenceWording>
+                    <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                    <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                    <ds:HomeOfficeClassification>053/01</ds:HomeOfficeClassification>
+                    <ds:ConvictionDate>2008-05-02</ds:ConvictionDate>
+                    <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                    <br7:CourtOffenceSequenceNumber>1</br7:CourtOffenceSequenceNumber>
+                    <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                    <br7:Result hasError="false" SchemaVersion="2.0">
+                        <ds:CJSresultCode>1044</ds:CJSresultCode>
+                        <ds:SourceOrganisation SchemaVersion="2.0">
+                            <ds:TopLevelCode>B</ds:TopLevelCode>
+                            <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                            <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                            <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                            <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+                        </ds:SourceOrganisation>
+                        <ds:CourtType>MCA</ds:CourtType>
+                        <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                        <ds:ResultHearingDate>2008-05-02</ds:ResultHearingDate>
+                        <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                        <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
+                        <ds:ResultVariableText>result text for result code 1044</ds:ResultVariableText>
+                        <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+                        <br7:PNCDisposalType>1044</br7:PNCDisposalType>
+                        <br7:ResultClass>Sentence</br7:ResultClass>
+                        <br7:ConvictingCourt>1375</br7:ConvictingCourt>
+                    </br7:Result>
+                </br7:Offence>
+                <br7:Offence hasError="false" SchemaVersion="4.0">
+                    <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                        <ds:DefendantOrOffender>
+                            <ds:Year>08</ds:Year>
+                            <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                <ds:SecondLevelCode>73</ds:SecondLevelCode>
+                                <ds:ThirdLevelCode>B7</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>12</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>73B712</ds:OrganisationUnitCode>
+                            </ds:OrganisationUnitIdentifierCode>
+                            <ds:DefendantOrOffenderSequenceNumber>00000012001</ds:DefendantOrOffenderSequenceNumber>
+                            <ds:CheckDigit>C</ds:CheckDigit>
+                        </ds:DefendantOrOffender>
+                        <ds:OffenceReason>
+                            <ds:OffenceCode>
+                                <ds:ActOrSource>TH</ds:ActOrSource>
+                                <ds:Year>68</ds:Year>
+                                <ds:Reason>058</ds:Reason>
+                            </ds:OffenceCode>
+                        </ds:OffenceReason>
+                    </ds:CriminalProsecutionReference>
+                    <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                    <ds:ArrestDate>2008-04-06</ds:ArrestDate>
+                    <ds:ChargeDate>2008-04-09</ds:ChargeDate>
+                    <ds:ActualOffenceDateCode Literal="between">4</ds:ActualOffenceDateCode>
+                    <ds:ActualOffenceStartDate>
+                        <ds:StartDate>2002-04-12</ds:StartDate>
+                    </ds:ActualOffenceStartDate>
+                    <ds:ActualOffenceEndDate>
+                        <ds:EndDate>2002-04-12</ds:EndDate>
+                    </ds:ActualOffenceEndDate>
+                    <ds:LocationOfOffence>offence 2 location</ds:LocationOfOffence>
+                    <ds:OffenceTitle>Abstract / use without authority electricity</ds:OffenceTitle>
+                    <ds:ActualOffenceWording>long text talking about offence 2</ds:ActualOffenceWording>
+                    <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                    <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                    <ds:HomeOfficeClassification>043/00</ds:HomeOfficeClassification>
+                    <ds:ConvictionDate>2008-05-02</ds:ConvictionDate>
+                    <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                    <br7:CourtOffenceSequenceNumber>2</br7:CourtOffenceSequenceNumber>
+                    <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                    <br7:Result hasError="false" SchemaVersion="2.0">
+                        <ds:CJSresultCode>1044</ds:CJSresultCode>
+                        <ds:SourceOrganisation SchemaVersion="2.0">
+                            <ds:TopLevelCode>B</ds:TopLevelCode>
+                            <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                            <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                            <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                            <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+                        </ds:SourceOrganisation>
+                        <ds:CourtType>MCA</ds:CourtType>
+                        <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                        <ds:ResultHearingDate>2008-05-02</ds:ResultHearingDate>
+                        <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                        <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
+                        <ds:ResultVariableText>result text for result code 1044</ds:ResultVariableText>
+                        <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+                        <br7:PNCDisposalType>1044</br7:PNCDisposalType>
+                        <br7:ResultClass>Sentence</br7:ResultClass>
+                        <br7:ConvictingCourt>1375</br7:ConvictingCourt>
+                    </br7:Result>
+                </br7:Offence>
+                <br7:Offence hasError="false" SchemaVersion="4.0">
+                    <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                        <ds:DefendantOrOffender>
+                            <ds:Year>08</ds:Year>
+                            <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                <ds:SecondLevelCode>73</ds:SecondLevelCode>
+                                <ds:ThirdLevelCode>B7</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>12</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>73B712</ds:OrganisationUnitCode>
+                            </ds:OrganisationUnitIdentifierCode>
+                            <ds:DefendantOrOffenderSequenceNumber>00000012001</ds:DefendantOrOffenderSequenceNumber>
+                            <ds:CheckDigit>C</ds:CheckDigit>
+                        </ds:DefendantOrOffender>
+                        <ds:OffenceReason>
+                            <ds:OffenceCode>
+                                <ds:ActOrSource>TH</ds:ActOrSource>
+                                <ds:Year>68</ds:Year>
+                                <ds:Reason>072</ds:Reason>
+                            </ds:OffenceCode>
+                        </ds:OffenceReason>
+                    </ds:CriminalProsecutionReference>
+                    <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                    <ds:ArrestDate>2008-04-06</ds:ArrestDate>
+                    <ds:ChargeDate>2008-04-09</ds:ChargeDate>
+                    <ds:ActualOffenceDateCode Literal="between">4</ds:ActualOffenceDateCode>
+                    <ds:ActualOffenceStartDate>
+                        <ds:StartDate>2002-04-12</ds:StartDate>
+                    </ds:ActualOffenceStartDate>
+                    <ds:ActualOffenceEndDate>
+                        <ds:EndDate>2002-04-12</ds:EndDate>
+                    </ds:ActualOffenceEndDate>
+                    <ds:LocationOfOffence>offence 3 location</ds:LocationOfOffence>
+                    <ds:OffenceTitle>Receive stolen goods - Theft Act 1968</ds:OffenceTitle>
+                    <ds:ActualOffenceWording>long text talking about offence 3</ds:ActualOffenceWording>
+                    <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                    <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                    <ds:HomeOfficeClassification>054/01</ds:HomeOfficeClassification>
+                    <ds:ConvictionDate>2008-05-02</ds:ConvictionDate>
+                    <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                    <br7:CourtOffenceSequenceNumber>3</br7:CourtOffenceSequenceNumber>
+                    <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                    <br7:Result hasError="false" SchemaVersion="2.0">
+                        <ds:CJSresultCode>1044</ds:CJSresultCode>
+                        <ds:SourceOrganisation SchemaVersion="2.0">
+                            <ds:TopLevelCode>B</ds:TopLevelCode>
+                            <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                            <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                            <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                            <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+                        </ds:SourceOrganisation>
+                        <ds:CourtType>MCA</ds:CourtType>
+                        <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                        <ds:ResultHearingDate>2008-05-02</ds:ResultHearingDate>
+                        <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                        <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
+                        <ds:ResultVariableText>result text for result code 1044</ds:ResultVariableText>
+                        <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+                        <br7:PNCDisposalType>1044</br7:PNCDisposalType>
+                        <br7:ResultClass>Sentence</br7:ResultClass>
+                        <br7:ConvictingCourt>1375</br7:ConvictingCourt>
+                    </br7:Result>
+                </br7:Offence>
+                <br7:Offence hasError="false" SchemaVersion="4.0">
+                    <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                        <ds:DefendantOrOffender>
+                            <ds:Year>08</ds:Year>
+                            <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                <ds:SecondLevelCode>73</ds:SecondLevelCode>
+                                <ds:ThirdLevelCode>B7</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>12</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>73B712</ds:OrganisationUnitCode>
+                            </ds:OrganisationUnitIdentifierCode>
+                            <ds:DefendantOrOffenderSequenceNumber>00000012001</ds:DefendantOrOffenderSequenceNumber>
+                            <ds:CheckDigit>C</ds:CheckDigit>
+                        </ds:DefendantOrOffender>
+                        <ds:OffenceReason>
+                            <ds:OffenceCode>
+                                <ds:ActOrSource>MD</ds:ActOrSource>
+                                <ds:Year>71</ds:Year>
+                                <ds:Reason>171</ds:Reason>
+                            </ds:OffenceCode>
+                        </ds:OffenceReason>
+                    </ds:CriminalProsecutionReference>
+                    <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                    <ds:ArrestDate>2008-04-06</ds:ArrestDate>
+                    <ds:ChargeDate>2008-04-09</ds:ChargeDate>
+                    <ds:ActualOffenceDateCode Literal="between">4</ds:ActualOffenceDateCode>
+                    <ds:ActualOffenceStartDate>
+                        <ds:StartDate>2002-04-12</ds:StartDate>
+                    </ds:ActualOffenceStartDate>
+                    <ds:ActualOffenceEndDate>
+                        <ds:EndDate>2002-04-12</ds:EndDate>
+                    </ds:ActualOffenceEndDate>
+                    <ds:LocationOfOffence>offence 4 location</ds:LocationOfOffence>
+                    <ds:OffenceTitle>Concerned in supply of heroin</ds:OffenceTitle>
+                    <ds:ActualOffenceWording>long text talking about offence 4</ds:ActualOffenceWording>
+                    <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                    <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                    <ds:HomeOfficeClassification>092/31</ds:HomeOfficeClassification>
+                    <ds:ConvictionDate>2008-05-02</ds:ConvictionDate>
+                    <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                    <br7:CourtOffenceSequenceNumber>4</br7:CourtOffenceSequenceNumber>
+                    <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                    <br7:Result hasError="false" SchemaVersion="2.0">
+                        <ds:CJSresultCode>1044</ds:CJSresultCode>
+                        <ds:SourceOrganisation SchemaVersion="2.0">
+                            <ds:TopLevelCode>B</ds:TopLevelCode>
+                            <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                            <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                            <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                            <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+                        </ds:SourceOrganisation>
+                        <ds:CourtType>MCA</ds:CourtType>
+                        <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                        <ds:ResultHearingDate>2008-05-02</ds:ResultHearingDate>
+                        <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                        <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
+                        <ds:ResultVariableText>result text for result code 1044</ds:ResultVariableText>
+                        <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+                        <br7:PNCDisposalType>1044</br7:PNCDisposalType>
+                        <br7:ResultClass>Sentence</br7:ResultClass>
+                        <br7:ConvictingCourt>1375</br7:ConvictingCourt>
+                    </br7:Result>
+                </br7:Offence>
+                <br7:Offence hasError="false" SchemaVersion="4.0">
+                    <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                        <ds:DefendantOrOffender>
+                            <ds:Year>08</ds:Year>
+                            <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                <ds:SecondLevelCode>73</ds:SecondLevelCode>
+                                <ds:ThirdLevelCode>B7</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>12</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>73B712</ds:OrganisationUnitCode>
+                            </ds:OrganisationUnitIdentifierCode>
+                            <ds:DefendantOrOffenderSequenceNumber>00000012001</ds:DefendantOrOffenderSequenceNumber>
+                            <ds:CheckDigit>C</ds:CheckDigit>
+                        </ds:DefendantOrOffender>
+                        <ds:OffenceReason>
+                            <ds:OffenceCode>
+                                <ds:ActOrSource>MD</ds:ActOrSource>
+                                <ds:Year>71</ds:Year>
+                                <ds:Reason>211</ds:Reason>
+                            </ds:OffenceCode>
+                        </ds:OffenceReason>
+                    </ds:CriminalProsecutionReference>
+                    <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                    <ds:ArrestDate>2008-04-06</ds:ArrestDate>
+                    <ds:ChargeDate>2008-04-09</ds:ChargeDate>
+                    <ds:ActualOffenceDateCode Literal="between">4</ds:ActualOffenceDateCode>
+                    <ds:ActualOffenceStartDate>
+                        <ds:StartDate>2002-04-12</ds:StartDate>
+                    </ds:ActualOffenceStartDate>
+                    <ds:ActualOffenceEndDate>
+                        <ds:EndDate>2002-04-12</ds:EndDate>
+                    </ds:ActualOffenceEndDate>
+                    <ds:LocationOfOffence>offence 5 location</ds:LocationOfOffence>
+                    <ds:OffenceTitle>Possess a class A controlled drug - heroin</ds:OffenceTitle>
+                    <ds:ActualOffenceWording>long text talking about offence 5</ds:ActualOffenceWording>
+                    <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                    <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                    <ds:HomeOfficeClassification>092/51</ds:HomeOfficeClassification>
+                    <ds:ConvictionDate>2008-05-02</ds:ConvictionDate>
+                    <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                    <br7:CourtOffenceSequenceNumber>5</br7:CourtOffenceSequenceNumber>
+                    <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                    <br7:Result hasError="false" SchemaVersion="2.0">
+                        <ds:CJSresultCode>1044</ds:CJSresultCode>
+                        <ds:SourceOrganisation SchemaVersion="2.0">
+                            <ds:TopLevelCode>B</ds:TopLevelCode>
+                            <ds:SecondLevelCode>04</ds:SecondLevelCode>
+                            <ds:ThirdLevelCode>KO</ds:ThirdLevelCode>
+                            <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                            <ds:OrganisationUnitCode>B04KO00</ds:OrganisationUnitCode>
+                        </ds:SourceOrganisation>
+                        <ds:CourtType>MCA</ds:CourtType>
+                        <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                        <ds:ResultHearingDate>2008-05-02</ds:ResultHearingDate>
+                        <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                        <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
+                        <ds:ResultVariableText>result text for result code 1044</ds:ResultVariableText>
+                        <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+                        <br7:PNCDisposalType>1044</br7:PNCDisposalType>
+                        <br7:ResultClass>Sentence</br7:ResultClass>
+                        <br7:ConvictingCourt>1375</br7:ConvictingCourt>
+                    </br7:Result>
+                </br7:Offence>
+            </br7:HearingDefendant>
+        </br7:Case>
+    </br7:HearingOutcome>
+    <br7:HasError>true</br7:HasError>
+    <CXE01>
+        <FSC FSCode="" IntfcUpdateType="K"/>
+        <IDS CRONumber="" Checkname="PERKINS" IntfcUpdateType="K" PNCID="2009/0000231M"/>
+        <CourtCases>
+            <CourtCase>
+                <CCR CourtCaseRefNo="09/0473/000231R" CrimeOffenceRefNo="" IntfcUpdateType="K"/>
+                <Offences>
+                    <Offence>
+                        <COF ACPOOffenceCode="1:9:2:1" CJSOffenceCode="OF61102" IntfcUpdateType="K" OffEndDate="12052006" OffEndTime="" OffStartDate="12052006" OffStartTime="" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Section 47 - assault    occasioning actual bodily harm" ReferenceNumber="001"/>
+                        <ADJ Adjudication1="GUILTY" DateOfSentence="12112008" IntfcUpdateType="I" OffenceTICNumber="0000" Plea="NO PLEA TAKEN" WeedFlag=""/>
+                        <DISList>
+                            <DIS IntfcUpdateType="I" QtyDate="" QtyDuration="M3" QtyMonetaryValue="" QtyUnitsFined="" Qualifiers="" Text="" Type="1115"/>
+                        </DISList>
+                    </Offence>
+                    <Offence>
+                        <COF ACPOOffenceCode="7:1:7:1" CJSOffenceCode="PU86002" IntfcUpdateType="K" OffEndDate="12052006" OffEndTime="" OffStartDate="12052006" OffStartTime="" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Public order - violent disorder" ReferenceNumber="002"/>
+                        <ADJ Adjudication1="GUILTY" DateOfSentence="12112008" IntfcUpdateType="I" OffenceTICNumber="0000" Plea="NO PLEA TAKEN" WeedFlag=""/>
+                        <DISList>
+                            <DIS IntfcUpdateType="I" QtyDate="" QtyDuration="M3" QtyMonetaryValue="" QtyUnitsFined="" Qualifiers="" Text="" Type="1115"/>
+                        </DISList>
+                    </Offence>
+                </Offences>
+            </CourtCase>
+        </CourtCases>
+    </CXE01>
+    <br7:PNCQueryDate>2010-12-02</br7:PNCQueryDate>
+</br7:AnnotatedHearingOutcome>
