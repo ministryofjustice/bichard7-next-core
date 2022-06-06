@@ -62,7 +62,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
-    "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : "",
+    "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     // "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult,
     "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
@@ -104,7 +104,7 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
         return {
           "ds:OffenceCode": {
             "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
-            "ds:Year": offenceReason.OffenceCode.Year ?? "",
+            "ds:Year": offenceReason.OffenceCode.Year,
             "ds:Reason": Number(offenceReason.OffenceCode.Reason),
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
@@ -132,7 +132,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
   offences.map((offence) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
-        "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year ?? "",
+        "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
         "ds:OrganisationUnitIdentifierCode": {
           "ds:SecondLevelCode":
             offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
@@ -146,7 +146,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
           "@_SchemaVersion": "2.0"
         },
         "ds:DefendantOrOffenderSequenceNumber":
-          offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber ?? "",
+          offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber,
         "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
       },
       "ds:OffenceReason": mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason!),
@@ -159,8 +159,8 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
         ? lookupOffenceCategoryByCjsCode(offence.OffenceCategory)?.description
         : undefined
     },
-    "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : "",
-    "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : "",
+    "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : undefined,
+    "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : undefined,
     "ds:ActualOffenceDateCode": {
       "#text": Number(offence.ActualOffenceDateCode),
       "@_Literal": offence.ActualOffenceDateCode
@@ -173,7 +173,7 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
         ? {
             "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
               ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
-              : ""
+              : undefined
           }
         : undefined,
     "ds:LocationOfOffence": offence.LocationOfOffence,
@@ -226,7 +226,7 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
       "br7:GeneratedPNCFilename": c.HearingDefendant.DefendantDetail.GeneratedPNCFilename,
       "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate
         ? format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd")
-        : "",
+        : undefined,
       "br7:Gender": { "#text": Number(c.HearingDefendant.DefendantDetail.Gender), "@_Literal": "male" }
     },
     "br7:Address": {

@@ -181,8 +181,8 @@ export interface DsName {
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
   "ds:OffenceCategory": Br7LiteralTextString
-  "ds:ArrestDate": string
-  "ds:ChargeDate": string
+  "ds:ArrestDate"?: string
+  "ds:ChargeDate"?: string
   "ds:ActualOffenceDateCode": Br7Gender
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
@@ -231,7 +231,7 @@ export interface Br7OrganisationUnit {
 }
 
 export interface DsActualOffenceEndDate {
-  "ds:EndDate": string
+  "ds:EndDate"?: string
 }
 
 export interface DsActualOffenceStartDate {
@@ -246,9 +246,9 @@ export interface Br7CriminalProsecutionReference {
 }
 
 export interface DsDefendantOrOffender {
-  "ds:Year": string
+  "ds:Year"?: string
   "ds:OrganisationUnitIdentifierCode": Br7OrganisationUnit
-  "ds:DefendantOrOffenderSequenceNumber": string
+  "ds:DefendantOrOffenderSequenceNumber"?: string
   "ds:CheckDigit"?: string
 }
 
@@ -259,7 +259,7 @@ export interface Br7OffenceReason {
 
 export interface NonMatchingOffenceCode {
   "ds:ActOrSource": string
-  "ds:Year": string
+  "ds:Year"?: string
   "ds:Reason": number
   "ds:Qualifier"?: string
 }
