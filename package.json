@@ -41,7 +41,6 @@
     "@types/promise-poller": "^1.7.1",
     "@types/stompit": "^0.26.3",
     "@types/uuid": "^8.3.4",
-    "@types/xml2js": "^0.4.11",
     "@typescript-eslint/parser": "^5.17.0",
     "axios": "^0.26.1",
     "babel-loader": "^8.2.4",
