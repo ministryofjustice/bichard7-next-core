@@ -107,9 +107,12 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         ActualOffenceStartDate: {
           StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"])
         },
-        ActualOffenceEndDate: {
-          EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]!["ds:EndDate"])
-        },
+        ActualOffenceEndDate:
+          xmlOffence["ds:ActualOffenceEndDate"] && xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]
+            ? {
+                EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"])
+              }
+            : undefined,
         LocationOfOffence: xmlOffence["ds:LocationOfOffence"],
         // OffenceWelshTitle: xmlOffence
         ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"],

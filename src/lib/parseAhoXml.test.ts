@@ -14,339 +14,225 @@ describe("parseAhoXml", () => {
           Hearing: {
             CourtHearingLocation: {
               TopLevelCode: "B",
-              SecondLevelCode: "04",
-              ThirdLevelCode: "KO",
-              BottomLevelCode: "00",
-              OrganisationUnitCode: "B04KO00"
+              SecondLevelCode: "01",
+              ThirdLevelCode: "EF",
+              BottomLevelCode: "01",
+              OrganisationUnitCode: "B01EF01"
             },
-            DateOfHearing: new Date("2008-05-07"),
-            TimeOfHearing: "15:01",
+            DateOfHearing: new Date("2011-09-26"),
+            TimeOfHearing: "10:00",
             HearingLanguage: "D",
             HearingDocumentationLanguage: "D",
-            DefendantPresentAtHearing: "Y",
+            DefendantPresentAtHearing: "A",
             SourceReference: {
-              DocumentName: "SPI NUALA MALLON",
-              UniqueID: "02-12-201014:35ID:414d51204252375f514d202020202020cf67174c013b0320",
+              DocumentName: "SPI TRPRFOUR SEXOFFENCE",
+              UniqueID: "CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415",
               DocumentType: "SPI Case Result"
             },
             CourtType: "MCA",
-            CourtHouseCode: 2014,
-            CourtHouseName: "Magistrates' Courts Lancashire Preston"
+            CourtHouseCode: 2576,
+            CourtHouseName: "London Croydon"
           },
           Case: {
-            PTIURN: "01KY0370016",
+            PTIURN: "01ZD0303208",
             PreChargeDecisionIndicator: false,
             RecordableOnPNCindicator: true,
             CourtReference: {
-              MagistratesCourtReference: "01KY0370016"
+              MagistratesCourtReference: "01ZD0303208"
             },
             ForceOwner: {
               BottomLevelCode: "00",
-              OrganisationUnitCode: "010000",
+              OrganisationUnitCode: "01ZD00",
               SecondLevelCode: "01",
-              ThirdLevelCode: "00",
+              ThirdLevelCode: "ZD",
               TopLevelCode: undefined
             },
             HearingDefendant: {
-              ArrestSummonsNumber: "1101ZD0100000410770Y",
-              CourtPNCIdentifier: "2001/0000837Z",
+              ArrestSummonsNumber: "1101ZD0100000448754K",
+              CourtPNCIdentifier: undefined,
               DefendantDetail: {
                 PersonName: {
-                  FamilyName: "MALLON",
-                  GivenName: ["NUALA"],
+                  FamilyName: "SEXOFFENCE",
+                  GivenName: ["TRPRFOUR"],
                   Title: "Mr"
                 },
                 Gender: "1",
-                GeneratedPNCFilename: "MALLON/NUALA",
-                BirthDate: new Date("1998-08-06")
+                GeneratedPNCFilename: "SEXOFFENCE/TRPRFOUR",
+                BirthDate: new Date("1948-11-11")
               },
               Address: {
-                AddressLine1: "person addline1",
-                AddressLine2: "person addline2",
-                AddressLine3: "person addline3"
+                AddressLine1: "Scenario1 Address Line 1",
+                AddressLine2: "Scenario1 Address Line 2",
+                AddressLine3: "Scenario1 Address Line 3"
               },
               BailConditions: [""],
               Offence: [
                 {
-                  ActualOffenceDateCode: "4",
-                  ActualOffenceStartDate: { StartDate: new Date("2002-04-12") },
-                  ActualOffenceEndDate: { EndDate: new Date("2002-04-12") },
-                  ActualOffenceWording: "long text talking about offence 1",
-                  ArrestDate: new Date("2008-04-06"),
-                  ChargeDate: new Date("2008-04-09"),
+                  ActualOffenceDateCode: "1",
+                  ActualOffenceStartDate: { StartDate: new Date("2010-11-28") },
+                  ActualOffenceEndDate: undefined,
+                  ActualOffenceWording: "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
+                  ArrestDate: new Date("2010-12-01"),
+                  ChargeDate: new Date("2010-12-02"),
                   CommittedOnBail: "D",
-                  ConvictionDate: new Date("2008-05-02"),
+                  ConvictionDate: new Date("2011-09-26"),
                   CourtOffenceSequenceNumber: 1,
                   CriminalProsecutionReference: {
                     DefendantOrOffender: {
-                      Year: "08",
-                      CheckDigit: "C",
-                      DefendantOrOffenderSequenceNumber: "00000012001",
+                      Year: "11",
+                      CheckDigit: "K",
+                      DefendantOrOffenderSequenceNumber: "00000448754",
                       OrganisationUnitIdentifierCode: {
-                        BottomLevelCode: "12",
-                        OrganisationUnitCode: "73B712",
-                        SecondLevelCode: "73",
-                        ThirdLevelCode: "B7",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "01ZD01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
                     }
                   },
-                  HomeOfficeClassification: "053/01",
-                  LocationOfOffence: "offence 1 location",
+                  HomeOfficeClassification: "019/11",
+                  LocationOfOffence: "Kingston High Street",
                   NotifiableToHOindicator: true,
-                  OffenceCategory: "CE",
-                  OffenceTitle: "Obtain property by deception",
+                  OffenceCategory: "CI",
+                  OffenceTitle: "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
                   RecordableOnPNCindicator: true,
                   Result: [
                     {
-                      CJSresultCode: 1044,
-                      ConvictingCourt: "1375",
+                      CJSresultCode: 3078,
+                      ConvictingCourt: undefined,
                       CourtType: "MCA",
                       DateSpecifiedInResult: [],
                       Duration: [],
-                      ModeOfTrialReason: "NOMOT",
-                      PNCDisposalType: 1044,
+                      ModeOfTrialReason: "SUM",
+                      PNCDisposalType: 3078,
                       PleaStatus: CjsPlea.NotGuilty,
                       ResultApplicableQualifierCode: [],
-                      ResultClass: "Sentence",
+                      ResultClass: "Judgement with final result",
                       ResultHalfLifeHours: 72,
-                      ResultHearingDate: new Date("2008-05-02"),
+                      ResultHearingDate: new Date("2011-09-26"),
                       ResultHearingType: "OTHER",
                       ResultQualifierVariable: [],
-                      ResultVariableText: "result text for result code 1044",
+                      ResultVariableText: "Travel Restriction Order",
                       SourceOrganisation: {
-                        BottomLevelCode: "00",
-                        OrganisationUnitCode: "B04KO00",
-                        SecondLevelCode: "04",
-                        ThirdLevelCode: "KO",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "B01EF01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "EF",
                         TopLevelCode: "B"
                       }
                     }
                   ]
                 },
                 {
-                  ActualOffenceDateCode: "4",
-                  ActualOffenceStartDate: { StartDate: new Date("2002-04-12") },
-                  ActualOffenceEndDate: { EndDate: new Date("2002-04-12") },
-                  ActualOffenceWording: "long text talking about offence 2",
-                  ArrestDate: new Date("2008-04-06"),
-                  ChargeDate: new Date("2008-04-09"),
+                  ActualOffenceDateCode: "1",
+                  ActualOffenceStartDate: { StartDate: new Date("2010-11-28") },
+                  ActualOffenceEndDate: undefined,
+                  ActualOffenceWording: "Rape of a Female",
+                  ArrestDate: new Date("2010-12-01"),
+                  ChargeDate: new Date("2010-12-02"),
                   CommittedOnBail: "D",
-                  ConvictionDate: new Date("2008-05-02"),
+                  ConvictionDate: new Date("2011-09-26"),
                   CourtOffenceSequenceNumber: 2,
                   CriminalProsecutionReference: {
                     DefendantOrOffender: {
-                      Year: "08",
-                      CheckDigit: "C",
-                      DefendantOrOffenderSequenceNumber: "00000012001",
+                      Year: "11",
+                      CheckDigit: "K",
+                      DefendantOrOffenderSequenceNumber: "00000448754",
                       OrganisationUnitIdentifierCode: {
-                        BottomLevelCode: "12",
-                        OrganisationUnitCode: "73B712",
-                        SecondLevelCode: "73",
-                        ThirdLevelCode: "B7",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "01ZD01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
                     }
                   },
-                  HomeOfficeClassification: "043/00",
-                  LocationOfOffence: "offence 2 location",
+                  HomeOfficeClassification: "019/07",
+                  LocationOfOffence: "Kingston High Street",
                   NotifiableToHOindicator: true,
-                  OffenceCategory: "CE",
-                  OffenceTitle: "Abstract / use without authority electricity",
+                  OffenceCategory: "CI",
+                  OffenceTitle: "Rape a girl aged 13 / 14 / 15 - SOA 2003",
                   RecordableOnPNCindicator: true,
                   Result: [
                     {
-                      CJSresultCode: 1044,
-                      ConvictingCourt: "1375",
+                      CJSresultCode: 3052,
+                      ConvictingCourt: undefined,
                       CourtType: "MCA",
                       DateSpecifiedInResult: [],
                       Duration: [],
-                      ModeOfTrialReason: "NOMOT",
-                      PNCDisposalType: 1044,
+                      ModeOfTrialReason: "SUM",
+                      PNCDisposalType: 3052,
                       PleaStatus: CjsPlea.NotGuilty,
                       ResultApplicableQualifierCode: [],
-                      ResultClass: "Sentence",
-                      ResultHalfLifeHours: 72,
-                      ResultHearingDate: new Date("2008-05-02"),
+                      ResultClass: "Judgement with final result",
+                      ResultHalfLifeHours: 24,
+                      ResultHearingDate: new Date("2011-09-26"),
                       ResultHearingType: "OTHER",
                       ResultQualifierVariable: [],
-                      ResultVariableText: "result text for result code 1044",
+                      ResultVariableText: "defendant must never be allowed out",
                       SourceOrganisation: {
-                        BottomLevelCode: "00",
-                        OrganisationUnitCode: "B04KO00",
-                        SecondLevelCode: "04",
-                        ThirdLevelCode: "KO",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "B01EF01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "EF",
                         TopLevelCode: "B"
                       }
                     }
                   ]
                 },
                 {
-                  ActualOffenceDateCode: "4",
-                  ActualOffenceStartDate: { StartDate: new Date("2002-04-12") },
-                  ActualOffenceEndDate: { EndDate: new Date("2002-04-12") },
-                  ActualOffenceWording: "long text talking about offence 3",
-                  ArrestDate: new Date("2008-04-06"),
-                  ChargeDate: new Date("2008-04-09"),
+                  ActualOffenceDateCode: "1",
+                  ActualOffenceStartDate: { StartDate: new Date("2010-11-28") },
+                  ActualOffenceEndDate: undefined,
+                  ActualOffenceWording: "Use a motor vehicle without third party insurance.",
+                  ArrestDate: new Date("2010-12-01"),
+                  ChargeDate: new Date("2010-12-02"),
                   CommittedOnBail: "D",
-                  ConvictionDate: new Date("2008-05-02"),
+                  ConvictionDate: new Date("2011-09-26"),
                   CourtOffenceSequenceNumber: 3,
                   CriminalProsecutionReference: {
                     DefendantOrOffender: {
-                      Year: "08",
-                      CheckDigit: "C",
-                      DefendantOrOffenderSequenceNumber: "00000012001",
+                      Year: "11",
+                      CheckDigit: "K",
+                      DefendantOrOffenderSequenceNumber: "00000448754",
                       OrganisationUnitIdentifierCode: {
-                        BottomLevelCode: "12",
-                        OrganisationUnitCode: "73B712",
-                        SecondLevelCode: "73",
-                        ThirdLevelCode: "B7",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "01ZD01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
                     }
                   },
-                  HomeOfficeClassification: "054/01",
-                  LocationOfOffence: "offence 3 location",
-                  NotifiableToHOindicator: true,
-                  OffenceCategory: "CE",
-                  OffenceTitle: "Receive stolen goods - Theft Act 1968",
-                  RecordableOnPNCindicator: true,
+                  HomeOfficeClassification: "809/01",
+                  LocationOfOffence: "Kingston High Street",
+                  NotifiableToHOindicator: false,
+                  OffenceCategory: "CM",
+                  OffenceTitle: "Use a motor vehicle on a road / public place without third party insurance",
+                  RecordableOnPNCindicator: false,
                   Result: [
                     {
-                      CJSresultCode: 1044,
-                      ConvictingCourt: "1375",
+                      CJSresultCode: 1015,
+                      ConvictingCourt: undefined,
                       CourtType: "MCA",
                       DateSpecifiedInResult: [],
                       Duration: [],
-                      ModeOfTrialReason: "NOMOT",
-                      PNCDisposalType: 1044,
+                      ModeOfTrialReason: "SUM",
+                      PNCDisposalType: 1015,
                       PleaStatus: CjsPlea.NotGuilty,
                       ResultApplicableQualifierCode: [],
-                      ResultClass: "Sentence",
+                      ResultClass: "Judgement with final result",
                       ResultHalfLifeHours: 72,
-                      ResultHearingDate: new Date("2008-05-02"),
+                      ResultHearingDate: new Date("2011-09-26"),
                       ResultHearingType: "OTHER",
                       ResultQualifierVariable: [],
-                      ResultVariableText: "result text for result code 1044",
+                      ResultVariableText: "Fined 100.",
                       SourceOrganisation: {
-                        BottomLevelCode: "00",
-                        OrganisationUnitCode: "B04KO00",
-                        SecondLevelCode: "04",
-                        ThirdLevelCode: "KO",
-                        TopLevelCode: "B"
-                      }
-                    }
-                  ]
-                },
-                {
-                  ActualOffenceDateCode: "4",
-                  ActualOffenceStartDate: { StartDate: new Date("2002-04-12") },
-                  ActualOffenceEndDate: { EndDate: new Date("2002-04-12") },
-                  ActualOffenceWording: "long text talking about offence 4",
-                  ArrestDate: new Date("2008-04-06"),
-                  ChargeDate: new Date("2008-04-09"),
-                  CommittedOnBail: "D",
-                  ConvictionDate: new Date("2008-05-02"),
-                  CourtOffenceSequenceNumber: 4,
-                  CriminalProsecutionReference: {
-                    DefendantOrOffender: {
-                      Year: "08",
-                      CheckDigit: "C",
-                      DefendantOrOffenderSequenceNumber: "00000012001",
-                      OrganisationUnitIdentifierCode: {
-                        BottomLevelCode: "12",
-                        OrganisationUnitCode: "73B712",
-                        SecondLevelCode: "73",
-                        ThirdLevelCode: "B7",
-                        TopLevelCode: undefined
-                      }
-                    }
-                  },
-                  HomeOfficeClassification: "092/31",
-                  LocationOfOffence: "offence 4 location",
-                  NotifiableToHOindicator: true,
-                  OffenceCategory: "CE",
-                  OffenceTitle: "Concerned in supply of heroin",
-                  RecordableOnPNCindicator: true,
-                  Result: [
-                    {
-                      CJSresultCode: 1044,
-                      ConvictingCourt: "1375",
-                      CourtType: "MCA",
-                      DateSpecifiedInResult: [],
-                      Duration: [],
-                      ModeOfTrialReason: "NOMOT",
-                      PNCDisposalType: 1044,
-                      PleaStatus: CjsPlea.NotGuilty,
-                      ResultApplicableQualifierCode: [],
-                      ResultClass: "Sentence",
-                      ResultHalfLifeHours: 72,
-                      ResultHearingDate: new Date("2008-05-02"),
-                      ResultHearingType: "OTHER",
-                      ResultQualifierVariable: [],
-                      ResultVariableText: "result text for result code 1044",
-                      SourceOrganisation: {
-                        BottomLevelCode: "00",
-                        OrganisationUnitCode: "B04KO00",
-                        SecondLevelCode: "04",
-                        ThirdLevelCode: "KO",
-                        TopLevelCode: "B"
-                      }
-                    }
-                  ]
-                },
-                {
-                  ActualOffenceDateCode: "4",
-                  ActualOffenceStartDate: { StartDate: new Date("2002-04-12") },
-                  ActualOffenceEndDate: { EndDate: new Date("2002-04-12") },
-                  ActualOffenceWording: "long text talking about offence 5",
-                  ArrestDate: new Date("2008-04-06"),
-                  ChargeDate: new Date("2008-04-09"),
-                  CommittedOnBail: "D",
-                  ConvictionDate: new Date("2008-05-02"),
-                  CourtOffenceSequenceNumber: 5,
-                  CriminalProsecutionReference: {
-                    DefendantOrOffender: {
-                      Year: "08",
-                      CheckDigit: "C",
-                      DefendantOrOffenderSequenceNumber: "00000012001",
-                      OrganisationUnitIdentifierCode: {
-                        BottomLevelCode: "12",
-                        OrganisationUnitCode: "73B712",
-                        SecondLevelCode: "73",
-                        ThirdLevelCode: "B7",
-                        TopLevelCode: undefined
-                      }
-                    }
-                  },
-                  HomeOfficeClassification: "092/51",
-                  LocationOfOffence: "offence 5 location",
-                  NotifiableToHOindicator: true,
-                  OffenceCategory: "CE",
-                  OffenceTitle: "Possess a class A controlled drug - heroin",
-                  RecordableOnPNCindicator: true,
-                  Result: [
-                    {
-                      CJSresultCode: 1044,
-                      ConvictingCourt: "1375",
-                      CourtType: "MCA",
-                      DateSpecifiedInResult: [],
-                      Duration: [],
-                      ModeOfTrialReason: "NOMOT",
-                      PNCDisposalType: 1044,
-                      PleaStatus: CjsPlea.NotGuilty,
-                      ResultApplicableQualifierCode: [],
-                      ResultClass: "Sentence",
-                      ResultHalfLifeHours: 72,
-                      ResultHearingDate: new Date("2008-05-02"),
-                      ResultHearingType: "OTHER",
-                      ResultQualifierVariable: [],
-                      ResultVariableText: "result text for result code 1044",
-                      SourceOrganisation: {
-                        BottomLevelCode: "00",
-                        OrganisationUnitCode: "B04KO00",
-                        SecondLevelCode: "04",
-                        ThirdLevelCode: "KO",
+                        BottomLevelCode: "01",
+                        OrganisationUnitCode: "B01EF01",
+                        SecondLevelCode: "01",
+                        ThirdLevelCode: "EF",
                         TopLevelCode: "B"
                       }
                     }
