@@ -4,7 +4,7 @@ import generateMessage from "tests/helpers/generateMessage"
 import processMessage from "tests/helpers/processMessage"
 
 describe("generateLegacyAhoXml", () => {
-  it("should generate legacy xml from aho", async () => {
+  it.ifNewBichard("should generate legacy xml from aho", async () => {
     const xml = fs.readFileSync("test-data/generated-aho.xml").toString()
 
     const inputMessage = generateMessage({
