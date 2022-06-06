@@ -1,4 +1,4 @@
-import convertAhoToXml from "./lib/generateAhoXml"
+import convertAhoToXml from "./lib/generateLegacyAhoXml"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
