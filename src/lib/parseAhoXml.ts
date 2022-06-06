@@ -81,11 +81,11 @@ const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
 
 const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
   DefendantOrOffender: {
-    Year: xmlCPR["ds:DefendantOrOffender"]["ds:Year"],
+    Year: xmlCPR["ds:DefendantOrOffender"]["ds:Year"] ?? "",
     OrganisationUnitIdentifierCode: mapXmlOrganisationalUnitToAho(
       xmlCPR["ds:DefendantOrOffender"]["ds:OrganisationUnitIdentifierCode"]
     ),
-    DefendantOrOffenderSequenceNumber: xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"],
+    DefendantOrOffenderSequenceNumber: xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"] ?? "",
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"] ?? ""
   }
   // OffenceReason: mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"])
@@ -101,8 +101,8 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         OffenceTitle: xmlOffence["ds:OffenceTitle"],
         // SummonsCode: xmlOffence.Sum
         // Informant: xmlOffence.inform
-        ArrestDate: new Date(xmlOffence["ds:ArrestDate"]),
-        ChargeDate: new Date(xmlOffence["ds:ChargeDate"]),
+        ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]) : undefined,
+        ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]) : undefined,
         ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
         ActualOffenceStartDate: {
           StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"])
@@ -207,8 +207,7 @@ export default (xml: string): AnnotatedHearingOutcome => {
   }
 
   const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(xml) // JSONify XML file
-  const rawAho = mapXmlToAho(rawParsedObj) // Map anything extra that's awkward
-  const x = annotatedHearingOutcomeSchema.parse(rawAho) // Validate/build with zod
-  return x
+  const rawParsedObj = parser.parse(xml)
+  const legacyAho = mapXmlToAho(rawParsedObj)
+  return annotatedHearingOutcomeSchema.parse(legacyAho)
 }
