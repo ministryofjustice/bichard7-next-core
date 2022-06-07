@@ -89,6 +89,16 @@ describe("parseAhoXml", () => {
                         ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
+                    },
+                    OffenceReason: {
+                      OffenceCode: {
+                        ActOrSource: "",
+                        FullCode: "001A",
+                        Qualifier: "A",
+                        Reason: "001",
+                        __type: "NonMatchingOffenceCode"
+                      },
+                      __type: "NationalOffenceReason"
                     }
                   },
                   HomeOfficeClassification: "019/11",
@@ -146,6 +156,16 @@ describe("parseAhoXml", () => {
                         ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
+                    },
+                    OffenceReason: {
+                      OffenceCode: {
+                        ActOrSource: "",
+                        FullCode: "001",
+                        Qualifier: undefined,
+                        Reason: "001",
+                        __type: "NonMatchingOffenceCode"
+                      },
+                      __type: "NationalOffenceReason"
                     }
                   },
                   HomeOfficeClassification: "019/07",
@@ -203,6 +223,16 @@ describe("parseAhoXml", () => {
                         ThirdLevelCode: "ZD",
                         TopLevelCode: undefined
                       }
+                    },
+                    OffenceReason: {
+                      OffenceCode: {
+                        ActOrSource: "",
+                        FullCode: "191",
+                        Qualifier: undefined,
+                        Reason: "191",
+                        __type: "NonMatchingOffenceCode"
+                      },
+                      __type: "NationalOffenceReason"
                     }
                   },
                   HomeOfficeClassification: "809/01",
