@@ -16,6 +16,7 @@ import type {
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
+  Hearing,
   Offence,
   OffenceReason,
   OrganisationUnit,
@@ -190,7 +191,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   }
 })
 
-const mapXmlHearingToAho = (xmlHearing: Br7Hearing): unknown => ({
+const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHearingLocation: mapXmlOrganisationalUnitToAho(xmlHearing["ds:CourtHearingLocation"]),
   DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]),
   TimeOfHearing: xmlHearing["ds:TimeOfHearing"],
@@ -207,7 +208,7 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): unknown => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
-const mapXmlToAho = (aho: RawAho): unknown => {
+const mapXmlToAho = (aho: RawAho): AnnotatedHearingOutcome | undefined => {
   if (aho["br7:AnnotatedHearingOutcome"]) {
     return {
       AnnotatedHearingOutcome: {
