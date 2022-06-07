@@ -38,8 +38,8 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   Duration: [],
   DateSpecifiedInResult: [],
   // TimeSpecifiedInResult: xmlResult,
-  // AmountSpecifiedInResult: xmlResult.
-  // NumberSpecifiedInResult: xmlResult.
+  // AmountSpecifiedInResult: xmlResult["ds:AmountSpecifiedInResult"] ? [Number(xmlResult["ds:AmountSpecifiedInResult"])] : undefined,
+  // NumberSpecifiedInResult: xmlResult["ds:NumberSpecifiedInResult"],
   // NextResultSourceOrganisation: {},
   // NextHearingType: xmlResult.
   // NextHearingDate: xmlResult.nex
@@ -149,7 +149,10 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
   HearingDefendant: {
-    ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
+    ArrestSummonsNumber:
+      typeof xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"] === "string"
+        ? xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]
+        : xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
     DefendantDetail: {
       PersonName: {
         Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"],

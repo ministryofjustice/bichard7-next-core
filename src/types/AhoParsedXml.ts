@@ -133,7 +133,7 @@ export interface Br7CourtReference {
 }
 
 export interface Br7HearingDefendant {
-  "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber
+  "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber | string
   "br7:PNCIdentifier"?: string
   "br7:PNCCheckname"?: string
   "br7:DefendantDetail": Br7DefendantDetail
@@ -208,6 +208,7 @@ export interface Br7Result {
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
   // "ds:AmountSpecifiedInResult": string
+  // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString

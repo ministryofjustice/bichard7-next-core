@@ -46,7 +46,7 @@
 				<ds:OrganisationUnitCode>01ZD00</ds:OrganisationUnitCode>            
 			</br7:ForceOwner>            
 			<br7:HearingDefendant hasError="false">                
-				<br7:ArrestSummonsNumber Error="">1101ZD0100000448754K</br7:ArrestSummonsNumber>                
+				<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>                
 				<br7:PNCIdentifier>2000/0448754K</br7:PNCIdentifier>                
 				<br7:PNCCheckname>SEXOFFENCE</br7:PNCCheckname>                
 				<br7:DefendantDetail>                    
