@@ -207,14 +207,27 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): unknown => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
-const mapXmlToAho = (aho: RawAho): unknown => ({
-  AnnotatedHearingOutcome: {
-    HearingOutcome: {
-      Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
-      Case: mapXmlCaseToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"])
+const mapXmlToAho = (aho: RawAho): unknown => {
+  if (aho["br7:AnnotatedHearingOutcome"]) {
+    return {
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
+          Case: mapXmlCaseToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"])
+        }
+      }
+    }
+  } else if (aho["br7:HearingOutcome"]) {
+    return {
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Hearing: mapXmlHearingToAho(aho["br7:HearingOutcome"]["br7:Hearing"]),
+          Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
+        }
+      }
     }
   }
-})
+}
 
 export default (xml: string): AnnotatedHearingOutcome => {
   const options = {

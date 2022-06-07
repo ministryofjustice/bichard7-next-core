@@ -1,6 +1,7 @@
 export interface RawAho {
   "?xml": XML
-  "br7:AnnotatedHearingOutcome": Br7AnnotatedHearingOutcome
+  "br7:AnnotatedHearingOutcome"?: Br7AnnotatedHearingOutcome
+  "br7:HearingOutcome"?: Br7HearingOutcome
 }
 
 export interface XML {

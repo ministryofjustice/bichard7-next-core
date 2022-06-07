@@ -15,10 +15,10 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
   if (message.match(/ResultedCaseMessage/)) {
     const spiResult = parseSpiResult(message)
     hearingOutcome = transformSpiToAho(spiResult)
-  } else if (message.match(/<br7:HearingOutcome/)) {
+  } else if (message.match(/<br7:HearingOutcome/) || message.match(/<br7:AnnotatedHearingOutcome/)) {
     hearingOutcome = parseAhoXml(message)
   } else {
-    throw new Error("Valid message not found")
+    throw new Error("Invalid incoming message format")
   }
 
   hearingOutcome = enrichHearingOutcome(hearingOutcome, pncGateway)
