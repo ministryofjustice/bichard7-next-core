@@ -1,18 +1,23 @@
 import { XMLParser } from "fast-xml-parser"
 import type {
-  AhoParsedXml,
+  RawAho,
   Br7Case,
   Br7CriminalProsecutionReference,
   Br7Hearing,
   Br7Offence,
+  Br7OffenceReason,
   Br7OrganisationUnit,
-  Br7Result
-} from "src/types/AhoParsedXml"
+  Br7Result,
+  CommonLawOffenceCode,
+  IndictmentOffenceCode,
+  NonMatchingOffenceCode
+} from "src/types/RawAho"
 import type {
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
   Offence,
+  OffenceReason,
   OrganisationUnit,
   Result
 } from "src/types/AnnotatedHearingOutcome"
@@ -69,15 +74,24 @@ const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
     ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
     : [mapXmlResultToAho(xmlResults)]
 
-// const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => ({
-//   OffenceCode: {
-//     __type: "NonMatchingOffenceCode",
-//     Year: xmlOffenceReason["ds:OffenceCode"]["ds:Year"],
-//     ActOrSource: xmlOffenceReason["ds:OffenceCode"]["ds:ActOrSource"],
-//     Reason: String(xmlOffenceReason["ds:OffenceCode"]["ds:Reason"]),
-//     FullCode: ""
-//   }
-// })
+const buildFullOffenceCode = (
+  offenceCode: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
+): string => {
+  const reason = offenceCode["ds:Reason"] ?? ""
+  const qualifier = offenceCode["ds:Qualifier"] ?? ""
+  return `${reason}${qualifier}`
+}
+
+const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => ({
+  __type: "NationalOffenceReason",
+  OffenceCode: {
+    __type: "NonMatchingOffenceCode",
+    ActOrSource: "",
+    Reason: String(xmlOffenceReason["ds:OffenceCode"]?.["ds:Reason"]),
+    Qualifier: xmlOffenceReason["ds:OffenceCode"]?.["ds:Qualifier"],
+    FullCode: xmlOffenceReason["ds:OffenceCode"] ? buildFullOffenceCode(xmlOffenceReason["ds:OffenceCode"]) : ""
+  }
+})
 
 const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
   DefendantOrOffender: {
@@ -87,8 +101,8 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     ),
     DefendantOrOffenderSequenceNumber: xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"] ?? "",
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"] ?? ""
-  }
-  // OffenceReason: mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"])
+  },
+  OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined
 })
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
@@ -193,7 +207,7 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): unknown => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]
 })
 
-const mapXmlToAho = (aho: AhoParsedXml): unknown => ({
+const mapXmlToAho = (aho: RawAho): unknown => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
       Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),

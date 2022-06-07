@@ -2,7 +2,7 @@ import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
 import type {
   Adj,
-  AhoParsedXml,
+  RawAho,
   Br7Case,
   Br7Duration,
   Br7Hearing,
@@ -13,7 +13,7 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList
-} from "src/types/AhoParsedXml"
+} from "src/types/RawAho"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -329,7 +329,7 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
   }
 })
 
-const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
+const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
     "br7:AnnotatedHearingOutcome": {
@@ -344,7 +344,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoParsedXml => {
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
       "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
     }
-  } as AhoParsedXml
+  } as RawAho
 }
 
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {

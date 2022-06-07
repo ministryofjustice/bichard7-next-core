@@ -1,4 +1,4 @@
-export interface AhoParsedXml {
+export interface RawAho {
   "?xml": XML
   "br7:AnnotatedHearingOutcome": Br7AnnotatedHearingOutcome
 }
