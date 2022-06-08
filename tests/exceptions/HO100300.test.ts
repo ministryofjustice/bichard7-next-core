@@ -105,4 +105,73 @@ describe("HO100300", () => {
       }
     ])
   })
+
+  it("shouldn't create an exception if a HO100200 (OU invalid) exception has been raised for this OU", async () => {
+    const inputMessage = generateMessage({
+      courtHearingLocation: "invalid",
+      offences: [{ results: [{ code: 1015 }] }]
+    })
+
+    const { exceptions } = await processMessage(inputMessage, {
+      expectTriggers: false
+    })
+
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO100200",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+      }
+    ])
+  })
+
+  it("should create an exception if a HO100200 (OU invalid) exception has been raised for a different OU", async () => {
+    const inputMessage = generateMessage({
+      courtHearingLocation: "invalid",
+      offences: [
+        {
+          results: [
+            {
+              code: 1015,
+              text: "Dummy result text",
+              nextHearing: {
+                nextHearingDetails: {
+                  courtHearingLocation: "B01NI01",
+                  dateOfHearing: "2011-10-08",
+                  timeOfHearing: "14:00:00"
+                },
+                nextHearingReason: "Dummy reason",
+                bailStatusOffence: "U"
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    const { exceptions } = await processMessage(inputMessage, {
+      expectTriggers: false
+    })
+
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO100200",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+      },
+      {
+        code: "HO100300",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      }
+    ])
+  })
 })

@@ -9,8 +9,7 @@ describe("HO100200", () => {
     PostgresHelper.closeConnection()
   })
 
-  // Won't pass when running against Bichard as HO100200 is overridden by HO100300 "OU Code is not recognised" exception
-  it.skip("should create an exception if the Court Hearing Location value is invalid", async () => {
+  it("should create an exception if the Court Hearing Location value is invalid", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
       courtHearingLocation: "invalid",
