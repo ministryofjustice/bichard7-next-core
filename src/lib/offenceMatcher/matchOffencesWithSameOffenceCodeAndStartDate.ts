@@ -36,7 +36,7 @@ const matchOffencesWithSameOffenceCodeAndStartDate = (
   applyMultipleCourtCaseMatchingLogic: boolean
 ): OffenceMatcherOutcome => {
   const outcome: OffenceMatcherOutcome = {
-    allPncOffencesMatched: false,
+    allPncOffencesMatched: true,
     duplicateHoOffences: [],
     matchedOffences: [],
     pncOffencesMatchedIncludingDuplicates: [],

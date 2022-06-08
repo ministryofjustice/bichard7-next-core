@@ -84,7 +84,7 @@ const matchOffences = (
   { attemptManualMatch, caseReference, hearingDate }: OffenceMatcherOptions
 ): OffenceMatcherOutcome => {
   let result: OffenceMatcherOutcome = {
-    allPncOffencesMatched: false,
+    allPncOffencesMatched: true,
     duplicateHoOffences: [],
     matchedOffences: [],
     pncOffencesMatchedIncludingDuplicates: [],

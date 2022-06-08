@@ -12,7 +12,7 @@ const matchUnmatchedBreachesWithoutUsingDates = (
   applyMultipleCourtCaseMatchingLogic: boolean
 ): OffenceMatcherOutcome => {
   const answer: OffenceMatcherOutcome = {
-    allPncOffencesMatched: false,
+    allPncOffencesMatched: true,
     duplicateHoOffences: [],
     matchedOffences: [],
     pncOffencesMatchedIncludingDuplicates: [],

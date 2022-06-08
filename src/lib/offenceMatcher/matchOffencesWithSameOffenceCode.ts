@@ -39,7 +39,7 @@ const matchOffencesWithSameOffenceCode = (
   applyMultipleCourtCaseMatchingLogic: boolean
 ): OffenceMatcherOutcome => {
   let result: OffenceMatcherOutcome = {
-    allPncOffencesMatched: false,
+    allPncOffencesMatched: true,
     duplicateHoOffences: [],
     matchedOffences: [],
     pncOffencesMatchedIncludingDuplicates: [],
@@ -75,29 +75,53 @@ const matchOffencesWithSameOffenceCode = (
 
   // Use approximate date matching to match remaining offences
   const unmatchedHoOffences = hoOffences.filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
+  const unmatchedPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+
+  const matchesByHoOffence = new Map<Offence, PncOffence[]>()
+  const matchesByPncOffence = new Map<PncOffence, Offence[]>()
+
+  const errorsFound = !result.allPncOffencesMatched || result.duplicateHoOffences.length > 0
+
+  if (unmatchedPncOffences.length > 0 && !errorsFound) {
+    unmatchedHoOffences.forEach((hoOffence) => {
+      unmatchedPncOffences.forEach((pncOffence) => {
+        if (datesMatchApproximately(hoOffence, pncOffence)) {
+          if (!matchesByHoOffence.has(hoOffence)) {
+            matchesByHoOffence.set(hoOffence, [])
+          }
+          matchesByHoOffence.get(hoOffence)?.push(pncOffence)
+
+          if (!matchesByPncOffence.has(pncOffence)) {
+            matchesByPncOffence.set(pncOffence, [])
+          }
+          matchesByPncOffence.get(pncOffence)?.push(hoOffence)
+        }
+      })
+    })
+  }
   pncOffences.forEach((pncOffence) => {
-    if (pncOffenceAlreadyMatched(pncOffence, result)) {
-      return
-    }
-
-    const matchingHoOffences = unmatchedHoOffences.filter((hoOffence) => datesMatchApproximately(hoOffence, pncOffence))
-
-    if (matchingHoOffences.length === 0) {
-      return
-    }
-
-    if (matchingHoOffences.length > 1 && !offencesHaveEqualResults(matchingHoOffences)) {
-      result.duplicateHoOffences = result.duplicateHoOffences.concat(matchingHoOffences)
-
-      if (!result.pncOffencesMatchedIncludingDuplicates.includes(pncOffence)) {
+    const hoMatches = matchesByPncOffence.get(pncOffence)
+    if (hoMatches && hoMatches.length > 0) {
+      if (hoMatches.length > 1 && !offencesHaveEqualResults(hoMatches)) {
+        result.duplicateHoOffences = result.duplicateHoOffences.concat(hoMatches)
         result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+      } else {
+        let matchMade = false
+        //TODO: Come back and refactor this since we don't really need matchMade
+        for (const hoMatch of hoMatches) {
+          if (matchMade) {
+            break
+          }
+          if (matchesByHoOffence.has(hoMatch)) {
+            result.matchedOffences.push({ hoOffence: hoMatch, pncOffence })
+            result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+            matchesByHoOffence.delete(hoMatch)
+            matchesByPncOffence.delete(pncOffence)
+            matchMade = true
+          }
+        }
       }
-
-      return
     }
-
-    result.matchedOffences.push({ hoOffence: matchingHoOffences[0], pncOffence })
-    result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
   })
 
   return result
