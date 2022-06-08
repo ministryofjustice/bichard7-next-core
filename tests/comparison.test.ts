@@ -1,6 +1,7 @@
 import fs from "fs"
 import "jest-xml-matcher"
 import CoreHandler from "src/index"
+import convertAhoToXml from "src/lib/generateLegacyAhoXml"
 import extractExceptionsFromAho from "./helpers/extractExceptionsFromAho"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
 import MockPncGateway from "./helpers/MockPncGateway"
@@ -32,13 +33,14 @@ describe("Comparison testing", () => {
         })
 
         it("should match exceptions", () => {
-          expect(coreResult.exceptions).toBeDefined()
+          expect(coreResult.hearingOutcome.Exceptions).toBeDefined()
           expect(exceptions).toBeDefined()
-          // expect(coreResult.exceptions).toStrictEqual(exceptions)
+          // expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
         })
 
         it("should match aho xml", () => {
-          expect(coreResult.ahoXml).toEqualXML(annotatedHearingOutcome)
+          const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
+          expect(ahoXml).toEqualXML(annotatedHearingOutcome)
         })
       } catch (e) {
         it("should not error", () => {

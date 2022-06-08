@@ -37,7 +37,6 @@ const anyOffenceHasAmbiguousError = (aho: AnnotatedHearingOutcome): boolean =>
 
 const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   if (!aho.PncQuery) {
-    addError(aho, ExceptionCode.HO100304, ["path", "to", "asn"])
     return aho
   }
 

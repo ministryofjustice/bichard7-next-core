@@ -1,8 +1,9 @@
 import fs from "fs"
 import "jest-xml-matcher"
+import MockDate from "mockdate"
 import generateMessage from "tests/helpers/generateMessage"
 import processMessage from "tests/helpers/processMessage"
-import MockDate from "mockdate"
+import convertAhoToXml from "./generateLegacyAhoXml"
 
 describe("generateLegacyAhoXml", () => {
   it.ifNewBichard("should generate legacy xml from aho", async () => {
@@ -13,7 +14,8 @@ describe("generateLegacyAhoXml", () => {
     const inputMessage = generateMessage({
       offences: [{ results: [{}] }, { results: [{}] }]
     })
-    const { ahoXml } = await processMessage(inputMessage)
+    const { hearingOutcome } = await processMessage(inputMessage)
+    const ahoXml = convertAhoToXml(hearingOutcome)
 
     expect(ahoXml).toEqualXML(xml)
 

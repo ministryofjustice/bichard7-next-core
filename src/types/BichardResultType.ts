@@ -1,10 +1,9 @@
-import type Exception from "./Exception"
+import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
 import type { Trigger } from "./Trigger"
 
 type BichardResultType = {
   triggers: Trigger[]
-  exceptions: Exception[]
-  ahoXml: string
+  hearingOutcome: AnnotatedHearingOutcome
 }
 
 export default BichardResultType

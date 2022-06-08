@@ -1,4 +1,3 @@
-import convertAhoToXml from "./lib/generateLegacyAhoXml"
 import parseAhoXml from "./lib/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type BichardResultType from "./types/BichardResultType"
@@ -25,11 +24,13 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
 
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
-  const ahoXml = convertAhoToXml(hearingOutcome)
+  if (!hearingOutcome.Exceptions) {
+    hearingOutcome.Exceptions = []
+  }
+  hearingOutcome.Exceptions = hearingOutcome.Exceptions.concat(exceptions)
 
   return {
     triggers,
-    exceptions,
-    ahoXml
+    hearingOutcome
   }
 }

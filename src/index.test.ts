@@ -9,6 +9,6 @@ describe("Bichard Core processing logic", () => {
     const mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
     const result = handler(inputMessage, mockPncGateway)
     expect(result).toHaveProperty("triggers")
-    expect(result).toHaveProperty("exceptions")
+    expect(result).toHaveProperty("hearingOutcome")
   })
 })

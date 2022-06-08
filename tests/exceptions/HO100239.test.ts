@@ -15,7 +15,9 @@ describe("HO100239", () => {
       offences: [{ results: [{ code: 4584 }], offenceSequenceNumber: 1 }]
     })
 
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
@@ -31,7 +33,9 @@ describe("HO100239", () => {
       })
 
       // Process the mock message
-      const { exceptions } = await processMessage(inputMessage, {
+      const {
+        hearingOutcome: { Exceptions: exceptions }
+      } = await processMessage(inputMessage, {
         expectTriggers: false
       })
 
@@ -62,7 +66,9 @@ describe("HO100239", () => {
       })
 
       // Process the mock message
-      const { exceptions } = await processMessage(inputMessage, {
+      const {
+        hearingOutcome: { Exceptions: exceptions }
+      } = await processMessage(inputMessage, {
         expectTriggers: false
       })
 
