@@ -12,7 +12,6 @@ let tests = fs
   .readdirSync(filePath)
   .map((name) => `${filePath}/${name}`)
   .map(processTestFile)
-  .filter((t) => !t.incomingMessage.match(/<br7:HearingOutcome/))
 
 const filter = process.env.FILTER_TEST
 if (filter) {
