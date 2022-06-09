@@ -37,7 +37,7 @@ describe("Comparison testing", () => {
         it("should match exceptions", () => {
           expect(coreResult.hearingOutcome.Exceptions).toBeDefined()
           expect(exceptions).toBeDefined()
-          // expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
+          expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
         })
 
         it("should match aho xml", () => {

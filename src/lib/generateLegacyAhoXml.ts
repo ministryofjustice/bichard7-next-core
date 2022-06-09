@@ -167,7 +167,10 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
       "ds:OffenceReason": offence.CriminalProsecutionReference.OffenceReason
         ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
         : undefined,
-      "ds:OffenceReasonSequence": offence.CriminalProsecutionReference.OffenceReasonSequence,
+      "ds:OffenceReasonSequence": offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(
+        3,
+        "0"
+      ),
       "@_SchemaVersion": "2.0"
     },
     "ds:OffenceCategory": {
