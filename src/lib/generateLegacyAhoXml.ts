@@ -64,7 +64,10 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
-    // "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult,
+    "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
+      "#text": amount.toFixed(2),
+      "@_Type": "Fine"
+    })),
     "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
     "ds:Verdict": result.Verdict
       ? {
