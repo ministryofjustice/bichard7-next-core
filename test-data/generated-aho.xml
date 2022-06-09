@@ -78,6 +78,7 @@
 								<ds:Qualifier>C</ds:Qualifier>
 							</ds:OffenceCode>
 						</ds:OffenceReason>
+						<ds:OffenceReasonSequence>001</ds:OffenceReasonSequence>
 					</ds:CriminalProsecutionReference>
 					<ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
 					<ds:ArrestDate>2010-12-01</ds:ArrestDate>
@@ -138,6 +139,7 @@
 								<ds:Qualifier>C</ds:Qualifier>
 							</ds:OffenceCode>
 						</ds:OffenceReason>
+						<ds:OffenceReasonSequence>002</ds:OffenceReasonSequence>
 					</ds:CriminalProsecutionReference>
 					<ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
 					<ds:ArrestDate>2010-12-01</ds:ArrestDate>

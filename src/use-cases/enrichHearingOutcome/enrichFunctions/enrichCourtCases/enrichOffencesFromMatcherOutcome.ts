@@ -30,7 +30,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
       if (matcherOutcome) {
         pncOffenceMatches = true
         const matchingPncOffences = matcherOutcome.matchedOffences.filter((match) => match.hoOffence === hoOffence)
-        if (matchingPncOffences.length > 1) {
+        if (matchingPncOffences.length >= 1) {
           pncOffence = matchingPncOffences[0].pncOffence
         }
         if (!pncOffence) {
