@@ -9,10 +9,10 @@ Object {
           "MagistratesCourtReference": "01ZD0303908",
         },
         "ForceOwner": Object {
-          "BottomLevelCode": "",
-          "OrganisationUnitCode": "0000000",
+          "BottomLevelCode": "00",
+          "OrganisationUnitCode": "01ZD00",
           "SecondLevelCode": "01",
-          "ThirdLevelCode": "",
+          "ThirdLevelCode": "ZD",
         },
         "HearingDefendant": Object {
           "Address": Object {

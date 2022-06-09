@@ -33,9 +33,9 @@
 			<br7:RecordableOnPNCindicator Literal="Yes">N</br7:RecordableOnPNCindicator>
 			<br7:ForceOwner SchemaVersion="2.0">
 				<ds:SecondLevelCode>01</ds:SecondLevelCode>
-				<ds:ThirdLevelCode/>
-				<ds:BottomLevelCode/>
-				<ds:OrganisationUnitCode>0000000</ds:OrganisationUnitCode>
+				<ds:ThirdLevelCode>ZD</ds:ThirdLevelCode>
+				<ds:BottomLevelCode>00</ds:BottomLevelCode>
+				<ds:OrganisationUnitCode>01ZD00</ds:OrganisationUnitCode>
 			</br7:ForceOwner>
 			<br7:HearingDefendant hasError>
 				<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>
