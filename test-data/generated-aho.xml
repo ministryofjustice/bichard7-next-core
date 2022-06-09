@@ -74,7 +74,7 @@
 							<ds:OffenceCode>
 								<ds:ActOrSource>TH</ds:ActOrSource>
 								<ds:Year>68</ds:Year>
-								<ds:Reason>68046</ds:Reason>
+								<ds:Reason>046</ds:Reason>
 								<ds:Qualifier>C</ds:Qualifier>
 							</ds:OffenceCode>
 						</ds:OffenceReason>
@@ -134,7 +134,7 @@
 							<ds:OffenceCode>
 								<ds:ActOrSource>TH</ds:ActOrSource>
 								<ds:Year>68</ds:Year>
-								<ds:Reason>68046</ds:Reason>
+								<ds:Reason>046</ds:Reason>
 								<ds:Qualifier>C</ds:Qualifier>
 							</ds:OffenceCode>
 						</ds:OffenceReason>

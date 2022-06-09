@@ -1,20 +1,6 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
 import type {
-  Adj,
-  RawAho,
-  Br7Case,
-  Br7Duration,
-  Br7Hearing,
-  Br7Offence,
-  Br7OffenceReason,
-  Br7OrganisationUnit,
-  Br7Result,
-  Br7Urgent,
-  Cxe01,
-  DISList
-} from "src/types/RawAho"
-import type {
   AnnotatedHearingOutcome,
   Case,
   Duration,
@@ -26,6 +12,20 @@ import type {
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
 import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
+import type {
+  Adj,
+  Br7Case,
+  Br7Duration,
+  Br7Hearing,
+  Br7Offence,
+  Br7OffenceReason,
+  Br7OrganisationUnit,
+  Br7Result,
+  Br7Urgent,
+  Cxe01,
+  DISList,
+  RawAho
+} from "src/types/RawAho"
 import {
   lookupDefendantPresentAtHearingByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
@@ -108,7 +108,7 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
           "ds:OffenceCode": {
             "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
             "ds:Year": offenceReason.OffenceCode.Year,
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
@@ -116,14 +116,14 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
         return {
           "ds:OffenceCode": {
             "ds:CommonLawOffence": offenceReason.OffenceCode.CommonLawOffence,
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
       case "IndictmentOffenceCode":
         return {
           "ds:OffenceCode": {
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }

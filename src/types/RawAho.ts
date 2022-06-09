@@ -262,18 +262,18 @@ export interface Br7OffenceReason {
 export interface NonMatchingOffenceCode {
   "ds:ActOrSource": string
   "ds:Year"?: string
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
 export interface CommonLawOffenceCode {
   "ds:CommonLawOffence": string
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
 export interface IndictmentOffenceCode {
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
