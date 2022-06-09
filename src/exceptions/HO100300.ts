@@ -1,5 +1,5 @@
 import convertAsnToOrganisationUnit from "src/lib/convertAsnToOrganisationUnit"
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
@@ -39,7 +39,7 @@ const findException = (
   return exceptions.find(condition) ?? generatedExceptions.find(condition)
 }
 
-const isOrganisationUnitValid = (organisationUnit?: OrganisationUnit): boolean =>
+const isOrganisationUnitValid = (organisationUnit?: OrganisationUnitCodes): boolean =>
   !!organisationUnit && !!lookupOrganisationUnitByCode(populateOrganisationUnitFields(organisationUnit))
 
 const isAsnValid = (asn?: string): boolean => !!asn && isOrganisationUnitValid(convertAsnToOrganisationUnit(asn))

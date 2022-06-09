@@ -3,7 +3,7 @@ import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import { isCommonLaw, isIndictment } from "./isOffenceType"
 
 const createReasonProp = (offenceCode: string): { Reason: string } => ({
-  Reason: offenceCode.length > 4 ? offenceCode.substring(2, Math.min(7, offenceCode.length)) : ""
+  Reason: offenceCode.length > 4 ? offenceCode.substring(4, Math.min(7, offenceCode.length)) : ""
 })
 
 const createQualifierProp = (offenceCode: string): { Qualifier: string } | undefined =>

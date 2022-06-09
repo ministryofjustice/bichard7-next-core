@@ -1,4 +1,3 @@
-import type { OrganisationUnit, Result } from "src/types/AnnotatedHearingOutcome"
 import {
   ADJOURNMENT_NO_NEXT_HEARING_RANGES,
   ADJOURNMENT_RANGES,
@@ -14,6 +13,7 @@ import {
   RESULT_UNRESULTED,
   WARRANT_ISSUED_CODES
 } from "src/lib/properties"
+import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 
 const isInRanges = (ranges: number[][], value: number) => ranges.some((range) => value >= range[0] && value <= range[1])
 
@@ -35,7 +35,7 @@ const populateResultClass = (
   const adjournment = nextHearingPresent || adjourned || warrantIssued || adjournedNoNextHearingDetails
 
   if (adjourned && !nextHearingPresent) {
-    result.NextResultSourceOrganisation = {} as OrganisationUnit
+    result.NextResultSourceOrganisation = {} as OrganisationUnitCodes
   }
 
   const { Verdict, PleaStatus, CJSresultCode } = result

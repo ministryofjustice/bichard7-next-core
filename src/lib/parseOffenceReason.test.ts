@@ -11,7 +11,7 @@ describe("GIVEN parseOffence", () => {
         OffenceCode: {
           __type: "CommonLawOffenceCode",
           CommonLawOffence: COMMON_LAWS,
-          Reason: "ML001",
+          Reason: "001",
           Qualifier: "A",
           FullCode: `${COMMON_LAWS}001A`
         }
@@ -42,7 +42,7 @@ describe("GIVEN parseOffence", () => {
           __type: "NonMatchingOffenceCode",
           ActOrSource: "CO",
           Year: "88",
-          Reason: "88013",
+          Reason: "013",
           FullCode: "CO88013"
         }
       })
@@ -51,7 +51,7 @@ describe("GIVEN parseOffence", () => {
     it('THEN parse a "Reason" for offenceCode.length > 4', () => {
       const nonMatchingOffenceCode = "CO88013"
       const res = parseOffenceReason(nonMatchingOffenceCode, "01")
-      expect(res && "OffenceCode" in res && res.OffenceCode.Reason).toBe("88013")
+      expect(res && "OffenceCode" in res && res.OffenceCode.Reason).toBe("013")
     })
 
     it('THEN parse "Qualifier" for offenceCode.length > 7', () => {

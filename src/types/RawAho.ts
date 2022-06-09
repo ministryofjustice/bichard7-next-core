@@ -120,7 +120,7 @@ export interface Br7Case {
   "br7:Urgent"?: Br7Urgent
   "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
-  "@_hasError": string
+  "@_hasError": boolean
   "@_SchemaVersion": string
 }
 
@@ -142,7 +142,7 @@ export interface Br7HearingDefendant {
   "br7:RemandStatus": Br7LiteralTextString
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
-  "@_hasError": string
+  "@_hasError": boolean
 }
 
 export interface Br7Address {
@@ -198,7 +198,7 @@ export interface Br7Offence {
   "br7:CourtOffenceSequenceNumber": number
   // "br7:AddedByTheCourt": Br7LiteralTextString
   "br7:Result": Br7Result | Br7Result[]
-  "@_hasError": string
+  "@_hasError": boolean
   "@_SchemaVersion": string
 }
 
@@ -219,7 +219,7 @@ export interface Br7Result {
   "br7:ResultClass"?: string
   "br7:PNCAdjudicationExists": Br7LiteralTextString
   "br7:ConvictingCourt"?: string
-  "@_hasError": string
+  "@_hasError": boolean
   "@_SchemaVersion": string
 }
 
@@ -262,18 +262,18 @@ export interface Br7OffenceReason {
 export interface NonMatchingOffenceCode {
   "ds:ActOrSource": string
   "ds:Year"?: string
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
 export interface CommonLawOffenceCode {
   "ds:CommonLawOffence": string
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
 export interface IndictmentOffenceCode {
-  "ds:Reason": number
+  "ds:Reason": string
   "ds:Qualifier"?: string
 }
 
@@ -293,7 +293,7 @@ export interface Br7Hearing {
   "br7:CourtType"?: Br7LiteralTextString
   "br7:CourtHouseCode": number
   "br7:CourtHouseName"?: string
-  "@_hasError": string
+  "@_hasError": boolean
   "@_SchemaVersion": string
 }
 

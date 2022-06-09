@@ -1,6 +1,17 @@
 import { XMLParser } from "fast-xml-parser"
 import type {
-  RawAho,
+  AnnotatedHearingOutcome,
+  Case,
+  CriminalProsecutionReference,
+  Hearing,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result
+} from "src/types/AnnotatedHearingOutcome"
+import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "src/types/Plea"
+import type {
   Br7Case,
   Br7CriminalProsecutionReference,
   Br7Hearing,
@@ -10,22 +21,11 @@ import type {
   Br7Result,
   CommonLawOffenceCode,
   IndictmentOffenceCode,
-  NonMatchingOffenceCode
+  NonMatchingOffenceCode,
+  RawAho
 } from "src/types/RawAho"
-import type {
-  AnnotatedHearingOutcome,
-  Case,
-  CriminalProsecutionReference,
-  Hearing,
-  Offence,
-  OffenceReason,
-  OrganisationUnit,
-  Result
-} from "src/types/AnnotatedHearingOutcome"
-import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "src/types/Plea"
 
-const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnit => ({
+const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"],
   SecondLevelCode: xmlOrgUnit["ds:SecondLevelCode"] ?? "",
   ThirdLevelCode: xmlOrgUnit["ds:ThirdLevelCode"] ?? "",

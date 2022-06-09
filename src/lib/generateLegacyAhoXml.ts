@@ -1,8 +1,20 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
 import type {
+  AnnotatedHearingOutcome,
+  Case,
+  Duration,
+  Hearing,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result,
+  Urgent
+} from "src/types/AnnotatedHearingOutcome"
+import type Exception from "src/types/Exception"
+import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
+import type {
   Adj,
-  RawAho,
   Br7Case,
   Br7Duration,
   Br7Hearing,
@@ -12,20 +24,9 @@ import type {
   Br7Result,
   Br7Urgent,
   Cxe01,
-  DISList
+  DISList,
+  RawAho
 } from "src/types/RawAho"
-import type {
-  AnnotatedHearingOutcome,
-  Case,
-  Duration,
-  Hearing,
-  Offence,
-  OffenceReason,
-  OrganisationUnit,
-  Result,
-  Urgent
-} from "src/types/AnnotatedHearingOutcome"
-import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
 import {
   lookupDefendantPresentAtHearingByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
@@ -35,7 +36,18 @@ import {
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
 
-const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnit): Br7OrganisationUnit => ({
+const hasError = (exceptions: Exception[] | undefined, path: (string | number)[] = []): boolean => {
+  if (!exceptions || exceptions.length === 0) {
+    return false
+  }
+  if (path.length > 0) {
+    const currentPath = path.join("")
+    return exceptions.some((e) => e.path.join("").startsWith(currentPath))
+  }
+  return false
+}
+
+const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": orgUnit.TopLevelCode,
   "ds:SecondLevelCode": orgUnit.SecondLevelCode,
   "ds:ThirdLevelCode": orgUnit.ThirdLevelCode,
@@ -56,7 +68,7 @@ const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
     "ds:DurationLength": d.DurationLength
   }))
 
-const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
+const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefined): Br7Result[] =>
   results.map((result) => ({
     "ds:CJSresultCode": result.CJSresultCode,
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
@@ -88,7 +100,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
     "br7:ConvictingCourt": result.ConvictingCourt,
-    "@_hasError": "false",
+    "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
     "@_SchemaVersion": "2.0"
   }))
 
@@ -108,7 +120,7 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
           "ds:OffenceCode": {
             "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
             "ds:Year": offenceReason.OffenceCode.Year,
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
@@ -116,14 +128,14 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
         return {
           "ds:OffenceCode": {
             "ds:CommonLawOffence": offenceReason.OffenceCode.CommonLawOffence,
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
       case "IndictmentOffenceCode":
         return {
           "ds:OffenceCode": {
-            "ds:Reason": Number(offenceReason.OffenceCode.Reason),
+            "ds:Reason": offenceReason.OffenceCode.Reason,
             "ds:Qualifier": offenceReason.OffenceCode.Qualifier
           }
         }
@@ -131,8 +143,8 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
   }
 }
 
-const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
-  offences.map((offence) => ({
+const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | undefined): Br7Offence[] =>
+  offences.map((offence, index) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
         "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
@@ -197,12 +209,19 @@ const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
     // "br7:AddedByTheCourt": { "#text": offence.AddedByTheCourt ? "Y" : "N", "@_Literal": "Yes" },
-    "br7:Result": mapAhoResultsToXml(offence.Result),
-    "@_hasError": "false",
+    "br7:Result": mapAhoResultsToXml(offence.Result, exceptions),
+    "@_hasError": hasError(exceptions, [
+      "AnnotatedHearingOutcome",
+      "HearingOutcome",
+      "Case",
+      "HearingDefendant",
+      "Offence",
+      index
+    ]),
     "@_SchemaVersion": "4.0"
   }))
 
-const mapAhoCaseToXml = (c: Case): Br7Case => ({
+const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case => ({
   "ds:PTIURN": c.PTIURN,
   "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
   "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
@@ -241,10 +260,10 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
     },
     "br7:RemandStatus": { "#text": c.HearingDefendant.RemandStatus, "@_Literal": "Unconditional Bail" },
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
-    "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence),
-    "@_hasError": "true"
+    "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
+    "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
   },
-  "@_hasError": "false",
+  "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
   "@_SchemaVersion": "4.0"
 })
 
@@ -276,7 +295,7 @@ const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
   }))
 })
 
-const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
+const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefined): Br7Hearing => ({
   "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
   "ds:DateOfHearing": format(hearing.DateOfHearing, "yyyy-MM-dd"),
   "ds:TimeOfHearing": hearing.TimeOfHearing,
@@ -294,7 +313,7 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
   "br7:CourtType": { "#text": hearing.CourtType, "@_Literal": "MC adult" },
   "br7:CourtHouseCode": hearing.CourtHouseCode,
   "br7:CourtHouseName": hearing.CourtHouseName,
-  "@_hasError": "false",
+  "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
   "@_SchemaVersion": "4.0"
 })
 
@@ -337,10 +356,10 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
     "br7:AnnotatedHearingOutcome": {
       "br7:HearingOutcome": {
-        "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing),
-        "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case)
+        "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing, aho.Exceptions),
+        "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case, aho.Exceptions)
       },
-      "br7:HasError": true,
+      "br7:HasError": hasError(aho.Exceptions),
       CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
       "br7:PNCQueryDate": aho.PncQueryDate ? format(aho.PncQueryDate, "yyyy-MM-dd") : undefined,
       "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
