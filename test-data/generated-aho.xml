@@ -37,7 +37,7 @@
 				<ds:BottomLevelCode>00</ds:BottomLevelCode>
 				<ds:OrganisationUnitCode>01ZD00</ds:OrganisationUnitCode>
 			</br7:ForceOwner>
-			<br7:HearingDefendant hasError>
+			<br7:HearingDefendant hasError="false">
 				<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>
 				<br7:PNCIdentifier>2000/0448754K</br7:PNCIdentifier>
 				<br7:PNCCheckname>TRTHREE</br7:PNCCheckname>
@@ -180,7 +180,7 @@
 			</br7:HearingDefendant>
 		</br7:Case>
 	</br7:HearingOutcome>
-	<br7:HasError>true</br7:HasError>
+	<br7:HasError>false</br7:HasError>
 	<CXE01>
 		<FSC FSCode="01Z" IntfcUpdateType="K"/>
 		<IDS CRONumber="" Checkname="TRTHREE" IntfcUpdateType="K" PNCID="2000/0448754K"/>
