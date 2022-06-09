@@ -34,7 +34,7 @@ type AhoPncCourtCase = {
   }
 }
 
-type ParsedAHO = {
+export type ParsedAHO = {
   AnnotatedHearingOutcome: {
     CXE01: {
       FSC: {
@@ -51,6 +51,7 @@ type ParsedAHO = {
         CourtCase: AhoPncCourtCase | AhoPncCourtCase[]
       }
     }
+    PNCQueryDate: string
   }
 }
 

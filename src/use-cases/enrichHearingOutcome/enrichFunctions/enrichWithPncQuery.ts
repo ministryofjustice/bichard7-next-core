@@ -10,7 +10,7 @@ const addTitle = (offence: PncOffence): PncOffence => {
 }
 
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
-  annotatedHearingOutcome.PncQueryDate = new Date()
+  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
   // TODO: We need to handle errors from the PNC here and create exceptions
   annotatedHearingOutcome.PncQuery = pncGateway.query(
