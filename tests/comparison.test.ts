@@ -4,6 +4,7 @@ import CoreHandler from "src/index"
 import convertAhoToXml from "src/lib/generateLegacyAhoXml"
 import extractExceptionsFromAho from "./helpers/extractExceptionsFromAho"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
+import getPncQueryTimeFromAho from "./helpers/getPncQueryTimeFromAho"
 import MockPncGateway from "./helpers/MockPncGateway"
 import processTestFile from "./helpers/processTestFile"
 
@@ -24,7 +25,8 @@ describe("Comparison testing", () => {
     describe("processing spi messages", () => {
       try {
         const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
-        const pncGateway = new MockPncGateway(response)
+        const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
+        const pncGateway = new MockPncGateway(response, pncQueryTime)
         const coreResult = CoreHandler(incomingMessage, pncGateway)
         const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
 
