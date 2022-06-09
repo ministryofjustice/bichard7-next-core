@@ -1,8 +1,8 @@
 import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
-import type OrganisationUnitData from "src/types/OrganisationUnitData"
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 
-const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnit): OrganisationUnitData | undefined => {
+const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnitCodes): OrganisationUnit | undefined => {
   if (!orgUnit) {
     return undefined
   }

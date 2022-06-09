@@ -21,7 +21,7 @@
 			</br7:SourceReference>
 			<br7:CourtType Literal="MC adult">MCA</br7:CourtType>
 			<br7:CourtHouseCode>2576</br7:CourtHouseCode>
-			<br7:CourtHouseName>B 01 EF 00</br7:CourtHouseName>
+			<br7:CourtHouseName>London Croydon</br7:CourtHouseName>
 		</br7:Hearing>
 		<br7:Case hasError="false" SchemaVersion="4.0">
 			<ds:PTIURN>01ZD0303908</ds:PTIURN>

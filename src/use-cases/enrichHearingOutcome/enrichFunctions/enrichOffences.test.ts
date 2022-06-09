@@ -165,7 +165,7 @@ describe("enrichOffences", () => {
             ActOrSource: "TH",
             FullCode: "TH68046C",
             Qualifier: "C",
-            Reason: "68046",
+            Reason: "046",
             Year: "68",
             __type: "NonMatchingOffenceCode"
           },
@@ -188,7 +188,7 @@ describe("enrichOffences", () => {
           ActOrSource: "TH",
           FullCode: "TH68046C",
           Qualifier: "C",
-          Reason: "68046",
+          Reason: "046",
           Year: "68",
           __type: "NonMatchingOffenceCode"
         },
@@ -236,7 +236,7 @@ describe("enrichOffences", () => {
           CommonLawOffence: COMMON_LAWS,
           FullCode: "COML001C",
           Qualifier: "C",
-          Reason: "ML001",
+          Reason: "001",
           __type: "CommonLawOffenceCode"
         },
         __type: "NationalOffenceReason"

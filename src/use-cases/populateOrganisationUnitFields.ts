@@ -1,7 +1,7 @@
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import logger from "src/utils/logging"
 
-const populateOrganisationUnitFields = (organisationUnit: OrganisationUnit): OrganisationUnit => {
+const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes): OrganisationUnitCodes => {
   const { OrganisationUnitCode, TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode } = organisationUnit
   if (!OrganisationUnitCode) {
     organisationUnit.OrganisationUnitCode = [TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode]

@@ -7,7 +7,7 @@ import type {
   Hearing,
   Offence,
   OffenceReason,
-  OrganisationUnit,
+  OrganisationUnitCodes,
   Result,
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
@@ -35,7 +35,7 @@ import {
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
 
-const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnit): Br7OrganisationUnit => ({
+const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": orgUnit.TopLevelCode,
   "ds:SecondLevelCode": orgUnit.SecondLevelCode,
   "ds:ThirdLevelCode": orgUnit.ThirdLevelCode,

@@ -18,7 +18,7 @@ import {
   TAGGING_FIX_REMOVE,
   WARRANT_ISSUE_DATE_RESULT_CODES
 } from "src/lib/properties"
-import type { Result, OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
 import type { CjsPlea } from "src/types/Plea"
 import type { CjsVerdict } from "src/types/Verdict"
@@ -26,11 +26,11 @@ import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupPleaStatusBySpiCode,
+  lookupPsaCodeByCrownCourtName,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "src/use-cases/dataLookup"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
-import { lookupPsaCodeByCrownCourtName } from "src/use-cases/dataLookup"
 
 interface RemandDetails {
   location?: string
@@ -206,7 +206,7 @@ export default class {
           OrganisationUnitCode:
             lookupOrganisationUnitByThirdLevelPsaCode(spiNextCourtHearingLocation)?.thirdLevelCode ??
             spiNextCourtHearingLocation
-        } as OrganisationUnit
+        } as OrganisationUnitCodes
 
         result.NextHearingDate = new Date(spiNextDateOfHearing)
         result.NextHearingTime = spiNextTimeOfHearing

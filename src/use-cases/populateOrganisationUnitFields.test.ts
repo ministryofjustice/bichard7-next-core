@@ -1,11 +1,11 @@
-import type { OrganisationUnit } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import populateOrganisationUnitFields from "./populateOrganisationUnitFields"
 
 describe("populateOrganisationUnitFields", () => {
   it("should populate top, second, third, and bottom levels by organisation unit code", () => {
     const organisationUnit = {
       OrganisationUnitCode: "abcdefg"
-    } as OrganisationUnit
+    } as OrganisationUnitCodes
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
@@ -20,7 +20,7 @@ describe("populateOrganisationUnitFields", () => {
   it("should populate second, third, and bottom levels by organisation unit code", () => {
     const organisationUnit = {
       OrganisationUnitCode: "bcdefg"
-    } as OrganisationUnit
+    } as OrganisationUnitCodes
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
@@ -38,7 +38,7 @@ describe("populateOrganisationUnitFields", () => {
       SecondLevelCode: "bc",
       ThirdLevelCode: "de",
       BottomLevelCode: "fg"
-    } as OrganisationUnit
+    } as OrganisationUnitCodes
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
