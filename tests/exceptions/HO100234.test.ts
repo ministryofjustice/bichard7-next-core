@@ -14,7 +14,9 @@ describe("validate hearing outcome", () => {
       offences: [{ code: "MC80524", results: [{ code: 4584 }], offenceWording: "something" }]
     })
 
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
@@ -28,7 +30,9 @@ describe("validate hearing outcome", () => {
     })
 
     // Process the mock message
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
@@ -56,7 +60,9 @@ describe("validate hearing outcome", () => {
     })
 
     // Process the mock message
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 

@@ -64,14 +64,14 @@ describe("TRPR0018", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(
-      inputMessage,
-      pncOffenceDateOverrides([{ startDate: pncStart, endDate: pncEnd }])
-    )
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, pncOffenceDateOverrides([{ startDate: pncStart, endDate: pncEnd }]))
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
   })
 
   it("should generate multiple triggers for multiple matching offences", async () => {
@@ -92,7 +92,10 @@ describe("TRPR0018", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(
       inputMessage,
       pncOffenceDateOverrides([
         { startDate: "2021-02-27", endDate: "2021-03-03" },
@@ -101,8 +104,8 @@ describe("TRPR0018", () => {
     )
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([
       { code, offenceSequenceNumber: 1 },
       { code, offenceSequenceNumber: 2 }
     ])
@@ -119,14 +122,17 @@ describe("TRPR0018", () => {
       ]
     })
 
-    const result = await processMessage(inputMessage, {
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectRecord: false,
       expectTriggers: false,
       ...pncOffenceDateOverrides([{ startDate: "2021-02-28" }])
     })
 
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toHaveLength(0)
   })
 
   it("should not generate triggers when all of the dates match", async () => {
@@ -140,14 +146,17 @@ describe("TRPR0018", () => {
       ]
     })
 
-    const result = await processMessage(inputMessage, {
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectRecord: false,
       expectTriggers: false,
       ...pncOffenceDateOverrides([{ startDate: "2021-01-28", endDate: "2021-02-28" }])
     })
 
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toHaveLength(0)
   })
 
   it("should not generate triggers when all of the dates are the same", async () => {
@@ -161,13 +170,16 @@ describe("TRPR0018", () => {
       ]
     })
 
-    const result = await processMessage(inputMessage, {
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectRecord: false,
       expectTriggers: false,
       ...pncOffenceDateOverrides([{ startDate: "2021-02-28", endDate: "2021-02-28" }])
     })
 
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toHaveLength(0)
   })
 })

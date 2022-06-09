@@ -21,11 +21,14 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 
   it("should generate a trigger for a single offence with the matching result qualifier", async () => {
@@ -35,11 +38,14 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 
   it("should generate a trigger for a result with bail conditions", async () => {
@@ -50,11 +56,14 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 
   it("should not generate the trigger if the defendant is in custody", async () => {
@@ -65,11 +74,14 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, { expectTriggers: false, expectRecord: false })
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toHaveLength(0)
   })
 
   it("should only generate one trigger for multiple matching conditions", async () => {
@@ -83,11 +95,14 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 
   it("should generate a trigger when the result is not recordable", async () => {
@@ -97,10 +112,13 @@ describe("TRPR0010", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage, { recordable: false })
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 })

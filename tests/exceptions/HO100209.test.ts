@@ -17,7 +17,9 @@ describe("HO100209", () => {
     })
 
     // Process the mock message
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 

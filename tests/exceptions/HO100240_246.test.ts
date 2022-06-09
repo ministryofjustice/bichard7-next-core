@@ -47,7 +47,9 @@ describe("HO100240 and HO100246", () => {
     })
 
     // Process the mock message
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
@@ -63,7 +65,9 @@ describe("HO100240 and HO100246", () => {
     })
 
     // Process the mock message
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 

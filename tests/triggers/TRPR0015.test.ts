@@ -22,11 +22,14 @@ describe("TRPR0015", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
   })
 
   it("should generate a case level trigger if another trigger is not generated when the case is recordable", async () => {
@@ -36,11 +39,14 @@ describe("TRPR0015", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage)
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage)
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code }])
   })
 
   it("should generate a case level trigger if another trigger is generated when the case is not recordable", async () => {
@@ -53,11 +59,14 @@ describe("TRPR0015", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage, { recordable: false })
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, { recordable: false })
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code: otherTriggerCode }, { code }])
   })
 
   it("should not generate a case level trigger if another trigger is not generated when the case is not recordable", async () => {
@@ -67,14 +76,17 @@ describe("TRPR0015", () => {
     })
 
     // Process the mock message
-    const result = await processMessage(inputMessage, {
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       recordable: false,
       expectTriggers: false,
       expectRecord: false
     })
 
     // Check the right triggers are generated
-    expect(result.exceptions).toHaveLength(0)
-    expect(result.triggers).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toHaveLength(0)
   })
 })

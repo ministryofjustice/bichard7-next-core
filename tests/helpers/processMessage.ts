@@ -1,5 +1,6 @@
 import promisePoller from "promise-poller"
 import CoreHandler from "src"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type BichardResultType from "src/types/BichardResultType"
 import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import { v4 as uuid } from "uuid"
@@ -102,9 +103,9 @@ const processMessageBichard = async (
     ...(record.trigger_item_identity ? { offenceSequenceNumber: parseInt(record.trigger_item_identity, 10) } : {})
   }))
 
-  const ahoXml = "Dummy"
+  const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { triggers, exceptions, ahoXml }
+  return { triggers, hearingOutcome }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<BichardResultType> => {
