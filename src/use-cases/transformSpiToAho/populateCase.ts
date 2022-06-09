@@ -18,9 +18,9 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
     HearingDefendant: populateDefendant(courtResult),
     ForceOwner: {
       SecondLevelCode: PTIURN.substring(0, 2),
-      ThirdLevelCode: "",
-      BottomLevelCode: "",
-      OrganisationUnitCode: "0000000"
+      ThirdLevelCode: PTIURN.substring(2, 4),
+      BottomLevelCode: "00",
+      OrganisationUnitCode: `${PTIURN.substring(0, 4)}00`
     }
   }
 }
