@@ -151,12 +151,14 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
           "@_Literal": result.Verdict ? lookupVerdictByCjsCode(result.Verdict)?.description : undefined
         }
       : undefined,
-    "ds:ModeOfTrialReason": {
-      "#text": result.ModeOfTrialReason,
-      "@_Literal": result.ModeOfTrialReason
-        ? lookupModeOfTrialReasonByCjsCode(result.ModeOfTrialReason)?.description
-        : undefined
-    },
+    "ds:ModeOfTrialReason": result.ModeOfTrialReason
+      ? {
+          "#text": result.ModeOfTrialReason,
+          "@_Literal": result.ModeOfTrialReason
+            ? lookupModeOfTrialReasonByCjsCode(result.ModeOfTrialReason)?.description
+            : undefined
+        }
+      : undefined,
     "ds:ResultVariableText": result.ResultVariableText,
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
