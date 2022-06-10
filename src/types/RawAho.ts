@@ -190,7 +190,7 @@ export interface Br7Offence {
   "ds:LocationOfOffence": string
   "ds:OffenceTitle"?: string
   "ds:ActualOffenceWording": string
-  "ds:RecordableOnPNCindicator": Br7LiteralTextString
+  "ds:RecordableOnPNCindicator"?: Br7LiteralTextString
   "ds:NotifiableToHOindicator": Br7LiteralTextString
   "ds:HomeOfficeClassification"?: string
   "ds:ConvictionDate"?: string
@@ -204,10 +204,15 @@ export interface Br7Offence {
 
 export interface Br7Result {
   "ds:CJSresultCode": number
+  "ds:OffenceRemandStatus"?: Br7LiteralTextString
   "ds:SourceOrganisation": Br7OrganisationUnit
   "ds:CourtType"?: string
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
+  "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
+  "ds:NextCourtType"?: string
+  "ds:NextHearingDate"?: string
+  "ds:NextHearingTime"?: string
   // "ds:AmountSpecifiedInResult": string
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString

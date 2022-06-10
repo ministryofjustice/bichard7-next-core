@@ -18,6 +18,7 @@ import type {
   Br7Case,
   Br7Duration,
   Br7Hearing,
+  Br7LiteralTextString,
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
@@ -32,6 +33,7 @@ import {
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
+  lookupRemandStatusByCjsCode,
   lookupSummonsCodeByCjsCode,
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
@@ -45,6 +47,41 @@ const hasError = (exceptions: Exception[] | undefined, path: (string | number)[]
     return exceptions.some((e) => e.path.join("").startsWith(currentPath))
   }
   return false
+}
+
+enum LiteralType {
+  OffenceRemandStatus,
+  YesNo
+}
+
+const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
+  let literalText: string
+  let literalAttribute: string
+  if (value === undefined) {
+    throw new Error("Text not supplied for required literal value")
+  }
+
+  if (type === LiteralType.OffenceRemandStatus && typeof value === "string") {
+    literalText = value
+    const remandStatus = lookupRemandStatusByCjsCode(value)
+    if (!remandStatus) {
+      throw new Error("Remand status lookup not found")
+    }
+    literalAttribute = remandStatus.description
+  } else if (type === LiteralType.YesNo) {
+    literalText = value ? "Y" : "N"
+    literalAttribute = value ? "Yes" : "No"
+  } else {
+    throw new Error("Invalid literal type specified")
+  }
+  return { "#text": literalText, "@_Literal": literalAttribute }
+}
+
+const optionalLiteral = (value: string | boolean | undefined, type: LiteralType): Br7LiteralTextString | undefined => {
+  if (value === undefined) {
+    return undefined
+  }
+  return literal(value, type)
 }
 
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
@@ -71,10 +108,24 @@ const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
 const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefined): Br7Result[] =>
   results.map((result) => ({
     "ds:CJSresultCode": result.CJSresultCode,
+    "ds:OffenceRemandStatus": optionalLiteral(result.OffenceRemandStatus, LiteralType.OffenceRemandStatus),
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
+    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
+      ? {
+          "@_SchemaVersion": "2.0",
+          "ds:TopLevelCode": result.NextResultSourceOrganisation?.TopLevelCode,
+          "ds:SecondLevelCode": result.NextResultSourceOrganisation?.SecondLevelCode,
+          "ds:ThirdLevelCode": result.NextResultSourceOrganisation?.ThirdLevelCode,
+          "ds:BottomLevelCode": result.NextResultSourceOrganisation?.BottomLevelCode,
+          "ds:OrganisationUnitCode": result.NextResultSourceOrganisation?.OrganisationUnitCode
+        }
+      : undefined,
+    "ds:NextCourtType": result.NextCourtType,
+    "ds:NextHearingDate": result.NextHearingDate ? format(result.NextHearingDate, "yyyy-MM-dd") : undefined,
+    "ds:NextHearingTime": result.NextHearingTime?.split(":").slice(0, 2).join(":"),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
       "#text": amount.toFixed(2),
@@ -199,10 +250,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "ds:LocationOfOffence": offence.LocationOfOffence,
     "ds:OffenceTitle": offence.OffenceTitle,
     "ds:ActualOffenceWording": offence.ActualOffenceWording,
-    "ds:RecordableOnPNCindicator": {
-      "#text": offence.RecordableOnPNCindicator ? "Y" : "N",
-      "@_Literal": offence.RecordableOnPNCindicator ? "Yes" : "No"
-    },
+    "ds:RecordableOnPNCindicator": optionalLiteral(offence.RecordableOnPNCindicator, LiteralType.YesNo),
     "ds:NotifiableToHOindicator": {
       "#text": offence.NotifiableToHOindicator ? "Y" : "N",
       "@_Literal": offence.NotifiableToHOindicator ? "Yes" : "No"

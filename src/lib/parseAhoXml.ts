@@ -106,6 +106,13 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined
 })
 
+const recordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
+  if (xmlOffence["ds:RecordableOnPNCindicator"] && xmlOffence["ds:RecordableOnPNCindicator"]["#text"]) {
+    return xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y"
+  }
+  return undefined
+}
+
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   return xmlOffences.map(
     (xmlOffence) =>
@@ -146,7 +153,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
-        RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
+        RecordableOnPNCindicator: recordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",
         HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]
         // ResultHalfLifeHours: xmlOffence.
