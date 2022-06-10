@@ -140,6 +140,7 @@ export interface Br7HearingDefendant {
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
+  "br7:BailConditions"?: { "#text": string }[]
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
@@ -222,6 +223,7 @@ export interface Br7Result {
   "ds:NextCourtType"?: string
   "ds:NextHearingDate"?: string
   "ds:NextHearingTime"?: string
+  "ds:BailCondition"?: { "#text": string }[]
   // "ds:AmountSpecifiedInResult": string
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString

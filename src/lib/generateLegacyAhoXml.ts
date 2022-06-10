@@ -126,6 +126,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
+    "ds:BailCondition": result.BailCondition ? result.BailCondition?.map((bc) => ({ "#text": bc })) : undefined,
     "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
       ? {
           "@_SchemaVersion": "2.0",
@@ -336,6 +337,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       "ds:AddressLine3": c.HearingDefendant.Address.AddressLine3
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
+    "br7:BailConditions": c.HearingDefendant.BailConditions.map((bc) => ({ "#text": bc })),
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
@@ -450,7 +452,8 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
   const options = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
-    processEntities: false
+    processEntities: false,
+    suppressBooleanAttributes: false
   }
 
   const builder = new XMLBuilder(options)
