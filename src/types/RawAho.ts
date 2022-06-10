@@ -116,7 +116,7 @@ export interface Br7Case {
   "ds:CourtCaseReferenceNumber"?: string
   "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
-  "br7:RecordableOnPNCindicator": Br7LiteralTextString
+  "br7:RecordableOnPNCindicator"?: Br7LiteralTextString
   "br7:Urgent"?: Br7Urgent
   "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
@@ -140,6 +140,7 @@ export interface Br7HearingDefendant {
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
+  "br7:BailConditions"?: { "#text": string }[]
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
@@ -179,6 +180,11 @@ export interface DsName {
   "@_NameSequence": string
 }
 
+export interface Br7AlcoholLevel {
+  "ds:Amount": string
+  "ds:Method": Br7LiteralTextString
+}
+
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
   "ds:OffenceCategory": Br7LiteralTextString
@@ -190,9 +196,10 @@ export interface Br7Offence {
   "ds:LocationOfOffence": string
   "ds:OffenceTitle"?: string
   "ds:ActualOffenceWording": string
-  "ds:RecordableOnPNCindicator": Br7LiteralTextString
+  "ds:RecordableOnPNCindicator"?: Br7LiteralTextString
   "ds:NotifiableToHOindicator": Br7LiteralTextString
   "ds:HomeOfficeClassification"?: string
+  "ds:AlcoholLevel"?: Br7AlcoholLevel
   "ds:ConvictionDate"?: string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
@@ -201,23 +208,34 @@ export interface Br7Offence {
   "@_hasError": boolean
   "@_SchemaVersion": string
 }
-
+export interface Br7ResultQualifierVariable {
+  "@_SchemaVersion": string
+  "ds:Code": string
+}
 export interface Br7Result {
   "ds:CJSresultCode": number
+  "ds:OffenceRemandStatus"?: Br7LiteralTextString
   "ds:SourceOrganisation": Br7OrganisationUnit
   "ds:CourtType"?: string
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
+  "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
+  "ds:NextCourtType"?: string
+  "ds:NextHearingDate"?: string
+  "ds:NextHearingTime"?: string
+  "ds:BailCondition"?: { "#text": string }[]
   // "ds:AmountSpecifiedInResult": string
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
   "ds:ResultVariableText"?: string
+  "ds:WarrantIssueDate"?: string
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
   "br7:PNCAdjudicationExists": Br7LiteralTextString
+  "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean
   "@_SchemaVersion": string

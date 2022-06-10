@@ -106,6 +106,20 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined
 })
 
+const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
+  if (xmlOffence["ds:RecordableOnPNCindicator"] && xmlOffence["ds:RecordableOnPNCindicator"]["#text"]) {
+    return xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y"
+  }
+  return undefined
+}
+
+const caseRecordableOnPnc = (xmlCase: Br7Case): boolean | undefined => {
+  if (xmlCase["br7:RecordableOnPNCindicator"] && xmlCase["br7:RecordableOnPNCindicator"]["#text"]) {
+    return xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y"
+  }
+  return undefined
+}
+
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
   return xmlOffences.map(
     (xmlOffence) =>
@@ -146,7 +160,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
-        RecordableOnPNCindicator: xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y",
+        RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",
         HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]
         // ResultHalfLifeHours: xmlOffence.
@@ -157,7 +171,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
 
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"],
-  RecordableOnPNCindicator: xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y",
+  RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
   ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
   CourtReference: {

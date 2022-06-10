@@ -6,6 +6,10 @@ type OffenceDates = {
   startDate: Date
   endDate?: Date
 }
+type OffenceTimes = {
+  startTime?: string
+  endTime?: string
+}
 
 type AhoPncOffence = {
   COF: {
@@ -73,6 +77,21 @@ const extractDates = (offence: AhoPncOffence): OffenceDates => {
   return dates
 }
 
+const extractTimes = (offence: AhoPncOffence): OffenceTimes => {
+  const times: OffenceTimes = { startTime: undefined, endTime: undefined }
+  const cofStartTime = offence.COF["@_OffStartTime"]
+  if (cofStartTime && cofStartTime !== "" && cofStartTime.length === 4) {
+    times.startTime = `${cofStartTime.substring(0, 2)}:${cofStartTime.substring(2)}`
+  }
+
+  const cofEndTime = offence.COF["@_OffEndTime"]
+  if (cofEndTime && cofEndTime !== "" && cofEndTime.length === 4) {
+    times.endTime = `${cofEndTime.substring(0, 2)}:${cofEndTime.substring(2)}`
+  }
+
+  return times
+}
+
 /*
 Sample CXE element
 <CXE01>
@@ -126,7 +145,8 @@ export default (ahoXml: string): PncQueryResult | undefined => {
             acpoOffenceCode: offence.COF["@_ACPOOffenceCode"],
             cjsOffenceCode: offence.COF["@_CJSOffenceCode"],
             sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
-            ...extractDates(offence)
+            ...extractDates(offence),
+            ...extractTimes(offence)
           }
         })
       )
