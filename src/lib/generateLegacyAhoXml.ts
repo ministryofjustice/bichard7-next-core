@@ -160,6 +160,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
         }
       : undefined,
     "ds:ResultVariableText": result.ResultVariableText,
+    "ds:WarrantIssueDate": result.WarrantIssueDate ? format(result.WarrantIssueDate, "yyyy-MM-dd") : undefined,
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,

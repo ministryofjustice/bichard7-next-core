@@ -228,6 +228,7 @@ export interface Br7Result {
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
   "ds:ResultVariableText"?: string
+  "ds:WarrantIssueDate"?: string
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
