@@ -29,6 +29,7 @@ import type {
   RawAho
 } from "src/types/RawAho"
 import {
+  lookupAlcoholLevelMethodByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
@@ -53,7 +54,8 @@ const hasError = (exceptions: Exception[] | undefined, path: (string | number)[]
 enum LiteralType {
   OffenceRemandStatus,
   YesNo,
-  PleaStatus
+  PleaStatus,
+  AlcoholLevelMethod
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
@@ -74,6 +76,9 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   } else if (type === LiteralType.PleaStatus) {
     literalText = value
     literalAttribute = lookupPleaStatusByCjsCode(value)?.description
+  } else if (type === LiteralType.AlcoholLevelMethod) {
+    literalText = value
+    literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
@@ -264,6 +269,12 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
       "@_Literal": offence.NotifiableToHOindicator ? "Yes" : "No"
     },
     "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
+    "ds:AlcoholLevel": offence.AlcoholLevel
+      ? {
+          "ds:Amount": offence.AlcoholLevel?.Amount,
+          "ds:Method": literal(offence.AlcoholLevel.Method, LiteralType.AlcoholLevelMethod)
+        }
+      : undefined,
     "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : undefined,
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,

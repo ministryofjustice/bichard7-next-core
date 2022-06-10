@@ -179,6 +179,11 @@ export interface DsName {
   "@_NameSequence": string
 }
 
+export interface Br7AlcoholLevel {
+  "ds:Amount": string
+  "ds:Method": Br7LiteralTextString
+}
+
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
   "ds:OffenceCategory": Br7LiteralTextString
@@ -193,6 +198,7 @@ export interface Br7Offence {
   "ds:RecordableOnPNCindicator"?: Br7LiteralTextString
   "ds:NotifiableToHOindicator": Br7LiteralTextString
   "ds:HomeOfficeClassification"?: string
+  "ds:AlcoholLevel"?: Br7AlcoholLevel
   "ds:ConvictionDate"?: string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number

@@ -86,6 +86,9 @@ const lookupQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undef
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   alcoholLevelMethod.find((x) => x.spiCode === spiCode)
 
+const lookupAlcoholLevelMethodByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
+  alcoholLevelMethod.find((x) => x.cjsCode === cjsCode)
+
 const lookupOrganisationUnitByThirdLevelPsaCode = (
   thirdLevelPsaCode: number | string
 ): OrganisationUnitData | undefined =>
@@ -153,6 +156,7 @@ export {
   lookupModeOfTrialReasonByCjsCode,
   lookupQualifierCodeByCjsCode,
   lookupAlcoholLevelMethodBySpiCode,
+  lookupAlcoholLevelMethodByCjsCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupResultCodeByCjsCode,
   lookupPncDisposalByCjsCode,
