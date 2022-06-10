@@ -23,7 +23,7 @@ describe("HO100201", () => {
       expectTriggers: false
     })
 
-    // Check the right triggers are generated
+    // Check the right exceptionss are generated
     expect(exceptions).toStrictEqual([
       { code: "HO100201", path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"] }
     ])

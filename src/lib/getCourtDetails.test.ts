@@ -13,7 +13,7 @@ describe("getCourtDetails", () => {
 
     const { courtName, courtType } = getCourtDetails(organisationUnitData)
 
-    expect(courtName).toBe("West Midlands Birmingham Youth Court (Steelehouse Lane)")
+    expect(courtName).toBe("Magistrates' Courts West Midlands Birmingham Youth Court (Steelehouse Lane)")
     expect(courtType).toBe(MC_YOUTH)
   })
 
@@ -27,7 +27,7 @@ describe("getCourtDetails", () => {
 
     const { courtName, courtType } = getCourtDetails(organisationUnitData)
 
-    expect(courtName).toBe("West Midlands Birmingham (Corporation St)")
+    expect(courtName).toBe("Magistrates' Courts West Midlands Birmingham (Corporation St)")
     expect(courtType).toBe(MC_ADULT)
   })
 

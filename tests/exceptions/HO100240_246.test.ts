@@ -53,7 +53,7 @@ describe("HO100240 and HO100246", () => {
       expectTriggers: false
     })
 
-    // Check the right triggers are generated
+    // Check the right exceptions are generated
     expect(exceptions).toStrictEqual(expectedExceptions)
   })
 
@@ -71,7 +71,7 @@ describe("HO100240 and HO100246", () => {
       expectTriggers: false
     })
 
-    // Check the right triggers are generated
+    // Check the right exceptions are generated
     expect(exceptions).toStrictEqual(expectedExceptions)
   })
 })

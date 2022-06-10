@@ -24,10 +24,7 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
 
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
-  if (!hearingOutcome.Exceptions) {
-    hearingOutcome.Exceptions = []
-  }
-  hearingOutcome.Exceptions = hearingOutcome.Exceptions.concat(exceptions)
+  hearingOutcome.Exceptions = (hearingOutcome.Exceptions ?? []).concat(exceptions)
 
   return {
     triggers,
