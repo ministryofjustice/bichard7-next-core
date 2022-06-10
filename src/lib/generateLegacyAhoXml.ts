@@ -165,6 +165,10 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "br7:ResultClass": result.ResultClass,
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
+    "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
+      "@_SchemaVersion": "3.0",
+      "ds:Code": rqv.Code
+    })),
     "br7:ConvictingCourt": result.ConvictingCourt,
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
     "@_SchemaVersion": "2.0"

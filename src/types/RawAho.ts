@@ -207,7 +207,10 @@ export interface Br7Offence {
   "@_hasError": boolean
   "@_SchemaVersion": string
 }
-
+export interface Br7ResultQualifierVariable {
+  "@_SchemaVersion": string
+  "ds:Code": string
+}
 export interface Br7Result {
   "ds:CJSresultCode": number
   "ds:OffenceRemandStatus"?: Br7LiteralTextString
@@ -229,6 +232,7 @@ export interface Br7Result {
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
   "br7:PNCAdjudicationExists": Br7LiteralTextString
+  "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean
   "@_SchemaVersion": string
