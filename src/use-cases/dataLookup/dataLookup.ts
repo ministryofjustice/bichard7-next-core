@@ -66,6 +66,9 @@ const lookupRemandStatusByCjsCode = (cjsCode: string): DataLookupResult | undefi
 const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined =>
   pleaStatus.find((x) => x.spiCode === plea?.toString())
 
+const lookupPleaStatusByCjsCode = (plea: string): DataLookupResult | undefined =>
+  pleaStatus.find((x) => x.cjsCode === plea?.toString())
+
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   verdict.find((x) => x.spiCode === spiCode)
 
@@ -143,6 +146,7 @@ export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
   lookupPleaStatusBySpiCode,
+  lookupPleaStatusByCjsCode,
   lookupVerdictBySpiCode,
   lookupVerdictByCjsCode,
   lookupModeOfTrialReasonBySpiCode,

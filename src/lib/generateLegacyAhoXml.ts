@@ -33,6 +33,7 @@ import {
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
+  lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
   lookupSummonsCodeByCjsCode,
   lookupVerdictByCjsCode
@@ -51,29 +52,36 @@ const hasError = (exceptions: Exception[] | undefined, path: (string | number)[]
 
 enum LiteralType {
   OffenceRemandStatus,
-  YesNo
+  YesNo,
+  PleaStatus
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
-  let literalText: string
-  let literalAttribute: string
+  let literalText: string | undefined
+  let literalAttribute: string | undefined
   if (value === undefined) {
     throw new Error("Text not supplied for required literal value")
   }
 
-  if (type === LiteralType.OffenceRemandStatus && typeof value === "string") {
-    literalText = value
-    const remandStatus = lookupRemandStatusByCjsCode(value)
-    if (!remandStatus) {
-      throw new Error("Remand status lookup not found")
+  if (typeof value === "boolean") {
+    if (type === LiteralType.YesNo) {
+      literalText = value ? "Y" : "N"
+      literalAttribute = value ? "Yes" : "No"
     }
-    literalAttribute = remandStatus.description
-  } else if (type === LiteralType.YesNo) {
-    literalText = value ? "Y" : "N"
-    literalAttribute = value ? "Yes" : "No"
+  } else if (type === LiteralType.OffenceRemandStatus && typeof value === "string") {
+    literalText = value
+    literalAttribute = lookupRemandStatusByCjsCode(value)?.description
+  } else if (type === LiteralType.PleaStatus) {
+    literalText = value
+    literalAttribute = lookupPleaStatusByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
+
+  if (!literalAttribute) {
+    throw new Error("Literal lookup not found")
+  }
+
   return { "#text": literalText, "@_Literal": literalAttribute }
 }
 
@@ -131,7 +139,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
       "#text": amount.toFixed(2),
       "@_Type": "Fine"
     })),
-    "ds:PleaStatus": { "#text": result.PleaStatus, "@_Literal": "Not Guilty" },
+    "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": result.Verdict
       ? {
           "#text": result.Verdict,
