@@ -117,7 +117,7 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"] ?? ""
   },
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
-  OffenceReasonSequence: Number(xmlCPR["ds:OffenceReasonSequence"])
+  OffenceReasonSequence: xmlCPR["ds:OffenceReasonSequence"] ? Number(xmlCPR["ds:OffenceReasonSequence"]) : undefined
 })
 
 const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
@@ -171,7 +171,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         // StartTime:
         // OffenceEndTime: xmlOffence.
         // OffenceTime: xmlOffence.Offence
-        ConvictionDate: new Date(xmlOffence["ds:ConvictionDate"] ?? ""),
+        ConvictionDate: xmlOffence["ds:ConvictionDate"] ? new Date(xmlOffence["ds:ConvictionDate"]) : undefined,
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
@@ -189,6 +189,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
   ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
+  CourtCaseReferenceNumber: xmlCase["ds:CourtCaseReferenceNumber"],
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
@@ -197,6 +198,8 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
       typeof xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"] === "string"
         ? xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]
         : xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
+    PNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:PNCIdentifier"],
+    PNCCheckname: xmlCase["br7:HearingDefendant"]["br7:PNCCheckname"],
     DefendantDetail: {
       PersonName: {
         Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"],
@@ -215,7 +218,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     },
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"] ?? "",
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"],
-    BailConditions: [""],
+    BailConditions: [],
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
   }
 })
