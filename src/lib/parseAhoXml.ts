@@ -247,6 +247,12 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"],
   RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
+  Urgent: xmlCase["br7:Urgent"]
+    ? {
+        urgent: xmlCase["br7:Urgent"]["br7:urgent"]["#text"] === "Y",
+        urgency: Number(xmlCase["br7:Urgent"]["br7:urgency"])
+      }
+    : undefined,
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
   ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
   CourtCaseReferenceNumber: xmlCase["ds:CourtCaseReferenceNumber"],
