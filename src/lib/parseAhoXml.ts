@@ -88,6 +88,12 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   PNCDisposalType: Number(xmlResult["br7:PNCDisposalType"]),
   // PNCAdjudicationExists: xmlResult.p
   ResultClass: xmlResult["br7:ResultClass"],
+  Urgent: xmlResult["br7:Urgent"]
+    ? {
+        urgent: xmlResult["br7:Urgent"]["br7:urgent"]["#text"] === "Y",
+        urgency: Number(xmlResult["br7:Urgent"]["br7:urgency"])
+      }
+    : undefined,
   // NumberOfOffencesTIC: xmlResult.
   // ReasonForOffenceBailConditions: xmlResult
   ResultQualifierVariable: [],
