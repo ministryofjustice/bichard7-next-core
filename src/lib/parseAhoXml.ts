@@ -62,7 +62,7 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
 
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]),
-  // OffenceRemandStatus: xmlResult.
+  OffenceRemandStatus: xmlResult["ds:OffenceRemandStatus"] ? xmlResult["ds:OffenceRemandStatus"]["#text"] : undefined,
   SourceOrganisation: mapXmlOrganisationalUnitToAho(xmlResult["ds:SourceOrganisation"]),
   CourtType: xmlResult["ds:CourtType"],
   ConvictingCourt: xmlResult["br7:ConvictingCourt"],
@@ -82,11 +82,9 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   // TimeSpecifiedInResult: xmlResult,
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
   // NumberSpecifiedInResult: xmlResult["ds:NumberSpecifiedInResult"],
-  // NextResultSourceOrganisation: {},
-  // NextHearingType: xmlResult.
-  // NextHearingDate: xmlResult.nex
-  // NextHearingTime: {},
-  // NextCourtType: xmlResult
+  NextCourtType: xmlResult["ds:NextCourtType"],
+  NextHearingDate: xmlResult["ds:NextHearingDate"] ? new Date(xmlResult["ds:NextHearingDate"]) : undefined,
+  NextHearingTime: xmlResult["ds:NextHearingTime"],
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
   Verdict: xmlResult["ds:Verdict"]?.["#text"],
   ResultVariableText: xmlResult["ds:ResultVariableText"],
@@ -106,8 +104,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   // NumberOfOffencesTIC: xmlResult.
   // ReasonForOffenceBailConditions: xmlResult
   ResultQualifierVariable: [],
-  ResultHalfLifeHours: Number(xmlResult["ds:ResultHalfLifeHours"]),
-  // Urgent: {},
+  ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"] ? Number(xmlResult["ds:ResultHalfLifeHours"]) : undefined,
   ResultApplicableQualifierCode: []
   // BailCondition: xmlResult.
 })
@@ -234,7 +231,12 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         // ActualWelshIndictmentWording: xmlOffence.Actr
         // ActualStatementOfFacts: xmlOffence.actual
         // ActualWelshStatementOfFacts:
-        // AlcoholLevel: alcoholLevelSchema.optional(),
+        AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
+          ? {
+              Amount: xmlOffence["ds:AlcoholLevel"]["ds:Amount"],
+              Method: xmlOffence["ds:AlcoholLevel"]["ds:Method"]["#text"]
+            }
+          : undefined,
         // VehicleCode:
         // VehicleRegistrationMark:
         // StartTime:
@@ -243,6 +245,9 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         ConvictionDate: xmlOffence["ds:ConvictionDate"] ? new Date(xmlOffence["ds:ConvictionDate"]) : undefined,
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
+        ManualSequenceNumber: xmlOffence["br7:ManualSequenceNo"]
+          ? xmlOffence["br7:ManualSequenceNo"]["#text"] === "Y"
+          : undefined,
         AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
           ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
           : undefined,
