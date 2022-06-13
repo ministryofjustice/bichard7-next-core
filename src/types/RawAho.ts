@@ -219,6 +219,7 @@ export interface Br7Result {
   "ds:CourtType"?: string
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
+  "ds:Duration"?: Br7Duration[]
   "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
   "ds:NextCourtType"?: string
   "ds:NextHearingDate"?: string
@@ -234,6 +235,7 @@ export interface Br7Result {
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
+  "br7:Urgent"?: Br7Urgent
   "br7:PNCAdjudicationExists": Br7LiteralTextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string

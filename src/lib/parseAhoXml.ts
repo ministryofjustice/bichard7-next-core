@@ -3,6 +3,7 @@ import type {
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
+  Duration,
   Hearing,
   Offence,
   OffenceReason,
@@ -14,6 +15,7 @@ import type { CjsPlea } from "src/types/Plea"
 import type {
   Br7Case,
   Br7CriminalProsecutionReference,
+  Br7Duration,
   Br7Hearing,
   Br7Offence,
   Br7OffenceReason,
@@ -46,6 +48,18 @@ const mapAmountSpecifiedInResult = (
   return resultArray.map((amount) => Number(amount["#text"]))
 }
 
+const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duration[] => {
+  if (!duration) {
+    return []
+  }
+  const durationArray = Array.isArray(duration) ? duration : [duration]
+  return durationArray.map((d) => ({
+    DurationType: d["ds:DurationType"],
+    DurationUnit: d["ds:DurationUnit"],
+    DurationLength: Number(d["ds:DurationLength"])
+  }))
+}
+
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]),
   // OffenceRemandStatus: xmlResult.
@@ -54,7 +68,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   ConvictingCourt: xmlResult["br7:ConvictingCourt"],
   ResultHearingType: xmlResult["ds:ResultHearingType"]?.["#text"],
   ResultHearingDate: new Date(xmlResult["ds:ResultHearingDate"] ?? ""),
-  Duration: [],
+  Duration: mapDuration(xmlResult["ds:Duration"]),
   DateSpecifiedInResult: [],
   // TimeSpecifiedInResult: xmlResult,
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
