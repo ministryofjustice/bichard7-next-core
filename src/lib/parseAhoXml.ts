@@ -8,7 +8,8 @@ import type {
   Offence,
   OffenceReason,
   OrganisationUnitCodes,
-  Result
+  Result,
+  ResultQualifierVariable
 } from "src/types/AnnotatedHearingOutcome"
 import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
@@ -21,6 +22,7 @@ import type {
   Br7OffenceReason,
   Br7OrganisationUnit,
   Br7Result,
+  Br7ResultQualifierVariable,
   Br7TypeTextString,
   CommonLawOffenceCode,
   IndictmentOffenceCode,
@@ -58,6 +60,16 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
     DurationUnit: d["ds:DurationUnit"],
     DurationLength: Number(d["ds:DurationLength"])
   }))
+}
+
+const mapXmlResultQualifierVariableTOAho = (
+  rqv: Br7ResultQualifierVariable | Br7ResultQualifierVariable[] | undefined
+): ResultQualifierVariable[] => {
+  if (!rqv) {
+    return []
+  }
+  const rqvArray = Array.isArray(rqv) ? rqv : [rqv]
+  return rqvArray.map((r) => ({ Code: r["ds:Code"] }))
 }
 
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
@@ -105,7 +117,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
     : undefined,
   // NumberOfOffencesTIC: xmlResult.
   // ReasonForOffenceBailConditions: xmlResult
-  ResultQualifierVariable: [],
+  ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"] ? Number(xmlResult["ds:ResultHalfLifeHours"]) : undefined,
   ResultApplicableQualifierCode: []
   // BailCondition: xmlResult.

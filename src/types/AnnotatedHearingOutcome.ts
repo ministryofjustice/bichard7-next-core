@@ -213,7 +213,7 @@ const resultSchema = z.object({
     .min(1, ExceptionCode.HO100106)
     .max(2500, ExceptionCode.HO100107)
     .optional(), // Can't test because it is masked by XML parser
-  ResultQualifierVariable: resultQualifierVariableSchema.array(),
+  ResultQualifierVariable: resultQualifierVariableSchema.array().min(0),
   ResultHalfLifeHours: z.number().min(1, ExceptionCode.HO100109).max(999, ExceptionCode.HO100110).optional(), // Can't test because all values come from standing data
   Urgent: urgentSchema.optional(),
   ResultApplicableQualifierCode: z
@@ -341,3 +341,4 @@ export type Urgent = z.infer<typeof urgentSchema>
 export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionReferenceSchema>
 export type Duration = z.infer<typeof durationSchema>
 export type DefendantOrOffender = z.infer<typeof defendantOrOffenderSchema>
+export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSchema>

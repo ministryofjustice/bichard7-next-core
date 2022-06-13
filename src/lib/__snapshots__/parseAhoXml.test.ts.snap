@@ -27,7 +27,7 @@ Object {
           "CourtPNCIdentifier": undefined,
           "DefendantDetail": Object {
             "BirthDate": 1948-11-11T00:00:00.000Z,
-            "Gender": "1",
+            "Gender": 1,
             "GeneratedPNCFilename": "SEXOFFENCE/TRPRFOUR",
             "PersonName": Object {
               "FamilyName": "SEXOFFENCE",
@@ -99,6 +99,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "OffenceRemandStatus": undefined,
+                  "PNCAdjudicationExists": false,
                   "PNCDisposalType": 3078,
                   "PleaStatus": "NG",
                   "ResultApplicableQualifierCode": Array [],
@@ -181,6 +182,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "OffenceRemandStatus": undefined,
+                  "PNCAdjudicationExists": false,
                   "PNCDisposalType": 3052,
                   "PleaStatus": "NG",
                   "ResultApplicableQualifierCode": Array [],
@@ -268,6 +270,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "OffenceRemandStatus": undefined,
+                  "PNCAdjudicationExists": false,
                   "PNCDisposalType": 1015,
                   "PleaStatus": "NG",
                   "ResultApplicableQualifierCode": Array [],
