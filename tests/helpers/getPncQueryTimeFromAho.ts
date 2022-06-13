@@ -1,13 +1,15 @@
 import { XMLParser } from "fast-xml-parser"
-import type { ParsedAHO } from "./generateMockPncQueryResultFromAho"
+import type { RawAho } from "src/types/RawAho"
 
 const getPncQueryTimeFromAho = (ahoXml: string): Date => {
   const parser = new XMLParser({
-    ignoreAttributes: false,
-    removeNSPrefix: true
+    ignoreAttributes: false
   })
-  const rawParsedObj = parser.parse(ahoXml) as ParsedAHO
-  const queryTime = rawParsedObj.AnnotatedHearingOutcome.PNCQueryDate
+  const rawParsedObj = parser.parse(ahoXml) as RawAho
+  const queryTime = rawParsedObj["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
+  if (!queryTime) {
+    return new Date()
+  }
   return new Date(queryTime)
 }
 

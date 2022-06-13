@@ -27,7 +27,7 @@ export interface Cxe01 {
 }
 
 export interface CourtCases {
-  CourtCase?: CourtCase[]
+  CourtCase?: CourtCase | CourtCase[]
 }
 
 export interface CourtCase {
@@ -42,10 +42,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: Offence[]
+  Offence: RawOffence[]
 }
 
-export interface Offence {
+export interface RawOffence {
   COF: Cof
   ADJ?: Adj
   DISList?: DISList

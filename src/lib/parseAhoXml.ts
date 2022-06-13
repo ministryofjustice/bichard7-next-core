@@ -19,11 +19,13 @@ import type {
   Br7OffenceReason,
   Br7OrganisationUnit,
   Br7Result,
+  Br7TypeTextString,
   CommonLawOffenceCode,
   IndictmentOffenceCode,
   NonMatchingOffenceCode,
   RawAho
 } from "src/types/RawAho"
+import mapXmlCxe01ToAho from "./mapXmlCxe01ToAho"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"],
@@ -120,8 +122,9 @@ const caseRecordableOnPnc = (xmlCase: Br7Case): boolean | undefined => {
   return undefined
 }
 
-const mapXmlOffencesToAho = (xmlOffences: Br7Offence[]): Offence[] => {
-  return xmlOffences.map(
+const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
+  const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
+  return offences.map(
     (xmlOffence) =>
       ({
         CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
@@ -223,24 +226,22 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
 })
 
 const mapXmlToAho = (aho: RawAho): AnnotatedHearingOutcome | undefined => {
-  if (aho["br7:AnnotatedHearingOutcome"]) {
-    return {
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Hearing: mapXmlHearingToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]),
-          Case: mapXmlCaseToAho(aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"])
-        }
+  const rootElement = aho["br7:AnnotatedHearingOutcome"] ? aho["br7:AnnotatedHearingOutcome"] : aho
+  if (!rootElement["br7:HearingOutcome"]) {
+    return
+  }
+
+  return {
+    AnnotatedHearingOutcome: {
+      HearingOutcome: {
+        Hearing: mapXmlHearingToAho(rootElement["br7:HearingOutcome"]["br7:Hearing"]),
+        Case: mapXmlCaseToAho(rootElement["br7:HearingOutcome"]["br7:Case"])
       }
-    }
-  } else if (aho["br7:HearingOutcome"]) {
-    return {
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Hearing: mapXmlHearingToAho(aho["br7:HearingOutcome"]["br7:Hearing"]),
-          Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
-        }
-      }
-    }
+    },
+    PncQuery: mapXmlCxe01ToAho(aho["br7:AnnotatedHearingOutcome"]?.CXE01),
+    PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
+      ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"])
+      : undefined
   }
 }
 
