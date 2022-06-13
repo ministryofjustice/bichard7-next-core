@@ -165,7 +165,12 @@ export interface Br7DefendantDetail {
 }
 
 export interface Br7Gender {
-  "#text": number
+  "#text"?: string | number
+  "@_Literal"?: string
+}
+
+export interface Br7NumberLiteral {
+  "#text"?: string | number
   "@_Literal"?: string
 }
 
@@ -190,7 +195,7 @@ export interface Br7Offence {
   "ds:OffenceCategory": Br7LiteralTextString
   "ds:ArrestDate"?: string
   "ds:ChargeDate"?: string
-  "ds:ActualOffenceDateCode": Br7Gender
+  "ds:ActualOffenceDateCode": Br7NumberLiteral
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
   "ds:LocationOfOffence": string
@@ -237,7 +242,7 @@ export interface Br7Result {
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
   "br7:Urgent"?: Br7Urgent
-  "br7:PNCAdjudicationExists": Br7LiteralTextString
+  "br7:PNCAdjudicationExists"?: Br7LiteralTextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean

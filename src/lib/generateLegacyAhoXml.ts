@@ -31,6 +31,7 @@ import type {
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
+  lookupGenderByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
@@ -55,7 +56,8 @@ enum LiteralType {
   OffenceRemandStatus,
   YesNo,
   PleaStatus,
-  AlcoholLevelMethod
+  AlcoholLevelMethod,
+  Gender
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
@@ -70,7 +72,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
       literalText = value ? "Y" : "N"
       literalAttribute = value ? "Yes" : "No"
     }
-  } else if (type === LiteralType.OffenceRemandStatus && typeof value === "string") {
+  } else if (type === LiteralType.OffenceRemandStatus) {
     literalText = value
     literalAttribute = lookupRemandStatusByCjsCode(value)?.description
   } else if (type === LiteralType.PleaStatus) {
@@ -79,6 +81,9 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   } else if (type === LiteralType.AlcoholLevelMethod) {
     literalText = value
     literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
+  } else if (type === LiteralType.Gender) {
+    literalText = value
+    literalAttribute = lookupGenderByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
@@ -166,7 +171,10 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
-    "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
+    "br7:PNCAdjudicationExists":
+      result.PNCAdjudicationExists !== undefined
+        ? { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" }
+        : undefined,
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
       "ds:Code": rqv.Code
@@ -329,7 +337,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate
         ? format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd")
         : undefined,
-      "br7:Gender": { "#text": Number(c.HearingDefendant.DefendantDetail.Gender), "@_Literal": "male" }
+      "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
     },
     "br7:Address": {
       "ds:AddressLine1": c.HearingDefendant.Address.AddressLine1,

@@ -92,8 +92,10 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   // WarrantIssueDate: xmlResult.
   // CRESTDisposalCode: xmlResult.
   ModeOfTrialReason: xmlResult["ds:ModeOfTrialReason"]?.["#text"],
-  PNCDisposalType: Number(xmlResult["br7:PNCDisposalType"]),
-  // PNCAdjudicationExists: xmlResult.p
+  PNCDisposalType: xmlResult["br7:PNCDisposalType"] ? Number(xmlResult["br7:PNCDisposalType"]) : undefined,
+  PNCAdjudicationExists: xmlResult["br7:PNCAdjudicationExists"]
+    ? xmlResult["br7:PNCAdjudicationExists"]["#text"] === "Y"
+    : undefined,
   ResultClass: xmlResult["br7:ResultClass"],
   Urgent: xmlResult["br7:Urgent"]
     ? {
@@ -290,8 +292,10 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
         FamilyName: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
       },
       GeneratedPNCFilename: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"],
-      BirthDate: new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"] ?? ""),
-      Gender: String(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
+      BirthDate: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]
+        ? new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"])
+        : undefined,
+      Gender: Number(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
     },
     Address: {
       AddressLine1: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine1"],
