@@ -45,13 +45,13 @@ const isOrganisationUnitValid = (organisationUnit?: OrganisationUnitCodes): bool
 const isAsnValid = (asn?: string): boolean => !!asn && isOrganisationUnitValid(convertAsnToOrganisationUnit(asn))
 
 const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
-  const { exceptions } = options!
+  const exceptions: Exception[] = options?.exceptions ?? []
   const { ArrestSummonsNumber } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
   const { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const generatedExceptions: Exception[] = []
 
   // Validate ASN
-  const arrestSummonsNumberException = findException(exceptions!, generatedExceptions, ARREST_SOMMONS_NUMBER_PATH)
+  const arrestSummonsNumberException = findException(exceptions, generatedExceptions, ARREST_SOMMONS_NUMBER_PATH)
   if (!arrestSummonsNumberException && ArrestSummonsNumber && !isAsnValid(ArrestSummonsNumber)) {
     generatedExceptions.push({ code: ExceptionCode.HO100300, path: ARREST_SOMMONS_NUMBER_PATH })
   }
