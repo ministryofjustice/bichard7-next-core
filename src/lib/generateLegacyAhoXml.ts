@@ -222,13 +222,13 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
         "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
         "ds:OrganisationUnitIdentifierCode": {
           "ds:SecondLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.SecondLevelCode,
           "ds:ThirdLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.ThirdLevelCode,
           "ds:BottomLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.BottomLevelCode,
           "ds:OrganisationUnitCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
               .OrganisationUnitCode,
           "@_SchemaVersion": "2.0"
         },

@@ -245,10 +245,10 @@ export interface Br7Result {
 
 export interface Br7OrganisationUnit {
   "ds:TopLevelCode"?: string
-  "ds:SecondLevelCode"?: string
-  "ds:ThirdLevelCode"?: string
-  "ds:BottomLevelCode"?: string
-  "ds:OrganisationUnitCode"?: string
+  "ds:SecondLevelCode": string
+  "ds:ThirdLevelCode": string
+  "ds:BottomLevelCode": string
+  "ds:OrganisationUnitCode": string
   "@_SchemaVersion": string
 }
 

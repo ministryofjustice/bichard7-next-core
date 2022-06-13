@@ -96,7 +96,7 @@ const defendantOrOffenderSchema = z.object({
 })
 
 const criminalProsecutionReferenceSchema = z.object({
-  DefendantOrOffender: defendantOrOffenderSchema.optional(),
+  DefendantOrOffender: defendantOrOffenderSchema,
   OffenceReason: offenceReasonSchema.optional(),
   OffenceReasonSequence: z.number().optional()
 })
@@ -340,3 +340,4 @@ export type OrganisationUnitCodes = z.infer<typeof organisationUnitSchema>
 export type Urgent = z.infer<typeof urgentSchema>
 export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionReferenceSchema>
 export type Duration = z.infer<typeof durationSchema>
+export type DefendantOrOffender = z.infer<typeof defendantOrOffenderSchema>

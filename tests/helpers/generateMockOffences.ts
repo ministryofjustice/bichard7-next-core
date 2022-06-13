@@ -39,6 +39,18 @@ export const createHOOffence = ({
           FullCode: `${actOrSource}${year}${reason}`
         }
       },
+      DefendantOrOffender: {
+        Year: "",
+        OrganisationUnitIdentifierCode: {
+          TopLevelCode: "B",
+          SecondLevelCode: "01",
+          ThirdLevelCode: "EF",
+          BottomLevelCode: "00",
+          OrganisationUnitCode: "B01EF00"
+        },
+        DefendantOrOffenderSequenceNumber: "",
+        CheckDigit: ""
+      },
       OffenceReasonSequence: sequenceNumber
     },
     ActualOffenceStartDate: {

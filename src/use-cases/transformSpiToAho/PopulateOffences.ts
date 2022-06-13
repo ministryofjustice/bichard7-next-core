@@ -7,7 +7,7 @@ import {
   STOP_LIST,
   TIME_RANGE
 } from "src/lib/properties"
-import type { Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
+import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
 import {
   lookupAlcoholLevelMethodBySpiCode,
@@ -90,7 +90,7 @@ export default class {
         OffenceCode,
         __type: "NationalOffenceReason"
       }
-    }
+    } as CriminalProsecutionReference
 
     offence.ArrestDate = spiArrestDate ? new Date(spiArrestDate) : undefined
     offence.ChargeDate = spiChargeDate ? new Date(spiChargeDate) : undefined
