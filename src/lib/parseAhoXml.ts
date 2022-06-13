@@ -96,16 +96,56 @@ const buildFullOffenceCode = (
   return `${reason}${qualifier}`
 }
 
-const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => ({
-  __type: "NationalOffenceReason",
-  OffenceCode: {
-    __type: "NonMatchingOffenceCode",
-    ActOrSource: "",
-    Reason: String(xmlOffenceReason["ds:OffenceCode"]?.["ds:Reason"]),
-    Qualifier: xmlOffenceReason["ds:OffenceCode"]?.["ds:Qualifier"],
-    FullCode: xmlOffenceReason["ds:OffenceCode"] ? buildFullOffenceCode(xmlOffenceReason["ds:OffenceCode"]) : ""
+const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => {
+  if (xmlOffenceReason["ds:LocalOffenceCode"]) {
+    return {
+      __type: "LocalOffenceReason",
+      LocalOffenceCode: {
+        AreaCode: xmlOffenceReason["ds:LocalOffenceCode"]["ds:AreaCode"],
+        OffenceCode: xmlOffenceReason["ds:LocalOffenceCode"]["ds:OffenceCode"]["#text"] ?? ""
+      }
+    }
   }
-})
+  if (xmlOffenceReason["ds:OffenceCode"]) {
+    const code = xmlOffenceReason["ds:OffenceCode"]
+    if ("ds:CommonLawOffence" in code) {
+      return {
+        __type: "NationalOffenceReason",
+        OffenceCode: {
+          __type: "CommonLawOffenceCode",
+          CommonLawOffence: code["ds:CommonLawOffence"],
+          Reason: code["ds:Reason"],
+          Qualifier: code["ds:Qualifier"],
+          FullCode: code ? buildFullOffenceCode(code) : ""
+        }
+      }
+    } else if ("ds:ActOrSource" in code) {
+      return {
+        __type: "NationalOffenceReason",
+        OffenceCode: {
+          __type: "NonMatchingOffenceCode",
+          ActOrSource: code["ds:ActOrSource"],
+          Year: code["ds:Year"],
+          Reason: String(code?.["ds:Reason"]),
+          Qualifier: code?.["ds:Qualifier"],
+          FullCode: code ? buildFullOffenceCode(code) : ""
+        }
+      }
+    } else {
+      return {
+        __type: "NationalOffenceReason",
+        OffenceCode: {
+          __type: "IndictmentOffenceCode",
+          Indictment: "",
+          Reason: String(code?.["ds:Reason"]),
+          Qualifier: code?.["ds:Qualifier"],
+          FullCode: code ? buildFullOffenceCode(code) : ""
+        }
+      }
+    }
+  }
+  throw new Error("Offence Reason Missing from XML")
+}
 
 const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
   DefendantOrOffender: {

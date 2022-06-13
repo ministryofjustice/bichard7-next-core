@@ -5,6 +5,7 @@ Object {
   "AnnotatedHearingOutcome": Object {
     "HearingOutcome": Object {
       "Case": Object {
+        "CourtCaseReferenceNumber": "97/1626/008395Q",
         "CourtReference": Object {
           "MagistratesCourtReference": "01ZD0303208",
         },
@@ -22,9 +23,7 @@ Object {
             "AddressLine3": "Scenario1 Address Line 3",
           },
           "ArrestSummonsNumber": "1101ZD0100000448754K",
-          "BailConditions": Array [
-            "",
-          ],
+          "BailConditions": Array [],
           "CourtPNCIdentifier": undefined,
           "DefendantDetail": Object {
             "BirthDate": 1948-11-11T00:00:00.000Z,
@@ -66,10 +65,11 @@ Object {
                 },
                 "OffenceReason": Object {
                   "OffenceCode": Object {
-                    "ActOrSource": "",
+                    "ActOrSource": "SX",
                     "FullCode": "001A",
                     "Qualifier": "A",
                     "Reason": "001",
+                    "Year": "03",
                     "__type": "NonMatchingOffenceCode",
                   },
                   "__type": "NationalOffenceReason",
@@ -138,10 +138,11 @@ Object {
                 },
                 "OffenceReason": Object {
                   "OffenceCode": Object {
-                    "ActOrSource": "",
+                    "ActOrSource": "SX",
                     "FullCode": "001",
                     "Qualifier": undefined,
                     "Reason": "001",
+                    "Year": "03",
                     "__type": "NonMatchingOffenceCode",
                   },
                   "__type": "NationalOffenceReason",
@@ -210,10 +211,11 @@ Object {
                 },
                 "OffenceReason": Object {
                   "OffenceCode": Object {
-                    "ActOrSource": "",
+                    "ActOrSource": "RT",
                     "FullCode": "191",
                     "Qualifier": undefined,
                     "Reason": "191",
+                    "Year": "88",
                     "__type": "NonMatchingOffenceCode",
                   },
                   "__type": "NationalOffenceReason",
@@ -258,6 +260,8 @@ Object {
               ],
             },
           ],
+          "PNCCheckname": "SEXOFFENCE",
+          "PNCIdentifier": "2000/0448754K",
           "RemandStatus": "UB",
         },
         "PTIURN": "01ZD0303208",
