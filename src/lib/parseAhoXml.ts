@@ -35,6 +35,17 @@ const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): Organis
   OrganisationUnitCode: xmlOrgUnit["ds:OrganisationUnitCode"] ?? ""
 })
 
+const mapAmountSpecifiedInResult = (
+  result: Br7TypeTextString | Br7TypeTextString[] | undefined
+): number[] | undefined => {
+  if (!result) {
+    return undefined
+  }
+  const resultArray = Array.isArray(result) ? result : [result]
+
+  return resultArray.map((amount) => Number(amount["#text"]))
+}
+
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]),
   // OffenceRemandStatus: xmlResult.
@@ -46,7 +57,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   Duration: [],
   DateSpecifiedInResult: [],
   // TimeSpecifiedInResult: xmlResult,
-  // AmountSpecifiedInResult: xmlResult["ds:AmountSpecifiedInResult"] ? [Number(xmlResult["ds:AmountSpecifiedInResult"])] : undefined,
+  AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
   // NumberSpecifiedInResult: xmlResult["ds:NumberSpecifiedInResult"],
   // NextResultSourceOrganisation: {},
   // NextHearingType: xmlResult.

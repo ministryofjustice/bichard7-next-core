@@ -224,7 +224,7 @@ export interface Br7Result {
   "ds:NextHearingDate"?: string
   "ds:NextHearingTime"?: string
   "ds:BailCondition"?: { "#text": string }[]
-  // "ds:AmountSpecifiedInResult": string
+  "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
@@ -324,6 +324,11 @@ export interface Br7SourceReference {
 export interface Br7LiteralTextString {
   "#text"?: string
   "@_Literal"?: string
+}
+
+export interface Br7TypeTextString {
+  "#text"?: string
+  "@_Type"?: string
 }
 
 export interface Br7ErrorTextString {
