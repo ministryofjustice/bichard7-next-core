@@ -65,7 +65,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   // NextHearingTime: {},
   // NextCourtType: xmlResult
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
-  // Verdict: xmlResult.v
+  Verdict: xmlResult["ds:Verdict"]?.["#text"],
   ResultVariableText: xmlResult["ds:ResultVariableText"],
   // TargetCourtType: xmlResult.
   // WarrantIssueDate: xmlResult.

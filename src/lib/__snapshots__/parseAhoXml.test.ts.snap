@@ -83,6 +83,7 @@ Object {
               "RecordableOnPNCindicator": true,
               "Result": Array [
                 Object {
+                  "AmountSpecifiedInResult": undefined,
                   "CJSresultCode": 3078,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
@@ -105,6 +106,7 @@ Object {
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
+                  "Verdict": "G",
                 },
               ],
             },
@@ -152,6 +154,7 @@ Object {
               "RecordableOnPNCindicator": true,
               "Result": Array [
                 Object {
+                  "AmountSpecifiedInResult": undefined,
                   "CJSresultCode": 3052,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
@@ -174,6 +177,7 @@ Object {
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
+                  "Verdict": "G",
                 },
               ],
             },
@@ -221,6 +225,9 @@ Object {
               "RecordableOnPNCindicator": false,
               "Result": Array [
                 Object {
+                  "AmountSpecifiedInResult": Array [
+                    100,
+                  ],
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
@@ -243,6 +250,7 @@ Object {
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
+                  "Verdict": "G",
                 },
               ],
             },
@@ -290,6 +298,7 @@ Object {
               "sequenceNumber": 1,
               "startDate": 2010-11-28T00:00:00.000Z,
               "startTime": "00:00",
+              "title": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
             },
           },
           Object {
@@ -300,6 +309,7 @@ Object {
               "sequenceNumber": 2,
               "startDate": 2010-11-28T00:00:00.000Z,
               "startTime": "00:00",
+              "title": "Rape a girl aged 13 / 14 / 15 - SOA 2003",
             },
           },
           Object {
@@ -310,6 +320,7 @@ Object {
               "sequenceNumber": 3,
               "startDate": 2010-11-28T00:00:00.000Z,
               "startTime": "00:00",
+              "title": "Use a motor vehicle on a road / public place without third party insurance",
             },
           },
         ],
@@ -319,5 +330,6 @@ Object {
     "forceStationCode": "01ZD",
     "pncId": "2000/0448754K",
   },
+  "PncQueryDate": 2022-03-22T00:00:00.000Z,
 }
 `;
