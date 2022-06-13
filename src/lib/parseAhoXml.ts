@@ -116,7 +116,8 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     DefendantOrOffenderSequenceNumber: xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"] ?? "",
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"] ?? ""
   },
-  OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined
+  OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
+  OffenceReasonSequence: Number(xmlCPR["ds:OffenceReasonSequence"])
 })
 
 const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
