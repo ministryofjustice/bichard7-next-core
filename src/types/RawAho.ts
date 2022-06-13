@@ -203,7 +203,7 @@ export interface Br7Offence {
   "ds:ConvictionDate"?: string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
-  // "br7:AddedByTheCourt": Br7LiteralTextString
+  "br7:AddedByTheCourt"?: Br7LiteralTextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": boolean
   "@_SchemaVersion": string

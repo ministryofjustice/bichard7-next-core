@@ -243,12 +243,14 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         ConvictionDate: xmlOffence["ds:ConvictionDate"] ? new Date(xmlOffence["ds:ConvictionDate"]) : undefined,
         CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
         CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]),
+        AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
+          ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
+          : undefined,
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",
         HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]
         // ResultHalfLifeHours: xmlOffence.
-        // AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]["#text"]
       } as Offence)
   )
 }
