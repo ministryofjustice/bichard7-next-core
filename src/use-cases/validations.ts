@@ -40,17 +40,7 @@ const validateASN = (data: string): boolean => {
   return !!data.match(/[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}/) && asn.checkCharacter() === data.slice(-1)
 }
 
-const validateDummyASN = (data: string): boolean => {
-  let result = false
-
-  dummyASNPatterns.forEach((p) => {
-    if (data.match(p)) {
-      result = true
-    }
-  })
-
-  return result
-}
+const validateDummyASN = (data: string): boolean => dummyASNPatterns.some((p) => data.match(p))
 
 const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   if (data < 1000 || data > 9999) {
