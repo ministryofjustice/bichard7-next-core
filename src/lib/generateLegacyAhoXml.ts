@@ -345,10 +345,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       "ds:AddressLine3": c.HearingDefendant.Address.AddressLine3
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
-    "br7:BailConditions":
-      c.HearingDefendant.BailConditions && c.HearingDefendant.BailConditions.length > 0
-        ? c.HearingDefendant.BailConditions.map((bc) => ({ "#text": bc }))
-        : undefined,
+    "br7:BailConditions": c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions : undefined,
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])

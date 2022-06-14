@@ -140,7 +140,7 @@ export interface Br7HearingDefendant {
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
-  "br7:BailConditions"?: { "#text": string }[]
+  "br7:BailConditions"?: string[]
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean

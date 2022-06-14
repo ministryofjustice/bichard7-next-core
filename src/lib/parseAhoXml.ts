@@ -72,9 +72,9 @@ const mapXmlResultQualifierVariableTOAho = (
   return rqvArray.map((r) => ({ Code: r["ds:Code"] }))
 }
 
-const mapBailCondition = (bailCondition: string | string[] | undefined): string[] | undefined => {
+const mapBailCondition = (bailCondition: string | string[] | undefined): string[] => {
   if (!bailCondition) {
-    return undefined
+    return []
   }
   return Array.isArray(bailCondition) ? bailCondition : [bailCondition]
 }
@@ -323,7 +323,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     },
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"] ?? "",
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"],
-    BailConditions: [],
+    BailConditions: mapBailCondition(xmlCase["br7:HearingDefendant"]["br7:BailConditions"]),
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
   }
 })

@@ -283,7 +283,7 @@ const hearingDefendantSchema = z.object({
   DefendantDetail: defendantDetailSchema,
   Address: addressSchema,
   RemandStatus: z.string().refine(validateRemandStatus, ExceptionCode.HO100108),
-  BailConditions: z.string().array(),
+  BailConditions: z.string().array().min(0),
   ReasonForBailConditions: z.string().min(1, ExceptionCode.HO100220).max(2500, ExceptionCode.HO100220).optional(),
   CourtPNCIdentifier: pncIdentifierSchema.optional(),
   OrganisationName: z.string().min(1, ExceptionCode.HO100211).max(255, ExceptionCode.HO100211).optional(),
