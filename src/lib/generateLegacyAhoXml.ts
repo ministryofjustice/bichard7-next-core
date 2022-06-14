@@ -314,6 +314,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
   "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
   "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
   "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
+  "br7:PenaltyNoticeCaseReference": c.PenaltyNoticeCaseReferenceNumber,
   "br7:RecordableOnPNCindicator": optionalLiteral(c.RecordableOnPNCindicator, LiteralType.YesNo),
   "br7:Urgent": c.Urgent ? mapAhoUrgentToXml(c.Urgent) : undefined,
   "br7:ForceOwner": c.ForceOwner ? mapAhoOrgUnitToXml(c.ForceOwner) : undefined,

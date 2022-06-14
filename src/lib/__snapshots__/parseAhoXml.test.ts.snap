@@ -307,6 +307,7 @@ Object {
           "RemandStatus": "UB",
         },
         "PTIURN": "01ZD0303208",
+        "PenaltyNoticeCaseReferenceNumber": undefined,
         "PreChargeDecisionIndicator": false,
         "RecordableOnPNCindicator": true,
         "Urgent": Object {

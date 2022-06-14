@@ -297,6 +297,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
+  PenaltyNoticeCaseReferenceNumber: xmlCase["br7:PenaltyNoticeCaseReference"],
   HearingDefendant: {
     ArrestSummonsNumber:
       typeof xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"] === "string"

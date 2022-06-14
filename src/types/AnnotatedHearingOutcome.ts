@@ -299,6 +299,7 @@ const caseSchema = z.object({
     .string()
     .regex(/[0-9]{2}\/[0-9]{4}\/[0-9]{6}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100203)
     .optional(),
+  PenaltyNoticeCaseReferenceNumber: z.string().optional(),
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),

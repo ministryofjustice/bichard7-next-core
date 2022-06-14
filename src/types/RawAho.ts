@@ -131,6 +131,7 @@ export interface Br7Case {
   "ds:CourtCaseReferenceNumber"?: string
   "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
+  "br7:PenaltyNoticeCaseReference"?: string
   "br7:RecordableOnPNCindicator"?: Br7LiteralTextString
   "br7:Urgent"?: Br7Urgent
   "br7:ForceOwner"?: Br7OrganisationUnit
