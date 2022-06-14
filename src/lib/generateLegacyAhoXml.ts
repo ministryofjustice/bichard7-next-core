@@ -295,6 +295,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
+    "br7:CourtCaseReferenceNumber": offence.CourtCaseReferenceNumber,
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",

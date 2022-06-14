@@ -272,6 +272,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
           ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
           : undefined,
+        CourtCaseReferenceNumber: xmlOffence["br7:CourtCaseReferenceNumber"],
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y",

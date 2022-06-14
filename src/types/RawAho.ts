@@ -210,6 +210,7 @@ export interface Br7Offence {
   "br7:CourtOffenceSequenceNumber": number
   "br7:ManualSequenceNo"?: Br7LiteralTextString
   "br7:AddedByTheCourt"?: Br7LiteralTextString
+  "br7:CourtCaseReferenceNumber"?: string
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": boolean
   "@_SchemaVersion": string

@@ -51,6 +51,7 @@ Object {
               "ChargeDate": 2010-12-02T00:00:00.000Z,
               "CommittedOnBail": "D",
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
+              "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 1,
               "CriminalProsecutionReference": Object {
                 "DefendantOrOffender": Object {
@@ -136,6 +137,7 @@ Object {
               "ChargeDate": 2010-12-02T00:00:00.000Z,
               "CommittedOnBail": "D",
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
+              "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 2,
               "CriminalProsecutionReference": Object {
                 "DefendantOrOffender": Object {
@@ -224,6 +226,7 @@ Object {
               "ChargeDate": 2010-12-02T00:00:00.000Z,
               "CommittedOnBail": "D",
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
+              "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 3,
               "CriminalProsecutionReference": Object {
                 "DefendantOrOffender": Object {
