@@ -8,7 +8,7 @@ import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUn
 
 type FieldPath = (string | number)[]
 
-const ARREST_SOMMONS_NUMBER_PATH: FieldPath =
+const ARREST_SUMMONS_NUMBER_PATH: FieldPath =
   "AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber".split(".")
 const COURT_HEARING_LOCATION_PATH: FieldPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
@@ -51,9 +51,9 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
   const generatedExceptions: Exception[] = []
 
   // Validate ASN
-  const arrestSummonsNumberException = findException(exceptions, generatedExceptions, ARREST_SOMMONS_NUMBER_PATH)
+  const arrestSummonsNumberException = findException(exceptions, generatedExceptions, ARREST_SUMMONS_NUMBER_PATH)
   if (!arrestSummonsNumberException && ArrestSummonsNumber && !isAsnValid(ArrestSummonsNumber)) {
-    generatedExceptions.push({ code: ExceptionCode.HO100300, path: ARREST_SOMMONS_NUMBER_PATH })
+    generatedExceptions.push({ code: ExceptionCode.HO100300, path: ARREST_SUMMONS_NUMBER_PATH })
   }
 
   // Validate Court Hearing Location
