@@ -230,7 +230,7 @@ export interface Br7Result {
   "ds:NextCourtType"?: string
   "ds:NextHearingDate"?: string
   "ds:NextHearingTime"?: string
-  "ds:BailCondition"?: { "#text": string }[]
+  "ds:BailCondition"?: string[] | string
   "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString

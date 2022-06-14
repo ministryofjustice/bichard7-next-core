@@ -131,7 +131,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
-    "ds:BailCondition": result.BailCondition ? result.BailCondition?.map((bc) => ({ "#text": bc })) : undefined,
+    "ds:BailCondition": result.BailCondition,
     "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
       ? {
           "@_SchemaVersion": "2.0",

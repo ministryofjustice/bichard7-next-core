@@ -88,6 +88,7 @@ Object {
               "Result": Array [
                 Object {
                   "AmountSpecifiedInResult": undefined,
+                  "BailCondition": undefined,
                   "CJSresultCode": 3078,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
@@ -171,6 +172,7 @@ Object {
               "Result": Array [
                 Object {
                   "AmountSpecifiedInResult": undefined,
+                  "BailCondition": undefined,
                   "CJSresultCode": 3052,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
@@ -259,6 +261,7 @@ Object {
                   "AmountSpecifiedInResult": Array [
                     100,
                   ],
+                  "BailCondition": undefined,
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",

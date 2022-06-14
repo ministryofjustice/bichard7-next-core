@@ -72,6 +72,13 @@ const mapXmlResultQualifierVariableTOAho = (
   return rqvArray.map((r) => ({ Code: r["ds:Code"] }))
 }
 
+const mapBailCondition = (bailCondition: string | string[] | undefined): string[] | undefined => {
+  if (!bailCondition) {
+    return undefined
+  }
+  return Array.isArray(bailCondition) ? bailCondition : [bailCondition]
+}
+
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]),
   OffenceRemandStatus: xmlResult["ds:OffenceRemandStatus"] ? xmlResult["ds:OffenceRemandStatus"]["#text"] : undefined,
@@ -80,6 +87,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   ConvictingCourt: xmlResult["br7:ConvictingCourt"],
   ResultHearingType: xmlResult["ds:ResultHearingType"]?.["#text"],
   ResultHearingDate: new Date(xmlResult["ds:ResultHearingDate"] ?? ""),
+  BailCondition: mapBailCondition(xmlResult["ds:BailCondition"]),
   NextResultSourceOrganisation: xmlResult["ds:NextResultSourceOrganisation"]
     ? {
         TopLevelCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:TopLevelCode"],
@@ -120,7 +128,6 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"] ? Number(xmlResult["ds:ResultHalfLifeHours"]) : undefined,
   ResultApplicableQualifierCode: []
-  // BailCondition: xmlResult.
 })
 
 const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
