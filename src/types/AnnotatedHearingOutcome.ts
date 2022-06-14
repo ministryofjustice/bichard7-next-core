@@ -206,7 +206,7 @@ const resultSchema = z.object({
   PNCDisposalType: z.number().min(1000, ExceptionCode.HO100246).max(9999, ExceptionCode.HO100246).optional(),
   PNCAdjudicationExists: z.boolean().optional(),
   ResultClass: z.string().refine(validateResultClass, ExceptionCode.HO100108).optional(), // Always set to a valid value
-  NumberOfOffencesTIC: z.string().optional(),
+  NumberOfOffencesTIC: z.number().optional(),
   ReasonForOffenceBailConditions: z
     .string()
     .min(1, ExceptionCode.HO100106)

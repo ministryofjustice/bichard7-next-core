@@ -182,6 +182,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
       result.PNCAdjudicationExists !== undefined
         ? { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" }
         : undefined,
+    "br7:NumberOfOffencesTIC": result.NumberOfOffencesTIC?.toString(),
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
       "ds:Code": rqv.Code

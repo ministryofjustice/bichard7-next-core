@@ -262,6 +262,7 @@ export interface Br7Result {
   "br7:ReasonForOffenceBailConditions"?: string
   "br7:Urgent"?: Br7Urgent
   "br7:PNCAdjudicationExists"?: Br7LiteralTextString
+  "br7:NumberOfOffencesTIC"?: string
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean
