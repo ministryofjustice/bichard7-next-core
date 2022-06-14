@@ -35,10 +35,5 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   // Generate HO100300 which depends on other exceptions generated
   const ho100300 = exceptions.HO100300(aho, { exceptions: generatedExceptions })
 
-  // Exception HO100321 should only added when recordable
-  if (!aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator) {
-    generatedExceptions = generatedExceptions.filter((e) => e.code != ExceptionCode.HO100321)
-  }
-
   return generatedExceptions.concat(ho100300)
 }

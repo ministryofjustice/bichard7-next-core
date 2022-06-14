@@ -35,12 +35,12 @@ const dummyASNPatterns = [
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
-const validateASNFormat = (data: string): boolean => {
+const validateASN = (data: string): boolean => {
   const asn = new ASN(data)
   return !!data.match(/[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}/) && asn.checkCharacter() === data.slice(-1)
 }
 
-const dummyASN = (data: string): boolean => {
+const validateDummyASN = (data: string): boolean => {
   let result = false
 
   dummyASNPatterns.forEach((p) => {
@@ -50,14 +50,6 @@ const dummyASN = (data: string): boolean => {
   })
 
   return result
-}
-
-const validateASN = (data: string, ctx: z.RefinementCtx): void => {
-  if (dummyASN(data)) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100321 })
-  } else if (!validateASNFormat(data)) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100206 })
-  }
 }
 
 const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
@@ -101,6 +93,7 @@ const validateVehicleCode = (data: string): boolean => !!lookupVehicleCodeByCjsC
 export {
   validateRemandStatus,
   validateASN,
+  validateDummyASN,
   validateResultCode,
   validateCourtType,
   validateTypeOfHearing,

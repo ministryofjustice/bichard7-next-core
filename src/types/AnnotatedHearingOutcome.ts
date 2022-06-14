@@ -1,6 +1,5 @@
 import {
   validateActualOffenceDateCode,
-  validateASN,
   validateCourtType,
   validateDurationType,
   validateDurationUnit,
@@ -269,7 +268,7 @@ const offenceSchema = z.object({
   AddedByTheCourt: z.boolean().optional()
 })
 
-const asnSchema = z.string().superRefine(validateASN)
+const asnSchema = z.string()
 const croNumberSchema = z.string().regex(/[0-9]{1,6}\/[0-9]{2}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100207)
 const driverNumberSchema = z.string().regex(/[A-Z0-9]{5}[0-9]{6}[A-Z0-9]{3}[A-Z]{2}/, ExceptionCode.HO100208)
 const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
