@@ -117,6 +117,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
     ? xmlResult["br7:PNCAdjudicationExists"]["#text"] === "Y"
     : undefined,
   ResultClass: xmlResult["br7:ResultClass"],
+  ReasonForOffenceBailConditions: xmlResult["br7:ReasonForOffenceBailConditions"],
   Urgent: xmlResult["br7:Urgent"]
     ? {
         urgent: xmlResult["br7:Urgent"]["br7:urgent"]["#text"] === "Y",
@@ -326,6 +327,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"] ?? "",
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"],
     BailConditions: mapBailCondition(xmlCase["br7:HearingDefendant"]["br7:BailConditions"]),
+    ReasonForBailConditions: xmlCase["br7:HearingDefendant"]["br7:ReasonForBailConditions"],
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
   }
 })

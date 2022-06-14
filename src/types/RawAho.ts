@@ -157,6 +157,7 @@ export interface Br7HearingDefendant {
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
   "br7:BailConditions"?: string[]
+  "br7:ReasonForBailConditions"?: string
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
@@ -258,6 +259,7 @@ export interface Br7Result {
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
+  "br7:ReasonForOffenceBailConditions"?: string
   "br7:Urgent"?: Br7Urgent
   "br7:PNCAdjudicationExists"?: Br7LiteralTextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]

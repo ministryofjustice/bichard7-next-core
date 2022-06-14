@@ -171,6 +171,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
+    "br7:ReasonForOffenceBailConditions": result.ReasonForOffenceBailConditions,
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists":
       result.PNCAdjudicationExists !== undefined
@@ -349,6 +350,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
     "br7:BailConditions": c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions : undefined,
+    "br7:ReasonForBailConditions": c.HearingDefendant.ReasonForBailConditions,
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
