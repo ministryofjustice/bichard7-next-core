@@ -241,7 +241,7 @@ export default class {
       OFFENCES_TIC_RESULT_TEXT.toLowerCase() === spiResult.ResultText.toLowerCase() ||
       spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE
     ) {
-      result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10).toString()
+      result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10)
     }
 
     if (

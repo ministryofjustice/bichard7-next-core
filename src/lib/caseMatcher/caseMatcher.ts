@@ -1,11 +1,11 @@
 import type { OffenceMatcherOutcome } from "src/lib/offenceMatcher/offenceMatcher"
 import { matchOffences } from "src/lib/offenceMatcher/offenceMatcher"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { PncCase, PncQueryResult } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncQueryResult } from "src/types/PncQueryResult"
 import sortCourtCasesByAge from "./sortCourtCasesByAge"
 
 type CaseMatch = {
-  courtCase: PncCase
+  courtCase: PncCourtCase
   offenceMatcherOutcome: OffenceMatcherOutcome
 }
 
@@ -20,7 +20,7 @@ const matchCases = (hoOffences: Offence[], pncResponse: PncQueryResult): CaseMat
     courtCaseMatches: [],
     penaltyCaseMatches: []
   }
-  const courtCases = pncResponse.cases
+  const courtCases = pncResponse.courtCases
 
   if (!courtCases || courtCases.length === 0) {
     return result

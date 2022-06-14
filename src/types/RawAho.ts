@@ -23,7 +23,8 @@ export interface Br7AnnotatedHearingOutcome {
 export interface Cxe01 {
   FSC: Fsc
   IDS: IDS
-  CourtCases: CourtCases
+  CourtCases?: CourtCases
+  PenaltyCases?: PenaltyCases
 }
 
 export interface CourtCases {
@@ -42,10 +43,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: RawOffence[]
+  Offence: RawAhoPncOffence[]
 }
 
-export interface RawOffence {
+export interface RawAhoPncOffence {
   COF: Cof
   ADJ?: Adj
   DISList?: DISList
@@ -106,6 +107,20 @@ export interface IDS {
   "@_PNCID": string
 }
 
+export interface PCR {
+  "@_IntfcUpdateType": string
+  "@_PenaltyCaseRefNo": string
+}
+
+export interface PenaltyCase {
+  PCR: PCR
+  Offences: Offences
+}
+
+export interface PenaltyCases {
+  PenaltyCase: PenaltyCase | PenaltyCase[]
+}
+
 export interface Br7HearingOutcome {
   "br7:Hearing": Br7Hearing
   "br7:Case": Br7Case
@@ -116,6 +131,7 @@ export interface Br7Case {
   "ds:CourtCaseReferenceNumber"?: string
   "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
+  "br7:PenaltyNoticeCaseReference"?: string
   "br7:RecordableOnPNCindicator"?: Br7LiteralTextString
   "br7:Urgent"?: Br7Urgent
   "br7:ForceOwner"?: Br7OrganisationUnit
@@ -141,6 +157,7 @@ export interface Br7HearingDefendant {
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
   "br7:BailConditions"?: string[]
+  "br7:ReasonForBailConditions"?: string
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
@@ -242,8 +259,10 @@ export interface Br7Result {
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
+  "br7:ReasonForOffenceBailConditions"?: string
   "br7:Urgent"?: Br7Urgent
   "br7:PNCAdjudicationExists"?: Br7LiteralTextString
+  "br7:NumberOfOffencesTIC"?: string
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean

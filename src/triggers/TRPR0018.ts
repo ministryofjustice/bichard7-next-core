@@ -10,8 +10,8 @@ const findMatchingPncOffence = (
   caseReference: string | undefined,
   sequenceNumber: number
 ): PncOffence | undefined =>
-  pncQuery.cases
-    ? pncQuery.cases
+  pncQuery.courtCases
+    ? pncQuery.courtCases
         .find((c) => c.courtCaseReference === caseReference)
         ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
     : undefined

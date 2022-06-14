@@ -1,5 +1,5 @@
-import type { PncCase, PncQueryResult } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncQueryResult } from "src/types/PncQueryResult"
 
-const createPNCMessage = (cases: PncCase[]): PncQueryResult => ({ cases } as PncQueryResult)
+const createPNCMessage = (courtCases: PncCourtCase[]): PncQueryResult => ({ courtCases } as PncQueryResult)
 
 export default createPNCMessage

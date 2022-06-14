@@ -2,19 +2,19 @@ import matchCases from "src/lib/caseMatcher/caseMatcher"
 import matchMultipleCases from "src/lib/matchMultipleCases"
 import type { AnnotatedHearingOutcome, Case } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncCase } from "src/types/PncQueryResult"
+import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
 import enrichOffencesFromMatcherOutcome from "./enrichOffencesFromMatcherOutcome"
 
-const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCase) => {
+const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCourtCase) => {
   const cprCourtCaseRef = pncCase.courtCaseReference
   if (cprCourtCaseRef) {
     hoCase.CourtCaseReferenceNumber = cprCourtCaseRef
   }
 }
 
-const enrichCaseTypeFromPenaltyCase = (hoCase: Case, pncCase: PncCase) => {
+const enrichCaseTypeFromPenaltyCase = (hoCase: Case, pncCase: PncCourtCase) => {
   // TODO: This needs updating to actually use penalty cases once they are implemented
   const cprCourtCaseRef = pncCase.courtCaseReference
   if (cprCourtCaseRef) {
@@ -60,7 +60,7 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   if (outcome.courtCaseMatches.length > 1) {
     const hearingDate = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
     const multipleMatchingOutcome = matchMultipleCases(hoOffences, outcome, hearingDate)
-    enrichOffencesFromCourtCasesAndMatcherOutcome(aho, pncQueryResult.cases ?? [], multipleMatchingOutcome)
+    enrichOffencesFromCourtCasesAndMatcherOutcome(aho, pncQueryResult.courtCases ?? [], multipleMatchingOutcome)
     allPncOffencesMatched = !multipleMatchingOutcome.unmatchedPNCOffences
   }
 

@@ -35,9 +35,14 @@ const pncOffenceSchema = z.object({
   disposals: z.array(pncDisposalSchema).optional()
 })
 
-const pncCaseSchema = z.object({
+const pncCourtCaseSchema = z.object({
   courtCaseReference: z.string(),
   crimeOffenceReference: z.string().optional(),
+  offences: z.array(pncOffenceSchema)
+})
+
+const pncPenaltyCaseSchema = z.object({
+  penaltyCaseReference: z.string(),
   offences: z.array(pncOffenceSchema)
 })
 
@@ -46,12 +51,14 @@ const pncQueryResultSchema = z.object({
   croNumber: z.string().optional(),
   checkName: z.string(),
   pncId: z.string(),
-  cases: z.array(pncCaseSchema).optional()
+  courtCases: z.array(pncCourtCaseSchema).optional(),
+  penaltyCases: z.array(pncPenaltyCaseSchema).optional()
 })
 
 export type PncOffence = z.infer<typeof pncOffenceSchema>
 export type PncQueryResult = z.infer<typeof pncQueryResultSchema>
-export type PncCase = z.infer<typeof pncCaseSchema>
+export type PncCourtCase = z.infer<typeof pncCourtCaseSchema>
+export type PncPenaltyCase = z.infer<typeof pncPenaltyCaseSchema>
 export type PNCDisposal = z.infer<typeof pncDisposalSchema>
 
 export { pncQueryResultSchema }

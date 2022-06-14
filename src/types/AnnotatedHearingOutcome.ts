@@ -206,7 +206,7 @@ const resultSchema = z.object({
   PNCDisposalType: z.number().min(1000, ExceptionCode.HO100246).max(9999, ExceptionCode.HO100246).optional(),
   PNCAdjudicationExists: z.boolean().optional(),
   ResultClass: z.string().refine(validateResultClass, ExceptionCode.HO100108).optional(), // Always set to a valid value
-  NumberOfOffencesTIC: z.string().optional(),
+  NumberOfOffencesTIC: z.number().optional(),
   ReasonForOffenceBailConditions: z
     .string()
     .min(1, ExceptionCode.HO100106)
@@ -299,6 +299,7 @@ const caseSchema = z.object({
     .string()
     .regex(/[0-9]{2}\/[0-9]{4}\/[0-9]{6}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100203)
     .optional(),
+  PenaltyNoticeCaseReferenceNumber: z.string().optional(),
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),

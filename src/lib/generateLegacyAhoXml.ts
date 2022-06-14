@@ -12,7 +12,7 @@ import type {
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
-import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
+import type { PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 import type {
   Adj,
   Br7Case,
@@ -26,10 +26,12 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList,
-  RawAho
+  RawAho,
+  RawAhoPncOffence
 } from "src/types/RawAho"
 import {
   lookupAlcoholLevelMethodByCjsCode,
+  lookupCourtTypeByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
   lookupGenderByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
@@ -57,7 +59,8 @@ enum LiteralType {
   YesNo,
   PleaStatus,
   AlcoholLevelMethod,
-  Gender
+  Gender,
+  CourtType
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
@@ -84,6 +87,9 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   } else if (type === LiteralType.Gender) {
     literalText = value
     literalAttribute = lookupGenderByCjsCode(value)?.description
+  } else if (type === LiteralType.CourtType) {
+    literalText = value
+    literalAttribute = lookupCourtTypeByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
@@ -170,11 +176,13 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
+    "br7:ReasonForOffenceBailConditions": result.ReasonForOffenceBailConditions,
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists":
       result.PNCAdjudicationExists !== undefined
         ? { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" }
         : undefined,
+    "br7:NumberOfOffencesTIC": result.NumberOfOffencesTIC?.toString(),
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
       "ds:Code": rqv.Code
@@ -313,6 +321,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
   "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
   "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
   "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
+  "br7:PenaltyNoticeCaseReference": c.PenaltyNoticeCaseReferenceNumber,
   "br7:RecordableOnPNCindicator": optionalLiteral(c.RecordableOnPNCindicator, LiteralType.YesNo),
   "br7:Urgent": c.Urgent ? mapAhoUrgentToXml(c.Urgent) : undefined,
   "br7:ForceOwner": c.ForceOwner ? mapAhoOrgUnitToXml(c.ForceOwner) : undefined,
@@ -347,6 +356,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
     "br7:BailConditions": c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions : undefined,
+    "br7:ReasonForBailConditions": c.HearingDefendant.ReasonForBailConditions,
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
@@ -398,12 +408,31 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "br7:UniqueID": hearing.SourceReference.UniqueID,
     "br7:DocumentType": hearing.SourceReference.DocumentType
   },
-  "br7:CourtType": { "#text": hearing.CourtType, "@_Literal": "MC adult" },
+  "br7:CourtType": optionalLiteral(hearing.CourtType, LiteralType.CourtType),
   "br7:CourtHouseCode": hearing.CourtHouseCode,
   "br7:CourtHouseName": hearing.CourtHouseName,
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
   "@_SchemaVersion": "4.0"
 })
+
+const mapAhoPncOffencesToXml = (offences: PncOffence[]): RawAhoPncOffence[] =>
+  offences.map((offence) => ({
+    COF: {
+      "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
+      "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
+      "@_IntfcUpdateType": "K",
+      "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
+      "@_OffEndTime": offence.offence.endTime?.replace(":", "") ?? "",
+      "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
+      "@_OffStartTime": offence.offence.startTime?.replace(":", "") ?? "",
+      "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
+      "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
+      "@_OffenceTitle": offence.offence.title ?? "",
+      "@_ReferenceNumber": String(offence.offence.sequenceNumber).padStart(3, "0")
+    },
+    ADJ: offence.adjudication ? mapOffenceADJ(offence.adjudication) : undefined,
+    DISList: offence.disposals ? mapOffenceDIS(offence.disposals) : undefined
+  }))
 
 const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
   FSC: { "@_FSCode": pncQuery.forceStationCode, "@_IntfcUpdateType": "K" },
@@ -413,30 +442,26 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     "@_IntfcUpdateType": "K",
     "@_PNCID": pncQuery.pncId
   },
-  CourtCases: {
-    CourtCase: pncQuery.cases?.map((c) => ({
-      CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
-      Offences: {
-        Offence: c.offences.map((offence) => ({
-          COF: {
-            "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
-            "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
-            "@_IntfcUpdateType": "K",
-            "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
-            "@_OffEndTime": offence.offence.endTime?.replace(":", "") ?? "",
-            "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
-            "@_OffStartTime": offence.offence.startTime?.replace(":", "") ?? "",
-            "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
-            "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
-            "@_OffenceTitle": offence.offence.title ?? "",
-            "@_ReferenceNumber": String(offence.offence.sequenceNumber).padStart(3, "0")
-          },
-          ADJ: offence.adjudication ? mapOffenceADJ(offence.adjudication) : undefined,
-          DISList: offence.disposals ? mapOffenceDIS(offence.disposals) : undefined
+  CourtCases: pncQuery.courtCases
+    ? {
+        CourtCase: pncQuery.courtCases?.map((c) => ({
+          CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
+          Offences: {
+            Offence: mapAhoPncOffencesToXml(c.offences)
+          }
         }))
       }
-    }))
-  }
+    : undefined,
+  PenaltyCases: pncQuery.penaltyCases
+    ? {
+        PenaltyCase: pncQuery.penaltyCases?.map((c) => ({
+          PCR: { "@_IntfcUpdateType": "K", "@_PenaltyCaseRefNo": c.penaltyCaseReference },
+          Offences: {
+            Offence: mapAhoPncOffencesToXml(c.offences)
+          }
+        }))
+      }
+    : undefined
 })
 
 const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {

@@ -117,14 +117,14 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
     ? xmlResult["br7:PNCAdjudicationExists"]["#text"] === "Y"
     : undefined,
   ResultClass: xmlResult["br7:ResultClass"],
+  ReasonForOffenceBailConditions: xmlResult["br7:ReasonForOffenceBailConditions"],
   Urgent: xmlResult["br7:Urgent"]
     ? {
         urgent: xmlResult["br7:Urgent"]["br7:urgent"]["#text"] === "Y",
         urgency: Number(xmlResult["br7:Urgent"]["br7:urgency"])
       }
     : undefined,
-  // NumberOfOffencesTIC: xmlResult.
-  // ReasonForOffenceBailConditions: xmlResult
+  NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"] ? Number(xmlResult["br7:NumberOfOffencesTIC"]) : undefined,
   ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"] ? Number(xmlResult["ds:ResultHalfLifeHours"]) : undefined,
   ResultApplicableQualifierCode: []
@@ -297,6 +297,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]
   },
+  PenaltyNoticeCaseReferenceNumber: xmlCase["br7:PenaltyNoticeCaseReference"],
   HearingDefendant: {
     ArrestSummonsNumber:
       typeof xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"] === "string"
@@ -325,6 +326,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"] ?? "",
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"],
     BailConditions: mapBailCondition(xmlCase["br7:HearingDefendant"]["br7:BailConditions"]),
+    ReasonForBailConditions: xmlCase["br7:HearingDefendant"]["br7:ReasonForBailConditions"],
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
   }
 })
