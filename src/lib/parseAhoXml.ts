@@ -108,8 +108,8 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
   Verdict: xmlResult["ds:Verdict"]?.["#text"],
   ResultVariableText: xmlResult["ds:ResultVariableText"],
+  WarrantIssueDate: xmlResult["ds:WarrantIssueDate"] ? new Date(xmlResult["ds:WarrantIssueDate"]) : undefined,
   // TargetCourtType: xmlResult.
-  // WarrantIssueDate: xmlResult.
   // CRESTDisposalCode: xmlResult.
   ModeOfTrialReason: xmlResult["ds:ModeOfTrialReason"]?.["#text"],
   PNCDisposalType: xmlResult["br7:PNCDisposalType"] ? Number(xmlResult["br7:PNCDisposalType"]) : undefined,
