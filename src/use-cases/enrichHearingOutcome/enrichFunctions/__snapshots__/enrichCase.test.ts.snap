@@ -27,7 +27,7 @@ Object {
           "CourtPNCIdentifier": undefined,
           "DefendantDetail": Object {
             "BirthDate": 1948-11-11T00:00:00.000Z,
-            "Gender": "1",
+            "Gender": 1,
             "PersonName": Object {
               "FamilyName": "TRTHREE",
               "GivenName": Array [

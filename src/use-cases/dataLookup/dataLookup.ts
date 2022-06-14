@@ -5,6 +5,7 @@ import {
   defendantPresentAtHearing,
   durationType,
   durationUnit,
+  gender,
   modeOfTrialReason,
   offenceCategory,
   offenceCode,
@@ -30,6 +31,7 @@ import type {
   DefendantPresentAtHearing,
   DurationType,
   DurationUnit,
+  Gender,
   ModeOfTrialReason,
   OffenceCategory,
   OffenceCode,
@@ -145,6 +147,8 @@ const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
 const lookupDefendantPresentAtHearingByCjsCode = (cjsCode: string): DefendantPresentAtHearing | undefined =>
   defendantPresentAtHearing.find((x) => x.cjsCode === cjsCode)
 
+const lookupGenderByCjsCode = (cjsCode: string): Gender | undefined => gender.find((g) => g.cjsCode === cjsCode)
+
 export {
   lookupRemandStatusBySpiCode,
   lookupRemandStatusByCjsCode,
@@ -174,5 +178,6 @@ export {
   lookupYesNoByCjsCode,
   lookupOffenceDateCodeByCjsCode,
   lookupOffenceByCjsCode,
-  lookupDefendantPresentAtHearingByCjsCode
+  lookupDefendantPresentAtHearingByCjsCode,
+  lookupGenderByCjsCode
 }

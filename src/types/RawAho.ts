@@ -27,7 +27,7 @@ export interface Cxe01 {
 }
 
 export interface CourtCases {
-  CourtCase?: CourtCase[]
+  CourtCase?: CourtCase | CourtCase[]
 }
 
 export interface CourtCase {
@@ -42,10 +42,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: Offence[]
+  Offence: RawOffence[]
 }
 
-export interface Offence {
+export interface RawOffence {
   COF: Cof
   ADJ?: Adj
   DISList?: DISList
@@ -140,7 +140,7 @@ export interface Br7HearingDefendant {
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
-  "br7:BailConditions"?: { "#text": string }[]
+  "br7:BailConditions"?: string[]
   "br7:CourtPNCIdentifier"?: string
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
@@ -165,7 +165,12 @@ export interface Br7DefendantDetail {
 }
 
 export interface Br7Gender {
-  "#text": number
+  "#text"?: string | number
+  "@_Literal"?: string
+}
+
+export interface Br7NumberLiteral {
+  "#text"?: string | number
   "@_Literal"?: string
 }
 
@@ -190,7 +195,7 @@ export interface Br7Offence {
   "ds:OffenceCategory": Br7LiteralTextString
   "ds:ArrestDate"?: string
   "ds:ChargeDate"?: string
-  "ds:ActualOffenceDateCode": Br7Gender
+  "ds:ActualOffenceDateCode": Br7NumberLiteral
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
   "ds:LocationOfOffence": string
@@ -203,7 +208,9 @@ export interface Br7Offence {
   "ds:ConvictionDate"?: string
   "br7:CommittedOnBail": Br7LiteralTextString
   "br7:CourtOffenceSequenceNumber": number
-  // "br7:AddedByTheCourt": Br7LiteralTextString
+  "br7:ManualSequenceNo"?: Br7LiteralTextString
+  "br7:AddedByTheCourt"?: Br7LiteralTextString
+  "br7:CourtCaseReferenceNumber"?: string
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": boolean
   "@_SchemaVersion": string
@@ -219,12 +226,13 @@ export interface Br7Result {
   "ds:CourtType"?: string
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: string
+  "ds:Duration"?: Br7Duration[]
   "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
   "ds:NextCourtType"?: string
   "ds:NextHearingDate"?: string
   "ds:NextHearingTime"?: string
-  "ds:BailCondition"?: { "#text": string }[]
-  // "ds:AmountSpecifiedInResult": string
+  "ds:BailCondition"?: string[] | string
+  "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
   // "ds:NumberSpecifiedInResult": string
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
@@ -234,7 +242,8 @@ export interface Br7Result {
   "ds:ResultHalfLifeHours"?: number
   "br7:PNCDisposalType"?: number
   "br7:ResultClass"?: string
-  "br7:PNCAdjudicationExists": Br7LiteralTextString
+  "br7:Urgent"?: Br7Urgent
+  "br7:PNCAdjudicationExists"?: Br7LiteralTextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: string
   "@_hasError": boolean
@@ -243,10 +252,10 @@ export interface Br7Result {
 
 export interface Br7OrganisationUnit {
   "ds:TopLevelCode"?: string
-  "ds:SecondLevelCode"?: string
-  "ds:ThirdLevelCode"?: string
-  "ds:BottomLevelCode"?: string
-  "ds:OrganisationUnitCode"?: string
+  "ds:SecondLevelCode": string
+  "ds:ThirdLevelCode": string
+  "ds:BottomLevelCode": string
+  "ds:OrganisationUnitCode": string
   "@_SchemaVersion": string
 }
 
@@ -324,6 +333,11 @@ export interface Br7SourceReference {
 export interface Br7LiteralTextString {
   "#text"?: string
   "@_Literal"?: string
+}
+
+export interface Br7TypeTextString {
+  "#text"?: string
+  "@_Type"?: string
 }
 
 export interface Br7ErrorTextString {

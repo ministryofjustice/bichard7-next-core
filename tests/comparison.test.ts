@@ -2,6 +2,7 @@ import fs from "fs"
 import "jest-xml-matcher"
 import CoreHandler from "src/index"
 import convertAhoToXml from "src/lib/generateLegacyAhoXml"
+import parseAhoXml from "src/lib/parseAhoXml"
 import extractExceptionsFromAho from "./helpers/extractExceptionsFromAho"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./helpers/getPncQueryTimeFromAho"
@@ -42,6 +43,12 @@ describe("Comparison testing", () => {
 
         it("should match aho xml", () => {
           const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
+          expect(ahoXml).toEqualXML(annotatedHearingOutcome)
+        })
+
+        it("should correctly parse aho xml", () => {
+          const parsedAho = parseAhoXml(annotatedHearingOutcome)
+          const ahoXml = convertAhoToXml(parsedAho)
           expect(ahoXml).toEqualXML(annotatedHearingOutcome)
         })
       } catch (e) {

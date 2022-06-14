@@ -31,6 +31,7 @@ import type {
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
+  lookupGenderByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
   lookupOffenceCategoryByCjsCode,
   lookupOffenceDateCodeByCjsCode,
@@ -55,7 +56,8 @@ enum LiteralType {
   OffenceRemandStatus,
   YesNo,
   PleaStatus,
-  AlcoholLevelMethod
+  AlcoholLevelMethod,
+  Gender
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
@@ -70,7 +72,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
       literalText = value ? "Y" : "N"
       literalAttribute = value ? "Yes" : "No"
     }
-  } else if (type === LiteralType.OffenceRemandStatus && typeof value === "string") {
+  } else if (type === LiteralType.OffenceRemandStatus) {
     literalText = value
     literalAttribute = lookupRemandStatusByCjsCode(value)?.description
   } else if (type === LiteralType.PleaStatus) {
@@ -79,6 +81,9 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   } else if (type === LiteralType.AlcoholLevelMethod) {
     literalText = value
     literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
+  } else if (type === LiteralType.Gender) {
+    literalText = value
+    literalAttribute = lookupGenderByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
@@ -126,7 +131,7 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "ds:CourtType": result.CourtType,
     "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
     "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
-    "ds:BailCondition": result.BailCondition ? result.BailCondition?.map((bc) => ({ "#text": bc })) : undefined,
+    "ds:BailCondition": result.BailCondition,
     "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
       ? {
           "@_SchemaVersion": "2.0",
@@ -166,7 +171,10 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
     "br7:PNCDisposalType": result.PNCDisposalType,
     "br7:ResultClass": result.ResultClass,
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
-    "br7:PNCAdjudicationExists": { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" },
+    "br7:PNCAdjudicationExists":
+      result.PNCAdjudicationExists !== undefined
+        ? { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" }
+        : undefined,
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
       "ds:Code": rqv.Code
@@ -222,13 +230,13 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
         "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
         "ds:OrganisationUnitIdentifierCode": {
           "ds:SecondLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.SecondLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.SecondLevelCode,
           "ds:ThirdLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.ThirdLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.ThirdLevelCode,
           "ds:BottomLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode.BottomLevelCode,
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.BottomLevelCode,
           "ds:OrganisationUnitCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender?.OrganisationUnitIdentifierCode
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
               .OrganisationUnitCode,
           "@_SchemaVersion": "2.0"
         },
@@ -287,6 +295,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
+    "br7:CourtCaseReferenceNumber": offence.CourtCaseReferenceNumber,
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",
@@ -329,7 +338,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate
         ? format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd")
         : undefined,
-      "br7:Gender": { "#text": Number(c.HearingDefendant.DefendantDetail.Gender), "@_Literal": "male" }
+      "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
     },
     "br7:Address": {
       "ds:AddressLine1": c.HearingDefendant.Address.AddressLine1,
@@ -337,7 +346,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       "ds:AddressLine3": c.HearingDefendant.Address.AddressLine3
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
-    "br7:BailConditions": c.HearingDefendant.BailConditions.map((bc) => ({ "#text": bc })),
+    "br7:BailConditions": c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions : undefined,
     "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])

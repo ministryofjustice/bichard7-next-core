@@ -96,7 +96,7 @@ const defendantOrOffenderSchema = z.object({
 })
 
 const criminalProsecutionReferenceSchema = z.object({
-  DefendantOrOffender: defendantOrOffenderSchema.optional(),
+  DefendantOrOffender: defendantOrOffenderSchema,
   OffenceReason: offenceReasonSchema.optional(),
   OffenceReasonSequence: z.number().optional()
 })
@@ -140,7 +140,7 @@ const defendantDetailSchema = z.object({
   PersonName: personNameSchema,
   GeneratedPNCFilename: z.string().optional(),
   BirthDate: z.date().optional(),
-  Gender: z.string()
+  Gender: z.number()
 })
 
 const courtReferenceSchema = z.object({
@@ -213,7 +213,7 @@ const resultSchema = z.object({
     .min(1, ExceptionCode.HO100106)
     .max(2500, ExceptionCode.HO100107)
     .optional(), // Can't test because it is masked by XML parser
-  ResultQualifierVariable: resultQualifierVariableSchema.array(),
+  ResultQualifierVariable: resultQualifierVariableSchema.array().min(0),
   ResultHalfLifeHours: z.number().min(1, ExceptionCode.HO100109).max(999, ExceptionCode.HO100110).optional(), // Can't test because all values come from standing data
   Urgent: urgentSchema.optional(),
   ResultApplicableQualifierCode: z
@@ -283,7 +283,7 @@ const hearingDefendantSchema = z.object({
   DefendantDetail: defendantDetailSchema,
   Address: addressSchema,
   RemandStatus: z.string().refine(validateRemandStatus, ExceptionCode.HO100108),
-  BailConditions: z.string().array(),
+  BailConditions: z.string().array().min(0),
   ReasonForBailConditions: z.string().min(1, ExceptionCode.HO100220).max(2500, ExceptionCode.HO100220).optional(),
   CourtPNCIdentifier: pncIdentifierSchema.optional(),
   OrganisationName: z.string().min(1, ExceptionCode.HO100211).max(255, ExceptionCode.HO100211).optional(),
@@ -340,3 +340,5 @@ export type OrganisationUnitCodes = z.infer<typeof organisationUnitSchema>
 export type Urgent = z.infer<typeof urgentSchema>
 export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionReferenceSchema>
 export type Duration = z.infer<typeof durationSchema>
+export type DefendantOrOffender = z.infer<typeof defendantOrOffenderSchema>
+export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSchema>
