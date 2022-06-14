@@ -31,6 +31,7 @@ import type {
 } from "src/types/RawAho"
 import {
   lookupAlcoholLevelMethodByCjsCode,
+  lookupCourtTypeByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
   lookupGenderByCjsCode,
   lookupModeOfTrialReasonByCjsCode,
@@ -58,7 +59,8 @@ enum LiteralType {
   YesNo,
   PleaStatus,
   AlcoholLevelMethod,
-  Gender
+  Gender,
+  CourtType
 }
 
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
@@ -85,6 +87,9 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   } else if (type === LiteralType.Gender) {
     literalText = value
     literalAttribute = lookupGenderByCjsCode(value)?.description
+  } else if (type === LiteralType.CourtType) {
+    literalText = value
+    literalAttribute = lookupCourtTypeByCjsCode(value)?.description
   } else {
     throw new Error("Invalid literal type specified")
   }
@@ -402,7 +407,7 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "br7:UniqueID": hearing.SourceReference.UniqueID,
     "br7:DocumentType": hearing.SourceReference.DocumentType
   },
-  "br7:CourtType": { "#text": hearing.CourtType, "@_Literal": "MC adult" },
+  "br7:CourtType": optionalLiteral(hearing.CourtType, LiteralType.CourtType),
   "br7:CourtHouseCode": hearing.CourtHouseCode,
   "br7:CourtHouseName": hearing.CourtHouseName,
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
