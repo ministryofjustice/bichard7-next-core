@@ -372,7 +372,8 @@ export default (xml: string): AnnotatedHearingOutcome => {
   const options = {
     ignoreAttributes: false,
     parseTagValue: false,
-    parseAttributeValue: false
+    parseAttributeValue: false,
+    trimValues: false
   }
 
   const parser = new XMLParser(options)
