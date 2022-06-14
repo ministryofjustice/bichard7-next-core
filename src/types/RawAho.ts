@@ -23,7 +23,8 @@ export interface Br7AnnotatedHearingOutcome {
 export interface Cxe01 {
   FSC: Fsc
   IDS: IDS
-  CourtCases: CourtCases
+  CourtCases?: CourtCases
+  PenaltyCases?: PenaltyCases
 }
 
 export interface CourtCases {
@@ -42,10 +43,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: RawOffence[]
+  Offence: RawAhoPncOffence[]
 }
 
-export interface RawOffence {
+export interface RawAhoPncOffence {
   COF: Cof
   ADJ?: Adj
   DISList?: DISList
@@ -104,6 +105,20 @@ export interface IDS {
   "@_Checkname": string
   "@_IntfcUpdateType": string
   "@_PNCID": string
+}
+
+export interface PCR {
+  "@_IntfcUpdateType": string
+  "@_PenaltyCaseRefNo": string
+}
+
+export interface PenaltyCase {
+  PCR: PCR
+  Offences: Offences
+}
+
+export interface PenaltyCases {
+  PenaltyCase: PenaltyCase | PenaltyCase[]
 }
 
 export interface Br7HearingOutcome {

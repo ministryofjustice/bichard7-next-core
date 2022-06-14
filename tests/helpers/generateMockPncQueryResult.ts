@@ -33,7 +33,7 @@ export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml>
     forceStationCode: spiCase.PTIURN.substring(0, 3),
     checkName,
     pncId: `2000/${prosecutorRef}`,
-    cases: [
+    courtCases: [
       {
         courtCaseReference: "12/3456/789012Q",
         offences: spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PncOffence => {

@@ -3,12 +3,12 @@ import offenceIsBreach from "src/lib/offenceMatcher/offenceIsBreach"
 import offencesMatch from "src/lib/offenceMatcher/offencesMatch"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncCase } from "src/types/PncQueryResult"
+import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 
 const getFirstMatchingCourtCaseWith2060Result = (
-  pncCases: PncCase[],
+  pncCases: PncCourtCase[],
   matcherOutcome: MultipleCaseMatcherOutcome
 ): string | undefined => {
   for (const pncCase of pncCases) {
@@ -27,7 +27,7 @@ const getFirstMatchingCourtCaseWith2060Result = (
 }
 
 const getFirstMatchingCourtCaseWithoutAdjudications = (
-  pncCases: PncCase[],
+  pncCases: PncCourtCase[],
   matcherOutcome: MultipleCaseMatcherOutcome
 ): string | undefined => {
   for (const pncCase of pncCases) {
@@ -48,7 +48,7 @@ const getFirstMatchingCourtCaseWithoutAdjudications = (
 }
 
 const getFirstMatchingCourtCase = (
-  pncCases: PncCase[],
+  pncCases: PncCourtCase[],
   matcherOutcome: MultipleCaseMatcherOutcome
 ): string | undefined => {
   for (const pncCase of pncCases) {
@@ -62,7 +62,7 @@ const getFirstMatchingCourtCase = (
 
 const enrichOffencesFromCourtCasesAndMatcherOutcome = (
   aho: AnnotatedHearingOutcome,
-  cases: PncCase[],
+  cases: PncCourtCase[],
   matcherOutcome: MultipleCaseMatcherOutcome
 ) => {
   const hoOffences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence

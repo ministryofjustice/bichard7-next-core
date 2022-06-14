@@ -36,7 +36,7 @@ describe("enrichWithQuery()", () => {
 
   it("should populate the offence titles from PNC query", () => {
     const result = enrichWithPncQuery(aho, pncGateway)
-    const offences = result.PncQuery?.cases![0].offences
+    const offences = result.PncQuery?.courtCases![0].offences
 
     expect(offences).toHaveLength(2)
     expect(offences![0].offence.title).toBe("POSSESSING PART OF DEAD BADGER")

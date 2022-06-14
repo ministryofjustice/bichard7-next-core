@@ -17,7 +17,7 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
-  annotatedHearingOutcome.PncQuery?.cases?.forEach((pncCase) => {
+  annotatedHearingOutcome.PncQuery?.courtCases?.forEach((pncCase) => {
     pncCase.offences = pncCase.offences.map(addTitle)
   })
 

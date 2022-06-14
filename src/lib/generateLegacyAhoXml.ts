@@ -12,7 +12,7 @@ import type {
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
-import type { PNCDisposal, PncQueryResult } from "src/types/PncQueryResult"
+import type { PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 import type {
   Adj,
   Br7Case,
@@ -26,7 +26,8 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList,
-  RawAho
+  RawAho,
+  RawAhoPncOffence
 } from "src/types/RawAho"
 import {
   lookupAlcoholLevelMethodByCjsCode,
@@ -405,6 +406,25 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
   "@_SchemaVersion": "4.0"
 })
 
+const mapAhoPncOffencesToXml = (offences: PncOffence[]): RawAhoPncOffence[] =>
+  offences.map((offence) => ({
+    COF: {
+      "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
+      "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
+      "@_IntfcUpdateType": "K",
+      "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
+      "@_OffEndTime": offence.offence.endTime?.replace(":", "") ?? "",
+      "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
+      "@_OffStartTime": offence.offence.startTime?.replace(":", "") ?? "",
+      "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
+      "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
+      "@_OffenceTitle": offence.offence.title ?? "",
+      "@_ReferenceNumber": String(offence.offence.sequenceNumber).padStart(3, "0")
+    },
+    ADJ: offence.adjudication ? mapOffenceADJ(offence.adjudication) : undefined,
+    DISList: offence.disposals ? mapOffenceDIS(offence.disposals) : undefined
+  }))
+
 const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
   FSC: { "@_FSCode": pncQuery.forceStationCode, "@_IntfcUpdateType": "K" },
   IDS: {
@@ -413,30 +433,26 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     "@_IntfcUpdateType": "K",
     "@_PNCID": pncQuery.pncId
   },
-  CourtCases: {
-    CourtCase: pncQuery.cases?.map((c) => ({
-      CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
-      Offences: {
-        Offence: c.offences.map((offence) => ({
-          COF: {
-            "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
-            "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
-            "@_IntfcUpdateType": "K",
-            "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
-            "@_OffEndTime": offence.offence.endTime?.replace(":", "") ?? "",
-            "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
-            "@_OffStartTime": offence.offence.startTime?.replace(":", "") ?? "",
-            "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
-            "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
-            "@_OffenceTitle": offence.offence.title ?? "",
-            "@_ReferenceNumber": String(offence.offence.sequenceNumber).padStart(3, "0")
-          },
-          ADJ: offence.adjudication ? mapOffenceADJ(offence.adjudication) : undefined,
-          DISList: offence.disposals ? mapOffenceDIS(offence.disposals) : undefined
+  CourtCases: pncQuery.courtCases
+    ? {
+        CourtCase: pncQuery.courtCases?.map((c) => ({
+          CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
+          Offences: {
+            Offence: mapAhoPncOffencesToXml(c.offences)
+          }
         }))
       }
-    }))
-  }
+    : undefined,
+  PenaltyCases: pncQuery.penaltyCases
+    ? {
+        PenaltyCase: pncQuery.penaltyCases?.map((c) => ({
+          PCR: { "@_IntfcUpdateType": "K", "@_PenaltyCaseRefNo": c.penaltyCaseReference },
+          Offences: {
+            Offence: mapAhoPncOffencesToXml(c.offences)
+          }
+        }))
+      }
+    : undefined
 })
 
 const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {

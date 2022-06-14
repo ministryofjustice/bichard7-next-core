@@ -339,11 +339,13 @@ Object {
     },
   },
   "PncQuery": Object {
-    "cases": Array [
+    "checkName": "SEXOFFENCE",
+    "courtCases": Array [
       Object {
         "courtCaseReference": "97/1626/008395Q",
         "offences": Array [
           Object {
+            "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "SX03001A",
@@ -355,6 +357,7 @@ Object {
             },
           },
           Object {
+            "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "SX03001",
@@ -366,6 +369,7 @@ Object {
             },
           },
           Object {
+            "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "RT88191",
@@ -379,8 +383,8 @@ Object {
         ],
       },
     ],
-    "checkName": "SEXOFFENCE",
     "forceStationCode": "01ZD",
+    "penaltyCases": undefined,
     "pncId": "2000/0448754K",
   },
   "PncQueryDate": 2022-03-22T00:00:00.000Z,
