@@ -8,7 +8,6 @@ import {
   gender,
   modeOfTrialReason,
   offenceCategory,
-  offenceCode,
   offenceInitiation,
   organisationUnit,
   pleaStatus,
@@ -34,7 +33,6 @@ import type {
   Gender,
   ModeOfTrialReason,
   OffenceCategory,
-  OffenceCode,
   OffenceInitiation,
   PncDisposal,
   ResultClass,
@@ -141,9 +139,6 @@ const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined => yesNo.find(
 const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
   vehicleCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
-  offenceCode.find((x) => x.cjsCode === cjsCode)
-
 const lookupDefendantPresentAtHearingByCjsCode = (cjsCode: string): DefendantPresentAtHearing | undefined =>
   defendantPresentAtHearing.find((x) => x.cjsCode === cjsCode)
 
@@ -177,7 +172,6 @@ export {
   lookupVehicleCodeByCjsCode,
   lookupYesNoByCjsCode,
   lookupOffenceDateCodeByCjsCode,
-  lookupOffenceByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
   lookupGenderByCjsCode
 }

@@ -18,6 +18,6 @@ export default (courtName: string): string | undefined => {
     (unit) =>
       unit.topLevelCode.toLowerCase() === CROWN_COURT_TOP_LEVEL_CODE.toLowerCase() &&
       unit.thirdLevelName &&
-      matchCourtNames(unit.thirdLevelName.trim(), trimmedCourtName)
+      matchCourtNames((unit.thirdLevelName ?? "").trim(), trimmedCourtName)
   )?.thirdLevelPsaCode
 }

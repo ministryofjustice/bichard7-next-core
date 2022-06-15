@@ -1,17 +1,15 @@
+import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
-import isOffenceIgnored from "src/use-cases/isOffenceIgnored"
-import getOffenceCode from "src/utils/offence/getOffenceCode"
 
-const enrichOffence = (offence: Offence): Offence => {
+const enrichOffence = (
+  offence: Offence,
+  offenceIgnored: boolean,
+  offenceCodeLookup: OffenceCode | undefined
+): Offence => {
   const reason = offence.CriminalProsecutionReference.OffenceReason
   if (!reason) {
     return offence
   }
-
-  const offenceCode = getOffenceCode(offence)
-  const offenceIgnored = isOffenceIgnored(offence)
-  const offenceCodeLookup = offenceCode ? lookupOffenceByCjsCode(offenceCode) : undefined
 
   if (offenceIgnored) {
     offence.OffenceCategory = "B7"

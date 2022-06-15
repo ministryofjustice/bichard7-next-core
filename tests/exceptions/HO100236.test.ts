@@ -1,13 +1,13 @@
 jest.setTimeout(30000)
 
-import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
+import { lookupNationalOffenceByCjsCode } from "src/use-cases/dataLookup"
 import generateMessage from "tests/helpers/generateMessage"
 import PostgresHelper from "tests/helpers/PostgresHelper"
 import processMessage from "tests/helpers/processMessage"
 
 jest.mock("../../src/use-cases/dataLookup", () => ({
   ...jest.requireActual("../../src/use-cases/dataLookup"),
-  lookupOffenceByCjsCode: jest.fn()
+  lookupNationalOffenceByCjsCode: jest.fn()
 }))
 
 describe("HO100233", () => {
@@ -20,7 +20,7 @@ describe("HO100233", () => {
   })
 
   it.ifNewBichard("should not throw an exception for a valid home Office Classification", async () => {
-    ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
+    ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "Application to reopen case",
@@ -42,11 +42,11 @@ describe("HO100233", () => {
     })
 
     expect(exceptions).toHaveLength(0)
-    expect(lookupOffenceByCjsCode).toHaveBeenCalled()
+    expect(lookupNationalOffenceByCjsCode).toHaveBeenCalled()
   })
 
   it.ifNewBichard("should create an exception if the home office classifcation is an empty string", async () => {
-    ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
+    ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
       offenceCategory: "CB",
       offenceTitle: "valid",
@@ -69,7 +69,7 @@ describe("HO100233", () => {
       expectTriggers: false
     })
 
-    // Check the right triggers are generated
+    // Check the right exceptions are generated
     expect(exceptions).toStrictEqual([
       {
         code: "HO100236",
@@ -89,7 +89,9 @@ describe("HO100233", () => {
   it.ifNewBichard(
     "should create an exception if the home office classification doesn't match the specified regex",
     async () => {
-      ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockImplementation(() => ({
+      ;(
+        lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>
+      ).mockImplementation(() => ({
         cjsCode: "MC8080524",
         offenceCategory: "CB",
         offenceTitle: "valid",
@@ -111,7 +113,7 @@ describe("HO100233", () => {
         expectTriggers: false
       })
 
-      // Check the right triggers are generated
+      // Check the right exceptions are generated
       expect(exceptions).toStrictEqual([
         {
           code: "HO100236",

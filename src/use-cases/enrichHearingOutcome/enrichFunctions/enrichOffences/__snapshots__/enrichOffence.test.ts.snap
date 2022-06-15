@@ -1,20 +1,58 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`enrichOffence() should add the data from the looked up offence 1`] = `
+exports[`enrichOffence() should add an offence category of B7 if the offence is ignored 1`] = `
 Object {
   "CriminalProsecutionReference": Object {
     "OffenceReason": Object {
       "LocalOffenceCode": Object {
-        "AreaCode": "05",
-        "OffenceCode": "BG73006",
+        "AreaCode": "01",
+        "OffenceCode": "01CP001",
       },
       "__type": "LocalOffenceReason",
     },
   },
   "HomeOfficeClassification": "000/00",
   "NotifiableToHOindicator": false,
-  "OffenceCategory": "CE",
-  "OffenceTitle": "POSSESSING THING DERIVED FROM DEAD BADGER",
+  "OffenceCategory": "B7",
+  "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
+  "RecordableOnPNCindicator": false,
+}
+`;
+
+exports[`enrichOffence() should add the data from the looked up offence 1`] = `
+Object {
+  "CriminalProsecutionReference": Object {
+    "OffenceReason": Object {
+      "LocalOffenceCode": Object {
+        "AreaCode": "01",
+        "OffenceCode": "01CP001",
+      },
+      "__type": "LocalOffenceReason",
+    },
+  },
+  "HomeOfficeClassification": "000/00",
+  "NotifiableToHOindicator": false,
+  "OffenceCategory": "B7",
+  "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
+  "RecordableOnPNCindicator": false,
+}
+`;
+
+exports[`enrichOffence() should set recordable to false if the offence is ignored 1`] = `
+Object {
+  "CriminalProsecutionReference": Object {
+    "OffenceReason": Object {
+      "LocalOffenceCode": Object {
+        "AreaCode": "01",
+        "OffenceCode": "01CP001",
+      },
+      "__type": "LocalOffenceReason",
+    },
+  },
+  "HomeOfficeClassification": "000/00",
+  "NotifiableToHOindicator": false,
+  "OffenceCategory": "B7",
+  "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
   "RecordableOnPNCindicator": false,
 }
 `;

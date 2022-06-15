@@ -23,7 +23,7 @@ describe("HO100245", () => {
       expectTriggers: false
     })
 
-    // Check the right triggers are generated
+    // Check the right exceptions are generated
     expect(exceptions).toStrictEqual([
       {
         code: "HO100245",
