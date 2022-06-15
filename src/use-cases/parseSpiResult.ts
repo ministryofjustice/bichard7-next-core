@@ -5,7 +5,8 @@ import { incomingMessageParsedXmlSchema } from "src/types/IncomingMessage"
 export default (message: string): IncomingMessageParsedXml => {
   const options = {
     ignoreAttributes: false,
-    removeNSPrefix: true
+    removeNSPrefix: true,
+    trimValues: false
   }
 
   const parser = new XMLParser(options)
