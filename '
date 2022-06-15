@@ -1,0 +1,46 @@
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
+import lambda from "src/comparison/lambda"
+import MockS3 from "tests/helpers/mockS3"
+
+const s3Port = 21001
+const bucket = "comparison-bucket"
+const region = (process.env.AWS_REGION = "local")
+process.env.S3_REGION = region
+const accessKeyId = (process.env.S3_AWS_ACCESS_KEY_ID = "S3RVER")
+const secretAccessKey = (process.env.S3_AWS_SECRET_ACCESS_KEY = "S3RVER")
+
+describe("Comparison lambda", () => {
+  let s3Server: MockS3
+
+  beforeAll(async () => {
+    s3Server = new MockS3(s3Port, bucket)
+    await s3Server.start()
+  })
+
+  afterAll(async () => {
+    await s3Server.stop()
+  })
+
+  beforeEach(async () => {
+    await s3Server.reset()
+  })
+
+  it("should return a comparison result", () => {
+    const client = new S3Client({ region, endpoint, credentials: { accessKeyId, secretAccessKey } })
+    const command = new PutObjectCommand({ Bucket: bucket, Key: "reports/AutomationRate.xls" })
+    const response = await client.send(command)
+
+    const result = lambda({ s3Path: "dummy" })
+    expect(result).toStrictEqual({
+      triggersMatch: true,
+      exceptionsMatch: true,
+      xmlOutputMatches: true,
+      xmlParsingMatches: true
+    })
+  })
+
+  it("should throw an error if the event did not match our schema", () => {
+    expect(() => lambda({ wrongPath: "dummy" })).toThrow(/invalid_type/)
+  })
+
+})

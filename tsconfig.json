@@ -25,5 +25,8 @@
   },
   "include": [
     "src/**/*.ts", "tests/**/*.ts", "tests/jest.d.ts"
-  ]
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

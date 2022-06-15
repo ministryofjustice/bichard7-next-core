@@ -16,17 +16,16 @@ type ComparisonFile = {
 }
 
 type ImportedComparison = {
-  file: string
+  file?: string
   incomingMessage: string
   annotatedHearingOutcome: string
   triggers: Trigger[]
 }
 
-export default (file: string): ImportedComparison => {
-  const contents = fs.readFileSync(file)
-  const { incomingMessage, annotatedHearingOutcome, triggers } = JSON.parse(contents.toString()) as ComparisonFile
+export const processTestString = (contents: string, file?: string): ImportedComparison => {
+  const { incomingMessage, annotatedHearingOutcome, triggers } = JSON.parse(contents) as ComparisonFile
   return {
-    file: path.basename(file),
+    file,
     triggers: orderBy(
       triggers.map(({ code, identifier }) => {
         const result: Trigger = { code }
@@ -40,4 +39,9 @@ export default (file: string): ImportedComparison => {
     incomingMessage,
     annotatedHearingOutcome
   }
+}
+
+export default (file: string): ImportedComparison => {
+  const contents = fs.readFileSync(file).toString()
+  return processTestString(contents, path.basename(file))
 }

@@ -18,7 +18,7 @@ let tests = fs
 
 const filter = process.env.FILTER_TEST
 if (filter) {
-  tests = tests.filter((t) => t.file.includes(filter))
+  tests = tests.filter((t) => t.file && t.file.includes(filter))
 }
 
 describe("Comparison testing", () => {
