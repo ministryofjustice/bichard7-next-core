@@ -1,3 +1,4 @@
+import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/types/types"
 import parseASN from "src/lib/parseASN"
 import parseOffenceReason from "src/lib/parseOffenceReason"
 import createCriminalProsecutionRef from "src/utils/offence/createCriminalProsecutionRef"
@@ -6,6 +7,9 @@ import getOffenceCode from "src/utils/offence/getOffenceCode"
 import lookupOffenceCode from "src/utils/offence/lookupOffenceCode"
 import isOffenceIgnored from "src/use-cases/isOffenceIgnored"
 import enrichOffence from "./enrichOffence"
+import { ExceptionCode } from "src/types/ExceptionCode"
+import isOffenceCode from "src/utils/offence/isOffenceCode"
+import { isLookupOffenceCodeError } from "src/types/LookupOffenceCodeError"
 
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
@@ -22,11 +26,9 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
     (offence: Offence, idx: number) => {
       const offenceReason = offence.CriminalProsecutionReference.OffenceReason
       const offenceCode = getOffenceCode(offence)
-      const { result: lookupOffenceCodeResult, exception } = lookupOffenceCode(
-        offenceCode ?? "",
-        offenceReason,
-        areaCode
-      )
+      const result = lookupOffenceCode(offenceCode ?? "", offenceReason, areaCode)
+      const lookupResult = isOffenceCode(result) ? (result as OffenceCode) : undefined
+
       const parsedOffenceReason = offenceCode ? parseOffenceReason(offenceCode, areaCode, offenceReason) : undefined
 
       offence.CriminalProsecutionReference = {
@@ -35,11 +37,12 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
       }
 
       const offenceIgnored = isOffenceIgnored(offence)
-      offence = enrichOffence(offence, offenceIgnored, lookupOffenceCodeResult)
 
-      if (!offenceIgnored && exception) {
+      offence = enrichOffence(offence, offenceIgnored, lookupResult)
+
+      if (!offenceIgnored && isLookupOffenceCodeError(result)) {
         const enrichedException: Exception = {
-          code: exception.code,
+          code: ExceptionCode.HO100306,
           path: [
             "AnnotatedHearingOutcome",
             "HearingOutcome",
@@ -47,7 +50,7 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
             "HearingDefendant",
             "Offence",
             idx,
-            ...exception.subPath
+            ...result.subPath
           ]
         }
         hearingOutCome.Exceptions = hearingOutCome.Exceptions

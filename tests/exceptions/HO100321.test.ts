@@ -39,7 +39,6 @@ describe("HO100321", () => {
     const nonRecordableOffenceCode = "BA76004"
 
     const inputMessage = generateMessage({
-      ASN: dummyASN,
       offences: [
         {
           code: nonRecordableOffenceCode,

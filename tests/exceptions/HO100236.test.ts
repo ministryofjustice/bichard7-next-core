@@ -21,16 +21,14 @@ describe("HO100233", () => {
 
   it.ifNewBichard("should not throw an exception for a valid home Office Classification", async () => {
     ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
-      result: {
-        cjsCode: "MC8080524",
-        offenceCategory: "CB",
-        offenceTitle: "Application to reopen case",
-        recordableOnPnc: false,
-        description: "blah",
-        homeOfficeClassification: "123/45",
-        notifiableToHo: true,
-        resultHalfLifeHours: null
-      }
+      cjsCode: "MC8080524",
+      offenceCategory: "CB",
+      offenceTitle: "Application to reopen case",
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true,
+      resultHalfLifeHours: null
     })
 
     const inputMessage = generateMessage({
@@ -49,16 +47,14 @@ describe("HO100233", () => {
 
   it.ifNewBichard("should create an exception if the home office classifcation is an empty string", async () => {
     ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
-      result: {
-        cjsCode: "MC8080524",
-        offenceCategory: "CB",
-        offenceTitle: "valid",
-        recordableOnPnc: false,
-        description: "blah",
-        homeOfficeClassification: "",
-        notifiableToHo: true,
-        resultHalfLifeHours: null
-      }
+      cjsCode: "MC8080524",
+      offenceCategory: "CB",
+      offenceTitle: "valid",
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "",
+      notifiableToHo: true,
+      resultHalfLifeHours: null
     })
 
     // Generate a mock message
@@ -96,16 +92,14 @@ describe("HO100233", () => {
       ;(
         lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>
       ).mockImplementation(() => ({
-        result: {
-          cjsCode: "MC8080524",
-          offenceCategory: "CB",
-          offenceTitle: "valid",
-          recordableOnPnc: false,
-          description: "blah",
-          homeOfficeClassification: "467/123",
-          notifiableToHo: true,
-          resultHalfLifeHours: null
-        }
+        cjsCode: "MC8080524",
+        offenceCategory: "CB",
+        offenceTitle: "valid",
+        recordableOnPnc: false,
+        description: "blah",
+        homeOfficeClassification: "467/123",
+        notifiableToHo: true,
+        resultHalfLifeHours: null
       }))
       // Generate a mock message
       const inputMessage = generateMessage({

@@ -21,16 +21,14 @@ describe("HO100233", () => {
 
   it.ifNewBichard("should not throw an exception for a valid offence title", async () => {
     ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
-      result: {
-        cjsCode: "MC8080524",
-        offenceCategory: "CB",
-        offenceTitle: "Application to reopen case",
-        recordableOnPnc: false,
-        description: "blah",
-        homeOfficeClassification: "123/45",
-        notifiableToHo: true,
-        resultHalfLifeHours: null
-      }
+      cjsCode: "MC8080524",
+      offenceCategory: "CB",
+      offenceTitle: "Application to reopen case",
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true,
+      resultHalfLifeHours: null
     })
 
     const inputMessage = generateMessage({
@@ -49,16 +47,14 @@ describe("HO100233", () => {
 
   it.ifNewBichard("should create an exception if the offence title is less than the min length", async () => {
     ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockReturnValue({
-      result: {
-        cjsCode: "MC8080524",
-        offenceCategory: "CB",
-        offenceTitle: "",
-        recordableOnPnc: false,
-        description: "blah",
-        homeOfficeClassification: "123/45",
-        notifiableToHo: true,
-        resultHalfLifeHours: null
-      }
+      cjsCode: "MC8080524",
+      offenceCategory: "CB",
+      offenceTitle: "",
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true,
+      resultHalfLifeHours: null
     })
 
     // Generate a mock message
@@ -85,16 +81,14 @@ describe("HO100233", () => {
   it.ifNewBichard("should create an exception if the offence title is greater than the max length", async () => {
     ;(lookupNationalOffenceByCjsCode as jest.MockedFunction<typeof lookupNationalOffenceByCjsCode>).mockImplementation(
       () => ({
-        result: {
-          cjsCode: "MC8080524",
-          offenceCategory: "CB",
-          offenceTitle: "x".repeat(121),
-          recordableOnPnc: false,
-          description: "blah",
-          homeOfficeClassification: "123/45",
-          notifiableToHo: true,
-          resultHalfLifeHours: null
-        }
+        cjsCode: "MC8080524",
+        offenceCategory: "CB",
+        offenceTitle: "x".repeat(121),
+        recordableOnPnc: false,
+        description: "blah",
+        homeOfficeClassification: "123/45",
+        notifiableToHo: true,
+        resultHalfLifeHours: null
       })
     )
     // Generate a mock message

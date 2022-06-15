@@ -1,13 +1,15 @@
 import { offenceCode } from "@moj-bichard7-developers/bichard7-next-data"
+import { LookupNationalOffenceCodeError, LookupLocalOffenceCodeError } from "src/types/LookupOffenceCodeError"
 
 import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import type { LookupResult } from "src/types/LookupResult"
 
 export const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
 
-export const lookupNationalOffenceByCjsCode = (cjsCode: string, areaCode?: string): LookupResult => {
+export const lookupNationalOffenceByCjsCode = (
+  cjsCode: string,
+  areaCode?: string
+): OffenceCode | LookupNationalOffenceCodeError | LookupLocalOffenceCodeError => {
   const fullLookup = lookupOffenceByCjsCode(cjsCode)
 
   if (!fullLookup && cjsCode.length === 8) {
@@ -15,44 +17,19 @@ export const lookupNationalOffenceByCjsCode = (cjsCode: string, areaCode?: strin
 
     if (!lookupNoQualifier && areaCode) {
       const localLookup = lookupOffenceByCjsCode(`${areaCode}${cjsCode}`)
-      return localLookup
-        ? { result: localLookup }
-        : {
-            exception: {
-              code: ExceptionCode.HO100306,
-              subPath: ["CriminalProsecutionReference", "OffenceReason", "LocalOffenceCode", "OffenceCode"]
-            }
-          }
+      return localLookup ? localLookup : new LookupLocalOffenceCodeError(`${areaCode}${cjsCode}`)
     }
 
-    return lookupNoQualifier
-      ? { result: lookupNoQualifier }
-      : {
-          exception: {
-            code: ExceptionCode.HO100306,
-            subPath: ["CriminalProsecutionReference", "OffenceReason", "OffenceCode"]
-          }
-        }
+    return lookupNoQualifier ? lookupNoQualifier : new LookupNationalOffenceCodeError(`${areaCode}${cjsCode}`)
   }
 
-  return fullLookup
-    ? { result: fullLookup }
-    : {
-        exception: {
-          code: ExceptionCode.HO100306,
-          subPath: ["CriminalProsecutionReference", "OffenceReason", "OffenceCode"]
-        }
-      }
+  return fullLookup ? fullLookup : new LookupNationalOffenceCodeError(`${areaCode}${cjsCode}`)
 }
 
-export const lookupLocalOffenceByCjsCode = (cjsCode: string, areaCode?: string): LookupResult => {
+export const lookupLocalOffenceByCjsCode = (
+  cjsCode: string,
+  areaCode?: string
+): OffenceCode | LookupLocalOffenceCodeError => {
   const fullLookup = lookupOffenceByCjsCode(`${areaCode}${cjsCode}`)
-  return fullLookup
-    ? { result: fullLookup }
-    : {
-        exception: {
-          code: ExceptionCode.HO100306,
-          subPath: ["CriminalProsecutionReference", "OffenceReason", "LocalOffenceCode"]
-        }
-      }
+  return fullLookup ? fullLookup : new LookupLocalOffenceCodeError(`${areaCode}${cjsCode}`)
 }
