@@ -9,11 +9,10 @@ describe("HO100200", () => {
     PostgresHelper.closeConnection()
   })
 
-  // Won't pass when running against Bichard as HO100200 is overridden by HO100300 "OU Code is not recognised" exception
-  it.skip("should create an exception if the Court Hearing Location value is invalid", async () => {
+  it("should create an exception if the Court Hearing Location value is invalid", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
-      courtHearingLocation: "invalid",
+      courtHearingLocation: "inval!d",
       offences: [{ results: [{ code: 1015 }] }]
     })
 
@@ -24,12 +23,10 @@ describe("HO100200", () => {
       expectTriggers: false
     })
 
-    // Check the right exceptions are generated
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO100200",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
-      }
-    ])
+    // Check the right triggers are generated
+    expect(exceptions).toContainEqual({
+      code: "HO100200",
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+    })
   })
 })

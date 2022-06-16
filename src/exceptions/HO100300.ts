@@ -56,9 +56,11 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
     generatedExceptions.push({ code: ExceptionCode.HO100300, path: ARREST_SUMMONS_NUMBER_PATH })
   }
 
+  const courtHearingLocationException = findException(exceptions!, generatedExceptions, COURT_HEARING_LOCATION_PATH)
+
   // Validate Court Hearing Location
   const isCourtHearingLocationValid = CourtHearingLocation && isOrganisationUnitValid(CourtHearingLocation)
-  if (!isCourtHearingLocationValid) {
+  if (!courtHearingLocationException && !isCourtHearingLocationValid) {
     generatedExceptions.push({ code: ExceptionCode.HO100300, path: COURT_HEARING_LOCATION_PATH })
   }
 
