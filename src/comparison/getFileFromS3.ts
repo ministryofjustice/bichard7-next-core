@@ -14,7 +14,6 @@ const getFileFromS3 = async (fileName: string, bucket: string, config: S3ClientC
   const client = new S3Client(config)
   const command = new GetObjectCommand({ Bucket: bucket, Key: fileName })
   const response = await client.send(command).catch((err: Error) => err)
-  console.log("S3 response", response)
 
   if ("Body" in response) {
     const stream = response.Body as Readable

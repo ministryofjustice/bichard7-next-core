@@ -4,6 +4,8 @@
   "description": "The code to replace the processing logic of Bichard 7",
   "main": "build/index.js",
   "scripts": {
+    "build:lambda:prod": "npx webpack --config ./.webpack/webpack.prod.js",
+    "build:lambda:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",
     "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test' --testNamePattern=",
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test' --testNamePattern=",
