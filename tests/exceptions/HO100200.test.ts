@@ -12,7 +12,7 @@ describe("HO100200", () => {
   it("should create an exception if the Court Hearing Location value is invalid", async () => {
     // Generate a mock message
     const inputMessage = generateMessage({
-      courtHearingLocation: "invalid",
+      courtHearingLocation: "inval!d",
       offences: [{ results: [{ code: 1015 }] }]
     })
 
@@ -23,12 +23,10 @@ describe("HO100200", () => {
       expectTriggers: false
     })
 
-    // Check the right exceptions are generated
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO100200",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
-      }
-    ])
+    // Check the right triggers are generated
+    expect(exceptions).toContainEqual({
+      code: "HO100200",
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+    })
   })
 })
