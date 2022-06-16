@@ -108,25 +108,25 @@ describe("HO100300", () => {
 
   it("shouldn't create an exception if a HO100200 (OU invalid) exception has been raised for this OU", async () => {
     const inputMessage = generateMessage({
-      courtHearingLocation: "invalid",
+      courtHearingLocation: "inval!d",
       offences: [{ results: [{ code: 1015 }] }]
     })
 
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO100200",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
-      }
-    ])
+    expect(exceptions).toContainEqual({
+      code: "HO100200",
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+    })
   })
 
   it("should create an exception if a HO100200 (OU invalid) exception has been raised for a different OU", async () => {
     const inputMessage = generateMessage({
-      courtHearingLocation: "invalid",
+      courtHearingLocation: "inval!d",
       offences: [
         {
           results: [
@@ -148,7 +148,9 @@ describe("HO100300", () => {
       ]
     })
 
-    const { exceptions } = await processMessage(inputMessage, {
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
       expectTriggers: false
     })
 
@@ -156,6 +158,21 @@ describe("HO100300", () => {
       {
         code: "HO100200",
         path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "CourtHearingLocation", "OrganisationUnitCode"]
+      },
+      {
+        code: "HO100200",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "SourceOrganisation",
+          "OrganisationUnitCode"
+        ]
       },
       {
         code: "HO100300",
