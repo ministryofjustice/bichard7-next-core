@@ -6,6 +6,7 @@ import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
 import enrichOffencesFromMatcherOutcome from "./enrichOffencesFromMatcherOutcome"
+import { asnPath } from "./errorPaths"
 
 const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCourtCase) => {
   const cprCourtCaseRef = pncCase.courtCaseReference
@@ -48,12 +49,12 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   const outcome = matchCases(hoOffences, pncQueryResult)
 
   if (outcome.courtCaseMatches.length > 0 && outcome.penaltyCaseMatches.length > 0) {
-    addError(aho, ExceptionCode.HO100328, ["path", "to", "asn"])
+    addError(aho, ExceptionCode.HO100328, asnPath)
     return aho
   }
 
   if (outcome.penaltyCaseMatches.length > 1) {
-    addError(aho, ExceptionCode.HO100329, ["path", "to", "asn"])
+    addError(aho, ExceptionCode.HO100329, asnPath)
     return aho
   }
 
