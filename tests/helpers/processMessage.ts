@@ -25,9 +25,11 @@ const realPnc = process.env.REAL_PNC === "true"
 
 const processMessageCore = (
   messageXml: string,
-  { recordable = true, pncOverrides = {} }: ProcessMessageOptions
+  { recordable = true, pncOverrides = {}, pncCaseType = "court", pncMessage }: ProcessMessageOptions
 ): BichardResultType => {
-  const response = recordable ? generateMockPncQueryResult(messageXml, pncOverrides) : undefined
+  const response = recordable
+    ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType)
+    : undefined
   const pncGateway = new MockPncGateway(response)
   return CoreHandler(messageXml, pncGateway)
 }
@@ -36,12 +38,21 @@ type ProcessMessageOptions = {
   expectRecord?: boolean
   expectTriggers?: boolean
   recordable?: boolean
+  pncCaseType?: string
   pncOverrides?: Partial<ResultedCaseMessageParsedXml>
+  pncMessage?: string
 }
 
 const processMessageBichard = async (
   messageXml: string,
-  { expectRecord = true, expectTriggers = true, recordable = true, pncOverrides = {} }: ProcessMessageOptions
+  {
+    expectRecord = true,
+    expectTriggers = true,
+    recordable = true,
+    pncOverrides = {},
+    pncCaseType = "court",
+    pncMessage
+  }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
@@ -52,7 +63,7 @@ const processMessageBichard = async (
   if (!realPnc) {
     if (recordable) {
       // Insert matching record in PNC
-      await mockRecordInPnc(messageXml, pncOverrides)
+      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType)
     } else {
       await mockEnquiryErrorInPnc()
     }
@@ -73,8 +84,8 @@ const processMessageBichard = async (
 
   const recordResult = await promisePoller({
     taskFn: fetchRecords,
-    interval: 100,
-    retries: 200
+    interval: 20,
+    retries: 1000
   })
 
   const exceptions = recordResult ? extractExceptionsFromAho(recordResult.annotated_msg) : []
@@ -94,8 +105,8 @@ const processMessageBichard = async (
   const triggerResult =
     (await promisePoller({
       taskFn: fetchTriggers,
-      interval: 100,
-      retries: 200
+      interval: 20,
+      retries: 1000
     }).catch(() => [])) ?? []
 
   const triggers = triggerResult.map((record) => ({

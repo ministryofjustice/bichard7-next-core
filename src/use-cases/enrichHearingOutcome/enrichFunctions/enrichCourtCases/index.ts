@@ -2,7 +2,7 @@ import matchCases from "src/lib/caseMatcher/caseMatcher"
 import matchMultipleCases from "src/lib/matchMultipleCases"
 import type { AnnotatedHearingOutcome, Case } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncCourtCase } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncPenaltyCase } from "src/types/PncQueryResult"
 import addError from "./addError"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
 import enrichOffencesFromMatcherOutcome from "./enrichOffencesFromMatcherOutcome"
@@ -15,11 +15,10 @@ const enrichCaseTypeFromCourtCase = (hoCase: Case, pncCase: PncCourtCase) => {
   }
 }
 
-const enrichCaseTypeFromPenaltyCase = (hoCase: Case, pncCase: PncCourtCase) => {
-  // TODO: This needs updating to actually use penalty cases once they are implemented
-  const cprCourtCaseRef = pncCase.courtCaseReference
+const enrichCaseFromPenaltyCase = (hoCase: Case, pncCase: PncPenaltyCase) => {
+  const cprCourtCaseRef = pncCase.penaltyCaseReference
   if (cprCourtCaseRef) {
-    hoCase.CourtCaseReferenceNumber = cprCourtCaseRef
+    hoCase.PenaltyNoticeCaseReferenceNumber = cprCourtCaseRef
   }
 }
 
@@ -77,12 +76,12 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
 
   if (outcome.courtCaseMatches.length === 0) {
     if (outcome.penaltyCaseMatches.length > 0) {
-      const { courtCase, offenceMatcherOutcome } = outcome.penaltyCaseMatches[0]
+      const { penaltyCase, offenceMatcherOutcome } = outcome.penaltyCaseMatches[0]
       enrichOffencesFromMatcherOutcome(aho, offenceMatcherOutcome)
       allPncOffencesMatched = offenceMatcherOutcome.allPncOffencesMatched
 
       if (allPncOffencesMatched) {
-        enrichCaseTypeFromPenaltyCase(aho.AnnotatedHearingOutcome.HearingOutcome.Case, courtCase)
+        enrichCaseFromPenaltyCase(aho.AnnotatedHearingOutcome.HearingOutcome.Case, penaltyCase)
       }
     } else {
       enrichOffencesFromMatcherOutcome(aho)

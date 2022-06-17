@@ -20,7 +20,11 @@ const extractDates = (offence: OffenceParsedXml) => {
   return { startDate, endDate }
 }
 
-const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}) => {
+const mockEnquiry = (
+  messageXml: string,
+  pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
+  pncCaseType = "court"
+) => {
   const parsed = parseSpiResult(messageXml).DeliverRequest.Message.ResultedCaseMessage
   const result = merge(parsed, pncOverrides)
 
@@ -38,11 +42,20 @@ const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessa
   const forceStationCode = result.Session.Case.PTIURN.substr(0, 4)
 
   const cofString = offences
-    .map(
-      (offence) =>
+    .map((offence) => {
+      const output = [
         `<COF>K${offence.sequenceNo}    12:15:24:1   ${offence.code}${offence.startDate}${offence.endDate}</COF>`
-    )
+      ]
+      if (pncCaseType === "penalty") {
+        output.push(
+          "<DIS>I1109000C 100.00                                                                                         </DIS>"
+        )
+      }
+      return output.join("\n")
+    })
     .join("\n")
+
+  const pncCaseElem = pncCaseType === "court" ? "CCR" : "PCR"
 
   const response = `<?XML VERSION="1.0" STANDALONE="YES"?>
   <CXE01>
@@ -50,7 +63,7 @@ const mockEnquiry = (messageXml: string, pncOverrides: Partial<ResultedCaseMessa
     <ASI>
       <FSC>K${forceStationCode}</FSC>
       <IDS>K00/${prosecutorRef} ${personFamilyName}            </IDS>
-      <CCR>K97/1626/839512Q               </CCR>
+      <${pncCaseElem}>K97/1626/839512Q    ${pncCaseElem === "CCR" ? "           " : ""}</${pncCaseElem}>
       ${cofString}
     </ASI>
     <GMT>000008073ENQR004540S</GMT>
@@ -84,9 +97,10 @@ const clearMocks = async (): Promise<void> => {
 
 const mockRecordInPnc = async (
   messageXml: string,
-  pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}
+  pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
+  pncCaseType = "court"
 ): Promise<void> => {
-  const enquiry = mockEnquiry(messageXml, pncOverrides)
+  const enquiry = mockEnquiry(messageXml, pncOverrides, pncCaseType)
   await clearMocks()
   await addMock(enquiry.matchRegex, enquiry.response)
 }
