@@ -84,7 +84,7 @@ const processMessageBichard = async (
 
   const recordResult = await promisePoller({
     taskFn: fetchRecords,
-    interval: 100,
+    interval: 10,
     retries: 200
   })
 
@@ -105,7 +105,7 @@ const processMessageBichard = async (
   const triggerResult =
     (await promisePoller({
       taskFn: fetchTriggers,
-      interval: 100,
+      interval: 10,
       retries: 200
     }).catch(() => [])) ?? []
 
