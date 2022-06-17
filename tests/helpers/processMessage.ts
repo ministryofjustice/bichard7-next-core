@@ -25,9 +25,9 @@ const realPnc = process.env.REAL_PNC === "true"
 
 const processMessageCore = (
   messageXml: string,
-  { recordable = true, pncOverrides = {} }: ProcessMessageOptions
+  { recordable = true, pncOverrides = {}, pncCaseType = "court" }: ProcessMessageOptions
 ): BichardResultType => {
-  const response = recordable ? generateMockPncQueryResult(messageXml, pncOverrides) : undefined
+  const response = recordable ? generateMockPncQueryResult(messageXml, pncOverrides, pncCaseType) : undefined
   const pncGateway = new MockPncGateway(response)
   return CoreHandler(messageXml, pncGateway)
 }
@@ -36,6 +36,7 @@ type ProcessMessageOptions = {
   expectRecord?: boolean
   expectTriggers?: boolean
   recordable?: boolean
+  pncCaseType?: string
   pncOverrides?: Partial<ResultedCaseMessageParsedXml>
 }
 

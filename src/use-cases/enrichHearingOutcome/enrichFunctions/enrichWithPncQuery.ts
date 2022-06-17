@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
 import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
 import enrichCourtCases from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases"
 
@@ -8,6 +8,9 @@ const addTitle = (offence: PncOffence): PncOffence => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle
   return offence
 }
+
+const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undefined) =>
+  cases && cases.forEach((c) => c.offences.forEach(addTitle))
 
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
@@ -17,9 +20,8 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
-  annotatedHearingOutcome.PncQuery?.courtCases?.forEach((pncCase) => {
-    pncCase.offences = pncCase.offences.map(addTitle)
-  })
+  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
+  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)
 
   annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
 

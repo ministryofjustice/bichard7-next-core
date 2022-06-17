@@ -9,21 +9,28 @@ const findMatchingPncOffence = (
   pncQuery: PncQueryResult,
   caseReference: string | undefined,
   sequenceNumber: number
-): PncOffence | undefined =>
-  pncQuery.courtCases
-    ? pncQuery.courtCases
-        .find((c) => c.courtCaseReference === caseReference)
-        ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
-    : undefined
+): PncOffence | undefined => {
+  if (pncQuery.courtCases) {
+    return pncQuery.courtCases
+      .find((c) => c.courtCaseReference === caseReference)
+      ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
+  }
+  if (pncQuery.penaltyCases) {
+    return pncQuery.penaltyCases
+      .find((c) => c.penaltyCaseReference === caseReference)
+      ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
+  }
+}
 
 const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) => {
   if (!PncQuery) {
     return []
   }
   return AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce((triggers: Trigger[], offence) => {
+    const ahoCase = AnnotatedHearingOutcome.HearingOutcome.Case
     const pncOffence = findMatchingPncOffence(
       PncQuery,
-      AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber,
+      ahoCase.CourtCaseReferenceNumber || ahoCase.PenaltyNoticeCaseReferenceNumber,
       offence.CourtOffenceSequenceNumber
     )
     if (!pncOffence) {

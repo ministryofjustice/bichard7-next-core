@@ -111,6 +111,32 @@ describe("TRPR0018", () => {
     ])
   })
 
+  it("should generate triggers for penalty offences", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [
+        {
+          startDate: new Date("2021-02-28"),
+          endDate: new Date("2021-03-02"),
+          results: [{ code: resultCode }]
+        }
+      ]
+    })
+
+    // Process the mock message
+    const {
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
+      pncCaseType: "penalty",
+      ...pncOffenceDateOverrides([{ startDate: "2021-02-27", endDate: "2021-03-03" }])
+    })
+
+    // Check the right triggers are generated
+    expect(exceptions).toHaveLength(0)
+    expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
+  })
+
   it("should not generate triggers when the start dates match and offence end date and pnc end date is missing", async () => {
     const inputMessage = generateMessage({
       offences: [

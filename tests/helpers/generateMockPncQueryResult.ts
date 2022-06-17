@@ -19,7 +19,11 @@ const extractDates = (offence: OffenceParsedXml): OffenceDates => {
   return dates
 }
 
-export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml> = {}): PncQueryResult => {
+export default (
+  xml: string,
+  pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
+  pncCaseType = "court"
+): PncQueryResult => {
   const spi = merge(parseSpiResult(xml).DeliverRequest.Message.ResultedCaseMessage, pncOverrides)
 
   const spiCase = spi.Session.Case
@@ -29,26 +33,42 @@ export default (xml: string, pncOverrides: Partial<ResultedCaseMessageParsedXml>
       12
     )
   const prosecutorRef = spiCase.Defendant.ProsecutorReference.slice(-8)
+  const offences = spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PncOffence => {
+    const dates = extractDates(offence)
+    return {
+      offence: {
+        acpoOffenceCode: "12:15:24:1",
+        cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
+        sequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
+        ...dates
+      }
+    }
+  })
+
+  const pncCase =
+    pncCaseType === "court"
+      ? {
+          courtCases: [
+            {
+              courtCaseReference: "12/3456/789012Q",
+              offences
+            }
+          ]
+        }
+      : {
+          penaltyCases: [
+            {
+              penaltyCaseReference: "12/3456/789012Q",
+              offences
+            }
+          ]
+        }
+
   const result: PncQueryResult = {
     forceStationCode: spiCase.PTIURN.substring(0, 3),
     checkName,
     pncId: `2000/${prosecutorRef}`,
-    courtCases: [
-      {
-        courtCaseReference: "12/3456/789012Q",
-        offences: spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PncOffence => {
-          const dates = extractDates(offence)
-          return {
-            offence: {
-              acpoOffenceCode: "12:15:24:1",
-              cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
-              sequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
-              ...dates
-            }
-          }
-        })
-      }
-    ]
+    ...pncCase
   }
   return result
 }

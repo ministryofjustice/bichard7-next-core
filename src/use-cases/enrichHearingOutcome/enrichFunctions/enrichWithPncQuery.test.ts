@@ -34,9 +34,47 @@ describe("enrichWithQuery()", () => {
     expect(resultAho.PncQuery).toBe(pncGateway.query("MockASN"))
   })
 
-  it("should populate the offence titles from PNC query", () => {
+  it("should populate the court case offence titles from PNC query", () => {
     const result = enrichWithPncQuery(aho, pncGateway)
     const offences = result.PncQuery?.courtCases![0].offences
+
+    expect(offences).toHaveLength(2)
+    expect(offences![0].offence.title).toBe("POSSESSING PART OF DEAD BADGER")
+    expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
+  })
+
+  it("should populate the penalty case offence titles from PNC query", () => {
+    pncGateway = new MockPncGateway({
+      forceStationCode: "01ZB",
+      croNumber: "dummy",
+      checkName: "test",
+      pncId: "dummyId",
+      penaltyCases: [
+        {
+          penaltyCaseReference: "dummy",
+          offences: [
+            {
+              offence: {
+                cjsOffenceCode: "BG73005",
+                acpoOffenceCode: "",
+                startDate: new Date("2010-11-28"),
+                sequenceNumber: 1
+              }
+            },
+            {
+              offence: {
+                cjsOffenceCode: "BG73006",
+                acpoOffenceCode: "",
+                startDate: new Date("2010-11-28"),
+                sequenceNumber: 1
+              }
+            }
+          ]
+        }
+      ]
+    })
+    const result = enrichWithPncQuery(aho, pncGateway)
+    const offences = result.PncQuery?.penaltyCases![0].offences
 
     expect(offences).toHaveLength(2)
     expect(offences![0].offence.title).toBe("POSSESSING PART OF DEAD BADGER")
