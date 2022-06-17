@@ -84,8 +84,8 @@ const processMessageBichard = async (
 
   const recordResult = await promisePoller({
     taskFn: fetchRecords,
-    interval: 10,
-    retries: 200
+    interval: 20,
+    retries: 1000
   })
 
   const exceptions = recordResult ? extractExceptionsFromAho(recordResult.annotated_msg) : []
@@ -105,8 +105,8 @@ const processMessageBichard = async (
   const triggerResult =
     (await promisePoller({
       taskFn: fetchTriggers,
-      interval: 10,
-      retries: 200
+      interval: 20,
+      retries: 1000
     }).catch(() => [])) ?? []
 
   const triggers = triggerResult.map((record) => ({
