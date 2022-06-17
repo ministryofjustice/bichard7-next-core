@@ -43,6 +43,14 @@ This requires the [old Bichard](https://github.com/ministryofjustice/bichard7-ne
 
 If all comparisons between the new and old Bichard are successful, `compareResults.ts` will exit with a `0` code. If any comparisions have failed or messages have been skipped, it will exit with a code of `1`.
 
+### Checking a comparison file
+
+You can run a cli tool to see if a comparison json file matches using:
+
+```
+npx ts-node src/comparison/compare.ts <path to json file>
+```
+
 ### Comparing outputs locally
 
 If being run locally, it may be clearer to run:

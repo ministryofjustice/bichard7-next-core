@@ -1,16 +1,7 @@
-import fs from "fs"
-import type ExcludedTriggerConfig from "src/types/ExcludedTriggerConfig"
+import { excludedTriggerConfig } from "@moj-bichard7-developers/bichard7-next-data"
 
-const prodConfigFile = "data/excluded-trigger-config.json"
-const testConfigFile = "data/excluded-trigger-config.test.json"
-
-const configFile = process.env.NODE_ENV === "test" ? testConfigFile : prodConfigFile
-
-const config = fs.readFileSync(configFile)
-if (!config) {
-  throw new Error(`Unable to load excluded trigger config from ${configFile}`)
+if (process.env.NODE_ENV === "test" && "01" in excludedTriggerConfig) {
+  delete excludedTriggerConfig["01"]
 }
 
-const parsedConfig = JSON.parse(config.toString()) as ExcludedTriggerConfig
-
-export default parsedConfig
+export default excludedTriggerConfig
