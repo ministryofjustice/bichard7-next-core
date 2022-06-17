@@ -4,12 +4,11 @@ import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
+import { asnPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
 type FieldPath = (string | number)[]
 
-const ARREST_SUMMONS_NUMBER_PATH: FieldPath =
-  "AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber".split(".")
 const COURT_HEARING_LOCATION_PATH: FieldPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
 
@@ -51,9 +50,9 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
   const generatedExceptions: Exception[] = []
 
   // Validate ASN
-  const arrestSummonsNumberException = findException(exceptions, generatedExceptions, ARREST_SUMMONS_NUMBER_PATH)
+  const arrestSummonsNumberException = findException(exceptions, generatedExceptions, asnPath)
   if (!arrestSummonsNumberException && ArrestSummonsNumber && !isAsnValid(ArrestSummonsNumber)) {
-    generatedExceptions.push({ code: ExceptionCode.HO100300, path: ARREST_SUMMONS_NUMBER_PATH })
+    generatedExceptions.push({ code: ExceptionCode.HO100300, path: asnPath })
   }
 
   const courtHearingLocationException = findException(exceptions!, generatedExceptions, COURT_HEARING_LOCATION_PATH)

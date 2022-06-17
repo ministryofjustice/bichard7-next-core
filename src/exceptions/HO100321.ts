@@ -1,10 +1,8 @@
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
+import { asnPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
 import { validateDummyASN } from "src/use-cases/validations"
-
-const ARREST_SUMMONS_NUMBER_PATH: (string | number)[] =
-  "AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber".split(".")
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const recordableOnPNCindicator = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
@@ -12,7 +10,7 @@ const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []
 
   if (recordableOnPNCindicator && validateDummyASN(asn)) {
-    generatedExceptions.push({ code: ExceptionCode.HO100321, path: ARREST_SUMMONS_NUMBER_PATH })
+    generatedExceptions.push({ code: ExceptionCode.HO100321, path: asnPath })
   }
 
   return generatedExceptions
