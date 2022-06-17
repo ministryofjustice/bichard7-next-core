@@ -14,8 +14,6 @@ import lookupOffenceCode from "src/utils/offence/lookupOffenceCode"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import type Exception from "src/types/Exception"
-import addError from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/addError"
-import { asnPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
 
 const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutcome) => {
   const parsedASN = parseASN(
@@ -58,13 +56,6 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
         hearingOutCome.Exceptions = hearingOutCome.Exceptions
           ? [...hearingOutCome.Exceptions, enrichedException]
           : [enrichedException]
-      }
-
-      if (
-        offence.AddedByTheCourt &&
-        hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-      ) {
-        addError(hearingOutCome, ExceptionCode.HO100507, asnPath)
       }
     }
   )
