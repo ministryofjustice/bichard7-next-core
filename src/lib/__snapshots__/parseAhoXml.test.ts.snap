@@ -346,6 +346,7 @@ Object {
       },
     },
   },
+  "Exceptions": Array [],
   "PncQuery": Object {
     "checkName": "SEXOFFENCE",
     "courtCases": Array [

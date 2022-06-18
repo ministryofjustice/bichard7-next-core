@@ -14,7 +14,7 @@ export interface Br7AnnotatedHearingOutcome {
   "br7:HearingOutcome": Br7HearingOutcome
   "br7:HasError": boolean
   CXE01: Cxe01
-  "br7:PNCQueryDate"?: string
+  "br7:PNCQueryDate"?: Br7TextString
   "@_xmlns:ds": string
   "@_xmlns:xsi": string
   "@_xmlns:br7": string
@@ -80,8 +80,8 @@ export interface DISList {
 }
 
 export interface Br7Duration {
-  "ds:DurationType": string
-  "ds:DurationUnit": string
+  "ds:DurationType": Br7TextString
+  "ds:DurationUnit": Br7TextString
   "ds:DurationLength": number
 }
 export interface Dis {
@@ -127,11 +127,11 @@ export interface Br7HearingOutcome {
 }
 
 export interface Br7Case {
-  "ds:PTIURN": string
-  "ds:CourtCaseReferenceNumber"?: string
+  "ds:PTIURN": Br7TextString
+  "ds:CourtCaseReferenceNumber"?: Br7TextString
   "ds:PreChargeDecisionIndicator": Br7LiteralTextString
   "br7:CourtReference": Br7CourtReference
-  "br7:PenaltyNoticeCaseReference"?: string
+  "br7:PenaltyNoticeCaseReference"?: Br7TextString
   "br7:RecordableOnPNCindicator"?: Br7LiteralTextString
   "br7:Urgent"?: Br7Urgent
   "br7:ForceOwner"?: Br7OrganisationUnit
@@ -142,162 +142,142 @@ export interface Br7Case {
 
 export interface Br7Urgent {
   "br7:urgent": Br7LiteralTextString
-  "br7:urgency": number
+  "br7:urgency": Br7TextString
 }
 
 export interface Br7CourtReference {
-  "ds:MagistratesCourtReference": string
+  "ds:MagistratesCourtReference": Br7TextString
 }
 
 export interface Br7HearingDefendant {
-  "br7:ArrestSummonsNumber": Br7ArrestSummonsNumber | string
-  "br7:PNCIdentifier"?: string
-  "br7:PNCCheckname"?: string
+  "br7:ArrestSummonsNumber": Br7ErrorTextString
+  "br7:PNCIdentifier"?: Br7TextString
+  "br7:PNCCheckname"?: Br7TextString
   "br7:DefendantDetail": Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
-  "br7:BailConditions"?: string[]
-  "br7:ReasonForBailConditions"?: string
-  "br7:CourtPNCIdentifier"?: string
+  "br7:BailConditions"?: Br7TextString[]
+  "br7:ReasonForBailConditions"?: Br7TextString
+  "br7:CourtPNCIdentifier"?: Br7TextString
   "br7:Offence": Br7Offence[]
   "@_hasError": boolean
 }
 
 export interface Br7Address {
-  "ds:AddressLine1": string
-  "ds:AddressLine2"?: string
-  "ds:AddressLine3"?: string
-}
-
-export interface Br7ArrestSummonsNumber {
-  "#text": string
-  "@_Error"?: string
+  "ds:AddressLine1": Br7TextString
+  "ds:AddressLine2"?: Br7TextString
+  "ds:AddressLine3"?: Br7TextString
 }
 
 export interface Br7DefendantDetail {
   "br7:PersonName": Br7PersonName
-  "br7:GeneratedPNCFilename"?: string
-  "br7:BirthDate"?: string
-  "br7:Gender": Br7Gender
-}
-
-export interface Br7Gender {
-  "#text"?: string | number
-  "@_Literal"?: string
-}
-
-export interface Br7NumberLiteral {
-  "#text"?: string | number
-  "@_Literal"?: string
+  "br7:GeneratedPNCFilename"?: Br7TextString
+  "br7:BirthDate"?: Br7TextString
+  "br7:Gender": Br7LiteralTextString
 }
 
 export interface Br7PersonName {
-  "ds:Title"?: string
-  "ds:GivenName": DsName
-  "ds:FamilyName": DsName
-}
-
-export interface DsName {
-  "#text": string
-  "@_NameSequence": string
+  "ds:Title"?: Br7TextString
+  "ds:GivenName": Br7NameSequenceTextString
+  "ds:FamilyName": Br7NameSequenceTextString
 }
 
 export interface Br7AlcoholLevel {
-  "ds:Amount": string
+  "ds:Amount": Br7TextString
   "ds:Method": Br7LiteralTextString
 }
 
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
   "ds:OffenceCategory": Br7LiteralTextString
-  "ds:ArrestDate"?: string
-  "ds:ChargeDate"?: string
+  "ds:ArrestDate"?: Br7TextString
+  "ds:ChargeDate"?: Br7TextString
   "ds:ActualOffenceDateCode": Br7NumberLiteral
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
-  "ds:LocationOfOffence": string
-  "ds:OffenceTitle"?: string
-  "ds:ActualOffenceWording": string
+  "ds:LocationOfOffence": Br7TextString
+  "ds:OffenceTitle"?: Br7TextString
+  "ds:ActualOffenceWording": Br7TextString
   "ds:RecordableOnPNCindicator"?: Br7LiteralTextString
-  "ds:NotifiableToHOindicator": Br7LiteralTextString
-  "ds:HomeOfficeClassification"?: string
+  "ds:NotifiableToHOindicator"?: Br7LiteralTextString
+  "ds:HomeOfficeClassification"?: Br7TextString
   "ds:AlcoholLevel"?: Br7AlcoholLevel
-  "ds:ConvictionDate"?: string
+  "ds:ConvictionDate"?: Br7TextString
   "br7:CommittedOnBail": Br7LiteralTextString
-  "br7:CourtOffenceSequenceNumber": number
+  "br7:CourtOffenceSequenceNumber": Br7TextString
   "br7:ManualSequenceNo"?: Br7LiteralTextString
   "br7:AddedByTheCourt"?: Br7LiteralTextString
-  "br7:CourtCaseReferenceNumber"?: string
+  "br7:CourtCaseReferenceNumber"?: Br7TextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": boolean
   "@_SchemaVersion": string
 }
 export interface Br7ResultQualifierVariable {
   "@_SchemaVersion": string
-  "ds:Code": string
+  "ds:Code": Br7TextString
 }
 export interface Br7Result {
-  "ds:CJSresultCode": number
+  "ds:CJSresultCode": Br7TextString
   "ds:OffenceRemandStatus"?: Br7LiteralTextString
   "ds:SourceOrganisation": Br7OrganisationUnit
-  "ds:CourtType"?: string
+  "ds:CourtType"?: Br7TextString
   "ds:ResultHearingType"?: Br7LiteralTextString
-  "ds:ResultHearingDate"?: string
+  "ds:ResultHearingDate"?: Br7TextString
   "ds:Duration"?: Br7Duration[]
   "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
-  "ds:NextCourtType"?: string
-  "ds:NextHearingDate"?: string
-  "ds:NextHearingTime"?: string
-  "ds:BailCondition"?: string[] | string
+  "ds:NextCourtType"?: Br7TextString
+  "ds:NextHearingDate"?: Br7TextString
+  "ds:NextHearingTime"?: Br7TextString
+  "ds:BailCondition"?: Br7TextString[]
   "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
-  // "ds:NumberSpecifiedInResult": string
+  // "ds:NumberSpecifiedInResult": Br7TextString
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
-  "ds:ResultVariableText"?: string
-  "ds:WarrantIssueDate"?: string
-  "ds:ResultHalfLifeHours"?: number
-  "br7:PNCDisposalType"?: number
-  "br7:ResultClass"?: string
-  "br7:ReasonForOffenceBailConditions"?: string
+  "ds:ResultVariableText"?: Br7TextString
+  "ds:WarrantIssueDate"?: Br7TextString
+  "ds:ResultHalfLifeHours"?: Br7TextString
+  "br7:PNCDisposalType"?: Br7TextString
+  "br7:ResultClass"?: Br7TextString
+  "br7:ReasonForOffenceBailConditions"?: Br7TextString
   "br7:Urgent"?: Br7Urgent
   "br7:PNCAdjudicationExists"?: Br7LiteralTextString
-  "br7:NumberOfOffencesTIC"?: string
+  "br7:NumberOfOffencesTIC"?: Br7TextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
-  "br7:ConvictingCourt"?: string
+  "br7:ConvictingCourt"?: Br7TextString
   "@_hasError": boolean
   "@_SchemaVersion": string
 }
 
 export interface Br7OrganisationUnit {
-  "ds:TopLevelCode"?: string
-  "ds:SecondLevelCode": string
-  "ds:ThirdLevelCode": string
-  "ds:BottomLevelCode": string
-  "ds:OrganisationUnitCode": string
+  "ds:TopLevelCode"?: Br7TextString
+  "ds:SecondLevelCode": Br7TextString
+  "ds:ThirdLevelCode": Br7TextString
+  "ds:BottomLevelCode": Br7TextString
+  "ds:OrganisationUnitCode": Br7TextString
   "@_SchemaVersion": string
 }
 
 export interface DsActualOffenceEndDate {
-  "ds:EndDate"?: string
+  "ds:EndDate"?: Br7TextString
 }
 
 export interface DsActualOffenceStartDate {
-  "ds:StartDate": string
+  "ds:StartDate": Br7TextString
 }
 
 export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
   "ds:OffenceReason"?: Br7OffenceReason
-  "ds:OffenceReasonSequence"?: string
+  "ds:OffenceReasonSequence"?: Br7TextString
   "@_SchemaVersion": string
 }
 
 export interface DsDefendantOrOffender {
-  "ds:Year"?: string
+  "ds:Year"?: Br7TextString
   "ds:OrganisationUnitIdentifierCode": Br7OrganisationUnit
-  "ds:DefendantOrOffenderSequenceNumber"?: string
-  "ds:CheckDigit"?: string
+  "ds:DefendantOrOffenderSequenceNumber"?: Br7TextString
+  "ds:CheckDigit"?: Br7TextString
 }
 
 export interface Br7OffenceReason {
@@ -306,60 +286,81 @@ export interface Br7OffenceReason {
 }
 
 export interface NonMatchingOffenceCode {
-  "ds:ActOrSource": string
-  "ds:Year"?: string
-  "ds:Reason": string
-  "ds:Qualifier"?: string
+  "ds:ActOrSource": Br7TextString
+  "ds:Year"?: Br7TextString
+  "ds:Reason": Br7TextString
+  "ds:Qualifier"?: Br7TextString
 }
 
 export interface CommonLawOffenceCode {
-  "ds:CommonLawOffence": string
-  "ds:Reason": string
-  "ds:Qualifier"?: string
+  "ds:CommonLawOffence": Br7TextString
+  "ds:Reason": Br7TextString
+  "ds:Qualifier"?: Br7TextString
 }
 
 export interface IndictmentOffenceCode {
-  "ds:Reason": string
-  "ds:Qualifier"?: string
+  "ds:Reason": Br7TextString
+  "ds:Qualifier"?: Br7TextString
 }
 
 export interface DsLocalOffenceCode {
-  "ds:AreaCode": string
+  "ds:AreaCode": Br7TextString
   "ds:OffenceCode": Br7ErrorTextString
 }
 
 export interface Br7Hearing {
   "ds:CourtHearingLocation": Br7OrganisationUnit
-  "ds:DateOfHearing": string
-  "ds:TimeOfHearing": string
+  "ds:DateOfHearing": Br7TextString
+  "ds:TimeOfHearing": Br7TextString
   "ds:HearingLanguage": Br7LiteralTextString
   "ds:HearingDocumentationLanguage": Br7LiteralTextString
   "ds:DefendantPresentAtHearing": Br7LiteralTextString
   "br7:SourceReference": Br7SourceReference
   "br7:CourtType"?: Br7LiteralTextString
-  "br7:CourtHouseCode": number
-  "br7:CourtHouseName"?: string
+  "br7:CourtHouseCode": Br7TextString
+  "br7:CourtHouseName"?: Br7TextString
   "@_hasError": boolean
   "@_SchemaVersion": string
 }
 
 export interface Br7SourceReference {
-  "br7:DocumentName": string
-  "br7:UniqueID": string
-  "br7:DocumentType": string
+  "br7:DocumentName": Br7TextString
+  "br7:UniqueID": Br7TextString
+  "br7:DocumentType": Br7TextString
 }
 
 export interface Br7LiteralTextString {
-  "#text"?: string
+  "#text": string
   "@_Literal"?: string
 }
 
 export interface Br7TypeTextString {
-  "#text"?: string
+  "#text": string
   "@_Type"?: string
 }
 
 export interface Br7ErrorTextString {
-  "#text"?: string
+  "#text": string
   "@_Error"?: string
+}
+
+export interface Br7NumberLiteral {
+  "#text"?: string | number
+  "@_Literal"?: string
+}
+
+export interface Br7NameSequenceTextString {
+  "#text": string
+  "@_NameSequence": string
+}
+
+export interface Br7TextString {
+  "#text": string
+  "@_Error"?: string
+}
+
+export type GenericRawAhoValue = GenericRawAho | GenericRawAho[] | Br7TextString | Br7TextString[] | string
+
+export type GenericRawAho = {
+  [key: string]: GenericRawAhoValue
 }
