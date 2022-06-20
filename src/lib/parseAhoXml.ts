@@ -60,7 +60,7 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
   return durationArray.map((d) => ({
     DurationType: d["ds:DurationType"]["#text"],
     DurationUnit: d["ds:DurationUnit"]["#text"],
-    DurationLength: Number(d["ds:DurationLength"])
+    DurationLength: Number(d["ds:DurationLength"]["#text"])
   }))
 }
 
@@ -235,7 +235,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
     (xmlOffence) =>
       ({
         CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
-        OffenceCategory: xmlOffence["ds:OffenceCategory"]["#text"],
+        OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
         // OffenceInitiationCode: xmlOffence.
         OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
         // SummonsCode: xmlOffence.Sum
@@ -282,7 +282,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
           ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
           : undefined,
-        CourtCaseReferenceNumber: xmlOffence["br7:CourtCaseReferenceNumber"],
+        CourtCaseReferenceNumber: xmlOffence["br7:CourtCaseReferenceNumber"]?.["#text"],
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]
