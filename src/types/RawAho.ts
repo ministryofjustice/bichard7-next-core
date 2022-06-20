@@ -150,7 +150,7 @@ export interface Br7CourtReference {
 }
 
 export interface Br7HearingDefendant {
-  "br7:ArrestSummonsNumber": Br7ErrorTextString
+  "br7:ArrestSummonsNumber": Br7TextString
   "br7:PNCIdentifier"?: Br7TextString
   "br7:PNCCheckname"?: Br7TextString
   "br7:DefendantDetail": Br7DefendantDetail
@@ -192,7 +192,7 @@ export interface Br7Offence {
   "ds:OffenceCategory": Br7LiteralTextString
   "ds:ArrestDate"?: Br7TextString
   "ds:ChargeDate"?: Br7TextString
-  "ds:ActualOffenceDateCode": Br7NumberLiteral
+  "ds:ActualOffenceDateCode": Br7LiteralTextString
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
   "ds:LocationOfOffence": Br7TextString
@@ -305,7 +305,7 @@ export interface IndictmentOffenceCode {
 
 export interface DsLocalOffenceCode {
   "ds:AreaCode": Br7TextString
-  "ds:OffenceCode": Br7ErrorTextString
+  "ds:OffenceCode": Br7TextString
 }
 
 export interface Br7Hearing {
@@ -329,34 +329,20 @@ export interface Br7SourceReference {
   "br7:DocumentType": Br7TextString
 }
 
-export interface Br7LiteralTextString {
-  "#text": string
-  "@_Literal"?: string
-}
-
-export interface Br7TypeTextString {
-  "#text": string
-  "@_Type"?: string
-}
-
-export interface Br7ErrorTextString {
-  "#text": string
-  "@_Error"?: string
-}
-
-export interface Br7NumberLiteral {
-  "#text"?: string | number
-  "@_Literal"?: string
-}
-
-export interface Br7NameSequenceTextString {
-  "#text": string
-  "@_NameSequence": string
-}
-
 export interface Br7TextString {
   "#text": string
   "@_Error"?: string
+}
+export interface Br7LiteralTextString extends Br7TextString {
+  "@_Literal"?: string
+}
+
+export interface Br7TypeTextString extends Br7TextString {
+  "@_Type"?: string
+}
+
+export interface Br7NameSequenceTextString extends Br7TextString {
+  "@_NameSequence": string
 }
 
 export type GenericRawAhoValue = GenericRawAho | GenericRawAho[] | Br7TextString | Br7TextString[] | string

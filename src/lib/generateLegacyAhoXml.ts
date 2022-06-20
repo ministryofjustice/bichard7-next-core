@@ -283,7 +283,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "ds:ArrestDate": offence.ArrestDate ? text(format(offence.ArrestDate, "yyyy-MM-dd")) : undefined,
     "ds:ChargeDate": offence.ChargeDate ? text(format(offence.ChargeDate, "yyyy-MM-dd")) : undefined,
     "ds:ActualOffenceDateCode": {
-      "#text": Number(offence.ActualOffenceDateCode),
+      "#text": offence.ActualOffenceDateCode,
       "@_Literal": offence.ActualOffenceDateCode
         ? lookupOffenceDateCodeByCjsCode(offence.ActualOffenceDateCode)?.description
         : undefined
