@@ -82,7 +82,7 @@ export interface DISList {
 export interface Br7Duration {
   "ds:DurationType": Br7TextString
   "ds:DurationUnit": Br7TextString
-  "ds:DurationLength": number
+  "ds:DurationLength": Br7TextString
 }
 export interface Dis {
   "@_IntfcUpdateType": string
@@ -189,7 +189,7 @@ export interface Br7AlcoholLevel {
 
 export interface Br7Offence {
   "ds:CriminalProsecutionReference": Br7CriminalProsecutionReference
-  "ds:OffenceCategory": Br7LiteralTextString
+  "ds:OffenceCategory"?: Br7LiteralTextString
   "ds:ArrestDate"?: Br7TextString
   "ds:ChargeDate"?: Br7TextString
   "ds:ActualOffenceDateCode": Br7LiteralTextString

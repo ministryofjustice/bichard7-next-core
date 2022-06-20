@@ -18,7 +18,7 @@ import {
   TAGGING_FIX_REMOVE,
   WARRANT_ISSUE_DATE_RESULT_CODES
 } from "src/lib/properties"
-import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
+import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
 import type { CjsPlea } from "src/types/Plea"
 import type { CjsVerdict } from "src/types/Verdict"
@@ -47,10 +47,10 @@ export interface OffenceResultsResult {
   bailQualifiers: string[]
 }
 
-const createDuration = (durationUnit?: string, durationValue?: number) => ({
+const createDuration = (durationUnit: string, durationValue: number): Duration => ({
   DurationType: DURATION_TYPES.DURATION,
   DurationUnit: !durationUnit || durationUnit === "." ? DURATION_UNITS.SESSIONS : durationUnit,
-  DurationLength: parseInt(durationValue?.toString() ?? "", 10)
+  DurationLength: durationValue
 })
 
 export default class {
@@ -159,10 +159,12 @@ export default class {
           DurationStartDate: spiDurationStartDate,
           DurationEndDate: spiDurationEndDate
         } = spiDuration
-        result.Duration?.push(createDuration(spiDurationUnit, spiDurationValue))
+        if (spiDurationUnit && spiDurationValue !== undefined) {
+          result.Duration.push(createDuration(spiDurationUnit, spiDurationValue))
+        }
 
-        if (spiSecondaryDurationValue) {
-          result.Duration?.push(createDuration(spiSecondaryDurationUnit, spiSecondaryDurationValue))
+        if (spiSecondaryDurationUnit && spiSecondaryDurationValue !== undefined) {
+          result.Duration.push(createDuration(spiSecondaryDurationUnit, spiSecondaryDurationValue))
         }
 
         result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
