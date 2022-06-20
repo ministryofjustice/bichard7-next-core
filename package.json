@@ -85,7 +85,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.110.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.17",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.18",
     "date-fns": "^2.28.0",
     "diff": "^5.1.0",
     "fast-xml-parser": "^4.0.7",
