@@ -23,6 +23,7 @@ import type {
   Br7OffenceReason,
   Br7OrganisationUnit,
   Br7Result,
+  Br7TextString,
   Br7Urgent,
   Cxe01,
   DISList,
@@ -39,9 +40,9 @@ import {
   lookupOffenceDateCodeByCjsCode,
   lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
-  lookupSummonsCodeByCjsCode,
   lookupVerdictByCjsCode
 } from "src/use-cases/dataLookup"
+import addExceptionsToRawAho from "./addExceptionsToRawAho"
 
 const hasError = (exceptions: Exception[] | undefined, path: (string | number)[] = []): boolean => {
   if (!exceptions || exceptions.length === 0) {
@@ -94,7 +95,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
     throw new Error("Invalid literal type specified")
   }
 
-  if (!literalAttribute) {
+  if (!literalAttribute || literalText === undefined) {
     throw new Error("Literal lookup not found")
   }
 
@@ -108,49 +109,58 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
   return literal(value, type)
 }
 
+const text = (t: string): Br7TextString => ({ "#text": t })
+const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
+
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
-  "ds:TopLevelCode": orgUnit.TopLevelCode,
-  "ds:SecondLevelCode": orgUnit.SecondLevelCode,
-  "ds:ThirdLevelCode": orgUnit.ThirdLevelCode,
-  "ds:BottomLevelCode": orgUnit.BottomLevelCode,
-  "ds:OrganisationUnitCode": orgUnit.OrganisationUnitCode,
+  "ds:TopLevelCode": optionalText(orgUnit.TopLevelCode),
+  "ds:SecondLevelCode": text(orgUnit.SecondLevelCode),
+  "ds:ThirdLevelCode": text(orgUnit.ThirdLevelCode),
+  "ds:BottomLevelCode": text(orgUnit.BottomLevelCode),
+  "ds:OrganisationUnitCode": text(orgUnit.OrganisationUnitCode),
   "@_SchemaVersion": "2.0"
 })
 
 const mapAhoUrgentToXml = (urgent: Urgent): Br7Urgent => ({
   "br7:urgent": { "#text": urgent.urgent ? "Y" : "N", "@_Literal": urgent.urgent ? "Yes" : "No" },
-  "br7:urgency": urgent.urgency
+  "br7:urgency": text(urgent.urgency.toString())
 })
 
 const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
   duration.map((d) => ({
-    "ds:DurationType": d.DurationType,
-    "ds:DurationUnit": d.DurationUnit,
+    "ds:DurationType": text(d.DurationType),
+    "ds:DurationUnit": text(d.DurationUnit),
     "ds:DurationLength": d.DurationLength
   }))
 
 const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefined): Br7Result[] =>
   results.map((result) => ({
-    "ds:CJSresultCode": result.CJSresultCode,
+    "ds:CJSresultCode": text(result.CJSresultCode.toString()),
     "ds:OffenceRemandStatus": optionalLiteral(result.OffenceRemandStatus, LiteralType.OffenceRemandStatus),
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
-    "ds:CourtType": result.CourtType,
-    "ds:ResultHearingType": { "#text": result.ResultHearingType, "@_Literal": "Other" },
-    "ds:ResultHearingDate": result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined,
-    "ds:BailCondition": result.BailCondition,
+    "ds:CourtType": optionalText(result.CourtType),
+    "ds:ResultHearingType": result.ResultHearingType
+      ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
+      : undefined,
+    "ds:ResultHearingDate": optionalText(
+      result.ResultHearingDate ? format(result.ResultHearingDate, "yyyy-MM-dd") : undefined
+    ),
+    "ds:BailCondition": result.BailCondition?.map(text),
     "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
       ? {
           "@_SchemaVersion": "2.0",
-          "ds:TopLevelCode": result.NextResultSourceOrganisation?.TopLevelCode,
-          "ds:SecondLevelCode": result.NextResultSourceOrganisation?.SecondLevelCode,
-          "ds:ThirdLevelCode": result.NextResultSourceOrganisation?.ThirdLevelCode,
-          "ds:BottomLevelCode": result.NextResultSourceOrganisation?.BottomLevelCode,
-          "ds:OrganisationUnitCode": result.NextResultSourceOrganisation?.OrganisationUnitCode
+          "ds:TopLevelCode": optionalText(result.NextResultSourceOrganisation?.TopLevelCode),
+          "ds:SecondLevelCode": text(result.NextResultSourceOrganisation?.SecondLevelCode),
+          "ds:ThirdLevelCode": text(result.NextResultSourceOrganisation?.ThirdLevelCode),
+          "ds:BottomLevelCode": text(result.NextResultSourceOrganisation?.BottomLevelCode),
+          "ds:OrganisationUnitCode": text(result.NextResultSourceOrganisation?.OrganisationUnitCode)
         }
       : undefined,
-    "ds:NextCourtType": result.NextCourtType,
-    "ds:NextHearingDate": result.NextHearingDate ? format(result.NextHearingDate, "yyyy-MM-dd") : undefined,
-    "ds:NextHearingTime": result.NextHearingTime?.split(":").slice(0, 2).join(":"),
+    "ds:NextCourtType": optionalText(result.NextCourtType),
+    "ds:NextHearingDate": optionalText(
+      result.NextHearingDate ? format(result.NextHearingDate, "yyyy-MM-dd") : undefined
+    ),
+    "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
       "#text": amount.toFixed(2),
@@ -171,23 +181,23 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
             : undefined
         }
       : undefined,
-    "ds:ResultVariableText": result.ResultVariableText,
-    "ds:WarrantIssueDate": result.WarrantIssueDate ? format(result.WarrantIssueDate, "yyyy-MM-dd") : undefined,
-    "ds:ResultHalfLifeHours": result.ResultHalfLifeHours,
-    "br7:PNCDisposalType": result.PNCDisposalType,
-    "br7:ResultClass": result.ResultClass,
-    "br7:ReasonForOffenceBailConditions": result.ReasonForOffenceBailConditions,
+    "ds:ResultVariableText": optionalText(result.ResultVariableText),
+    "ds:WarrantIssueDate": result.WarrantIssueDate ? text(format(result.WarrantIssueDate, "yyyy-MM-dd")) : undefined,
+    "ds:ResultHalfLifeHours": result.ResultHalfLifeHours ? text(result.ResultHalfLifeHours.toString()) : undefined,
+    "br7:PNCDisposalType": result.PNCDisposalType ? text(result.PNCDisposalType.toString()) : undefined,
+    "br7:ResultClass": optionalText(result.ResultClass),
+    "br7:ReasonForOffenceBailConditions": optionalText(result.ReasonForOffenceBailConditions),
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists":
       result.PNCAdjudicationExists !== undefined
         ? { "#text": result.PNCAdjudicationExists ? "Y" : "N", "@_Literal": "No" }
         : undefined,
-    "br7:NumberOfOffencesTIC": result.NumberOfOffencesTIC?.toString(),
+    "br7:NumberOfOffencesTIC": optionalText(result.NumberOfOffencesTIC?.toString()),
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
-      "ds:Code": rqv.Code
+      "ds:Code": text(rqv.Code)
     })),
-    "br7:ConvictingCourt": result.ConvictingCourt,
+    "br7:ConvictingCourt": optionalText(result.ConvictingCourt),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
     "@_SchemaVersion": "2.0"
   }))
@@ -196,8 +206,8 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
   if (offenceReason.__type === "LocalOffenceReason") {
     return {
       "ds:LocalOffenceCode": {
-        "ds:AreaCode": offenceReason.LocalOffenceCode.AreaCode,
-        "ds:OffenceCode": { "#text": offenceReason.LocalOffenceCode.OffenceCode }
+        "ds:AreaCode": text(offenceReason.LocalOffenceCode.AreaCode),
+        "ds:OffenceCode": text(offenceReason.LocalOffenceCode.OffenceCode)
       }
     }
   }
@@ -206,25 +216,25 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
       case "NonMatchingOffenceCode":
         return {
           "ds:OffenceCode": {
-            "ds:ActOrSource": offenceReason.OffenceCode.ActOrSource,
-            "ds:Year": offenceReason.OffenceCode.Year,
-            "ds:Reason": offenceReason.OffenceCode.Reason,
-            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
+            "ds:ActOrSource": text(offenceReason.OffenceCode.ActOrSource),
+            "ds:Year": optionalText(offenceReason.OffenceCode.Year),
+            "ds:Reason": text(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
           }
         }
       case "CommonLawOffenceCode":
         return {
           "ds:OffenceCode": {
-            "ds:CommonLawOffence": offenceReason.OffenceCode.CommonLawOffence,
-            "ds:Reason": offenceReason.OffenceCode.Reason,
-            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
+            "ds:CommonLawOffence": text(offenceReason.OffenceCode.CommonLawOffence),
+            "ds:Reason": text(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
           }
         }
       case "IndictmentOffenceCode":
         return {
           "ds:OffenceCode": {
-            "ds:Reason": offenceReason.OffenceCode.Reason,
-            "ds:Qualifier": offenceReason.OffenceCode.Qualifier
+            "ds:Reason": text(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
           }
         }
     }
@@ -235,29 +245,32 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
   offences.map((offence, index) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
-        "ds:Year": offence.CriminalProsecutionReference.DefendantOrOffender?.Year,
+        "ds:Year": optionalText(offence.CriminalProsecutionReference.DefendantOrOffender?.Year),
         "ds:OrganisationUnitIdentifierCode": {
-          "ds:SecondLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.SecondLevelCode,
-          "ds:ThirdLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.ThirdLevelCode,
-          "ds:BottomLevelCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.BottomLevelCode,
-          "ds:OrganisationUnitCode":
-            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
-              .OrganisationUnitCode,
+          "ds:SecondLevelCode": text(
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.SecondLevelCode
+          ),
+          "ds:ThirdLevelCode": text(
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.ThirdLevelCode
+          ),
+          "ds:BottomLevelCode": text(
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.BottomLevelCode
+          ),
+          "ds:OrganisationUnitCode": text(
+            offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode.OrganisationUnitCode
+          ),
           "@_SchemaVersion": "2.0"
         },
-        "ds:DefendantOrOffenderSequenceNumber":
-          offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber,
-        "ds:CheckDigit": offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit
+        "ds:DefendantOrOffenderSequenceNumber": text(
+          offence.CriminalProsecutionReference.DefendantOrOffender?.DefendantOrOffenderSequenceNumber
+        ),
+        "ds:CheckDigit": text(offence.CriminalProsecutionReference.DefendantOrOffender?.CheckDigit)
       },
       "ds:OffenceReason": offence.CriminalProsecutionReference.OffenceReason
         ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
         : undefined,
-      "ds:OffenceReasonSequence": offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(
-        3,
-        "0"
+      "ds:OffenceReasonSequence": optionalText(
+        offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
       ),
       "@_SchemaVersion": "2.0"
     },
@@ -267,43 +280,42 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
         ? lookupOffenceCategoryByCjsCode(offence.OffenceCategory)?.description
         : undefined
     },
-    "ds:ArrestDate": offence.ArrestDate ? format(offence.ArrestDate, "yyyy-MM-dd") : undefined,
-    "ds:ChargeDate": offence.ChargeDate ? format(offence.ChargeDate, "yyyy-MM-dd") : undefined,
+    "ds:ArrestDate": offence.ArrestDate ? text(format(offence.ArrestDate, "yyyy-MM-dd")) : undefined,
+    "ds:ChargeDate": offence.ChargeDate ? text(format(offence.ChargeDate, "yyyy-MM-dd")) : undefined,
     "ds:ActualOffenceDateCode": {
-      "#text": Number(offence.ActualOffenceDateCode),
+      "#text": offence.ActualOffenceDateCode,
       "@_Literal": offence.ActualOffenceDateCode
         ? lookupOffenceDateCodeByCjsCode(offence.ActualOffenceDateCode)?.description
         : undefined
     },
-    "ds:ActualOffenceStartDate": { "ds:StartDate": format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd") },
+    "ds:ActualOffenceStartDate": {
+      "ds:StartDate": text(format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd"))
+    },
     "ds:ActualOffenceEndDate":
       offence.ActualOffenceEndDate && offence.ActualOffenceEndDate.EndDate
         ? {
             "ds:EndDate": offence.ActualOffenceEndDate?.EndDate
-              ? format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
+              ? text(format(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd"))
               : undefined
           }
         : undefined,
-    "ds:LocationOfOffence": offence.LocationOfOffence,
-    "ds:OffenceTitle": offence.OffenceTitle,
-    "ds:ActualOffenceWording": offence.ActualOffenceWording,
+    "ds:LocationOfOffence": text(offence.LocationOfOffence),
+    "ds:OffenceTitle": optionalText(offence.OffenceTitle),
+    "ds:ActualOffenceWording": text(offence.ActualOffenceWording),
     "ds:RecordableOnPNCindicator": optionalLiteral(offence.RecordableOnPNCindicator, LiteralType.YesNo),
-    "ds:NotifiableToHOindicator": {
-      "#text": offence.NotifiableToHOindicator ? "Y" : "N",
-      "@_Literal": offence.NotifiableToHOindicator ? "Yes" : "No"
-    },
-    "ds:HomeOfficeClassification": offence.HomeOfficeClassification,
+    "ds:NotifiableToHOindicator": optionalLiteral(offence.NotifiableToHOindicator, LiteralType.YesNo),
+    "ds:HomeOfficeClassification": optionalText(offence.HomeOfficeClassification),
     "ds:AlcoholLevel": offence.AlcoholLevel
       ? {
-          "ds:Amount": offence.AlcoholLevel?.Amount,
+          "ds:Amount": text(offence.AlcoholLevel?.Amount),
           "ds:Method": literal(offence.AlcoholLevel.Method, LiteralType.AlcoholLevelMethod)
         }
       : undefined,
-    "ds:ConvictionDate": offence.ConvictionDate ? format(offence.ConvictionDate, "yyyy-MM-dd") : undefined,
+    "ds:ConvictionDate": offence.ConvictionDate ? text(format(offence.ConvictionDate, "yyyy-MM-dd")) : undefined,
     "br7:CommittedOnBail": { "#text": String(offence.CommittedOnBail), "@_Literal": "Don't Know" },
-    "br7:CourtOffenceSequenceNumber": offence.CourtOffenceSequenceNumber,
+    "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
-    "br7:CourtCaseReferenceNumber": offence.CourtCaseReferenceNumber,
+    "br7:CourtCaseReferenceNumber": optionalText(offence.CourtCaseReferenceNumber),
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",
@@ -317,47 +329,43 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
   }))
 
 const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case => ({
-  "ds:PTIURN": c.PTIURN,
-  "ds:PreChargeDecisionIndicator": { "#text": c.PreChargeDecisionIndicator ? "Y" : "N", "@_Literal": "No" },
-  "ds:CourtCaseReferenceNumber": c.CourtCaseReferenceNumber,
-  "br7:CourtReference": { "ds:MagistratesCourtReference": c.CourtReference.MagistratesCourtReference },
-  "br7:PenaltyNoticeCaseReference": c.PenaltyNoticeCaseReferenceNumber,
+  "ds:PTIURN": text(c.PTIURN),
+  "ds:PreChargeDecisionIndicator": literal(c.PreChargeDecisionIndicator, LiteralType.YesNo),
+  "ds:CourtCaseReferenceNumber": optionalText(c.CourtCaseReferenceNumber),
+  "br7:CourtReference": { "ds:MagistratesCourtReference": text(c.CourtReference.MagistratesCourtReference) },
+  "br7:PenaltyNoticeCaseReference": optionalText(c.PenaltyNoticeCaseReferenceNumber),
   "br7:RecordableOnPNCindicator": optionalLiteral(c.RecordableOnPNCindicator, LiteralType.YesNo),
   "br7:Urgent": c.Urgent ? mapAhoUrgentToXml(c.Urgent) : undefined,
   "br7:ForceOwner": c.ForceOwner ? mapAhoOrgUnitToXml(c.ForceOwner) : undefined,
   "br7:HearingDefendant": {
-    "br7:ArrestSummonsNumber": {
-      "#text": c.HearingDefendant.ArrestSummonsNumber,
-      "@_Error": c.HearingDefendant.ArrestSummonsNumber
-        ? lookupSummonsCodeByCjsCode(c.HearingDefendant.ArrestSummonsNumber)?.description
-        : undefined
-    },
-    "br7:PNCIdentifier": c.HearingDefendant.PNCIdentifier,
-    "br7:PNCCheckname": c.HearingDefendant.PNCCheckname,
+    "br7:ArrestSummonsNumber": text(c.HearingDefendant.ArrestSummonsNumber),
+    "br7:PNCIdentifier": optionalText(c.HearingDefendant.PNCIdentifier),
+    "br7:PNCCheckname": optionalText(c.HearingDefendant.PNCCheckname),
     "br7:DefendantDetail": {
       "br7:PersonName": {
-        "ds:Title": c.HearingDefendant.DefendantDetail.PersonName.Title,
+        "ds:Title": optionalText(c.HearingDefendant.DefendantDetail.PersonName.Title),
         "ds:GivenName": {
           "#text": c.HearingDefendant.DefendantDetail.PersonName.GivenName.join(" "),
           "@_NameSequence": "1"
         },
         "ds:FamilyName": { "#text": c.HearingDefendant.DefendantDetail.PersonName.FamilyName, "@_NameSequence": "1" }
       },
-      "br7:GeneratedPNCFilename": c.HearingDefendant.DefendantDetail.GeneratedPNCFilename,
+      "br7:GeneratedPNCFilename": optionalText(c.HearingDefendant.DefendantDetail.GeneratedPNCFilename),
       "br7:BirthDate": c.HearingDefendant.DefendantDetail.BirthDate
-        ? format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd")
+        ? text(format(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd"))
         : undefined,
       "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
     },
     "br7:Address": {
-      "ds:AddressLine1": c.HearingDefendant.Address.AddressLine1,
-      "ds:AddressLine2": c.HearingDefendant.Address.AddressLine2,
-      "ds:AddressLine3": c.HearingDefendant.Address.AddressLine3
+      "ds:AddressLine1": text(c.HearingDefendant.Address.AddressLine1),
+      "ds:AddressLine2": optionalText(c.HearingDefendant.Address.AddressLine2),
+      "ds:AddressLine3": optionalText(c.HearingDefendant.Address.AddressLine3)
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
-    "br7:BailConditions": c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions : undefined,
-    "br7:ReasonForBailConditions": c.HearingDefendant.ReasonForBailConditions,
-    "br7:CourtPNCIdentifier": c.HearingDefendant.CourtPNCIdentifier,
+    "br7:BailConditions":
+      c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions.map(text) : undefined,
+    "br7:ReasonForBailConditions": optionalText(c.HearingDefendant.ReasonForBailConditions),
+    "br7:CourtPNCIdentifier": optionalText(c.HearingDefendant.CourtPNCIdentifier),
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
     "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
   },
@@ -395,8 +403,8 @@ const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
 
 const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefined): Br7Hearing => ({
   "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
-  "ds:DateOfHearing": format(hearing.DateOfHearing, "yyyy-MM-dd"),
-  "ds:TimeOfHearing": hearing.TimeOfHearing,
+  "ds:DateOfHearing": text(format(hearing.DateOfHearing, "yyyy-MM-dd")),
+  "ds:TimeOfHearing": text(hearing.TimeOfHearing),
   "ds:HearingLanguage": { "#text": hearing.HearingLanguage, "@_Literal": "Don't Know" },
   "ds:HearingDocumentationLanguage": { "#text": hearing.HearingDocumentationLanguage, "@_Literal": "Don't Know" },
   "ds:DefendantPresentAtHearing": {
@@ -404,13 +412,13 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "@_Literal": lookupDefendantPresentAtHearingByCjsCode(hearing.DefendantPresentAtHearing)?.description
   },
   "br7:SourceReference": {
-    "br7:DocumentName": hearing.SourceReference.DocumentName,
-    "br7:UniqueID": hearing.SourceReference.UniqueID,
-    "br7:DocumentType": hearing.SourceReference.DocumentType
+    "br7:DocumentName": text(hearing.SourceReference.DocumentName),
+    "br7:UniqueID": text(hearing.SourceReference.UniqueID),
+    "br7:DocumentType": text(hearing.SourceReference.DocumentType)
   },
   "br7:CourtType": optionalLiteral(hearing.CourtType, LiteralType.CourtType),
-  "br7:CourtHouseCode": hearing.CourtHouseCode,
-  "br7:CourtHouseName": hearing.CourtHouseName,
+  "br7:CourtHouseCode": text(hearing.CourtHouseCode.toString()),
+  "br7:CourtHouseName": optionalText(hearing.CourtHouseName),
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
   "@_SchemaVersion": "4.0"
 })
@@ -498,6 +506,7 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
 
   const builder = new XMLBuilder(options)
   const xmlAho = mapAhoToXml(hearingOutcome)
+  addExceptionsToRawAho(xmlAho, hearingOutcome.Exceptions)
   const xml = builder.build(xmlAho)
 
   return xml
