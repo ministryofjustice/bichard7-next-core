@@ -2,8 +2,7 @@ jest.mock("src/use-cases/dataLookup")
 import {
   GUILTY_OF_ALTERNATIVE,
   PNC_DISPOSAL_TYPE,
-  RESULT_ADJOURNMENT_WITH_JUDGEMENT,
-  RESULT_JUDGEMENT_WITH_FINAL_RESULT,
+  ResultClass,
   VICTIM_SURCHARGE_AMOUNT_IN_POUNDS
 } from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
@@ -23,7 +22,6 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 123,
-      ResultClass: "",
       CRESTDisposalCode: "FDINST",
       ResultVariableText: "It expects to see {victim surcharge}",
       AmountSpecifiedInResult: [345, VICTIM_SURCHARGE_AMOUNT_IN_POUNDS],
@@ -47,7 +45,6 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 123,
-      ResultClass: "",
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [0],
@@ -81,7 +78,7 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 123,
-      ResultClass: RESULT_JUDGEMENT_WITH_FINAL_RESULT,
+      ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [0],
@@ -115,7 +112,7 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 123,
-      ResultClass: RESULT_ADJOURNMENT_WITH_JUDGEMENT,
+      ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [0],
@@ -149,7 +146,7 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 123,
-      ResultClass: "Dummy Result Class",
+      ResultClass: ResultClass.UNRESULTED,
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [0],
@@ -178,7 +175,7 @@ describe("populatePncDisposal", () => {
     } as AnnotatedHearingOutcome
     const result = {
       CJSresultCode: 999,
-      ResultClass: "Dummy Result Class",
+      ResultClass: ResultClass.UNRESULTED,
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [0],

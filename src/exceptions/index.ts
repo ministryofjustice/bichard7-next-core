@@ -6,6 +6,7 @@ import type { KeyValue } from "src/types/KeyValue"
 const exceptionCodes = [
   ExceptionCode.HO100206,
   ExceptionCode.HO100300,
+  ExceptionCode.HO100305,
   ExceptionCode.HO100321,
   ExceptionCode.HO100322,
   ExceptionCode.HO100507

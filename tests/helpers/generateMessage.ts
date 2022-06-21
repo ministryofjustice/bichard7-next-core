@@ -35,6 +35,7 @@ type Offence = {
   location?: string
   offenceWording?: string
   offenceSequenceNumber?: number
+  convictionDate?: string | null
 }
 
 type Person = {
