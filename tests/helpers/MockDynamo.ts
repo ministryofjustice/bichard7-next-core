@@ -1,4 +1,5 @@
 import * as dynamodb from "@aws-sdk/client-dynamodb"
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dynalite = require("dynalite") as any
 
 export default class MockDynamo {
