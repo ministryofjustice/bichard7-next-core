@@ -2,17 +2,16 @@ import S3rver from "s3rver"
 import { S3Client, CreateBucketCommand } from "@aws-sdk/client-s3"
 
 export default class MockS3 {
-  server: S3rver
+  private readonly server: S3rver
 
-  port: number
+  private readonly port = 21001
 
-  bucket: string
+  private readonly bucket: string
 
-  constructor(port: number, bucket: string) {
-    this.port = port
+  constructor(bucket: string) {
     this.bucket = bucket
     this.server = new S3rver({
-      port,
+      port: this.port,
       address: "localhost",
       silent: true,
       configureBuckets: [

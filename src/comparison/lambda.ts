@@ -1,20 +1,10 @@
-import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import compare from "src/comparison/compare"
 import { z } from "zod"
 import type { ComparisonResult } from "./compare"
+import createS3Config from "./createS3Config"
 import getFileFromS3 from "./getFileFromS3"
 
-const s3Config: S3ClientConfig = {
-  endpoint: process.env.S3_ENDPOINT ?? "https://s3.eu-west-2.amazonaws.com",
-  region: process.env.S3_REGION ?? "eu-west-2",
-  forcePathStyle: true
-}
-if (process.env.S3_AWS_ACCESS_KEY_ID && process.env.S3_AWS_ACCESS_KEY_ID) {
-  s3Config.credentials = {
-    accessKeyId: process.env.S3_AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_AWS_ACCESS_KEY_ID
-  }
-}
+const s3Config = createS3Config()
 
 const inputSchema = z.object({
   detail: z.object({
