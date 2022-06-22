@@ -10,8 +10,8 @@ import { ZodError } from "zod"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import type * as dynamodb from "@aws-sdk/client-dynamodb"
 import createS3Config from "./createS3Config"
-import { isError } from "lodash"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { isError } from "src/comparison/Types"
+import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 
@@ -19,7 +19,7 @@ const bucket = "comparison-bucket"
 const s3Config = createS3Config()
 
 const dynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
-  TableName: "core-comparison",
+  TableName: process.env.COMPARISON_TABLE_NAME,
   KeySchema: [{ AttributeName: "s3Path", KeyType: "HASH" }],
   AttributeDefinitions: [{ AttributeName: "s3Path", AttributeType: "S" }],
   BillingMode: "PAY_PER_REQUEST"
@@ -56,7 +56,7 @@ describe("Comparison lambda", () => {
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
 
-  it.only("should return a passing comparison result", async () => {
+  it("should return a passing comparison result", async () => {
     const mockedDate = new Date()
     MockDate.set(mockedDate)
     const response = await uploadFile("test-data/comparison/passing.json")
@@ -78,6 +78,7 @@ describe("Comparison lambda", () => {
 
     const actualRecord = record as DocumentClient.GetItemOutput
     expect(actualRecord.Item).toStrictEqual({
+      _: "_",
       s3Path,
       initialRunAt: mockedDate.toISOString(),
       initialResult: 1,
@@ -121,17 +122,5 @@ describe("Comparison lambda", () => {
       expect(error).toBeInstanceOf(ZodError)
       expect((error as ZodError).issues[0].code).toBe("invalid_type")
     }
-  })
-
-  it("can call the mock dynamo db", async () => {
-    await dynamoGateway.insertOne(dynamoDbTableConfig.TableName!, { s3Path: "somePath" }, "s3Path")
-
-    const result = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", "somePath")
-    expect(result).toEqual({
-      Item: {
-        _: "_",
-        s3Path: "somePath"
-      }
-    })
   })
 })
