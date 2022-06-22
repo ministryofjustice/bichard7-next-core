@@ -7,7 +7,10 @@ export default class DynamoGateway {
 
   protected readonly client: DocumentClient
 
+  private readonly tableName: string
+
   constructor(config: DynamoDbConfig) {
+    this.tableName = config.TABLE_NAME
     const conf: DynamoDB.ClientConfiguration = {
       endpoint: config.DYNAMO_URL,
       region: config.DYNAMO_REGION,
@@ -21,9 +24,9 @@ export default class DynamoGateway {
     })
   }
 
-  insertOne<T>(tableName: string, record: T, keyName: string): PromiseResult<void> {
+  insertOne<T>(record: T, keyName: string): PromiseResult<void> {
     const params: DocumentClient.PutItemInput = {
-      TableName: tableName,
+      TableName: this.tableName,
       Item: { _: "_", ...record },
       ConditionExpression: `attribute_not_exists(${keyName})`
     }
@@ -35,9 +38,9 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  updateOne<T>(tableName: string, record: T, keyName: string, version: number): PromiseResult<void> {
+  updateOne<T>(record: T, keyName: string, version: number): PromiseResult<void> {
     const params: DocumentClient.PutItemInput = {
-      TableName: tableName,
+      TableName: this.tableName,
       Item: { _: "_", ...record, version: version + 1 },
       ConditionExpression: `attribute_exists(${keyName}) and version = :version`,
       ExpressionAttributeValues: {
@@ -52,14 +55,10 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  getOne(
-    tableName: string,
-    keyName: string,
-    keyValue: unknown
-  ): PromiseResult<DocumentClient.GetItemOutput | Error | null> {
+  getOne(keyName: string, keyValue: unknown): PromiseResult<DocumentClient.GetItemOutput | Error | null> {
     return this.client
       .get({
-        TableName: tableName,
+        TableName: this.tableName,
         Key: {
           [keyName]: keyValue
         }

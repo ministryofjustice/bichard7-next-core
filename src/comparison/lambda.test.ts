@@ -74,7 +74,7 @@ describe("Comparison lambda", () => {
       xmlParsingMatches: true
     })
 
-    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    const record = await dynamoGateway.getOne("s3Path", s3Path)
     expect(isError(record)).toBe(false)
 
     const actualRecord = record as DocumentClient.GetItemOutput
@@ -116,7 +116,7 @@ describe("Comparison lambda", () => {
       xmlParsingMatches: false
     })
 
-    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    const record = await dynamoGateway.getOne("s3Path", s3Path)
     expect(isError(record)).toBe(false)
 
     const actualRecord = record as DocumentClient.GetItemOutput
@@ -170,7 +170,7 @@ describe("Comparison lambda", () => {
       version: 1
     }
 
-    await dynamoGateway.insertOne(dynamoDbTableConfig.TableName!, existingRecord, "s3Path")
+    await dynamoGateway.insertOne(existingRecord, "s3Path")
 
     const result = await lambda({
       detail: { bucket: { name: bucket }, object: { key: s3Path } }
@@ -182,7 +182,7 @@ describe("Comparison lambda", () => {
       xmlParsingMatches: true
     })
 
-    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    const record = await dynamoGateway.getOne("s3Path", s3Path)
     expect(isError(record)).toBe(false)
 
     const actualRecord = record as DocumentClient.GetItemOutput

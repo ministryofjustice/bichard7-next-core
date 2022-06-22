@@ -1,7 +1,8 @@
 import type { DynamoDbConfig } from "src/comparison/Types"
 
 export default function createDynamoDbConfig(): DynamoDbConfig {
-  const { DYNAMO_URL, DYNAMO_REGION, DYNAMO_AWS_ACCESS_KEY_ID, DYNAMO_AWS_SECRET_ACCESS_KEY } = process.env
+  const { DYNAMO_URL, DYNAMO_REGION, COMPARISON_TABLE_NAME, DYNAMO_AWS_ACCESS_KEY_ID, DYNAMO_AWS_SECRET_ACCESS_KEY } =
+    process.env
 
   if (!DYNAMO_URL) {
     throw Error("AWS_URL environment variable must have value.")
@@ -11,9 +12,14 @@ export default function createDynamoDbConfig(): DynamoDbConfig {
     throw Error("AWS_REGION environment variable must have value.")
   }
 
+  if (!COMPARISON_TABLE_NAME) {
+    throw new Error("COMPARISON_TABLE_NAME environment variable must have value.")
+  }
+
   const config: DynamoDbConfig = {
     DYNAMO_URL,
-    DYNAMO_REGION
+    DYNAMO_REGION,
+    TABLE_NAME: COMPARISON_TABLE_NAME
   }
 
   if (DYNAMO_AWS_ACCESS_KEY_ID) {
