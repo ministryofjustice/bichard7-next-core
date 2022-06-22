@@ -1,8 +1,7 @@
 import {
   GUILTY_OF_ALTERNATIVE,
   PNC_DISPOSAL_TYPE,
-  RESULT_ADJOURNMENT_WITH_JUDGEMENT,
-  RESULT_JUDGEMENT_WITH_FINAL_RESULT,
+  ResultClass,
   VICTIM_SURCHARGE_AMOUNT_IN_POUNDS,
   VICTIM_SURCHARGE_CREST_CODES
 } from "src/lib/properties"
@@ -10,7 +9,14 @@ import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearing
 import { lookupPncDisposalByCjsCode } from "src/use-cases/dataLookup"
 
 const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Result) => {
-  const { CJSresultCode, ResultClass, CRESTDisposalCode, ResultVariableText, AmountSpecifiedInResult, Verdict } = result
+  const {
+    CJSresultCode,
+    ResultClass: resultClass,
+    CRESTDisposalCode,
+    ResultVariableText,
+    AmountSpecifiedInResult,
+    Verdict
+  } = result
   const { CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
 
   if (
@@ -24,7 +30,7 @@ const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Re
     result.PNCDisposalType = PNC_DISPOSAL_TYPE.GUILTY_OF_ALTERNATIVE
   } else {
     const adjudicationIndicator =
-      ResultClass === RESULT_ADJOURNMENT_WITH_JUDGEMENT || ResultClass == RESULT_JUDGEMENT_WITH_FINAL_RESULT
+      resultClass === ResultClass.ADJOURNMENT_WITH_JUDGEMENT || resultClass == ResultClass.JUDGEMENT_WITH_FINAL_RESULT
 
     const pncDisposal = lookupPncDisposalByCjsCode(CJSresultCode ?? 0)
     const pncDisposalType = adjudicationIndicator ? pncDisposal?.pncAdjudication : pncDisposal?.pncNonAdjudication

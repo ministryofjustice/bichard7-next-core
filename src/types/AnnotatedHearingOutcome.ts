@@ -1,3 +1,4 @@
+import { ResultClass } from "src/lib/properties"
 import {
   validateActualOffenceDateCode,
   validateCourtType,
@@ -7,7 +8,6 @@ import {
   validateOffenceCategory,
   validateOffenceInitiationCode,
   validateRemandStatus,
-  validateResultClass,
   validateResultCode,
   validateResultQualifierCode,
   validateSummonsCode,
@@ -205,7 +205,7 @@ const resultSchema = z.object({
   ModeOfTrialReason: z.string().refine(validateModeOfTrialReason, ExceptionCode.HO100108).optional(), // Tested in HO100108
   PNCDisposalType: z.number().min(1000, ExceptionCode.HO100246).max(9999, ExceptionCode.HO100246).optional(),
   PNCAdjudicationExists: z.boolean().optional(),
-  ResultClass: z.string().refine(validateResultClass, ExceptionCode.HO100108).optional(), // Always set to a valid value
+  ResultClass: z.nativeEnum(ResultClass).optional(), // Always set to a valid value
   NumberOfOffencesTIC: z.number().optional(),
   ReasonForOffenceBailConditions: z
     .string()

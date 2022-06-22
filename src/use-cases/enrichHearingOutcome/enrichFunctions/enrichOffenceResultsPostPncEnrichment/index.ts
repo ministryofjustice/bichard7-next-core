@@ -6,7 +6,7 @@ import populatePncDisposal from "./populatePncDisposal"
 import populateResultClass from "./populateResultClass"
 
 const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome) => {
-  const { DateOfHearing, CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+  const { DateOfHearing } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence) => {
     offence.Result.forEach((result) => {
@@ -22,7 +22,7 @@ const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome
       }
 
       if (isCaseRecordable(hearingOutcome)) {
-        populateResultClass(result, offence.ConvictionDate, DateOfHearing, CourtType)
+        populateResultClass(result, offence.ConvictionDate, DateOfHearing)
         populatePncDisposal(hearingOutcome, result)
       }
 

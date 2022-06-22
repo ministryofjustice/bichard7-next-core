@@ -108,7 +108,7 @@
                 <DC:Plea>{{ offence.plea if offence.plea else "2" }}</DC:Plea>
                 <DC:ModeOfTrial>{{ offence.modeOfTrial if offence.modeOfTrial else "01" }}</DC:ModeOfTrial>
                 <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
-                <DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
+                {% if offence.convictionDate !== null %}<DC:ConvictionDate>{{ offence.convictionDate if offence.convictionDate else "2011-09-26" }}</DC:ConvictionDate>{% endif %}
                 <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
                 {% for result in offence.results %}
                   <DC:Result>
@@ -121,7 +121,7 @@
                       <DC:NextHearing>
                         {% if result.nextHearing.nextHearingDetails %}
                           <DC:NextHearingDetails>
-                            <DC:CourtHearingLocation>{{ result.nextHearing.nextHearingDetails.courtHearingLocation if result.nextHearing.nextHearingDetails.courtHearingLocation else "B01NI01" }}</DC:CourtHearingLocation>
+                            <DC:CourtHearingLocation>{{ result.nextHearing.nextHearingDetails.courtHearingLocation if result.nextHearing.nextHearingDetails.courtHearingLocation else "B01EF01" }}</DC:CourtHearingLocation>
                             <DC:DateOfHearing>{{ result.nextHearing.nextHearingDetails.dateOfHearing if result.nextHearing.nextHearingDetails.dateOfHearing else "2011-10-08" }}</DC:DateOfHearing>
                             <DC:TimeOfHearing>{{ result.nextHearing.nextHearingDetails.timeOfHearing if result.nextHearing.nextHearingDetails.timeOfHearing else "14:00:00" }}</DC:TimeOfHearing>
                           </DC:NextHearingDetails>

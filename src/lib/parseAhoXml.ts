@@ -32,6 +32,7 @@ import type {
 } from "src/types/RawAho"
 import extractExceptionsFromAho from "tests/helpers/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "./mapXmlCxe01ToAho"
+import type { ResultClass } from "./properties"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],
@@ -119,7 +120,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   PNCAdjudicationExists: xmlResult["br7:PNCAdjudicationExists"]
     ? xmlResult["br7:PNCAdjudicationExists"]["#text"] === "Y"
     : undefined,
-  ResultClass: xmlResult["br7:ResultClass"]?.["#text"],
+  ResultClass: xmlResult["br7:ResultClass"]?.["#text"] as ResultClass,
   ReasonForOffenceBailConditions: xmlResult["br7:ReasonForOffenceBailConditions"]?.["#text"],
   Urgent: xmlResult["br7:Urgent"]
     ? {
