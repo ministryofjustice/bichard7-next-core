@@ -6,7 +6,7 @@ import createDynamoDbConfig from "./createDynamoDbConfig"
 import createS3Config from "./createS3Config"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFileFromS3 from "./getFileFromS3"
-import logInDynamoDb from "./LogInDynamoDb"
+import logInDynamoDb from "./logInDynamoDb"
 import logger from "src/utils/logging"
 
 const s3Config = createS3Config()
