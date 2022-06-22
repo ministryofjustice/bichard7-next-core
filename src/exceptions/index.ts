@@ -9,6 +9,9 @@ const exceptionCodes = [
   ExceptionCode.HO100305,
   ExceptionCode.HO100321,
   ExceptionCode.HO100322,
+  ExceptionCode.HO100324,
+  ExceptionCode.HO100325,
+  ExceptionCode.HO100326,
   ExceptionCode.HO100507
 ]
 

@@ -25,10 +25,16 @@ const realPnc = process.env.REAL_PNC === "true"
 
 const processMessageCore = (
   messageXml: string,
-  { recordable = true, pncOverrides = {}, pncCaseType = "court", pncMessage }: ProcessMessageOptions
+  {
+    recordable = true,
+    pncOverrides = {},
+    pncCaseType = "court",
+    pncMessage,
+    pncAdjudication = false
+  }: ProcessMessageOptions
 ): BichardResultType => {
   const response = recordable
-    ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType)
+    ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
   const pncGateway = new MockPncGateway(response)
   return CoreHandler(messageXml, pncGateway)
@@ -41,6 +47,7 @@ type ProcessMessageOptions = {
   pncCaseType?: string
   pncOverrides?: Partial<ResultedCaseMessageParsedXml>
   pncMessage?: string
+  pncAdjudication?: boolean
 }
 
 const processMessageBichard = async (
@@ -51,7 +58,8 @@ const processMessageBichard = async (
     recordable = true,
     pncOverrides = {},
     pncCaseType = "court",
-    pncMessage
+    pncMessage,
+    pncAdjudication = false
   }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
   const correlationId = uuid()
@@ -63,7 +71,7 @@ const processMessageBichard = async (
   if (!realPnc) {
     if (recordable) {
       // Insert matching record in PNC
-      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType)
+      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     } else {
       await mockEnquiryErrorInPnc()
     }

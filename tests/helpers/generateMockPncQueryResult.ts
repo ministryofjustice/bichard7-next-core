@@ -22,7 +22,8 @@ const extractDates = (offence: OffenceParsedXml): OffenceDates => {
 export default (
   xml: string,
   pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
-  pncCaseType = "court"
+  pncCaseType = "court",
+  pncAdjudication = false
 ): PncQueryResult => {
   const spi = merge(parseSpiResult(xml).DeliverRequest.Message.ResultedCaseMessage, pncOverrides)
 
@@ -41,7 +42,10 @@ export default (
         cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
         sequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
         ...dates
-      }
+      },
+      ...(pncAdjudication && {
+        adjudication: { verdict: "GUILTY", sentenceDate: "2020-01-02", offenceTICNumber: 1, plea: "GUILTY" }
+      })
     }
   })
 
