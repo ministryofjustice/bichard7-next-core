@@ -10,6 +10,10 @@ import { ZodError } from "zod"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import type * as dynamodb from "@aws-sdk/client-dynamodb"
 import createS3Config from "./createS3Config"
+import { isError } from "lodash"
+import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import MockDate from "mockdate"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
@@ -20,10 +24,7 @@ const dynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
   AttributeDefinitions: [{ AttributeName: "s3Path", AttributeType: "S" }],
   BillingMode: "PAY_PER_REQUEST"
 }
-const dynamoDbGatewayConfig = {
-  DYNAMO_URL: "http://localhost:8000",
-  DYNAMO_REGION: "test"
-}
+const dynamoDbGatewayConfig = createDynamoDbConfig()
 
 const uploadFile = async (fileName: string) => {
   const client = new S3Client(s3Config)
@@ -50,22 +51,50 @@ describe("Comparison lambda", () => {
   })
 
   beforeEach(async () => {
+    MockDate.reset()
     await s3Server.reset()
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
 
-  it("should return a passing comparison result", async () => {
+  it.only("should return a passing comparison result", async () => {
+    const mockedDate = new Date()
+    MockDate.set(mockedDate)
     const response = await uploadFile("test-data/comparison/passing.json")
     expect(response).toBeDefined()
 
+    const s3Path = "test-data/comparison/passing.json"
     const result = await lambda({
-      detail: { bucket: { name: bucket }, object: { key: "test-data/comparison/passing.json" } }
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
     })
     expect(result).toStrictEqual({
       triggersMatch: true,
       exceptionsMatch: true,
       xmlOutputMatches: true,
       xmlParsingMatches: true
+    })
+
+    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    expect(isError(record)).toBe(false)
+
+    const actualRecord = record as DocumentClient.GetItemOutput
+    expect(actualRecord.Item).toStrictEqual({
+      s3Path,
+      initialRunAt: mockedDate.toISOString(),
+      initialResult: 1,
+      latestRunAt: mockedDate.toISOString(),
+      latestResult: 1,
+      history: [
+        {
+          runAt: mockedDate.toISOString(),
+          result: 1,
+          details: {
+            triggersMatch: 1,
+            exceptionsMatch: 1,
+            xmlOutputMatches: 1,
+            xmlParsingMatches: 1
+          }
+        }
+      ]
     })
   })
 
@@ -95,9 +124,9 @@ describe("Comparison lambda", () => {
   })
 
   it("can call the mock dynamo db", async () => {
-    await dynamoGateway.insertOne(dynamoDbTableConfig.TableName ?? "", { s3Path: "somePath" }, "s3Path")
+    await dynamoGateway.insertOne(dynamoDbTableConfig.TableName!, { s3Path: "somePath" }, "s3Path")
 
-    const result = await dynamoGateway.getOne(dynamoDbTableConfig.TableName ?? "", "s3Path", "somePath")
+    const result = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", "somePath")
     expect(result).toEqual({
       Item: {
         _: "_",
