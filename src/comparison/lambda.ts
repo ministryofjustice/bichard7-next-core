@@ -1,10 +1,19 @@
 import compare from "src/comparison/compare"
 import { z } from "zod"
 import type { ComparisonResult } from "./compare"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import createS3Config from "./createS3Config"
+import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFileFromS3 from "./getFileFromS3"
+import { ComparisonLog } from "./Types"
 
 const s3Config = createS3Config()
+const dynamoDbGatewayConfig = createDynamoDbConfig()
+const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
+const tableName = process.env.TABLE_NAME
+if (!tableName) {
+  throw new Error("TABLE_NAME environment variable is mandatory")
+}
 
 const inputSchema = z.object({
   detail: z.object({
@@ -24,5 +33,31 @@ export default async (event: unknown): Promise<ComparisonResult> => {
   if (content instanceof Error) {
     throw content
   }
-  return compare(content)
+
+  const comparisonResult = compare(content)
+
+  const date = new Date()
+  const record: ComparisonLog = {
+    s3Path,
+    initialRunAt: date.toISOString(),
+    initialResult: 1,
+    latestRunAt: date.toISOString(),
+    latestResult: 1,
+    history: [
+      {
+        runAt: date.toISOString(),
+        result: 1,
+        details: {
+          triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
+          exceptionsMatch: true,
+          xmlOutputMatches: true,
+          xmlParsingMatches: true
+        }
+      }
+    ]
+  }
+  dynamoGateway.insertOne(tableName,)
+
+
+  return comparisonResult
 }
