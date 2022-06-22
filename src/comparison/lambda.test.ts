@@ -224,15 +224,20 @@ describe("Comparison lambda", () => {
     }
   })
 
-  it("should throw an error when dynamo db fails to log the record", async () => {
-    const s3Path = "test-data/comparison/failing.json"
-    const response = await uploadFile(s3Path)
-
+  it("should throw an error when log in dynamo fails to log the record", async () => {
+    const expectedError = new Error("dummy error")
+    jest.spyOn(DynamoGateway.prototype, "getOne").mockResolvedValue(expectedError)
+    const response = await uploadFile("test-data/comparison/passing.json")
     expect(response).toBeDefined()
+
+    const s3Path = "test-data/comparison/passing.json"
     const result = await lambda({
       detail: { bucket: { name: bucket }, object: { key: s3Path } }
-    })
+    }).catch((error) => error)
+    jest.resetAllMocks()
 
     expect(isError(result)).toBe(true)
+    const actualError = result as Error
+    expect(actualError.message).toBe(expectedError.message)
   })
 })
