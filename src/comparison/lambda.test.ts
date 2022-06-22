@@ -8,22 +8,16 @@ import MockS3 from "tests/helpers/MockS3"
 import MockDynamo from "tests/helpers/MockDynamo"
 import { ZodError } from "zod"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
-import type * as dynamodb from "@aws-sdk/client-dynamodb"
 import createS3Config from "./createS3Config"
 import { isError } from "src/comparison/Types"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
+import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
 
-const dynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
-  TableName: process.env.COMPARISON_TABLE_NAME,
-  KeySchema: [{ AttributeName: "s3Path", KeyType: "HASH" }],
-  AttributeDefinitions: [{ AttributeName: "s3Path", AttributeType: "S" }],
-  BillingMode: "PAY_PER_REQUEST"
-}
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
 const uploadFile = async (fileName: string) => {
@@ -230,15 +224,15 @@ describe("Comparison lambda", () => {
     }
   })
 
-  // it("should throw an error when dynamo db fails insert the record", async () => {
-  //   const s3Path = "test-data/comparison/failing.json"
-  //   const response = await uploadFile(s3Path)
+  it("should throw an error when dynamo db fails to log the record", async () => {
+    const s3Path = "test-data/comparison/failing.json"
+    const response = await uploadFile(s3Path)
 
-  //   expect(response).toBeDefined()
-  //   const result = await lambda({
-  //     detail: { bucket: { name: bucket }, object: { key: s3Path } }
-  //   })
+    expect(response).toBeDefined()
+    const result = await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
 
-  //   expect(isError(result)).toBe(true)
-  // })
+    expect(isError(result)).toBe(true)
+  })
 })

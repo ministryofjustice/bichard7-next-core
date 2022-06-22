@@ -19,7 +19,7 @@ const logInDynamoDb = async (
   const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
 
   if (isError(getOneResult)) {
-    throw getOneResult
+    return getOneResult
   }
 
   const date = new Date()
