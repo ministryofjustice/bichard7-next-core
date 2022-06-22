@@ -1,3 +1,4 @@
+import { isError } from "src/comparison/Types"
 import compare from "src/comparison/compare"
 import { z } from "zod"
 import type { ComparisonResult } from "./compare"
@@ -5,7 +6,6 @@ import createDynamoDbConfig from "./createDynamoDbConfig"
 import createS3Config from "./createS3Config"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFileFromS3 from "./getFileFromS3"
-import type { ComparisonLog } from "./Types"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
@@ -36,28 +36,54 @@ export default async (event: unknown): Promise<ComparisonResult> => {
 
   const comparisonResult = compare(content)
 
-  const date = new Date()
-  const record: ComparisonLog = {
-    s3Path,
-    initialRunAt: date.toISOString(),
-    initialResult: 1,
-    latestRunAt: date.toISOString(),
-    latestResult: 1,
-    history: [
-      {
-        runAt: date.toISOString(),
-        result: 1,
-        details: {
-          triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
-          exceptionsMatch: comparisonResult.exceptionsMatch ? 1 : 0,
-          xmlOutputMatches: comparisonResult.xmlOutputMatches ? 1 : 0,
-          xmlParsingMatches: comparisonResult.xmlParsingMatches ? 1 : 0
-        }
-      }
-    ]
+  const latestResult =
+    comparisonResult.triggersMatch &&
+    comparisonResult.exceptionsMatch &&
+    comparisonResult.xmlOutputMatches &&
+    comparisonResult.xmlParsingMatches
+      ? 1
+      : 0
+
+  const getOneResult = await dynamoGateway.getOne(tableName, "s3Path", s3Path)
+
+  if (isError(getOneResult)) {
+    throw getOneResult
   }
 
-  await dynamoGateway.insertOne(tableName, record, "s3Path")
+  const date = new Date()
+  const record = getOneResult?.Item ?? {
+    s3Path,
+    initialRunAt: date.toISOString(),
+    initialResult: latestResult,
+    history: [],
+    version: 1
+  }
+
+  record.latestRunAt = date.toISOString()
+  record.latestResult = latestResult
+
+  record.history.push({
+    runAt: date.toISOString(),
+    result: record.latestResult,
+    details: {
+      triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
+      exceptionsMatch: comparisonResult.exceptionsMatch ? 1 : 0,
+      xmlOutputMatches: comparisonResult.xmlOutputMatches ? 1 : 0,
+      xmlParsingMatches: comparisonResult.xmlParsingMatches ? 1 : 0
+    }
+  })
+
+  if (getOneResult?.Item) {
+    const updateResult = await dynamoGateway.updateOne(tableName, record, "s3Path", record.version)
+    if (isError(updateResult)) {
+      throw updateResult
+    }
+  } else {
+    const insertResult = await dynamoGateway.insertOne(tableName, record, "s3Path")
+    if (isError(insertResult)) {
+      throw insertResult
+    }
+  }
 
   return comparisonResult
 }

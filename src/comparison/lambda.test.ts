@@ -96,7 +96,8 @@ describe("Comparison lambda", () => {
             xmlParsingMatches: 1
           }
         }
-      ]
+      ],
+      version: 1
     })
   })
 
@@ -123,13 +124,13 @@ describe("Comparison lambda", () => {
       _: "_",
       s3Path,
       initialRunAt: mockedDate.toISOString(),
-      initialResult: 1,
+      initialResult: 0,
       latestRunAt: mockedDate.toISOString(),
-      latestResult: 1,
+      latestResult: 0,
       history: [
         {
           runAt: mockedDate.toISOString(),
-          result: 1,
+          result: 0,
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
@@ -137,7 +138,84 @@ describe("Comparison lambda", () => {
             xmlParsingMatches: 0
           }
         }
-      ]
+      ],
+      version: 1
+    })
+  })
+
+  it("should update the record in DynamoDB when the a record already exist", async () => {
+    await uploadFile("test-data/comparison/passing.json")
+
+    const s3Path = "test-data/comparison/passing.json"
+    const existingRecordDate = new Date("2021-01-02").toISOString()
+    const existingRecord = {
+      _: "_",
+      s3Path,
+      initialRunAt: existingRecordDate,
+      initialResult: 0,
+      latestRunAt: existingRecordDate,
+      latestResult: 0,
+      history: [
+        {
+          runAt: existingRecordDate,
+          result: 0,
+          details: {
+            triggersMatch: 0,
+            exceptionsMatch: 1,
+            xmlOutputMatches: 1,
+            xmlParsingMatches: 1
+          }
+        }
+      ],
+      version: 1
+    }
+
+    await dynamoGateway.insertOne(dynamoDbTableConfig.TableName!, existingRecord, "s3Path")
+
+    const result = await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+    expect(result).toStrictEqual({
+      triggersMatch: true,
+      exceptionsMatch: true,
+      xmlOutputMatches: true,
+      xmlParsingMatches: true
+    })
+
+    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    expect(isError(record)).toBe(false)
+
+    const actualRecord = record as DocumentClient.GetItemOutput
+    expect(actualRecord.Item).toStrictEqual({
+      _: "_",
+      s3Path,
+      initialRunAt: existingRecordDate,
+      initialResult: 0,
+      latestRunAt: mockedDate.toISOString(),
+      latestResult: 1,
+      history: [
+        {
+          runAt: existingRecordDate,
+          result: 0,
+          details: {
+            triggersMatch: 0,
+            exceptionsMatch: 1,
+            xmlOutputMatches: 1,
+            xmlParsingMatches: 1
+          }
+        },
+        {
+          runAt: mockedDate.toISOString(),
+          result: 1,
+          details: {
+            triggersMatch: 1,
+            exceptionsMatch: 1,
+            xmlOutputMatches: 1,
+            xmlParsingMatches: 1
+          }
+        }
+      ],
+      version: 2
     })
   })
 
@@ -151,4 +229,16 @@ describe("Comparison lambda", () => {
       expect((error as ZodError).issues[0].code).toBe("invalid_type")
     }
   })
+
+  // it("should throw an error when dynamo db fails insert the record", async () => {
+  //   const s3Path = "test-data/comparison/failing.json"
+  //   const response = await uploadFile(s3Path)
+
+  //   expect(response).toBeDefined()
+  //   const result = await lambda({
+  //     detail: { bucket: { name: bucket }, object: { key: s3Path } }
+  //   })
+
+  //   expect(isError(result)).toBe(true)
+  // })
 })
