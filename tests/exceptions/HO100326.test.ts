@@ -1,0 +1,66 @@
+jest.setTimeout(30000)
+
+import { offenceResultClassPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
+import generateMessage from "tests/helpers/generateMessage"
+import PostgresHelper from "tests/helpers/PostgresHelper"
+import processMessage from "tests/helpers/processMessage"
+
+describe("HO100326", () => {
+  afterAll(() => {
+    PostgresHelper.closeConnection()
+  })
+
+  it("should create an exception when the conviction date is before the date of hearing and there is no adjudication", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [{ convictionDate: "2011-09-25", results: [{}], recordable: true }]
+    })
+
+    // Process the mock message
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
+      expectTriggers: false,
+      recordable: true
+    })
+
+    // Check the right triggers are generated
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO100326",
+        path: offenceResultClassPath(0, 0)
+      }
+    ])
+  })
+
+  it("should not create an exception when offence was added by the court", async () => {
+    // Generate a mock message
+    const inputMessage = generateMessage({
+      offences: [
+        { convictionDate: "2011-09-25", results: [{}], recordable: true, offenceSequenceNumber: 1 },
+        { convictionDate: "2011-09-25", results: [{}], recordable: true, offenceSequenceNumber: 2 }
+      ]
+    })
+
+    const pncMessage = generateMessage({
+      offences: [{ convictionDate: "2011-09-25", results: [{}], recordable: true, offenceSequenceNumber: 1 }]
+    })
+
+    // Process the mock message
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processMessage(inputMessage, {
+      expectTriggers: false,
+      recordable: true,
+      pncMessage
+    })
+
+    // Check the right triggers are generated
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO100326",
+        path: offenceResultClassPath(0, 0)
+      }
+    ])
+  })
+})

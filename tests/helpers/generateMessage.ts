@@ -25,7 +25,7 @@ type Result = {
 
 type Offence = {
   code?: string
-  finding?: SpiVerdict
+  finding?: SpiVerdict | null
   results: Result[]
   recordable?: boolean
   plea?: SpiPlea

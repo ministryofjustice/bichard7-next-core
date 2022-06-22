@@ -23,7 +23,8 @@ const extractDates = (offence: OffenceParsedXml) => {
 const mockEnquiry = (
   messageXml: string,
   pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
-  pncCaseType = "court"
+  pncCaseType = "court",
+  pncAdjudication = false
 ) => {
   const parsed = parseSpiResult(messageXml).DeliverRequest.Message.ResultedCaseMessage
   const result = merge(parsed, pncOverrides)
@@ -46,7 +47,10 @@ const mockEnquiry = (
       const output = [
         `<COF>K${offence.sequenceNo}    12:15:24:1   ${offence.code}${offence.startDate}${offence.endDate}</COF>`
       ]
-      if (pncCaseType === "penalty") {
+      if (pncAdjudication) {
+        output.push("<ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ>")
+      }
+      if (pncCaseType === "penalty" || pncAdjudication) {
         output.push(
           "<DIS>I1109000C 100.00                                                                                         </DIS>"
         )
@@ -98,9 +102,10 @@ const clearMocks = async (): Promise<void> => {
 const mockRecordInPnc = async (
   messageXml: string,
   pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
-  pncCaseType = "court"
+  pncCaseType = "court",
+  pncAdjudication = false
 ): Promise<void> => {
-  const enquiry = mockEnquiry(messageXml, pncOverrides, pncCaseType)
+  const enquiry = mockEnquiry(messageXml, pncOverrides, pncCaseType, pncAdjudication)
   await clearMocks()
   await addMock(enquiry.matchRegex, enquiry.response)
 }

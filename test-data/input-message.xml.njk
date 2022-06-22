@@ -109,7 +109,7 @@
                 <DC:ModeOfTrial>{{ offence.modeOfTrial if offence.modeOfTrial else "01" }}</DC:ModeOfTrial>
                 <DC:FinalDisposalIndicator>N</DC:FinalDisposalIndicator>
                 {% if offence.convictionDate !== null %}<DC:ConvictionDate>{{ offence.convictionDate if offence.convictionDate else "2011-09-26" }}</DC:ConvictionDate>{% endif %}
-                <DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>
+                {% if offence.finding !== null %}<DC:Finding>{{ offence.finding if offence.finding else "G" }}</DC:Finding>{% endif %}
                 {% for result in offence.results %}
                   <DC:Result>
                     <DC:ResultCode>{{ result.code if result.code else "1015" }}</DC:ResultCode>
