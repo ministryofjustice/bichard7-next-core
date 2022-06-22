@@ -33,6 +33,8 @@ const uploadFile = async (fileName: string) => {
   return client.send(command)
 }
 
+const mockedDate = new Date()
+
 describe("Comparison lambda", () => {
   let s3Server: MockS3
   let dynamoServer: MockDynamo
@@ -43,22 +45,21 @@ describe("Comparison lambda", () => {
     await s3Server.start()
     dynamoServer = new MockDynamo()
     await dynamoServer.start(8000)
+    MockDate.set(mockedDate)
   })
 
   afterAll(async () => {
     await s3Server.stop()
     await dynamoServer.stop()
+    MockDate.reset()
   })
 
   beforeEach(async () => {
-    MockDate.reset()
     await s3Server.reset()
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
 
   it("should return a passing comparison result", async () => {
-    const mockedDate = new Date()
-    MockDate.set(mockedDate)
     const response = await uploadFile("test-data/comparison/passing.json")
     expect(response).toBeDefined()
 
@@ -100,16 +101,43 @@ describe("Comparison lambda", () => {
   })
 
   it("should return a failing comparison result", async () => {
-    const response = await uploadFile("test-data/comparison/failing.json")
+    const s3Path = "test-data/comparison/failing.json"
+    const response = await uploadFile(s3Path)
+
     expect(response).toBeDefined()
     const result = await lambda({
-      detail: { bucket: { name: bucket }, object: { key: "test-data/comparison/failing.json" } }
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
     })
     expect(result).toStrictEqual({
       triggersMatch: false,
       exceptionsMatch: true,
       xmlOutputMatches: false,
       xmlParsingMatches: false
+    })
+
+    const record = await dynamoGateway.getOne(dynamoDbTableConfig.TableName!, "s3Path", s3Path)
+    expect(isError(record)).toBe(false)
+
+    const actualRecord = record as DocumentClient.GetItemOutput
+    expect(actualRecord.Item).toStrictEqual({
+      _: "_",
+      s3Path,
+      initialRunAt: mockedDate.toISOString(),
+      initialResult: 1,
+      latestRunAt: mockedDate.toISOString(),
+      latestResult: 1,
+      history: [
+        {
+          runAt: mockedDate.toISOString(),
+          result: 1,
+          details: {
+            triggersMatch: 0,
+            exceptionsMatch: 1,
+            xmlOutputMatches: 0,
+            xmlParsingMatches: 0
+          }
+        }
+      ]
     })
   })
 
