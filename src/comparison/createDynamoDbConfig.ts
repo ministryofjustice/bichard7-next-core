@@ -5,11 +5,11 @@ export default function createDynamoDbConfig(): DynamoDbConfig {
     process.env
 
   if (!DYNAMO_URL) {
-    throw Error("AWS_URL environment variable must have value.")
+    throw Error("DYNAMO_URL environment variable must have value.")
   }
 
   if (!DYNAMO_REGION) {
-    throw Error("AWS_REGION environment variable must have value.")
+    throw Error("DYNAMO_REGION environment variable must have value.")
   }
 
   if (!COMPARISON_TABLE_NAME) {
