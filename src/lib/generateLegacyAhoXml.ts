@@ -197,9 +197,9 @@ const mapAhoResultsToXml = (
     "ds:ResultHalfLifeHours": optionalText(result.ResultHalfLifeHours?.toString()),
     "br7:PNCDisposalType": optionalText(result.PNCDisposalType?.toString()),
     "br7:ResultClass": optionalText(result.ResultClass),
-    "br7:ReasonForOffenceBailConditions": optionalText(result.ReasonForOffenceBailConditions),
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists": optionalLiteral(result.PNCAdjudicationExists, LiteralType.YesNo),
+    "br7:ReasonForOffenceBailConditions": optionalText(result.ReasonForOffenceBailConditions),
     "br7:NumberOfOffencesTIC": optionalText(result.NumberOfOffencesTIC?.toString()),
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
