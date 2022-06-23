@@ -18,6 +18,7 @@ import type {
   Br7Case,
   Br7CriminalProsecutionReference,
   Br7Duration,
+  Br7ErrorString,
   Br7Hearing,
   Br7Offence,
   Br7OffenceReason,
@@ -226,6 +227,16 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
   throw new Error("Offence Reason Missing from XML")
 }
 
+const mapOffenceReasonSequence = (node: Br7ErrorString | undefined): number | null | undefined => {
+  if (node?.["#text"]) {
+    return Number(node["#text"])
+  }
+  if (node?.["@_Error"]) {
+    return null
+  }
+  return undefined
+}
+
 const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
   DefendantOrOffender: {
     Year: xmlCPR["ds:DefendantOrOffender"]["ds:Year"]?.["#text"] ?? "",
@@ -237,9 +248,7 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"]?.["#text"] ?? ""
   },
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
-  OffenceReasonSequence: xmlCPR["ds:OffenceReasonSequence"]?.["#text"]
-    ? Number(xmlCPR["ds:OffenceReasonSequence"]["#text"])
-    : undefined
+  OffenceReasonSequence: mapOffenceReasonSequence(xmlCPR["ds:OffenceReasonSequence"])
 })
 
 const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {

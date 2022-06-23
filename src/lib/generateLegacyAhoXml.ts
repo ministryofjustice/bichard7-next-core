@@ -298,11 +298,14 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
       "ds:OffenceReason": offence.CriminalProsecutionReference.OffenceReason
         ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
         : undefined,
-      "ds:OffenceReasonSequence": optionalText(
-        offence.ManualSequenceNumber
-          ? offence.CriminalProsecutionReference.OffenceReasonSequence?.toString()
-          : offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
-      ),
+      "ds:OffenceReasonSequence":
+        offence.CriminalProsecutionReference.OffenceReasonSequence === null
+          ? {}
+          : optionalText(
+              offence.ManualSequenceNumber
+                ? offence.CriminalProsecutionReference.OffenceReasonSequence?.toString()
+                : offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
+            ),
       "@_SchemaVersion": "2.0"
     },
     "ds:OffenceCategory": optionalLiteral(offence.OffenceCategory, LiteralType.OffenceCategory),

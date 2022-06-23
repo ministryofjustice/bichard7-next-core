@@ -1,7 +1,7 @@
 import type Exception from "src/types/Exception"
 import type { Br7TextString, GenericRawAho, GenericRawAhoValue, RawAho } from "src/types/RawAho"
 
-const isBr7TextString = (element: GenericRawAhoValue): boolean => typeof element === "object" && "#text" in element
+const isBr7TextString = (element: GenericRawAhoValue): boolean => typeof element === "object"
 
 const findNamespacedKey = (element: GenericRawAhoValue, key: string | number): GenericRawAhoValue | Error => {
   if (Array.isArray(element) && typeof key === "number") {

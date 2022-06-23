@@ -272,7 +272,7 @@ export interface DsActualOffenceStartDate {
 export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
   "ds:OffenceReason"?: Br7OffenceReason
-  "ds:OffenceReasonSequence"?: Br7TextString
+  "ds:OffenceReasonSequence"?: Br7ErrorString
   "@_SchemaVersion": string
 }
 
