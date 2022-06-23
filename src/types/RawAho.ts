@@ -331,6 +331,11 @@ export interface Br7SourceReference {
   "br7:DocumentType": Br7TextString
 }
 
+export interface Br7ErrorString {
+  "#text"?: string
+  "@_Error"?: string
+}
+
 export interface Br7TextString {
   "#text": string
   "@_Error"?: string

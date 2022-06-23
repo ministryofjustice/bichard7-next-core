@@ -11,7 +11,6 @@ import type {
   Result,
   ResultQualifierVariable
 } from "src/types/AnnotatedHearingOutcome"
-import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
 import type {
   Br7Case,
@@ -211,7 +210,7 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"]?.["#text"] ?? ""
   },
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
-  OffenceReasonSequence: xmlCPR["ds:OffenceReasonSequence"]
+  OffenceReasonSequence: xmlCPR["ds:OffenceReasonSequence"]?.["#text"]
     ? Number(xmlCPR["ds:OffenceReasonSequence"]["#text"])
     : undefined
 })
@@ -381,7 +380,7 @@ const mapXmlToAho = (aho: RawAho): AnnotatedHearingOutcome | undefined => {
   }
 }
 
-export default (xml: string): AnnotatedHearingOutcome => {
+export default (xml: string): AnnotatedHearingOutcome | Error => {
   const options = {
     ignoreAttributes: false,
     parseTagValue: false,
@@ -395,6 +394,7 @@ export default (xml: string): AnnotatedHearingOutcome => {
   const legacyAho = mapXmlToAho(rawParsedObj)
   if (legacyAho) {
     legacyAho.Exceptions = extractExceptionsFromAho(xml)
+    return legacyAho
   }
-  return annotatedHearingOutcomeSchema.parse(legacyAho)
+  return new Error("Could not parse AHO XML")
 }

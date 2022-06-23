@@ -42,6 +42,9 @@ const compare = (input: string, debug = false): ComparisonResult => {
   const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
   const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
   const parsedAho = parseAhoXml(annotatedHearingOutcome)
+  if (parsedAho instanceof Error) {
+    throw parsedAho
+  }
   const generatedXml = convertAhoToXml(parsedAho)
 
   const debugOutput: ComparisonResultDebugOutput = {

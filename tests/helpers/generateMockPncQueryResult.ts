@@ -44,7 +44,7 @@ export default (
         ...dates
       },
       ...(pncAdjudication && {
-        adjudication: { verdict: "GUILTY", sentenceDate: "2020-01-02", offenceTICNumber: 1, plea: "GUILTY" }
+        adjudication: { verdict: "GUILTY", sentenceDate: new Date("2020-01-02"), offenceTICNumber: 1, plea: "GUILTY" }
       })
     }
   })
