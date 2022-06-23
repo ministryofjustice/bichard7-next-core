@@ -84,6 +84,9 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         (duplicateCases && duplicateCases.length > 1)
       ) {
         addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+        if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
+          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
+        }
         offenceHasError = true
       } else if (!duplicateCases) {
         if (offenceCategoryIsNonRecordable(hoOffence)) {
@@ -109,6 +112,9 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
             })
           } else {
             addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
+            }
             offenceHasError = true
           }
         }
@@ -134,6 +140,9 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         hoOffence.ManualCourtCaseReferenceNumber !== courtCaseRef
       ) {
         addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+        if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
+          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
+        }
         offenceHasError = true
       } else {
         if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence !== pncRefNo) {

@@ -167,6 +167,8 @@ export interface Br7Address {
   "ds:AddressLine1": Br7TextString
   "ds:AddressLine2"?: Br7TextString
   "ds:AddressLine3"?: Br7TextString
+  "ds:AddressLine4"?: Br7TextString
+  "ds:AddressLine5"?: Br7TextString
 }
 
 export interface Br7DefendantDetail {
@@ -223,6 +225,8 @@ export interface Br7Result {
   "ds:CourtType"?: Br7TextString
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: Br7TextString
+  "ds:DateSpecifiedInResult"?: Br7SequenceTextString[]
+  "ds:NumberSpecifiedInResult"?: Br7TypeTextString[]
   "ds:Duration"?: Br7Duration[]
   "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
   "ds:NextCourtType"?: Br7TextString
@@ -230,7 +234,6 @@ export interface Br7Result {
   "ds:NextHearingTime"?: Br7TextString
   "ds:BailCondition"?: Br7TextString[]
   "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
-  // "ds:NumberSpecifiedInResult": Br7TextString
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
@@ -269,7 +272,7 @@ export interface DsActualOffenceStartDate {
 export interface Br7CriminalProsecutionReference {
   "ds:DefendantOrOffender": DsDefendantOrOffender
   "ds:OffenceReason"?: Br7OffenceReason
-  "ds:OffenceReasonSequence"?: Br7TextString
+  "ds:OffenceReasonSequence"?: Br7ErrorString
   "@_SchemaVersion": string
 }
 
@@ -329,6 +332,11 @@ export interface Br7SourceReference {
   "br7:DocumentType": Br7TextString
 }
 
+export interface Br7ErrorString {
+  "#text"?: string
+  "@_Error"?: string
+}
+
 export interface Br7TextString {
   "#text": string
   "@_Error"?: string
@@ -338,7 +346,11 @@ export interface Br7LiteralTextString extends Br7TextString {
 }
 
 export interface Br7TypeTextString extends Br7TextString {
-  "@_Type"?: string
+  "@_Type": string
+}
+
+export interface Br7SequenceTextString extends Br7TextString {
+  "@_Sequence": string
 }
 
 export interface Br7NameSequenceTextString extends Br7TextString {

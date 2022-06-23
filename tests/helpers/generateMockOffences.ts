@@ -81,7 +81,7 @@ export const createHOOffence = ({
   }
 
   if (!!manualSequenceNumber) {
-    offence.ManualSequenceNumber = manualSequenceNumber
+    offence.ManualSequenceNumber = !!manualSequenceNumber
   }
 
   return offence as Offence

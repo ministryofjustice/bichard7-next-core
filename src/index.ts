@@ -9,7 +9,7 @@ import parseSpiResult from "./use-cases/parseSpiResult"
 import transformSpiToAho from "./use-cases/transformSpiToAho"
 
 export default (message: string, pncGateway: PncGateway): BichardResultType => {
-  let hearingOutcome: AnnotatedHearingOutcome
+  let hearingOutcome: AnnotatedHearingOutcome | Error
 
   if (message.match(/ResultedCaseMessage/)) {
     const spiResult = parseSpiResult(message)
@@ -18,6 +18,9 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
     hearingOutcome = parseAhoXml(message)
   } else {
     throw new Error("Invalid incoming message format")
+  }
+  if (hearingOutcome instanceof Error) {
+    throw hearingOutcome
   }
 
   hearingOutcome = enrichHearingOutcome(hearingOutcome, pncGateway)

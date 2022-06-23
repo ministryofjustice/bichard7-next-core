@@ -1,28 +1,32 @@
 import { XMLParser } from "fast-xml-parser"
 import type {
+  AmountSpecifiedInResult,
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
+  DateSpecifiedInResult,
   Duration,
   Hearing,
+  NumberSpecifiedInResult,
   Offence,
   OffenceReason,
   OrganisationUnitCodes,
   Result,
   ResultQualifierVariable
 } from "src/types/AnnotatedHearingOutcome"
-import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
 import type {
   Br7Case,
   Br7CriminalProsecutionReference,
   Br7Duration,
+  Br7ErrorString,
   Br7Hearing,
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
   Br7Result,
   Br7ResultQualifierVariable,
+  Br7SequenceTextString,
   Br7TextString,
   Br7TypeTextString,
   CommonLawOffenceCode,
@@ -44,13 +48,35 @@ const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): Organis
 
 const mapAmountSpecifiedInResult = (
   result: Br7TypeTextString | Br7TypeTextString[] | undefined
-): number[] | undefined => {
+): AmountSpecifiedInResult[] | undefined => {
   if (!result) {
     return undefined
   }
   const resultArray = Array.isArray(result) ? result : [result]
 
-  return resultArray.map((amount) => Number(amount["#text"]))
+  return resultArray.map((amount) => ({ Amount: Number(amount["#text"]), Type: amount["@_Type"] }))
+}
+
+const mapNumberSpecifiedInResult = (
+  input: Br7TypeTextString | Br7TypeTextString[] | undefined
+): NumberSpecifiedInResult[] | undefined => {
+  if (!input) {
+    return undefined
+  }
+  const inputArray = Array.isArray(input) ? input : [input]
+
+  return inputArray.map((amount) => ({ Number: Number(amount["#text"]), Type: amount["@_Type"] }))
+}
+
+const mapDateSpecifiedInResult = (
+  input: Br7SequenceTextString | Br7SequenceTextString[] | undefined
+): DateSpecifiedInResult[] | undefined => {
+  if (!input) {
+    return undefined
+  }
+  const inputArray = Array.isArray(input) ? input : [input]
+
+  return inputArray.map((el) => ({ Date: new Date(el["#text"]), Sequence: Number(el?.["@_Sequence"]) }))
 }
 
 const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duration[] => {
@@ -102,10 +128,10 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
       }
     : undefined,
   Duration: mapDuration(xmlResult["ds:Duration"]),
-  DateSpecifiedInResult: [],
+  DateSpecifiedInResult: mapDateSpecifiedInResult(xmlResult["ds:DateSpecifiedInResult"]),
   // TimeSpecifiedInResult: xmlResult,
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
-  // NumberSpecifiedInResult: xmlResult["ds:NumberSpecifiedInResult"],
+  NumberSpecifiedInResult: mapNumberSpecifiedInResult(xmlResult["ds:NumberSpecifiedInResult"]),
   NextCourtType: xmlResult["ds:NextCourtType"]?.["#text"],
   NextHearingDate: xmlResult["ds:NextHearingDate"] ? new Date(xmlResult["ds:NextHearingDate"]["#text"]) : undefined,
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],
@@ -128,7 +154,9 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
         urgency: Number(xmlResult["br7:Urgent"]["br7:urgency"]["#text"])
       }
     : undefined,
-  NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"] ? Number(xmlResult["br7:NumberOfOffencesTIC"]) : undefined,
+  NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"]?.["#text"]
+    ? Number(xmlResult["br7:NumberOfOffencesTIC"]["#text"])
+    : undefined,
   ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"]
     ? Number(xmlResult["ds:ResultHalfLifeHours"]["#text"])
@@ -144,9 +172,11 @@ const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
 const buildFullOffenceCode = (
   offenceCode: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
 ): string => {
+  const actOrSource = "ds:ActOrSource" in offenceCode ? offenceCode["ds:ActOrSource"]?.["#text"] : ""
+  const year = "ds:Year" in offenceCode ? offenceCode["ds:Year"]?.["#text"] : ""
   const reason = offenceCode["ds:Reason"]["#text"] ?? ""
   const qualifier = offenceCode["ds:Qualifier"]?.["#text"] ?? ""
-  return `${reason}${qualifier}`
+  return `${actOrSource}${year}${reason}${qualifier}`
 }
 
 const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => {
@@ -200,6 +230,16 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
   throw new Error("Offence Reason Missing from XML")
 }
 
+const mapOffenceReasonSequence = (node: Br7ErrorString | undefined): number | null | undefined => {
+  if (node?.["#text"]) {
+    return Number(node["#text"])
+  }
+  if (node?.["@_Error"]) {
+    return null
+  }
+  return undefined
+}
+
 const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
   DefendantOrOffender: {
     Year: xmlCPR["ds:DefendantOrOffender"]["ds:Year"]?.["#text"] ?? "",
@@ -211,9 +251,7 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"]?.["#text"] ?? ""
   },
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
-  OffenceReasonSequence: xmlCPR["ds:OffenceReasonSequence"]
-    ? Number(xmlCPR["ds:OffenceReasonSequence"]["#text"])
-    : undefined
+  OffenceReasonSequence: mapOffenceReasonSequence(xmlCPR["ds:OffenceReasonSequence"])
 })
 
 const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
@@ -237,10 +275,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
       ({
         CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
         OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
-        // OffenceInitiationCode: xmlOffence.
         OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
-        // SummonsCode: xmlOffence.Sum
-        // Informant: xmlOffence.inform
         ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]["#text"]) : undefined,
         ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]["#text"]) : undefined,
         ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
@@ -254,24 +289,13 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
               }
             : undefined,
         LocationOfOffence: xmlOffence["ds:LocationOfOffence"]["#text"],
-        // OffenceWelshTitle: xmlOffence
         ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
-        // ActualWelshOffenceWording: xmlOffence.
-        // ActualIndictmentWording: xmlOffence.actu
-        // ActualWelshIndictmentWording: xmlOffence.Actr
-        // ActualStatementOfFacts: xmlOffence.actual
-        // ActualWelshStatementOfFacts:
         AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
           ? {
               Amount: xmlOffence["ds:AlcoholLevel"]["ds:Amount"]["#text"],
               Method: xmlOffence["ds:AlcoholLevel"]["ds:Method"]["#text"]
             }
           : undefined,
-        // VehicleCode:
-        // VehicleRegistrationMark:
-        // StartTime:
-        // OffenceEndTime: xmlOffence.
-        // OffenceTime: xmlOffence.Offence
         ConvictionDate: xmlOffence["ds:ConvictionDate"]
           ? new Date(xmlOffence["ds:ConvictionDate"]["#text"])
           : undefined,
@@ -332,7 +356,9 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     Address: {
       AddressLine1: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine1"]["#text"],
       AddressLine2: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine2"]?.["#text"],
-      AddressLine3: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine3"]?.["#text"]
+      AddressLine3: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine3"]?.["#text"],
+      AddressLine4: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine4"]?.["#text"],
+      AddressLine5: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine5"]?.["#text"]
     },
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"],
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"]?.["#text"],
@@ -379,7 +405,7 @@ const mapXmlToAho = (aho: RawAho): AnnotatedHearingOutcome | undefined => {
   }
 }
 
-export default (xml: string): AnnotatedHearingOutcome => {
+export default (xml: string): AnnotatedHearingOutcome | Error => {
   const options = {
     ignoreAttributes: false,
     parseTagValue: false,
@@ -393,6 +419,7 @@ export default (xml: string): AnnotatedHearingOutcome => {
   const legacyAho = mapXmlToAho(rawParsedObj)
   if (legacyAho) {
     legacyAho.Exceptions = extractExceptionsFromAho(xml)
+    return legacyAho
   }
-  return annotatedHearingOutcomeSchema.parse(legacyAho)
+  return new Error("Could not parse AHO XML")
 }

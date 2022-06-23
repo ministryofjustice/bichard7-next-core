@@ -21,6 +21,8 @@ Object {
             "AddressLine1": "Scenario1 Address Line 1",
             "AddressLine2": "Scenario1 Address Line 2",
             "AddressLine3": "Scenario1 Address Line 3",
+            "AddressLine4": undefined,
+            "AddressLine5": undefined,
           },
           "ArrestSummonsNumber": "1101ZD0100000448754K",
           "BailConditions": Array [],
@@ -69,7 +71,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "SX",
-                    "FullCode": "001A",
+                    "FullCode": "SX03001A",
                     "Qualifier": "A",
                     "Reason": "001",
                     "Year": "03",
@@ -93,7 +95,7 @@ Object {
                   "CJSresultCode": 3078,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
-                  "DateSpecifiedInResult": Array [],
+                  "DateSpecifiedInResult": undefined,
                   "Duration": Array [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
@@ -101,6 +103,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "NumberOfOffencesTIC": undefined,
+                  "NumberSpecifiedInResult": undefined,
                   "OffenceRemandStatus": undefined,
                   "PNCAdjudicationExists": false,
                   "PNCDisposalType": 3078,
@@ -157,7 +160,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "SX",
-                    "FullCode": "001",
+                    "FullCode": "SX03001",
                     "Qualifier": undefined,
                     "Reason": "001",
                     "Year": "03",
@@ -181,7 +184,7 @@ Object {
                   "CJSresultCode": 3052,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
-                  "DateSpecifiedInResult": Array [],
+                  "DateSpecifiedInResult": undefined,
                   "Duration": Array [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
@@ -189,6 +192,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "NumberOfOffencesTIC": undefined,
+                  "NumberSpecifiedInResult": undefined,
                   "OffenceRemandStatus": undefined,
                   "PNCAdjudicationExists": false,
                   "PNCDisposalType": 3052,
@@ -248,7 +252,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "RT",
-                    "FullCode": "191",
+                    "FullCode": "RT88191",
                     "Qualifier": undefined,
                     "Reason": "191",
                     "Year": "88",
@@ -268,13 +272,16 @@ Object {
               "Result": Array [
                 Object {
                   "AmountSpecifiedInResult": Array [
-                    100,
+                    Object {
+                      "Amount": 100,
+                      "Type": "Fine",
+                    },
                   ],
                   "BailCondition": Array [],
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
-                  "DateSpecifiedInResult": Array [],
+                  "DateSpecifiedInResult": undefined,
                   "Duration": Array [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
@@ -282,6 +289,7 @@ Object {
                   "NextHearingTime": undefined,
                   "NextResultSourceOrganisation": undefined,
                   "NumberOfOffencesTIC": undefined,
+                  "NumberSpecifiedInResult": undefined,
                   "OffenceRemandStatus": undefined,
                   "PNCAdjudicationExists": false,
                   "PNCDisposalType": 1015,
@@ -354,6 +362,7 @@ Object {
         "courtCaseReference": "97/1626/008395Q",
         "offences": Array [
           Object {
+            "adjudication": undefined,
             "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",
@@ -366,6 +375,7 @@ Object {
             },
           },
           Object {
+            "adjudication": undefined,
             "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",
@@ -378,6 +388,7 @@ Object {
             },
           },
           Object {
+            "adjudication": undefined,
             "disposals": undefined,
             "offence": Object {
               "acpoOffenceCode": "12:15:24:1",

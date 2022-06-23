@@ -24,7 +24,7 @@ describe("populatePncDisposal", () => {
       CJSresultCode: 123,
       CRESTDisposalCode: "FDINST",
       ResultVariableText: "It expects to see {victim surcharge}",
-      AmountSpecifiedInResult: [345, VICTIM_SURCHARGE_AMOUNT_IN_POUNDS],
+      AmountSpecifiedInResult: [{ Amount: 345 }, { Amount: VICTIM_SURCHARGE_AMOUNT_IN_POUNDS }],
       Verdict: ""
     } as Result
 
@@ -47,7 +47,7 @@ describe("populatePncDisposal", () => {
       CJSresultCode: 123,
       CRESTDisposalCode: "",
       ResultVariableText: "",
-      AmountSpecifiedInResult: [0],
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: GUILTY_OF_ALTERNATIVE
     } as Result
 
@@ -81,7 +81,7 @@ describe("populatePncDisposal", () => {
       ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
       CRESTDisposalCode: "",
       ResultVariableText: "",
-      AmountSpecifiedInResult: [0],
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -115,7 +115,7 @@ describe("populatePncDisposal", () => {
       ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
       CRESTDisposalCode: "",
       ResultVariableText: "",
-      AmountSpecifiedInResult: [0],
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -149,7 +149,7 @@ describe("populatePncDisposal", () => {
       ResultClass: ResultClass.UNRESULTED,
       CRESTDisposalCode: "",
       ResultVariableText: "",
-      AmountSpecifiedInResult: [0],
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -178,7 +178,7 @@ describe("populatePncDisposal", () => {
       ResultClass: ResultClass.UNRESULTED,
       CRESTDisposalCode: "",
       ResultVariableText: "",
-      AmountSpecifiedInResult: [0],
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 

@@ -1,5 +1,12 @@
-import type { PncCourtCase, PNCDisposal, PncOffence, PncPenaltyCase, PncQueryResult } from "src/types/PncQueryResult"
-import type { Cxe01, Dis, RawAhoPncOffence } from "src/types/RawAho"
+import type {
+  PncAdjudication,
+  PncCourtCase,
+  PNCDisposal,
+  PncOffence,
+  PncPenaltyCase,
+  PncQueryResult
+} from "src/types/PncQueryResult"
+import type { Adj, Cxe01, Dis, RawAhoPncOffence } from "src/types/RawAho"
 import parsePncDate from "./parsePncDate"
 
 type OffenceDates = {
@@ -60,6 +67,19 @@ const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PNCDisposal[] | und
   }))
 }
 
+const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undefined => {
+  if (!adj) {
+    return undefined
+  }
+  return {
+    verdict: adj["@_Adjudication1"],
+    sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
+    plea: adj["@_Plea"],
+    offenceTICNumber: Number(adj["@_OffenceTICNumber"]),
+    weedFlag: adj["@_WeedFlag"]
+  }
+}
+
 const mapXmlOffencesToAho = (offences: RawAhoPncOffence[]): PncOffence[] =>
   offences.map(
     (offence): PncOffence => ({
@@ -71,6 +91,7 @@ const mapXmlOffencesToAho = (offences: RawAhoPncOffence[]): PncOffence[] =>
         ...extractDates(offence),
         ...extractTimes(offence)
       },
+      adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
       disposals: mapXmlDisposalsToAho(offence.DISList?.DIS)
     })
   )

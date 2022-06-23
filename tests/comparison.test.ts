@@ -48,8 +48,24 @@ describe("Comparison testing", () => {
 
         it("should correctly parse aho xml", () => {
           const parsedAho = parseAhoXml(annotatedHearingOutcome)
+          if (parsedAho instanceof Error) {
+            throw parsedAho
+          }
           const ahoXml = convertAhoToXml(parsedAho)
           expect(ahoXml).toEqualXML(annotatedHearingOutcome)
+        })
+
+        it("should fully match", () => {
+          expect(coreResult.triggers).toStrictEqual(triggers)
+          expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
+          const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
+          expect(ahoXml).toEqualXML(annotatedHearingOutcome)
+          const parsedAho = parseAhoXml(annotatedHearingOutcome)
+          if (parsedAho instanceof Error) {
+            throw parsedAho
+          }
+          const parsedAhoXml = convertAhoToXml(parsedAho)
+          expect(parsedAhoXml).toEqualXML(annotatedHearingOutcome)
         })
       } catch (e) {
         it("should not error", () => {
