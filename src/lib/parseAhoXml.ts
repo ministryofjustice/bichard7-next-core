@@ -152,7 +152,9 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
         urgency: Number(xmlResult["br7:Urgent"]["br7:urgency"]["#text"])
       }
     : undefined,
-  NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"] ? Number(xmlResult["br7:NumberOfOffencesTIC"]) : undefined,
+  NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"]?.["#text"]
+    ? Number(xmlResult["br7:NumberOfOffencesTIC"]["#text"])
+    : undefined,
   ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"]
     ? Number(xmlResult["ds:ResultHalfLifeHours"]["#text"])
