@@ -44,15 +44,27 @@ import {
 } from "src/use-cases/dataLookup"
 import addExceptionsToRawAho from "./addExceptionsToRawAho"
 
+const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]
+
+const mostSpecificErrorElement = (path: (string | number)[]) => {
+  const matchingElements = errorElementHierarchy.filter((value) => path.includes(value))
+  return matchingElements.pop()
+}
+
+const exceptionMatchesElement = (exception: Exception, elementPath: (string | number)[]) => {
+  const exceptionElement = mostSpecificErrorElement(exception.path)
+  const pathElement = mostSpecificErrorElement(elementPath)
+  return exceptionElement === pathElement && exception.path.join("").startsWith(elementPath.join(""))
+}
+
 const hasError = (exceptions: Exception[] | undefined, path: (string | number)[] = []): boolean => {
   if (!exceptions || exceptions.length === 0) {
     return false
   }
   if (path.length > 0) {
-    const currentPath = path.join("")
-    return exceptions.some((e) => e.path.join("").startsWith(currentPath))
+    return exceptions.some((e) => exceptionMatchesElement(e, path))
   }
-  return false
+  return exceptions.length > 0
 }
 
 enum LiteralType {
@@ -148,8 +160,12 @@ const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
     "ds:DurationLength": text(d.DurationLength.toString())
   }))
 
-const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefined): Br7Result[] =>
-  results.map((result) => ({
+const mapAhoResultsToXml = (
+  results: Result[],
+  exceptions: Exception[] | undefined,
+  offenceIndex: number
+): Br7Result[] =>
+  results.map((result, resultIndex) => ({
     "ds:CJSresultCode": text(result.CJSresultCode.toString()),
     "ds:OffenceRemandStatus": optionalLiteral(result.OffenceRemandStatus, LiteralType.OffenceRemandStatus),
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
@@ -187,7 +203,16 @@ const mapAhoResultsToXml = (results: Result[], exceptions: Exception[] | undefin
       "ds:Code": text(rqv.Code)
     })),
     "br7:ConvictingCourt": optionalText(result.ConvictingCourt),
-    "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
+    "@_hasError": hasError(exceptions, [
+      "AnnotatedHearingOutcome",
+      "HearingOutcome",
+      "Case",
+      "HearingDefendant",
+      "Offence",
+      offenceIndex,
+      "Result",
+      resultIndex
+    ]),
     "@_SchemaVersion": "2.0"
   }))
 
@@ -281,7 +306,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
     "br7:CourtCaseReferenceNumber": optionalText(offence.CourtCaseReferenceNumber),
-    "br7:Result": mapAhoResultsToXml(offence.Result, exceptions),
+    "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",
       "HearingOutcome",
