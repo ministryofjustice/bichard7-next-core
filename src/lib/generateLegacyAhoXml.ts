@@ -347,7 +347,9 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
     "br7:Address": {
       "ds:AddressLine1": text(c.HearingDefendant.Address.AddressLine1),
       "ds:AddressLine2": optionalText(c.HearingDefendant.Address.AddressLine2),
-      "ds:AddressLine3": optionalText(c.HearingDefendant.Address.AddressLine3)
+      "ds:AddressLine3": optionalText(c.HearingDefendant.Address.AddressLine3),
+      "ds:AddressLine4": optionalText(c.HearingDefendant.Address.AddressLine4),
+      "ds:AddressLine5": optionalText(c.HearingDefendant.Address.AddressLine5)
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
     "br7:BailConditions":

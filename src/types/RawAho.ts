@@ -167,6 +167,8 @@ export interface Br7Address {
   "ds:AddressLine1": Br7TextString
   "ds:AddressLine2"?: Br7TextString
   "ds:AddressLine3"?: Br7TextString
+  "ds:AddressLine4"?: Br7TextString
+  "ds:AddressLine5"?: Br7TextString
 }
 
 export interface Br7DefendantDetail {

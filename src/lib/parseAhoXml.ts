@@ -332,7 +332,9 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     Address: {
       AddressLine1: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine1"]["#text"],
       AddressLine2: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine2"]?.["#text"],
-      AddressLine3: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine3"]?.["#text"]
+      AddressLine3: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine3"]?.["#text"],
+      AddressLine4: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine4"]?.["#text"],
+      AddressLine5: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine5"]?.["#text"]
     },
     RemandStatus: xmlCase["br7:HearingDefendant"]["br7:RemandStatus"]["#text"],
     CourtPNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:CourtPNCIdentifier"]?.["#text"],
