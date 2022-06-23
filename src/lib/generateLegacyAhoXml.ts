@@ -3,8 +3,10 @@ import { XMLBuilder } from "fast-xml-parser"
 import type {
   AnnotatedHearingOutcome,
   Case,
+  DateSpecifiedInResult,
   Duration,
   Hearing,
+  NumberSpecifiedInResult,
   Offence,
   OffenceReason,
   OrganisationUnitCodes,
@@ -23,7 +25,9 @@ import type {
   Br7OffenceReason,
   Br7OrganisationUnit,
   Br7Result,
+  Br7SequenceTextString,
   Br7TextString,
+  Br7TypeTextString,
   Br7Urgent,
   Cxe01,
   DISList,
@@ -163,6 +167,24 @@ const mapAhoDuration = (duration: Duration[]): Br7Duration[] =>
     "ds:DurationLength": text(d.DurationLength.toString())
   }))
 
+const mapDateSpecifiedInResult = (dates: DateSpecifiedInResult[] | undefined): Br7SequenceTextString[] | undefined => {
+  if (!dates || dates.length === 0) {
+    return undefined
+  }
+
+  return dates.map((date) => ({ "#text": format(date.Date, "yyyy-MM-dd"), "@_Sequence": date.Sequence.toString() }))
+}
+
+const mapNumberSpecifiedInResult = (
+  numbers: NumberSpecifiedInResult[] | undefined
+): Br7TypeTextString[] | undefined => {
+  if (!numbers || numbers.length === 0) {
+    return undefined
+  }
+
+  return numbers.map((number) => ({ "#text": number.Number.toString(), "@_Type": number.Type.toString() }))
+}
+
 const mapAhoResultsToXml = (
   results: Result[],
   exceptions: Exception[] | undefined,
@@ -177,6 +199,7 @@ const mapAhoResultsToXml = (
       ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
       : undefined,
     "ds:ResultHearingDate": optionalFormatText(result.ResultHearingDate, "yyyy-MM-dd"),
+    "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
     "ds:BailCondition": result.BailCondition?.map(text),
     "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
       ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
@@ -189,6 +212,7 @@ const mapAhoResultsToXml = (
       "#text": amount.toFixed(2),
       "@_Type": "Fine"
     })),
+    "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),

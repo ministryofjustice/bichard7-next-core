@@ -106,6 +106,16 @@ const durationSchema = z.object({
   DurationLength: z.number().min(1, ExceptionCode.HO100242).max(999, ExceptionCode.HO100242)
 })
 
+const dateSpecifiedInResultSchema = z.object({
+  Date: z.date(),
+  Sequence: z.number()
+})
+
+const numberSpecifiedInResultSchema = z.object({
+  Number: z.number(),
+  Type: z.string()
+})
+
 const resultQualifierVariableSchema = z.object({
   Code: z
     .string()
@@ -113,7 +123,7 @@ const resultQualifierVariableSchema = z.object({
     .max(2, ExceptionCode.HO100247)
     .refine(validateResultQualifierCode, ExceptionCode.HO100309), // HO100309 is tested but HO100247 is masked by XML parsing
   Duration: durationSchema.optional(),
-  DateSpecifiedInResult: z.date().optional(),
+  DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   Text: z.string().optional()
 })
 
@@ -187,10 +197,10 @@ const resultSchema = z.object({
   ResultHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Always set to OTHER so can't test exception
   ResultHearingDate: z.date().optional(),
   Duration: durationSchema.array().optional(),
-  DateSpecifiedInResult: z.date().array().optional(),
+  DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: z.number().array().optional(),
-  NumberSpecifiedInResult: z.string().array().optional(),
+  NumberSpecifiedInResult: numberSpecifiedInResultSchema.array().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
   NextHearingDate: z.date().optional(),
@@ -342,3 +352,5 @@ export type CriminalProsecutionReference = z.infer<typeof criminalProsecutionRef
 export type Duration = z.infer<typeof durationSchema>
 export type DefendantOrOffender = z.infer<typeof defendantOrOffenderSchema>
 export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSchema>
+export type DateSpecifiedInResult = z.infer<typeof dateSpecifiedInResultSchema>
+export type NumberSpecifiedInResult = z.infer<typeof numberSpecifiedInResultSchema>

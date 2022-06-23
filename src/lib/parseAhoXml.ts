@@ -3,8 +3,10 @@ import type {
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
+  DateSpecifiedInResult,
   Duration,
   Hearing,
+  NumberSpecifiedInResult,
   Offence,
   OffenceReason,
   OrganisationUnitCodes,
@@ -22,6 +24,7 @@ import type {
   Br7OrganisationUnit,
   Br7Result,
   Br7ResultQualifierVariable,
+  Br7SequenceTextString,
   Br7TextString,
   Br7TypeTextString,
   CommonLawOffenceCode,
@@ -50,6 +53,28 @@ const mapAmountSpecifiedInResult = (
   const resultArray = Array.isArray(result) ? result : [result]
 
   return resultArray.map((amount) => Number(amount["#text"]))
+}
+
+const mapNumberSpecifiedInResult = (
+  input: Br7TypeTextString | Br7TypeTextString[] | undefined
+): NumberSpecifiedInResult[] | undefined => {
+  if (!input) {
+    return undefined
+  }
+  const inputArray = Array.isArray(input) ? input : [input]
+
+  return inputArray.map((amount) => ({ Number: Number(amount["#text"]), Type: amount["@_Type"] }))
+}
+
+const mapDateSpecifiedInResult = (
+  input: Br7SequenceTextString | Br7SequenceTextString[] | undefined
+): DateSpecifiedInResult[] | undefined => {
+  if (!input) {
+    return undefined
+  }
+  const inputArray = Array.isArray(input) ? input : [input]
+
+  return inputArray.map((el) => ({ Date: new Date(el["#text"]), Sequence: Number(el?.["@_Sequence"]) }))
 }
 
 const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duration[] => {
@@ -101,10 +126,10 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
       }
     : undefined,
   Duration: mapDuration(xmlResult["ds:Duration"]),
-  DateSpecifiedInResult: [],
+  DateSpecifiedInResult: mapDateSpecifiedInResult(xmlResult["ds:DateSpecifiedInResult"]),
   // TimeSpecifiedInResult: xmlResult,
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
-  // NumberSpecifiedInResult: xmlResult["ds:NumberSpecifiedInResult"],
+  NumberSpecifiedInResult: mapNumberSpecifiedInResult(xmlResult["ds:NumberSpecifiedInResult"]),
   NextCourtType: xmlResult["ds:NextCourtType"]?.["#text"],
   NextHearingDate: xmlResult["ds:NextHearingDate"] ? new Date(xmlResult["ds:NextHearingDate"]["#text"]) : undefined,
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],

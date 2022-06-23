@@ -169,9 +169,9 @@ export default class {
 
         result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
         spiDurationStartDate.forEach((durationStartDate, index) => {
-          result.DateSpecifiedInResult?.push(new Date(durationStartDate))
+          result.DateSpecifiedInResult?.push({ Date: new Date(durationStartDate), Sequence: 1 })
           if (spiDurationEndDate[index]) {
-            result.DateSpecifiedInResult?.push(new Date(spiDurationEndDate[index]))
+            result.DateSpecifiedInResult?.push({ Date: new Date(spiDurationEndDate[index]), Sequence: 2 })
           }
         })
       }
@@ -184,13 +184,13 @@ export default class {
       if (spiResultCode) {
         result.NumberSpecifiedInResult = result.NumberSpecifiedInResult ?? []
         if (spiResultCode === RESULT_PENALTY_POINTS && spiPenaltyPoints) {
-          result.NumberSpecifiedInResult.push(spiPenaltyPoints.toString())
+          result.NumberSpecifiedInResult.push({ Number: spiPenaltyPoints, Type: "P" })
         } else if (
           (spiResultCode === RESULT_CURFEW1 || spiResultCode === RESULT_CURFEW2) &&
           spiDuration?.SecondaryDurationUnit === DURATION_UNITS.HOURS &&
           spiDuration?.SecondaryDurationValue
         ) {
-          result.NumberSpecifiedInResult.push(spiDuration.SecondaryDurationValue.toString())
+          result.NumberSpecifiedInResult.push({ Number: spiDuration.SecondaryDurationValue, Type: "P" })
         }
       }
     }

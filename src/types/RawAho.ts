@@ -225,6 +225,8 @@ export interface Br7Result {
   "ds:CourtType"?: Br7TextString
   "ds:ResultHearingType"?: Br7LiteralTextString
   "ds:ResultHearingDate"?: Br7TextString
+  "ds:DateSpecifiedInResult"?: Br7SequenceTextString[]
+  "ds:NumberSpecifiedInResult"?: Br7TypeTextString[]
   "ds:Duration"?: Br7Duration[]
   "ds:NextResultSourceOrganisation"?: Br7OrganisationUnit
   "ds:NextCourtType"?: Br7TextString
@@ -232,7 +234,6 @@ export interface Br7Result {
   "ds:NextHearingTime"?: Br7TextString
   "ds:BailCondition"?: Br7TextString[]
   "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
-  // "ds:NumberSpecifiedInResult": Br7TextString
   "ds:PleaStatus"?: Br7LiteralTextString
   "ds:Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
@@ -345,7 +346,11 @@ export interface Br7LiteralTextString extends Br7TextString {
 }
 
 export interface Br7TypeTextString extends Br7TextString {
-  "@_Type"?: string
+  "@_Type": string
+}
+
+export interface Br7SequenceTextString extends Br7TextString {
+  "@_Sequence": string
 }
 
 export interface Br7NameSequenceTextString extends Br7TextString {
