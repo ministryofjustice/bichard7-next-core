@@ -272,7 +272,10 @@ Object {
               "Result": Array [
                 Object {
                   "AmountSpecifiedInResult": Array [
-                    100,
+                    Object {
+                      "Amount": 100,
+                      "Type": "Fine",
+                    },
                   ],
                   "BailCondition": Array [],
                   "CJSresultCode": 1015,

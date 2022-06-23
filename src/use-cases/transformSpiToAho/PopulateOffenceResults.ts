@@ -31,6 +31,7 @@ import {
   lookupVerdictBySpiCode
 } from "src/use-cases/dataLookup"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
+import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
 interface RemandDetails {
   location?: string
@@ -178,7 +179,8 @@ export default class {
 
       if (spiResultAmountSterling) {
         result.AmountSpecifiedInResult = result.AmountSpecifiedInResult ?? []
-        result.AmountSpecifiedInResult.push(spiResultAmountSterling)
+        const amountType = lookupAmountTypeByCjsCode(result.CJSresultCode)
+        result.AmountSpecifiedInResult.push({ Amount: spiResultAmountSterling, Type: amountType })
       }
 
       if (spiResultCode) {

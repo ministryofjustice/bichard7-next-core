@@ -209,8 +209,8 @@ const mapAhoResultsToXml = (
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
-      "#text": amount.toFixed(2),
-      "@_Type": "Fine"
+      "#text": amount.Amount.toFixed(2),
+      "@_Type": amount.Type ?? ""
     })),
     "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),

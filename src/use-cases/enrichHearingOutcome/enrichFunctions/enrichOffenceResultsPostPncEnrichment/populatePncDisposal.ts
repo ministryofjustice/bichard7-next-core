@@ -23,7 +23,7 @@ const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Re
     CourtType?.startsWith("M") &&
     VICTIM_SURCHARGE_CREST_CODES.includes(CRESTDisposalCode ?? "") &&
     ResultVariableText?.match(/victim\s*surcharge/i) &&
-    AmountSpecifiedInResult?.some((amount) => amount === VICTIM_SURCHARGE_AMOUNT_IN_POUNDS)
+    AmountSpecifiedInResult?.some((amount) => amount.Amount === VICTIM_SURCHARGE_AMOUNT_IN_POUNDS)
   ) {
     result.PNCDisposalType = PNC_DISPOSAL_TYPE.VICTIM_SURCHARGE
   } else if (Verdict === GUILTY_OF_ALTERNATIVE) {

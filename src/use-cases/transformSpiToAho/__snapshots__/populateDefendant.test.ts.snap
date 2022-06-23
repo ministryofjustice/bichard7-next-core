@@ -148,7 +148,10 @@ Object {
       "Result": Array [
         Object {
           "AmountSpecifiedInResult": Array [
-            100,
+            Object {
+              "Amount": 100,
+              "Type": "Fine",
+            },
           ],
           "CJSresultCode": 1015,
           "ConvictingCourt": undefined,

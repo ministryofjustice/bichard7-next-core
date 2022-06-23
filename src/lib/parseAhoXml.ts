@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import type {
+  AmountSpecifiedInResult,
   AnnotatedHearingOutcome,
   Case,
   CriminalProsecutionReference,
@@ -47,13 +48,13 @@ const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): Organis
 
 const mapAmountSpecifiedInResult = (
   result: Br7TypeTextString | Br7TypeTextString[] | undefined
-): number[] | undefined => {
+): AmountSpecifiedInResult[] | undefined => {
   if (!result) {
     return undefined
   }
   const resultArray = Array.isArray(result) ? result : [result]
 
-  return resultArray.map((amount) => Number(amount["#text"]))
+  return resultArray.map((amount) => ({ Amount: Number(amount["#text"]), Type: amount["@_Type"] }))
 }
 
 const mapNumberSpecifiedInResult = (

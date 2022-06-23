@@ -116,6 +116,11 @@ const numberSpecifiedInResultSchema = z.object({
   Type: z.string()
 })
 
+const amountSpecifiedInResultSchema = z.object({
+  Amount: z.number(),
+  Type: z.string().optional()
+})
+
 const resultQualifierVariableSchema = z.object({
   Code: z
     .string()
@@ -199,7 +204,7 @@ const resultSchema = z.object({
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
-  AmountSpecifiedInResult: z.number().array().optional(),
+  AmountSpecifiedInResult: amountSpecifiedInResultSchema.array().optional(),
   NumberSpecifiedInResult: numberSpecifiedInResultSchema.array().optional(),
   NextResultSourceOrganisation: organisationUnitSchema.optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
@@ -354,3 +359,4 @@ export type DefendantOrOffender = z.infer<typeof defendantOrOffenderSchema>
 export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSchema>
 export type DateSpecifiedInResult = z.infer<typeof dateSpecifiedInResultSchema>
 export type NumberSpecifiedInResult = z.infer<typeof numberSpecifiedInResultSchema>
+export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>
