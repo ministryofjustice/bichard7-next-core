@@ -54,7 +54,10 @@ const mostSpecificErrorElement = (path: (string | number)[]) => {
 const exceptionMatchesElement = (exception: Exception, elementPath: (string | number)[]) => {
   const exceptionElement = mostSpecificErrorElement(exception.path)
   const pathElement = mostSpecificErrorElement(elementPath)
-  return exceptionElement === pathElement && exception.path.join("").startsWith(elementPath.join(""))
+  return (
+    (exceptionElement === pathElement || (exceptionElement === "Result" && pathElement === "Offence")) &&
+    exception.path.join("").startsWith(elementPath.join(""))
+  )
 }
 
 const hasError = (exceptions: Exception[] | undefined, path: (string | number)[] = []): boolean => {
