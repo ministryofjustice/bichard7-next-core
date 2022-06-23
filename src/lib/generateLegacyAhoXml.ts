@@ -12,7 +12,7 @@ import type {
   Urgent
 } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
-import type { PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
+import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 import type {
   Adj,
   Br7Case,
@@ -366,17 +366,11 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
   "@_SchemaVersion": "4.0"
 })
 
-const mapOffenceADJ = (adjudication: {
-  verdict: string
-  sentenceDate: string
-  offenceTICNumber: number
-  plea: string
-  weedFlag?: string
-}): Adj => ({
+const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_Adjudication1": adjudication.verdict,
-  "@_DateOfSentence": adjudication.sentenceDate,
-  "@_IntfcUpdateType": "",
-  "@_OffenceTICNumber": String(adjudication.offenceTICNumber),
+  "@_DateOfSentence": format(adjudication.sentenceDate, "ddMMyyyy"),
+  "@_IntfcUpdateType": "I",
+  "@_OffenceTICNumber": adjudication.offenceTICNumber.toString().padStart(4, "0"),
   "@_Plea": adjudication.plea,
   "@_WeedFlag": adjudication.weedFlag ?? ""
 })
