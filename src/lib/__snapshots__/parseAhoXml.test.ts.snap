@@ -71,7 +71,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "SX",
-                    "FullCode": "001A",
+                    "FullCode": "SX03001A",
                     "Qualifier": "A",
                     "Reason": "001",
                     "Year": "03",
@@ -160,7 +160,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "SX",
-                    "FullCode": "001",
+                    "FullCode": "SX03001",
                     "Qualifier": undefined,
                     "Reason": "001",
                     "Year": "03",
@@ -252,7 +252,7 @@ Object {
                 "OffenceReason": Object {
                   "OffenceCode": Object {
                     "ActOrSource": "RT",
-                    "FullCode": "191",
+                    "FullCode": "RT88191",
                     "Qualifier": undefined,
                     "Reason": "191",
                     "Year": "88",

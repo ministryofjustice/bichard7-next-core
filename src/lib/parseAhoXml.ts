@@ -172,9 +172,11 @@ const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
 const buildFullOffenceCode = (
   offenceCode: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
 ): string => {
+  const actOrSource = "ds:ActOrSource" in offenceCode ? offenceCode["ds:ActOrSource"]?.["#text"] : ""
+  const year = "ds:Year" in offenceCode ? offenceCode["ds:Year"]?.["#text"] : ""
   const reason = offenceCode["ds:Reason"]["#text"] ?? ""
   const qualifier = offenceCode["ds:Qualifier"]?.["#text"] ?? ""
-  return `${reason}${qualifier}`
+  return `${actOrSource}${year}${reason}${qualifier}`
 }
 
 const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => {
