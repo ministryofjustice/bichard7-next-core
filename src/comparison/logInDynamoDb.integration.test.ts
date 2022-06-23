@@ -46,7 +46,6 @@ describe("logInDynamoDb", () => {
 
     const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
     const record = (getOneResult as DocumentClient.GetItemOutput).Item as ComparisonLog
-    console.log(JSON.stringify(record, null, 2))
     expect(record).toStrictEqual({
       _: "_",
       s3Path: "DummyPath",
@@ -103,7 +102,6 @@ describe("logInDynamoDb", () => {
 
     const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
     const record = (getOneResult as DocumentClient.GetItemOutput).Item as ComparisonLog
-    console.log(JSON.stringify(record, null, 2))
     expect(record).toStrictEqual({
       _: "_",
       s3Path: "DummyPath",

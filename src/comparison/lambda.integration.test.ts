@@ -38,7 +38,7 @@ describe("Comparison lambda", () => {
     s3Server = new MockS3(bucket)
     await s3Server.start()
     dynamoServer = new MockDynamo()
-    await dynamoServer.start(8001)
+    await dynamoServer.start(8000)
     MockDate.set(mockedDate)
   })
 
