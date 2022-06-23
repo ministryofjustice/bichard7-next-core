@@ -75,7 +75,7 @@ jobs:
           at: .
       - run:
           name: Run tests against core code
-          command: npm t
+          command: npm t && npm run test:integration
 
   test_bichard:
     machine:
