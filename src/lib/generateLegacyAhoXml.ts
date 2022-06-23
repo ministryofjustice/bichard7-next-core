@@ -299,7 +299,9 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
         ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
         : undefined,
       "ds:OffenceReasonSequence": optionalText(
-        offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
+        offence.ManualSequenceNumber
+          ? offence.CriminalProsecutionReference.OffenceReasonSequence?.toString()
+          : offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
       ),
       "@_SchemaVersion": "2.0"
     },
@@ -331,6 +333,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "ds:ConvictionDate": optionalFormatText(offence.ConvictionDate, "yyyy-MM-dd"),
     "br7:CommittedOnBail": { "#text": offence.CommittedOnBail, "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
+    "br7:ManualSequenceNo": optionalLiteral(offence.ManualSequenceNumber, LiteralType.YesNo),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
     "br7:CourtCaseReferenceNumber": optionalText(offence.CourtCaseReferenceNumber),
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index),

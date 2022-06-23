@@ -266,7 +266,7 @@ const offenceSchema = z.object({
   CourtCaseReferenceNumber: z.string().optional(),
   ManualCourtCaseReferenceNumber: z.string().optional(),
   CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
-  ManualSequenceNumber: z.number().optional(),
+  ManualSequenceNumber: z.boolean().optional(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional(),
   NotifiableToHOindicator: z.boolean().optional(),

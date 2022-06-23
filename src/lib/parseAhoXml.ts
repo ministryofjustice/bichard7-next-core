@@ -261,10 +261,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
       ({
         CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
         OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
-        // OffenceInitiationCode: xmlOffence.
         OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
-        // SummonsCode: xmlOffence.Sum
-        // Informant: xmlOffence.inform
         ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]["#text"]) : undefined,
         ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]["#text"]) : undefined,
         ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
@@ -278,24 +275,13 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
               }
             : undefined,
         LocationOfOffence: xmlOffence["ds:LocationOfOffence"]["#text"],
-        // OffenceWelshTitle: xmlOffence
         ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
-        // ActualWelshOffenceWording: xmlOffence.
-        // ActualIndictmentWording: xmlOffence.actu
-        // ActualWelshIndictmentWording: xmlOffence.Actr
-        // ActualStatementOfFacts: xmlOffence.actual
-        // ActualWelshStatementOfFacts:
         AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
           ? {
               Amount: xmlOffence["ds:AlcoholLevel"]["ds:Amount"]["#text"],
               Method: xmlOffence["ds:AlcoholLevel"]["ds:Method"]["#text"]
             }
           : undefined,
-        // VehicleCode:
-        // VehicleRegistrationMark:
-        // StartTime:
-        // OffenceEndTime: xmlOffence.
-        // OffenceTime: xmlOffence.Offence
         ConvictionDate: xmlOffence["ds:ConvictionDate"]
           ? new Date(xmlOffence["ds:ConvictionDate"]["#text"])
           : undefined,
