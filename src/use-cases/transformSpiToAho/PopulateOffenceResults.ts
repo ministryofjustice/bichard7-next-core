@@ -169,11 +169,11 @@ export default class {
         }
 
         result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
-        spiDurationStartDate.forEach((durationStartDate, index) => {
+        spiDurationStartDate.forEach((durationStartDate) => {
           result.DateSpecifiedInResult?.push({ Date: new Date(durationStartDate), Sequence: 1 })
-          if (spiDurationEndDate[index]) {
-            result.DateSpecifiedInResult?.push({ Date: new Date(spiDurationEndDate[index]), Sequence: 2 })
-          }
+        })
+        spiDurationEndDate.forEach((durationEndDate) => {
+          result.DateSpecifiedInResult?.push({ Date: new Date(durationEndDate), Sequence: 2 })
         })
       }
 
