@@ -21,8 +21,8 @@ const lookupAmountTypeByCjsCode = (cjsCode: number): string | undefined => {
     if (lookup[type].some((code) => code === cjsCode)) {
       return type
     }
-    return defaultAmountType
   }
+  return defaultAmountType
 }
 
 export default lookupAmountTypeByCjsCode

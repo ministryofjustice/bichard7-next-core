@@ -169,11 +169,11 @@ export default class {
         }
 
         result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
-        spiDurationStartDate.forEach((durationStartDate, index) => {
+        spiDurationStartDate.forEach((durationStartDate) => {
           result.DateSpecifiedInResult?.push({ Date: new Date(durationStartDate), Sequence: 1 })
-          if (spiDurationEndDate[index]) {
-            result.DateSpecifiedInResult?.push({ Date: new Date(spiDurationEndDate[index]), Sequence: 2 })
-          }
+        })
+        spiDurationEndDate.forEach((durationEndDate) => {
+          result.DateSpecifiedInResult?.push({ Date: new Date(durationEndDate), Sequence: 2 })
         })
       }
 
@@ -241,17 +241,17 @@ export default class {
       result.WarrantIssueDate = new Date(spiDateOfHearing)
     }
 
-    if (
-      OFFENCES_TIC_RESULT_TEXT.toLowerCase() === spiResult.ResultText.toLowerCase() ||
-      spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE
-    ) {
+    const containsNumberOfOffencesTIC = (resultText: string): boolean =>
+      resultText.toLowerCase().includes(OFFENCES_TIC_RESULT_TEXT)
+
+    if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE) {
       result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10)
     }
 
     if (
       spiResultCodeQualifier.length === LIBRA_MAX_QUALIFIERS &&
       !spiResultCodeQualifier.some((resultCodeQualifier) => /BA/i.test(resultCodeQualifier)) &&
-      LIBRA_ELECTRONIC_TAGGING_TEXT.toLowerCase() === spiResult.ResultText.toLocaleLowerCase()
+      spiResult.ResultText.toLowerCase().includes(LIBRA_ELECTRONIC_TAGGING_TEXT.toLowerCase())
     ) {
       if (TAGGING_FIX_REMOVE.includes(spiResultCodeNumber)) {
         this.baResultCodeQualifierHasBeenExcluded = true
@@ -273,14 +273,6 @@ export default class {
       }
     })
 
-    if (
-      result.CJSresultCode === TAGGING_FIX_ADD &&
-      !result.ResultQualifierVariable.some((r) => r.Code === BAIL_QUALIFIER_CODE)
-    ) {
-      result.ResultQualifierVariable.push({ Code: BAIL_QUALIFIER_CODE })
-      this.baQualifierAdded = true
-    }
-
     if (!result.NextResultSourceOrganisation || !result.NextHearingDate) {
       const remandDetails = this.getRemandDetailsFromResultText(result)
       if (remandDetails.location && !result.NextResultSourceOrganisation) {
@@ -294,10 +286,25 @@ export default class {
     return result
   }
 
+  addBailResultQualifierVariable(results: Result[]): void {
+    if (this.baResultCodeQualifierHasBeenExcluded) {
+      results.forEach((result) => {
+        if (
+          result.CJSresultCode === TAGGING_FIX_ADD &&
+          !result.ResultQualifierVariable.some((r) => r.Code === BAIL_QUALIFIER_CODE)
+        ) {
+          result.ResultQualifierVariable.push({ Code: BAIL_QUALIFIER_CODE })
+          this.baQualifierAdded = true
+        }
+      })
+    }
+  }
+
   execute(): OffenceResultsResult {
     const { Result: spiResults } = this.spiOffence
 
     const results = spiResults.map((spiResult) => this.populateResult(spiResult))
+    this.addBailResultQualifierVariable(results)
 
     if (this.baResultCodeQualifierHasBeenExcluded && this.baQualifierAdded) {
       this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
