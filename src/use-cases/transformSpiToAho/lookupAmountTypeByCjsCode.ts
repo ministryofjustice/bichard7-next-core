@@ -14,12 +14,14 @@ const lookup: { [k: string]: number[] } = {
   "Inter-partes costs": [],
   "Estreatment of recognisance": [1063, 1071, 1094, 3016]
 }
+const defaultAmountType = "Fine"
 
 const lookupAmountTypeByCjsCode = (cjsCode: number): string | undefined => {
   for (const type of Object.keys(lookup)) {
     if (lookup[type].some((code) => code === cjsCode)) {
       return type
     }
+    return defaultAmountType
   }
 }
 
