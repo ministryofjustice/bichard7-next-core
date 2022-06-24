@@ -81,9 +81,9 @@ describe("enrichWithQuery()", () => {
     expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
   })
 
-  it("should set the PNC query date element to a date", () => {
+  it("should set the PNC query date element to undefined if it is not set", () => {
     expect(aho.PncQueryDate).toBeUndefined()
     const resultAho = enrichWithPncQuery(aho, pncGateway)
-    expect(resultAho.PncQueryDate).toBeInstanceOf(Date)
+    expect(resultAho.PncQueryDate).toBeUndefined()
   })
 })
