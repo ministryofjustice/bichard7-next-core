@@ -8,7 +8,8 @@ import {
   enrichOffenceResults,
   enrichOffenceResultsPostPncEnrichment,
   enrichOffences,
-  enrichWithPncQuery
+  enrichWithPncQuery,
+  enrichForceOwner
 } from "./enrichFunctions"
 
 const enrichHearingOutcome = (
@@ -24,7 +25,8 @@ const enrichHearingOutcome = (
     enrichOffenceResults,
     enrichCase,
     pncEnrich,
-    enrichOffenceResultsPostPncEnrichment
+    enrichOffenceResultsPostPncEnrichment,
+    enrichForceOwner
   ]
 
   return enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)

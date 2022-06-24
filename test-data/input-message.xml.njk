@@ -49,9 +49,9 @@
           <DC:PSAcode>2576</DC:PSAcode>
         </DC:CourtHearing>
         <DC:Case>
-          <DC:PTIURN>{{ PTIURN if PTIURN else "01ZD0303908" }}</DC:PTIURN>
+          <DC:PTIURN>{{ PTIURN if PTIURN === "" or PTIURN else "01ZD0303908" }}</DC:PTIURN>
           <DC:Defendant>
-            <DC:ProsecutorReference>{{ ASN if ASN else "1101ZD0100000448754K" }}</DC:ProsecutorReference>
+            <DC:ProsecutorReference>{{ ASN if ASN === "" or ASN else "1101ZD0100000448754K" }}</DC:ProsecutorReference>
             <DC:CourtIndividualDefendant>
               <DC:PersonDefendant>
                 <DC:BasePersonDetails>
