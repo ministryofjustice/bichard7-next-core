@@ -18,19 +18,30 @@ const populateForceOwner = (
   return hearingOutcome
 }
 
+/*
+  Try to get the forceStationCode from the PNC Query
+  Failing that, the case PTIURN
+  Failing that, the case ASN
+  Failing that, the courtHearingLocation
+*/
 const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | undefined => {
   if (hearingOutcome.PncQuery && hearingOutcome.PncQuery.forceStationCode) {
     return hearingOutcome.PncQuery.forceStationCode
   }
-  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN) {
-    return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN.substring(0, 4)
+
+  const ahoCase = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
+  if (ahoCase.PTIURN) {
+    return ahoCase.PTIURN.substring(0, 4)
   }
-  const asn = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+
+  const asn = ahoCase.HearingDefendant.ArrestSummonsNumber
   if (asn) {
     return asn.substring(asn.length - 18)
   }
-  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.SecondLevelCode) {
-    return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.SecondLevelCode
+
+  const courtHearingLocation = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation
+  if (courtHearingLocation.SecondLevelCode) {
+    return courtHearingLocation.SecondLevelCode
   }
 }
 
