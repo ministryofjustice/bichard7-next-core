@@ -5,11 +5,15 @@ const populateForceOwner = (
   hearingOutcome: AnnotatedHearingOutcome,
   forceStationCode: string
 ): AnnotatedHearingOutcome => {
+  const secondLevelCode = forceStationCode.substring(0, 2)
+  const thirdLevelCode = forceStationCode.length >= 4 ? forceStationCode.substring(2, 4) : "00"
+  const bottomLevelCode = "00"
+
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
-    SecondLevelCode: forceStationCode.substring(0, 2),
-    ThirdLevelCode: forceStationCode.length >= 4 ? forceStationCode.substring(2, 4) : "00",
-    BottomLevelCode: "00",
-    OrganisationUnitCode: forceStationCode.substring(0, 4) + "00"
+    SecondLevelCode: secondLevelCode,
+    ThirdLevelCode: thirdLevelCode,
+    BottomLevelCode: bottomLevelCode,
+    OrganisationUnitCode: secondLevelCode + thirdLevelCode + bottomLevelCode
   }
   return hearingOutcome
 }
