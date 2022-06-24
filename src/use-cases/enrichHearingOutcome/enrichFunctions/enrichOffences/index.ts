@@ -14,8 +14,11 @@ import lookupOffenceCode from "src/utils/offence/lookupOffenceCode"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import type Exception from "src/types/Exception"
+import handle100Offences from "./handle100Offences"
 
 const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutcome) => {
+  handle100Offences(hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case)
+
   const parsedASN = parseASN(
     hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
