@@ -9,12 +9,19 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
     }
   } = courtResult
 
+  const ptiurn = PTIURN.toUpperCase()
   return {
-    PTIURN: PTIURN?.toUpperCase(),
+    PTIURN: ptiurn,
     PreChargeDecisionIndicator: false,
     CourtReference: {
-      MagistratesCourtReference: PTIURN
+      MagistratesCourtReference: ptiurn
     },
-    HearingDefendant: populateDefendant(courtResult)
+    HearingDefendant: populateDefendant(courtResult),
+    ForceOwner: {
+      SecondLevelCode: ptiurn.substring(0, 2),
+      ThirdLevelCode: ptiurn.substring(2, 4),
+      BottomLevelCode: "00",
+      OrganisationUnitCode: `${ptiurn.substring(0, 4)}00`
+    }
   }
 }
