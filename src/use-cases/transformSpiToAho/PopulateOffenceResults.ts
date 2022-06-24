@@ -241,10 +241,10 @@ export default class {
       result.WarrantIssueDate = new Date(spiDateOfHearing)
     }
 
-    if (
-      OFFENCES_TIC_RESULT_TEXT.toLowerCase() === spiResult.ResultText.toLowerCase() ||
-      spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE
-    ) {
+    const containsNumberOfOffencesTIC = (resultText: string): boolean =>
+      resultText.toLowerCase().includes(OFFENCES_TIC_RESULT_TEXT)
+
+    if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE) {
       result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10)
     }
 
