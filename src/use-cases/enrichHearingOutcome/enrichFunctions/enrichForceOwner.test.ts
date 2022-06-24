@@ -2,9 +2,18 @@ import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import parseSpiResult from "src/use-cases/parseSpiResult"
 import transformSpiToAho from "src/use-cases/transformSpiToAho"
 import generateMessage from "tests/helpers/generateMessage"
+import generateMockAho from "tests/helpers/generateMockAho"
 import enrichForceOwner from "./enrichForceOwner"
 
 describe("enrichForceOwner", () => {
+  it("should return AHO enriched with force owner", () => {
+    const aho = generateMockAho()
+    const result = enrichForceOwner(aho)
+
+    expect(result).toBeDefined()
+    expect(result).toMatchSnapshot()
+  })
+
   it("should enrich the force from a valid PNC forceStationCode", () => {
     const incomingMessage = generateMessage({ offences: [{ results: [{}] }] })
     const spiResult = parseSpiResult(incomingMessage)
