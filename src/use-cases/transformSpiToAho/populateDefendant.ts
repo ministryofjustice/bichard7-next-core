@@ -87,13 +87,10 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
   if (spiDefendant.CourtIndividualDefendant) {
     const {
       CourtIndividualDefendant: {
-        PersonDefendant: {
-          PNCidentifier: spiPNCidentifier,
-          BailConditions: spiBailConditions,
-          ReasonForBailConditionsOrCustody: spiReasonForBailConditionsOrCustody
-        },
+        PersonDefendant: { PNCidentifier: spiPNCidentifier, BailConditions: spiBailConditions },
         BailStatus: spiBailStatus,
-        Address: spiAddress
+        Address: spiAddress,
+        ReasonForBailConditionsOrCustody: spiReasonForBailConditionsOrCustody
       }
     } = spiDefendant
     hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)

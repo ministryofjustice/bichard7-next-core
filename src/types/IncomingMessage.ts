@@ -107,7 +107,6 @@ const spiCourtIndividualDefendantSchema = z.object({
   PersonDefendant: z.object({
     PNCidentifier: z.string().optional(),
     BailConditions: z.string().optional(),
-    ReasonForBailConditionsOrCustody: z.string().optional(),
     BasePersonDetails: z.object({
       Birthdate: z.string().optional(),
       Gender: z.number(),
