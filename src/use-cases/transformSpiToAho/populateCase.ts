@@ -16,12 +16,6 @@ export default (courtResult: ResultedCaseMessageParsedXml): Case => {
     CourtReference: {
       MagistratesCourtReference: ptiurn
     },
-    HearingDefendant: populateDefendant(courtResult),
-    ForceOwner: {
-      SecondLevelCode: ptiurn.substring(0, 2),
-      ThirdLevelCode: ptiurn.substring(2, 4),
-      BottomLevelCode: "00",
-      OrganisationUnitCode: `${ptiurn.substring(0, 4)}00`
-    }
+    HearingDefendant: populateDefendant(courtResult)
   }
 }
