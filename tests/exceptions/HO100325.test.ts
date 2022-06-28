@@ -1,6 +1,6 @@
 jest.setTimeout(30000)
 
-import { offenceResultClassPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
+import errorPaths from "src/lib/errorPaths"
 import generateMessage from "tests/helpers/generateMessage"
 import PostgresHelper from "tests/helpers/PostgresHelper"
 import processMessage from "tests/helpers/processMessage"
@@ -34,7 +34,7 @@ describe("HO100325", () => {
     expect(exceptions).toStrictEqual([
       {
         code: "HO100325",
-        path: offenceResultClassPath(0, 0)
+        path: errorPaths.offence(0).result(0).resultClass
       }
     ])
   })
@@ -82,7 +82,7 @@ describe("HO100325", () => {
     expect(exceptions).toStrictEqual([
       {
         code: "HO100325",
-        path: offenceResultClassPath(0, 0)
+        path: errorPaths.offence(0).result(0).resultClass
       }
     ])
   })

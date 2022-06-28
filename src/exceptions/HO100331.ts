@@ -1,3 +1,4 @@
+import errorPaths from "src/lib/errorPaths"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 
@@ -8,7 +9,7 @@ const HO100331: ExceptionGenerator = (hearingOutcome) => {
     return [
       {
         code: ExceptionCode.HO100331,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "CourtReference", "MagistratesCourtReference"]
+        path: errorPaths.case.magistratesCourtReference
       }
     ]
   }

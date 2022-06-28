@@ -1,3 +1,4 @@
+import errorPaths from "src/lib/errorPaths"
 import type { MultipleCaseMatcherOutcome } from "src/lib/matchMultipleCases"
 import offenceIsBreach from "src/lib/offenceMatcher/offenceIsBreach"
 import offencesMatch from "src/lib/offenceMatcher/offencesMatch"
@@ -5,7 +6,6 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
-import { offenceReasonSequencePath } from "./errorPaths"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 
 const getFirstMatchingCourtCaseWith2060Result = (
@@ -77,13 +77,13 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
     if (!pncOffence) {
       const duplicateCases = matcherOutcome.duplicateHoOffences.get(hoOffence)
       if (duplicateCases && duplicateCases.length === 1) {
-        addError(aho, ExceptionCode.HO100310, offenceReasonSequencePath(offenceIndex))
+        addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
         offenceHasError = true
       } else if (
         matcherOutcome.ambiguousHoOffences.includes(hoOffence) ||
         (duplicateCases && duplicateCases.length > 1)
       ) {
-        addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+        addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
           hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
         }
@@ -111,7 +111,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
               result.PNCAdjudicationExists = false
             })
           } else {
-            addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+            addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
             if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
               hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
             }
@@ -132,14 +132,14 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
       const pncOffenceMatches = offencesMatch(hoOffence, pncOffence)
 
       if (!pncOffenceMatches) {
-        addError(aho, ExceptionCode.HO100320, offenceReasonSequencePath(offenceIndex))
+        addError(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
         offenceHasError = true
       } else if (
         !!hoOffence.ManualCourtCaseReferenceNumber &&
         hoOffence.ManualCourtCaseReferenceNumber !== "" &&
         hoOffence.ManualCourtCaseReferenceNumber !== courtCaseRef
       ) {
-        addError(aho, ExceptionCode.HO100332, offenceReasonSequencePath(offenceIndex))
+        addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
           hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
         }

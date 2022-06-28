@@ -1,13 +1,17 @@
+import errorPaths from "src/lib/errorPaths"
 import findException from "src/lib/findException"
 import isCaseRecordable from "src/lib/isCaseRecordable"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import { nextResultSourceOrganisationPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichOffenceResultsPostPncEnrichment/errorPaths"
-import { nextHearingDatePath } from "src/use-cases/transformSpiToAho/errorPaths"
 
 const hasHO100322 = (exceptions: Exception[], offenceIndex: number, resultIndex: number): boolean =>
-  !!findException(exceptions, [], nextResultSourceOrganisationPath(offenceIndex, resultIndex), ExceptionCode.HO100322)
+  !!findException(
+    exceptions,
+    [],
+    errorPaths.offence(offenceIndex).result(resultIndex).nextResultSourceOrganisation.organisationUnitCode,
+    ExceptionCode.HO100322
+  )
 
 const HO100323: ExceptionGenerator = (hearingOutcome, options) => {
   if (!isCaseRecordable(hearingOutcome)) {
@@ -21,7 +25,7 @@ const HO100323: ExceptionGenerator = (hearingOutcome, options) => {
     (offence, offenceIndex) => {
       offence.Result.forEach((result, resultIndex) => {
         if (hasHO100322(exceptions, offenceIndex, resultIndex) && !result.NextHearingDate) {
-          const path = nextHearingDatePath(offenceIndex, resultIndex)
+          const path = errorPaths.offence(offenceIndex).result(resultIndex).nextHearingDate
           generatedExceptions.push({ code: ExceptionCode.HO100323, path })
         }
       })
