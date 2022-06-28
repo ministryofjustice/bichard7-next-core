@@ -1,23 +1,14 @@
-import {
-  ADJOURNMENT_NO_NEXT_HEARING_RANGES,
-  ADJOURNMENT_RANGES,
-  ResultClass,
-  RESULT_CLASS_PLEAS,
-  RESULT_CLASS_RESULT_CODES,
-  RESULT_CLASS_VERDICTS,
-  WARRANT_ISSUED_CODES
-} from "src/lib/properties"
+import isAdjourned from "src/lib/isAdjourned"
+import isAdjournedNoNextHearing from "src/lib/isAdjournedNoNextHearing"
+import isWarrantIssued from "src/lib/isWarrantIssued"
+import { ResultClass, RESULT_CLASS_PLEAS, RESULT_CLASS_RESULT_CODES, RESULT_CLASS_VERDICTS } from "src/lib/properties"
 import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
-
-const isInRanges = (ranges: number[][], value: number) => ranges.some((range) => value >= range[0] && value <= range[1])
 
 const populateResultClass = (result: Result, convictionDate: Date | undefined, dateOfHearing: Date) => {
   const nextHearingPresent = !!result.NextResultSourceOrganisation?.OrganisationUnitCode
-  const adjourned = result.CJSresultCode ? isInRanges(ADJOURNMENT_RANGES, result.CJSresultCode) : false
-  const warrantIssued = result.CJSresultCode ? isInRanges(WARRANT_ISSUED_CODES, result.CJSresultCode) : false
-  const adjournedNoNextHearingDetails = result.CJSresultCode
-    ? isInRanges(ADJOURNMENT_NO_NEXT_HEARING_RANGES, result.CJSresultCode)
-    : false
+  const adjourned = isAdjourned(result.CJSresultCode)
+  const warrantIssued = isWarrantIssued(result.CJSresultCode)
+  const adjournedNoNextHearingDetails = isAdjournedNoNextHearing(result.CJSresultCode)
   const adjournment = nextHearingPresent || adjourned || warrantIssued || adjournedNoNextHearingDetails
 
   if (adjourned && !nextHearingPresent) {
