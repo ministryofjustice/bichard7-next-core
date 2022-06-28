@@ -1,18 +1,18 @@
 import convertAsnToOrganisationUnit from "src/lib/convertAsnToOrganisationUnit"
+import findException from "src/lib/findException"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
+import type { ExceptionPath } from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
 import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import { asnPath } from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases/errorPaths"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
-type FieldPath = (string | number)[]
-
-const COURT_HEARING_LOCATION_PATH: FieldPath =
+const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
 
-const getResultPath = (offenceIndex: number, resultIndex: number): FieldPath => [
+const getResultPath = (offenceIndex: number, resultIndex: number): ExceptionPath => [
   "AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",
@@ -23,20 +23,8 @@ const getResultPath = (offenceIndex: number, resultIndex: number): FieldPath => 
   resultIndex
 ]
 
-const getResultNextResultSourceOrganisationPath = (offenceIndex: number, resultIndex: number): FieldPath =>
+const getResultNextResultSourceOrganisationPath = (offenceIndex: number, resultIndex: number): ExceptionPath =>
   getResultPath(offenceIndex, resultIndex).concat(["NextResultSourceOrganisation", "OrganisationUnitCode"])
-
-const findException = (
-  exceptions: Exception[],
-  generatedExceptions: Exception[],
-  path: FieldPath,
-  exceptionCode?: string
-) => {
-  const pathString = JSON.stringify(path)
-  const condition = (exception: Exception) =>
-    JSON.stringify(exception.path) === pathString && (!exceptionCode || exception.code === exceptionCode)
-  return exceptions.find(condition) ?? generatedExceptions.find(condition)
-}
 
 const isOrganisationUnitValid = (organisationUnit?: OrganisationUnitCodes): boolean =>
   !!organisationUnit && !!lookupOrganisationUnitByCode(populateOrganisationUnitFields(organisationUnit))
