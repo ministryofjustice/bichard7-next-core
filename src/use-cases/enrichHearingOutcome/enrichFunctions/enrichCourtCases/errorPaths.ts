@@ -1,4 +1,6 @@
-export const offenceReasonSequencePath = (offenceIndex: number): (number | string)[] => [
+import type { ExceptionPath } from "src/types/Exception"
+
+export const offenceReasonSequencePath = (offenceIndex: number): ExceptionPath => [
   "AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",
@@ -11,7 +13,7 @@ export const offenceReasonSequencePath = (offenceIndex: number): (number | strin
 
 export const asnPath = ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
 
-export const offenceResultClassPath = (offenceIndex: number, resultIndex: number): (string | number)[] => [
+export const offenceResultClassPath = (offenceIndex: number, resultIndex: number): ExceptionPath => [
   "AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",

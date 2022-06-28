@@ -35,5 +35,8 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   // Generate HO100300 which depends on other exceptions generated
   const ho100300 = exceptions.HO100300(aho, { exceptions: generatedExceptions })
 
-  return generatedExceptions.concat(ho100300)
+  // Generate HO100323 which depends on HO100322
+  const ho100323 = exceptions.HO100323(aho, { exceptions: generatedExceptions })
+
+  return generatedExceptions.concat(ho100300, ho100323)
 }
