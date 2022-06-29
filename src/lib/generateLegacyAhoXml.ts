@@ -386,7 +386,13 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
     },
     "br7:RemandStatus": literal(c.HearingDefendant.RemandStatus, LiteralType.OffenceRemandStatus),
     "br7:BailConditions":
-      c.HearingDefendant.BailConditions.length > 0 ? c.HearingDefendant.BailConditions.map(text) : undefined,
+      c.HearingDefendant.BailConditions.length > 0
+        ? c.HearingDefendant.BailConditions.map((bc) => {
+            const bcText = text(bc)
+            bcText["#text"] = bcText["#text"].trim()
+            return bcText
+          })
+        : undefined,
     "br7:ReasonForBailConditions": optionalText(c.HearingDefendant.ReasonForBailConditions),
     "br7:CourtPNCIdentifier": optionalText(c.HearingDefendant.CourtPNCIdentifier),
     "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
