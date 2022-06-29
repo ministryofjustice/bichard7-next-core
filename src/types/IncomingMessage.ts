@@ -1,7 +1,8 @@
 import { z } from "zod"
 import { spiPleaSchema } from "./Plea"
 
-const toArray = <T>(element: unknown): T[] => (!element ? [] : !Array.isArray(element) ? [element] : element)
+const toArray = <T>(element: unknown): T[] =>
+  element === undefined ? [] : !Array.isArray(element) ? [element] : element
 
 const nextHearingDetailsSchema = z.object({
   CourtHearingLocation: z.string(),

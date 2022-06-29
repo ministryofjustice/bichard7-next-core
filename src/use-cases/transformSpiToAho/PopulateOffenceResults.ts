@@ -140,7 +140,7 @@ export default class {
     result.ResultHearingType = OTHER_VALUE
     result.ResultHearingDate = new Date(spiConvictionDate ?? spiDateOfHearing)
 
-    if (spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody) {
+    if (typeof spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody === "string") {
       result.ReasonForOffenceBailConditions = spiCourtIndividualDefendant.ReasonForBailConditionsOrCustody
     }
 

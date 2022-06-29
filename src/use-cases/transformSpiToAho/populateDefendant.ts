@@ -24,7 +24,7 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
   } = spiCourtIndividualDefendant
 
   const spiGivenNames = [spiPersonGivenName1, spiPersonGivenName2, spiPersonGivenName3]
-    .filter((name) => !!name)
+    .filter((name) => name !== undefined)
     .map((name) => name!.trim())
 
   return {

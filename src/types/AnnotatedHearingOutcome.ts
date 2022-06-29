@@ -132,21 +132,20 @@ const resultQualifierVariableSchema = z.object({
   Text: z.string().optional()
 })
 
+const addressLine = z.string().min(1, ExceptionCode.HO100217).max(35, ExceptionCode.HO100217)
+
 const addressSchema = z.object({
-  AddressLine1: z.string(),
-  AddressLine2: z.string().optional(),
-  AddressLine3: z.string().optional(),
-  AddressLine4: z.string().optional(),
-  AddressLine5: z.string().optional(),
-  UKpostcode: z.string().optional(),
-  Country: z.string().optional()
+  AddressLine1: addressLine,
+  AddressLine2: addressLine.optional(),
+  AddressLine3: addressLine.optional(),
+  AddressLine4: addressLine.optional(),
+  AddressLine5: addressLine.optional()
 })
 
 const personNameSchema = z.object({
   Title: z.string().min(1, ExceptionCode.HO100212).max(35, ExceptionCode.HO100212).optional(),
-  GivenName: z.string().array(),
-  RequestedName: z.string().optional(),
-  FamilyName: z.string(),
+  GivenName: z.array(z.string().min(1, ExceptionCode.HO100213).max(35, ExceptionCode.HO100213)),
+  FamilyName: z.string().min(1, ExceptionCode.HO100215).max(35, ExceptionCode.HO100215),
   Suffix: z.string().optional()
 })
 
@@ -176,7 +175,7 @@ const sourceReferenceSchema = z.object({
 const hearingSchema = z.object({
   CourtHearingLocation: organisationUnitSchema,
   DateOfHearing: z.date(),
-  TimeOfHearing: z.string(),
+  TimeOfHearing: timeSchema,
   HearingLanguage: z.string(),
   HearingDocumentationLanguage: z.string(),
   DefendantPresentAtHearing: z.string(),
@@ -184,7 +183,7 @@ const hearingSchema = z.object({
   ReportCompletedDate: z.date().optional(),
   SourceReference: sourceReferenceSchema,
   CourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Can't test this in Bichard because it is always set to a valid value
-  CourtHouseCode: z.number(),
+  CourtHouseCode: z.number().min(100, ExceptionCode.HO100249).max(9999, ExceptionCode.HO100249),
   CourtHouseName: z.string().optional()
 })
 
@@ -263,9 +262,9 @@ const offenceSchema = z.object({
   AlcoholLevel: alcoholLevelSchema.optional(),
   VehicleCode: z.string().refine(validateVehicleCode).optional(),
   VehicleRegistrationMark: z.string().min(11).max(11).optional(),
-  StartTime: z.string().optional(),
-  OffenceEndTime: z.string().optional(),
-  OffenceTime: z.string().optional(),
+  StartTime: timeSchema.optional(),
+  OffenceEndTime: timeSchema.optional(),
+  OffenceTime: timeSchema.optional(),
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string().refine(validateYesNo),
   CourtCaseReferenceNumber: z.string().optional(),
