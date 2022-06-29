@@ -25,8 +25,13 @@ function formatter(_: string, value: unknown) {
 app.post("/", (req, res) => {
   const testData = JSON.parse(req.body.toString(), formatter) as TestInput
   const pncGateway = new MockPncGateway(testData.pncQueryResult)
-  const coreResult = CoreHandler(testData.inputMessage, pncGateway)
-  res.json(coreResult)
+  try {
+    const coreResult = CoreHandler(testData.inputMessage, pncGateway)
+    res.json(coreResult)
+  } catch (e) {
+    console.error(e)
+    return 500
+  }
 })
 
 app.listen(port, () => {
