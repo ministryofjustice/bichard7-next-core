@@ -20,34 +20,6 @@ commands:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
 
-  clone_bichard_repo:
-    description: Check out the bichard7-next repo
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - f3:11:43:21:ad:34:00:77:21:25:d7:01:85:55:13:90
-      - run:
-          name: Remove SSH keys
-          command: ssh-add -D
-      - run:
-          name: Add bichard7-next deploy key
-          command: ssh-add ~/.ssh/id_rsa_f3114321ad3400772125d70185551390
-      - run:
-          name: Clone bichard7-next
-          command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
-
-  fetch_docker_images:
-    description: Fetch all of the required docker images from ECR
-    steps:
-      - run:
-          name: Fetch the BeanConnect image
-          working_directory: ~/bichard7-next
-          command: bash scripts/fetch_beanconnect_docker.sh
-      - run:
-          name: Fetch the PNC Emulator image
-          working_directory: ~/bichard7-next
-          command: bash scripts/fetch_pncemulator_docker.sh
-
 jobs:
   build:
     docker:
@@ -65,7 +37,7 @@ jobs:
           root: .
           paths: build
 
-  test_core:
+  test:
     docker:
       - image: cimg/node:16.13.1
     working_directory: ~
@@ -80,37 +52,50 @@ jobs:
           name: Run integration tests against core code
           command: npm run test:integration
 
-  test_bichard:
-    machine:
-      image: ubuntu-2004:202104-01
-      docker_layer_caching: true
+  characterisation_test:
+    docker:
+      - image: cimg/node:16.13.1
+    resource_class: xlarge
     working_directory: ~
     steps:
       - checkout_and_install
       - attach_workspace:
           at: .
-      - clone_bichard_repo
-      - fetch_docker_images
       - run:
-          name: Run Bichard stack
-          working_directory: ~/bichard7-next
-          command: make run-beanconnect run-activemq run-liberty run-pg
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
-          name: Wait for Bichard
-          working_directory: ~/bichard7-next
-          command: bash scripts/wait_for_bichard.sh
+          name: Start the test server in the background
+          command: npm run test:server
+          background: true
       - run:
-          name: Run tests against Bichard application
-          command: npm run test:bichard
+          name: Wait for Core
+          command: npx -y wait-port 6000
+      - run:
+          name: Create a hash of the package lock
+          command: md5sum ~/bichard7-next-tests/package-lock.json > ~/bichard7-next-tests/package-lock.json.md5
+      - restore_cache:
+          name: Load node_modules from the cache if they haven't changed
+          keys:
+            - test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
+      - run:
+          name: NPM install the tests repo
+          command: cd ~/bichard7-next-tests && npm i
+      - save_cache:
+          key: test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
+          paths: ~/bichard7-next-tests/node_modules
+      - run:
+          name: Run tests against core code
+          command: cd ~/bichard7-next-tests && npm run test:characterisation
 
 workflows:
   version: 2
   build-and-test:
     jobs:
       - build
-      - test_core:
+      - test:
           requires:
             - build
-      - test_bichard:
+      - characterisation_test:
           requires:
             - build
