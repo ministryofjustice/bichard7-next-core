@@ -54,7 +54,7 @@ describe("enrichForceOwner", () => {
 
   it("should enrich the force and station from the PTIURN if there's no forceStationCode", () => {
     const incomingMessage = generateMessage({
-      PTIURN: "01ZD0303908",
+      PTIURN: "01AA123408",
       offences: [{ results: [{}] }]
     })
     const spiResult = parseSpiResult(incomingMessage)
@@ -64,9 +64,9 @@ describe("enrichForceOwner", () => {
 
     expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual({
       SecondLevelCode: "01",
-      ThirdLevelCode: "ZD",
+      ThirdLevelCode: "AA",
       BottomLevelCode: "00",
-      OrganisationUnitCode: "01ZD00"
+      OrganisationUnitCode: "01AA00"
     } as OrganisationUnitCodes)
   })
 
@@ -93,6 +93,46 @@ describe("enrichForceOwner", () => {
     const incomingMessage = generateMessage({
       PTIURN: "",
       ASN: "",
+      courtHearingLocation: "B01EF01",
+      offences: [{ results: [{}] }]
+    })
+    const spiResult = parseSpiResult(incomingMessage)
+    const aho = transformSpiToAho(spiResult)
+
+    const resultAho = enrichForceOwner(aho)
+
+    expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual({
+      SecondLevelCode: "01",
+      ThirdLevelCode: "00",
+      BottomLevelCode: "00",
+      OrganisationUnitCode: "010000"
+    } as OrganisationUnitCodes)
+  })
+
+  it("should enrich the force and station from the PTIURN that doesn't match the formatting regex", () => {
+    const incomingMessage = generateMessage({
+      PTIURN: "00NP0000008",
+      ASN: "",
+      courtHearingLocation: "B01EF01",
+      offences: [{ results: [{}] }]
+    })
+    const spiResult = parseSpiResult(incomingMessage)
+    const aho = transformSpiToAho(spiResult)
+
+    const resultAho = enrichForceOwner(aho)
+
+    expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual({
+      SecondLevelCode: "01",
+      ThirdLevelCode: "00",
+      BottomLevelCode: "00",
+      OrganisationUnitCode: "010000"
+    } as OrganisationUnitCodes)
+  })
+
+  it("should enrich the force and station from the ASN that doesn't match the formatting regex", () => {
+    const incomingMessage = generateMessage({
+      PTIURN: "",
+      ASN: "1102ZZ0100000448754K",
       courtHearingLocation: "B01EF01",
       offences: [{ results: [{}] }]
     })
