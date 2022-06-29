@@ -10,5 +10,10 @@ export default (time: string): string => {
   date.setHours(parseInt(timeParts[0], 10))
   date.setMinutes(parseInt(timeParts[1], 10))
 
-  return format(date, "HH:mm")
+  try {
+    return format(date, "HH:mm")
+  } catch (e) {
+    console.error("Error removing seconds from timestamp")
+    return time
+  }
 }
