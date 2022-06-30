@@ -1,6 +1,7 @@
 import { ResultClass } from "src/lib/properties"
 import {
   validateActualOffenceDateCode,
+  validateAmountSpecifiedInResult,
   validateCourtType,
   validateDurationType,
   validateDurationUnit,
@@ -26,7 +27,7 @@ import { pncQueryResultSchema } from "./PncQueryResult"
 const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
 
 const alcoholLevelSchema = z.object({
-  Amount: z.string(),
+  Amount: z.number().min(0, ExceptionCode.HO100237).max(999, ExceptionCode.HO100237),
   Method: z.string()
 })
 
@@ -112,12 +113,12 @@ const dateSpecifiedInResultSchema = z.object({
 })
 
 const numberSpecifiedInResultSchema = z.object({
-  Number: z.number(),
+  Number: z.number().min(1, ExceptionCode.HO100244).max(9999, ExceptionCode.HO100244),
   Type: z.string()
 })
 
 const amountSpecifiedInResultSchema = z.object({
-  Amount: z.number(),
+  Amount: z.number().refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243),
   Type: z.string().optional()
 })
 

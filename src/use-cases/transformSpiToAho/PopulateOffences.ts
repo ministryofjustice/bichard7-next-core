@@ -115,7 +115,7 @@ export default class {
 
     if (spiAlcoholRelatedOffence) {
       offence.AlcoholLevel = {
-        Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount.toString(),
+        Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount,
         Method:
           lookupAlcoholLevelMethodBySpiCode(spiAlcoholRelatedOffence.AlcoholLevelMethod)?.cjsCode ??
           spiAlcoholRelatedOffence.AlcoholLevelMethod
