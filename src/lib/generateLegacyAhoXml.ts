@@ -329,7 +329,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "ds:HomeOfficeClassification": optionalText(offence.HomeOfficeClassification),
     "ds:AlcoholLevel": offence.AlcoholLevel
       ? {
-          "ds:Amount": text(offence.AlcoholLevel?.Amount),
+          "ds:Amount": text(offence.AlcoholLevel?.Amount.toString()),
           "ds:Method": literal(offence.AlcoholLevel.Method, LiteralType.AlcoholLevelMethod)
         }
       : undefined,
