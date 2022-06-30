@@ -29,7 +29,7 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
   spiResults.forEach((result) => {
     if (result.ResultCode === ADJOURNMENT_SINE_DIE_RESULT_CODE) {
       a2007ResultFound = true
-    } else if (!resultCodeIsOnStopList(result.ResultCode ?? 0)) {
+    } else if (!resultCodeIsOnStopList(result.ResultCode ?? 1000)) {
       aFailConditionResultFound = true
     }
   })
