@@ -1,4 +1,5 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import { forceCodeExists, lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import logger from "src/utils/logging"
 
 const populateForceOwner = (
@@ -18,25 +19,58 @@ const populateForceOwner = (
   return hearingOutcome
 }
 
+const isDummy = (code: string): boolean => {
+  return !!code.match(/^00(N|P)P/) || !!code.match(/^[0-9]{2}00/)
+}
+
+const getValidForceOrForceStation = (code: string | undefined): string | undefined => {
+  let forceCode: string
+  if (code === undefined) {
+    return
+  }
+  if (code.length >= 2) {
+    forceCode = code.substring(0, 2)
+    if (forceCodeExists(forceCode)) {
+      if (code.length >= 4) {
+        const stationCode = code.substring(2, 4)
+        const lookupResult = lookupOrganisationUnitByCode({
+          TopLevelCode: "",
+          SecondLevelCode: forceCode,
+          ThirdLevelCode: stationCode,
+          BottomLevelCode: "00"
+        } as OrganisationUnitCodes)
+        if (lookupResult) {
+          return `${forceCode}${stationCode}`
+        }
+      }
+      return forceCode
+    }
+  }
+}
+
 /*
   Try to get the forceStationCode from the PNC Query
   Failing that, the case PTIURN
   Failing that, the case ASN
   Failing that, the courtHearingLocation
 */
+
 const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | undefined => {
-  if (hearingOutcome.PncQuery && hearingOutcome.PncQuery.forceStationCode) {
-    return hearingOutcome.PncQuery.forceStationCode
+  const pncCode = getValidForceOrForceStation(hearingOutcome.PncQuery?.forceStationCode)
+  if (pncCode) {
+    return pncCode
   }
 
   const ahoCase = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
-  if (ahoCase.PTIURN) {
-    return ahoCase.PTIURN.substring(0, 4)
+  const ptiurnCode = getValidForceOrForceStation(ahoCase.PTIURN)
+  if (ptiurnCode && !isDummy(ptiurnCode)) {
+    return ptiurnCode
   }
 
   const asn = ahoCase.HearingDefendant.ArrestSummonsNumber
-  if (asn) {
-    return asn.substring(asn.length - 18)
+  const asnCode = getValidForceOrForceStation(asn.substring(asn.length - 18))
+  if (asnCode && !isDummy(asnCode)) {
+    return asnCode
   }
 
   const courtHearingLocation = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation

@@ -73,7 +73,7 @@ describe("enrichForceOwner", () => {
   it("should enrich the force and station from the ASN if there's no PTIURN", () => {
     const incomingMessage = generateMessage({
       PTIURN: "",
-      ASN: "1102ZZ0100000448754K",
+      ASN: "1146AA0100000448754K",
       offences: [{ results: [{}] }]
     })
     const spiResult = parseSpiResult(incomingMessage)
@@ -82,10 +82,10 @@ describe("enrichForceOwner", () => {
     const resultAho = enrichForceOwner(aho)
 
     expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner).toStrictEqual({
-      SecondLevelCode: "02",
-      ThirdLevelCode: "ZZ",
+      SecondLevelCode: "46",
+      ThirdLevelCode: "AA",
       BottomLevelCode: "00",
-      OrganisationUnitCode: "02ZZ00"
+      OrganisationUnitCode: "46AA00"
     } as OrganisationUnitCodes)
   })
 
