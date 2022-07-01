@@ -96,6 +96,8 @@ const lookupOrganisationUnitByThirdLevelPsaCode = (
     (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
+const forceCodeExists = (code: string): boolean => organisationUnit.some((ou) => ou.secondLevelCode === code)
+
 const lookupResultCodeByCjsCode = (cjsCode: string): ResultCode | undefined =>
   resultCode.find((x) => x.cjsCode === cjsCode)
 
@@ -173,5 +175,6 @@ export {
   lookupYesNoByCjsCode,
   lookupOffenceDateCodeByCjsCode,
   lookupDefendantPresentAtHearingByCjsCode,
-  lookupGenderByCjsCode
+  lookupGenderByCjsCode,
+  forceCodeExists
 }
