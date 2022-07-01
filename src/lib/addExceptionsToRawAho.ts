@@ -7,7 +7,7 @@ const findNamespacedKey = (element: GenericRawAhoValue, key: string | number): G
   if (Array.isArray(element) && typeof key === "number") {
     return element[key]
   }
-  if (typeof element === "string" || Array.isArray(element) || "#text" in element) {
+  if (element === undefined || typeof element === "string" || Array.isArray(element) || "#text" in element) {
     return new Error("Could not find key")
   }
   const keys = Object.keys(element)

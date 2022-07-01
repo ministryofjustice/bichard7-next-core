@@ -23,6 +23,10 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)
 
+  if (annotatedHearingOutcome.PncQuery !== undefined) {
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
+  }
+
   annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
 
   return annotatedHearingOutcome

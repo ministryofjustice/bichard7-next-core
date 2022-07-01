@@ -194,7 +194,7 @@ const mapAhoResultsToXml = (
     "ds:CJSresultCode": text(result.CJSresultCode.toString()),
     "ds:OffenceRemandStatus": optionalLiteral(result.OffenceRemandStatus, LiteralType.OffenceRemandStatus),
     "ds:SourceOrganisation": mapAhoOrgUnitToXml(result.SourceOrganisation),
-    "ds:CourtType": optionalText(result.CourtType),
+    "ds:CourtType": optionalText(result.CourtType) ?? { "#text": "" },
     "ds:ResultHearingType": result.ResultHearingType
       ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
       : undefined,

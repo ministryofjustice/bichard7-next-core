@@ -1,8 +1,10 @@
 import fs from "fs"
 import "jest-xml-matcher"
+import orderBy from "lodash.orderby"
 import CoreHandler from "src/index"
 import convertAhoToXml from "src/lib/generateLegacyAhoXml"
 import parseAhoXml from "src/lib/parseAhoXml"
+import type Exception from "src/types/Exception"
 import extractExceptionsFromAho from "./helpers/extractExceptionsFromAho"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./helpers/getPncQueryTimeFromAho"
@@ -21,6 +23,8 @@ if (filter) {
   tests = tests.filter((t) => t.file && t.file.includes(filter))
 }
 
+const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
+
 describe("Comparison testing", () => {
   describe.each(tests)("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
     describe("processing spi messages", () => {
@@ -29,16 +33,17 @@ describe("Comparison testing", () => {
         const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
         const pncGateway = new MockPncGateway(response, pncQueryTime)
         const coreResult = CoreHandler(incomingMessage, pncGateway)
-        const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
+        const exceptions = sortExceptions(extractExceptionsFromAho(annotatedHearingOutcome))
 
         it("should match triggers", () => {
           expect(coreResult.triggers).toStrictEqual(triggers)
         })
 
         it("should match exceptions", () => {
+          const coreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
           expect(coreResult.hearingOutcome.Exceptions).toBeDefined()
           expect(exceptions).toBeDefined()
-          expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
+          expect(coreExceptions).toStrictEqual(exceptions)
         })
 
         it("should match aho xml", () => {

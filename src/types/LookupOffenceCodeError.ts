@@ -5,7 +5,7 @@ export class LookupNationalOffenceCodeError extends Error {
     super()
     this.name = "LookupNationalOffenceCodeError"
     this.message = `National Lookup Failed: ${val}`
-    this.subPath = ["CriminalProsecutionReference", "OffenceReason", "OffenceCode"]
+    this.subPath = ["CriminalProsecutionReference", "OffenceReason", "OffenceCode", "Reason"]
   }
 }
 

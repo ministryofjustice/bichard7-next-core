@@ -53,7 +53,16 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence, offenceIndex) =>
     offence.Result.forEach((result, resultIndex) => {
-      if (result.NextResultSourceOrganisation && !isOrganisationUnitValid(result.NextResultSourceOrganisation)) {
+      const nextResultSourceOrganisationException = findException(
+        exceptions!,
+        generatedExceptions,
+        getResultNextResultSourceOrganisationPath(offenceIndex, resultIndex)
+      )
+      if (
+        !nextResultSourceOrganisationException &&
+        result.NextResultSourceOrganisation &&
+        !isOrganisationUnitValid(result.NextResultSourceOrganisation)
+      ) {
         generatedExceptions.push({
           code: ExceptionCode.HO100300,
           path: getResultNextResultSourceOrganisationPath(offenceIndex, resultIndex)
