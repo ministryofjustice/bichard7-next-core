@@ -5,6 +5,7 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncOffence } from "src/types/PncQueryResult"
 import addError from "./addError"
+import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import hasDuplicateSequenceNumber from "./hasDuplicateSequenceNumber"
 
 const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherOutcome?: OffenceMatcherOutcome) => {
@@ -136,10 +137,12 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
             matcherOutcome.duplicateHoOffences.includes(hoOffence))
         ) {
           addError(aho, ExceptionCode.HO100312, errorPaths.offence(offenceIndex).reasonSequence)
+          addNullOffenceReasonSequence(hoOffence)
           offenceHasError = true
         } else if (matcherOutcome && matcherOutcome.duplicateHoOffences.includes(hoOffence)) {
           // Error: Offence is a duplicate
           addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
+          addNullOffenceReasonSequence(hoOffence)
           offenceHasError = true
         } else {
           // Offence is added by the court"

@@ -6,6 +6,7 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
+import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 
 const getFirstMatchingCourtCaseWith2060Result = (
@@ -78,15 +79,14 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
       const duplicateCases = matcherOutcome.duplicateHoOffences.get(hoOffence)
       if (duplicateCases && duplicateCases.length === 1) {
         addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
+        addNullOffenceReasonSequence(hoOffence)
         offenceHasError = true
       } else if (
         matcherOutcome.ambiguousHoOffences.includes(hoOffence) ||
         (duplicateCases && duplicateCases.length > 1)
       ) {
         addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
-        if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
-          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
-        }
+        addNullOffenceReasonSequence(hoOffence)
         offenceHasError = true
       } else if (!duplicateCases) {
         if (offenceCategoryIsNonRecordable(hoOffence)) {
@@ -112,9 +112,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
             })
           } else {
             addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
-            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
-              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
-            }
+            addNullOffenceReasonSequence(hoOffence)
             offenceHasError = true
           }
         }
@@ -140,9 +138,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         hoOffence.ManualCourtCaseReferenceNumber !== courtCaseRef
       ) {
         addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
-        if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence === undefined) {
-          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = null
-        }
+        addNullOffenceReasonSequence(hoOffence)
         offenceHasError = true
       } else {
         if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence !== pncRefNo) {
