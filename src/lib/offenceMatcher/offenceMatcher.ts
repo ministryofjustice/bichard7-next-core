@@ -172,7 +172,8 @@ const matchOffences = (
     result = mergeOffenceMatcherOutcomes(result, breachOutcome)
   }
 
-  result.allPncOffencesMatched = result.matchedOffences.length === pncOffences.length
+  result.allPncOffencesMatched =
+    pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result)).length === 0
 
   return result
 }
