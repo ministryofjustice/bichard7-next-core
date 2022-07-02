@@ -199,20 +199,22 @@ const mapAhoResultsToXml = (
       ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
       : undefined,
     "ds:ResultHearingDate": optionalFormatText(result.ResultHearingDate, "yyyy-MM-dd"),
-    "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
     "ds:BailCondition": result.BailCondition?.map(text),
-    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
-      ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
-      : undefined,
-    "ds:NextCourtType": optionalText(result.NextCourtType),
-    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
-    "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
+    "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
+    // ds:TimeSpecifiedInResult
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
       "#text": amount.Amount.toFixed(2),
       "@_Type": amount.Type ?? ""
     })),
     "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),
+    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
+      ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
+      : undefined,
+    "ds:NextCourtType": optionalText(result.NextCourtType),
+    // ds:NextHearingType
+    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
+    "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),
