@@ -62,7 +62,8 @@ describe("Comparison testing", () => {
 
         it("should fully match", () => {
           expect(coreResult.triggers).toStrictEqual(triggers)
-          expect(coreResult.hearingOutcome.Exceptions).toStrictEqual(exceptions)
+          const coreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
+          expect(coreExceptions).toStrictEqual(exceptions)
           const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
           expect(ahoXml).toEqualXML(annotatedHearingOutcome)
           const parsedAho = parseAhoXml(annotatedHearingOutcome)
