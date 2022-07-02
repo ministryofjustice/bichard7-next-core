@@ -288,7 +288,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
   offences.map((offence, index) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
-        "ds:Year": optionalText(offence.CriminalProsecutionReference.DefendantOrOffender?.Year),
+        "ds:Year": optionalText(offence.CriminalProsecutionReference.DefendantOrOffender?.Year) ?? { "#text": "" },
         "ds:OrganisationUnitIdentifierCode": mapAhoOrgUnitToXml(
           offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
         ),
