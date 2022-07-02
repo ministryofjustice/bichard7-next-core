@@ -340,7 +340,8 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
     "br7:ManualSequenceNo": optionalLiteral(offence.ManualSequenceNumber, LiteralType.YesNo),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
-    "br7:CourtCaseReferenceNumber": optionalText(offence.CourtCaseReferenceNumber),
+    "br7:CourtCaseReferenceNumber":
+      offence.CourtCaseReferenceNumber === null ? { "#text": "" } : optionalText(offence.CourtCaseReferenceNumber),
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",
