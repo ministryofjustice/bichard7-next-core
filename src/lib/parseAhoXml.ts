@@ -268,6 +268,17 @@ const caseRecordableOnPnc = (xmlCase: Br7Case): boolean | undefined => {
   return undefined
 }
 
+const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string | undefined | null => {
+  if (element === undefined) {
+    return undefined
+  }
+  const value = element["#text"]
+  if (value === "") {
+    return null
+  }
+  return value
+}
+
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
   const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
   return offences.map(
@@ -307,7 +318,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
         AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
           ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
           : undefined,
-        CourtCaseReferenceNumber: xmlOffence["br7:CourtCaseReferenceNumber"]?.["#text"],
+        CourtCaseReferenceNumber: mapCourtCaseReferenceNumber(xmlOffence["br7:CourtCaseReferenceNumber"]),
         Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
         RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
         NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]
