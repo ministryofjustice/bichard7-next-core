@@ -33,7 +33,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
       ahoCase.CourtCaseReferenceNumber || ahoCase.PenaltyNoticeCaseReferenceNumber,
       offence.CourtOffenceSequenceNumber
     )
-    if (!pncOffence) {
+    if (!pncOffence || !offence.CriminalProsecutionReference.OffenceReasonSequence) {
       return triggers
     }
     const courtStart = offence.ActualOffenceStartDate.StartDate
