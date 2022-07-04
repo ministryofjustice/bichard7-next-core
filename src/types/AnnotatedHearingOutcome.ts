@@ -206,7 +206,7 @@ const resultSchema = z.object({
   TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: amountSpecifiedInResultSchema.array().optional(),
   NumberSpecifiedInResult: numberSpecifiedInResultSchema.array().optional(),
-  NextResultSourceOrganisation: organisationUnitSchema.optional(),
+  NextResultSourceOrganisation: organisationUnitSchema.or(z.null()).optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
   NextHearingDate: z.date().optional(),
   NextHearingTime: timeSchema.optional(),

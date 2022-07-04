@@ -2,7 +2,7 @@ import isAdjourned from "src/lib/isAdjourned"
 import isAdjournedNoNextHearing from "src/lib/isAdjournedNoNextHearing"
 import isWarrantIssued from "src/lib/isWarrantIssued"
 import { ResultClass, RESULT_CLASS_PLEAS, RESULT_CLASS_RESULT_CODES, RESULT_CLASS_VERDICTS } from "src/lib/properties"
-import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
+import type { Result } from "src/types/AnnotatedHearingOutcome"
 
 const populateResultClass = (result: Result, convictionDate: Date | undefined, dateOfHearing: Date) => {
   const nextHearingPresent = !!result.NextResultSourceOrganisation?.OrganisationUnitCode
@@ -12,7 +12,7 @@ const populateResultClass = (result: Result, convictionDate: Date | undefined, d
   const adjournment = nextHearingPresent || adjourned || warrantIssued || adjournedNoNextHearingDetails
 
   if (adjourned && !nextHearingPresent) {
-    result.NextResultSourceOrganisation = {} as OrganisationUnitCodes
+    result.NextResultSourceOrganisation = undefined
   }
 
   const { Verdict, PleaStatus, CJSresultCode } = result

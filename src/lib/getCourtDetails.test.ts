@@ -1,15 +1,15 @@
-import type OrganisationUnitData from "src/types/OrganisationUnitData"
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import getCourtDetails from "./getCourtDetails"
 import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT } from "./properties"
 
 describe("getCourtDetails", () => {
   it("should set Court Type to  MCY when top level code is for Magistrates Court and court name contains word YOUTH", () => {
     const organisationUnitData = {
-      topLevelCode: TOP_LEVEL_MAGISTRATES_COURT,
-      secondLevelCode: "20",
-      thirdLevelCode: "BN",
-      bottomLevelCode: "00"
-    } as OrganisationUnitData
+      TopLevelCode: TOP_LEVEL_MAGISTRATES_COURT,
+      SecondLevelCode: "20",
+      ThirdLevelCode: "BN",
+      BottomLevelCode: "00"
+    } as OrganisationUnitCodes
 
     const { courtName, courtType } = getCourtDetails(organisationUnitData)
 
@@ -19,11 +19,11 @@ describe("getCourtDetails", () => {
 
   it("should set Court Type to  MCA when top level code is for Magistrates Court and court name does not contain word YOUTH", () => {
     const organisationUnitData = {
-      topLevelCode: TOP_LEVEL_MAGISTRATES_COURT,
-      secondLevelCode: "20",
-      thirdLevelCode: "BL",
-      bottomLevelCode: "00"
-    } as OrganisationUnitData
+      TopLevelCode: TOP_LEVEL_MAGISTRATES_COURT,
+      SecondLevelCode: "20",
+      ThirdLevelCode: "BL",
+      BottomLevelCode: "00"
+    } as OrganisationUnitCodes
 
     const { courtName, courtType } = getCourtDetails(organisationUnitData)
 
@@ -33,11 +33,11 @@ describe("getCourtDetails", () => {
 
   it("should set Court Type to  CC when top level code is for Crown Court", () => {
     const organisationUnitData = {
-      topLevelCode: "C",
-      secondLevelCode: "20",
-      thirdLevelCode: "CO",
-      bottomLevelCode: "00"
-    } as OrganisationUnitData
+      TopLevelCode: "C",
+      SecondLevelCode: "20",
+      ThirdLevelCode: "CO",
+      BottomLevelCode: "00"
+    } as OrganisationUnitCodes
 
     const { courtName, courtType } = getCourtDetails(organisationUnitData)
 

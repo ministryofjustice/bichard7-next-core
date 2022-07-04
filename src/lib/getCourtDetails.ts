@@ -1,5 +1,4 @@
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import type OrganisationUnitData from "src/types/OrganisationUnitData"
 import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "./properties"
 
@@ -8,12 +7,12 @@ type CourtDetailsResult = {
   courtName: string
 }
 
-const getCourtName = (ouData: OrganisationUnitData): string => {
+const getCourtName = (ouData: OrganisationUnitCodes): string => {
   const courtRecord = lookupOrganisationUnitByCode({
-    TopLevelCode: ouData.topLevelCode,
-    SecondLevelCode: ouData.secondLevelCode,
-    ThirdLevelCode: ouData.thirdLevelCode,
-    BottomLevelCode: ouData.bottomLevelCode
+    TopLevelCode: ouData.TopLevelCode,
+    SecondLevelCode: ouData.SecondLevelCode,
+    ThirdLevelCode: ouData.ThirdLevelCode,
+    BottomLevelCode: ouData.BottomLevelCode
   } as OrganisationUnitCodes)
   return [
     courtRecord?.topLevelName,
@@ -25,12 +24,12 @@ const getCourtName = (ouData: OrganisationUnitData): string => {
     .join(" ")
 }
 
-const getCourtDetails = (organisationUnitData: OrganisationUnitData): CourtDetailsResult => {
-  const { topLevelCode } = organisationUnitData
+const getCourtDetails = (organisationUnitData: OrganisationUnitCodes): CourtDetailsResult => {
+  const { TopLevelCode } = organisationUnitData
   const courtName = getCourtName(organisationUnitData)
 
   let courtType: string
-  if (topLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
+  if (TopLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
     courtType = courtName.toUpperCase().includes(YOUTH_COURT) ? MC_YOUTH : MC_ADULT
   } else {
     courtType = CROWN_COURT

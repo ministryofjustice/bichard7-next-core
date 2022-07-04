@@ -185,6 +185,25 @@ const mapNumberSpecifiedInResult = (
   return numbers.map((number) => ({ "#text": number.Number.toString(), "@_Type": number.Type.toString() }))
 }
 
+const mapNextResultSourceOrganisation = (
+  ou: OrganisationUnitCodes | undefined | null
+): Br7OrganisationUnit | undefined => {
+  if (ou === null) {
+    return mapAhoOrgUnitToXml({
+      SecondLevelCode: "",
+      ThirdLevelCode: "",
+      BottomLevelCode: "",
+      OrganisationUnitCode: ""
+    })
+  }
+
+  if (!ou) {
+    return undefined
+  }
+
+  return mapAhoOrgUnitToXml(ou)
+}
+
 const mapAhoResultsToXml = (
   results: Result[],
   exceptions: Exception[] | undefined,
@@ -208,9 +227,7 @@ const mapAhoResultsToXml = (
       "@_Type": amount.Type ?? ""
     })),
     "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),
-    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
-      ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
-      : undefined,
+    "ds:NextResultSourceOrganisation": mapNextResultSourceOrganisation(result.NextResultSourceOrganisation),
     "ds:NextCourtType": optionalText(result.NextCourtType),
     // ds:NextHearingType
     "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),

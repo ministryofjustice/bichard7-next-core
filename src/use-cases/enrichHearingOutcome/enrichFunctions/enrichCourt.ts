@@ -18,7 +18,13 @@ const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
   }
 
   if (organisationUnitData) {
-    const { courtName, courtType } = getCourtDetails(organisationUnitData)
+    const { courtName, courtType } = getCourtDetails({
+      TopLevelCode: organisationUnitData.topLevelCode,
+      SecondLevelCode: organisationUnitData.secondLevelCode,
+      ThirdLevelCode: organisationUnitData.thirdLevelCode,
+      BottomLevelCode: organisationUnitData.bottomLevelCode,
+      OrganisationUnitCode: ""
+    })
     Hearing.CourtType = courtType
     Hearing.CourtHouseName = courtName
   }
