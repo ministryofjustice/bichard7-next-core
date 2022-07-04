@@ -52,6 +52,18 @@ jobs:
           name: Run integration tests against core code
           command: npm run test:integration
 
+  comparison_test:
+    docker:
+      - image: cimg/node:16.13.1
+    working_directory: ~
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run integration tests against core code
+          command: npm run test:compare
+
   characterisation_test:
     docker:
       - image: cimg/node:16.13.1
@@ -97,5 +109,8 @@ workflows:
           requires:
             - build
       - characterisation_test:
+          requires:
+            - build
+      - comparison_test:
           requires:
             - build
