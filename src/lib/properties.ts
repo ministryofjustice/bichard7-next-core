@@ -1,4 +1,7 @@
+import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type { KeyValue } from "src/types/KeyValue"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup/dataLookup"
+import extractCodesFromOU from "src/use-cases/dataLookup/extractCodesFromOU"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [
@@ -30,6 +33,12 @@ const LIBRA_ELECTRONIC_TAGGING_TEXT = "to be electronically monitored"
 const TAGGING_FIX_REMOVE = [1115, 1116, 1141, 1142, 1143]
 const BAIL_QUALIFIER_CODE = "BA"
 const RESULT_TEXT_PATTERN_CODES: KeyValue<string[]> = {
+  "4014": ["1"],
+  "4015": ["1"],
+  "4016": ["1"],
+  "4017": ["1"],
+  "4020": ["1"],
+  "4021": ["1"],
   "4025": ["1"],
   "4027": ["2ab", "2c3b"],
   "4028": ["3a", "2c3b"],
@@ -58,6 +67,7 @@ const RESULT_TEXT_PATTERN_CODES: KeyValue<string[]> = {
   "4566": ["1"],
   "4567": ["4"]
 }
+
 const RESULT_TEXT_PATTERN_REGEX: KeyValue<RegExp> = {
   "1": /[Cc]ommitted to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
   "2ab": /to appear (?:at|before) (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
@@ -66,10 +76,15 @@ const RESULT_TEXT_PATTERN_REGEX: KeyValue<RegExp> = {
   "2c3b":
     /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/
 }
-const CROWN_COURT_NAME_MAPPING_OVERRIDES: KeyValue<string> = {
-  "Newport (South Wales) Crown Court": "0441",
-  "Great Grimsby Crown Court": "0425"
+
+const grimsby = lookupOrganisationUnitByThirdLevelPsaCode("0441")
+const newport = lookupOrganisationUnitByThirdLevelPsaCode("0425")
+
+const CROWN_COURT_NAME_MAPPING_OVERRIDES: KeyValue<OrganisationUnitCodes | undefined> = {
+  "Newport (South Wales) Crown Court": newport ? extractCodesFromOU(newport) : undefined,
+  "Great Grimsby Crown Court": grimsby ? extractCodesFromOU(grimsby) : undefined
 }
+
 const TAGGING_FIX_ADD = 3105
 const CROWN_COURT_TOP_LEVEL_CODE = "C"
 const TOP_LEVEL_MAGISTRATES_COURT = "B"

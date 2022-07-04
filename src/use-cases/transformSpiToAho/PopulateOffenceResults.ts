@@ -26,16 +26,16 @@ import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupPleaStatusBySpiCode,
-  lookupPsaCodeByCrownCourtName,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "src/use-cases/dataLookup"
+import lookupCrownCourtByName from "src/use-cases/dataLookup/lookupCrownCourtByName"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
 interface RemandDetails {
-  location?: string
-  date?: string
+  location?: OrganisationUnitCodes
+  date?: Date
 }
 
 interface ExtractedResultTextDate {
@@ -71,7 +71,7 @@ export default class {
     let courtName: string | undefined
     let date: string | undefined
 
-    patterns.forEach((pattern) => {
+    for (const pattern of patterns) {
       const patternRegex = RESULT_TEXT_PATTERN_REGEX[pattern]
       const matchedGroups = resultText.match(patternRegex)?.groups
 
@@ -85,26 +85,36 @@ export default class {
           return { courtName, date }
         }
       }
-    })
+    }
 
     return {}
   }
 
+  private parseDate(extractedDate: string): Date | undefined {
+    const dateString = extractedDate.match(/(\d{2})\/(\d{2})\/(\d{4})/)
+
+    if (dateString) {
+      return new Date(parseInt(dateString[3], 10), parseInt(dateString[2], 10) - 1, parseInt(dateString[1], 10))
+    }
+  }
+
   private getRemandDetailsFromResultText(result: Result): RemandDetails {
-    let psaCode: string | undefined
-    let date: string | undefined
+    let location: OrganisationUnitCodes | undefined
+    let date: Date | undefined
     if (result.CJSresultCode) {
       const patterns = RESULT_TEXT_PATTERN_CODES[result.CJSresultCode] ?? []
       if (result.ResultVariableText) {
         const { courtName, date: extractedDate } = this.extractResultTextData(patterns, result.ResultVariableText)
         if (courtName) {
-          psaCode = CROWN_COURT_NAME_MAPPING_OVERRIDES[courtName] ?? lookupPsaCodeByCrownCourtName(courtName)
+          location = CROWN_COURT_NAME_MAPPING_OVERRIDES[courtName] ?? lookupCrownCourtByName(courtName)
         }
-        date = extractedDate
+        if (extractedDate) {
+          date = this.parseDate(extractedDate)
+        }
       }
     }
 
-    return { location: psaCode, date }
+    return { location, date }
   }
 
   private populateResult(spiResult: SpiResult): Result {
@@ -276,10 +286,10 @@ export default class {
     if (!result.NextResultSourceOrganisation || !result.NextHearingDate) {
       const remandDetails = this.getRemandDetailsFromResultText(result)
       if (remandDetails.location && !result.NextResultSourceOrganisation) {
-        result.NextResultSourceOrganisation = getOrganisationUnit(remandDetails.location)
+        result.NextResultSourceOrganisation = remandDetails.location
       }
       if (!result.NextHearingDate && remandDetails.date) {
-        result.NextHearingDate = new Date(remandDetails.date)
+        result.NextHearingDate = remandDetails.date
       }
     }
 

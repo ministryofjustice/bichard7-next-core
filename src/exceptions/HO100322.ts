@@ -18,6 +18,7 @@ const HO100322: ExceptionGenerator = (hearingOutcome) => {
           const path = errorPaths.offence(offenceIndex).result(resultIndex)
             .nextResultSourceOrganisation.organisationUnitCode
           generatedExceptions.push({ code: ExceptionCode.HO100322, path })
+          result.NextResultSourceOrganisation = null
         }
       })
     }

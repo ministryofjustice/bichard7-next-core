@@ -45,7 +45,7 @@ import type {
   Verdict,
   YesNo
 } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type OrganisationUnitData from "src/types/OrganisationUnitData"
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
 import type { SpiPlea } from "src/types/Plea"
 
 interface DataLookupResult {
@@ -89,9 +89,7 @@ const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | 
 const lookupAlcoholLevelMethodByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
   alcoholLevelMethod.find((x) => x.cjsCode === cjsCode)
 
-const lookupOrganisationUnitByThirdLevelPsaCode = (
-  thirdLevelPsaCode: number | string
-): OrganisationUnitData | undefined =>
+const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number | string): OrganisationUnit | undefined =>
   organisationUnit.find(
     (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )

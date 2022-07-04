@@ -21,7 +21,7 @@ describe("populateResultClass", () => {
     populateResultClass(result, new Date(), new Date())
 
     const { NextResultSourceOrganisation } = result
-    expect(NextResultSourceOrganisation).toStrictEqual({})
+    expect(NextResultSourceOrganisation).toBeUndefined()
   })
 
   it("should set the result class to Adjournment post Judgement", () => {
