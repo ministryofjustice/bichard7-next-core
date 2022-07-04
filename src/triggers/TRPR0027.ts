@@ -1,6 +1,10 @@
+import { excludedTriggerConfig } from "@moj-bichard7-developers/bichard7-next-data"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
 import type { TriggerGenerator } from "src/types/TriggerGenerator"
+
+const forceReceivesTrigger27 = (code: string): boolean =>
+  !excludedTriggerConfig[code] || !excludedTriggerConfig[code].includes(TriggerCode.TRPR0027)
 
 const generator: TriggerGenerator = (annotatedHearingOutcome, options): Trigger[] => {
   const triggersExcluded = options?.triggersExcluded
@@ -13,7 +17,7 @@ const generator: TriggerGenerator = (annotatedHearingOutcome, options): Trigger[
     return []
   }
 
-  if (triggersExcluded && forceCode !== courtCode) {
+  if (forceReceivesTrigger27(forceCode) && triggersExcluded && forceCode !== courtCode) {
     return [{ code: TriggerCode.TRPR0027 }]
   }
   return []
