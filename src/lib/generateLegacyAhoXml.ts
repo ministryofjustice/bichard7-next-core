@@ -199,20 +199,22 @@ const mapAhoResultsToXml = (
       ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
       : undefined,
     "ds:ResultHearingDate": optionalFormatText(result.ResultHearingDate, "yyyy-MM-dd"),
-    "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
     "ds:BailCondition": result.BailCondition?.map(text),
-    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
-      ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
-      : undefined,
-    "ds:NextCourtType": optionalText(result.NextCourtType),
-    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
-    "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
+    "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
+    // ds:TimeSpecifiedInResult
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
       "#text": amount.Amount.toFixed(2),
       "@_Type": amount.Type ?? ""
     })),
     "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),
+    "ds:NextResultSourceOrganisation": result.NextResultSourceOrganisation
+      ? mapAhoOrgUnitToXml(result.NextResultSourceOrganisation)
+      : undefined,
+    "ds:NextCourtType": optionalText(result.NextCourtType),
+    // ds:NextHearingType
+    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
+    "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),
@@ -286,7 +288,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
   offences.map((offence, index) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
-        "ds:Year": optionalText(offence.CriminalProsecutionReference.DefendantOrOffender?.Year),
+        "ds:Year": optionalText(offence.CriminalProsecutionReference.DefendantOrOffender?.Year) ?? { "#text": "" },
         "ds:OrganisationUnitIdentifierCode": mapAhoOrgUnitToXml(
           offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
         ),
@@ -338,7 +340,8 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
     "br7:ManualSequenceNo": optionalLiteral(offence.ManualSequenceNumber, LiteralType.YesNo),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
-    "br7:CourtCaseReferenceNumber": optionalText(offence.CourtCaseReferenceNumber),
+    "br7:CourtCaseReferenceNumber":
+      offence.CourtCaseReferenceNumber === null ? { "#text": "" } : optionalText(offence.CourtCaseReferenceNumber),
     "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index),
     "@_hasError": hasError(exceptions, [
       "AnnotatedHearingOutcome",

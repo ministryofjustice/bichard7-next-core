@@ -6,6 +6,7 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase } from "src/types/PncQueryResult"
 import addError from "./addError"
+import addNullCourtCaseReferenceNumber from "./addNullCourtCaseReferenceNumber"
 import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 
@@ -80,6 +81,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
       if (duplicateCases && duplicateCases.length === 1) {
         addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
+        addNullCourtCaseReferenceNumber(hoOffence)
         offenceHasError = true
       } else if (
         matcherOutcome.ambiguousHoOffences.includes(hoOffence) ||
@@ -87,6 +89,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
       ) {
         addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
+        addNullCourtCaseReferenceNumber(hoOffence)
         offenceHasError = true
       } else if (!duplicateCases) {
         if (offenceCategoryIsNonRecordable(hoOffence)) {
@@ -113,6 +116,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
           } else {
             addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
             addNullOffenceReasonSequence(hoOffence)
+            addNullCourtCaseReferenceNumber(hoOffence)
             offenceHasError = true
           }
         }

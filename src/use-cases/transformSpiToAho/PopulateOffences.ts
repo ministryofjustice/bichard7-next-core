@@ -12,7 +12,7 @@ import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "
 import {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceByCjsCode,
-  lookupQualifierCodeByCjsCode
+  lookupResultQualifierCodeByCjsCode
 } from "src/use-cases/dataLookup"
 import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
@@ -150,7 +150,7 @@ export default class {
 
     if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
       bailQualifiers.forEach((bailQualifier) => {
-        const description = lookupQualifierCodeByCjsCode(bailQualifier)?.description
+        const description = lookupResultQualifierCodeByCjsCode(bailQualifier)?.description
         if (description) {
           this.bailConditions.push(description)
         }
