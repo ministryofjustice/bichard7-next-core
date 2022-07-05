@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import isCaseRecordable from "src/lib/isCaseRecordable"
+import getOffenceFullCode from "src/lib/offence/getOffenceFullCode"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import { TriggerCode } from "src/types/TriggerCode"
 import type { TriggerGenerator } from "src/types/TriggerGenerator"
-import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 
 const triggerCode = TriggerCode.TRPR0029
 // prettier-ignore

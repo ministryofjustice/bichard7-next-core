@@ -1,6 +1,6 @@
 import fs from "fs"
 import compare from "src/comparison/compare"
-import { formatXmlDiff } from "src/lib/xmlOutputComparison"
+import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
 
 const FILE_PATH = process.argv.slice(-1)[0]
 

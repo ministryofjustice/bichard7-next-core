@@ -1,14 +1,14 @@
+import errorPaths from "src/lib/errorPaths"
+import { validateAsn, validateDummyAsn } from "src/schemas/ahoValidations"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import errorPaths from "src/lib/errorPaths"
-import { validateASN, validateDummyASN } from "src/use-cases/validations"
 
 const HO100206: ExceptionGenerator = (hearingOutcome) => {
   const asn = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const generatedExceptions: Exception[] = []
 
-  if (!validateASN(asn) && !validateDummyASN(asn)) {
+  if (!validateAsn(asn) && !validateDummyAsn(asn)) {
     generatedExceptions.push({ code: ExceptionCode.HO100206, path: errorPaths.case.asn })
   }
 

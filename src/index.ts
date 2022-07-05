@@ -1,12 +1,12 @@
-import parseAhoXml from "./lib/parseAhoXml"
+import enrichAho from "./enrichAho"
+import generateExceptions from "./exceptions/generate"
+import { parseAhoXml } from "./parse/parseAhoXml"
+import parseSpiResult from "./parse/parseSpiResult"
+import transformSpiToAho from "./parse/transformSpiToAho"
+import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
-import enrichHearingOutcome from "./use-cases/enrichHearingOutcome"
-import generateExceptions from "./use-cases/generateExceptions"
-import generateTriggers from "./use-cases/generateTriggers"
-import parseSpiResult from "./use-cases/parseSpiResult"
-import transformSpiToAho from "./use-cases/transformSpiToAho"
 
 export default (message: string, pncGateway: PncGateway): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome | Error
@@ -23,7 +23,7 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
     throw hearingOutcome
   }
 
-  hearingOutcome = enrichHearingOutcome(hearingOutcome, pncGateway)
+  hearingOutcome = enrichAho(hearingOutcome, pncGateway)
 
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)

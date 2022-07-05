@@ -1,6 +1,6 @@
 import errorPaths from "src/lib/errorPaths"
-import isAdjourned from "src/lib/isAdjourned"
 import isCaseRecordable from "src/lib/isCaseRecordable"
+import isAdjourned from "src/lib/result/isAdjourned"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"

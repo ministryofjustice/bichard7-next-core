@@ -1,7 +1,7 @@
 import merge from "lodash.merge"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
+import parseSpiResult from "src/parse/parseSpiResult"
 import type { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
-import parseSpiResult from "src/use-cases/parseSpiResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/SpiResult"
 
 type OffenceDates = {
   startDate: Date
