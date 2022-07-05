@@ -1,11 +1,11 @@
 import enrichAho from "./enrichAho"
+import generateExceptions from "./exceptions/generate"
 import parseAhoXml from "./parse/parseAhoXml"
 import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
-import generateExceptions from "./use-cases/generateExceptions"
 import generateTriggers from "./use-cases/generateTriggers"
 
 export default (message: string, pncGateway: PncGateway): BichardResultType => {

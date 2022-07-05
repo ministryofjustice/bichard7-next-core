@@ -1,7 +1,7 @@
 import parseSpiResult from "src/parse/parseSpiResult"
 import transformSpiToAho from "src/parse/transformSpiToAho"
 import generateMessage from "tests/helpers/generateMessage"
-import generateExceptions from "./generateExceptions"
+import generateExceptions from "./generate"
 
 const generateAho = () => {
   const spi = generateMessage({

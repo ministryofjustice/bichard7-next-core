@@ -1,9 +1,9 @@
-import exceptions from "src/exceptions"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { annotatedHearingOutcomeSchema } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ZodIssue } from "zod"
+import * as exceptions from "./exceptions"
 
 const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
   if (issue.message in ExceptionCode) {
