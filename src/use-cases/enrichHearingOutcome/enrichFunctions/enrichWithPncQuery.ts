@@ -1,7 +1,7 @@
+import { lookupOffenceByCjsCode } from "src/dataLookup"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
-import { lookupOffenceByCjsCode } from "src/use-cases/dataLookup"
 import enrichCourtCases from "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichCourtCases"
 
 const addTitle = (offence: PncOffence): PncOffence => {

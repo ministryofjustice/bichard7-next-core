@@ -1,6 +1,6 @@
+import { lookupOrganisationUnitByCode } from "src/dataLookup"
 import getCourtDetails from "src/lib/getCourtDetails"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 

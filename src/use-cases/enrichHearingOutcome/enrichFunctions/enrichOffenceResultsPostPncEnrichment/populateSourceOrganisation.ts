@@ -1,5 +1,5 @@
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/dataLookup"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
 const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {

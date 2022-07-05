@@ -1,5 +1,5 @@
+import { forceCodeExists, lookupOrganisationUnitByCode } from "src/dataLookup"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import { forceCodeExists, lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import logger from "src/utils/logging"
 
 const populateForceOwner = (

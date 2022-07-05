@@ -1,5 +1,17 @@
 import { format } from "date-fns"
 import { XMLBuilder } from "fast-xml-parser"
+import {
+  lookupAlcoholLevelMethodByCjsCode,
+  lookupCourtTypeByCjsCode,
+  lookupDefendantPresentAtHearingByCjsCode,
+  lookupGenderByCjsCode,
+  lookupModeOfTrialReasonByCjsCode,
+  lookupOffenceCategoryByCjsCode,
+  lookupOffenceDateCodeByCjsCode,
+  lookupPleaStatusByCjsCode,
+  lookupRemandStatusByCjsCode,
+  lookupVerdictByCjsCode
+} from "src/dataLookup"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -34,18 +46,6 @@ import type {
   RawAho,
   RawAhoPncOffence
 } from "src/types/RawAho"
-import {
-  lookupAlcoholLevelMethodByCjsCode,
-  lookupCourtTypeByCjsCode,
-  lookupDefendantPresentAtHearingByCjsCode,
-  lookupGenderByCjsCode,
-  lookupModeOfTrialReasonByCjsCode,
-  lookupOffenceCategoryByCjsCode,
-  lookupOffenceDateCodeByCjsCode,
-  lookupPleaStatusByCjsCode,
-  lookupRemandStatusByCjsCode,
-  lookupVerdictByCjsCode
-} from "src/use-cases/dataLookup"
 import addExceptionsToRawAho from "./addExceptionsToRawAho"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]

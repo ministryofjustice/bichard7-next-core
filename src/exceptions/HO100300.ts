@@ -1,3 +1,4 @@
+import { lookupOrganisationUnitByCode } from "src/dataLookup"
 import convertAsnToOrganisationUnit from "src/lib/convertAsnToOrganisationUnit"
 import errorPaths from "src/lib/errorPaths"
 import findException from "src/lib/findException"
@@ -6,7 +7,6 @@ import type Exception from "src/types/Exception"
 import type { ExceptionPath } from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =

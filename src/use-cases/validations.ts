@@ -1,7 +1,4 @@
 import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
-import ASN from "src/lib/asn"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import { z } from "zod"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -19,7 +16,10 @@ import {
   lookupVehicleCodeByCjsCode,
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
-} from "./dataLookup"
+} from "src/dataLookup"
+import ASN from "src/lib/asn"
+import { ExceptionCode } from "src/types/ExceptionCode"
+import { z } from "zod"
 
 const dummyASNPatterns = [
   "0800(N|P)P01[0-9]{11}[A-HJ-NP-RT-Z]{1}",

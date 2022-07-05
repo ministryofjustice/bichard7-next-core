@@ -1,4 +1,12 @@
 import {
+  lookupModeOfTrialReasonBySpiCode,
+  lookupOrganisationUnitByThirdLevelPsaCode,
+  lookupPleaStatusBySpiCode,
+  lookupRemandStatusBySpiCode,
+  lookupVerdictBySpiCode
+} from "src/dataLookup"
+import lookupCrownCourtByName from "src/dataLookup/lookupCrownCourtByName"
+import {
   BAIL_QUALIFIER_CODE,
   CROWN_COURT_NAME_MAPPING_OVERRIDES,
   DURATION_TYPES,
@@ -22,14 +30,6 @@ import type { Duration, OrganisationUnitCodes, Result } from "src/types/Annotate
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
 import type { CjsPlea } from "src/types/Plea"
 import type { CjsVerdict } from "src/types/Verdict"
-import {
-  lookupModeOfTrialReasonBySpiCode,
-  lookupOrganisationUnitByThirdLevelPsaCode,
-  lookupPleaStatusBySpiCode,
-  lookupRemandStatusBySpiCode,
-  lookupVerdictBySpiCode
-} from "src/use-cases/dataLookup"
-import lookupCrownCourtByName from "src/use-cases/dataLookup/lookupCrownCourtByName"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 

@@ -1,7 +1,7 @@
-jest.mock("src/use-cases/dataLookup")
+jest.mock("src/dataLookup")
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/dataLookup"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 
 describe("populateSourceOrganisation", () => {

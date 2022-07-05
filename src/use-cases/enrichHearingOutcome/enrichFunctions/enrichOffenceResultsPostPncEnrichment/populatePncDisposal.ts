@@ -1,3 +1,4 @@
+import { lookupPncDisposalByCjsCode } from "src/dataLookup"
 import {
   GUILTY_OF_ALTERNATIVE,
   PNC_DISPOSAL_TYPE,
@@ -6,7 +7,6 @@ import {
   VICTIM_SURCHARGE_CREST_CODES
 } from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import { lookupPncDisposalByCjsCode } from "src/use-cases/dataLookup"
 
 const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Result) => {
   const {

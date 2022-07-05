@@ -1,7 +1,7 @@
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/dataLookup/dataLookup"
+import extractCodesFromOU from "src/dataLookup/extractCodesFromOU"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type { KeyValue } from "src/types/KeyValue"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/use-cases/dataLookup/dataLookup"
-import extractCodesFromOU from "src/use-cases/dataLookup/extractCodesFromOU"
 
 const ENTERED_IN_ERROR_RESULT_CODE = 4583 // Hearing Removed
 const STOP_LIST = [

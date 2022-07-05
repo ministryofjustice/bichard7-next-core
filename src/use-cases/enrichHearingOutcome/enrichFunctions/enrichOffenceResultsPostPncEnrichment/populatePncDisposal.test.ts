@@ -1,4 +1,5 @@
-jest.mock("src/use-cases/dataLookup")
+jest.mock("src/dataLookup")
+import { lookupPncDisposalByCjsCode } from "src/dataLookup"
 import {
   GUILTY_OF_ALTERNATIVE,
   PNC_DISPOSAL_TYPE,
@@ -6,7 +7,6 @@ import {
   VICTIM_SURCHARGE_AMOUNT_IN_POUNDS
 } from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import { lookupPncDisposalByCjsCode } from "src/use-cases/dataLookup"
 import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {

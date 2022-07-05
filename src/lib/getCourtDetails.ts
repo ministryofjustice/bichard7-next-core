@@ -1,5 +1,5 @@
+import { lookupOrganisationUnitByCode } from "src/dataLookup"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "src/use-cases/dataLookup"
 import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "./properties"
 
 type CourtDetailsResult = {

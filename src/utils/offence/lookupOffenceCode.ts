@@ -1,8 +1,8 @@
-import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "src/use-cases/dataLookup"
-import type { LookupNationalOffenceCodeError, LookupLocalOffenceCodeError } from "src/types/LookupOffenceCodeError"
+import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "src/dataLookup"
+import type { LookupLocalOffenceCodeError, LookupNationalOffenceCodeError } from "src/types/LookupOffenceCodeError"
 
-import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 
 export default (
   offenceCode: string,

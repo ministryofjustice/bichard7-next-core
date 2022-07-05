@@ -1,4 +1,9 @@
 import {
+  lookupAlcoholLevelMethodBySpiCode,
+  lookupOffenceByCjsCode,
+  lookupResultQualifierCodeByCjsCode
+} from "src/dataLookup"
+import {
   ADJOURNMENT_SINE_DIE_RESULT_CODE,
   COMMON_LAWS,
   DONT_KNOW_VALUE,
@@ -9,11 +14,6 @@ import {
 import resultCodeIsOnStopList from "src/lib/resultCodeIsOnStopList"
 import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/IncomingMessage"
-import {
-  lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceByCjsCode,
-  lookupResultQualifierCodeByCjsCode
-} from "src/use-cases/dataLookup"
 import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 
