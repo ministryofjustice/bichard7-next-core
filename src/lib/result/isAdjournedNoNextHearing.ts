@@ -1,7 +1,7 @@
-import { ADJOURNMENT_NO_NEXT_HEARING_RANGES } from "src/lib/properties"
+const adjournmentNoNextHearingRanges = [[0, 0]]
 
 const isAdjournedNoNextHearing = (cjsResultCode?: number) =>
   cjsResultCode &&
-  ADJOURNMENT_NO_NEXT_HEARING_RANGES.some((range) => cjsResultCode >= range[0] && cjsResultCode <= range[1])
+  adjournmentNoNextHearingRanges.some((range) => cjsResultCode >= range[0] && cjsResultCode <= range[1])
 
 export default isAdjournedNoNextHearing

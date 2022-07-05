@@ -1,5 +1,5 @@
-import { ResultClass, RESULT_CLASS_PLEAS, RESULT_CLASS_RESULT_CODES, RESULT_CLASS_VERDICTS } from "src/lib/properties"
 import type { Result } from "src/types/AnnotatedHearingOutcome"
+import ResultClass from "src/types/ResultClass"
 import populateResultClass from "./populateResultClass"
 
 const ADJOURNED_RESULT_CODE = 4001
@@ -80,7 +80,7 @@ describe("populateResultClass", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      PleaStatus: RESULT_CLASS_PLEAS[0]
+      PleaStatus: "ADM"
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -91,7 +91,7 @@ describe("populateResultClass", () => {
   it("should set the result class to Unresulted when adjourned and CJS result code is in result codes list", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
-      CJSresultCode: RESULT_CLASS_RESULT_CODES[0],
+      CJSresultCode: 2050,
       NextResultSourceOrganisation: {
         OrganisationUnitCode: "ABCDEFG"
       }
@@ -106,7 +106,7 @@ describe("populateResultClass", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: ADJOURNED_RESULT_CODE,
-      Verdict: RESULT_CLASS_VERDICTS[0]
+      Verdict: "NG"
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -117,7 +117,7 @@ describe("populateResultClass", () => {
   it("should set the result class to Judgement with final result when not adjourned and CJS result code is in result codes list", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
-      CJSresultCode: RESULT_CLASS_RESULT_CODES[0]
+      CJSresultCode: 2050
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -129,7 +129,7 @@ describe("populateResultClass", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      Verdict: RESULT_CLASS_VERDICTS[0]
+      Verdict: "NG"
     } as Result
 
     populateResultClass(result, undefined, new Date())

@@ -1,9 +1,11 @@
 import isCaseRecordable from "src/lib/isCaseRecordable"
-import { SUSPENDED, SUSPENDED_2ND_DURATION_RESULTS } from "src/lib/properties"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import populateCourt from "./populateCourt"
 import populatePncDisposal from "./populatePncDisposal"
 import populateResultClass from "./populateResultClass"
+
+const suspendedSecondDurationResults = [1115, 1134]
+const suspended = "Suspended"
 
 const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome) => {
   const { DateOfHearing } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
@@ -16,9 +18,9 @@ const enrichOffenceResultsPostPncEnrichment: EnrichAhoFunction = (hearingOutcome
         result.CJSresultCode &&
         result.Duration &&
         result.Duration.length > 1 &&
-        SUSPENDED_2ND_DURATION_RESULTS.includes(result.CJSresultCode)
+        suspendedSecondDurationResults.includes(result.CJSresultCode)
       ) {
-        result.Duration[1].DurationType = SUSPENDED
+        result.Duration[1].DurationType = suspended
       }
 
       if (isCaseRecordable(hearingOutcome)) {

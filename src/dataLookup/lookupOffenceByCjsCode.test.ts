@@ -1,6 +1,6 @@
-import { lookupNationalOffenceByCjsCode, lookupLocalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
-import { COMMON_LAWS } from "src/lib/properties"
-import { LookupNationalOffenceCodeError, LookupLocalOffenceCodeError } from "src/types/LookupOffenceCodeError"
+import { COMMON_LAWS } from "src/lib/offenceTypes"
+import { LookupLocalOffenceCodeError, LookupNationalOffenceCodeError } from "src/types/LookupOffenceCodeError"
+import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
 
 const localOffenceCode = "01CP001"
 const areaCode = "01"

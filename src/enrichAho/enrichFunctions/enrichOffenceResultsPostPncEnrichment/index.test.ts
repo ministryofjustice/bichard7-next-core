@@ -4,7 +4,6 @@ jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/p
 jest.mock("src/lib/isCaseRecordable")
 
 import isCaseRecordable from "src/lib/isCaseRecordable"
-import { SUSPENDED, SUSPENDED_2ND_DURATION_RESULTS } from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import enrichOffenceResultsPostPncEnrichment from "./index"
 import populateCourt from "./populateCourt"
@@ -98,7 +97,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
       ConvictionDate: convictionDate,
       Result: [
         {
-          CJSresultCode: SUSPENDED_2ND_DURATION_RESULTS[0],
+          CJSresultCode: 1115,
           ResultApplicableQualifierCode: ["A", "B"],
           Duration: [
             {
@@ -149,7 +148,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     expect(Duration?.[0].DurationType).toBe("Duration type should not change")
     expect(Duration?.[0].DurationUnit).toBe("Duration unit should not change")
     expect(Duration?.[1].DurationLength).toBe(2)
-    expect(Duration?.[1].DurationType).toBe(SUSPENDED)
+    expect(Duration?.[1].DurationType).toBe("Suspended")
     expect(Duration?.[1].DurationUnit).toBe("Duration unit should not change")
     expect(Duration?.[2].DurationLength).toBe(3)
     expect(Duration?.[2].DurationType).toBe("Duration type should not change")

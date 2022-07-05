@@ -1,6 +1,11 @@
 import { lookupOrganisationUnitByCode } from "src/dataLookup"
-import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "src/lib/properties"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+
+const topLevelMagistratesCourtCode = "B"
+const youthCourt = "YOUTH"
+const mcYouth = "MCY"
+const mcAdult = "MCA"
+const crownCourt = "CC"
 
 type CourtDetailsResult = {
   courtType: string
@@ -29,10 +34,10 @@ const getCourtDetails = (organisationUnitData: OrganisationUnitCodes): CourtDeta
   const courtName = getCourtName(organisationUnitData)
 
   let courtType: string
-  if (TopLevelCode === TOP_LEVEL_MAGISTRATES_COURT) {
-    courtType = courtName.toUpperCase().includes(YOUTH_COURT) ? MC_YOUTH : MC_ADULT
+  if (TopLevelCode === topLevelMagistratesCourtCode) {
+    courtType = courtName.toUpperCase().includes(youthCourt) ? mcYouth : mcAdult
   } else {
-    courtType = CROWN_COURT
+    courtType = crownCourt
   }
 
   return { courtType, courtName }

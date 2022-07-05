@@ -1,4 +1,4 @@
-import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
+import { COMMON_LAWS, INDICTMENT } from "src/lib/offenceTypes"
 import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import parseOffenceReason from "./parseOffenceReason"
 

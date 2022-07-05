@@ -1,12 +1,25 @@
 import { lookupPncDisposalByCjsCode } from "src/dataLookup"
-import {
-  GUILTY_OF_ALTERNATIVE,
-  PNC_DISPOSAL_TYPE,
-  ResultClass,
-  VICTIM_SURCHARGE_AMOUNT_IN_POUNDS,
-  VICTIM_SURCHARGE_CREST_CODES
-} from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
+import ResultClass from "src/types/ResultClass"
+
+const victimSurchargeCrestCodes = [
+  "COM",
+  "COMINST",
+  "COMTIME",
+  "FD",
+  "FDINST",
+  "FDTIME",
+  "FINE",
+  "PC",
+  "PCINST",
+  "PCTIME"
+]
+const victimSurchargeAmountInPounds = 15
+const guiltyOfAlternative = "NA"
+const pncDisposalTypes = {
+  VICTIM_SURCHARGE: 3117,
+  GUILTY_OF_ALTERNATIVE: 2060
+}
 
 const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Result) => {
   const {
@@ -21,13 +34,13 @@ const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Re
 
   if (
     CourtType?.startsWith("M") &&
-    VICTIM_SURCHARGE_CREST_CODES.includes(CRESTDisposalCode ?? "") &&
+    victimSurchargeCrestCodes.includes(CRESTDisposalCode ?? "") &&
     ResultVariableText?.match(/victim\s*surcharge/i) &&
-    AmountSpecifiedInResult?.some((amount) => amount.Amount === VICTIM_SURCHARGE_AMOUNT_IN_POUNDS)
+    AmountSpecifiedInResult?.some((amount) => amount.Amount === victimSurchargeAmountInPounds)
   ) {
-    result.PNCDisposalType = PNC_DISPOSAL_TYPE.VICTIM_SURCHARGE
-  } else if (Verdict === GUILTY_OF_ALTERNATIVE) {
-    result.PNCDisposalType = PNC_DISPOSAL_TYPE.GUILTY_OF_ALTERNATIVE
+    result.PNCDisposalType = pncDisposalTypes.VICTIM_SURCHARGE
+  } else if (Verdict === guiltyOfAlternative) {
+    result.PNCDisposalType = pncDisposalTypes.GUILTY_OF_ALTERNATIVE
   } else {
     const adjudicationIndicator =
       resultClass === ResultClass.ADJOURNMENT_WITH_JUDGEMENT || resultClass == ResultClass.JUDGEMENT_WITH_FINAL_RESULT

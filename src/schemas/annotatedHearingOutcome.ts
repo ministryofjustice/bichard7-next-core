@@ -1,6 +1,6 @@
-import { ResultClass } from "src/lib/properties"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { CjsPlea } from "src/types/Plea"
+import ResultClass from "src/types/ResultClass"
 import { z } from "zod"
 import {
   validateActualOffenceDateCode,

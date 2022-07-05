@@ -1,5 +1,4 @@
 import { XMLParser } from "fast-xml-parser"
-import type { ResultClass } from "src/lib/properties"
 import extractExceptionsFromAho from "src/parse/parseAhoXml/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "src/parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
@@ -37,6 +36,7 @@ import type {
   ResultQualifierVariable
 } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
+import type ResultClass from "src/types/ResultClass"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],

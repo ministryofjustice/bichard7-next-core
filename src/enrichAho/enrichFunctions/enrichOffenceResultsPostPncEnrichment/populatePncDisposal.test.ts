@@ -1,12 +1,7 @@
 jest.mock("src/dataLookup")
 import { lookupPncDisposalByCjsCode } from "src/dataLookup"
-import {
-  GUILTY_OF_ALTERNATIVE,
-  PNC_DISPOSAL_TYPE,
-  ResultClass,
-  VICTIM_SURCHARGE_AMOUNT_IN_POUNDS
-} from "src/lib/properties"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
+import ResultClass from "src/types/ResultClass"
 import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {
@@ -24,13 +19,13 @@ describe("populatePncDisposal", () => {
       CJSresultCode: 123,
       CRESTDisposalCode: "FDINST",
       ResultVariableText: "It expects to see {victim surcharge}",
-      AmountSpecifiedInResult: [{ Amount: 345 }, { Amount: VICTIM_SURCHARGE_AMOUNT_IN_POUNDS }],
+      AmountSpecifiedInResult: [{ Amount: 345 }, { Amount: 15 }],
       Verdict: ""
     } as Result
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe(PNC_DISPOSAL_TYPE.VICTIM_SURCHARGE)
+    expect(result.PNCDisposalType).toBe(3117)
   })
 
   it("should set PNCDisposalType to GUILTY_OF_ALTERNATIVE", () => {
@@ -48,12 +43,12 @@ describe("populatePncDisposal", () => {
       CRESTDisposalCode: "",
       ResultVariableText: "",
       AmountSpecifiedInResult: [{ Amount: 0 }],
-      Verdict: GUILTY_OF_ALTERNATIVE
+      Verdict: "NA"
     } as Result
 
     populatePncDisposal(hearingOutcome, result)
 
-    expect(result.PNCDisposalType).toBe(PNC_DISPOSAL_TYPE.GUILTY_OF_ALTERNATIVE)
+    expect(result.PNCDisposalType).toBe(2060)
   })
 
   it("should set PNCDisposalType to PNC Adjudication when result class is RESULT_JUDGEMENT_WITH_FINAL_RESULT", () => {

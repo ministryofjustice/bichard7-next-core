@@ -1,4 +1,4 @@
-import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
+import { COMMON_LAWS, INDICTMENT } from "src/lib/offenceTypes"
 
 export const isCommonLaw = (offenceCode: string): boolean => {
   const commonLawOffenceRegExp = new RegExp(`^${COMMON_LAWS}`)
