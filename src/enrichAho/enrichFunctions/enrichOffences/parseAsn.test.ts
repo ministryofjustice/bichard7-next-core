@@ -1,8 +1,8 @@
-import parseASN from "./parseASN"
+import parseAsn from "./parseAsn"
 
-describe("parseASN", () => {
+describe("parseAsn", () => {
   it("should handle 20 character ASNs", () => {
-    expect(parseASN("YYFFUUSS00000000123D")).toStrictEqual({
+    expect(parseAsn("YYFFUUSS00000000123D")).toStrictEqual({
       bottomLevelCode: "SS",
       checkDigit: "D",
       secondLevelCode: "FF",
@@ -14,7 +14,7 @@ describe("parseASN", () => {
   })
 
   it("should handle 21 character ASNs", () => {
-    expect(parseASN("YYBFFUUSS00000000123D")).toStrictEqual({
+    expect(parseAsn("YYBFFUUSS00000000123D")).toStrictEqual({
       bottomLevelCode: "SS",
       checkDigit: "D",
       secondLevelCode: "FF",

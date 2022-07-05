@@ -1,7 +1,7 @@
-import convertASNToLongFormat from "src/lib/convertASNToLongFormat"
 import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import type { KeyValue } from "src/types/KeyValue"
+import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
 const GENERATED_PNC_FILENAME_MAX_LENGTH = 54
 
@@ -29,7 +29,7 @@ const createGeneratedPncName = (defendant: HearingDefendant): string => {
 const enrichDefendant: EnrichAhoFunction = (hearingOutCome) => {
   const defendant = hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
 
-  defendant.ArrestSummonsNumber = convertASNToLongFormat(defendant.ArrestSummonsNumber)
+  defendant.ArrestSummonsNumber = convertAsnToLongFormat(defendant.ArrestSummonsNumber)
 
   defendant.BailConditions = deduplicateBailConditions(defendant.BailConditions)
 

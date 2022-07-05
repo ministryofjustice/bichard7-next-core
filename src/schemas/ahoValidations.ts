@@ -17,11 +17,11 @@ import {
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
 } from "src/dataLookup"
-import ASN from "src/lib/asn"
+import Asn from "src/lib/Asn"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { z } from "zod"
 
-const dummyASNPatterns = [
+const dummyAsnPatterns = [
   "0800(N|P)P01[0-9]{11}[A-HJ-NP-RT-Z]{1}",
   "[0-9]{4}NRPR[0-9A-Z]{12}",
   "[0-9]{2}12LN00[0-9]{11}[A-HJ-NP-RT-Z]{1}",
@@ -35,12 +35,12 @@ const dummyASNPatterns = [
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
-const validateASN = (data: string): boolean => {
-  const asn = new ASN(data)
+const validateAsn = (data: string): boolean => {
+  const asn = new Asn(data)
   return !!data.match(/[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}/) && asn.checkCharacter() === data.slice(-1)
 }
 
-const validateDummyASN = (data: string): boolean => dummyASNPatterns.some((p) => data.match(p))
+const validateDummyAsn = (data: string): boolean => dummyAsnPatterns.some((p) => data.match(p))
 
 const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   if (data < 1000 || data > 9999) {
@@ -96,8 +96,8 @@ const validateAmountSpecifiedInResult = (amount: number): boolean => {
 
 export {
   validateRemandStatus,
-  validateASN,
-  validateDummyASN,
+  validateAsn,
+  validateDummyAsn,
   validateResultCode,
   validateCourtType,
   validateTypeOfHearing,

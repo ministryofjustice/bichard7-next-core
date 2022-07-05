@@ -1,4 +1,4 @@
-class ASN {
+class Asn {
   public year: string
 
   public force: string
@@ -30,4 +30,4 @@ class ASN {
   }
 }
 
-export default ASN
+export default Asn

@@ -14,8 +14,8 @@ import {
 import resultCodeIsOnStopList from "src/lib/result/resultCodeIsOnStopList"
 import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/SpiResult"
-import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
+import removeSeconds from "./removeSeconds"
 
 export interface OffencesResult {
   offences: Offence[]

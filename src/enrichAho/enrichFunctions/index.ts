@@ -1,6 +1,6 @@
 export { default as enrichCase } from "./enrichCase"
 export { default as enrichCourt } from "./enrichCourt"
-export { default as enrichDefendant } from "./enrichDefendant"
+export { enrichDefendant } from "./enrichDefendant"
 export { default as enrichForceOwner } from "./enrichForceOwner"
 export { enrichOffenceResults } from "./enrichOffenceResults"
 export { default as enrichOffenceResultsPostPncEnrichment } from "./enrichOffenceResultsPostPncEnrichment"

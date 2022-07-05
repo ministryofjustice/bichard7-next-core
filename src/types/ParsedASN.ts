@@ -1,4 +1,4 @@
-export type ParsedASN = {
+export type ParsedAsn = {
   year: string
   topLevelCode?: string
   secondLevelCode: string

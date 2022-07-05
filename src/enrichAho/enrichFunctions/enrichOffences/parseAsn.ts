@@ -1,6 +1,6 @@
-import type { ParsedASN } from "src/types/ParsedASN"
+import type { ParsedAsn } from "src/types/ParsedAsn"
 
-const parseASN = (asn: string): ParsedASN => {
+const parseAsn = (asn: string): ParsedAsn => {
   let offset = 0
   let topLevelCode
   if (asn.length === 21) {
@@ -19,4 +19,4 @@ const parseASN = (asn: string): ParsedASN => {
   }
 }
 
-export default parseASN
+export default parseAsn

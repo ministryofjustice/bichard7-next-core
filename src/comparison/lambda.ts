@@ -1,5 +1,6 @@
-import { isError } from "src/comparison/Types"
 import compare from "src/comparison/compare"
+import { isError } from "src/comparison/Types"
+import logger from "src/lib/logging"
 import { z } from "zod"
 import type { ComparisonResult } from "./compare"
 import createDynamoDbConfig from "./createDynamoDbConfig"
@@ -7,7 +8,6 @@ import createS3Config from "./createS3Config"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFileFromS3 from "./getFileFromS3"
 import logInDynamoDb from "./logInDynamoDb"
-import logger from "src/utils/logging"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()

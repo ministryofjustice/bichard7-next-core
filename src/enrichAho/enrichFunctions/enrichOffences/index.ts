@@ -7,18 +7,18 @@ import isOffenceCode from "src/lib/offence/isOffenceCode"
 import isOffenceIgnored from "src/lib/offence/isOffenceIgnored"
 import lookupOffenceCode from "src/lib/offence/lookupOffenceCode"
 import parseOffenceReason from "src/lib/offence/parseOffenceReason"
-import parseASN from "src/lib/parseASN"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { isLookupOffenceCodeError } from "src/types/LookupOffenceCodeError"
 import handle100Offences from "./handle100Offences"
+import parseAsn from "./parseAsn"
 
 const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutcome) => {
   handle100Offences(hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case)
 
-  const parsedASN = parseASN(
+  const parsedAsn = parseAsn(
     hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
@@ -35,7 +35,7 @@ const enrichOffences: EnrichAhoFunction = (hearingOutCome: AnnotatedHearingOutco
 
       offence.CriminalProsecutionReference = {
         ...offence.CriminalProsecutionReference,
-        ...createCriminalProsecutionRef(parsedASN, parsedOffenceReason)
+        ...createCriminalProsecutionRef(parsedAsn, parsedOffenceReason)
       }
 
       const offenceIgnored = isOffenceIgnored(offence)

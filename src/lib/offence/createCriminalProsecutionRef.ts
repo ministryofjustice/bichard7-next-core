@@ -1,23 +1,23 @@
 import type { CriminalProsecutionReference, OffenceReason } from "src/types/AnnotatedHearingOutcome"
-import type { ParsedASN } from "src/types/ParsedASN"
+import type { ParsedAsn } from "src/types/ParsedAsn"
 
 export default (
-  parsedASN: ParsedASN,
+  parsedAsn: ParsedAsn,
   parsedOffenceReason: OffenceReason | undefined
 ): CriminalProsecutionReference => ({
   DefendantOrOffender: {
-    Year: parsedASN.year,
+    Year: parsedAsn.year,
     OrganisationUnitIdentifierCode: {
-      ...(parsedASN.topLevelCode && { TopLevelCode: parsedASN.topLevelCode }),
-      SecondLevelCode: parsedASN.secondLevelCode,
-      ThirdLevelCode: parsedASN.thirdLevelCode,
-      BottomLevelCode: parsedASN.bottomLevelCode,
-      OrganisationUnitCode: `${parsedASN.topLevelCode ? parsedASN.topLevelCode : ""}${parsedASN.secondLevelCode}${
-        parsedASN.thirdLevelCode
-      }${parsedASN.bottomLevelCode}`
+      ...(parsedAsn.topLevelCode && { TopLevelCode: parsedAsn.topLevelCode }),
+      SecondLevelCode: parsedAsn.secondLevelCode,
+      ThirdLevelCode: parsedAsn.thirdLevelCode,
+      BottomLevelCode: parsedAsn.bottomLevelCode,
+      OrganisationUnitCode: `${parsedAsn.topLevelCode ? parsedAsn.topLevelCode : ""}${parsedAsn.secondLevelCode}${
+        parsedAsn.thirdLevelCode
+      }${parsedAsn.bottomLevelCode}`
     },
-    DefendantOrOffenderSequenceNumber: parsedASN.sequenceNumber,
-    CheckDigit: parsedASN.checkDigit
+    DefendantOrOffenderSequenceNumber: parsedAsn.sequenceNumber,
+    CheckDigit: parsedAsn.checkDigit
   },
   ...(parsedOffenceReason && { OffenceReason: parsedOffenceReason })
 })

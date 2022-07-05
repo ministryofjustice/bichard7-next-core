@@ -1,6 +1,6 @@
-import convertASNToLongFormat from "./convertASNToLongFormat"
+import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
-describe("convertASNToLongFormat", () => {
+describe("convertAsnToLongFormat", () => {
   test.each([
     "YYFFUUSS123D",
     "YYFFUUSS00000000123D",
@@ -11,10 +11,10 @@ describe("convertASNToLongFormat", () => {
     "YY/FFUU/SS/00000000123/D",
     "Y/YFFUU/SSX123D"
   ])("should should convert correctly for %s", (inputASN) => {
-    expect(convertASNToLongFormat(inputASN)).toBe("YYFFUUSS00000000123D")
+    expect(convertAsnToLongFormat(inputASN)).toBe("YYFFUUSS00000000123D")
   })
 
   it("should return the original (capitalised) if the ID can't be parsed", () => {
-    expect(convertASNToLongFormat("yyffUUSSXXXXD")).toBe("YYFFUUSSXXXXD")
+    expect(convertAsnToLongFormat("yyffUUSSXXXXD")).toBe("YYFFUUSSXXXXD")
   })
 })

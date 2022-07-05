@@ -1,3 +1,4 @@
+import parsePncDate from "src/lib/parsePncDate"
 import type {
   PncAdjudication,
   PncCourtCase,
@@ -7,7 +8,6 @@ import type {
   PncQueryResult
 } from "src/types/PncQueryResult"
 import type { Adj, Cxe01, Dis, RawAhoPncOffence } from "src/types/RawAho"
-import parsePncDate from "./parsePncDate"
 
 type OffenceDates = {
   startDate: Date

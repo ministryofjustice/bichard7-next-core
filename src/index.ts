@@ -1,6 +1,6 @@
 import enrichAho from "./enrichAho"
 import generateExceptions from "./exceptions/generate"
-import parseAhoXml from "./parse/parseAhoXml"
+import { parseAhoXml } from "./parse/parseAhoXml"
 import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"

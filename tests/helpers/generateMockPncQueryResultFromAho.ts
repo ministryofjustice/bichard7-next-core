@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
-import mapXmlCxe01ToAho from "src/lib/mapXmlCxe01ToAho"
+import { mapXmlCxe01ToAho } from "src/parse/parseAhoXml"
 import type { PncQueryResult } from "src/types/PncQueryResult"
 import type { Cxe01, RawAho } from "src/types/RawAho"
 
