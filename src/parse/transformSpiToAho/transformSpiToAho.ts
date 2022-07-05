@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type { IncomingMessageParsedXml } from "src/types/IncomingMessage"
+import type { IncomingMessageParsedXml } from "src/types/SpiResult"
 import populateCase from "./populateCase"
 import populateHearing from "./populateHearing"
 

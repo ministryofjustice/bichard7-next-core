@@ -1,4 +1,4 @@
-import { validateAmountSpecifiedInResult } from "./validations"
+import { validateAmountSpecifiedInResult } from "./ahoValidations"
 
 describe("validations", () => {
   describe("validateAmountSpecifiedInResult", () => {

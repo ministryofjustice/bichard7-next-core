@@ -1,7 +1,7 @@
 import type { Hearing } from "src/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "src/types/IncomingMessage"
-import removeSeconds from "src/utils/removeSeconds"
+import type { ResultedCaseMessageParsedXml } from "src/types/SpiResult"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
+import removeSeconds from "src/utils/removeSeconds"
 
 export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {

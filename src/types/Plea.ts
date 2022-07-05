@@ -1,5 +1,3 @@
-import { z } from "zod"
-
 export enum SpiPlea {
   Guilty = 1,
   NotGuilty = 2,
@@ -19,8 +17,3 @@ export enum CjsPlea {
   None = "NONE",
   Opposed = "OPP"
 }
-
-const spiPleaSchema = z.nativeEnum(SpiPlea)
-
-export type SpiPleaType = z.infer<typeof spiPleaSchema>
-export { spiPleaSchema }

@@ -1,21 +1,23 @@
+import { SpiPlea } from "src/types/Plea"
 import { z } from "zod"
-import { spiPleaSchema } from "./Plea"
 
-const toArray = <T>(element: unknown): T[] =>
+export const spiPleaSchema = z.nativeEnum(SpiPlea)
+
+export const toArray = <T>(element: unknown): T[] =>
   element === undefined ? [] : !Array.isArray(element) ? [element] : element
 
-const nextHearingDetailsSchema = z.object({
+export const nextHearingDetailsSchema = z.object({
   CourtHearingLocation: z.string(),
   DateOfHearing: z.string(),
   TimeOfHearing: z.string()
 })
 
-const nextHearingSchema = z.object({
+export const nextHearingSchema = z.object({
   BailStatusOffence: z.string().optional(),
   NextHearingDetails: nextHearingDetailsSchema
 })
 
-const durationSchema = z.object({
+export const durationSchema = z.object({
   DurationValue: z.number().optional(),
   DurationUnit: z.string().optional(),
   SecondaryDurationValue: z.number().optional(),
@@ -24,13 +26,13 @@ const durationSchema = z.object({
   DurationEndDate: z.preprocess(toArray, z.string().array().min(0))
 })
 
-const outcomeSchema = z.object({
+export const outcomeSchema = z.object({
   ResultAmountSterling: z.number().optional(),
   PenaltyPoints: z.number().optional(),
   Duration: durationSchema.optional()
 })
 
-const resultParsedXmlSchema = z.object({
+export const resultParsedXmlSchema = z.object({
   ResultCode: z.number().optional(),
   ResultText: z.string(),
   ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
@@ -38,7 +40,7 @@ const resultParsedXmlSchema = z.object({
   NextHearing: nextHearingSchema.optional()
 })
 
-const offenceParsedXmlSchema = z.object({
+export const offenceParsedXmlSchema = z.object({
   BaseOffenceDetails: z.object({
     OffenceSequenceNumber: z.number(),
     OffenceCode: z.string(),
@@ -78,7 +80,7 @@ const offenceParsedXmlSchema = z.object({
   Result: z.preprocess(toArray, resultParsedXmlSchema.array().min(0))
 })
 
-const simpleAddressSchema = z.object({
+export const simpleAddressSchema = z.object({
   SimpleAddress: z.object({
     AddressLine1: z.string(),
     AddressLine2: z.string().optional(),
@@ -88,7 +90,7 @@ const simpleAddressSchema = z.object({
   })
 })
 
-const complexAddressSchema = z.object({
+export const complexAddressSchema = z.object({
   ComplexAddress: z.object({
     PAON: z.string().optional(),
     StreetDescription: z.string().optional(),
@@ -100,9 +102,9 @@ const complexAddressSchema = z.object({
   })
 })
 
-const spiAddressSchema = z.union([simpleAddressSchema, complexAddressSchema])
+export const spiAddressSchema = z.union([simpleAddressSchema, complexAddressSchema])
 
-const spiCourtIndividualDefendantSchema = z.object({
+export const spiCourtIndividualDefendantSchema = z.object({
   PresentAtHearing: z.string(),
   BailStatus: z.string(),
   PersonDefendant: z.object({
@@ -124,7 +126,7 @@ const spiCourtIndividualDefendantSchema = z.object({
   ReasonForBailConditionsOrCustody: z.string().optional()
 })
 
-const spiCourtCorporateDefendantSchema = z.object({
+export const spiCourtCorporateDefendantSchema = z.object({
   PNCidentifier: z.string().optional(),
   PresentAtHearing: z.string(),
   BailStatus: z.string(),
@@ -134,7 +136,7 @@ const spiCourtCorporateDefendantSchema = z.object({
   Address: spiAddressSchema
 })
 
-const defendantSchema = z
+export const defendantSchema = z
   .object({
     CourtIndividualDefendant: spiCourtIndividualDefendantSchema.optional(),
     CourtCorporateDefendant: spiCourtCorporateDefendantSchema.optional(),
@@ -150,7 +152,7 @@ const defendantSchema = z
     "Either CourtIndividualDefendant or CourtCorporateDefendant should exist."
   )
 
-const resultedCaseMessageParsedXmlSchema = z.object({
+export const resultedCaseMessageParsedXmlSchema = z.object({
   Session: z.object({
     Case: z.object({
       PTIURN: z.string(),
@@ -167,7 +169,7 @@ const resultedCaseMessageParsedXmlSchema = z.object({
   })
 })
 
-const incomingMessageParsedXmlSchema = z.object({
+export const incomingMessageParsedXmlSchema = z.object({
   DeliverRequest: z.object({
     MessageIdentifier: z.string(),
     Message: z.object({
@@ -175,14 +177,3 @@ const incomingMessageParsedXmlSchema = z.object({
     })
   })
 })
-
-export type ResultParsedXml = z.infer<typeof resultParsedXmlSchema>
-export type OffenceParsedXml = z.infer<typeof offenceParsedXmlSchema>
-export type SpiAddress = z.infer<typeof spiAddressSchema>
-export type SpiCourtIndividualDefendant = z.infer<typeof spiCourtIndividualDefendantSchema>
-export type SpiOffence = z.infer<typeof offenceParsedXmlSchema>
-export type SpiResult = z.infer<typeof resultParsedXmlSchema>
-export type ResultedCaseMessageParsedXml = z.infer<typeof resultedCaseMessageParsedXmlSchema>
-export type IncomingMessageParsedXml = z.infer<typeof incomingMessageParsedXmlSchema>
-
-export { incomingMessageParsedXmlSchema }

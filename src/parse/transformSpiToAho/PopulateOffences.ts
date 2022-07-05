@@ -13,7 +13,7 @@ import {
 } from "src/lib/properties"
 import resultCodeIsOnStopList from "src/lib/resultCodeIsOnStopList"
 import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/IncomingMessage"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/SpiResult"
 import removeSeconds from "src/utils/removeSeconds"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 

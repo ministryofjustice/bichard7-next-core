@@ -1,6 +1,7 @@
 import { ResultClass } from "src/lib/properties"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { CjsPlea } from "src/types/Plea"
+import { z } from "zod"
 import {
   validateActualOffenceDateCode,
   validateAmountSpecifiedInResult,
@@ -19,8 +20,7 @@ import {
   validateVehicleCode,
   validateVerdict,
   validateYesNo
-} from "src/use-cases/validations"
-import { z } from "zod"
+} from "./ahoValidations"
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
 

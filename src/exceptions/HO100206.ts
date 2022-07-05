@@ -1,8 +1,8 @@
+import errorPaths from "src/lib/errorPaths"
+import { validateASN, validateDummyASN } from "src/schemas/ahoValidations"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import errorPaths from "src/lib/errorPaths"
-import { validateASN, validateDummyASN } from "src/use-cases/validations"
 
 const HO100206: ExceptionGenerator = (hearingOutcome) => {
   const asn = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber

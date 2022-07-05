@@ -27,8 +27,8 @@ import {
   WARRANT_ISSUE_DATE_RESULT_CODES
 } from "src/lib/properties"
 import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/IncomingMessage"
 import type { CjsPlea } from "src/types/Plea"
+import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/SpiResult"
 import type { CjsVerdict } from "src/types/Verdict"
 import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"

@@ -1,6 +1,6 @@
 import { lookupRemandStatusBySpiCode } from "src/dataLookup"
 import type { Address, DefendantDetail, HearingDefendant } from "src/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "src/types/IncomingMessage"
+import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "src/types/SpiResult"
 import PopulateOffences from "./PopulateOffences"
 
 const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>
