@@ -1,11 +1,11 @@
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isEqual"
+import logger from "src/lib/logging"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
 import type BichardResultType from "../src/types/BichardResultType"
 import type Exception from "../src/types/Exception"
 import type { Trigger } from "../src/types/Trigger"
-import logger from "../src/utils/logging"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 

@@ -3,19 +3,25 @@ import {
   lookupOffenceByCjsCode,
   lookupResultQualifierCodeByCjsCode
 } from "src/dataLookup"
-import {
-  ADJOURNMENT_SINE_DIE_RESULT_CODE,
-  COMMON_LAWS,
-  DONT_KNOW_VALUE,
-  ENTERED_IN_ERROR_RESULT_CODE,
-  INDICTMENT,
-  TIME_RANGE
-} from "src/lib/properties"
+import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
 import resultCodeIsOnStopList from "src/lib/result/resultCodeIsOnStopList"
 import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/SpiResult"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 import removeSeconds from "./removeSeconds"
+
+const enteredInErrorResultCode = 4583 // Hearing Removed
+const dontKnowValue = "D"
+const adjournmentSineDieResultCode = 2007
+// TODO: Refactor into an enum
+const timeRange = {
+  ON_OR_IN: 1,
+  BEFORE: 2,
+  AFTER: 3,
+  BETWEEN: 4,
+  ON_OR_ABOUT: 5,
+  ON_OR_BEFORE: 6
+}
 
 export interface OffencesResult {
   offences: Offence[]
@@ -27,7 +33,7 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
   let aFailConditionResultFound = false
 
   spiResults.forEach((result) => {
-    if (result.ResultCode === ADJOURNMENT_SINE_DIE_RESULT_CODE) {
+    if (result.ResultCode === adjournmentSineDieResultCode) {
       a2007ResultFound = true
     } else if (!resultCodeIsOnStopList(result.ResultCode ?? 1000)) {
       aFailConditionResultFound = true
@@ -90,7 +96,7 @@ export default class {
       Result: spiResults
     } = spiOffence
 
-    const enteredInError = spiResults.some((result) => result.ResultCode === ENTERED_IN_ERROR_RESULT_CODE)
+    const enteredInError = spiResults.some((result) => result.ResultCode === enteredInErrorResultCode)
     if (enteredInError) {
       return undefined
     }
@@ -125,7 +131,7 @@ export default class {
     if (spiOffenceStart?.OffenceStartTime) {
       const spiOffenceStartTime = removeSeconds(spiOffenceStart.OffenceStartTime)
 
-      const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = TIME_RANGE
+      const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = timeRange
       if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(spiOffenceDateCode)) {
         offence.OffenceTime = spiOffenceStartTime
       } else if (spiOffenceDateCode === BETWEEN) {
@@ -137,7 +143,7 @@ export default class {
       offence.OffenceEndTime = removeSeconds(spiOffenceEnd.OffenceEndTime)
     }
 
-    offence.CommittedOnBail = DONT_KNOW_VALUE
+    offence.CommittedOnBail = dontKnowValue
     offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber
 
     offence.ConvictionDate = spiConvictionDate ? new Date(spiConvictionDate) : undefined

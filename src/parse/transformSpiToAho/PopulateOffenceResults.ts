@@ -5,33 +5,89 @@ import {
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "src/dataLookup"
+import extractCodesFromOU from "src/dataLookup/extractCodesFromOU"
 import lookupCrownCourtByName from "src/dataLookup/lookupCrownCourtByName"
 import getOrganisationUnit from "src/lib/organisationUnit/getOrganisationUnit"
-import {
-  BAIL_QUALIFIER_CODE,
-  CROWN_COURT_NAME_MAPPING_OVERRIDES,
-  DURATION_TYPES,
-  DURATION_UNITS,
-  FREE_TEXT_RESULT_CODE,
-  LIBRA_ELECTRONIC_TAGGING_TEXT,
-  LIBRA_MAX_QUALIFIERS,
-  OFFENCES_TIC_RESULT_CODE,
-  OFFENCES_TIC_RESULT_TEXT,
-  OTHER_VALUE,
-  RESULT_CURFEW1,
-  RESULT_CURFEW2,
-  RESULT_PENALTY_POINTS,
-  RESULT_TEXT_PATTERN_CODES,
-  RESULT_TEXT_PATTERN_REGEX,
-  TAGGING_FIX_ADD,
-  TAGGING_FIX_REMOVE,
-  WARRANT_ISSUE_DATE_RESULT_CODES
-} from "src/lib/properties"
 import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
+import type { KeyValue } from "src/types/KeyValue"
 import type { CjsPlea } from "src/types/Plea"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/SpiResult"
 import type { CjsVerdict } from "src/types/Verdict"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
+
+const freeTextResultCode = 1000
+const otherValue = "OTHER"
+const warrantIssueDateResultCodes = [4505, 4575, 4576, 4577, 4585, 4586]
+const offencesTicResultText = "other offences admitted and taken into consideration"
+const offencesTicResultCode = -1
+const libraMaxQualifiers = 4
+const libraElectronicTaggingText = "to be electronically monitored"
+const taggingFixAdd = 3105
+const taggingFixRemove = [1115, 1116, 1141, 1142, 1143]
+const bailQualifierCode = "BA"
+const durationTypes = {
+  DURATION: "Duration"
+}
+const durationUnits = {
+  SESSIONS: "S",
+  HOURS: "H"
+}
+const resultPenaltyPoints = 3008
+const resultCurfew1 = 1052
+const resultCurfew2 = 3105
+
+const resultTextPatternCodes: KeyValue<string[]> = {
+  "4014": ["1"],
+  "4015": ["1"],
+  "4016": ["1"],
+  "4017": ["1"],
+  "4020": ["1"],
+  "4021": ["1"],
+  "4025": ["1"],
+  "4027": ["2ab", "2c3b"],
+  "4028": ["3a", "2c3b"],
+  "4029": ["3a", "2c3b"],
+  "4030": ["3a", "2c3b"],
+  "4046": ["3a", "2c3b"],
+  "4047": ["2ab"],
+  "4048": ["1", "4"],
+  "4053": ["1"],
+  "4570": ["1"],
+  "4571": ["1"],
+  "4530": ["2ab", "2c3b"],
+  "4542": ["2ab"],
+  "4531": ["3a", "2c3b"],
+  "4533": ["3a", "2c3b"],
+  "4537": ["3a", "2c3b"],
+  "4539": ["3a", "2c3b"],
+  "4558": ["4"],
+  "4559": ["4"],
+  "4560": ["4"],
+  "4561": ["4"],
+  "4562": ["4"],
+  "4563": ["4"],
+  "4564": ["4"],
+  "4565": ["1", "4"],
+  "4566": ["1"],
+  "4567": ["4"]
+}
+
+const resultTextPatternRegex: KeyValue<RegExp> = {
+  "1": /[Cc]ommitted to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
+  "2ab": /to appear (?:at|before) (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
+  "4": /Act \\d{4} to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
+  "3a": /[tT]o be brought before (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
+  "2c3b":
+    /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/
+}
+
+const grimsby = lookupOrganisationUnitByThirdLevelPsaCode("0441")
+const newport = lookupOrganisationUnitByThirdLevelPsaCode("0425")
+
+const crownCourtNameMappingOverrides: KeyValue<OrganisationUnitCodes | undefined> = {
+  "Newport (South Wales) Crown Court": newport ? extractCodesFromOU(newport) : undefined,
+  "Great Grimsby Crown Court": grimsby ? extractCodesFromOU(grimsby) : undefined
+}
 
 interface RemandDetails {
   location?: OrganisationUnitCodes
@@ -49,8 +105,8 @@ export interface OffenceResultsResult {
 }
 
 const createDuration = (durationUnit: string, durationValue: number): Duration => ({
-  DurationType: DURATION_TYPES.DURATION,
-  DurationUnit: !durationUnit || durationUnit === "." ? DURATION_UNITS.SESSIONS : durationUnit,
+  DurationType: durationTypes.DURATION,
+  DurationUnit: !durationUnit || durationUnit === "." ? durationUnits.SESSIONS : durationUnit,
   DurationLength: durationValue
 })
 
@@ -72,7 +128,7 @@ export default class {
     let date: string | undefined
 
     for (const pattern of patterns) {
-      const patternRegex = RESULT_TEXT_PATTERN_REGEX[pattern]
+      const patternRegex = resultTextPatternRegex[pattern]
       const matchedGroups = resultText.match(patternRegex)?.groups
 
       if (matchedGroups) {
@@ -102,11 +158,11 @@ export default class {
     let location: OrganisationUnitCodes | undefined
     let date: Date | undefined
     if (result.CJSresultCode) {
-      const patterns = RESULT_TEXT_PATTERN_CODES[result.CJSresultCode] ?? []
+      const patterns = resultTextPatternCodes[result.CJSresultCode] ?? []
       if (result.ResultVariableText) {
         const { courtName, date: extractedDate } = this.extractResultTextData(patterns, result.ResultVariableText)
         if (courtName) {
-          location = CROWN_COURT_NAME_MAPPING_OVERRIDES[courtName] ?? lookupCrownCourtByName(courtName)
+          location = crownCourtNameMappingOverrides[courtName] ?? lookupCrownCourtByName(courtName)
         }
         if (extractedDate) {
           date = this.parseDate(extractedDate)
@@ -136,7 +192,7 @@ export default class {
       Outcome: spiOutcome
     } = spiResult
     const result = {} as Result
-    const spiResultCodeNumber = spiResultCode ?? FREE_TEXT_RESULT_CODE
+    const spiResultCodeNumber = spiResultCode ?? freeTextResultCode
     result.CJSresultCode = spiResultCodeNumber
 
     if (spiNextHearing?.BailStatusOffence) {
@@ -147,7 +203,7 @@ export default class {
     result.SourceOrganisation = getOrganisationUnit(this.courtResult.Session.CourtHearing.Hearing.CourtHearingLocation)
 
     result.ConvictingCourt = spiConvictingCourt
-    result.ResultHearingType = OTHER_VALUE
+    result.ResultHearingType = otherValue
     result.ResultHearingDate = new Date(spiConvictionDate ?? spiDateOfHearing)
 
     if (typeof spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody === "string") {
@@ -195,11 +251,11 @@ export default class {
 
       if (spiResultCode) {
         result.NumberSpecifiedInResult = result.NumberSpecifiedInResult ?? []
-        if (spiResultCode === RESULT_PENALTY_POINTS && spiPenaltyPoints) {
+        if (spiResultCode === resultPenaltyPoints && spiPenaltyPoints) {
           result.NumberSpecifiedInResult.push({ Number: spiPenaltyPoints, Type: "P" })
         } else if (
-          (spiResultCode === RESULT_CURFEW1 || spiResultCode === RESULT_CURFEW2) &&
-          spiDuration?.SecondaryDurationUnit === DURATION_UNITS.HOURS &&
+          (spiResultCode === resultCurfew1 || spiResultCode === resultCurfew2) &&
+          spiDuration?.SecondaryDurationUnit === durationUnits.HOURS &&
           spiDuration?.SecondaryDurationValue
         ) {
           result.NumberSpecifiedInResult.push({ Number: spiDuration.SecondaryDurationValue, Type: "P" })
@@ -247,36 +303,36 @@ export default class {
       result.ResultVariableText = spiResult.ResultText
     }
 
-    if (WARRANT_ISSUE_DATE_RESULT_CODES.includes(spiResultCodeNumber)) {
+    if (warrantIssueDateResultCodes.includes(spiResultCodeNumber)) {
       result.WarrantIssueDate = new Date(spiDateOfHearing)
     }
 
     const containsNumberOfOffencesTIC = (resultText: string): boolean =>
-      resultText.toLowerCase().includes(OFFENCES_TIC_RESULT_TEXT)
+      resultText.toLowerCase().includes(offencesTicResultText)
 
-    if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === OFFENCES_TIC_RESULT_CODE) {
+    if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === offencesTicResultCode) {
       result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10)
     }
 
     if (
-      spiResultCodeQualifier.length === LIBRA_MAX_QUALIFIERS &&
+      spiResultCodeQualifier.length === libraMaxQualifiers &&
       !spiResultCodeQualifier.some((resultCodeQualifier) => /BA/i.test(resultCodeQualifier)) &&
-      spiResult.ResultText.toLowerCase().includes(LIBRA_ELECTRONIC_TAGGING_TEXT.toLowerCase())
+      spiResult.ResultText.toLowerCase().includes(libraElectronicTaggingText.toLowerCase())
     ) {
-      if (TAGGING_FIX_REMOVE.includes(spiResultCodeNumber)) {
+      if (taggingFixRemove.includes(spiResultCodeNumber)) {
         this.baResultCodeQualifierHasBeenExcluded = true
       } else {
-        this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
+        this.bailQualifiers.add(bailQualifierCode)
       }
     }
 
     result.ResultQualifierVariable = []
     spiResultCodeQualifier.forEach((resultCodeQualifier) => {
-      if (/BA/i.test(resultCodeQualifier) && TAGGING_FIX_REMOVE.includes(spiResultCodeNumber)) {
+      if (/BA/i.test(resultCodeQualifier) && taggingFixRemove.includes(spiResultCodeNumber)) {
         this.baResultCodeQualifierHasBeenExcluded = true
       } else {
-        if (resultCodeQualifier === BAIL_QUALIFIER_CODE) {
-          this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
+        if (resultCodeQualifier === bailQualifierCode) {
+          this.bailQualifiers.add(bailQualifierCode)
         }
 
         result.ResultQualifierVariable?.push({ Code: resultCodeQualifier })
@@ -300,10 +356,10 @@ export default class {
     if (this.baResultCodeQualifierHasBeenExcluded) {
       results.forEach((result) => {
         if (
-          result.CJSresultCode === TAGGING_FIX_ADD &&
-          !result.ResultQualifierVariable.some((r) => r.Code === BAIL_QUALIFIER_CODE)
+          result.CJSresultCode === taggingFixAdd &&
+          !result.ResultQualifierVariable.some((r) => r.Code === bailQualifierCode)
         ) {
-          result.ResultQualifierVariable.push({ Code: BAIL_QUALIFIER_CODE })
+          result.ResultQualifierVariable.push({ Code: bailQualifierCode })
           this.baQualifierAdded = true
         }
       })
@@ -317,7 +373,7 @@ export default class {
     this.addBailResultQualifierVariable(results)
 
     if (this.baResultCodeQualifierHasBeenExcluded && this.baQualifierAdded) {
-      this.bailQualifiers.add(BAIL_QUALIFIER_CODE)
+      this.bailQualifiers.add(bailQualifierCode)
     }
 
     return { results, bailQualifiers: Array.from(this.bailQualifiers) }
