@@ -1,8 +1,8 @@
-import type { CaseMatcherOutcome } from "src/lib/caseMatcher/caseMatcher"
-import offenceHasFinalResult from "src/lib/offenceMatcher/offenceHasFinalResult"
-import type { OffenceMatcherOutcome } from "src/lib/offenceMatcher/offenceMatcher"
-import { matchOffences } from "src/lib/offenceMatcher/offenceMatcher"
-import offencesAreEqual from "src/lib/offenceMatcher/offencesAreEqual"
+import type { CaseMatcherOutcome } from "src/enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
+import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import type { OffenceMatcherOutcome } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
+import { matchOffences } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
+import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
 

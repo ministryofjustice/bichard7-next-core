@@ -1,10 +1,6 @@
-jest.mock("src/use-cases/enrichHearingOutcome/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt")
-jest.mock(
-  "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass"
-)
-jest.mock(
-  "src/use-cases/enrichHearingOutcome/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal"
-)
+jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt")
+jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass")
+jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal")
 jest.mock("src/lib/isCaseRecordable")
 
 import isCaseRecordable from "src/lib/isCaseRecordable"

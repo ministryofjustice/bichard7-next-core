@@ -1,5 +1,5 @@
-import type { OffenceMatcherOutcome } from "src/lib/offenceMatcher/offenceMatcher"
-import { matchOffences } from "src/lib/offenceMatcher/offenceMatcher"
+import type { OffenceMatcherOutcome } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
+import { matchOffences } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncCourtCase, PncPenaltyCase, PncQueryResult } from "src/types/PncQueryResult"
 import sortCourtCasesByAge from "./sortCourtCasesByAge"

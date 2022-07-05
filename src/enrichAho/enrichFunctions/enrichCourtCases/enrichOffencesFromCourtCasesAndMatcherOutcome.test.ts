@@ -1,5 +1,5 @@
-import matchCases from "src/lib/caseMatcher/caseMatcher"
-import matchMultipleCases from "src/lib/matchMultipleCases"
+import matchCases from "src/enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
+import matchMultipleCases from "src/enrichAho/enrichFunctions/enrichCourtCases/matchMultipleCases"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import createPNCMessage from "tests/helpers/createPncMessage"
 import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"

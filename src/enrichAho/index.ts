@@ -5,17 +5,14 @@ import {
   enrichCase,
   enrichCourt,
   enrichDefendant,
+  enrichForceOwner,
   enrichOffenceResults,
   enrichOffenceResultsPostPncEnrichment,
   enrichOffences,
-  enrichWithPncQuery,
-  enrichForceOwner
+  enrichWithPncQuery
 } from "./enrichFunctions"
 
-const enrichHearingOutcome = (
-  hearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGateway
-): AnnotatedHearingOutcome => {
+const enrichAho = (hearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
   const pncEnrich: EnrichAhoFunction = (aho) => enrichWithPncQuery(aho, pncGateway)
 
   const enrichSteps: EnrichAhoFunction[] = [
@@ -32,4 +29,4 @@ const enrichHearingOutcome = (
   return enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)
 }
 
-export default enrichHearingOutcome
+export default enrichAho

@@ -1,12 +1,12 @@
 import errorPaths from "src/lib/errorPaths"
-import offenceIsBreach from "src/lib/offenceMatcher/offenceIsBreach"
-import type { OffenceMatcherOutcome } from "src/lib/offenceMatcher/offenceMatcher"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncOffence } from "src/types/PncQueryResult"
 import addError from "./addError"
 import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import hasDuplicateSequenceNumber from "./hasDuplicateSequenceNumber"
+import offenceIsBreach from "./offenceMatcher/offenceIsBreach"
+import type { OffenceMatcherOutcome } from "./offenceMatcher/offenceMatcher"
 
 const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherOutcome?: OffenceMatcherOutcome) => {
   const hoOffences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence

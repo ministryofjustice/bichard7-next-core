@@ -1,6 +1,6 @@
-import matchCases from "src/lib/caseMatcher/caseMatcher"
+import matchCases from "src/enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
+import matchMultipleCases from "src/enrichAho/enrichFunctions/enrichCourtCases/matchMultipleCases"
 import errorPaths from "src/lib/errorPaths"
-import matchMultipleCases from "src/lib/matchMultipleCases"
 import type { AnnotatedHearingOutcome, Case } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncPenaltyCase } from "src/types/PncQueryResult"
