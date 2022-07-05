@@ -1,4 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
+import mapXmlCxe01ToAho from "src/lib/mapXmlCxe01ToAho"
+import type { ResultClass } from "src/lib/properties"
 import type {
   AmountSpecifiedInResult,
   AnnotatedHearingOutcome,
@@ -35,8 +37,6 @@ import type {
   RawAho
 } from "src/types/RawAho"
 import extractExceptionsFromAho from "tests/helpers/extractExceptionsFromAho"
-import mapXmlCxe01ToAho from "./mapXmlCxe01ToAho"
-import type { ResultClass } from "./properties"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],

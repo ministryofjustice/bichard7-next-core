@@ -1,6 +1,6 @@
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import parseSpiResult from "src/use-cases/parseSpiResult"
-import transformSpiToAho from "src/use-cases/transformSpiToAho"
 import generateMessage from "tests/helpers/generateMessage"
 import generateMockAho from "tests/helpers/generateMockAho"
 import enrichForceOwner from "./enrichForceOwner"
