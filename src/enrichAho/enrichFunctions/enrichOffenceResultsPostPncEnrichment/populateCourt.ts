@@ -1,7 +1,7 @@
 import { lookupOrganisationUnitByCode } from "src/dataLookup"
 import getCourtDetails from "src/lib/getCourtDetails"
+import populateOrganisationUnitFields from "src/lib/organisationUnit/populateOrganisationUnitFields"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import populateOrganisationUnitFields from "src/use-cases/populateOrganisationUnitFields"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 
 const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {

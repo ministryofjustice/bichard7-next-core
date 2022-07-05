@@ -1,4 +1,4 @@
-import { ADJOURNMENT_NO_NEXT_HEARING_RANGES } from "./properties"
+import { ADJOURNMENT_NO_NEXT_HEARING_RANGES } from "src/lib/properties"
 
 const isAdjournedNoNextHearing = (cjsResultCode?: number) =>
   cjsResultCode &&

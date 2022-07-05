@@ -6,6 +6,7 @@ import {
   lookupVerdictBySpiCode
 } from "src/dataLookup"
 import lookupCrownCourtByName from "src/dataLookup/lookupCrownCourtByName"
+import getOrganisationUnit from "src/lib/organisationUnit/getOrganisationUnit"
 import {
   BAIL_QUALIFIER_CODE,
   CROWN_COURT_NAME_MAPPING_OVERRIDES,
@@ -30,7 +31,6 @@ import type { Duration, OrganisationUnitCodes, Result } from "src/types/Annotate
 import type { CjsPlea } from "src/types/Plea"
 import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/SpiResult"
 import type { CjsVerdict } from "src/types/Verdict"
-import getOrganisationUnit from "src/use-cases/getOrganisationUnit"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
 interface RemandDetails {

@@ -1,9 +1,9 @@
+import getOffenceFullCode from "src/lib/offence/getOffenceFullCode"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import { CjsPlea } from "src/types/Plea"
 import { TriggerCode } from "src/types/TriggerCode"
 import type { TriggerGenerator } from "src/types/TriggerGenerator"
 import { CjsVerdict } from "src/types/Verdict"
-import getOffenceFullCode from "src/utils/offence/getOffenceFullCode"
 
 const triggerCode = TriggerCode.TRPR0008
 const offenceCodes = ["BA76004", "BA76005"]

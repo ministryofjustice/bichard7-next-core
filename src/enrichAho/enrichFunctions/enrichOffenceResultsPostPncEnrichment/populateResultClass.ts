@@ -1,7 +1,7 @@
-import isAdjourned from "src/lib/isAdjourned"
-import isAdjournedNoNextHearing from "src/lib/isAdjournedNoNextHearing"
-import isWarrantIssued from "src/lib/isWarrantIssued"
 import { ResultClass, RESULT_CLASS_PLEAS, RESULT_CLASS_RESULT_CODES, RESULT_CLASS_VERDICTS } from "src/lib/properties"
+import isAdjourned from "src/lib/result/isAdjourned"
+import isAdjournedNoNextHearing from "src/lib/result/isAdjournedNoNextHearing"
+import isWarrantIssued from "src/lib/result/isWarrantIssued"
 import type { Result } from "src/types/AnnotatedHearingOutcome"
 
 const populateResultClass = (result: Result, convictionDate: Date | undefined, dateOfHearing: Date) => {

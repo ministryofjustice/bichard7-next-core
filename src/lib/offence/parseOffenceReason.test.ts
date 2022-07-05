@@ -1,6 +1,6 @@
-import parseOffenceReason from "./parseOffenceReason"
-import { COMMON_LAWS, INDICTMENT } from "./properties"
+import { COMMON_LAWS, INDICTMENT } from "src/lib/properties"
 import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
+import parseOffenceReason from "./parseOffenceReason"
 
 const localOffenceReason: OffenceReason = {
   __type: "LocalOffenceReason",

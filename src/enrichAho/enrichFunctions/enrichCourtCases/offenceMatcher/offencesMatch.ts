@@ -1,6 +1,6 @@
+import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
-import getOffenceCode from "src/utils/offence/getOffenceCode"
 import datesMatchApproximately from "./datesMatchApproximately"
 import offenceIsBreach from "./offenceIsBreach"
 
