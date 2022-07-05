@@ -1,4 +1,5 @@
 import { format } from "date-fns"
+import logger from "./logging"
 
 export default (time: string): string => {
   if (!time) {
@@ -13,7 +14,7 @@ export default (time: string): string => {
   try {
     return format(date, "HH:mm")
   } catch (e) {
-    console.error("Error removing seconds from timestamp")
+    logger.error("Error removing seconds from timestamp")
     return time
   }
 }
