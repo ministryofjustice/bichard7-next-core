@@ -21,8 +21,6 @@ export enum CjsPlea {
 }
 
 const spiPleaSchema = z.nativeEnum(SpiPlea)
-const cjsPleaSchema = z.nativeEnum(CjsPlea)
 
 export type SpiPleaType = z.infer<typeof spiPleaSchema>
-export type CjsPleaType = z.infer<typeof cjsPleaSchema>
-export { spiPleaSchema, cjsPleaSchema }
+export { spiPleaSchema }
