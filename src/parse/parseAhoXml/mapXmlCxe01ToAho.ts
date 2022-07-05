@@ -1,4 +1,5 @@
 import parsePncDate from "src/lib/parsePncDate"
+import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "src/types/AhoXml"
 import type {
   PncAdjudication,
   PncCourtCase,
@@ -7,7 +8,6 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "src/types/PncQueryResult"
-import type { Adj, Cxe01, Dis, RawAhoPncOffence } from "src/types/RawAho"
 
 type OffenceDates = {
   startDate: Date
@@ -18,7 +18,7 @@ type OffenceTimes = {
   endTime?: string
 }
 
-const extractDates = (offence: RawAhoPncOffence): OffenceDates => {
+const extractDates = (offence: AhoXmlPncOffence): OffenceDates => {
   const startDate = parsePncDate(offence.COF["@_OffStartDate"])
   if (!startDate) {
     throw new Error(`Start date could not be processed: ${offence.COF["@_OffStartDate"]}`)
@@ -36,7 +36,7 @@ const extractDates = (offence: RawAhoPncOffence): OffenceDates => {
   return dates
 }
 
-const extractTimes = (offence: RawAhoPncOffence): OffenceTimes => {
+const extractTimes = (offence: AhoXmlPncOffence): OffenceTimes => {
   const times: OffenceTimes = { startTime: undefined, endTime: undefined }
   const cofStartTime = offence.COF["@_OffStartTime"]
   if (cofStartTime && cofStartTime !== "" && cofStartTime.length === 4) {
@@ -80,7 +80,7 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   }
 }
 
-const mapXmlOffencesToAho = (offences: RawAhoPncOffence[]): PncOffence[] =>
+const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PncOffence[] =>
   offences.map(
     (offence): PncOffence => ({
       offence: {
@@ -114,7 +114,7 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     }
     courtCases = cxe.CourtCases?.CourtCase.map((courtCase) => ({
       courtCaseReference: courtCase.CCR["@_CourtCaseRefNo"],
-      offences: mapXmlOffencesToAho(courtCase.Offences.Offence as RawAhoPncOffence[])
+      offences: mapXmlOffencesToAho(courtCase.Offences.Offence as AhoXmlPncOffence[])
     }))
   }
   if (cxe.PenaltyCases && cxe.PenaltyCases.PenaltyCase) {
@@ -128,7 +128,7 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     }
     penaltyCases = cxe.PenaltyCases?.PenaltyCase.map((penaltyCase) => ({
       penaltyCaseReference: penaltyCase.PCR["@_PenaltyCaseRefNo"],
-      offences: mapXmlOffencesToAho(penaltyCase.Offences.Offence as RawAhoPncOffence[])
+      offences: mapXmlOffencesToAho(penaltyCase.Offences.Offence as AhoXmlPncOffence[])
     }))
   }
 

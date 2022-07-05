@@ -1,6 +1,6 @@
 import { lookupOrganisationUnitByCode } from "src/dataLookup"
+import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "src/lib/properties"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT, YOUTH_COURT } from "./properties"
 
 type CourtDetailsResult = {
   courtType: string

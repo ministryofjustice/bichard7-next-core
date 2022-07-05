@@ -1,9 +1,9 @@
+import type { AhoXml, Br7TextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
 import type Exception from "src/types/Exception"
-import type { Br7TextString, GenericRawAho, GenericRawAhoValue, RawAho } from "src/types/RawAho"
 
-const isBr7TextString = (element: GenericRawAhoValue): boolean => typeof element === "object"
+const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
-const findNamespacedKey = (element: GenericRawAhoValue, key: string | number): GenericRawAhoValue | Error => {
+const findNamespacedKey = (element: GenericAhoXmlValue, key: string | number): GenericAhoXmlValue | Error => {
   if (Array.isArray(element) && typeof key === "number") {
     return element[key]
   }
@@ -18,7 +18,7 @@ const findNamespacedKey = (element: GenericRawAhoValue, key: string | number): G
   return new Error("Could not find key")
 }
 
-const findElement = (element: GenericRawAhoValue, path: (number | string)[]): Br7TextString | Error => {
+const findElement = (element: GenericAhoXmlValue, path: (number | string)[]): Br7TextString | Error => {
   const nextElementIndex = path[0]
   const nextElement = findNamespacedKey(element, nextElementIndex)
   if (nextElement instanceof Error || typeof nextElement === "string") {
@@ -37,12 +37,12 @@ const findElement = (element: GenericRawAhoValue, path: (number | string)[]): Br
   return Error("Could not find element")
 }
 
-const addExceptionsToRawAho = (aho: RawAho, exceptions: Exception[] | undefined): void | Error => {
+const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
   }
   for (const e of exceptions) {
-    const element = findElement(aho as unknown as GenericRawAho, e.path)
+    const element = findElement(aho as unknown as GenericAhoXml, e.path)
 
     if (element instanceof Error) {
       return element
@@ -53,4 +53,4 @@ const addExceptionsToRawAho = (aho: RawAho, exceptions: Exception[] | undefined)
   }
 }
 
-export default addExceptionsToRawAho
+export default addExceptionsToAhoXml

@@ -3,22 +3,7 @@ import type { ResultClass } from "src/lib/properties"
 import extractExceptionsFromAho from "src/parse/parseAhoXml/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "src/parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
-  AmountSpecifiedInResult,
-  AnnotatedHearingOutcome,
-  Case,
-  CriminalProsecutionReference,
-  DateSpecifiedInResult,
-  Duration,
-  Hearing,
-  NumberSpecifiedInResult,
-  Offence,
-  OffenceReason,
-  OrganisationUnitCodes,
-  Result,
-  ResultQualifierVariable
-} from "src/types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "src/types/Plea"
-import type {
+  AhoXml,
   Br7Case,
   Br7CriminalProsecutionReference,
   Br7Duration,
@@ -34,9 +19,24 @@ import type {
   Br7TypeTextString,
   CommonLawOffenceCode,
   IndictmentOffenceCode,
-  NonMatchingOffenceCode,
-  RawAho
-} from "src/types/RawAho"
+  NonMatchingOffenceCode
+} from "src/types/AhoXml"
+import type {
+  AmountSpecifiedInResult,
+  AnnotatedHearingOutcome,
+  Case,
+  CriminalProsecutionReference,
+  DateSpecifiedInResult,
+  Duration,
+  Hearing,
+  NumberSpecifiedInResult,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result,
+  ResultQualifierVariable
+} from "src/types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "src/types/Plea"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],
@@ -396,7 +396,7 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]?.["#text"]
 })
 
-const mapXmlToAho = (aho: RawAho): AnnotatedHearingOutcome | undefined => {
+const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | undefined => {
   const rootElement = aho["br7:AnnotatedHearingOutcome"] ? aho["br7:AnnotatedHearingOutcome"] : aho
   if (!rootElement["br7:HearingOutcome"]) {
     return

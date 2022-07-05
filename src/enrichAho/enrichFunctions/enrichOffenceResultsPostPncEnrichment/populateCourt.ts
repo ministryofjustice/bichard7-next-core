@@ -1,5 +1,5 @@
 import { lookupOrganisationUnitByCode } from "src/dataLookup"
-import getCourtDetails from "src/lib/getCourtDetails"
+import getCourtDetails from "src/dataLookup/getCourtDetails"
 import populateOrganisationUnitFields from "src/lib/organisationUnit/populateOrganisationUnitFields"
 import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
 import populateSourceOrganisation from "./populateSourceOrganisation"

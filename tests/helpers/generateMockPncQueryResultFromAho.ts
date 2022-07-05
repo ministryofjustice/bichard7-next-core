@@ -1,7 +1,7 @@
 import { XMLParser } from "fast-xml-parser"
 import { mapXmlCxe01ToAho } from "src/parse/parseAhoXml"
+import type { AhoXml, Cxe01 } from "src/types/AhoXml"
 import type { PncQueryResult } from "src/types/PncQueryResult"
-import type { Cxe01, RawAho } from "src/types/RawAho"
 
 /*
 Sample CXE element
@@ -29,7 +29,7 @@ export default (ahoXml: string): PncQueryResult | undefined => {
     ignoreAttributes: false
   }
   const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(ahoXml) as RawAho
+  const rawParsedObj = parser.parse(ahoXml) as AhoXml
 
   const cxe = rawParsedObj["br7:AnnotatedHearingOutcome"]?.CXE01 as Cxe01
   if (!cxe) {

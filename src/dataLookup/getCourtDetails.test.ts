@@ -1,6 +1,6 @@
+import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT } from "src/lib/properties"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import getCourtDetails from "./getCourtDetails"
-import { CROWN_COURT, MC_ADULT, MC_YOUTH, TOP_LEVEL_MAGISTRATES_COURT } from "./properties"
 
 describe("getCourtDetails", () => {
   it("should set Court Type to  MCY when top level code is for Magistrates Court and court name contains word YOUTH", () => {

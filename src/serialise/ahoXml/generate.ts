@@ -13,6 +13,25 @@ import {
   lookupVerdictByCjsCode
 } from "src/dataLookup"
 import type {
+  Adj,
+  AhoXml,
+  AhoXmlPncOffence,
+  Br7Case,
+  Br7Duration,
+  Br7Hearing,
+  Br7LiteralTextString,
+  Br7Offence,
+  Br7OffenceReason,
+  Br7OrganisationUnit,
+  Br7Result,
+  Br7SequenceTextString,
+  Br7TextString,
+  Br7TypeTextString,
+  Br7Urgent,
+  Cxe01,
+  DISList
+} from "src/types/AhoXml"
+import type {
   AnnotatedHearingOutcome,
   Case,
   DateSpecifiedInResult,
@@ -27,26 +46,7 @@ import type {
 } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
-import type {
-  Adj,
-  Br7Case,
-  Br7Duration,
-  Br7Hearing,
-  Br7LiteralTextString,
-  Br7Offence,
-  Br7OffenceReason,
-  Br7OrganisationUnit,
-  Br7Result,
-  Br7SequenceTextString,
-  Br7TextString,
-  Br7TypeTextString,
-  Br7Urgent,
-  Cxe01,
-  DISList,
-  RawAho,
-  RawAhoPncOffence
-} from "src/types/RawAho"
-import addExceptionsToRawAho from "./addExceptionsToRawAho"
+import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]
 
@@ -463,7 +463,7 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
   "@_SchemaVersion": "4.0"
 })
 
-const mapAhoPncOffencesToXml = (offences: PncOffence[]): RawAhoPncOffence[] =>
+const mapAhoPncOffencesToXml = (offences: PncOffence[]): AhoXmlPncOffence[] =>
   offences.map((offence) => ({
     COF: {
       "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
@@ -512,7 +512,7 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     : undefined
 })
 
-const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {
+const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
     "br7:AnnotatedHearingOutcome": {
@@ -527,7 +527,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): RawAho => {
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
       "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
     }
-  } as RawAho
+  } as AhoXml
 }
 
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
@@ -546,7 +546,7 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
 
   const builder = new XMLBuilder(options)
   const xmlAho = mapAhoToXml(hearingOutcome)
-  addExceptionsToRawAho(xmlAho, hearingOutcome.Exceptions)
+  addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
   const xml = builder.build(xmlAho)
 
   return xml

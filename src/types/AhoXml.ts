@@ -1,4 +1,4 @@
-export interface RawAho {
+export interface AhoXml {
   "?xml": XML
   "br7:AnnotatedHearingOutcome"?: Br7AnnotatedHearingOutcome
   "br7:HearingOutcome"?: Br7HearingOutcome
@@ -43,10 +43,10 @@ export interface Ccr {
 }
 
 export interface Offences {
-  Offence: RawAhoPncOffence[]
+  Offence: AhoXmlPncOffence[]
 }
 
-export interface RawAhoPncOffence {
+export interface AhoXmlPncOffence {
   COF: Cof
   ADJ?: Adj
   DISList?: DISList
@@ -357,8 +357,8 @@ export interface Br7NameSequenceTextString extends Br7TextString {
   "@_NameSequence": string
 }
 
-export type GenericRawAhoValue = GenericRawAho | GenericRawAho[] | Br7TextString | Br7TextString[] | string
+export type GenericAhoXmlValue = GenericAhoXml | GenericAhoXml[] | Br7TextString | Br7TextString[] | string
 
-export type GenericRawAho = {
-  [key: string]: GenericRawAhoValue
+export type GenericAhoXml = {
+  [key: string]: GenericAhoXmlValue
 }
