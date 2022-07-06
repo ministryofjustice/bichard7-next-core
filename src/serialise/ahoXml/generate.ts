@@ -223,7 +223,7 @@ const mapAhoResultsToXml = (
     "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
     // ds:TimeSpecifiedInResult
     "ds:AmountSpecifiedInResult": result.AmountSpecifiedInResult?.map((amount) => ({
-      "#text": amount.Amount.toFixed(2),
+      "#text": amount.Amount.toFixed(amount.DecimalPlaces),
       "@_Type": amount.Type ?? ""
     })),
     "ds:NumberSpecifiedInResult": mapNumberSpecifiedInResult(result.NumberSpecifiedInResult),

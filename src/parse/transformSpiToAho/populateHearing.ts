@@ -51,7 +51,7 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
     UniqueID: messageId
   }
 
-  hearingOutcomeHearing.CourtHouseCode = spiPsaCode
+  hearingOutcomeHearing.CourtHouseCode = Number(spiPsaCode)
 
   return hearingOutcomeHearing
 }

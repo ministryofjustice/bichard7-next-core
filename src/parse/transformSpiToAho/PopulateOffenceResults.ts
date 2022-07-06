@@ -5,6 +5,7 @@ import {
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "src/dataLookup"
+import decimalPlaces from "src/lib/decimalPlaces"
 import getOrganisationUnit from "src/lib/organisationUnit/getOrganisationUnit"
 import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
@@ -73,7 +74,7 @@ export default class {
       Outcome: spiOutcome
     } = spiResult
     const result = {} as Result
-    const spiResultCodeNumber = spiResultCode ?? freeTextResultCode
+    const spiResultCodeNumber = spiResultCode ? Number(spiResultCode) : freeTextResultCode
     result.CJSresultCode = spiResultCodeNumber
 
     if (spiNextHearing?.BailStatusOffence) {
@@ -108,11 +109,11 @@ export default class {
           DurationEndDate: spiDurationEndDate
         } = spiDuration
         if (spiDurationUnit && spiDurationValue !== undefined) {
-          result.Duration.push(createDuration(spiDurationUnit, spiDurationValue))
+          result.Duration.push(createDuration(spiDurationUnit, Number(spiDurationValue)))
         }
 
         if (spiSecondaryDurationUnit && spiSecondaryDurationValue !== undefined) {
-          result.Duration.push(createDuration(spiSecondaryDurationUnit, spiSecondaryDurationValue))
+          result.Duration.push(createDuration(spiSecondaryDurationUnit, Number(spiSecondaryDurationValue)))
         }
 
         result.DateSpecifiedInResult = result.DateSpecifiedInResult ?? []
@@ -127,19 +128,24 @@ export default class {
       if (spiResultAmountSterling) {
         result.AmountSpecifiedInResult = result.AmountSpecifiedInResult ?? []
         const amountType = lookupAmountTypeByCjsCode(result.CJSresultCode)
-        result.AmountSpecifiedInResult.push({ Amount: spiResultAmountSterling, Type: amountType })
+        result.AmountSpecifiedInResult.push({
+          Amount: Number(spiResultAmountSterling),
+          DecimalPlaces: decimalPlaces(spiResultAmountSterling),
+          Type: amountType
+        })
       }
 
       if (spiResultCode) {
+        const resultCode = Number(spiResultCode)
         result.NumberSpecifiedInResult = result.NumberSpecifiedInResult ?? []
-        if (spiResultCode === resultPenaltyPoints && spiPenaltyPoints) {
-          result.NumberSpecifiedInResult.push({ Number: spiPenaltyPoints, Type: "P" })
+        if (resultCode === resultPenaltyPoints && spiPenaltyPoints) {
+          result.NumberSpecifiedInResult.push({ Number: Number(spiPenaltyPoints), Type: "P" })
         } else if (
-          (spiResultCode === resultCurfew1 || spiResultCode === resultCurfew2) &&
+          (resultCode === resultCurfew1 || resultCode === resultCurfew2) &&
           spiDuration?.SecondaryDurationUnit === durationUnits.HOURS &&
           spiDuration?.SecondaryDurationValue
         ) {
-          result.NumberSpecifiedInResult.push({ Number: spiDuration.SecondaryDurationValue, Type: "P" })
+          result.NumberSpecifiedInResult.push({ Number: Number(spiDuration.SecondaryDurationValue), Type: "P" })
         }
       }
     }
@@ -175,9 +181,8 @@ export default class {
     }
 
     if (this.spiOffence.ModeOfTrial !== undefined) {
-      result.ModeOfTrialReason =
-        lookupModeOfTrialReasonBySpiCode(this.spiOffence.ModeOfTrial.toString())?.cjsCode ??
-        this.spiOffence.ModeOfTrial.toString()
+      const modeOfTrial = Number(this.spiOffence.ModeOfTrial).toString()
+      result.ModeOfTrialReason = lookupModeOfTrialReasonBySpiCode(modeOfTrial)?.cjsCode ?? modeOfTrial
     }
 
     if (spiResult.ResultText?.length > 0) {
@@ -192,7 +197,7 @@ export default class {
       resultText.toLowerCase().includes(offencesTicResultText)
 
     if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === offencesTicResultCode) {
-      result.NumberOfOffencesTIC = parseInt(spiResult.ResultText.trim().split(" ")[0], 10)
+      result.NumberOfOffencesTIC = Number(spiResult.ResultText.trim().split(" ")[0])
     }
 
     if (

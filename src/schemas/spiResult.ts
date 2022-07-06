@@ -18,22 +18,22 @@ export const nextHearingSchema = z.object({
 })
 
 export const durationSchema = z.object({
-  DurationValue: z.number().optional(),
+  DurationValue: z.string().optional(),
   DurationUnit: z.string().optional(),
-  SecondaryDurationValue: z.number().optional(),
+  SecondaryDurationValue: z.string().optional(),
   SecondaryDurationUnit: z.string().optional(),
   DurationStartDate: z.preprocess(toArray, z.string().array().min(0)),
   DurationEndDate: z.preprocess(toArray, z.string().array().min(0))
 })
 
 export const outcomeSchema = z.object({
-  ResultAmountSterling: z.number().optional(),
-  PenaltyPoints: z.number().optional(),
+  ResultAmountSterling: z.string().optional(),
+  PenaltyPoints: z.string().optional(),
   Duration: durationSchema.optional()
 })
 
 export const resultParsedXmlSchema = z.object({
-  ResultCode: z.number().optional(),
+  ResultCode: z.string().optional(),
   ResultText: z.string(),
   ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
   Outcome: outcomeSchema.optional(),
@@ -42,7 +42,7 @@ export const resultParsedXmlSchema = z.object({
 
 export const offenceParsedXmlSchema = z.object({
   BaseOffenceDetails: z.object({
-    OffenceSequenceNumber: z.number(),
+    OffenceSequenceNumber: z.string(),
     OffenceCode: z.string(),
     OffenceWording: z.string(),
     ChargeDate: z.string().optional(),
@@ -52,12 +52,12 @@ export const offenceParsedXmlSchema = z.object({
     ConvictionDate: z.string().optional(),
     AlcoholRelatedOffence: z
       .object({
-        AlcoholLevelAmount: z.number(),
+        AlcoholLevelAmount: z.string(),
         AlcoholLevelMethod: z.string()
       })
       .optional(),
     OffenceTiming: z.object({
-      OffenceDateCode: z.number(),
+      OffenceDateCode: z.string(),
       OffenceStart: z.object({
         OffenceDateStartDate: z.string(),
         OffenceStartTime: z.string().optional()
@@ -72,7 +72,7 @@ export const offenceParsedXmlSchema = z.object({
   }),
   InitiatedDate: z.string(),
   Plea: spiPleaSchema,
-  ModeOfTrial: z.number().optional(),
+  ModeOfTrial: z.string().optional(),
   FinalDisposalIndicator: z.string(),
   ConvictionDate: z.string().optional(),
   ConvictingCourt: z.preprocess((s) => (s ? String(s) : undefined), z.string().optional()),
@@ -96,7 +96,7 @@ export const complexAddressSchema = z.object({
     StreetDescription: z.string().optional(),
     Locality: z.string().optional(),
     Town: z.string().optional(),
-    UniqueStreetReferenceNumber: z.number().optional(),
+    UniqueStreetReferenceNumber: z.string().optional(),
     AdministrativeArea: z.string().optional(),
     PostCode: z.string().optional()
   })
@@ -112,7 +112,7 @@ export const spiCourtIndividualDefendantSchema = z.object({
     BailConditions: z.string().optional(),
     BasePersonDetails: z.object({
       Birthdate: z.string().optional(),
-      Gender: z.number(),
+      Gender: z.string(),
       PersonName: z.object({
         PersonTitle: z.string().optional(),
         PersonGivenName1: z.string(),
@@ -164,7 +164,7 @@ export const resultedCaseMessageParsedXmlSchema = z.object({
         DateOfHearing: z.string(),
         TimeOfHearing: z.string()
       }),
-      PSAcode: z.number()
+      PSAcode: z.string()
     })
   })
 })

@@ -119,6 +119,7 @@ export const numberSpecifiedInResultSchema = z.object({
 
 export const amountSpecifiedInResultSchema = z.object({
   Amount: z.number().refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243),
+  DecimalPlaces: z.number(),
   Type: z.string().optional()
 })
 

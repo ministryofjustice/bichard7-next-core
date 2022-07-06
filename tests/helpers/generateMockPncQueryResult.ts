@@ -40,7 +40,7 @@ export default (
       offence: {
         acpoOffenceCode: "12:15:24:1",
         cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
-        sequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
+        sequenceNumber: Number(offence.BaseOffenceDetails.OffenceSequenceNumber),
         ...dates
       },
       ...(pncAdjudication && {

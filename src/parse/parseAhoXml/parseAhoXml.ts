@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
+import decimalPlaces from "src/lib/decimalPlaces"
 import extractExceptionsFromAho from "src/parse/parseAhoXml/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "src/parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
@@ -54,7 +55,11 @@ const mapAmountSpecifiedInResult = (
   }
   const resultArray = Array.isArray(result) ? result : [result]
 
-  return resultArray.map((amount) => ({ Amount: Number(amount["#text"]), Type: amount["@_Type"] }))
+  return resultArray.map((amount) => ({
+    Amount: Number(amount["#text"]),
+    DecimalPlaces: decimalPlaces(amount["#text"]),
+    Type: amount["@_Type"]
+  }))
 }
 
 const mapNumberSpecifiedInResult = (

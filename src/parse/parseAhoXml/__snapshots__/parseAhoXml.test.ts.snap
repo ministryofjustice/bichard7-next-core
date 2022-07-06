@@ -274,6 +274,7 @@ Object {
                   "AmountSpecifiedInResult": Array [
                     Object {
                       "Amount": 100,
+                      "DecimalPlaces": 2,
                       "Type": "Fine",
                     },
                   ],
