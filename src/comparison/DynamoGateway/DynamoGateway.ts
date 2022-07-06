@@ -1,6 +1,6 @@
 import { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import type { DynamoDbConfig, PromiseResult } from "src/comparison/Types"
+import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "src/comparison/Types"
 
 export default class DynamoGateway {
   protected readonly service: DynamoDB
@@ -64,6 +64,36 @@ export default class DynamoGateway {
         }
       })
       .promise()
+      .catch((error) => <Error>error)
+  }
+
+  getRange(start: string, end: string, success?: boolean): PromiseResult<ComparisonLog[] | Error | null> {
+    let failureFilter = {}
+    let failureValue = {}
+    if (success !== undefined) {
+      failureFilter = { FilterExpression: "latestResult = :latestResultValue" }
+      failureValue = { ":latestResultValue": success ? 1 : 0 }
+    }
+
+    return this.client
+      .query({
+        TableName: this.tableName,
+        IndexName: "initialRunAtIndex",
+        // FilterExpression: "#partitionKey = :partitionKeyValue",
+        KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
+        ExpressionAttributeNames: {
+          "#partitionKey": "_"
+        },
+        ExpressionAttributeValues: {
+          ":start": start,
+          ":end": end,
+          ":partitionKeyValue": "_",
+          ...failureValue
+        },
+        ...failureFilter
+      })
+      .promise()
+      .then((result) => result.Items as ComparisonLog[])
       .catch((error) => <Error>error)
   }
 }

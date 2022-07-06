@@ -11,7 +11,7 @@ npm i # If packages not already installed
 npm t
 ```
 
-To run unit tests against old Bichard (*requires the [old Bichard](https://github.com/ministryofjustice/bichard7-next) stack to be running*):
+To run unit tests against old Bichard (_requires the [old Bichard](https://github.com/ministryofjustice/bichard7-next) stack to be running_):
 
 ```bash
 npm i # If packages not already installed
@@ -24,9 +24,9 @@ Triggers can be excluded for either a specific `force` or `court` by adding the 
 
 The choice of which `excluded-trigger-configuration` file to use is decided in `src/lib/excludedTriggerConfig.ts` using the `NODE_ENV` environment variable. The test configuration file (`excluded-trigger-configuration.test.json`) is run if `NODE_ENV` is set as `testing`.
 
-| Environment Variable   | Description                                                       |
-| ---------------------- | ----------------------------------------------------------------- |
-| NODE_ENV               | The environment node is being run in                              |
+| Environment Variable | Description                          |
+| -------------------- | ------------------------------------ |
+| NODE_ENV             | The environment node is being run in |
 
 ## Comparing New and Old Bichard
 
@@ -48,8 +48,23 @@ If all comparisons between the new and old Bichard are successful, `compareResul
 You can run a cli tool to see if a comparison json file matches using:
 
 ```
-npx ts-node src/comparison/compare.ts <path to json file>
+npm run compare -- <path to json file>
 ```
+
+You can also run this tool against the comparison files collected in production using the following arguments:
+
+```
+Options
+
+  -f, --file string     Specify either the local file path or an S3 URL
+  -s, --start string    Specify the start timestamp in ISO8601 format
+  -e, --end string      Specify the end timestamp in ISO8601 format
+  -p, --filter string   Filter based on the last result. Specify either 'failure', 'success', 'both'.
+                        Default is 'failure'
+  -h, --help            Prints this usage guide
+```
+
+You will need to run it using `aws-vault`
 
 ### Comparing outputs locally
 

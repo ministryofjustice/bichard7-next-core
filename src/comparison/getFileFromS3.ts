@@ -21,6 +21,7 @@ const getFileFromS3 = async (fileName: string, bucket: string, config: S3ClientC
     return buffer.toString()
   }
 
+  console.error(response)
   return new Error("Couldn't retrieve file from S3")
 }
 
