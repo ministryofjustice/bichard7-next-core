@@ -6,6 +6,7 @@ export default (message: string): IncomingMessageParsedXml => {
   const options = {
     ignoreAttributes: false,
     removeNSPrefix: true,
+    parseTagValue: false,
     trimValues: false
   }
 

@@ -1,11 +1,11 @@
 export enum SpiPlea {
-  Guilty = 1,
-  NotGuilty = 2,
-  NoPlea = 3,
-  Consents = 4,
-  Guilty6 = 6,
-  Admits = 7,
-  Denies = 8
+  Guilty = "1",
+  NotGuilty = "2",
+  NoPlea = "3",
+  Consents = "4",
+  Guilty6 = "6",
+  Admits = "7",
+  Denies = "8"
 }
 
 export enum CjsPlea {

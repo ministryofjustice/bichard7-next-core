@@ -33,9 +33,10 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
   let aFailConditionResultFound = false
 
   spiResults.forEach((result) => {
-    if (result.ResultCode === adjournmentSineDieResultCode) {
+    const resultCode = result.ResultCode !== undefined ? Number(result.ResultCode) : undefined
+    if (resultCode === adjournmentSineDieResultCode) {
       a2007ResultFound = true
-    } else if (!resultCodeIsOnStopList(result.ResultCode ?? 1000)) {
+    } else if (!resultCodeIsOnStopList(resultCode ?? 1000)) {
       aFailConditionResultFound = true
     }
   })
@@ -96,7 +97,9 @@ export default class {
       Result: spiResults
     } = spiOffence
 
-    const enteredInError = spiResults.some((result) => result.ResultCode === enteredInErrorResultCode)
+    const enteredInError = spiResults.some(
+      (result) => result.ResultCode !== undefined && Number(result.ResultCode) === enteredInErrorResultCode
+    )
     if (enteredInError) {
       return undefined
     }
@@ -121,7 +124,7 @@ export default class {
 
     if (spiAlcoholRelatedOffence) {
       offence.AlcoholLevel = {
-        Amount: spiAlcoholRelatedOffence.AlcoholLevelAmount,
+        Amount: Number(spiAlcoholRelatedOffence.AlcoholLevelAmount),
         Method:
           lookupAlcoholLevelMethodBySpiCode(spiAlcoholRelatedOffence.AlcoholLevelMethod)?.cjsCode ??
           spiAlcoholRelatedOffence.AlcoholLevelMethod
@@ -131,10 +134,11 @@ export default class {
     if (spiOffenceStart?.OffenceStartTime) {
       const spiOffenceStartTime = removeSeconds(spiOffenceStart.OffenceStartTime)
 
+      const offenceDateCode = Number(spiOffenceDateCode)
       const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = timeRange
-      if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(spiOffenceDateCode)) {
+      if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(offenceDateCode)) {
         offence.OffenceTime = spiOffenceStartTime
-      } else if (spiOffenceDateCode === BETWEEN) {
+      } else if (offenceDateCode === BETWEEN) {
         offence.StartTime = spiOffenceStartTime
       }
     }
@@ -144,7 +148,7 @@ export default class {
     }
 
     offence.CommittedOnBail = dontKnowValue
-    offence.CourtOffenceSequenceNumber = spiOffenceSequenceNumber
+    offence.CourtOffenceSequenceNumber = Number(spiOffenceSequenceNumber)
 
     offence.ConvictionDate = spiConvictionDate ? new Date(spiConvictionDate) : undefined
     if (!spiConvictionDate && adjournmentSineDieConditionMet(spiResults)) {
