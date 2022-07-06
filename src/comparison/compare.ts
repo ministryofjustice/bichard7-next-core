@@ -30,6 +30,7 @@ export type ComparisonResult = {
   xmlOutputMatches: boolean
   xmlParsingMatches: boolean
   debugOutput?: ComparisonResultDebugOutput
+  file?: string
 }
 
 const compare = (input: string, debug = false): ComparisonResult => {

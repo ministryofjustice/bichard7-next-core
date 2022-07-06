@@ -1,12 +1,23 @@
 process.env.NODE_ENV = "test"
 
 import getArgs from "./getArgs"
+import printOutput from "./printOutput"
 import processFile from "./processFile"
+import processRange from "./processRange"
 
 const main = async () => {
   const args = getArgs()
+  const filter = args.filter ?? "failure"
   if ("file" in args && args.file) {
-    await processFile(args.file)
+    const result = await processFile(args.file)
+    printOutput(result)
+  } else if ("start" in args || "end" in args) {
+    if ("start" in args && "end" in args && args.start && args.end) {
+      const results = await processRange(args.start, args.end, filter)
+      printOutput(results)
+    } else {
+      console.error("You must specify both a start and end time")
+    }
   }
 }
 

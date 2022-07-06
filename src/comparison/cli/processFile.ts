@@ -1,12 +1,12 @@
 import fs from "fs"
+import type { ComparisonResult } from "src/comparison/compare"
 import compare from "src/comparison/compare"
 import createS3Config from "src/comparison/createS3Config"
 import getFileFromS3 from "src/comparison/getFileFromS3"
-import printOutput from "./printOutput"
 
 const s3Config = createS3Config()
 
-const processFile = async (file: string) => {
+const processFile = async (file: string): Promise<ComparisonResult> => {
   let contents: string | Error | undefined
   if (file.startsWith("s3://")) {
     const urlMatch = file.match(/s3\:\/\/([^\/]+)\/(.*)/)
@@ -26,7 +26,8 @@ const processFile = async (file: string) => {
   }
 
   const result = compare(contents, true)
-  printOutput(result)
+  result.file = file
+  return result
 }
 
 export default processFile

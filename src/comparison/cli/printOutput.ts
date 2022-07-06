@@ -1,7 +1,47 @@
 import type { ComparisonResult } from "src/comparison/compare"
+// eslint-disable-next-line import/no-extraneous-dependencies
+import chalk from "chalk"
 import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
 
-const printOutput = (result: ComparisonResult): void => {
+const resultMatches = (result: ComparisonResult): boolean =>
+  result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
+
+const printSummary = (results: ComparisonResult[]): void => {
+  const passed = results.filter((result) => resultMatches(result))
+  console.log("\nSummary:")
+  console.log(`${results.length} comparisons`)
+  if (passed.length > 0) {
+    console.log(chalk.green(`✓ ${passed.length} passed`))
+  }
+  if (results.length - passed.length > 0) {
+    console.log(chalk.red(`✗ ${results.length - passed.length} failed`))
+  }
+}
+
+const formatTest = (name: string, success: boolean): string => {
+  if (success) {
+    return `${chalk.green("✓")} ${name} passed`
+  }
+  return `${chalk.red("✗")} ${name} failed`
+}
+
+const printSingleSummary = (result: ComparisonResult): void => {
+  console.log(`\n${result.file}`)
+  console.log(formatTest("Triggers", result.triggersMatch))
+  console.log(formatTest("Exceptions", result.exceptionsMatch))
+  console.log(formatTest("XML Output", result.xmlOutputMatches))
+  console.log(formatTest("XML Parsing", result.xmlParsingMatches))
+}
+
+const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
+  if (Array.isArray(result)) {
+    result.forEach(printResult)
+    result.forEach(printSingleSummary)
+    printSummary(result)
+    return
+  }
+
+  console.log(`\nProcessing file:\n${result.file}\n\n###############################################\n\n`)
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
@@ -26,9 +66,7 @@ const printOutput = (result: ComparisonResult): void => {
     }
   }
 
-  if (result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches) {
-    console.log("Comparison matches")
-  }
+  printSingleSummary(result)
 }
 
-export default printOutput
+export default printResult
