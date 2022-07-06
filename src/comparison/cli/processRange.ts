@@ -16,6 +16,7 @@ const processRange = async (start: string, end: string, filter: string): Promise
   const records = await dynamo.getRange(start, end, filterValue)
 
   if (!records || records instanceof Error) {
+    console.error(records)
     throw new Error("Error fetching records from Dynamo")
   }
 

@@ -25,7 +25,8 @@ export const getArgs = () =>
         alias: "p",
         optional: true,
         defaultValue: "failure",
-        description: "Specify either 'failure', 'success', 'both'. Default is 'failure'"
+        description:
+          "Filter based on the last result. Specify either 'failure', 'success', 'both'. Default is 'failure'"
       },
       help: { type: Boolean, optional: true, alias: "h", description: "Prints this usage guide" }
     },

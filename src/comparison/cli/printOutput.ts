@@ -25,7 +25,7 @@ const formatTest = (name: string, success: boolean): string => {
   return `${chalk.red("✗")} ${name} failed`
 }
 
-const printSingleSummary = (result: ComparisonResult): void => {
+export const printSingleSummary = (result: ComparisonResult): void => {
   console.log(`\n${result.file}`)
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
@@ -41,7 +41,7 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
     return
   }
 
-  console.log(`\nProcessing file:\n${result.file}\n\n###############################################\n\n`)
+  console.log(`\nProcessing file:\n${result.file}\n`)
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
@@ -66,7 +66,9 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
     }
   }
 
-  printSingleSummary(result)
+  if (resultMatches(result)) {
+    console.log("Comparison matches")
+  }
 }
 
 export default printResult

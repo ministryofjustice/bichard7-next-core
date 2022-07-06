@@ -48,8 +48,22 @@ If all comparisons between the new and old Bichard are successful, `compareResul
 You can run a cli tool to see if a comparison json file matches using:
 
 ```
-npx ts-node src/comparison/compare.ts <path to json file>
+npm run compare -- <path to json file>
 ```
+
+You can also run this tool against the comparison files collected in production using the following arguments:
+
+```
+Options
+
+  -f, --file string     Specify either the local file path or an S3 URL                               
+  -s, --start string    Specify the start timestamp in ISO8601 format                                 
+  -e, --end string      Specify the end timestamp in ISO8601 format                                   
+  -p, --filter string   Filter based on the last result. Specify either 'failure', 'success', 'both'. 
+                        Default is 'failure'                                                          
+  -h, --help            Prints this usage guide   
+```
+You will need to run it using `aws-vault`
 
 ### Comparing outputs locally
 

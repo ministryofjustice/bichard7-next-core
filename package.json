@@ -14,7 +14,7 @@
     "test:integration": "jest --runInBand --testPathPattern=integration.test",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
     "clean": "rimraf build",
-    "compare": "ts-node scripts/compareResults.ts",
+    "compare": "ts-node src/comparison/cli.ts",
     "compare:dev": "npm run compare | pino-pretty",
     "build": "npm run clean && tsc -p tsconfig.json",
     "lint": "eslint .",

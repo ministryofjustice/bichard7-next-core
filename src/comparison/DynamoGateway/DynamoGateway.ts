@@ -68,7 +68,12 @@ export default class DynamoGateway {
   }
 
   getRange(start: string, end: string, success?: boolean): PromiseResult<ComparisonLog[] | Error | null> {
-    const failureFilter = success !== undefined ? {} : {}
+    let failureFilter = {}
+    let failureValue = {}
+    if (success !== undefined) {
+      failureFilter = { FilterExpression: "latestResult = :latestResultValue" }
+      failureValue = { ":latestResultValue": success ? 1 : 0 }
+    }
 
     return this.client
       .query({
@@ -82,7 +87,8 @@ export default class DynamoGateway {
         ExpressionAttributeValues: {
           ":start": start,
           ":end": end,
-          ":partitionKeyValue": "_"
+          ":partitionKeyValue": "_",
+          ...failureValue
         },
         ...failureFilter
       })
