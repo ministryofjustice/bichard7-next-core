@@ -91,13 +91,7 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   if (allPncOffencesMatched) {
     enrichHearingDefendantFromPncResult(aho)
   } else if (!anyOffenceHasAmbiguousError(aho)) {
-    addError(aho, ExceptionCode.HO100304, [
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case",
-      "HearingDefendant",
-      "ArrestSummonsNumber"
-    ])
+    addError(aho, ExceptionCode.HO100304, errorPaths.asn)
   }
 
   return aho

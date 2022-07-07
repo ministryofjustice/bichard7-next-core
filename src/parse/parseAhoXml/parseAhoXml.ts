@@ -417,7 +417,8 @@ const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | undefined => {
     PncQuery: mapXmlCxe01ToAho(aho["br7:AnnotatedHearingOutcome"]?.CXE01),
     PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
       ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]["#text"])
-      : undefined
+      : undefined,
+    PncErrorMessage: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.["#text"]
   }
 }
 

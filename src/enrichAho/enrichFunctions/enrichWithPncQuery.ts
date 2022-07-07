@@ -15,10 +15,14 @@ const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undef
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
-  // TODO: We need to handle errors from the PNC here and create exceptions
-  annotatedHearingOutcome.PncQuery = pncGateway.query(
+  const pncResult = pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
+  if (pncResult instanceof Error) {
+    annotatedHearingOutcome.PncErrorMessage = pncResult.message
+  } else {
+    annotatedHearingOutcome.PncQuery = pncResult
+  }
 
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)

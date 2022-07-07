@@ -15,6 +15,10 @@ export interface Br7AnnotatedHearingOutcome {
   "br7:HasError": boolean
   CXE01: Cxe01
   "br7:PNCQueryDate"?: Br7TextString
+  "br7:PNCErrorMessage"?: {
+    "#text": string
+    "@_classification"?: string
+  }
   "@_xmlns:ds": string
   "@_xmlns:xsi": string
   "@_xmlns:br7": string

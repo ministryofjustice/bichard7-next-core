@@ -1,7 +1,7 @@
 import type { PncQueryResult } from "./PncQueryResult"
 
 interface PncGateway {
-  query: (asn: string) => PncQueryResult | undefined
+  query: (asn: string) => PncQueryResult | Error | undefined
   queryTime: Date | undefined
 }
 

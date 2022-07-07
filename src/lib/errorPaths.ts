@@ -34,9 +34,12 @@ const $case = {
   magistratesCourtReference: casePath.concat("CourtReference", "MagistratesCourtReference")
 }
 
+const asnPath = ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+
 const errorPaths = {
   offence,
-  case: $case
+  case: $case,
+  asn: asnPath
 }
 
 export default errorPaths

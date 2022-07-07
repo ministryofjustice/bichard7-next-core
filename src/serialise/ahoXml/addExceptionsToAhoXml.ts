@@ -1,5 +1,6 @@
 import type { AhoXml, Br7TextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
 import type Exception from "src/types/Exception"
+import { ExceptionCode } from "src/types/ExceptionCode"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
@@ -37,6 +38,14 @@ const findElement = (element: GenericAhoXmlValue, path: (number | string)[]): Br
   return Error("Could not find element")
 }
 
+const pncErrors = [
+  ExceptionCode.HO100301,
+  ExceptionCode.HO100302,
+  ExceptionCode.HO100313,
+  ExceptionCode.HO100314,
+  ExceptionCode.HO100315
+]
+
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
@@ -49,6 +58,14 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
     }
     if (isBr7TextString(element)) {
       element["@_Error"] = e.code
+    }
+  }
+
+  // Add PNC errors to the PNC error message if it is set
+  if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
+    const pncError = exceptions.find((e) => pncErrors.includes(e.code))
+    if (pncError) {
+      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
     }
   }
 }
