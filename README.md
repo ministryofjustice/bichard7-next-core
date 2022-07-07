@@ -2,6 +2,16 @@
 
 The code to replace the processing logic of Bichard 7
 
+## Publishing package updates
+
+The code in this repository is packaged in the [`@moj-bichard7-developers/bichard7-next-core` NPM package](https://www.npmjs.com/package/@moj-bichard7-developers/bichard7-next-core).
+
+To deploy a new version of the package:
+
+1. Manually bump the version number in `package.json` in your PR. It's recommended to follow [semantic versioning principles](https://semver.org).
+1. Merge your PR into the `main` branch.
+1. Run the [`Release` GitHub action](https://github.com/ministryofjustice/bichard7-next-core/actions/workflows/release.yml) against the `main` branch, by clicking the "Run workflow" button in the Actions interface.
+
 ## Testing
 
 To run unit tests against new Bichard:
