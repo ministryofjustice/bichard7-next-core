@@ -41,7 +41,7 @@ export default async (event: unknown): Promise<ComparisonResult> => {
   }
 
   logger.info(
-    `[ComparisonResult] ${
+    `[Comparison Result] ${
       comparisonResult.triggersMatch &&
       comparisonResult.exceptionsMatch &&
       comparisonResult.xmlOutputMatches &&
