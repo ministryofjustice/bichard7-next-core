@@ -1,0 +1,56 @@
+name: Release
+on:
+  workflow_dispatch:
+
+jobs:
+  check-package-version-is-unused:
+    name: Check package version is unused
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Capture local package version
+        id: local_version
+        run: echo "::set-output name=version::$(jq .version package.json | tr -d '\"')"
+
+      - name: Capture published package version
+        id: published_version
+        run: echo "::set-output name=version::$(npm view @moj-bichard7-developers/bichard7-next-core version || echo 'unpublished')"
+
+      - name: Check package versions
+        run: |
+          echo "Local package version is ${{ steps.local_version.outputs.version }}"
+          echo "Published package version is ${{ steps.published_version.outputs.version }}"
+
+      - name: Fail if local version is the same as the published version
+        if: ${{ steps.local_version.outputs.version == steps.published_version.outputs.version }}
+        run: |
+          echo "Local package version is the same as the published package version."
+          echo "Aborting release, as this would overwrite published package."
+          echo "Bump the version number in package.json and try again."
+          exit 1
+
+  release-npm-package:
+    name: Release NPM package
+    needs: check-package-version-is-unused
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.13.1"
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build output package
+        run: npm run build
+
+      - name: Publish output package
+        run: npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

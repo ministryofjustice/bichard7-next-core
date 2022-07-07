@@ -1,5 +1,5 @@
 {
-  "name": "bichard7-next-core",
+  "name": "@moj-bichard7-developers/bichard7-next-core",
   "version": "1.0.0",
   "description": "The code to replace the processing logic of Bichard 7",
   "main": "build/index.js",
@@ -32,6 +32,10 @@
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
