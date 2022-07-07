@@ -10,7 +10,12 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
-const processRange = async (start: string, end: string, filter: string): Promise<ComparisonResult[]> => {
+const processRange = async (
+  start: string,
+  end: string,
+  filter: string,
+  cache: boolean
+): Promise<ComparisonResult[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
   const records = await dynamo.getRange(start, end, filterValue)
@@ -22,7 +27,7 @@ const processRange = async (start: string, end: string, filter: string): Promise
 
   const resultsPromises = records.map((record) => {
     const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
-    return processFile(s3Url)
+    return processFile(s3Url, cache)
   })
   return Promise.all(resultsPromises)
 }
