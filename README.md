@@ -56,13 +56,13 @@ You can also run this tool against the comparison files collected in production 
 ```
 Options
 
-  -f, --file string     Specify either the local file path or an S3 URL                               
-  -s, --start string    Specify the start timestamp in ISO8601 format                                 
-  -e, --end string      Specify the end timestamp in ISO8601 format                                   
-  -p, --filter string   Filter based on the last result. Specify either 'failure', 'success', 'both'. 
-                        Default is 'failure'                                                          
-  -c, --cache           Cache the comparison files                                                    
-  -h, --help            Prints this usage guide     
+  -f, --file string     Specify either the local file path or an S3 URL
+  -s, --start string    Specify the start timestamp in ISO8601 format
+  -e, --end string      Specify the end timestamp in ISO8601 format
+  -p, --filter string   Filter based on the last result. Specify either 'failure', 'success', 'both'.
+                        Default is 'failure'
+  -c, --cache           Cache the comparison files
+  -h, --help            Prints this usage guide
 ```
 
 You will need to run it using `aws-vault`
