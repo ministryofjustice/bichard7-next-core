@@ -538,7 +538,7 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
     suppressBooleanAttributes: false,
     tagValueProcessor: (_: string, value: string) => {
       if (typeof value === "string") {
-        return value.replace("&", "&amp;")
+        return value.replace(/&/g, "&amp;")
       }
       return value
     }
