@@ -286,53 +286,46 @@ const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
   const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
-  return offences.map(
-    (xmlOffence) =>
-      ({
-        CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
-        OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
-        OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
-        ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]["#text"]) : undefined,
-        ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]["#text"]) : undefined,
-        ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
-        ActualOffenceStartDate: {
-          StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"]["#text"])
-        },
-        ActualOffenceEndDate:
-          xmlOffence["ds:ActualOffenceEndDate"] && xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]?.["#text"]
-            ? {
-                EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]["#text"])
-              }
-            : undefined,
-        LocationOfOffence: xmlOffence["ds:LocationOfOffence"]["#text"],
-        ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
-        AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
-          ? {
-              Amount: xmlOffence["ds:AlcoholLevel"]["ds:Amount"]["#text"],
-              Method: xmlOffence["ds:AlcoholLevel"]["ds:Method"]["#text"]
-            }
-          : undefined,
-        ConvictionDate: xmlOffence["ds:ConvictionDate"]
-          ? new Date(xmlOffence["ds:ConvictionDate"]["#text"])
-          : undefined,
-        CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
-        CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]["#text"]),
-        ManualSequenceNumber: xmlOffence["br7:ManualSequenceNo"]
-          ? xmlOffence["br7:ManualSequenceNo"]["#text"] === "Y"
-          : undefined,
-        AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"]
-          ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y"
-          : undefined,
-        CourtCaseReferenceNumber: mapCourtCaseReferenceNumber(xmlOffence["br7:CourtCaseReferenceNumber"]),
-        Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
-        RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
-        NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]
-          ? xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y"
-          : undefined,
-        HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]?.["#text"]
-        // ResultHalfLifeHours: xmlOffence.
-      } as Offence)
-  )
+  return offences.map((xmlOffence) => ({
+    CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
+    OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
+    OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
+    ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]["#text"]) : undefined,
+    ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]["#text"]) : undefined,
+    ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
+    ActualOffenceStartDate: {
+      StartDate: new Date(xmlOffence["ds:ActualOffenceStartDate"]["ds:StartDate"]["#text"])
+    },
+    ActualOffenceEndDate:
+      xmlOffence["ds:ActualOffenceEndDate"] && xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]?.["#text"]
+        ? {
+            EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]["#text"])
+          }
+        : undefined,
+    LocationOfOffence: xmlOffence["ds:LocationOfOffence"]["#text"],
+    ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
+    AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
+      ? {
+          Amount: Number(xmlOffence["ds:AlcoholLevel"]["ds:Amount"]["#text"]),
+          Method: xmlOffence["ds:AlcoholLevel"]["ds:Method"]["#text"]
+        }
+      : undefined,
+    ConvictionDate: xmlOffence["ds:ConvictionDate"] ? new Date(xmlOffence["ds:ConvictionDate"]["#text"]) : undefined,
+    CommittedOnBail: xmlOffence["br7:CommittedOnBail"]["#text"],
+    CourtOffenceSequenceNumber: Number(xmlOffence["br7:CourtOffenceSequenceNumber"]["#text"]),
+    ManualSequenceNumber: xmlOffence["br7:ManualSequenceNo"]
+      ? xmlOffence["br7:ManualSequenceNo"]["#text"] === "Y"
+      : undefined,
+    AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"] ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y" : undefined,
+    CourtCaseReferenceNumber: mapCourtCaseReferenceNumber(xmlOffence["br7:CourtCaseReferenceNumber"]),
+    Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
+    RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
+    NotifiableToHOindicator: xmlOffence["ds:NotifiableToHOindicator"]
+      ? xmlOffence["ds:NotifiableToHOindicator"]["#text"] === "Y"
+      : undefined,
+    HomeOfficeClassification: xmlOffence["ds:HomeOfficeClassification"]?.["#text"]
+    // ResultHalfLifeHours: xmlOffence.
+  }))
 }
 
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
