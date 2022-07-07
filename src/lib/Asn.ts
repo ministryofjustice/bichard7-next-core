@@ -1,3 +1,5 @@
+const intOrString = (input: string): string => (input.match(/^\d*$/) ? input : "")
+
 class Asn {
   public year: string
 
@@ -18,8 +20,9 @@ class Asn {
   }
 
   checkCharacter() {
-    const modulus =
-      parseInt(`${this.force}${this.system}${this.year}${this.sequence.toString().padStart(11, "0")}`, 10) % 23
+    const sequence = this.sequence.toString().padStart(11, "0")
+    const number = `${intOrString(this.force)}${intOrString(this.system)}${this.year}${sequence}`
+    const modulus = Number(BigInt(number) % BigInt(23))
     return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
   }
 
