@@ -7,6 +7,7 @@ interface IArguments {
   end?: string
   filter?: string
   help?: boolean
+  cache?: boolean
 }
 
 export const getArgs = () =>
@@ -27,6 +28,13 @@ export const getArgs = () =>
         defaultValue: "failure",
         description:
           "Filter based on the last result. Specify either 'failure', 'success', 'both'. Default is 'failure'"
+      },
+      cache: {
+        type: Boolean,
+        alias: "c",
+        optional: true,
+        defaultValue: false,
+        description: "Cache the comparison files"
       },
       help: { type: Boolean, optional: true, alias: "h", description: "Prints this usage guide" }
     },

@@ -61,6 +61,7 @@ Options
   -e, --end string      Specify the end timestamp in ISO8601 format
   -p, --filter string   Filter based on the last result. Specify either 'failure', 'success', 'both'.
                         Default is 'failure'
+  -c, --cache           Cache the comparison files
   -h, --help            Prints this usage guide
 ```
 
