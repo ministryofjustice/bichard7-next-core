@@ -4,9 +4,8 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
 
-const addTitle = (offence: PncOffence): PncOffence => {
-  offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle
-  return offence
+const addTitle = (offence: PncOffence): void => {
+  offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
 }
 
 const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undefined) =>
