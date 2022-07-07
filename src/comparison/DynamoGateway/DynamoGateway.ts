@@ -79,7 +79,6 @@ export default class DynamoGateway {
       .query({
         TableName: this.tableName,
         IndexName: "initialRunAtIndex",
-        // FilterExpression: "#partitionKey = :partitionKeyValue",
         KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
         ExpressionAttributeNames: {
           "#partitionKey": "_"
