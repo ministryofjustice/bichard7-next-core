@@ -40,5 +40,16 @@ export default async (event: unknown): Promise<ComparisonResult> => {
     throw logInDynamoDbResult
   }
 
+  logger.info(
+    `[Comparison Result] ${
+      comparisonResult.triggersMatch &&
+      comparisonResult.exceptionsMatch &&
+      comparisonResult.xmlOutputMatches &&
+      comparisonResult.xmlParsingMatches
+        ? "PASS"
+        : "FAIL"
+    }`
+  )
+
   return comparisonResult
 }
