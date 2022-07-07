@@ -1,4 +1,5 @@
 import { format } from "date-fns"
+import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
 import {
   lookupAlcoholLevelMethodByCjsCode,
@@ -531,18 +532,21 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
   } as AhoXml
 }
 
+const escapeCharacters = (_: string, value: string): string => {
+  if (typeof value === "string") {
+    return value.replace(/&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;")
+  }
+  return value
+}
+
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
-  const options = {
+  const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
     processEntities: false,
     suppressBooleanAttributes: false,
-    tagValueProcessor: (_: string, value: string) => {
-      if (typeof value === "string") {
-        return value.replace(/&/g, "&amp;")
-      }
-      return value
-    }
+    tagValueProcessor: escapeCharacters,
+    attributeValueProcessor: escapeCharacters
   }
 
   const builder = new XMLBuilder(options)
