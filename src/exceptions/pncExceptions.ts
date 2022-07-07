@@ -12,7 +12,7 @@ type ErrorRangeDefinition = {
   ranges: ErrorRange[]
 }
 
-const ho100301 = { code: ExceptionCode.HO100301, path: errorPaths.asn }
+const ho100301 = { code: ExceptionCode.HO100301, path: errorPaths.case.asn }
 
 const errorRanges: ErrorRangeDefinition[] = [
   {
@@ -68,7 +68,7 @@ const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
 
   for (const { code, ranges } of errorRanges) {
     if (inErrorRange(errorCode, ranges)) {
-      return [{ code, path: errorPaths.asn }]
+      return [{ code, path: errorPaths.case.asn }]
     }
   }
 
