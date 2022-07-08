@@ -41,7 +41,9 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
     return
   }
 
-  console.log(`\nProcessing file:\n${result.file}\n`)
+  if (!resultMatches(result)) {
+    console.log(`\nProcessing file:\n${result.file}\n`)
+  }
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
@@ -64,10 +66,6 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
       console.log("XML parsing does not match")
       console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff))
     }
-  }
-
-  if (resultMatches(result)) {
-    console.log("Comparison matches")
   }
 }
 

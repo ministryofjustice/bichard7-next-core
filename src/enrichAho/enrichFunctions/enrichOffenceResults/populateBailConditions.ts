@@ -6,9 +6,8 @@ const resultQualifierIsBailCondition = (qualifier: ResultQualifierVariable): boo
 
 const populateBailConditions = (result: Result): void => {
   const qualifiers = result.ResultQualifierVariable
-  if (!result.BailCondition) {
-    result.BailCondition = []
-  }
+  result.BailCondition = []
+
   qualifiers.filter(resultQualifierIsBailCondition).forEach((qualifier) => {
     if (qualifier.Code) {
       const description = lookupResultQualifierCodeByCjsCode(qualifier.Code)?.description

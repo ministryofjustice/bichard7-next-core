@@ -187,12 +187,12 @@ const matchMultipleCases = (
           ) {
             matchFoundInGroup = true
           }
-          if (!matchFoundInGroup) {
-            unmatchedPNCOffences = false
-            caseMatcherOutcome.courtCaseMatches = caseMatcherOutcome.courtCaseMatches.filter(
-              (match) => match.courtCase !== courtCase
-            )
-          }
+        }
+        if (!matchFoundInGroup) {
+          unmatchedPNCOffences = false
+          caseMatcherOutcome.courtCaseMatches = caseMatcherOutcome.courtCaseMatches.filter(
+            (match) => match.courtCase !== courtCase
+          )
         }
       }
     }

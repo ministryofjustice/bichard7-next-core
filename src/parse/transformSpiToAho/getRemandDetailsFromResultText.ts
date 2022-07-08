@@ -85,7 +85,7 @@ const extractResultTextData = (patterns: string[], resultText: string): Extracte
       courtName = courtName ?? Court ?? Court2
       date = date ?? Date
 
-      if (courtName && date) {
+      if (courtName) {
         return { courtName, date }
       }
     }
