@@ -4,6 +4,7 @@ import type { PncOffence } from "src/types/PncQueryResult"
 import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
 import matchUnmatchedBreachesWithoutUsingDates from "./matchUnmatchedBreachesWithoutUsingDates"
 import mergeOffenceMatcherOutcomes from "./mergeOffenceMatcherOutcomes"
+import offenceHasFinalResult from "./offenceHasFinalResult"
 import offenceIsBreach from "./offenceIsBreach"
 import offencesMatch from "./offencesMatch"
 
@@ -173,7 +174,9 @@ const matchOffences = (
   }
 
   result.allPncOffencesMatched =
-    pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result)).length === 0
+    pncOffences
+      .filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+      .filter((pncOffence) => !offenceHasFinalResult(pncOffence)).length === 0
 
   return result
 }
