@@ -4,9 +4,8 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type PncGateway from "src/types/PncGateway"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
 
-const addTitle = (offence: PncOffence): PncOffence => {
-  offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle
-  return offence
+const addTitle = (offence: PncOffence): void => {
+  offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
 }
 
 const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undefined) =>
@@ -15,10 +14,14 @@ const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undef
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
-  // TODO: We need to handle errors from the PNC here and create exceptions
-  annotatedHearingOutcome.PncQuery = pncGateway.query(
+  const pncResult = pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
+  if (pncResult instanceof Error) {
+    annotatedHearingOutcome.PncErrorMessage = pncResult.message
+  } else {
+    annotatedHearingOutcome.PncQuery = pncResult
+  }
 
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)

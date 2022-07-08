@@ -1,5 +1,6 @@
 import type { Change } from "diff"
 import isEqual from "lodash.isequal"
+import orderBy from "lodash.orderby"
 import { xmlOutputDiff, xmlOutputMatches } from "src/comparison/xmlOutputComparison"
 import CoreHandler from "src/index"
 import { extractExceptionsFromAho, parseAhoXml } from "src/parse/parseAhoXml"
@@ -33,13 +34,20 @@ export type ComparisonResult = {
   file?: string
 }
 
+const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
+const sortTriggers = (exceptions: Trigger[]): Trigger[] => orderBy(exceptions, ["code", "offenceSequenceNumber"])
+
 const compare = (input: string, debug = false): ComparisonResult => {
-  const { incomingMessage, annotatedHearingOutcome, triggers } = processTestString(input)
+  const { incomingMessage, annotatedHearingOutcome, triggers } = processTestString(input.replace(/Â£/g, "£"))
+  const sortedTriggers = sortTriggers(triggers)
   const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
   const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
   const pncGateway = new MockPncGateway(response, pncQueryTime)
   const coreResult = CoreHandler(incomingMessage, pncGateway)
+  const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
+  const sortedCoreTriggers = sortTriggers(coreResult.triggers)
   const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
+  const sortedExceptions = sortExceptions(exceptions)
   const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
   const parsedAho = parseAhoXml(annotatedHearingOutcome)
   if (parsedAho instanceof Error) {
@@ -49,11 +57,11 @@ const compare = (input: string, debug = false): ComparisonResult => {
 
   const debugOutput: ComparisonResultDebugOutput = {
     triggers: {
-      coreResult: coreResult.triggers,
+      coreResult: sortedCoreTriggers,
       comparisonResult: triggers
     },
     exceptions: {
-      coreResult: coreResult.hearingOutcome.Exceptions ?? [],
+      coreResult: sortedCoreExceptions,
       comparisonResult: exceptions
     },
     xmlOutputDiff: xmlOutputDiff(ahoXml, annotatedHearingOutcome),
@@ -61,8 +69,8 @@ const compare = (input: string, debug = false): ComparisonResult => {
   }
 
   return {
-    triggersMatch: isEqual(coreResult.triggers, triggers),
-    exceptionsMatch: isEqual(coreResult.hearingOutcome.Exceptions, exceptions),
+    triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
+    exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
     xmlOutputMatches: xmlOutputMatches(ahoXml, annotatedHearingOutcome),
     xmlParsingMatches: xmlOutputMatches(generatedXml, annotatedHearingOutcome),
     ...(debug && { debugOutput })

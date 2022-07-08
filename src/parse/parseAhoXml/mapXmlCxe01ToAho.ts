@@ -88,6 +88,8 @@ const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PncOffence[] =>
         cjsOffenceCode: offence.COF["@_CJSOffenceCode"],
         title: offence.COF["@_OffenceTitle"],
         sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
+        qualifier1: offence.COF["@_OffenceQualifier1"],
+        qualifier2: offence.COF["@_OffenceQualifier2"],
         ...extractDates(offence),
         ...extractTimes(offence)
       },
