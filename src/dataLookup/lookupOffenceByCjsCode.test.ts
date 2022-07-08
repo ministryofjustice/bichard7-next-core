@@ -58,11 +58,6 @@ describe("lookupNationalOffenceByCjsCode()", () => {
     const result = lookupNationalOffenceByCjsCode(`${COMMON_LAWS}111`)
     expect(result).toBeInstanceOf(LookupNationalOffenceCodeError)
   })
-
-  it("should return an error when a national or local offence code is not found", () => {
-    const result = lookupNationalOffenceByCjsCode(`${COMMON_LAWS}111A`, "01")
-    expect(result).toBeInstanceOf(LookupLocalOffenceCodeError)
-  })
 })
 
 describe("lookupLocalOffenceByCjsCode()", () => {
