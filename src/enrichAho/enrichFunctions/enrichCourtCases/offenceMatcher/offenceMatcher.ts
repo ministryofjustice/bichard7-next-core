@@ -106,12 +106,12 @@ const matchOffences = (
   if (attemptManualMatch) {
     pncOffences.forEach((pncOffence) => {
       const pncSequence = pncOffence.offence.sequenceNumber
-      let matchingExplicitMatch: Offence | undefined
+      let matchingExplicitMatch: Offence | undefined = undefined
       let pncAdjudicationMatches = false
 
       for (const hoOffence of filteredHoOffences) {
         if (matchingExplicitMatch || hoOffenceAlreadyMatched(hoOffence, result)) {
-          return
+          continue
         }
 
         const hoSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
