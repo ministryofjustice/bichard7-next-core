@@ -1,11 +1,12 @@
 import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"
 
 const crownCourtTopLevelCode = "C"
 
-const lookupCrownCourtByName = (courtName: string): OrganisationUnitCodes | undefined => {
+const lookupCrownCourtByNameAndFirstPsaCode = (courtName: string): OrganisationUnitCodes | undefined => {
   const trimmedCourtName = courtName.split("Crown Court")[0].trim()
   const found = organisationUnit.find(
     (unit) =>
@@ -18,7 +19,14 @@ const lookupCrownCourtByName = (courtName: string): OrganisationUnitCodes | unde
     return undefined
   }
 
-  return extractCodesFromOU(found)
+  const psaCode = found.thirdLevelPsaCode
+  const firstResult = lookupOrganisationUnitByThirdLevelPsaCode(psaCode)
+
+  if (!firstResult) {
+    return undefined
+  }
+
+  return extractCodesFromOU(firstResult)
 }
 
-export default lookupCrownCourtByName
+export default lookupCrownCourtByNameAndFirstPsaCode
