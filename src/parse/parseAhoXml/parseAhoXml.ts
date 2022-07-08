@@ -178,10 +178,11 @@ const buildFullOffenceCode = (
   offenceCode: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
 ): string => {
   const actOrSource = "ds:ActOrSource" in offenceCode ? offenceCode["ds:ActOrSource"]?.["#text"] : ""
+  const coml = "ds:CommonLawOffence" in offenceCode ? offenceCode["ds:CommonLawOffence"]["#text"] : ""
   const year = "ds:Year" in offenceCode ? offenceCode["ds:Year"]?.["#text"] : ""
   const reason = offenceCode["ds:Reason"]["#text"] ?? ""
   const qualifier = offenceCode["ds:Qualifier"]?.["#text"] ?? ""
-  return `${actOrSource}${year}${reason}${qualifier}`
+  return `${actOrSource}${coml}${year}${reason}${qualifier}`
 }
 
 const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReason => {

@@ -1,6 +1,7 @@
 export { default as HO100206 } from "./HO100206"
 export { default as HO100300 } from "./HO100300"
 export { default as HO100305 } from "./HO100305"
+export { default as HO100306 } from "./HO100306"
 export { default as HO100321 } from "./HO100321"
 export { default as HO100322 } from "./HO100322"
 export { default as HO100323 } from "./HO100323"
