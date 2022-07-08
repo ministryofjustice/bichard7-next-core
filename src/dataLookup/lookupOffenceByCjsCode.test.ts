@@ -1,5 +1,4 @@
 import { COMMON_LAWS } from "src/lib/offenceTypes"
-import { LookupLocalOffenceCodeError, LookupNationalOffenceCodeError } from "src/types/LookupOffenceCodeError"
 import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
 
 const localOffenceCode = "01CP001"
@@ -49,14 +48,14 @@ describe("lookupNationalOffenceByCjsCode()", () => {
     })
   })
 
-  it("should return an error when a national offence code is not found with a qualifier", () => {
+  it("should return undefined when a national offence code is not found with a qualifier", () => {
     const result = lookupNationalOffenceByCjsCode(`${COMMON_LAWS}111A`)
-    expect(result).toBeInstanceOf(LookupNationalOffenceCodeError)
+    expect(result).toBeUndefined()
   })
 
-  it("should return an error when a national offence code is not found without a qualifier", () => {
+  it("should return undefined when a national offence code is not found without a qualifier", () => {
     const result = lookupNationalOffenceByCjsCode(`${COMMON_LAWS}111`)
-    expect(result).toBeInstanceOf(LookupNationalOffenceCodeError)
+    expect(result).toBeUndefined()
   })
 })
 
@@ -76,8 +75,8 @@ describe("lookupLocalOffenceByCjsCode()", () => {
     })
   })
 
-  it("should return an error when a local offence code is not found", () => {
+  it("should return undefined when a local offence code is not found", () => {
     const result = lookupLocalOffenceByCjsCode(localOffenceCode, "XX")
-    expect(result).toBeInstanceOf(LookupLocalOffenceCodeError)
+    expect(result).toBeUndefined()
   })
 })
