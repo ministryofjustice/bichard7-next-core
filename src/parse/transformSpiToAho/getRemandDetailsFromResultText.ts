@@ -1,5 +1,6 @@
-import { lookupCrownCourtByName, lookupOrganisationUnitByThirdLevelPsaCode } from "src/dataLookup"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "src/dataLookup"
 import extractCodesFromOU from "src/dataLookup/extractCodesFromOU"
+import lookupCrownCourtByNameAndFirstPsaCode from "src/dataLookup/lookupCrownCourtByNameAndFirstPsaCode"
 import type { OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 import type { KeyValue } from "src/types/KeyValue"
 
@@ -109,7 +110,7 @@ const getRemandDetailsFromResultText = (result: Result): RemandDetails => {
     if (result.ResultVariableText) {
       const { courtName, date: extractedDate } = extractResultTextData(patterns, result.ResultVariableText)
       if (courtName) {
-        location = crownCourtNameMappingOverrides[courtName] ?? lookupCrownCourtByName(courtName)
+        location = crownCourtNameMappingOverrides[courtName] ?? lookupCrownCourtByNameAndFirstPsaCode(courtName)
       }
       if (extractedDate) {
         date = parseDate(extractedDate)
