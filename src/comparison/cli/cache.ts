@@ -11,10 +11,13 @@ const getCachePath = (file: string): string => {
   return `${cacheDir}/${match[1]}`
 }
 
+const cachedFileIsNotEmpty = (file: string): Promise<boolean> =>
+  fs.promises.stat(getCachePath(file)).then((stats) => stats.size > 0)
+
 export const cacheFileExists = (file: string): Promise<boolean> =>
   fs.promises
     .access(getCachePath(file))
-    .then(() => true)
+    .then(() => cachedFileIsNotEmpty(file))
     .catch((_) => false)
 
 export const getCacheFile = (file: string): Promise<string> =>
