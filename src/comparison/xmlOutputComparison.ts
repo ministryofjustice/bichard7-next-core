@@ -10,8 +10,22 @@ export const xmlOutputDiff = (value1: string, value2: string): Change[] =>
 export const xmlOutputMatches = (value1: string, value2: string): boolean =>
   xmlOutputDiff(value1, value2).filter((d) => d.added || d.removed).length === 0
 
-export const formatXmlDiff = (changes: Change[]): string =>
+const truncateUnchanged = (change: Change): Change => {
+  if (change.added || change.removed || (change.count && change.count <= 11)) {
+    return change
+  }
+
+  const lines = change.value.split("\n")
+
+  return {
+    count: 11,
+    value: [...lines.slice(0, 5), "...", ...lines.slice(-5)].join("\n")
+  }
+}
+
+export const formatXmlDiff = (changes: Change[], truncate = false): string =>
   changes
+    .map((c) => (truncate ? truncateUnchanged(c) : c))
     .map((change) => {
       const color = change.added ? "green" : change.removed ? "red" : "grey"
       return chalk[color](change.value)

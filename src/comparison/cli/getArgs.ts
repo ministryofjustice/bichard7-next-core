@@ -8,6 +8,7 @@ interface IArguments {
   filter?: string
   help?: boolean
   cache?: boolean
+  noTruncate?: boolean
 }
 
 export const getArgs = () =>
@@ -36,7 +37,13 @@ export const getArgs = () =>
         defaultValue: false,
         description: "Cache the comparison files"
       },
-      help: { type: Boolean, optional: true, alias: "h", description: "Prints this usage guide" }
+      help: { type: Boolean, optional: true, alias: "h", description: "Prints this usage guide" },
+      noTruncate: {
+        type: Boolean,
+        optional: true,
+        alias: "t",
+        description: "Stops truncating the unchanged sections of XML diffs"
+      }
     },
     {
       helpArg: "help"

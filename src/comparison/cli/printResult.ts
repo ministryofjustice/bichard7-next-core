@@ -40,9 +40,9 @@ export const printSingleSummary = (result: ComparisonResult): void => {
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
-const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
+const printResult = (result: ComparisonResult | ComparisonResult[], truncate = false): void => {
   if (Array.isArray(result)) {
-    result.forEach(printResult)
+    result.forEach((r) => printResult(r, truncate))
     result.forEach(printSingleSummary)
     printSummary(result)
     return
@@ -66,12 +66,12 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
 
     if (!result.xmlOutputMatches) {
       console.log("XML output from Core does not match")
-      console.log(formatXmlDiff(result.debugOutput.xmlOutputDiff))
+      console.log(formatXmlDiff(result.debugOutput.xmlOutputDiff, truncate))
     }
 
     if (!result.xmlParsingMatches) {
       console.log("XML parsing does not match")
-      console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff))
+      console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff, truncate))
     }
   }
 }
