@@ -43,7 +43,6 @@ export const printSingleSummary = (result: ComparisonResult): void => {
 const printResult = (result: ComparisonResult | ComparisonResult[], truncate = false): void => {
   if (Array.isArray(result)) {
     result.forEach((r) => printResult(r, truncate))
-    result.forEach(printSingleSummary)
     printSummary(result)
     return
   }
@@ -51,6 +50,7 @@ const printResult = (result: ComparisonResult | ComparisonResult[], truncate = f
   if (!resultMatches(result)) {
     console.log(`\nProcessing file:\n${result.file}\n`)
   }
+
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
@@ -73,6 +73,10 @@ const printResult = (result: ComparisonResult | ComparisonResult[], truncate = f
       console.log("XML parsing does not match")
       console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff, truncate))
     }
+  }
+
+  if (!resultMatches(result)) {
+    printSingleSummary(result)
   }
 }
 
