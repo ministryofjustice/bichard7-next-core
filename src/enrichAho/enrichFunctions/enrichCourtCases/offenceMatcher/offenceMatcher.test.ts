@@ -174,7 +174,7 @@ describe("Offence Matcher", () => {
 
     outcome.matchedOffences.forEach((match) => {
       expect(match.hoOffence.CriminalProsecutionReference.OffenceReasonSequence).toEqual(
-        match.pncOffence.offence.sequenceNumber
+        match.pncOffence.offence.sequenceNumber.toString()
       )
     })
   })
@@ -200,7 +200,7 @@ describe("Offence Matcher", () => {
 
     outcome.matchedOffences.forEach((match) => {
       expect(match.hoOffence.CriminalProsecutionReference.OffenceReasonSequence).toEqual(
-        match.pncOffence.offence.sequenceNumber
+        match.pncOffence.offence.sequenceNumber.toString()
       )
     })
   })

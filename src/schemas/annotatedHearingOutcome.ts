@@ -98,7 +98,7 @@ export const defendantOrOffenderSchema = z.object({
 export const criminalProsecutionReferenceSchema = z.object({
   DefendantOrOffender: defendantOrOffenderSchema,
   OffenceReason: offenceReasonSchema.optional(),
-  OffenceReasonSequence: z.number().or(z.null()).optional()
+  OffenceReasonSequence: z.string().or(z.null()).optional()
 })
 
 export const durationSchema = z.object({

@@ -114,7 +114,7 @@ const matchOffences = (
           continue
         }
 
-        const hoSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        const hoSequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
         if (hoSequence !== undefined && hoSequence === pncSequence && !matchingExplicitMatch) {
           if (offencesMatch(hoOffence, pncOffence)) {
             matchingExplicitMatch = hoOffence

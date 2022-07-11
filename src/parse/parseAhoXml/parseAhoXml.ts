@@ -236,9 +236,9 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
   throw new Error("Offence Reason Missing from XML")
 }
 
-const mapOffenceReasonSequence = (node: Br7ErrorString | undefined): number | null | undefined => {
+const mapOffenceReasonSequence = (node: Br7ErrorString | undefined): string | null | undefined => {
   if (node?.["#text"]) {
-    return Number(node["#text"])
+    return node["#text"]
   }
   if (node?.["@_Error"]) {
     return null
