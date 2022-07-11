@@ -11,9 +11,24 @@ const addTitle = (offence: PncOffence): void => {
 const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undefined) =>
   cases && cases.forEach((c) => c.offences.forEach(addTitle))
 
-export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
-  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
+const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
+  const hoCase = aho.AnnotatedHearingOutcome.HearingOutcome.Case
+  hoCase.CourtCaseReferenceNumber = undefined
+  hoCase.PenaltyNoticeCaseReferenceNumber = undefined
 
+  const hoDefendant = hoCase.HearingDefendant
+  hoDefendant.PNCCheckname = undefined
+  hoDefendant.CRONumber = undefined
+  hoDefendant.PNCIdentifier = undefined
+
+  hoDefendant.Offence.forEach((offence) => {
+    offence.AddedByTheCourt = undefined
+    offence.CourtCaseReferenceNumber = undefined
+  })
+}
+
+export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: PncGateway): AnnotatedHearingOutcome => {
+  clearPNCPopulatedElements(annotatedHearingOutcome)
   const pncResult = pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
@@ -22,6 +37,7 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome, pncGateway: Pn
   } else {
     annotatedHearingOutcome.PncQuery = pncResult
   }
+  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)

@@ -17,15 +17,15 @@ const ho100301 = { code: ExceptionCode.HO100301, path: errorPaths.case.asn }
 const errorRanges: ErrorRangeDefinition[] = [
   {
     code: ExceptionCode.HO100301,
-    ranges: [{ start: "PNCAM" }, { start: "PNCUE" }]
-  },
-  {
-    code: ExceptionCode.HO100302,
     ranges: [{ start: "I0013", end: "I0022" }]
   },
   {
+    code: ExceptionCode.HO100302,
+    ranges: [{ start: "PNCAM" }, { start: "PNCUE" }]
+  },
+  {
     code: ExceptionCode.HO100313,
-    ranges: [{ start: "I0208", end: "I0208" }, { start: "I0212" }, { start: "I0256" }]
+    ranges: [{ start: "I0208", end: "I0209" }, { start: "I0212" }, { start: "I0256" }]
   },
   {
     code: ExceptionCode.HO100314,
