@@ -6,15 +6,22 @@ import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
 const resultMatches = (result: ComparisonResult): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
+const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(1)}%`
+
 const printSummary = (results: ComparisonResult[]): void => {
-  const passed = results.filter((result) => resultMatches(result))
+  const total = results.length
+  const passed = results.filter((result) => resultMatches(result)).length
+  const failed = total - passed
+
   console.log("\nSummary:")
   console.log(`${results.length} comparisons`)
-  if (passed.length > 0) {
-    console.log(chalk.green(`✓ ${passed.length} passed`))
+
+  if (passed > 0) {
+    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total)})`))
   }
-  if (results.length - passed.length > 0) {
-    console.log(chalk.red(`✗ ${results.length - passed.length} failed`))
+
+  if (failed > 0) {
+    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total)})`))
   }
 }
 
