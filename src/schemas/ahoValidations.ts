@@ -18,6 +18,7 @@ import {
   lookupYesNoByCjsCode
 } from "src/dataLookup"
 import Asn from "src/lib/Asn"
+import type { NumberSpecifiedInResult } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { z } from "zod"
 
@@ -94,6 +95,9 @@ const validateAmountSpecifiedInResult = (amount: number): boolean => {
   )
 }
 
+const validateNumberSpecifiedInResult = (value: NumberSpecifiedInResult): boolean =>
+  value.Number >= 1 && value.Number <= 9999
+
 export {
   validateRemandStatus,
   validateAsn,
@@ -114,5 +118,6 @@ export {
   validateVehicleCode,
   validateYesNo,
   validateActualOffenceDateCode,
-  validateAmountSpecifiedInResult
+  validateAmountSpecifiedInResult,
+  validateNumberSpecifiedInResult
 }

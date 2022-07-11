@@ -9,6 +9,7 @@ import {
   validateDurationType,
   validateDurationUnit,
   validateModeOfTrialReason,
+  validateNumberSpecifiedInResult,
   validateOffenceCategory,
   validateOffenceInitiationCode,
   validateRemandStatus,
@@ -113,7 +114,7 @@ export const dateSpecifiedInResultSchema = z.object({
 })
 
 export const numberSpecifiedInResultSchema = z.object({
-  Number: z.number().min(1, ExceptionCode.HO100244).max(9999, ExceptionCode.HO100244),
+  Number: z.number(),
   Type: z.string()
 })
 
@@ -208,7 +209,9 @@ export const resultSchema = z.object({
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: amountSpecifiedInResultSchema.array().optional(),
-  NumberSpecifiedInResult: numberSpecifiedInResultSchema.array().optional(),
+  NumberSpecifiedInResult: z
+    .array(numberSpecifiedInResultSchema.refine(validateNumberSpecifiedInResult, ExceptionCode.HO100244))
+    .optional(),
   NextResultSourceOrganisation: organisationUnitSchema.or(z.null()).optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
   NextHearingDate: z.date().optional(),
