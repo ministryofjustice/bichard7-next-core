@@ -380,6 +380,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
   "br7:PenaltyNoticeCaseReference": optionalText(c.PenaltyNoticeCaseReferenceNumber),
   "br7:RecordableOnPNCindicator": optionalLiteral(c.RecordableOnPNCindicator, LiteralType.YesNo),
   "br7:Urgent": c.Urgent ? mapAhoUrgentToXml(c.Urgent) : undefined,
+  "br7:ManualForceOwner": optionalLiteral(c.ManualForceOwner, LiteralType.YesNo),
   "br7:ForceOwner": c.ForceOwner ? mapAhoOrgUnitToXml(c.ForceOwner) : undefined,
   "br7:HearingDefendant": {
     "br7:ArrestSummonsNumber": text(c.HearingDefendant.ArrestSummonsNumber),

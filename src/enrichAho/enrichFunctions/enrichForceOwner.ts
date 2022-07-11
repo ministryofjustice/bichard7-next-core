@@ -1,6 +1,7 @@
 import { forceCodeExists, lookupOrganisationUnitByCode } from "src/dataLookup"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 
 const populateForceOwner = (
   hearingOutcome: AnnotatedHearingOutcome,
@@ -79,7 +80,11 @@ const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | 
   }
 }
 
-const enrichForceOwner = (hearingOutcome: AnnotatedHearingOutcome) => {
+const enrichForceOwner: EnrichAhoFunction = (hearingOutcome) => {
+  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ManualForceOwner) {
+    return hearingOutcome
+  }
+
   const forceStationCode = getForceStationCode(hearingOutcome)
   if (forceStationCode) {
     hearingOutcome = populateForceOwner(hearingOutcome, forceStationCode)

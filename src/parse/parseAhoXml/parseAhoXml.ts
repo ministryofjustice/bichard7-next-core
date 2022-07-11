@@ -375,7 +375,8 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     BailConditions: mapBailCondition(xmlCase["br7:HearingDefendant"]["br7:BailConditions"]),
     ReasonForBailConditions: xmlCase["br7:HearingDefendant"]["br7:ReasonForBailConditions"]?.["#text"],
     Offence: mapXmlOffencesToAho(xmlCase["br7:HearingDefendant"]["br7:Offence"])
-  }
+  },
+  ManualForceOwner: xmlCase["br7:ManualForceOwner"]?.["#text"] ? true : undefined
 })
 
 const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
