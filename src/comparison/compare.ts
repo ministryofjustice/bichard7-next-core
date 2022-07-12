@@ -32,6 +32,7 @@ export type ComparisonResult = {
   xmlParsingMatches: boolean
   debugOutput?: ComparisonResultDebugOutput
   file?: string
+  skipped?: boolean
 }
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])

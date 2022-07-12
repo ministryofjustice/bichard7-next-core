@@ -4,6 +4,9 @@ export default interface ComparisonLog {
   initialResult: number
   latestRunAt: string
   latestResult: number
+  skipped?: boolean
+  skippedBy?: string
+  skippedReason?: string
   history: [
     {
       runAt: string

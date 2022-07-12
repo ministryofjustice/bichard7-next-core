@@ -10,6 +10,16 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
+const skippedFile = (file: string): Promise<ComparisonResult> =>
+  Promise.resolve({
+    file,
+    skipped: true,
+    triggersMatch: false,
+    exceptionsMatch: false,
+    xmlOutputMatches: false,
+    xmlParsingMatches: false
+  })
+
 const processRange = async (
   start: string,
   end: string,
@@ -26,8 +36,9 @@ const processRange = async (
   }
 
   const resultsPromises = records.map((record) => {
+    const skip = !!record.skipped
     const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
-    return processFile(s3Url, cache)
+    return skip ? skippedFile(s3Url) : processFile(s3Url, cache)
   })
   return Promise.all(resultsPromises)
 }

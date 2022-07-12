@@ -10,8 +10,9 @@ const toPercent = (quotient: number, total: number): string => `${((quotient / t
 
 const printSummary = (results: ComparisonResult[]): void => {
   const total = results.length
-  const passed = results.filter((result) => resultMatches(result)).length
-  const failed = total - passed
+  const passed = results.filter((result) => !result.skipped && resultMatches(result)).length
+  const skipped = results.filter((result) => result.skipped).length
+  const failed = total - passed - skipped
 
   console.log("\nSummary:")
   console.log(`${results.length} comparisons`)
@@ -22,6 +23,10 @@ const printSummary = (results: ComparisonResult[]): void => {
 
   if (failed > 0) {
     console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total)})`))
+  }
+
+  if (skipped > 0) {
+    console.log(chalk.yellow(`✗ ${skipped} skipped (${toPercent(skipped, total)})`))
   }
 }
 
