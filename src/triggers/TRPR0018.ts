@@ -1,3 +1,4 @@
+import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
@@ -8,16 +9,24 @@ const triggerCode = TriggerCode.TRPR0018
 const findMatchingPncOffence = (
   pncQuery: PncQueryResult,
   caseReference: string | undefined,
-  sequenceNumber: number
+  offence: Offence
 ): PncOffence | undefined => {
+  let courtCaseReference = caseReference
+  if (!courtCaseReference && offence.CourtCaseReferenceNumber) {
+    courtCaseReference = offence.CourtCaseReferenceNumber
+  }
+
+  const sequenceNumber = Number(offence.CriminalProsecutionReference.OffenceReasonSequence)
+
   if (pncQuery.courtCases) {
     return pncQuery.courtCases
-      .find((c) => c.courtCaseReference === caseReference)
+      .find((c) => c.courtCaseReference === courtCaseReference)
       ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
   }
+
   if (pncQuery.penaltyCases) {
     return pncQuery.penaltyCases
-      .find((c) => c.penaltyCaseReference === caseReference)
+      .find((c) => c.penaltyCaseReference === courtCaseReference)
       ?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
   }
 }
@@ -28,14 +37,19 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
   }
   return AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce((triggers: Trigger[], offence) => {
     const ahoCase = AnnotatedHearingOutcome.HearingOutcome.Case
+    if (!offence.CriminalProsecutionReference.OffenceReasonSequence) {
+      return triggers
+    }
+
     const pncOffence = findMatchingPncOffence(
       PncQuery,
       ahoCase.CourtCaseReferenceNumber || ahoCase.PenaltyNoticeCaseReferenceNumber,
-      offence.CourtOffenceSequenceNumber
+      offence
     )
-    if (!pncOffence || !offence.CriminalProsecutionReference.OffenceReasonSequence) {
+    if (!pncOffence) {
       return triggers
     }
+
     const courtStart = offence.ActualOffenceStartDate.StartDate
     const pncStart = pncOffence.offence.startDate
 
