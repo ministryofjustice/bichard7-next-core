@@ -1,5 +1,3 @@
-process.env.NODE_ENV = "test"
-
 import getArgs from "./getArgs"
 import printResult from "./printResult"
 import processFile from "./processFile"
