@@ -1,6 +1,7 @@
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"
+import type { ImportedComparison } from "src/comparison/Types/ImportedComparison"
 import type { Trigger } from "src/types/Trigger"
 import type { TriggerCode } from "src/types/TriggerCode"
 
@@ -13,13 +14,6 @@ type ComparisonFile = {
   incomingMessage: string
   annotatedHearingOutcome: string
   triggers: ComparisonTrigger[]
-}
-
-type ImportedComparison = {
-  file?: string
-  incomingMessage: string
-  annotatedHearingOutcome: string
-  triggers: Trigger[]
 }
 
 export const processTestString = (contents: string, file?: string): ImportedComparison => {

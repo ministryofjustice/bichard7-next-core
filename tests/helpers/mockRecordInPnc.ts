@@ -1,6 +1,10 @@
 import axios from "axios"
+import { format } from "date-fns"
 import merge from "lodash.merge"
+import { isError } from "src/comparison/Types"
+import { parseAhoXml } from "src/parse/parseAhoXml"
 import parseSpiResult from "src/parse/parseSpiResult"
+import type { PncCourtCase, PncQueryResult } from "src/types/PncQueryResult"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/SpiResult"
 import defaults from "./defaults"
 import reformatDate from "./reformatDate"
@@ -110,10 +114,122 @@ const mockRecordInPnc = async (
   await addMock(enquiry.matchRegex, enquiry.response)
 }
 
+const toPncDate = (date: Date): string => format(date, "ddMMyyyy")
+
+const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
+  courtCase.offences.reduce((acc: string[], { offence, adjudication, disposals }) => {
+    const sequenceNumber = offence.sequenceNumber.toString().padStart(3, "0")
+    const offenceCode = offence.cjsOffenceCode.padEnd(8, " ")
+    const startDate = toPncDate(offence.startDate)
+    const startTime = offence.startTime ? offence.startTime.replace(":", "") : "    "
+    const endDate = offence.endDate ? toPncDate(offence.endDate) : "        "
+    const endTime = offence.endTime ? offence.endTime.replace(":", "") : "    "
+
+    acc.push(`<COF>K${sequenceNumber}    12:15:24:1   ${offenceCode}${startDate}${startTime}${endDate}${endTime}</COF>`)
+
+    if (adjudication) {
+      acc.push("<ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ>")
+    }
+
+    if (disposals) {
+      acc.push(
+        "<DIS>I1109000C 100.00                                                                                         </DIS>"
+      )
+    }
+    return acc
+  }, [])
+
+const formatCcr = (pncId: string): string => {
+  const idSegments = pncId.split("/")
+  idSegments[2] = idSegments[2].replace(/^0+/, "")
+  return idSegments.join("/").padEnd(15, " ")
+}
+
+const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult) => {
+  const pncCaseType = "court" // TODO: make this work with penalty cases too
+  const pncCaseElem = pncCaseType === "court" ? "CCR" : "PCR"
+
+  const response = [
+    '<?XML VERSION="1.0" STANDALONE="YES"?>',
+    "<CXE01>",
+    "<GMH>073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772</GMH>",
+    "<ASI>",
+    `<FSC>K${pncQueryResult.forceStationCode}</FSC>`,
+    `<IDS>K00/${pncQueryResult.pncId.slice(-7)} ${pncQueryResult.checkName.padEnd(12, " ")}            </IDS>`
+  ]
+
+  pncQueryResult.courtCases?.forEach((courtCase) => {
+    const padding = pncCaseElem === "CCR" ? "           " : ""
+    response.push(`<${pncCaseElem}>K${formatCcr(courtCase.courtCaseReference)}    ${padding}</${pncCaseElem}>`)
+    response.push(...generateOffenceXml(courtCase))
+  })
+
+  response.push("</ASI>", "<GMT>000008073ENQR004540S</GMT>", "</CXE01>")
+
+  /*
+<?XML VERSION=\"1.0\" STANDALONE=\"YES\"?>
+    <CXE01>
+      <GMH>073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772</GMH>
+      <ASI>
+        <FSC>K01ZD</FSC>
+        <IDS>K00/448754K SEXOFFENCE              </IDS>
+        <CCR>K97/1626/8395Q                 </CCR>
+        <COF>K001    12:15:24:1   SX03001A281120100000            </COF>
+<COF>K002    12:15:24:1   SX03001 281120100000            </COF>
+<COF>K003    12:15:24:1   RT88191 281120100000            </COF>
+      </ASI>
+      <GMT>000008073ENQR004540S</GMT>
+    </CXE01>
+  */
+
+  /*
+    <CXE01>
+        <FSC FSCode="01ZD" IntfcUpdateType="K" />
+        <IDS CRONumber="" Checkname="SEXOFFENCE" IntfcUpdateType="K" PNCID="2000/0448754K" />
+        <CourtCases>
+            <CourtCase>
+                <CCR CourtCaseRefNo="97/1626/008395Q" CrimeOffenceRefNo="" IntfcUpdateType="K" />
+                <Offences>
+                    <Offence>
+                        <COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001A" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003" ReferenceNumber="001" />
+                    </Offence>
+                    <Offence>
+                        <COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Rape a girl aged 13 / 14 / 15 - SOA 2003" ReferenceNumber="002" />
+                    </Offence>
+                    <Offence>
+                        <COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="RT88191" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Use a motor vehicle on a road / public place without third party insurance" ReferenceNumber="003" />
+                    </Offence>
+                </Offences>
+            </CourtCase>
+        </CourtCases>
+    </CXE01>
+    */
+
+  return {
+    matchRegex: "CXE01",
+    response: response.join("\n")
+  }
+}
+
+const mockAhoRecordInPnc = async (messageXml: string): Promise<void> => {
+  const parsedAho = parseAhoXml(messageXml)
+  if (isError(parsedAho)) {
+    throw parsedAho
+  }
+
+  if (!parsedAho.PncQuery) {
+    throw new Error("Pnc Query not found!")
+  }
+
+  const enquiry = mockEnquiryFromPncResult(parsedAho.PncQuery)
+  await clearMocks()
+  await addMock(enquiry.matchRegex, enquiry.response)
+}
+
 const mockEnquiryErrorInPnc = async (): Promise<void> => {
   const enquiryError = mockEnquiryError()
   await clearMocks()
   await addMock("CXE01", enquiryError)
 }
 
-export { mockRecordInPnc, mockEnquiryErrorInPnc, mockEnquiry }
+export { mockRecordInPnc, mockEnquiryErrorInPnc, mockEnquiry, mockAhoRecordInPnc, mockEnquiryFromPncResult }
