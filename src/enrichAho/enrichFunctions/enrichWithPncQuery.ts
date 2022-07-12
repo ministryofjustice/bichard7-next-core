@@ -23,7 +23,13 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 
   hoDefendant.Offence.forEach((offence) => {
     offence.AddedByTheCourt = undefined
-    offence.CourtCaseReferenceNumber = undefined
+    if (offence.CourtCaseReferenceNumber) {
+      offence.CourtCaseReferenceNumber = undefined
+    }
+    if (offence.ManualSequenceNumber === undefined) {
+      offence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+    }
+    offence.Result.forEach((result) => (result.PNCAdjudicationExists = undefined))
   })
 }
 
