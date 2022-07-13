@@ -214,6 +214,7 @@ export interface Br7Offence {
   "br7:CourtOffenceSequenceNumber": Br7TextString
   "br7:ManualSequenceNo"?: Br7LiteralTextString
   "br7:AddedByTheCourt"?: Br7LiteralTextString
+  "br7:ManualCourtCaseReference"?: Br7LiteralTextString
   "br7:CourtCaseReferenceNumber"?: Br7TextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError": boolean
