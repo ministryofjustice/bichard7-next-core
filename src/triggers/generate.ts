@@ -3,6 +3,7 @@ import filterExcludedTriggers from "src/triggers/filterExcludedTriggers"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Trigger } from "src/types/Trigger"
 import { TriggerCode } from "src/types/TriggerCode"
+import deduplicateTriggers from "./deduplicateTriggers"
 
 export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => {
   // Run triggers which don't depend on any other triggers
@@ -23,5 +24,5 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => 
   const triggersExcluded = filteredTriggers.length !== allTriggers.length
   const trigger27 = triggers.TRPR0027(annotatedHearingOutcome, { triggersExcluded })
 
-  return filteredTriggers.concat(trigger27)
+  return deduplicateTriggers(filteredTriggers.concat(trigger27))
 }
