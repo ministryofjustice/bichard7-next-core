@@ -13,15 +13,20 @@ export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => 
       return acc.concat(trigger(annotatedHearingOutcome))
     }, [])
 
+  // Filter triggers which are excluded by specific forces or courts
+  const filteredIndependentTriggers = filterExcludedTriggers(annotatedHearingOutcome, independentTriggers)
+  let triggersExcluded = filteredIndependentTriggers.length !== independentTriggers.length
+
   // Generate TRPR0015 which depends on whether other triggers have been generated
-  const trigger15 = triggers.TRPR0015(annotatedHearingOutcome, { triggers: independentTriggers })
-  const allTriggers = independentTriggers.concat(trigger15)
+  const trigger15 = triggers.TRPR0015(annotatedHearingOutcome, { triggers: filteredIndependentTriggers })
+  const allTriggers = filteredIndependentTriggers.concat(trigger15)
 
   // Filter triggers which are excluded by specific forces or courts
   const filteredTriggers = filterExcludedTriggers(annotatedHearingOutcome, allTriggers)
+  triggersExcluded = triggersExcluded || filteredTriggers.length !== allTriggers.length
 
   // Generate TRPR0027 which depends on whether triggers have been excluded or not
-  const triggersExcluded = filteredTriggers.length !== allTriggers.length
+  // const triggersExcluded = filteredTriggers.length !== allTriggers.length
   const trigger27 = triggers.TRPR0027(annotatedHearingOutcome, { triggersExcluded })
 
   return deduplicateTriggers(filteredTriggers.concat(trigger27))
