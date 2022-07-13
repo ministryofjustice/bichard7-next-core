@@ -19,7 +19,7 @@ const deduplicateBailConditions = (conditions: string[]): string[] =>
 
 const createGeneratedPncName = (defendant: HearingDefendant): string => {
   const personName = defendant.DefendantDetail.PersonName
-  const pncFilename = [personName.FamilyName, ...personName.GivenName].join("/").toUpperCase()
+  const pncFilename = [personName.FamilyName, personName.GivenName.join(" ")].join("/").toUpperCase()
   if (pncFilename.length > GENERATED_PNC_FILENAME_MAX_LENGTH) {
     return pncFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 1) + "+"
   }
