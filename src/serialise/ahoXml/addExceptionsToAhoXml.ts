@@ -1,4 +1,4 @@
-import type { AhoXml, Br7TextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
+import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 
@@ -46,10 +46,19 @@ const pncErrors = [
   ExceptionCode.HO100315
 ]
 
+const reorderAttributesToPutErrorFirst = (element: Partial<Br7TypeTextString>): void => {
+  if ("@_Type" in element) {
+    const type = element["@_Type"]
+    delete element["@_Type"]
+    element["@_Type"] = type
+  }
+}
+
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
   }
+
   for (const e of exceptions) {
     const element = findElement(aho as unknown as GenericAhoXml, e.path)
 
@@ -58,6 +67,7 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
     }
     if (isBr7TextString(element)) {
       element["@_Error"] = e.code
+      reorderAttributesToPutErrorFirst(element)
     }
   }
 

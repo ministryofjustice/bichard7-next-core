@@ -6,15 +6,27 @@ import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
 const resultMatches = (result: ComparisonResult): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
+const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(1)}%`
+
 const printSummary = (results: ComparisonResult[]): void => {
-  const passed = results.filter((result) => resultMatches(result))
+  const total = results.length
+  const passed = results.filter((result) => !result.skipped && resultMatches(result)).length
+  const skipped = results.filter((result) => result.skipped).length
+  const failed = total - passed - skipped
+
   console.log("\nSummary:")
   console.log(`${results.length} comparisons`)
-  if (passed.length > 0) {
-    console.log(chalk.green(`✓ ${passed.length} passed`))
+
+  if (passed > 0) {
+    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total)})`))
   }
-  if (results.length - passed.length > 0) {
-    console.log(chalk.red(`✗ ${results.length - passed.length} failed`))
+
+  if (failed > 0) {
+    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total)})`))
+  }
+
+  if (skipped > 0) {
+    console.log(chalk.yellow(`✗ ${skipped} skipped (${toPercent(skipped, total)})`))
   }
 }
 
@@ -33,10 +45,9 @@ export const printSingleSummary = (result: ComparisonResult): void => {
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
-const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
+const printResult = (result: ComparisonResult | ComparisonResult[], truncate = false): void => {
   if (Array.isArray(result)) {
-    result.forEach(printResult)
-    result.forEach(printSingleSummary)
+    result.forEach((r) => printResult(r, truncate))
     printSummary(result)
     return
   }
@@ -44,6 +55,7 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
   if (!resultMatches(result)) {
     console.log(`\nProcessing file:\n${result.file}\n`)
   }
+
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
@@ -59,13 +71,17 @@ const printResult = (result: ComparisonResult | ComparisonResult[]): void => {
 
     if (!result.xmlOutputMatches) {
       console.log("XML output from Core does not match")
-      console.log(formatXmlDiff(result.debugOutput.xmlOutputDiff))
+      console.log(formatXmlDiff(result.debugOutput.xmlOutputDiff, truncate))
     }
 
     if (!result.xmlParsingMatches) {
       console.log("XML parsing does not match")
-      console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff))
+      console.log(formatXmlDiff(result.debugOutput.xmlParsingDiff, truncate))
     }
+  }
+
+  if (!resultMatches(result)) {
+    printSingleSummary(result)
   }
 }
 

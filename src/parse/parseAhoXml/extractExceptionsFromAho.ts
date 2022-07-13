@@ -36,12 +36,15 @@ export default (xml: string): Exception[] => {
       const results = offence.Result
       if (results && !Array.isArray(results)) {
         offence.Result = [results]
-        offence.Result.forEach((result: Result) => {
-          if (result.ResultQualifierVariable && !Array.isArray(result.ResultQualifierVariable)) {
-            result.ResultQualifierVariable = [result.ResultQualifierVariable]
-          }
-        })
       }
+      offence.Result.forEach((result: Result) => {
+        if (result.ResultQualifierVariable && !Array.isArray(result.ResultQualifierVariable)) {
+          result.ResultQualifierVariable = [result.ResultQualifierVariable]
+        }
+        if (result.NumberSpecifiedInResult && !Array.isArray(result.NumberSpecifiedInResult)) {
+          result.NumberSpecifiedInResult = [result.NumberSpecifiedInResult]
+        }
+      })
     })
   }
   return extract(rawParsedObj)

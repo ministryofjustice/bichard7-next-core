@@ -51,7 +51,7 @@ export const createHOOffence = ({
         DefendantOrOffenderSequenceNumber: "",
         CheckDigit: ""
       },
-      OffenceReasonSequence: sequenceNumber
+      OffenceReasonSequence: sequenceNumber?.toString()
     },
     ActualOffenceStartDate: {
       StartDate: new Date(startDate)

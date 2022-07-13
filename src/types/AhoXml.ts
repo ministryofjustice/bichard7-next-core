@@ -138,6 +138,7 @@ export interface Br7Case {
   "br7:PenaltyNoticeCaseReference"?: Br7TextString
   "br7:RecordableOnPNCindicator"?: Br7LiteralTextString
   "br7:Urgent"?: Br7Urgent
+  "br7:ManualForceOwner"?: Br7TextString
   "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError": boolean
