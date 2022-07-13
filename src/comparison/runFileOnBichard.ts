@@ -18,7 +18,11 @@ const main = async () => {
     login: process.env.MQ_USER || defaults.mqUser,
     password: process.env.MQ_PASSWORD || defaults.mqPassword
   })
-  await mq.sendMessage("COURT_RESULT_INPUT_QUEUE", fileJson.incomingMessage)
+  if (fileJson.incomingMessage.match(/DeliverRequest/)) {
+    await mq.sendMessage("COURT_RESULT_INPUT_QUEUE", fileJson.incomingMessage)
+  } else {
+    await mq.sendMessage("HEARING_OUTCOME_INPUT_QUEUE", fileJson.incomingMessage)
+  }
 }
 
 main()
