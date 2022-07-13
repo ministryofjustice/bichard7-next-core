@@ -83,11 +83,11 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           if (hoOffence.ManualSequenceNumber !== undefined && pncOffenceMatches) {
             if (Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !== pncRefNo) {
               hoOffence.ManualSequenceNumber = undefined
-              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
             }
           } else if (pncOffenceMatches) {
             // must have been automatically matched so set the offence reason sequence.
-            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
           } else {
             // must be an offence added at court, determined as a result of automatic matching
             // overriding failed manual match

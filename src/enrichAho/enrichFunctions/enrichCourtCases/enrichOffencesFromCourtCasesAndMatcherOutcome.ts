@@ -148,7 +148,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         if (Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !== pncRefNo) {
           hoOffence.ManualSequenceNumber = undefined
         }
-        hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+        hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
         hoOffence.CourtCaseReferenceNumber = courtCaseRef
 
         if (offenceIsBreach(hoOffence)) {
