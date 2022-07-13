@@ -31,7 +31,7 @@ const getValidForceOrForceStation = (code: string | undefined): string | undefin
   }
   if (code.length >= 2) {
     forceCode = code.substring(0, 2)
-    if (forceCodeExists(forceCode)) {
+    if (forceCodeExists(forceCode) && forceCode !== "00") {
       if (code.length >= 4) {
         const stationCode = code.substring(2, 4)
         const lookupResult = lookupOrganisationUnitByCode({
@@ -62,6 +62,7 @@ const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | 
     return pncCode
   }
 
+  //TODO: Need to check for an HO100201 exception here and not use PTIURN if there is one
   const ahoCase = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
   const ptiurnCode = getValidForceOrForceStation(ahoCase.PTIURN)
   if (ptiurnCode && !isDummy(ptiurnCode)) {
