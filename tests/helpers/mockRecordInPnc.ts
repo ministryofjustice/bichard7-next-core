@@ -218,7 +218,8 @@ const mockAhoRecordInPnc = async (messageXml: string): Promise<void> => {
   }
 
   if (!parsedAho.PncQuery) {
-    throw new Error("Pnc Query not found!")
+    console.log("Pnc Query not found!")
+    return
   }
 
   const enquiry = mockEnquiryFromPncResult(parsedAho.PncQuery)
