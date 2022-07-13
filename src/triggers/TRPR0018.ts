@@ -31,6 +31,34 @@ const findMatchingPncOffence = (
   }
 }
 
+const datesAreDifferent = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+  const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
+  const pncStartDate = pncOffence.offence.startDate
+  const startDatesMatch = hoStartDate.getTime() === pncStartDate.getTime()
+
+  if (!startDatesMatch) {
+    return true
+  }
+
+  const hoEndDate = hoOffence.ActualOffenceEndDate?.EndDate
+  const pncEndDate = pncOffence.offence.endDate
+  const endDatesMatch = hoEndDate?.getTime() === pncEndDate?.getTime()
+
+  if (endDatesMatch) {
+    return false
+  }
+
+  if (!hoEndDate) {
+    return hoStartDate.getTime() !== pncEndDate?.getTime()
+  }
+
+  if (!pncEndDate) {
+    return hoEndDate?.getTime() !== pncStartDate.getTime()
+  }
+
+  return true
+}
+
 const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) => {
   if (!PncQuery) {
     return []
@@ -50,22 +78,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
       return triggers
     }
 
-    const courtStart = offence.ActualOffenceStartDate.StartDate
-    const pncStart = pncOffence.offence.startDate
-
-    const courtEnd = offence.ActualOffenceEndDate?.EndDate
-    const pncEnd = pncOffence.offence.endDate
-
-    if (!courtStart || !pncStart) {
-      return triggers
-    }
-    if (!courtEnd && !pncEnd && courtStart.getTime() === pncStart.getTime()) {
-      return triggers
-    }
-    if (
-      (courtStart >= pncStart && !courtEnd && pncEnd) ||
-      (courtEnd && pncEnd && (courtStart > pncStart || courtEnd < pncEnd))
-    ) {
+    if (datesAreDifferent(offence, pncOffence)) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
     }
 
