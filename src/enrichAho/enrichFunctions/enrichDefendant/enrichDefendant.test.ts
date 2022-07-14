@@ -23,7 +23,7 @@ describe("enrichDefendant", () => {
     defendant.BailConditions = ["Condition one", "condition   one", "   condition one    ", "Condition two"]
     const result = enrichDefendant(aho)
     expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.BailConditions).toStrictEqual([
-      "   condition one    ",
+      "Condition one",
       "Condition two"
     ])
   })

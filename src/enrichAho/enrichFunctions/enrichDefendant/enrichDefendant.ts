@@ -9,7 +9,9 @@ const deduplicate = (input: string[]): string[] =>
   Object.values(
     input.reduce((acc: KeyValue<string>, val) => {
       const key = val.trim().toLowerCase().replace(/\s+/g, " ")
-      acc[key] = val
+      if (!(key in acc)) {
+        acc[key] = val
+      }
       return acc
     }, {})
   )
