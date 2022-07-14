@@ -17,11 +17,12 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
 
     if (!matcherOutcome && existingOffenceReasonSequence !== undefined) {
       addError(aho, ExceptionCode.HO100333, errorPaths.offence(offenceIndex).reasonSequence)
+      addNullOffenceReasonSequence(hoOffence, true)
       offenceHasError = true
-      hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
       hoOffence.ManualSequenceNumber = undefined
     } else if (hasDuplicateSequenceNumber(hoOffence, hoOffences)) {
       addError(aho, ExceptionCode.HO100311, errorPaths.offence(offenceIndex).reasonSequence)
+      addNullOffenceReasonSequence(hoOffence)
       offenceHasError = true
     } else {
       // Look for a matched PNC offence - either one which actually matches the HO offence, or one
@@ -92,7 +93,9 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
             // must be an offence added at court, determined as a result of automatic matching
             // overriding failed manual match
             hoOffence.AddedByTheCourt = true
-            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence !== null) {
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+            }
             hoOffence.ManualSequenceNumber = undefined
             // By definition adjudication cannot exist on the PNC. This is being set to
             // True if non matching explicit match was specified and the PNC offence contained an adjudication.
@@ -147,7 +150,9 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
         } else {
           // Offence is added by the court"
           hoOffence.AddedByTheCourt = true
-          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+          if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence) {
+            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+          }
           // set the manual sequence no flag to false as it shouldn't be set if the offence is
           // added at court.
           hoOffence.ManualSequenceNumber = undefined

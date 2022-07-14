@@ -140,7 +140,7 @@ const matchOffences = (
     })
   }
 
-  const remainingHoOffences = hoOffences.filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
+  const remainingHoOffences = filteredHoOffences.filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
   const remainingPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
   const hoOffencesByCode = getHoOffencesByOffenceCode(remainingHoOffences)
   const pncOffencesByCode = getPncOffencesByOffenceCode(remainingPncOffences)
@@ -156,7 +156,7 @@ const matchOffences = (
     result = mergeOffenceMatcherOutcomes(result, matchOffencesOutcome)
   })
 
-  const breachOffences = hoOffences
+  const breachOffences = filteredHoOffences
     .filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
     .filter(offenceIsBreach)
 
