@@ -13,6 +13,7 @@ import {
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
 } from "src/dataLookup"
+import { encodeEntitiesProcessor } from "src/lib/encoding"
 import type {
   Adj,
   AhoXml,
@@ -530,21 +531,14 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
   } as AhoXml
 }
 
-const escapeCharacters = (_: string, value: string): string => {
-  if (typeof value === "string") {
-    return value.replace(/&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;")
-  }
-  return value
-}
-
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
   const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
     processEntities: false,
     suppressBooleanAttributes: false,
-    tagValueProcessor: escapeCharacters,
-    attributeValueProcessor: escapeCharacters
+    tagValueProcessor: encodeEntitiesProcessor,
+    attributeValueProcessor: encodeEntitiesProcessor
   }
 
   const builder = new XMLBuilder(options)
