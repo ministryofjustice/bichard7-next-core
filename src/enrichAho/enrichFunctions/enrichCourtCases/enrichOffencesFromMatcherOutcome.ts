@@ -106,7 +106,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           // present when matching against a single court case.
           if (hoOffence.CourtCaseReferenceNumber !== undefined) {
             hoOffence.CourtCaseReferenceNumber = undefined
-            hoOffence.ManualCourtCaseReferenceNumber = undefined
+            hoOffence.ManualCourtCaseReference = undefined
           }
         }
 
@@ -162,7 +162,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
         // present when matching against a single court case.
         if (hoOffence.CourtCaseReferenceNumber !== undefined) {
           hoOffence.CourtCaseReferenceNumber = undefined
-          hoOffence.ManualCourtCaseReferenceNumber = undefined
+          hoOffence.ManualCourtCaseReference = undefined
         }
       }
     }
