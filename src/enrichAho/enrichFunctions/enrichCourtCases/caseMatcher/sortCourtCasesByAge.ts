@@ -17,11 +17,13 @@ export const getCourtCaseSortKey = (pncCase: PncCourtCase): string => {
   return year + sequenceNumber
 }
 
+// Sorts by age ascending
+// i.e. youngest (highest year+sequence) first
 const sortCourtCasesByAge = (cases: PncCourtCase[]): PncCourtCase[] => {
   return [...cases].sort((case1: PncCourtCase, case2: PncCourtCase) => {
     const case1SortKey = getCourtCaseSortKey(case1)
     const case2SortKey = getCourtCaseSortKey(case2)
-    return case1SortKey.localeCompare(case2SortKey)
+    return case2SortKey.localeCompare(case1SortKey)
   })
 }
 

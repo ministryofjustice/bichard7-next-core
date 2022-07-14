@@ -56,9 +56,9 @@ const matchMultipleCases = (
     })
 
     let identicalOffenceFound = false
-    for (const otherPncOffence of identicalOffenceSets.keys()) {
-      if (offencesAreEqual(hoOffence, otherPncOffence, true)) {
-        identicalOffenceSets.get(otherPncOffence)?.push(hoOffence)
+    for (const otherHoOffence of identicalOffenceSets.keys()) {
+      if (offencesAreEqual(hoOffence, otherHoOffence, true)) {
+        identicalOffenceSets.get(otherHoOffence)?.push(hoOffence)
         identicalOffenceFound = true
       }
     }
@@ -96,7 +96,7 @@ const matchMultipleCases = (
     if (
       offences.length > 1 ||
       (offences.length === 1 &&
-        (!matchingPncOffences || matchingPncOffences.length > 1) &&
+        (!matchingPncOffences || matchingPncOffences.length !== 1) &&
         !result.duplicateHoOffences.get(offences[0]))
     ) {
       // Match all the offences in the group against the available PNC offences.
@@ -108,7 +108,7 @@ const matchMultipleCases = (
       offences.forEach((hoOffence) => {
         const matchedOffences = offenceMatchingOutcome.matchedOffences.filter((match) => match.hoOffence === hoOffence)
 
-        if (matchOffences.length === 0) {
+        if (matchedOffences.length === 0) {
           // If it doesn't match a PNC offence, it has been added by the court.
           if (matchingPncOffences && matchingPncOffences.length > 1) {
             // If we had matches before then consider this to be ambiguous and don't consider the
