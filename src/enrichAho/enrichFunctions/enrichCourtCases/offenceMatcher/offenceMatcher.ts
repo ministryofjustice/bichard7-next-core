@@ -93,17 +93,18 @@ const matchOffences = (
   }
 
   const applyMultipleCourtCaseMatchingLogic = !caseReference && !!hearingDate
+  const excludedPncOffences: PncOffence[] = []
   let filteredHoOffences = hoOffences
 
-  if (caseReference) {
-    filteredHoOffences = hoOffences.filter(
-      (hoOffence) =>
-        !hoOffence.CourtCaseReferenceNumber ||
-        (hoOffence.CourtCaseReferenceNumber && hoOffence.CourtCaseReferenceNumber === caseReference)
-    )
-  }
-
   if (attemptManualMatch) {
+    if (caseReference) {
+      filteredHoOffences = hoOffences.filter(
+        (hoOffence) =>
+          !hoOffence.CourtCaseReferenceNumber ||
+          (hoOffence.CourtCaseReferenceNumber && hoOffence.CourtCaseReferenceNumber === caseReference)
+      )
+    }
+
     pncOffences.forEach((pncOffence) => {
       const pncSequence = pncOffence.offence.sequenceNumber
       let matchingExplicitMatch: Offence | undefined = undefined
@@ -114,7 +115,8 @@ const matchOffences = (
           continue
         }
 
-        const hoSequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
+        const sequenceValue = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        const hoSequence = sequenceValue ? Number(sequenceValue) : undefined
         if (hoSequence !== undefined && hoSequence === pncSequence && !matchingExplicitMatch) {
           if (offencesMatch(hoOffence, pncOffence)) {
             matchingExplicitMatch = hoOffence
@@ -135,13 +137,18 @@ const matchOffences = (
           result.matchedOffences.push({ hoOffence, pncOffence })
           result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
           break
+        } else if (applyMultipleCourtCaseMatchingLogic && !pncAdjudicationMatches) {
+          excludedPncOffences.push(pncOffence)
+          break
         }
       }
     })
   }
 
   const remainingHoOffences = filteredHoOffences.filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
-  const remainingPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+  const remainingPncOffences = pncOffences.filter(
+    (pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result) && !excludedPncOffences.includes(pncOffence)
+  )
   const hoOffencesByCode = getHoOffencesByOffenceCode(remainingHoOffences)
   const pncOffencesByCode = getPncOffencesByOffenceCode(remainingPncOffences)
   const offenceCodes = new Set(Object.keys(hoOffencesByCode).concat(Object.keys(pncOffencesByCode)))
