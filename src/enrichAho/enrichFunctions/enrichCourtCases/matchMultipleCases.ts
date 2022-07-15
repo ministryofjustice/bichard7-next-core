@@ -190,9 +190,6 @@ const matchMultipleCases = (
         }
         if (!matchFoundInGroup) {
           unmatchedPNCOffences = false
-          caseMatcherOutcome.courtCaseMatches = caseMatcherOutcome.courtCaseMatches.filter(
-            (match) => match.courtCase !== courtCase
-          )
         }
       }
     }

@@ -137,9 +137,9 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         addError(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
         offenceHasError = true
       } else if (
-        !!hoOffence.ManualCourtCaseReferenceNumber &&
-        hoOffence.ManualCourtCaseReferenceNumber !== "" &&
-        hoOffence.ManualCourtCaseReferenceNumber !== courtCaseRef
+        !!hoOffence.ManualCourtCaseReference &&
+        hoOffence.CourtCaseReferenceNumber !== "" &&
+        hoOffence.CourtCaseReferenceNumber !== courtCaseRef
       ) {
         addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)

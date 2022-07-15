@@ -277,7 +277,6 @@ export const offenceSchema = z.object({
   CommittedOnBail: z.string().refine(validateYesNo),
   CourtCaseReferenceNumber: z.string().or(z.null()).optional(),
   ManualCourtCaseReference: z.boolean().optional(),
-  ManualCourtCaseReferenceNumber: z.string().optional(),
   CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
   ManualSequenceNumber: z.boolean().optional(),
   Result: resultSchema.array().min(0),
