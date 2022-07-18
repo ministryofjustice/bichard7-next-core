@@ -1,5 +1,4 @@
 ---
-
 version: 0.2
 
 phases:
@@ -8,8 +7,8 @@ phases:
       - yum install -y zip
   build:
     commands:
-      - npm i
+      - npm ci
       - npm run build:lambda:prod
       - ./scripts/codebuild_artifacts.sh
-...
+---
 
