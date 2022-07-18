@@ -1,6 +1,16 @@
 import { XMLParser } from "fast-xml-parser"
+import deduplicateExceptions from "src/exceptions/deduplicateExceptions"
+import errorPaths from "src/lib/errorPaths"
 import type { Result } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
+
+// TODO: Use the existing AHO XML parsing to pull out the errors
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+const extractPncExceptions = (aho: any): Exception[] => {
+  const errorMessage = aho.AnnotatedHearingOutcome?.PNCErrorMessage?.["@_classification"]
+
+  return errorMessage ? [{ code: errorMessage, path: errorPaths.case.asn }] : []
+}
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extract = (el: any, path: (string | number)[] = []): Exception[] => {
@@ -47,5 +57,7 @@ export default (xml: string): Exception[] => {
       })
     })
   }
-  return extract(rawParsedObj)
+  const mainExceptions = extract(rawParsedObj)
+  const pncExceptions = extractPncExceptions(rawParsedObj)
+  return deduplicateExceptions(mainExceptions.concat(pncExceptions))
 }
