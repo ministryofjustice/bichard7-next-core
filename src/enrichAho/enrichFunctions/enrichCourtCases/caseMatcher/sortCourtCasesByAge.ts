@@ -1,5 +1,7 @@
 import type { PncCourtCase } from "src/types/PncQueryResult"
 
+const getFullYear = (year: string): string => (year >= "70" ? `19${year}` : `20${year}`)
+
 export const getCourtCaseSortKey = (pncCase: PncCourtCase): string => {
   if (!pncCase.courtCaseReference) {
     return ""
@@ -14,7 +16,7 @@ export const getCourtCaseSortKey = (pncCase: PncCourtCase): string => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const [year, _, sequenceNumber] = referenceParts
 
-  return year + sequenceNumber
+  return getFullYear(year) + sequenceNumber
 }
 
 // Sorts by age ascending

@@ -3,22 +3,22 @@ import createPNCCourtCase from "tests/helpers/generateMockPncCase"
 import sortCourtCasesByAge from "./sortCourtCasesByAge"
 
 describe("sortCourtCasesByAge", () => {
-  it("Should sort two cases and put the case with the earliest year first", () => {
+  it("Should sort two cases and put the case with the latest year first", () => {
     const newPncCase = createPNCCourtCase("09/11FG/568235X")
     const oldPncCase = createPNCCourtCase("05/11FG/568235X")
 
-    const sortedCases = sortCourtCasesByAge([newPncCase, oldPncCase])
+    const sortedCases = sortCourtCasesByAge([oldPncCase, newPncCase])
 
-    expect(sortedCases).toStrictEqual([oldPncCase, newPncCase])
+    expect(sortedCases).toStrictEqual([newPncCase, oldPncCase])
   })
 
-  it("Should sort two cases and put the case with the lowest sequence number first", () => {
+  it("Should sort two cases and put the case with the lowest sequence number last", () => {
     const newPncCase = createPNCCourtCase("09/11FG/568235X")
     const oldPncCase = createPNCCourtCase("09/11FG/123235X")
 
     const sortedCases = sortCourtCasesByAge([newPncCase, oldPncCase])
 
-    expect(sortedCases).toStrictEqual([oldPncCase, newPncCase])
+    expect(sortedCases).toStrictEqual([newPncCase, oldPncCase])
   })
 
   it("Should leave to identical cases in the same order", () => {
@@ -37,7 +37,7 @@ describe("sortCourtCasesByAge", () => {
 
     const sortedCases = sortCourtCasesByAge([goodCase, malformedCase])
 
-    expect(sortedCases).toStrictEqual([malformedCase, goodCase])
+    expect(sortedCases).toStrictEqual([goodCase, malformedCase])
   })
 
   it("Should sort multiple cases", () => {
@@ -48,6 +48,6 @@ describe("sortCourtCasesByAge", () => {
 
     const sortedCases = sortCourtCasesByAge([olderCase, newestCase, oldestCase, newerCase])
 
-    expect(sortedCases).toStrictEqual([oldestCase, olderCase, newerCase, newestCase])
+    expect(sortedCases).toStrictEqual([newestCase, newerCase, olderCase, oldestCase])
   })
 })
