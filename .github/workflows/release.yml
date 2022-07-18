@@ -44,11 +44,14 @@ jobs:
         with:
           node-version: "16.13.1"
 
-      - name: Install NPM dependencies
+      - name: Install npm dependencies
         run: npm ci
 
       - name: Build output package
         run: npm run build
+
+      - name: Add registry config for npm
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Publish output package
         run: npm publish
