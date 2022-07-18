@@ -38,7 +38,7 @@ const validateRemandStatus = (data: string): boolean => remandStatus.some((el) =
 
 const validateAsn = (data: string): boolean => {
   const asn = new Asn(data)
-  return !!data.match(/[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}/) && asn.checkCharacter() === data.slice(-1)
+  return !!data.match(/^[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}$/) && asn.checkCharacter() === data.slice(-1)
 }
 
 const validateDummyAsn = (data: string): boolean => dummyAsnPatterns.some((p) => data.match(p))

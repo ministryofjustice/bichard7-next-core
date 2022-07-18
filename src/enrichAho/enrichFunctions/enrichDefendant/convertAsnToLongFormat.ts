@@ -8,10 +8,7 @@ const convertAsnToLongFormat = (shortAsn: string) => {
 
   const shortFormatLength = shortAsnNoSlashes.length
   if (shortFormatLength >= ASN_MIN_VALID_LENGTH) {
-    const id = parseInt(
-      shortAsnNoSlashes.substring(ASN_NN_INDEX, shortFormatLength - 1).replace(/[^\d]/g, ""),
-      10
-    ).toString()
+    const id = Number(shortAsnNoSlashes.substring(ASN_NN_INDEX, shortFormatLength - 1)).toString()
     if (id !== "NaN") {
       const header = shortAsnNoSlashes.substring(0, ASN_NN_INDEX)
       const footer = shortAsnNoSlashes.substring(shortFormatLength - 1)

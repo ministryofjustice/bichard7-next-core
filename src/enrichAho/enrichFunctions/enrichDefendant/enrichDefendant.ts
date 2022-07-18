@@ -9,7 +9,9 @@ const deduplicate = (input: string[]): string[] =>
   Object.values(
     input.reduce((acc: KeyValue<string>, val) => {
       const key = val.trim().toLowerCase().replace(/\s+/g, " ")
-      acc[key] = val
+      if (!(key in acc)) {
+        acc[key] = val
+      }
       return acc
     }, {})
   )
@@ -19,7 +21,7 @@ const deduplicateBailConditions = (conditions: string[]): string[] =>
 
 const createGeneratedPncName = (defendant: HearingDefendant): string => {
   const personName = defendant.DefendantDetail.PersonName
-  const pncFilename = [personName.FamilyName, ...personName.GivenName].join("/").toUpperCase()
+  const pncFilename = [personName.FamilyName, personName.GivenName.join(" ")].join("/").toUpperCase()
   if (pncFilename.length > GENERATED_PNC_FILENAME_MAX_LENGTH) {
     return pncFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 1) + "+"
   }

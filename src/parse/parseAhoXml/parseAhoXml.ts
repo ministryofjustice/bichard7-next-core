@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import decimalPlaces from "src/lib/decimalPlaces"
+import { decodeEntitiesProcessor } from "src/lib/encoding"
 import extractExceptionsFromAho from "src/parse/parseAhoXml/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "src/parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
@@ -318,6 +319,9 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
       ? xmlOffence["br7:ManualSequenceNo"]["#text"] === "Y"
       : undefined,
     AddedByTheCourt: xmlOffence["br7:AddedByTheCourt"] ? xmlOffence["br7:AddedByTheCourt"]["#text"] === "Y" : undefined,
+    ManualCourtCaseReference: xmlOffence["br7:ManualCourtCaseReference"]
+      ? xmlOffence["br7:ManualCourtCaseReference"]?.["#text"] === "Y"
+      : undefined,
     CourtCaseReferenceNumber: mapCourtCaseReferenceNumber(xmlOffence["br7:CourtCaseReferenceNumber"]),
     Result: mapXmlResultsToAho(xmlOffence["br7:Result"]),
     RecordableOnPNCindicator: offenceRecordableOnPnc(xmlOffence),
@@ -422,8 +426,11 @@ export default (xml: string): AnnotatedHearingOutcome | Error => {
     ignoreAttributes: false,
     parseTagValue: false,
     parseAttributeValue: false,
+    processEntities: false,
     trimValues: false,
-    alwaysCreateTextNode: true
+    alwaysCreateTextNode: true,
+    attributeValueProcessor: decodeEntitiesProcessor,
+    tagValueProcessor: decodeEntitiesProcessor
   }
 
   const parser = new XMLParser(options)

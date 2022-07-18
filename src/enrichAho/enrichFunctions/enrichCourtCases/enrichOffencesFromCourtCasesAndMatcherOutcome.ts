@@ -137,9 +137,9 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         addError(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
         offenceHasError = true
       } else if (
-        !!hoOffence.ManualCourtCaseReferenceNumber &&
-        hoOffence.ManualCourtCaseReferenceNumber !== "" &&
-        hoOffence.ManualCourtCaseReferenceNumber !== courtCaseRef
+        !!hoOffence.ManualCourtCaseReference &&
+        hoOffence.CourtCaseReferenceNumber !== "" &&
+        hoOffence.CourtCaseReferenceNumber !== courtCaseRef
       ) {
         addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
@@ -148,7 +148,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         if (Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !== pncRefNo) {
           hoOffence.ManualSequenceNumber = undefined
         }
-        hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+        hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
         hoOffence.CourtCaseReferenceNumber = courtCaseRef
 
         if (offenceIsBreach(hoOffence)) {

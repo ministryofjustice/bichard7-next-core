@@ -67,7 +67,12 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  getRange(start: string, end: string, success?: boolean): PromiseResult<ComparisonLog[] | Error | null> {
+  async getRange(
+    start: string,
+    end: string,
+    success?: boolean,
+    ExclusiveStartKey?: DynamoDB.DocumentClient.Key
+  ): Promise<ComparisonLog[]> {
     let failureFilter = {}
     let failureValue = {}
     if (success !== undefined) {
@@ -75,7 +80,7 @@ export default class DynamoGateway {
       failureValue = { ":latestResultValue": success ? 1 : 0 }
     }
 
-    return this.client
+    const result = await this.client
       .query({
         TableName: this.tableName,
         IndexName: "initialRunAtIndex",
@@ -89,10 +94,18 @@ export default class DynamoGateway {
           ":partitionKeyValue": "_",
           ...failureValue
         },
-        ...failureFilter
+        ...failureFilter,
+        ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
       })
       .promise()
-      .then((result) => result.Items as ComparisonLog[])
-      .catch((error) => <Error>error)
+
+    const items = result.Items as unknown as ComparisonLog[]
+
+    if (result.LastEvaluatedKey && items) {
+      const result2 = await this.getRange(start, end, success, result.LastEvaluatedKey)
+      return items.concat(result2)
+    } else {
+      return items
+    }
   }
 }

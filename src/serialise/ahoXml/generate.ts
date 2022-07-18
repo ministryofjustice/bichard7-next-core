@@ -13,6 +13,7 @@ import {
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
 } from "src/dataLookup"
+import { encodeEntitiesProcessor } from "src/lib/encoding"
 import type {
   Adj,
   AhoXml,
@@ -321,11 +322,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
       "ds:OffenceReasonSequence":
         offence.CriminalProsecutionReference.OffenceReasonSequence === null
           ? {}
-          : optionalText(
-              offence.ManualSequenceNumber
-                ? offence.CriminalProsecutionReference.OffenceReasonSequence?.toString()
-                : offence.CriminalProsecutionReference.OffenceReasonSequence?.toString().padStart(3, "0")
-            ),
+          : optionalText(offence.CriminalProsecutionReference.OffenceReasonSequence),
       "@_SchemaVersion": "2.0"
     },
     "ds:OffenceCategory": optionalLiteral(offence.OffenceCategory, LiteralType.OffenceCategory),
@@ -356,6 +353,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "ds:ConvictionDate": optionalFormatText(offence.ConvictionDate, "yyyy-MM-dd"),
     "br7:CommittedOnBail": { "#text": offence.CommittedOnBail, "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
+    "br7:ManualCourtCaseReference": optionalLiteral(offence.ManualCourtCaseReference, LiteralType.YesNo),
     "br7:ManualSequenceNo": optionalLiteral(offence.ManualSequenceNumber, LiteralType.YesNo),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
     "br7:CourtCaseReferenceNumber":
@@ -533,21 +531,14 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
   } as AhoXml
 }
 
-const escapeCharacters = (_: string, value: string): string => {
-  if (typeof value === "string") {
-    return value.replace(/&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;")
-  }
-  return value
-}
-
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
   const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
     processEntities: false,
     suppressBooleanAttributes: false,
-    tagValueProcessor: escapeCharacters,
-    attributeValueProcessor: escapeCharacters
+    tagValueProcessor: encodeEntitiesProcessor,
+    attributeValueProcessor: encodeEntitiesProcessor
   }
 
   const builder = new XMLBuilder(options)

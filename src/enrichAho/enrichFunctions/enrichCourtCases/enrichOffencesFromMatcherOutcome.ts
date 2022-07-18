@@ -17,11 +17,12 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
 
     if (!matcherOutcome && existingOffenceReasonSequence !== undefined) {
       addError(aho, ExceptionCode.HO100333, errorPaths.offence(offenceIndex).reasonSequence)
+      addNullOffenceReasonSequence(hoOffence, true)
       offenceHasError = true
-      hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
       hoOffence.ManualSequenceNumber = undefined
     } else if (hasDuplicateSequenceNumber(hoOffence, hoOffences)) {
       addError(aho, ExceptionCode.HO100311, errorPaths.offence(offenceIndex).reasonSequence)
+      addNullOffenceReasonSequence(hoOffence)
       offenceHasError = true
     } else {
       // Look for a matched PNC offence - either one which actually matches the HO offence, or one
@@ -83,16 +84,18 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           if (hoOffence.ManualSequenceNumber !== undefined && pncOffenceMatches) {
             if (Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !== pncRefNo) {
               hoOffence.ManualSequenceNumber = undefined
-              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
             }
           } else if (pncOffenceMatches) {
             // must have been automatically matched so set the offence reason sequence.
-            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString()
+            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
           } else {
             // must be an offence added at court, determined as a result of automatic matching
             // overriding failed manual match
             hoOffence.AddedByTheCourt = true
-            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence !== null) {
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+            }
             hoOffence.ManualSequenceNumber = undefined
             // By definition adjudication cannot exist on the PNC. This is being set to
             // True if non matching explicit match was specified and the PNC offence contained an adjudication.
@@ -103,7 +106,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           // present when matching against a single court case.
           if (hoOffence.CourtCaseReferenceNumber !== undefined) {
             hoOffence.CourtCaseReferenceNumber = undefined
-            hoOffence.ManualCourtCaseReferenceNumber = undefined
+            hoOffence.ManualCourtCaseReference = undefined
           }
         }
 
@@ -147,7 +150,9 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
         } else {
           // Offence is added by the court"
           hoOffence.AddedByTheCourt = true
-          hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+          if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence) {
+            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+          }
           // set the manual sequence no flag to false as it shouldn't be set if the offence is
           // added at court.
           hoOffence.ManualSequenceNumber = undefined
@@ -157,7 +162,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
         // present when matching against a single court case.
         if (hoOffence.CourtCaseReferenceNumber !== undefined) {
           hoOffence.CourtCaseReferenceNumber = undefined
-          hoOffence.ManualCourtCaseReferenceNumber = undefined
+          hoOffence.ManualCourtCaseReference = undefined
         }
       }
     }

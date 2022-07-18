@@ -23,7 +23,7 @@ describe("enrichDefendant", () => {
     defendant.BailConditions = ["Condition one", "condition   one", "   condition one    ", "Condition two"]
     const result = enrichDefendant(aho)
     expect(result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.BailConditions).toStrictEqual([
-      "   condition one    ",
+      "Condition one",
       "Condition two"
     ])
   })
@@ -35,7 +35,7 @@ describe("enrichDefendant", () => {
       const result = enrichDefendant(aho)
       expect(
         result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail.GeneratedPNCFilename
-      ).toBe("SMITH/JOHN/WILLIAM")
+      ).toBe("SMITH/JOHN WILLIAM")
     })
 
     it("should truncate the PNC file name if it is too long", () => {
@@ -49,7 +49,7 @@ describe("enrichDefendant", () => {
       const pncFilename =
         result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail.GeneratedPNCFilename
       expect(pncFilename).toHaveLength(54)
-      expect(pncFilename).toBe("SMITH/JOHN/WILLIAM/REALLYREALLYREALLYREALLYREALLYREAL+")
+      expect(pncFilename).toBe("SMITH/JOHN WILLIAM REALLYREALLYREALLYREALLYREALLYREAL+")
     })
   })
 })

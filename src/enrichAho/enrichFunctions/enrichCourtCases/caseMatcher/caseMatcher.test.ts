@@ -64,7 +64,7 @@ describe("caseMatcher", () => {
     const outcome = matchCases(hoOffences, pncMessage)
 
     expect(outcome.courtCaseMatches).toHaveLength(2)
-    expect(outcome.courtCaseMatches[0].courtCase).toStrictEqual(pncCases[0])
+    expect(outcome.courtCaseMatches[0].courtCase).toStrictEqual(pncCases[1])
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })
 
@@ -159,8 +159,8 @@ describe("caseMatcher", () => {
     const outcome = matchCases(hoOffences, pncMessage)
 
     expect(outcome.courtCaseMatches).toHaveLength(2)
-    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[0])
-    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[0])
     expect(outcome.penaltyCaseMatches).toHaveLength(0)
   })
 
@@ -191,8 +191,8 @@ describe("caseMatcher", () => {
 
     const outcome = matchCases(hoOffences, createPNCMessage(pncCases))
     expect(outcome.courtCaseMatches).toHaveLength(2)
-    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[0])
-    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[0])
   })
 
   it("should testExplicitMatchTwoCasesNeitherMatchesNoOtherMatches() throws Exception", () => {
@@ -248,7 +248,7 @@ describe("caseMatcher", () => {
 
     const outcome = matchCases(hoOffences, createPNCMessage(pncCases))
     expect(outcome.courtCaseMatches).toHaveLength(2)
-    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[0])
-    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[0].courtCase).toEqual(pncCases[1])
+    expect(outcome.courtCaseMatches[1].courtCase).toEqual(pncCases[0])
   })
 })
