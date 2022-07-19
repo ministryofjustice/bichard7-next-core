@@ -21,14 +21,20 @@ const parseAsn = (asn: string): ParsedAsn => {
     offset = 1
   }
 
+  const validLength = asn.length >= 20
+  const sequenceNumber = validLength ? asn.substring(8 + offset, 8 + offset + sequenceNumberLength).toUpperCase() : null
+  const checkDigit = validLength
+    ? asn.substring(8 + offset + sequenceNumberLength, 8 + offset + sequenceNumberLength + 1).toUpperCase()
+    : null
+
   return {
     year: asn.substring(0, 2),
     topLevelCode, // if 21 chars long it will include the third char as topLevelCode
     secondLevelCode: asn.substring(2 + offset, 4 + offset).toUpperCase(),
     thirdLevelCode: asn.substring(4 + offset, 6 + offset).toUpperCase(),
     bottomLevelCode: asn.substring(6 + offset, 8 + offset).toUpperCase(),
-    sequenceNumber: asn.substring(8 + offset, 8 + offset + sequenceNumberLength).toUpperCase(),
-    checkDigit: asn.substring(8 + offset + sequenceNumberLength, 8 + offset + sequenceNumberLength + 1).toUpperCase()
+    sequenceNumber,
+    checkDigit
   }
 }
 

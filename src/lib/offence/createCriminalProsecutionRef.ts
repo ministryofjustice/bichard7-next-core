@@ -16,8 +16,8 @@ export default (
         parsedAsn.thirdLevelCode
       }${parsedAsn.bottomLevelCode}`
     },
-    DefendantOrOffenderSequenceNumber: parsedAsn.sequenceNumber,
-    CheckDigit: parsedAsn.checkDigit
+    DefendantOrOffenderSequenceNumber: parsedAsn.sequenceNumber ?? "",
+    CheckDigit: parsedAsn.checkDigit ?? ""
   },
   ...(parsedOffenceReason && { OffenceReason: parsedOffenceReason })
 })

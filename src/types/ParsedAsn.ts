@@ -4,6 +4,6 @@ export type ParsedAsn = {
   secondLevelCode: string
   thirdLevelCode: string
   bottomLevelCode: string
-  sequenceNumber: string
-  checkDigit: string
+  sequenceNumber: string | null
+  checkDigit: string | null
 }
