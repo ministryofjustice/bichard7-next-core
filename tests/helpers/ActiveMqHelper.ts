@@ -1,11 +1,47 @@
 import type { Client } from "stompit"
 import { ConnectFailover } from "stompit"
+import type Subscription from "stompit/lib/client/Subscription"
 
 type Options = {
   url: string
   login: string
   password: string
 }
+
+const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<string | null> =>
+  new Promise((resolve, reject) => {
+    // eslint-disable-next-line prefer-const
+    let timeout: NodeJS.Timeout
+    // eslint-disable-next-line prefer-const
+    let subscription: Subscription
+    const callback: Client.MessageCallback = (error1, message) => {
+      if (error1) {
+        reject(error1)
+      } else {
+        clearTimeout(timeout)
+        message.readString("utf-8", (error2, buffer) => {
+          if (error2) {
+            reject(error2)
+          } else if (!buffer) {
+            reject(new Error("No buffer returned for message"))
+          } else {
+            client.ack(message)
+            try {
+              subscription.unsubscribe()
+            } catch (e) {
+              console.error(e)
+            }
+            resolve(buffer.toString())
+          }
+        })
+      }
+    }
+    subscription = client.subscribe({ destination: queueName, ack: "client" }, callback)
+    timeout = setTimeout(() => {
+      subscription.unsubscribe()
+      resolve(null)
+    }, timeoutAmount)
+  })
 
 export default class ActiveMqHelper {
   private url: string
@@ -79,5 +115,26 @@ export default class ActiveMqHelper {
         }
       })
     })
+  }
+
+  async getMessages(queueName: string, timeout = 500): Promise<string[]> {
+    const messages = []
+    const client = await this.connectIfRequired()
+    let waiting = true
+
+    while (waiting) {
+      // eslint-disable-next-line no-await-in-loop
+      const message = await getMessage(client, queueName, timeout)
+      if (message) {
+        messages.push(message)
+      } else {
+        waiting = false
+      }
+    }
+    return messages
+  }
+
+  disconnect(): undefined | void {
+    return this.client?.disconnect()
   }
 }

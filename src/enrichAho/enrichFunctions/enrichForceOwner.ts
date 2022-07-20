@@ -20,9 +20,22 @@ const populateForceOwner = (
   return hearingOutcome
 }
 
-const isDummy = (code: string): boolean => {
-  return !!code.match(/^00(N|P)P/) || !!code.match(/^[0-9]{2}00/)
-}
+const dummyPtiurnRegexes = [/^00(N|P)P/, /^[0-9]{2}00/]
+
+const isDummyPtiurn = (code: string): boolean => dummyPtiurnRegexes.some((regex) => !!code.match(regex))
+
+const dummyAsnRegexes = [
+  /0800(N|P)P01[0-9]{11}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{4}NRPR[0-9A-Z]{12}/,
+  /[0-9]{2}12LN00[0-9]{11}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{2}00NP00[0-9]{11}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{2}6300[0-9]{13}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{2}06SS[0-9A-Z]{2}[0-9]{11}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{2}00XX[0-9A-Z]{2}[0-9]{11}[A-HJ-NP-RT-Z]{1}/,
+  /[0-9]{2}50(11|12|21|41|42|43|OF|SJ)[0-9A-Z]{2}[0-9]{11}[A-HJ-NP-RT-Z]{1}/
+]
+
+const isDummyAsn = (code: string): boolean => dummyAsnRegexes.some((regex) => !!code.match(regex))
 
 const getValidForceOrForceStation = (code: string | undefined): string | undefined => {
   let forceCode: string
@@ -65,13 +78,13 @@ const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | 
   //TODO: Need to check for an HO100201 exception here and not use PTIURN if there is one
   const ahoCase = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
   const ptiurnCode = getValidForceOrForceStation(ahoCase.PTIURN)
-  if (ptiurnCode && !isDummy(ptiurnCode)) {
+  if (ptiurnCode && !isDummyPtiurn(ptiurnCode)) {
     return ptiurnCode
   }
 
   const asn = ahoCase.HearingDefendant.ArrestSummonsNumber
   const asnCode = getValidForceOrForceStation(asn.substring(asn.length - 18))
-  if (asnCode && !isDummy(asnCode)) {
+  if (asnCode && !isDummyAsn(asn)) {
     return asnCode
   }
 

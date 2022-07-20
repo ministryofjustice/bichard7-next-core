@@ -1,3 +1,4 @@
+import errorPaths from "src/lib/errorPaths"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
@@ -54,20 +55,32 @@ const reorderAttributesToPutErrorFirst = (element: Partial<Br7TypeTextString>): 
   }
 }
 
+const addException = (aho: AhoXml, exception: Exception): void | Error => {
+  const element = findElement(aho as unknown as GenericAhoXml, exception.path)
+  if (element instanceof Error) {
+    return element
+  }
+  if (isBr7TextString(element)) {
+    element["@_Error"] = exception.code
+    reorderAttributesToPutErrorFirst(element)
+  }
+}
+
+const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
+  exceptions.some((e) => !pncErrors.includes(e.code) && e.path.join("/") === errorPaths.case.asn.join("/"))
+
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
   }
 
   for (const e of exceptions) {
-    const element = findElement(aho as unknown as GenericAhoXml, e.path)
-
-    if (element instanceof Error) {
-      return element
+    if (pncErrors.includes(e.code)) {
+      continue
     }
-    if (isBr7TextString(element)) {
-      element["@_Error"] = e.code
-      reorderAttributesToPutErrorFirst(element)
+    const result = addException(aho, e)
+    if (result instanceof Error) {
+      return result
     }
   }
 
@@ -76,6 +89,9 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
     const pncError = exceptions.find((e) => pncErrors.includes(e.code))
     if (pncError) {
       aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
+      if (!hasNonPncAsnExceptions(exceptions) || pncError.code === ExceptionCode.HO100315) {
+        addException(aho, pncError)
+      }
     }
   }
 }

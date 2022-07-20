@@ -4,6 +4,7 @@ import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { ZodIssue } from "zod"
 import * as exceptions from "./exceptions"
+import pncExceptions from "./pncExceptions"
 
 const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
   if (issue.message in ExceptionCode) {
@@ -38,5 +39,7 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   // Generate HO100323 which depends on HO100322
   const ho100323 = exceptions.HO100323(aho, { exceptions: generatedExceptions })
 
-  return generatedExceptions.concat(ho100300, ho100323)
+  const pncGeneratedExceptions = pncExceptions(aho)
+
+  return generatedExceptions.concat(ho100300, ho100323, pncGeneratedExceptions)
 }

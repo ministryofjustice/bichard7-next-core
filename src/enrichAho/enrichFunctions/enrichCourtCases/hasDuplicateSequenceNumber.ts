@@ -9,7 +9,7 @@ const hasDuplicateSequenceNumber = (offence: Offence, allOffences: Offence[]): b
         offence !== hoOffence &&
         (courtCaseRef === undefined || courtCaseRef === hoOffence.CourtCaseReferenceNumber) &&
         hoOffence.ManualSequenceNumber !== undefined &&
-        hoOffence.CriminalProsecutionReference.OffenceReasonSequence === sequenceNumber
+        Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) === Number(sequenceNumber)
     )
   }
   return false
