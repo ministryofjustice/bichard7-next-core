@@ -119,23 +119,31 @@ const toPncDate = (date: Date): string => format(date, "ddMMyyyy")
 const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
   courtCase.offences.reduce((acc: string[], { offence, adjudication, disposals }) => {
     const sequenceNumber = offence.sequenceNumber.toString().padStart(3, "0")
+    const acpoOffenceCode = offence.acpoOffenceCode.padEnd(13, " ")
     const offenceCode = offence.cjsOffenceCode.padEnd(8, " ")
     const startDate = toPncDate(offence.startDate)
     const startTime = offence.startTime ? offence.startTime.replace(":", "") : "    "
     const endDate = offence.endDate ? toPncDate(offence.endDate) : "        "
     const endTime = offence.endTime ? offence.endTime.replace(":", "") : "    "
 
-    acc.push(`<COF>K${sequenceNumber}    12:15:24:1   ${offenceCode}${startDate}${startTime}${endDate}${endTime}</COF>`)
+    acc.push(
+      `<COF>K${sequenceNumber}    ${acpoOffenceCode}${offenceCode}${startDate}${startTime}${endDate}${endTime}</COF>`
+    )
 
     if (adjudication) {
-      acc.push("<ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ>")
+      const dateOfSentence = toPncDate(adjudication.sentenceDate)
+      const plea = adjudication.plea.padEnd(13, " ")
+      const verdict = adjudication.verdict.padEnd(13, " ")
+      acc.push(`<ADJ>I${plea}${verdict} ${dateOfSentence}0000 </ADJ>`)
     }
 
-    if (disposals) {
+    disposals?.forEach((disposal) => {
+      const type = disposal.type.toString().padStart(4, "0")
+      const duration = (disposal.qtyDuration ?? "").padEnd(4, " ")
       acc.push(
-        "<DIS>I1109000C 100.00                                                                                         </DIS>"
+        `<DIS>I${type}${duration} 100.00                                                                                         </DIS>`
       )
-    }
+    })
     return acc
   }, [])
 
@@ -148,14 +156,16 @@ const formatCcr = (pncId: string): string => {
 const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult) => {
   const pncCaseType = "court" // TODO: make this work with penalty cases too
   const pncCaseElem = pncCaseType === "court" ? "CCR" : "PCR"
-
+  const splitPncId = pncQueryResult.pncId.split("/")
+  const pncYear = splitPncId[0].slice(2)
+  const pncId = splitPncId[1].slice(-7)
   const response = [
     '<?XML VERSION="1.0" STANDALONE="YES"?>',
     "<CXE01>",
     "<GMH>073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772</GMH>",
     "<ASI>",
     `<FSC>K${pncQueryResult.forceStationCode}</FSC>`,
-    `<IDS>K00/${pncQueryResult.pncId.slice(-7)} ${pncQueryResult.checkName.padEnd(12, " ")}            </IDS>`
+    `<IDS>K${pncYear}/${pncId} ${pncQueryResult.checkName.padEnd(12, " ")}            </IDS>`
   ]
 
   pncQueryResult.courtCases?.forEach((courtCase) => {
