@@ -6,7 +6,7 @@ import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
 const resultMatches = (result: ComparisonResult): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
-const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(1)}%`
+const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
 const printSummary = (results: ComparisonResult[]): void => {
   const total = results.length
@@ -18,15 +18,15 @@ const printSummary = (results: ComparisonResult[]): void => {
   console.log(`${results.length} comparisons`)
 
   if (passed > 0) {
-    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total)})`))
+    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total - skipped)})`))
   }
 
   if (failed > 0) {
-    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total)})`))
+    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total - skipped)})`))
   }
 
   if (skipped > 0) {
-    console.log(chalk.yellow(`✗ ${skipped} skipped (${toPercent(skipped, total)})`))
+    console.log(chalk.yellow(`✗ ${skipped} skipped`))
   }
 }
 
@@ -49,6 +49,10 @@ const printResult = (result: ComparisonResult | ComparisonResult[], truncate = f
   if (Array.isArray(result)) {
     result.forEach((r) => printResult(r, truncate))
     printSummary(result)
+    return
+  }
+
+  if (result.skipped) {
     return
   }
 

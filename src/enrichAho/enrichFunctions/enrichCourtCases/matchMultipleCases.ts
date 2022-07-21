@@ -190,6 +190,10 @@ const matchMultipleCases = (
         }
         if (!matchFoundInGroup) {
           unmatchedPNCOffences = false
+          // YUK: Mutate the case matcher outcome by removing a court case match if there was no match found
+          caseMatcherOutcome.courtCaseMatches = caseMatcherOutcome.courtCaseMatches.filter(
+            (match) => match.courtCase !== courtCase
+          )
         }
       }
     }
