@@ -69,18 +69,23 @@ const addException = (aho: AhoXml, exception: Exception): void | Error => {
 const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
   exceptions.some((e) => !pncErrors.includes(e.code) && e.path.join("/") === errorPaths.case.asn.join("/"))
 
+const isPncAsnException = (exception: Exception): boolean =>
+  pncErrors.includes(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
+
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
   }
 
   for (const e of exceptions) {
-    if (pncErrors.includes(e.code)) {
-      continue
-    }
-    const result = addException(aho, e)
-    if (result instanceof Error) {
-      return result
+    if (
+      !isPncAsnException(e) ||
+      (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
+    ) {
+      const result = addException(aho, e)
+      if (result instanceof Error) {
+        return result
+      }
     }
   }
 
@@ -89,9 +94,6 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
     const pncError = exceptions.find((e) => pncErrors.includes(e.code))
     if (pncError) {
       aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
-      if (!hasNonPncAsnExceptions(exceptions) || pncError.code === ExceptionCode.HO100315) {
-        addException(aho, pncError)
-      }
     }
   }
 }
