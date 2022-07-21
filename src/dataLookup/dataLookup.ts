@@ -91,7 +91,9 @@ const lookupAlcoholLevelMethodByCjsCode = (cjsCode: string): DataLookupResult | 
 
 const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number | string): OrganisationUnit | undefined =>
   organisationUnit.find(
-    (orgUnit) => orgUnit.thirdLevelPsaCode.toUpperCase() === String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
+    (orgUnit) =>
+      orgUnit.thirdLevelPsaCode.padStart(4, "0").toUpperCase() ===
+      String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
 const forceCodeExists = (code: string): boolean => organisationUnit.some((ou) => ou.secondLevelCode === code)

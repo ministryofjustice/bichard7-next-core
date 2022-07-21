@@ -5,11 +5,12 @@ import {
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
 } from "src/dataLookup"
+import extractCodesFromOU from "src/dataLookup/extractCodesFromOU"
 import decimalPlaces from "src/lib/decimalPlaces"
 import getOrganisationUnit from "src/lib/organisationUnit/getOrganisationUnit"
 import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "src/types/Plea"
-import type { ResultedCaseMessageParsedXml, SpiOffence, SpiResult } from "src/types/SpiResult"
+import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "src/types/SpiResult"
 import type { CjsVerdict } from "src/types/Verdict"
 import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
@@ -45,6 +46,23 @@ const createDuration = (durationUnit: string, durationValue: number): Duration =
   DurationUnit: !durationUnit || durationUnit === "." ? durationUnits.SESSIONS : durationUnit,
   DurationLength: durationValue
 })
+
+const populateNextHearingDetails = (result: Result, nextHearingDetails: SpiNextHearingDetails): void => {
+  result.NextHearingDate = nextHearingDetails.DateOfHearing ? new Date(nextHearingDetails.DateOfHearing) : undefined
+  result.NextHearingTime = nextHearingDetails.TimeOfHearing
+  // TODO: Currently Bichard looks this up by Third Level PSA code, but the data we receive is actully an org unit code
+  if (nextHearingDetails.CourtHearingLocation !== undefined) {
+    const codeNeedsPadding =
+      nextHearingDetails.CourtHearingLocation.length > 0 && nextHearingDetails.CourtHearingLocation.length < 4
+    const paddedCode = codeNeedsPadding
+      ? nextHearingDetails.CourtHearingLocation.padEnd(4, "0")
+      : nextHearingDetails.CourtHearingLocation
+    const ou = lookupOrganisationUnitByThirdLevelPsaCode(paddedCode)
+    if (ou) {
+      result.NextResultSourceOrganisation = extractCodesFromOU(ou)
+    }
+  }
+}
 
 export default class {
   private baResultCodeQualifierHasBeenExcluded = false
@@ -90,6 +108,10 @@ export default class {
 
     if (typeof spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody === "string") {
       result.ReasonForOffenceBailConditions = spiCourtIndividualDefendant.ReasonForBailConditionsOrCustody
+    }
+
+    if (spiNextHearing && spiNextHearing.NextHearingDetails) {
+      populateNextHearingDetails(result, spiNextHearing.NextHearingDetails)
     }
 
     if (spiOutcome) {
