@@ -9,6 +9,11 @@ import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "src/types/S
 import defaults from "./defaults"
 import reformatDate from "./reformatDate"
 
+type PncMock = {
+  matchRegex: string
+  response: string
+}
+
 const extractDates = (offence: OffenceParsedXml) => {
   const startDate = reformatDate(offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate)
   let endDate: string
@@ -133,8 +138,8 @@ const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
     if (adjudication) {
       const dateOfSentence = toPncDate(adjudication.sentenceDate)
       const plea = adjudication.plea.padEnd(13, " ")
-      const verdict = adjudication.verdict.padEnd(13, " ")
-      acc.push(`<ADJ>I${plea}${verdict} ${dateOfSentence}0000 </ADJ>`)
+      const verdict = adjudication.verdict.padEnd(14, " ")
+      acc.push(`<ADJ>I${plea}${verdict}${dateOfSentence}0000 </ADJ>`)
     }
 
     disposals?.forEach((disposal) => {
@@ -153,7 +158,7 @@ const formatCcr = (pncId: string): string => {
   return idSegments.join("/").padEnd(15, " ")
 }
 
-const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult) => {
+const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult): PncMock => {
   const pncCaseType = "court" // TODO: make this work with penalty cases too
   const pncCaseElem = pncCaseType === "court" ? "CCR" : "PCR"
   const splitPncId = pncQueryResult.pncId.split("/")
@@ -221,26 +226,25 @@ const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult) => {
   }
 }
 
+const mockEnquiryErrorInPnc = async (): Promise<void> => {
+  const enquiryError = mockEnquiryError()
+  await clearMocks()
+  await addMock("CXE01", enquiryError)
+}
+
 const mockAhoRecordInPnc = async (messageXml: string): Promise<void> => {
   const parsedAho = parseAhoXml(messageXml)
   if (isError(parsedAho)) {
     throw parsedAho
   }
 
-  if (!parsedAho.PncQuery) {
-    console.log("Pnc Query not found!")
-    return
+  if (parsedAho.PncQuery) {
+    const mock = mockEnquiryFromPncResult(parsedAho.PncQuery)
+    await clearMocks()
+    await addMock(mock.matchRegex, mock.response)
+  } else {
+    mockEnquiryErrorInPnc()
   }
-
-  const enquiry = mockEnquiryFromPncResult(parsedAho.PncQuery)
-  await clearMocks()
-  await addMock(enquiry.matchRegex, enquiry.response)
-}
-
-const mockEnquiryErrorInPnc = async (): Promise<void> => {
-  const enquiryError = mockEnquiryError()
-  await clearMocks()
-  await addMock("CXE01", enquiryError)
 }
 
 export { mockRecordInPnc, mockEnquiryErrorInPnc, mockEnquiry, mockAhoRecordInPnc, mockEnquiryFromPncResult }
