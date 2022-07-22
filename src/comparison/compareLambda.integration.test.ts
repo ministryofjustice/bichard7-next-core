@@ -20,10 +20,12 @@ const s3Config = createS3Config()
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
-const uploadFile = async (fileName: string) => {
+const uploadFile = async (fileName: string, dataVersion = standingDataVersion) => {
   const client = new S3Client(s3Config)
-  const Body = await fs.promises.readFile(fileName)
-  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body })
+  const body = await fs.promises.readFile(fileName)
+  const jsonBody = JSON.parse(body)
+  jsonBody.dataVersion = dataVersion
+  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body: jsonBody })
   return client.send(command)
 }
 
