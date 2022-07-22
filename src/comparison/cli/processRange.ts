@@ -1,6 +1,7 @@
 import type { ComparisonResult } from "src/comparison/compare"
 import createDynamoDbConfig from "src/comparison/createDynamoDbConfig"
 import DynamoGateway from "src/comparison/DynamoGateway/DynamoGateway"
+import getFile from "src/comparison/getFile"
 import processFile from "./processFile"
 
 process.env.COMPARISON_TABLE_NAME = process.env.COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
@@ -10,15 +11,19 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
-const skippedFile = (file: string): Promise<ComparisonResult> =>
-  Promise.resolve({
-    file,
-    skipped: true,
-    triggersMatch: false,
-    exceptionsMatch: false,
-    xmlOutputMatches: false,
-    xmlParsingMatches: false
-  })
+const skippedFile = (file: string): ComparisonResult => ({
+  file,
+  skipped: true,
+  triggersMatch: false,
+  exceptionsMatch: false,
+  xmlOutputMatches: false,
+  xmlParsingMatches: false
+})
+
+type FileLookup = {
+  fileName: string
+  contents?: string
+}
 
 const processRange = async (
   start: string,
@@ -35,12 +40,27 @@ const processRange = async (
     throw new Error("Error fetching records from Dynamo")
   }
 
-  const resultsPromises = records.map((record) => {
+  const filePromises = records.map(async (record): Promise<FileLookup> => {
     const skip = !!record.skipped
     const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
-    return skip ? skippedFile(s3Url) : processFile(s3Url, cache)
+    if (skip) {
+      return { fileName: s3Url }
+    }
+    const contents = await getFile(s3Url, cache)
+    return { fileName: s3Url, contents }
   })
-  return Promise.all(resultsPromises)
+
+  const files = await Promise.all(filePromises)
+
+  const results = []
+  for (const { fileName, contents } of files) {
+    if (contents) {
+      results.push(processFile(contents, fileName))
+    } else {
+      results.push(skippedFile(fileName))
+    }
+  }
+  return results
 }
 
 export default processRange
