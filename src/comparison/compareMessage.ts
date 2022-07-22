@@ -38,7 +38,7 @@ export type ComparisonResult = {
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 const sortTriggers = (exceptions: Trigger[]): Trigger[] => orderBy(exceptions, ["code", "offenceSequenceNumber"])
 
-const compare = (input: string, debug = false): ComparisonResult => {
+const compareMessage = (input: string, debug = false): ComparisonResult => {
   const { incomingMessage, annotatedHearingOutcome, triggers } = processTestString(input.replace(/Â£/g, "£"))
   const sortedTriggers = sortTriggers(triggers)
   const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
@@ -78,4 +78,4 @@ const compare = (input: string, debug = false): ComparisonResult => {
   }
 }
 
-export default compare
+export default compareMessage
