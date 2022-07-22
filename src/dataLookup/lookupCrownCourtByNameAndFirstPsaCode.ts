@@ -1,8 +1,9 @@
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
+import requireStandingData from "src/lib/requireStandingData"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"
+const { organisationUnit } = requireStandingData()
 
 const crownCourtTopLevelCode = "C"
 

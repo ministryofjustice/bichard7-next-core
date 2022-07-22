@@ -1,4 +1,28 @@
-import {
+import type {
+  ActualOffenceDate,
+  CourtType,
+  DefendantPresentAtHearing,
+  DurationType,
+  DurationUnit,
+  Gender,
+  ModeOfTrialReason,
+  OffenceCategory,
+  OffenceInitiation,
+  PncDisposal,
+  ResultClass,
+  ResultCode,
+  ResultQualifierCode,
+  Summons,
+  TargetCourtType,
+  TypeOfHearing,
+  VehicleCode,
+  Verdict,
+  YesNo
+} from "bichard7-next-data-latest/dist/types/types"
+import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import type { SpiPlea } from "src/types/Plea"
+import requireStandingData from "src/lib/requireStandingData"
+const {
   actualOffenceDate,
   alcoholLevelMethod,
   courtType,
@@ -23,30 +47,7 @@ import {
   vehicleCode,
   verdict,
   yesNo
-} from "@moj-bichard7-developers/bichard7-next-data"
-import type {
-  ActualOffenceDate,
-  CourtType,
-  DefendantPresentAtHearing,
-  DurationType,
-  DurationUnit,
-  Gender,
-  ModeOfTrialReason,
-  OffenceCategory,
-  OffenceInitiation,
-  PncDisposal,
-  ResultClass,
-  ResultCode,
-  ResultQualifierCode,
-  Summons,
-  TargetCourtType,
-  TypeOfHearing,
-  VehicleCode,
-  Verdict,
-  YesNo
-} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
-import type { SpiPlea } from "src/types/Plea"
+} = requireStandingData()
 
 interface DataLookupResult {
   cjsCode: string

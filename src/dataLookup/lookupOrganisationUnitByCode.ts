@@ -1,6 +1,7 @@
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import requireStandingData from "src/lib/requireStandingData"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+const { organisationUnit } = requireStandingData()
 
 const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnitCodes): OrganisationUnit | undefined => {
   if (!orgUnit) {
