@@ -22,6 +22,7 @@ const skippedFile = (file: string): ComparisonResult => ({
 
 type FileLookup = {
   fileName: string
+  date: Date
   contents?: string
 }
 
@@ -43,19 +44,20 @@ const processRange = async (
   const filePromises = records.map(async (record): Promise<FileLookup> => {
     const skip = !!record.skipped
     const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
+    const date = new Date(record.initialRunAt)
     if (skip) {
-      return { fileName: s3Url }
+      return { fileName: s3Url, date }
     }
     const contents = await getFile(s3Url, cache)
-    return { fileName: s3Url, contents }
+    return { fileName: s3Url, contents, date }
   })
 
   const files = await Promise.all(filePromises)
 
   const results = []
-  for (const { fileName, contents } of files) {
+  for (const { fileName, contents, date } of files) {
     if (contents) {
-      results.push(processFile(contents, fileName))
+      results.push(processFile(contents, fileName, date))
     } else {
       results.push(skippedFile(fileName))
     }

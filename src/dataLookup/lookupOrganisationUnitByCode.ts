@@ -1,14 +1,13 @@
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
 import requireStandingData from "src/lib/requireStandingData"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-const { organisationUnit } = requireStandingData()
 
 const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnitCodes): OrganisationUnit | undefined => {
   if (!orgUnit) {
     return undefined
   }
 
-  const result = organisationUnit.filter(
+  const result = requireStandingData().organisationUnit.filter(
     (unit) =>
       unit.topLevelCode.toUpperCase() === (orgUnit.TopLevelCode?.toUpperCase() ?? "") &&
       unit.secondLevelCode.toUpperCase() === orgUnit.SecondLevelCode?.toUpperCase() &&

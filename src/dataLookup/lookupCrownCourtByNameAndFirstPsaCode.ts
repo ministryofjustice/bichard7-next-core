@@ -3,13 +3,12 @@ import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"
-const { organisationUnit } = requireStandingData()
 
 const crownCourtTopLevelCode = "C"
 
 const lookupCrownCourtByNameAndFirstPsaCode = (courtName: string): OrganisationUnitCodes | undefined => {
   const trimmedCourtName = courtName.split("Crown Court")[0].trim()
-  const found = organisationUnit.find(
+  const found = requireStandingData().organisationUnit.find(
     (unit) =>
       unit.topLevelCode.toLowerCase() === crownCourtTopLevelCode.toLowerCase() &&
       unit.thirdLevelName &&

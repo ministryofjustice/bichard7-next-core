@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
@@ -38,12 +39,23 @@ export type ComparisonResult = {
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 const sortTriggers = (exceptions: Trigger[]): Trigger[] => orderBy(exceptions, ["code", "offenceSequenceNumber"])
 
-const compare = (input: string, debug = false): ComparisonResult => {
-  const { incomingMessage, annotatedHearingOutcome, triggers } = processTestString(input.replace(/Â£/g, "£"))
+type CompareOptions = {
+  defaultStandingDataVersion?: string
+}
+
+const compare = (
+  input: string,
+  debug = false,
+  { defaultStandingDataVersion }: CompareOptions = {}
+): ComparisonResult => {
+  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = processTestString(
+    input.replace(/Â£/g, "£")
+  )
   const sortedTriggers = sortTriggers(triggers)
   const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
   const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
   const pncGateway = new MockPncGateway(response, pncQueryTime)
+  ;(global as any).dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
   const coreResult = CoreHandler(incomingMessage, pncGateway)
   const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
   const sortedCoreTriggers = sortTriggers(coreResult.triggers)
