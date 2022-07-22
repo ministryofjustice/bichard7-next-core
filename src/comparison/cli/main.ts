@@ -1,3 +1,4 @@
+import getFile from "src/comparison/getFile"
 import getArgs from "./getArgs"
 import printResult from "./printResult"
 import processFile from "./processFile"
@@ -7,7 +8,8 @@ const main = async () => {
   const args = getArgs()
   const filter = args.filter ?? "failure"
   if ("file" in args && args.file) {
-    const result = await processFile(args.file, !!args.cache)
+    const contents = await getFile(args.file, !!args.cache)
+    const result = processFile(contents, args.file)
     printResult(result, !args.noTruncate)
   } else if ("start" in args || "end" in args) {
     if ("start" in args && "end" in args && args.start && args.end) {
