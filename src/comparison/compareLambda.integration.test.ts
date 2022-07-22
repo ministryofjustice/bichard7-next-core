@@ -3,7 +3,7 @@ jest.setTimeout(10000)
 import "tests/helpers/setEnvironmentVariables"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
-import lambda from "src/comparison/lambda"
+import lambda from "src/comparison/compareLambda"
 import MockS3 from "tests/helpers/MockS3"
 import MockDynamo from "tests/helpers/MockDynamo"
 import { ZodError } from "zod"

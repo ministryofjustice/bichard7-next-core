@@ -90,4 +90,4 @@ const compare = (
   }
 }
 
-export default compare
+export default compareMessage
