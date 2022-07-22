@@ -1,10 +1,7 @@
-import * as standingDataPackageInfo from "@moj-bichard7-developers/bichard7-next-data/package.json"
 import type { ComparisonResult } from "./compare"
 import type DynamoGateway from "./DynamoGateway/DynamoGateway"
 import type { PromiseResult } from "./Types"
 import { isError } from "./Types"
-
-const { version: standingDataVersion } = standingDataPackageInfo
 
 const logInDynamoDb = async (
   s3Path: string,
@@ -30,7 +27,6 @@ const logInDynamoDb = async (
     s3Path,
     initialRunAt: date.toISOString(),
     initialResult: latestResult,
-    initialStandingDataVersion: standingDataVersion,
     history: [],
     version: 1
   }
@@ -41,7 +37,6 @@ const logInDynamoDb = async (
   record.history.push({
     runAt: date.toISOString(),
     result: record.latestResult,
-    standingDataVersion,
     details: {
       triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
       exceptionsMatch: comparisonResult.exceptionsMatch ? 1 : 0,

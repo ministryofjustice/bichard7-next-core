@@ -1,4 +1,3 @@
-import * as standingDataPackageInfo from "@moj-bichard7-developers/bichard7-next-data/package.json"
 import MockDynamo from "tests/helpers/MockDynamo"
 import "tests/helpers/setEnvironmentVariables"
 import createDynamoDbConfig from "./createDynamoDbConfig"
@@ -10,7 +9,6 @@ import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 
-const { version: standingDataVersion } = standingDataPackageInfo
 const config = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(config)
 const comparisonResult = {
@@ -53,12 +51,10 @@ describe("logInDynamoDb", () => {
       s3Path: "DummyPath",
       initialRunAt: mockedDate.toISOString(),
       initialResult: 1,
-      initialStandingDataVersion: standingDataVersion,
       history: [
         {
           runAt: mockedDate.toISOString(),
           result: 1,
-          standingDataVersion,
           details: {
             triggersMatch: 1,
             exceptionsMatch: 1,
@@ -82,12 +78,10 @@ describe("logInDynamoDb", () => {
         s3Path: "DummyPath",
         initialRunAt: initialDateString,
         initialResult: 0,
-        initialStandingDataVersion: standingDataVersion,
         history: [
           {
             runAt: mockedDate.toISOString(),
             result: 0,
-            standingDataVersion,
             details: {
               triggersMatch: 0,
               exceptionsMatch: 1,
@@ -113,12 +107,10 @@ describe("logInDynamoDb", () => {
       s3Path: "DummyPath",
       initialRunAt: initialDateString,
       initialResult: 0,
-      initialStandingDataVersion: standingDataVersion,
       history: [
         {
           runAt: mockedDate.toISOString(),
           result: 0,
-          standingDataVersion,
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
@@ -129,7 +121,6 @@ describe("logInDynamoDb", () => {
         {
           runAt: mockedDate.toISOString(),
           result: 1,
-          standingDataVersion,
           details: {
             triggersMatch: 1,
             exceptionsMatch: 1,
