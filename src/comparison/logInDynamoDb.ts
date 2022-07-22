@@ -4,6 +4,8 @@ import type DynamoGateway from "./DynamoGateway/DynamoGateway"
 import type { PromiseResult } from "./Types"
 import { isError } from "./Types"
 
+const { version: standingDataVersion } = standingDataPackageInfo
+
 const logInDynamoDb = async (
   s3Path: string,
   comparisonResult: ComparisonResult,
@@ -30,6 +32,7 @@ const logInDynamoDb = async (
     s3Path,
     initialRunAt: initialDate,
     initialResult: latestResult,
+    initialStandingDataVersion: standingDataVersion,
     history: [],
     version: 1
   }
@@ -40,6 +43,7 @@ const logInDynamoDb = async (
   record.history.push({
     runAt: getOneResult?.Item ? date : initialDate,
     result: record.latestResult,
+    standingDataVersion,
     details: {
       triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
       exceptionsMatch: comparisonResult.exceptionsMatch ? 1 : 0,
