@@ -1,5 +1,5 @@
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import requireStandingData from "src/lib/requireStandingData"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 
 const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnitCodes): OrganisationUnit | undefined => {
@@ -7,7 +7,7 @@ const lookupOrganisationUnitByCode = (orgUnit: OrganisationUnitCodes): Organisat
     return undefined
   }
 
-  const result = organisationUnit.filter(
+  const result = requireStandingData().organisationUnit.filter(
     (unit) =>
       unit.topLevelCode.toUpperCase() === (orgUnit.TopLevelCode?.toUpperCase() ?? "") &&
       unit.secondLevelCode.toUpperCase() === orgUnit.SecondLevelCode?.toUpperCase() &&

@@ -1,5 +1,6 @@
-import { excludedTriggerConfig } from "@moj-bichard7-developers/bichard7-next-data"
 import { TriggerCode } from "src/types/TriggerCode"
+import requireStandingData from "./requireStandingData"
+const { excludedTriggerConfig } = requireStandingData()
 
 if (process.env.NODE_ENV === "test" && "01" in excludedTriggerConfig) {
   delete excludedTriggerConfig["01"]

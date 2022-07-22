@@ -1,4 +1,4 @@
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
 import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 
 const extractCodesFromOU = (ou: OrganisationUnit): OrganisationUnitCodes => ({

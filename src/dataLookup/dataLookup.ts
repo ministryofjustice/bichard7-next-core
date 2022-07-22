@@ -1,29 +1,3 @@
-import {
-  actualOffenceDate,
-  alcoholLevelMethod,
-  courtType,
-  defendantPresentAtHearing,
-  durationType,
-  durationUnit,
-  gender,
-  modeOfTrialReason,
-  offenceCategory,
-  offenceInitiation,
-  organisationUnit,
-  pleaStatus,
-  pncDisposal,
-  qualifier,
-  remandStatus,
-  resultClass,
-  resultCode,
-  resultQualifierCode,
-  summons,
-  targetCourtType,
-  typeOfHearing,
-  vehicleCode,
-  verdict,
-  yesNo
-} from "@moj-bichard7-developers/bichard7-next-data"
 import type {
   ActualOffenceDate,
   CourtType,
@@ -44,8 +18,9 @@ import type {
   VehicleCode,
   Verdict,
   YesNo
-} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+} from "bichard7-next-data-latest/dist/types/types"
+import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import requireStandingData from "src/lib/requireStandingData"
 import type { SpiPlea } from "src/types/Plea"
 
 interface DataLookupResult {
@@ -58,93 +33,98 @@ interface DataLookupResult {
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  remandStatus.find((x) => x.spiCode === spiCode)
+  requireStandingData().remandStatus.find((x) => x.spiCode === spiCode)
 
 const lookupRemandStatusByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
-  remandStatus.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().remandStatus.find((x) => x.cjsCode === cjsCode)
 
 const lookupPleaStatusBySpiCode = (plea: SpiPlea): DataLookupResult | undefined =>
-  pleaStatus.find((x) => x.spiCode === plea?.toString())
+  requireStandingData().pleaStatus.find((x) => x.spiCode === plea?.toString())
 
 const lookupPleaStatusByCjsCode = (plea: string): DataLookupResult | undefined =>
-  pleaStatus.find((x) => x.cjsCode === plea?.toString())
+  requireStandingData().pleaStatus.find((x) => x.cjsCode === plea?.toString())
 
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  verdict.find((x) => x.spiCode === spiCode)
+  requireStandingData().verdict.find((x) => x.spiCode === spiCode)
 
-const lookupVerdictByCjsCode = (cjsCode: string): Verdict | undefined => verdict.find((x) => x.cjsCode === cjsCode)
+const lookupVerdictByCjsCode = (cjsCode: string): Verdict | undefined =>
+  requireStandingData().verdict.find((x) => x.cjsCode === cjsCode)
 
 const lookupModeOfTrialReasonBySpiCode = (spiCode: string): ModeOfTrialReason | undefined =>
-  modeOfTrialReason.find((x) => x.spiCode === spiCode)
+  requireStandingData().modeOfTrialReason.find((x) => x.spiCode === spiCode)
 
 const lookupModeOfTrialReasonByCjsCode = (cjsCode: string): ModeOfTrialReason | undefined =>
-  modeOfTrialReason.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().modeOfTrialReason.find((x) => x.cjsCode === cjsCode)
 
 const lookupQualifierCodeByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
-  qualifier.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().qualifier.find((x) => x.cjsCode === cjsCode)
 
 const lookupAlcoholLevelMethodBySpiCode = (spiCode: string): DataLookupResult | undefined =>
-  alcoholLevelMethod.find((x) => x.spiCode === spiCode)
+  requireStandingData().alcoholLevelMethod.find((x) => x.spiCode === spiCode)
 
 const lookupAlcoholLevelMethodByCjsCode = (cjsCode: string): DataLookupResult | undefined =>
-  alcoholLevelMethod.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().alcoholLevelMethod.find((x) => x.cjsCode === cjsCode)
 
 const lookupOrganisationUnitByThirdLevelPsaCode = (thirdLevelPsaCode: number | string): OrganisationUnit | undefined =>
-  organisationUnit.find(
+  requireStandingData().organisationUnit.find(
     (orgUnit) =>
       orgUnit.thirdLevelPsaCode.padStart(4, "0").toUpperCase() ===
       String(thirdLevelPsaCode).padStart(4, "0").toUpperCase()
   )
 
-const forceCodeExists = (code: string): boolean => organisationUnit.some((ou) => ou.secondLevelCode === code)
+const forceCodeExists = (code: string): boolean =>
+  requireStandingData().organisationUnit.some((ou) => ou.secondLevelCode === code)
 
 const lookupResultCodeByCjsCode = (cjsCode: string): ResultCode | undefined =>
-  resultCode.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().resultCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposal | undefined =>
-  pncDisposal.find((x) => x.cjsCode === cjsCode.toString())
+  requireStandingData().pncDisposal.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupCourtTypeByCjsCode = (cjsCode: string): CourtType | undefined =>
-  courtType.find((x) => x.cjsCode === cjsCode.toString())
+  requireStandingData().courtType.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupTypeOfHearingByCjsCode = (cjsCode: string): TypeOfHearing | undefined =>
-  typeOfHearing.find((x) => x.cjsCode === cjsCode.toString())
+  requireStandingData().typeOfHearing.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupTargetCourtTypeByCjsCode = (cjsCode: string): TargetCourtType | undefined =>
-  targetCourtType.find((x) => x.cjsCode === cjsCode.toString())
+  requireStandingData().targetCourtType.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupResultClassByCjsCode = (cjsCode: string): ResultClass | undefined =>
-  resultClass.find((x) => x.cjsCode === cjsCode.toString())
+  requireStandingData().resultClass.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupResultQualifierCodeByCjsCode = (cjsCode: string): ResultQualifierCode | undefined =>
-  resultQualifierCode.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().resultQualifierCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupDurationTypeByCjsCode = (cjsCode: string): DurationType | undefined =>
-  durationType.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().durationType.find((x) => x.cjsCode === cjsCode)
 
 const lookupDurationUnitByCjsCode = (cjsCode: string): DurationUnit | undefined =>
-  durationUnit.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().durationUnit.find((x) => x.cjsCode === cjsCode)
 
 const lookupOffenceCategoryByCjsCode = (cjsCode: string): OffenceCategory | undefined =>
-  offenceCategory.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().offenceCategory.find((x) => x.cjsCode === cjsCode)
 
 const lookupOffenceInitiationCodeByCjsCode = (cjsCode: string): OffenceInitiation | undefined =>
-  offenceInitiation.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().offenceInitiation.find((x) => x.cjsCode === cjsCode)
 
-const lookupSummonsCodeByCjsCode = (cjsCode: string): Summons | undefined => summons.find((x) => x.cjsCode === cjsCode)
+const lookupSummonsCodeByCjsCode = (cjsCode: string): Summons | undefined =>
+  requireStandingData().summons.find((x) => x.cjsCode === cjsCode)
 
 const lookupOffenceDateCodeByCjsCode = (cjsCode: string): ActualOffenceDate | undefined =>
-  actualOffenceDate.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().actualOffenceDate.find((x) => x.cjsCode === cjsCode)
 
-const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined => yesNo.find((x) => x.cjsCode === cjsCode)
+const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined =>
+  requireStandingData().yesNo.find((x) => x.cjsCode === cjsCode)
 
 const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
-  vehicleCode.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().vehicleCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupDefendantPresentAtHearingByCjsCode = (cjsCode: string): DefendantPresentAtHearing | undefined =>
-  defendantPresentAtHearing.find((x) => x.cjsCode === cjsCode)
+  requireStandingData().defendantPresentAtHearing.find((x) => x.cjsCode === cjsCode)
 
-const lookupGenderByCjsCode = (cjsCode: string): Gender | undefined => gender.find((g) => g.cjsCode === cjsCode)
+const lookupGenderByCjsCode = (cjsCode: string): Gender | undefined =>
+  requireStandingData().gender.find((g) => g.cjsCode === cjsCode)
 
 export {
   lookupRemandStatusBySpiCode,

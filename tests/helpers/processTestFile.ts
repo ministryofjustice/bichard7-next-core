@@ -13,11 +13,14 @@ type ComparisonTrigger = {
 type ComparisonFile = {
   incomingMessage: string
   annotatedHearingOutcome: string
+  standingDataVersion: string
   triggers: ComparisonTrigger[]
 }
 
 export const processTestString = (contents: string, file?: string): ImportedComparison => {
-  const { incomingMessage, annotatedHearingOutcome, triggers } = JSON.parse(contents) as ComparisonFile
+  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = JSON.parse(
+    contents
+  ) as ComparisonFile
   return {
     file,
     triggers: orderBy(
@@ -31,7 +34,8 @@ export const processTestString = (contents: string, file?: string): ImportedComp
       ["code", "offenceSequenceNumber"]
     ),
     incomingMessage,
-    annotatedHearingOutcome
+    annotatedHearingOutcome,
+    standingDataVersion
   }
 }
 

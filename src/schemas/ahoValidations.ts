@@ -1,4 +1,3 @@
-import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -18,9 +17,11 @@ import {
   lookupYesNoByCjsCode
 } from "src/dataLookup"
 import Asn from "src/lib/Asn"
+import requireStandingData from "src/lib/requireStandingData"
 import type { NumberSpecifiedInResult } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import { z } from "zod"
+const { remandStatus } = requireStandingData()
 
 const dummyAsnPatterns = [
   "0800(N|P)P01[0-9]{11}[A-HJ-NP-RT-Z]{1}",

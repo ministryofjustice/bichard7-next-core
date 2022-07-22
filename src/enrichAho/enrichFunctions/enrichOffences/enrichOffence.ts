@@ -1,4 +1,4 @@
-import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OffenceCode } from "bichard7-next-data-latest/dist/types/types"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 
 const enrichOffence = (
