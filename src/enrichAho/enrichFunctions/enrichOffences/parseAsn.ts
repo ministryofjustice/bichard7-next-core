@@ -28,7 +28,7 @@ const parseAsn = (asn: string): ParsedAsn => {
     : null
 
   return {
-    year: asn.substring(0, 2),
+    year: asn.length >= 2 ? asn.substring(0, 2) : null,
     topLevelCode, // if 21 chars long it will include the third char as topLevelCode
     secondLevelCode: asn.substring(2 + offset, 4 + offset).toUpperCase(),
     thirdLevelCode: asn.substring(4 + offset, 6 + offset).toUpperCase(),

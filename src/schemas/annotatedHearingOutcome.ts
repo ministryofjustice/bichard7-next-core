@@ -91,7 +91,7 @@ export const organisationUnitSchema = z.object({
 })
 
 export const defendantOrOffenderSchema = z.object({
-  Year: z.string(),
+  Year: z.string().or(z.null()),
   OrganisationUnitIdentifierCode: organisationUnitSchema,
   DefendantOrOffenderSequenceNumber: z.string(),
   CheckDigit: z.string()

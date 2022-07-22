@@ -1,5 +1,5 @@
 export type ParsedAsn = {
-  year: string
+  year: string | null
   topLevelCode?: string
   secondLevelCode: string
   thirdLevelCode: string
