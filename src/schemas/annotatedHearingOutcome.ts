@@ -309,7 +309,7 @@ export const hearingDefendantSchema = z.object({
 })
 
 export const caseSchema = z.object({
-  PTIURN: z.string().regex(/[A-Z0-9]{4}[0-9]{3,7}/, ExceptionCode.HO100201),
+  PTIURN: z.string().regex(/^[A-Z0-9]{4}[0-9]{3,7}$/, ExceptionCode.HO100201),
   CaseMarker: z.string().min(0, ExceptionCode.HO100202).max(255, ExceptionCode.HO100202).optional(), // Note: This doesn't seem to ever be set in the original code
   CPSOrganisation: organisationUnitSchema.optional(),
   PreChargeDecisionIndicator: z.boolean(),
