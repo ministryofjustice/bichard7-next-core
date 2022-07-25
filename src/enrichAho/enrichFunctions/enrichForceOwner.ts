@@ -1,5 +1,6 @@
 import { forceCodeExists, lookupOrganisationUnitByCode } from "src/dataLookup"
 import logger from "src/lib/logging"
+import { validateAsn } from "src/schemas/ahoValidations"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
 
@@ -83,9 +84,12 @@ const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | 
   }
 
   const asn = ahoCase.HearingDefendant.ArrestSummonsNumber
-  const asnCode = getValidForceOrForceStation(asn.substring(asn.length - 18))
-  if (asnCode && !isDummyAsn(asn)) {
-    return asnCode
+  const asnValid = validateAsn(asn)
+  if (asnValid) {
+    const asnCode = getValidForceOrForceStation(asn.substring(asn.length - 18))
+    if (asnCode && !isDummyAsn(asn)) {
+      return asnCode
+    }
   }
 
   const courtHearingLocation = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation
