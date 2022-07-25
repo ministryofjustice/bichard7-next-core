@@ -62,8 +62,8 @@ const resultTextPatternRegex: KeyValue<RegExp> = {
     /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/
 }
 
-const grimsby = lookupOrganisationUnitByThirdLevelPsaCode("0441")
-const newport = lookupOrganisationUnitByThirdLevelPsaCode("0425")
+const grimsby = lookupOrganisationUnitByThirdLevelPsaCode("0425")
+const newport = lookupOrganisationUnitByThirdLevelPsaCode("0441")
 
 const crownCourtNameMappingOverrides: KeyValue<OrganisationUnitCodes | undefined> = {
   "Newport (South Wales) Crown Court": newport ? extractCodesFromOU(newport) : undefined,
