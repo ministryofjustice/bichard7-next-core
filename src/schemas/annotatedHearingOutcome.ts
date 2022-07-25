@@ -84,9 +84,9 @@ export const offenceReasonSchema = z.discriminatedUnion("__type", [
 
 export const organisationUnitSchema = z.object({
   TopLevelCode: z.string().optional(),
-  SecondLevelCode: z.string(),
-  ThirdLevelCode: z.string(),
-  BottomLevelCode: z.string(),
+  SecondLevelCode: z.string().or(z.null()),
+  ThirdLevelCode: z.string().or(z.null()),
+  BottomLevelCode: z.string().or(z.null()),
   OrganisationUnitCode: z.string().regex(/[A-JZ0-9]{0,1}[A-Z0-9]{6}/, ExceptionCode.HO100200)
 })
 
