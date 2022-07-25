@@ -41,7 +41,10 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
     } = spiDefendant
 
     hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
-    name = [givenName.trim(), familyName.trim()].filter((namePart) => namePart).join(" ")
+    name = [givenName, familyName]
+      .filter((namePart) => namePart)
+      .join(" ")
+      .trim()
   } else if (spiDefendant.CourtCorporateDefendant) {
     name = spiDefendant.CourtCorporateDefendant.OrganisationName.OrganisationName
   }
