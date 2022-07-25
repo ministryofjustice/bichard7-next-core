@@ -126,11 +126,7 @@ export const amountSpecifiedInResultSchema = z.object({
 })
 
 export const resultQualifierVariableSchema = z.object({
-  Code: z
-    .string()
-    .min(1, ExceptionCode.HO100247)
-    .max(2, ExceptionCode.HO100247)
-    .refine(validateResultQualifierCode, ExceptionCode.HO100309), // HO100309 is tested but HO100247 is masked by XML parsing
+  Code: z.string().superRefine(validateResultQualifierCode),
   Duration: durationSchema.optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   Text: z.string().optional()
