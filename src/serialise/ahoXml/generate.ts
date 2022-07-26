@@ -146,15 +146,16 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 }
 
 const text = (t: string): Br7TextString => ({ "#text": t })
+const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
 const optionalFormatText = (t: Date | undefined, f: string): Br7TextString | undefined =>
   t ? { "#text": format(t, f) } : undefined
 
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": optionalText(orgUnit.TopLevelCode),
-  "ds:SecondLevelCode": text(orgUnit.SecondLevelCode),
-  "ds:ThirdLevelCode": text(orgUnit.ThirdLevelCode),
-  "ds:BottomLevelCode": text(orgUnit.BottomLevelCode),
+  "ds:SecondLevelCode": nullText(orgUnit.SecondLevelCode),
+  "ds:ThirdLevelCode": nullText(orgUnit.ThirdLevelCode),
+  "ds:BottomLevelCode": nullText(orgUnit.BottomLevelCode),
   "ds:OrganisationUnitCode": text(orgUnit.OrganisationUnitCode),
   "@_SchemaVersion": "2.0"
 })

@@ -64,7 +64,13 @@ const validateTargetCourtType = (data: string): boolean => !!lookupTargetCourtTy
 
 const validateResultClass = (data: string): boolean => !!lookupResultClassByCjsCode(data.toString())
 
-const validateResultQualifierCode = (data: string): boolean => !!lookupResultQualifierCodeByCjsCode(data.toString())
+const validateResultQualifierCode = (data: string, ctx: z.RefinementCtx): void => {
+  if (data.length < 1 || data.length > 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100247 })
+  } else if (!lookupResultQualifierCodeByCjsCode(data.toString())) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100309 })
+  }
+}
 
 const validateDurationUnit = (data: string): boolean => !!lookupDurationUnitByCjsCode(data.toString())
 

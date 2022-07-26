@@ -73,7 +73,7 @@ describe("enrichForceOwner", () => {
   it("should enrich the force and station from the ASN if there's no PTIURN", () => {
     const incomingMessage = generateMessage({
       PTIURN: "",
-      ASN: "1146AA0100000448754K",
+      ASN: "1146AA0100000448754E",
       offences: [{ results: [{}] }]
     })
     const spiResult = parseSpiResult(incomingMessage)

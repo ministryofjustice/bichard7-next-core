@@ -99,7 +99,10 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
     hearingDefendant.BailConditions = []
     if (spiBailConditions && spiBailConditions !== "") {
-      hearingDefendant.BailConditions = spiBailConditions.split(";")
+      hearingDefendant.BailConditions = spiBailConditions
+        .split(";")
+        .map((cond) => cond.trim())
+        .filter((cond) => !!cond)
     }
     hearingDefendant.ReasonForBailConditions = spiReasonForBailConditionsOrCustody
   } else if (spiDefendant.CourtCorporateDefendant) {

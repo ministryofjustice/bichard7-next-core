@@ -62,8 +62,10 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
     // matchMultipleCases can mutate the case matching outcome by removing matches
     // this means that the following if statement (=== 1) can also subsequently run
     const multipleMatchingOutcome = matchMultipleCases(hoOffences, outcome, hearingDate)
-    enrichOffencesFromCourtCasesAndMatcherOutcome(aho, pncQueryResult.courtCases ?? [], multipleMatchingOutcome)
-    allPncOffencesMatched = !multipleMatchingOutcome.unmatchedPNCOffences
+    if (outcome.courtCaseMatches.length > 1) {
+      enrichOffencesFromCourtCasesAndMatcherOutcome(aho, pncQueryResult.courtCases ?? [], multipleMatchingOutcome)
+      allPncOffencesMatched = !multipleMatchingOutcome.unmatchedPNCOffences
+    }
   }
 
   if (outcome.courtCaseMatches.length === 1) {
