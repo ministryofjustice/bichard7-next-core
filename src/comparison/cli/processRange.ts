@@ -1,4 +1,4 @@
-import type { ComparisonResult } from "src/comparison/compare"
+import type { ComparisonResult } from "src/comparison/compareMessage"
 import createDynamoDbConfig from "src/comparison/createDynamoDbConfig"
 import DynamoGateway from "src/comparison/DynamoGateway/DynamoGateway"
 import getFile from "src/comparison/getFile"

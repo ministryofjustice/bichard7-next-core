@@ -1,8 +1,8 @@
-import compare from "src/comparison/compare"
+import compareMessage from "src/comparison/compareMessage"
 import { isError } from "src/comparison/Types"
 import logger from "src/lib/logging"
 import { z } from "zod"
-import type { ComparisonResult } from "./compare"
+import type { ComparisonResult } from "./compareMessage"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import createS3Config from "./createS3Config"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
@@ -32,7 +32,7 @@ export default async (event: unknown): Promise<ComparisonResult> => {
     throw content
   }
 
-  const comparisonResult = compare(content)
+  const comparisonResult = compareMessage(content)
 
   logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
   const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)

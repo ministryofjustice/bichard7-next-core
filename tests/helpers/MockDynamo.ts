@@ -1,4 +1,5 @@
 import * as dynamodb from "@aws-sdk/client-dynamodb"
+import { isError } from "src/comparison/Types"
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dynalite = require("dynalite") as any
 
@@ -17,7 +18,10 @@ export default class MockDynamo {
       credentials: { accessKeyId: "test", secretAccessKey: "test" }
     })
     await db.deleteTable({ TableName: tableConfig.TableName }).catch((error) => error)
-    await db.createTable(tableConfig).catch((error) => error)
+    const createTableResult = await db.createTable(tableConfig).catch((error) => error)
+    if (isError(createTableResult)) {
+      console.log(createTableResult)
+    }
   }
 
   stop(): Promise<void> {

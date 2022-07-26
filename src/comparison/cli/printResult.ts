@@ -1,4 +1,4 @@
-import type { ComparisonResult } from "src/comparison/compare"
+import type { ComparisonResult } from "src/comparison/compareMessage"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import { formatXmlDiff } from "src/comparison/xmlOutputComparison"

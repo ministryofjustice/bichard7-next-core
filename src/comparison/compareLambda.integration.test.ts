@@ -1,6 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
 jest.setTimeout(10000)
-import * as standingDataPackageInfo from "@moj-bichard7-developers/bichard7-next-data/package.json"
 import "tests/helpers/setEnvironmentVariables"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
@@ -16,19 +15,15 @@ import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 
-const { version: standingDataVersion } = standingDataPackageInfo
-
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
-const uploadFile = async (fileName: string, dataVersion = standingDataVersion) => {
+const uploadFile = async (fileName: string) => {
   const client = new S3Client(s3Config)
   const body = await fs.promises.readFile(fileName)
-  const jsonBody = JSON.parse(body)
-  jsonBody.dataVersion = dataVersion
-  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body: jsonBody })
+  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body: body.toString() })
   return client.send(command)
 }
 
@@ -83,13 +78,11 @@ describe("Comparison lambda", () => {
       initialRunAt: mockedDate.toISOString(),
       initialResult: 1,
       latestRunAt: mockedDate.toISOString(),
-      initialStandingDataVersion: standingDataVersion,
       latestResult: 1,
       history: [
         {
           runAt: mockedDate.toISOString(),
           result: 1,
-          standingDataVersion,
           details: {
             triggersMatch: 1,
             exceptionsMatch: 1,
@@ -126,14 +119,12 @@ describe("Comparison lambda", () => {
       s3Path,
       initialRunAt: mockedDate.toISOString(),
       initialResult: 0,
-      initialStandingDataVersion: standingDataVersion,
       latestRunAt: mockedDate.toISOString(),
       latestResult: 0,
       history: [
         {
           runAt: mockedDate.toISOString(),
           result: 0,
-          standingDataVersion,
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
@@ -156,14 +147,12 @@ describe("Comparison lambda", () => {
       s3Path,
       initialRunAt: existingRecordDate,
       initialResult: 0,
-      initialStandingDataVersion: standingDataVersion,
       latestRunAt: existingRecordDate,
       latestResult: 0,
       history: [
         {
           runAt: existingRecordDate,
           result: 0,
-          standingDataVersion,
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
@@ -196,14 +185,12 @@ describe("Comparison lambda", () => {
       s3Path,
       initialRunAt: existingRecordDate,
       initialResult: 0,
-      initialStandingDataVersion: standingDataVersion,
       latestRunAt: mockedDate.toISOString(),
       latestResult: 1,
       history: [
         {
           runAt: existingRecordDate,
           result: 0,
-          standingDataVersion,
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
@@ -214,7 +201,6 @@ describe("Comparison lambda", () => {
         {
           runAt: mockedDate.toISOString(),
           result: 1,
-          standingDataVersion,
           details: {
             triggersMatch: 1,
             exceptionsMatch: 1,

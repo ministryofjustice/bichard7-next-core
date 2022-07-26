@@ -43,7 +43,7 @@ type CompareOptions = {
   defaultStandingDataVersion?: string
 }
 
-const compare = (
+const compareMessage = (
   input: string,
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
