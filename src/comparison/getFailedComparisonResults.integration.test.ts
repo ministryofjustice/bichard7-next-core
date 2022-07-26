@@ -50,7 +50,26 @@ describe("getFailedComparisonResults", () => {
     const records = [createRecord(0, "1"), createRecord(1, "2"), createRecord(0, "3"), createRecord(1, "4")]
     await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
-    const result = await getFailedComparisonResults(dynamoGateway)
+    const result = await getFailedComparisonResults(dynamoGateway, 10)
+    expect(isError(result)).toBe(false)
+
+    const actualRecords = result as ComparisonLog[]
+    expect(actualRecords).toHaveLength(2)
+    expect(actualRecords[0].s3Path).toBe("1")
+    expect(actualRecords[1].s3Path).toBe("3")
+  })
+
+  it("should only return the two out of 5 failed records", async () => {
+    const records = [
+      createRecord(0, "1"),
+      createRecord(1, "2"),
+      createRecord(0, "3"),
+      createRecord(1, "4"),
+      createRecord(1, "5")
+    ]
+    await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+    const result = await getFailedComparisonResults(dynamoGateway, 10)
     expect(isError(result)).toBe(false)
 
     const actualRecords = result as ComparisonLog[]
@@ -63,7 +82,7 @@ describe("getFailedComparisonResults", () => {
     const records = [createRecord(1, "1"), createRecord(1, "2"), createRecord(1, "3"), createRecord(1, "4")]
     await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
-    const result = await getFailedComparisonResults(dynamoGateway)
+    const result = await getFailedComparisonResults(dynamoGateway, 10)
     expect(isError(result)).toBe(false)
 
     const actualRecords = result as ComparisonLog[]
@@ -74,7 +93,7 @@ describe("getFailedComparisonResults", () => {
     const error = new Error("Dummy error message")
     jest.spyOn(dynamoGateway, "getFailedOnes").mockResolvedValue(error)
 
-    const result = await getFailedComparisonResults(dynamoGateway)
+    const result = await getFailedComparisonResults(dynamoGateway, 10)
     expect(isError(result)).toBe(true)
     const actualError = result as Error
     expect(actualError.message).toBe(error.message)
