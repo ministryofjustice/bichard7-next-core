@@ -1,11 +1,11 @@
-import "tests/helpers/setEnvironmentVariables"
 import MockDynamo from "tests/helpers/MockDynamo"
+import "tests/helpers/setEnvironmentVariables"
+import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
-import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
+import getFailedComparisonResults from "./getFailedComparisonResults"
 import type { ComparisonLog } from "./Types"
 import { isError } from "./Types"
-import getFailedComparisonResults from "./getFailedComparisonResults"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
@@ -48,7 +48,7 @@ describe("getFailedComparisonResults", () => {
 
   it("should only return the failed records", async () => {
     const records = [createRecord(0, "1"), createRecord(1, "2"), createRecord(0, "3"), createRecord(1, "4")]
-    console.log(await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path"))))
+    await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
     const result = await getFailedComparisonResults(dynamoGateway)
     expect(isError(result)).toBe(false)
@@ -59,7 +59,24 @@ describe("getFailedComparisonResults", () => {
     expect(actualRecords[1].s3Path).toBe("3")
   })
 
-  // it("should return empty when there is no failed records", () => {})
+  it("should return empty when there is no failed records", async () => {
+    const records = [createRecord(1, "1"), createRecord(1, "2"), createRecord(1, "3"), createRecord(1, "4")]
+    await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
-  // it("should return error when there is an internal error", () => {})
+    const result = await getFailedComparisonResults(dynamoGateway)
+    expect(isError(result)).toBe(false)
+
+    const actualRecords = result as ComparisonLog[]
+    expect(actualRecords).toHaveLength(0)
+  })
+
+  it("should return error when there is an internal error", async () => {
+    const error = new Error("Dummy error message")
+    jest.spyOn(dynamoGateway, "getFailedOnes").mockResolvedValue(error)
+
+    const result = await getFailedComparisonResults(dynamoGateway)
+    expect(isError(result)).toBe(true)
+    const actualError = result as Error
+    expect(actualError.message).toBe(error.message)
+  })
 })
