@@ -27,10 +27,10 @@ describe("parseAsn", () => {
 
   it("should handle < 20 character ASNs", () => {
     expect(parseAsn("YYFFUUSS000123D")).toStrictEqual({
-      bottomLevelCode: "SS",
+      bottomLevelCode: null,
       checkDigit: null,
-      secondLevelCode: "FF",
-      thirdLevelCode: "UU",
+      secondLevelCode: null,
+      thirdLevelCode: null,
       topLevelCode: undefined,
       year: "YY",
       sequenceNumber: null
