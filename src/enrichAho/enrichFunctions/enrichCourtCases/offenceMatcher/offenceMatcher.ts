@@ -167,7 +167,9 @@ const matchOffences = (
     .filter((hoOffence) => !hoOffenceAlreadyMatched(hoOffence, result))
     .filter(offenceIsBreach)
 
-  const unmatchedPncOffences = pncOffences.filter((pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result))
+  const unmatchedPncOffences = remainingPncOffences.filter(
+    (pncOffence) => !pncOffenceAlreadyMatched(pncOffence, result)
+  )
 
   if (breachOffences.length > 0 && unmatchedPncOffences.length > 0) {
     const breachOutcome = matchUnmatchedBreachesWithoutUsingDates(
