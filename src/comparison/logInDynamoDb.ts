@@ -1,3 +1,4 @@
+import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import type { ComparisonResult } from "./compare"
 import type DynamoGateway from "./DynamoGateway/DynamoGateway"
 import type { PromiseResult } from "./Types"
@@ -22,20 +23,22 @@ const logInDynamoDb = async (
     return getOneResult
   }
 
-  const date = new Date()
+  const initialDate = getDateFromComparisonFilePath(s3Path).toISOString()
+  const date = new Date().toISOString()
+
   const record = getOneResult?.Item ?? {
     s3Path,
-    initialRunAt: date.toISOString(),
+    initialRunAt: initialDate,
     initialResult: latestResult,
     history: [],
     version: 1
   }
 
-  record.latestRunAt = date.toISOString()
+  record.latestRunAt = date
   record.latestResult = latestResult
 
   record.history.push({
-    runAt: date.toISOString(),
+    runAt: getOneResult?.Item ? date : initialDate,
     result: record.latestResult,
     details: {
       triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
