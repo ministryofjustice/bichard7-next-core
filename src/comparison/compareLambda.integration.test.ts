@@ -14,6 +14,7 @@ import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
+import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
@@ -216,7 +217,7 @@ describe("Comparison lambda", () => {
   it("should throw an error if the event did not match our schema", async () => {
     expect.assertions(2)
     try {
-      await lambda({ wrongPath: "dummy" })
+      await lambda({ wrongPath: "dummy" } as unknown as CompareLambdaEvent)
     } catch (e: unknown) {
       const error = e as Error
       expect(error).toBeInstanceOf(ZodError)
