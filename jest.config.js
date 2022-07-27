@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: "node",
   modulePathIgnorePatterns: ["node_modules", "build"],
   moduleNameMapper: {
+    "^(node_modules/.*)$": "<rootDir>/$1",
     "^(data|src|tests)$": "<rootDir>/$1",
     "^(data|src|tests)/(.*)": "<rootDir>/$1/$2"
   },
