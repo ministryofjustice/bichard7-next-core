@@ -2,7 +2,7 @@ import logger from "src/lib/logging"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFailedComparisonResults from "./getFailedComparisonResults"
-import InvokeCompareLambda from "./invokeCompareLambda"
+import InvokeCompareLambda from "./InvokeCompareLambda"
 import { isError } from "./Types"
 
 const { BATCH_SIZE, COMPARISON_LAMBDA_NAME, COMPARISON_BUCKET_NAME } = process.env

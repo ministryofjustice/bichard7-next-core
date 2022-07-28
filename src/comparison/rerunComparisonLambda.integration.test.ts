@@ -14,11 +14,11 @@ import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 import rerunComparisonLambda from "./rerunComparisonLambda"
-import InvokeCompareLambda from "./invokeCompareLambda"
 import compareLambda from "./compareLambda"
 import type { ComparisonLog } from "./Types"
 import { isError } from "./Types"
 import MockDate from "mockdate"
+import InvokeCompareLambda from "./InvokeCompareLambda"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const s3Config = createS3Config()
