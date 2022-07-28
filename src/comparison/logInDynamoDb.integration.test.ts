@@ -69,6 +69,20 @@ describe("logInDynamoDb", () => {
     })
   })
 
+  it("should insert a new record in DynamoDB and read the date from S3 path", async () => {
+    MockDate.reset()
+    const s3Path = "2022/07/01/20/12/dummy.json"
+    const result = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
+    expect(isError(result)).toBe(false)
+
+    const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
+    const record = (getOneResult as DocumentClient.GetItemOutput).Item as ComparisonLog
+    const expectedDate = new Date("2022-07-01T20:12").toISOString()
+    expect(record.initialRunAt).toBe(expectedDate)
+    expect(record.history[0].runAt).toBe(expectedDate)
+    expect(record.latestRunAt).not.toBe(expectedDate)
+  })
+
   it("should update the existing record in DynamoDB", async () => {
     const s3Path = "DummyPath"
     const initialDateString = new Date("2022-01-01").toISOString()

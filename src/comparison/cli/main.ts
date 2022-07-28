@@ -1,6 +1,6 @@
 import getFile from "src/comparison/getFile"
 import getArgs from "./getArgs"
-import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
+import getDateFromComparisonFilePath from "src/comparison/getDateFromComparisonFilePath"
 import printResult from "./printResult"
 import processFile from "./processFile"
 import processRange from "./processRange"
