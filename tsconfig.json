@@ -16,7 +16,8 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "baseUrl": "./"
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "tests/jest.d.ts", "package.json"],
   "ts-node": {
