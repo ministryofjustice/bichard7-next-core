@@ -2,7 +2,8 @@
   "name": "@moj-bichard7-developers/bichard7-next-core",
   "version": "1.0.1",
   "description": "The code to replace the processing logic of Bichard 7",
-  "main": "build/index.js",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
   "scripts": {
     "build:lambda:prod": "npx webpack --config ./.webpack/webpack.prod.js",
     "build:lambda:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",

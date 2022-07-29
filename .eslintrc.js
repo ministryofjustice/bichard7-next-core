@@ -41,8 +41,6 @@ module.exports = {
         semi: ["error", "never"],
         "no-plusplus": "off",
         "require-await": "error",
-        "import/no-relative-packages": "error",
-        "import/no-relative-parent-imports": "error",
         "prettier/prettier": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",

@@ -6,14 +6,7 @@
     "strict": true,
     "sourceMap": true,
     "outDir": "build",
-    "types": [
-      "node",
-      "jest"
-    ],
-    "baseUrl": "./",
-    "paths": {
-      "data": ["data"]
-    },
+    "types": ["node", "jest"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
@@ -21,11 +14,11 @@
     "noUnusedParameters": true,
     "preserveConstEnums": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "composite": true,
+    "declaration": true
   },
-  "include": [
-    "src/**/*.ts", "tests/**/*.ts", "tests/jest.d.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "tests/jest.d.ts", "package.json"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }
