@@ -1,5 +1,5 @@
-import logger from "src/lib/logging"
-import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import logger from "../../lib/logging"
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 
 const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes): OrganisationUnitCodes => {
   const { OrganisationUnitCode, TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode } = organisationUnit

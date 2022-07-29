@@ -1,8 +1,8 @@
-import type { ComparisonResult } from "src/comparison/compare"
-import createDynamoDbConfig from "src/comparison/createDynamoDbConfig"
-import DynamoGateway from "src/comparison/DynamoGateway/DynamoGateway"
-import getFile from "src/comparison/getFile"
-import getDateFromComparisonFilePath from "src/comparison/getDateFromComparisonFilePath"
+import type { ComparisonResult } from "../compare"
+import createDynamoDbConfig from "../createDynamoDbConfig"
+import DynamoGateway from "../DynamoGateway/DynamoGateway"
+import getFile from "../getFile"
+import getDateFromComparisonFilePath from "../getDateFromComparisonFilePath"
 import processFile from "./processFile"
 
 process.env.COMPARISON_TABLE_NAME = process.env.COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"

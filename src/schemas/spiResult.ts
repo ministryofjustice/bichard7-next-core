@@ -1,4 +1,4 @@
-import { SpiPlea } from "src/types/Plea"
+import { SpiPlea } from "../types/Plea"
 import { z } from "zod"
 
 export const spiPleaSchema = z.nativeEnum(SpiPlea)

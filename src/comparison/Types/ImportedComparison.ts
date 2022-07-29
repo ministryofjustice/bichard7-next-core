@@ -1,4 +1,4 @@
-import type { Trigger } from "src/types/Trigger"
+import type { Trigger } from "../../types/Trigger"
 
 export type ImportedComparison = {
   file?: string

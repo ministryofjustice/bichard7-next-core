@@ -1,10 +1,10 @@
-import type { CaseMatcherOutcome } from "src/enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
-import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import type { OffenceMatcherOutcome } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
-import { matchOffences } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
-import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { CaseMatcherOutcome } from "../../../enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
+import offenceHasFinalResult from "../../../enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import type { OffenceMatcherOutcome } from "../../../enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
+import { matchOffences } from "../../../enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceMatcher"
+import offencesAreEqual from "../../../enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../../types/PncQueryResult"
 
 export type MultipleCaseMatcherOutcome = {
   ambiguousHoOffences: Offence[]

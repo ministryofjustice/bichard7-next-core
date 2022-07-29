@@ -15,11 +15,11 @@ import {
   lookupVehicleCodeByCjsCode,
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
-} from "src/dataLookup"
-import Asn from "src/lib/Asn"
-import requireStandingData from "src/lib/requireStandingData"
-import type { NumberSpecifiedInResult } from "src/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "src/types/ExceptionCode"
+} from "../dataLookup"
+import Asn from "../lib/Asn"
+import requireStandingData from "../lib/requireStandingData"
+import type { NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../types/ExceptionCode"
 import { z } from "zod"
 const { remandStatus } = requireStandingData()
 

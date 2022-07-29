@@ -1,6 +1,6 @@
 import type { OffenceCode } from "bichard7-next-data-latest/types/types"
-import lookupOffenceCode from "src/lib/offence/lookupOffenceCode"
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import lookupOffenceCode from "../../../lib/offence/lookupOffenceCode"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import enrichOffence from "./enrichOffence"
 
 const localOffence = {

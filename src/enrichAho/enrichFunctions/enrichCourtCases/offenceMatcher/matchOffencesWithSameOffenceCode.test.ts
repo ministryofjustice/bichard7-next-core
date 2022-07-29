@@ -2,7 +2,7 @@ import {
   createHOOffence,
   createPNCCourtCaseOffence,
   createPNCPenaltyCaseOffence
-} from "tests/helpers/generateMockOffences"
+} from "../../../../../tests/helpers/generateMockOffences"
 import matchOffencesWithSameOffenceCode from "./matchOffencesWithSameOffenceCode"
 
 describe("matchOffencesWithSameOffenceCode()", () => {

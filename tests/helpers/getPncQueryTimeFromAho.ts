@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
-import type { AhoXml } from "src/types/AhoXml"
+import type { AhoXml } from "../../src/types/AhoXml"
 
 const getPncQueryTimeFromAho = (ahoXml: string): Date | undefined => {
   const parser = new XMLParser({

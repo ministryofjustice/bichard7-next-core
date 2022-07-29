@@ -1,5 +1,5 @@
-import type { Result } from "src/types/AnnotatedHearingOutcome"
-import ResultClass from "src/types/ResultClass"
+import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../types/ResultClass"
 import populateResultClass from "./populateResultClass"
 
 const ADJOURNED_RESULT_CODE = 4001

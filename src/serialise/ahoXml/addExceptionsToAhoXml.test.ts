@@ -1,5 +1,5 @@
-import type { AhoXml } from "src/types/AhoXml"
-import { ExceptionCode } from "src/types/ExceptionCode"
+import type { AhoXml } from "../../types/AhoXml"
+import { ExceptionCode } from "../../types/ExceptionCode"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
 
 describe("addExceptionsToAhoXml", () => {

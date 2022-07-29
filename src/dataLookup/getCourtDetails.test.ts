@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
 import getCourtDetails from "./getCourtDetails"
 
 describe("getCourtDetails", () => {

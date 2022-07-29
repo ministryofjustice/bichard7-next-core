@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
-import type PncGateway from "src/types/PncGateway"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
+import type PncGateway from "../types/PncGateway"
 import {
   enrichCase,
   enrichCourt,

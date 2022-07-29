@@ -1,6 +1,6 @@
-import type { HearingDefendant } from "src/types/AnnotatedHearingOutcome"
-import type { EnrichAhoFunction } from "src/types/EnrichAhoFunction"
-import type { KeyValue } from "src/types/KeyValue"
+import type { HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
+import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+import type { KeyValue } from "../../../types/KeyValue"
 import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
 const GENERATED_PNC_FILENAME_MAX_LENGTH = 54

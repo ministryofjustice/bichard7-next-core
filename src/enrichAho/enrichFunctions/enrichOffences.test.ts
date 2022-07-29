@@ -1,6 +1,6 @@
-import { COMMON_LAWS, INDICTMENT } from "src/lib/offenceTypes"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import generateMockAho from "tests/helpers/generateMockAho"
+import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import generateMockAho from "../../../tests/helpers/generateMockAho"
 import enrichOffences from "./enrichOffences"
 
 const mockNationalIndictmmentOffence = [

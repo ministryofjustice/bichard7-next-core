@@ -1,9 +1,9 @@
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { PncOffence } from "../../../../types/PncQueryResult"
 import {
   createHOOffence,
   createPNCCourtCaseOffence,
   createPNCPenaltyCaseOffence
-} from "tests/helpers/generateMockOffences"
+} from "../../../../../tests/helpers/generateMockOffences"
 import { matchOffences } from "./offenceMatcher"
 
 describe("Offence Matcher", () => {

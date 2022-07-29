@@ -1,7 +1,7 @@
-import requireStandingData from "src/lib/requireStandingData"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import requireStandingData from "../lib/requireStandingData"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 const { excludedTriggerConfig } = requireStandingData()
 
 const forceReceivesTrigger27 = (code: string): boolean =>

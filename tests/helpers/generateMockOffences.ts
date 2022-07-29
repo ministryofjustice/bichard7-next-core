@@ -1,6 +1,6 @@
-import parsePncDate from "src/lib/parsePncDate"
-import type { Offence, Result } from "src/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "src/types/PncQueryResult"
+import parsePncDate from "../../src/lib/parsePncDate"
+import type { Offence, Result } from "../../src/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../src/types/PncQueryResult"
 
 export type CreateHoOffenceOptions = {
   actOrSource?: string

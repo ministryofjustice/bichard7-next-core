@@ -1,4 +1,4 @@
-import type { PncQueryResult } from "src/types/PncQueryResult"
+import type { PncQueryResult } from "../../src/types/PncQueryResult"
 import { mockEnquiryFromPncResult } from "./mockRecordInPnc"
 
 const normaliseResponse = (response: string): string[] => response.split("\n").map((line) => line.trim())

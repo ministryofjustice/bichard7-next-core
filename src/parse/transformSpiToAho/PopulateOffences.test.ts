@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-import parseSpiResult from "src/parse/parseSpiResult"
+import parseSpiResult from "../../parse/parseSpiResult"
 import PopulateOffences from "./PopulateOffences"
 
 describe("PopulateOffences", () => {

@@ -1,4 +1,4 @@
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 
 const addNullCourtCaseReferenceNumber = (hoOffence: Offence): void => {
   if (hoOffence.CourtCaseReferenceNumber === undefined) {

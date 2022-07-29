@@ -1,4 +1,4 @@
-import { createHOOffence } from "tests/helpers/generateMockOffences"
+import { createHOOffence } from "../../../../../tests/helpers/generateMockOffences"
 import offencesAreEqual from "./offencesAreEqual"
 
 describe("offencesAreEqual()", () => {

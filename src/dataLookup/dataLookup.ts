@@ -20,8 +20,8 @@ import type {
   YesNo
 } from "bichard7-next-data-latest/dist/types/types"
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
-import requireStandingData from "src/lib/requireStandingData"
-import type { SpiPlea } from "src/types/Plea"
+import requireStandingData from "../lib/requireStandingData"
+import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
   cjsCode: string

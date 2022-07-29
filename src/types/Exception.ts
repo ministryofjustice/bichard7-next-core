@@ -1,4 +1,4 @@
-import type { exceptionPathSchema, exceptionSchema } from "src/schemas/exception"
+import type { exceptionPathSchema, exceptionSchema } from "../schemas/exception"
 import type { z } from "zod"
 
 export type ExceptionPath = z.infer<typeof exceptionPathSchema>

@@ -1,4 +1,4 @@
-import { TriggerCode } from "src/types/TriggerCode"
+import { TriggerCode } from "../types/TriggerCode"
 import requireStandingData from "./requireStandingData"
 const { excludedTriggerConfig } = requireStandingData()
 

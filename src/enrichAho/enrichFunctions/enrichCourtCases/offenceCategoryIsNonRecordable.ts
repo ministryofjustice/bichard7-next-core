@@ -1,4 +1,4 @@
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 
 const nonRecordableOffenceCategories = [
   "B7",

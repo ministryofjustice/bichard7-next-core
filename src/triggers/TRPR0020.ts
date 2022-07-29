@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import getOffenceFullCode from "src/lib/offence/getOffenceFullCode"
-import resultCodeIsFinal from "src/lib/result/resultCodeIsFinal"
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
-import { CjsVerdict } from "src/types/Verdict"
+import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
+import resultCodeIsFinal from "../lib/result/resultCodeIsFinal"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
+import { CjsVerdict } from "../types/Verdict"
 
 const triggerCode = TriggerCode.TRPR0020
 const resultCodes = [1029, 1030, 1031, 1032, 3501]

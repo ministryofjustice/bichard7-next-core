@@ -1,5 +1,5 @@
-import { createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
-import createPNCCourtCase from "tests/helpers/generateMockPncCase"
+import { createPNCCourtCaseOffence } from "../../../../../tests/helpers/generateMockOffences"
+import createPNCCourtCase from "../../../../../tests/helpers/generateMockPncCase"
 import sortCourtCasesByAge from "./sortCourtCasesByAge"
 
 describe("sortCourtCasesByAge", () => {
