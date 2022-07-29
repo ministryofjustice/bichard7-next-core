@@ -1,0 +1,15 @@
+# From .gitignore
+
+.env
+build
+node_modules
+.eslintcache
+.npmrc
+
+# Things we don't need
+
+tests/
+test-data/
+.github/
+.circleci/
+.husky/
