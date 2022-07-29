@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
-import deduplicateExceptions from "src/exceptions/deduplicateExceptions"
-import errorPaths from "src/lib/errorPaths"
-import type { Result } from "src/types/AnnotatedHearingOutcome"
-import type Exception from "src/types/Exception"
+import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
+import errorPaths from "../../lib/errorPaths"
+import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type Exception from "../../types/Exception"
 
 // TODO: Use the existing AHO XML parsing to pull out the errors
 //eslint-disable-next-line @typescript-eslint/no-explicit-any

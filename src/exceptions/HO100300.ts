@@ -1,12 +1,12 @@
-import { lookupOrganisationUnitByCode } from "src/dataLookup"
-import errorPaths from "src/lib/errorPaths"
-import findException from "src/lib/findException"
-import populateOrganisationUnitFields from "src/lib/organisationUnit/populateOrganisationUnitFields"
-import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import type Exception from "src/types/Exception"
-import type { ExceptionPath } from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
+import { lookupOrganisationUnitByCode } from "../dataLookup"
+import errorPaths from "../lib/errorPaths"
+import findException from "../lib/findException"
+import populateOrganisationUnitFields from "../lib/organisationUnit/populateOrganisationUnitFields"
+import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
+import type Exception from "../types/Exception"
+import type { ExceptionPath } from "../types/Exception"
+import { ExceptionCode } from "../types/ExceptionCode"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")

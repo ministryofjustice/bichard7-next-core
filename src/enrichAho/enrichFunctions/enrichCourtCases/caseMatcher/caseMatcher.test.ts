@@ -1,6 +1,6 @@
-import createPNCMessage from "tests/helpers/createPncMessage"
-import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
-import createPNCCourtCase from "tests/helpers/generateMockPncCase"
+import createPNCMessage from "../../../../../tests/helpers/createPncMessage"
+import { createHOOffence, createPNCCourtCaseOffence } from "../../../../../tests/helpers/generateMockOffences"
+import createPNCCourtCase from "../../../../../tests/helpers/generateMockPncCase"
 import matchCases from "./caseMatcher"
 
 describe("caseMatcher", () => {

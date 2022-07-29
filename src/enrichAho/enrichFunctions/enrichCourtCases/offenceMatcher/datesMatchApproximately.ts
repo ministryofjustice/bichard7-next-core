@@ -1,5 +1,5 @@
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../../../types/PncQueryResult"
 
 const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate

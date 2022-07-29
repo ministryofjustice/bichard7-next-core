@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import type { KeyValue } from "src/types/KeyValue"
-import * as packageInfo from "src/../package.json"
+import type { KeyValue } from "../types/KeyValue"
+import * as packageInfo from "../../package.json"
 import logger from "./logging"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports

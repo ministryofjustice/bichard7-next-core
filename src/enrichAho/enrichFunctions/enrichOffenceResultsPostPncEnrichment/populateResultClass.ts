@@ -1,8 +1,8 @@
-import isAdjourned from "src/lib/result/isAdjourned"
-import isAdjournedNoNextHearing from "src/lib/result/isAdjournedNoNextHearing"
-import isWarrantIssued from "src/lib/result/isWarrantIssued"
-import type { Result } from "src/types/AnnotatedHearingOutcome"
-import ResultClass from "src/types/ResultClass"
+import isAdjourned from "../../../lib/result/isAdjourned"
+import isAdjournedNoNextHearing from "../../../lib/result/isAdjournedNoNextHearing"
+import isWarrantIssued from "../../../lib/result/isWarrantIssued"
+import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../types/ResultClass"
 
 const resultClassPleas = ["ADM"]
 const resultClassVerdicts = ["NG", "NC", "NA"]

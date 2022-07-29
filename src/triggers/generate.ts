@@ -1,9 +1,9 @@
-import triggers from "src/triggers"
-import filterExcludedTriggers from "src/triggers/filterExcludedTriggers"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import triggers from "../triggers"
+import filterExcludedTriggers from "../triggers/filterExcludedTriggers"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 import deduplicateTriggers from "./deduplicateTriggers"
 
 const independentTriggerFn = (aho: AnnotatedHearingOutcome) =>

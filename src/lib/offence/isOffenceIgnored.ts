@@ -1,5 +1,5 @@
-import getOffenceCode from "src/lib/offence/getOffenceCode"
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
+import getOffenceCode from "../../lib/offence/getOffenceCode"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 const ignoredOffenceCodes = ["05MC001"]
 

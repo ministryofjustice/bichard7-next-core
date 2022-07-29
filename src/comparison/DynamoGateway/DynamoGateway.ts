@@ -1,6 +1,6 @@
 import { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "src/comparison/Types"
+import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "../../../src/comparison/Types"
 
 export default class DynamoGateway {
   protected readonly service: DynamoDB

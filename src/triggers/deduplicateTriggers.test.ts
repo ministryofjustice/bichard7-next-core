@@ -1,5 +1,5 @@
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
 import deduplicateTriggers from "./deduplicateTriggers"
 
 describe("deduplicateTriggers", () => {

@@ -1,5 +1,5 @@
-import type Exception from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
+import type Exception from "../types/Exception"
+import { ExceptionCode } from "../types/ExceptionCode"
 import deduplicateExceptions from "./deduplicateExceptions"
 
 describe("deduplicateExceptions", () => {

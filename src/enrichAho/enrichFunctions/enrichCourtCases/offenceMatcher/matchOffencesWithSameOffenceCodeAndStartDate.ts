@@ -1,5 +1,5 @@
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../../../types/PncQueryResult"
 import type { OffenceMatcherOutcome } from "./offenceMatcher"
 import { hoOffenceAlreadyMatched, pncOffenceAlreadyMatched } from "./offenceMatcher"
 import { offencesHaveEqualResults } from "./resultsAreEqual"

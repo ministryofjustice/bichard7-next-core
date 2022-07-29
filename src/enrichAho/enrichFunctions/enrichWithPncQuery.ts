@@ -1,8 +1,8 @@
-import { lookupOffenceByCjsCode } from "src/dataLookup"
-import enrichCourtCases from "src/enrichAho/enrichFunctions/enrichCourtCases"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type PncGateway from "src/types/PncGateway"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
+import { lookupOffenceByCjsCode } from "../../dataLookup"
+import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type PncGateway from "../../types/PncGateway"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"

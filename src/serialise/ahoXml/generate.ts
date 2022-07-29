@@ -12,8 +12,8 @@ import {
   lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
-} from "src/dataLookup"
-import { encodeEntitiesProcessor } from "src/lib/encoding"
+} from "../../dataLookup"
+import { encodeEntitiesProcessor } from "../../lib/encoding"
 import type {
   Adj,
   AhoXml,
@@ -32,7 +32,7 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList
-} from "src/types/AhoXml"
+} from "../../types/AhoXml"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -45,9 +45,9 @@ import type {
   OrganisationUnitCodes,
   Result,
   Urgent
-} from "src/types/AnnotatedHearingOutcome"
-import type Exception from "src/types/Exception"
-import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
+} from "../../types/AnnotatedHearingOutcome"
+import type Exception from "../../types/Exception"
+import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "../../types/PncQueryResult"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]

@@ -1,10 +1,10 @@
-import parseSpiResult from "src/parse/parseSpiResult"
-import transformSpiToAho from "src/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type PncGateway from "src/types/PncGateway"
-import generateMessage from "tests/helpers/generateMessage"
-import generateMockPncQueryResult from "tests/helpers/generateMockPncQueryResult"
-import MockPncGateway from "tests/helpers/MockPncGateway"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type PncGateway from "../../types/PncGateway"
+import generateMessage from "../../../tests/helpers/generateMessage"
+import generateMockPncQueryResult from "../../../tests/helpers/generateMockPncQueryResult"
+import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import enrichWithPncQuery from "./enrichWithPncQuery"
 
 describe("enrichWithQuery()", () => {

@@ -20,7 +20,7 @@ import type {
   resultQualifierVariableSchema,
   resultSchema,
   urgentSchema
-} from "src/schemas/annotatedHearingOutcome"
+} from "../schemas/annotatedHearingOutcome"
 import type { z } from "zod"
 
 export type AnnotatedHearingOutcome = z.infer<typeof annotatedHearingOutcomeSchema>

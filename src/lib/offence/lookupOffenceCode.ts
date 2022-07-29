@@ -1,7 +1,7 @@
-import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "src/dataLookup"
+import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "../../dataLookup"
 
 import type { OffenceCode } from "bichard7-next-data-latest/dist/types/types"
-import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
+import type { OffenceReason } from "../../types/AnnotatedHearingOutcome"
 
 export default (offenceCode: string, reason?: OffenceReason, areaCode?: string): OffenceCode | undefined =>
   reason?.__type === "NationalOffenceReason"

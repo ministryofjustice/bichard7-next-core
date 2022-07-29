@@ -1,6 +1,6 @@
-import { ExceptionCode } from "src/types/ExceptionCode"
-import { CjsPlea } from "src/types/Plea"
-import ResultClass from "src/types/ResultClass"
+import { ExceptionCode } from "../types/ExceptionCode"
+import { CjsPlea } from "../types/Plea"
+import ResultClass from "../types/ResultClass"
 import { z } from "zod"
 import {
   validateActualOffenceDateCode,

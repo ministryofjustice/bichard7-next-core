@@ -1,8 +1,8 @@
-import errorPaths from "src/lib/errorPaths"
-import { validateDummyAsn } from "src/schemas/ahoValidations"
-import type Exception from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
+import errorPaths from "../lib/errorPaths"
+import { validateDummyAsn } from "../schemas/ahoValidations"
+import type Exception from "../types/Exception"
+import { ExceptionCode } from "../types/ExceptionCode"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const recordableOnPNCindicator = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator

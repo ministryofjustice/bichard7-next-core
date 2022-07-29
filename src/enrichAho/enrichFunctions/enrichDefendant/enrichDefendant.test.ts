@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome, HearingDefendant } from "src/types/AnnotatedHearingOutcome"
-import generateMockAho from "tests/helpers/generateMockAho"
+import type { AnnotatedHearingOutcome, HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
+import generateMockAho from "../../../../tests/helpers/generateMockAho"
 import enrichDefendant from "./enrichDefendant"
 
 describe("enrichDefendant", () => {

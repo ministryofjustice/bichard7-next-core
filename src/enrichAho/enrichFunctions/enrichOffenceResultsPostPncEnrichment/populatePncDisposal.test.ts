@@ -1,7 +1,7 @@
 jest.mock("src/dataLookup")
-import { lookupPncDisposalByCjsCode } from "src/dataLookup"
-import type { AnnotatedHearingOutcome, Result } from "src/types/AnnotatedHearingOutcome"
-import ResultClass from "src/types/ResultClass"
+import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
+import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../types/ResultClass"
 import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {

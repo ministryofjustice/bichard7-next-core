@@ -4,14 +4,14 @@ import {
   lookupPleaStatusBySpiCode,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
-} from "src/dataLookup"
-import extractCodesFromOU from "src/dataLookup/extractCodesFromOU"
-import decimalPlaces from "src/lib/decimalPlaces"
-import getOrganisationUnit from "src/lib/organisationUnit/getOrganisationUnit"
-import type { Duration, OrganisationUnitCodes, Result } from "src/types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "src/types/Plea"
-import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "src/types/SpiResult"
-import type { CjsVerdict } from "src/types/Verdict"
+} from "../../dataLookup"
+import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
+import decimalPlaces from "../../lib/decimalPlaces"
+import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
+import type { Duration, OrganisationUnitCodes, Result } from "../../types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "../../types/Plea"
+import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "../../types/SpiResult"
+import type { CjsVerdict } from "../../types/Verdict"
 import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 

@@ -1,5 +1,5 @@
 import fs from "fs"
-import compare from "src/comparison/compare"
+import compare from "./compare"
 
 describe("compare", () => {
   describe("success", () => {

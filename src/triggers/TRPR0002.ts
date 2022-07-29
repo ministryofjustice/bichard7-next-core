@@ -1,5 +1,5 @@
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0002
 const resultCodes = [4575, 4576, 4577, 4585, 4586]

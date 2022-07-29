@@ -1,9 +1,9 @@
-import errorPaths from "src/lib/errorPaths"
-import resultCodeIsOnStopList from "src/lib/result/resultCodeIsOnStopList"
-import type Exception from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import ResultClass from "src/types/ResultClass"
+import errorPaths from "../lib/errorPaths"
+import resultCodeIsOnStopList from "../lib/result/resultCodeIsOnStopList"
+import type Exception from "../types/Exception"
+import { ExceptionCode } from "../types/ExceptionCode"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import ResultClass from "../types/ResultClass"
 
 const HO100305: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []
