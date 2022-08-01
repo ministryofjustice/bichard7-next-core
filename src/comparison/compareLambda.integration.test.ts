@@ -3,9 +3,9 @@ jest.setTimeout(10000)
 import "tests/helpers/setEnvironmentVariables"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
-import lambda from "../comparison/lambda"
-import MockS3 from "../../tests/helpers/MockS3"
-import MockDynamo from "../../tests/helpers/MockDynamo"
+import lambda from "src/comparison/compareLambda"
+import MockS3 from "tests/helpers/MockS3"
+import MockDynamo from "tests/helpers/MockDynamo"
 import { ZodError } from "zod"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import createS3Config from "./createS3Config"
@@ -13,7 +13,8 @@ import { isError } from "../comparison/Types"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
-import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
+import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
+import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
@@ -22,8 +23,8 @@ const dynamoDbGatewayConfig = createDynamoDbConfig()
 
 const uploadFile = async (fileName: string) => {
   const client = new S3Client(s3Config)
-  const Body = await fs.promises.readFile(fileName)
-  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body })
+  const body = await fs.promises.readFile(fileName)
+  const command = new PutObjectCommand({ Bucket: bucket, Key: fileName, Body: body.toString() })
   return client.send(command)
 }
 
@@ -216,7 +217,7 @@ describe("Comparison lambda", () => {
   it("should throw an error if the event did not match our schema", async () => {
     expect.assertions(2)
     try {
-      await lambda({ wrongPath: "dummy" })
+      await lambda({ wrongPath: "dummy" } as unknown as CompareLambdaEvent)
     } catch (e: unknown) {
       const error = e as Error
       expect(error).toBeInstanceOf(ZodError)

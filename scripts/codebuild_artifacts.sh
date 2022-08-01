@@ -20,12 +20,15 @@ function upload_to_s3 {
 }
 
 ############################################
-# Message Receiver
+# Lambdas
 ############################################
 
 cd build
 
 zip compare.zip compare.js
 upload_to_s3 compare.zip compare.zip
+
+zip rerunComparison.zip rerunComparison.js
+upload_to_s3 rerunComparison.zip rerunComparison.zip
 
 cd -

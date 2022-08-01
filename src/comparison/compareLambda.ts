@@ -1,27 +1,21 @@
-import compare from "../comparison/compare"
-import { isError } from "../comparison/Types"
-import logger from "../lib/logging"
-import { z } from "zod"
-import type { ComparisonResult } from "./compare"
+import compareMessage from "src/comparison/compareMessage"
+import { isError } from "src/comparison/Types"
+import logger from "src/lib/logging"
+import type { ComparisonResult } from "./compareMessage"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import createS3Config from "./createS3Config"
 import DynamoGateway from "./DynamoGateway/DynamoGateway"
 import getFileFromS3 from "./getFileFromS3"
 import logInDynamoDb from "./logInDynamoDb"
+import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
+import { eventSchema } from "./Types/CompareLambdaEvent"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
-const inputSchema = z.object({
-  detail: z.object({
-    bucket: z.object({ name: z.string() }),
-    object: z.object({ key: z.string() })
-  })
-})
-
-export default async (event: unknown): Promise<ComparisonResult> => {
-  const parsedEvent = inputSchema.parse(event)
+export default async (event: CompareLambdaEvent): Promise<ComparisonResult> => {
+  const parsedEvent = eventSchema.parse(event)
 
   const bucket = parsedEvent.detail.bucket.name
   const s3Path = parsedEvent.detail.object.key
@@ -32,7 +26,7 @@ export default async (event: unknown): Promise<ComparisonResult> => {
     throw content
   }
 
-  const comparisonResult = compare(content)
+  const comparisonResult = compareMessage(content)
 
   logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
   const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)

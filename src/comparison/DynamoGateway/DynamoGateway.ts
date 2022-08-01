@@ -1,6 +1,7 @@
 import { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "../../../src/comparison/Types"
+import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "src/comparison/Types"
+import { isError } from "src/comparison/Types"
 
 export default class DynamoGateway {
   protected readonly service: DynamoDB
@@ -107,5 +108,29 @@ export default class DynamoGateway {
     } else {
       return items
     }
+  }
+
+  async getFailedOnes(limit: number): PromiseResult<ComparisonLog[]> {
+    const result = await this.client
+      .query({
+        TableName: this.tableName,
+        IndexName: "latestResultIndex",
+        KeyConditionExpression: "#latestResult = :latestResultValue",
+        ExpressionAttributeNames: {
+          "#latestResult": "latestResult"
+        },
+        ExpressionAttributeValues: {
+          ":latestResultValue": 0
+        },
+        Limit: limit
+      })
+      .promise()
+      .catch((error: Error) => error)
+
+    if (isError(result)) {
+      return result
+    }
+
+    return (result.Items || []) as ComparisonLog[]
   }
 }
