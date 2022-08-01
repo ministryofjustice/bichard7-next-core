@@ -8,8 +8,18 @@ node_modules
 
 # Things we don't need
 
+src/
 tests/
 test-data/
 .github/
 .circleci/
 .husky/
+.webpack/
+.eslintrc.js
+.gitignore
+.nvmrc
+.prettierrc
+buildspec.yml
+jest.config.js
+tsconfig.eslint.json
+tsconfig.json
