@@ -1,6 +1,6 @@
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isEqual"
-import logger from "src/lib/logging"
+import logger from "../src/lib/logging"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
 import type BichardResultType from "../src/types/BichardResultType"

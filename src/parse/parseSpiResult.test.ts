@@ -1,5 +1,5 @@
 import fs from "fs"
-import type { ResultedCaseMessageParsedXml } from "src/types/SpiResult"
+import type { ResultedCaseMessageParsedXml } from "../types/SpiResult"
 import parseSpiResult from "./parseSpiResult"
 
 const parseFile = (file: string): ResultedCaseMessageParsedXml => {

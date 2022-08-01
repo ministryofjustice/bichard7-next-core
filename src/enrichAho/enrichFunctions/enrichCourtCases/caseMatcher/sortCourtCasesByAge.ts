@@ -1,4 +1,4 @@
-import type { PncCourtCase } from "src/types/PncQueryResult"
+import type { PncCourtCase } from "../../../../types/PncQueryResult"
 
 const getFullYear = (year: string): string => (year >= "70" ? `19${year}` : `20${year}`)
 

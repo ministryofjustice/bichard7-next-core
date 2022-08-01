@@ -1,4 +1,4 @@
-import type Exception from "src/types/Exception"
+import type Exception from "../types/Exception"
 
 type AccumulatorObject = {
   [k: string]: Exception

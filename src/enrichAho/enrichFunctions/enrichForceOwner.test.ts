@@ -1,8 +1,8 @@
-import parseSpiResult from "src/parse/parseSpiResult"
-import transformSpiToAho from "src/parse/transformSpiToAho"
-import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
-import generateMessage from "tests/helpers/generateMessage"
-import generateMockAho from "tests/helpers/generateMockAho"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import generateMessage from "../../../tests/helpers/generateMessage"
+import generateMockAho from "../../../tests/helpers/generateMockAho"
 import enrichForceOwner from "./enrichForceOwner"
 
 describe("enrichForceOwner", () => {

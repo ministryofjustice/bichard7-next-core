@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 
 const isCaseRecordable = (annotatedHearingOutcome: AnnotatedHearingOutcome): boolean => {
   const isPncQuery = annotatedHearingOutcome.PncQuery !== undefined

@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import logger from "src/lib/logging"
+import logger from "../../lib/logging"
 
 export default (time: string): string => {
   if (!time) {

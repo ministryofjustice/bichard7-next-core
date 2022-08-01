@@ -1,4 +1,4 @@
-import type { ParsedAsn } from "src/types/ParsedAsn"
+import type { ParsedAsn } from "../../../types/ParsedAsn"
 
 const sequenceNumberLength = 11
 

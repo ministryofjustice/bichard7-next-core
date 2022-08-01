@@ -1,7 +1,7 @@
 import type { ComparisonResult } from "src/comparison/compareMessage"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
-import { formatXmlDiff } from "src/comparison/xmlOutputComparison"
+import { formatXmlDiff } from "../xmlOutputComparison"
 
 const resultMatches = (result: ComparisonResult): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches

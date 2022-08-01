@@ -1,4 +1,4 @@
-import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
+import { createHOOffence, createPNCCourtCaseOffence } from "../../../../../tests/helpers/generateMockOffences"
 import matchOffencesWithSameOffenceCodeAndStartDate from "./matchOffencesWithSameOffenceCodeAndStartDate"
 
 describe("matchOffencesWithSameOffenceCodeAndStartDate()", () => {

@@ -1,4 +1,4 @@
-import type { Case } from "src/types/AnnotatedHearingOutcome"
+import type { Case } from "../../../types/AnnotatedHearingOutcome"
 
 const handle100Offences = (caseElem: Case): void => {
   if (caseElem.HearingDefendant.Offence.length > 100) {

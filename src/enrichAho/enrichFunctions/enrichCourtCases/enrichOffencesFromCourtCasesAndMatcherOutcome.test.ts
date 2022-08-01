@@ -1,9 +1,9 @@
-import matchCases from "src/enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
-import matchMultipleCases from "src/enrichAho/enrichFunctions/enrichCourtCases/matchMultipleCases"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import createPNCMessage from "tests/helpers/createPncMessage"
-import { createHOOffence, createPNCCourtCaseOffence } from "tests/helpers/generateMockOffences"
-import createPNCCourtCase from "tests/helpers/generateMockPncCase"
+import matchCases from "../../../enrichAho/enrichFunctions/enrichCourtCases/caseMatcher/caseMatcher"
+import matchMultipleCases from "../../../enrichAho/enrichFunctions/enrichCourtCases/matchMultipleCases"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import createPNCMessage from "../../../../tests/helpers/createPncMessage"
+import { createHOOffence, createPNCCourtCaseOffence } from "../../../../tests/helpers/generateMockOffences"
+import createPNCCourtCase from "../../../../tests/helpers/generateMockPncCase"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
 
 describe("enrichOffencesFromCourtCasesAndMatcherOutcome", () => {

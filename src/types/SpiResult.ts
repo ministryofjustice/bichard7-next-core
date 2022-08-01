@@ -5,8 +5,8 @@ import type {
   resultParsedXmlSchema,
   spiAddressSchema,
   spiCourtIndividualDefendantSchema
-} from "src/schemas/spiResult"
-import { incomingMessageParsedXmlSchema } from "src/schemas/spiResult"
+} from "../schemas/spiResult"
+import { incomingMessageParsedXmlSchema } from "../schemas/spiResult"
 import type { z } from "zod"
 
 export type ResultParsedXml = z.infer<typeof resultParsedXmlSchema>

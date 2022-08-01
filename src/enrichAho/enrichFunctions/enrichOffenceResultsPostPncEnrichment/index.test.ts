@@ -3,8 +3,8 @@ jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/p
 jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal")
 jest.mock("src/lib/isCaseRecordable")
 
-import isCaseRecordable from "src/lib/isCaseRecordable"
-import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
+import isCaseRecordable from "../../../lib/isCaseRecordable"
+import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 import enrichOffenceResultsPostPncEnrichment from "./index"
 import populateCourt from "./populateCourt"
 import populatePncDisposal from "./populatePncDisposal"

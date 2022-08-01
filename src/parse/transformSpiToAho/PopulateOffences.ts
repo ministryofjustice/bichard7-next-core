@@ -2,11 +2,11 @@ import {
   lookupAlcoholLevelMethodBySpiCode,
   lookupOffenceByCjsCode,
   lookupResultQualifierCodeByCjsCode
-} from "src/dataLookup"
-import { COMMON_LAWS, INDICTMENT } from "src/lib/offenceTypes"
-import resultCodeIsOnStopList from "src/lib/result/resultCodeIsOnStopList"
-import type { CriminalProsecutionReference, Offence, OffenceCode } from "src/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "src/types/SpiResult"
+} from "../../dataLookup"
+import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
+import resultCodeIsOnStopList from "../../lib/result/resultCodeIsOnStopList"
+import type { CriminalProsecutionReference, Offence, OffenceCode } from "../../types/AnnotatedHearingOutcome"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../types/SpiResult"
 import PopulateOffenceResults from "./PopulateOffenceResults"
 import removeSeconds from "./removeSeconds"
 

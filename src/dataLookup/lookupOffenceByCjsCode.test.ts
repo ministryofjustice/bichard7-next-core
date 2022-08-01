@@ -1,4 +1,4 @@
-import { COMMON_LAWS } from "src/lib/offenceTypes"
+import { COMMON_LAWS } from "../lib/offenceTypes"
 import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
 
 const localOffenceCode = "01CP001"

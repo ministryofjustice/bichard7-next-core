@@ -1,5 +1,5 @@
-import requireStandingData from "src/lib/requireStandingData"
-import type { OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
+import requireStandingData from "../lib/requireStandingData"
+import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"

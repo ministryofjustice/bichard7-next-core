@@ -1,8 +1,8 @@
-import isCaseRecordable from "src/lib/isCaseRecordable"
-import type { Offence } from "src/types/AnnotatedHearingOutcome"
-import type { Trigger } from "src/types/Trigger"
-import { TriggerCode } from "src/types/TriggerCode"
-import type { TriggerGenerator } from "src/types/TriggerGenerator"
+import isCaseRecordable from "../lib/isCaseRecordable"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
+import { TriggerCode } from "../types/TriggerCode"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0015
 const resultCode = 4592

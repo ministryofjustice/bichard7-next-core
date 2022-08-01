@@ -1,7 +1,7 @@
 import { XMLParser } from "fast-xml-parser"
-import { mapXmlCxe01ToAho } from "src/parse/parseAhoXml"
-import type { AhoXml } from "src/types/AhoXml"
-import type { PncQueryResult } from "src/types/PncQueryResult"
+import { mapXmlCxe01ToAho } from "../../src/parse/parseAhoXml"
+import type { AhoXml } from "../../src/types/AhoXml"
+import type { PncQueryResult } from "../../src/types/PncQueryResult"
 
 /*
 Sample CXE element

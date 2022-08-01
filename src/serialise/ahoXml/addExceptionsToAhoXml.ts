@@ -1,7 +1,7 @@
-import errorPaths from "src/lib/errorPaths"
-import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "src/types/AhoXml"
-import type Exception from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
+import errorPaths from "../../lib/errorPaths"
+import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"
+import type Exception from "../../types/Exception"
+import { ExceptionCode } from "../../types/ExceptionCode"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 

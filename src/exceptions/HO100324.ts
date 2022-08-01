@@ -1,8 +1,8 @@
-import errorPaths from "src/lib/errorPaths"
-import type Exception from "src/types/Exception"
-import { ExceptionCode } from "src/types/ExceptionCode"
-import type { ExceptionGenerator } from "src/types/ExceptionGenerator"
-import ResultClass from "src/types/ResultClass"
+import errorPaths from "../lib/errorPaths"
+import type Exception from "../types/Exception"
+import { ExceptionCode } from "../types/ExceptionCode"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import ResultClass from "../types/ResultClass"
 
 const HO100324: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []
