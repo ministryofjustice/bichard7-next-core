@@ -10,6 +10,7 @@ import type {
   Br7Duration,
   Br7ErrorString,
   Br7Hearing,
+  Br7NameSequenceTextString,
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
@@ -333,6 +334,9 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
   }))
 }
 
+const getGivenNames = (givenName: Br7NameSequenceTextString | Br7NameSequenceTextString[]): string[] =>
+  Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"]["#text"],
   RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
@@ -356,8 +360,9 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     DefendantDetail: {
       PersonName: {
         Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"]?.["#text"],
-        GivenName:
-          xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]["#text"].split(" "),
+        GivenName: getGivenNames(
+          xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]
+        ),
         FamilyName: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
       },
       GeneratedPNCFilename:
