@@ -30,4 +30,8 @@ export const storeCacheFile = async (file: string, contents: string): Promise<vo
   return fs.promises.writeFile(cachePath, contents)
 }
 
-export const clearCache = (): Promise<void> => fs.promises.rm(cacheDir, { recursive: true })
+export const clearCache = async (): Promise<void> => {
+  if (fs.existsSync(cacheDir)) {
+    await fs.promises.rm(cacheDir, { recursive: true })
+  }
+}
