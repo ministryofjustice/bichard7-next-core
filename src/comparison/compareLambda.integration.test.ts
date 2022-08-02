@@ -15,6 +15,7 @@ import MockDate from "mockdate"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
+import * as CompareMessage from "./compareMessage"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
@@ -50,6 +51,7 @@ describe("Comparison lambda", () => {
   })
 
   beforeEach(async () => {
+    jest.restoreAllMocks()
     await s3Server.reset()
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
@@ -129,6 +131,52 @@ describe("Comparison lambda", () => {
           details: {
             triggersMatch: 0,
             exceptionsMatch: 1,
+            xmlOutputMatches: 0,
+            xmlParsingMatches: 0
+          }
+        }
+      ],
+      version: 1
+    })
+  })
+
+  it("should return a failing comparison result when compareMessage function throws exception", async () => {
+    const s3Path = "test-data/comparison/passing.json"
+    const response = await uploadFile(s3Path)
+
+    expect(response).toBeDefined()
+    jest.spyOn(CompareMessage, "default").mockImplementation(() => {
+      throw Error("Dummy error")
+    })
+
+    const result = await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+    expect(result).toStrictEqual({
+      triggersMatch: false,
+      exceptionsMatch: false,
+      xmlOutputMatches: false,
+      xmlParsingMatches: false
+    })
+
+    const record = await dynamoGateway.getOne("s3Path", s3Path)
+    expect(isError(record)).toBe(false)
+
+    const actualRecord = record as DocumentClient.GetItemOutput
+    expect(actualRecord.Item).toStrictEqual({
+      _: "_",
+      s3Path,
+      initialRunAt: mockedDate.toISOString(),
+      initialResult: 0,
+      latestRunAt: mockedDate.toISOString(),
+      latestResult: 0,
+      history: [
+        {
+          runAt: mockedDate.toISOString(),
+          result: 0,
+          details: {
+            triggersMatch: 0,
+            exceptionsMatch: 0,
             xmlOutputMatches: 0,
             xmlParsingMatches: 0
           }

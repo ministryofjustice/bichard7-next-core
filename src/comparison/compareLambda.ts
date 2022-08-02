@@ -26,7 +26,19 @@ export default async (event: CompareLambdaEvent): Promise<ComparisonResult> => {
     throw content
   }
 
-  const comparisonResult = compareMessage(content)
+  let comparisonResult: ComparisonResult
+  let error: Error | undefined
+  try {
+    comparisonResult = compareMessage(content)
+  } catch (e) {
+    error = e as Error
+    comparisonResult = {
+      triggersMatch: false,
+      exceptionsMatch: false,
+      xmlOutputMatches: false,
+      xmlParsingMatches: false
+    }
+  }
 
   logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
   const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
@@ -44,6 +56,10 @@ export default async (event: CompareLambdaEvent): Promise<ComparisonResult> => {
         : "FAIL"
     }`
   )
+
+  if (error) {
+    logger.info(error)
+  }
 
   return comparisonResult
 }
