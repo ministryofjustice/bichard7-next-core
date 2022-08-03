@@ -297,7 +297,7 @@ export const hearingDefendantSchema = z.object({
   CRONumber: croNumberSchema.optional(),
   PNCIdentifier: pncIdentifierSchema.optional(),
   PNCCheckname: z.string().max(54, ExceptionCode.HO100210).optional(),
-  DefendantDetail: defendantDetailSchema,
+  DefendantDetail: defendantDetailSchema.optional(),
   Address: addressSchema,
   RemandStatus: z.string().refine(validateRemandStatus, ExceptionCode.HO100108),
   BailConditions: z.string().array().min(0),

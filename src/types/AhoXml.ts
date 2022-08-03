@@ -158,7 +158,8 @@ export interface Br7HearingDefendant {
   "br7:ArrestSummonsNumber": Br7TextString
   "br7:PNCIdentifier"?: Br7TextString
   "br7:PNCCheckname"?: Br7TextString
-  "br7:DefendantDetail": Br7DefendantDetail
+  "br7:OrganisationName"?: Br7TextString
+  "br7:DefendantDetail"?: Br7DefendantDetail
   "br7:Address": Br7Address
   "br7:RemandStatus": Br7LiteralTextString
   "br7:BailConditions"?: Br7TextString[]

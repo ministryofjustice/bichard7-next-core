@@ -390,19 +390,25 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
     "br7:ArrestSummonsNumber": text(c.HearingDefendant.ArrestSummonsNumber),
     "br7:PNCIdentifier": optionalText(c.HearingDefendant.PNCIdentifier),
     "br7:PNCCheckname": optionalText(c.HearingDefendant.PNCCheckname),
-    "br7:DefendantDetail": {
-      "br7:PersonName": {
-        "ds:Title": optionalText(c.HearingDefendant.DefendantDetail.PersonName.Title),
-        "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName.map((name, index) => ({
-          "#text": name,
-          "@_NameSequence": `${index + 1}`
-        })),
-        "ds:FamilyName": { "#text": c.HearingDefendant.DefendantDetail.PersonName.FamilyName, "@_NameSequence": "1" }
-      },
-      "br7:GeneratedPNCFilename": optionalText(c.HearingDefendant.DefendantDetail.GeneratedPNCFilename),
-      "br7:BirthDate": optionalFormatText(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd"),
-      "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
-    },
+    "br7:OrganisationName": optionalText(c.HearingDefendant.OrganisationName),
+    "br7:DefendantDetail": c.HearingDefendant.DefendantDetail
+      ? {
+          "br7:PersonName": {
+            "ds:Title": optionalText(c.HearingDefendant.DefendantDetail.PersonName.Title),
+            "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName.map((name, index) => ({
+              "#text": name,
+              "@_NameSequence": `${index + 1}`
+            })),
+            "ds:FamilyName": {
+              "#text": c.HearingDefendant.DefendantDetail.PersonName.FamilyName,
+              "@_NameSequence": "1"
+            }
+          },
+          "br7:GeneratedPNCFilename": optionalText(c.HearingDefendant.DefendantDetail.GeneratedPNCFilename),
+          "br7:BirthDate": optionalFormatText(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd"),
+          "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
+        }
+      : undefined,
     "br7:Address": {
       "ds:AddressLine1": text(c.HearingDefendant.Address.AddressLine1),
       "ds:AddressLine2": optionalText(c.HearingDefendant.Address.AddressLine2),

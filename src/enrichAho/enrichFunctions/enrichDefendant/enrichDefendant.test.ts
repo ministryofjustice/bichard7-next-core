@@ -30,24 +30,24 @@ describe("enrichDefendant", () => {
 
   describe("generating PNC name", () => {
     it("should generate the PNC file name", () => {
-      defendant.DefendantDetail.PersonName.FamilyName = "Smith"
-      defendant.DefendantDetail.PersonName.GivenName = ["John A", "William"]
+      defendant.DefendantDetail!.PersonName.FamilyName = "Smith"
+      defendant.DefendantDetail!.PersonName.GivenName = ["John A", "William"]
       const result = enrichDefendant(aho)
       expect(
-        result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail.GeneratedPNCFilename
+        result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail!.GeneratedPNCFilename
       ).toBe("SMITH/JOHN A/WILLIAM")
     })
 
     it("should truncate the PNC file name if it is too long", () => {
-      defendant.DefendantDetail.PersonName.FamilyName = "Smith"
-      defendant.DefendantDetail.PersonName.GivenName = [
+      defendant.DefendantDetail!.PersonName.FamilyName = "Smith"
+      defendant.DefendantDetail!.PersonName.GivenName = [
         "John A",
         "William",
         "Reallyreallyreallyreallyreallyreallyreallylongname"
       ]
       const result = enrichDefendant(aho)
       const pncFilename =
-        result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail.GeneratedPNCFilename
+        result.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail!.GeneratedPNCFilename
       expect(pncFilename).toHaveLength(54)
       expect(pncFilename).toBe("SMITH/JOHN A/WILLIAM/REALLYREALLYREALLYREALLYREALLYRE+")
     })
