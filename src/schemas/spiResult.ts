@@ -47,7 +47,7 @@ export const offenceParsedXmlSchema = z.object({
     OffenceWording: z.string(),
     ChargeDate: z.string().optional(),
     ArrestDate: z.string().optional(),
-    LocationOfOffence: z.string(),
+    LocationOfOffence: z.string().optional(),
     OffenceTitle: z.string().optional(),
     ConvictionDate: z.string().optional(),
     AlcoholRelatedOffence: z

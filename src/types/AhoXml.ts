@@ -203,7 +203,7 @@ export interface Br7Offence {
   "ds:ActualOffenceDateCode": Br7LiteralTextString
   "ds:ActualOffenceStartDate": DsActualOffenceStartDate
   "ds:ActualOffenceEndDate"?: DsActualOffenceEndDate
-  "ds:LocationOfOffence": Br7TextString
+  "ds:LocationOfOffence"?: Br7TextString
   "ds:OffenceTitle"?: Br7TextString
   "ds:ActualOffenceWording": Br7TextString
   "ds:RecordableOnPNCindicator"?: Br7LiteralTextString
