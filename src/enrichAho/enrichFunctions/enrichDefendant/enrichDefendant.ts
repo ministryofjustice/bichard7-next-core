@@ -20,7 +20,7 @@ const deduplicateBailConditions = (conditions: string[]): string[] =>
   deduplicate(conditions.filter((c) => c.length > 0))
 
 const createGeneratedPncName = (defendant: HearingDefendant): string => {
-  const personName = defendant.DefendantDetail.PersonName
+  const personName = defendant.DefendantDetail!.PersonName
   const pncFilename = [personName.FamilyName, personName.GivenName.join("/")].join("/").toUpperCase()
   if (pncFilename.length > GENERATED_PNC_FILENAME_MAX_LENGTH) {
     return pncFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 1) + "+"
@@ -35,7 +35,7 @@ const enrichDefendant: EnrichAhoFunction = (hearingOutCome) => {
 
   defendant.BailConditions = deduplicateBailConditions(defendant.BailConditions)
 
-  if (defendant.DefendantDetail.PersonName.FamilyName) {
+  if (defendant.DefendantDetail?.PersonName.FamilyName) {
     defendant.DefendantDetail.GeneratedPNCFilename = createGeneratedPncName(defendant)
   }
 

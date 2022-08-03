@@ -46,7 +46,14 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
       .join(" ")
       .trim()
   } else if (spiDefendant.CourtCorporateDefendant) {
-    name = spiDefendant.CourtCorporateDefendant.OrganisationName.OrganisationName
+    const {
+      CourtCorporateDefendant: {
+        OrganisationName: { OrganisationName: spiOrganisationName },
+        PresentAtHearing: spiPresentAtHearing
+      }
+    } = spiDefendant
+    name = spiOrganisationName
+    hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
   }
   hearingOutcomeHearing.SourceReference = {
     DocumentName: `SPI ${name}`,

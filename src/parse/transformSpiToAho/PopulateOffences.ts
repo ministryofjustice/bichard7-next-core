@@ -47,7 +47,10 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
 export default class {
   private bailConditions: string[] = []
 
-  constructor(private courtResult: ResultedCaseMessageParsedXml, private hearingDefendantBailConditions: string[]) {}
+  constructor(
+    private courtResult: ResultedCaseMessageParsedXml,
+    private hearingDefendantBailConditions: string[] = []
+  ) {}
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length

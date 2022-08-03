@@ -357,21 +357,25 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
     PNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:PNCIdentifier"]?.["#text"],
     PNCCheckname: xmlCase["br7:HearingDefendant"]["br7:PNCCheckname"]?.["#text"],
-    DefendantDetail: {
-      PersonName: {
-        Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"]?.["#text"],
-        GivenName: getGivenNames(
-          xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]
-        ),
-        FamilyName: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
-      },
-      GeneratedPNCFilename:
-        xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"]?.["#text"],
-      BirthDate: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]
-        ? new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]["#text"])
-        : undefined,
-      Gender: Number(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
-    },
+    OrganisationName: xmlCase["br7:HearingDefendant"]["br7:OrganisationName"]?.["#text"],
+    DefendantDetail: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]
+      ? {
+          PersonName: {
+            Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"]?.["#text"],
+            GivenName: getGivenNames(
+              xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]
+            ),
+            FamilyName:
+              xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
+          },
+          GeneratedPNCFilename:
+            xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"]?.["#text"],
+          BirthDate: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]
+            ? new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]["#text"])
+            : undefined,
+          Gender: Number(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
+        }
+      : undefined,
     Address: {
       AddressLine1: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine1"]["#text"],
       AddressLine2: xmlCase["br7:HearingDefendant"]["br7:Address"]["ds:AddressLine2"]?.["#text"],
