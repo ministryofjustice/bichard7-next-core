@@ -255,7 +255,7 @@ export const offenceSchema = z.object({
   ActualOffenceDateCode: z.string().refine(validateActualOffenceDateCode),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
   ActualOffenceEndDate: actualOffenceEndDateSchema.optional(),
-  LocationOfOffence: z.string().min(1, ExceptionCode.HO100232).max(80, ExceptionCode.HO100232),
+  LocationOfOffence: z.string().min(1, ExceptionCode.HO100232).max(80, ExceptionCode.HO100232).optional(),
   OffenceWelshTitle: z.string().optional(),
   ActualOffenceWording: z.string().min(1, ExceptionCode.HO100234).max(2500, ExceptionCode.HO100234),
   ActualWelshOffenceWording: z.string().optional(),

@@ -305,7 +305,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
             EndDate: new Date(xmlOffence["ds:ActualOffenceEndDate"]["ds:EndDate"]["#text"])
           }
         : undefined,
-    LocationOfOffence: xmlOffence["ds:LocationOfOffence"]["#text"],
+    LocationOfOffence: xmlOffence["ds:LocationOfOffence"]?.["#text"],
     ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
     AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
       ? {

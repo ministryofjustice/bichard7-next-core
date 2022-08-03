@@ -344,7 +344,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
             "ds:EndDate": optionalFormatText(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
           }
         : undefined,
-    "ds:LocationOfOffence": text(offence.LocationOfOffence),
+    "ds:LocationOfOffence": optionalText(offence.LocationOfOffence),
     "ds:OffenceTitle": optionalText(offence.OffenceTitle),
     "ds:ActualOffenceWording": text(offence.ActualOffenceWording),
     "ds:RecordableOnPNCindicator": optionalLiteral(offence.RecordableOnPNCindicator, LiteralType.YesNo),
