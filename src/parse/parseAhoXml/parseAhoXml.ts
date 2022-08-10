@@ -340,8 +340,15 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
   }))
 }
 
-const getGivenNames = (givenName: Br7NameSequenceTextString | Br7NameSequenceTextString[]): string[] =>
-  Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+const getGivenNames = (
+  givenName: Br7NameSequenceTextString | Br7NameSequenceTextString[] | undefined
+): string[] | undefined => {
+  if (!givenName) {
+    return undefined
+  }
+
+  return Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+}
 
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"]["#text"],

@@ -144,7 +144,7 @@ export const addressSchema = z.object({
 
 export const personNameSchema = z.object({
   Title: z.string().min(1, ExceptionCode.HO100212).max(35, ExceptionCode.HO100212).optional(),
-  GivenName: z.array(z.string().min(1, ExceptionCode.HO100213).max(35, ExceptionCode.HO100213)),
+  GivenName: z.array(z.string().min(1, ExceptionCode.HO100213).max(35, ExceptionCode.HO100213)).optional(),
   FamilyName: z.string().min(1, ExceptionCode.HO100215).max(35, ExceptionCode.HO100215),
   Suffix: z.string().optional()
 })

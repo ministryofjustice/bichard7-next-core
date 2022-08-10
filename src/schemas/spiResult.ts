@@ -1,5 +1,5 @@
-import { SpiPlea } from "../types/Plea"
 import { z } from "zod"
+import { SpiPlea } from "../types/Plea"
 
 export const spiPleaSchema = z.nativeEnum(SpiPlea)
 
@@ -115,7 +115,7 @@ export const spiCourtIndividualDefendantSchema = z.object({
       Gender: z.string(),
       PersonName: z.object({
         PersonTitle: z.string().optional(),
-        PersonGivenName1: z.string(),
+        PersonGivenName1: z.string().optional(),
         PersonGivenName2: z.string().optional(),
         PersonGivenName3: z.string().optional(),
         PersonFamilyName: z.string()

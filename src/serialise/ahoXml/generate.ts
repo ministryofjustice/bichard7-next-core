@@ -395,7 +395,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       ? {
           "br7:PersonName": {
             "ds:Title": optionalText(c.HearingDefendant.DefendantDetail.PersonName.Title),
-            "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName.map((name, index) => ({
+            "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName?.map((name, index) => ({
               "#text": name,
               "@_NameSequence": `${index + 1}`
             })),
