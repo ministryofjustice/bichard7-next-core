@@ -140,7 +140,9 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
   NumberSpecifiedInResult: mapNumberSpecifiedInResult(xmlResult["ds:NumberSpecifiedInResult"]),
   NextCourtType: xmlResult["ds:NextCourtType"]?.["#text"],
-  NextHearingDate: xmlResult["ds:NextHearingDate"] ? new Date(xmlResult["ds:NextHearingDate"]["#text"]) : undefined,
+  NextHearingDate: xmlResult["ds:NextHearingDate"]?.["#text"]
+    ? new Date(xmlResult["ds:NextHearingDate"]["#text"])
+    : undefined,
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
   Verdict: xmlResult["ds:Verdict"]?.["#text"],
