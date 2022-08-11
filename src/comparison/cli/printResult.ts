@@ -12,7 +12,8 @@ const printSummary = (results: ComparisonResult[]): void => {
   const total = results.length
   const passed = results.filter((result) => !result.skipped && resultMatches(result)).length
   const skipped = results.filter((result) => result.skipped).length
-  const failed = total - passed - skipped
+  const errored = results.filter((result) => result.error).length
+  const failed = total - passed - skipped - errored
 
   console.log("\nSummary:")
   console.log(`${results.length} comparisons`)
@@ -26,7 +27,11 @@ const printSummary = (results: ComparisonResult[]): void => {
   }
 
   if (skipped > 0) {
-    console.log(chalk.yellow(`✗ ${skipped} skipped`))
+    console.log(chalk.yellow(`○ ${skipped} skipped`))
+  }
+
+  if (errored > 0) {
+    console.log(chalk.bgRed(`● ${errored} errored (${toPercent(errored, total - skipped)})`))
   }
 }
 
@@ -53,6 +58,12 @@ const printResult = (result: ComparisonResult | ComparisonResult[], truncate = f
   }
 
   if (result.skipped) {
+    return
+  }
+
+  if (result.error) {
+    console.error(`\nFile threw an error!\n${result.file}\n`)
+    console.error(result.error)
     return
   }
 
