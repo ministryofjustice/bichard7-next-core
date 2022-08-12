@@ -9,11 +9,15 @@ if (!fileName) {
   process.exit()
 }
 
-const fileText = fs.readFileSync(fileName).toString()
+const localFileName = fileName.startsWith("s3://")
+  ? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
+  : fileName
+
+const fileText = fs.readFileSync(localFileName).toString()
 const fileJson = JSON.parse(fileText)
 
-const inputFileName = fileName.replace(".json", ".input.xml")
-const ahoFileName = fileName.replace(".json", ".aho.xml")
+const inputFileName = localFileName.replace(".json", ".input.xml")
+const ahoFileName = localFileName.replace(".json", ".aho.xml")
 
 fs.writeFileSync(inputFileName, fileJson.incomingMessage)
 fs.writeFileSync(ahoFileName, fileJson.annotatedHearingOutcome)

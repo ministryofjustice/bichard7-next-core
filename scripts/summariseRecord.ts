@@ -22,9 +22,13 @@ if (!fileName) {
   process.exit()
 }
 
+const localFileName = fileName.startsWith("s3://")
+  ? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
+  : fileName
+
 const formatDate = (date: Date | undefined): string => (date ? date.toISOString().split("T")[0] : "")
 
-const fileContents = fs.readFileSync(fileName)
+const fileContents = fs.readFileSync(localFileName)
 const fileJson = JSON.parse(fileContents.toString()) as ComparisonFile
 
 // const summariseAho = null
@@ -73,7 +77,7 @@ if (!(outputAho instanceof Error) && outputAho.PncQuery) {
 
 const textOutput = output.join("\n")
 
-const outFileName = fileName.replace(".json", ".summary.txt")
+const outFileName = localFileName.replace(".json", ".summary.txt")
 
 fs.writeFileSync(outFileName, textOutput)
 

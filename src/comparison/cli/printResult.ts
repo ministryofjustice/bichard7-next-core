@@ -58,6 +58,7 @@ const printResult = (result: ComparisonResult | ComparisonResult[], truncate = f
   }
 
   if (result.skipped) {
+    console.log(`\nSkipping file:\n${result.file}\n`)
     return
   }
 
