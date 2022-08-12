@@ -116,6 +116,19 @@ const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undef
   return allBailConditions.map((bc) => bc["#text"])
 }
 
+const parseDateOrFallbackToString = (input: string | undefined): Date | string | undefined => {
+  if (!input) {
+    return undefined
+  }
+
+  const parsedDate = new Date(input)
+  if (isNaN(parsedDate.getTime())) {
+    return input
+  }
+
+  return parsedDate
+}
+
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]["#text"]),
   OffenceRemandStatus: xmlResult["ds:OffenceRemandStatus"] ? xmlResult["ds:OffenceRemandStatus"]["#text"] : undefined,
@@ -140,9 +153,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
   NumberSpecifiedInResult: mapNumberSpecifiedInResult(xmlResult["ds:NumberSpecifiedInResult"]),
   NextCourtType: xmlResult["ds:NextCourtType"]?.["#text"],
-  NextHearingDate: xmlResult["ds:NextHearingDate"]?.["#text"]
-    ? new Date(xmlResult["ds:NextHearingDate"]["#text"])
-    : undefined,
+  NextHearingDate: parseDateOrFallbackToString(xmlResult["ds:NextHearingDate"]?.["#text"]),
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
   Verdict: xmlResult["ds:Verdict"]?.["#text"],

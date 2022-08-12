@@ -211,7 +211,7 @@ export const resultSchema = z.object({
     .optional(),
   NextResultSourceOrganisation: organisationUnitSchema.or(z.null()).optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
-  NextHearingDate: z.date().optional(),
+  NextHearingDate: z.date().or(z.string()).optional(),
   NextHearingTime: timeSchema.optional(),
   NextCourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Always set to a valid value
   PleaStatus: cjsPleaSchema.optional(),

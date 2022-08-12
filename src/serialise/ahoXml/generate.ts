@@ -148,8 +148,14 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 const text = (t: string): Br7TextString => ({ "#text": t })
 const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
-const optionalFormatText = (t: Date | undefined, f: string): Br7TextString | undefined =>
-  t ? { "#text": format(t, f) } : undefined
+const optionalFormatText = (t: Date | string | undefined, f: string): Br7TextString | undefined => {
+  if (!t) {
+    return undefined
+  }
+
+  const value = t instanceof Date ? format(t, f) : t
+  return { "#text": value }
+}
 
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": optionalText(orgUnit.TopLevelCode),
