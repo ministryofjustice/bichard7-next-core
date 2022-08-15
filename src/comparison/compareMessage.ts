@@ -2,6 +2,7 @@
 import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import generateMockPncQueryResultFromAho from "../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../tests/helpers/getPncQueryTimeFromAho"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
@@ -44,6 +45,9 @@ type CompareOptions = {
   defaultStandingDataVersion?: string
 }
 
+const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
+  !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
+
 const compareMessage = (
   input: string,
   debug = false,
@@ -73,6 +77,8 @@ const compareMessage = (
     if (parsedAho instanceof Error) {
       throw parsedAho
     }
+
+    const isIgnored = !hasOffences(parsedAho)
     const generatedXml = convertAhoToXml(parsedAho)
 
     const debugOutput: ComparisonResultDebugOutput = {
@@ -91,8 +97,10 @@ const compareMessage = (
     return {
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      xmlOutputMatches: xmlOutputMatches(ahoXml, annotatedHearingOutcome),
-      xmlParsingMatches: xmlOutputMatches(generatedXml, annotatedHearingOutcome),
+      xmlOutputMatches: isIgnored
+        ? !hasOffences(coreResult.hearingOutcome)
+        : xmlOutputMatches(ahoXml, annotatedHearingOutcome),
+      xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, annotatedHearingOutcome),
       ...(debug && { debugOutput })
     }
   } catch (e) {
