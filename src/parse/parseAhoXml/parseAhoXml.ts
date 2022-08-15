@@ -117,12 +117,12 @@ const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undef
 }
 
 const parseDateOrFallbackToString = (input?: Br7ErrorString): Date | string | null | undefined => {
-  if (!input) {
-    return undefined
+  if (input && input["@_Error"] && !input["#text"]) {
+    return null
   }
 
-  if (!input["#text"]) {
-    return null
+  if (!input || !input["#text"]) {
+    return undefined
   }
 
   const parsedDate = new Date(input["#text"])
