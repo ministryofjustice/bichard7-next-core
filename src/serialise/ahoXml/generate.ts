@@ -241,7 +241,10 @@ const mapAhoResultsToXml = (
     "ds:NextResultSourceOrganisation": mapNextResultSourceOrganisation(result.NextResultSourceOrganisation),
     "ds:NextCourtType": optionalText(result.NextCourtType),
     // ds:NextHearingType
-    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
+    "ds:NextHearingDate":
+      result.NextHearingDate === null
+        ? nullText(result.NextHearingDate)
+        : optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
