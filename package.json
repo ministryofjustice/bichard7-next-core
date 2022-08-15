@@ -19,6 +19,7 @@
     "compare:files": "scripts/files-from-comparison.js",
     "compare:summarise": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/summariseRecord.ts",
     "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node src/comparison/repeatTestBichard.ts",
+    "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
     "build": "npm run clean && tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

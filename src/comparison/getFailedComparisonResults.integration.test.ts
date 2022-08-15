@@ -10,6 +10,7 @@ import { isError } from "./Types"
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
 const createRecord = (result: number, s3Path: string): ComparisonLog => ({
+  version: 1,
   initialResult: result,
   initialRunAt: "2022-07-09T10:12:13.000Z",
   latestResult: result,
