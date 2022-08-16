@@ -29,7 +29,7 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
 
   return {
     PersonName: {
-      Title: spiPersonTitle?.trim(),
+      Title: spiPersonTitle?.trim() || undefined,
       GivenName: spiGivenNames,
       FamilyName: spiPersonFamilyName.trim()
     },
