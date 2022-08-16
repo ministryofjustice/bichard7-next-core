@@ -1,7 +1,7 @@
+import { z } from "zod"
 import { ExceptionCode } from "../types/ExceptionCode"
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
-import { z } from "zod"
 import {
   invalid,
   validateActualOffenceDateCode,
@@ -334,7 +334,7 @@ export const hearingOutcomeSchema = z.object({
 })
 
 export const annotatedHearingOutcomeSchema = z.object({
-  Exceptions: z.array(exceptionSchema).optional(),
+  Exceptions: z.array(exceptionSchema),
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),

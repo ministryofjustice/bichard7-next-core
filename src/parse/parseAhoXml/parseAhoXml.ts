@@ -450,6 +450,7 @@ const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | undefined => {
         Case: mapXmlCaseToAho(rootElement["br7:HearingOutcome"]["br7:Case"])
       }
     },
+    Exceptions: [],
     PncQuery: mapXmlCxe01ToAho(aho["br7:AnnotatedHearingOutcome"]?.CXE01),
     PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
       ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]["#text"])
