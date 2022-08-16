@@ -148,8 +148,14 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 const text = (t: string): Br7TextString => ({ "#text": t })
 const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
-const optionalFormatText = (t: Date | undefined, f: string): Br7TextString | undefined =>
-  t ? { "#text": format(t, f) } : undefined
+const optionalFormatText = (t: Date | string | undefined, f: string): Br7TextString | undefined => {
+  if (!t) {
+    return undefined
+  }
+
+  const value = t instanceof Date ? format(t, f) : t
+  return { "#text": value }
+}
 
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": optionalText(orgUnit.TopLevelCode),
@@ -235,7 +241,10 @@ const mapAhoResultsToXml = (
     "ds:NextResultSourceOrganisation": mapNextResultSourceOrganisation(result.NextResultSourceOrganisation),
     "ds:NextCourtType": optionalText(result.NextCourtType),
     // ds:NextHearingType
-    "ds:NextHearingDate": optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
+    "ds:NextHearingDate":
+      result.NextHearingDate === null
+        ? nullText(result.NextHearingDate)
+        : optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
@@ -395,7 +404,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
       ? {
           "br7:PersonName": {
             "ds:Title": optionalText(c.HearingDefendant.DefendantDetail.PersonName.Title),
-            "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName.map((name, index) => ({
+            "ds:GivenName": c.HearingDefendant.DefendantDetail.PersonName.GivenName?.map((name, index) => ({
               "#text": name,
               "@_NameSequence": `${index + 1}`
             })),
@@ -468,7 +477,7 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "br7:UniqueID": text(hearing.SourceReference.UniqueID),
     "br7:DocumentType": text(hearing.SourceReference.DocumentType)
   },
-  "br7:CourtType": optionalLiteral(hearing.CourtType, LiteralType.CourtType),
+  "br7:CourtType": hearing.CourtType ? optionalLiteral(hearing.CourtType, LiteralType.CourtType) : undefined,
   "br7:CourtHouseCode": text(hearing.CourtHouseCode.toString()),
   "br7:CourtHouseName": optionalText(hearing.CourtHouseName),
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),

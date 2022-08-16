@@ -1,4 +1,5 @@
 export default interface ComparisonLog {
+  version: number
   s3Path: string
   initialRunAt: string
   initialResult: number

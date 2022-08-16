@@ -1,8 +1,8 @@
 import differenceWith from "lodash.differencewith"
-import isEqual from "lodash.isEqual"
-import logger from "../src/lib/logging"
+import isEqual from "lodash.isequal"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
+import logger from "../src/lib/logging"
 import type BichardResultType from "../src/types/BichardResultType"
 import type Exception from "../src/types/Exception"
 import type { Trigger } from "../src/types/Trigger"
@@ -109,7 +109,7 @@ const processMessage = (message: string): void => {
 
   if (
     areTriggerOrExceptionArraysEqual(coreResult.triggers, bichardResult.triggers || []) &&
-    areTriggerOrExceptionArraysEqual(coreResult.exceptions, bichardResult.exceptions || [])
+    areTriggerOrExceptionArraysEqual(coreResult.hearingOutcome.Exceptions, bichardResult.exceptions || [])
   ) {
     results.passed++
     logger.info(`Result ${results.total} passed`)

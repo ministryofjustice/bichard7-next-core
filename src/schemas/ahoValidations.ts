@@ -1,3 +1,4 @@
+import { z } from "zod"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -20,7 +21,6 @@ import Asn from "../lib/Asn"
 import requireStandingData from "../lib/requireStandingData"
 import type { NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../types/ExceptionCode"
-import { z } from "zod"
 const { remandStatus } = requireStandingData()
 
 const dummyAsnPatterns = [
@@ -34,6 +34,8 @@ const dummyAsnPatterns = [
   "[0-9]{2}50(11|12|21|41|42|43|OF)[0-9A-Z]{2}[0-9]{11}[A-HJ-NP-RT-Z]{1}",
   "[0-9]{2}50(11|12|21|41|42|43|OF|SJ)[0-9A-Z]{2}[0-9]{11}[A-HJ-NP-RT-Z]{1}"
 ]
+
+const invalid = () => false
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
@@ -106,6 +108,7 @@ const validateNumberSpecifiedInResult = (value: NumberSpecifiedInResult): boolea
   value.Number >= 1 && value.Number <= 9999
 
 export {
+  invalid,
   validateRemandStatus,
   validateAsn,
   validateDummyAsn,

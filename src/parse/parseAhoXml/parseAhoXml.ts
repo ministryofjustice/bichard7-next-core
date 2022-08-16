@@ -116,6 +116,23 @@ const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undef
   return allBailConditions.map((bc) => bc["#text"])
 }
 
+const parseDateOrFallbackToString = (input?: Br7ErrorString): Date | string | null | undefined => {
+  if (input && input["@_Error"] && !input["#text"]) {
+    return null
+  }
+
+  if (!input || !input["#text"]) {
+    return undefined
+  }
+
+  const parsedDate = new Date(input["#text"])
+  if (isNaN(parsedDate.getTime())) {
+    return input["#text"]
+  }
+
+  return parsedDate
+}
+
 const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   CJSresultCode: Number(xmlResult["ds:CJSresultCode"]["#text"]),
   OffenceRemandStatus: xmlResult["ds:OffenceRemandStatus"] ? xmlResult["ds:OffenceRemandStatus"]["#text"] : undefined,
@@ -140,7 +157,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   AmountSpecifiedInResult: mapAmountSpecifiedInResult(xmlResult["ds:AmountSpecifiedInResult"]),
   NumberSpecifiedInResult: mapNumberSpecifiedInResult(xmlResult["ds:NumberSpecifiedInResult"]),
   NextCourtType: xmlResult["ds:NextCourtType"]?.["#text"],
-  NextHearingDate: xmlResult["ds:NextHearingDate"] ? new Date(xmlResult["ds:NextHearingDate"]["#text"]) : undefined,
+  NextHearingDate: parseDateOrFallbackToString(xmlResult["ds:NextHearingDate"]),
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
   Verdict: xmlResult["ds:Verdict"]?.["#text"],
@@ -288,6 +305,10 @@ const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string
 }
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
+  if (!xmlOffences) {
+    return []
+  }
+
   const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
   return offences.map((xmlOffence) => ({
     CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
@@ -334,8 +355,15 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
   }))
 }
 
-const getGivenNames = (givenName: Br7NameSequenceTextString | Br7NameSequenceTextString[]): string[] =>
-  Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+const getGivenNames = (
+  givenName: Br7NameSequenceTextString | Br7NameSequenceTextString[] | undefined
+): string[] | undefined => {
+  if (!givenName) {
+    return undefined
+  }
+
+  return Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+}
 
 const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"]["#text"],
@@ -347,7 +375,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
       }
     : undefined,
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
-  ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
+  ForceOwner: xmlCase["br7:ForceOwner"] ? mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]) : undefined,
   CourtCaseReferenceNumber: xmlCase["ds:CourtCaseReferenceNumber"]?.["#text"],
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]["#text"]
@@ -370,7 +398,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
           },
           GeneratedPNCFilename:
             xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"]?.["#text"],
-          BirthDate: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]
+          BirthDate: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]?.["#text"]
             ? new Date(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:BirthDate"]["#text"])
             : undefined,
           Gender: Number(xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:Gender"]["#text"])
@@ -422,6 +450,7 @@ const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | undefined => {
         Case: mapXmlCaseToAho(rootElement["br7:HearingOutcome"]["br7:Case"])
       }
     },
+    Exceptions: [],
     PncQuery: mapXmlCxe01ToAho(aho["br7:AnnotatedHearingOutcome"]?.CXE01),
     PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
       ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]["#text"])

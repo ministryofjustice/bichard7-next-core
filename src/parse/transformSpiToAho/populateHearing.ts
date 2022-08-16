@@ -52,7 +52,7 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
         PresentAtHearing: spiPresentAtHearing
       }
     } = spiDefendant
-    name = spiOrganisationName
+    name = spiOrganisationName.trim()
     hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
   }
   hearingOutcomeHearing.SourceReference = {

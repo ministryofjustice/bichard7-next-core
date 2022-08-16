@@ -12,5 +12,6 @@ export default (spiResult: IncomingMessageParsedXml): AnnotatedHearingOutcome =>
       ),
       Case: populateCase(spiResult.DeliverRequest.Message.ResultedCaseMessage)
     }
-  }
+  },
+  Exceptions: []
 })

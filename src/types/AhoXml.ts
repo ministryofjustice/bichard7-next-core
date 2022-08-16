@@ -186,7 +186,7 @@ export interface Br7DefendantDetail {
 
 export interface Br7PersonName {
   "ds:Title"?: Br7TextString
-  "ds:GivenName": Br7NameSequenceTextString | Br7NameSequenceTextString[]
+  "ds:GivenName"?: Br7NameSequenceTextString | Br7NameSequenceTextString[]
   "ds:FamilyName": Br7NameSequenceTextString
 }
 

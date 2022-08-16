@@ -1,8 +1,9 @@
+import { z } from "zod"
 import { ExceptionCode } from "../types/ExceptionCode"
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
-import { z } from "zod"
 import {
+  invalid,
   validateActualOffenceDateCode,
   validateAmountSpecifiedInResult,
   validateAsn,
@@ -144,7 +145,7 @@ export const addressSchema = z.object({
 
 export const personNameSchema = z.object({
   Title: z.string().min(1, ExceptionCode.HO100212).max(35, ExceptionCode.HO100212).optional(),
-  GivenName: z.array(z.string().min(1, ExceptionCode.HO100213).max(35, ExceptionCode.HO100213)),
+  GivenName: z.array(z.string().min(1, ExceptionCode.HO100213).max(35, ExceptionCode.HO100213)).optional(),
   FamilyName: z.string().min(1, ExceptionCode.HO100215).max(35, ExceptionCode.HO100215),
   Suffix: z.string().optional()
 })
@@ -211,7 +212,7 @@ export const resultSchema = z.object({
     .optional(),
   NextResultSourceOrganisation: organisationUnitSchema.or(z.null()).optional(),
   NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
-  NextHearingDate: z.date().optional(),
+  NextHearingDate: z.date().or(z.string().refine(invalid, ExceptionCode.HO100102)).or(z.null()).optional(),
   NextHearingTime: timeSchema.optional(),
   NextCourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Always set to a valid value
   PleaStatus: cjsPleaSchema.optional(),
@@ -333,7 +334,7 @@ export const hearingOutcomeSchema = z.object({
 })
 
 export const annotatedHearingOutcomeSchema = z.object({
-  Exceptions: z.array(exceptionSchema).optional(),
+  Exceptions: z.array(exceptionSchema),
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),

@@ -26,6 +26,7 @@ const HO100323: ExceptionGenerator = (hearingOutcome, options) => {
       offence.Result.forEach((result, resultIndex) => {
         if (hasHO100322(exceptions, offenceIndex, resultIndex) && !result.NextHearingDate) {
           const path = errorPaths.offence(offenceIndex).result(resultIndex).nextHearingDate
+          result.NextHearingDate = null
           generatedExceptions.push({ code: ExceptionCode.HO100323, path })
         }
       })

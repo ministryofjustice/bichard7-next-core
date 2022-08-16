@@ -11,7 +11,11 @@ const generateHash = (message: string): string => crypto.createHash("sha256").up
 
 const main = async () => {
   const filename = process.argv[2]
-  const fileContents = fs.readFileSync(filename, { encoding: "utf-8" })
+  const localFileName = filename.startsWith("s3://")
+    ? filename.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
+    : filename
+
+  const fileContents = fs.readFileSync(localFileName, { encoding: "utf-8" })
   const comparison = JSON.parse(fileContents) as ImportedComparison
   const iterations = process.argv[3] ? Number(process.argv[3]) : 20
 
