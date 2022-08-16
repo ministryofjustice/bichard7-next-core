@@ -288,6 +288,10 @@ const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string
 }
 
 const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
+  if (!xmlOffences) {
+    return []
+  }
+
   const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
   return offences.map((xmlOffence) => ({
     CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
