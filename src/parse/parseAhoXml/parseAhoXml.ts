@@ -347,7 +347,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
       }
     : undefined,
   PreChargeDecisionIndicator: xmlCase["ds:PreChargeDecisionIndicator"]["#text"] === "Y",
-  ForceOwner: mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]!),
+  ForceOwner: xmlCase["br7:ForceOwner"] ? mapXmlOrganisationalUnitToAho(xmlCase["br7:ForceOwner"]) : undefined,
   CourtCaseReferenceNumber: xmlCase["ds:CourtCaseReferenceNumber"]?.["#text"],
   CourtReference: {
     MagistratesCourtReference: xmlCase["br7:CourtReference"]["ds:MagistratesCourtReference"]["#text"]

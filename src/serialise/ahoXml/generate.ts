@@ -468,7 +468,7 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "br7:UniqueID": text(hearing.SourceReference.UniqueID),
     "br7:DocumentType": text(hearing.SourceReference.DocumentType)
   },
-  "br7:CourtType": optionalLiteral(hearing.CourtType, LiteralType.CourtType),
+  "br7:CourtType": hearing.CourtType ? optionalLiteral(hearing.CourtType, LiteralType.CourtType) : undefined,
   "br7:CourtHouseCode": text(hearing.CourtHouseCode.toString()),
   "br7:CourtHouseName": optionalText(hearing.CourtHouseName),
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
