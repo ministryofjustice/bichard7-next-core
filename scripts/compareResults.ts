@@ -1,5 +1,5 @@
 import differenceWith from "lodash.differencewith"
-import isEqual from "lodash.isEqual"
+import isEqual from "lodash.isequal"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
 import logger from "../src/lib/logging"
