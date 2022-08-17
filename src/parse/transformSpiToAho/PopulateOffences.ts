@@ -49,7 +49,8 @@ export default class {
 
   constructor(
     private courtResult: ResultedCaseMessageParsedXml,
-    private hearingDefendantBailConditions: string[] = []
+    private hearingDefendantBailConditions: string[] = [],
+    private isAdjournmentSineDieConditionMet = false
   ) {}
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
@@ -154,7 +155,10 @@ export default class {
     offence.CourtOffenceSequenceNumber = Number(spiOffenceSequenceNumber)
 
     offence.ConvictionDate = spiConvictionDate ? new Date(spiConvictionDate) : undefined
-    if (!spiConvictionDate && adjournmentSineDieConditionMet(spiResults)) {
+
+    this.isAdjournmentSineDieConditionMet ||= adjournmentSineDieConditionMet(spiResults)
+
+    if (!spiConvictionDate && this.isAdjournmentSineDieConditionMet) {
       offence.ConvictionDate = new Date(this.courtResult.Session.CourtHearing.Hearing.DateOfHearing)
     }
 
