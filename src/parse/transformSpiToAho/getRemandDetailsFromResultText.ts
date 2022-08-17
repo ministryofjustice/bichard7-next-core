@@ -101,7 +101,7 @@ const parseDate = (extractedDate: string): Date | undefined => {
   const dateString = extractedDate.match(/(\d{2})\/(\d{2})\/(\d{4})/)
 
   if (dateString) {
-    return new Date(parseInt(dateString[3], 10), parseInt(dateString[2], 10) - 1, parseInt(dateString[1], 10))
+    return new Date(`${dateString[3]}-${dateString[2]}-${dateString[1]}`)
   }
 }
 

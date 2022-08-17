@@ -1,6 +1,6 @@
-import { format } from "date-fns"
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
+import { toISODate, toPNCDate } from "src/lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -148,12 +148,12 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 const text = (t: string): Br7TextString => ({ "#text": t })
 const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
-const optionalFormatText = (t: Date | string | undefined, f: string): Br7TextString | undefined => {
+const optionalFormatText = (t: Date | string | undefined): Br7TextString | undefined => {
   if (!t) {
     return undefined
   }
 
-  const value = t instanceof Date ? format(t, f) : t
+  const value = t instanceof Date ? toISODate(t) : t
   return { "#text": value }
 }
 
@@ -183,7 +183,7 @@ const mapDateSpecifiedInResult = (dates: DateSpecifiedInResult[] | undefined): B
     return undefined
   }
 
-  return dates.map((date) => ({ "#text": format(date.Date, "yyyy-MM-dd"), "@_Sequence": date.Sequence.toString() }))
+  return dates.map((date) => ({ "#text": toISODate(date.Date), "@_Sequence": date.Sequence.toString() }))
 }
 
 const mapNumberSpecifiedInResult = (
@@ -228,7 +228,7 @@ const mapAhoResultsToXml = (
     "ds:ResultHearingType": result.ResultHearingType
       ? { "#text": result.ResultHearingType, "@_Literal": "Other" }
       : undefined,
-    "ds:ResultHearingDate": optionalFormatText(result.ResultHearingDate, "yyyy-MM-dd"),
+    "ds:ResultHearingDate": optionalFormatText(result.ResultHearingDate),
     "ds:BailCondition": result.BailCondition?.map(text),
     "ds:Duration": result.Duration ? mapAhoDuration(result.Duration) : undefined,
     "ds:DateSpecifiedInResult": mapDateSpecifiedInResult(result.DateSpecifiedInResult),
@@ -242,15 +242,13 @@ const mapAhoResultsToXml = (
     "ds:NextCourtType": optionalText(result.NextCourtType),
     // ds:NextHearingType
     "ds:NextHearingDate":
-      result.NextHearingDate === null
-        ? nullText(result.NextHearingDate)
-        : optionalFormatText(result.NextHearingDate, "yyyy-MM-dd"),
+      result.NextHearingDate === null ? nullText(result.NextHearingDate) : optionalFormatText(result.NextHearingDate),
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
     "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),
     "ds:ResultVariableText": optionalText(result.ResultVariableText),
-    "ds:WarrantIssueDate": optionalFormatText(result.WarrantIssueDate, "yyyy-MM-dd"),
+    "ds:WarrantIssueDate": optionalFormatText(result.WarrantIssueDate),
     "ds:ResultHalfLifeHours": optionalText(result.ResultHalfLifeHours?.toString()),
     "br7:PNCDisposalType": optionalText(result.PNCDisposalType?.toString()),
     "br7:ResultClass": optionalText(result.ResultClass),
@@ -341,16 +339,16 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
       "@_SchemaVersion": "2.0"
     },
     "ds:OffenceCategory": optionalLiteral(offence.OffenceCategory, LiteralType.OffenceCategory),
-    "ds:ArrestDate": optionalFormatText(offence.ArrestDate, "yyyy-MM-dd"),
-    "ds:ChargeDate": optionalFormatText(offence.ChargeDate, "yyyy-MM-dd"),
+    "ds:ArrestDate": optionalFormatText(offence.ArrestDate),
+    "ds:ChargeDate": optionalFormatText(offence.ChargeDate),
     "ds:ActualOffenceDateCode": literal(offence.ActualOffenceDateCode, LiteralType.ActualOffenceDateCode),
     "ds:ActualOffenceStartDate": {
-      "ds:StartDate": text(format(offence.ActualOffenceStartDate.StartDate, "yyyy-MM-dd"))
+      "ds:StartDate": text(toISODate(offence.ActualOffenceStartDate.StartDate))
     },
     "ds:ActualOffenceEndDate":
       offence.ActualOffenceEndDate && offence.ActualOffenceEndDate.EndDate
         ? {
-            "ds:EndDate": optionalFormatText(offence.ActualOffenceEndDate.EndDate, "yyyy-MM-dd")
+            "ds:EndDate": optionalFormatText(offence.ActualOffenceEndDate.EndDate)
           }
         : undefined,
     "ds:LocationOfOffence": optionalText(offence.LocationOfOffence),
@@ -365,7 +363,7 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
           "ds:Method": literal(offence.AlcoholLevel.Method, LiteralType.AlcoholLevelMethod)
         }
       : undefined,
-    "ds:ConvictionDate": optionalFormatText(offence.ConvictionDate, "yyyy-MM-dd"),
+    "ds:ConvictionDate": optionalFormatText(offence.ConvictionDate),
     "br7:CommittedOnBail": { "#text": offence.CommittedOnBail, "@_Literal": "Don't Know" },
     "br7:CourtOffenceSequenceNumber": text(offence.CourtOffenceSequenceNumber.toString()),
     "br7:AddedByTheCourt": optionalLiteral(offence.AddedByTheCourt, LiteralType.YesNo),
@@ -414,7 +412,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
             }
           },
           "br7:GeneratedPNCFilename": optionalText(c.HearingDefendant.DefendantDetail.GeneratedPNCFilename),
-          "br7:BirthDate": optionalFormatText(c.HearingDefendant.DefendantDetail.BirthDate, "yyyy-MM-dd"),
+          "br7:BirthDate": optionalFormatText(c.HearingDefendant.DefendantDetail.BirthDate),
           "br7:Gender": literal(c.HearingDefendant.DefendantDetail.Gender.toString(), LiteralType.Gender)
         }
       : undefined,
@@ -445,7 +443,7 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
 
 const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_Adjudication1": adjudication.verdict,
-  "@_DateOfSentence": format(adjudication.sentenceDate, "ddMMyyyy"),
+  "@_DateOfSentence": toPNCDate(adjudication.sentenceDate),
   "@_IntfcUpdateType": "I",
   "@_OffenceTICNumber": adjudication.offenceTICNumber.toString().padStart(4, "0"),
   "@_Plea": adjudication.plea,
@@ -467,7 +465,7 @@ const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
 
 const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefined): Br7Hearing => ({
   "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
-  "ds:DateOfHearing": text(format(hearing.DateOfHearing, "yyyy-MM-dd")),
+  "ds:DateOfHearing": text(toISODate(hearing.DateOfHearing)),
   "ds:TimeOfHearing": text(hearing.TimeOfHearing),
   "ds:HearingLanguage": { "#text": hearing.HearingLanguage, "@_Literal": "Don't Know" },
   "ds:HearingDocumentationLanguage": { "#text": hearing.HearingDocumentationLanguage, "@_Literal": "Don't Know" },
@@ -490,9 +488,9 @@ const mapAhoPncOffencesToXml = (offences: PncOffence[]): AhoXmlPncOffence[] =>
       "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
       "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
       "@_IntfcUpdateType": "K",
-      "@_OffEndDate": offence.offence.endDate ? format(offence.offence.endDate, "ddMMyyyy") : "",
+      "@_OffEndDate": offence.offence.endDate ? toPNCDate(offence.offence.endDate) : "",
       "@_OffEndTime": offence.offence.endTime?.replace(":", "") ?? "",
-      "@_OffStartDate": format(offence.offence.startDate, "ddMMyyyy") ?? "",
+      "@_OffStartDate": toPNCDate(offence.offence.startDate) ?? "",
       "@_OffStartTime": offence.offence.startTime?.replace(":", "") ?? "",
       "@_OffenceQualifier1": offence.offence.qualifier1 ?? "",
       "@_OffenceQualifier2": offence.offence.qualifier2 ?? "",
@@ -543,7 +541,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
       },
       "br7:HasError": hasError(aho.Exceptions),
       CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
-      "br7:PNCQueryDate": aho.PncQueryDate ? format(aho.PncQueryDate, "yyyy-MM-dd") : undefined,
+      "br7:PNCQueryDate": aho.PncQueryDate ? toISODate(aho.PncQueryDate) : undefined,
       "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
       "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
