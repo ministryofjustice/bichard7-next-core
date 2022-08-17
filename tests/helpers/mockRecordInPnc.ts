@@ -1,6 +1,6 @@
 import axios from "axios"
-import { format } from "date-fns"
 import merge from "lodash.merge"
+import { toPNCDate } from "src/lib/dates"
 import { isError } from "../../src/comparison/Types"
 import { parseAhoXml } from "../../src/parse/parseAhoXml"
 import parseSpiResult from "../../src/parse/parseSpiResult"
@@ -119,16 +119,14 @@ const mockRecordInPnc = async (
   await addMock(enquiry.matchRegex, enquiry.response)
 }
 
-const toPncDate = (date: Date): string => format(date, "ddMMyyyy")
-
 const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
   courtCase.offences.reduce((acc: string[], { offence, adjudication, disposals }) => {
     const sequenceNumber = offence.sequenceNumber.toString().padStart(3, "0")
     const acpoOffenceCode = offence.acpoOffenceCode.padEnd(13, " ")
     const offenceCode = offence.cjsOffenceCode.padEnd(8, " ")
-    const startDate = toPncDate(offence.startDate)
+    const startDate = toPNCDate(offence.startDate)
     const startTime = offence.startTime ? offence.startTime.replace(":", "") : "    "
-    const endDate = offence.endDate ? toPncDate(offence.endDate) : "        "
+    const endDate = offence.endDate ? toPNCDate(offence.endDate) : "        "
     const endTime = offence.endTime ? offence.endTime.replace(":", "") : "    "
 
     acc.push(
@@ -136,7 +134,7 @@ const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
     )
 
     if (adjudication) {
-      const dateOfSentence = toPncDate(adjudication.sentenceDate)
+      const dateOfSentence = toPNCDate(adjudication.sentenceDate)
       const plea = adjudication.plea.padEnd(13, " ")
       const verdict = adjudication.verdict.padEnd(14, " ")
       acc.push(`<ADJ>I${plea}${verdict}${dateOfSentence}0000 </ADJ>`)
