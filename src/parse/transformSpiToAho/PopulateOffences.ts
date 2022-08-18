@@ -1,8 +1,4 @@
-import {
-  lookupAlcoholLevelMethodBySpiCode,
-  lookupOffenceByCjsCode,
-  lookupResultQualifierCodeByCjsCode
-} from "../../dataLookup"
+import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
 import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
 import resultCodeIsOnStopList from "../../lib/result/resultCodeIsOnStopList"
 import type { CriminalProsecutionReference, Offence, OffenceCode } from "../../types/AnnotatedHearingOutcome"
@@ -172,11 +168,6 @@ export default class {
           this.bailConditions.push(description)
         }
       })
-    }
-
-    const offenceCode = lookupOffenceByCjsCode(spiOffenceCode)
-    if (offenceCode) {
-      offence.RecordableOnPNCindicator = offenceCode.recordableOnPnc
     }
 
     return offence
