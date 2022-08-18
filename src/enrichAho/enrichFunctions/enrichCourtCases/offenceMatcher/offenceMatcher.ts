@@ -117,7 +117,8 @@ const matchOffences = (
 
         const sequenceValue = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
         const hoSequence = sequenceValue ? Number(sequenceValue) : undefined
-        if (hoSequence !== undefined && hoSequence === pncSequence && !matchingExplicitMatch) {
+
+        if (hoSequence !== undefined && hoSequence === pncSequence) {
           if (offencesMatch(hoOffence, pncOffence)) {
             matchingExplicitMatch = hoOffence
           } else {
@@ -125,22 +126,20 @@ const matchOffences = (
           }
         } else if (
           applyMultipleCourtCaseMatchingLogic &&
-          !matchingExplicitMatch &&
           !pncAdjudicationMatches &&
           offencesMatch(hoOffence, pncOffence) &&
           hoResultMatchesPncAdjudication(hoOffence, pncOffence, hearingDate)
         ) {
           pncAdjudicationMatches = true
         }
+      }
 
-        if (matchingExplicitMatch) {
-          result.matchedOffences.push({ hoOffence, pncOffence })
-          result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
-          break
-        } else if (applyMultipleCourtCaseMatchingLogic && !pncAdjudicationMatches) {
-          excludedPncOffences.push(pncOffence)
-          break
-        }
+      if (matchingExplicitMatch) {
+        result.matchedOffences.push({ hoOffence: matchingExplicitMatch, pncOffence })
+        result.pncOffencesMatchedIncludingDuplicates.push(pncOffence)
+        excludedPncOffences.push(pncOffence)
+      } else if (applyMultipleCourtCaseMatchingLogic && !pncAdjudicationMatches) {
+        excludedPncOffences.push(pncOffence)
       }
     })
   }
