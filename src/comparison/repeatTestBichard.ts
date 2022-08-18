@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import chalk from "chalk"
 import crypto from "crypto"
 import fs from "fs"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
@@ -8,6 +10,18 @@ import type { ImportedComparison } from "./Types/ImportedComparison"
 const queueName = "PROCESSING_VALIDATION_QUEUE"
 
 const generateHash = (message: string): string => crypto.createHash("sha256").update(message.trim()).digest("base64")
+
+const generateCounts = (results: string[]): { [k: string]: number } => {
+  const hashes = results.map(generateHash)
+
+  return hashes.reduce((acc: { [k: string]: number }, hash: string) => {
+    if (!acc[hash]) {
+      acc[hash] = 0
+    }
+    acc[hash] += 1
+    return acc
+  }, {})
+}
 
 const main = async () => {
   const filename = process.argv[2]
@@ -38,22 +52,20 @@ const main = async () => {
       messages = await mq.getMessages(queueName, 100)
       results.push(...messages)
       if (messages.length > 0) {
-        console.log("results: ", results.length)
+        const count = Object.keys(generateCounts(results)).length
+        const countString = count > 1 ? chalk.red(count) : chalk.green(count)
+        console.log(
+          `results: ${chalk.yellow(
+            results.length.toString().padStart(3, " ")
+          )} iterations, ${countString} different results`
+        )
       }
     }
   }
 
   await mq.disconnect()
 
-  const hashes = results.map(generateHash)
-
-  const counts = hashes.reduce((acc: { [k: string]: number }, hash: string) => {
-    if (!acc[hash]) {
-      acc[hash] = 0
-    }
-    acc[hash] += 1
-    return acc
-  }, {})
+  const counts = generateCounts(results)
 
   if (Object.keys(counts).length === 1) {
     console.log("Processing was consistent")
