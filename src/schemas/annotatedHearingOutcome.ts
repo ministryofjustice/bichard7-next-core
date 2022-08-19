@@ -88,7 +88,7 @@ export const organisationUnitSchema = z.object({
   SecondLevelCode: z.string().or(z.null()),
   ThirdLevelCode: z.string().or(z.null()),
   BottomLevelCode: z.string().or(z.null()),
-  OrganisationUnitCode: z.string().regex(/[A-JZ0-9]{0,1}[A-Z0-9]{6}/, ExceptionCode.HO100200)
+  OrganisationUnitCode: z.string().regex(/^[A-JZ0-9]{0,1}[A-Z0-9]{6}$/, ExceptionCode.HO100200)
 })
 
 export const defendantOrOffenderSchema = z.object({
