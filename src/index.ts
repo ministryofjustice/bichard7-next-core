@@ -23,8 +23,14 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
     throw hearingOutcome
   }
 
-  hearingOutcome = enrichAho(hearingOutcome, pncGateway)
+  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
+    return {
+      triggers: [],
+      hearingOutcome
+    }
+  }
 
+  hearingOutcome = enrichAho(hearingOutcome, pncGateway)
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
   hearingOutcome.Exceptions = (hearingOutcome.Exceptions ?? []).concat(exceptions)
