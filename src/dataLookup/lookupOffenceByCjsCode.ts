@@ -4,6 +4,9 @@ import requireStandingData from "../lib/requireStandingData"
 export const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   requireStandingData().offenceCode.find((x) => x.cjsCode === cjsCode)
 
+export const lookupLocalOffenceByCjsCode = (cjsCode: string, areaCode?: string): OffenceCode | undefined =>
+  lookupOffenceByCjsCode(`${areaCode}${cjsCode}`)
+
 export const lookupNationalOffenceByCjsCode = (cjsCode: string, areaCode?: string): OffenceCode | undefined => {
   let lookup = lookupOffenceByCjsCode(cjsCode)
 
@@ -12,11 +15,8 @@ export const lookupNationalOffenceByCjsCode = (cjsCode: string, areaCode?: strin
   }
 
   if (!lookup && areaCode) {
-    lookup = lookupOffenceByCjsCode(`${areaCode}${cjsCode}`)
+    lookup = lookupLocalOffenceByCjsCode(cjsCode, areaCode)
   }
 
   return lookup
 }
-
-export const lookupLocalOffenceByCjsCode = (cjsCode: string, areaCode?: string): OffenceCode | undefined =>
-  lookupOffenceByCjsCode(`${areaCode}${cjsCode}`)
