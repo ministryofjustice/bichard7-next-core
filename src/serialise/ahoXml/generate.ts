@@ -147,7 +147,8 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 
 const text = (t: string): Br7TextString => ({ "#text": t })
 const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
-const optionalText = (t: string | undefined): Br7TextString | undefined => (t ? { "#text": t } : undefined)
+const optionalText = (t: string | undefined): Br7TextString | undefined =>
+  t !== undefined ? { "#text": t } : undefined
 const optionalFormatText = (t: Date | string | undefined): Br7TextString | undefined => {
   if (!t) {
     return undefined

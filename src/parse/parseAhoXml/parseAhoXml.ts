@@ -309,11 +309,24 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
     return []
   }
 
+  const getElementText = (el?: Br7ErrorString): string | undefined => {
+    if (!el) {
+      return undefined
+    }
+    if (el["#text"] !== undefined) {
+      return el["#text"]
+    }
+    if (el["@_Error"]) {
+      return ""
+    }
+    return undefined
+  }
+
   const offences: Br7Offence[] = Array.isArray(xmlOffences) ? xmlOffences : [xmlOffences]
   return offences.map((xmlOffence) => ({
     CriminalProsecutionReference: mapXmlCPRToAho(xmlOffence["ds:CriminalProsecutionReference"]),
     OffenceCategory: xmlOffence["ds:OffenceCategory"]?.["#text"],
-    OffenceTitle: xmlOffence["ds:OffenceTitle"]?.["#text"],
+    OffenceTitle: getElementText(xmlOffence["ds:OffenceTitle"]),
     ArrestDate: xmlOffence["ds:ArrestDate"] ? new Date(xmlOffence["ds:ArrestDate"]["#text"]) : undefined,
     ChargeDate: xmlOffence["ds:ChargeDate"] ? new Date(xmlOffence["ds:ChargeDate"]["#text"]) : undefined,
     ActualOffenceDateCode: String(xmlOffence["ds:ActualOffenceDateCode"]["#text"]),
