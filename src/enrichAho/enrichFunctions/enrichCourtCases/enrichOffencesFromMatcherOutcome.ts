@@ -83,7 +83,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           // (i.e. ambiguities addressed by other manual matches).
           const newPncRefNo = pncRefNo.toString().padStart(3, "0")
           if (hoOffence.ManualSequenceNumber !== undefined && pncOffenceMatches) {
-            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence !== newPncRefNo) {
+            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence?.padStart(3, "0") !== newPncRefNo) {
               hoOffence.ManualSequenceNumber = undefined
               hoOffence.CriminalProsecutionReference.OffenceReasonSequence = newPncRefNo
             }
