@@ -1,5 +1,7 @@
-import logger from "../../lib/logging"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
+const safeSubstring = (input: string, start: number, end: number): string | null =>
+  input.length >= end ? input.substring(start, end) : null
 
 const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes): OrganisationUnitCodes => {
   const { OrganisationUnitCode, TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode } = organisationUnit
@@ -13,13 +15,10 @@ const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes)
       organisationUnit.TopLevelCode = OrganisationUnitCode.substring(0, 1)
       offset = 0
     }
-    try {
-      organisationUnit.SecondLevelCode = OrganisationUnitCode.substring(1 - offset, 3 - offset)
-      organisationUnit.ThirdLevelCode = OrganisationUnitCode.substring(3 - offset, 5 - offset)
-      organisationUnit.BottomLevelCode = OrganisationUnitCode.substring(5 - offset, 7 - offset)
-    } catch (error) {
-      logger.error(error)
-    }
+
+    organisationUnit.SecondLevelCode = safeSubstring(OrganisationUnitCode, 1 - offset, 3 - offset)
+    organisationUnit.ThirdLevelCode = safeSubstring(OrganisationUnitCode, 3 - offset, 5 - offset)
+    organisationUnit.BottomLevelCode = safeSubstring(OrganisationUnitCode, 5 - offset, 7 - offset)
   }
 
   organisationUnit.TopLevelCode = organisationUnit.TopLevelCode?.toUpperCase()
