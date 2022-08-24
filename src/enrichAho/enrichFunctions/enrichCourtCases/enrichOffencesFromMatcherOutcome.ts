@@ -81,14 +81,15 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
           // flag if the ManualSequenceNo flag is set and the pnc and ho offence sequence numbers
           // do not match. This indicates a failed manual match where a match was detected automatically
           // (i.e. ambiguities addressed by other manual matches).
+          const newPncRefNo = pncRefNo.toString().padStart(3, "0")
           if (hoOffence.ManualSequenceNumber !== undefined && pncOffenceMatches) {
-            if (Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !== pncRefNo) {
+            if (hoOffence.CriminalProsecutionReference.OffenceReasonSequence?.padStart(3, "0") !== newPncRefNo) {
               hoOffence.ManualSequenceNumber = undefined
-              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
+              hoOffence.CriminalProsecutionReference.OffenceReasonSequence = newPncRefNo
             }
           } else if (pncOffenceMatches) {
             // must have been automatically matched so set the offence reason sequence.
-            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncRefNo.toString().padStart(3, "0")
+            hoOffence.CriminalProsecutionReference.OffenceReasonSequence = newPncRefNo
           } else {
             // must be an offence added at court, determined as a result of automatic matching
             // overriding failed manual match

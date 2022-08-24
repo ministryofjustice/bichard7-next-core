@@ -1,8 +1,19 @@
-import { forceCodeExists, lookupOrganisationUnitByCode } from "../../dataLookup"
+import { lookupOrganisationUnitByCode } from "../../dataLookup"
 import logger from "../../lib/logging"
 import { validateAsn } from "../../schemas/ahoValidations"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
+
+const validForceCodes = [
+  // eslint-disable-next-line prettier/prettier
+  "01","02","03","04","05","06","07","10","11","12","13","14","16","17","20","21",
+  // eslint-disable-next-line prettier/prettier
+  "22","23","24","30","31","32","33","34","35","36","37","40","41","42","43","44",
+  // eslint-disable-next-line prettier/prettier
+  "45","46","47","48","50","52","53","54","55","60","61","62","63","88","89","93"
+]
+
+const isValidForceCode = (code: string): boolean => validForceCodes.includes(code)
 
 const populateForceOwner = (
   hearingOutcome: AnnotatedHearingOutcome,
@@ -45,7 +56,7 @@ const getValidForceOrForceStation = (code: string | undefined): string | undefin
   }
   if (code.length >= 2) {
     forceCode = code.substring(0, 2)
-    if (forceCodeExists(forceCode) && forceCode !== "00") {
+    if (isValidForceCode(forceCode)) {
       if (code.length >= 4) {
         const stationCode = code.substring(2, 4)
         const lookupResult = lookupOrganisationUnitByCode({
