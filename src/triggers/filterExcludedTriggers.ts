@@ -14,12 +14,12 @@ const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome
   const matchingCourtKeys = Object.keys(excludedTriggerConfig).filter((key) => court.startsWith(key))
 
   const forceExcludesTrigger = (code: TriggerCode) =>
-    excludedTriggerConfig[force] && excludedTriggerConfig[force].includes(code)
+    !!excludedTriggerConfig[force] && excludedTriggerConfig[force].includes(code)
 
   const courtExcludesTrigger = (code: TriggerCode) =>
-    matchingCourtKeys.every((key) => excludedTriggerConfig[key].includes(code))
+    matchingCourtKeys.some((key) => excludedTriggerConfig[key].includes(code))
 
-  return triggers.filter((trigger) => !(forceExcludesTrigger(trigger.code) && courtExcludesTrigger(trigger.code)))
+  return triggers.filter((trigger) => !(forceExcludesTrigger(trigger.code) || courtExcludesTrigger(trigger.code)))
 }
 
 export default filterExcludedTriggers
