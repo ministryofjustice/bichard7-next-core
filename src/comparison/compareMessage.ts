@@ -2,6 +2,7 @@
 import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import generateMockPncQueryResultFromAho from "../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../tests/helpers/getPncQueryTimeFromAho"
@@ -66,9 +67,10 @@ const compareMessage = (
   const pncResponse = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
   const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
   const pncGateway = new MockPncGateway(pncResponse, pncQueryTime)
+  const auditLogger = new CoreAuditLogger()
 
   try {
-    const coreResult = CoreHandler(incomingMessage, pncGateway)
+    const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger)
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
 

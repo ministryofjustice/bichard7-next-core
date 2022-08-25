@@ -5,11 +5,13 @@ import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
+import type AuditLogger from "./types/AuditLogger"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
 
-export default (message: string, pncGateway: PncGateway): BichardResultType => {
+export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome | Error
+  auditLogger.start("Phase 1 Processing")
 
   if (message.match(/ResultedCaseMessage/)) {
     const spiResult = parseSpiResult(message)
@@ -26,7 +28,8 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
   if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
     return {
       triggers: [],
-      hearingOutcome
+      hearingOutcome,
+      events: auditLogger.finish().getEvents()
     }
   }
 
@@ -37,6 +40,7 @@ export default (message: string, pncGateway: PncGateway): BichardResultType => {
 
   return {
     triggers,
-    hearingOutcome
+    hearingOutcome,
+    events: auditLogger.finish().getEvents()
   }
 }
