@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import express from "express"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import CoreHandler from "../src"
 import type { PncQueryResult } from "../src/types/PncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
@@ -25,8 +26,9 @@ function formatter(_: string, value: unknown) {
 app.post("/", (req, res) => {
   const testData = JSON.parse(req.body.toString(), formatter) as TestInput
   const pncGateway = new MockPncGateway(testData.pncQueryResult)
+  const auditLogger = new CoreAuditLogger()
   try {
-    const coreResult = CoreHandler(testData.inputMessage, pncGateway)
+    const coreResult = CoreHandler(testData.inputMessage, pncGateway, auditLogger)
     res.json(coreResult)
   } catch (e) {
     console.error(e)
