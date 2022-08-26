@@ -11,6 +11,7 @@ import generateMockPncQueryResult from "./generateMockPncQueryResult"
 import MockPncGateway from "./MockPncGateway"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -37,7 +38,8 @@ const processMessageCore = (
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
   const pncGateway = new MockPncGateway(response)
-  return CoreHandler(messageXml, pncGateway)
+  const auditLogger = new CoreAuditLogger()
+  return CoreHandler(messageXml, pncGateway, auditLogger)
 }
 
 type ProcessMessageOptions = {
@@ -124,7 +126,7 @@ const processMessageBichard = async (
 
   const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { triggers, hearingOutcome }
+  return { triggers, hearingOutcome, events: [] }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<BichardResultType> => {

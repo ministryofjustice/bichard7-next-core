@@ -1,5 +1,6 @@
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
 import logger from "../src/lib/logging"
@@ -88,7 +89,8 @@ const processResultCore = (incomingMessage: string): BichardResultType | undefin
   try {
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
-    return CoreHandler(incomingMessage, pncGateway)
+    const auditLogger = new CoreAuditLogger()
+    return CoreHandler(incomingMessage, pncGateway, auditLogger)
   } catch (e) {
     results.failed++
     logger.warn(`Application failed to process message: ${e}`)
