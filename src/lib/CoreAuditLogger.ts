@@ -41,7 +41,6 @@ export default class CoreAuditLogger implements AuditLogger {
   }
 
   getEvents = (): AuditLogEvent[] => {
-    console.log("=======", this.scope)
     if (this.scope) {
       throw Error("Logger is not finished yet")
     }
