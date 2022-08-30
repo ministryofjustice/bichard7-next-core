@@ -1,14 +1,14 @@
 import compareMessage from "src/comparison/compareMessage"
 import { isError } from "src/comparison/Types"
 import logger from "src/lib/logging"
-import type { ComparisonResult } from "./compareMessage"
-import createDynamoDbConfig from "./createDynamoDbConfig"
-import createS3Config from "./createS3Config"
-import DynamoGateway from "./DynamoGateway/DynamoGateway"
-import getFileFromS3 from "./getFileFromS3"
-import logInDynamoDb from "./logInDynamoDb"
-import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
-import { eventSchema } from "./Types/CompareLambdaEvent"
+import type { ComparisonResult } from "../compareMessage"
+import createDynamoDbConfig from "../createDynamoDbConfig"
+import createS3Config from "../createS3Config"
+import DynamoGateway from "../DynamoGateway/DynamoGateway"
+import getFileFromS3 from "../getFileFromS3"
+import logInDynamoDb from "../logInDynamoDb"
+import type { CompareLambdaEvent } from "../Types/CompareLambdaEvent"
+import { eventSchema } from "../Types/CompareLambdaEvent"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
