@@ -25,7 +25,7 @@ function upload_to_s3 {
 
 cd build
 
-zip compare.zip compare.js
+zip compare.zip compare.js bichard7-next-data*
 upload_to_s3 compare.zip compare.zip
 
 zip rerunComparison.zip rerunComparison.js
