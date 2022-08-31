@@ -1,50 +1,56 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import packageInfo from "../../package.json"
 import type { KeyValue } from "../types/KeyValue"
 import logger from "./logging"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type StandingData = typeof import("bichard7-next-data-latest").default
 
-const importDataRepoVersion = (version: string, acc: KeyValue<StandingData>): KeyValue<StandingData> => {
+const importDataRepoVersion = (version: string): StandingData | undefined => {
   try {
     // Webpack friendly format for import
-    acc[version] = require(`node_modules/bichard7-next-data-${version}/dist`)
+    return require(`node_modules/bichard7-next-data-${version}/dist`) as StandingData
   } catch (e) {
     logger.debug(`Webpack import of bichard7-next-data-${version} failed, retrying in npm format: ${e}`)
     try {
       // Npm friendly format for import
-      acc[version] = require(`bichard7-next-data-${version}/dist`)
+      return require(`bichard7-next-data-${version}/dist`) as StandingData
     } catch (e1) {
       logger.warn(`Npm and Webpack formatted import of bichard7-next-data-${version} failed: ${e1}`)
-    } finally {
-      return acc
+      return undefined
     }
-  } finally {
-    return acc
   }
 }
 
-const versions = Object.keys(packageInfo.dependencies)
-  .filter((d) => d.startsWith("bichard7-next-data-"))
-  .reduce((acc: KeyValue<StandingData>, v) => {
-    return importDataRepoVersion(v.replace("bichard7-next-data-", ""), acc)
-  }, {})
+const cachedStandingDataModules: KeyValue<StandingData> = {}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const requireStandingData = (): StandingData => {
-  const dataVersion = (global as any).dataVersion as string
-  if (!dataVersion) {
-    return versions.latest
+const getStandingDataModule = (version: string): StandingData => {
+  if (cachedStandingDataModules[version]) {
+    return cachedStandingDataModules[version]
   }
 
-  const version = versions[dataVersion]
+  const standingDataModule = importDataRepoVersion(version)
+
+  if (standingDataModule) {
+    cachedStandingDataModules[version] = standingDataModule
+  }
+
+  return cachedStandingDataModules[version]
+}
+
+const requireStandingData = (): StandingData => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dataVersion = (global as any).dataVersion as string
+  if (!dataVersion) {
+    return getStandingDataModule("latest")
+  }
+
+  const version = getStandingDataModule(dataVersion)
   if (version) {
     return version
   }
 
   logger.error(`Standing data version not found: ${dataVersion}`)
-  return versions.latest
+  return getStandingDataModule("latest")
 }
 
 export default requireStandingData

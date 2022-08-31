@@ -15,6 +15,22 @@ module.exports = {
     path: path.join(__dirname, "..", "build"),
     filename: "[name].js"
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        "bichard7-next-data": {
+          test: /[\\/]node_modules[\\/]bichard7-next-data-.*?[\\/]/,
+          name(module) {
+            const moduleFileName = module
+              .identifier()
+              .match(/(?<moduleName>bichard7-next-data-.*?)[\\/]/).groups.moduleName
+            return moduleFileName;
+          },
+          chunks: "all"
+        },
+      }
+    }
+  },
   target: "node",
   module: {
     rules: [
