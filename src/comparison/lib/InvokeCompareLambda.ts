@@ -1,6 +1,6 @@
 import { Lambda } from "aws-sdk"
-import { isError } from "./Types"
-import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
+import { isError } from "../types"
+import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
 
 export default class InvokeCompareLambda {
   constructor(private comparisonLambdaName: string, private comparisonBucketName: string) {}

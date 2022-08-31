@@ -1,5 +1,5 @@
 import * as dynamodb from "@aws-sdk/client-dynamodb"
-import { isError } from "src/comparison/Types"
+import { isError } from "src/comparison/types"
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dynalite = require("dynalite") as any
 

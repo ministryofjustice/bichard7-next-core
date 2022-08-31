@@ -1,7 +1,7 @@
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import type { Readable } from "stream"
-import { isError } from "./Types"
+import { isError } from "../types"
 
 const streamToBuffer = (stream: Readable) =>
   new Promise<Buffer>((resolve, reject) => {
