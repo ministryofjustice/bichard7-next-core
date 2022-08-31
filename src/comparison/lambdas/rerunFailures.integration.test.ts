@@ -17,8 +17,8 @@ import DynamoGateway from "../lib/DynamoGateway"
 import InvokeCompareLambda from "../lib/InvokeCompareLambda"
 import type { ComparisonLog } from "../types"
 import { isError } from "../types"
-import compareLambda from "./compareLambda"
-import rerunComparisonLambda from "./rerunComparisonLambda"
+import compareLambda from "./compareSingle"
+import rerunFailures from "./rerunFailures"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const s3Config = createS3Config()
@@ -94,7 +94,7 @@ describe("Comparison lambda", () => {
       return undefined
     })
     const s3Path = "test-data/comparison/passing.json"
-    const rerunResult = await rerunComparisonLambda().catch((error) => error)
+    const rerunResult = await rerunFailures().catch((error) => error)
     expect(isError(rerunResult)).toBe(false)
 
     const record = await dynamoGateway.getOne("s3Path", s3Path)
