@@ -1,6 +1,6 @@
 import logger from "src/lib/logging"
-import DynamoGateway from "../DynamoGateway/DynamoGateway"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import DynamoGateway from "../lib/DynamoGateway"
 import getFailedComparisonResults from "../lib/getFailedComparisonResults"
 import InvokeCompareLambda from "../lib/InvokeCompareLambda"
 import { isError } from "../types"

@@ -1,6 +1,6 @@
-import DynamoGateway from "../DynamoGateway/DynamoGateway"
 import type { ComparisonResult } from "../lib/compareMessage"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import getFile from "../lib/getFile"
 import processFile from "./processFile"

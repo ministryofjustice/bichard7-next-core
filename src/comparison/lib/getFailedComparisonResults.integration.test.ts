@@ -1,10 +1,10 @@
 import MockDynamo from "tests/helpers/MockDynamo"
 import "tests/helpers/setEnvironmentVariables"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
-import DynamoGateway from "../DynamoGateway/DynamoGateway"
 import type { ComparisonLog } from "../types"
 import { isError } from "../types"
 import createDynamoDbConfig from "./createDynamoDbConfig"
+import DynamoGateway from "./DynamoGateway"
 import getFailedComparisonResults from "./getFailedComparisonResults"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
