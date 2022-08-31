@@ -33,7 +33,7 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
     }
   }
 
-  hearingOutcome = enrichAho(hearingOutcome, pncGateway)
+  hearingOutcome = enrichAho(hearingOutcome, pncGateway, auditLogger)
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
   hearingOutcome.Exceptions = (hearingOutcome.Exceptions ?? []).concat(exceptions)
