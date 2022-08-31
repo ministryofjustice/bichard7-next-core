@@ -114,6 +114,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
     "pino": "^7.9.2",
+    "pino-pretty": "^9.1.0",
     "pretty-data": "^0.40.0",
     "stompit": "^1.0.0",
     "zod": "^3.14.3"
