@@ -14,8 +14,8 @@ import DynamoGateway from "../DynamoGateway/DynamoGateway"
 import * as CompareMessage from "../lib/compareMessage"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import createS3Config from "../lib/createS3Config"
-import { isError } from "../Types"
-import type { CompareLambdaEvent } from "../Types/CompareLambdaEvent"
+import { isError } from "../types"
+import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()

@@ -4,7 +4,7 @@ import crypto from "crypto"
 import fs from "fs"
 import ActiveMqHelper from "../../../tests/helpers/ActiveMqHelper"
 import defaults from "../../../tests/helpers/defaults"
-import type { ImportedComparison } from "../Types/ImportedComparison"
+import type { ImportedComparison } from "../types/ImportedComparison"
 import runFileOnBichard from "./runFileOnBichard"
 
 const queueName = "PROCESSING_VALIDATION_QUEUE"

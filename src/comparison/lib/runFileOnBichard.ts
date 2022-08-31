@@ -2,7 +2,7 @@ import fs from "fs"
 import ActiveMqHelper from "../../../tests/helpers/ActiveMqHelper"
 import defaults from "../../../tests/helpers/defaults"
 import { mockAhoRecordInPnc } from "../../../tests/helpers/mockRecordInPnc"
-import type { ImportedComparison } from "../Types/ImportedComparison"
+import type { ImportedComparison } from "../types/ImportedComparison"
 
 const runFileOnBichard = async (comparison: ImportedComparison): Promise<void> => {
   // Insert matching record in PNC

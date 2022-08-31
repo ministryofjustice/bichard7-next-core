@@ -3,7 +3,7 @@ import DynamoGateway from "../DynamoGateway/DynamoGateway"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import getFailedComparisonResults from "../lib/getFailedComparisonResults"
 import InvokeCompareLambda from "../lib/InvokeCompareLambda"
-import { isError } from "../Types"
+import { isError } from "../types"
 
 const { BATCH_SIZE, COMPARISON_LAMBDA_NAME, COMPARISON_BUCKET_NAME } = process.env
 if (!BATCH_SIZE) {

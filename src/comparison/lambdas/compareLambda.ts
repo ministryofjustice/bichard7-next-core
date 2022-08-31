@@ -6,9 +6,9 @@ import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import createS3Config from "../lib/createS3Config"
 import getFileFromS3 from "../lib/getFileFromS3"
 import logInDynamoDb from "../lib/logInDynamoDb"
-import { isError } from "../Types"
-import type { CompareLambdaEvent } from "../Types/CompareLambdaEvent"
-import { eventSchema } from "../Types/CompareLambdaEvent"
+import { isError } from "../types"
+import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
+import { eventSchema } from "../types/CompareLambdaEvent"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()

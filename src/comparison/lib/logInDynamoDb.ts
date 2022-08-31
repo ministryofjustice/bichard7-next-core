@@ -1,6 +1,6 @@
 import type DynamoGateway from "../DynamoGateway/DynamoGateway"
-import type { PromiseResult } from "../Types"
-import { isError } from "../Types"
+import type { PromiseResult } from "../types"
+import { isError } from "../types"
 import type { ComparisonResult } from "./compareMessage"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
