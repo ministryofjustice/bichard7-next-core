@@ -107,9 +107,7 @@ describe("enrichWithQuery()", () => {
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
     expect(auditLoggerSpy).toHaveBeenCalledWith({
       eventType: "PNC Response received",
-      eventSource: "PNC Access Manager",
-      eventSourceArn: "",
-      eventSourceQueueName: "",
+      eventSource: "EnrichWithPncQuery",
       category: "information",
       timestamp: mockedDate
     })
@@ -126,9 +124,7 @@ describe("enrichWithQuery()", () => {
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
     expect(auditLoggerSpy).toHaveBeenCalledWith({
       eventType: "PNC Response not received",
-      eventSource: "PNC Access Manager",
-      eventSourceArn: "",
-      eventSourceQueueName: "",
+      eventSource: "EnrichWithPncQuery",
       category: "warning",
       timestamp: mockedDate
     })

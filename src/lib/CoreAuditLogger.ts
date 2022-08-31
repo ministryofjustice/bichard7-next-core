@@ -16,8 +16,6 @@ export default class CoreAuditLogger implements AuditLogger {
     this.logEvent({
       timestamp: new Date(),
       eventType: `Started ${this.scope}`,
-      eventSourceArn: "",
-      eventSourceQueueName: "",
       eventSource: "Core Audit Logger",
       category: "information"
     })
@@ -33,8 +31,6 @@ export default class CoreAuditLogger implements AuditLogger {
     this.logEvent({
       timestamp: new Date(),
       eventType: `Finished ${this.scope}`,
-      eventSourceArn: "",
-      eventSourceQueueName: "",
       eventSource: "Core Audit Logger",
       category: "information"
     })
