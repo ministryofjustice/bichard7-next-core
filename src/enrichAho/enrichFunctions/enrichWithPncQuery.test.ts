@@ -109,7 +109,11 @@ describe("enrichWithQuery()", () => {
       eventType: "PNC Response received",
       eventSource: "EnrichWithPncQuery",
       category: "information",
-      timestamp: mockedDate
+      timestamp: mockedDate,
+      attributes: {
+        "PNC Response Time": 0,
+        "PNC Attempts Made": 1
+      }
     })
   })
 
@@ -126,7 +130,11 @@ describe("enrichWithQuery()", () => {
       eventType: "PNC Response not received",
       eventSource: "EnrichWithPncQuery",
       category: "warning",
-      timestamp: mockedDate
+      timestamp: mockedDate,
+      attributes: {
+        "PNC Response Time": 0,
+        "PNC Attempts Made": 1
+      }
     })
   })
 })

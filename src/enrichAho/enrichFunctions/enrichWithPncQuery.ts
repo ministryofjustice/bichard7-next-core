@@ -35,12 +35,16 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   })
 }
 
-const createAuditLogEvent = (eventType: string, category: EventCategory) => {
+const createAuditLogEvent = (eventType: string, category: EventCategory, requestStartTime: Date) => {
   return {
     timestamp: new Date(),
     eventType: eventType,
     eventSource: "EnrichWithPncQuery",
-    category: category
+    category: category,
+    attributes: {
+      "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
+      "PNC Attempts Made": 1 // Retry is not implemented
+    }
   }
 }
 
@@ -50,16 +54,17 @@ export default (
   auditLogger: AuditLogger
 ): AnnotatedHearingOutcome => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
+  const requestStartTime = new Date()
   const pncResult = pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
   if (pncResult instanceof Error) {
-    auditLogger.logEvent(createAuditLogEvent("PNC Response not received", "warning"))
+    auditLogger.logEvent(createAuditLogEvent("PNC Response not received", "warning", requestStartTime))
 
     annotatedHearingOutcome.PncErrorMessage = pncResult.message
   } else {
-    auditLogger.logEvent(createAuditLogEvent("PNC Response received", "information"))
+    auditLogger.logEvent(createAuditLogEvent("PNC Response received", "information", requestStartTime))
 
     annotatedHearingOutcome.PncQuery = pncResult
   }
