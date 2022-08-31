@@ -1,6 +1,6 @@
 import type DynamoDB from "aws-sdk/clients/dynamodb"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import type ComparisonLog from "src/comparison/Types/ComparisonLog"
+import type ComparisonLog from "src/comparison/types/ComparisonLog"
 
 const config: DynamoDB.ClientConfiguration = {
   endpoint: process.env.DYNAMO_URL ?? "https://dynamodb.eu-west-2.amazonaws.com",

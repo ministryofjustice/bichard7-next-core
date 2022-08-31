@@ -1,4 +1,4 @@
-import type { DynamoDbConfig } from "../comparison/Types"
+import type { DynamoDbConfig } from "../types"
 
 export default function createDynamoDbConfig(): DynamoDbConfig {
   const { DYNAMO_URL, DYNAMO_REGION, COMPARISON_TABLE_NAME, DYNAMO_AWS_ACCESS_KEY_ID, DYNAMO_AWS_SECRET_ACCESS_KEY } =

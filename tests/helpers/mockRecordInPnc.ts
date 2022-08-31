@@ -1,7 +1,7 @@
 import axios from "axios"
 import merge from "lodash.merge"
 import { toPNCDate } from "src/lib/dates"
-import { isError } from "../../src/comparison/Types"
+import { isError } from "../../src/comparison/types"
 import { parseAhoXml } from "../../src/parse/parseAhoXml"
 import parseSpiResult from "../../src/parse/parseSpiResult"
 import type { PncCourtCase, PncQueryResult } from "../../src/types/PncQueryResult"

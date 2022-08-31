@@ -1,13 +1,13 @@
-import MockDynamo from "../../tests/helpers/MockDynamo"
-import "tests/helpers/setEnvironmentVariables"
-import createDynamoDbConfig from "./createDynamoDbConfig"
-import DynamoGateway from "./DynamoGateway/DynamoGateway"
-import logInDynamoDb from "./logInDynamoDb"
-import type { ComparisonLog } from "./Types"
-import { isError } from "./Types"
-import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
+import "tests/helpers/setEnvironmentVariables"
+import MockDynamo from "../../../tests/helpers/MockDynamo"
+import dynamoDbTableConfig from "../../../tests/helpers/testDynamoDbTableConfig"
+import type { ComparisonLog } from "../types"
+import { isError } from "../types"
+import createDynamoDbConfig from "./createDynamoDbConfig"
+import DynamoGateway from "./DynamoGateway"
+import logInDynamoDb from "./logInDynamoDb"
 
 const config = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(config)

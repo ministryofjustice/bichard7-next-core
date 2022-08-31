@@ -3,8 +3,8 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 
 module.exports = {
   entry: {
-    compare: "./src/comparison/compareLambda.ts",
-    rerunComparison: "./src/comparison/rerunComparisonLambda.ts"
+    compare: "./src/comparison/lambdas/compareLambda.ts",
+    rerunComparison: "./src/comparison/lambdas/rerunComparisonLambda.ts"
   },
   resolve: {
     modules: [path.resolve("./node_modules"), path.resolve("."), path.resolve(".")],

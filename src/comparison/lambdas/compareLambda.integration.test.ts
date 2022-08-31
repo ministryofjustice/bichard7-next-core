@@ -1,21 +1,22 @@
 /* eslint-disable jest/no-conditional-expect */
 jest.setTimeout(10000)
 import "tests/helpers/setEnvironmentVariables"
+
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import fs from "fs"
-import lambda from "src/comparison/compareLambda"
-import MockS3 from "tests/helpers/MockS3"
-import MockDynamo from "tests/helpers/MockDynamo"
-import { ZodError } from "zod"
-import DynamoGateway from "./DynamoGateway/DynamoGateway"
-import createS3Config from "./createS3Config"
-import { isError } from "../comparison/Types"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
+import fs from "fs"
 import MockDate from "mockdate"
-import createDynamoDbConfig from "./createDynamoDbConfig"
+import lambda from "src/comparison/lambdas/compareLambda"
+import MockDynamo from "tests/helpers/MockDynamo"
+import MockS3 from "tests/helpers/MockS3"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
-import type { CompareLambdaEvent } from "./Types/CompareLambdaEvent"
-import * as CompareMessage from "./compareMessage"
+import { ZodError } from "zod"
+import * as CompareMessage from "../lib/compareMessage"
+import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import createS3Config from "../lib/createS3Config"
+import DynamoGateway from "../lib/DynamoGateway"
+import { isError } from "../types"
+import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()

@@ -1,5 +1,5 @@
 import fs from "fs"
-import { cacheFileExists, clearCache, getCacheFile, storeCacheFile } from "./cli/cache"
+import { cacheFileExists, clearCache, getCacheFile, storeCacheFile } from "../cli/cache"
 import createS3Config from "./createS3Config"
 import getFileFromS3 from "./getFileFromS3"
 

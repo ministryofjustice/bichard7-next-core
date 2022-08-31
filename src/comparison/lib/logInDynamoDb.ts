@@ -1,8 +1,8 @@
-import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
+import type { PromiseResult } from "../types"
+import { isError } from "../types"
 import type { ComparisonResult } from "./compareMessage"
-import type DynamoGateway from "./DynamoGateway/DynamoGateway"
-import type { PromiseResult } from "./Types"
-import { isError } from "./Types"
+import type DynamoGateway from "./DynamoGateway"
+import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
 const logInDynamoDb = async (
   s3Path: string,
