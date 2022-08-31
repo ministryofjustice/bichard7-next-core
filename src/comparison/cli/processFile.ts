@@ -1,5 +1,5 @@
-import type { ComparisonResult } from "src/comparison/compareMessage"
-import compareMessage from "src/comparison/compareMessage"
+import type { ComparisonResult } from "../lib/compareMessage"
+import compareMessage from "../lib/compareMessage"
 import getStandingDataVersionByDate from "./getStandingDataVersionByDate"
 
 const processFile = (contents: string, fileName: string, date: Date): ComparisonResult => {

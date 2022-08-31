@@ -2,10 +2,10 @@
 import chalk from "chalk"
 import crypto from "crypto"
 import fs from "fs"
-import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
-import defaults from "../../tests/helpers/defaults"
+import ActiveMqHelper from "../../../tests/helpers/ActiveMqHelper"
+import defaults from "../../../tests/helpers/defaults"
+import type { ImportedComparison } from "../Types/ImportedComparison"
 import runFileOnBichard from "./runFileOnBichard"
-import type { ImportedComparison } from "./Types/ImportedComparison"
 
 const queueName = "PROCESSING_VALIDATION_QUEUE"
 
