@@ -1,4 +1,5 @@
 import type EventCategory from "./EventCategory"
+import type KeyValuePair from "./KeyValuePair"
 
 export default interface AuditLogEvent {
   timestamp: Date
@@ -8,4 +9,5 @@ export default interface AuditLogEvent {
   eventSourceQueueName?: string
   eventSource: string
   category: EventCategory
+  attributes?: KeyValuePair<string, unknown>
 }
