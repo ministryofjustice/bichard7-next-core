@@ -8,15 +8,18 @@ import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
 import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
+import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
+import getMessageType from "./lib/getMessageType"
 
 export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome | Error
   auditLogger.start("Phase 1 Processing")
+  const messageType = getMessageType(message)
 
-  if (message.match(/ResultedCaseMessage/)) {
+  if (messageType === "SPIResults") {
     const spiResult = parseSpiResult(message)
     hearingOutcome = transformSpiToAho(spiResult)
-  } else if (message.match(/<br7:HearingOutcome/) || message.match(/<br7:AnnotatedHearingOutcome/)) {
+  } else if (messageType === "HearingOutcome") {
     hearingOutcome = parseAhoXml(message)
   } else {
     throw new Error("Invalid incoming message format")
@@ -32,6 +35,10 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
       events: auditLogger.finish().getEvents()
     }
   }
+
+  auditLogger.logEvent(
+    getIncomingMessageLog(hearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
+  )
 
   hearingOutcome = enrichAho(hearingOutcome, pncGateway, auditLogger)
   const triggers = generateTriggers(hearingOutcome)
