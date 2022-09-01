@@ -16,7 +16,7 @@ import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
 import { isError } from "../types"
-import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
+import type { CompareSingleLambdaEvent } from "../types/CompareLambdaEvent"
 
 const bucket = "comparison-bucket"
 const s3Config = createS3Config()
@@ -266,7 +266,7 @@ describe("Comparison lambda", () => {
   it("should throw an error if the event did not match our schema", async () => {
     expect.assertions(2)
     try {
-      await lambda({ wrongPath: "dummy" } as unknown as CompareLambdaEvent)
+      await lambda({ wrongPath: "dummy" } as unknown as CompareSingleLambdaEvent)
     } catch (e: unknown) {
       const error = e as Error
       expect(error).toBeInstanceOf(ZodError)
