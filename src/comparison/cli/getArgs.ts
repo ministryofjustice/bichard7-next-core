@@ -3,6 +3,7 @@ import { parse } from "ts-command-line-args"
 
 interface IArguments {
   file?: string
+  runMissing?: string
   start?: string
   end?: string
   filter?: string
@@ -19,6 +20,12 @@ export const getArgs = () =>
         alias: "f",
         optional: true,
         description: "Specify either the local file path or an S3 URL"
+      },
+      runMissing: {
+        type: String,
+        alias: "m",
+        optional: true,
+        description: "Specify part of the the S3 URL e.g. 2022/08/31"
       },
       start: { type: String, alias: "s", optional: true, description: "Specify the start timestamp in ISO8601 format" },
       end: { type: String, alias: "e", optional: true, description: "Specify the end timestamp in ISO8601 format" },

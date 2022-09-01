@@ -1,5 +1,6 @@
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import getFile from "../lib/getFile"
+import runMissingComparisons from "../lib/runMissingComparisons"
 import getArgs from "./getArgs"
 import printResult from "./printResult"
 import processFile from "./processFile"
@@ -13,6 +14,8 @@ const main = async () => {
     const date = getDateFromComparisonFilePath(args.file)
     const result = processFile(contents, args.file, date)
     printResult(result, !args.noTruncate)
+  } else if ("runMissing" in args && args.runMissing) {
+    await runMissingComparisons(args.runMissing)
   } else if ("start" in args || "end" in args) {
     if ("start" in args && "end" in args && args.start && args.end) {
       const results = await processRange(args.start, args.end, filter, !!args.cache)
