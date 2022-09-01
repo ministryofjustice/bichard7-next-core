@@ -28,9 +28,6 @@ cd build
 zip compareSingle.zip compareSingle.js bichard7-next-data*
 upload_to_s3 compareSingle.zip compareSingle.zip
 
-zip gatherStats.zip gatherStats.js
-upload_to_s3 gatherStats.zip gatherStats.zip
-
 zip rerunFailures.zip rerunFailures.js
 upload_to_s3 rerunFailures.zip rerunFailures.zip
 
