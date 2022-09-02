@@ -69,4 +69,32 @@ describe("Bichard Core processing logic", () => {
       }
     ])
   })
+
+  it("should log when an input message is ignored", () => {
+    const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-no-offences.xml").toString()
+    handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
+    expect(auditLogger.getEvents()).toEqual([
+      {
+        eventType: "Started Phase 1 Processing",
+        eventSource: "Core Audit Logger",
+        category: "information",
+        timestamp: mockedDate
+      },
+      {
+        attributes: {
+          ASN: "1101ZD0100000448754K"
+        },
+        eventType: "Hearing Outcome ignored as it contains no offences",
+        eventSource: "CoreHandler",
+        category: "information",
+        timestamp: mockedDate
+      },
+      {
+        eventType: "Finished Phase 1 Processing",
+        eventSource: "Core Audit Logger",
+        category: "information",
+        timestamp: mockedDate
+      }
+    ])
+  })
 })

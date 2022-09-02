@@ -10,6 +10,7 @@ import type BichardResultType from "./types/BichardResultType"
 import type PncGateway from "./types/PncGateway"
 import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
 import getMessageType from "./lib/getMessageType"
+import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
 
 export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome | Error
@@ -29,6 +30,12 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
   }
 
   if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
+    auditLogger.logEvent(
+      getAuditLogEvent("information", "Hearing Outcome ignored as it contains no offences", "CoreHandler", {
+        ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+      })
+    )
+
     return {
       triggers: [],
       hearingOutcome,
