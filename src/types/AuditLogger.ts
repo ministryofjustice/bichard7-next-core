@@ -20,7 +20,7 @@ export default interface AuditLogger {
    * Audit logger must be started by calling start() function before being able to add a log.
    * @returns The audit logger instance
    */
-  logEvent(eventType: string): AuditLogger
+  logEvent(auditLogEvent: AuditLogEvent): AuditLogger
 
   /**
    * Gets all the events.

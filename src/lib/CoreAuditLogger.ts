@@ -13,7 +13,13 @@ export default class CoreAuditLogger implements AuditLogger {
 
     this.scope = scope
     this.events = []
-    this.logEvent(`Started ${this.scope}`)
+    this.logEvent({
+      timestamp: new Date(),
+      eventType: `Started ${this.scope}`,
+      eventSource: "Core Audit Logger",
+      category: "information"
+    })
+
     return this
   }
 
@@ -22,20 +28,23 @@ export default class CoreAuditLogger implements AuditLogger {
       throw Error("Logger is not started")
     }
 
-    this.logEvent(`Finished ${this.scope}`)
+    this.logEvent({
+      timestamp: new Date(),
+      eventType: `Finished ${this.scope}`,
+      eventSource: "Core Audit Logger",
+      category: "information"
+    })
+
     this.scope = null
     return this
   }
 
-  logEvent = (eventType: string): AuditLogger => {
+  logEvent = (auditLogEvent: AuditLogEvent): AuditLogger => {
     if (!this.scope) {
       throw Error("Logger is not started")
     }
 
-    this.events.push({
-      timestamp: new Date(),
-      eventType
-    })
+    this.events.push(auditLogEvent)
 
     return this
   }

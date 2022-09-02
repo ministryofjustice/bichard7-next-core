@@ -1,11 +1,27 @@
+import type EventCategory from "src/types/EventCategory"
 import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
+  const testEvent = {
+    timestamp: new Date(),
+    eventType: "Test Event Type",
+    eventSourceArn: "Dummy source arn",
+    eventSourceQueueName: "DUMMY_QUEUE",
+    eventSource: "Dummy Event Source",
+    category: "information" as EventCategory
+  }
+
   it("should clear previous logs and log the start event", () => {
     const auditLogger = new CoreAuditLogger()
       .start("Test 1")
-      .logEvent("To be removed 1")
-      .logEvent("To be removed 2")
+      .logEvent({
+        ...testEvent,
+        eventType: "Dummy event to be removed 1"
+      })
+      .logEvent({
+        ...testEvent,
+        category: "information"
+      })
       .finish()
 
     auditLogger.start("Test 2").finish()
@@ -19,7 +35,15 @@ describe("CoreAuditLogger", () => {
   it("should log the finish event", () => {
     const auditLogger = new CoreAuditLogger()
     auditLogger.start("Test 3")
-    auditLogger.logEvent("Event 1").logEvent("Event 2")
+    auditLogger
+      .logEvent({
+        ...testEvent,
+        eventType: "Event 1"
+      })
+      .logEvent({
+        ...testEvent,
+        eventType: "Event 2"
+      })
     auditLogger.finish()
 
     const events = auditLogger.getEvents()
@@ -32,7 +56,7 @@ describe("CoreAuditLogger", () => {
 
   it("should not be able to log if logger is not started", () => {
     const auditLogger = new CoreAuditLogger()
-    const log = () => auditLogger.logEvent("To be removed 1")
+    const log = () => auditLogger.logEvent({ ...testEvent, eventType: "To be removed 1" })
 
     expect(log).toThrow("Logger is not started")
   })
