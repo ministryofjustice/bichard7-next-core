@@ -11,6 +11,7 @@ import type PncGateway from "./types/PncGateway"
 import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
 import getMessageType from "./lib/getMessageType"
 import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
+import getHearingOutcomePassedToErrorListLog from "./lib/auditLog/getHearingOutcomePassedToErrorListLog"
 
 export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
   let hearingOutcome: AnnotatedHearingOutcome | Error
@@ -51,6 +52,10 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
   const triggers = generateTriggers(hearingOutcome)
   const exceptions = generateExceptions(hearingOutcome)
   hearingOutcome.Exceptions = (hearingOutcome.Exceptions ?? []).concat(exceptions)
+
+  if (hearingOutcome.Exceptions.length > 0) {
+    auditLogger.logEvent(getHearingOutcomePassedToErrorListLog(hearingOutcome))
+  }
 
   return {
     triggers,
