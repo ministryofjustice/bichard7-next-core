@@ -1,7 +1,7 @@
 import { S3 } from "aws-sdk"
+import { isError } from "../types/Result"
 import DynamoGateway from "./DynamoGateway"
 import InvokeCompareLambda from "./InvokeCompareLambda"
-import { isError } from "../types/Result"
 
 const workspace = process.env.WORKSPACE || "production"
 const region = "eu-west-2"
@@ -36,7 +36,7 @@ const processS3Object = async (
   }
 
   console.log(`Processing ${s3Path}`)
-  await invokeCompareLambda.call(s3Path)
+  await invokeCompareLambda.call([s3Path])
   return ProcessResult.Processed
 }
 
