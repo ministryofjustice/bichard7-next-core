@@ -30,6 +30,7 @@ export default async () => {
   }
 
   logger.info(`Invoking compare lambda for ${failedRecords.length} records`)
-  const invocationResult = await Promise.all(failedRecords.map(({ s3Path }) => invokeCompareLambda.call(s3Path)))
+  const failedS3Paths = failedRecords.map(({ s3Path }) => s3Path)
+  const invocationResult = await invokeCompareLambda.call(failedS3Paths)
   logger.info(invocationResult)
 }

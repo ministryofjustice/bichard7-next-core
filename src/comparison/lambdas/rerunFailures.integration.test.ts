@@ -17,8 +17,8 @@ import DynamoGateway from "../lib/DynamoGateway"
 import InvokeCompareLambda from "../lib/InvokeCompareLambda"
 import type { ComparisonLog } from "../types"
 import { isError } from "../types"
-import compareLambda from "./compareLambda"
-import rerunComparisonLambda from "./rerunComparisonLambda"
+import compareBatchLambda from "./compareBatch"
+import rerunFailures from "./rerunFailures"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const s3Config = createS3Config()
@@ -83,18 +83,19 @@ describe("Comparison lambda", () => {
     const records = [createRecord(1, "should/not/rerun"), createRecord(0, key)]
     await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
-    jest.spyOn(InvokeCompareLambda.prototype, "call").mockImplementation(async (s3Path) => {
-      await compareLambda({
+    jest.spyOn(InvokeCompareLambda.prototype, "call").mockImplementation(async (s3Paths) => {
+      const payloads = s3Paths.map((s3Path) => ({
         detail: {
           bucket: { name: comparisonBucketName },
           object: { key: s3Path }
         }
-      })
+      }))
 
-      return undefined
+      await compareBatchLambda(payloads)
+      return []
     })
     const s3Path = "test-data/comparison/passing.json"
-    const rerunResult = await rerunComparisonLambda().catch((error) => error)
+    const rerunResult = await rerunFailures().catch((error) => error)
     expect(isError(rerunResult)).toBe(false)
 
     const record = await dynamoGateway.getOne("s3Path", s3Path)
