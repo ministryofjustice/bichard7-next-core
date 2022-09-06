@@ -4,17 +4,15 @@ import type KeyValuePair from "src/types/KeyValuePair"
 import getOffenceCode from "src/lib/offence/getOffenceCode"
 import getAuditLogEvent from "./getAuditLogEvent"
 
-const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> => {
-  const offenceDetails: KeyValuePair<string, string> = {}
-  offences.forEach((offence, i) => {
+const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
+  offences.reduce((acc: KeyValuePair<string, string>, offence, i) => {
     const offenceCode = getOffenceCode(offence)
     const offenceSequence = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0")
     const offenceResult = offence.Result.map((result) => result.CJSresultCode).join(",")
     const offenceDetail = offenceCode + "||" + offenceSequence + "||" + offenceResult
-    offenceDetails[`Offence ${i + 1} Details`] = offenceDetail
-  })
-  return offenceDetails
-}
+    acc[`Offence ${i + 1} Details`] = offenceDetail
+    return acc
+  }, {})
 
 const getIncomingMessageLog = (
   hearingOutcome: HearingOutcome,
