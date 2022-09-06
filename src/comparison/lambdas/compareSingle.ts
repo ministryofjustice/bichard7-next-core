@@ -7,14 +7,14 @@ import DynamoGateway from "../lib/DynamoGateway"
 import getFileFromS3 from "../lib/getFileFromS3"
 import logInDynamoDb from "../lib/logInDynamoDb"
 import { isError } from "../types"
-import type { CompareLambdaEvent } from "../types/CompareLambdaEvent"
+import type { CompareSingleLambdaEvent } from "../types/CompareLambdaEvent"
 import { eventSchema } from "../types/CompareLambdaEvent"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
-export default async (event: CompareLambdaEvent): Promise<ComparisonResult> => {
+export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult> => {
   const parsedEvent = eventSchema.parse(event)
 
   const bucket = parsedEvent.detail.bucket.name
