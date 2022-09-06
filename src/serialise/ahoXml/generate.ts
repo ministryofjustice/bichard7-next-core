@@ -1,6 +1,6 @@
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
-import { toISODate, toPNCDate } from "src/lib/dates"
+import { toISODate, toPNCDate } from "../../lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
