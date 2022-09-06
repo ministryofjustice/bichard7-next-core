@@ -118,4 +118,18 @@ describe("Bichard Core processing logic", () => {
       ])
     )
   })
+
+  it("should log Message Rejected by CoreHandler", () => {
+    const invalidInputMessage = "invalid format"
+    handler(invalidInputMessage, mockPncGateway, auditLogger)
+
+    const receivedEvent = auditLogger.getEvents()[1]!
+    expect(receivedEvent.attributes!["Exception Stack Trace"]).toBeDefined()
+    expect(receivedEvent.attributes!["Exception Stack Trace"]).not.toBeNull()
+    expect(receivedEvent.attributes!["Exception Message"]).toBe("Invalid incoming message format")
+    expect(receivedEvent.category).toBe("error")
+    expect(receivedEvent.eventSource).toBe("CoreHandler")
+    expect(receivedEvent.eventType).toBe("Message Rejected by CoreHandler")
+    expect(receivedEvent.timestamp).toEqual(mockedDate)
+  })
 })
