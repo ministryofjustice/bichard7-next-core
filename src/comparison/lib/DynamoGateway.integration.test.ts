@@ -117,4 +117,87 @@ describe("DynamoGateway()", () => {
       expect(firstBatch.done).toBe(true)
     })
   })
+
+  describe("getRange()", () => {
+    it("should only return records within the specified range", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:01:00.000Z"),
+        createRecord(0, "2", "2022-07-09T11:01:00.000Z"),
+        createRecord(0, "3", "2022-07-09T12:01:00.000Z"),
+        createRecord(0, "4", "2022-07-09T13:01:00.000Z"),
+        createRecord(0, "5", "2022-07-09T14:01:00.000Z")
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getRange("2022-07-09T11:00:00.000Z", "2022-07-09T14:00:00.000Z")
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(3)
+      expect(firstBatch.value![0].s3Path).toBe("2")
+      expect(firstBatch.value![1].s3Path).toBe("3")
+      expect(firstBatch.value![2].s3Path).toBe("4")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
+
+    it("should filter records within the range if a filter is specified", async () => {
+      const records = [
+        createRecord(1, "1", "2022-07-09T10:01:00.000Z"),
+        createRecord(0, "2", "2022-07-09T11:01:00.000Z"),
+        createRecord(1, "3", "2022-07-09T12:01:00.000Z"),
+        createRecord(0, "4", "2022-07-09T13:01:00.000Z"),
+        createRecord(1, "5", "2022-07-09T14:01:00.000Z")
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const failedResult = await dynamoGateway.getRange("2022-07-09T11:00:00.000Z", "2022-07-09T14:00:00.000Z", false)
+
+      const failedFirstBatch = await failedResult.next()
+      if (isError(failedFirstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(failedFirstBatch.value)).toBe(false)
+      expect(failedFirstBatch.value).toHaveLength(2)
+      expect(failedFirstBatch.value![0].s3Path).toBe("2")
+      expect(failedFirstBatch.value![1].s3Path).toBe("4")
+      expect(failedFirstBatch.done).toBe(false)
+
+      const failedSecondBatch = await failedResult.next()
+      expect(failedSecondBatch.done).toBe(true)
+
+      const passedResult = await dynamoGateway.getRange("2022-07-09T11:00:00.000Z", "2022-07-09T14:00:00.000Z", true)
+
+      const passedFirstBatch = await passedResult.next()
+      if (isError(passedFirstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(passedFirstBatch.value)).toBe(false)
+      expect(passedFirstBatch.value).toHaveLength(1)
+      expect(passedFirstBatch.value![0].s3Path).toBe("3")
+      expect(passedFirstBatch.done).toBe(false)
+
+      const passedSecondBatch = await passedResult.next()
+      expect(passedSecondBatch.done).toBe(true)
+    })
+
+    it("should return empty when there are no records in range", async () => {
+      const records = [createRecord(1, "1"), createRecord(1, "2"), createRecord(1, "3"), createRecord(1, "4")]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getRange("2022-07-09T17:00:00.000Z", "2022-07-09T17:01:00.000Z")
+
+      const firstBatch = await result.next()
+      expect(firstBatch.value).toBeUndefined()
+      expect(firstBatch.done).toBe(true)
+    })
+  })
 })

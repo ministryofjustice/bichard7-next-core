@@ -68,12 +68,14 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  async getRange(
+  async *getRange(
     start: string,
     end: string,
     success?: boolean,
-    ExclusiveStartKey?: DynamoDB.DocumentClient.Key
-  ): Promise<ComparisonLog[]> {
+    batchSize = 1000
+  ): AsyncIterableIterator<ComparisonLog[] | Error> {
+    let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
+
     let failureFilter = {}
     let failureValue = {}
     if (success !== undefined) {
@@ -81,8 +83,8 @@ export default class DynamoGateway {
       failureValue = { ":latestResultValue": success ? 1 : 0 }
     }
 
-    const result = await this.client
-      .query({
+    while (true) {
+      const query = {
         TableName: this.tableName,
         IndexName: "initialRunAtIndex",
         KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
@@ -96,17 +98,31 @@ export default class DynamoGateway {
           ...failureValue
         },
         ...failureFilter,
+        Limit: batchSize,
         ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
-      })
-      .promise()
+      }
 
-    const items = result.Items as unknown as ComparisonLog[]
+      const result = await this.client
+        .query(query)
+        .promise()
+        .catch((error: Error) => error)
 
-    if (result.LastEvaluatedKey && items) {
-      const result2 = await this.getRange(start, end, success, result.LastEvaluatedKey)
-      return items.concat(result2)
-    } else {
-      return items
+      if (isError(result)) {
+        yield result
+        break
+      }
+
+      if (result.Items && result.Items.length > 0) {
+        yield result.Items as ComparisonLog[]
+
+        if (result.LastEvaluatedKey) {
+          ExclusiveStartKey = result.LastEvaluatedKey
+        } else {
+          break
+        }
+      } else {
+        break
+      }
     }
   }
 
