@@ -106,7 +106,7 @@ describe("DynamoGateway()", () => {
       expect(fourthBatch.done).toBe(true)
     })
 
-    it("should return empty when there is no failed records", async () => {
+    it("should return empty when there are no failed records", async () => {
       const records = [createRecord(1, "1"), createRecord(1, "2"), createRecord(1, "3"), createRecord(1, "4")]
       await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
@@ -187,6 +187,44 @@ describe("DynamoGateway()", () => {
 
       const passedSecondBatch = await passedResult.next()
       expect(passedSecondBatch.done).toBe(true)
+    })
+
+    it("should use batch size correctly", async () => {
+      const records = [
+        createRecord(1, "1", "2022-07-09T10:01:00.000Z"),
+        createRecord(0, "2", "2022-07-09T11:01:00.000Z"),
+        createRecord(1, "3", "2022-07-09T12:01:00.000Z"),
+        createRecord(0, "4", "2022-07-09T13:01:00.000Z"),
+        createRecord(1, "5", "2022-07-09T14:01:00.000Z")
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getRange("2022-07-09T10:00:00.000Z", "2022-07-09T15:00:00.000Z", undefined, 2)
+
+      const firstBatch = await result.next()
+      const secondBatch = await result.next()
+      const thirdBatch = await result.next()
+
+      if (isError(firstBatch.value) || isError(secondBatch.value) || isError(thirdBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(firstBatch.value).toHaveLength(2)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.value![1].s3Path).toBe("2")
+      expect(firstBatch.done).toBe(false)
+
+      expect(secondBatch.value).toHaveLength(2)
+      expect(secondBatch.value![0].s3Path).toBe("3")
+      expect(secondBatch.value![1].s3Path).toBe("4")
+      expect(secondBatch.done).toBe(false)
+
+      expect(thirdBatch.value).toHaveLength(1)
+      expect(thirdBatch.value![0].s3Path).toBe("5")
+      expect(thirdBatch.done).toBe(false)
+
+      const fourthBatch = await result.next()
+      expect(fourthBatch.done).toBe(true)
     })
 
     it("should return empty when there are no records in range", async () => {

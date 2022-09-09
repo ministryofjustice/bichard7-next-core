@@ -127,44 +127,8 @@ export default class DynamoGateway {
   }
 
   async *getFailures(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
-    let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
-
-    while (true) {
-      const query = {
-        TableName: this.tableName,
-        IndexName: "latestResultIndex",
-        KeyConditionExpression: "#latestResult = :latestResultValue",
-        ExpressionAttributeNames: {
-          "#latestResult": "latestResult"
-        },
-        ExpressionAttributeValues: {
-          ":latestResultValue": 0
-        },
-        Limit: batchSize,
-        ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
-      }
-
-      const result = await this.client
-        .query(query)
-        .promise()
-        .catch((error: Error) => error)
-
-      if (isError(result)) {
-        yield result
-        break
-      }
-
-      if (result.Items && result.Items.length > 0) {
-        yield result.Items as ComparisonLog[]
-
-        if (result.LastEvaluatedKey) {
-          ExclusiveStartKey = result.LastEvaluatedKey
-        } else {
-          break
-        }
-      } else {
-        break
-      }
+    for await (const batch of this.getRange("0", "3000", false, batchSize)) {
+      yield batch
     }
   }
 }
