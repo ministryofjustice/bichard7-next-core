@@ -8,7 +8,7 @@ phases:
   build:
     commands:
       - npm ci
-      - npm run build:lambda:prod
+      - npm run build:lambdas
       - ./scripts/codebuild_artifacts.sh
 ---
 

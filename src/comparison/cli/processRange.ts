@@ -3,6 +3,7 @@ import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import getFile from "../lib/getFile"
+import type { ComparisonLog } from "../types"
 import processFile from "./processFile"
 
 process.env.COMPARISON_TABLE_NAME = process.env.COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
@@ -26,6 +27,16 @@ type FileLookup = {
   contents?: string
 }
 
+const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLookup> => {
+  const skip = !!record.skipped
+  const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
+  if (skip) {
+    return { fileName: s3Url }
+  }
+  const contents = await getFile(s3Url, cache)
+  return { fileName: s3Url, contents }
+}
+
 const processRange = async (
   start: string,
   end: string,
@@ -34,34 +45,32 @@ const processRange = async (
 ): Promise<ComparisonResult[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
-  const records = await dynamo.getRange(start, end, filterValue)
-
-  if (!records || records instanceof Error) {
-    console.error(records)
-    throw new Error("Error fetching records from Dynamo")
-  }
-
-  const filePromises = records.map(async (record): Promise<FileLookup> => {
-    const skip = !!record.skipped
-    const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
-    if (skip) {
-      return { fileName: s3Url }
-    }
-    const contents = await getFile(s3Url, cache)
-    return { fileName: s3Url, contents }
-  })
-
-  const files = await Promise.all(filePromises)
-
   const results = []
-  for (const { fileName, contents } of files) {
-    if (contents) {
-      const date = getDateFromComparisonFilePath(fileName)
-      results.push(processFile(contents, fileName, date))
-    } else {
-      results.push(skippedFile(fileName))
+  let count = 0
+
+  for await (const batch of dynamo.getRange(start, end, filterValue, 100)) {
+    if (!batch || batch instanceof Error) {
+      console.error(batch)
+      throw new Error("Error fetching batch from Dynamo")
     }
+
+    count += batch.length
+
+    const filePromises = batch.map((record) => fetchFile(record, cache))
+    const files = await Promise.all(filePromises)
+
+    for (const { fileName, contents } of files) {
+      if (contents) {
+        const date = getDateFromComparisonFilePath(fileName)
+        results.push(processFile(contents, fileName, date))
+      } else {
+        results.push(skippedFile(fileName))
+      }
+    }
+
+    console.log(`Processed ${count} records`)
   }
+
   return results
 }
 

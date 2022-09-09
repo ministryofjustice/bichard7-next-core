@@ -24,6 +24,7 @@ jobs:
   build:
     docker:
       - image: cimg/node:16.13.1
+    resource_class: xlarge
     working_directory: ~
     steps:
       - checkout_and_install
@@ -33,6 +34,9 @@ jobs:
       - run:
           name: Build the code
           command: npm run build
+      - run:
+          name: Build the lambdas
+          command: npm run build:lambdas
       - persist_to_workspace:
           root: .
           paths: build
