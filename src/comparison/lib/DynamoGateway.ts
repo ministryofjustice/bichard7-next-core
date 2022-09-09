@@ -131,4 +131,10 @@ export default class DynamoGateway {
       yield batch
     }
   }
+
+  async *getAll(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
+    for await (const batch of this.getRange("0", "3000", undefined, batchSize)) {
+      yield batch
+    }
+  }
 }
