@@ -33,6 +33,9 @@ jobs:
       - run:
           name: Build the code
           command: npm run build
+      - run:
+          name: Build the lambdas
+          command: npm run build:lambdas
       - persist_to_workspace:
           root: .
           paths: build
