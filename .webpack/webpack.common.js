@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     compareBatch: "./src/comparison/lambdas/compareBatch.ts",
     compareSingle: "./src/comparison/lambdas/compareSingle.ts",
+    rerunAll: "./src/comparison/lambdas/rerunAll.ts",
     rerunFailures: "./src/comparison/lambdas/rerunFailures.ts"
   },
   resolve: {
