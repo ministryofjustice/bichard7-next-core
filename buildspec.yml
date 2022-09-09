@@ -11,3 +11,4 @@ phases:
       - npm run build:lambdas
       - ./scripts/codebuild_artifacts.sh
 ---
+
