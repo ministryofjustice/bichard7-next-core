@@ -5,8 +5,8 @@
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
-    "build:lambda:prod": "npx webpack --config ./.webpack/webpack.prod.js",
-    "build:lambda:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",
+    "build:lambdas": "webpack --config ./.webpack/webpack.prod.js",
+    "build:lambdas:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",
     "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
