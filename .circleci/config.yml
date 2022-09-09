@@ -82,7 +82,9 @@ jobs:
           background: true
       - run:
           name: Wait for Core
-          command: npx -y wait-port 6000
+          # The version of wait-port is pinned here because version 1.0.0
+          # has a breaking change that makes it die when the port is not open
+          command: npx -y wait-port@0.3.1 6000
       - run:
           name: Create a hash of the package lock
           command: md5sum ~/bichard7-next-tests/package-lock.json > ~/bichard7-next-tests/package-lock.json.md5
