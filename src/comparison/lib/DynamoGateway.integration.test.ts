@@ -113,8 +113,11 @@ describe("DynamoGateway()", () => {
       const result = await dynamoGateway.getFailures(2)
 
       const firstBatch = await result.next()
-      expect(firstBatch.value).toBeUndefined()
-      expect(firstBatch.done).toBe(true)
+      expect(firstBatch.value).toStrictEqual([])
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
     })
   })
 
@@ -234,8 +237,11 @@ describe("DynamoGateway()", () => {
       const result = await dynamoGateway.getRange("2022-07-09T17:00:00.000Z", "2022-07-09T17:01:00.000Z")
 
       const firstBatch = await result.next()
-      expect(firstBatch.value).toBeUndefined()
-      expect(firstBatch.done).toBe(true)
+      expect(firstBatch.value).toStrictEqual([])
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
     })
   })
 

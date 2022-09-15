@@ -112,7 +112,7 @@ export default class DynamoGateway {
         break
       }
 
-      if (result.Items && result.Items.length > 0) {
+      if (result.Items) {
         yield result.Items as ComparisonLog[]
 
         if (result.LastEvaluatedKey) {
@@ -127,9 +127,18 @@ export default class DynamoGateway {
   }
 
   async *getFailures(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
+    let buffer: ComparisonLog[] = []
     for await (const batch of this.getRange("0", "3000", false, batchSize)) {
-      yield batch
+      if (isError(batch)) {
+        return batch
+      }
+      buffer = buffer.concat(batch)
+      if (buffer.length >= batchSize) {
+        yield buffer.slice(0, 50)
+        buffer = buffer.slice(50)
+      }
     }
+    yield buffer
   }
 
   async *getAll(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
