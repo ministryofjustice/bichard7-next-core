@@ -22,18 +22,21 @@ const dynamoGateway = new DynamoGateway(dynamoConfig)
 const invokeCompareLambda = new InvokeCompareLambda(COMPARISON_LAMBDA_NAME, COMPARISON_BUCKET_NAME)
 
 export default async () => {
-  for await (const recordBatch of dynamoGateway.getAll(parseInt(BATCH_SIZE, 10))) {
-    logger.info(`Fetching next ${BATCH_SIZE} records from the comparison table`)
+  let total = 0
 
+  for await (const recordBatch of dynamoGateway.getAll(parseInt(BATCH_SIZE, 10))) {
     if (isError(recordBatch)) {
       logger.error("Failed to fetch records from Dynamo")
       throw recordBatch
     }
 
     const s3Paths = recordBatch.map(({ s3Path }) => s3Path)
+    total += s3Paths.length
 
-    logger.info(`Invoking a lambda to run those ${s3Paths.length} records`)
     const invocationResult = await invokeCompareLambda.call(s3Paths)
-    logger.info(invocationResult)
+    if (isError(invocationResult)) {
+      console.error(invocationResult)
+    }
+    logger.info(`Processed ${total} records up to ${recordBatch[recordBatch.length - 1].initialRunAt}`)
   }
 }
