@@ -72,7 +72,8 @@ export default class DynamoGateway {
     start: string,
     end: string,
     success?: boolean,
-    batchSize = 1000
+    batchSize = 1000,
+    includeSkipped = false
   ): AsyncIterableIterator<ComparisonLog[] | Error> {
     let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
 
@@ -113,7 +114,11 @@ export default class DynamoGateway {
       }
 
       if (result.Items) {
-        yield result.Items as ComparisonLog[]
+        if (includeSkipped) {
+          yield result.Items as ComparisonLog[]
+        } else {
+          yield result.Items.filter((item) => !item.skipped) as ComparisonLog[]
+        }
 
         if (result.LastEvaluatedKey) {
           ExclusiveStartKey = result.LastEvaluatedKey
@@ -126,23 +131,23 @@ export default class DynamoGateway {
     }
   }
 
-  async *getFailures(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
+  async *getFailures(batchSize = 1000, includeSkipped = false): AsyncIterableIterator<ComparisonLog[] | Error> {
     let buffer: ComparisonLog[] = []
-    for await (const batch of this.getRange("0", "3000", false, batchSize)) {
+    for await (const batch of this.getRange("0", "3000", false, batchSize, includeSkipped)) {
       if (isError(batch)) {
         return batch
       }
       buffer = buffer.concat(batch)
       if (buffer.length >= batchSize) {
-        yield buffer.slice(0, 50)
-        buffer = buffer.slice(50)
+        yield buffer.slice(0, batchSize)
+        buffer = buffer.slice(batchSize)
       }
     }
     yield buffer
   }
 
-  async *getAll(batchSize = 1000): AsyncIterableIterator<ComparisonLog[] | Error> {
-    for await (const batch of this.getRange("0", "3000", undefined, batchSize)) {
+  async *getAll(batchSize = 1000, includeSkipped = false): AsyncIterableIterator<ComparisonLog[] | Error> {
+    for await (const batch of this.getRange("0", "3000", undefined, batchSize, includeSkipped)) {
       yield batch
     }
   }

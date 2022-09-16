@@ -14,8 +14,12 @@ const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
+const isPass = (result: ComparisonResult): boolean =>
+  result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
+
 export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[]> => {
   const parsedEvent = batchEventSchema.parse(Array.isArray(event) ? event : [event])
+  const count = { pass: 0, fail: 0 }
 
   logger.info(`Processing ${parsedEvent.length} comparison tests...`)
 
@@ -23,7 +27,6 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
     const bucket = test.detail.bucket.name
     const s3Path = test.detail.object.key
 
-    logger.info(`Retrieving file from S3: ${s3Path}`)
     const content = await getFileFromS3(s3Path, bucket, s3Config)
     if (content instanceof Error) {
       throw content
@@ -43,22 +46,17 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       }
     }
 
-    logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
     const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
     if (isError(logInDynamoDbResult)) {
       throw logInDynamoDbResult
     }
 
-    logger.info(
-      `[Comparison Result] ${
-        comparisonResult.triggersMatch &&
-        comparisonResult.exceptionsMatch &&
-        comparisonResult.xmlOutputMatches &&
-        comparisonResult.xmlParsingMatches
-          ? "PASS"
-          : "FAIL"
-      }`
-    )
+    if (isPass(comparisonResult)) {
+      count.pass += 1
+    } else {
+      count.fail += 1
+      logger.info(`Comparison failed: ${s3Path}`)
+    }
 
     if (error) {
       logger.info(error)
@@ -69,5 +67,6 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
 
   const results = await Promise.all(resultPromises)
 
+  console.info(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
   return results
 }
