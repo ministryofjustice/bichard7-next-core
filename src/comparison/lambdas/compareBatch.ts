@@ -15,7 +15,7 @@ const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
 export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[]> => {
-  const parsedEvent = batchEventSchema.parse(event)
+  const parsedEvent = batchEventSchema.parse(Array.isArray(event) ? event : [event])
 
   logger.info(`Processing ${parsedEvent.length} comparison tests...`)
 
