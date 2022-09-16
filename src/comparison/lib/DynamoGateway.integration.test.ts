@@ -8,12 +8,18 @@ import DynamoGateway from "./DynamoGateway"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 
-const createRecord = (result: number, s3Path: string, runAt = "2022-07-09T10:12:13.000Z"): ComparisonLog => ({
+const createRecord = (
+  result: number,
+  s3Path: string,
+  runAt = "2022-07-09T10:12:13.000Z",
+  skipped = false
+): ComparisonLog => ({
   version: 1,
   initialResult: result,
   initialRunAt: runAt,
   latestResult: result,
   latestRunAt: runAt,
+  skipped,
   s3Path,
   history: [
     {
@@ -119,6 +125,53 @@ describe("DynamoGateway()", () => {
       const secondBatch = await result.next()
       expect(secondBatch.done).toBe(true)
     })
+
+    it("should not return skipped records by default", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getFailures(10)
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(1)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
+
+    it("should return skipped records if specified", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getFailures(10, true)
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(2)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.value![1].s3Path).toBe("2")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
   })
 
   describe("getRange()", () => {
@@ -153,10 +206,10 @@ describe("DynamoGateway()", () => {
     it("should filter records within the range if a filter is specified", async () => {
       const records = [
         createRecord(1, "1", "2022-07-09T10:01:00.000Z"),
-        createRecord(0, "2", "2022-07-09T11:01:00.000Z"),
-        createRecord(1, "3", "2022-07-09T12:01:00.000Z"),
-        createRecord(0, "4", "2022-07-09T13:01:00.000Z"),
-        createRecord(1, "5", "2022-07-09T14:01:00.000Z")
+        createRecord(0, "2", "2022-07-09T11:02:00.000Z"),
+        createRecord(1, "3", "2022-07-09T12:03:00.000Z"),
+        createRecord(0, "4", "2022-07-09T13:04:00.000Z"),
+        createRecord(1, "5", "2022-07-09T14:05:00.000Z")
       ]
       await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
 
@@ -243,6 +296,59 @@ describe("DynamoGateway()", () => {
       const secondBatch = await result.next()
       expect(secondBatch.done).toBe(true)
     })
+
+    it("should not return skipped records by default", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getRange("2022-07-09T10:00:00.000Z", "2022-07-09T15:00:00.000Z")
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(1)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
+
+    it("should return skipped records if specified", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getRange(
+        "2022-07-09T10:00:00.000Z",
+        "2022-07-09T15:00:00.000Z",
+        undefined,
+        10,
+        true
+      )
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(2)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.value![1].s3Path).toBe("2")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
   })
 
   describe("getAll()", () => {
@@ -310,6 +416,53 @@ describe("DynamoGateway()", () => {
 
       const fourthBatch = await result.next()
       expect(fourthBatch.done).toBe(true)
+    })
+
+    it("should not return skipped records by default", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getAll()
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(1)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
+    })
+
+    it("should return skipped records if specified", async () => {
+      const records = [
+        createRecord(0, "1", "2022-07-09T10:12:11.000Z"),
+        createRecord(0, "2", "2022-07-09T10:12:12.000Z", true)
+      ]
+      await Promise.all(records.map((record) => dynamoGateway.insertOne(record, "s3Path")))
+
+      const result = await dynamoGateway.getAll(10, true)
+
+      const firstBatch = await result.next()
+      if (isError(firstBatch.value)) {
+        throw new Error("Error returned from Dynamo")
+      }
+
+      expect(isError(firstBatch.value)).toBe(false)
+      expect(firstBatch.value).toHaveLength(2)
+      expect(firstBatch.value![0].s3Path).toBe("1")
+      expect(firstBatch.value![1].s3Path).toBe("2")
+      expect(firstBatch.done).toBe(false)
+
+      const secondBatch = await result.next()
+      expect(secondBatch.done).toBe(true)
     })
   })
 })
