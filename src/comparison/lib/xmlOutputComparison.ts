@@ -31,3 +31,12 @@ export const formatXmlDiff = (changes: Change[], truncate = false): string =>
       return chalk[color](change.value)
     })
     .join("")
+
+export const formatXmlDiffAsTxt = (changes: Change[], truncate = false): string =>
+  changes
+    .map((c) => (truncate ? truncateUnchanged(c) : c))
+    .map((change) => {
+      const prefix = change.added ? "+" : change.removed ? "-" : " "
+      return `${prefix} ${change.value}`
+    })
+    .join("")

@@ -3,6 +3,7 @@ import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
@@ -58,7 +59,11 @@ const compareMessage = (
     input.replace(/Â£/g, "£")
   )
 
-  ;(global as any).dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
+  const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
+  ;(global as any).dataVersion = dataVersion
+  if (debug) {
+    logger.info(`Using version ${dataVersion} of standing data`)
+  }
 
   const sortedTriggers = sortTriggers(triggers)
   const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
