@@ -1,4 +1,4 @@
-import { lookupOrganisationUnitByCode } from "../dataLookup"
+import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../dataLookup"
 import errorPaths from "../lib/errorPaths"
 import findException from "../lib/findException"
 import populateOrganisationUnitFields from "../lib/organisationUnit/populateOrganisationUnitFields"
@@ -10,6 +10,8 @@ import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
+
+const COURT_HOUSE_CODE_PATH: ExceptionPath = "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode".split(".")
 
 const getResultPath = (offenceIndex: number, resultIndex: number): ExceptionPath => [
   "AnnotatedHearingOutcome",
@@ -64,6 +66,14 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
   const isCourtHearingLocationValid = CourtHearingLocation && isOrganisationUnitValid(CourtHearingLocation)
   if (!courtHearingLocationException && !isCourtHearingLocationValid) {
     generatedExceptions.push({ code: ExceptionCode.HO100300, path: COURT_HEARING_LOCATION_PATH })
+  }
+
+  if (!isCourtHearingLocationValid) {
+    const courtHouseCode = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode
+    const isCourtHouseCodeValid = !!lookupOrganisationUnitByThirdLevelPsaCode(courtHouseCode)
+    if (!isCourtHouseCodeValid) {
+      generatedExceptions.push({ code: ExceptionCode.HO100300, path: COURT_HOUSE_CODE_PATH })
+    }
   }
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence, offenceIndex) =>

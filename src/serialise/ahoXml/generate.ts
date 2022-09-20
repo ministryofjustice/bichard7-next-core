@@ -1,6 +1,5 @@
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
-import { toISODate, toPNCDate } from "../../lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -13,6 +12,7 @@ import {
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
 } from "../../dataLookup"
+import { toISODate, toPNCDate } from "../../lib/dates"
 import { encodeEntitiesProcessor } from "../../lib/encoding"
 import type {
   Adj,
@@ -476,7 +476,8 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     "br7:UniqueID": text(hearing.SourceReference.UniqueID),
     "br7:DocumentType": text(hearing.SourceReference.DocumentType)
   },
-  "br7:CourtType": hearing.CourtType ? optionalLiteral(hearing.CourtType, LiteralType.CourtType) : undefined,
+  "br7:CourtType":
+    hearing.CourtType !== null ? optionalLiteral(hearing.CourtType, LiteralType.CourtType) : { "#text": "" },
   "br7:CourtHouseCode": text(hearing.CourtHouseCode.toString()),
   "br7:CourtHouseName": optionalText(hearing.CourtHouseName),
   "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
