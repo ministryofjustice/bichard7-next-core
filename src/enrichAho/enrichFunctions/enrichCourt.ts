@@ -27,6 +27,8 @@ const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
     })
     Hearing.CourtType = courtType
     Hearing.CourtHouseName = courtName
+  } else {
+    Hearing.CourtType = null
   }
 
   return hearingOutcome

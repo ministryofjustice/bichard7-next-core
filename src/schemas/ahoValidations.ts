@@ -54,7 +54,7 @@ const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   }
 }
 
-const validateCourtType = (data: string): boolean => !!lookupCourtTypeByCjsCode(data.toString())
+const validateCourtType = (data: string | null): boolean => !!data && !!lookupCourtTypeByCjsCode(data.toString())
 
 const validateTypeOfHearing = (data: string): boolean => !!lookupTypeOfHearingByCjsCode(data.toString())
 

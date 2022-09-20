@@ -255,7 +255,7 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
   throw new Error("Offence Reason Missing from XML")
 }
 
-const mapOffenceReasonSequence = (node: Br7ErrorString | undefined): string | null | undefined => {
+const mapErrorString = (node: Br7ErrorString | undefined): string | null | undefined => {
   if (node?.["#text"]) {
     return node["#text"]
   }
@@ -276,7 +276,7 @@ const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsec
     CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"]?.["#text"] ?? ""
   },
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
-  OffenceReasonSequence: mapOffenceReasonSequence(xmlCPR["ds:OffenceReasonSequence"])
+  OffenceReasonSequence: mapErrorString(xmlCPR["ds:OffenceReasonSequence"])
 })
 
 const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => {
@@ -446,7 +446,7 @@ const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
     UniqueID: xmlHearing["br7:SourceReference"]["br7:UniqueID"]["#text"],
     DocumentType: xmlHearing["br7:SourceReference"]["br7:DocumentType"]["#text"]
   },
-  CourtType: xmlHearing["br7:CourtType"] ? xmlHearing["br7:CourtType"]["#text"] : "",
+  CourtType: mapErrorString(xmlHearing["br7:CourtType"]),
   CourtHouseName: xmlHearing["br7:CourtHouseName"]?.["#text"]
 })
 

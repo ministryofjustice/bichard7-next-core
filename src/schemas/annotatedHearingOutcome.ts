@@ -183,7 +183,7 @@ export const hearingSchema = z.object({
   ReportRequestedDate: z.date().optional(),
   ReportCompletedDate: z.date().optional(),
   SourceReference: sourceReferenceSchema,
-  CourtType: z.string().refine(validateCourtType, ExceptionCode.HO100108).optional(), // Can't test this in Bichard because it is always set to a valid value
+  CourtType: z.string().or(z.null()).refine(validateCourtType, ExceptionCode.HO100108).optional(), // Can't test this in Bichard because it is always set to a valid value
   CourtHouseCode: z.number().min(100, ExceptionCode.HO100249).max(9999, ExceptionCode.HO100249),
   CourtHouseName: z.string().optional()
 })
