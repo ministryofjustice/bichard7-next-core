@@ -48,7 +48,7 @@ const processRange = async (
   const results = []
   let count = 0
 
-  for await (const batch of dynamo.getRange(start, end, filterValue, 100)) {
+  for await (const batch of dynamo.getRange(start, end, filterValue, 1000)) {
     if (!batch || batch instanceof Error) {
       console.error(batch)
       throw new Error("Error fetching batch from Dynamo")
@@ -68,7 +68,9 @@ const processRange = async (
       }
     }
 
-    console.log(`Processed ${count} records`)
+    if (batch.length !== 0) {
+      console.log(`Processed ${count} records`)
+    }
   }
 
   return results
