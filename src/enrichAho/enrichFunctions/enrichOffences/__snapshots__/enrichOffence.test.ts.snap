@@ -16,6 +16,7 @@ Object {
   "OffenceCategory": "B7",
   "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
   "RecordableOnPNCindicator": false,
+  "ResultHalfLifeHours": undefined,
 }
 `;
 
@@ -35,6 +36,7 @@ Object {
   "OffenceCategory": "B7",
   "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
   "RecordableOnPNCindicator": false,
+  "ResultHalfLifeHours": undefined,
 }
 `;
 
@@ -54,5 +56,6 @@ Object {
   "OffenceCategory": "B7",
   "OffenceTitle": "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
   "RecordableOnPNCindicator": false,
+  "ResultHalfLifeHours": undefined,
 }
 `;
