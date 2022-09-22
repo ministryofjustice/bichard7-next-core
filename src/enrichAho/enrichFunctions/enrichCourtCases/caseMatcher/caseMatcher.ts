@@ -55,7 +55,9 @@ const matchCases = (hoOffences: Offence[], pncResponse: PncQueryResult): CaseMat
     if (result.courtCaseMatches.length === 0 && nonMatchingExplicitMatch) {
       result.courtCaseMatches.push(nonMatchingExplicitMatch)
     }
-  } else if (penaltyCases) {
+  }
+
+  if (penaltyCases) {
     penaltyCases.forEach((penaltyCase) => {
       const pncOffences = penaltyCase.offences
       const caseReference = penaltyCase.penaltyCaseReference
