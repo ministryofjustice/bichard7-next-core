@@ -4,7 +4,7 @@ import type { ComparisonResult } from "./compareMessage"
 import type DynamoGateway from "./DynamoGateway"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
-const logInDynamoDb = async (
+const recordResultInDynamo = async (
   s3Path: string,
   comparisonResult: ComparisonResult,
   dynamoGateway: DynamoGateway
@@ -53,4 +53,4 @@ const logInDynamoDb = async (
     : dynamoGateway.insertOne(record, "s3Path")
 }
 
-export default logInDynamoDb
+export default recordResultInDynamo

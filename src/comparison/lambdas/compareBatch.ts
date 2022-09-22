@@ -7,7 +7,7 @@ import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import getFileFromS3 from "../lib/getFileFromS3"
-import logInDynamoDb from "../lib/logInDynamoDb"
+import recordResultInDynamo from "../lib/recordResultInDynamo"
 import { formatXmlDiffAsTxt } from "../lib/xmlOutputComparison"
 import { isError } from "../types"
 import type { CompareBatchLambdaEvent } from "../types/CompareLambdaEvent"
@@ -80,9 +80,9 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       }
     }
 
-    const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
-    if (isError(logInDynamoDbResult)) {
-      throw logInDynamoDbResult
+    const recordResultInDynamoResult = await recordResultInDynamo(s3Path, comparisonResult, dynamoGateway)
+    if (isError(recordResultInDynamoResult)) {
+      throw recordResultInDynamoResult
     }
 
     if (isPass(comparisonResult)) {
