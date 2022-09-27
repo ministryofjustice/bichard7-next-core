@@ -39,7 +39,7 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  insertBatch<T>(records: T[], keyName: string): PromiseResult<void> {
+  async insertBatch<T>(records: T[], keyName: string): Promise<PromiseResult<void>> {
     const params: DocumentClient.BatchWriteItemInput = {
       RequestItems: {
         [this.tableName]: records.map((record) => ({
@@ -51,11 +51,27 @@ export default class DynamoGateway {
       }
     }
 
-    return this.client
+    const result = await this.client
       .batchWrite(params)
       .promise()
-      .then(() => undefined)
       .catch((error) => <Error>error)
+
+    if (isError(result)) {
+      return result
+    }
+
+    while (result.UnprocessedItems && Object.keys(result.UnprocessedItems).length > 0) {
+      const nextResult = await this.client
+        .batchWrite({
+          RequestItems: result.UnprocessedItems
+        })
+        .promise()
+        .catch((error) => <Error>error)
+
+      if (isError(nextResult)) {
+        return nextResult
+      }
+    }
   }
 
   updateOne<T>(record: T, keyName: string, version: number): PromiseResult<void> {
