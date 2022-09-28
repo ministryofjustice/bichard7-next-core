@@ -20,6 +20,7 @@
     "compare:summarise": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/summariseRecord.ts",
     "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node src/comparison/lib/repeatTestBichard.ts",
     "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
+    "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
     "build": "npm run clean && tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

@@ -39,7 +39,7 @@ const getFile = async (file: string, cache: boolean): Promise<string> => {
       process.exit()
     }
   }
-  return Buffer.from(contents, "binary").toString("utf8")
+  return contents
 }
 
 export default getFile

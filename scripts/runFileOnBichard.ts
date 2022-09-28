@@ -1,8 +1,8 @@
-import fs from "fs"
-import ActiveMqHelper from "../../../tests/helpers/ActiveMqHelper"
-import defaults from "../../../tests/helpers/defaults"
-import { mockAhoRecordInPnc } from "../../../tests/helpers/mockRecordInPnc"
-import type { ImportedComparison } from "../types/ImportedComparison"
+import getFile from "src/comparison/lib/getFile"
+import type { ImportedComparison } from "../src/comparison/types/ImportedComparison"
+import ActiveMqHelper from "../tests/helpers/ActiveMqHelper"
+import defaults from "../tests/helpers/defaults"
+import { mockAhoRecordInPnc } from "../tests/helpers/mockRecordInPnc"
 
 const runFileOnBichard = async (comparison: ImportedComparison): Promise<void> => {
   // Insert matching record in PNC
@@ -21,11 +21,15 @@ const runFileOnBichard = async (comparison: ImportedComparison): Promise<void> =
   }
 }
 
+const main = async () => {
+  const filename = process.argv[2]
+  const fileContents = await getFile(filename, true)
+  const comparison = JSON.parse(fileContents) as ImportedComparison
+  runFileOnBichard(comparison)
+}
+
 export default runFileOnBichard
 
 if (require.main === module) {
-  const filename = process.argv[2]
-  const fileContents = fs.readFileSync(filename, { encoding: "utf-8" })
-  const comparison = JSON.parse(fileContents) as ImportedComparison
-  runFileOnBichard(comparison)
+  main()
 }
