@@ -5,7 +5,7 @@ import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
 import getFileFromS3 from "../lib/getFileFromS3"
-import logInDynamoDb from "../lib/logInDynamoDb"
+import recordResultInDynamo from "../lib/recordResultInDynamo"
 import { isError } from "../types"
 import type { CompareSingleLambdaEvent } from "../types/CompareLambdaEvent"
 import { eventSchema } from "../types/CompareLambdaEvent"
@@ -41,9 +41,9 @@ export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult
   }
 
   logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
-  const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
-  if (isError(logInDynamoDbResult)) {
-    throw logInDynamoDbResult
+  const recordResultInDynamoResult = await recordResultInDynamo(s3Path, comparisonResult, dynamoGateway)
+  if (isError(recordResultInDynamoResult)) {
+    throw recordResultInDynamoResult
   }
 
   logger.info(

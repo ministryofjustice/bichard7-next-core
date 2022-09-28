@@ -7,7 +7,7 @@ import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import getFileFromS3 from "../lib/getFileFromS3"
-import logInDynamoDb from "../lib/logInDynamoDb"
+import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import { formatXmlDiffAsTxt } from "../lib/xmlOutputComparison"
 import { isError } from "../types"
 import type { CompareBatchLambdaEvent } from "../types/CompareLambdaEvent"
@@ -80,11 +80,6 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       }
     }
 
-    const logInDynamoDbResult = await logInDynamoDb(s3Path, comparisonResult, dynamoGateway)
-    if (isError(logInDynamoDbResult)) {
-      throw logInDynamoDbResult
-    }
-
     if (isPass(comparisonResult)) {
       count.pass += 1
     } else {
@@ -99,11 +94,16 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       logger.info(error)
     }
 
-    return comparisonResult
+    return { s3Path, comparisonResult }
   })
 
   const results = await Promise.all(resultPromises)
 
-  console.info(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
-  return results
+  const recordResultsInDynamoResult = await recordResultsInDynamo(results, dynamoGateway)
+  if (isError(recordResultsInDynamoResult)) {
+    throw recordResultsInDynamoResult
+  }
+
+  logger.info(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
+  return results.map((result) => result.comparisonResult)
 }

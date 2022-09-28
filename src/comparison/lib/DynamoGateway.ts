@@ -8,7 +8,7 @@ export default class DynamoGateway {
 
   protected readonly client: DocumentClient
 
-  private readonly tableName: string
+  public readonly tableName: string
 
   constructor(config: DynamoDbConfig) {
     this.tableName = config.TABLE_NAME
@@ -39,6 +39,41 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
+  async insertBatch<T>(records: T[], keyName: string): Promise<PromiseResult<void>> {
+    const params: DocumentClient.BatchWriteItemInput = {
+      RequestItems: {
+        [this.tableName]: records.map((record) => ({
+          PutRequest: {
+            Item: { _: "_", ...record },
+            ConditionExpression: `attribute_not_exists(${keyName})`
+          }
+        }))
+      }
+    }
+
+    const result = await this.client
+      .batchWrite(params)
+      .promise()
+      .catch((error) => <Error>error)
+
+    if (isError(result)) {
+      return result
+    }
+
+    while (result.UnprocessedItems && Object.keys(result.UnprocessedItems).length > 0) {
+      const nextResult = await this.client
+        .batchWrite({
+          RequestItems: result.UnprocessedItems
+        })
+        .promise()
+        .catch((error) => <Error>error)
+
+      if (isError(nextResult)) {
+        return nextResult
+      }
+    }
+  }
+
   updateOne<T>(record: T, keyName: string, version: number): PromiseResult<void> {
     const params: DocumentClient.PutItemInput = {
       TableName: this.tableName,
@@ -62,6 +97,19 @@ export default class DynamoGateway {
         TableName: this.tableName,
         Key: {
           [keyName]: keyValue
+        }
+      })
+      .promise()
+      .catch((error) => <Error>error)
+  }
+
+  getBatch(keyName: string, keyValues: unknown[]): PromiseResult<DocumentClient.BatchGetItemOutput | Error | null> {
+    return this.client
+      .batchGet({
+        RequestItems: {
+          [this.tableName]: {
+            Keys: keyValues.map((kv) => ({ [keyName]: kv }))
+          }
         }
       })
       .promise()
