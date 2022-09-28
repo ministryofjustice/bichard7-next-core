@@ -255,8 +255,8 @@ const mapAhoResultsToXml = (
     "br7:ResultClass": optionalText(result.ResultClass),
     "br7:Urgent": result.Urgent ? mapAhoUrgentToXml(result.Urgent) : undefined,
     "br7:PNCAdjudicationExists": optionalLiteral(result.PNCAdjudicationExists, LiteralType.YesNo),
-    "br7:ReasonForOffenceBailConditions": optionalText(result.ReasonForOffenceBailConditions),
     "br7:NumberOfOffencesTIC": optionalText(result.NumberOfOffencesTIC?.toString()),
+    "br7:ReasonForOffenceBailConditions": optionalText(result.ReasonForOffenceBailConditions),
     "br7:ResultQualifierVariable": result.ResultQualifierVariable.map((rqv) => ({
       "@_SchemaVersion": "3.0",
       "ds:Code": text(rqv.Code)
