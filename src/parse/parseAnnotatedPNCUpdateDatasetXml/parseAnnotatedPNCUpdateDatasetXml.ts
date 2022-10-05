@@ -17,7 +17,8 @@ const mapXmlToAnnotatedPNCUpdateDataset = (
               Hearing: mapXmlHearingToAho(aho["br7:HearingOutcome"]["br7:Hearing"]),
               Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
             }
-          }
+          },
+          Exceptions: []
         }
       }
     }
