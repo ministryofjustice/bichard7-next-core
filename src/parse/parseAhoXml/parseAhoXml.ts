@@ -378,7 +378,7 @@ const getGivenNames = (
   return Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
 }
 
-const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
+export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   PTIURN: xmlCase["ds:PTIURN"]["#text"],
   RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
   Urgent: xmlCase["br7:Urgent"]
@@ -433,7 +433,7 @@ const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   ManualForceOwner: xmlCase["br7:ManualForceOwner"]?.["#text"] ? true : undefined
 })
 
-const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
+export const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHearingLocation: mapXmlOrganisationalUnitToAho(xmlHearing["ds:CourtHearingLocation"]),
   DateOfHearing: new Date(xmlHearing["ds:DateOfHearing"]["#text"]),
   TimeOfHearing: xmlHearing["ds:TimeOfHearing"]["#text"],
