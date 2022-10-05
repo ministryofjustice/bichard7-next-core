@@ -1,4 +1,4 @@
-import type { XML } from "./xml"
+import type { XML } from "./Xml"
 
 export interface AhoXml {
   "?xml": XML
