@@ -101,7 +101,11 @@ export const defendantOrOffenderSchema = z.object({
 export const criminalProsecutionReferenceSchema = z.object({
   DefendantOrOffender: defendantOrOffenderSchema,
   OffenceReason: offenceReasonSchema.optional(),
-  OffenceReasonSequence: z.string().or(z.null()).optional()
+  OffenceReasonSequence: z
+    .string()
+    .regex(/^\d{1,3}$/, ExceptionCode.HO100228)
+    .or(z.null())
+    .optional()
 })
 
 export const durationSchema = z.object({
