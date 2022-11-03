@@ -13,6 +13,7 @@ type ErrorRangeDefinition = {
 }
 
 const ho100301 = { code: ExceptionCode.HO100301, path: errorPaths.case.asn }
+const ho100314 = { code: ExceptionCode.HO100314, path: errorPaths.case.asn }
 
 const errorRanges: ErrorRangeDefinition[] = [
   {
@@ -56,6 +57,9 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
 const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
   if (hearingOutcome.PncErrorMessage?.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)) {
     return [ho100301]
+  }
+  if (hearingOutcome.PncErrorMessage === "Unexpected PNC communication error") {
+    return [ho100314]
   }
 
   const errorCode = hearingOutcome.PncErrorMessage?.substring(0, 5)
