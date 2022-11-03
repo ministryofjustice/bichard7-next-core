@@ -126,7 +126,7 @@ const parseDateOrFallbackToString = (input?: Br7ErrorString): Date | string | nu
   }
 
   const parsedDate = new Date(input["#text"])
-  if (isNaN(parsedDate.getTime())) {
+  if (isNaN(parsedDate.getTime()) || !input["#text"].match(/\d{4}-\d{2}-\d{2}/)) {
     return input["#text"]
   }
 
