@@ -179,6 +179,55 @@ export default class DynamoGateway {
     }
   }
 
+  async *getAllFailures(batchSize = 1000, includeSkipped = false): AsyncIterableIterator<ComparisonLog[] | Error> {
+    let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
+
+    while (true) {
+      const query = {
+        TableName: this.tableName,
+        IndexName: "latestResultIndex",
+        KeyConditionExpression: "#partitionKey = :partitionKeyValue and latestResult = :latestResultValue",
+        FilterExpression: "skipped <> :skippedValue",
+        ExpressionAttributeNames: {
+          "#partitionKey": "_"
+        },
+        ExpressionAttributeValues: {
+          ":partitionKeyValue": "_",
+          ":latestResultValue": 0,
+          ":skippedValue": true
+        },
+        Limit: batchSize,
+        ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
+      }
+
+      const result = await this.client
+        .query(query)
+        .promise()
+        .catch((error: Error) => error)
+
+      if (isError(result)) {
+        yield result
+        break
+      }
+
+      if (result.Items) {
+        if (includeSkipped) {
+          yield result.Items as ComparisonLog[]
+        } else {
+          yield result.Items.filter((item) => !item.skipped) as ComparisonLog[]
+        }
+
+        if (result.LastEvaluatedKey) {
+          ExclusiveStartKey = result.LastEvaluatedKey
+        } else {
+          break
+        }
+      } else {
+        break
+      }
+    }
+  }
+
   async *getFailures(batchSize = 1000, includeSkipped = false): AsyncIterableIterator<ComparisonLog[] | Error> {
     let buffer: ComparisonLog[] = []
     for await (const batch of this.getRange("0", "3000", false, batchSize, includeSkipped)) {

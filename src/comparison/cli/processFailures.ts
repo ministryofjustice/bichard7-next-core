@@ -13,18 +13,12 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
-const processRange = async (
-  start: string,
-  end: string,
-  filter: string,
-  cache: boolean
-): Promise<ComparisonResult[]> => {
+const processFailures = async (cache: boolean): Promise<ComparisonResult[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
-  const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
   const results = []
   let count = 0
 
-  for await (const batch of dynamo.getRange(start, end, filterValue, 1000)) {
+  for await (const batch of dynamo.getAllFailures(1000)) {
     if (!batch || batch instanceof Error) {
       console.error(batch)
       throw new Error("Error fetching batch from Dynamo")
@@ -52,4 +46,4 @@ const processRange = async (
   return results
 }
 
-export default processRange
+export default processFailures

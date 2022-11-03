@@ -3,6 +3,7 @@ import getFile from "../lib/getFile"
 import runMissingComparisons from "../lib/runMissingComparisons"
 import getArgs from "./getArgs"
 import printResult from "./printResult"
+import processFailures from "./processFailures"
 import processFile from "./processFile"
 import processRange from "./processRange"
 
@@ -23,6 +24,9 @@ const main = async () => {
     } else {
       console.error("You must specify both a start and end time")
     }
+  } else if (filter === "failure") {
+    const results = await processFailures(!!args.cache)
+    printResult(results, !args.noTruncate)
   }
 }
 
