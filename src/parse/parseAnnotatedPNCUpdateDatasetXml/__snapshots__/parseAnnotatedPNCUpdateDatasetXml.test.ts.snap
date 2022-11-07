@@ -1,25 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDatasetXml 1`] = `
-Object {
-  "AnnotatedPNCUpdateDataset": Object {
-    "PNCUpdateDataset": Object {
-      "AnnotatedHearingOutcome": Object {
-        "HearingOutcome": Object {
-          "Case": Object {
+{
+  "AnnotatedPNCUpdateDataset": {
+    "PNCUpdateDataset": {
+      "AnnotatedHearingOutcome": {
+        "HearingOutcome": {
+          "Case": {
             "CourtCaseReferenceNumber": "97/1626/008395Q",
-            "CourtReference": Object {
+            "CourtReference": {
               "MagistratesCourtReference": "01ZD0304208",
             },
-            "ForceOwner": Object {
+            "ForceOwner": {
               "BottomLevelCode": "00",
               "OrganisationUnitCode": "01ZD00",
               "SecondLevelCode": "01",
               "ThirdLevelCode": "ZD",
               "TopLevelCode": undefined,
             },
-            "HearingDefendant": Object {
-              "Address": Object {
+            "HearingDefendant": {
+              "Address": {
                 "AddressLine1": "Scenario1 Address Line 1",
                 "AddressLine2": "Scenario1 Address Line 2",
                 "AddressLine3": "Scenario1 Address Line 3",
@@ -27,25 +27,25 @@ Object {
                 "AddressLine5": undefined,
               },
               "ArrestSummonsNumber": "1101ZD0100000410770Y",
-              "BailConditions": Array [],
+              "BailConditions": [],
               "CourtPNCIdentifier": undefined,
-              "DefendantDetail": Object {
+              "DefendantDetail": {
                 "BirthDate": 1948-11-11T00:00:00.000Z,
                 "Gender": 1,
                 "GeneratedPNCFilename": "TRTHREE/TRPSTWO",
-                "PersonName": Object {
+                "PersonName": {
                   "FamilyName": "TRTHREE",
-                  "GivenName": Array [
+                  "GivenName": [
                     "TRPSTWO",
                   ],
                   "Title": "Mr",
                 },
               },
-              "Offence": Array [
-                Object {
+              "Offence": [
+                {
                   "ActualOffenceDateCode": "1",
                   "ActualOffenceEndDate": undefined,
-                  "ActualOffenceStartDate": Object {
+                  "ActualOffenceStartDate": {
                     "StartDate": 2010-11-28T00:00:00.000Z,
                   },
                   "ActualOffenceWording": "Theft of pedal cycle.",
@@ -57,11 +57,11 @@ Object {
                   "ConvictionDate": 2011-09-26T00:00:00.000Z,
                   "CourtCaseReferenceNumber": undefined,
                   "CourtOffenceSequenceNumber": 1,
-                  "CriminalProsecutionReference": Object {
-                    "DefendantOrOffender": Object {
+                  "CriminalProsecutionReference": {
+                    "DefendantOrOffender": {
                       "CheckDigit": "Y",
                       "DefendantOrOffenderSequenceNumber": "00000410770",
-                      "OrganisationUnitIdentifierCode": Object {
+                      "OrganisationUnitIdentifierCode": {
                         "BottomLevelCode": "01",
                         "OrganisationUnitCode": "01ZD01",
                         "SecondLevelCode": "01",
@@ -70,8 +70,8 @@ Object {
                       },
                       "Year": "11",
                     },
-                    "OffenceReason": Object {
-                      "OffenceCode": Object {
+                    "OffenceReason": {
+                      "OffenceCode": {
                         "ActOrSource": "TH",
                         "FullCode": "TH68006",
                         "Qualifier": undefined,
@@ -91,21 +91,21 @@ Object {
                   "OffenceCategory": "CE",
                   "OffenceTitle": "Theft of pedal cycle",
                   "RecordableOnPNCindicator": true,
-                  "Result": Array [
-                    Object {
-                      "AmountSpecifiedInResult": Array [
-                        Object {
+                  "Result": [
+                    {
+                      "AmountSpecifiedInResult": [
+                        {
                           "Amount": 100,
                           "DecimalPlaces": 2,
                           "Type": "Fine",
                         },
                       ],
-                      "BailCondition": Array [],
+                      "BailCondition": [],
                       "CJSresultCode": 1015,
                       "ConvictingCourt": undefined,
                       "CourtType": "MCA",
                       "DateSpecifiedInResult": undefined,
-                      "Duration": Array [],
+                      "Duration": [],
                       "ModeOfTrialReason": "SUM",
                       "NextCourtType": undefined,
                       "NextHearingDate": undefined,
@@ -118,14 +118,14 @@ Object {
                       "PNCDisposalType": 1015,
                       "PleaStatus": "NG",
                       "ReasonForOffenceBailConditions": undefined,
-                      "ResultApplicableQualifierCode": Array [],
+                      "ResultApplicableQualifierCode": [],
                       "ResultClass": "Judgement with final result",
                       "ResultHalfLifeHours": 72,
                       "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                       "ResultHearingType": "OTHER",
-                      "ResultQualifierVariable": Array [],
+                      "ResultQualifierVariable": [],
                       "ResultVariableText": "Fined 100.",
-                      "SourceOrganisation": Object {
+                      "SourceOrganisation": {
                         "BottomLevelCode": "01",
                         "OrganisationUnitCode": "B01EF01",
                         "SecondLevelCode": "01",
@@ -138,10 +138,10 @@ Object {
                     },
                   ],
                 },
-                Object {
+                {
                   "ActualOffenceDateCode": "1",
                   "ActualOffenceEndDate": undefined,
-                  "ActualOffenceStartDate": Object {
+                  "ActualOffenceStartDate": {
                     "StartDate": 2010-11-28T00:00:00.000Z,
                   },
                   "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
@@ -153,11 +153,11 @@ Object {
                   "ConvictionDate": 2011-09-26T00:00:00.000Z,
                   "CourtCaseReferenceNumber": undefined,
                   "CourtOffenceSequenceNumber": 2,
-                  "CriminalProsecutionReference": Object {
-                    "DefendantOrOffender": Object {
+                  "CriminalProsecutionReference": {
+                    "DefendantOrOffender": {
                       "CheckDigit": "Y",
                       "DefendantOrOffenderSequenceNumber": "00000410770",
-                      "OrganisationUnitIdentifierCode": Object {
+                      "OrganisationUnitIdentifierCode": {
                         "BottomLevelCode": "01",
                         "OrganisationUnitCode": "01ZD01",
                         "SecondLevelCode": "01",
@@ -166,8 +166,8 @@ Object {
                       },
                       "Year": "11",
                     },
-                    "OffenceReason": Object {
-                      "OffenceCode": Object {
+                    "OffenceReason": {
+                      "OffenceCode": {
                         "ActOrSource": "RT",
                         "FullCode": "RT88191",
                         "Qualifier": undefined,
@@ -187,15 +187,15 @@ Object {
                   "OffenceCategory": "CM",
                   "OffenceTitle": "Use a motor vehicle on a road / public place without third party insurance",
                   "RecordableOnPNCindicator": false,
-                  "Result": Array [
-                    Object {
+                  "Result": [
+                    {
                       "AmountSpecifiedInResult": undefined,
-                      "BailCondition": Array [],
+                      "BailCondition": [],
                       "CJSresultCode": 3107,
                       "ConvictingCourt": undefined,
                       "CourtType": "MCA",
                       "DateSpecifiedInResult": undefined,
-                      "Duration": Array [],
+                      "Duration": [],
                       "ModeOfTrialReason": "SUM",
                       "NextCourtType": undefined,
                       "NextHearingDate": undefined,
@@ -208,14 +208,14 @@ Object {
                       "PNCDisposalType": 3107,
                       "PleaStatus": "NG",
                       "ReasonForOffenceBailConditions": undefined,
-                      "ResultApplicableQualifierCode": Array [],
+                      "ResultApplicableQualifierCode": [],
                       "ResultClass": "Judgement with final result",
                       "ResultHalfLifeHours": 72,
                       "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                       "ResultHearingType": "OTHER",
-                      "ResultQualifierVariable": Array [],
+                      "ResultQualifierVariable": [],
                       "ResultVariableText": "DEFENDANT MUST LIVE AT OUR HOUSE IN THE MIDDLE OF OUR STREET",
-                      "SourceOrganisation": Object {
+                      "SourceOrganisation": {
                         "BottomLevelCode": "01",
                         "OrganisationUnitCode": "B01EF01",
                         "SecondLevelCode": "01",
@@ -242,8 +242,8 @@ Object {
             "RecordableOnPNCindicator": true,
             "Urgent": undefined,
           },
-          "Hearing": Object {
-            "CourtHearingLocation": Object {
+          "Hearing": {
+            "CourtHearingLocation": {
               "BottomLevelCode": "01",
               "OrganisationUnitCode": "B01EF01",
               "SecondLevelCode": "01",
@@ -257,7 +257,7 @@ Object {
             "DefendantPresentAtHearing": "Y",
             "HearingDocumentationLanguage": "D",
             "HearingLanguage": "D",
-            "SourceReference": Object {
+            "SourceReference": {
               "DocumentName": "SPI TRPSTWO TRTHREE",
               "DocumentType": "SPI Case Result",
               "UniqueID": "CID-060ddbaa-cd00-48cd-91b8-fb9562be2196",
@@ -266,7 +266,7 @@ Object {
           },
         },
       },
-      "Exceptions": Array [],
+      "Exceptions": [],
     },
   },
 }

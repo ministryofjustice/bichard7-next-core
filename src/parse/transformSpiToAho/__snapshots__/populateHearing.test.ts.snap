@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`populateHearing should transform SPI Hearing to Hearing Outcome Hearing 1`] = `
-Object {
-  "CourtHearingLocation": Object {
+{
+  "CourtHearingLocation": {
     "BottomLevelCode": "01",
     "OrganisationUnitCode": "B01EF01",
     "SecondLevelCode": "01",
@@ -14,7 +14,7 @@ Object {
   "DefendantPresentAtHearing": "A",
   "HearingDocumentationLanguage": "D",
   "HearingLanguage": "D",
-  "SourceReference": Object {
+  "SourceReference": {
     "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
     "DocumentType": "SPI Case Result",
     "UniqueID": "DUMMY_MESSAGE_ID",
