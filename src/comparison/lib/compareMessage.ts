@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
@@ -60,6 +59,7 @@ const compareMessage = (
   )
 
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(global as any).dataVersion = dataVersion
   if (debug) {
     logger.info(`Using version ${dataVersion} of standing data`)
