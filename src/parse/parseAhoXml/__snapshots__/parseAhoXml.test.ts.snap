@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parseAhoXml converts XML to Aho 1`] = `
-Object {
-  "AnnotatedHearingOutcome": Object {
-    "HearingOutcome": Object {
-      "Case": Object {
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Case": {
         "CourtCaseReferenceNumber": "97/1626/008395Q",
-        "CourtReference": Object {
+        "CourtReference": {
           "MagistratesCourtReference": "01ZD0303208",
         },
-        "ForceOwner": Object {
+        "ForceOwner": {
           "BottomLevelCode": "00",
           "OrganisationUnitCode": "01ZD00",
           "SecondLevelCode": "01",
           "ThirdLevelCode": "ZD",
           "TopLevelCode": undefined,
         },
-        "HearingDefendant": Object {
-          "Address": Object {
+        "HearingDefendant": {
+          "Address": {
             "AddressLine1": "Scenario1 Address Line 1",
             "AddressLine2": "Scenario1 Address Line 2",
             "AddressLine3": "Scenario1 Address Line 3",
@@ -25,25 +25,25 @@ Object {
             "AddressLine5": undefined,
           },
           "ArrestSummonsNumber": "1101ZD0100000448754K",
-          "BailConditions": Array [],
+          "BailConditions": [],
           "CourtPNCIdentifier": undefined,
-          "DefendantDetail": Object {
+          "DefendantDetail": {
             "BirthDate": 1948-11-11T00:00:00.000Z,
             "Gender": 1,
             "GeneratedPNCFilename": "SEXOFFENCE/TRPRFOUR",
-            "PersonName": Object {
+            "PersonName": {
               "FamilyName": "SEXOFFENCE",
-              "GivenName": Array [
+              "GivenName": [
                 "TRPRFOUR",
               ],
               "Title": "Mr",
             },
           },
-          "Offence": Array [
-            Object {
+          "Offence": [
+            {
               "ActualOffenceDateCode": "1",
               "ActualOffenceEndDate": undefined,
-              "ActualOffenceStartDate": Object {
+              "ActualOffenceStartDate": {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
               "ActualOffenceWording": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
@@ -55,11 +55,11 @@ Object {
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
               "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 1,
-              "CriminalProsecutionReference": Object {
-                "DefendantOrOffender": Object {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
                   "CheckDigit": "K",
                   "DefendantOrOffenderSequenceNumber": "00000448754",
-                  "OrganisationUnitIdentifierCode": Object {
+                  "OrganisationUnitIdentifierCode": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "01ZD01",
                     "SecondLevelCode": "01",
@@ -68,8 +68,8 @@ Object {
                   },
                   "Year": "11",
                 },
-                "OffenceReason": Object {
-                  "OffenceCode": Object {
+                "OffenceReason": {
+                  "OffenceCode": {
                     "ActOrSource": "SX",
                     "FullCode": "SX03001A",
                     "Qualifier": "A",
@@ -89,15 +89,15 @@ Object {
               "OffenceCategory": "CI",
               "OffenceTitle": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
               "RecordableOnPNCindicator": true,
-              "Result": Array [
-                Object {
+              "Result": [
+                {
                   "AmountSpecifiedInResult": undefined,
-                  "BailCondition": Array [],
+                  "BailCondition": [],
                   "CJSresultCode": 3078,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
                   "DateSpecifiedInResult": undefined,
-                  "Duration": Array [],
+                  "Duration": [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
                   "NextHearingDate": undefined,
@@ -110,14 +110,14 @@ Object {
                   "PNCDisposalType": 3078,
                   "PleaStatus": "NG",
                   "ReasonForOffenceBailConditions": undefined,
-                  "ResultApplicableQualifierCode": Array [],
+                  "ResultApplicableQualifierCode": [],
                   "ResultClass": "Judgement with final result",
                   "ResultHalfLifeHours": 72,
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": Array [],
+                  "ResultQualifierVariable": [],
                   "ResultVariableText": "Travel Restriction Order",
-                  "SourceOrganisation": Object {
+                  "SourceOrganisation": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "B01EF01",
                     "SecondLevelCode": "01",
@@ -130,10 +130,10 @@ Object {
                 },
               ],
             },
-            Object {
+            {
               "ActualOffenceDateCode": "1",
               "ActualOffenceEndDate": undefined,
-              "ActualOffenceStartDate": Object {
+              "ActualOffenceStartDate": {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
               "ActualOffenceWording": "Rape of a Female",
@@ -145,11 +145,11 @@ Object {
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
               "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 2,
-              "CriminalProsecutionReference": Object {
-                "DefendantOrOffender": Object {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
                   "CheckDigit": "K",
                   "DefendantOrOffenderSequenceNumber": "00000448754",
-                  "OrganisationUnitIdentifierCode": Object {
+                  "OrganisationUnitIdentifierCode": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "01ZD01",
                     "SecondLevelCode": "01",
@@ -158,8 +158,8 @@ Object {
                   },
                   "Year": "11",
                 },
-                "OffenceReason": Object {
-                  "OffenceCode": Object {
+                "OffenceReason": {
+                  "OffenceCode": {
                     "ActOrSource": "SX",
                     "FullCode": "SX03001",
                     "Qualifier": undefined,
@@ -179,15 +179,15 @@ Object {
               "OffenceCategory": "CI",
               "OffenceTitle": "Rape a girl aged 13 / 14 / 15 - SOA 2003",
               "RecordableOnPNCindicator": true,
-              "Result": Array [
-                Object {
+              "Result": [
+                {
                   "AmountSpecifiedInResult": undefined,
-                  "BailCondition": Array [],
+                  "BailCondition": [],
                   "CJSresultCode": 3052,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
                   "DateSpecifiedInResult": undefined,
-                  "Duration": Array [],
+                  "Duration": [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
                   "NextHearingDate": undefined,
@@ -200,21 +200,21 @@ Object {
                   "PNCDisposalType": 3052,
                   "PleaStatus": "NG",
                   "ReasonForOffenceBailConditions": undefined,
-                  "ResultApplicableQualifierCode": Array [],
+                  "ResultApplicableQualifierCode": [],
                   "ResultClass": "Judgement with final result",
                   "ResultHalfLifeHours": 24,
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": Array [],
+                  "ResultQualifierVariable": [],
                   "ResultVariableText": "defendant must never be allowed out",
-                  "SourceOrganisation": Object {
+                  "SourceOrganisation": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "B01EF01",
                     "SecondLevelCode": "01",
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
-                  "Urgent": Object {
+                  "Urgent": {
                     "urgency": 24,
                     "urgent": true,
                   },
@@ -223,10 +223,10 @@ Object {
                 },
               ],
             },
-            Object {
+            {
               "ActualOffenceDateCode": "1",
               "ActualOffenceEndDate": undefined,
-              "ActualOffenceStartDate": Object {
+              "ActualOffenceStartDate": {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
               "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
@@ -238,11 +238,11 @@ Object {
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
               "CourtCaseReferenceNumber": undefined,
               "CourtOffenceSequenceNumber": 3,
-              "CriminalProsecutionReference": Object {
-                "DefendantOrOffender": Object {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
                   "CheckDigit": "K",
                   "DefendantOrOffenderSequenceNumber": "00000448754",
-                  "OrganisationUnitIdentifierCode": Object {
+                  "OrganisationUnitIdentifierCode": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "01ZD01",
                     "SecondLevelCode": "01",
@@ -251,8 +251,8 @@ Object {
                   },
                   "Year": "11",
                 },
-                "OffenceReason": Object {
-                  "OffenceCode": Object {
+                "OffenceReason": {
+                  "OffenceCode": {
                     "ActOrSource": "RT",
                     "FullCode": "RT88191",
                     "Qualifier": undefined,
@@ -272,21 +272,21 @@ Object {
               "OffenceCategory": "CM",
               "OffenceTitle": "Use a motor vehicle on a road / public place without third party insurance",
               "RecordableOnPNCindicator": false,
-              "Result": Array [
-                Object {
-                  "AmountSpecifiedInResult": Array [
-                    Object {
+              "Result": [
+                {
+                  "AmountSpecifiedInResult": [
+                    {
                       "Amount": 100,
                       "DecimalPlaces": 2,
                       "Type": "Fine",
                     },
                   ],
-                  "BailCondition": Array [],
+                  "BailCondition": [],
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "CourtType": "MCA",
                   "DateSpecifiedInResult": undefined,
-                  "Duration": Array [],
+                  "Duration": [],
                   "ModeOfTrialReason": "SUM",
                   "NextCourtType": undefined,
                   "NextHearingDate": undefined,
@@ -299,14 +299,14 @@ Object {
                   "PNCDisposalType": 1015,
                   "PleaStatus": "NG",
                   "ReasonForOffenceBailConditions": undefined,
-                  "ResultApplicableQualifierCode": Array [],
+                  "ResultApplicableQualifierCode": [],
                   "ResultClass": "Judgement with final result",
                   "ResultHalfLifeHours": 72,
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": Array [],
+                  "ResultQualifierVariable": [],
                   "ResultVariableText": "Fined 100.",
-                  "SourceOrganisation": Object {
+                  "SourceOrganisation": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "B01EF01",
                     "SecondLevelCode": "01",
@@ -331,13 +331,13 @@ Object {
         "PenaltyNoticeCaseReferenceNumber": undefined,
         "PreChargeDecisionIndicator": false,
         "RecordableOnPNCindicator": true,
-        "Urgent": Object {
+        "Urgent": {
           "urgency": 24,
           "urgent": true,
         },
       },
-      "Hearing": Object {
-        "CourtHearingLocation": Object {
+      "Hearing": {
+        "CourtHearingLocation": {
           "BottomLevelCode": "01",
           "OrganisationUnitCode": "B01EF01",
           "SecondLevelCode": "01",
@@ -351,7 +351,7 @@ Object {
         "DefendantPresentAtHearing": "A",
         "HearingDocumentationLanguage": "D",
         "HearingLanguage": "D",
-        "SourceReference": Object {
+        "SourceReference": {
           "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
           "DocumentType": "SPI Case Result",
           "UniqueID": "CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415",
@@ -360,18 +360,18 @@ Object {
       },
     },
   },
-  "Exceptions": Array [],
+  "Exceptions": [],
   "PncErrorMessage": undefined,
-  "PncQuery": Object {
+  "PncQuery": {
     "checkName": "SEXOFFENCE",
-    "courtCases": Array [
-      Object {
+    "courtCases": [
+      {
         "courtCaseReference": "97/1626/008395Q",
-        "offences": Array [
-          Object {
+        "offences": [
+          {
             "adjudication": undefined,
             "disposals": undefined,
-            "offence": Object {
+            "offence": {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "SX03001A",
               "endTime": undefined,
@@ -383,10 +383,10 @@ Object {
               "title": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
             },
           },
-          Object {
+          {
             "adjudication": undefined,
             "disposals": undefined,
-            "offence": Object {
+            "offence": {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "SX03001",
               "endTime": undefined,
@@ -398,10 +398,10 @@ Object {
               "title": "Rape a girl aged 13 / 14 / 15 - SOA 2003",
             },
           },
-          Object {
+          {
             "adjudication": undefined,
             "disposals": undefined,
-            "offence": Object {
+            "offence": {
               "acpoOffenceCode": "12:15:24:1",
               "cjsOffenceCode": "RT88191",
               "endTime": undefined,

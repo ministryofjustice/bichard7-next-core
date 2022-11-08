@@ -72,7 +72,6 @@ describe("Comparison lambda", () => {
   })
 
   beforeEach(async () => {
-    await s3Server.reset()
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
 

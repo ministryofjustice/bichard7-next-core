@@ -53,7 +53,6 @@ describe("Comparison lambda", () => {
 
   beforeEach(async () => {
     jest.restoreAllMocks()
-    await s3Server.reset()
     await dynamoServer.setupTable(dynamoDbTableConfig)
   })
 

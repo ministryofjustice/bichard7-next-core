@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`enrichForceOwner should return AHO enriched with force owner 1`] = `
-Object {
-  "AnnotatedHearingOutcome": Object {
-    "HearingOutcome": Object {
-      "Case": Object {
-        "CourtReference": Object {
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Case": {
+        "CourtReference": {
           "MagistratesCourtReference": "01ZD0303908",
         },
-        "ForceOwner": Object {
+        "ForceOwner": {
           "BottomLevelCode": "00",
           "OrganisationUnitCode": "01ZD00",
           "SecondLevelCode": "01",
           "ThirdLevelCode": "ZD",
         },
-        "HearingDefendant": Object {
-          "Address": Object {
+        "HearingDefendant": {
+          "Address": {
             "AddressLine1": "ScenarioD Address Line 1",
             "AddressLine2": "ScenarioD Address Line 2",
             "AddressLine3": "ScenarioD Address Line 3",
@@ -23,24 +23,24 @@ Object {
             "AddressLine5": undefined,
           },
           "ArrestSummonsNumber": "1101ZD0100000448754K",
-          "BailConditions": Array [],
+          "BailConditions": [],
           "CourtPNCIdentifier": undefined,
-          "DefendantDetail": Object {
+          "DefendantDetail": {
             "BirthDate": 1948-11-11T00:00:00.000Z,
             "Gender": 1,
-            "PersonName": Object {
+            "PersonName": {
               "FamilyName": "TRTHREE",
-              "GivenName": Array [
+              "GivenName": [
                 "TRPRTWELVE",
               ],
               "Title": "Mr",
             },
           },
-          "Offence": Array [
-            Object {
+          "Offence": [
+            {
               "ActualOffenceDateCode": "1",
               "ActualOffenceEndDate": undefined,
-              "ActualOffenceStartDate": Object {
+              "ActualOffenceStartDate": {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
               "ActualOffenceWording": "Theft of pedal cycle.",
@@ -49,9 +49,9 @@ Object {
               "CommittedOnBail": "D",
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
               "CourtOffenceSequenceNumber": 1,
-              "CriminalProsecutionReference": Object {
-                "OffenceReason": Object {
-                  "OffenceCode": Object {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
                     "ActOrSource": "TH",
                     "FullCode": "TH68046C",
                     "Qualifier": "C",
@@ -63,17 +63,17 @@ Object {
                 },
               },
               "LocationOfOffence": "Kingston High Street",
-              "Result": Array [
-                Object {
+              "Result": [
+                {
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "ModeOfTrialReason": "SUM",
                   "PleaStatus": "NG",
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": Array [],
+                  "ResultQualifierVariable": [],
                   "ResultVariableText": "RESULT_TEXT",
-                  "SourceOrganisation": Object {
+                  "SourceOrganisation": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "B01EF01",
                     "SecondLevelCode": "01",
@@ -84,10 +84,10 @@ Object {
                 },
               ],
             },
-            Object {
+            {
               "ActualOffenceDateCode": "1",
               "ActualOffenceEndDate": undefined,
-              "ActualOffenceStartDate": Object {
+              "ActualOffenceStartDate": {
                 "StartDate": 2010-11-28T00:00:00.000Z,
               },
               "ActualOffenceWording": "Theft of pedal cycle.",
@@ -96,9 +96,9 @@ Object {
               "CommittedOnBail": "D",
               "ConvictionDate": 2011-09-26T00:00:00.000Z,
               "CourtOffenceSequenceNumber": 2,
-              "CriminalProsecutionReference": Object {
-                "OffenceReason": Object {
-                  "OffenceCode": Object {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
                     "ActOrSource": "TH",
                     "FullCode": "TH68046C",
                     "Qualifier": "C",
@@ -110,17 +110,17 @@ Object {
                 },
               },
               "LocationOfOffence": "Kingston High Street",
-              "Result": Array [
-                Object {
+              "Result": [
+                {
                   "CJSresultCode": 1015,
                   "ConvictingCourt": undefined,
                   "ModeOfTrialReason": "SUM",
                   "PleaStatus": "NG",
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": Array [],
+                  "ResultQualifierVariable": [],
                   "ResultVariableText": "RESULT_TEXT",
-                  "SourceOrganisation": Object {
+                  "SourceOrganisation": {
                     "BottomLevelCode": "01",
                     "OrganisationUnitCode": "B01EF01",
                     "SecondLevelCode": "01",
@@ -138,8 +138,8 @@ Object {
         "PTIURN": "01ZD0303908",
         "PreChargeDecisionIndicator": false,
       },
-      "Hearing": Object {
-        "CourtHearingLocation": Object {
+      "Hearing": {
+        "CourtHearingLocation": {
           "BottomLevelCode": "01",
           "OrganisationUnitCode": "B01EF01",
           "SecondLevelCode": "01",
@@ -151,7 +151,7 @@ Object {
         "DefendantPresentAtHearing": "A",
         "HearingDocumentationLanguage": "D",
         "HearingLanguage": "D",
-        "SourceReference": Object {
+        "SourceReference": {
           "DocumentName": "SPI TRPRTWELVE TRTHREE",
           "DocumentType": "SPI Case Result",
           "UniqueID": "EXTERNAL_CORRELATION_ID",
@@ -160,6 +160,6 @@ Object {
       },
     },
   },
-  "Exceptions": Array [],
+  "Exceptions": [],
 }
 `;

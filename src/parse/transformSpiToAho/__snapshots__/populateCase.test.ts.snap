@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`populateCase should transform SPI Case to Hearing Outcome Case 1`] = `
-Object {
-  "CourtReference": Object {
+{
+  "CourtReference": {
     "MagistratesCourtReference": "01ZD0303208",
   },
-  "HearingDefendant": Object {},
+  "HearingDefendant": {},
   "PTIURN": "01ZD0303208",
   "PreChargeDecisionIndicator": false,
 }

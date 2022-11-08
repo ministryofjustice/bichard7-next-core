@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`enrichOffence() should add an offence category of B7 if the offence is ignored 1`] = `
-Object {
-  "CriminalProsecutionReference": Object {
-    "OffenceReason": Object {
-      "LocalOffenceCode": Object {
+{
+  "CriminalProsecutionReference": {
+    "OffenceReason": {
+      "LocalOffenceCode": {
         "AreaCode": "01",
         "OffenceCode": "01CP001",
       },
@@ -21,10 +21,10 @@ Object {
 `;
 
 exports[`enrichOffence() should add the data from the looked up offence 1`] = `
-Object {
-  "CriminalProsecutionReference": Object {
-    "OffenceReason": Object {
-      "LocalOffenceCode": Object {
+{
+  "CriminalProsecutionReference": {
+    "OffenceReason": {
+      "LocalOffenceCode": {
         "AreaCode": "01",
         "OffenceCode": "01CP001",
       },
@@ -41,10 +41,10 @@ Object {
 `;
 
 exports[`enrichOffence() should set recordable to false if the offence is ignored 1`] = `
-Object {
-  "CriminalProsecutionReference": Object {
-    "OffenceReason": Object {
-      "LocalOffenceCode": Object {
+{
+  "CriminalProsecutionReference": {
+    "OffenceReason": {
+      "LocalOffenceCode": {
         "AreaCode": "01",
         "OffenceCode": "01CP001",
       },

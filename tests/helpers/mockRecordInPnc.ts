@@ -98,7 +98,7 @@ const addMock = async (matchRegex: string, response: string, count: number | nul
   if (resp.status < 200 || resp.status >= 300) {
     throw new Error("Error setting mock in PNC Emulator")
   }
-  return resp.headers.location.replace("/mocks/", "")
+  return resp.headers.location!.replace("/mocks/", "")
 }
 
 const clearMocks = async (): Promise<void> => {

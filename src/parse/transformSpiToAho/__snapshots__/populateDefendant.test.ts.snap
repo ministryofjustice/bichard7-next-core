@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`populateDefendant should transform SPI Defendant to Hearing Outcome Defendant for individual defendant 1`] = `
-Object {
-  "Address": Object {
+{
+  "Address": {
     "AddressLine1": "Scenario1 Address Line 1",
     "AddressLine2": "Scenario1 Address Line 2",
     "AddressLine3": "Scenario1 Address Line 3",
@@ -10,24 +10,24 @@ Object {
     "AddressLine5": undefined,
   },
   "ArrestSummonsNumber": "1101ZD0100000448754K",
-  "BailConditions": Array [],
+  "BailConditions": [],
   "CourtPNCIdentifier": undefined,
-  "DefendantDetail": Object {
+  "DefendantDetail": {
     "BirthDate": 1948-11-11T00:00:00.000Z,
     "Gender": 1,
-    "PersonName": Object {
+    "PersonName": {
       "FamilyName": "SEXOFFENCE",
-      "GivenName": Array [
+      "GivenName": [
         "TRPRFOUR",
       ],
       "Title": "Mr",
     },
   },
-  "Offence": Array [
-    Object {
+  "Offence": [
+    {
       "ActualOffenceDateCode": "1",
       "ActualOffenceEndDate": undefined,
-      "ActualOffenceStartDate": Object {
+      "ActualOffenceStartDate": {
         "StartDate": 2010-11-28T00:00:00.000Z,
       },
       "ActualOffenceWording": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
@@ -36,9 +36,9 @@ Object {
       "CommittedOnBail": "D",
       "ConvictionDate": 2011-09-26T00:00:00.000Z,
       "CourtOffenceSequenceNumber": 1,
-      "CriminalProsecutionReference": Object {
-        "OffenceReason": Object {
-          "OffenceCode": Object {
+      "CriminalProsecutionReference": {
+        "OffenceReason": {
+          "OffenceCode": {
             "ActOrSource": "SX",
             "FullCode": "SX03001A",
             "Qualifier": "A",
@@ -50,17 +50,17 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "Result": Array [
-        Object {
+      "Result": [
+        {
           "CJSresultCode": 3078,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "PleaStatus": "NG",
           "ResultHearingDate": 2011-09-26T00:00:00.000Z,
           "ResultHearingType": "OTHER",
-          "ResultQualifierVariable": Array [],
+          "ResultQualifierVariable": [],
           "ResultVariableText": "Travel Restriction Order",
-          "SourceOrganisation": Object {
+          "SourceOrganisation": {
             "BottomLevelCode": "01",
             "OrganisationUnitCode": "B01EF01",
             "SecondLevelCode": "01",
@@ -71,10 +71,10 @@ Object {
         },
       ],
     },
-    Object {
+    {
       "ActualOffenceDateCode": "1",
       "ActualOffenceEndDate": undefined,
-      "ActualOffenceStartDate": Object {
+      "ActualOffenceStartDate": {
         "StartDate": 2010-11-28T00:00:00.000Z,
       },
       "ActualOffenceWording": "Rape of a Female",
@@ -83,9 +83,9 @@ Object {
       "CommittedOnBail": "D",
       "ConvictionDate": 2011-09-26T00:00:00.000Z,
       "CourtOffenceSequenceNumber": 2,
-      "CriminalProsecutionReference": Object {
-        "OffenceReason": Object {
-          "OffenceCode": Object {
+      "CriminalProsecutionReference": {
+        "OffenceReason": {
+          "OffenceCode": {
             "ActOrSource": "SX",
             "FullCode": "SX03001",
             "Reason": "001",
@@ -96,17 +96,17 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "Result": Array [
-        Object {
+      "Result": [
+        {
           "CJSresultCode": 3052,
           "ConvictingCourt": undefined,
           "ModeOfTrialReason": "SUM",
           "PleaStatus": "NG",
           "ResultHearingDate": 2011-09-26T00:00:00.000Z,
           "ResultHearingType": "OTHER",
-          "ResultQualifierVariable": Array [],
+          "ResultQualifierVariable": [],
           "ResultVariableText": "defendant must never be allowed out",
-          "SourceOrganisation": Object {
+          "SourceOrganisation": {
             "BottomLevelCode": "01",
             "OrganisationUnitCode": "B01EF01",
             "SecondLevelCode": "01",
@@ -117,10 +117,10 @@ Object {
         },
       ],
     },
-    Object {
+    {
       "ActualOffenceDateCode": "1",
       "ActualOffenceEndDate": undefined,
-      "ActualOffenceStartDate": Object {
+      "ActualOffenceStartDate": {
         "StartDate": 2010-11-28T00:00:00.000Z,
       },
       "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
@@ -129,9 +129,9 @@ Object {
       "CommittedOnBail": "D",
       "ConvictionDate": 2011-09-26T00:00:00.000Z,
       "CourtOffenceSequenceNumber": 3,
-      "CriminalProsecutionReference": Object {
-        "OffenceReason": Object {
-          "OffenceCode": Object {
+      "CriminalProsecutionReference": {
+        "OffenceReason": {
+          "OffenceCode": {
             "ActOrSource": "RT",
             "FullCode": "RT88191",
             "Reason": "191",
@@ -142,10 +142,10 @@ Object {
         },
       },
       "LocationOfOffence": "Kingston High Street",
-      "Result": Array [
-        Object {
-          "AmountSpecifiedInResult": Array [
-            Object {
+      "Result": [
+        {
+          "AmountSpecifiedInResult": [
+            {
               "Amount": 100,
               "DecimalPlaces": 2,
               "Type": "Fine",
@@ -153,15 +153,15 @@ Object {
           ],
           "CJSresultCode": 1015,
           "ConvictingCourt": undefined,
-          "Duration": Array [],
+          "Duration": [],
           "ModeOfTrialReason": "SUM",
-          "NumberSpecifiedInResult": Array [],
+          "NumberSpecifiedInResult": [],
           "PleaStatus": "NG",
           "ResultHearingDate": 2011-09-26T00:00:00.000Z,
           "ResultHearingType": "OTHER",
-          "ResultQualifierVariable": Array [],
+          "ResultQualifierVariable": [],
           "ResultVariableText": "Fined 100.",
-          "SourceOrganisation": Object {
+          "SourceOrganisation": {
             "BottomLevelCode": "01",
             "OrganisationUnitCode": "B01EF01",
             "SecondLevelCode": "01",
