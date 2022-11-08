@@ -219,7 +219,8 @@ const mapNextResultSourceOrganisation = (
 const mapAhoResultsToXml = (
   results: Result[],
   exceptions: Exception[] | undefined,
-  offenceIndex: number
+  offenceIndex: number,
+  validate = true
 ): Br7Result[] =>
   results.map((result, resultIndex) => ({
     "ds:CJSresultCode": text(result.CJSresultCode.toString()),
@@ -262,16 +263,18 @@ const mapAhoResultsToXml = (
       "ds:Code": text(rqv.Code)
     })),
     "br7:ConvictingCourt": optionalText(result.ConvictingCourt),
-    "@_hasError": hasError(exceptions, [
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case",
-      "HearingDefendant",
-      "Offence",
-      offenceIndex,
-      "Result",
-      resultIndex
-    ]),
+    ...(validate && {
+      "@_hasError": hasError(exceptions, [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        offenceIndex,
+        "Result",
+        resultIndex
+      ])
+    }),
     "@_SchemaVersion": "2.0"
   }))
 
@@ -314,7 +317,7 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
   }
 }
 
-const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | undefined): Br7Offence[] =>
+const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | undefined, validate = true): Br7Offence[] =>
   offences.map((offence, index) => ({
     "ds:CriminalProsecutionReference": {
       "ds:DefendantOrOffender": {
@@ -372,19 +375,21 @@ const mapAhoOffencesToXml = (offences: Offence[], exceptions: Exception[] | unde
     "br7:ManualSequenceNo": optionalLiteral(offence.ManualSequenceNumber, LiteralType.YesNo),
     "br7:CourtCaseReferenceNumber":
       offence.CourtCaseReferenceNumber === null ? { "#text": "" } : optionalText(offence.CourtCaseReferenceNumber),
-    "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index),
-    "@_hasError": hasError(exceptions, [
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case",
-      "HearingDefendant",
-      "Offence",
-      index
-    ]),
+    "br7:Result": mapAhoResultsToXml(offence.Result, exceptions, index, validate),
+    ...(validate && {
+      "@_hasError": hasError(exceptions, [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        index
+      ])
+    }),
     "@_SchemaVersion": "4.0"
   }))
 
-const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case => ({
+const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined, validate = true): Br7Case => ({
   "ds:PTIURN": text(c.PTIURN),
   "ds:PreChargeDecisionIndicator": literal(c.PreChargeDecisionIndicator, LiteralType.YesNo),
   "ds:CourtCaseReferenceNumber": optionalText(c.CourtCaseReferenceNumber),
@@ -435,10 +440,12 @@ const mapAhoCaseToXml = (c: Case, exceptions: Exception[] | undefined): Br7Case 
         : undefined,
     "br7:ReasonForBailConditions": optionalText(c.HearingDefendant.ReasonForBailConditions),
     "br7:CourtPNCIdentifier": optionalText(c.HearingDefendant.CourtPNCIdentifier),
-    "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions),
-    "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
+    "br7:Offence": mapAhoOffencesToXml(c.HearingDefendant.Offence, exceptions, validate),
+    ...(validate && {
+      "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
+    })
   },
-  "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]),
+  ...(validate && { "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]) }),
   "@_SchemaVersion": "4.0"
 })
 
@@ -464,7 +471,7 @@ const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
   }))
 })
 
-const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefined): Br7Hearing => ({
+const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefined, validate = true): Br7Hearing => ({
   "ds:CourtHearingLocation": mapAhoOrgUnitToXml(hearing.CourtHearingLocation),
   "ds:DateOfHearing": text(toISODate(hearing.DateOfHearing)),
   "ds:TimeOfHearing": text(hearing.TimeOfHearing),
@@ -480,7 +487,7 @@ const mapAhoHearingToXml = (hearing: Hearing, exceptions: Exception[] | undefine
     hearing.CourtType !== null ? optionalLiteral(hearing.CourtType, LiteralType.CourtType) : { "#text": "" },
   "br7:CourtHouseCode": text(hearing.CourtHouseCode.toString()),
   "br7:CourtHouseName": optionalText(hearing.CourtHouseName),
-  "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]),
+  ...(validate && { "@_hasError": hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"]) }),
   "@_SchemaVersion": "4.0"
 })
 
@@ -533,26 +540,40 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     : undefined
 })
 
-const mapAhoToXml = (aho: AnnotatedHearingOutcome): AhoXml => {
+const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
+  const xmlnsTags = {
+    "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
+    "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
+    "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+  }
+  const hearingOutcome = {
+    "br7:HearingOutcome": {
+      "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing, aho.Exceptions, validate),
+      "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case, aho.Exceptions, validate),
+      ...(!validate && xmlnsTags)
+    }
+  }
+
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
-    "br7:AnnotatedHearingOutcome": {
-      "br7:HearingOutcome": {
-        "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing, aho.Exceptions),
-        "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case, aho.Exceptions)
-      },
-      "br7:HasError": hasError(aho.Exceptions),
-      CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
-      "br7:PNCQueryDate": aho.PncQueryDate ? toISODate(aho.PncQueryDate) : undefined,
-      "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
-      "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
-      "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
-      "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
-    }
+    ...(validate
+      ? {
+          "br7:AnnotatedHearingOutcome": {
+            ...hearingOutcome,
+            "br7:HasError": hasError(aho.Exceptions),
+            CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
+            "br7:PNCQueryDate": aho.PncQueryDate ? toISODate(aho.PncQueryDate) : undefined,
+            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
+            ...xmlnsTags
+          }
+        }
+      : {
+          ...hearingOutcome
+        })
   } as AhoXml
 }
 
-const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
+const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome, validate = true): string => {
   const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
@@ -563,8 +584,10 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome): string => {
   }
 
   const builder = new XMLBuilder(options)
-  const xmlAho = mapAhoToXml(hearingOutcome)
-  addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
+  const xmlAho = mapAhoToXml(hearingOutcome, validate)
+  if (validate) {
+    addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
+  }
   const xml = builder.build(xmlAho)
 
   return xml
