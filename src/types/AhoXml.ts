@@ -138,7 +138,7 @@ export interface Br7Case {
   "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
   "@_hasError"?: boolean
-  "@_SchemaVersion": string
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7Urgent {
@@ -215,7 +215,7 @@ export interface Br7Offence {
   "br7:CourtCaseReferenceNumber"?: Br7TextString
   "br7:Result": Br7Result | Br7Result[]
   "@_hasError"?: boolean
-  "@_SchemaVersion": string
+  "@_SchemaVersion"?: string
 }
 export interface Br7ResultQualifierVariable {
   "@_SchemaVersion": string
@@ -252,7 +252,7 @@ export interface Br7Result {
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: Br7TextString
   "@_hasError"?: boolean
-  "@_SchemaVersion": string
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7OrganisationUnit {
@@ -326,7 +326,7 @@ export interface Br7Hearing {
   "br7:CourtHouseCode": Br7TextString
   "br7:CourtHouseName"?: Br7TextString
   "@_hasError"?: boolean
-  "@_SchemaVersion": string
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7SourceReference {
