@@ -500,7 +500,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
           "br7:AnnotatedHearingOutcome": {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
-            "br7:PNCQueryDate": aho.PncQueryDate ? toISODate(aho.PncQueryDate) : undefined,
+            "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
             "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
             ...xmlnsTags
           }
@@ -508,7 +508,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
       : {
           ...hearingOutcome
         })
-  } as AhoXml
+  }
 }
 
 const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome, validate = true): string => {

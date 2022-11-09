@@ -8,8 +8,8 @@ export interface AhoXml {
 
 export interface Br7AnnotatedHearingOutcome {
   "br7:HearingOutcome": Br7HearingOutcome
-  "br7:HasError": boolean
-  CXE01: Cxe01
+  "br7:HasError"?: boolean
+  CXE01: Cxe01 | undefined
   "br7:PNCQueryDate"?: Br7TextString
   "br7:PNCErrorMessage"?: {
     "#text": string
