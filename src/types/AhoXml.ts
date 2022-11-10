@@ -8,8 +8,8 @@ export interface AhoXml {
 
 export interface Br7AnnotatedHearingOutcome {
   "br7:HearingOutcome": Br7HearingOutcome
-  "br7:HasError": boolean
-  CXE01: Cxe01
+  "br7:HasError"?: boolean
+  CXE01: Cxe01 | undefined
   "br7:PNCQueryDate"?: Br7TextString
   "br7:PNCErrorMessage"?: {
     "#text": string
@@ -137,8 +137,8 @@ export interface Br7Case {
   "br7:ManualForceOwner"?: Br7TextString
   "br7:ForceOwner"?: Br7OrganisationUnit
   "br7:HearingDefendant": Br7HearingDefendant
-  "@_hasError": boolean
-  "@_SchemaVersion": string
+  "@_hasError"?: boolean
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7Urgent {
@@ -162,7 +162,7 @@ export interface Br7HearingDefendant {
   "br7:ReasonForBailConditions"?: Br7TextString
   "br7:CourtPNCIdentifier"?: Br7TextString
   "br7:Offence": Br7Offence[]
-  "@_hasError": boolean
+  "@_hasError"?: boolean
 }
 
 export interface Br7Address {
@@ -214,8 +214,8 @@ export interface Br7Offence {
   "br7:ManualCourtCaseReference"?: Br7LiteralTextString
   "br7:CourtCaseReferenceNumber"?: Br7TextString
   "br7:Result": Br7Result | Br7Result[]
-  "@_hasError": boolean
-  "@_SchemaVersion": string
+  "@_hasError"?: boolean
+  "@_SchemaVersion"?: string
 }
 export interface Br7ResultQualifierVariable {
   "@_SchemaVersion": string
@@ -251,8 +251,8 @@ export interface Br7Result {
   "br7:NumberOfOffencesTIC"?: Br7TextString
   "br7:ResultQualifierVariable"?: Br7ResultQualifierVariable[]
   "br7:ConvictingCourt"?: Br7TextString
-  "@_hasError": boolean
-  "@_SchemaVersion": string
+  "@_hasError"?: boolean
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7OrganisationUnit {
@@ -325,8 +325,8 @@ export interface Br7Hearing {
   "br7:CourtType"?: Br7LiteralTextString
   "br7:CourtHouseCode": Br7TextString
   "br7:CourtHouseName"?: Br7TextString
-  "@_hasError": boolean
-  "@_SchemaVersion": string
+  "@_hasError"?: boolean
+  "@_SchemaVersion"?: string
 }
 
 export interface Br7SourceReference {

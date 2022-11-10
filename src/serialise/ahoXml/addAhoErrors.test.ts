@@ -1,9 +1,9 @@
-import type { AhoXml } from "../../types/AhoXml"
+import type { AhoXml, Br7Result } from "../../types/AhoXml"
 import { ExceptionCode } from "../../types/ExceptionCode"
-import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
+import addAhoErrors from "./addAhoErrors"
 
-describe("addExceptionsToAhoXml", () => {
-  it("should add an exception to the nested element", () => {
+describe("addAhoErrors()", () => {
+  it("should add an '@_hasError' tag to the Hearing", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
@@ -11,72 +11,6 @@ describe("addExceptionsToAhoXml", () => {
           "br7:Case": {
             "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
-              "br7:ArrestSummonsNumber": { "#text": "foo" },
-              "br7:Offence": [
-                {
-                  "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as AhoXml
-    const exceptions = [
-      { code: ExceptionCode.HO100100, path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"] }
-    ]
-    addExceptionsToAhoXml(rawAho, exceptions)
-    expect(rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["ds:PTIURN"]["@_Error"]).toBe(
-      "HO100100"
-    )
-  })
-  it("should add multiple exception to the nested element", () => {
-    const rawAho: AhoXml = {
-      "br7:AnnotatedHearingOutcome": {
-        "br7:HearingOutcome": {
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
-          "br7:Case": {
-            "ds:PTIURN": { "#text": "12345" },
-            "ds:CourtCaseReferenceNumber": { "#text": "12345" },
-            "br7:HearingDefendant": {
-              "br7:ArrestSummonsNumber": { "#text": "foo" },
-              "br7:Offence": [
-                {
-                  "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as AhoXml
-    const exceptions = [
-      { code: ExceptionCode.HO100100, path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"] },
-      {
-        code: ExceptionCode.HO100200,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "CourtCaseReferenceNumber"]
-      }
-    ]
-    addExceptionsToAhoXml(rawAho, exceptions)
-    expect(rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["ds:PTIURN"]["@_Error"]).toBe(
-      "HO100100"
-    )
-    expect(
-      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["ds:CourtCaseReferenceNumber"]?.[
-        "@_Error"
-      ]
-    ).toBe("HO100200")
-  })
-
-  it("should add an exception to an element in an array", () => {
-    const rawAho: AhoXml = {
-      "br7:AnnotatedHearingOutcome": {
-        "br7:HearingOutcome": {
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
-          "br7:Case": {
-            "ds:PTIURN": { "#text": "12345" },
-            "br7:HearingDefendant": {
-              "br7:BailConditions": [{ "#text": "12345" }],
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
                 {
@@ -92,18 +26,16 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
       }
     ]
-    addExceptionsToAhoXml(rawAho, exceptions)
-    expect(
-      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
-        "br7:BailConditions"
-      ]?.[0]["@_Error"]
-    ).toBe("HO100100")
+
+    addAhoErrors(rawAho, exceptions)
+
+    expect(rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"]).toBe(true)
   })
 
-  it("should add an exception to multiple elements in an array", () => {
+  it("should add an '@_hasError' tag to the Case", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
@@ -111,7 +43,6 @@ describe("addExceptionsToAhoXml", () => {
           "br7:Case": {
             "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
-              "br7:BailConditions": [{ "#text": "12345" }, { "#text": "12345" }],
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
                 {
@@ -123,30 +54,20 @@ describe("addExceptionsToAhoXml", () => {
         }
       }
     } as AhoXml
+
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
-      },
-      {
-        code: ExceptionCode.HO100200,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 1]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       }
     ]
-    addExceptionsToAhoXml(rawAho, exceptions)
-    expect(
-      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
-        "br7:BailConditions"
-      ]?.[0]["@_Error"]
-    ).toBe("HO100100")
-    expect(
-      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
-        "br7:BailConditions"
-      ]?.[1]["@_Error"]
-    ).toBe("HO100200")
+
+    addAhoErrors(rawAho, exceptions)
+
+    expect(rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["@_hasError"]).toBe(true)
   })
 
-  it("should return an error if it can't find the element", () => {
+  it("should add an '@_hasError' tag to the HearingDefendant", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
@@ -165,10 +86,99 @@ describe("addExceptionsToAhoXml", () => {
         }
       }
     } as AhoXml
+
     const exceptions = [
-      { code: ExceptionCode.HO100100, path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "Foo"] }
+      {
+        code: ExceptionCode.HO100100,
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
     ]
-    const result = addExceptionsToAhoXml(rawAho, exceptions)
-    expect(result).toBeInstanceOf(Error)
+
+    addAhoErrors(rawAho, exceptions)
+
+    expect(
+      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["@_hasError"]
+    ).toBe(true)
+  })
+
+  it("should add an '@_hasError' tag to the right Offence", () => {
+    const rawAho: AhoXml = {
+      "br7:AnnotatedHearingOutcome": {
+        "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
+          "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
+            "br7:HearingDefendant": {
+              "br7:ArrestSummonsNumber": { "#text": "foo" },
+              "br7:Offence": [
+                {
+                  "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
+                },
+                {
+                  "br7:CourtOffenceSequenceNumber": { "#text": "error_here" }
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as AhoXml
+
+    const exceptions = [
+      {
+        code: ExceptionCode.HO100100,
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
+      }
+    ]
+
+    addAhoErrors(rawAho, exceptions)
+
+    expect(
+      rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+        "br7:Offence"
+      ][1]["@_hasError"]
+    ).toBe(true)
+  })
+
+  it("should add an '@_hasError' tag to the right Result", () => {
+    const rawAho: AhoXml = {
+      "br7:AnnotatedHearingOutcome": {
+        "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
+          "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
+            "br7:HearingDefendant": {
+              "br7:ArrestSummonsNumber": { "#text": "foo" },
+              "br7:Offence": [
+                {
+                  "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
+                },
+                {
+                  "br7:CourtOffenceSequenceNumber": { "#text": "random" },
+                  "br7:Result": [{ "ds:CJSresultCode": { "#text": "error_here" } }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as AhoXml
+
+    const exceptions = [
+      {
+        code: ExceptionCode.HO100100,
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1, "Result", 0]
+      }
+    ]
+
+    addAhoErrors(rawAho, exceptions)
+
+    expect(
+      (
+        rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+          "br7:Offence"
+        ][1]["br7:Result"] as Br7Result[]
+      )[0]["@_hasError"]
+    ).toBe(true)
   })
 })

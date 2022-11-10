@@ -2,6 +2,7 @@ import errorPaths from "../../lib/errorPaths"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
 import { ExceptionCode } from "../../types/ExceptionCode"
+import addAhoErrors from "./addAhoErrors"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
@@ -71,7 +72,6 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 
 const isPncAsnException = (exception: Exception): boolean =>
   pncErrors.includes(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
-
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
@@ -96,6 +96,8 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
       aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
     }
   }
+
+  addAhoErrors(aho, exceptions)
 }
 
 export default addExceptionsToAhoXml
