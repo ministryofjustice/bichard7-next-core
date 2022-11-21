@@ -17,5 +17,5 @@ export const decodeEntitiesProcessor = (_: string, value: string): string => dec
 export const encodeEntities = (value: string): string =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 
-export const encodeEntitiesProcessor = (_: string, value: string): string =>
-  typeof value === "string" ? encodeEntities(value) : value
+export const encodeEntitiesProcessor = (_: string, value: unknown): string =>
+  typeof value === "string" ? encodeEntities(value) : (value as string)
