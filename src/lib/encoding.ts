@@ -2,8 +2,7 @@ const entities: { [k: string]: string } = {
   "&amp;": "&",
   "&lt;": "<",
   "&gt;": ">",
-  "&apos;": "'",
-  "&quot;": '"'
+  "&apos;": "'"
 }
 
 export const decodeEntities = (value: string): string =>
@@ -15,7 +14,7 @@ export const decodeEntities = (value: string): string =>
 export const decodeEntitiesProcessor = (_: string, value: string): string => decodeEntities(value)
 
 export const encodeEntities = (value: string): string =>
-  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
 
 export const encodeEntitiesProcessor = (_: string, value: unknown): string =>
   typeof value === "string" ? encodeEntities(value) : (value as string)
