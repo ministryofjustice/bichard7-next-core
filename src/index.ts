@@ -12,6 +12,8 @@ import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
 import getMessageType from "./lib/getMessageType"
 import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
 import getHearingOutcomePassedToErrorListLog from "./lib/auditLog/getHearingOutcomePassedToErrorListLog"
+import addExceptionsToAho from "./exceptions/addExceptionsToAho"
+import { isError } from "./comparison/types/Result"
 
 export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
   try {
@@ -50,9 +52,15 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
     )
 
     hearingOutcome = enrichAho(hearingOutcome, pncGateway, auditLogger)
+    if (isError(hearingOutcome)) {
+      throw hearingOutcome
+    }
     const triggers = generateTriggers(hearingOutcome)
     const exceptions = generateExceptions(hearingOutcome)
-    hearingOutcome.Exceptions = (hearingOutcome.Exceptions ?? []).concat(exceptions)
+
+    exceptions.forEach(({ code, path }) => {
+      addExceptionsToAho(hearingOutcome as AnnotatedHearingOutcome, code, path)
+    })
 
     if (hearingOutcome.Exceptions.length > 0) {
       auditLogger.logEvent(getHearingOutcomePassedToErrorListLog(hearingOutcome))

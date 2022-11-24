@@ -4,7 +4,7 @@ import errorPaths from "../../../lib/errorPaths"
 import type { AnnotatedHearingOutcome, Case } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { PncCourtCase, PncPenaltyCase } from "../../../types/PncQueryResult"
-import addError from "./addError"
+import addExceptionsToAho from "../../../exceptions/addExceptionsToAho"
 import enrichOffencesFromCourtCasesAndMatcherOutcome from "./enrichOffencesFromCourtCasesAndMatcherOutcome"
 import enrichOffencesFromMatcherOutcome from "./enrichOffencesFromMatcherOutcome"
 
@@ -48,12 +48,12 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   const outcome = matchCases(hoOffences, pncQueryResult)
 
   if (outcome.courtCaseMatches.length > 0 && outcome.penaltyCaseMatches.length > 0) {
-    addError(aho, ExceptionCode.HO100328, errorPaths.case.asn)
+    addExceptionsToAho(aho, ExceptionCode.HO100328, errorPaths.case.asn)
     return aho
   }
 
   if (outcome.penaltyCaseMatches.length > 1) {
-    addError(aho, ExceptionCode.HO100329, errorPaths.case.asn)
+    addExceptionsToAho(aho, ExceptionCode.HO100329, errorPaths.case.asn)
     return aho
   }
 
@@ -95,7 +95,7 @@ const matchCourtCases = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome 
   if (allPncOffencesMatched) {
     enrichHearingDefendantFromPncResult(aho)
   } else if (!anyOffenceHasAmbiguousError(aho)) {
-    addError(aho, ExceptionCode.HO100304, errorPaths.case.asn)
+    addExceptionsToAho(aho, ExceptionCode.HO100304, errorPaths.case.asn)
   }
 
   return aho
