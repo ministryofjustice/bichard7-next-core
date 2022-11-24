@@ -58,7 +58,7 @@ If all comparisons between the new and old Bichard are successful, `compareResul
 You can run a cli tool to see if a comparison json file matches using:
 
 ```
-npm run compare -- <path to json file>
+npm run compare -- -f <path to json file>
 ```
 
 You can also run this tool against the comparison files collected in production using the following arguments:
@@ -76,6 +76,16 @@ Options
 ```
 
 You will need to run it using `aws-vault`
+
+### Checking a comparison file on old Bichard
+
+```
+npm run compare:runonbichard -- <path to json file>
+```
+
+You will need to run it using `aws-vault`
+
+To run old Bichard in debug mode, follow [this guide](https://github.com/ministryofjustice/bichard7-next#debugging-bichard-in-open-liberty).
 
 ### Comparing outputs locally
 
