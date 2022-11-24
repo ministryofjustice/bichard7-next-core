@@ -5,7 +5,7 @@ import errorPaths from "../../../lib/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { PncCourtCase } from "../../../types/PncQueryResult"
-import addError from "./addError"
+import addExceptionsToAho from "../../../exceptions/addExceptionsToAho"
 import addNullCourtCaseReferenceNumber from "./addNullCourtCaseReferenceNumber"
 import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
@@ -79,7 +79,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
     if (!pncOffence) {
       const duplicateCases = matcherOutcome.duplicateHoOffences.get(hoOffence)
       if (duplicateCases && duplicateCases.length === 1) {
-        addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
+        addExceptionsToAho(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
         addNullCourtCaseReferenceNumber(hoOffence)
         offenceHasError = true
@@ -87,7 +87,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
         matcherOutcome.ambiguousHoOffences.includes(hoOffence) ||
         (duplicateCases && duplicateCases.length > 1)
       ) {
-        addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
+        addExceptionsToAho(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
         addNullCourtCaseReferenceNumber(hoOffence)
         offenceHasError = true
@@ -114,7 +114,7 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
               result.PNCAdjudicationExists = false
             })
           } else {
-            addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
+            addExceptionsToAho(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
             addNullOffenceReasonSequence(hoOffence)
             addNullCourtCaseReferenceNumber(hoOffence)
             offenceHasError = true
@@ -134,14 +134,14 @@ const enrichOffencesFromCourtCasesAndMatcherOutcome = (
       const pncOffenceMatches = offencesMatch(hoOffence, pncOffence)
 
       if (!pncOffenceMatches) {
-        addError(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
+        addExceptionsToAho(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
         offenceHasError = true
       } else if (
         !!hoOffence.ManualCourtCaseReference &&
         hoOffence.CourtCaseReferenceNumber !== "" &&
         hoOffence.CourtCaseReferenceNumber !== courtCaseRef
       ) {
-        addError(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
+        addExceptionsToAho(aho, ExceptionCode.HO100332, errorPaths.offence(offenceIndex).reasonSequence)
         addNullOffenceReasonSequence(hoOffence)
         offenceHasError = true
       } else {

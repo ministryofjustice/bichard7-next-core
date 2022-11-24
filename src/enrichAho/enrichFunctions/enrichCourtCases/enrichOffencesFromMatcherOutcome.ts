@@ -2,7 +2,7 @@ import errorPaths from "../../../lib/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { PncOffence } from "../../../types/PncQueryResult"
-import addError from "./addError"
+import addExceptionsToAho from "../../../exceptions/addExceptionsToAho"
 import addNullOffenceReasonSequence from "./addNullOffenceReasonSequence"
 import hasDuplicateSequenceNumber from "./hasDuplicateSequenceNumber"
 import offenceIsBreach from "./offenceMatcher/offenceIsBreach"
@@ -16,12 +16,12 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
     const existingOffenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
 
     if (!matcherOutcome && existingOffenceReasonSequence !== undefined) {
-      addError(aho, ExceptionCode.HO100333, errorPaths.offence(offenceIndex).reasonSequence)
+      addExceptionsToAho(aho, ExceptionCode.HO100333, errorPaths.offence(offenceIndex).reasonSequence)
       addNullOffenceReasonSequence(hoOffence, true)
       offenceHasError = true
       hoOffence.ManualSequenceNumber = undefined
     } else if (hasDuplicateSequenceNumber(hoOffence, hoOffences)) {
-      addError(aho, ExceptionCode.HO100311, errorPaths.offence(offenceIndex).reasonSequence)
+      addExceptionsToAho(aho, ExceptionCode.HO100311, errorPaths.offence(offenceIndex).reasonSequence)
       addNullOffenceReasonSequence(hoOffence)
       offenceHasError = true
     } else {
@@ -74,7 +74,7 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
             !matcherOutcome.allPncOffencesMatched ||
             matcherOutcome.pncOffencesMatchedIncludingDuplicates.length === 0)
         ) {
-          addError(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
+          addExceptionsToAho(aho, ExceptionCode.HO100320, errorPaths.offence(offenceIndex).reasonSequence)
           offenceHasError = true
         } else {
           // Set the offence reason sequence in the HO Offence and clear the ManualSequenceNo
@@ -140,12 +140,12 @@ const enrichOffencesFromMatcherOutcome = (aho: AnnotatedHearingOutcome, matcherO
             matcherOutcome.pncOffencesMatchedIncludingDuplicates.length === 0 ||
             matcherOutcome.duplicateHoOffences.includes(hoOffence))
         ) {
-          addError(aho, ExceptionCode.HO100312, errorPaths.offence(offenceIndex).reasonSequence)
+          addExceptionsToAho(aho, ExceptionCode.HO100312, errorPaths.offence(offenceIndex).reasonSequence)
           addNullOffenceReasonSequence(hoOffence)
           offenceHasError = true
         } else if (matcherOutcome && matcherOutcome.duplicateHoOffences.includes(hoOffence)) {
           // Error: Offence is a duplicate
-          addError(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
+          addExceptionsToAho(aho, ExceptionCode.HO100310, errorPaths.offence(offenceIndex).reasonSequence)
           addNullOffenceReasonSequence(hoOffence)
           offenceHasError = true
         } else {
