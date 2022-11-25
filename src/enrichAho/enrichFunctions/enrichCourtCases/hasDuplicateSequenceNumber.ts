@@ -1,5 +1,8 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 
+const equalAsNumberOrString = (firstSeq: string | null, secondSeq: string | null): boolean =>
+  String(firstSeq).replace(/^0+/, "") === String(secondSeq).replace(/^0+/, "") || Number(firstSeq) === Number(secondSeq)
+
 const hasDuplicateSequenceNumber = (offence: Offence, allOffences: Offence[]): boolean => {
   const sequenceNumber = offence.CriminalProsecutionReference.OffenceReasonSequence
   const courtCaseRef = offence.CourtCaseReferenceNumber
@@ -9,7 +12,8 @@ const hasDuplicateSequenceNumber = (offence: Offence, allOffences: Offence[]): b
         offence !== hoOffence &&
         (courtCaseRef === undefined || courtCaseRef === hoOffence.CourtCaseReferenceNumber) &&
         hoOffence.ManualSequenceNumber !== undefined &&
-        Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) === Number(sequenceNumber)
+        hoOffence.CriminalProsecutionReference.OffenceReasonSequence &&
+        equalAsNumberOrString(hoOffence.CriminalProsecutionReference.OffenceReasonSequence, sequenceNumber)
     )
   }
   return false
