@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
 import resultCodeIsFinal from "../lib/result/resultCodeIsFinal"
-import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
@@ -26,14 +26,19 @@ const offenceCodes = [
 
 const resultCodeIsExcluded = (resultCode: number): boolean => excludedResultCodes.includes(resultCode)
 
+const hasGuiltyResult = (result: Result) => result.Verdict !== CjsVerdict.NotGuilty
+
 const containsOffenceCode = (offence: Offence) => {
   const fullCode = getOffenceFullCode(offence)
   return (
     fullCode &&
-    offenceCodes.includes(fullCode) &&
+    offenceCodes.includes(fullCode.substring(0, 7)) &&
     offence.Result.some(
       (result) =>
-        result.CJSresultCode && !resultCodeIsExcluded(result.CJSresultCode) && resultCodeIsFinal(result.CJSresultCode)
+        hasGuiltyResult(result) &&
+        result.CJSresultCode &&
+        !resultCodeIsExcluded(result.CJSresultCode) &&
+        resultCodeIsFinal(result.CJSresultCode)
     )
   )
 }
@@ -41,12 +46,10 @@ const containsOffenceCode = (offence: Offence) => {
 const containsResultCode = (offence: Offence) =>
   offence.Result.some((result) => result.CJSresultCode && resultCodes.includes(result.CJSresultCode))
 
-const hasGuiltyResults = (offence: Offence) => offence.Result.some((result) => result.Verdict !== CjsVerdict.NotGuilty)
-
 const generator: TriggerGenerator = (hearingOutcome) => {
   return hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (acc: Trigger[], offence) => {
-      if (containsResultCode(offence) || (hasGuiltyResults(offence) && containsOffenceCode(offence))) {
+      if (containsResultCode(offence) || containsOffenceCode(offence)) {
         acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
 
