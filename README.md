@@ -73,6 +73,7 @@ Options
                         Default is 'failure'
   -c, --cache           Cache the comparison files
   -h, --help            Prints this usage guide
+  -t, --noTruncate      Stops truncating the unchanged sections of XML diffs
 ```
 
 You will need to run it using `aws-vault`
