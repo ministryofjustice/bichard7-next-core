@@ -152,10 +152,12 @@ export default class {
 
     offence.ConvictionDate = spiConvictionDate ? new Date(spiConvictionDate) : undefined
 
-    this.isAdjournmentSineDieConditionMet ||= adjournmentSineDieConditionMet(spiResults)
+    if (!spiConvictionDate) {
+      this.isAdjournmentSineDieConditionMet ||= adjournmentSineDieConditionMet(spiResults)
 
-    if (!spiConvictionDate && this.isAdjournmentSineDieConditionMet) {
-      offence.ConvictionDate = new Date(this.courtResult.Session.CourtHearing.Hearing.DateOfHearing)
+      if (this.isAdjournmentSineDieConditionMet) {
+        offence.ConvictionDate = new Date(this.courtResult.Session.CourtHearing.Hearing.DateOfHearing)
+      }
     }
 
     const { results, bailQualifiers } = new PopulateOffenceResults(this.courtResult, spiOffence).execute()
