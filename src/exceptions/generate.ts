@@ -41,5 +41,7 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
 
   const pncGeneratedExceptions = pncExceptions(aho)
 
-  return generatedExceptions.concat(ho100300, ho100323, pncGeneratedExceptions)
+  return generatedExceptions
+    .concat(ho100300, ho100323, pncGeneratedExceptions)
+    .sort((a, b) => a.code.localeCompare(b.code))
 }
