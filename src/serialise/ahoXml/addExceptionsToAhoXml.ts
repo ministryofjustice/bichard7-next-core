@@ -1,3 +1,4 @@
+import isPncException from "src/lib/isPncException"
 import errorPaths from "../../lib/errorPaths"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
@@ -40,14 +41,6 @@ const findElement = (element: GenericAhoXmlValue, path: (number | string)[]): Br
   return Error("Could not find element")
 }
 
-const pncErrors = [
-  ExceptionCode.HO100301,
-  ExceptionCode.HO100302,
-  ExceptionCode.HO100313,
-  ExceptionCode.HO100314,
-  ExceptionCode.HO100315
-]
-
 const reorderAttributesToPutErrorFirst = (element: Partial<Br7TypeTextString>): void => {
   if ("@_Type" in element) {
     const type = element["@_Type"]
@@ -68,10 +61,10 @@ const addException = (aho: AhoXml, exception: Exception): void | Error => {
 }
 
 const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
-  exceptions.some((e) => !pncErrors.includes(e.code) && e.path.join("/") === errorPaths.case.asn.join("/"))
+  exceptions.some((e) => !isPncException(e.code) && e.path.join("/") === errorPaths.case.asn.join("/"))
 
 const isPncAsnException = (exception: Exception): boolean =>
-  pncErrors.includes(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
+  isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
@@ -91,7 +84,7 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
 
   // Add PNC errors to the PNC error message if it is set
   if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
-    const pncError = exceptions.find((e) => pncErrors.includes(e.code))
+    const pncError = exceptions.find((e) => isPncException(e.code))
     if (pncError) {
       aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
     }

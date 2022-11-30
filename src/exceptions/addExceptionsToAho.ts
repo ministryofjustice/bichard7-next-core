@@ -1,5 +1,6 @@
-import type { ExceptionPath } from "src/types/Exception"
+import isPncException from "src/lib/isPncException"
 import type Exception from "src/types/Exception"
+import type { ExceptionPath } from "src/types/Exception"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { ExceptionCode } from "../types/ExceptionCode"
 
@@ -10,7 +11,7 @@ const addExceptionsToAho = (aho: AnnotatedHearingOutcome, code: ExceptionCode, p
   if (!aho.Exceptions) {
     aho.Exceptions = []
   }
-  if (!hasExceptionWithPath(path, aho.Exceptions)) {
+  if (!hasExceptionWithPath(path, aho.Exceptions) || isPncException(code)) {
     aho.Exceptions.push({ code, path })
   }
 }
