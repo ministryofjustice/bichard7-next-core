@@ -25,7 +25,7 @@ export default async () => {
   const batchSize = parseInt(BATCH_SIZE, 10)
   let total = 0
 
-  for await (const recordBatch of dynamoGateway.getAll(batchSize)) {
+  for await (const recordBatch of dynamoGateway.getAll(batchSize, false, ["s3Path"])) {
     if (isError(recordBatch)) {
       logger.error("Failed to fetch records from Dynamo")
       throw recordBatch
@@ -38,6 +38,6 @@ export default async () => {
     if (isError(invocationResult)) {
       console.error(invocationResult)
     }
-    logger.info(`Processed ${total} records up to ${recordBatch[recordBatch.length - 1].initialRunAt}`)
+    logger.info(`Processed ${total} records up to ${recordBatch[recordBatch.length - 1].s3Path}`)
   }
 }

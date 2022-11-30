@@ -121,7 +121,8 @@ export default class DynamoGateway {
     end: string,
     success?: boolean,
     batchSize = 1000,
-    includeSkipped = false
+    includeSkipped = false,
+    columns: string[] = []
   ): AsyncIterableIterator<ComparisonLog[] | Error> {
     let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
 
@@ -133,7 +134,7 @@ export default class DynamoGateway {
     }
 
     while (true) {
-      const query = {
+      const query: DynamoDB.DocumentClient.QueryInput = {
         TableName: this.tableName,
         IndexName: "initialRunAtIndex",
         KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
@@ -149,6 +150,10 @@ export default class DynamoGateway {
         ...failureFilter,
         Limit: batchSize,
         ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
+      }
+
+      if (columns.length > 0) {
+        query.ProjectionExpression = columns.join(",")
       }
 
       const result = await this.client
@@ -243,8 +248,12 @@ export default class DynamoGateway {
     yield buffer
   }
 
-  async *getAll(batchSize = 1000, includeSkipped = false): AsyncIterableIterator<ComparisonLog[] | Error> {
-    for await (const batch of this.getRange("0", "3000", undefined, batchSize, includeSkipped)) {
+  async *getAll(
+    batchSize = 1000,
+    includeSkipped = false,
+    columns: string[] = []
+  ): AsyncIterableIterator<ComparisonLog[] | Error> {
+    for await (const batch of this.getRange("0", "3000", undefined, batchSize, includeSkipped, columns)) {
       yield batch
     }
   }
