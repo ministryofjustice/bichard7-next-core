@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "src/lib/encoding"
 import decimalPlaces from "../../lib/decimalPlaces"
-import { decodeEntitiesProcessor } from "../../lib/encoding"
 import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
 import mapXmlCxe01ToAho from "../../parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
@@ -480,8 +480,8 @@ export default (xml: string): AnnotatedHearingOutcome | Error => {
     processEntities: false,
     trimValues: false,
     alwaysCreateTextNode: true,
-    attributeValueProcessor: decodeEntitiesProcessor,
-    tagValueProcessor: decodeEntitiesProcessor
+    attributeValueProcessor: decodeAttributeEntitiesProcessor,
+    tagValueProcessor: decodeTagEntitiesProcessor
   }
 
   const parser = new XMLParser(options)
