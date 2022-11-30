@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "src/lib/encoding"
 import type { AnnotatedPNCUpdateDatasetXml } from "src/types/AnnotatedPNCUpdateDatasetXml"
-import { decodeEntitiesProcessor } from "../../lib/encoding"
 import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
-import { mapXmlHearingToAho, mapXmlCaseToAho } from "../parseAhoXml/parseAhoXml"
+import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"
 
 const mapXmlToAnnotatedPNCUpdateDataset = (
   annotatedPNCUpdateDataset: AnnotatedPNCUpdateDatasetXml
@@ -33,8 +33,8 @@ export default (xml: string): AnnotatedPNCUpdateDataset | Error => {
     processEntities: false,
     trimValues: false,
     alwaysCreateTextNode: true,
-    attributeValueProcessor: decodeEntitiesProcessor,
-    tagValueProcessor: decodeEntitiesProcessor
+    attributeValueProcessor: decodeAttributeEntitiesProcessor,
+    tagValueProcessor: decodeTagEntitiesProcessor
   }
 
   const parser = new XMLParser(options)

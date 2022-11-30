@@ -1,20 +1,35 @@
-const entities: { [k: string]: string } = {
+import type KeyValuePair from "src/types/KeyValuePair"
+
+const tagEntities: { [k: string]: string } = {
   "&amp;": "&",
   "&lt;": "<",
   "&gt;": ">",
   "&apos;": "'"
 }
 
-export const decodeEntities = (value: string): string =>
+const attributeEntities: { [k: string]: string } = {
+  ...tagEntities,
+  "&quot;": '"'
+}
+
+const decodeEntities = (value: string, valueLookup: KeyValuePair<string, string>): string =>
   value.replace(/&[^;]+;/g, (match: string): string => {
-    const replacement = entities[match]
+    const replacement = valueLookup[match]
     return replacement ? replacement : match
   })
 
-export const decodeEntitiesProcessor = (_: string, value: string): string => decodeEntities(value)
-
-export const encodeEntities = (value: string): string =>
+const encodeTagEntities = (value: string): string =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
 
-export const encodeEntitiesProcessor = (_: string, value: unknown): string =>
-  typeof value === "string" ? encodeEntities(value) : (value as string)
+const encodeAttributeEntities = (value: string): string => encodeTagEntities(value).replace(/"/g, "&quot;")
+
+export const decodeAttributeEntitiesProcessor = (_: string, value: string): string =>
+  decodeEntities(value, attributeEntities)
+
+export const decodeTagEntitiesProcessor = (_: string, value: string): string => decodeEntities(value, tagEntities)
+
+export const encodeAttributeEntitiesProcessor = (_: string, value: unknown): string =>
+  typeof value === "string" ? encodeAttributeEntities(value) : (value as string)
+
+export const encodeTagEntitiesProcessor = (_: string, value: unknown): string =>
+  typeof value === "string" ? encodeTagEntities(value) : (value as string)

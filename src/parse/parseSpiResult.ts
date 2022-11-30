@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
-import { decodeEntitiesProcessor } from "../lib/encoding"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "src/lib/encoding"
 import type { IncomingMessageParsedXml } from "../types/SpiResult"
 import { incomingMessageParsedXmlSchema } from "../types/SpiResult"
 
@@ -10,8 +10,8 @@ export default (message: string): IncomingMessageParsedXml => {
     parseTagValue: false,
     trimValues: false,
     processEntities: false,
-    attributeValueProcessor: decodeEntitiesProcessor,
-    tagValueProcessor: decodeEntitiesProcessor
+    attributeValueProcessor: decodeAttributeEntitiesProcessor,
+    tagValueProcessor: decodeTagEntitiesProcessor
   }
 
   const parser = new XMLParser(options)

@@ -1,5 +1,6 @@
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
+import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "src/lib/encoding"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -13,7 +14,6 @@ import {
   lookupVerdictByCjsCode
 } from "../../dataLookup"
 import { toISODate, toPNCDate } from "../../lib/dates"
-import { encodeEntitiesProcessor } from "../../lib/encoding"
 import type {
   Adj,
   AhoXml,
@@ -517,8 +517,8 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome, validate = tru
     suppressEmptyNode: true,
     processEntities: false,
     suppressBooleanAttributes: false,
-    tagValueProcessor: encodeEntitiesProcessor,
-    attributeValueProcessor: encodeEntitiesProcessor
+    tagValueProcessor: encodeTagEntitiesProcessor,
+    attributeValueProcessor: encodeAttributeEntitiesProcessor
   }
 
   const builder = new XMLBuilder(options)
