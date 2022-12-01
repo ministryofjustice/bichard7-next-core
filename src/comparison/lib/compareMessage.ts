@@ -76,6 +76,10 @@ const compareMessage = (
 
   try {
     const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger)
+    if ("failure" in coreResult) {
+      throw Error("Failed to process")
+    }
+
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
 

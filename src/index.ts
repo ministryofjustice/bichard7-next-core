@@ -12,10 +12,10 @@ import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
-import type BichardResultType from "./types/BichardResultType"
+import type Phase1Result from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
 
-export default (message: string, pncGateway: PncGatewayInterface, auditLogger: AuditLogger): BichardResultType => {
+export default (message: string, pncGateway: PncGatewayInterface, auditLogger: AuditLogger): Phase1Result => {
   try {
     let hearingOutcome: AnnotatedHearingOutcome | Error
     auditLogger.start("Phase 1 Processing")
@@ -82,9 +82,8 @@ export default (message: string, pncGateway: PncGatewayInterface, auditLogger: A
     )
 
     return {
-      triggers: [],
-      hearingOutcome: {} as AnnotatedHearingOutcome,
-      auditLogEvents: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents(),
+      failure: true
     }
   }
 }

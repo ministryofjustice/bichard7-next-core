@@ -4,8 +4,8 @@ import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import stompit from "stompit"
 import CoreHandler from "../src/index"
 import logger from "../src/lib/logging"
-import type BichardResultType from "../src/types/BichardResultType"
 import type Exception from "../src/types/Exception"
+import type Phase1Result from "../src/types/Phase1Result"
 import type { Trigger } from "../src/types/Trigger"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
@@ -85,7 +85,7 @@ const areTriggerOrExceptionArraysEqual = (
   return extraExpected.length === 0 && extraReceived.length === 0
 }
 
-const processResultCore = (incomingMessage: string): BichardResultType | undefined => {
+const processResultCore = (incomingMessage: string): Phase1Result | undefined => {
   try {
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
@@ -105,7 +105,7 @@ const processMessage = (message: string): void => {
   }
 
   const coreResult = processResultCore(bichardResult.incomingMessage)
-  if (!coreResult) {
+  if (!coreResult || "failure" in coreResult) {
     return
   }
 

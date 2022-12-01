@@ -4,25 +4,9 @@ import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import PncGateway from "src/lib/pncGateway"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type AuditLogEvent from "src/types/AuditLogEvent"
-import type BichardResultType from "src/types/BichardResultType"
-import type { Trigger } from "src/types/Trigger"
+import type Phase1Result from "src/types/Phase1Result"
 
-type ProcessingSuccessResult = {
-  hearingOutcome: AnnotatedHearingOutcome
-  auditLogEvents: AuditLogEvent[]
-  triggers: Trigger[]
-}
-
-type ProcessingFailureResult = {
-  auditLogEvents: AuditLogEvent[]
-  failure: true
-}
-
-type ProcessingResult = ProcessingSuccessResult | ProcessingFailureResult
-
-const processPhase1 = async (s3Path: string): Promise<ProcessingResult> => {
+const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
   const config = createS3Config()
   const bucket = process.env.PHASE_1_BUCKET_NAME
 
@@ -38,7 +22,7 @@ const processPhase1 = async (s3Path: string): Promise<ProcessingResult> => {
   const pncGateway = new PncGateway()
   const auditLogger = new CoreAuditLogger()
 
-  let result: BichardResultType
+  let result: Phase1Result
 
   try {
     result = phase1(message, pncGateway, auditLogger)
@@ -47,6 +31,10 @@ const processPhase1 = async (s3Path: string): Promise<ProcessingResult> => {
       auditLogEvents: [],
       failure: true
     }
+  }
+
+  if ("failure" in result) {
+    return result
   }
 
   if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {

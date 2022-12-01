@@ -1,8 +1,9 @@
 import fs from "fs"
 import "jest-xml-matcher"
 import orderBy from "lodash.orderby"
+import CoreHandler from "src/index"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
-import CoreHandler from "../src/index"
+import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import extractExceptionsFromAho from "../src/parse/parseAhoXml/extractExceptionsFromAho"
 import convertAhoToXml from "../src/serialise/ahoXml/generate"
@@ -34,7 +35,7 @@ describe("Comparison testing", () => {
         const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
         const pncGateway = new MockPncGateway(response, pncQueryTime)
         const auditLogger = new CoreAuditLogger()
-        const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger)
+        const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger) as Phase1SuccessResult
         const exceptions = sortExceptions(extractExceptionsFromAho(annotatedHearingOutcome))
 
         it("should match triggers", () => {

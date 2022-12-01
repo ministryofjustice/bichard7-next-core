@@ -1,5 +1,6 @@
 import "jest-xml-matcher"
 import MockDate from "mockdate"
+import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import generateMessage from "../../../tests/helpers/generateMessage"
 import processMessage from "../../../tests/helpers/processMessage"
 import convertAhoToXml from "./generate"
@@ -11,7 +12,7 @@ describe("generateLegacyAhoXml", () => {
     const inputMessage = generateMessage({
       offences: [{ results: [{}] }, { results: [{}] }]
     })
-    const { hearingOutcome } = await processMessage(inputMessage)
+    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
     const ahoXml = convertAhoToXml(hearingOutcome)
 
     expect(ahoXml).toMatchSnapshot()
@@ -25,7 +26,7 @@ describe("generateLegacyAhoXml", () => {
     const inputMessage = generateMessage({
       offences: [{ results: [{}] }, { results: [{}] }]
     })
-    const { hearingOutcome } = await processMessage(inputMessage)
+    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
     const hoXml = convertAhoToXml(hearingOutcome, false)
 
     expect(hoXml).toMatchSnapshot()
