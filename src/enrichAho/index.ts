@@ -1,7 +1,7 @@
 import type AuditLogger from "src/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
-import type PncGateway from "../types/PncGateway"
+import type PncGatewayInterface from "../types/PncGatewayInterface"
 import {
   enrichCase,
   enrichCourt,
@@ -15,7 +15,7 @@ import {
 
 const enrichAho = (
   hearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGateway,
+  pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): AnnotatedHearingOutcome => {
   const pncEnrich: EnrichAhoFunction = (aho) => enrichWithPncQuery(aho, pncGateway, auditLogger)

@@ -2,9 +2,9 @@ import type { PutObjectCommandOutput } from "@aws-sdk/client-s3"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import type { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import createS3Config from "src/comparison/lib/createS3Config"
-import getFileFromS3 from "src/comparison/lib/getFileFromS3"
 import { isError } from "src/comparison/types"
+import createS3Config from "src/lib/createS3Config"
+import getFileFromS3 from "src/lib/getFileFromS3"
 
 const s3Config = createS3Config()
 const config: DynamoDB.ClientConfiguration = {

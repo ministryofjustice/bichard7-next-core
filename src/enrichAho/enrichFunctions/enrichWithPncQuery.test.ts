@@ -1,19 +1,19 @@
-import parseSpiResult from "../../parse/parseSpiResult"
-import transformSpiToAho from "../../parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type PncGateway from "../../types/PncGateway"
+import MockDate from "mockdate"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import type AuditLogger from "src/types/AuditLogger"
 import generateMessage from "../../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import enrichWithPncQuery from "./enrichWithPncQuery"
-import type AuditLogger from "src/types/AuditLogger"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
-import MockDate from "mockdate"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string
   let aho: AnnotatedHearingOutcome
-  let pncGateway: PncGateway
+  let pncGateway: PncGatewayInterface
   let auditLogger: AuditLogger
   const mockedDate = new Date()
 
