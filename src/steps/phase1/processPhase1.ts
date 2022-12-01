@@ -4,23 +4,30 @@ import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import PncGateway from "src/lib/pncGateway"
-import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type AuditLogEvent from "src/types/AuditLogEvent"
+import type BichardResultType from "src/types/BichardResultType"
 import type { Trigger } from "src/types/Trigger"
 
-type ProcessingResult = {
+type ProcessingSuccessResult = {
+  hearingOutcome: AnnotatedHearingOutcome
   auditLogEvents: AuditLogEvent[]
-  ahoXml: string
-  messageIsRejected: boolean
+  triggers: Trigger[]
 }
+
+type ProcessingFailureResult = {
+  auditLogEvents: AuditLogEvent[]
+  failure: true
+}
+
+type ProcessingResult = ProcessingSuccessResult | ProcessingFailureResult
 
 const processPhase1 = async (s3Path: string): Promise<ProcessingResult> => {
   const config = createS3Config()
-  const bucket = process.env.INCOMING_MESSAGE_BUCKET_NAME
+  const bucket = process.env.PHASE_1_BUCKET_NAME
 
   if (!bucket) {
-    throw Error("INCOMING_MESSAGE_BUCKET_NAME not set!")
+    throw Error("PHASE_1_BUCKET_NAME not set!")
   }
 
   const message = await getFileFromS3(s3Path, bucket, config)
@@ -31,34 +38,22 @@ const processPhase1 = async (s3Path: string): Promise<ProcessingResult> => {
   const pncGateway = new PncGateway()
   const auditLogger = new CoreAuditLogger()
 
-  let events: AuditLogEvent[]
-  let hearingOutcome: AnnotatedHearingOutcome
-  let triggers: Trigger[]
+  let result: BichardResultType
 
   try {
-    const result = phase1(message, pncGateway, auditLogger)
-    events = result.events
-    hearingOutcome = result.hearingOutcome
-    triggers = result.triggers
+    result = phase1(message, pncGateway, auditLogger)
   } catch (err) {
     return {
-      ahoXml: message,
       auditLogEvents: [],
-      messageIsRejected: true
+      failure: true
     }
   }
 
-  if (triggers.length > 0 || hearingOutcome.Exceptions.length > 0) {
+  if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
     // Store in Bichard DB if necessary
   }
 
-  const ahoXml = convertAhoToXml(hearingOutcome)
-
-  return {
-    ahoXml,
-    auditLogEvents: events,
-    messageIsRejected: false
-  }
+  return result
 }
 
 export default processPhase1

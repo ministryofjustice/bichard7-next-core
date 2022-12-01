@@ -43,7 +43,7 @@ export default (message: string, pncGateway: PncGatewayInterface, auditLogger: A
       return {
         triggers: [],
         hearingOutcome,
-        events: auditLogger.finish().getEvents()
+        auditLogEvents: auditLogger.finish().getEvents()
       }
     }
 
@@ -69,7 +69,7 @@ export default (message: string, pncGateway: PncGatewayInterface, auditLogger: A
     return {
       triggers,
       hearingOutcome,
-      events: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents()
     }
   } catch (e) {
     const { message: errorMessage, stack } = e as Error
@@ -84,7 +84,7 @@ export default (message: string, pncGateway: PncGatewayInterface, auditLogger: A
     return {
       triggers: [],
       hearingOutcome: {} as AnnotatedHearingOutcome,
-      events: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents()
     }
   }
 }

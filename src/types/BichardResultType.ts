@@ -3,9 +3,9 @@ import type AuditLogEvent from "./AuditLogEvent"
 import type { Trigger } from "./Trigger"
 
 type BichardResultType = {
-  triggers: Trigger[]
+  auditLogEvents: AuditLogEvent[]
   hearingOutcome: AnnotatedHearingOutcome
-  events: AuditLogEvent[]
+  triggers: Trigger[]
 }
 
 export default BichardResultType

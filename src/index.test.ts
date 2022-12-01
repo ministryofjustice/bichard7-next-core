@@ -17,9 +17,9 @@ describe("Bichard Core processing logic", () => {
 
   it("should return an object with the correct attributes", () => {
     const result = handler(inputMessage, mockPncGateway, auditLogger)
-    expect(result).toHaveProperty("triggers")
+    expect(result).toHaveProperty("auditLogEvents")
     expect(result).toHaveProperty("hearingOutcome")
-    expect(result).toHaveProperty("events")
+    expect(result).toHaveProperty("triggers")
   })
 
   it("should create audit logs when a message received", () => {

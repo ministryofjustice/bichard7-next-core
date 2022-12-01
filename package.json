@@ -7,7 +7,8 @@
   "scripts": {
     "build:lambdas": "webpack --config ./.webpack/webpack.prod.js",
     "build:lambdas:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",
-    "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
+    "test": "jest --runInBand --testNamePattern=",
+    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",

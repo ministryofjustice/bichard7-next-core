@@ -4,15 +4,17 @@ import storeAuditLogEvents from "src/steps/phase1/storeAuditLogEvents"
 import storeInQuarantineBucket from "src/steps/phase1/storeInQuarantineBucket"
 
 const main = async () => {
-  const { auditLogEvents, message, messageIsRejected } = await processPhase1("fake S3 Path")
-  storeAuditLogEvents(auditLogEvents)
+  const s3Path = "fake S3 Path"
+  const result = await processPhase1(s3Path)
 
-  if (messageIsRejected) {
+  storeAuditLogEvents(result.auditLogEvents)
+
+  if ("failure" in result) {
     console.error("Message rejected!")
-    storeInQuarantineBucket(message)
+    storeInQuarantineBucket(s3Path)
   } else {
     console.log("Message processed, sending to phase 2")
-    sendToPhase2(message)
+    sendToPhase2(result.hearingOutcome)
   }
 }
 
