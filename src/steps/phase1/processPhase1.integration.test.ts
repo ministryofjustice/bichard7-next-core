@@ -4,6 +4,8 @@ import "tests/helpers/setEnvironmentVariables"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
 import { MockServer } from "jest-mock-server"
+import "jest-xml-matcher"
+import MockDate from "mockdate"
 import type { ImportedComparison } from "src/comparison/types/ImportedComparison"
 import createS3Config from "src/lib/createS3Config"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
@@ -20,6 +22,15 @@ const extractAsnFromAhoXml = (ahoXml: string): string | void => {
   if (matchResult) {
     return matchResult[1]
   }
+}
+
+const extractPncQueryDateFromAhoXml = (ahoXml: string): Date => {
+  const matchResult = ahoXml.match(/<br7:PNCQueryDate>([^<]*)<\/br7:PNCQueryDate>/)
+  if (matchResult) {
+    return new Date(matchResult[1])
+  }
+
+  return new Date()
 }
 
 describe("processPhase1", () => {
@@ -59,7 +70,8 @@ describe("processPhase1", () => {
     const comparisonFile = fs.readFileSync("test-data/e2e-comparison/test-019.json")
     const comparison = JSON.parse(comparisonFile.toString()) as ImportedComparison
     const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-    console.log(asn)
+    const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
+    MockDate.set(pncQueryDate)
 
     const s3Path = "no-triggers-exceptions.xml"
     const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
@@ -72,10 +84,9 @@ describe("processPhase1", () => {
 
     const result = (await processPhase1(s3Path)) as Phase1SuccessResult
     expect(result).not.toHaveProperty("failure")
+    expect(result.triggers).toStrictEqual(comparison.triggers)
 
     const resultXml = convertAhoToXml(result.hearingOutcome)
-
-    expect(result.triggers).toStrictEqual(comparison.triggers)
-    expect(resultXml).toEqual(comparison.annotatedHearingOutcome)
+    expect(resultXml).toEqualXML(comparison.annotatedHearingOutcome)
   })
 })
