@@ -1,16 +1,23 @@
 import axios from "axios"
+import type PncApiConfig from "src/types/PncApiConfig"
 import type PncGatewayInterface from "src/types/PncGatewayInterface"
 import type { PncQueryResult } from "src/types/PncQueryResult"
+import dateTransformer from "./axiosDateTransformer"
+
+axios.defaults.transformResponse = [dateTransformer]
 
 export default class PncGateway implements PncGatewayInterface {
-  // Constructor should take a PncApiConfig type that has API key and API url
+  constructor(private config: PncApiConfig) {}
+
   queryTime: Date | undefined
 
-  async query(asn: string): Promise<PncQueryResult | Error | undefined> {
-    // Query PNC (emulator)
-    // Check response with zod
-    // Return parsed response
-    await axios.get(asn)
-    return undefined
+  query(asn: string): Promise<PncQueryResult | Error | undefined> {
+    this.queryTime = new Date()
+    return axios
+      .get<PncQueryResult>(`${this.config.url}/${asn}`)
+      .then((result) => {
+        return result.data
+      })
+      .catch((e) => e)
   }
 }
