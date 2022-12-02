@@ -6,7 +6,7 @@ function isValidDate(date: unknown): boolean {
   return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
 }
 
-function dateReviver(_: string, value: unknown): unknown | Date {
+export function dateReviver(_: string, value: unknown): unknown | Date {
   if (typeof value === "string" && dateFormat.test(value)) {
     const potentialDate = new Date(value)
     if (isValidDate(potentialDate)) {
