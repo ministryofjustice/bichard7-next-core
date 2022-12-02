@@ -6,12 +6,8 @@ function isValidDate(date: unknown): boolean {
   return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
 }
 
-function dateReviver(key: string, value: unknown): unknown | Date {
-  if (
-    (key.includes("date") || key.includes("time") || key.includes("Date") || key.includes("Time")) &&
-    typeof value === "string" &&
-    dateFormat.test(value)
-  ) {
+function dateReviver(_: string, value: unknown): unknown | Date {
+  if (typeof value === "string" && dateFormat.test(value)) {
     const potentialDate = new Date(value)
     if (isValidDate(potentialDate)) {
       return potentialDate

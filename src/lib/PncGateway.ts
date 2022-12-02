@@ -2,9 +2,9 @@ import axios from "axios"
 import type PncApiConfig from "src/types/PncApiConfig"
 import type PncGatewayInterface from "src/types/PncGatewayInterface"
 import type { PncQueryResult } from "src/types/PncQueryResult"
-import dateTransformer from "./axiosDateTransformer"
+import axiosDateTransformer from "./axiosDateTransformer"
 
-axios.defaults.transformResponse = [dateTransformer]
+axios.defaults.transformResponse = [axiosDateTransformer]
 
 export default class PncGateway implements PncGatewayInterface {
   constructor(private config: PncApiConfig) {}
