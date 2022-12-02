@@ -33,7 +33,7 @@ const processMessageCore = (
     pncMessage,
     pncAdjudication = false
   }: ProcessMessageOptions
-): Phase1Result => {
+): Promise<Phase1Result> => {
   const response = recordable
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined

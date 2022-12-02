@@ -35,14 +35,14 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   })
 }
 
-export default (
+export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): AnnotatedHearingOutcome => {
+): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const requestStartTime = new Date()
-  const pncResult = pncGateway.query(
+  const pncResult = await pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 

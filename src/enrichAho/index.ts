@@ -13,12 +13,12 @@ import {
   enrichWithPncQuery
 } from "./enrichFunctions"
 
-const enrichAho = (
+const enrichAho = async (
   hearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): AnnotatedHearingOutcome => {
-  const pncEnrich: EnrichAhoFunction = (aho) => enrichWithPncQuery(aho, pncGateway, auditLogger)
+): Promise<AnnotatedHearingOutcome> => {
+  await enrichWithPncQuery(hearingOutcome, pncGateway, auditLogger)
 
   const enrichSteps: EnrichAhoFunction[] = [
     enrichCourt,
@@ -26,7 +26,7 @@ const enrichAho = (
     enrichOffences,
     enrichOffenceResults,
     enrichCase,
-    pncEnrich,
+    // pncEnrich,
     enrichOffenceResultsPostPncEnrichment,
     enrichForceOwner
   ]

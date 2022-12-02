@@ -66,7 +66,7 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
     let error: Error | undefined
     const date = getDateFromComparisonFilePath(s3Path)
     try {
-      comparisonResult = compareMessage(content, debug, {
+      comparisonResult = await compareMessage(content, debug, {
         defaultStandingDataVersion: getStandingDataVersionByDate(date)
       })
     } catch (e) {

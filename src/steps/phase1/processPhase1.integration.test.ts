@@ -4,6 +4,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
 import type { ImportedComparison } from "src/comparison/types/ImportedComparison"
 import createS3Config from "src/lib/createS3Config"
+import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import MockS3 from "tests/helpers/MockS3"
 import processPhase1 from "./processPhase1"
@@ -48,10 +49,10 @@ describe("processPhase1", () => {
     await client.send(command)
 
     const result = (await processPhase1(s3Path)) as Phase1SuccessResult
+    const resultXml = convertAhoToXml(result.hearingOutcome)
 
     expect(result).not.toHaveProperty("failure")
-    expect(result.triggers).toHaveLength(0)
-    expect(result.hearingOutcome.Exceptions).toHaveLength(0)
-    console.log(JSON.stringify(result, null, 2))
+    expect(result.triggers).toStrictEqual(comparison.triggers)
+    expect(resultXml).toEqual(comparison.annotatedHearingOutcome)
   })
 })

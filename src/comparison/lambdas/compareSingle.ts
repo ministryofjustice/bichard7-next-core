@@ -29,7 +29,7 @@ export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult
   let comparisonResult: ComparisonResult
   let error: Error | undefined
   try {
-    comparisonResult = compareMessage(content)
+    comparisonResult = await compareMessage(content)
   } catch (e) {
     error = e as Error
     comparisonResult = {

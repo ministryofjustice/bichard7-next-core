@@ -49,11 +49,11 @@ type CompareOptions = {
 const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
   !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
 
-const compareMessage = (
+const compareMessage = async (
   input: string,
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
-): ComparisonResult => {
+): Promise<ComparisonResult> => {
   const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = processTestString(
     input.replace(/Â£/g, "£")
   )
@@ -75,7 +75,7 @@ const compareMessage = (
   const auditLogger = new CoreAuditLogger()
 
   try {
-    const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger)
+    const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
     if ("failure" in coreResult) {
       throw Error("Failed to process")
     }

@@ -29,13 +29,14 @@ const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(excepti
 
 describe("Comparison testing", () => {
   describe.each(tests)("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
-    describe("processing spi messages", () => {
+    // eslint-disable-next-line jest/valid-describe-callback
+    describe("processing spi messages", async () => {
       try {
         const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
         const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
         const pncGateway = new MockPncGateway(response, pncQueryTime)
         const auditLogger = new CoreAuditLogger()
-        const coreResult = CoreHandler(incomingMessage, pncGateway, auditLogger) as Phase1SuccessResult
+        const coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
         const exceptions = sortExceptions(extractExceptionsFromAho(annotatedHearingOutcome))
 
         it("should match triggers", () => {

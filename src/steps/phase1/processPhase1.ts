@@ -25,7 +25,7 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
   let result: Phase1Result
 
   try {
-    result = phase1(message, pncGateway, auditLogger)
+    result = await phase1(message, pncGateway, auditLogger)
   } catch (err) {
     return {
       auditLogEvents: [],

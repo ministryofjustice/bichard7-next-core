@@ -15,7 +15,11 @@ import type AuditLogger from "./types/AuditLogger"
 import type Phase1Result from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
 
-export default (message: string, pncGateway: PncGatewayInterface, auditLogger: AuditLogger): Phase1Result => {
+export default async (
+  message: string,
+  pncGateway: PncGatewayInterface,
+  auditLogger: AuditLogger
+): Promise<Phase1Result> => {
   try {
     let hearingOutcome: AnnotatedHearingOutcome | Error
     auditLogger.start("Phase 1 Processing")
@@ -51,7 +55,7 @@ export default (message: string, pncGateway: PncGatewayInterface, auditLogger: A
       getIncomingMessageLog(hearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
     )
 
-    hearingOutcome = enrichAho(hearingOutcome, pncGateway, auditLogger)
+    hearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
     if (isError(hearingOutcome)) {
       throw hearingOutcome
     }

@@ -85,7 +85,7 @@ const areTriggerOrExceptionArraysEqual = (
   return extraExpected.length === 0 && extraReceived.length === 0
 }
 
-const processResultCore = (incomingMessage: string): Phase1Result | undefined => {
+const processResultCore = (incomingMessage: string): Promise<Phase1Result | undefined> => {
   try {
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
@@ -94,17 +94,17 @@ const processResultCore = (incomingMessage: string): Phase1Result | undefined =>
   } catch (e) {
     results.failed++
     logger.warn(`Application failed to process message: ${e}`)
-    return undefined
+    return Promise.resolve(undefined)
   }
 }
 
-const processMessage = (message: string): void => {
+const processMessage = async (message: string): Promise<void> => {
   const bichardResult = parseBichardResult(message)
   if (!bichardResult) {
     return
   }
 
-  const coreResult = processResultCore(bichardResult.incomingMessage)
+  const coreResult = await processResultCore(bichardResult.incomingMessage)
   if (!coreResult || "failure" in coreResult) {
     return
   }
