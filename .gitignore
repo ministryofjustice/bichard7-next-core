@@ -10,3 +10,4 @@ node_modules
 
 # airflow
 airflow/logs
+__pycache__
