@@ -29,46 +29,43 @@ const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(excepti
 
 describe("Comparison testing", () => {
   describe.each(tests)("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
-    // eslint-disable-next-line jest/valid-describe-callback
-    describe("processing spi messages", async () => {
-      try {
+    describe("processing spi messages", () => {
+      let coreResult: Phase1SuccessResult
+      let exceptions: Exception[]
+
+      beforeEach(async () => {
         const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
         const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
         const pncGateway = new MockPncGateway(response, pncQueryTime)
         const auditLogger = new CoreAuditLogger()
-        const coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
-        const exceptions = sortExceptions(extractExceptionsFromAho(annotatedHearingOutcome))
+        coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
+        exceptions = sortExceptions(extractExceptionsFromAho(annotatedHearingOutcome))
+      })
 
-        it("should match triggers", () => {
-          expect(coreResult.triggers).toStrictEqual(triggers)
-        })
+      it("should match triggers", () => {
+        expect(coreResult.triggers).toStrictEqual(triggers)
+      })
 
-        it("should match exceptions", () => {
-          const coreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
-          expect(coreResult.hearingOutcome.Exceptions).toBeDefined()
-          expect(exceptions).toBeDefined()
-          expect(coreExceptions).toStrictEqual(exceptions)
-        })
+      it("should match exceptions", () => {
+        const coreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
+        expect(coreResult.hearingOutcome.Exceptions).toBeDefined()
+        expect(exceptions).toBeDefined()
+        expect(coreExceptions).toStrictEqual(exceptions)
+      })
 
-        it("should match aho xml", () => {
-          const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
-          expect(ahoXml).toEqualXML(annotatedHearingOutcome)
-        })
+      it("should match aho xml", () => {
+        const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
+        expect(ahoXml).toEqualXML(annotatedHearingOutcome)
+      })
 
-        it("should correctly parse aho xml", () => {
-          const parsedAho = parseAhoXml(annotatedHearingOutcome)
-          if (parsedAho instanceof Error) {
-            throw parsedAho
-          }
-          const ahoXml = convertAhoToXml(parsedAho)
-          expect(ahoXml).toEqualXML(annotatedHearingOutcome)
-        })
-      } catch (e) {
-        it("should not error", () => {
-          console.log(e)
-          expect(e).toBeUndefined()
-        })
-      }
+      it("should correctly parse aho xml", () => {
+        const parsedAho = parseAhoXml(annotatedHearingOutcome)
+        if (parsedAho instanceof Error) {
+          throw parsedAho
+        }
+        const ahoXml = convertAhoToXml(parsedAho)
+        expect(ahoXml).toEqualXML(annotatedHearingOutcome)
+      })
     })
   })
 })

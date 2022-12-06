@@ -11,20 +11,23 @@ const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
 
 const insertErrorListRecord = async (db: Client, record: Phase1SuccessResult): PromiseResult<void> => {
   try {
+    const generateFalseHasErrorAttributes = record.triggers.length > 0 && record.hearingOutcome.Exceptions.length === 0
+
     const caseElem = record.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
     const hearing = record.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
     const newRecordResult = await db.query(
       "INSERT INTO br7own.error_list (\
-        message_id, defendant_name, phase, trigger_count, is_urgent, annotated_msg, error_report,\
+        message_id, defendant_name, phase, trigger_count, is_urgent, annotated_msg, updated_msg, error_report,\
         create_ts, error_count, user_updated_flag, msg_received_ts, court_reference, court_date, ptiurn,\
         court_name, org_for_police_filter, court_room)\
-        VALUES ($1, $2, 1, $3, $4, $5, $6, NOW(), $7, 0, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+        VALUES ($1, $2, 1, $3, $4, $5, $6, $7, NOW(), $8, 0, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
       [
         hearing.SourceReference.UniqueID,
         generateDefendantName(record.hearingOutcome),
         record.triggers.length,
         0,
         convertAhoToXml(record.hearingOutcome),
+        convertAhoToXml(record.hearingOutcome, false, generateFalseHasErrorAttributes),
         "",
         record.hearingOutcome.Exceptions.length,
         new Date(),

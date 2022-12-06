@@ -48,6 +48,7 @@ import type {
 } from "../../types/AnnotatedHearingOutcome"
 import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "../../types/PncQueryResult"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -493,8 +494,10 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
     }
   }
 
+  const standalone = !validate && aho.Exceptions.length > 0 ? {} : { "@_standalone": "yes" }
+
   return {
-    "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
+    "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
     ...(validate
       ? {
           "br7:AnnotatedHearingOutcome": {
@@ -511,7 +514,11 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome, validate = true): string => {
+const convertAhoToXml = (
+  hearingOutcome: AnnotatedHearingOutcome,
+  validate = true,
+  generateFalseHasErrorAttributes = false
+): string => {
   const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
@@ -525,6 +532,8 @@ const convertAhoToXml = (hearingOutcome: AnnotatedHearingOutcome, validate = tru
   const xmlAho = mapAhoToXml(hearingOutcome, validate)
   if (validate) {
     addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
+  } else if (generateFalseHasErrorAttributes) {
+    addFalseHasErrorAttributesToAhoXml(xmlAho)
   }
   const xml = builder.build(xmlAho)
 
