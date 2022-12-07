@@ -1,3 +1,4 @@
+jest.setTimeout(9999999)
 import "tests/helpers/setEnvironmentVariables"
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
@@ -5,11 +6,13 @@ import fs from "fs"
 import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
 import MockDate from "mockdate"
-import { Client } from "pg"
+import postgres from "postgres"
 import type { ImportedComparison } from "src/comparison/types/ImportedComparison"
 import createDbConfig from "src/lib/createDbConfig"
 import createS3Config from "src/lib/createS3Config"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
+import type ErrorListRecord from "src/types/ErrorListRecord"
+import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import generateMockPncQueryResultFromAho from "tests/helpers/generateMockPncQueryResultFromAho"
 import MockS3 from "tests/helpers/MockS3"
@@ -19,7 +22,19 @@ import processPhase1 from "./processPhase1"
 const bucket = "phase-1-bucket"
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
-const db = new Client(dbConfig)
+const sql = postgres({
+  ...dbConfig,
+  types: {
+    date: {
+      to: 25,
+      from: [1082],
+      serialize: (x: string): string => x,
+      parse: (x: string): Date => {
+        return new Date(x)
+      }
+    }
+  }
+})
 
 const extractAsnFromAhoXml = (ahoXml: string): string | void => {
   const matchResult = ahoXml.match(/<DC:ProsecutorReference>([^<]*)<\/DC:ProsecutorReference>/)
@@ -37,27 +52,60 @@ const extractPncQueryDateFromAhoXml = (ahoXml: string): Date => {
   return new Date()
 }
 
-const checkDatabaseMatches = async (expected: any): Promise<void> => {
-  const errorList = await db.query("select * from BR7OWN.ERROR_LIST")
-  const errorListTriggers = await db.query("select * from BR7OWN.ERROR_LIST_TRIGGERS")
+// const parseErrorReport = (report: string): { code: string; element: string }[] =>
+//   report
+//     .split(", ")
+//     .map((err) => ({ code: err.split("||")[0], element: err.split("||")[1] }))
+//     .sort((a, b) => a.code.localeCompare(b.code))
 
-  expect(errorList.rows).toHaveLength(expected.errorList.length)
-  expect(errorListTriggers.rows).toHaveLength(expected.errorListTriggers.length)
+const checkDatabaseMatches = async (expected: any): Promise<void> => {
+  const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
+  const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
+  const expectedTriggers = errorListTriggers.map((trigger) => trigger.trigger_code)
+
+  expect(errorList).toHaveLength(expected.errorList.length)
+  expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
   if (expected.errorList.length === 1) {
-    expect(errorList.rows[0].message_id).toEqual(expected.errorList[0].message_id)
-    expect(errorList.rows[0].defendant_name).toEqual(expected.errorList[0].defendant_name)
-    expect(errorList.rows[0].phase).toEqual(expected.errorList[0].phase)
-    expect(errorList.rows[0].trigger_count).toEqual(expected.errorList[0].trigger_count)
-    expect(errorList.rows[0].error_count).toEqual(expected.errorList[0].error_count)
-    expect(errorList.rows[0].user_updated_flag).toEqual(expected.errorList[0].user_updated_flag)
-    expect(errorList.rows[0].court_reference).toEqual(expected.errorList[0].court_reference)
-    expect(errorList.rows[0].court_date).toEqual(expected.errorList[0].court_date)
-    expect(errorList.rows[0].ptiurn).toEqual(expected.errorList[0].ptiurn)
-    expect(errorList.rows[0].court_name).toEqual(expected.errorList[0].court_name)
-    expect(errorList.rows[0].org_for_police_filter).toEqual(expected.errorList[0].org_for_police_filter)
-    expect(errorList.rows[0].court_room).toEqual(expected.errorList[0].court_room)
-    expect(errorList.rows[0].annotated_msg).toEqualXML(expected.errorList[0].annotated_msg)
-    expect(errorList.rows[0].updated_msg).toEqualXML(expected.errorList[0].updated_msg)
+    expect(errorList[0].message_id).toEqual(expected.errorList[0].message_id)
+    expect(errorList[0].phase).toEqual(expected.errorList[0].phase)
+    expect(errorList[0].error_status).toEqual(expected.errorList[0].error_status)
+    expect(errorList[0].trigger_status).toEqual(expected.errorList[0].trigger_status)
+    expect(errorList[0].error_quality_checked).toEqual(expected.errorList[0].error_quality_checked)
+    expect(errorList[0].trigger_quality_checked).toEqual(expected.errorList[0].trigger_quality_checked)
+    expect(errorList[0].trigger_count).toEqual(expected.errorList[0].trigger_count)
+    expect(errorList[0].error_locked_by_id).toEqual(expected.errorList[0].error_locked_by_id)
+    expect(errorList[0].trigger_locked_by_id).toEqual(expected.errorList[0].trigger_locked_by_id)
+    expect(errorList[0].is_urgent).toEqual(expected.errorList[0].is_urgent)
+    expect(errorList[0].asn).toEqual(expected.errorList[0].asn)
+    expect(errorList[0].court_code).toEqual(expected.errorList[0].court_code)
+    expect(errorList[0].annotated_msg).toEqualXML(expected.errorList[0].annotated_msg)
+    expect(errorList[0].updated_msg).toEqualXML(expected.errorList[0].updated_msg)
+    expect(errorList[0].error_report).toStrictEqual(expected.errorList[0].error_report)
+    expect(errorList[0].create_ts).toBeDefined()
+    expect(errorList[0].error_reason).toEqual(expected.errorList[0].error_reason)
+    if (expected.errorList[0].trigger_reason) {
+      expect(expectedTriggers).toContain(errorList[0].trigger_reason)
+    } else {
+      expect(errorList[0].trigger_reason).toBeNull()
+    }
+    expect(errorList[0].error_count).toEqual(expected.errorList[0].error_count)
+    expect(errorList[0].user_updated_flag).toEqual(expected.errorList[0].user_updated_flag)
+    expect(errorList[0].court_date).toEqual(expected.errorList[0].court_date)
+    expect(errorList[0].ptiurn).toEqual(expected.errorList[0].ptiurn)
+    expect(errorList[0].court_name).toEqual(expected.errorList[0].court_name)
+    expect(errorList[0].resolution_ts).toEqual(expected.errorList[0].resolution_ts)
+    expect(errorList[0].msg_received_ts).toBeDefined()
+    expect(errorList[0].error_resolved_by).toEqual(expected.errorList[0].error_resolved_by)
+    expect(errorList[0].trigger_resolved_by).toEqual(expected.errorList[0].trigger_resolved_by)
+    expect(errorList[0].error_resolved_ts).toEqual(expected.errorList[0].error_resolved_ts)
+    expect(errorList[0].trigger_resolved_ts).toEqual(expected.errorList[0].trigger_resolved_ts)
+    expect(errorList[0].defendant_name).toEqual(expected.errorList[0].defendant_name)
+    expect(errorList[0].org_for_police_filter).toEqual(expected.errorList[0].org_for_police_filter)
+    expect(errorList[0].court_room).toEqual(expected.errorList[0].court_room)
+    expect(errorList[0].court_reference).toEqual(expected.errorList[0].court_reference)
+    expect(errorList[0].error_insert_ts).toBeDefined()
+    expect(errorList[0].trigger_insert_ts).toBeDefined()
+    expect(errorList[0].pnc_update_enabled).toEqual(expected.errorList[0].pnc_update_enabled)
   }
 }
 
@@ -75,19 +123,16 @@ describe("processPhase1", () => {
     await pncApi.start()
 
     process.env.PHASE_1_BUCKET_NAME = bucket
-
-    await db.connect()
   })
 
   afterAll(async () => {
     await s3Server.stop()
     await client.destroy()
     await pncApi.stop()
-    await db.end()
   })
 
   beforeEach(async () => {
-    await db.query("TRUNCATE br7own.error_list CASCADE")
+    await sql`DELETE FROM br7own.error_list`
   })
 
   it("should return failure if message XML cannot be parsed", async () => {

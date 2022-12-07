@@ -1,54 +1,99 @@
-import type { Client } from "pg"
+import type { Sql } from "postgres"
 import type { PromiseResult } from "src/comparison/types"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type ErrorListRecord from "src/types/ErrorListRecord"
+import { QualityCheckStatus } from "src/types/ErrorListRecord"
+import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import ResolutionStatus from "src/types/ResolutionStatus"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
   const personName = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail?.PersonName
   return `${personName?.FamilyName} ${personName?.GivenName}`
 }
 
-const insertErrorListRecord = async (db: Client, record: Phase1SuccessResult): PromiseResult<void> => {
+const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
+  // Bichard generates this in the order they appear in the XML document so we need to do this too
+  const ahoXml = convertAhoToXml(aho)
+  const matches = ahoXml.matchAll(/<([^ |>]*)[^>]* Error="([^"]*)/gm)
+  if (!matches) {
+    return ""
+  }
+  // return ""
+  return Array.from(matches)
+    .map((m) => `${m[2]}||${m[1]}`)
+    .join(", ")
+}
+
+const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListRecord => {
+  const generateFalseHasErrorAttributes = result.triggers.length > 0 && result.hearingOutcome.Exceptions.length === 0
+
+  const caseElem = result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearing = result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+  const errorReport = generateErrorReport(result.hearingOutcome)
+  return {
+    message_id: hearing.SourceReference.UniqueID,
+    phase: 1,
+    error_status: result.hearingOutcome.Exceptions.length > 0 ? ResolutionStatus.UNRESOLVED : null,
+    trigger_status: result.triggers.length > 0 ? ResolutionStatus.UNRESOLVED : null,
+    error_quality_checked: result.hearingOutcome.Exceptions.length > 0 ? QualityCheckStatus.UNCHECKED : null,
+    trigger_quality_checked: result.triggers.length > 0 ? QualityCheckStatus.UNCHECKED : null,
+    defendant_name: generateDefendantName(result.hearingOutcome),
+    trigger_count: result.triggers.length,
+    is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
+    asn: caseElem.HearingDefendant.ArrestSummonsNumber,
+    court_code: hearing.CourtHearingLocation.OrganisationUnitCode,
+    annotated_msg: convertAhoToXml(result.hearingOutcome),
+    updated_msg: convertAhoToXml(result.hearingOutcome, false, generateFalseHasErrorAttributes),
+    error_report: errorReport,
+    create_ts: new Date(),
+    error_reason: errorReport.length > 0 ? errorReport.split("||")[0] : null,
+    error_insert_ts: new Date(),
+    trigger_insert_ts: new Date(),
+    trigger_reason: result.triggers.length > 0 ? result.triggers[0].code : null,
+    error_count: result.hearingOutcome.Exceptions.length,
+    user_updated_flag: 0,
+    msg_received_ts: new Date(),
+    court_reference: caseElem.CourtReference.MagistratesCourtReference,
+    court_date: hearing.DateOfHearing,
+    ptiurn: caseElem.PTIURN,
+    court_name: hearing.CourtHouseName,
+    org_for_police_filter: `${caseElem.ForceOwner?.SecondLevelCode}${caseElem.ForceOwner?.ThirdLevelCode}  `,
+    court_room: hearing.CourtHearingLocation.BottomLevelCode || undefined,
+    pnc_update_enabled: "Y"
+  }
+}
+
+const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): PromiseResult<void> => {
+  const errorListRecord = convertResultToErrorListRecord(result)
   try {
-    const generateFalseHasErrorAttributes = record.triggers.length > 0 && record.hearingOutcome.Exceptions.length === 0
+    const newRecordResult = await sql<ErrorListRecord[]>`
+      INSERT INTO br7own.error_list ${sql(errorListRecord)} RETURNING *`
 
-    const caseElem = record.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
-    const hearing = record.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
-    const newRecordResult = await db.query(
-      "INSERT INTO br7own.error_list (\
-        message_id, defendant_name, phase, trigger_count, is_urgent, annotated_msg, updated_msg, error_report,\
-        create_ts, error_count, user_updated_flag, msg_received_ts, court_reference, court_date, ptiurn,\
-        court_name, org_for_police_filter, court_room)\
-        VALUES ($1, $2, 1, $3, $4, $5, $6, $7, NOW(), $8, 0, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
-      [
-        hearing.SourceReference.UniqueID,
-        generateDefendantName(record.hearingOutcome),
-        record.triggers.length,
-        0,
-        convertAhoToXml(record.hearingOutcome),
-        convertAhoToXml(record.hearingOutcome, false, generateFalseHasErrorAttributes),
-        "",
-        record.hearingOutcome.Exceptions.length,
-        new Date(),
-        caseElem.CourtReference.MagistratesCourtReference,
-        hearing.DateOfHearing,
-        caseElem.PTIURN,
-        hearing.CourtHouseName,
-        `${caseElem.ForceOwner?.SecondLevelCode}${caseElem.ForceOwner?.ThirdLevelCode}  `,
-        hearing.CourtHearingLocation.BottomLevelCode
-      ]
-    )
+    if (!newRecordResult[0].error_id) {
+      throw new Error("Error inserting to error_list table")
+    }
 
-    for (const trigger of record.triggers) {
-      await db.query(
-        "INSERT INTO br7own.error_list_triggers (error_id, trigger_code, trigger_item_identity, status, create_ts) VALUES ($1, $2, $3, 0, NOW())",
-        [newRecordResult.rows[0].error_id, trigger.code, trigger.offenceSequenceNumber]
-      )
+    for (const trigger of result.triggers) {
+      const triggerRecord: ErrorListTriggerRecord = {
+        error_id: newRecordResult[0].error_id,
+        trigger_code: trigger.code,
+        status: 0,
+        create_ts: new Date()
+      }
+      if (trigger.offenceSequenceNumber) {
+        triggerRecord.trigger_item_identity = String(trigger.offenceSequenceNumber)
+      }
+      await sql`
+        INSERT INTO br7own.error_list_triggers  ${sql(triggerRecord)}`
     }
   } catch (e) {
-    console.error(e)
-    return e as Error
+    const error = e as any
+    if (error.severity !== "NOTICE") {
+      console.error(e)
+      return e as Error
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { Client } from "pg"
+import postgres from "postgres"
 import { isError } from "src/comparison/types"
 import phase1 from "src/index"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
@@ -7,7 +7,7 @@ import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import insertErrorListRecord from "src/lib/insertErrorListRecord"
-import PncGateway from "src/lib/pncGateway"
+import PncGateway from "src/lib/PncGateway"
 import type Phase1Result from "src/types/Phase1Result"
 
 const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
@@ -17,7 +17,7 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
   const pncApiConfig = createPncApiConfig()
 
   const dbConfig = createDbConfig()
-  const db = new Client(dbConfig)
+  const db = postgres(dbConfig)
 
   if (!bucket) {
     throw Error("PHASE_1_BUCKET_NAME not set!")
@@ -48,7 +48,6 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
 
   if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
     // Store in Bichard DB if necessary
-    await db.connect()
     const dbResult = await insertErrorListRecord(db, result)
     if (isError(dbResult)) {
       return {
