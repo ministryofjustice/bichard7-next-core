@@ -44,7 +44,8 @@ describe("enrichWithQuery()", () => {
   it("should enrich AHO with results from PNC query", async () => {
     expect(aho.PncQuery).toBeUndefined()
     const resultAho = await enrichWithPncQuery(aho, pncGateway, auditLogger)
-    expect(resultAho.PncQuery).toBe(pncGateway.query("MockASN"))
+    const expected = await pncGateway.query("MockASN")
+    expect(resultAho.PncQuery).toBe(expected)
   })
 
   it("should populate the court case offence titles from PNC query", async () => {

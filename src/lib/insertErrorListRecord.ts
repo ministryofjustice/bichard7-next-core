@@ -86,7 +86,7 @@ const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Pro
         triggerRecord.trigger_item_identity = String(trigger.offenceSequenceNumber)
       }
       await sql`
-        INSERT INTO br7own.error_list_triggers  ${sql(triggerRecord)}`
+        INSERT INTO br7own.error_list_triggers ${sql(triggerRecord)}`
     }
   } catch (e) {
     const error = e as any

@@ -1,9 +1,9 @@
 import fs from "fs"
+import MockDate from "mockdate"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import handler from "./index"
 import CoreAuditLogger from "./lib/CoreAuditLogger"
-import MockDate from "mockdate"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("test-data/input-message-001.xml").toString()
@@ -15,15 +15,15 @@ describe("Bichard Core processing logic", () => {
     MockDate.set(mockedDate)
   })
 
-  it("should return an object with the correct attributes", () => {
-    const result = handler(inputMessage, mockPncGateway, auditLogger)
+  it("should return an object with the correct attributes", async () => {
+    const result = await handler(inputMessage, mockPncGateway, auditLogger)
     expect(result).toHaveProperty("auditLogEvents")
     expect(result).toHaveProperty("hearingOutcome")
     expect(result).toHaveProperty("triggers")
   })
 
-  it("should create audit logs when a message received", () => {
-    handler(inputMessage, mockPncGateway, auditLogger)
+  it("should create audit logs when a message received", async () => {
+    await handler(inputMessage, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual([
       {
         eventType: "Started Phase 1 Processing",
@@ -70,9 +70,9 @@ describe("Bichard Core processing logic", () => {
     ])
   })
 
-  it("should log when an input message is ignored", () => {
+  it("should log when an input message is ignored", async () => {
     const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-no-offences.xml").toString()
-    handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
+    await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual([
       {
         eventType: "Started Phase 1 Processing",
@@ -98,9 +98,9 @@ describe("Bichard Core processing logic", () => {
     ])
   })
 
-  it("should log hearing outcome passed to error list", () => {
+  it("should log hearing outcome passed to error list", async () => {
     const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-003.xml").toString()
-    handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
+    await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -119,9 +119,9 @@ describe("Bichard Core processing logic", () => {
     )
   })
 
-  it("should log Message Rejected by CoreHandler", () => {
+  it("should log Message Rejected by CoreHandler", async () => {
     const invalidInputMessage = "invalid format"
-    handler(invalidInputMessage, mockPncGateway, auditLogger)
+    await handler(invalidInputMessage, mockPncGateway, auditLogger)
 
     const receivedEvent = auditLogger.getEvents()[1]!
     expect(receivedEvent.attributes!["Exception Stack Trace"]).toBeDefined()
