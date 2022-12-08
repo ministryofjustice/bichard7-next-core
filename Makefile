@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 UID ?= $(shell id -u)
-PIP_ADDITIONAL_REQUIREMENTS ?= apache-airflow-providers-amazon==2.6.0
+PIP_ADDITIONAL_REQUIREMENTS ?= apache-airflow-providers-amazon==5.1.0
 AIRFLOW_ENV_VARS ?= _PIP_ADDITIONAL_REQUIREMENTS=$(PIP_ADDITIONAL_REQUIREMENTS) AIRFLOW_UID=$(UID)
 
 .PHONY: airflow
