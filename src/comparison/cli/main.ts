@@ -13,7 +13,7 @@ const main = async () => {
   if ("file" in args && args.file) {
     const contents = await getFile(args.file, !!args.cache)
     const date = getDateFromComparisonFilePath(args.file)
-    const result = processFile(contents, args.file, date)
+    const result = await processFile(contents, args.file, date)
     printResult(result, !args.noTruncate)
   } else if ("runMissing" in args && args.runMissing) {
     await runMissingComparisons(args.runMissing)

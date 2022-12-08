@@ -1,7 +1,7 @@
 import fs from "fs"
+import createS3Config from "../../lib/createS3Config"
+import getFileFromS3 from "../../lib/getFileFromS3"
 import { cacheFileExists, clearCache, getCacheFile, storeCacheFile } from "../cli/cache"
-import createS3Config from "./createS3Config"
-import getFileFromS3 from "./getFileFromS3"
 
 const s3Config = createS3Config()
 

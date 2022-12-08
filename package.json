@@ -7,12 +7,13 @@
   "scripts": {
     "build:lambdas": "webpack --config ./.webpack/webpack.prod.js",
     "build:lambdas:dev": "npm run clean && webpack --config ./.webpack/webpack.dev.js",
-    "test": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
+    "test": "jest --runInBand --forceExit --testNamePattern=",
+    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",
     "test:compare": "jest --testPathPattern=comparison.test",
-    "test:integration": "jest --runInBand --testPathPattern=integration.test",
+    "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
     "clean": "rimraf build",
     "compare": "TS_NODE_TRANSPILE_ONLY=true ts-node src/comparison/cli.ts",
@@ -26,7 +27,8 @@
     "lint:fix": "eslint . --fix",
     "prepare": "husky install",
     "update-deps": "ncu -u !chalk && npm install",
-    "postinstall": "./scripts/install-standing-data.sh"
+    "postinstall": "./scripts/install-standing-data.sh",
+    "pg": "docker-compose -f environment/docker-compose.yml up -d pg"
   },
   "repository": {
     "type": "git",
@@ -61,7 +63,6 @@
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/parser": "^5.45.0",
     "aws-crt": "^1.14.8",
-    "axios": "^1.2.0",
     "babel-loader": "^9.1.0",
     "chalk": ">=4.0.0 <5.0.0",
     "eslint": "^8.29.0",
@@ -75,6 +76,7 @@
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "husky": "^8.0.2",
     "jest": "^29.3.1",
+    "jest-mock-server": "^0.1.0",
     "jest-xml-matcher": "^1.2.0",
     "json-helpers": "^5.2.0",
     "lint-staged": "^13.1.0",
@@ -102,6 +104,7 @@
     "@aws-sdk/client-s3": "^3.223.0",
     "@aws-sdk/signature-v4-crt": "^3.222.0",
     "aws-sdk": "^2.1267.0",
+    "axios": "^1.2.0",
     "bichard7-next-data-2.0.20": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.20",
     "bichard7-next-data-2.0.21": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.21",
     "bichard7-next-data-2.0.22": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.22",
@@ -124,6 +127,7 @@
     "lodash.orderby": "^4.6.0",
     "pino": "^8.7.0",
     "pino-pretty": "^9.1.1",
+    "postgres": "^3.3.2",
     "pretty-data": "^0.40.0",
     "stompit": "^1.0.0",
     "zod": "^3.19.1"

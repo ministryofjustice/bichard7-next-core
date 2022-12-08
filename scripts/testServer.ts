@@ -23,12 +23,12 @@ function formatter(_: string, value: unknown) {
   return value
 }
 
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
   const testData = JSON.parse(req.body.toString(), formatter) as TestInput
   const pncGateway = new MockPncGateway(testData.pncQueryResult)
   const auditLogger = new CoreAuditLogger()
   try {
-    const coreResult = CoreHandler(testData.inputMessage, pncGateway, auditLogger)
+    const coreResult = await CoreHandler(testData.inputMessage, pncGateway, auditLogger)
     res.json(coreResult)
   } catch (e) {
     console.error(e)

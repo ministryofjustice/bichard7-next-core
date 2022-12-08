@@ -42,19 +42,26 @@ jobs:
           paths: build
 
   test:
-    docker:
-      - image: cimg/node:16.13.1
+    machine:
+      image: ubuntu-2004:202104-01
+      docker_layer_caching: true
     working_directory: ~
     steps:
       - checkout_and_install
       - attach_workspace:
           at: .
       - run:
+          name: Run PostgreSQL
+          command: npm run pg
+      - run:
+          name: Install Nodejs version in .nvmrc
+          command: nvm install
+      - run:
           name: Run tests against core code
-          command: npm t
+          command: nvm use && npm t
       - run:
           name: Run integration tests against core code
-          command: npm run test:integration
+          command: nvm use && npm run test:integration
 
   comparison_test:
     docker:

@@ -1,3 +1,4 @@
+import type AuditLogEvent from "src/types/AuditLogEvent"
 import type { Trigger } from "../../types/Trigger"
 
 export type ImportedComparison = {
@@ -6,4 +7,6 @@ export type ImportedComparison = {
   annotatedHearingOutcome: string
   standingDataVersion: string
   triggers: Trigger[]
+  dbContent?: { errorList: object[]; errorListTriggers: object[] }
+  auditLogs?: AuditLogEvent[]
 }

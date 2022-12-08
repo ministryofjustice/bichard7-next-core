@@ -1,12 +1,12 @@
+import createS3Config from "../../lib/createS3Config"
+import getFileFromS3 from "../../lib/getFileFromS3"
 import logger from "../../lib/logging"
 import getStandingDataVersionByDate from "../cli/getStandingDataVersionByDate"
 import type { ComparisonResult } from "../lib/compareMessage"
 import compareMessage from "../lib/compareMessage"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import getFileFromS3 from "../lib/getFileFromS3"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import { formatXmlDiffAsTxt } from "../lib/xmlOutputComparison"
 import { isError } from "../types"
@@ -66,7 +66,7 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
     let error: Error | undefined
     const date = getDateFromComparisonFilePath(s3Path)
     try {
-      comparisonResult = compareMessage(content, debug, {
+      comparisonResult = await compareMessage(content, debug, {
         defaultStandingDataVersion: getStandingDataVersionByDate(date)
       })
     } catch (e) {

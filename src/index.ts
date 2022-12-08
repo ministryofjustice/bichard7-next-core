@@ -1,21 +1,25 @@
+import { isError } from "./comparison/types/Result"
 import enrichAho from "./enrichAho"
+import addExceptionsToAho from "./exceptions/addExceptionsToAho"
 import generateExceptions from "./exceptions/generate"
+import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
+import getHearingOutcomePassedToErrorListLog from "./lib/auditLog/getHearingOutcomePassedToErrorListLog"
+import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
+import getMessageType from "./lib/getMessageType"
 import { parseAhoXml } from "./parse/parseAhoXml"
 import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
-import type BichardResultType from "./types/BichardResultType"
-import type PncGateway from "./types/PncGateway"
-import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
-import getMessageType from "./lib/getMessageType"
-import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
-import getHearingOutcomePassedToErrorListLog from "./lib/auditLog/getHearingOutcomePassedToErrorListLog"
-import addExceptionsToAho from "./exceptions/addExceptionsToAho"
-import { isError } from "./comparison/types/Result"
+import type Phase1Result from "./types/Phase1Result"
+import type PncGatewayInterface from "./types/PncGatewayInterface"
 
-export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogger): BichardResultType => {
+export default async (
+  message: string,
+  pncGateway: PncGatewayInterface,
+  auditLogger: AuditLogger
+): Promise<Phase1Result> => {
   try {
     let hearingOutcome: AnnotatedHearingOutcome | Error
     auditLogger.start("Phase 1 Processing")
@@ -43,7 +47,7 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
       return {
         triggers: [],
         hearingOutcome,
-        events: auditLogger.finish().getEvents()
+        auditLogEvents: auditLogger.finish().getEvents()
       }
     }
 
@@ -51,7 +55,7 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
       getIncomingMessageLog(hearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
     )
 
-    hearingOutcome = enrichAho(hearingOutcome, pncGateway, auditLogger)
+    hearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
     if (isError(hearingOutcome)) {
       throw hearingOutcome
     }
@@ -69,7 +73,7 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
     return {
       triggers,
       hearingOutcome,
-      events: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents()
     }
   } catch (e) {
     const { message: errorMessage, stack } = e as Error
@@ -82,9 +86,8 @@ export default (message: string, pncGateway: PncGateway, auditLogger: AuditLogge
     )
 
     return {
-      triggers: [],
-      hearingOutcome: {} as AnnotatedHearingOutcome,
-      events: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents(),
+      failure: true
     }
   }
 }

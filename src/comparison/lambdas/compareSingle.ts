@@ -1,10 +1,10 @@
+import createS3Config from "../../lib/createS3Config"
+import getFileFromS3 from "../../lib/getFileFromS3"
 import logger from "../../lib/logging"
 import type { ComparisonResult } from "../lib/compareMessage"
 import compareMessage from "../lib/compareMessage"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import createS3Config from "../lib/createS3Config"
 import DynamoGateway from "../lib/DynamoGateway"
-import getFileFromS3 from "../lib/getFileFromS3"
 import recordResultInDynamo from "../lib/recordResultInDynamo"
 import { isError } from "../types"
 import type { CompareSingleLambdaEvent } from "../types/CompareLambdaEvent"
@@ -29,7 +29,7 @@ export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult
   let comparisonResult: ComparisonResult
   let error: Error | undefined
   try {
-    comparisonResult = compareMessage(content)
+    comparisonResult = await compareMessage(content)
   } catch (e) {
     error = e as Error
     comparisonResult = {

@@ -32,7 +32,7 @@ const processFailures = async (cache: boolean): Promise<ComparisonResult[]> => {
     for (const { fileName, contents } of files) {
       if (contents) {
         const date = getDateFromComparisonFilePath(fileName)
-        results.push(processFile(contents, fileName, date))
+        results.push(await processFile(contents, fileName, date))
       } else {
         results.push(skippedFile(fileName))
       }

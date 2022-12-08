@@ -1,19 +1,19 @@
-import parseSpiResult from "../../parse/parseSpiResult"
-import transformSpiToAho from "../../parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type PncGateway from "../../types/PncGateway"
+import MockDate from "mockdate"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import type AuditLogger from "src/types/AuditLogger"
 import generateMessage from "../../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import enrichWithPncQuery from "./enrichWithPncQuery"
-import type AuditLogger from "src/types/AuditLogger"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
-import MockDate from "mockdate"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string
   let aho: AnnotatedHearingOutcome
-  let pncGateway: PncGateway
+  let pncGateway: PncGatewayInterface
   let auditLogger: AuditLogger
   const mockedDate = new Date()
 
@@ -41,14 +41,15 @@ describe("enrichWithQuery()", () => {
     MockDate.reset()
   })
 
-  it("should enrich AHO with results from PNC query", () => {
+  it("should enrich AHO with results from PNC query", async () => {
     expect(aho.PncQuery).toBeUndefined()
-    const resultAho = enrichWithPncQuery(aho, pncGateway, auditLogger)
-    expect(resultAho.PncQuery).toBe(pncGateway.query("MockASN"))
+    const resultAho = await enrichWithPncQuery(aho, pncGateway, auditLogger)
+    const expected = await pncGateway.query("MockASN")
+    expect(resultAho.PncQuery).toBe(expected)
   })
 
-  it("should populate the court case offence titles from PNC query", () => {
-    const result = enrichWithPncQuery(aho, pncGateway, auditLogger)
+  it("should populate the court case offence titles from PNC query", async () => {
+    const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
     const offences = result.PncQuery?.courtCases![0].offences
 
     expect(offences).toHaveLength(2)
@@ -56,7 +57,7 @@ describe("enrichWithQuery()", () => {
     expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
   })
 
-  it("should populate the penalty case offence titles from PNC query", () => {
+  it("should populate the penalty case offence titles from PNC query", async () => {
     pncGateway = new MockPncGateway({
       forceStationCode: "01ZB",
       croNumber: "dummy",
@@ -86,7 +87,7 @@ describe("enrichWithQuery()", () => {
         }
       ]
     })
-    const result = enrichWithPncQuery(aho, pncGateway, auditLogger)
+    const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
     const offences = result.PncQuery?.penaltyCases![0].offences
 
     expect(offences).toHaveLength(2)
@@ -94,15 +95,15 @@ describe("enrichWithQuery()", () => {
     expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
   })
 
-  it("should set the PNC query date element to undefined if it is not set", () => {
+  it("should set the PNC query date element to undefined if it is not set", async () => {
     expect(aho.PncQueryDate).toBeUndefined()
-    const resultAho = enrichWithPncQuery(aho, pncGateway, auditLogger)
+    const resultAho = await enrichWithPncQuery(aho, pncGateway, auditLogger)
     expect(resultAho.PncQueryDate).toBeUndefined()
   })
 
-  it("should log a successful PNC query", () => {
+  it("should log a successful PNC query", async () => {
     const auditLoggerSpy = jest.spyOn(auditLogger, "logEvent")
-    enrichWithPncQuery(aho, pncGateway, auditLogger)
+    await enrichWithPncQuery(aho, pncGateway, auditLogger)
 
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
     expect(auditLoggerSpy).toHaveBeenCalledWith({
@@ -117,13 +118,13 @@ describe("enrichWithQuery()", () => {
     })
   })
 
-  it("should log a failed PNC query", () => {
+  it("should log a failed PNC query", async () => {
     const auditLoggerSpy = jest.spyOn(auditLogger, "logEvent")
     jest.spyOn(pncGateway, "query").mockImplementation(() => {
-      return new Error("PNC error")
+      return Promise.resolve(new Error("PNC error"))
     })
 
-    enrichWithPncQuery(aho, pncGateway, auditLogger)
+    await enrichWithPncQuery(aho, pncGateway, auditLogger)
 
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
     expect(auditLoggerSpy).toHaveBeenCalledWith({

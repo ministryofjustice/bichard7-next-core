@@ -1,17 +1,17 @@
 import promisePoller from "promise-poller"
+import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import { v4 as uuid } from "uuid"
 import CoreHandler from "../../src"
 import extractExceptionsFromAho from "../../src/parse/parseAhoXml/extractExceptionsFromAho"
 import type { AnnotatedHearingOutcome } from "../../src/types/AnnotatedHearingOutcome"
-import type BichardResultType from "../../src/types/BichardResultType"
+import type Phase1Result from "../../src/types/Phase1Result"
 import type { ResultedCaseMessageParsedXml } from "../../src/types/SpiResult"
-import { v4 as uuid } from "uuid"
 import ActiveMqHelper from "./ActiveMqHelper"
 import defaults from "./defaults"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
 import MockPncGateway from "./MockPncGateway"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -33,7 +33,7 @@ const processMessageCore = (
     pncMessage,
     pncAdjudication = false
   }: ProcessMessageOptions
-): BichardResultType => {
+): Promise<Phase1Result> => {
   const response = recordable
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
@@ -63,7 +63,7 @@ const processMessageBichard = async (
     pncMessage,
     pncAdjudication = false
   }: ProcessMessageOptions
-): Promise<BichardResultType> => {
+): Promise<Phase1Result> => {
   const correlationId = uuid()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
   if (expectTriggers && !expectRecord) {
@@ -126,10 +126,10 @@ const processMessageBichard = async (
 
   const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { triggers, hearingOutcome, events: [] }
+  return { triggers, hearingOutcome, auditLogEvents: [] }
 }
 
-export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<BichardResultType> => {
+export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<Phase1Result> => {
   if (process.env.USE_BICHARD === "true") {
     return processMessageBichard(messageXml, options)
   }

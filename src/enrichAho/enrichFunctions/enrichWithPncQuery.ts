@@ -3,7 +3,7 @@ import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type PncGateway from "../../types/PncGateway"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 
 const addTitle = (offence: PncOffence): void => {
@@ -35,14 +35,14 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   })
 }
 
-export default (
+export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGateway,
+  pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): AnnotatedHearingOutcome => {
+): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const requestStartTime = new Date()
-  const pncResult = pncGateway.query(
+  const pncResult = await pncGateway.query(
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 

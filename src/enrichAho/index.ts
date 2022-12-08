@@ -1,7 +1,7 @@
 import type AuditLogger from "src/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
-import type PncGateway from "../types/PncGateway"
+import type PncGatewayInterface from "../types/PncGatewayInterface"
 import {
   enrichCase,
   enrichCourt,
@@ -13,25 +13,26 @@ import {
   enrichWithPncQuery
 } from "./enrichFunctions"
 
-const enrichAho = (
+const enrichAho = async (
   hearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGateway,
+  pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): AnnotatedHearingOutcome => {
-  const pncEnrich: EnrichAhoFunction = (aho) => enrichWithPncQuery(aho, pncGateway, auditLogger)
-
+): Promise<AnnotatedHearingOutcome> => {
   const enrichSteps: EnrichAhoFunction[] = [
     enrichCourt,
     enrichDefendant,
     enrichOffences,
     enrichOffenceResults,
-    enrichCase,
-    pncEnrich,
-    enrichOffenceResultsPostPncEnrichment,
-    enrichForceOwner
+    enrichCase
   ]
 
-  return enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)
+  enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)
+
+  await enrichWithPncQuery(hearingOutcome, pncGateway, auditLogger)
+  enrichOffenceResultsPostPncEnrichment(hearingOutcome)
+  enrichForceOwner(hearingOutcome)
+
+  return hearingOutcome
 }
 
 export default enrichAho

@@ -1,6 +1,7 @@
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"
+import { dateReviver } from "src/lib/axiosDateTransformer"
 import type { ImportedComparison } from "../../src/comparison/types/ImportedComparison"
 import type { Trigger } from "../../src/types/Trigger"
 import type { TriggerCode } from "../../src/types/TriggerCode"
@@ -18,13 +19,12 @@ type ComparisonFile = {
 }
 
 export const processTestString = (contents: string, file?: string): ImportedComparison => {
-  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = JSON.parse(
-    contents
-  ) as ComparisonFile
+  const parsed = JSON.parse(contents, dateReviver) as ComparisonFile
   return {
+    ...parsed,
     file,
     triggers: orderBy(
-      triggers.map(({ code, identifier }) => {
+      parsed.triggers.map(({ code, identifier }) => {
         const result: Trigger = { code }
         if (identifier) {
           result.offenceSequenceNumber = parseInt(identifier, 10)
@@ -32,10 +32,7 @@ export const processTestString = (contents: string, file?: string): ImportedComp
         return result
       }),
       ["code", "offenceSequenceNumber"]
-    ),
-    incomingMessage,
-    annotatedHearingOutcome,
-    standingDataVersion
+    )
   }
 }
 
