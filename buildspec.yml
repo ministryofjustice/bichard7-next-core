@@ -10,5 +10,6 @@ phases:
       - npm ci
       - npm run build:lambdas
       - ./scripts/codebuild_artifacts.sh
+      - ./scripts/codebuild_dags.sh
 ---
 
