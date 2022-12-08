@@ -79,7 +79,7 @@ const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Pro
       const triggerRecord: ErrorListTriggerRecord = {
         error_id: newRecordResult[0].error_id,
         trigger_code: trigger.code,
-        status: 0,
+        status: ResolutionStatus.UNRESOLVED,
         create_ts: new Date()
       }
       if (trigger.offenceSequenceNumber) {
