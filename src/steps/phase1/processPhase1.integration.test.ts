@@ -5,6 +5,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import fs from "fs"
 import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
+import orderBy from "lodash.orderby"
 import MockDate from "mockdate"
 import postgres from "postgres"
 import type { ImportedComparison } from "src/comparison/types/ImportedComparison"
@@ -36,6 +37,17 @@ const sql = postgres({
   }
 })
 
+const normaliseTriggers = (triggers: ErrorListTriggerRecord[]): ErrorListTriggerRecord[] =>
+  orderBy(triggers, ["trigger_code", "trigger_item_identity"]).map(
+    ({ trigger_code, status, trigger_item_identity }) => ({
+      trigger_code,
+      status,
+      trigger_item_identity,
+      error_id: 0,
+      create_ts: new Date("2000-01-01")
+    })
+  )
+
 const extractAsnFromAhoXml = (ahoXml: string): string | void => {
   const matchResult = ahoXml.match(/<DC:ProsecutorReference>([^<]*)<\/DC:ProsecutorReference>/)
   if (matchResult) {
@@ -52,19 +64,12 @@ const extractPncQueryDateFromAhoXml = (ahoXml: string): Date => {
   return new Date()
 }
 
-// const parseErrorReport = (report: string): { code: string; element: string }[] =>
-//   report
-//     .split(", ")
-//     .map((err) => ({ code: err.split("||")[0], element: err.split("||")[1] }))
-//     .sort((a, b) => a.code.localeCompare(b.code))
-
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
   const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
   const expectedTriggers = errorListTriggers.map((trigger) => trigger.trigger_code)
 
   expect(errorList).toHaveLength(expected.errorList.length)
-  expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
   if (expected.errorList.length === 1) {
     expect(errorList[0].message_id).toEqual(expected.errorList[0].message_id)
     expect(errorList[0].phase).toEqual(expected.errorList[0].phase)
@@ -80,7 +85,7 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
     expect(errorList[0].court_code).toEqual(expected.errorList[0].court_code)
     expect(errorList[0].annotated_msg).toEqualXML(expected.errorList[0].annotated_msg)
     expect(errorList[0].updated_msg).toEqualXML(expected.errorList[0].updated_msg)
-    expect(errorList[0].error_report).toStrictEqual(expected.errorList[0].error_report)
+    expect(errorList[0].error_report).toEqual(expected.errorList[0].error_report)
     expect(errorList[0].create_ts).toBeDefined()
     expect(errorList[0].error_reason).toEqual(expected.errorList[0].error_reason)
     if (expected.errorList[0].trigger_reason) {
@@ -107,6 +112,9 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
     expect(errorList[0].trigger_insert_ts).toBeDefined()
     expect(errorList[0].pnc_update_enabled).toEqual(expected.errorList[0].pnc_update_enabled)
   }
+
+  expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
+  expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
 }
 
 describe("processPhase1", () => {
