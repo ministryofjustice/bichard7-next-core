@@ -21,7 +21,7 @@ function upload_to_s3 {
 ############################################
 
 upload_to_s3 airflow/requirements.txt requirements.txt
-upload_to_s3 airflow/dags/ dags/ '--recursive \'--exclude dags/__pycache__/*\''
+upload_to_s3 airflow/dags/ dags/ --recursive
 
 if [ "${IS_CD}" = "true" ]; then
   cat <<EOF>/tmp/core.json
