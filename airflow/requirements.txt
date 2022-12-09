@@ -1,0 +1,1 @@
+apache-airflow-providers-amazon==5.1.0

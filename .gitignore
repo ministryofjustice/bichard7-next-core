@@ -7,3 +7,7 @@ node_modules
 # because the contents of the file (specifically the NPM_TOKEN variable reference) cause the
 # codebuild job for this repo to fail.
 .npmrc
+
+# airflow
+airflow/logs
+__pycache__
