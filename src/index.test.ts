@@ -26,12 +26,6 @@ describe("Bichard Core processing logic", () => {
     await handler(inputMessage, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual([
       {
-        eventType: "Started Phase 1 Processing",
-        eventSource: "Core Audit Logger",
-        category: "information",
-        timestamp: mockedDate
-      },
-      {
         attributes: {
           ASN: "1101ZD0100000448754K",
           "Court Hearing Location": "B01EF01",
@@ -46,10 +40,11 @@ describe("Bichard Core processing logic", () => {
           "Offence 2 Details": "SX03001||002||3052",
           "Offence 3 Details": "RT88191||003||1015"
         },
-        eventType: "Input message received",
+        eventType: "Hearing outcome details",
+        eventCode: "hearing-outcome.details",
         eventSource: "CoreHandler",
         category: "information",
-        timestamp: mockedDate
+        timestamp: mockedDate.toISOString()
       },
       {
         attributes: {
@@ -57,15 +52,10 @@ describe("Bichard Core processing logic", () => {
           "PNC Response Time": 0
         },
         eventType: "PNC Response received",
+        eventCode: "pnc.response-received",
         eventSource: "EnrichWithPncQuery",
         category: "information",
-        timestamp: mockedDate
-      },
-      {
-        eventType: "Finished Phase 1 Processing",
-        eventSource: "Core Audit Logger",
-        category: "information",
-        timestamp: mockedDate
+        timestamp: mockedDate.toISOString()
       }
     ])
   })
@@ -75,30 +65,19 @@ describe("Bichard Core processing logic", () => {
     await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual([
       {
-        eventType: "Started Phase 1 Processing",
-        eventSource: "Core Audit Logger",
-        category: "information",
-        timestamp: mockedDate
-      },
-      {
         attributes: {
           ASN: "1101ZD0100000448754K"
         },
         eventType: "Hearing Outcome ignored as it contains no offences",
+        eventCode: "hearing-outcome.ignored.no-offences",
         eventSource: "CoreHandler",
         category: "information",
-        timestamp: mockedDate
-      },
-      {
-        eventType: "Finished Phase 1 Processing",
-        eventSource: "Core Audit Logger",
-        category: "information",
-        timestamp: mockedDate
+        timestamp: mockedDate.toISOString()
       }
     ])
   })
 
-  it("should log hearing outcome passed to error list", async () => {
+  it("should log exceptions generated", async () => {
     const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-003.xml").toString()
     await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual(
@@ -110,10 +89,11 @@ describe("Bichard Core processing logic", () => {
             "Exception Type": "HO100304",
             "Number Of Errors": "1"
           },
-          eventType: "Hearing Outcome passed to Error List",
+          eventType: "Exceptions generated",
+          eventCode: "exceptions.generated",
           eventSource: "CoreHandler",
           category: "information",
-          timestamp: mockedDate
+          timestamp: mockedDate.toISOString()
         })
       ])
     )
@@ -123,13 +103,13 @@ describe("Bichard Core processing logic", () => {
     const invalidInputMessage = "invalid format"
     await handler(invalidInputMessage, mockPncGateway, auditLogger)
 
-    const receivedEvent = auditLogger.getEvents()[1]!
+    const receivedEvent = auditLogger.getEvents()[0]!
     expect(receivedEvent.attributes!["Exception Stack Trace"]).toBeDefined()
     expect(receivedEvent.attributes!["Exception Stack Trace"]).not.toBeNull()
     expect(receivedEvent.attributes!["Exception Message"]).toBe("Invalid incoming message format")
     expect(receivedEvent.category).toBe("error")
     expect(receivedEvent.eventSource).toBe("CoreHandler")
     expect(receivedEvent.eventType).toBe("Message Rejected by CoreHandler")
-    expect(receivedEvent.timestamp).toEqual(mockedDate)
+    expect(receivedEvent.timestamp).toEqual(mockedDate.toISOString())
   })
 })

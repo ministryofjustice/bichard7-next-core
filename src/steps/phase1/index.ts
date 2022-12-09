@@ -7,7 +7,7 @@ const main = async () => {
   const s3Path = "fake S3 Path"
   const result = await processPhase1(s3Path)
 
-  storeAuditLogEvents(result.auditLogEvents)
+  storeAuditLogEvents(result)
 
   if ("failure" in result) {
     console.error("Message rejected!")

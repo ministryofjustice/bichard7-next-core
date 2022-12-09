@@ -1,7 +1,7 @@
+import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { HearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type AuditLogEvent from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
-import getOffenceCode from "src/lib/offence/getOffenceCode"
 import getAuditLogEvent from "./getAuditLogEvent"
 
 const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
@@ -37,7 +37,13 @@ const getIncomingMessageLog = (
     ...getOffenceDetails(hearingOutcome.Case.HearingDefendant.Offence)
   }
 
-  return getAuditLogEvent("information", "Input message received", "CoreHandler", attributes)
+  return getAuditLogEvent(
+    "hearing-outcome.details",
+    "information",
+    "Hearing outcome details",
+    "CoreHandler",
+    attributes
+  )
 }
 
 export default getIncomingMessageLog

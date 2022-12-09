@@ -1,4 +1,3 @@
-jest.setTimeout(9999999)
 import "tests/helpers/setEnvironmentVariables"
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
@@ -152,7 +151,7 @@ describe("processPhase1", () => {
 
     expect(result).toHaveProperty("failure", true)
     expect(result).toHaveProperty("auditLogEvents")
-    expect(result.auditLogEvents).toHaveLength(3)
+    expect(result.auditLogEvents).toHaveLength(1)
   })
   it.each([
     "test-data/e2e-comparison/test-019.json",

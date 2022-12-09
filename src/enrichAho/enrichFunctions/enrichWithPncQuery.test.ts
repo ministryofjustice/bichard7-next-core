@@ -109,8 +109,9 @@ describe("enrichWithQuery()", () => {
     expect(auditLoggerSpy).toHaveBeenCalledWith({
       eventType: "PNC Response received",
       eventSource: "EnrichWithPncQuery",
+      eventCode: "pnc.response-received",
       category: "information",
-      timestamp: mockedDate,
+      timestamp: mockedDate.toISOString(),
       attributes: {
         "PNC Response Time": 0,
         "PNC Attempts Made": 1
@@ -129,9 +130,10 @@ describe("enrichWithQuery()", () => {
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
     expect(auditLoggerSpy).toHaveBeenCalledWith({
       eventType: "PNC Response not received",
+      eventCode: "pnc.response-not-received",
       eventSource: "EnrichWithPncQuery",
       category: "warning",
-      timestamp: mockedDate,
+      timestamp: mockedDate.toISOString(),
       attributes: {
         "PNC Response Time": 0,
         "PNC Attempts Made": 1
