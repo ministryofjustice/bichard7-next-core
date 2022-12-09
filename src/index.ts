@@ -13,6 +13,7 @@ import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
 import type Phase1Result from "./types/Phase1Result"
+import { Phase1ResultType } from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
 
 export default async (
@@ -39,6 +40,8 @@ export default async (
     const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
+      hearingOutcome.Ignored = true
+
       auditLogger.logEvent(
         getAuditLogEvent(
           "hearing-outcome.ignored.no-offences",
@@ -55,7 +58,8 @@ export default async (
         correlationId,
         triggers: [],
         hearingOutcome,
-        auditLogEvents: auditLogger.finish().getEvents()
+        auditLogEvents: auditLogger.finish().getEvents(),
+        resultType: Phase1ResultType.success
       }
     }
 
@@ -82,7 +86,8 @@ export default async (
       correlationId,
       triggers,
       hearingOutcome,
-      auditLogEvents: auditLogger.finish().getEvents()
+      auditLogEvents: auditLogger.finish().getEvents(),
+      resultType: Phase1ResultType.success
     }
   } catch (e) {
     const { message: errorMessage, stack } = e as Error
@@ -96,7 +101,7 @@ export default async (
 
     return {
       auditLogEvents: auditLogger.finish().getEvents(),
-      failure: true
+      resultType: Phase1ResultType.failure
     }
   }
 }

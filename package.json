@@ -28,7 +28,8 @@
     "prepare": "husky install",
     "update-deps": "ncu -u !chalk && npm install",
     "postinstall": "./scripts/install-standing-data.sh",
-    "pg": "docker-compose -f environment/docker-compose.yml up -d pg"
+    "pg": "docker-compose -f environment/docker-compose.yml up -d pg",
+    "mq": "docker-compose -f environment/docker-compose.yml up -d mq"
   },
   "repository": {
     "type": "git",

@@ -14,6 +14,7 @@ import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import { Phase1ResultType } from "src/types/Phase1Result"
 import generateMockPncQueryResultFromAho from "tests/helpers/generateMockPncQueryResultFromAho"
 import MockS3 from "tests/helpers/MockS3"
 import processTestFile from "tests/helpers/processTestFile"
@@ -149,7 +150,7 @@ describe("processPhase1", () => {
 
     const result = await processPhase1(s3Path)
 
-    expect(result).toHaveProperty("failure", true)
+    expect(result.resultType).toEqual(Phase1ResultType.failure)
     expect(result).toHaveProperty("auditLogEvents")
     expect(result.auditLogEvents).toHaveLength(1)
   })
@@ -184,7 +185,7 @@ describe("processPhase1", () => {
       }
 
       const result = (await processPhase1(s3Path)) as Phase1SuccessResult
-      expect(result).not.toHaveProperty("failure")
+      expect(result.resultType).toEqual(Phase1ResultType.success)
       expect(result.triggers).toStrictEqual(comparison.triggers)
 
       const resultXml = convertAhoToXml(result.hearingOutcome)

@@ -6,6 +6,7 @@ import CoreHandler from "../src/index"
 import logger from "../src/lib/logging"
 import type Exception from "../src/types/Exception"
 import type Phase1Result from "../src/types/Phase1Result"
+import { Phase1ResultType } from "../src/types/Phase1Result"
 import type { Trigger } from "../src/types/Trigger"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
@@ -105,7 +106,7 @@ const processMessage = async (message: string): Promise<void> => {
   }
 
   const coreResult = await processResultCore(bichardResult.incomingMessage)
-  if (!coreResult || "failure" in coreResult) {
+  if (coreResult?.resultType !== Phase1ResultType.success) {
     return
   }
 
