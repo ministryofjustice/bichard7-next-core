@@ -36,15 +36,23 @@ export default async (
     if (hearingOutcome instanceof Error) {
       throw hearingOutcome
     }
+    const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
       auditLogger.logEvent(
-        getAuditLogEvent("information", "Hearing Outcome ignored as it contains no offences", "CoreHandler", {
-          ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-        })
+        getAuditLogEvent(
+          "hearing-outcome.ignored.no-offences",
+          "information",
+          "Hearing Outcome ignored as it contains no offences",
+          "CoreHandler",
+          {
+            ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+          }
+        )
       )
 
       return {
+        correlationId,
         triggers: [],
         hearingOutcome,
         auditLogEvents: auditLogger.finish().getEvents()
@@ -71,6 +79,7 @@ export default async (
     }
 
     return {
+      correlationId,
       triggers,
       hearingOutcome,
       auditLogEvents: auditLogger.finish().getEvents()
@@ -79,7 +88,7 @@ export default async (
     const { message: errorMessage, stack } = e as Error
 
     auditLogger.logEvent(
-      getAuditLogEvent("error", "Message Rejected by CoreHandler", "CoreHandler", {
+      getAuditLogEvent("message-rejected", "error", "Message Rejected by CoreHandler", "CoreHandler", {
         "Exception Message": errorMessage,
         "Exception Stack Trace": stack
       })

@@ -10,6 +10,14 @@ import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import PncGateway from "src/lib/PncGateway"
 import type Phase1Result from "src/types/Phase1Result"
 
+const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
+  const matchResult = ahoXml.match(/<msg:MessageIdentifier>([^<]*)<\/msg:MessageIdentifier>/)
+  if (matchResult) {
+    return matchResult[1]
+  }
+  return "Correlation ID Not Found"
+}
+
 const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
   const s3Config = createS3Config()
   const bucket = process.env.PHASE_1_BUCKET_NAME
@@ -28,6 +36,7 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
     throw message
   }
 
+  const correlationId = extractCorrelationIdFromAhoXml(message)
   const pncGateway = new PncGateway(pncApiConfig)
   const auditLogger = new CoreAuditLogger()
 
@@ -37,13 +46,14 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
     result = await phase1(message, pncGateway, auditLogger)
   } catch (err) {
     return {
+      correlationId,
       auditLogEvents: [],
       failure: true
     }
   }
 
   if ("failure" in result) {
-    return result
+    return { ...result, correlationId }
   }
 
   if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
@@ -51,6 +61,7 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
     const dbResult = await insertErrorListRecord(db, result)
     if (isError(dbResult)) {
       return {
+        correlationId,
         auditLogEvents: [],
         failure: true
       }

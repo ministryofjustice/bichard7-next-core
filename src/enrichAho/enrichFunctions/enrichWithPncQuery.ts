@@ -53,13 +53,25 @@ export default async (
 
   if (pncResult instanceof Error) {
     auditLogger.logEvent(
-      getAuditLogEvent("warning", "PNC Response not received", "EnrichWithPncQuery", auditLogAttributes)
+      getAuditLogEvent(
+        "pnc.response-not-received",
+        "warning",
+        "PNC Response not received",
+        "EnrichWithPncQuery",
+        auditLogAttributes
+      )
     )
 
     annotatedHearingOutcome.PncErrorMessage = pncResult.message
   } else {
     auditLogger.logEvent(
-      getAuditLogEvent("information", "PNC Response received", "EnrichWithPncQuery", auditLogAttributes)
+      getAuditLogEvent(
+        "pnc.response-received",
+        "information",
+        "PNC Response received",
+        "EnrichWithPncQuery",
+        auditLogAttributes
+      )
     )
 
     annotatedHearingOutcome.PncQuery = pncResult

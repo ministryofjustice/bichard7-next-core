@@ -3,8 +3,9 @@ import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
   const testEvent = {
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     eventType: "Test Event Type",
+    eventCode: "dummy.code",
     eventSourceArn: "Dummy source arn",
     eventSourceQueueName: "DUMMY_QUEUE",
     eventSource: "Dummy Event Source",
@@ -27,9 +28,7 @@ describe("CoreAuditLogger", () => {
     auditLogger.start("Test 2").finish()
 
     const events = auditLogger.getEvents()
-    expect(events).toHaveLength(2)
-    expect(events[0].eventType).toBe("Started Test 2")
-    expect(events[1].eventType).toBe("Finished Test 2")
+    expect(events).toHaveLength(0)
   })
 
   it("should log the finish event", () => {
@@ -47,11 +46,9 @@ describe("CoreAuditLogger", () => {
     auditLogger.finish()
 
     const events = auditLogger.getEvents()
-    expect(events).toHaveLength(4)
-    expect(events[0].eventType).toBe("Started Test 3")
-    expect(events[1].eventType).toBe("Event 1")
-    expect(events[2].eventType).toBe("Event 2")
-    expect(events[3].eventType).toBe("Finished Test 3")
+    expect(events).toHaveLength(2)
+    expect(events[0].eventType).toBe("Event 1")
+    expect(events[1].eventType).toBe("Event 2")
   })
 
   it("should not be able to log if logger is not started", () => {

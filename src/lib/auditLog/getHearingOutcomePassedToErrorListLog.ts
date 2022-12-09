@@ -17,7 +17,7 @@ const getHearingOutcomePassedToErrorListLog = (hearingOutcome: AnnotatedHearingO
     ...errorDetails
   }
 
-  return getAuditLogEvent("information", "Hearing Outcome passed to Error List", "CoreHandler", attributes)
+  return getAuditLogEvent("exceptions.generated", "information", "Exceptions generated", "CoreHandler", attributes)
 }
 
 export default getHearingOutcomePassedToErrorListLog

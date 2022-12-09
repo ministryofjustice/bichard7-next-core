@@ -126,7 +126,7 @@ const processMessageBichard = async (
 
   const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { triggers, hearingOutcome, auditLogEvents: [] }
+  return { correlationId, triggers, hearingOutcome, auditLogEvents: [] }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<Phase1Result> => {
