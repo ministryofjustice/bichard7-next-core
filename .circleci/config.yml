@@ -54,6 +54,9 @@ jobs:
           name: Run PostgreSQL
           command: npm run pg
       - run:
+          name: Run ActiveMQ
+          command: npm run mq
+      - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
       - run:

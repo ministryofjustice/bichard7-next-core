@@ -4,6 +4,7 @@ import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import { Phase1ResultType } from "src/types/Phase1Result"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
@@ -76,7 +77,7 @@ const compareMessage = async (
 
   try {
     const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
-    if ("failure" in coreResult) {
+    if (coreResult.resultType !== Phase1ResultType.success) {
       throw Error("Failed to process")
     }
 

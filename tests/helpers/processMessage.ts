@@ -5,6 +5,7 @@ import CoreHandler from "../../src"
 import extractExceptionsFromAho from "../../src/parse/parseAhoXml/extractExceptionsFromAho"
 import type { AnnotatedHearingOutcome } from "../../src/types/AnnotatedHearingOutcome"
 import type Phase1Result from "../../src/types/Phase1Result"
+import { Phase1ResultType } from "../../src/types/Phase1Result"
 import type { ResultedCaseMessageParsedXml } from "../../src/types/SpiResult"
 import ActiveMqHelper from "./ActiveMqHelper"
 import defaults from "./defaults"
@@ -126,7 +127,7 @@ const processMessageBichard = async (
 
   const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { correlationId, triggers, hearingOutcome, auditLogEvents: [] }
+  return { correlationId, triggers, hearingOutcome, auditLogEvents: [], resultType: Phase1ResultType.success }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<Phase1Result> => {

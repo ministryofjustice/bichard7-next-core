@@ -1,5 +1,13 @@
 version: "3.2"
 services:
+  mq:
+    image: rmohr/activemq
+    ports:
+      - 59161:8161
+      - 62613:61613
+    volumes:
+      - ./activemq.xml:/opt/activemq/conf/activemq.xml
+
   pg:
     build:
       context: .

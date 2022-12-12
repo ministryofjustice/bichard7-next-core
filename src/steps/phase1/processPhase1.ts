@@ -9,6 +9,7 @@ import getFileFromS3 from "src/lib/getFileFromS3"
 import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import PncGateway from "src/lib/PncGateway"
 import type Phase1Result from "src/types/Phase1Result"
+import { Phase1ResultType } from "src/types/Phase1Result"
 
 const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
   const matchResult = ahoXml.match(/<msg:MessageIdentifier>([^<]*)<\/msg:MessageIdentifier>/)
@@ -48,11 +49,11 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
     return {
       correlationId,
       auditLogEvents: [],
-      failure: true
+      resultType: Phase1ResultType.failure
     }
   }
 
-  if ("failure" in result) {
+  if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
     return { ...result, correlationId }
   }
 
@@ -63,7 +64,7 @@ const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
       return {
         correlationId,
         auditLogEvents: [],
-        failure: true
+        resultType: Phase1ResultType.failure
       }
     }
   }

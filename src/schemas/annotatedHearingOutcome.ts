@@ -344,5 +344,6 @@ export const annotatedHearingOutcomeSchema = z.object({
   }),
   PncQuery: pncQueryResultSchema.optional(),
   PncQueryDate: z.date().optional(),
-  PncErrorMessage: z.string().optional()
+  PncErrorMessage: z.string().optional(),
+  Ignored: z.boolean().optional()
 })
