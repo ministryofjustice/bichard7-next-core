@@ -1,3 +1,4 @@
+import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
@@ -48,7 +49,12 @@ export default async (
 
   const auditLogAttributes = {
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
-    "PNC Attempts Made": 1 // Retry is not implemented
+    "PNC Attempts Made": 1, // Retry is not implemented
+    "PNC Request Type": "enquiry",
+    "PNC Request Message":
+      annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
+    "PNC Response Message": isError(pncResult) ? pncResult.message : pncResult,
+    sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
   if (pncResult instanceof Error) {

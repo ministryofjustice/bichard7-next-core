@@ -1,6 +1,7 @@
 import postgres from "postgres"
 import { isError } from "src/comparison/types"
 import phase1 from "src/index"
+import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
@@ -11,6 +12,14 @@ import PncGateway from "src/lib/PncGateway"
 import type Phase1Result from "src/types/Phase1Result"
 import { Phase1ResultType } from "src/types/Phase1Result"
 
+const bucket = process.env.PHASE_1_BUCKET_NAME
+if (!bucket) {
+  throw Error("PHASE_1_BUCKET_NAME environment variable is required")
+}
+const s3Config = createS3Config()
+const pncApiConfig = createPncApiConfig()
+const dbConfig = createDbConfig()
+
 const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
   const matchResult = ahoXml.match(/<msg:MessageIdentifier>([^<]*)<\/msg:MessageIdentifier>/)
   if (matchResult) {
@@ -20,38 +29,22 @@ const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
 }
 
 const processPhase1 = async (s3Path: string): Promise<Phase1Result> => {
-  const s3Config = createS3Config()
-  const bucket = process.env.PHASE_1_BUCKET_NAME
-
-  const pncApiConfig = createPncApiConfig()
-
-  const dbConfig = createDbConfig()
   const db = postgres(dbConfig)
-
-  if (!bucket) {
-    throw Error("PHASE_1_BUCKET_NAME not set!")
-  }
+  const pncGateway = new PncGateway(pncApiConfig)
+  const auditLogger = new CoreAuditLogger()
 
   const message = await getFileFromS3(s3Path, bucket, s3Config)
   if (isError(message)) {
     throw message
   }
 
+  auditLogger.logEvent(
+    getAuditLogEvent("hearing-outcome.received", "debug", "Hearing outcome received", "CoreHandler", {})
+  )
+
   const correlationId = extractCorrelationIdFromAhoXml(message)
-  const pncGateway = new PncGateway(pncApiConfig)
-  const auditLogger = new CoreAuditLogger()
 
-  let result: Phase1Result
-
-  try {
-    result = await phase1(message, pncGateway, auditLogger)
-  } catch (err) {
-    return {
-      correlationId,
-      auditLogEvents: [],
-      resultType: Phase1ResultType.failure
-    }
-  }
+  const result = await phase1(message, pncGateway, auditLogger)
 
   if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
     return { ...result, correlationId }

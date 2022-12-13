@@ -77,7 +77,7 @@ const compareMessage = async (
 
   try {
     const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
-    if (coreResult.resultType !== Phase1ResultType.success) {
+    if (coreResult.resultType === Phase1ResultType.failure) {
       throw Error("Failed to process")
     }
 

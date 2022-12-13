@@ -20,7 +20,7 @@ const getIncomingMessageLog = (
   messageType: string
 ): AuditLogEvent => {
   const attributes = {
-    "Date Of Hearing": hearingOutcome.Hearing.DateOfHearing,
+    "Date Of Hearing": hearingOutcome.Hearing.DateOfHearing.toISOString().split("T")[0],
     ...(!!hearingOutcome.Hearing.TimeOfHearing && {
       "Time Of Hearing": hearingOutcome.Hearing.TimeOfHearing
     }),

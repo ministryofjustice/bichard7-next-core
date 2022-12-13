@@ -8,10 +8,11 @@ import CoreAuditLogger from "./lib/CoreAuditLogger"
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("test-data/input-message-001.xml").toString()
   const mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
-  const auditLogger = new CoreAuditLogger()
+  let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
 
   beforeEach(() => {
+    auditLogger = new CoreAuditLogger()
     MockDate.set(mockedDate)
   })
 
@@ -24,40 +25,32 @@ describe("Bichard Core processing logic", () => {
 
   it("should create audit logs when a message received", async () => {
     await handler(inputMessage, mockPncGateway, auditLogger)
-    expect(auditLogger.getEvents()).toEqual([
-      {
-        attributes: {
-          ASN: "1101ZD0100000448754K",
-          "Court Hearing Location": "B01EF01",
-          "Date Of Hearing": new Date("2011-09-26T00:00:00.000Z"),
-          "Message Size": 7082,
-          "Message Type": "SPIResults",
-          "Number Of Offences": 3,
-          "PSA Code": 2576,
-          PTIURN: "01ZD0303208",
-          "Time Of Hearing": "10:00",
-          "Offence 1 Details": "SX03001A||001||3078",
-          "Offence 2 Details": "SX03001||002||3052",
-          "Offence 3 Details": "RT88191||003||1015"
-        },
-        eventType: "Hearing outcome details",
-        eventCode: "hearing-outcome.details",
-        eventSource: "CoreHandler",
-        category: "information",
-        timestamp: mockedDate.toISOString()
-      },
-      {
-        attributes: {
-          "PNC Attempts Made": 1,
-          "PNC Response Time": 0
-        },
-        eventType: "PNC Response received",
-        eventCode: "pnc.response-received",
-        eventSource: "EnrichWithPncQuery",
-        category: "information",
-        timestamp: mockedDate.toISOString()
-      }
-    ])
+    expect(auditLogger.getEvents()).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attributes: {
+            ASN: "1101ZD0100000448754K",
+            "Court Hearing Location": "B01EF01",
+            "Date Of Hearing": "2011-09-26",
+            "Message Size": 7082,
+            "Message Type": "SPIResults",
+            "Number Of Offences": 3,
+            "PSA Code": 2576,
+            PTIURN: "01ZD0303208",
+            "Time Of Hearing": "10:00",
+            "Offence 1 Details": "SX03001A||001||3078",
+            "Offence 2 Details": "SX03001||002||3052",
+            "Offence 3 Details": "RT88191||003||1015",
+            "Force Owner": "010000"
+          },
+          eventType: "Hearing outcome details",
+          eventCode: "hearing-outcome.details",
+          eventSource: "CoreHandler",
+          category: "information",
+          timestamp: mockedDate.toISOString()
+        })
+      ])
+    )
   })
 
   it("should log when an input message is ignored", async () => {
@@ -84,10 +77,9 @@ describe("Bichard Core processing logic", () => {
       expect.arrayContaining([
         expect.objectContaining({
           attributes: {
-            ASN: "1101ZD0100000410769X",
             "Error 1 Details": "HO100304||ArrestSummonsNumber",
             "Exception Type": "HO100304",
-            "Number Of Errors": "1"
+            "Number Of Errors": 1
           },
           eventType: "Exceptions generated",
           eventCode: "exceptions.generated",
