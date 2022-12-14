@@ -20,7 +20,6 @@ describe("enrichWithQuery()", () => {
   beforeEach(() => {
     MockDate.set(mockedDate)
     auditLogger = new CoreAuditLogger()
-    auditLogger.start("Test")
 
     const options = {
       offences: [
@@ -113,8 +112,12 @@ describe("enrichWithQuery()", () => {
       category: "information",
       timestamp: mockedDate.toISOString(),
       attributes: {
+        "PNC Request Message": "1101ZD0100000448754K",
         "PNC Response Time": 0,
-        "PNC Attempts Made": 1
+        "PNC Request Type": "enquiry",
+        "PNC Attempts Made": 1,
+        "PNC Response Message": await pncGateway.query("1101ZD0100000448754K"),
+        sensitiveAttributes: "PNC Request Message,PNC Response Message"
       }
     })
   })
@@ -136,7 +139,11 @@ describe("enrichWithQuery()", () => {
       timestamp: mockedDate.toISOString(),
       attributes: {
         "PNC Response Time": 0,
-        "PNC Attempts Made": 1
+        "PNC Attempts Made": 1,
+        "PNC Request Message": "1101ZD0100000448754K",
+        "PNC Request Type": "enquiry",
+        "PNC Response Message": "PNC error",
+        sensitiveAttributes: "PNC Request Message,PNC Response Message"
       }
     })
   })

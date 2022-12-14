@@ -4,6 +4,7 @@ import type { Trigger } from "./Trigger"
 
 export enum Phase1ResultType {
   success,
+  exceptions,
   failure,
   ignored
 }
@@ -13,7 +14,7 @@ export type Phase1SuccessResult = {
   hearingOutcome: AnnotatedHearingOutcome
   auditLogEvents: AuditLogEvent[]
   triggers: Trigger[]
-  resultType: Phase1ResultType.success
+  resultType: Phase1ResultType.success | Phase1ResultType.exceptions | Phase1ResultType.ignored
 }
 
 export type Phase1FailureResult = {
@@ -22,12 +23,6 @@ export type Phase1FailureResult = {
   resultType: Phase1ResultType.failure
 }
 
-export type Phase1IgnoredResult = {
-  correlationId: string
-  auditLogEvents: AuditLogEvent[]
-  resultType: Phase1ResultType.ignored
-}
-
-type Phase1Result = Phase1SuccessResult | Phase1FailureResult | Phase1IgnoredResult
+type Phase1Result = Phase1SuccessResult | Phase1FailureResult
 
 export default Phase1Result

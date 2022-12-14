@@ -3,9 +3,11 @@ import enrichAho from "./enrichAho"
 import addExceptionsToAho from "./exceptions/addExceptionsToAho"
 import generateExceptions from "./exceptions/generate"
 import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
-import getHearingOutcomePassedToErrorListLog from "./lib/auditLog/getHearingOutcomePassedToErrorListLog"
+import getExceptionsGeneratedLog from "./lib/auditLog/getExceptionsGeneratedLog"
 import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
+import getTriggersGeneratedLog from "./lib/auditLog/getTriggersGeneratedLog"
 import getMessageType from "./lib/getMessageType"
+import isReopenedOrStatutoryDeclarationCase from "./lib/isReopenedOrStatutoryDeclarationCase"
 import { parseAhoXml } from "./parse/parseAhoXml"
 import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
@@ -23,7 +25,6 @@ export default async (
 ): Promise<Phase1Result> => {
   try {
     let hearingOutcome: AnnotatedHearingOutcome | Error
-    auditLogger.start("Phase 1 Processing")
     const messageType = getMessageType(message)
 
     if (messageType === "SPIResults") {
@@ -40,8 +41,6 @@ export default async (
     const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
-      hearingOutcome.Ignored = true
-
       auditLogger.logEvent(
         getAuditLogEvent(
           "hearing-outcome.ignored.no-offences",
@@ -56,18 +55,19 @@ export default async (
 
       return {
         correlationId,
-        triggers: [],
         hearingOutcome,
-        auditLogEvents: auditLogger.finish().getEvents(),
-        resultType: Phase1ResultType.success
+        triggers: [],
+        auditLogEvents: auditLogger.getEvents(),
+        resultType: Phase1ResultType.ignored
       }
     }
+
+    hearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
 
     auditLogger.logEvent(
       getIncomingMessageLog(hearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
     )
 
-    hearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
     if (isError(hearingOutcome)) {
       throw hearingOutcome
     }
@@ -78,16 +78,35 @@ export default async (
       addExceptionsToAho(hearingOutcome as AnnotatedHearingOutcome, code, path)
     })
 
-    if (hearingOutcome.Exceptions.length > 0) {
-      auditLogger.logEvent(getHearingOutcomePassedToErrorListLog(hearingOutcome))
+    const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
+    let resultType: Phase1ResultType
+    if (isIgnored) {
+      auditLogger.logEvent(
+        getAuditLogEvent(
+          "hearing-outcome.ignored.reopened",
+          "information",
+          "Re-opened / Statutory Declaration case ignored",
+          "CoreHandler",
+          {}
+        )
+      )
+      resultType = Phase1ResultType.ignored
+    } else {
+      if (hearingOutcome.Exceptions.length > 0) {
+        auditLogger.logEvent(getExceptionsGeneratedLog(hearingOutcome))
+      }
+      if (triggers.length > 0) {
+        auditLogger.logEvent(getTriggersGeneratedLog(triggers, hearingOutcome.Exceptions.length > 0))
+      }
+      resultType = hearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
     }
 
     return {
       correlationId,
       triggers,
       hearingOutcome,
-      auditLogEvents: auditLogger.finish().getEvents(),
-      resultType: Phase1ResultType.success
+      auditLogEvents: auditLogger.getEvents(),
+      resultType
     }
   } catch (e) {
     const { message: errorMessage, stack } = e as Error
@@ -100,7 +119,7 @@ export default async (
     )
 
     return {
-      auditLogEvents: auditLogger.finish().getEvents(),
+      auditLogEvents: auditLogger.getEvents(),
       resultType: Phase1ResultType.failure
     }
   }

@@ -1,4 +1,4 @@
-const queueName = (process.env.MQ_QUEUE_NAME = "TEST_PHASE_2_QUEUE")
+const queueName = (process.env.PHASE_2_QUEUE_NAME = "TEST_PHASE_2_QUEUE")
 process.env.MQ_URL = "failover:(stomp://localhost:62613)"
 process.env.MQ_USER = "admin"
 process.env.MQ_PASSWORD = "admin"
@@ -35,7 +35,7 @@ describe("sendToPhase2", () => {
       resultType: Phase1ResultType.success
     }
     const result = await sendToPhase2(phase1Result)
-    expect(result).toBeUndefined()
+    expect(result).toBe(phase1Result)
 
     const message = await testMqGateway.getMessage(queueName)
     expect(message).toEqual(convertAhoToXml(phase1Result.hearingOutcome))
