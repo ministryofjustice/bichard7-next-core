@@ -15,7 +15,7 @@ def compare_single():
     # """
     AwsLambdaInvokeFunctionOperator(
         task_id='invoke_lambda',
-        function_name = COMPARE_SINGLE_LAMBDA_NAME,
+        function_name=COMPARE_SINGLE_LAMBDA_NAME,
         payload=json.dumps({
             "detail": {
                 "object": {
