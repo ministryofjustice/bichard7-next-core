@@ -12,7 +12,8 @@
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",
-    "test:compare": "jest --testPathPattern=comparison.test",
+    "test:compare": "jest tests/comparison.test.ts",
+    "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test",
     "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
     "clean": "rimraf build",
@@ -30,7 +31,7 @@
     "postinstall": "./scripts/install-standing-data.sh",
     "pg": "docker-compose -f environment/docker-compose.yml up -d pg",
     "mq": "docker-compose -f environment/docker-compose.yml up -d mq",
-    "phase1": "AUDIT_LOG_API_URL=${AUDIT_LOG_API_URL:-http://localhost:3010}  AUDIT_LOG_API_KEY=${AUDIT_LOG_API_KEY:-xxx} AWS_ACCESS_KEY_ID=S3RVER AWS_SECRET_ACCESS_KEY=S3RVER S3_ENDPOINT=http://localhost:4570 MQ_USER=${MQ_USER:-admin} MQ_PASSWORD=${MQ_PASSWORD:-admin} MQ_URL=${MQ_URL:-stomp://localhost:61613} PHASE_1_BUCKET_NAME=phase1 ts-node -T scripts/phase1.ts"
+    "phase1": "DB_PORT=${DB_PORT:-5432} AUDIT_LOG_API_URL=${AUDIT_LOG_API_URL:-http://localhost:3010}  AUDIT_LOG_API_KEY=${AUDIT_LOG_API_KEY:-xxx} AWS_ACCESS_KEY_ID=S3RVER AWS_SECRET_ACCESS_KEY=S3RVER S3_ENDPOINT=http://localhost:4570 MQ_USER=${MQ_USER:-admin} MQ_PASSWORD=${MQ_PASSWORD:-admin} MQ_URL=${MQ_URL:-stomp://localhost:61613} PHASE_1_BUCKET_NAME=phase1 ts-node -T scripts/phase1.ts"
   },
   "repository": {
     "type": "git",
@@ -120,7 +121,8 @@
     "bichard7-next-data-2.0.30": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.30",
     "bichard7-next-data-2.0.31": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.31",
     "bichard7-next-data-2.0.32": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.32",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.32",
+    "bichard7-next-data-2.0.33": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.33",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.33",
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
     "fast-xml-parser": "^4.0.12",
