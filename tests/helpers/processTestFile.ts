@@ -19,7 +19,13 @@ type ComparisonFile = {
 }
 
 export const processTestString = (contents: string, file?: string): ImportedComparison => {
-  const parsed = JSON.parse(contents, dateReviver) as ComparisonFile
+  let parsed: ComparisonFile
+  try {
+    parsed = JSON.parse(contents, dateReviver) as ComparisonFile
+  } catch (e) {
+    console.error(`Error parsing file: ${file}`)
+    throw e
+  }
   return {
     ...parsed,
     file,

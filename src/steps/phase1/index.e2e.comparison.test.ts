@@ -1,4 +1,4 @@
-jest.setTimeout(99999999)
+/* eslint-disable jest/no-conditional-expect */
 import "tests/helpers/setEnvironmentVariables"
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
@@ -13,6 +13,7 @@ import type { ImportedComparison } from "src/comparison/types/ImportedComparison
 import createDbConfig from "src/lib/createDbConfig"
 import createS3Config from "src/lib/createS3Config"
 import { createMqConfig, TestMqGateway } from "src/lib/MqGateway"
+import { extractExceptionsFromAho } from "src/parse/parseAhoXml"
 import type AuditLogEvent from "src/types/AuditLogEvent"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
@@ -208,6 +209,63 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
 }
 
+const filePath = "test-data/e2e-comparison"
+const ignored = [
+  "010",
+  "011",
+  "018",
+  "034",
+  "035",
+  "075",
+  "083",
+  "121",
+  "122",
+  "142",
+  "190",
+  "232",
+  "269",
+  "271",
+  "281",
+  "282",
+  "283",
+  "284",
+  "285",
+  "286",
+  "290",
+  "291",
+  "312",
+  "313",
+  "400",
+  "402",
+  "403",
+  "404",
+  "405",
+  "406",
+  "407",
+  "408",
+  "409"
+]
+
+let tests = fs
+  .readdirSync(filePath)
+  .map((name) => `${filePath}/${name}`)
+  .map(processTestFile)
+
+const filter = process.env.FILTER_TEST
+tests = tests.filter((t) => t.dbContent !== undefined && t.auditLogEvents !== undefined)
+const totalChunks = process.env.CIRCLE_NODE_TOTAL ? Number(process.env.CIRCLE_NODE_TOTAL) : null
+const currentChunk = process.env.CIRCLE_NODE_INDEX ? Number(process.env.CIRCLE_NODE_INDEX) : null
+
+if (filter) {
+  tests = tests.filter((t) => t.file && t.file.includes(`test-${filter}`))
+} else {
+  tests = tests.filter((t) => !ignored.some((i) => t.file && t.file.includes(`test-${i}`)))
+}
+
+if (totalChunks !== null) {
+  tests = tests.filter((_, i) => i % totalChunks === currentChunk)
+}
+
 describe("phase1", () => {
   let s3Server: MockS3
   let client: S3Client
@@ -238,221 +296,61 @@ describe("phase1", () => {
   })
 
   beforeEach(async () => {
-    await testMqGateway.getMessages(phase2Queue)
+    await testMqGateway.getMessages(phase2Queue, 1)
     await sql`DELETE FROM br7own.error_list`
     mockAuditLog = auditLogApi.post("/messages/:id/events").mockImplementationOnce((ctx) => (ctx.status = 204))
   })
 
-  it.each([
-    "test-data/e2e-comparison/test-019.json",
-    "test-data/e2e-comparison/test-036.json",
-    "test-data/e2e-comparison/test-054.json"
-  ])(
-    "should correctly process an input message that doesn't raise any triggers or exceptions for %s",
-    async (file: string) => {
-      const comparisonFile = fs.readFileSync(file)
-      const comparison = JSON.parse(comparisonFile.toString()) as ImportedComparison
-      const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-      const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
+  it.each(tests)("should correctly process $file", async (comparison: ImportedComparison) => {
+    const asn = extractAsnFromAhoXml(comparison.incomingMessage)
+    const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
+    const hasExceptions = extractExceptionsFromAho(comparison.annotatedHearingOutcome).length > 0
+    const isIgnored = comparison.auditLogEvents?.some((event) => event.match(/hearing-outcome\.ignored/))
+
+    const s3Path = "comparison.xml"
+    const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
+    await client.send(command)
+
+    const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
+    if (mockPncResult) {
+      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
+        ctx.status = 200
+        ctx.body = mockPncResult
+      })
+    } else {
+      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
+        ctx.status = 404
+        ctx.body = "{}"
+      })
+    }
+
+    let thrown = false
+    try {
       MockDate.set(pncQueryDate)
-
-      const s3Path = "no-triggers-exceptions.xml"
-      const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
-      await client.send(command)
-
-      const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
-      if (mockPncResult) {
-        pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-          ctx.status = 200
-          ctx.body = mockPncResult
-        })
-      } else {
-        pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-          ctx.status = 404
-          ctx.body = "{}"
-        })
-      }
-
       await phase1(s3Path)
+      MockDate.reset()
+    } catch (e) {
+      thrown = true
+    }
+    expect(thrown).toBeFalsy()
 
-      // Check the database
-      await checkDatabaseMatches(comparison.dbContent)
+    // Check the database
+    await checkDatabaseMatches(comparison.dbContent)
 
-      // Check the audit logs
-      const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
-      const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
-      expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
+    // Check the audit logs
+    const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
+    const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
+    expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
 
-      // Check the Phase 2 message queue
-      const message = await testMqGateway.getMessage(phase2Queue)
+    // Check the Phase 2 message queue
+    const message = await testMqGateway.getMessage(phase2Queue)
+    const shouldGoToMessageQueue = !hasExceptions && !isIgnored
+
+    if (shouldGoToMessageQueue) {
+      expect(message).not.toBeNull()
       expect(message).toEqualXML(comparison.annotatedHearingOutcome)
-    }
-  )
-
-  it.each([
-    "test-data/e2e-comparison/test-001.json",
-    "test-data/e2e-comparison/test-032.json",
-    "test-data/e2e-comparison/test-043.json"
-  ])("should correctly process an input message that only raises triggers for %s", async (file: string) => {
-    const comparison = processTestFile(file)
-    const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-    const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
-    MockDate.set(pncQueryDate)
-
-    const s3Path = "triggers-exceptions.xml"
-    const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
-    await client.send(command)
-
-    const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
-    if (mockPncResult) {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 200
-        ctx.body = mockPncResult
-      })
     } else {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 404
-        ctx.body = "{}"
-      })
-    }
-
-    await phase1(s3Path)
-
-    // Check the database
-    await checkDatabaseMatches(comparison.dbContent)
-
-    // Check the audit logs
-    const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
-    const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
-    expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
-
-    // Check the Phase 2 message queue
-    const message = await testMqGateway.getMessage(phase2Queue)
-    expect(message).toEqualXML(comparison.annotatedHearingOutcome)
-  })
-
-  it.each([
-    "test-data/e2e-comparison/test-021.json",
-    "test-data/e2e-comparison/test-089.json",
-    "test-data/e2e-comparison/test-127.json"
-  ])("should correctly process an input message that only raises exceptions for %s", async (file: string) => {
-    const comparison = processTestFile(file)
-    const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-    const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
-    MockDate.set(pncQueryDate)
-
-    const s3Path = "triggers-exceptions.xml"
-    const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
-    await client.send(command)
-
-    const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
-    if (mockPncResult) {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 200
-        ctx.body = mockPncResult
-      })
-    } else {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 404
-        ctx.body = "{}"
-      })
-    }
-
-    await phase1(s3Path)
-
-    // Check the database
-    await checkDatabaseMatches(comparison.dbContent)
-
-    // Check the audit logs
-    const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
-    const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
-    expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
-
-    // Check the Phase 2 message queue
-    const message = await testMqGateway.getMessage(phase2Queue)
-    expect(message).toBeNull()
-  })
-
-  it.each([
-    "test-data/e2e-comparison/test-013.json",
-    "test-data/e2e-comparison/test-081.json",
-    "test-data/e2e-comparison/test-120.json"
-  ])("should correctly process an input message that raises triggers and exceptions for %s", async (file: string) => {
-    const comparison = processTestFile(file)
-    const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-    const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
-    MockDate.set(pncQueryDate)
-
-    const s3Path = "triggers-exceptions.xml"
-    const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
-    await client.send(command)
-
-    const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
-    if (mockPncResult) {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 200
-        ctx.body = mockPncResult
-      })
-    } else {
-      pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-        ctx.status = 404
-        ctx.body = "{}"
-      })
-    }
-
-    await phase1(s3Path)
-
-    // Check the database
-    await checkDatabaseMatches(comparison.dbContent)
-
-    // Check the audit logs
-    const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
-    const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
-    expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
-
-    // Check the Phase 2 message queue
-    const message = await testMqGateway.getMessage(phase2Queue)
-    expect(message).toBeNull()
-  })
-
-  it.each(["test-data/e2e-comparison/test-146.json"])(
-    "should correctly process an input message that is ignored for %s",
-    async (file: string) => {
-      const comparison = processTestFile(file)
-      const asn = extractAsnFromAhoXml(comparison.incomingMessage)
-      const pncQueryDate = extractPncQueryDateFromAhoXml(comparison.annotatedHearingOutcome)
-      MockDate.set(pncQueryDate)
-
-      const s3Path = "ignored.xml"
-      const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: comparison.incomingMessage })
-      await client.send(command)
-
-      const mockPncResult = generateMockPncQueryResultFromAho(comparison.annotatedHearingOutcome)
-      if (mockPncResult) {
-        pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-          ctx.status = 200
-          ctx.body = mockPncResult
-        })
-      } else {
-        pncApi.get(`/${asn}`).mockImplementationOnce((ctx) => {
-          ctx.status = 404
-          ctx.body = "{}"
-        })
-      }
-
-      await phase1(s3Path)
-
-      // Check the database
-      await checkDatabaseMatches(comparison.dbContent)
-
-      // Check the audit logs
-      const generatedAuditLogs = mockAuditLog.mock.calls[0][0].request.body
-      const expectedAuditLogs = convertXmlAuditLogs(comparison.auditLogEvents!)
-      expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
-
-      // Check the Phase 2 message queue
-      const message = await testMqGateway.getMessage(phase2Queue)
       expect(message).toBeNull()
     }
-  )
+  })
 })

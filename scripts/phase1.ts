@@ -15,7 +15,12 @@ type NewRecordEvent = {
 }
 
 const handleRecord = async (record: Record) => {
-  await phase1(record.s3.object.key)
+  console.log(`Processing fils form S3: ${record.s3.object.key}`)
+  try {
+    await phase1(record.s3.object.key)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const main = async () => {

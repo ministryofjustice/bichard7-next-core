@@ -18,7 +18,7 @@ const readMessage = (message: Client.Message): Promise<string> => {
   })
 }
 
-const getMessage = (client: Client, queueName: string): Promise<string | null> =>
+const getMessage = (client: Client, queueName: string, timeoutMs: number): Promise<string | null> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line prefer-const
     let subscription: Subscription
@@ -46,11 +46,11 @@ const getMessage = (client: Client, queueName: string): Promise<string | null> =
     timeout = setTimeout(() => {
       subscription.unsubscribe()
       resolve(null)
-    }, 500)
+    }, timeoutMs)
   })
 
 export default class TestMqGateway extends MqGateway {
-  async getMessage(queueName: string): PromiseResult<string | null> {
+  async getMessage(queueName: string, timeout = 500): PromiseResult<string | null> {
     const client = await this.connectIfRequired()
 
     if (isError(client)) {
@@ -58,13 +58,13 @@ export default class TestMqGateway extends MqGateway {
     }
 
     try {
-      return await getMessage(client, queueName)
+      return await getMessage(client, queueName, timeout)
     } catch (error) {
       return <Error>error
     }
   }
 
-  async getMessages(queueName: string) {
+  async getMessages(queueName: string, timeout = 500) {
     const messages = []
     const client = await this.connectIfRequired()
     let waiting = true
@@ -74,7 +74,7 @@ export default class TestMqGateway extends MqGateway {
     }
 
     while (waiting) {
-      const message = await getMessage(client, queueName)
+      const message = await getMessage(client, queueName, timeout)
       if (message) {
         messages.push(message)
       } else {
