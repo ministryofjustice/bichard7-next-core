@@ -142,6 +142,9 @@ const convertXmlAuditLogs = (logs: string[]): AuditLogEvent[] => {
     const attributes = rawParsedObj.logEvent.nameValuePairs.nameValuePair.reduce(
       (acc: KeyValuePair<string, string>, nvp: { name: string; value: string }) => {
         acc[nvp.name] = nvp.value
+        if (nvp.name === "Force Owner") {
+          acc[nvp.name] = String(nvp.value).padStart(6, "0")
+        }
         return acc
       },
       {}
@@ -211,28 +214,12 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
 
 const filePath = "test-data/e2e-comparison"
 const ignored = [
-  "010",
-  "011",
-  "018",
   "034",
-  "035",
   "075",
   "083",
-  "121",
-  "122",
   "142",
   "190",
-  "232",
-  "269",
   "271",
-  "281",
-  "282",
-  "283",
-  "284",
-  "285",
-  "286",
-  "290",
-  "291",
   "312",
   "313",
   "400",
@@ -241,9 +228,7 @@ const ignored = [
   "404",
   "405",
   "406",
-  "407",
-  "408",
-  "409"
+  "408"
 ]
 
 let tests = fs
@@ -343,13 +328,14 @@ describe("phase1", () => {
     expect(normaliseAuditLogs(generatedAuditLogs)).toStrictEqual(normaliseAuditLogs(expectedAuditLogs))
 
     // Check the Phase 2 message queue
-    const message = await testMqGateway.getMessage(phase2Queue)
     const shouldGoToMessageQueue = !hasExceptions && !isIgnored
 
     if (shouldGoToMessageQueue) {
+      const message = await testMqGateway.getMessage(phase2Queue)
       expect(message).not.toBeNull()
       expect(message).toEqualXML(comparison.annotatedHearingOutcome)
     } else {
+      const message = await testMqGateway.getMessage(phase2Queue, 100)
       expect(message).toBeNull()
     }
   })
