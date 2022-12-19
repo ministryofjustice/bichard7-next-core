@@ -1,0 +1,31 @@
+[
+  {
+    "accessPolicy": {},
+    "name": "compare_batch",
+    "description": "Compares a batch of comparison S3 files against Core",
+    "version": 6,
+    "tasks": [
+      {
+        "name": "compare_batch",
+        "taskReferenceName": "compare_batch",
+        "inputParameters": {
+          "s3Paths": "${workflow.input.s3Paths}"
+        },
+        "type": "SIMPLE",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false
+      }
+    ],
+    "inputParameters": ["s3Paths"],
+    "outputParameters": {},
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "moj-bichard7@madetech.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {}
+  }
+]

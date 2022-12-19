@@ -1,0 +1,61 @@
+[
+  {
+    "accessPolicy": {},
+    "name": "rerun_all",
+    "description": "Compares a batch of comparison S3 files against Core",
+    "version": 16,
+    "tasks": [
+      {
+        "name": "Loop Task",
+        "taskReferenceName": "LoopTask",
+        "inputParameters": {
+          "startKey": "${workflow.input.startKey}"
+        },
+        "type": "DO_WHILE",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false,
+        "loopCondition": "$.rerun_all.nextKey !== null",
+        "loopOver": [
+          {
+            "name": "rerun_all",
+            "taskReferenceName": "rerun_all",
+            "inputParameters": {
+              "startKey": "${rerun_all.output.nextKey}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          },
+          {
+            "name": "start_compare_batch",
+            "taskReferenceName": "start_compare_batch",
+            "inputParameters": {
+              "startWorkflow": {
+                "name": "compare_batch",
+                "input": {
+                  "s3Paths": "${rerun_all.output.s3Paths}"
+                }
+              }
+            },
+            "type": "START_WORKFLOW",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          }
+        ]
+      }
+    ],
+    "inputParameters": ["startKey"],
+    "outputParameters": {},
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "moj-bichard7@madetech.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {}
+  }
+]
