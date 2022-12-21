@@ -1,7 +1,7 @@
 import type { Sql } from "postgres"
 import type { PromiseResult } from "src/comparison/types"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
-import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import { QualityCheckStatus } from "src/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
@@ -24,6 +24,17 @@ const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
   return Array.from(matches)
     .map((m) => `${m[2]}||${m[1]}`)
     .join(", ")
+}
+
+const generateOrgForPoliceFilter = (forceOwner?: OrganisationUnitCodes): string => {
+  if (!forceOwner?.SecondLevelCode) {
+    return ""
+  }
+  if (forceOwner.ThirdLevelCode === null || forceOwner.ThirdLevelCode === "00") {
+    return forceOwner.SecondLevelCode
+  }
+
+  return `${forceOwner.SecondLevelCode}${forceOwner.ThirdLevelCode}`
 }
 
 const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListRecord => {
@@ -55,11 +66,11 @@ const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListR
     error_count: result.hearingOutcome.Exceptions.length,
     user_updated_flag: 0,
     msg_received_ts: new Date(),
-    court_reference: caseElem.CourtReference.MagistratesCourtReference,
+    court_reference: caseElem.CourtReference.MagistratesCourtReference.slice(0, 11),
     court_date: hearing.DateOfHearing,
     ptiurn: caseElem.PTIURN,
     court_name: hearing.CourtHouseName,
-    org_for_police_filter: `${caseElem.ForceOwner?.SecondLevelCode}${caseElem.ForceOwner?.ThirdLevelCode}  `,
+    org_for_police_filter: generateOrgForPoliceFilter(caseElem.ForceOwner),
     court_room: hearing.CourtHearingLocation.BottomLevelCode || undefined,
     pnc_update_enabled: "Y"
   }

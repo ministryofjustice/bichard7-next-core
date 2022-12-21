@@ -1,5 +1,5 @@
+import isDummyAsn from "src/lib/isDummyAsn"
 import errorPaths from "../lib/errorPaths"
-import { validateDummyAsn } from "../schemas/ahoValidations"
 import type Exception from "../types/Exception"
 import { ExceptionCode } from "../types/ExceptionCode"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
@@ -9,7 +9,7 @@ const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const asn = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const generatedExceptions: Exception[] = []
 
-  if (recordableOnPNCindicator && validateDummyAsn(asn)) {
+  if (recordableOnPNCindicator && isDummyAsn(asn)) {
     generatedExceptions.push({ code: ExceptionCode.HO100321, path: errorPaths.case.asn })
   }
 

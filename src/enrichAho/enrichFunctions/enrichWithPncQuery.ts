@@ -1,5 +1,6 @@
 import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
+import isDummyAsn from "src/lib/isDummyAsn"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
@@ -41,11 +42,15 @@ export default async (
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<AnnotatedHearingOutcome> => {
-  clearPNCPopulatedElements(annotatedHearingOutcome)
+  const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  if (isDummyAsn(asn)) {
+    return annotatedHearingOutcome
+  }
+
   const requestStartTime = new Date()
-  const pncResult = await pncGateway.query(
-    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  )
+  clearPNCPopulatedElements(annotatedHearingOutcome)
+
+  const pncResult = await pncGateway.query(asn)
 
   const auditLogAttributes = {
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
@@ -57,7 +62,7 @@ export default async (
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
-  if (pncResult instanceof Error) {
+  if (isError(pncResult)) {
     auditLogger.logEvent(
       getAuditLogEvent(
         "pnc.response-not-received",
