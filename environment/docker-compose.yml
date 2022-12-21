@@ -23,3 +23,46 @@ services:
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     volumes:
       - ./pg-schema.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD", "psql", "-U", "bichard", "-c", "SELECT 1;"]
+      interval: 2s
+      timeout: 5s
+      retries: 50
+
+  conductor:
+    image: conductor:v3.13.2
+    environment:
+      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
+      CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
+      CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
+      CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
+      CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
+      CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
+    healthcheck:
+      test: [ "CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health" ]
+      interval: "2s"
+      timeout: "5s"
+      retries: 30
+    ports:
+      - 5001:5000
+
+  elasticsearch:
+    image: elasticsearch:6.8.15
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
+      - transport.host=0.0.0.0
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - 9200:9200
+      - 9300:9300
+    healthcheck:
+      test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/9300'
+      interval: 5s
+      timeout: 5s
+      retries: 50
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1k"
+        max-file: "3"

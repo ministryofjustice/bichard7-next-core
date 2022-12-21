@@ -1383,3 +1383,7 @@ GRANT SELECT,REFERENCES ON TABLE sysibm.sysdummy1 TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+
+CREATE DATABASE conductor;
+CREATE USER conductor WITH ENCRYPTED PASSWORD 'conductor';
+GRANT ALL PRIVILEGES ON DATABASE conductor TO conductor;
