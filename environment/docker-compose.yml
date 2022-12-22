@@ -39,7 +39,7 @@ services:
       CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
       CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
     healthcheck:
-      test: [ "CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health" ]
+      test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
       interval: "2s"
       timeout: "5s"
       retries: 30
