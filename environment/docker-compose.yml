@@ -38,6 +38,9 @@ services:
       CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
       CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
       CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
+      CJSE_CONDUCTOR_UI_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
+      CJSE_CONDUCTOR_UI_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
+
     healthcheck:
       test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
       interval: "2s"
