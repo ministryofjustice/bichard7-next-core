@@ -3,14 +3,11 @@
     "accessPolicy": {},
     "name": "rerun_all",
     "description": "Compares a batch of comparison S3 files against Core",
-    "version": 16,
+    "version": 1,
     "tasks": [
       {
         "name": "Loop Task",
         "taskReferenceName": "LoopTask",
-        "inputParameters": {
-          "startKey": "${workflow.input.startKey}"
-        },
         "type": "DO_WHILE",
         "startDelay": 0,
         "optional": false,
@@ -47,7 +44,7 @@
         ]
       }
     ],
-    "inputParameters": ["startKey"],
+    "inputParameters": [],
     "outputParameters": {},
     "schemaVersion": 2,
     "restartable": true,

@@ -4,19 +4,24 @@ set -e
 
 echo "Creating tasks..."
 
-curl -X POST \
-  http://localhost:8080/api/metadata/taskdefs \
+curl --insecure -X POST \
+  https://localhost:5001/api/metadata/taskdefs \
   -H 'Content-Type: application/json' \
   -d @src/conductor/tasks.json
 
 echo "Creating workflows..."
 
-curl -X PUT \
-  http://localhost:8080/api/metadata/workflow \
+curl --insecure -X PUT \
+  https://localhost:5001/api/metadata/workflow \
   -H 'Content-Type: application/json' \
   -d @src/conductor/compare-batch-workflow.json
 
-curl -X PUT \
-  http://localhost:8080/api/metadata/workflow \
+curl --insecure -X PUT \
+  https://localhost:5001/api/metadata/workflow \
   -H 'Content-Type: application/json' \
   -d @src/conductor/rerun-all-workflow.json
+
+curl --insecure -X PUT \
+  https://localhost:5001/api/metadata/workflow \
+  -H 'Content-Type: application/json' \
+  -d @src/conductor/rerun-failures-workflow.json
