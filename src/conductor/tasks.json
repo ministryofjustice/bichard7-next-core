@@ -1,31 +1,22 @@
 [
   {
-    "name": "compare_batch",
-    "retryCount": 3,
-    "retryLogic": "FIXED",
-    "retryDelaySeconds": 10,
-    "timeoutSeconds": 4000,
-    "timeoutPolicy": "TIME_OUT_WF",
-    "ownerEmail": "moj-bichard7@madetech.com"
-  },
-  {
-    "name": "rerun_all",
+    "name": "generate_rerun_tasks",
     "retryCount": 3,
     "retryLogic": "FIXED",
     "retryDelaySeconds": 10,
     "timeoutSeconds": 4000,
     "timeoutPolicy": "TIME_OUT_WF",
     "ownerEmail": "moj-bichard7@madetech.com",
-    "outputKeys": ["nextKey", "s3Paths"]
+    "outputKeys": ["dynamicTasks", "dynamicTasksInput"]
   },
   {
-    "name": "rerun_failures",
+    "name": "rerun_failure_day",
     "retryCount": 3,
     "retryLogic": "FIXED",
     "retryDelaySeconds": 10,
     "timeoutSeconds": 4000,
     "timeoutPolicy": "TIME_OUT_WF",
     "ownerEmail": "moj-bichard7@madetech.com",
-    "outputKeys": ["nextKey", "s3Paths"]
+    "outputKeys": []
   }
 ]

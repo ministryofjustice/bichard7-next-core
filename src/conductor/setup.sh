@@ -14,14 +14,4 @@ echo "Creating workflows..."
 curl --insecure -X PUT \
   https://localhost:5001/api/metadata/workflow \
   -H 'Content-Type: application/json' \
-  -d @src/conductor/compare-batch-workflow.json
-
-curl --insecure -X PUT \
-  https://localhost:5001/api/metadata/workflow \
-  -H 'Content-Type: application/json' \
-  -d @src/conductor/rerun-all-workflow.json
-
-curl --insecure -X PUT \
-  https://localhost:5001/api/metadata/workflow \
-  -H 'Content-Type: application/json' \
-  -d @src/conductor/rerun-failures-workflow.json
+  -d @src/conductor/workflows/rerun-failures.json

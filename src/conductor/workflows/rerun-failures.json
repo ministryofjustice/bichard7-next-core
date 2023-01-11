@@ -1,0 +1,54 @@
+[
+  {
+    "accessPolicy": {},
+    "name": "rerun_failures",
+    "description": "Compares a batch of failed comparison S3 files against Core",
+    "version": 1,
+    "tasks": [
+      {
+        "name": "generate_rerun_failures_tasks",
+        "taskReferenceName": "generate_rerun_failures_tasks_ref",
+        "inputParameters": {
+          "taskName": "rerun_failure_day"
+        },
+        "type": "SIMPLE",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false
+      },
+      {
+        "name": "rerun_failures_fork",
+        "taskReferenceName": "rerun_failures_fork_ref",
+        "inputParameters": {
+          "dynamicTasks": "${generate_rerun_failures_tasks_ref.output.dynamicTasks}",
+          "dynamicTasksInput": "${generate_rerun_failures_tasks_ref.output.dynamicTasksInput}"
+        },
+        "type": "FORK_JOIN_DYNAMIC",
+        "dynamicForkTasksParam": "dynamicTasks",
+        "dynamicForkTasksInputParamName": "dynamicTasksInput",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false
+      },
+      {
+        "name": "rerun_failures_join",
+        "taskReferenceName": "rerun_failures_join_ref",
+        "inputParameters": {},
+        "type": "JOIN",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false
+      }
+    ],
+    "inputParameters": [],
+    "outputParameters": {},
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "moj-bichard7@madetech.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {}
+  }
+]
