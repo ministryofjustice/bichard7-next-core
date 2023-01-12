@@ -1,7 +1,7 @@
 [
   {
     "accessPolicy": {},
-    "name": "rerun_failures",
+    "name": "rerun_failures_fork",
     "description": "Compares a batch of failed comparison S3 files against Core",
     "version": 1,
     "tasks": [
@@ -9,6 +9,8 @@
         "name": "generate_rerun_failures_tasks",
         "taskReferenceName": "generate_rerun_failures_tasks_ref",
         "inputParameters": {
+          "startDate": "${workflow.input.startDate}",
+          "endDate": "${workflow.input.endDate}",
           "taskName": "rerun_failure_day"
         },
         "type": "SIMPLE",
@@ -17,8 +19,8 @@
         "asyncComplete": false
       },
       {
-        "name": "rerun_failures_fork",
-        "taskReferenceName": "rerun_failures_fork_ref",
+        "name": "rerun_failure_day",
+        "taskReferenceName": "rerun_failure_day_ref",
         "inputParameters": {
           "dynamicTasks": "${generate_rerun_failures_tasks_ref.output.dynamicTasks}",
           "dynamicTasksInput": "${generate_rerun_failures_tasks_ref.output.dynamicTasksInput}"
@@ -40,7 +42,7 @@
         "asyncComplete": false
       }
     ],
-    "inputParameters": [],
+    "inputParameters": ["startDate", "endDate"],
     "outputParameters": {},
     "schemaVersion": 2,
     "restartable": true,
