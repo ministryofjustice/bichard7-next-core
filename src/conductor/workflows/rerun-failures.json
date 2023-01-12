@@ -1,7 +1,7 @@
 [
   {
     "accessPolicy": {},
-    "name": "rerun_failures_fork",
+    "name": "rerun_failures",
     "description": "Compares a batch of failed comparison S3 files against Core",
     "version": 1,
     "tasks": [
