@@ -40,10 +40,22 @@
         "startDelay": 0,
         "optional": false,
         "asyncComplete": false
+      },
+      {
+        "name": "aggregate_results",
+        "taskReferenceName": "aggregate_results_ref",
+        "inputParameters": {
+          "results": "${rerun_failures_join_ref.output}",
+          "queryExpression": ".results | map(to_entries) | add | group_by(.key) | map({ key: .[0].key, value: map(.value) | add }) | from_entries"
+        },
+        "type": "JSON_JQ_TRANSFORM"
       }
     ],
     "inputParameters": ["startDate", "endDate"],
-    "outputParameters": {},
+    "outputParameters": {
+      "pass": "${aggregate_results_ref.output.result.pass}",
+      "fail": "${aggregate_results_ref.output.result.fail}"
+    },
     "schemaVersion": 2,
     "restartable": true,
     "workflowStatusListenerEnabled": false,

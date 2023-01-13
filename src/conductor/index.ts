@@ -6,8 +6,6 @@ import compareMessage from "src/comparison/lib/compareMessage"
 import createDynamoDbConfig from "src/comparison/lib/createDynamoDbConfig"
 import DynamoGateway from "src/comparison/lib/DynamoGateway"
 import getDateFromComparisonFilePath from "src/comparison/lib/getDateFromComparisonFilePath"
-import recordResultsInDynamo from "src/comparison/lib/recordResultsInDynamo"
-import { isError } from "src/comparison/types/Result"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import type { Task } from "./Task"
@@ -156,10 +154,13 @@ const rerunFailureDay: ConductorWorker = {
 
       logs.push(...allTestLogs)
 
-      const recordResultsInDynamoResult = await recordResultsInDynamo(allTestResults, gateway)
-      if (isError(recordResultsInDynamoResult)) {
-        throw recordResultsInDynamoResult
-      }
+      // const recordResultsInDynamoResult = await recordResultsInDynamo(allTestResults, gateway)
+      // if (isError(recordResultsInDynamoResult)) {
+      //   return {
+      //     logs: [conductorLog("Failed to write results to Dynamo")],
+      //     status: "FAILED"
+      //   }
+      // }
 
       logs.push(conductorLog(`Results of processing: ${count.pass} passed. ${count.fail} failed`))
     }

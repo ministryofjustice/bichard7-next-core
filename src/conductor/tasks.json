@@ -17,6 +17,6 @@
     "timeoutSeconds": 4000,
     "timeoutPolicy": "TIME_OUT_WF",
     "ownerEmail": "moj-bichard7@madetech.com",
-    "outputKeys": []
+    "outputKeys": ["pass", "fail"]
   }
 ]
