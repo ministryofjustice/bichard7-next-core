@@ -12,7 +12,10 @@ type DynamoResult = {
 const isPass = (result: ComparisonResult): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
-const recordResultsInDynamo = async (results: DynamoResult[], dynamoGateway: DynamoGateway): PromiseResult<void> => {
+const recordResultsInDynamoBatch = async (
+  results: DynamoResult[],
+  dynamoGateway: DynamoGateway
+): PromiseResult<void> => {
   const s3Paths = results.map((result) => result.s3Path)
   const getBatchResult = await dynamoGateway.getBatch("s3Path", s3Paths)
 
@@ -71,6 +74,17 @@ const recordResultsInDynamo = async (results: DynamoResult[], dynamoGateway: Dyn
   })
 
   promises.push(dynamoGateway.insertBatch(recordsToInsert, "s3Path"))
+  await Promise.all(promises)
+}
+
+const recordResultsInDynamo = async (results: DynamoResult[], dynamoGateway: DynamoGateway): PromiseResult<void> => {
+  const batchSize = 100
+  const promises: PromiseResult<void>[] = []
+
+  for (let i = 0; i < results.length; i += batchSize) {
+    promises.push(recordResultsInDynamoBatch(results.slice(i, i + batchSize), dynamoGateway))
+  }
+
   await Promise.all(promises)
 }
 
