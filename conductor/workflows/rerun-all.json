@@ -1,8 +1,8 @@
 [
   {
     "accessPolicy": {},
-    "name": "rerun_failures",
-    "description": "Compares failed comparison S3 files against Core",
+    "name": "rerun_all",
+    "description": "Compares comparison S3 files against Core",
     "version": 1,
     "tasks": [
       {
@@ -12,7 +12,7 @@
           "startDate": "${workflow.input.startDate}",
           "endDate": "${workflow.input.endDate}",
           "taskName": "rerun_day",
-          "onlyFailures": true
+          "onlyFailures": false
         },
         "type": "SIMPLE",
         "startDelay": 0,
