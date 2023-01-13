@@ -1,82 +1,24 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
-import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
-import getStandingDataVersionByDate from "src/comparison/cli/getStandingDataVersionByDate"
-import type { ComparisonResult } from "src/comparison/lib/compareMessage"
-import compareMessage from "src/comparison/lib/compareMessage"
-import createDynamoDbConfig from "src/comparison/lib/createDynamoDbConfig"
-import DynamoGateway from "src/comparison/lib/DynamoGateway"
-import getDateFromComparisonFilePath from "src/comparison/lib/getDateFromComparisonFilePath"
-import recordResultsInDynamo from "src/comparison/lib/recordResultsInDynamo"
-import { isError } from "src/comparison/types/Result"
+import type { ConductorLog } from "conductor/src/types"
+import type { Task } from "conductor/src/types/Task"
+import { conductorLog, logWorkingMessage } from "conductor/src/utils"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
-import type { Task } from "./Task"
+import getStandingDataVersionByDate from "../cli/getStandingDataVersionByDate"
+import type { ComparisonResult } from "../lib/compareMessage"
+import compareMessage from "../lib/compareMessage"
+import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import DynamoGateway from "../lib/DynamoGateway"
+import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
+import recordResultsInDynamo from "../lib/recordResultsInDynamo"
+import { isError } from "../types"
 
-type ConductorLog = {
-  createdTime?: number
-  log?: string
-  taskId?: string
-}
-
-type Range = {
-  start: string
-  end: string
-}
-
-const conductorLog = (log: string): ConductorLog => ({ log, createdTime: new Date().getTime() })
-const logWorkingMessage = (task: Task) => console.log(`working on ${task.taskDefName} (${task.taskId})`)
-
-const dynamoConfig = createDynamoDbConfig()
 const s3Config = createS3Config()
+const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
-
-const client = new ConductorClient({
-  serverUrl: "http://localhost:5002/api"
-})
 
 const isPass = (result: ComparisonResult): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
-
-const generateRerunFailuresTasks: ConductorWorker = {
-  taskDefName: "generate_rerun_failures_tasks",
-  execute: (task: Task) => {
-    logWorkingMessage(task)
-    const startDate = task.inputData?.startDate ?? "2023-01-01"
-    const endDate = task.inputData?.endDate ?? new Date().toISOString()
-    const taskName = task.inputData?.taskName
-
-    if (!taskName) {
-      return Promise.resolve({
-        logs: [conductorLog("taskName must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
-    }
-
-    const logs: ConductorLog[] = []
-    const ranges: Range[] = []
-
-    for (const d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-      const start = d.toISOString()
-      const end = new Date(d)
-      end.setDate(d.getDate() + 1)
-      ranges.push({ start, end: end.toISOString() })
-    }
-
-    logs.push(conductorLog(`Generated ${ranges.length} day intervals`))
-
-    return Promise.resolve({
-      logs,
-      outputData: {
-        dynamicTasks: ranges.map((_, i) => ({ name: taskName, taskReferenceName: `task${i}` })),
-        dynamicTasksInput: ranges.reduce((inputs: { [key: string]: Range }, { start, end }, i) => {
-          inputs[`task${i}`] = { start, end }
-          return inputs
-        }, {})
-      },
-      status: "COMPLETED"
-    })
-  }
-}
 
 const rerunFailureDay: ConductorWorker = {
   taskDefName: "rerun_failure_day",
@@ -175,8 +117,4 @@ const rerunFailureDay: ConductorWorker = {
   }
 }
 
-const workers = [generateRerunFailuresTasks, rerunFailureDay]
-const taskManager = new TaskManager(client, workers)
-
-console.log("Starting polling...")
-taskManager.startPolling()
+export default rerunFailureDay

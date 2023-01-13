@@ -7,11 +7,11 @@ echo "Creating tasks..."
 curl --insecure -X POST \
   https://localhost:5001/api/metadata/taskdefs \
   -H 'Content-Type: application/json' \
-  -d @src/conductor/tasks.json
+  -d @conductor/tasks.json
 
 echo "Creating workflows..."
 
 curl --insecure -X PUT \
   https://localhost:5001/api/metadata/workflow \
   -H 'Content-Type: application/json' \
-  -d @src/conductor/workflows/rerun-failures.json
+  -d @conductor/workflows/rerun-failures.json
