@@ -11,12 +11,9 @@ curl --insecure -X POST \
 
 echo "Creating workflows..."
 
-curl --insecure -X PUT \
-  https://localhost:5001/api/metadata/workflow \
-  -H 'Content-Type: application/json' \
-  -d @conductor/workflows/rerun-all.json
+WORKFLOWS="$(jq -s -c '.' conductor/workflows/*.json)"
 
-curl --insecure -X PUT \
+curl --insecure -s -X PUT \
   https://localhost:5001/api/metadata/workflow \
   -H 'Content-Type: application/json' \
-  -d @conductor/workflows/rerun-failures.json
+  -d "$WORKFLOWS" | jq
