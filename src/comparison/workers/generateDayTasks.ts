@@ -3,17 +3,19 @@ import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog, logWorkingMessage } from "conductor/src/utils"
 
-type Range = {
+export type GenerateDayTasksOutput = {
   start: string
   end: string
+  onlyFailures: boolean
 }
 
-const generateRerunFailuresTasks: ConductorWorker = {
-  taskDefName: "generate_rerun_failures_tasks",
+const generateDayTasks: ConductorWorker = {
+  taskDefName: "generate_day_tasks",
   execute: (task: Task) => {
     logWorkingMessage(task)
     const startDate = task.inputData?.startDate ?? "2023-01-01"
     const endDate = task.inputData?.endDate ?? new Date().toISOString()
+    const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
 
     if (!taskName) {
@@ -24,13 +26,13 @@ const generateRerunFailuresTasks: ConductorWorker = {
     }
 
     const logs: ConductorLog[] = []
-    const ranges: Range[] = []
+    const ranges: GenerateDayTasksOutput[] = []
 
     for (const d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
       const start = d.toISOString()
       const end = new Date(d)
       end.setDate(d.getDate() + 1)
-      ranges.push({ start, end: end.toISOString() })
+      ranges.push({ start, end: end.toISOString(), onlyFailures })
     }
 
     logs.push(conductorLog(`Generated ${ranges.length} day intervals`))
@@ -39,8 +41,8 @@ const generateRerunFailuresTasks: ConductorWorker = {
       logs,
       outputData: {
         dynamicTasks: ranges.map((_, i) => ({ name: taskName, taskReferenceName: `task${i}` })),
-        dynamicTasksInput: ranges.reduce((inputs: { [key: string]: Range }, { start, end }, i) => {
-          inputs[`task${i}`] = { start, end }
+        dynamicTasksInput: ranges.reduce((inputs: { [key: string]: GenerateDayTasksOutput }, taskInput, i) => {
+          inputs[`task${i}`] = taskInput
           return inputs
         }, {})
       },
@@ -49,4 +51,4 @@ const generateRerunFailuresTasks: ConductorWorker = {
   }
 }
 
-export default generateRerunFailuresTasks
+export default generateDayTasks

@@ -20,17 +20,18 @@ const gateway = new DynamoGateway(dynamoConfig)
 const isPass = (result: ComparisonResult): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
-const rerunFailureDay: ConductorWorker = {
-  taskDefName: "rerun_failure_day",
+const rerunDay: ConductorWorker = {
+  taskDefName: "rerun_day",
   execute: async (task: Task) => {
     logWorkingMessage(task)
 
     const start = task.inputData?.start
     const end = task.inputData?.end
+    const onlyFailures = task.inputData?.onlyFailures ?? false
 
     if (!start || !end) {
       return {
-        logs: [conductorLog("taskName must be specified")],
+        logs: [conductorLog("start and end must be specified")],
         status: "FAILED_WITH_TERMINAL_ERROR"
       }
     }
@@ -38,7 +39,7 @@ const rerunFailureDay: ConductorWorker = {
     const logs: ConductorLog[] = []
     const count = { pass: 0, fail: 0 }
 
-    for await (const batch of gateway.getRange(start, end, false, 1000)) {
+    for await (const batch of gateway.getRange(start, end, !onlyFailures, 1000)) {
       if (!batch || batch instanceof Error) {
         return {
           logs: [conductorLog("Failed to get batch from Dynamo")],
@@ -117,4 +118,4 @@ const rerunFailureDay: ConductorWorker = {
   }
 }
 
-export default rerunFailureDay
+export default rerunDay
