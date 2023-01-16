@@ -79,12 +79,20 @@ function pull_and_build_from_aws() {
     pull_trivy_db
 
     ## Run goss tests
-    # GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 "${DOCKER_OUTPUT_TAG}:latest"
+    GOSS_SLEEP=15 GOSS_FILE=conductor/goss.yaml dgoss run \
+      -e COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
+      -e DYNAMO_REGION="eu-west-2" \
+      -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
+      -e S3_REGION="eu-west-2" \
+      -e S3_URL="https://s3.eu-west-2.amazonaws.com" \
+      -e CONDUCTOR_URL="http://conductor:4000/api" \
+      "${DOCKER_OUTPUT_TAG}:latest"
+
     ## Run Trivy scan
-    # TRIVY_CACHE_DIR=trivy trivy image \
-    #   --exit-code 1 \
-    #   --severity "CRITICAL" \
-    #   --skip-update "${DOCKER_OUTPUT_TAG}:latest" # we have the most recent db pulled locally
+    TRIVY_CACHE_DIR=trivy trivy image \
+      --exit-code 1 \
+      --severity "CRITICAL" \
+      --skip-update "${DOCKER_OUTPUT_TAG}:latest" # we have the most recent db pulled locally
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
