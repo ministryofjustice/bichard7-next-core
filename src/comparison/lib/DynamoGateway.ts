@@ -235,6 +235,7 @@ export default class DynamoGateway {
           break
         }
       } else {
+        yield []
         break
       }
     }
