@@ -71,10 +71,3 @@ services:
       options:
         max-size: "1k"
         max-file: "3"
-
-  s3:
-    image: justinmchase/s3rver
-    volumes:
-      - $PWD/.data:/app/.data
-    ports:
-      - "4569:4569"
