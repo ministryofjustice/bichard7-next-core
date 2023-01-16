@@ -71,3 +71,17 @@ services:
       options:
         max-size: "1k"
         max-file: "3"
+
+  worker:
+    image: core-worker:latest
+    environment:
+      COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
+      DYNAMO_REGION: eu-west-2
+      DYNAMO_URL: https://dynamodb.eu-west-2.amazonaws.com
+      S3_REGION: eu-west-2
+      S3_URL: https://s3.eu-west-2.amazonaws.com
+      CONDUCTOR_URL: http://conductor:4000/api
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+      AWS_SECURITY_TOKEN: ${AWS_SECURITY_TOKEN}
