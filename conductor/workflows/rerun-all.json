@@ -1,0 +1,66 @@
+{
+  "accessPolicy": {},
+  "name": "rerun_all",
+  "description": "Compares comparison S3 files against Core",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "generate_day_tasks",
+      "taskReferenceName": "generate_day_tasks",
+      "inputParameters": {
+        "startDate": "${workflow.input.startDate}",
+        "endDate": "${workflow.input.endDate}",
+        "taskName": "rerun_day",
+        "onlyFailures": false
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "rerun_day",
+      "taskReferenceName": "rerun_day",
+      "inputParameters": {
+        "dynamicTasks": "${generate_day_tasks.output.dynamicTasks}",
+        "dynamicTasksInput": "${generate_day_tasks.output.dynamicTasksInput}"
+      },
+      "type": "FORK_JOIN_DYNAMIC",
+      "dynamicForkTasksParam": "dynamicTasks",
+      "dynamicForkTasksInputParamName": "dynamicTasksInput",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "rerun_failures_join",
+      "taskReferenceName": "rerun_failures_join",
+      "inputParameters": {},
+      "type": "JOIN",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "aggregate_results",
+      "taskReferenceName": "aggregate_results",
+      "inputParameters": {
+        "results": "${rerun_failures_join.output}",
+        "queryExpression": ".results | map(to_entries) | add | group_by(.key) | map({ key: .[0].key, value: map(.value) | add }) | from_entries"
+      },
+      "type": "JSON_JQ_TRANSFORM"
+    }
+  ],
+  "inputParameters": ["startDate", "endDate"],
+  "outputParameters": {
+    "pass": "${aggregate_results.output.result.pass}",
+    "fail": "${aggregate_results.output.result.fail}"
+  },
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}

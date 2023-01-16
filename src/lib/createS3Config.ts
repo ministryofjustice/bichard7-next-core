@@ -6,10 +6,11 @@ const createS3Config = () => {
     region: process.env.S3_REGION ?? "eu-west-2",
     forcePathStyle: true
   }
-  if (process.env.S3_AWS_ACCESS_KEY_ID && process.env.S3_AWS_ACCESS_KEY_ID) {
+
+  if (process.env.S3_AWS_ACCESS_KEY_ID && process.env.S3_AWS_SECRET_ACCESS_KEY) {
     s3Config.credentials = {
       accessKeyId: process.env.S3_AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.S3_AWS_ACCESS_KEY_ID
+      secretAccessKey: process.env.S3_AWS_SECRET_ACCESS_KEY
     }
   }
 

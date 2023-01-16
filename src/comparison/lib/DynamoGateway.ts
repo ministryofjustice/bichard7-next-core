@@ -3,6 +3,19 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "src/comparison/types"
 import { isError } from "src/comparison/types"
 
+type GetRangePageOptions = {
+  batchSize?: number
+  columns?: string[]
+  exclusiveStartKey?: DynamoDB.DocumentClient.Key
+  includeSkipped?: boolean
+  success?: boolean
+}
+
+type ResultPage<T> = {
+  records: T[]
+  lastEvaluatedKey?: DynamoDB.DocumentClient.Key
+}
+
 export default class DynamoGateway {
   protected readonly service: DynamoDB
 
@@ -116,15 +129,16 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  async *getRange(
+  async getRangePage(
     start: string,
     end: string,
-    success?: boolean,
-    batchSize = 1000,
-    includeSkipped = false,
-    columns: string[] = []
-  ): AsyncIterableIterator<ComparisonLog[] | Error> {
-    let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
+    options?: GetRangePageOptions
+  ): PromiseResult<ResultPage<ComparisonLog>> {
+    const success = options?.success
+    const batchSize = options?.batchSize ?? 1000
+    const includeSkipped = options?.includeSkipped ?? false
+    const columns = options?.columns ?? []
+    const ExclusiveStartKey = options?.exclusiveStartKey
 
     let failureFilter = {}
     let failureValue = {}
@@ -133,54 +147,145 @@ export default class DynamoGateway {
       failureValue = { ":latestResultValue": success ? 1 : 0 }
     }
 
+    const query: DynamoDB.DocumentClient.QueryInput = {
+      TableName: this.tableName,
+      IndexName: "initialRunAtIndex",
+      KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
+      ExpressionAttributeNames: {
+        "#partitionKey": "_"
+      },
+      ExpressionAttributeValues: {
+        ":start": start,
+        ":end": end,
+        ":partitionKeyValue": "_",
+        ...failureValue
+      },
+      ...failureFilter,
+      Limit: batchSize,
+      ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
+    }
+
+    if (columns.length > 0) {
+      query.ProjectionExpression = columns.join(",")
+    }
+
+    const result = await this.client
+      .query(query)
+      .promise()
+      .catch((error: Error) => error)
+
+    if (isError(result)) {
+      return result
+    }
+
+    if (result.Items) {
+      if (includeSkipped) {
+        return {
+          records: result.Items as ComparisonLog[],
+          lastEvaluatedKey: result.LastEvaluatedKey
+        }
+      } else {
+        return {
+          records: result.Items.filter((item) => !item.skipped) as ComparisonLog[],
+          lastEvaluatedKey: result.LastEvaluatedKey
+        }
+      }
+    }
+
+    return {
+      records: [],
+      lastEvaluatedKey: result.LastEvaluatedKey
+    }
+  }
+
+  async *getRange(
+    start: string,
+    end: string,
+    success?: boolean,
+    batchSize = 1000,
+    includeSkipped = false,
+    columns: string[] = []
+  ): AsyncIterableIterator<ComparisonLog[] | Error> {
+    let exclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
+
     while (true) {
-      const query: DynamoDB.DocumentClient.QueryInput = {
-        TableName: this.tableName,
-        IndexName: "initialRunAtIndex",
-        KeyConditionExpression: "#partitionKey = :partitionKeyValue and initialRunAt between :start and :end",
-        ExpressionAttributeNames: {
-          "#partitionKey": "_"
-        },
-        ExpressionAttributeValues: {
-          ":start": start,
-          ":end": end,
-          ":partitionKeyValue": "_",
-          ...failureValue
-        },
-        ...failureFilter,
-        Limit: batchSize,
-        ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
-      }
-
-      if (columns.length > 0) {
-        query.ProjectionExpression = columns.join(",")
-      }
-
-      const result = await this.client
-        .query(query)
-        .promise()
-        .catch((error: Error) => error)
+      const result = await this.getRangePage(start, end, {
+        success,
+        batchSize,
+        includeSkipped,
+        columns,
+        exclusiveStartKey
+      })
 
       if (isError(result)) {
         yield result
         break
       }
 
-      if (result.Items) {
+      if (result.records.length > 0) {
         if (includeSkipped) {
-          yield result.Items as ComparisonLog[]
+          yield result.records as ComparisonLog[]
         } else {
-          yield result.Items.filter((item) => !item.skipped) as ComparisonLog[]
+          yield result.records.filter((record) => !record.skipped) as ComparisonLog[]
         }
 
-        if (result.LastEvaluatedKey) {
-          ExclusiveStartKey = result.LastEvaluatedKey
+        if (result.lastEvaluatedKey) {
+          exclusiveStartKey = result.lastEvaluatedKey
         } else {
           break
         }
       } else {
+        yield []
         break
       }
+    }
+  }
+
+  async getAllFailuresPage(
+    batchSize = 1000,
+    includeSkipped = false,
+    ExclusiveStartKey?: DynamoDB.DocumentClient.Key
+  ): PromiseResult<ResultPage<ComparisonLog>> {
+    const query = {
+      TableName: this.tableName,
+      IndexName: "latestResultIndex",
+      KeyConditionExpression: "#partitionKey = :partitionKeyValue and latestResult = :latestResultValue",
+      FilterExpression: "skipped <> :skippedValue",
+      ExpressionAttributeNames: {
+        "#partitionKey": "_"
+      },
+      ExpressionAttributeValues: {
+        ":partitionKeyValue": "_",
+        ":latestResultValue": 0,
+        ":skippedValue": true
+      },
+      Limit: batchSize,
+      ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
+    }
+
+    const result = await this.client
+      .query(query)
+      .promise()
+      .catch((error: Error) => error)
+
+    if (isError(result)) {
+      return result
+    }
+
+    if (result.Items) {
+      if (includeSkipped) {
+        return { records: result.Items as ComparisonLog[], lastEvaluatedKey: result.LastEvaluatedKey }
+      } else {
+        return {
+          records: result.Items.filter((item) => !item.skipped) as ComparisonLog[],
+          lastEvaluatedKey: result.LastEvaluatedKey
+        }
+      }
+    }
+
+    return {
+      records: [],
+      lastEvaluatedKey: result.LastEvaluatedKey
     }
   }
 
@@ -188,42 +293,22 @@ export default class DynamoGateway {
     let ExclusiveStartKey: DynamoDB.DocumentClient.Key | undefined
 
     while (true) {
-      const query = {
-        TableName: this.tableName,
-        IndexName: "latestResultIndex",
-        KeyConditionExpression: "#partitionKey = :partitionKeyValue and latestResult = :latestResultValue",
-        FilterExpression: "skipped <> :skippedValue",
-        ExpressionAttributeNames: {
-          "#partitionKey": "_"
-        },
-        ExpressionAttributeValues: {
-          ":partitionKeyValue": "_",
-          ":latestResultValue": 0,
-          ":skippedValue": true
-        },
-        Limit: batchSize,
-        ...(ExclusiveStartKey ? { ExclusiveStartKey } : {})
-      }
-
-      const result = await this.client
-        .query(query)
-        .promise()
-        .catch((error: Error) => error)
+      const result = await this.getAllFailuresPage(batchSize, includeSkipped, ExclusiveStartKey)
 
       if (isError(result)) {
         yield result
         break
       }
 
-      if (result.Items) {
+      if (result.records.length > 0) {
         if (includeSkipped) {
-          yield result.Items as ComparisonLog[]
+          yield result.records as ComparisonLog[]
         } else {
-          yield result.Items.filter((item) => !item.skipped) as ComparisonLog[]
+          yield result.records.filter((record) => !record.skipped) as ComparisonLog[]
         }
 
-        if (result.LastEvaluatedKey) {
-          ExclusiveStartKey = result.LastEvaluatedKey
+        if (result.lastEvaluatedKey) {
+          ExclusiveStartKey = result.lastEvaluatedKey
         } else {
           break
         }

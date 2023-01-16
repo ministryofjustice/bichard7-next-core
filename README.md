@@ -109,3 +109,47 @@ This mode pretty-prints the `Pino` logs and makes it a bit clearer as to what's 
 | MQ_CONNECTION_PASSCODE | The login password for the ActiveMQ messaging queue               | admin                              |
 | MQ_QUEUE_NAME          | The ActiveMQ queue to subscribe to                                | /queue/PROCESSING_VALIDATION_QUEUE |
 | PINO_LOG_LEVEL         | The logging level used by Pino, the logger used within the script | info                               |
+
+## Conductor
+
+[Netflix Conductor](https://github.com/Netflix/conductor) is used to run Core in production, and can also be run locally.
+
+To start Conductor locally:
+
+```bash
+# Run conductor without elasticsearch, and using an in-memory database
+npm run conductor
+
+# OR
+# Run the full set of conductor infrastructure, including elasticsearch and postgres
+npm run conductor-full
+```
+
+The Conductor UI is available (by default) on [http://localhost:5002](http://localhost:5002), and the API is available at [http://localhost:5002/api](http://localhost:5002/api). There's also API documentation available at [http://localhost:5002/swagger-ui/index.html](http://localhost:5002/swagger-ui/index.html).
+
+You can then import the task and workflow JSON definitions into the Conductor instance:
+
+```bash
+# Import the workflow and task definitions
+npm run conductor-setup
+```
+
+It should then be possible start workflow executions using either the Conductor UI (via the [Workbench](http://localhost:5002/workbench)) or the Conductor API.
+
+In order to then actually process the scheduled executions, you need to run one or more workers:
+
+```bash
+# Run a worker to process Conductor tasks
+npm run conductor-worker
+```
+
+Depending on the tasks you wish to process, you may need to configure the worker with the appropriate environment variables, and/or run using aws-vault:
+
+```bash
+COMPARISON_TABLE_NAME="bichard-7-e2e-test-comparison-log" \
+DYNAMO_REGION="eu-west-2" \
+DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
+S3_REGION="eu-west-2" \
+S3_URL="https://s3.eu-west-2.amazonaws.com" \
+aws-vault exec bichard7-shared-e2e-test -- npm run conductor-worker
+```
