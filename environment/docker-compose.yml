@@ -81,6 +81,8 @@ services:
       S3_REGION: eu-west-2
       S3_URL: https://s3.eu-west-2.amazonaws.com
       CONDUCTOR_URL: http://conductor:4000/api
+      CONDUCTOR_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
+      CONDUCTOR_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}

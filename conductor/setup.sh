@@ -2,10 +2,15 @@
 
 set -e
 
+URL=${CONDUCTOR_URL:-http://localhost:5002/api}
+USERNAME=${CONDUCTOR_USERNAME:-bichard}
+PASSWORD=${CONDUCTOR_PASSWORD:-password}
+
 echo "Creating tasks..."
 
 curl --insecure -X POST \
-  https://localhost:5001/api/metadata/taskdefs \
+  -u "${USERNAME}:${PASSWORD}" \
+  "${URL}/metadata/taskdefs" \
   -H 'Content-Type: application/json' \
   -d @conductor/tasks.json
 
@@ -14,6 +19,7 @@ echo "Creating workflows..."
 WORKFLOWS="$(jq -s -c '.' conductor/workflows/*.json)"
 
 curl --insecure -s -X PUT \
-  https://localhost:5001/api/metadata/workflow \
+  -u "${USERNAME}:${PASSWORD}" \
+  "${URL}/metadata/workflow" \
   -H 'Content-Type: application/json' \
   -d "$WORKFLOWS" | jq
