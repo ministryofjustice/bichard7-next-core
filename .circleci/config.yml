@@ -22,8 +22,8 @@ commands:
 
 jobs:
   build:
-    docker:
-      - image: cimg/node:16.13.1
+    machine:
+      image: ubuntu-2204:2022.10.2
     resource_class: xlarge
     working_directory: ~
     steps:
