@@ -20,9 +20,22 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+             exit 1
 
       - name: Update dependencies
         run: npm run update-deps
+
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notification_title: 'GitHub action failed'
+          message_format: ':elmo-fire: *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          notify_when: 'failure'
+          footer: 'Linked to Repo <{repo_url}|{repo}>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
 
       - name: Create pull request
         id: cpr
