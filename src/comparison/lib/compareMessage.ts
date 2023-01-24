@@ -58,6 +58,7 @@ const compareMessage = async (
   const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = processTestString(
     input.replace(/Â£/g, "£")
   )
+  const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag=""/g, "")
 
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,11 +68,11 @@ const compareMessage = async (
   }
 
   const sortedTriggers = sortTriggers(triggers)
-  const exceptions = extractExceptionsFromAho(annotatedHearingOutcome)
+  const exceptions = extractExceptionsFromAho(normalisedAho)
   const sortedExceptions = sortExceptions(exceptions)
 
-  const pncResponse = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
-  const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
+  const pncResponse = generateMockPncQueryResultFromAho(normalisedAho)
+  const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)
   const pncGateway = new MockPncGateway(pncResponse, pncQueryTime)
   const auditLogger = new CoreAuditLogger()
 
@@ -85,7 +86,7 @@ const compareMessage = async (
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
 
     const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
-    const parsedAho = parseAhoXml(annotatedHearingOutcome)
+    const parsedAho = parseAhoXml(normalisedAho)
     if (parsedAho instanceof Error) {
       throw parsedAho
     }
@@ -102,17 +103,15 @@ const compareMessage = async (
         coreResult: sortedCoreExceptions,
         comparisonResult: exceptions
       },
-      xmlOutputDiff: xmlOutputDiff(ahoXml, annotatedHearingOutcome),
-      xmlParsingDiff: xmlOutputDiff(generatedXml, annotatedHearingOutcome)
+      xmlOutputDiff: xmlOutputDiff(ahoXml, normalisedAho),
+      xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
     }
 
     return {
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      xmlOutputMatches: isIgnored
-        ? !hasOffences(coreResult.hearingOutcome)
-        : xmlOutputMatches(ahoXml, annotatedHearingOutcome),
-      xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, annotatedHearingOutcome),
+      xmlOutputMatches: isIgnored ? !hasOffences(coreResult.hearingOutcome) : xmlOutputMatches(ahoXml, normalisedAho),
+      xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, normalisedAho),
       ...(debug && { debugOutput })
     }
   } catch (e) {
