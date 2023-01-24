@@ -58,7 +58,7 @@ export interface Adj {
   "@_IntfcUpdateType": string
   "@_OffenceTICNumber": string
   "@_Plea": string
-  "@_WeedFlag": string
+  "@_WeedFlag"?: string
 }
 
 export interface Cof {
