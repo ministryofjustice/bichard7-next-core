@@ -5,7 +5,7 @@ LABEL maintainer="CJSE"
 
 WORKDIR /core
 
-RUN yum update && \
+RUN yum update -y && \
     yum install -y jq && \
     yum clean all && \
     rm -rf /var/cache/yum
@@ -13,7 +13,8 @@ RUN yum update && \
 COPY scripts ./scripts
 
 COPY package.json .
-RUN npm i
+COPY package-lock.json .
+RUN npm ci
 
 COPY conductor ./conductor
 COPY src ./src
