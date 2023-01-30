@@ -1,9 +1,10 @@
+import { parseComparisonFile } from "tests/helpers/processTestFile"
 import createS3Config from "../../lib/createS3Config"
 import getFileFromS3 from "../../lib/getFileFromS3"
 import logger from "../../lib/logging"
 import getStandingDataVersionByDate from "../cli/getStandingDataVersionByDate"
-import type { ComparisonResult } from "../lib/compareMessage"
-import compareMessage from "../lib/compareMessage"
+import { isPhase1 } from "../lib/checkPhase"
+import compareMessage from "../lib/comparePhase1"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
@@ -12,6 +13,7 @@ import { formatXmlDiffAsTxt } from "../lib/xmlOutputComparison"
 import { isError } from "../types"
 import type { CompareBatchLambdaEvent } from "../types/CompareLambdaEvent"
 import { batchEventSchema } from "../types/CompareLambdaEvent"
+import type ComparisonResult from "../types/ComparisonResult"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
@@ -46,6 +48,13 @@ const printDebug = (result: ComparisonResult) => {
   }
 }
 
+const failResult: ComparisonResult = {
+  triggersMatch: false,
+  exceptionsMatch: false,
+  xmlOutputMatches: false,
+  xmlParsingMatches: false
+}
+
 export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[]> => {
   const parsedEvent = batchEventSchema.parse(Array.isArray(event) ? event : [event])
   const count = { pass: 0, fail: 0 }
@@ -62,22 +71,21 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       throw content
     }
 
-    let comparisonResult: ComparisonResult
+    let comparisonResult = failResult
     let error: Error | undefined
     const date = getDateFromComparisonFilePath(s3Path)
+    const comparison = parseComparisonFile(content)
+    const correlationId = "correlationId" in comparison ? comparison.correlationId : undefined
+    const phase = "phase" in comparison ? comparison.phase : 1
     try {
-      comparisonResult = await compareMessage(content, debug, {
-        defaultStandingDataVersion: getStandingDataVersionByDate(date)
-      })
+      if (isPhase1(comparison)) {
+        comparisonResult = await compareMessage(comparison, debug, {
+          defaultStandingDataVersion: getStandingDataVersionByDate(date)
+        })
+      }
     } catch (e) {
       error = e as Error
       logger.error(error)
-      comparisonResult = {
-        triggersMatch: false,
-        exceptionsMatch: false,
-        xmlOutputMatches: false,
-        xmlParsingMatches: false
-      }
     }
 
     if (isPass(comparisonResult)) {
@@ -94,7 +102,7 @@ export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[
       logger.info(error)
     }
 
-    return { s3Path, comparisonResult }
+    return { s3Path, phase, correlationId, comparisonResult }
   })
 
   const results = await Promise.all(resultPromises)

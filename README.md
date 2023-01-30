@@ -146,7 +146,7 @@ npm run conductor-worker
 Depending on the tasks you wish to process, you may need to configure the worker with the appropriate environment variables, and/or run using aws-vault:
 
 ```bash
-COMPARISON_TABLE_NAME="bichard-7-e2e-test-comparison-log" \
+PHASE1_COMPARISON_TABLE_NAME="bichard-7-e2e-test-comparison-log" \
 DYNAMO_REGION="eu-west-2" \
 DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
 S3_REGION="eu-west-2" \

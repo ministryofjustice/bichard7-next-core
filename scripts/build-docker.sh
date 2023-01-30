@@ -80,7 +80,7 @@ function pull_and_build_from_aws() {
 
     ## Run goss tests
     GOSS_SLEEP=15 GOSS_FILE=conductor/goss.yaml dgoss run \
-      -e COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
+      -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
       -e DYNAMO_REGION="eu-west-2" \
       -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
       -e S3_REGION="eu-west-2" \

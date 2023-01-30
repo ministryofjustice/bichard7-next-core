@@ -4,18 +4,27 @@ import type { Task } from "conductor/src/types/Task"
 import { conductorLog, logWorkingMessage } from "conductor/src/utils"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
+import { parseComparisonFile } from "tests/helpers/processTestFile"
 import getStandingDataVersionByDate from "../cli/getStandingDataVersionByDate"
-import type { ComparisonResult } from "../lib/compareMessage"
-import compareMessage from "../lib/compareMessage"
+import { isPhase1 } from "../lib/checkPhase"
+import compareMessage from "../lib/comparePhase1"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import { isError } from "../types"
+import type ComparisonResult from "../types/ComparisonResult"
 
 const s3Config = createS3Config()
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
+
+const failResult: ComparisonResult = {
+  triggersMatch: false,
+  exceptionsMatch: false,
+  xmlOutputMatches: false,
+  xmlParsingMatches: false
+}
 
 const isPass = (result: ComparisonResult): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
@@ -52,7 +61,6 @@ const rerunDay: ConductorWorker = {
       logs.push(conductorLog(`Processing ${batch.length} comparison tests...`))
 
       const resultPromises = batch.map(async (test) => {
-        const testLogs: ConductorLog[] = []
         const bucket = "bichard-7-production-processing-validation"
         const s3Path = test.s3Path
 
@@ -61,45 +69,34 @@ const rerunDay: ConductorWorker = {
           throw content
         }
 
-        let comparisonResult: ComparisonResult
+        const comparison = parseComparisonFile(content)
+        const correlationId = "correlationId" in comparison ? comparison.correlationId : undefined
+        const phase = "phase" in comparison ? comparison.phase : 1
+        let comparisonResult: ComparisonResult = failResult
         let error: Error | undefined
         const date = getDateFromComparisonFilePath(s3Path)
         try {
-          comparisonResult = await compareMessage(content, false, {
-            defaultStandingDataVersion: getStandingDataVersionByDate(date)
-          })
+          if (isPhase1(comparison)) {
+            comparisonResult = await compareMessage(comparison, false, {
+              defaultStandingDataVersion: getStandingDataVersionByDate(date)
+            })
+          }
         } catch (e) {
           error = e as Error
-          testLogs.push(conductorLog(error.message))
-          comparisonResult = {
-            triggersMatch: false,
-            exceptionsMatch: false,
-            xmlOutputMatches: false,
-            xmlParsingMatches: false
-          }
+          logs.push(conductorLog(error.message))
         }
 
         if (isPass(comparisonResult)) {
           count.pass += 1
         } else {
           count.fail += 1
-          testLogs.push(conductorLog(`Comparison failed: ${s3Path}`))
+          logs.push(conductorLog(`Comparison failed: ${s3Path}`))
         }
 
-        if (error) {
-          testLogs.push(conductorLog(error.message))
-        }
-
-        return { s3Path, comparisonResult, logs: testLogs }
+        return { s3Path, phase, correlationId, comparisonResult }
       })
 
       const allTestResults = await Promise.all(resultPromises)
-
-      const allTestLogs = allTestResults.reduce((accumulatedLogs: ConductorLog[], testResult) => {
-        return accumulatedLogs.concat(testResult.logs)
-      }, [])
-
-      logs.push(...allTestLogs)
 
       const recordResultsInDynamoResult = await recordResultsInDynamo(allTestResults, gateway)
       if (isError(recordResultsInDynamoResult)) {

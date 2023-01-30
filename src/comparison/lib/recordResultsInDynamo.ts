@@ -1,13 +1,19 @@
 import type { ComparisonLog, PromiseResult } from "../types"
 import { isError } from "../types"
-import type { ComparisonResult } from "./compareMessage"
+import type ComparisonResult from "../types/ComparisonResult"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import type DynamoGateway from "./DynamoGateway"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
 type DynamoResult = {
   s3Path: string
   comparisonResult: ComparisonResult
+  correlationId?: string
+  phase: number
 }
+
+const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
+const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]
 
 const isPass = (result: ComparisonResult): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
@@ -32,8 +38,8 @@ const recordResultsInDynamoBatch = async (
     return acc
   }, {})
 
-  const promises = []
-  const recordsToInsert: ComparisonLog[] = []
+  const promises: PromiseResult<void>[] = []
+  const recordsToInsert: { [k: string]: ComparisonLog[] } = {}
 
   results.forEach((result) => {
     const passOrFail = isPass(result.comparisonResult) ? 1 : 0
@@ -44,6 +50,7 @@ const recordResultsInDynamoBatch = async (
 
     const record = logsInDynamoByS3Path[result.s3Path] ?? {
       s3Path: result.s3Path,
+      correlationId: result.correlationId,
       initialRunAt: runAt,
       initialResult: passOrFail,
       history: [],
@@ -64,16 +71,24 @@ const recordResultsInDynamoBatch = async (
       }
     })
 
+    const table = dynamoTables[result.phase] ?? PHASE1_TABLE_NAME
+
     if (hasExistingRecord) {
       // There's no way to do a batch update in Dynamo, so just do a normal update
-      promises.push(dynamoGateway.updateOne(record, "s3Path", record.version))
+      promises.push(dynamoGateway.updateOne(record, "s3Path", record.version, table))
     } else {
       // Group up all of the inserts so that we can do a batch update
-      recordsToInsert.push(record)
+      if (!recordsToInsert[table]) {
+        recordsToInsert[table] = []
+      }
+      recordsToInsert[table].push(record)
     }
   })
 
-  promises.push(dynamoGateway.insertBatch(recordsToInsert, "s3Path"))
+  Object.entries(recordsToInsert).forEach(([table, records]) => {
+    promises.push(dynamoGateway.insertBatch(records, "s3Path", table))
+  })
+
   await Promise.all(promises)
 }
 

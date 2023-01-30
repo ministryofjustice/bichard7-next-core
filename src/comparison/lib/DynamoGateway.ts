@@ -24,7 +24,7 @@ export default class DynamoGateway {
   public readonly tableName: string
 
   constructor(config: DynamoDbConfig) {
-    this.tableName = config.TABLE_NAME
+    this.tableName = config.PHASE1_TABLE_NAME
     const conf: DynamoDB.ClientConfiguration = {
       endpoint: config.DYNAMO_URL,
       region: config.DYNAMO_REGION,
@@ -38,9 +38,9 @@ export default class DynamoGateway {
     })
   }
 
-  insertOne<T>(record: T, keyName: string): PromiseResult<void> {
+  insertOne<T>(record: T, keyName: string, tableName?: string): PromiseResult<void> {
     const params: DocumentClient.PutItemInput = {
-      TableName: this.tableName,
+      TableName: tableName ?? this.tableName,
       Item: { _: "_", ...record },
       ConditionExpression: `attribute_not_exists(${keyName})`
     }
@@ -52,10 +52,10 @@ export default class DynamoGateway {
       .catch((error) => <Error>error)
   }
 
-  async insertBatch<T>(records: T[], keyName: string): Promise<PromiseResult<void>> {
+  async insertBatch<T>(records: T[], keyName: string, tableName?: string): PromiseResult<void> {
     const params: DocumentClient.BatchWriteItemInput = {
       RequestItems: {
-        [this.tableName]: records.map((record) => ({
+        [tableName ?? this.tableName]: records.map((record) => ({
           PutRequest: {
             Item: { _: "_", ...record },
             ConditionExpression: `attribute_not_exists(${keyName})`
@@ -87,9 +87,9 @@ export default class DynamoGateway {
     }
   }
 
-  updateOne<T>(record: T, keyName: string, version: number): PromiseResult<void> {
+  updateOne<T>(record: T, keyName: string, version: number, tableName?: string): PromiseResult<void> {
     const params: DocumentClient.PutItemInput = {
-      TableName: this.tableName,
+      TableName: tableName ?? this.tableName,
       Item: { _: "_", ...record, version: version + 1 },
       ConditionExpression: `attribute_exists(${keyName}) and version = :version`,
       ExpressionAttributeValues: {

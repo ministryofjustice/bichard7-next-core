@@ -10,7 +10,9 @@ const comparisonBucketName = `bichard-7-${workspace}-processing-validation`
 const dynamoConfig = {
   DYNAMO_URL: "https://dynamodb.eu-west-2.amazonaws.com",
   DYNAMO_REGION: region,
-  TABLE_NAME: `bichard-7-${workspace}-comparison-log`
+  PHASE1_TABLE_NAME: `bichard-7-${workspace}-comparison-log`,
+  PHASE2_TABLE_NAME: `bichard-7-${workspace}-phase2-comparison-log`,
+  PHASE3_TABLE_NAME: `bichard-7-${workspace}-phase3-comparison-log`
 }
 
 enum ProcessResult {

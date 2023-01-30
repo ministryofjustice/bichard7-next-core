@@ -1,4 +1,4 @@
-import type { ComparisonResult } from "../lib/compareMessage"
+import type ComparisonResult from "../types/ComparisonResult"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
@@ -50,7 +50,10 @@ export const printSingleSummary = (result: ComparisonResult): void => {
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
-const printResult = (result: ComparisonResult | ComparisonResult[], truncate = false): void => {
+const printResult = (result?: ComparisonResult | ComparisonResult[], truncate = false): void => {
+  if (!result) {
+    return
+  }
   if (Array.isArray(result)) {
     result.forEach((r) => printResult(r, truncate))
     printSummary(result)

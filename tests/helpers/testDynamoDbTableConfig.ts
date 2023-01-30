@@ -4,7 +4,7 @@ import type * as dynamodb from "@aws-sdk/client-dynamodb"
 // bichard7-next-infrastructure.git/terraform/stack_data_storage/main.tf
 
 const testDynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
-  TableName: process.env.COMPARISON_TABLE_NAME,
+  TableName: process.env.PHASE1_COMPARISON_TABLE_NAME,
   AttributeDefinitions: [
     { AttributeName: "s3Path", AttributeType: "S" },
     { AttributeName: "_", AttributeType: "S" },
@@ -30,15 +30,15 @@ const testDynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
       ]
     },
     {
-      IndexName: "initialResultIndex",
+      IndexName: "initialResultByDateIndex",
       Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
-          AttributeName: "_",
+          AttributeName: "initialResult",
           KeyType: "HASH"
         },
         {
-          AttributeName: "initialResult",
+          AttributeName: "initialRunAt",
           KeyType: "RANGE"
         }
       ]
@@ -58,15 +58,15 @@ const testDynamoDbTableConfig: dynamodb.CreateTableCommandInput = {
       ]
     },
     {
-      IndexName: "latestResultIndex",
+      IndexName: "latestResultByDateIndex",
       Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
-          AttributeName: "_",
+          AttributeName: "latestResult",
           KeyType: "HASH"
         },
         {
-          AttributeName: "latestResult",
+          AttributeName: "initialRunAt",
           KeyType: "RANGE"
         }
       ]

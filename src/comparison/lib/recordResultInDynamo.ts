@@ -1,12 +1,17 @@
 import type { PromiseResult } from "../types"
 import { isError } from "../types"
-import type { ComparisonResult } from "./compareMessage"
+import type ComparisonResult from "../types/ComparisonResult"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import type DynamoGateway from "./DynamoGateway"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
+
+const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
+const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]
 
 const recordResultInDynamo = async (
   s3Path: string,
   comparisonResult: ComparisonResult,
+  phase: number,
   dynamoGateway: DynamoGateway
 ): PromiseResult<void> => {
   const latestResult =
@@ -48,9 +53,11 @@ const recordResultInDynamo = async (
     }
   })
 
+  const table = dynamoTables[phase]
+
   return getOneResult?.Item
-    ? dynamoGateway.updateOne(record, "s3Path", record.version)
-    : dynamoGateway.insertOne(record, "s3Path")
+    ? dynamoGateway.updateOne(record, "s3Path", record.version, table)
+    : dynamoGateway.insertOne(record, "s3Path", table)
 }
 
 export default recordResultInDynamo

@@ -9,6 +9,7 @@ import "jest-xml-matcher"
 import orderBy from "lodash.orderby"
 import MockDate from "mockdate"
 import postgres from "postgres"
+import type { OldPhase1Comparison } from "src/comparison/types/ComparisonFile"
 import type { ImportedComparison } from "src/comparison/types/ImportedComparison"
 import createDbConfig from "src/lib/createDbConfig"
 import createS3Config from "src/lib/createS3Config"
@@ -234,7 +235,7 @@ const ignored = [
 let tests = fs
   .readdirSync(filePath)
   .map((name) => `${filePath}/${name}`)
-  .map(processTestFile)
+  .map(processTestFile) as OldPhase1Comparison[]
 
 const filter = process.env.FILTER_TEST
 tests = tests.filter((t) => t.dbContent !== undefined && t.auditLogEvents !== undefined)
