@@ -27,7 +27,9 @@ describe("recordResultInDynamo", () => {
   })
 
   beforeEach(async () => {
-    await dynamoServer.setupTable(dynamoDbTableConfig)
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE1_TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE2_TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE3_TABLE_NAME))
     MockDate.set(mockedDate)
   })
 
@@ -41,7 +43,7 @@ describe("recordResultInDynamo", () => {
 
   it("should insert a new record in DynamoDB", async () => {
     const s3Path = "DummyPath"
-    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, "correlation-id", dynamoGateway)
     expect(isError(result)).toBe(false)
 
     const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
@@ -49,6 +51,7 @@ describe("recordResultInDynamo", () => {
     expect(record).toStrictEqual({
       _: "_",
       s3Path: "DummyPath",
+      correlationId: "correlation-id",
       initialRunAt: mockedDate.toISOString(),
       initialResult: 1,
       history: [
@@ -72,7 +75,7 @@ describe("recordResultInDynamo", () => {
   it("should insert a new record in DynamoDB and read the date from S3 path", async () => {
     MockDate.reset()
     const s3Path = "2022/07/01/20/12/dummy.json"
-    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, "correlation-id", dynamoGateway)
     expect(isError(result)).toBe(false)
 
     const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
@@ -111,7 +114,7 @@ describe("recordResultInDynamo", () => {
       "s3Path"
     )
 
-    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo(s3Path, comparisonResult, 1, "correlation-id", dynamoGateway)
     expect(isError(result)).toBe(false)
 
     const getOneResult = await dynamoGateway.getOne("s3Path", s3Path)
@@ -152,7 +155,7 @@ describe("recordResultInDynamo", () => {
   it("should return error when DynamoGateway failes to get the item", async () => {
     const expectedError = new Error("Dummy get error")
     jest.spyOn(dynamoGateway, "getOne").mockResolvedValue(expectedError)
-    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, "correlation-id", dynamoGateway)
     jest.resetAllMocks()
 
     expect(isError(result)).toBe(true)
@@ -163,7 +166,7 @@ describe("recordResultInDynamo", () => {
   it("should return error when DynamoGateway failes to insert an item", async () => {
     const expectedError = new Error("Dummy insert error")
     jest.spyOn(dynamoGateway, "insertOne").mockResolvedValue(expectedError)
-    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, "correlation-id", dynamoGateway)
     jest.resetAllMocks()
 
     expect(isError(result)).toBe(true)
@@ -175,7 +178,7 @@ describe("recordResultInDynamo", () => {
     const expectedError = new Error("Dummy update error")
     jest.spyOn(dynamoGateway, "getOne").mockResolvedValue({ Item: { history: [] } })
     jest.spyOn(dynamoGateway, "updateOne").mockResolvedValue(expectedError)
-    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, dynamoGateway)
+    const result = await recordResultInDynamo("dummy S3 path", comparisonResult, 1, "correlation-id", dynamoGateway)
     jest.resetAllMocks()
 
     expect(isError(result)).toBe(true)

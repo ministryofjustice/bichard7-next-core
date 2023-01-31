@@ -37,6 +37,7 @@ export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult
 
   let comparisonResult = failResult
   const comparison = parseComparisonFile(content)
+  const correlationId = "correlationId" in comparison ? comparison.correlationId : undefined
   const phase = "phase" in comparison ? comparison.phase : 1
   try {
     if (isPhase1(comparison)) {
@@ -47,7 +48,13 @@ export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult
   }
 
   logger.info(`Logging comparison results in DynamoDB: ${s3Path}`)
-  const recordResultInDynamoResult = await recordResultInDynamo(s3Path, comparisonResult, phase, dynamoGateway)
+  const recordResultInDynamoResult = await recordResultInDynamo(
+    s3Path,
+    comparisonResult,
+    phase,
+    correlationId,
+    dynamoGateway
+  )
   if (isError(recordResultInDynamoResult)) {
     throw recordResultInDynamoResult
   }

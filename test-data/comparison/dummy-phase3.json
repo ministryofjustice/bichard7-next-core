@@ -1,0 +1,9 @@
+{
+  "phase": 3,
+  "correlationId": "phase3-dummy-correlation-id",
+  "incomingMessage": "<xml>dummyIncomingMessage</xml>",
+  "standingDataVersion": "1.2.3",
+  "auditLogEvents": [],
+  "pncOperations": [],
+  "sentToPhase3": true
+}

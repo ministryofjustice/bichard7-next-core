@@ -24,6 +24,7 @@ type ComparisonResult = {
   debugOutput?: ComparisonResultDebugOutput
   file?: string
   skipped?: boolean
+  correlationId?: string
 }
 
 export default ComparisonResult

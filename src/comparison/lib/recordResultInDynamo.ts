@@ -12,6 +12,7 @@ const recordResultInDynamo = async (
   s3Path: string,
   comparisonResult: ComparisonResult,
   phase: number,
+  correlationId: string | undefined,
   dynamoGateway: DynamoGateway
 ): PromiseResult<void> => {
   const latestResult =
@@ -36,7 +37,8 @@ const recordResultInDynamo = async (
     initialRunAt: initialDate,
     initialResult: latestResult,
     history: [],
-    version: 1
+    version: 1,
+    correlationId
   }
 
   record.latestRunAt = date
