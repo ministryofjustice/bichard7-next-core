@@ -1,4 +1,4 @@
-import type { ComparisonResult } from "../lib/compareMessage"
+import type ComparisonResult from "../types/ComparisonResult"
 
 const skippedFile = (file: string): ComparisonResult => ({
   file,

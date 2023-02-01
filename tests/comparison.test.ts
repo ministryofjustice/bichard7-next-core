@@ -1,9 +1,11 @@
 import fs from "fs"
 import "jest-xml-matcher"
 import orderBy from "lodash.orderby"
+import type { Phase1Comparison } from "src/comparison/types/ComparisonFile"
 import CoreHandler from "src/index"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import type { Trigger } from "src/types/Trigger"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import extractExceptionsFromAho from "../src/parse/parseAhoXml/extractExceptionsFromAho"
 import convertAhoToXml from "../src/serialise/ahoXml/generate"
@@ -18,7 +20,7 @@ const filePath = "test-data/e2e-comparison"
 let tests = fs
   .readdirSync(filePath)
   .map((name) => `${filePath}/${name}`)
-  .map(processTestFile)
+  .map(processTestFile) as Phase1Comparison[]
 
 const filter = process.env.FILTER_TEST
 if (filter) {
@@ -26,6 +28,7 @@ if (filter) {
 }
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
+const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
 
 describe("Comparison testing", () => {
   describe.each(tests)("for test file $file", ({ incomingMessage, annotatedHearingOutcome, triggers }) => {
@@ -43,7 +46,7 @@ describe("Comparison testing", () => {
       })
 
       it("should match triggers", () => {
-        expect(coreResult.triggers).toStrictEqual(triggers)
+        expect(sortTriggers(coreResult.triggers)).toStrictEqual(triggers)
       })
 
       it("should match exceptions", () => {

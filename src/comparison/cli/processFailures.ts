@@ -1,12 +1,13 @@
-import type { ComparisonResult } from "../lib/compareMessage"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
+import type ComparisonResult from "../types/ComparisonResult"
 import fetchFile from "./fetchFile"
 import processFile from "./processFile"
 import skippedFile from "./skippedFile"
 
-process.env.COMPARISON_TABLE_NAME = process.env.COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
+process.env.PHASE1_COMPARISON_TABLE_NAME =
+  process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
 process.env.DYNAMO_URL = process.env.DYNAMO_URL ?? "https://dynamodb.eu-west-2.amazonaws.com"
 process.env.DYNAMO_REGION = process.env.DYNAMO_REGION ?? "eu-west-2"
 process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-7-production-processing-validation"
@@ -32,7 +33,10 @@ const processFailures = async (cache: boolean): Promise<ComparisonResult[]> => {
     for (const { fileName, contents } of files) {
       if (contents) {
         const date = getDateFromComparisonFilePath(fileName)
-        results.push(await processFile(contents, fileName, date))
+        const result = await processFile(contents, fileName, date)
+        if (result) {
+          results.push(result)
+        }
       } else {
         results.push(skippedFile(fileName))
       }

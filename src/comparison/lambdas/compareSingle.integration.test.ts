@@ -12,7 +12,7 @@ import MockS3 from "tests/helpers/MockS3"
 import dynamoDbTableConfig from "tests/helpers/testDynamoDbTableConfig"
 import { ZodError } from "zod"
 import createS3Config from "../../lib/createS3Config"
-import * as CompareMessage from "../lib/compareMessage"
+import * as CompareMessage from "../lib/comparePhase1"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import { isError } from "../types"
@@ -22,6 +22,9 @@ const bucket = "comparison-bucket"
 const s3Config = createS3Config()
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
+const phase1TableConfig = dynamoDbTableConfig(dynamoDbGatewayConfig.PHASE1_TABLE_NAME)
+const phase2TableConfig = dynamoDbTableConfig(dynamoDbGatewayConfig.PHASE2_TABLE_NAME)
+const phase3TableConfig = dynamoDbTableConfig(dynamoDbGatewayConfig.PHASE3_TABLE_NAME)
 
 const uploadFile = async (fileName: string) => {
   const client = new S3Client(s3Config)
@@ -53,7 +56,9 @@ describe("Comparison lambda", () => {
 
   beforeEach(async () => {
     jest.restoreAllMocks()
-    await dynamoServer.setupTable(dynamoDbTableConfig)
+    await dynamoServer.setupTable(phase1TableConfig)
+    await dynamoServer.setupTable(phase2TableConfig)
+    await dynamoServer.setupTable(phase3TableConfig)
   })
 
   it("should return a passing comparison result", async () => {
@@ -288,5 +293,89 @@ describe("Comparison lambda", () => {
     expect(isError(result)).toBe(true)
     const actualError = result as Error
     expect(actualError.message).toBe(expectedError.message)
+  })
+
+  it("should write to the correct table for an old style phase 1 log", async () => {
+    await uploadFile("test-data/comparison/passing.json")
+
+    const s3Path = "test-data/comparison/passing.json"
+
+    await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+
+    const record = (await dynamoGateway.getOne(
+      "s3Path",
+      s3Path,
+      dynamoDbGatewayConfig.PHASE1_TABLE_NAME
+    )) as DocumentClient.GetItemOutput
+    expect(record.Item).toHaveProperty("s3Path", s3Path)
+    expect(record.Item).not.toHaveProperty("correlationId")
+  })
+
+  it("should write to the correct table for an new style phase 1 log", async () => {
+    await uploadFile("test-data/comparison/passing-new-phase1.json")
+
+    const s3Path = "test-data/comparison/passing-new-phase1.json"
+
+    await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+
+    const record = (await dynamoGateway.getOne(
+      "s3Path",
+      s3Path,
+      dynamoDbGatewayConfig.PHASE1_TABLE_NAME
+    )) as DocumentClient.GetItemOutput
+    expect(record.Item).toHaveProperty("s3Path", s3Path)
+    expect(record.Item).toHaveProperty("correlationId", "new-phase1-dummy-correlation-id")
+  })
+
+  it("should write an error to the correct table for a phase 2 log", async () => {
+    await uploadFile("test-data/comparison/dummy-phase2.json")
+
+    const s3Path = "test-data/comparison/dummy-phase2.json"
+
+    const result = await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+    expect(result).toStrictEqual({
+      triggersMatch: false,
+      exceptionsMatch: false,
+      xmlOutputMatches: false,
+      xmlParsingMatches: false
+    })
+
+    const record = (await dynamoGateway.getOne(
+      "s3Path",
+      s3Path,
+      dynamoDbGatewayConfig.PHASE2_TABLE_NAME
+    )) as DocumentClient.GetItemOutput
+    expect(record.Item).toHaveProperty("s3Path", s3Path)
+    expect(record.Item).toHaveProperty("correlationId", "phase2-dummy-correlation-id")
+  })
+
+  it("should write an error to the correct table for a phase 3 log", async () => {
+    await uploadFile("test-data/comparison/dummy-phase3.json")
+
+    const s3Path = "test-data/comparison/dummy-phase3.json"
+
+    const result = await lambda({
+      detail: { bucket: { name: bucket }, object: { key: s3Path } }
+    })
+    expect(result).toStrictEqual({
+      triggersMatch: false,
+      exceptionsMatch: false,
+      xmlOutputMatches: false,
+      xmlParsingMatches: false
+    })
+
+    const record = (await dynamoGateway.getOne(
+      "s3Path",
+      s3Path,
+      dynamoDbGatewayConfig.PHASE3_TABLE_NAME
+    )) as DocumentClient.GetItemOutput
+    expect(record.Item).toHaveProperty("s3Path", s3Path)
+    expect(record.Item).toHaveProperty("correlationId", "phase3-dummy-correlation-id")
   })
 })

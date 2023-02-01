@@ -1,4 +1,3 @@
-import type { Change } from "diff"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
@@ -8,40 +7,18 @@ import { Phase1ResultType } from "src/types/Phase1Result"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
-import { processTestString } from "../../../tests/helpers/processTestFile"
 import CoreHandler from "../../index"
 import { extractExceptionsFromAho, parseAhoXml } from "../../parse/parseAhoXml"
 import convertAhoToXml from "../../serialise/ahoXml/generate"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
+import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
+import type ComparisonResult from "../types/ComparisonResult"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResult"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
-type ComparisonResultDebugOutput = {
-  triggers: {
-    coreResult: Trigger[]
-    comparisonResult: Trigger[]
-  }
-  exceptions: {
-    coreResult: Exception[]
-    comparisonResult: Exception[]
-  }
-  xmlOutputDiff: Change[]
-  xmlParsingDiff: Change[]
-}
-
-export type ComparisonResult = {
-  triggersMatch: boolean
-  exceptionsMatch: boolean
-  xmlOutputMatches: boolean
-  xmlParsingMatches: boolean
-  error?: unknown
-  debugOutput?: ComparisonResultDebugOutput
-  file?: string
-  skipped?: boolean
-}
-
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
-const sortTriggers = (exceptions: Trigger[]): Trigger[] => orderBy(exceptions, ["code", "offenceSequenceNumber"])
+const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
 
 type CompareOptions = {
   defaultStandingDataVersion?: string
@@ -50,14 +27,12 @@ type CompareOptions = {
 const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
   !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
 
-const compareMessage = async (
-  input: string,
+const comparePhase1 = async (
+  comparison: OldPhase1Comparison | Phase1Comparison,
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<ComparisonResult> => {
-  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = processTestString(
-    input.replace(/Â£/g, "£")
-  )
+  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = comparison
   const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag=""/g, "")
 
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
@@ -125,4 +100,4 @@ const compareMessage = async (
   }
 }
 
-export default compareMessage
+export default comparePhase1

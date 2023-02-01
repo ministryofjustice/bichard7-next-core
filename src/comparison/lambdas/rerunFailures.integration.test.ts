@@ -72,7 +72,7 @@ describe("Comparison lambda", () => {
   })
 
   beforeEach(async () => {
-    await dynamoServer.setupTable(dynamoDbTableConfig)
+    await dynamoServer.setupTable(dynamoDbTableConfig(dynamoDbGatewayConfig.PHASE1_TABLE_NAME))
   })
 
   it("should rerun the failed record", async () => {
