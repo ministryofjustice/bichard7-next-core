@@ -7,7 +7,7 @@
       "action": "start_workflow",
       "start_workflow": {
         "name": "process_comparison",
-        "input":{"records":"${Records}"}
+        "input": { "records": "${Records}" }
       }
     }
   ]

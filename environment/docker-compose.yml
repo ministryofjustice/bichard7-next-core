@@ -47,7 +47,6 @@ services:
       AWS_SECRET_ACCESS_KEY: FAKE
       AWS_ACCESS_KEY_ID: FAKE
 
-
     healthcheck:
       test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
       interval: "2s"
@@ -100,7 +99,7 @@ services:
     container_name: "localstack"
     image: localstack/localstack
     ports:
-      - "4566:4566"            # LocalStack Gateway
+      - "4566:4566" # LocalStack Gateway
       # - "4510-4559:4510-4559"  # external services port range
     healthcheck:
       test: timeout 2 bash -c 'awslocal sqs list-queues'
