@@ -23,3 +23,11 @@ curl --insecure -s -X PUT \
   "${URL}/metadata/workflow" \
   -H 'Content-Type: application/json' \
   -d "$WORKFLOWS" | jq
+
+echo "Creating event handlers..."
+
+curl --insecure -s -X POST \
+  -u "${USERNAME}:${PASSWORD}" \
+  "${URL}/event" \
+  -H 'Content-Type: application/json' \
+  -d @conductor/event-handlers/handleNewComparisonMessage.json | jq

@@ -30,23 +30,28 @@ services:
       retries: 50
 
   conductor:
-    image: conductor:v3.13.2
+    image: conductor:v3.13.3
     environment:
       CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
       CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
       CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
       CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
+      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: ${CJSE_CONDUCTOR_ELASTICSEARCH_VERSION:-6}
       CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
       CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
       CJSE_CONDUCTOR_UI_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
       CJSE_CONDUCTOR_UI_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
       CJSE_CONDUCTOR_ENABLE_HTTP: "true"
+      CJSE_CONDUCTOR_QUEUE_TYPE: "sqs"
+      CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
+      AWS_SECRET_ACCESS_KEY: FAKE
+      AWS_ACCESS_KEY_ID: FAKE
 
     healthcheck:
       test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
       interval: "2s"
       timeout: "5s"
-      retries: 30
+      retries: 60
     ports:
       - 5001:5000
       - 5002:4000
@@ -65,7 +70,7 @@ services:
       test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/9300'
       interval: 5s
       timeout: 5s
-      retries: 50
+      retries: 100
     logging:
       driver: "json-file"
       options:
@@ -89,3 +94,15 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
       AWS_SECURITY_TOKEN: ${AWS_SECURITY_TOKEN}
+
+  localstack:
+    container_name: "localstack"
+    image: localstack/localstack
+    ports:
+      - "4566:4566" # LocalStack Gateway
+      # - "4510-4559:4510-4559"  # external services port range
+    healthcheck:
+      test: timeout 2 bash -c 'awslocal sqs list-queues'
+      interval: 2s
+      timeout: 2s
+      retries: 100

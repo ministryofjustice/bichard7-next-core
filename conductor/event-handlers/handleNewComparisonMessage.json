@@ -1,0 +1,14 @@
+{
+  "name": "handleNewComparisonMessage",
+  "event": "sqs:comparisonQueue",
+  "active": true,
+  "actions": [
+    {
+      "action": "start_workflow",
+      "start_workflow": {
+        "name": "process_comparison",
+        "input": { "records": "${Records}" }
+      }
+    }
+  ]
+}
