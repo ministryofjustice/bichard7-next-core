@@ -44,7 +44,8 @@ module.exports = {
         "prettier/prettier": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$", varsIgnorePattern: "^_$" }]
+        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_$", varsIgnorePattern: "^_$" }],
+        "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }]
       }
     },
     {
