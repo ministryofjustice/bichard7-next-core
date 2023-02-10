@@ -10,20 +10,20 @@ import recordResultInDynamo from "../lib/recordResultInDynamo"
 import { isError } from "../types"
 import type { CompareSingleLambdaEvent } from "../types/CompareLambdaEvent"
 import { eventSchema } from "../types/CompareLambdaEvent"
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
-const failResult: ComparisonResult = {
+const failResult: ComparisonResultDetail = {
   triggersMatch: false,
   exceptionsMatch: false,
   xmlOutputMatches: false,
   xmlParsingMatches: false
 }
 
-export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResult> => {
+export default async (event: CompareSingleLambdaEvent): Promise<ComparisonResultDetail> => {
   const parsedEvent = eventSchema.parse(event)
 
   const bucket = parsedEvent.detail.bucket.name

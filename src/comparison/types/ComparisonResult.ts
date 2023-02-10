@@ -1,30 +1,10 @@
-import type { Change } from "diff"
-import type Exception from "src/types/Exception"
-import type { Trigger } from "src/types/Trigger"
-
-export type ComparisonResultDebugOutput = {
-  triggers: {
-    coreResult: Trigger[]
-    comparisonResult: Trigger[]
-  }
-  exceptions: {
-    coreResult: Exception[]
-    comparisonResult: Exception[]
-  }
-  xmlOutputDiff: Change[]
-  xmlParsingDiff: Change[]
-}
+import type ComparisonResultDetail from "./ComparisonResultDetail"
 
 type ComparisonResult = {
-  triggersMatch: boolean
-  exceptionsMatch: boolean
-  xmlOutputMatches: boolean
-  xmlParsingMatches: boolean
-  error?: unknown
-  debugOutput?: ComparisonResultDebugOutput
-  file?: string
-  skipped?: boolean
+  s3Path: string
+  comparisonResult: ComparisonResultDetail
   correlationId?: string
+  phase: number
 }
 
 export default ComparisonResult

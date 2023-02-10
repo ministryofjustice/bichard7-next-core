@@ -1,6 +1,6 @@
 import type { PromiseResult } from "../types"
 import { isError } from "../types"
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import type DynamoGateway from "./DynamoGateway"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
@@ -10,7 +10,7 @@ const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TA
 
 const recordResultInDynamo = async (
   s3Path: string,
-  comparisonResult: ComparisonResult,
+  comparisonResult: ComparisonResultDetail,
   phase: number,
   correlationId: string | undefined,
   dynamoGateway: DynamoGateway

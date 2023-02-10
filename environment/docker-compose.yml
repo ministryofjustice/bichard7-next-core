@@ -30,7 +30,7 @@ services:
       retries: 50
 
   conductor:
-    image: conductor:v3.13.3
+    image: conductor:v3.13.3-arm
     environment:
       CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
       CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
@@ -46,6 +46,7 @@ services:
       CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
       AWS_SECRET_ACCESS_KEY: FAKE
       AWS_ACCESS_KEY_ID: FAKE
+      AWS_REGION: eu-west-2
 
     healthcheck:
       test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
@@ -58,6 +59,8 @@ services:
 
   elasticsearch:
     image: elasticsearch:6.8.15
+    # image: elasticsearch:7.17.3
+    platform: linux/amd64
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
       - transport.host=0.0.0.0
@@ -83,10 +86,11 @@ services:
       PHASE1_COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
       PHASE2_COMPARISON_TABLE_NAME: bichard-7-production-phase2-comparison-log
       PHASE3_COMPARISON_TABLE_NAME: bichard-7-production-phase3-comparison-log
+      COMPARISON_BUCKET: comparisons
       DYNAMO_REGION: eu-west-2
-      DYNAMO_URL: https://dynamodb.eu-west-2.amazonaws.com
+      DYNAMO_URL: http://localstack:4566
       S3_REGION: eu-west-2
-      S3_URL: https://s3.eu-west-2.amazonaws.com
+      S3_URL: http://localstack:4566
       CONDUCTOR_URL: http://conductor:4000/api
       CONDUCTOR_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
       CONDUCTOR_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
@@ -99,10 +103,15 @@ services:
     container_name: "localstack"
     image: localstack/localstack
     ports:
-      - "4566:4566" # LocalStack Gateway
-      # - "4510-4559:4510-4559"  # external services port range
+      - "4566:4566"
+    volumes:
+      - "${PWD}/environment/localstack/init:/etc/localstack/init"
+    environment:
+      SERVICES: "s3,sqs,dynamodb"
+      USE_SINGLE_REGION: 1
+      DEFAULT_REGION: eu-west-2
     healthcheck:
-      test: timeout 2 bash -c 'awslocal sqs list-queues'
+      test: "timeout 2 bash -c \"curl -s localhost:4566/_localstack/init | grep -q '\\\"READY\\\": true'\""
       interval: 2s
       timeout: 2s
       retries: 100

@@ -4,22 +4,13 @@ import type ComparisonResult from "../types/ComparisonResult"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import type DynamoGateway from "./DynamoGateway"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
-
-type DynamoResult = {
-  s3Path: string
-  comparisonResult: ComparisonResult
-  correlationId?: string
-  phase: number
-}
+import isPass from "./isPass"
 
 const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
 const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]
 
-const isPass = (result: ComparisonResult): boolean =>
-  result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
-
 const recordResultsInDynamoBatch = async (
-  results: DynamoResult[],
+  results: ComparisonResult[],
   dynamoGateway: DynamoGateway
 ): PromiseResult<void> => {
   const s3Paths = results.map((result) => result.s3Path)
@@ -92,7 +83,10 @@ const recordResultsInDynamoBatch = async (
   await Promise.all(promises)
 }
 
-const recordResultsInDynamo = async (results: DynamoResult[], dynamoGateway: DynamoGateway): PromiseResult<void> => {
+const recordResultsInDynamo = async (
+  results: ComparisonResult[],
+  dynamoGateway: DynamoGateway
+): PromiseResult<void> => {
   const batchSize = 100
   const promises: PromiseResult<void>[] = []
 

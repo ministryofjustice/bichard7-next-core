@@ -1,17 +1,28 @@
 {
   "accessPolicy": {},
-  "name": "process_comparison",
+  "name": "compare_files",
   "description": "Runs comparisons between Core and Bichard as they are emitted from Bichard",
   "version": 1,
   "tasks": [
     {
       "name": "extract_paths",
-      "taskReferenceName": "aggregate_results",
+      "taskReferenceName": "extract_paths",
       "inputParameters": {
         "records": "${workflow.input.records}",
         "queryExpression": "[.records[].s3.object.key]"
       },
       "type": "JSON_JQ_TRANSFORM"
+    },
+    {
+      "name": "compare_files",
+      "taskReferenceName": "compare_files",
+      "inputParameters": {
+        "records": "${extract_paths.output.result}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
     }
   ],
   "inputParameters": ["records"],

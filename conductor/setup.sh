@@ -30,4 +30,4 @@ curl --insecure -s -X POST \
   -u "${USERNAME}:${PASSWORD}" \
   "${URL}/event" \
   -H 'Content-Type: application/json' \
-  -d @conductor/event-handlers/handleNewComparisonMessage.json | jq
+  -d @conductor/event-handlers/handle-new-comparison-message.json | jq
