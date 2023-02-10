@@ -1,7 +1,7 @@
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import fetchFile from "./fetchFile"
 import processFile from "./processFile"
 import skippedFile from "./skippedFile"
@@ -14,7 +14,7 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
-const processFailures = async (cache: boolean): Promise<ComparisonResult[]> => {
+const processFailures = async (cache: boolean): Promise<ComparisonResultDetail[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const results = []
   let count = 0

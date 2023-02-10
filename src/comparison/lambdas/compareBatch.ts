@@ -13,16 +13,16 @@ import { formatXmlDiffAsTxt } from "../lib/xmlOutputComparison"
 import { isError } from "../types"
 import type { CompareBatchLambdaEvent } from "../types/CompareLambdaEvent"
 import { batchEventSchema } from "../types/CompareLambdaEvent"
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
 const s3Config = createS3Config()
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
 
-const isPass = (result: ComparisonResult): boolean =>
+const isPass = (result: ComparisonResultDetail): boolean =>
   result.triggersMatch && result.exceptionsMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
-const printDebug = (result: ComparisonResult) => {
+const printDebug = (result: ComparisonResultDetail) => {
   if (result.debugOutput) {
     if (!result.triggersMatch) {
       logger.error("Triggers do not match")
@@ -48,14 +48,14 @@ const printDebug = (result: ComparisonResult) => {
   }
 }
 
-const failResult: ComparisonResult = {
+const failResult: ComparisonResultDetail = {
   triggersMatch: false,
   exceptionsMatch: false,
   xmlOutputMatches: false,
   xmlParsingMatches: false
 }
 
-export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResult[]> => {
+export default async (event: CompareBatchLambdaEvent): Promise<ComparisonResultDetail[]> => {
   const parsedEvent = batchEventSchema.parse(Array.isArray(event) ? event : [event])
   const count = { pass: 0, fail: 0 }
 
