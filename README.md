@@ -150,6 +150,7 @@ PHASE1_COMPARISON_TABLE_NAME="bichard-7-e2e-test-comparison-log" \
 DYNAMO_REGION="eu-west-2" \
 DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
 S3_REGION="eu-west-2" \
-S3_URL="https://s3.eu-west-2.amazonaws.com" \
 aws-vault exec bichard7-shared-e2e-test -- npm run conductor-worker
 ```
+
+See the docker compose file for Conductor for an up to date list of environment variables required

@@ -86,7 +86,6 @@ function pull_and_build_from_aws() {
       -e DYNAMO_REGION="eu-west-2" \
       -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
       -e S3_REGION="eu-west-2" \
-      -e S3_URL="https://s3.eu-west-2.amazonaws.com" \
       -e CONDUCTOR_URL="http://conductor:4000/api" \
       "${DOCKER_OUTPUT_TAG}:latest"
 

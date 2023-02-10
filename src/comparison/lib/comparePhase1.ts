@@ -13,8 +13,8 @@ import convertAhoToXml from "../../serialise/ahoXml/generate"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
-import type ComparisonResult from "../types/ComparisonResult"
-import type { ComparisonResultDebugOutput } from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
@@ -31,7 +31,7 @@ const comparePhase1 = async (
   comparison: OldPhase1Comparison | Phase1Comparison,
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
-): Promise<ComparisonResult> => {
+): Promise<ComparisonResultDetail> => {
   const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = comparison
   const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag=""/g, "")
 

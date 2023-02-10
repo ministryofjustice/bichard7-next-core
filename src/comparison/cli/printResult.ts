@@ -1,14 +1,14 @@
-import type ComparisonResult from "../types/ComparisonResult"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
-const resultMatches = (result: ComparisonResult): boolean =>
+const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
-const printSummary = (results: ComparisonResult[]): void => {
+const printSummary = (results: ComparisonResultDetail[]): void => {
   const total = results.length
   const passed = results.filter((result) => !result.skipped && resultMatches(result)).length
   const skipped = results.filter((result) => result.skipped).length
@@ -42,7 +42,7 @@ const formatTest = (name: string, success: boolean): string => {
   return `${chalk.red("✗")} ${name} failed`
 }
 
-export const printSingleSummary = (result: ComparisonResult): void => {
+export const printSingleSummary = (result: ComparisonResultDetail): void => {
   console.log(`\n${result.file}`)
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
@@ -50,7 +50,7 @@ export const printSingleSummary = (result: ComparisonResult): void => {
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
-const printResult = (result?: ComparisonResult | ComparisonResult[], truncate = false): void => {
+const printResult = (result?: ComparisonResultDetail | ComparisonResultDetail[], truncate = false): void => {
   if (!result) {
     return
   }

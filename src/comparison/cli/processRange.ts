@@ -1,7 +1,7 @@
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import fetchFile from "./fetchFile"
 import processFile from "./processFile"
 import skippedFile from "./skippedFile"
@@ -19,7 +19,7 @@ const processRange = async (
   end: string,
   filter: string,
   cache: boolean
-): Promise<ComparisonResult[]> => {
+): Promise<ComparisonResultDetail[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
   const results = []

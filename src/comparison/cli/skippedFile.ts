@@ -1,6 +1,6 @@
-import type ComparisonResult from "../types/ComparisonResult"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
-const skippedFile = (file: string): ComparisonResult => ({
+const skippedFile = (file: string): ComparisonResultDetail => ({
   file,
   skipped: true,
   triggersMatch: false,
