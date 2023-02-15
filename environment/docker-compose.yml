@@ -112,6 +112,7 @@ services:
       - "${PWD}/environment/localstack/init:/etc/localstack/init"
     environment:
       SERVICES: "s3,sqs,dynamodb"
+      AWS_DEFAULT_REGION: "eu-west-2"
     healthcheck:
       test: "timeout 2 bash -c \"curl -s localhost:4566/_localstack/init | grep -q '\\\"READY\\\": true'\""
       interval: 2s
