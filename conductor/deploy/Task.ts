@@ -3,11 +3,6 @@ import fs from "fs"
 import { isMatch } from "lodash"
 import type ConductorGateway from "./ConductorGateway"
 
-const commitHash = process.env.GIT_COMMIT_HASH
-if (!commitHash) {
-  throw new Error("Must specify $GIT_COMMIT_HASH")
-}
-
 class Task {
   private localTask: TaskDef
 
