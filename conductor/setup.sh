@@ -8,11 +8,13 @@ PASSWORD=${CONDUCTOR_PASSWORD:-password}
 
 echo "Creating tasks..."
 
+TASKS="$(jq -s -c '.' conductor/tasks/*.json)"
+
 curl --insecure -X POST \
   -u "${USERNAME}:${PASSWORD}" \
   "${URL}/metadata/taskdefs" \
   -H 'Content-Type: application/json' \
-  -d @conductor/tasks.json
+  -d "$TASKS"
 
 echo "Creating workflows..."
 

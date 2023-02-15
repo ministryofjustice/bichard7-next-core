@@ -1,17 +1,11 @@
 import type { WorkflowDef } from "@io-orkes/conductor-typescript"
-import crypto from "crypto"
 import fs from "fs"
 import type ConductorGateway from "./ConductorGateway"
+import { hashFile } from "./utils"
 
 const commitHash = process.env.GIT_COMMIT_HASH
 if (!commitHash) {
   throw new Error("Must specify $GIT_COMMIT_HASH")
-}
-
-const hashFile = (fileContent: Buffer): string => {
-  const hashSum = crypto.createHash("sha256")
-  hashSum.update(fileContent)
-  return hashSum.digest("hex").substring(0, 16)
 }
 
 class Workflow {
@@ -47,7 +41,7 @@ class Workflow {
   }
 
   private getUpdatedBy(): string {
-    return `Workflow File: ${this.localWorkflowHash}, Commit Hash: ${commitHash}`
+    return `Workflow file: ${this.localWorkflowHash}, Commit hash: ${commitHash}`
   }
 
   private workflowNeedsUpdating(remoteWorkflow: WorkflowDef): boolean {
