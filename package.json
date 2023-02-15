@@ -37,7 +37,7 @@
     "conductor-down": "docker-compose --project-name conductor -f environment/docker-compose.yml down -v",
     "conductor-full": "docker-compose --project-name conductor -f environment/docker-compose.yml -f environment/docker-compose-conductor-full.yml up -d conductor --wait",
     "conductor-full-down": "docker-compose --project-name conductor -f environment/docker-compose.yml -f environment/docker-compose-conductor-full.yml down -v",
-    "conductor-setup": "conductor/setup.sh",
+    "conductor-setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -T conductor/deploy/deploy.ts",
     "conductor-worker": "npx ts-node -T conductor/src/worker.ts",
     "conductor-worker-docker": "docker-compose --project-name conductor -f environment/docker-compose.yml up -d worker",
     "environment": "docker-compose -f environment/docker-compose.yml up -d",
