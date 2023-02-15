@@ -1,7 +1,7 @@
 {
   "accessPolicy": {},
   "name": "dummy",
-  "description": "Compares comparison S3 files against Core",
+  "description": "Dummy workflow for testing",
   "version": 1,
   "tasks": [
     {

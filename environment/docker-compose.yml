@@ -30,7 +30,7 @@ services:
       retries: 50
 
   conductor:
-    image: conductor:v3.13.3-arm
+    image: conductor:v3.13.3
     environment:
       CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
       CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
