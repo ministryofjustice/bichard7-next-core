@@ -1,10 +1,12 @@
 import fs from "fs/promises"
 import ConductorGateway from "./ConductorGateway"
+import EventHandler from "./EventHandler"
 import Task from "./Task"
 import Workflow from "./Workflow"
 
 const workflowDir = "./conductor/workflows"
 const taskDir = "./conductor/tasks"
+const eventHandlerDir = "./conductor/event-handlers"
 
 const conductor = new ConductorGateway({
   url: process.env.CONDUCTOR_URL ?? "http://localhost:5002",
@@ -24,6 +26,14 @@ const main = async () => {
 
   const workflowPromises = workflows.map((workflow) => workflow.upsert())
   await Promise.all(workflowPromises)
+
+  const eventHandlerFilenames = await fs.readdir(eventHandlerDir)
+  const eventHandlers = eventHandlerFilenames.map(
+    (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor)
+  )
+
+  const eventHandlerPromises = eventHandlers.map((eventHandler) => eventHandler.upsert())
+  await Promise.all(eventHandlerPromises)
 }
 
 main()

@@ -1,5 +1,6 @@
 import type { WorkflowDef } from "@io-orkes/conductor-typescript"
 import axios from "axios"
+import type { EventHandlerDef } from "conductor/src/types/EventHandlerDef"
 import type { TaskDef } from "conductor/src/types/TaskDef"
 
 type ConductorOptions = {
@@ -41,6 +42,21 @@ class ConductorGateway {
       })
   }
 
+  getEventHandler(event: string, name: string): Promise<EventHandlerDef | undefined> {
+    return axios
+      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/api/event/${event}`, {
+        auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
+        validateStatus: (status: number) => status >= 200 && status < 500
+      })
+      .then((res) => {
+        if (res.status === 200 && res.data.length > 0) {
+          return res.data.filter((e) => e.name === name)[0]
+        }
+
+        return undefined
+      })
+  }
+
   putWorkflow(definition: WorkflowDef): Promise<void> {
     return axios.put(`${this.conductorOptions.url}/api/metadata/workflow`, [definition], {
       auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
@@ -50,6 +66,20 @@ class ConductorGateway {
 
   postTask(definition: TaskDef): Promise<void> {
     return axios.post(`${this.conductorOptions.url}/api/metadata/taskdefs`, [definition], {
+      auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
+      headers: { "Content-Type": "application/json" }
+    })
+  }
+
+  postEventHandler(definition: EventHandlerDef): Promise<void> {
+    return axios.post(`${this.conductorOptions.url}/api/event`, definition, {
+      auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
+      headers: { "Content-Type": "application/json" }
+    })
+  }
+
+  putEventHandler(definition: EventHandlerDef): Promise<void> {
+    return axios.put(`${this.conductorOptions.url}/api/event`, definition, {
       auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
       headers: { "Content-Type": "application/json" }
     })

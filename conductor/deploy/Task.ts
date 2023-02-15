@@ -1,5 +1,6 @@
 import type { TaskDef } from "conductor/src/types/TaskDef"
 import fs from "fs"
+import { isMatch } from "lodash"
 import type ConductorGateway from "./ConductorGateway"
 
 const commitHash = process.env.GIT_COMMIT_HASH
@@ -34,15 +35,7 @@ class Task {
   }
 
   private taskNeedsUpdating(remoteTask: TaskDef): boolean {
-    for (const key of Object.keys(this.localTask)) {
-      const remoteValue = remoteTask[key as keyof TaskDef]
-      const localValue = this.localTask[key as keyof TaskDef]
-
-      if (remoteValue && JSON.stringify(remoteValue) !== JSON.stringify(localValue)) {
-        return true
-      }
-    }
-    return false
+    return !isMatch(remoteTask, this.localTask)
   }
 }
 
