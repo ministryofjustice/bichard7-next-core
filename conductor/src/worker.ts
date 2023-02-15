@@ -11,7 +11,7 @@ const client = new ConductorClient({
 })
 
 const workers = [generateDayTasks, rerunDay, compareFiles, dummyTask]
-const taskManager = new TaskManager(client, workers)
+const taskManager = new TaskManager(client, workers, { options: { concurrency: 10 } })
 
 console.log("Starting polling...")
 taskManager.startPolling()

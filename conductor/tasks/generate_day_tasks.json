@@ -1,0 +1,11 @@
+{
+  "name": "generate_day_tasks",
+  "retryCount": 3,
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 10,
+  "timeoutSeconds": 4000,
+  "timeoutPolicy": "TIME_OUT_WF",
+  "ownerEmail": "moj-bichard7@madetech.com",
+  "inputKeys": ["start", "end", "onlyFailures", "taskName"],
+  "outputKeys": ["dynamicTasks", "dynamicTasksInput"]
+}
