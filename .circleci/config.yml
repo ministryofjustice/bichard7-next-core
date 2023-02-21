@@ -1,6 +1,15 @@
 version: 2.1
 
 commands:
+  fetch_docker_image:
+    parameters:
+      image:
+        type: string
+    steps:
+      - run:
+          name: Fetch the <<parameters.image>> image
+          command: bash scripts/fetch-docker-image.sh <<parameters.image>>
+
   checkout_and_install:
     description: Check out the repo and install the node dependencies
     steps:
@@ -146,6 +155,37 @@ jobs:
           name: Run tests against core code
           command: cd ~/bichard7-next-tests && npm run test:characterisation
 
+  conductor_test:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    working_directory: ~
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: .
+      - fetch_docker_image:
+          image: conductor
+      - fetch_docker_image:
+          image: nodejs
+      - run:
+          name: Build the Conductor Worker
+          command: npm run conductor-worker-docker-build
+      - run:
+          name: Boot Conductor infrastructure
+          command: npm run conductor-full
+      - run:
+          name: Set up Conductor
+          command: npm run conductor-setup
+      - run:
+          name: Run the Conductor Worker
+          command: npm run conductor-worker-docker
+          background: true
+      - run:
+          name: Test the workflows
+          command: npm run test:conductor
+
 workflows:
   version: 2
   build-and-test:
@@ -161,5 +201,8 @@ workflows:
           requires:
             - build
       - e2e_comparison_test:
+          requires:
+            - build
+      - conductor_test:
           requires:
             - build

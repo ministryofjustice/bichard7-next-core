@@ -30,7 +30,7 @@ services:
       retries: 50
 
   conductor:
-    image: conductor:v3.13.3
+    image: conductor
     environment:
       CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
       CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
@@ -81,7 +81,9 @@ services:
         max-file: "3"
 
   worker:
-    image: core-worker:latest
+    build:
+      context: ..
+      dockerfile: conductor/Dockerfile
     environment:
       PHASE1_COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
       PHASE2_COMPARISON_TABLE_NAME: bichard-7-production-phase2-comparison-log
