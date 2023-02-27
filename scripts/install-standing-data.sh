@@ -3,7 +3,7 @@
 VERSIONS=$(npm view @moj-bichard7-developers/bichard7-next-data versions | tr "'" '"')
 
 # Set minimum package version required
-declare -i MAJOR=2 MINOR=0 PATCH=30
+declare -i MAJOR=2 MINOR=0 PATCH=40
 declare -i FROM_VERSION=MAJOR*10000+MINOR*100+PATCH
 
 ALL_VERSIONS=$(echo $VERSIONS | jq -rj ".[] | { version: ., parsedVersion: (. | split(\".\")) } | .parsedVersion[] |= tonumber | select((.parsedVersion[0] * 10000) + (.parsedVersion[1] * 100) + .parsedVersion[2] >= $FROM_VERSION) | { c: (\" bichard7-next-data-\" + .version + \"@npm:@moj-bichard7-developers/bichard7-next-data@\" + .version) } | .c")
