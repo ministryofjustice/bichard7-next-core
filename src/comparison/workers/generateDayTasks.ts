@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
-import { conductorLog, logWorkingMessage } from "conductor/src/utils"
+import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/src/utils"
 
 export type GenerateDayTasksOutput = {
   start: string
@@ -11,9 +11,10 @@ export type GenerateDayTasksOutput = {
 
 const generateDayTasks: ConductorWorker = {
   taskDefName: "generate_day_tasks",
+  concurrency: 10,
   execute: (task: Task) => {
     logWorkingMessage(task)
-    const startDate = task.inputData?.startDate ?? "2023-01-01"
+    const startDate = task.inputData?.startDate ?? "2022-07-01"
     const endDate = task.inputData?.endDate ?? new Date().toISOString()
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
@@ -37,6 +38,7 @@ const generateDayTasks: ConductorWorker = {
 
     logs.push(conductorLog(`Generated ${ranges.length} day intervals`))
 
+    logCompletedMessage(task)
     return Promise.resolve({
       logs,
       outputData: {

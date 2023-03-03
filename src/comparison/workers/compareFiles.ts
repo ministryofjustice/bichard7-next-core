@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
-import { conductorLog, logWorkingMessage } from "conductor/src/utils"
+import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/src/utils"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
@@ -16,6 +16,7 @@ const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing
 
 const compareFiles: ConductorWorker = {
   taskDefName: "compare_files",
+  concurrency: 10,
   execute: async (task: Task) => {
     logWorkingMessage(task)
 
@@ -60,6 +61,7 @@ const compareFiles: ConductorWorker = {
 
     logs.push(conductorLog(`Results of processing: ${count.pass} passed. ${count.fail} failed`))
 
+    logCompletedMessage(task)
     return {
       logs,
       outputData: { ...count },

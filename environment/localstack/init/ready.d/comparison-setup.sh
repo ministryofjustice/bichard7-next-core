@@ -5,8 +5,8 @@ COMPARISON_BUCKET="comparisons"
 
 # Create the comparison queue
 awslocal sqs create-queue --region $AWS_REGION --queue-name $COMPARISON_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
-awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_sqs_notify_test_COMPLETED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
-awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_sqs_notify_test_FAILED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_COMPLETED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_FAILED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 
 # Create the incoming message bucket
 awslocal s3 mb s3://$COMPARISON_BUCKET
