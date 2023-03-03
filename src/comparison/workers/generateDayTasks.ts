@@ -11,9 +11,10 @@ export type GenerateDayTasksOutput = {
 
 const generateDayTasks: ConductorWorker = {
   taskDefName: "generate_day_tasks",
+  concurrency: 10,
   execute: (task: Task) => {
     logWorkingMessage(task)
-    const startDate = task.inputData?.startDate ?? "2023-01-01"
+    const startDate = task.inputData?.startDate ?? "2022-07-01"
     const endDate = task.inputData?.endDate ?? new Date().toISOString()
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName

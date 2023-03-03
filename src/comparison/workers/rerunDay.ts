@@ -16,6 +16,7 @@ const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing
 
 const rerunDay: ConductorWorker = {
   taskDefName: "rerun_day",
+  concurrency: 10,
   execute: async (task: Task) => {
     logWorkingMessage(task)
 

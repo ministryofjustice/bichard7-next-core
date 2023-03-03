@@ -16,6 +16,7 @@ const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing
 
 const compareFiles: ConductorWorker = {
   taskDefName: "compare_files",
+  concurrency: 10,
   execute: async (task: Task) => {
     logWorkingMessage(task)
 
