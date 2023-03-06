@@ -1,8 +1,8 @@
 import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
+import { defaultConcurrency } from "src/comparison/lib/getTaskConcurrency"
 import compareFiles from "src/comparison/workers/compareFiles"
 import generateDayTasks from "src/comparison/workers/generateDayTasks"
 import rerunDay from "src/comparison/workers/rerunDay"
-import dummyTask from "./dummyTask"
 
 const client = new ConductorClient({
   serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
@@ -10,8 +10,8 @@ const client = new ConductorClient({
   PASSWORD: process.env.CONDUCTOR_PASSWORD
 })
 
-const workers = [generateDayTasks, rerunDay, compareFiles, dummyTask]
-const taskManager = new TaskManager(client, workers, { options: { concurrency: 10 } })
+const workers = [generateDayTasks, rerunDay, compareFiles]
+const taskManager = new TaskManager(client, workers, { options: { concurrency: defaultConcurrency } })
 
 console.log("Starting polling...")
 taskManager.startPolling()
