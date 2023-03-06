@@ -5,6 +5,7 @@ import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
+import getTaskConcurrency from "../lib/getTaskConcurrency"
 import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import { isError } from "../types"
@@ -13,10 +14,11 @@ import type ComparisonResult from "../types/ComparisonResult"
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
+const taskDefName = "compare_files"
 
 const compareFiles: ConductorWorker = {
-  taskDefName: "compare_files",
-  concurrency: 10,
+  taskDefName,
+  concurrency: getTaskConcurrency(taskDefName, 10),
   execute: async (task: Task) => {
     logWorkingMessage(task)
 
