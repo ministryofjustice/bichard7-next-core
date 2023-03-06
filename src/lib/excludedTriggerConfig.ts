@@ -1,12 +1,15 @@
 import { TriggerCode } from "../types/TriggerCode"
 import requireStandingData from "./requireStandingData"
-const { excludedTriggerConfig } = requireStandingData()
 
-if (process.env.NODE_ENV === "test" && "01" in excludedTriggerConfig) {
-  delete excludedTriggerConfig["01"]
-  excludedTriggerConfig["42"] = [TriggerCode.TRPR0001]
-  excludedTriggerConfig["36"].push(TriggerCode.TRPR0004)
-  excludedTriggerConfig["36"].push(TriggerCode.TRPR0027)
+const excludedTriggerConfig = () => {
+  const { excludedTriggerConfig: excludedTriggers } = requireStandingData()
+  if (process.env.NODE_ENV === "test" && "01" in excludedTriggers) {
+    delete excludedTriggers["01"]
+    excludedTriggers["42"] = [TriggerCode.TRPR0001]
+    excludedTriggers["36"].push(TriggerCode.TRPR0004)
+    excludedTriggers["36"].push(TriggerCode.TRPR0027)
+  }
+  return excludedTriggers
 }
 
 export default excludedTriggerConfig

@@ -39,7 +39,7 @@ const comparePhase1 = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(global as any).dataVersion = dataVersion
   if (debug) {
-    logger.info(`Using version ${dataVersion} of standing data`)
+    logger.debug(`Using version ${dataVersion} of standing data`)
   }
 
   const sortedTriggers = sortTriggers(triggers)
