@@ -26,6 +26,7 @@ import {
 } from "./ahoValidations"
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
+import toArray from "./toArray"
 
 export const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
 
@@ -210,10 +211,10 @@ export const resultSchema = z.object({
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
-  AmountSpecifiedInResult: amountSpecifiedInResultSchema
-    .refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243)
-    .array()
-    .optional(),
+  AmountSpecifiedInResult: z.preprocess(
+    toArray,
+    amountSpecifiedInResultSchema.refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243).array().min(0)
+  ),
   NumberSpecifiedInResult: z
     .array(numberSpecifiedInResultSchema.refine(validateNumberSpecifiedInResult, ExceptionCode.HO100244))
     .optional(),

@@ -1,10 +1,8 @@
 import { z } from "zod"
 import { SpiPlea } from "../types/Plea"
+import toArray from "./toArray"
 
 export const spiPleaSchema = z.nativeEnum(SpiPlea)
-
-export const toArray = <T>(element: unknown): T[] =>
-  element === undefined ? [] : !Array.isArray(element) ? [element] : element
 
 export const nextHearingDetailsSchema = z.object({
   CourtHearingLocation: z.string(),
