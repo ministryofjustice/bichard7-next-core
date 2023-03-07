@@ -125,7 +125,7 @@ export const numberSpecifiedInResultSchema = z.object({
 })
 
 export const amountSpecifiedInResultSchema = z.object({
-  Amount: z.number().refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243),
+  Amount: z.number(),
   DecimalPlaces: z.number(),
   Type: z.string().optional()
 })
@@ -210,7 +210,10 @@ export const resultSchema = z.object({
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
-  AmountSpecifiedInResult: amountSpecifiedInResultSchema.array().optional(),
+  AmountSpecifiedInResult: amountSpecifiedInResultSchema
+    .refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243)
+    .array()
+    .optional(),
   NumberSpecifiedInResult: z
     .array(numberSpecifiedInResultSchema.refine(validateNumberSpecifiedInResult, ExceptionCode.HO100244))
     .optional(),
