@@ -211,10 +211,12 @@ export const resultSchema = z.object({
   Duration: durationSchema.array().optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
-  AmountSpecifiedInResult: z.preprocess(
-    toArray,
-    amountSpecifiedInResultSchema.refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243).array().min(0)
-  ),
+  AmountSpecifiedInResult: z
+    .preprocess(
+      toArray,
+      amountSpecifiedInResultSchema.refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243).array().min(0)
+    )
+    .optional(),
   NumberSpecifiedInResult: z
     .array(numberSpecifiedInResultSchema.refine(validateNumberSpecifiedInResult, ExceptionCode.HO100244))
     .optional(),
