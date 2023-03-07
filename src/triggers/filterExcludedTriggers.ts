@@ -4,6 +4,7 @@ import type { Trigger } from "../types/Trigger"
 import type { TriggerCode } from "../types/TriggerCode"
 
 const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome, triggers: Trigger[]): Trigger[] => {
+  const excludedTriggers = excludedTriggerConfig()
   const court =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode
   const force = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
@@ -11,14 +12,14 @@ const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome
     throw Error("Force not found")
   }
 
-  const matchingCourtKeys = Object.keys(excludedTriggerConfig).filter((key) => court.startsWith(key))
+  const matchingCourtKeys = Object.keys(excludedTriggers).filter((key) => court.startsWith(key))
   const courtHasRules = matchingCourtKeys.length > 0
-  const forceHasRules = !!excludedTriggerConfig[force]
+  const forceHasRules = !!excludedTriggers[force]
 
-  const forceExcludesTrigger = (code: TriggerCode) => forceHasRules && excludedTriggerConfig[force].includes(code)
+  const forceExcludesTrigger = (code: TriggerCode) => forceHasRules && excludedTriggers[force].includes(code)
 
   const courtExcludesTrigger = (code: TriggerCode) =>
-    matchingCourtKeys.some((key) => excludedTriggerConfig[key].includes(code))
+    matchingCourtKeys.some((key) => excludedTriggers[key].includes(code))
 
   const shouldIncludeTrigger = (code: TriggerCode) => {
     const forceExcluded = forceExcludesTrigger(code)
