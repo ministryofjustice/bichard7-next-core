@@ -54,6 +54,9 @@ export default (xml: string): Exception[] => {
         if (result.NumberSpecifiedInResult && !Array.isArray(result.NumberSpecifiedInResult)) {
           result.NumberSpecifiedInResult = [result.NumberSpecifiedInResult]
         }
+        if (result.AmountSpecifiedInResult && !Array.isArray(result.AmountSpecifiedInResult)) {
+          result.AmountSpecifiedInResult = [result.AmountSpecifiedInResult]
+        }
       })
     })
   }

@@ -19,7 +19,7 @@ import {
 } from "../dataLookup"
 import Asn from "../lib/Asn"
 import requireStandingData from "../lib/requireStandingData"
-import type { NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
+import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../types/ExceptionCode"
 const { remandStatus } = requireStandingData()
 
@@ -76,15 +76,15 @@ const validateYesNo = (data: string): boolean => !!lookupYesNoByCjsCode(data)
 
 const validateVehicleCode = (data: string): boolean => !!lookupVehicleCodeByCjsCode(data)
 
-const validateAmountSpecifiedInResult = (amount: number): boolean => {
+const validateAmountSpecifiedInResult = (elem: AmountSpecifiedInResult): boolean => {
   const maxAmount = 999999999999.99
   const minAmount = 0.01
-  const fractionDigits = amount.toString().split(".")[1]?.length
-  const totalDigits = amount.toString().replace(".", "").length
+  const fractionDigits = elem.Amount.toString().split(".")[1]?.length
+  const totalDigits = elem.Amount.toString().replace(".", "").length
 
   return (
-    amount >= minAmount &&
-    amount <= maxAmount &&
+    elem.Amount >= minAmount &&
+    elem.Amount <= maxAmount &&
     (fractionDigits === undefined || fractionDigits <= 2) &&
     totalDigits <= 14
   )
