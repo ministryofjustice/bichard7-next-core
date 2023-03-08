@@ -2,6 +2,7 @@ import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import type { Readable } from "stream"
 import { isError } from "../comparison/types"
+import logger from "./logging"
 
 const streamToBuffer = (stream: Readable) =>
   new Promise<Buffer>((resolve, reject) => {
@@ -23,9 +24,9 @@ const getFileFromS3 = async (fileName: string, bucket: string, config: S3ClientC
       const buffer = await streamToBuffer(stream)
       return buffer.toString()
     }
+    logger.error(response)
   }
-
-  return new Error("Couldn't retrieve file from S3")
+  return new Error(`Couldn't retrieve file from S3: ${fileName}`)
 }
 
 export default getFileFromS3
