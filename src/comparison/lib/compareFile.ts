@@ -21,7 +21,7 @@ const s3Config = createS3Config()
 const compareFile = async (s3Path: string, bucket: string): PromiseResult<ComparisonResult> => {
   const content = await getFileFromS3(s3Path, bucket, s3Config)
   if (content instanceof Error) {
-    throw content
+    return content
   }
 
   const comparison = parseComparisonFile(content)

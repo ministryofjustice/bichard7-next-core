@@ -39,7 +39,7 @@ const rerunDay: ConductorWorker = {
     const successFilter = onlyFailures ? false : undefined
 
     for await (const batch of gateway.getRange(start, end, successFilter, 1000)) {
-      if (!batch || batch instanceof Error) {
+      if (!batch || isError(batch)) {
         return {
           logs: [conductorLog("Failed to get batch from Dynamo")],
           status: "FAILED"
