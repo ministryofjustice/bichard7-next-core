@@ -1,3 +1,4 @@
+import logger from "src/lib/logging"
 import type { ComparisonLog, PromiseResult } from "../types"
 import { isError } from "../types"
 import type ComparisonResult from "../types/ComparisonResult"
@@ -80,7 +81,11 @@ const recordResultsInDynamoBatch = async (
     promises.push(dynamoGateway.insertBatch(records, "s3Path", table))
   })
 
-  await Promise.all(promises)
+  const dynamoResults = await Promise.all(promises)
+  const errors = dynamoResults.filter((res) => isError(res))
+  if (errors.length > 0) {
+    return errors[0]
+  }
 }
 
 const recordResultsInDynamo = async (
@@ -94,7 +99,12 @@ const recordResultsInDynamo = async (
     promises.push(recordResultsInDynamoBatch(results.slice(i, i + batchSize), dynamoGateway))
   }
 
-  await Promise.all(promises)
+  const updateResult = await Promise.all(promises)
+  const errors = updateResult.filter((res) => isError(res))
+  if (errors.length > 0) {
+    logger.error(errors[0])
+    return errors[0]
+  }
 }
 
 export default recordResultsInDynamo
