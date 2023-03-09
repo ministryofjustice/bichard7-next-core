@@ -6,7 +6,7 @@
     {
       "action": "start_workflow",
       "start_workflow": {
-        "name": "corePhase1",
+        "name": "core_phase1",
         "input": { "records": "${Records}" }
       }
     }

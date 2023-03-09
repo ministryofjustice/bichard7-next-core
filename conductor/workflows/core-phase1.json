@@ -5,10 +5,22 @@
   "version": 1,
   "tasks": [
     {
+      "name": "extract_paths",
+      "taskReferenceName": "extract_paths",
+      "inputParameters": {
+        "records": "${workflow.input.records}",
+        "queryExpression": ".records[0].s3.object.key"
+      },
+      "type": "JSON_JQ_TRANSFORM",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
       "name": "process_phase1",
       "taskReferenceName": "process_phase1",
       "inputParameters": {
-        "s3Path": "${workflow.input.s3Path}"
+        "s3Path": "${extract_paths.output.result}"
       },
       "type": "SIMPLE",
       "startDelay": 0,

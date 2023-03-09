@@ -2,10 +2,12 @@
 AWS_REGION=eu-west-2
 COMPARISON_QUEUE="comparisonQueue"
 COMPARISON_BUCKET="comparisons"
+PHASE_1_QUEUE="phase1Queue"
 PHASE_1_BUCKET_NAME="phase1"
 
 # Create the comparison queue
 awslocal sqs create-queue --region $AWS_REGION --queue-name $COMPARISON_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name $PHASE_1_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_COMPLETED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_FAILED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 
@@ -21,6 +23,18 @@ awslocal s3api put-bucket-notification-configuration \
                                     "QueueConfigurations": [
                                       {
                                         "QueueArn": "arn:aws:sqs:'"$AWS_REGION"':000000000000:'"$COMPARISON_QUEUE"'",
+                                        "Events": ["s3:ObjectCreated:*"]
+                                      }
+                                    ]
+                                  }'
+
+awslocal s3api put-bucket-notification-configuration \
+  --bucket $PHASE_1_BUCKET_NAME \
+  --region $AWS_REGION \
+  --notification-configuration  '{
+                                    "QueueConfigurations": [
+                                      {
+                                        "QueueArn": "arn:aws:sqs:'"$AWS_REGION"':000000000000:'"$PHASE_1_QUEUE"'",
                                         "Events": ["s3:ObjectCreated:*"]
                                       }
                                     ]
