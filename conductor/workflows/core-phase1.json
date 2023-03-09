@@ -26,6 +26,17 @@
       "startDelay": 0,
       "optional": false,
       "asyncComplete": false
+    },
+    {
+      "name": "send_to_phase2",
+      "taskReferenceName": "send_to_phase2",
+      "inputParameters": {
+        "phase1Result": "${process_phase1.output.result}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
     }
   ],
   "inputParameters": ["s3Path"],

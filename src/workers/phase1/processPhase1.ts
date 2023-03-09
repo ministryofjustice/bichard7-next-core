@@ -71,7 +71,7 @@ const processPhase1: ConductorWorker = {
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,
-        outputData: { ...result, correlationId },
+        outputData: { result: { ...result, correlationId } },
         status: "FAILED_WITH_TERMINAL_ERROR"
       }
     }
@@ -83,9 +83,11 @@ const processPhase1: ConductorWorker = {
         return {
           logs,
           outputData: {
-            correlationId,
-            auditLogEvents: [],
-            resultType: Phase1ResultType.failure
+            result: {
+              correlationId,
+              auditLogEvents: [],
+              resultType: Phase1ResultType.failure
+            }
           },
           status: "FAILED"
         }
@@ -94,7 +96,7 @@ const processPhase1: ConductorWorker = {
 
     return {
       logs,
-      outputData: result,
+      outputData: { result },
       status: "COMPLETED"
     }
   }

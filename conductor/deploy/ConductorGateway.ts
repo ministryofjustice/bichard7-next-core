@@ -58,10 +58,15 @@ class ConductorGateway {
   }
 
   putWorkflow(definition: WorkflowDef): Promise<void> {
-    return axios.put(`${this.conductorOptions.url}/api/metadata/workflow`, [definition], {
-      auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
-      headers: { "Content-Type": "application/json" }
-    })
+    return axios
+      .put(`${this.conductorOptions.url}/api/metadata/workflow`, [definition], {
+        auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
+        headers: { "Content-Type": "application/json" }
+      })
+      .catch((res) => {
+        console.error(res.response.data)
+        return res
+      })
   }
 
   postTask(definition: TaskDef): Promise<void> {

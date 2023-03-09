@@ -1,11 +1,11 @@
 {
-  "name": "process_phase1",
+  "name": "send_to_phase2",
   "retryCount": 3,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 4000,
   "timeoutPolicy": "TIME_OUT_WF",
   "ownerEmail": "moj-bichard7@madetech.com",
-  "inputKeys": ["s3Path"],
+  "inputKeys": ["phase1Result"],
   "outputKeys": ["result"]
 }
