@@ -1,6 +1,6 @@
 {
   "accessPolicy": {},
-  "name": "core-phase1",
+  "name": "core_phase1",
   "description": "Runs phase 1 processing for Bichard in Core",
   "version": 1,
   "tasks": [

@@ -11,8 +11,8 @@ const client = new ConductorClient({
   PASSWORD: process.env.CONDUCTOR_PASSWORD
 })
 
-const workers = [generateDayTasks, rerunDay, compareFiles, processPhase1]
-const taskManager = new TaskManager(client, workers, { options: { concurrency: defaultConcurrency } })
+const tasks = [generateDayTasks, rerunDay, compareFiles, processPhase1]
+const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })
 
 console.log("Starting polling...")
 taskManager.startPolling()

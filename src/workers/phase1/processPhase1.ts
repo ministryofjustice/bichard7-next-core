@@ -69,7 +69,11 @@ const processPhase1: ConductorWorker = {
     const result = await phase1(message, pncGateway, auditLogger)
 
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
-      return { ...result, correlationId }
+      return {
+        logs,
+        outputData: { ...result, correlationId },
+        status: "FAILED_WITH_TERMINAL_ERROR"
+      }
     }
 
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
@@ -77,9 +81,13 @@ const processPhase1: ConductorWorker = {
       const dbResult = await insertErrorListRecord(db, result)
       if (isError(dbResult)) {
         return {
-          correlationId,
-          auditLogEvents: [],
-          resultType: Phase1ResultType.failure
+          logs,
+          outputData: {
+            correlationId,
+            auditLogEvents: [],
+            resultType: Phase1ResultType.failure
+          },
+          status: "FAILED"
         }
       }
     }
