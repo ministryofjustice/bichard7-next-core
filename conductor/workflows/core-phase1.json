@@ -1,0 +1,28 @@
+{
+  "accessPolicy": {},
+  "name": "core-phase1",
+  "description": "Runs phase 1 processing for Bichard in Core",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "process_phase1",
+      "taskReferenceName": "process_phase1",
+      "inputParameters": {
+        "s3Path": "${workflow.input.s3Path}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    }
+  ],
+  "inputParameters": ["s3Path"],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}

@@ -2,7 +2,7 @@ import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/src/utils"
-import getTaskConcurrency from "../lib/getTaskConcurrency"
+import getTaskConcurrency from "../../../conductor/src/getTaskConcurrency"
 const taskDefName = "generate_day_tasks"
 
 export type GenerateDayTasksOutput = {

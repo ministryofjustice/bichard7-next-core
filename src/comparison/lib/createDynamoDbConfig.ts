@@ -15,10 +15,6 @@ export default function createDynamoDbConfig(): DynamoDbConfig {
     throw Error("DYNAMO_URL environment variable must have value.")
   }
 
-  if (!DYNAMO_REGION) {
-    throw Error("DYNAMO_REGION environment variable must have value.")
-  }
-
   if (!PHASE1_COMPARISON_TABLE_NAME) {
     throw new Error("PHASE1_COMPARISON_TABLE_NAME environment variable must have value.")
   }
@@ -33,7 +29,7 @@ export default function createDynamoDbConfig(): DynamoDbConfig {
 
   const config: DynamoDbConfig = {
     DYNAMO_URL,
-    DYNAMO_REGION,
+    DYNAMO_REGION: DYNAMO_REGION ?? "eu-west-2",
     PHASE1_TABLE_NAME: PHASE1_COMPARISON_TABLE_NAME,
     PHASE2_TABLE_NAME: PHASE2_COMPARISON_TABLE_NAME,
     PHASE3_TABLE_NAME: PHASE3_COMPARISON_TABLE_NAME
