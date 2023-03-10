@@ -38,18 +38,18 @@ const sendToPhase2: ConductorWorker = {
       }
     }
 
-    phase1Result.auditLogEvents.push({
+    const auditLog = {
       eventCode: "hearing-outcome.submitted-phase-2",
       eventType: "Hearing outcome submitted to phase 2",
       category: "debug",
       eventSource: "CoreHandler",
       timestamp: new Date().toISOString(),
       attributes: {}
-    })
+    }
 
     return {
       logs: [conductorLog("Sent to Phase 2 via MQ")],
-      outputData: { result: phase1Result },
+      outputData: { auditLogEvents: [auditLog] },
       status: "COMPLETED"
     }
   }

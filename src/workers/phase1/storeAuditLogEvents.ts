@@ -1,18 +1,36 @@
+import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import axios from "axios"
-import type Phase1Result from "src/types/Phase1Result"
+import getTaskConcurrency from "conductor/src/getTaskConcurrency"
+import type { Task } from "conductor/src/types/Task"
+import { conductorLog } from "conductor/src/utils"
+
+const taskDefName = "store_audit_log_events"
 
 const auditLogApiUrl = process.env.AUDIT_LOG_API_URL
 const auditLogApiKey = process.env.AUDIT_LOG_API_KEY
 
-const storeAuditLogEvents = async (phase1Result: Phase1Result): Promise<void> => {
-  if (!auditLogApiUrl || !auditLogApiKey) {
-    throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
-  }
+if (!auditLogApiUrl || !auditLogApiKey) {
+  throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
+}
 
-  if (phase1Result.correlationId && phase1Result.auditLogEvents.length > 0) {
-    await axios.post(`${auditLogApiUrl}/messages/${phase1Result.correlationId}/events`, phase1Result.auditLogEvents, {
-      headers: { "X-Api-Key": auditLogApiKey }
-    })
+const storeAuditLogEvents: ConductorWorker = {
+  taskDefName,
+  concurrency: getTaskConcurrency(taskDefName),
+  execute: async (task: Task) => {
+    const correlationId = task.inputData?.correlationId
+    const auditLogEvents = task.inputData?.auditLogEvents
+
+    if (correlationId && auditLogEvents.length > 0) {
+      await axios.post(`${auditLogApiUrl}/messages/${correlationId}/events`, auditLogEvents, {
+        headers: { "X-Api-Key": auditLogApiKey },
+        transformResponse: (x) => x
+      })
+    }
+
+    return {
+      logs: [conductorLog("Audit logs written to API")],
+      status: "COMPLETED"
+    }
   }
 }
 

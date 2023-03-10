@@ -28,10 +28,60 @@
       "asyncComplete": false
     },
     {
-      "name": "send_to_phase2",
-      "taskReferenceName": "send_to_phase2",
+      "name": "check_phase1_result",
+      "taskReferenceName": "check_phase1_result",
       "inputParameters": {
-        "phase1Result": "${process_phase1.output.result}"
+        "switchCaseValue": "${process_phase1.output.result.resultType}"
+      },
+      "type": "SWITCH",
+      "evaluatorType": "value-param",
+      "expression": "switchCaseValue",
+      "decisionCases": {
+        "success": [
+          {
+            "name": "send_to_phase2",
+            "taskReferenceName": "send_to_phase2",
+            "inputParameters": {
+              "phase1Result": "${process_phase1.output.result}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          }
+        ],
+        "failure": [
+          {
+            "name": "store_in_quarantine_bucket",
+            "taskReferenceName": "store_in_quarantine_bucket",
+            "inputParameters": {
+              "s3Path": "${extract_paths.output.result}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "merge_audit_log_events",
+      "taskReferenceName": "merge_audit_log_events",
+      "type": "JSON_JQ_TRANSFORM",
+      "inputParameters": {
+        "quarantineEvents": "${store_in_quarantine_bucket.output.auditLogEvents}",
+        "sendToPhase2Events": "${send_to_phase2.output.auditLogEvents}",
+        "phase1Events": "${process_phase1.output.result.auditLogEvents}",
+        "queryExpression": "{ auditLogEvents: .quarantineEvents + .sendToPhase2Events + .phase1Events}"
+      }
+    },
+    {
+      "name": "store_audit_log_events",
+      "taskReferenceName": "store_audit_log_events",
+      "inputParameters": {
+        "correlationId": "${process_phase1.output.result.correlationId}",
+        "auditLogEvents": "${merge_audit_log_events.output.result.auditLogEvents}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
