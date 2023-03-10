@@ -11,7 +11,7 @@ import type { Phase1SuccessResult } from "src/types/Phase1Result"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)
-const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "PNC_UPDATE_REQUEST_QUEUE"
+const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
 const taskDefName = "send_to_phase2"
 
