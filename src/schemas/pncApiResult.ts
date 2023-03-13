@@ -57,7 +57,7 @@ export const pncApiCourtCaseSchema = z.object({
 
 export const pncApiPenaltyCaseSchema = z.object({
   penaltyCaseRefNo: z.string(),
-  crimeOffenceRefNo: z.string(),
+  crimeOffenceRefNo: z.preprocess(stringOrUndefined, z.string().optional()),
   offences: z.array(pncApiOffenceSchema)
 })
 

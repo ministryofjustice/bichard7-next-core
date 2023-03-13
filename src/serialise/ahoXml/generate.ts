@@ -457,26 +457,28 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     "@_IntfcUpdateType": "K",
     "@_PNCID": pncQuery.pncId
   },
-  CourtCases: pncQuery.courtCases
-    ? {
-        CourtCase: pncQuery.courtCases?.map((c) => ({
-          CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
-          Offences: {
-            Offence: mapAhoPncOffencesToXml(c.offences)
-          }
-        }))
-      }
-    : undefined,
-  PenaltyCases: pncQuery.penaltyCases
-    ? {
-        PenaltyCase: pncQuery.penaltyCases?.map((c) => ({
-          PCR: { "@_IntfcUpdateType": "K", "@_PenaltyCaseRefNo": c.penaltyCaseReference },
-          Offences: {
-            Offence: mapAhoPncOffencesToXml(c.offences)
-          }
-        }))
-      }
-    : undefined
+  CourtCases:
+    pncQuery.courtCases && pncQuery.courtCases.length > 0
+      ? {
+          CourtCase: pncQuery.courtCases?.map((c) => ({
+            CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
+            Offences: {
+              Offence: mapAhoPncOffencesToXml(c.offences)
+            }
+          }))
+        }
+      : undefined,
+  PenaltyCases:
+    pncQuery.penaltyCases && pncQuery.penaltyCases.length > 0
+      ? {
+          PenaltyCase: pncQuery.penaltyCases?.map((c) => ({
+            PCR: { "@_IntfcUpdateType": "K", "@_PenaltyCaseRefNo": c.penaltyCaseReference },
+            Offences: {
+              Offence: mapAhoPncOffencesToXml(c.offences)
+            }
+          }))
+        }
+      : undefined
 })
 
 const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {

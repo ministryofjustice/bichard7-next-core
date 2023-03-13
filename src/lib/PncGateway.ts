@@ -4,11 +4,18 @@ import { pncApiResultSchema } from "src/schemas/pncApiResult"
 import type PncApiConfig from "src/types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "src/types/PncApiResult"
 import type PncGatewayInterface from "src/types/PncGatewayInterface"
-import type { PncAdjudication, PncCourtCase, PncDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
+import type {
+  PncAdjudication,
+  PncCourtCase,
+  PncDisposal,
+  PncOffence,
+  PncPenaltyCase,
+  PncQueryResult
+} from "src/types/PncQueryResult"
 import axiosDateTransformer from "./axiosDateTransformer"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
-// penalty = test 80
+
 const transform = (apiResponse: PncApiResult): PncQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PncAdjudication | undefined => {
     if (
@@ -41,6 +48,22 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
       })
     )
   }
+  const getOffences = (o: PncApiOffence): PncOffence => ({
+    offence: {
+      acpoOffenceCode: o.acpoOffenceCode,
+      cjsOffenceCode: o.cjsOffenceCode,
+      startDate: o.startDate || undefined,
+      startTime: o.startTime,
+      endDate: o.endDate || undefined,
+      endTime: o.endTime,
+      qualifier1: o.offenceQualifier1,
+      qualifier2: o.offenceQualifier2,
+      title: o.title,
+      sequenceNumber: Number(o.referenceNumber)
+    },
+    adjudication: getAdjudication(o),
+    disposals: getDisposals(o)
+  })
   return {
     forceStationCode: apiResponse.forceStationCode,
     croNumber: apiResponse.croNumber,
@@ -50,24 +73,13 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
       (c): PncCourtCase => ({
         courtCaseReference: c.courtCaseRefNo,
         crimeOffenceReference: c.crimeOffenceRefNo,
-        offences: c.offences.map(
-          (o): PncOffence => ({
-            offence: {
-              acpoOffenceCode: o.acpoOffenceCode,
-              cjsOffenceCode: o.cjsOffenceCode,
-              startDate: o.startDate || undefined,
-              startTime: o.startTime,
-              endDate: o.endDate || undefined,
-              endTime: o.endTime,
-              qualifier1: o.offenceQualifier1,
-              qualifier2: o.offenceQualifier2,
-              title: o.title,
-              sequenceNumber: Number(o.referenceNumber)
-            },
-            adjudication: getAdjudication(o),
-            disposals: getDisposals(o)
-          })
-        )
+        offences: c.offences.map(getOffences)
+      })
+    ),
+    penaltyCases: apiResponse.penaltyCases.map(
+      (c): PncPenaltyCase => ({
+        penaltyCaseReference: c.penaltyCaseRefNo,
+        offences: c.offences.map(getOffences)
       })
     )
   }
