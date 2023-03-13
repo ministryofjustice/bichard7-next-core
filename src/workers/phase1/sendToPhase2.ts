@@ -5,6 +5,7 @@ import { conductorLog } from "conductor/src/utils"
 import { isError } from "src/comparison/types"
 import { dateReviver } from "src/lib/axiosDateTransformer"
 import createMqConfig from "src/lib/createMqConfig"
+import logger from "src/lib/logging"
 import { MqGateway } from "src/lib/MqGateway"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
@@ -19,38 +20,46 @@ const sendToPhase2: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: async (task: Task) => {
-    const phase1Result: Phase1SuccessResult = task.inputData?.phase1Result
+    try {
+      const phase1Result: Phase1SuccessResult = task.inputData?.phase1Result
 
-    if (!phase1Result) {
-      return Promise.resolve({
-        logs: [conductorLog("s3Path must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
-    }
+      if (!phase1Result) {
+        return {
+          logs: [conductorLog("s3Path must be specified")],
+          status: "FAILED_WITH_TERMINAL_ERROR"
+        }
+      }
 
-    const aho = JSON.parse(JSON.stringify(phase1Result.hearingOutcome), dateReviver)
+      const aho = JSON.parse(JSON.stringify(phase1Result.hearingOutcome), dateReviver)
 
-    const result = await mqGateway.sendMessage(convertAhoToXml(aho), mqQueue)
-    if (isError(result)) {
+      const result = await mqGateway.sendMessage(convertAhoToXml(aho), mqQueue)
+      if (isError(result)) {
+        return {
+          logs: [conductorLog("Failed to write to MQ")],
+          status: "FAILED"
+        }
+      }
+
+      const auditLog = {
+        eventCode: "hearing-outcome.submitted-phase-2",
+        eventType: "Hearing outcome submitted to phase 2",
+        category: "debug",
+        eventSource: "CoreHandler",
+        timestamp: new Date().toISOString(),
+        attributes: {}
+      }
+
       return {
-        logs: [conductorLog("Failed to write to MQ")],
+        logs: [conductorLog("Sent to Phase 2 via MQ")],
+        outputData: { auditLogEvents: [auditLog] },
+        status: "COMPLETED"
+      }
+    } catch (e) {
+      logger.error(e)
+      return {
+        logs: [conductorLog(`Send to phase 2 failed: ${(e as Error).message}`)],
         status: "FAILED"
       }
-    }
-
-    const auditLog = {
-      eventCode: "hearing-outcome.submitted-phase-2",
-      eventType: "Hearing outcome submitted to phase 2",
-      category: "debug",
-      eventSource: "CoreHandler",
-      timestamp: new Date().toISOString(),
-      attributes: {}
-    }
-
-    return {
-      logs: [conductorLog("Sent to Phase 2 via MQ")],
-      outputData: { auditLogEvents: [auditLog] },
-      status: "COMPLETED"
     }
   }
 }

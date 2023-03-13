@@ -3,6 +3,7 @@ import { defaultConcurrency } from "conductor/src/getTaskConcurrency"
 import compareFiles from "src/comparison/workers/compareFiles"
 import generateDayTasks from "src/comparison/workers/generateDayTasks"
 import rerunDay from "src/comparison/workers/rerunDay"
+import logger from "src/lib/logging"
 import processPhase1 from "src/workers/phase1/processPhase1"
 import sendToPhase2 from "src/workers/phase1/sendToPhase2"
 import storeAuditLogEvents from "src/workers/phase1/storeAuditLogEvents"
@@ -25,5 +26,5 @@ const tasks = [
 ]
 const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })
 
-console.log("Starting polling...")
+logger.info("Starting polling...")
 taskManager.startPolling()

@@ -1,5 +1,5 @@
 const queueName = (process.env.PHASE_2_QUEUE_NAME = "TEST_PHASE_2_QUEUE")
-process.env.MQ_URL = "failover:(stomp://localhost:62613)"
+process.env.MQ_URL = "failover:(stomp://localhost:61613)"
 process.env.MQ_USER = "admin"
 process.env.MQ_PASSWORD = "admin"
 
@@ -34,14 +34,18 @@ describe("sendToPhase2", () => {
       hearingOutcome,
       resultType: Phase1ResultType.success
     }
-    const result = await sendToPhase2(phase1Result)
-    expect(result).toBe(phase1Result)
+    const result = await sendToPhase2.execute({ inputData: { phase1Result: phase1Result } })
+
+    expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toHaveProperty("auditLogEvents")
+    expect(result.outputData?.auditLogEvents).toHaveLength(1)
+    expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
 
     const message = await testMqGateway.getMessage(queueName)
     expect(message).toEqual(convertAhoToXml(phase1Result.hearingOutcome))
   })
 
-  it("should raise an exception if there is a problem", async () => {
+  it("should return an error if there is a problem", async () => {
     const phase1Result: Phase1SuccessResult = {
       correlationId: "dummy-id",
       auditLogEvents: [],
@@ -50,12 +54,8 @@ describe("sendToPhase2", () => {
       resultType: Phase1ResultType.success
     }
 
-    let errorThrown = false
-    try {
-      await sendToPhase2(phase1Result)
-    } catch (e) {
-      errorThrown = true
-    }
-    expect(errorThrown).toBeTruthy()
+    const result = await sendToPhase2.execute({ inputData: { phase1Result: phase1Result } })
+
+    expect(result.status).toBe("FAILED")
   })
 })

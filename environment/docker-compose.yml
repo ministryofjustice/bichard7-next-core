@@ -4,7 +4,7 @@ services:
     image: rmohr/activemq
     ports:
       - 59161:8161
-      - 62613:61613
+      - 61613:61613
     volumes:
       - ./activemq.xml:/opt/activemq/conf/activemq.xml
 
@@ -19,7 +19,7 @@ services:
       POSTGRES_USER: bichard
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - 5434:5432
+      - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     volumes:
       - ./pg-schema.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -105,6 +105,13 @@ services:
       S3_AWS_ACCESS_KEY_ID: FAKE
       S3_AWS_SECRET_ACCESS_KEY: FAKE
       S3_ENDPOINT: http://localstack:4566
+      PHASE_1_BUCKET_NAME: phase1
+      MQ_USER: admin
+      MQ_PASSWORD: admin
+      MQ_URL: failover:(stomp://mq:61613)
+      AUDIT_LOG_API_URL: toBeSet
+      AUDIT_LOG_API_KEY: toBeSet
+      DB_HOST: pg
 
   localstack:
     container_name: "localstack"

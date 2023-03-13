@@ -433,7 +433,7 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
 const mapAhoPncOffencesToXml = (offences: PncOffence[]): AhoXmlPncOffence[] =>
   offences.map((offence) => ({
     COF: {
-      "@_ACPOOffenceCode": offence.offence.acpoOffenceCode,
+      "@_ACPOOffenceCode": offence.offence.acpoOffenceCode ?? "",
       "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
       "@_IntfcUpdateType": "K",
       "@_OffEndDate": offence.offence.endDate ? toPNCDate(offence.offence.endDate) : "",
