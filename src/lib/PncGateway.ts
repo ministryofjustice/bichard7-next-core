@@ -2,28 +2,44 @@ import axios from "axios"
 import https from "https"
 import { pncApiResultSchema } from "src/schemas/pncApiResult"
 import type PncApiConfig from "src/types/PncApiConfig"
-import type { PncApiOffence, PncApiResult } from "src/types/PncApiResult"
+import type { PncApiDisposal, PncApiOffence, PncApiResult } from "src/types/PncApiResult"
 import type PncGatewayInterface from "src/types/PncGatewayInterface"
-import type { PncAdjudication, PncCourtCase, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
+import type { PncAdjudication, PncCourtCase, PncDisposal, PncOffence, PncQueryResult } from "src/types/PncQueryResult"
 import axiosDateTransformer from "./axiosDateTransformer"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
-
+// penalty = test 80
 const transform = (apiResponse: PncApiResult): PncQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PncAdjudication | undefined => {
     if (
       offence.pleaStatus &&
       offence.numberOffencesTakenIntoAccount !== undefined &&
       offence.verdict &&
-      offence.sentenceDate
+      offence.hearingDate
     ) {
       return {
         verdict: offence.verdict,
-        sentenceDate: offence.sentenceDate,
+        sentenceDate: offence.hearingDate,
         plea: offence.pleaStatus,
         offenceTICNumber: offence.numberOffencesTakenIntoAccount
       }
     }
+  }
+  const getDisposals = (offence: PncApiOffence): PncDisposal[] | undefined => {
+    if (offence.disposals.length === 0) {
+      return undefined
+    }
+    return offence.disposals.map(
+      (d: PncApiDisposal): PncDisposal => ({
+        qtyDate: d.disposalQuantityDate,
+        qtyDuration: d.disposalQuantityDuration,
+        qtyMonetaryValue: d.disposalQuantityMonetaryValue,
+        qtyUnitsFined: undefined,
+        qualifiers: d.disposalQualifiers,
+        text: d.disposalText,
+        type: Number(d.disposalType)
+      })
+    )
   }
   return {
     forceStationCode: apiResponse.forceStationCode,
@@ -48,8 +64,8 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
               title: o.title,
               sequenceNumber: Number(o.referenceNumber)
             },
-            adjudication: getAdjudication(o)
-            // disposals: []
+            adjudication: getAdjudication(o),
+            disposals: getDisposals(o)
           })
         )
       })

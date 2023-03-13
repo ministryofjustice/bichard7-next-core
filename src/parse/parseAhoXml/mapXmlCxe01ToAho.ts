@@ -3,7 +3,7 @@ import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "../../types/AhoXml"
 import type {
   PncAdjudication,
   PncCourtCase,
-  PNCDisposal,
+  PncDisposal,
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
@@ -51,7 +51,7 @@ const extractTimes = (offence: AhoXmlPncOffence): OffenceTimes => {
   return times
 }
 
-const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PNCDisposal[] | undefined => {
+const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PncDisposal[] | undefined => {
   if (!dis) {
     return undefined
   }

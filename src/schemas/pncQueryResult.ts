@@ -20,7 +20,7 @@ export const pncAdjudicationSchema = z.object({
 
 export const pncOffenceSchema = z.object({
   offence: z.object({
-    acpoOffenceCode: z.string(),
+    acpoOffenceCode: z.string().optional(),
     cjsOffenceCode: z.string(),
     startDate: z.date(),
     startTime: z.string().optional(),

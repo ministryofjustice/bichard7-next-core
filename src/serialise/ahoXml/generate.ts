@@ -46,7 +46,7 @@ import type {
   Result,
   Urgent
 } from "../../types/AnnotatedHearingOutcome"
-import type { PncAdjudication, PNCDisposal, PncOffence, PncQueryResult } from "../../types/PncQueryResult"
+import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../types/PncQueryResult"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 
@@ -398,7 +398,7 @@ const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_Plea": adjudication.plea
 })
 
-const mapOffenceDIS = (disposals: PNCDisposal[]): DISList => ({
+const mapOffenceDIS = (disposals: PncDisposal[]): DISList => ({
   DIS: disposals.map((d) => ({
     "@_IntfcUpdateType": "I",
     "@_QtyDate": d.qtyDate,

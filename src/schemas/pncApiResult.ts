@@ -16,7 +16,19 @@ const numberOrUndefined = (input: unknown): number | undefined => {
   if (typeof input === "number") {
     return input
   }
+  if (typeof input === "string" && /^\d+$/.test(input)) {
+    return Number(input)
+  }
 }
+
+export const pncApiDisposalSchema = z.object({
+  disposalQualifiers: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposalQuantityDate: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposalQuantityDuration: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposalQuantityMonetaryValue: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposalText: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposalType: z.preprocess(stringOrUndefined, z.string().optional())
+})
 
 export const pncApiOffenceSchema = z.object({
   pleaStatus: z.preprocess(stringOrUndefined, z.string().optional()),
@@ -26,7 +38,7 @@ export const pncApiOffenceSchema = z.object({
   numberOffencesTakenIntoAccount: z.preprocess(numberOrUndefined, z.number().optional()),
   offenceQualifier1: z.preprocess(stringOrUndefined, z.string().optional()),
   offenceQualifier2: z.preprocess(stringOrUndefined, z.string().optional()),
-  acpoOffenceCode: z.string(),
+  acpoOffenceCode: z.preprocess(stringOrUndefined, z.string().optional()),
   title: z.preprocess(stringOrUndefined, z.string().optional()),
   referenceNumber: z.string(),
   cjsOffenceCode: z.string(),
@@ -34,7 +46,7 @@ export const pncApiOffenceSchema = z.object({
   startTime: z.preprocess(stringOrUndefined, z.string().optional()),
   endDate: z.preprocess(dateOrUndefined, z.date().optional()),
   endTime: z.preprocess(stringOrUndefined, z.string().optional()),
-  disposals: z.array(z.any())
+  disposals: z.array(pncApiDisposalSchema)
 })
 
 export const pncApiCourtCaseSchema = z.object({
