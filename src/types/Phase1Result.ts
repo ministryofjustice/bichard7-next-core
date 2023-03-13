@@ -3,10 +3,10 @@ import type AuditLogEvent from "./AuditLogEvent"
 import type { Trigger } from "./Trigger"
 
 export enum Phase1ResultType {
-  success,
-  exceptions,
-  failure,
-  ignored
+  success = "success",
+  exceptions = "exceptions",
+  failure = "failure",
+  ignored = "ignored"
 }
 
 export type Phase1SuccessResult = {

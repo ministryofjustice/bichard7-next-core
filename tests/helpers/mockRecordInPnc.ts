@@ -122,7 +122,7 @@ const mockRecordInPnc = async (
 const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
   courtCase.offences.reduce((acc: string[], { offence, adjudication, disposals }) => {
     const sequenceNumber = offence.sequenceNumber.toString().padStart(3, "0")
-    const acpoOffenceCode = offence.acpoOffenceCode.padEnd(13, " ")
+    const acpoOffenceCode = offence.acpoOffenceCode?.padEnd(13, " ")
     const offenceCode = offence.cjsOffenceCode.padEnd(8, " ")
     const startDate = toPNCDate(offence.startDate)
     const startTime = offence.startTime ? offence.startTime.replace(":", "") : "    "

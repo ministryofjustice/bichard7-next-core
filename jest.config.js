@@ -4,8 +4,8 @@ module.exports = {
   modulePathIgnorePatterns: ["node_modules", "build"],
   moduleNameMapper: {
     "^(node_modules/.*)$": "<rootDir>/$1",
-    "^(data|src|tests)$": "<rootDir>/$1",
-    "^(data|src|tests)/(.*)": "<rootDir>/$1/$2"
+    "^(data|src|tests|conductor|test-data)$": "<rootDir>/$1",
+    "^(data|src|tests|conductor|test-data)/(.*)": "<rootDir>/$1/$2"
   },
   // Run these files after jest has been
   // installed in the environment

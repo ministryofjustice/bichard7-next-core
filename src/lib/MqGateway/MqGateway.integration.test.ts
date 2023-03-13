@@ -6,7 +6,7 @@ jest.setTimeout(30000)
 
 const queueName = "mq-gateway-integration-testing"
 const config: MqConfig = {
-  url: "failover:(stomp://localhost:62613)",
+  url: "failover:(stomp://localhost:61613)",
   username: "admin",
   password: "admin"
 }

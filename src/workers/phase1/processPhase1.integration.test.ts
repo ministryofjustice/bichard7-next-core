@@ -8,6 +8,7 @@ import postgres from "postgres"
 import createDbConfig from "src/lib/createDbConfig"
 import createS3Config from "src/lib/createS3Config"
 import { Phase1ResultType } from "src/types/Phase1Result"
+import { test1PncResponse, test89PncResponse } from "test-data/mockPncApiResponses"
 import MockS3 from "tests/helpers/MockS3"
 import processPhase1 from "./processPhase1"
 
@@ -51,6 +52,7 @@ describe("processPhase1", () => {
   })
 
   beforeEach(async () => {
+    pncApi.reset()
     await sql`DELETE FROM br7own.error_list`
   })
 
@@ -59,25 +61,30 @@ describe("processPhase1", () => {
     const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: "invalid xml" })
     await client.send(command)
 
-    const result = await processPhase1(s3Path)
+    const phase1Result = await processPhase1.execute({ inputData: { s3Path } })
+    const resultData = phase1Result.outputData?.result
 
-    expect(result.resultType).toEqual(Phase1ResultType.failure)
-    expect(result).toHaveProperty("auditLogEvents")
-    expect(result.auditLogEvents).toHaveLength(2)
+    expect(resultData.resultType).toEqual(Phase1ResultType.failure)
+    expect(resultData).toHaveProperty("auditLogEvents")
+    expect(resultData.auditLogEvents).toHaveLength(2)
   })
 
   it("should write triggers to the database if they are raised", async () => {
+    pncApi.get("/pnc/records/1101ZD0100000448754K").mockImplementationOnce((ctx) => {
+      ctx.status = 200
+      ctx.body = test1PncResponse
+    })
     const s3Path = "trigger.xml"
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: s3Path,
-      Body: fs.readFileSync("test-data/AnnotatedHO1.xml")
+      Body: fs.readFileSync("test-data/input-message-001.xml")
     })
     await client.send(command)
 
-    const result = await processPhase1(s3Path)
+    const result = await processPhase1.execute({ inputData: { s3Path } })
 
-    expect(result.resultType).toEqual(Phase1ResultType.success)
+    expect(result.outputData?.result.resultType).toEqual(Phase1ResultType.success)
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
     expect(errorListRecords).toHaveLength(1)
@@ -87,6 +94,10 @@ describe("processPhase1", () => {
   })
 
   it("should write exceptions to the database if they are raised", async () => {
+    pncApi.get("/pnc/records/1101ZD0100000410837W").mockImplementationOnce((ctx) => {
+      ctx.status = 200
+      ctx.body = test89PncResponse
+    })
     const s3Path = "exception.xml"
     const command = new PutObjectCommand({
       Bucket: bucket,
@@ -95,9 +106,9 @@ describe("processPhase1", () => {
     })
     await client.send(command)
 
-    const result = await processPhase1(s3Path)
+    const result = await processPhase1.execute({ inputData: { s3Path } })
 
-    expect(result.resultType).toEqual(Phase1ResultType.exceptions)
+    expect(result.outputData?.result.resultType).toEqual(Phase1ResultType.exceptions)
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
     expect(errorListRecords).toHaveLength(1)

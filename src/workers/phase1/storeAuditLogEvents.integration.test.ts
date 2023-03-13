@@ -45,7 +45,9 @@ describe("storeAuditLogEvents", () => {
         ctx.status = 204
       })
 
-    await storeAuditLogEvents(phase1Result)
+    await storeAuditLogEvents.execute({
+      inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
+    })
     expect(mockApiCall).toHaveBeenCalledTimes(1)
     expect(mockApiCall.mock.calls[0][0].request).toHaveProperty("body", phase1Result.auditLogEvents)
   })
@@ -74,7 +76,9 @@ describe("storeAuditLogEvents", () => {
 
     let errorThrown = false
     try {
-      await storeAuditLogEvents(phase1Result)
+      await storeAuditLogEvents.execute({
+        inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
+      })
     } catch (e) {
       errorThrown = true
     }

@@ -1,10 +1,10 @@
 {
-  "name": "rerun_day",
+  "name": "send_to_phase2",
   "retryCount": 3,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 4000,
   "timeoutPolicy": "TIME_OUT_WF",
-  "inputKeys": ["start", "end", "onlyFailures"],
-  "outputKeys": ["pass", "fail"]
+  "inputKeys": ["phase1Result"],
+  "outputKeys": ["auditLogEvents"]
 }
