@@ -29,14 +29,14 @@ ALTER SCHEMA br7own OWNER TO bichard;
 -- Name: pg_cron; Type: EXTENSION; Schema: -; Owner: -
 --
 
-CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
+-- CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
 
 
 --
 -- Name: EXTENSION pg_cron; Type: COMMENT; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION pg_cron IS 'Job scheduler for PostgreSQL';
+-- COMMENT ON EXTENSION pg_cron IS 'Job scheduler for PostgreSQL';
 
 
 --
@@ -1313,18 +1313,18 @@ COPY br7own.work_allocation_report (area_code, report, report_timestamp) FROM st
 -- Data for Name: job; Type: TABLE DATA; Schema: cron; Owner: bichard
 --
 
-COPY cron.job (jobid, schedule, command, nodename, nodeport, database, username, active, jobname) FROM stdin;
-1	*/10 * * * *	SELECT br7own.archive_met_police_records(100)	localhost	5432	bichard	bichard	f	met_police_cleardown
-2	*/10 * * * *	SELECT br7own.archive_resolved_records(100)	localhost	5432	bichard	bichard	t	archive_resolved_records
-\.
+-- COPY cron.job (jobid, schedule, command, nodename, nodeport, database, username, active, jobname) FROM stdin;
+-- 1	*/10 * * * *	SELECT br7own.archive_met_police_records(100)	localhost	5432	bichard	bichard	f	met_police_cleardown
+-- 2	*/10 * * * *	SELECT br7own.archive_resolved_records(100)	localhost	5432	bichard	bichard	t	archive_resolved_records
+-- \.
 
 
 --
 -- Data for Name: job_run_details; Type: TABLE DATA; Schema: cron; Owner: bichard
 --
 
-COPY cron.job_run_details (jobid, runid, job_pid, database, username, command, status, return_message, start_time, end_time) FROM stdin;
-\.
+-- COPY cron.job_run_details (jobid, runid, job_pid, database, username, command, status, return_message, start_time, end_time) FROM stdin;
+-- \.
 
 
 --
@@ -1459,14 +1459,14 @@ SELECT pg_catalog.setval('br7own.users_id_seq', 25, true);
 -- Name: jobid_seq; Type: SEQUENCE SET; Schema: cron; Owner: bichard
 --
 
-SELECT pg_catalog.setval('cron.jobid_seq', 2, true);
+-- SELECT pg_catalog.setval('cron.jobid_seq', 2, true);
 
 
 --
 -- Name: runid_seq; Type: SEQUENCE SET; Schema: cron; Owner: bichard
 --
 
-SELECT pg_catalog.setval('cron.runid_seq', 1, false);
+-- SELECT pg_catalog.setval('cron.runid_seq', 1, false);
 
 
 --
@@ -1793,27 +1793,27 @@ ALTER TABLE ONLY br7own.users_groups
 -- Name: job cron_job_policy; Type: POLICY; Schema: cron; Owner: bichard
 --
 
-CREATE POLICY cron_job_policy ON cron.job USING ((username = CURRENT_USER));
+-- CREATE POLICY cron_job_policy ON cron.job USING ((username = CURRENT_USER));
 
 
 --
 -- Name: job_run_details cron_job_run_details_policy; Type: POLICY; Schema: cron; Owner: bichard
 --
 
-CREATE POLICY cron_job_run_details_policy ON cron.job_run_details USING ((username = CURRENT_USER));
+-- CREATE POLICY cron_job_run_details_policy ON cron.job_run_details USING ((username = CURRENT_USER));
 
 
 --
 -- Name: job; Type: ROW SECURITY; Schema: cron; Owner: bichard
 --
 
-ALTER TABLE cron.job ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE cron.job ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: job_run_details; Type: ROW SECURITY; Schema: cron; Owner: bichard
 --
 
-ALTER TABLE cron.job_run_details ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE cron.job_run_details ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: SCHEMA sysibm; Type: ACL; Schema: -; Owner: bichard

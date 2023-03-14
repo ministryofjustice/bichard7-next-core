@@ -2,7 +2,12 @@
 
 set -ex
 
-IMAGES=(beanconnect bichard7-liberty conductor nginx-auth-proxy pncemulator ui user-service)
+IMAGES=(beanconnect pncemulator)
+
+PLATFORM=$(uname -m)
+if [ $PLATFORM != "arm64" ]; then
+    IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui user-service)
+fi
 
 for image in "${IMAGES[@]}"; do
     if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then

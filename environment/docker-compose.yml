@@ -1,23 +1,22 @@
 version: "3.2"
 services:
-  mq:
-    image: rmohr/activemq
-    ports:
-      - 59161:8161
-      - 61613:61613
-    volumes:
-      - ./activemq.xml:/opt/activemq/conf/activemq.xml
-    healthcheck:
-      test: ["CMD", "curl -u admin:admin -s http://localhost:8161/api/jolokia/exec/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/healthStatus | grep Good"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
-  pg:
+  activemq:
     build:
-      context: .
-      dockerfile: PgDockerfile
-    restart: always
+      context: ./environment/activemq
+      dockerfile: Dockerfile
+    ports:
+      - 61616:61616
+      - 61613:61613
+      - 8161:8161
+    healthcheck:
+      test: ["CMD", "curl", "-u", "admin:admin", "-s", "http://localhost:8161/api/jolokia/exec/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/healthStatus"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+
+  postgres:
+    image: postgres:14
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: bichard
@@ -27,12 +26,13 @@ services:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     volumes:
-      - ./pg-schema.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
-      test: ["CMD", "psql", "-U", "bichard", "-c", "SELECT 1;"]
+      test: pg_isready -U bichard
       interval: 2s
-      timeout: 5s
-      retries: 50
+      timeout: 2s
+      retries: 10
+      start_period: 20s
 
   conductor:
     image: conductor
@@ -46,7 +46,7 @@ services:
       CJSE_CONDUCTOR_ENABLE_HTTP: "true"
       CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-true}
       CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
-      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
+      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://postgres:5432/conductor}
       CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
       CJSE_CONDUCTOR_QUEUE_BATCHSIZE: "10"
       CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
@@ -56,15 +56,16 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-      pg:
+      postgres:
         condition: service_healthy
       localstack:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
-      interval: "2s"
-      timeout: "5s"
-      retries: 60
+      test: curl --insecure --fail https://localhost:5000/health
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 120s
     ports:
       - 5001:5000
       - 5002:4000
@@ -83,9 +84,10 @@ services:
       - 9300:9300
     healthcheck:
       test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/9300'
-      interval: 5s
-      timeout: 5s
-      retries: 100
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
     logging:
       driver: "json-file"
       options:
@@ -105,7 +107,8 @@ services:
       test: "timeout 2 bash -c \"curl -s localhost:4566/_localstack/init | grep -q '\\\"READY\\\": true'\""
       interval: 2s
       timeout: 2s
-      retries: 100
+      retries: 10
+      start_period: 40s
 
   bichard7-liberty:
     image: bichard7-liberty
@@ -118,7 +121,7 @@ services:
       WLP_LOGGING_APPS_WRITE_JSON: "true"
       DB_USER: ${DB_USER:-bichard}
       DB_PASSWORD: ${DB_PASSWORD:-password}
-      DB_HOST: ${DB_HOST:-pg}
+      DB_HOST: ${DB_HOST:-postgres}
       DB_SSL: "${DB_SSL:-false}" # Set to true if connecting to AWS
       DB_SSL_MODE: ${DB_SSL_MODE:-disable} # Set to "require" if connecting to AWS
       LOG_PNC_REQUESTS: "true"
@@ -140,20 +143,27 @@ services:
       PNC_HTTP_ENDPOINTS_ENABLED: "${PNC_HTTP_ENDPOINTS_ENABLED:-}"
       PNC_API_BASE_URL: "${PNC_API_BASE_URL:-}"
       PNC_API_KEY: "${PNC_API_KEY:-apikey}"
+    healthcheck:
+      test: curl --insecure --fail https://localhost:9443/bichard-ui/Health
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
     depends_on:
       beanconnect:
         condition: service_started
-      mq:
+      activemq:
         condition: service_healthy
-      pg:
+      postgres:
         condition: service_healthy
 
   beanconnect:
     image: beanconnect
+    platform: linux/amd64
     environment:
       BC_EIS_LISTENER_PORT: ${BC_EIS_LISTENER_PORT:-30001}
       BC_PROXY_HOSTNAME: ${BC_PROXY_HOSTNAME:-LOCAL}
-      BC_EIS_HOST: ${BC_EIS_HOST:-pnc}
+      BC_EIS_HOST: ${BC_EIS_HOST:-pncemulator}
       BC_EIS_TSEL: ${BC_EIS_TSEL:-SMP20001}
       BC_ADMIN_PASSWORD: password
       SETUP_HOSTS_FILE: "true"
@@ -164,36 +174,61 @@ services:
       BC_EIS_IS_ADMIN: "${BC_EIS_IS_ADMIN:-false}"
       BC_EIS_IP: ${BC_EIS_IP}
     hostname: 'bc.cjse.org'
+    healthcheck:
+      test: echo >/dev/tcp/localhost/31004
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
 
   pncemulator:
     image: pncemulator
+    platform: linux/amd64
     ports:
       - 3000:3000
+    healthcheck:
+      test: (echo >/dev/tcp/localhost/20001) && (echo >/dev/tcp/localhost/30001)
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 60s
 
   user-service:
     image: user-service
     environment:
       BASE_URL: "https://localhost:4443/users"
-      DB_HOST: ${DB_HOST:-pg}
+      DB_HOST: ${DB_HOST:-postgres}
       INCORRECT_DELAY: ${INCORRECT_DELAY:-0}
       TOKEN_EXPIRES_IN: "10 minutes"
       TOKEN_ISSUER: ${TOKEN_ISSUER:-Bichard}
       TOKEN_SECRET: ${TOKEN_SECRET:-OliverTwist}
+    healthcheck:
+      test: curl --insecure --fail https://localhost/users/login
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
     depends_on:
-      pg:
+      postgres:
         condition: service_healthy
 
   ui:
     image: ui
     environment:
-      DB_HOST: ${DB_HOST:-pg}
+      DB_HOST: ${DB_HOST:-postgres}
       MQ_URL: ${MQ_URL:-tcp://activemq:61613}
       MQ_USER: ${MQ_USER:-admin}
       MQ_PASSWORD: ${MQ_PASSWORD:-admin}
     ports:
       - 4080:443
+    healthcheck:
+      test: curl --insecure --fail -v https://localhost/elb-status
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
     depends_on:
-      pg:
+      postgres:
         condition: service_healthy
 
   nginx-auth-proxy:
@@ -209,6 +244,12 @@ services:
       CJSE_NGINX_PROXYSSLVERIFY: ${CJSE_NGINX_PROXYSSLVERIFY:-off}
       CJSE_NGINX_PORT_HTTPS: ${CJSE_NGINX_PORT_HTTPS:-4443}
       CJSE_NGINX_STATICSERVICE_DOMAIN: ${CJSE_NGINX_STATICSERVICE_DOMAIN:-nginx-auth-proxy:4443/elb-status}
+    healthcheck:
+      test: curl --insecure --fail -v https://localhost:4443/elb-status
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
     depends_on:
       bichard7-liberty:
         condition: service_healthy
