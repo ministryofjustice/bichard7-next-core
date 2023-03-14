@@ -203,7 +203,7 @@ services:
       TOKEN_ISSUER: ${TOKEN_ISSUER:-Bichard}
       TOKEN_SECRET: ${TOKEN_SECRET:-OliverTwist}
     healthcheck:
-      test: curl --insecure --fail https://localhost/users/login
+      test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/443)
       interval: 2s
       timeout: 2s
       retries: 10
