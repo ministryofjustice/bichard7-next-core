@@ -22,7 +22,7 @@ commands:
           name: Load node_modules from the cache if they haven't changed
           working_directory: core
           keys:
-            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+            - v1-npm-deps-{{ checksum "core/package-lock.json.md5" }}
             - v1-npm-deps-
       - run:
           name: Install npm dependencies
