@@ -8,6 +8,7 @@ commands:
     steps:
       - run:
           name: Fetch the <<parameters.image>> image
+          working_directory: core
           command: bash scripts/fetch-docker-image.sh <<parameters.image>>
 
   checkout_and_install:
@@ -16,17 +17,21 @@ commands:
       - checkout
       - run:
           name: Hash package-lock.json
-          command: bash .circleci/scripts/hash-package-lock.sh
+          working_directory: core
+          command: bash ../.circleci/scripts/hash-package-lock.sh
       - restore_cache:
           name: Load node_modules from the cache if they haven't changed
+          working_directory: core
           keys:
-            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+            - v1-npm-deps-{{ checksum "core/package-lock.json.md5" }}
             - v1-npm-deps-
       - run:
           name: Install npm dependencies
+          working_directory: core
           command: npm i
       - save_cache:
-          key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+          working_directory: core
+          key: v1-npm-deps-{{ checksum "core/package-lock.json.md5" }}
           paths: node_modules
 
 jobs:
@@ -39,12 +44,21 @@ jobs:
       - checkout_and_install
       - run:
           name: Check the code for linting errors
+          working_directory: core
           command: npm run lint
       - run:
           name: Build the code
+          working_directory: core
           command: npm run build
+<<<<<<< Updated upstream
+=======
+      - run:
+          name: Build the lambdas
+          working_directory: core
+          command: npm run build:lambdas
+>>>>>>> Stashed changes
       - persist_to_workspace:
-          root: .
+          root: ./core
           paths: build
 
   test:
@@ -58,20 +72,55 @@ jobs:
           at: .
       - run:
           name: Run PostgreSQL
+          working_directory: core
           command: npm run pg
       - run:
           name: Run ActiveMQ
+          working_directory: core
           command: npm run mq
       - run:
           name: Install Nodejs version in .nvmrc
+          working_directory: core
           command: nvm install
       - run:
           name: Run unit tests against core code
+          working_directory: core
           command: nvm use && npm run test:unit
       - run:
           name: Run integration tests against core code
+          working_directory: core
           command: nvm use && npm run test:integration
 
+<<<<<<< Updated upstream
+=======
+  e2e_comparison_test:
+    machine:
+      image: ubuntu-2004:202104-01
+      docker_layer_caching: true
+    working_directory: ~
+    parallelism: 4
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run PostgreSQL
+          working_directory: core
+          command: npm run pg
+      - run:
+          name: Run ActiveMQ
+          working_directory: core
+          command: npm run mq
+      - run:
+          name: Install Nodejs version in .nvmrc
+          working_directory: core
+          command: nvm install
+      - run:
+          name: Run unit tests against core code
+          working_directory: core
+          command: nvm use && npm run test:compare:e2e
+
+>>>>>>> Stashed changes
   comparison_test:
     machine:
       image: ubuntu-2004:202104-01
@@ -83,12 +132,15 @@ jobs:
           at: .
       - run:
           name: Run PostgreSQL
+          working_directory: core
           command: npm run pg
       - run:
           name: Run ActiveMQ
+          working_directory: core
           command: npm run mq
       - run:
           name: Run integration tests against core code
+          working_directory: core
           command: npm run test:compare
 
   characterisation_test:
@@ -105,24 +157,29 @@ jobs:
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: Start the test server in the background
+          working_directory: core
           command: npm run test:server
           background: true
       - run:
           name: Wait for Core
           # The version of wait-port is pinned here because version 1.0.0
           # has a breaking change that makes it die when the port is not open
+          working_directory: core
           command: npx -y wait-port@0.3.1 6000
       - run:
           name: Create a hash of the package lock
+          working_directory: core
           command: md5sum ~/bichard7-next-tests/package-lock.json > ~/bichard7-next-tests/package-lock.json.md5
       - restore_cache:
           name: Load node_modules from the cache if they haven't changed
+          working_directory: core
           keys:
             - test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
       - run:
           name: NPM install the tests repo
           command: cd ~/bichard7-next-tests && npm i
       - save_cache:
+          working_directory: core
           key: test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
           paths: ~/bichard7-next-tests/node_modules
       - run:
@@ -145,19 +202,24 @@ jobs:
           image: nodejs
       - run:
           name: Build the Conductor Worker
+          working_directory: core
           command: npm run conductor-worker-docker-build
       - run:
           name: Boot Conductor infrastructure
+          working_directory: core
           command: npm run conductor-full
       - run:
           name: Set up Conductor
+          working_directory: core
           command: npm run conductor-setup
       - run:
           name: Run the Conductor Worker
+          working_directory: core
           command: npm run conductor-worker-docker
           background: true
       - run:
           name: Test the workflows
+          working_directory: core
           command: npm run test:conductor
 
 workflows:
