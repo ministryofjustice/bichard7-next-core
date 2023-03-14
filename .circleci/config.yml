@@ -17,7 +17,7 @@ commands:
       - run:
           name: Hash package-lock.json
           working_directory: core
-          command: bash .circleci/scripts/hash-package-lock.sh
+          command: bash ../.circleci/scripts/hash-package-lock.sh
       - restore_cache:
           name: Load node_modules from the cache if they haven't changed
           working_directory: core
