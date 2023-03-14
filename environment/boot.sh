@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-set -ex
+set -e
 
 IMAGES=(beanconnect pncemulator)
 
@@ -16,6 +15,9 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
-docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait
+docker compose \
+    --project-name bichard \
+    -f environment/docker-compose.yml \
+    up -d --wait
 
 npm run conductor-setup
