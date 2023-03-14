@@ -7,6 +7,11 @@ services:
       - 61613:61613
     volumes:
       - ./activemq.xml:/opt/activemq/conf/activemq.xml
+    healthcheck:
+      test: ["CMD", "curl -u admin:admin -s http://localhost:8161/api/jolokia/exec/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/healthStatus | grep Good"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   pg:
     build:
@@ -32,23 +37,29 @@ services:
   conductor:
     image: conductor
     environment:
-      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
-      CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
-      CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
-      CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
-      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: ${CJSE_CONDUCTOR_ELASTICSEARCH_VERSION:-6}
-      CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
-      CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
-      CJSE_CONDUCTOR_UI_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
-      CJSE_CONDUCTOR_UI_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
-      CJSE_CONDUCTOR_ENABLE_HTTP: "true"
-      CJSE_CONDUCTOR_QUEUE_TYPE: "sqs"
-      CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
-      CJSE_CONDUCTOR_QUEUE_BATCHSIZE: "10"
-      AWS_SECRET_ACCESS_KEY: FAKE
       AWS_ACCESS_KEY_ID: FAKE
       AWS_REGION: eu-west-2
-
+      AWS_SECRET_ACCESS_KEY: FAKE
+      CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-postgres}
+      CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
+      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: ${CJSE_CONDUCTOR_ELASTICSEARCH_VERSION:-6}
+      CJSE_CONDUCTOR_ENABLE_HTTP: "true"
+      CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-true}
+      CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
+      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
+      CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
+      CJSE_CONDUCTOR_QUEUE_BATCHSIZE: "10"
+      CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
+      CJSE_CONDUCTOR_QUEUE_TYPE: "sqs"
+      CJSE_CONDUCTOR_UI_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
+      CJSE_CONDUCTOR_UI_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      pg:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
       interval: "2s"
@@ -81,40 +92,7 @@ services:
         max-size: "1k"
         max-file: "3"
 
-  worker:
-    build:
-      context: ..
-      dockerfile: conductor/Dockerfile
-    environment:
-      PHASE1_COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
-      PHASE2_COMPARISON_TABLE_NAME: bichard-7-production-phase2-comparison-log
-      PHASE3_COMPARISON_TABLE_NAME: bichard-7-production-phase3-comparison-log
-      COMPARISON_BUCKET: comparisons
-      DYNAMO_REGION: eu-west-2
-      DYNAMO_URL: http://localstack:4566
-      S3_REGION: eu-west-2
-      CONDUCTOR_URL: http://conductor:4000/api
-      CONDUCTOR_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
-      CONDUCTOR_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
-      AWS_SECURITY_TOKEN: ${AWS_SECURITY_TOKEN}
-      DYNAMO_AWS_ACCESS_KEY_ID: FAKE
-      DYNAMO_AWS_SECRET_ACCESS_KEY: FAKE
-      S3_AWS_ACCESS_KEY_ID: FAKE
-      S3_AWS_SECRET_ACCESS_KEY: FAKE
-      S3_ENDPOINT: http://localstack:4566
-      PHASE_1_BUCKET_NAME: phase1
-      MQ_USER: admin
-      MQ_PASSWORD: admin
-      MQ_URL: failover:(stomp://mq:61613)
-      AUDIT_LOG_API_URL: toBeSet
-      AUDIT_LOG_API_KEY: toBeSet
-      DB_HOST: pg
-
   localstack:
-    container_name: "localstack"
     image: localstack/localstack
     ports:
       - "4566:4566"
@@ -128,3 +106,111 @@ services:
       interval: 2s
       timeout: 2s
       retries: 100
+
+  bichard7-liberty:
+    image: bichard7-liberty
+    environment:
+      WLP_LOGGING_MESSAGE_FORMAT: "json"
+      WLP_LOGGING_MESSAGE_SOURCE: "message,trace,accessLog,ffdc,audit"
+      WLP_LOGGING_CONSOLE_FORMAT: "json"
+      WLP_LOGGING_CONSOLE_LOGLEVEL: "info"
+      WLP_LOGGING_CONSOLE_SOURCE: "message,trace,accessLog,ffdc,audit"
+      WLP_LOGGING_APPS_WRITE_JSON: "true"
+      DB_USER: ${DB_USER:-bichard}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_HOST: ${DB_HOST:-pg}
+      DB_SSL: "${DB_SSL:-false}" # Set to true if connecting to AWS
+      DB_SSL_MODE: ${DB_SSL_MODE:-disable} # Set to "require" if connecting to AWS
+      LOG_PNC_REQUESTS: "true"
+      MQ_CONN_STR: ${MQ_CONN_STR:-tcp://activemq:61616}
+      MQ_USER: ${MQ_USER:-admin}
+      MQ_PASSWORD: ${MQ_PASSWORD:-admin}
+      LOG_LEVEL: ${LOG_LEVEL:-WARN}
+      BC_PROXY_URL: ${BC_PROXY_URL:-oltp://beanconnect:31004/BCU31004}
+      LOGIN_URL: ${LOGIN_URL:-https://localhost:4443/users/login?redirect=/bichard-ui/Authenticate}
+      TOKEN_SECRET: ${TOKEN_SECRET:-OliverTwist}
+      HEALTH_CHECK_TAC: ${HEALTH_CHECK_TAC:-HEALTH}
+      TAC_SUFFIX: ${TAC_SUFFIX:-M5B}
+      ENVIRONMENT: ${ENVIRONMENT:-test}
+      DISABLE_MDB: ${DISABLE_MDB:-}
+      PROCESSING_VALIDATION_PERCENTAGE: ${PROCESSING_VALIDATION_PERCENTAGE:-100}
+      VALIDATE_SCHEMA: "${VALIDATE_SCHEMA:-true}"
+      ENABLE_PHASE_2: "${ENABLE_PHASE_2:-true}"
+      ENABLE_PHASE_3: "${ENABLE_PHASE_3:-true}"
+      PNC_HTTP_ENDPOINTS_ENABLED: "${PNC_HTTP_ENDPOINTS_ENABLED:-}"
+      PNC_API_BASE_URL: "${PNC_API_BASE_URL:-}"
+      PNC_API_KEY: "${PNC_API_KEY:-apikey}"
+    depends_on:
+      beanconnect:
+        condition: service_started
+      mq:
+        condition: service_healthy
+      pg:
+        condition: service_healthy
+
+  beanconnect:
+    image: beanconnect
+    environment:
+      BC_EIS_LISTENER_PORT: ${BC_EIS_LISTENER_PORT:-30001}
+      BC_PROXY_HOSTNAME: ${BC_PROXY_HOSTNAME:-LOCAL}
+      BC_EIS_HOST: ${BC_EIS_HOST:-pnc}
+      BC_EIS_TSEL: ${BC_EIS_TSEL:-SMP20001}
+      BC_ADMIN_PASSWORD: password
+      SETUP_HOSTS_FILE: "true"
+      BC_EIS_LPAP: ${BC_EIS_LPAP:-LPBICHCD}
+      BC_EIS_AEQ: ${BC_EIS_AEQ:-7707}
+      BC_CONTWIN: ${BC_CONTWIN:-9}
+      BC_EIS_IS_BS2000: "${BC_EIS_IS_BS2000:-false}"
+      BC_EIS_IS_ADMIN: "${BC_EIS_IS_ADMIN:-false}"
+      BC_EIS_IP: ${BC_EIS_IP}
+    hostname: 'bc.cjse.org'
+
+  pncemulator:
+    image: pncemulator
+    ports:
+      - 3000:3000
+
+  user-service:
+    image: user-service
+    environment:
+      BASE_URL: "https://localhost:4443/users"
+      DB_HOST: ${DB_HOST:-pg}
+      INCORRECT_DELAY: ${INCORRECT_DELAY:-0}
+      TOKEN_EXPIRES_IN: "10 minutes"
+      TOKEN_ISSUER: ${TOKEN_ISSUER:-Bichard}
+      TOKEN_SECRET: ${TOKEN_SECRET:-OliverTwist}
+    depends_on:
+      pg:
+        condition: service_healthy
+
+  ui:
+    image: ui
+    environment:
+      DB_HOST: ${DB_HOST:-pg}
+      MQ_URL: ${MQ_URL:-tcp://activemq:61613}
+      MQ_USER: ${MQ_USER:-admin}
+      MQ_PASSWORD: ${MQ_PASSWORD:-admin}
+    ports:
+      - 4080:443
+    depends_on:
+      pg:
+        condition: service_healthy
+
+  nginx-auth-proxy:
+    image: nginx-auth-proxy
+    ports:
+      - 4443:4443
+    environment:
+      CJSE_NGINX_APP_DOMAIN: ${CJSE_NGINX_APP_DOMAIN:-liberty:9443}
+      CJSE_NGINX_UI_DOMAIN: ${CJSE_NGINX_UI_DOMAIN:-ui}
+      CJSE_NGINX_BICHARDBACKEND_DOMAIN: ${CJSE_NGINX_BICHARDBACKEND_DOMAIN:-liberty:9443}
+      CJSE_NGINX_USERSERVICE_DOMAIN: ${CJSE_NGINX_USERSERVICE_DOMAIN:-user-service}
+      CJSE_NGINX_AUDITLOGGING_DOMAIN: ${CJSE_NGINX_AUDITLOGGING_DOMAIN:-nginx-auth-proxy:4443/elb-status}
+      CJSE_NGINX_PROXYSSLVERIFY: ${CJSE_NGINX_PROXYSSLVERIFY:-off}
+      CJSE_NGINX_PORT_HTTPS: ${CJSE_NGINX_PORT_HTTPS:-4443}
+      CJSE_NGINX_STATICSERVICE_DOMAIN: ${CJSE_NGINX_STATICSERVICE_DOMAIN:-nginx-auth-proxy:4443/elb-status}
+    depends_on:
+      bichard7-liberty:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy

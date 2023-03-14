@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.2 (Debian 14.2-1.pgdg110+1)
+-- Dumped from database version 14.7 (Debian 14.7-1.pgdg110+1)
 -- Dumped by pg_dump version 14.0
 
 SET statement_timeout = 0;
@@ -29,14 +29,14 @@ ALTER SCHEMA br7own OWNER TO bichard;
 -- Name: pg_cron; Type: EXTENSION; Schema: -; Owner: -
 --
 
--- CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION pg_cron; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION pg_cron; Type: COMMENT; Schema: -; Owner:
 --
 
--- COMMENT ON EXTENSION pg_cron IS 'Job scheduler for PostgreSQL';
+COMMENT ON EXTENSION pg_cron IS 'Job scheduler for PostgreSQL';
 
 
 --
@@ -1021,6 +1021,455 @@ ALTER TABLE ONLY br7own.users ALTER COLUMN id SET DEFAULT nextval('br7own.users_
 
 
 --
+-- Data for Name: archive_error_list; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.archive_error_list (error_id, message_id, phase, error_status, trigger_status, error_quality_checked, trigger_quality_checked, trigger_count, error_locked_by_id, trigger_locked_by_id, is_urgent, asn, court_code, annotated_msg, updated_msg, error_report, create_ts, error_reason, trigger_reason, error_count, user_updated_flag, court_date, ptiurn, court_name, resolution_ts, msg_received_ts, error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts, defendant_name, org_for_police_filter, court_room, court_reference, error_insert_ts, trigger_insert_ts, pnc_update_enabled, archive_log_id, audit_logged_at, audit_log_attempts) FROM stdin;
+\.
+
+
+--
+-- Data for Name: archive_error_list_notes; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.archive_error_list_notes (note_id, error_id, note_text, user_id, create_ts) FROM stdin;
+\.
+
+
+--
+-- Data for Name: archive_error_list_triggers; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.archive_error_list_triggers (trigger_id, error_id, trigger_code, trigger_item_identity, status, create_ts, resolved_by, resolved_ts) FROM stdin;
+\.
+
+
+--
+-- Data for Name: archive_log; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.archive_log (log_id, archived_at, archived_by, audit_logged_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: error_list; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.error_list (error_id, message_id, phase, error_status, trigger_status, error_quality_checked, trigger_quality_checked, trigger_count, error_locked_by_id, trigger_locked_by_id, is_urgent, asn, court_code, annotated_msg, updated_msg, error_report, create_ts, error_reason, trigger_reason, error_count, user_updated_flag, court_date, ptiurn, court_name, resolution_ts, msg_received_ts, error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts, defendant_name, org_for_police_filter, court_room, court_reference, error_insert_ts, trigger_insert_ts, pnc_update_enabled, last_pnc_failure_resubmission_ts, total_pnc_failure_resubmissions) FROM stdin;
+\.
+
+
+--
+-- Data for Name: error_list_notes; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.error_list_notes (note_id, error_id, note_text, user_id, create_ts) FROM stdin;
+\.
+
+
+--
+-- Data for Name: error_list_triggers; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.error_list_triggers (trigger_id, error_id, trigger_code, trigger_item_identity, status, create_ts, resolved_by, resolved_ts) FROM stdin;
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.groups (id, name, description, friendly_name, parent_id) FROM stdin;
+9	B7SuperUserManager_grp	\N	Super User Manager	\N
+8	B7AuditLoggingManager_grp	\N	Audit Logging Manager	9
+7	B7UserManager_grp	\N	User Manager	9
+2	B7Audit_grp	\N	Audit	7
+5	B7Supervisor_grp	\N	Supervisor	7
+1	B7Allocator_grp	\N	Allocator	5
+4	B7GeneralHandler_grp	\N	General Handler	5
+6	B7TriggerHandler_grp	\N	Trigger Handler	4
+3	B7ExceptionHandler_grp	\N	Exception Handler	4
+10	B7NewUI_grp	\N	New Bichard UI	0
+\.
+
+
+--
+-- Data for Name: password_history; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.password_history (id, user_id, password_hash, last_used) FROM stdin;
+\.
+
+
+--
+-- Data for Name: pnc_data_channel; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.pnc_data_channel (data_channel_id, force_number, nid, nid_range_start, nid_range_end, last_nid_reset, manual_nid_reset, last_event_sequence_reset, manual_event_sequence_reset, channel_taken) FROM stdin;
+1	73	1	1	9999999	2023-03-13 17:07:19.616393	0	2023-03-13 17:07:19.616393	0	\N
+\.
+
+
+--
+-- Data for Name: pnc_event_sequence; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.pnc_event_sequence (event_sequence_id, event_code, sequence_number, data_channel_id) FROM stdin;
+1	SAPP	1	1
+2	RDIS	1	1
+3	GENL	1	1
+4	ENQR	1	1
+\.
+
+
+--
+-- Data for Name: service_messages; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.service_messages (id, message, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.team (team_id, team_name, owner, area) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team_membership; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.team_membership (team_id, member) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team_supervision; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.team_supervision (supervisor, team_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.users (id, username, exclusion_list, inclusion_list, created_at, endorsed_by, last_logged_in, org_serves, forenames, surname, email, password, last_login_attempt, email_verification_code, email_verification_generated, deleted_at, password_reset_code, migrated_password, jwt_id, jwt_generated_at, visible_courts, visible_forces, excluded_triggers, failed_password_attempts, feature_flags) FROM stdin;
+23	marc.de-la-rue			2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Marc	De La Rue	marc.delarue@justice.gov.uk		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	01,02,03,04,05,06,07,10,11,12,13,14,15,16,17,20,21,22,23,24,30,31,32,33,34,35,36,37,40,41,42,43,44,45,46,47,50,52,53,54,55,60,61,62,63,73,88,89,91,93	001,002,004,014,045		\N	{}
+1	Bichard01		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	bichard01@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+2	Allocator1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	allocator1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+3	Audit1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	audit1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+4	ExceptionHandler1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	exceptionhandler1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+5	GeneralHandler1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	generalhandler1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+6	Supervisor1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	supervisor1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+7	TriggerHandler1		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	triggerhandler1@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+8	Allocator2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	allocator2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+9	Audit2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	audit2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+10	ExceptionHandler2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	exceptionhandler2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+11	GeneralHandler2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	generalhandler2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+12	Supervisor2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	supervisor2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+13	TriggerHandler2		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	triggerhandler2@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+14	NoGroupsAssigned		B40ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Bichard User	01	nogroupsassigned@example.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B40ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+15	ben.pirt		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Ben	Pirt	ben.pirt@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+16	emad.karamad		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Emad	Karamad	emad.karamad@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+17	jamie.davies		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Jamie	Davies	jamie.davies@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+18	simon.oldham		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Simon	Oldham	simon.oldham@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+19	alice.lee		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Alice	Lee	alice.lee@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+20	csaba.gyorfi		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Csaba	Gyorfi	csaba.gyorfi@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+21	jazz.sarkaria		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Jazz	Sarkaria	jazz.sarkaria@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+22	tom.vaughan		B01,B41ME00	2023-03-13 17:07:26.783212	Endorser Not found	\N	048C600	Tom	Vaughan	tom.vaughan@madetech.com		2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+24	heather.roberts		B01,B41ME00	2023-03-13 17:07:27.000512	Endorser Not found	\N	048C600	Heather	Roberts	heather.roberts@madetech.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+25	tolu.johnson		B01,B41ME00	2023-03-13 17:07:27.000512	Endorser Not found	\N	048C600	Tolu	Johnson	tolu.johnson@madetech.com	$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw	2020-01-01 00:00:00		2020-01-01 00:00:00	\N		{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux		\N	B01,B41ME00	001,002,004,014,045		\N	"{\\"test_flag\\":true}"
+\.
+
+
+--
+-- Data for Name: users_groups; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.users_groups (user_id, group_id) FROM stdin;
+1	1
+2	1
+8	1
+15	1
+16	1
+17	1
+18	1
+19	1
+20	1
+21	1
+22	1
+1	2
+3	2
+9	2
+15	2
+16	2
+17	2
+18	2
+19	2
+20	2
+21	2
+22	2
+1	3
+5	3
+11	3
+15	3
+16	3
+17	3
+18	3
+19	3
+20	3
+21	3
+22	3
+1	5
+6	5
+12	5
+15	5
+16	5
+17	5
+18	5
+19	5
+20	5
+21	5
+22	5
+23	5
+1	6
+7	6
+13	6
+15	6
+16	6
+17	6
+18	6
+19	6
+20	6
+21	6
+22	6
+15	7
+16	7
+17	7
+18	7
+19	7
+20	7
+21	7
+22	7
+15	8
+16	8
+17	8
+18	8
+19	8
+20	8
+21	8
+22	8
+15	9
+16	9
+17	9
+18	9
+19	9
+20	9
+21	9
+22	9
+24	1
+25	1
+24	2
+25	2
+24	3
+25	3
+24	5
+25	5
+24	6
+25	6
+24	7
+25	7
+24	8
+25	8
+24	9
+25	9
+15	10
+16	10
+17	10
+18	10
+19	10
+20	10
+21	10
+22	10
+24	10
+\.
+
+
+--
+-- Data for Name: work_allocation_report; Type: TABLE DATA; Schema: br7own; Owner: bichard
+--
+
+COPY br7own.work_allocation_report (area_code, report, report_timestamp) FROM stdin;
+\.
+
+
+--
+-- Data for Name: job; Type: TABLE DATA; Schema: cron; Owner: bichard
+--
+
+COPY cron.job (jobid, schedule, command, nodename, nodeport, database, username, active, jobname) FROM stdin;
+1	*/10 * * * *	SELECT br7own.archive_met_police_records(100)	localhost	5432	bichard	bichard	f	met_police_cleardown
+2	*/10 * * * *	SELECT br7own.archive_resolved_records(100)	localhost	5432	bichard	bichard	t	archive_resolved_records
+\.
+
+
+--
+-- Data for Name: job_run_details; Type: TABLE DATA; Schema: cron; Owner: bichard
+--
+
+COPY cron.job_run_details (jobid, runid, job_pid, database, username, command, status, return_message, start_time, end_time) FROM stdin;
+\.
+
+
+--
+-- Data for Name: databasechangelog; Type: TABLE DATA; Schema: public; Owner: bichard
+--
+
+COPY public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) FROM stdin;
+001-schema	bjpirt	migrations/base/001_schema.sql	2023-03-13 17:07:19.371859	1	EXECUTED	8:c12762f242370c51e99e4ed228059ff6	sql		\N	4.20.0	\N	\N	8727239216
+002-error-list	bjpirt	migrations/base/002_error_list.sql	2023-03-13 17:07:19.49591	2	EXECUTED	8:3405d0d22f4a55a8aa35e5c56d6ea530	sql		\N	4.20.0	\N	\N	8727239216
+003-error-list-notes	bjpirt	migrations/base/003_error_list_notes.sql	2023-03-13 17:07:19.548404	3	EXECUTED	8:f9cc0f3a7db887eed2c5a28736821e65	sql		\N	4.20.0	\N	\N	8727239216
+004-error-list-triggers	bjpirt	migrations/base/004_error_list_triggers.sql	2023-03-13 17:07:19.597887	4	EXECUTED	8:340335203ba601d1d75bd38e64c2cd4b	sql		\N	4.20.0	\N	\N	8727239216
+005-pnc-data-channel	bjpirt	migrations/base/005_pnc_data_channel.sql	2023-03-13 17:07:19.665237	5	EXECUTED	8:144cbd0c5acb64d58f8cfdf4a727bc83	sql		\N	4.20.0	\N	\N	8727239216
+006-pnc-event-sequence	bjpirt	migrations/base/006_pnc_event_sequence.sql	2023-03-13 17:07:19.701323	6	EXECUTED	8:757580f7eceaac6fb861d25dfa32ce8b	sql		\N	4.20.0	\N	\N	8727239216
+007-team	bjpirt	migrations/base/007_team.sql	2023-03-13 17:07:19.743324	7	EXECUTED	8:6a1b9e2fc7c70a828b0001420e7f7d90	sql		\N	4.20.0	\N	\N	8727239216
+008-team-membership	bjpirt	migrations/base/008_team_membership.sql	2023-03-13 17:07:19.798168	8	EXECUTED	8:a5f090890d5a0f0c613cbd9b07274e05	sql		\N	4.20.0	\N	\N	8727239216
+009-team-supervision	bjpirt	migrations/base/009_team_supervision.sql	2023-03-13 17:07:19.842995	9	EXECUTED	8:b288b0fdb8f413a10ec10196b5a5d21a	sql		\N	4.20.0	\N	\N	8727239216
+010-work-allocation-report	bjpirt	migrations/base/010_work_allocation_report.sql	2023-03-13 17:07:19.89015	10	EXECUTED	8:7700ecfc2c0dbf06d245fe4f306b5a0b	sql		\N	4.20.0	\N	\N	8727239216
+011-groups	bjpirt	migrations/base/011_groups.sql	2023-03-13 17:07:19.953443	11	EXECUTED	8:ce02d2398cc45f7300634472347b600e	sql		\N	4.20.0	\N	\N	8727239216
+012-users	bjpirt	migrations/base/012_users.sql	2023-03-13 17:07:19.992106	12	EXECUTED	8:8f564b8feaf86754b3e021e17683d556	sql		\N	4.20.0	\N	\N	8727239216
+013-users-groups	bjpirt	migrations/base/013_users_groups.sql	2023-03-13 17:07:20.040692	13	EXECUTED	8:b4bfb1894870c1f95a10a3a3cd88bca7	sql		\N	4.20.0	\N	\N	8727239216
+014-password-history	mihai	migrations/base/014_password_history.sql	2023-03-13 17:07:20.086073	14	EXECUTED	8:d79acaa678f5326042cad6ad32234c40	sql		\N	4.20.0	\N	\N	8727239216
+015-service-messages	emad	migrations/base/015_service_messages.sql	2023-03-13 17:07:20.133889	15	EXECUTED	8:1c2659979f0a64c9469e1446e48bf2e7	sql		\N	4.20.0	\N	\N	8727239216
+016-failed-password-attempts	mihai	migrations/base/016_failed_password_attempts.sql	2023-03-13 17:07:20.175459	16	EXECUTED	8:c3adb0c8d54033cfe418eb8862293929	sql		\N	4.20.0	\N	\N	8727239216
+0117-update-inclusion-exclusion-to-be-nullable	mihai	migrations/base/017-update-inclusion-exclusion-to-be-nullable.sql	2023-03-13 17:07:20.209508	17	EXECUTED	8:289076e03b6cfcb209654d56dbd9d906	sql		\N	4.20.0	\N	\N	8727239216
+018-add_archive_tables	bjpirt	migrations/base/018-add_archive_tables.sql	2023-03-13 17:07:20.310235	18	EXECUTED	8:a77286ab73f28cc8673965e88e7d7e42	sql		\N	4.20.0	\N	\N	8727239216
+019-archive_met_cron	bjpirt	migrations/base/019-archive_met_cron.sql	2023-03-13 17:07:20.373779	19	EXECUTED	8:edfbf61bdca29b1f7404b4a36ebf5072	sql		\N	4.20.0	\N	\N	8727239216
+020-group_friendly_name	sjblac	migrations/base/020_group_friendly_name.sql	2023-03-13 17:07:20.415776	20	EXECUTED	8:5d9700e7100eff48524935b4c9991d57	sql		\N	4.20.0	\N	\N	8727239216
+021-add_group	mihai	migrations/base/021_add_made_tech_group.sql	2023-03-13 17:07:20.448399	21	EXECUTED	8:bbde01f20e6436c0dc497c1e735694f5	sql		\N	4.20.0	\N	\N	8727239216
+022-update_met_cron	bjpirt	migrations/base/022-update_met_cron.sql	2023-03-13 17:07:20.487824	22	EXECUTED	8:253844e17233c6ee03aba8448517a7c6	sql		\N	4.20.0	\N	\N	8727239216
+022_group_parent_inheritance	mihai	migrations/base/022_group_parent_inheritance.sql	2023-03-13 17:07:20.546531	23	EXECUTED	8:51545c0368f56015bce65de35b6ef9f4	sql		\N	4.20.0	\N	\N	8727239216
+024_archive_resolved_records_cron.sql	mihai	migrations/base/024_archive_resolved_records_cron.sql	2023-03-13 17:07:20.572064	24	EXECUTED	8:0a6023c41737c1ea54af5f042333df3d	sql		\N	4.20.0	\N	\N	8727239216
+025_urn_on_archive_resolved_records.sql	mihai	migrations/base/025_turn_on_archive_resolved_records.sql	2023-03-13 17:07:20.593023	25	EXECUTED	8:c92727a325d647bc6348d44885be4bf6	sql		\N	4.20.0	\N	\N	8727239216
+026_error_archival_recording.sql	alice	migrations/base/026_error_archival_recording.sql	2023-03-13 17:07:20.65359	26	EXECUTED	8:c3fa5171d836e1c9e3c73eaf770c7df8	sql		\N	4.20.0	\N	\N	8727239216
+027_add_new_ui_group.sql	emad	migrations/base/027_add_new_ui_group.sql	2023-03-13 17:07:20.684791	27	EXECUTED	8:037304e6490f9ba1c9eb6c971f49bb5b	sql		\N	4.20.0	\N	\N	8727239216
+028_add_pnc_failure-resubmission_columns.sql	emad	migrations/base/028_add_pnc_failure-resubmission_columns.sql	2023-03-13 17:07:20.704952	28	EXECUTED	8:c8ff6e9e523fd551249ae8fdeb4ab195	sql		\N	4.20.0	\N	\N	8727239216
+029_add_feature_flags.sql	tomv	migrations/base/029_add_feature_flags.sql	2023-03-13 17:07:20.747566	29	EXECUTED	8:b0cfc57f1a977468f83c4f188b4dc125	sql		\N	4.20.0	\N	\N	8727239216
+archive_error_records	bjpirt	migrations/functions/archive_error_records.sql	2023-03-13 17:07:20.783155	30	EXECUTED	8:c898632581d39f7f5e0eb51a26c87921	sql		\N	4.20.0	\N	\N	8727239216
+archive_met_police_records	bjpirt	migrations/functions/archive_met_police_records.sql	2023-03-13 17:07:20.822691	31	EXECUTED	8:b34dbf329f7c385d3161f18147bb2635	sql		\N	4.20.0	\N	\N	8727239216
+archive_resolved_records	mihai	migrations/functions/archive_resolved_records.sql	2023-03-13 17:07:20.861773	32	EXECUTED	8:bf5e58d550220f6c291a79a373544744	sql		\N	4.20.0	\N	\N	8727239216
+note_text	bjpirt	migrations/functions/note_text.sql	2023-03-13 17:07:20.902032	33	EXECUTED	8:064dfa2f9ec1bd8a8cbea41fc564a8af	sql		\N	4.20.0	\N	\N	8727239216
+secondsdiff	bjpirt	migrations/functions/secondsdiff.sql	2023-03-13 17:07:20.934311	34	EXECUTED	8:b33811a91020c1ee69b58f3d7995200a	sql		\N	4.20.0	\N	\N	8727239216
+startofnextday	bjpirt	migrations/functions/startofnextday.sql	2023-03-13 17:07:20.95923	35	EXECUTED	8:36dea737ffdade65532d9b64016876e2	sql		\N	4.20.0	\N	\N	8727239216
+trigger_cd_status	bjpirt	migrations/functions/trigger_cd_status.sql	2023-03-13 17:07:21.011032	36	EXECUTED	8:e4ff86a4eb870966e4da726baa1b9dd0	sql		\N	4.20.0	\N	\N	8727239216
+unres_triggers	bjpirt	migrations/functions/unres_triggers.sql	2023-03-13 17:07:21.066369	37	EXECUTED	8:f70d9f6d34dddd08bb40f1e55f63cf49	sql		\N	4.20.0	\N	\N	8727239216
+001_staging_users.sql	bjpirt	seeds/base/001_staging_users.sql	2023-03-13 17:07:26.984447	38	EXECUTED	8:f052942e209d1fe70d691697716f8832	sql		\N	4.20.0	\N	\N	8727246728
+raw	includeAll	seeds/base/002_staging_users.sql	2023-03-13 17:07:27.021113	39	EXECUTED	8:9dfeed4454a89d4985fc4d32ea120e24	sql		\N	4.20.0	\N	\N	8727246728
+raw	includeAll	seeds/base/003_assign_ui_group_to_users.sql	2023-03-13 17:07:27.045869	40	EXECUTED	8:a00c129c21dc9880522b90fa54f6208d	sql		\N	4.20.0	\N	\N	8727246728
+raw	includeAll	seeds/base/004_update_default_feature_flag_format.sql	2023-03-13 17:07:27.074906	41	EXECUTED	8:662e07382085c2fa9132f918b4babd25	sql		\N	4.20.0	\N	\N	8727246728
+\.
+
+
+--
+-- Data for Name: databasechangeloglock; Type: TABLE DATA; Schema: public; Owner: bichard
+--
+
+COPY public.databasechangeloglock (id, locked, lockgranted, lockedby) FROM stdin;
+1	f	\N	\N
+\.
+
+
+--
+-- Name: archive_log_log_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.archive_log_log_id_seq', 1, false);
+
+
+--
+-- Name: error_list_error_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.error_list_error_id_seq', 1, false);
+
+
+--
+-- Name: error_list_notes_note_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.error_list_notes_note_id_seq', 1, false);
+
+
+--
+-- Name: error_list_triggers_trigger_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.error_list_triggers_trigger_id_seq', 1, false);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.groups_id_seq', 10, true);
+
+
+--
+-- Name: password_history_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.password_history_id_seq', 1, false);
+
+
+--
+-- Name: pnc_event_sequence_event_sequence_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.pnc_event_sequence_event_sequence_id_seq', 4, true);
+
+
+--
+-- Name: service_messages_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.service_messages_id_seq', 1, false);
+
+
+--
+-- Name: team_team_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.team_team_id_seq', 1, false);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: br7own; Owner: bichard
+--
+
+SELECT pg_catalog.setval('br7own.users_id_seq', 25, true);
+
+
+--
+-- Name: jobid_seq; Type: SEQUENCE SET; Schema: cron; Owner: bichard
+--
+
+SELECT pg_catalog.setval('cron.jobid_seq', 2, true);
+
+
+--
+-- Name: runid_seq; Type: SEQUENCE SET; Schema: cron; Owner: bichard
+--
+
+SELECT pg_catalog.setval('cron.runid_seq', 1, false);
+
+
+--
 -- Name: archive_error_list archive_error_list_pkey; Type: CONSTRAINT; Schema: br7own; Owner: bichard
 --
 
@@ -1344,27 +1793,27 @@ ALTER TABLE ONLY br7own.users_groups
 -- Name: job cron_job_policy; Type: POLICY; Schema: cron; Owner: bichard
 --
 
--- CREATE POLICY cron_job_policy ON cron.job USING ((username = CURRENT_USER));
+CREATE POLICY cron_job_policy ON cron.job USING ((username = CURRENT_USER));
 
 
 --
 -- Name: job_run_details cron_job_run_details_policy; Type: POLICY; Schema: cron; Owner: bichard
 --
 
--- CREATE POLICY cron_job_run_details_policy ON cron.job_run_details USING ((username = CURRENT_USER));
+CREATE POLICY cron_job_run_details_policy ON cron.job_run_details USING ((username = CURRENT_USER));
 
 
 --
 -- Name: job; Type: ROW SECURITY; Schema: cron; Owner: bichard
 --
 
--- ALTER TABLE cron.job ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cron.job ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: job_run_details; Type: ROW SECURITY; Schema: cron; Owner: bichard
 --
 
--- ALTER TABLE cron.job_run_details ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cron.job_run_details ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: SCHEMA sysibm; Type: ACL; Schema: -; Owner: bichard
