@@ -6,4 +6,4 @@ then
     md5="md5sum"
 fi
 
-$md5 package-lock.json > package-lock.json.md5
+$md5 ./core/package-lock.json > ./core/package-lock.json.md5
