@@ -1,0 +1,31 @@
+version: "3.2"
+services:
+  e2e-tests:
+    image: e2etests
+    environment:
+      MQ_URL: failover:(stomp://activemq:61613)
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      UI_HOST: bichard7-liberty
+      UI_PORT: 9443
+      UI_SCHEME: https
+      USERS_SCHEME: https
+      USERS_HOST: user-service
+      USERS_PORT: 443
+      PNC_HOST: pncemulator
+      DB_HOST: postgres
+      DB_USER: ${DEFAULT_USER}
+      DB_PASSWORD: ${DEFAULT_PASSWORD}
+      AWS_URL: http://localstack:4566
+      S3_INCOMING_MESSAGE_BUCKET: incoming-messages
+      MESSAGE_ENTRY_POINT: s3phase1
+      RECORD: "false"
+      TEST_TIMEOUT: 30000
+      AUTH_TYPE: user-service
+      TOTAL_CHUNKS: "${TOTAL_CHUNKS:-1}"
+      CHUNK_NUMBER: "${CHUNK_NUMBER:-0}"
+    depends_on:
+      conductor:
+        condition: service_healthy
+      nginx-auth-proxy:
+        condition: service_healthy

@@ -189,7 +189,7 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 60s
+      start_period: 180s
 
   user-service:
     image: user-service
@@ -236,9 +236,9 @@ services:
     ports:
       - 4443:4443
     environment:
-      CJSE_NGINX_APP_DOMAIN: liberty:9443
+      CJSE_NGINX_APP_DOMAIN: bichard7-liberty:9443
       CJSE_NGINX_AUDITLOGGING_DOMAIN: nginx-auth-proxy:4443/elb-status
-      CJSE_NGINX_BICHARDBACKEND_DOMAIN: liberty:9443
+      CJSE_NGINX_BICHARDBACKEND_DOMAIN: bichard7-liberty:9443
       CJSE_NGINX_PORT_HTTPS: 4443
       CJSE_NGINX_PROXYSSLVERIFY: "off"
       CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
