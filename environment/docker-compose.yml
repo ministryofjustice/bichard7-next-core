@@ -255,3 +255,5 @@ services:
         condition: service_healthy
       user-service:
         condition: service_healthy
+      ui:
+        condition: service_healthy
