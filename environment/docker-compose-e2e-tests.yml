@@ -22,6 +22,7 @@ services:
       RECORD: "false"
       TEST_TIMEOUT: 30000
       AUTH_TYPE: user-service
+      AUDIT_LOG_API_URL: http://audit-log-api:5000
       TOTAL_CHUNKS: "${TOTAL_CHUNKS:-1}"
       CHUNK_NUMBER: "${CHUNK_NUMBER:-0}"
     depends_on:

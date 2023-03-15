@@ -289,3 +289,19 @@ services:
       AUDIT_LOG_API_URL: toBeSet
       AUDIT_LOG_API_KEY: toBeSet
       DB_HOST: postgres
+    depends_on:
+      audit-log-api:
+        condition: service_healthy
+
+  audit-log-api:
+    image: natenho/mockaco
+    ports:
+      - 3011:5000
+    volumes:
+      - ./audit-log-api:/app/Mocks
+    healthcheck:
+      test: wget -q http://localhost:5000/health -O -
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 10s
