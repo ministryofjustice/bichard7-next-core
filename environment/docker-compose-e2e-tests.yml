@@ -10,8 +10,8 @@ services:
       UI_PORT: 9443
       UI_SCHEME: https
       USERS_SCHEME: https
-      USERS_HOST: user-service
-      USERS_PORT: 443
+      USERS_HOST: nginx-auth-proxy
+      USERS_PORT: 4443
       PNC_HOST: pncemulator
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
