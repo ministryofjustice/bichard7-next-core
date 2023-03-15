@@ -49,7 +49,7 @@ jobs:
 
   test:
     machine:
-      image: ubuntu-2004:202104-01
+      image: ubuntu-2204:current
       docker_layer_caching: true
     working_directory: ~
     steps:
@@ -58,10 +58,10 @@ jobs:
           at: .
       - run:
           name: Run PostgreSQL
-          command: npm run pg
+          command: npm run postgres
       - run:
           name: Run ActiveMQ
-          command: npm run mq
+          command: npm run activemq
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
@@ -74,19 +74,13 @@ jobs:
 
   comparison_test:
     machine:
-      image: ubuntu-2004:202104-01
+      image: ubuntu-2204:current
       docker_layer_caching: true
     working_directory: ~
     steps:
       - checkout_and_install
       - attach_workspace:
           at: .
-      - run:
-          name: Run PostgreSQL
-          command: npm run pg
-      - run:
-          name: Run ActiveMQ
-          command: npm run mq
       - run:
           name: Run integration tests against core code
           command: npm run test:compare
@@ -144,18 +138,11 @@ jobs:
       - fetch_docker_image:
           image: nodejs
       - run:
-          name: Build the Conductor Worker
-          command: npm run conductor-worker-docker-build
-      - run:
           name: Boot Conductor infrastructure
-          command: npm run conductor-full
+          command: npm run conductor
       - run:
           name: Set up Conductor
           command: npm run conductor-setup
-      - run:
-          name: Run the Conductor Worker
-          command: npm run conductor-worker-docker
-          background: true
       - run:
           name: Test the workflows
           command: npm run test:conductor

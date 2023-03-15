@@ -1,66 +1,82 @@
 version: "3.2"
 services:
-  mq:
-    image: rmohr/activemq
-    ports:
-      - 59161:8161
-      - 61613:61613
-    volumes:
-      - ./activemq.xml:/opt/activemq/conf/activemq.xml
-
-  pg:
-    build:
-      context: .
-      dockerfile: PgDockerfile
-    restart: always
+  activemq:
+    image: symptoma/activemq:5.17.4
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: bichard
-      POSTGRES_USER: bichard
+      ACTIVEMQ_WEBCONSOLE_USE_DEFAULT_ADDRESS: "false"
+      ACTIVEMQ_DISALLOW_WEBCONSOLE: "false"
+      ACTIVEMQ_USERNAME: ${DEFAULT_USER}
+      ACTIVEMQ_PASSWORD: ${DEFAULT_PASSWORD}
+      ACTIVEMQ_WEBADMIN_USERNAME: ${DEFAULT_USER}
+      ACTIVEMQ_WEBADMIN_PASSWORD: ${DEFAULT_PASSWORD}
+    ports:
+      - 61616:61616
+      - 61613:61613
+      - 8161:8161
+    healthcheck:
+      test: "curl --header 'Origin: origin' --fail -u ${DEFAULT_USER}:${DEFAULT_PASSWORD} -s http://localhost:8161/api/jolokia/exec/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/healthStatus"
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DEFAULT_USER}
+      POSTGRES_PASSWORD: ${DEFAULT_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     volumes:
-      - ./pg-schema.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
-      test: ["CMD", "psql", "-U", "bichard", "-c", "SELECT 1;"]
+      test: "pg_isready -U $${POSTGRES_USER}"
       interval: 2s
-      timeout: 5s
-      retries: 50
+      timeout: 2s
+      retries: 10
+      start_period: 20s
 
   conductor:
     image: conductor
     environment:
-      CJSE_CONDUCTOR_POSTGRES_URL: ${CJSE_CONDUCTOR_POSTGRES_URL:-jdbc:postgresql://pg:5432/conductor}
-      CJSE_CONDUCTOR_POSTGRES_USER: ${CJSE_CONDUCTOR_POSTGRES_USER:-conductor}
-      CJSE_CONDUCTOR_POSTGRES_PASSWORD: ${CJSE_CONDUCTOR_POSTGRES_PASSWORD:-conductor}
-      CJSE_CONDUCTOR_ELASTICSEARCH_URL: ${CJSE_CONDUCTOR_ELASTICSEARCH_URL:-http://elasticsearch:9200}
-      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: ${CJSE_CONDUCTOR_ELASTICSEARCH_VERSION:-6}
-      CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-memory}
-      CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-false}
-      CJSE_CONDUCTOR_UI_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
-      CJSE_CONDUCTOR_UI_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
-      CJSE_CONDUCTOR_ENABLE_HTTP: "true"
-      CJSE_CONDUCTOR_QUEUE_TYPE: "sqs"
-      CJSE_CONDUCTOR_QUEUE_ENDPOINT: "http://localstack:4566"
-      CJSE_CONDUCTOR_QUEUE_BATCHSIZE: "10"
-      AWS_SECRET_ACCESS_KEY: FAKE
       AWS_ACCESS_KEY_ID: FAKE
       AWS_REGION: eu-west-2
-
+      AWS_SECRET_ACCESS_KEY: FAKE
+      CJSE_CONDUCTOR_DB_TYPE: postgres
+      CJSE_CONDUCTOR_ELASTICSEARCH_URL: http://elasticsearch:9200
+      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: 6
+      CJSE_CONDUCTOR_ENABLE_HTTP: "true"
+      CJSE_CONDUCTOR_INDEXING_ENABLED: "true"
+      CJSE_CONDUCTOR_POSTGRES_PASSWORD: conductor
+      CJSE_CONDUCTOR_POSTGRES_URL: jdbc:postgresql://postgres:5432/conductor
+      CJSE_CONDUCTOR_POSTGRES_USER: conductor
+      CJSE_CONDUCTOR_QUEUE_BATCHSIZE: 10
+      CJSE_CONDUCTOR_QUEUE_ENDPOINT: http://localstack:4566
+      CJSE_CONDUCTOR_QUEUE_TYPE: sqs
+      CJSE_CONDUCTOR_UI_USERNAME: ${DEFAULT_USER}
+      CJSE_CONDUCTOR_UI_PASSWORD: ${DEFAULT_PASSWORD}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "--insecure", "--fail", "https://localhost:5000/health"]
-      interval: "2s"
-      timeout: "5s"
-      retries: 60
+      test: curl --insecure --fail https://localhost:5000/health
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 120s
     ports:
       - 5001:5000
       - 5002:4000
 
   elasticsearch:
     image: elasticsearch:6.8.15
-    # image: elasticsearch:7.17.3
     platform: linux/amd64
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
@@ -72,14 +88,175 @@ services:
       - 9300:9300
     healthcheck:
       test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/9300'
-      interval: 5s
-      timeout: 5s
-      retries: 100
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
     logging:
       driver: "json-file"
       options:
         max-size: "1k"
         max-file: "3"
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    volumes:
+      - "${PWD}/environment/localstack/init:/etc/localstack/init"
+    environment:
+      SERVICES: "s3,sqs,dynamodb"
+      AWS_DEFAULT_REGION: "eu-west-2"
+    healthcheck:
+      test: 'curl -s localhost:4566/_localstack/init | grep -q ''"READY": true'''
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 40s
+
+  bichard7-liberty:
+    image: bichard7-liberty
+    environment:
+      WLP_LOGGING_MESSAGE_FORMAT: "json"
+      WLP_LOGGING_MESSAGE_SOURCE: "message,trace,accessLog,ffdc,audit"
+      WLP_LOGGING_CONSOLE_FORMAT: "json"
+      WLP_LOGGING_CONSOLE_LOGLEVEL: "info"
+      WLP_LOGGING_CONSOLE_SOURCE: "message,trace,accessLog,ffdc,audit"
+      WLP_LOGGING_APPS_WRITE_JSON: "true"
+      DB_USER: ${DEFAULT_USER}
+      DB_PASSWORD: ${DEFAULT_PASSWORD}
+      DB_HOST: postgres
+      DB_SSL: "false"
+      DB_SSL_MODE: disable
+      LOG_PNC_REQUESTS: "true"
+      MQ_CONN_STR: tcp://activemq:61616
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      LOG_LEVEL: WARN
+      BC_PROXY_URL: oltp://beanconnect:31004/BCU31004
+      LOGIN_URL: https://localhost:4443/users/login?redirect=/bichard-ui/Authenticate
+      TOKEN_SECRET: ${AUTH_JWT_SECRET}
+      TAC_SUFFIX: M5B
+      ENVIRONMENT: test
+      PROCESSING_VALIDATION_PERCENTAGE: 100
+      ENABLE_PHASE_2: "${ENABLE_PHASE_2:-true}"
+      ENABLE_PHASE_3: "${ENABLE_PHASE_3:-true}"
+      PNC_API_KEY: "${PNC_API_KEY}"
+    healthcheck:
+      test: curl --insecure --fail https://localhost:9443/bichard-ui/Health
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
+    depends_on:
+      beanconnect:
+        condition: service_started
+      activemq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  beanconnect:
+    image: beanconnect
+    platform: linux/amd64
+    environment:
+      BC_ADMIN_PASSWORD: password
+      BC_CONTWIN: 9
+      BC_EIS_AEQ: 7707
+      BC_EIS_HOST: pncemulator
+      BC_EIS_IS_ADMIN: "false"
+      BC_EIS_IS_BS2000: "false"
+      BC_EIS_LISTENER_PORT: 30001
+      BC_EIS_LPAP: LPBICHCD
+      BC_EIS_TSEL: SMP20001
+      BC_PROXY_HOSTNAME: LOCAL
+      SETUP_HOSTS_FILE: "true"
+    hostname: "bc.cjse.org"
+    healthcheck:
+      test: echo >/dev/tcp/localhost/31004
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 180s
+
+  pncemulator:
+    image: pncemulator
+    platform: linux/amd64
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: (echo >/dev/tcp/localhost/20001) && (echo >/dev/tcp/localhost/30001)
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 60s
+
+  user-service:
+    image: user-service
+    environment:
+      BASE_URL: https://localhost:4443/users
+      DB_HOST: postgres
+      INCORRECT_DELAY: 0
+      TOKEN_EXPIRES_IN: 1 week
+      TOKEN_ISSUER: Bichard
+      TOKEN_SECRET: ${AUTH_JWT_SECRET}
+    healthcheck:
+      test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/443)
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ui:
+    image: ui
+    environment:
+      DB_HOST: postgres
+      DB_USER: ${DEFAULT_USER}
+      DB_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_URL: tcp://activemq:61613
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+    ports:
+      - 4080:443
+    healthcheck:
+      test: curl --insecure --fail -v https://localhost/elb-status
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx-auth-proxy:
+    image: nginx-auth-proxy
+    ports:
+      - 4443:4443
+    environment:
+      CJSE_NGINX_APP_DOMAIN: liberty:9443
+      CJSE_NGINX_AUDITLOGGING_DOMAIN: nginx-auth-proxy:4443/elb-status
+      CJSE_NGINX_BICHARDBACKEND_DOMAIN: liberty:9443
+      CJSE_NGINX_PORT_HTTPS: 4443
+      CJSE_NGINX_PROXYSSLVERIFY: "off"
+      CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
+      CJSE_NGINX_UI_DOMAIN: ui
+      CJSE_NGINX_USERSERVICE_DOMAIN: user-service
+    healthcheck:
+      test: curl --insecure --fail -v https://localhost:4443/elb-status
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+    depends_on:
+      bichard7-liberty:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      ui:
+        condition: service_healthy
 
   worker:
     build:
@@ -94,8 +271,8 @@ services:
       DYNAMO_URL: http://localstack:4566
       S3_REGION: eu-west-2
       CONDUCTOR_URL: http://conductor:4000/api
-      CONDUCTOR_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
-      CONDUCTOR_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
+      CONDUCTOR_USERNAME: ${DEFAULT_USER}
+      CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
@@ -106,25 +283,9 @@ services:
       S3_AWS_SECRET_ACCESS_KEY: FAKE
       S3_ENDPOINT: http://localstack:4566
       PHASE_1_BUCKET_NAME: phase1
-      MQ_USER: admin
-      MQ_PASSWORD: admin
-      MQ_URL: failover:(stomp://mq:61613)
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_URL: failover:(stomp://activemq:61613)
       AUDIT_LOG_API_URL: toBeSet
       AUDIT_LOG_API_KEY: toBeSet
-      DB_HOST: pg
-
-  localstack:
-    container_name: "localstack"
-    image: localstack/localstack
-    ports:
-      - "4566:4566"
-    volumes:
-      - "${PWD}/environment/localstack/init:/etc/localstack/init"
-    environment:
-      SERVICES: "s3,sqs,dynamodb"
-      AWS_DEFAULT_REGION: "eu-west-2"
-    healthcheck:
-      test: "timeout 2 bash -c \"curl -s localhost:4566/_localstack/init | grep -q '\\\"READY\\\": true'\""
-      interval: 2s
-      timeout: 2s
-      retries: 100
+      DB_HOST: postgres

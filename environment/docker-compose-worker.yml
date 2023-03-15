@@ -1,13 +1,12 @@
 version: "3.2"
 services:
   conductor:
-    environment:
-      CJSE_CONDUCTOR_DB_TYPE: ${CJSE_CONDUCTOR_DB_TYPE:-postgres}
-      CJSE_CONDUCTOR_INDEXING_ENABLED: ${CJSE_CONDUCTOR_INDEXING_ENABLED:-true}
     depends_on:
       elasticsearch:
         condition: service_healthy
-      pg:
+      postgres:
         condition: service_healthy
       localstack:
         condition: service_healthy
+      worker:
+        condition: service_started
