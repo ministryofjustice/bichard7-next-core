@@ -155,11 +155,9 @@ jobs:
     working_directory: ~
     parallelism: 8
     steps:
-      - checkout_and_install
+      - checkout
       - attach_workspace:
           at: .
-      - fetch_docker_image:
-          image: e2etests
       - run:
           name: Run the infrastructure
           command: npm run all
