@@ -6,13 +6,13 @@ services:
       MQ_URL: failover:(stomp://activemq:61613)
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
-      UI_HOST: bichard7-liberty
-      UI_PORT: 9443
+      UI_HOST: nginx-auth-proxy
+      UI_PORT: 4443
       UI_SCHEME: https
       USERS_SCHEME: https
       USERS_HOST: nginx-auth-proxy
       USERS_PORT: 4443
-      PNC_HOST: pncemulator
+      PNC_HOST: pnc
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
       DB_PASSWORD: ${DEFAULT_PASSWORD}
@@ -30,3 +30,7 @@ services:
         condition: service_healthy
       nginx-auth-proxy:
         condition: service_healthy
+
+  worker:
+    environment:
+      NODE_ENV: test

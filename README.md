@@ -18,6 +18,12 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, ElasticSearch, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, ElasticSearch, Postgres, Localstack and will not run the worker (for development purposes)
 
+You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) against core in Conductor with:
+
+```
+npm run test:e2e
+```
+
 ### Building on an M1 Mac
 
 We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore it is necessary to build the relevant images yourself.
