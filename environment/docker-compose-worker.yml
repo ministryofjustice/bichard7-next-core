@@ -1,33 +1,13 @@
 version: "3.2"
 services:
-  worker:
-    build:
-      context: ..
-      dockerfile: conductor/Dockerfile
-    environment:
-      PHASE1_COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
-      PHASE2_COMPARISON_TABLE_NAME: bichard-7-production-phase2-comparison-log
-      PHASE3_COMPARISON_TABLE_NAME: bichard-7-production-phase3-comparison-log
-      COMPARISON_BUCKET: comparisons
-      DYNAMO_REGION: eu-west-2
-      DYNAMO_URL: http://localstack:4566
-      S3_REGION: eu-west-2
-      CONDUCTOR_URL: http://conductor:4000/api
-      CONDUCTOR_USERNAME: ${CJSE_CONDUCTOR_UI_USERNAME:-bichard}
-      CONDUCTOR_PASSWORD: ${CJSE_CONDUCTOR_UI_PASSWORD:-password}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
-      AWS_SECURITY_TOKEN: ${AWS_SECURITY_TOKEN}
-      DYNAMO_AWS_ACCESS_KEY_ID: FAKE
-      DYNAMO_AWS_SECRET_ACCESS_KEY: FAKE
-      S3_AWS_ACCESS_KEY_ID: FAKE
-      S3_AWS_SECRET_ACCESS_KEY: FAKE
-      S3_ENDPOINT: http://localstack:4566
-      PHASE_1_BUCKET_NAME: phase1
-      MQ_USER: admin
-      MQ_PASSWORD: admin
-      MQ_URL: failover:(stomp://mq:61613)
-      AUDIT_LOG_API_URL: toBeSet
-      AUDIT_LOG_API_KEY: toBeSet
-      DB_HOST: pg
+  conductor:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      worker:
+        condition: service_started
+  
