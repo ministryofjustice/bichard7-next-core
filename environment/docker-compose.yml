@@ -49,7 +49,7 @@ services:
       CJSE_CONDUCTOR_ELASTICSEARCH_URL: http://elasticsearch:9200
       CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: 6
       CJSE_CONDUCTOR_ENABLE_HTTP: "true"
-      CJSE_CONDUCTOR_INDEXING_ENABLED: true
+      CJSE_CONDUCTOR_INDEXING_ENABLED: "true"
       CJSE_CONDUCTOR_POSTGRES_PASSWORD: conductor
       CJSE_CONDUCTOR_POSTGRES_URL: jdbc:postgresql://postgres:5432/conductor
       CJSE_CONDUCTOR_POSTGRES_USER: conductor
@@ -126,7 +126,7 @@ services:
       DB_USER: ${DEFAULT_USER}
       DB_PASSWORD: ${DEFAULT_PASSWORD}
       DB_HOST: postgres
-      DB_SSL: false
+      DB_SSL: "false"
       DB_SSL_MODE: disable
       LOG_PNC_REQUESTS: "true"
       MQ_CONN_STR: tcp://activemq:61616
