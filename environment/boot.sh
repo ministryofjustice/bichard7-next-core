@@ -18,6 +18,7 @@ done
 docker compose \
     --project-name bichard \
     -f environment/docker-compose.yml \
+    -f environment/docker-compose-worker.yml \
     up -d --wait
 
 npm run conductor-setup

@@ -2,6 +2,31 @@
 
 The code to replace the processing logic of Bichard 7
 
+## Booting the infrastructure
+
+Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
+
+```
+aws-vault exec bichard7-shared -- npm run all
+```
+
+This will pull down the images from ECR so you don't need to build them. On an M1 Mac, see below.
+
+You can also run subsets of the infrastructure using:
+
+- `npm run bichard` will run old Bichard, ActiveMQ, Postgres, BeanConnect, PNC Emulator, User Service, Auth Proxy and the new UI
+- `npm run conductor` will run Conductor, ElasticSearch, Postgres, Localstack and the worker
+- `npm run conductor-no-worker` will run Conductor, ElasticSearch, Postgres, Localstack and will not run the worker (for development purposes)
+
+### Building on an M1 Mac
+
+We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore it is necessary to build the relevant images yourself.
+
+1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
+1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
+1. In the [bichard7-next-user-service](https://github.com/ministryofjustice/bichard7-next-user-service/) repository run `make build`
+1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-ui/) repository run `make build`
+
 ## Publishing package updates
 
 The code in this repository is packaged in the [`@moj-bichard7-developers/bichard7-next-core` NPM package](https://www.npmjs.com/package/@moj-bichard7-developers/bichard7-next-core).

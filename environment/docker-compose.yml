@@ -108,7 +108,7 @@ services:
       SERVICES: "s3,sqs,dynamodb"
       AWS_DEFAULT_REGION: "eu-west-2"
     healthcheck:
-      test: "curl -s localhost:4566/_localstack/init | grep -q '\"READY\": true'"
+      test: 'curl -s localhost:4566/_localstack/init | grep -q ''"READY": true'''
       interval: 2s
       timeout: 2s
       retries: 10
@@ -171,7 +171,7 @@ services:
       BC_EIS_TSEL: SMP20001
       BC_PROXY_HOSTNAME: LOCAL
       SETUP_HOSTS_FILE: "true"
-    hostname: 'bc.cjse.org'
+    hostname: "bc.cjse.org"
     healthcheck:
       test: echo >/dev/tcp/localhost/31004
       interval: 2s
@@ -257,7 +257,7 @@ services:
         condition: service_healthy
       ui:
         condition: service_healthy
-  
+
   worker:
     build:
       context: ..
