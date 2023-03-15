@@ -24,6 +24,12 @@ You can also run the [end-to-end tests](https://github.com/ministryofjustice/bic
 npm run test:e2e
 ```
 
+Finally, to bring all of that infrastructure down again, you can use:
+
+```
+npm run destroy
+```
+
 ### Building on an M1 Mac
 
 We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore it is necessary to build the relevant images yourself.
