@@ -30,7 +30,3 @@ services:
         condition: service_healthy
       nginx-auth-proxy:
         condition: service_healthy
-
-  worker:
-    environment:
-      NODE_ENV: test

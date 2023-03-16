@@ -116,6 +116,8 @@ services:
 
   bichard7-liberty:
     image: bichard7-liberty
+    ports:
+      - 9443:9443
     environment:
       WLP_LOGGING_MESSAGE_FORMAT: "json"
       WLP_LOGGING_MESSAGE_SOURCE: "message,trace,accessLog,ffdc,audit"
@@ -289,11 +291,12 @@ services:
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_URL: failover:(stomp://activemq:61613)
-      AUDIT_LOG_API_URL: toBeSet
+      AUDIT_LOG_API_URL: http://audit-log-api:5000
       AUDIT_LOG_API_KEY: toBeSet
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
+      NODE_ENV: ${NODE_ENV:-test}
     depends_on:
       audit-log-api:
         condition: service_healthy
