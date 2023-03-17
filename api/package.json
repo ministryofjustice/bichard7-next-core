@@ -7,7 +7,8 @@
     "postinstall": "tsc",
     "start": "node dist/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
-    "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'"
+    "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
+    "test:integration": "jest --verbose ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +17,10 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
+    "@types/supertest": "^2.0.12",
     "jest": "^29.5.0",
     "nodemon": "^2.0.21",
+    "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
