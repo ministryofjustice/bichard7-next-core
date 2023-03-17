@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "tsc",
     "start": "node dist/index.js",
-    "start:dev": "nodemon --config nodemon.json src/index.ts"
+    "start:dev": "nodemon --config nodemon.json src/index.ts",
+    "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'"
   },
   "keywords": [],
   "author": "",
