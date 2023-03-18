@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "route": "/messages/{correlationId}/events"
+  },
+  "response": {
+    "status": 201
+  }
+}

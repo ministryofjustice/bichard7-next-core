@@ -5,7 +5,7 @@ IMAGES=(beanconnect pncemulator)
 
 PLATFORM=$(uname -m)
 if [ $PLATFORM != "arm64" ]; then
-    IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui user-service)
+    IMAGES+=(bichard7-liberty conductor e2etests nginx-auth-proxy ui user-service)
 fi
 
 for image in "${IMAGES[@]}"; do

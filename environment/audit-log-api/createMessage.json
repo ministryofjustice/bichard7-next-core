@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "route": "/messages"
+  },
+  "response": {
+    "status": 201
+  }
+}

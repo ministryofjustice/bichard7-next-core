@@ -116,6 +116,8 @@ services:
 
   bichard7-liberty:
     image: bichard7-liberty
+    ports:
+      - 9443:9443
     environment:
       WLP_LOGGING_MESSAGE_FORMAT: "json"
       WLP_LOGGING_MESSAGE_SOURCE: "message,trace,accessLog,ffdc,audit"
@@ -163,7 +165,7 @@ services:
       BC_ADMIN_PASSWORD: password
       BC_CONTWIN: 9
       BC_EIS_AEQ: 7707
-      BC_EIS_HOST: pncemulator
+      BC_EIS_HOST: pnc
       BC_EIS_IS_ADMIN: "false"
       BC_EIS_IS_BS2000: "false"
       BC_EIS_LISTENER_PORT: 30001
@@ -178,8 +180,11 @@ services:
       timeout: 2s
       retries: 10
       start_period: 180s
+    depends_on:
+      pnc:
+        condition: service_healthy
 
-  pncemulator:
+  pnc:
     image: pncemulator
     platform: linux/amd64
     ports:
@@ -189,7 +194,7 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 60s
+      start_period: 180s
 
   user-service:
     image: user-service
@@ -236,9 +241,9 @@ services:
     ports:
       - 4443:4443
     environment:
-      CJSE_NGINX_APP_DOMAIN: liberty:9443
+      CJSE_NGINX_APP_DOMAIN: bichard7-liberty:9443
       CJSE_NGINX_AUDITLOGGING_DOMAIN: nginx-auth-proxy:4443/elb-status
-      CJSE_NGINX_BICHARDBACKEND_DOMAIN: liberty:9443
+      CJSE_NGINX_BICHARDBACKEND_DOMAIN: bichard7-liberty:9443
       CJSE_NGINX_PORT_HTTPS: 4443
       CJSE_NGINX_PROXYSSLVERIFY: "off"
       CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
@@ -286,6 +291,25 @@ services:
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_URL: failover:(stomp://activemq:61613)
-      AUDIT_LOG_API_URL: toBeSet
+      AUDIT_LOG_API_URL: http://audit-log-api:5000
       AUDIT_LOG_API_KEY: toBeSet
       DB_HOST: postgres
+      PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
+      PNC_API_KEY: ${PNC_API_KEY}
+      NODE_ENV: ${NODE_ENV:-test}
+    depends_on:
+      audit-log-api:
+        condition: service_healthy
+
+  audit-log-api:
+    image: natenho/mockaco
+    ports:
+      - 3011:5000
+    volumes:
+      - ./audit-log-api:/app/Mocks
+    healthcheck:
+      test: wget -q http://localhost:5000/health -O -
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 10s
