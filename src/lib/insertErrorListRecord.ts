@@ -1,5 +1,4 @@
-import type { Sql } from "postgres"
-import type { PromiseResult } from "src/comparison/types"
+import type { PostgresError, Sql } from "postgres"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "src/types/ErrorListRecord"
@@ -76,8 +75,9 @@ const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListR
   }
 }
 
-const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): PromiseResult<void> => {
+const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Promise<number> => {
   const errorListRecord = convertResultToErrorListRecord(result)
+  let newRecordId: number | undefined
   try {
     const newRecordResult = await sql<ErrorListRecord[]>`
       INSERT INTO br7own.error_list ${sql(errorListRecord)} RETURNING *`
@@ -85,6 +85,7 @@ const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Pro
     if (!newRecordResult[0].error_id) {
       throw new Error("Error inserting to error_list table")
     }
+    newRecordId = newRecordResult[0].error_id
 
     for (const trigger of result.triggers) {
       const triggerRecord: ErrorListTriggerRecord = {
@@ -100,12 +101,16 @@ const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Pro
         INSERT INTO br7own.error_list_triggers ${sql(triggerRecord)}`
     }
   } catch (e) {
-    const error = e as any
+    const error = e as PostgresError
     if (error.severity !== "NOTICE") {
       console.error(e)
-      return e as Error
+      throw error
     }
   }
+  if (newRecordId === undefined) {
+    throw new Error("Error inserting new error_list record")
+  }
+  return newRecordId
 }
 
 export default insertErrorListRecord
