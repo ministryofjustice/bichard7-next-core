@@ -44,7 +44,9 @@ export default async (
   auditLogger: AuditLogger
 ): Promise<AnnotatedHearingOutcome> => {
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  if (isDummyAsn(asn) || !validateAsn(asn)) {
+  const offenceCount =
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
+  if (isDummyAsn(asn) || !validateAsn(asn) || offenceCount > 100) {
     return annotatedHearingOutcome
   }
 
