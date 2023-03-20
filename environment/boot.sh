@@ -15,10 +15,22 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
-docker compose \
-    --project-name bichard \
-    -f environment/docker-compose.yml \
-    -f environment/docker-compose-worker.yml \
-    up -d --wait
+for i in $(seq 1 5); do
+    echo "Setting up infrastructure"
+    docker compose \
+        --project-name bichard \
+        -f environment/docker-compose.yml \
+        -f environment/docker-compose-worker.yml \
+        up -d --wait \
+        && break
+    docker compose \
+        --project-name bichard \
+        -f environment/docker-compose.yml \
+        -f environment/docker-compose-worker.yml \
+        down
+done;
 
-npm run conductor-setup
+for i in $(seq 1 5); do
+    echo "Setting up conductor"
+    npm run conductor-setup && break || sleep 5
+done;
