@@ -1,6 +1,7 @@
 import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import isDummyAsn from "src/lib/isDummyAsn"
+import { validateAsn } from "src/schemas/ahoValidations"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
@@ -43,7 +44,7 @@ export default async (
   auditLogger: AuditLogger
 ): Promise<AnnotatedHearingOutcome> => {
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  if (isDummyAsn(asn)) {
+  if (isDummyAsn(asn) || !validateAsn(asn)) {
     return annotatedHearingOutcome
   }
 
