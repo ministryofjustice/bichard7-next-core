@@ -1,3 +1,4 @@
+import { isAsnFormatValid, isAsnOrganisationUnitValid } from "src/lib/isAsnValid"
 import { z } from "zod"
 import {
   lookupCourtTypeByCjsCode,
@@ -17,7 +18,6 @@ import {
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
 } from "../dataLookup"
-import Asn from "../lib/Asn"
 import requireStandingData from "../lib/requireStandingData"
 import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../types/ExceptionCode"
@@ -27,10 +27,9 @@ const invalid = () => false
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
 
-const validateAsn = (data: string): boolean => {
-  const asn = new Asn(data)
-  return !!data.match(/^[0-9]{2}[A-Z0-9]{6,7}[0-9]{11}[A-HJ-NP-RT-Z]{1}$/) && asn.checkCharacter() === data.slice(-1)
-}
+export const validateAsnFormat = (data: string): boolean => isAsnFormatValid(data)
+
+export const validateAsnOuCode = (data: string): boolean => isAsnOrganisationUnitValid(data)
 
 const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   if (data < 1000 || data > 9999) {
@@ -96,7 +95,6 @@ const validateNumberSpecifiedInResult = (value: NumberSpecifiedInResult): boolea
 export {
   invalid,
   validateRemandStatus,
-  validateAsn,
   validateResultCode,
   validateCourtType,
   validateTypeOfHearing,

@@ -19,11 +19,15 @@ class Asn {
     this.sequence = parseInt(asn.slice(8), 10)
   }
 
-  checkCharacter() {
-    const sequence = this.sequence.toString().padStart(11, "0")
-    const number = `${intOrString(this.force)}${intOrString(this.system)}${this.year}${sequence}`
-    const modulus = Number(BigInt(number) % BigInt(23))
-    return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
+  checkCharacter(): string | undefined {
+    try {
+      const sequence = this.sequence.toString().padStart(11, "0")
+      const number = `${intOrString(this.force)}${intOrString(this.system)}${this.year}${sequence}`
+      const modulus = Number(BigInt(number) % BigInt(23))
+      return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
+    } catch (e) {
+      return undefined
+    }
   }
 
   toString() {

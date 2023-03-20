@@ -1,6 +1,6 @@
+import isAsnValid from "src/lib/isAsnValid"
 import { lookupOrganisationUnitByCode } from "../../dataLookup"
 import logger from "../../lib/logging"
-import { validateAsn } from "../../schemas/ahoValidations"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
@@ -95,7 +95,7 @@ const getForceStationCode = (hearingOutcome: AnnotatedHearingOutcome): string | 
   }
 
   const asn = ahoCase.HearingDefendant.ArrestSummonsNumber
-  const asnValid = validateAsn(asn)
+  const asnValid = isAsnValid(asn)
   if (asnValid) {
     const asnCode = getValidForceOrForceStation(asn.substring(asn.length - 18))
     if (asnCode && !isDummyAsn(asn)) {

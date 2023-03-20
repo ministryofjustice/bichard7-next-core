@@ -1,7 +1,7 @@
 import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
+import isAsnValid from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
-import { validateAsn } from "src/schemas/ahoValidations"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
@@ -46,7 +46,7 @@ export default async (
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const offenceCount =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
-  if (isDummyAsn(asn) || !validateAsn(asn) || offenceCount > 100) {
+  if (isDummyAsn(asn) || !isAsnValid(asn) || offenceCount > 100) {
     return annotatedHearingOutcome
   }
 
