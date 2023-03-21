@@ -2,6 +2,7 @@
 set -e
 
 IMAGES=(beanconnect pncemulator)
+SERVICES=$@
 
 PLATFORM=$(uname -m)
 if [ $PLATFORM != "arm64" ]; then
@@ -22,13 +23,19 @@ else
     eval "$DOCKER_COMPOSE build worker"
 fi
 
-for i in $(seq 1 5); do
+if [ "$CI" == "true" ]; then
+    ATTEMPTS=5
+else
+    ATTEMPTS=1
+fi
+
+for i in $(seq 1 $ATTEMPTS); do
     echo "Setting up infrastructure"
-    eval "$DOCKER_COMPOSE up -d --wait" && break
+    eval "$DOCKER_COMPOSE up -d --wait $SERVICES" && break
     eval "$DOCKER_COMPOSE down"
 done;
 
-for i in $(seq 1 5); do
+for i in $(seq 1 $ATTEMPTS); do
     echo "Setting up conductor"
     npm run conductor-setup && break || sleep 5
 done;
