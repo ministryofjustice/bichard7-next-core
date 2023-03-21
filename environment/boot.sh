@@ -15,6 +15,8 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
+docker compose --project-name bichard -f environment/docker-compose.yml build worker
+
 for i in $(seq 1 5); do
     echo "Setting up infrastructure"
     docker compose \
