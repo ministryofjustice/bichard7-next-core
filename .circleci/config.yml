@@ -153,7 +153,7 @@ jobs:
       docker_layer_caching: true
     resource_class: xlarge
     working_directory: ~
-    parallelism: 20
+    parallelism: 10
     steps:
       - checkout_and_install
       - attach_workspace:
