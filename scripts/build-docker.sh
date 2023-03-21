@@ -83,7 +83,7 @@ function pull_and_build_from_aws() {
       -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
       -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
       -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \
-      -e PHASE_1_BUCKET_NAME="phase1" \
+      -e PHASE1_BUCKET_NAME="phase1" \
       -e DYNAMO_REGION="eu-west-2" \
       -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
       -e S3_REGION="eu-west-2" \

@@ -19,9 +19,9 @@ import PncGateway from "src/lib/PncGateway"
 import { Phase1ResultType } from "src/types/Phase1Result"
 
 const taskDefName = "process_phase1"
-const bucket = process.env.PHASE_1_BUCKET_NAME
+const bucket = process.env.PHASE1_BUCKET_NAME
 if (!bucket) {
-  throw Error("PHASE_1_BUCKET_NAME environment variable is required")
+  throw Error("PHASE1_BUCKET_NAME environment variable is required")
 }
 const s3Config = createS3Config()
 const pncApiConfig = createPncApiConfig()

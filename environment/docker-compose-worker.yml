@@ -24,7 +24,7 @@ services:
       S3_AWS_ACCESS_KEY_ID: FAKE
       S3_AWS_SECRET_ACCESS_KEY: FAKE
       S3_ENDPOINT: http://localstack:4566
-      PHASE_1_BUCKET_NAME: phase1
+      PHASE1_BUCKET_NAME: phase1
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_URL: failover:(stomp://activemq:61613)
