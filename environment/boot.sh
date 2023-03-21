@@ -15,21 +15,17 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
-docker compose --project-name bichard -f environment/docker-compose.yml build worker
+if [ $NOWORKER == "true" ]; then
+    DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
+else
+    DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml"
+    eval "$DOCKER_COMPOSE build worker"
+fi
 
 for i in $(seq 1 5); do
     echo "Setting up infrastructure"
-    docker compose \
-        --project-name bichard \
-        -f environment/docker-compose.yml \
-        -f environment/docker-compose-worker.yml \
-        up -d --wait \
-        && break
-    docker compose \
-        --project-name bichard \
-        -f environment/docker-compose.yml \
-        -f environment/docker-compose-worker.yml \
-        down
+    eval "$DOCKER_COMPOSE up -d --wait" && break
+    eval "$DOCKER_COMPOSE down"
 done;
 
 for i in $(seq 1 5); do

@@ -30,6 +30,7 @@
     "update-deps": "ncu -u !chalk && npm install",
     "postinstall": "./scripts/install-standing-data.sh",
     "all": "./environment/boot.sh",
+    "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
     "activemq": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
     "conductor": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml up -d --wait conductor",
