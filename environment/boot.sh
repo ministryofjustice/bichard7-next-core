@@ -15,7 +15,7 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
-if [ $NOWORKER == "true" ]; then
+if [ "$NOWORKER" == "true" ]; then
     DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
 else
     DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml"
