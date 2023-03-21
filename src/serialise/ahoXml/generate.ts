@@ -401,12 +401,12 @@ const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
 const mapOffenceDIS = (disposals: PncDisposal[]): DISList => ({
   DIS: disposals.map((d) => ({
     "@_IntfcUpdateType": "I",
-    "@_QtyDate": d.qtyDate,
-    "@_QtyDuration": d.qtyDuration,
+    "@_QtyDate": d.qtyDate ?? "",
+    "@_QtyDuration": d.qtyDuration ?? "",
     "@_QtyMonetaryValue": d.qtyMonetaryValue ?? "",
-    "@_QtyUnitsFined": d.qtyUnitsFined,
-    "@_Qualifiers": d.qualifiers,
-    "@_Text": d.text,
+    "@_QtyUnitsFined": d.qtyUnitsFined ?? "",
+    "@_Qualifiers": d.qualifiers ?? "",
+    "@_Text": d.text ?? "",
     "@_Type": String(d.type)
   }))
 })
