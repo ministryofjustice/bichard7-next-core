@@ -68,7 +68,7 @@ jobs:
       - checkout
       - install_core
       - run:
-          name: Build the code
+          name: Build the core
           command: npm run build
       - persist_to_workspace:
           root: .
@@ -83,7 +83,7 @@ jobs:
       - checkout
       - install_api
       - run:
-          name: Build the code
+          name: Build the API
           command: cd api && npm run build
       - persist_to_workspace:
           root: ./api
@@ -234,7 +234,7 @@ jobs:
           name: Install Nodejs version in .nvmrc
           command: nvm install
       - run:
-          name: Run unit tests against core code
+          name: Run unit tests against API code
           command: nvm use && cd api && npm run test:api
 
 workflows:
