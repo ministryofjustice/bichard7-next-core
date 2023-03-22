@@ -78,15 +78,15 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     resource_class: xlarge
-    working_directory: api
+    working_directory: ~
     steps:
       - checkout
       - install_api
       - run:
           name: Build the code
-          command: npm run build
+          command: cd api && npm run build
       - persist_to_workspace:
-          root: api
+          root: ./api
           paths: build
 
   test:
