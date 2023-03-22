@@ -2,6 +2,7 @@ import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/src/utils"
+import pLimit from "p-limit"
 import getTaskConcurrency from "../../../conductor/src/getTaskConcurrency"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
@@ -15,6 +16,7 @@ const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 const taskDefName = "rerun_day"
+const s3Concurrency = process.env.S3_CONCURRENCY ? Number(process.env.S3_CONCURRENCY) : 20
 
 const rerunDay: ConductorWorker = {
   taskDefName,
@@ -48,8 +50,8 @@ const rerunDay: ConductorWorker = {
 
       logs.push(conductorLog(`Processing ${batch.length} comparison tests...`))
 
-      const resultPromises = batch.map(({ s3Path }) => compareFile(s3Path, bucket))
-
+      const limit = pLimit(s3Concurrency)
+      const resultPromises = batch.map(({ s3Path }) => limit(() => compareFile(s3Path, bucket)))
       const allTestResults = await Promise.all(resultPromises)
 
       allTestResults.forEach((res) => {
