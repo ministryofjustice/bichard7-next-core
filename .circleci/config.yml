@@ -243,10 +243,10 @@ workflows:
     jobs:
       - lint
       - build_core:
-          requires: 
+          requires:
             - lint
       - build_api:
-          requires: 
+          requires:
             - lint
       - test:
           requires:
