@@ -12,15 +12,16 @@ import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
+import insertErrorListNotes from "src/lib/insertErrorListNotes"
 import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import logger from "src/lib/logging"
 import PncGateway from "src/lib/PncGateway"
 import { Phase1ResultType } from "src/types/Phase1Result"
 
 const taskDefName = "process_phase1"
-const bucket = process.env.PHASE_1_BUCKET_NAME
+const bucket = process.env.PHASE1_BUCKET_NAME
 if (!bucket) {
-  throw Error("PHASE_1_BUCKET_NAME environment variable is required")
+  throw Error("PHASE1_BUCKET_NAME environment variable is required")
 }
 const s3Config = createS3Config()
 const pncApiConfig = createPncApiConfig()
@@ -78,7 +79,13 @@ const processPhase1: ConductorWorker = {
 
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
       // Store in Bichard DB if necessary
-      const dbResult = await insertErrorListRecord(db, result)
+      const dbResult = await db
+        .begin(async () => {
+          const recordId = await insertErrorListRecord(db, result)
+          await insertErrorListNotes(db, recordId, result)
+        })
+        .catch((e) => e)
+
       if (isError(dbResult)) {
         return {
           logs,

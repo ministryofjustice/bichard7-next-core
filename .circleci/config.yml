@@ -139,10 +139,14 @@ jobs:
           image: nodejs
       - run:
           name: Boot Conductor infrastructure
-          command: npm run conductor
+          command: npm run conductor-no-worker
       - run:
           name: Set up Conductor
           command: npm run conductor-setup
+      - run:
+          name: Run the worker
+          command: npm run conductor-worker
+          background: true
       - run:
           name: Test the workflows
           command: npm run test:conductor
@@ -153,17 +157,21 @@ jobs:
       docker_layer_caching: true
     resource_class: xlarge
     working_directory: ~
-    parallelism: 20
+    parallelism: 10
     steps:
       - checkout_and_install
       - attach_workspace:
           at: .
       - run:
           name: Run the infrastructure
-          command: npm run all
+          command: npm run all-no-worker
       - run:
-          name: Run integration tests against core code
-          command: TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX npm run test:e2e
+          name: Run the worker
+          command: npm run conductor-worker
+          background: true
+      - run:
+          name: Run e2e tests against core code
+          command: TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX npm run test:e2e:ci
 
 workflows:
   version: 2

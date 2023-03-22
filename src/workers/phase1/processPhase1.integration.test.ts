@@ -42,7 +42,7 @@ describe("processPhase1", () => {
     pncApi = new MockServer({ port: 11000 })
     await pncApi.start()
 
-    process.env.PHASE_1_BUCKET_NAME = bucket
+    process.env.PHASE1_BUCKET_NAME = bucket
   })
 
   afterAll(async () => {
