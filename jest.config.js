@@ -1,7 +1,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  modulePathIgnorePatterns: ["node_modules", "build"],
+  modulePathIgnorePatterns: ["node_modules", "build", "api"],
   moduleNameMapper: {
     "^(node_modules/.*)$": "<rootDir>/$1",
     "^(data|src|tests|conductor|test-data)$": "<rootDir>/$1",
