@@ -21,4 +21,4 @@ COPY src ./src
 COPY tests ./tests
 COPY tsconfig.json .
 
-CMD [ "npm", "run", "conductor-worker" ]
+CMD [ "npm", "run", "conductor-worker-noenv" ]
