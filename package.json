@@ -28,7 +28,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "husky install",
-    "update-deps": "ncu -u !chalk && npm install",
+    "update-deps": "ncu -u --reject chalk --reject p-limit && npm install",
     "postinstall": "./scripts/install-standing-data.sh",
     "all": "./environment/boot.sh",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
