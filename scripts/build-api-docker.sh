@@ -17,7 +17,7 @@ function pull_and_build_from_aws() {
       --output text \
       2>/dev/null
   )
-
+  
   AWS_STATUS=$?
   if [[ $AWS_STATUS -ne 0 ]]; then
     echo "Unable to authenticate with AWS - are you running this with aws-vault?" >&2
@@ -45,88 +45,74 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
+    ## Install goss/trivy
+    curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+    chmod +rx /usr/local/bin/goss
+    curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
+    chmod +rx /usr/local/bin/dgoss
 
-    # ## Install goss/trivy
-    # curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-    # chmod +rx /usr/local/bin/goss
-    # curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-    # chmod +rx /usr/local/bin/dgoss
+    export GOSS_PATH="/usr/local/bin/goss"
 
-    # export GOSS_PATH="/usr/local/bin/goss"
+    install_trivy() {
+      echo "Pulling trivy binary from s3"
+      aws s3 cp \
+        s3://"${ARTIFACT_BUCKET}"/trivy/binary/trivy_latest_Linux-64bit.rpm \
+        .
 
-    # install_trivy() {
-    #   echo "Pulling trivy binary from s3"
-    #   aws s3 cp \
-    #     s3://"${ARTIFACT_BUCKET}"/trivy/binary/trivy_latest_Linux-64bit.rpm \
-    #     .
+      echo "Installing trivy binary"
+      rpm -ivh trivy_latest_Linux-64bit.rpm
+    }
 
-    #   echo "Installing trivy binary"
-    #   rpm -ivh trivy_latest_Linux-64bit.rpm
-    # }
+    pull_trivy_db() {
+      echo "Pulling trivy db from s3..."
+      aws s3 cp \
+        s3://"${ARTIFACT_BUCKET}"/trivy/db/trivy-offline.db.tgz \
+        trivy/db/
 
-    # pull_trivy_db() {
-    #   echo "Pulling trivy db from s3..."
-    #   aws s3 cp \
-    #     s3://"${ARTIFACT_BUCKET}"/trivy/db/trivy-offline.db.tgz \
-    #     trivy/db/
+      echo "Extracting trivy db to $(pwd)/trivy/db/"
+      tar -xvf trivy/db/trivy-offline.db.tgz -C trivy/db/
+    }
 
-    #   echo "Extracting trivy db to $(pwd)/trivy/db/"
-    #   tar -xvf trivy/db/trivy-offline.db.tgz -C trivy/db/
-    # }
+    mkdir -p trivy/db
+    install_trivy
+    pull_trivy_db
 
-    # mkdir -p trivy/db
-    # install_trivy
-    # pull_trivy_db
+    ## Run goss tests
+    GOSS_SLEEP=15 GOSS_FILE=api/goss.yaml dgoss run \
+      "${DOCKER_OUTPUT_TAG}:latest"
 
-    # ## Run goss tests
-    # GOSS_SLEEP=15 GOSS_FILE=conductor/goss.yaml dgoss run \
-    #   -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
-    #   -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
-    #   -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \
-    #   -e PHASE1_BUCKET_NAME="phase1" \
-    #   -e DYNAMO_REGION="eu-west-2" \
-    #   -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
-    #   -e S3_REGION="eu-west-2" \
-    #   -e CONDUCTOR_URL="http://conductor:4000/api" \
-    #   "${DOCKER_OUTPUT_TAG}:latest"
-
-    # ## Run Trivy scan
-    # TRIVY_CACHE_DIR=trivy trivy image \
-    #   --exit-code 1 \
-    #   --severity "CRITICAL" \
-    #   --skip-update "${DOCKER_OUTPUT_TAG}:latest" # we have the most recent db pulled locally
+    ## Run Trivy scan
+    TRIVY_CACHE_DIR=trivy trivy image \
+      --exit-code 1 \
+      --severity "CRITICAL" \
+      --skip-update "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
       ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME}
 
-    # echo "Push docker image on $(date)"
-    # docker push \
-    #   ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME} | tee /tmp/docker.out
-    # export IMAGE_SHA_HASH=$(cat /tmp/docker.out | grep digest | cut -d':' -f3-4 | cut -d' ' -f2)
+    echo "Push docker image on $(date)"
+    docker push \
+      ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME} | tee /tmp/docker.out
+    export IMAGE_SHA_HASH=$(cat /tmp/docker.out | grep digest | cut -d':' -f3-4 | cut -d' ' -f2)
 
-#     if [ "${IS_CD}" = "true" ]; then
-#       cat <<EOF >/tmp/${DOCKER_OUTPUT_TAG}.json
-#         {
-#           "source-hash" : "${CODEBUILD_RESOLVED_SOURCE_VERSION}",
-#           "build-time": "${CODEBUILD_START_TIME}",
-#           "image-hash": "${IMAGE_SHA_HASH}"
-#         }
-# EOF
-#       aws s3 cp /tmp/${DOCKER_OUTPUT_TAG}.json s3://${ARTIFACT_BUCKET}/semaphores/${DOCKER_OUTPUT_TAG}.json
-#       export CORE_WORKER_HASH="${IMAGE_SHA_HASH}"
-#     fi
+    if [ "${IS_CD}" = "true" ]; then
+      cat <<EOF >/tmp/${DOCKER_OUTPUT_TAG}.json
+        {
+          "source-hash" : "${CODEBUILD_RESOLVED_SOURCE_VERSION}",
+          "build-time": "${CODEBUILD_START_TIME}",
+          "image-hash": "${IMAGE_SHA_HASH}"
+        }
+EOF
+      aws s3 cp /tmp/${DOCKER_OUTPUT_TAG}.json s3://${ARTIFACT_BUCKET}/semaphores/${DOCKER_OUTPUT_TAG}.json
+      export API_HASH="${IMAGE_SHA_HASH}"
+    fi
   fi
 }
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
-  # if [ $(arch) = "arm64" ]; then
-  #   echo "Building for ARM"
-  #   docker build --platform=linux/amd64 -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
-  # else
-    echo "Building regular image"
-    docker build -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
-  # fi
+  echo "Building local image"
+  docker build -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
 else
   pull_and_build_from_aws
 fi
