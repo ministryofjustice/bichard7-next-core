@@ -1,0 +1,31 @@
+file:
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    size: 552
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+package:
+  jq:
+    installed: true
+user:
+  node:
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+      - node
+    home: /home/node
+    shell: /bin/bash
+process:
+  node:
+    running: true
+command:
+  node --version:
+    exit-status: 0
+    stdout:
+      - v16.18.1
+    stderr: []
+    timeout: 10000
