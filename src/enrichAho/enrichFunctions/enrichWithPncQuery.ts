@@ -1,10 +1,8 @@
 import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
-import errorPaths from "src/lib/errorPaths"
 import isAsnValid from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
 import type AuditLogger from "src/types/AuditLogger"
-import { ExceptionCode } from "src/types/ExceptionCode"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
@@ -77,8 +75,6 @@ export default async (
         auditLogAttributes
       )
     )
-    annotatedHearingOutcome.Exceptions.push({ code: ExceptionCode.HO100314, path: errorPaths.case.asn })
-
     annotatedHearingOutcome.PncErrorMessage = pncResult.message
   } else {
     auditLogger.logEvent(
