@@ -55,17 +55,15 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
   })
 
 const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
-  if (hearingOutcome.PncErrorMessage?.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)) {
-    return [ho100301]
+  if (!hearingOutcome.PncErrorMessage) {
+    return []
   }
-  if (hearingOutcome.PncErrorMessage === "Unexpected PNC communication error") {
-    return [ho100314]
+
+  if (hearingOutcome.PncErrorMessage.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)) {
+    return [ho100301]
   }
 
   const errorCode = hearingOutcome.PncErrorMessage?.substring(0, 5)
-  if (!errorCode) {
-    return []
-  }
   if (errorCode && errorCode >= "I0013" && errorCode <= "I0022") {
     return [ho100301]
   }
@@ -76,7 +74,7 @@ const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
     }
   }
 
-  return []
+  return [ho100314]
 }
 
 export default pncExceptions
