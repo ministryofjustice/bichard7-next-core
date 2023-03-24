@@ -33,7 +33,7 @@ const comparePhase1 = async (
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<ComparisonResultDetail> => {
   const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = comparison
-  const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag=""/g, "")
+  const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
 
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
