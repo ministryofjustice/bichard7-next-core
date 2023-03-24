@@ -104,7 +104,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   }
 
   if (!literalAttribute || literalText === undefined) {
-    throw new Error("Literal lookup not found")
+    return { "#text": literalText ?? "" }
   }
 
   return { "#text": literalText, "@_Literal": literalAttribute }
