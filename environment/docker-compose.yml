@@ -59,8 +59,6 @@ services:
       CJSE_CONDUCTOR_UI_USERNAME: ${DEFAULT_USER}
       CJSE_CONDUCTOR_UI_PASSWORD: ${DEFAULT_PASSWORD}
     depends_on:
-      elasticsearch:
-        condition: service_healthy
       postgres:
         condition: service_healthy
       localstack:
@@ -74,29 +72,6 @@ services:
     ports:
       - 5001:5000
       - 5002:4000
-
-  elasticsearch:
-    image: elasticsearch:6.8.15
-    platform: linux/amd64
-    environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
-      - transport.host=0.0.0.0
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-    ports:
-      - 9200:9200
-      - 9300:9300
-    healthcheck:
-      test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/9300'
-      interval: 2s
-      timeout: 2s
-      retries: 10
-      start_period: 180s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1k"
-        max-file: "3"
 
   localstack:
     image: localstack/localstack
@@ -152,7 +127,7 @@ services:
       start_period: 180s
     depends_on:
       beanconnect:
-        condition: service_started
+        condition: service_healthy
       activemq:
         condition: service_healthy
       postgres:
