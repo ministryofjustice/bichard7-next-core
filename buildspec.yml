@@ -6,12 +6,8 @@ env:
     "NODE_OPTIONS": "--max_old_space_size=4096"
 
 phases:
-  install:
-    commands:
-      - yum install -y zip
   build:
     commands:
       - npm ci
       - ./scripts/build-docker.sh
 ---
-
