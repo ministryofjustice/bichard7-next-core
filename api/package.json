@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.json",
-    "clean": "rimraf build",
+    "build": "node build.js",
     "lint": "cd .. && eslint . && cd -",
     "lint:fix": "cd .. && eslint . --fix && cd -",
     "postinstall": "tsc",
     "test:api": "jest --runInBand --forceExit --testPathPattern=api/*.test",
-    "start": "node build/src/index.js",
+    "start": "node build/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
     "test:integration": "jest --verbose ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
@@ -33,6 +32,8 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "esbuild": "^0.17.12",
+    "esbuild-plugin-ignore": "^1.1.1",
     "express": "^4.18.2"
   }
 }
