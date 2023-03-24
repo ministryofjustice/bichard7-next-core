@@ -43,6 +43,7 @@ export default async (
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<AnnotatedHearingOutcome> => {
+  clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const offenceCount =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
@@ -52,7 +53,6 @@ export default async (
   }
 
   const requestStartTime = new Date()
-  clearPNCPopulatedElements(annotatedHearingOutcome)
 
   const pncResult = await pncGateway.query(asn)
 
