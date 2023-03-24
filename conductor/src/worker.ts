@@ -8,6 +8,7 @@ import processPhase1 from "src/workers/phase1/processPhase1"
 import sendToPhase2 from "src/workers/phase1/sendToPhase2"
 import storeAuditLogEvents from "src/workers/phase1/storeAuditLogEvents"
 import storeInQuarantineBucket from "src/workers/phase1/storeInQuarantineBucket"
+import { captureWorkerExceptions } from "./utils"
 
 const client = new ConductorClient({
   serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
@@ -23,7 +24,8 @@ const tasks = [
   sendToPhase2,
   storeAuditLogEvents,
   storeInQuarantineBucket
-]
+].map(captureWorkerExceptions)
+
 const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })
 
 logger.info("Starting polling...")
