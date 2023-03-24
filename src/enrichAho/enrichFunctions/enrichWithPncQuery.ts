@@ -1,6 +1,6 @@
 import { isError } from "src/comparison/types"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
-import isAsnValid from "src/lib/isAsnValid"
+import { isAsnFormatValid } from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
@@ -46,7 +46,8 @@ export default async (
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const offenceCount =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
-  if (isDummyAsn(asn) || !isAsnValid(asn) || offenceCount > 100) {
+  // TODO: Bichard currently only checks the format, but we should use 'isAsnValid' here instead
+  if (isDummyAsn(asn) || !isAsnFormatValid(asn) || offenceCount > 100) {
     return annotatedHearingOutcome
   }
 
