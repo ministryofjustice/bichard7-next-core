@@ -32,7 +32,9 @@ fi
 for i in $(seq 1 $ATTEMPTS); do
     echo "Setting up infrastructure"
     eval "$DOCKER_COMPOSE up -d --wait $SERVICES" && break
-    eval "$DOCKER_COMPOSE down"
+    if [ "$CI" == "true" ]; then
+        eval "$DOCKER_COMPOSE down"
+    fi
 done;
 
 for i in $(seq 1 $ATTEMPTS); do
