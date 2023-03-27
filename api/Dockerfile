@@ -13,6 +13,7 @@ COPY api/package.json .
 COPY api/package-lock.json .
 COPY api/src ./src
 COPY api/tsconfig.json .
+COPY api/build.js .
 
 RUN npm ci
 RUN npm run build

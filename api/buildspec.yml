@@ -11,7 +11,7 @@ phases:
       - yum install -y zip
   build:
     commands:
-      - npm ci
-      - ../scripts/build-api-docker.sh
+      - cd api && npm ci && cd -
+      - ./scripts/build-api-docker.sh
 ---
 
