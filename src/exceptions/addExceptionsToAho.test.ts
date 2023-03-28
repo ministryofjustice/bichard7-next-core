@@ -14,7 +14,7 @@ describe("addExceptionsToAho", () => {
     expect(aho.Exceptions[0]).toStrictEqual(exception)
   })
 
-  it("will not add an exception if one already exists in that path", () => {
+  it("will overwrite an existing exception if one already exists in that path", () => {
     const exceptionOne = {
       code: ExceptionCode.HO100100,
       path: ["path", "to", "exception"]
@@ -29,6 +29,6 @@ describe("addExceptionsToAho", () => {
 
     addExceptionsToAho(aho, exceptionTwo.code, exceptionTwo.path)
     expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0]).toStrictEqual(exceptionOne)
+    expect(aho.Exceptions[0]).toStrictEqual(exceptionTwo)
   })
 })

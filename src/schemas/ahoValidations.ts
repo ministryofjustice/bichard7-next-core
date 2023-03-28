@@ -1,4 +1,3 @@
-import { isAsnFormatValid, isAsnOrganisationUnitValid } from "src/lib/isAsnValid"
 import { z } from "zod"
 import {
   lookupCourtTypeByCjsCode,
@@ -18,6 +17,7 @@ import {
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
 } from "../dataLookup"
+import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../lib/isAsnValid"
 import requireStandingData from "../lib/requireStandingData"
 import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../types/ExceptionCode"
@@ -26,10 +26,6 @@ const { remandStatus } = requireStandingData()
 const invalid = () => false
 
 const validateRemandStatus = (data: string): boolean => remandStatus.some((el) => el.cjsCode === data)
-
-export const validateAsnFormat = (data: string): boolean => isAsnFormatValid(data)
-
-export const validateAsnOuCode = (data: string): boolean => isAsnOrganisationUnitValid(data)
 
 const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   if (data < 1000 || data > 9999) {
@@ -56,6 +52,14 @@ const validateResultQualifierCode = (data: string, ctx: z.RefinementCtx): void =
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100247 })
   } else if (!lookupResultQualifierCodeByCjsCode(data.toString())) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100309 })
+  }
+}
+
+const validateAsn = (data: string, ctx: z.RefinementCtx): void => {
+  if (!isAsnFormatValid(data)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100206 })
+  } else if (!isAsnOrganisationUnitValid(data)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: ExceptionCode.HO100300 })
   }
 }
 
@@ -94,6 +98,7 @@ const validateNumberSpecifiedInResult = (value: NumberSpecifiedInResult): boolea
 
 export {
   invalid,
+  validateAsn,
   validateRemandStatus,
   validateResultCode,
   validateCourtType,

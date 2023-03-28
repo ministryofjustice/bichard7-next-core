@@ -1,4 +1,4 @@
-import { ExceptionCode } from "src/types/ExceptionCode"
+import { ExceptionCode } from "../types/ExceptionCode"
 
 const pncErrors = [
   ExceptionCode.HO100301,
