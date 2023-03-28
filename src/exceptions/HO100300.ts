@@ -31,7 +31,7 @@ const HO100300: ExceptionGenerator = (hearingOutcome, options) => {
   const { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const generatedExceptions: Exception[] = []
 
-  const courtHearingLocationException = findException(exceptions!, generatedExceptions, COURT_HEARING_LOCATION_PATH)
+  const courtHearingLocationException = findException(exceptions, generatedExceptions, COURT_HEARING_LOCATION_PATH)
 
   // Validate Court Hearing Location
   const isCourtHearingLocationValid = CourtHearingLocation && isOrganisationUnitValid(CourtHearingLocation)

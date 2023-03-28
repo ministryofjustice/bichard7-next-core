@@ -6,8 +6,7 @@ import {
   invalid,
   validateActualOffenceDateCode,
   validateAmountSpecifiedInResult,
-  validateAsnFormat,
-  validateAsnOuCode,
+  validateAsn,
   validateCourtType,
   validateDurationType,
   validateDurationUnit,
@@ -298,10 +297,7 @@ export const offenceSchema = z.object({
   AddedByTheCourt: z.boolean().optional()
 })
 
-export const asnSchema = z
-  .string()
-  .refine(validateAsnFormat, ExceptionCode.HO100206)
-  .refine(validateAsnOuCode, ExceptionCode.HO100300)
+export const asnSchema = z.string().superRefine(validateAsn)
 export const croNumberSchema = z.string().regex(/[0-9]{1,6}\/[0-9]{2}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100207)
 export const driverNumberSchema = z.string().regex(/[A-Z0-9]{5}[0-9]{6}[A-Z0-9]{3}[A-Z]{2}/, ExceptionCode.HO100208)
 export const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
