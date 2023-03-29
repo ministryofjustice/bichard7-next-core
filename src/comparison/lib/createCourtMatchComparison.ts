@@ -3,13 +3,13 @@ import fs from "fs"
 import orderBy from "lodash.orderby"
 import { dateReviver } from "src/lib/axiosDateTransformer"
 import { ExceptionCode } from "src/types/ExceptionCode"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "src/types/PncQueryResult"
 import { parseAhoXml } from "../../parse/parseAhoXml"
 import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
 import parseSpiResult from "../../parse/parseSpiResult"
 import transformSpiToAho from "../../parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import type { Trigger } from "../../types/Trigger"
 import type {
   CourtResultMatchingSummary,
@@ -47,6 +47,16 @@ interface ComparisonFile {
   exceptions?: Exception[]
 }
 
+const sanitiseResultVariableText = (text: string | undefined): string | undefined => {
+  if (text === undefined) {
+    return text
+  }
+  if (text.startsWith("**")) {
+    return "**anonymised"
+  }
+  return "anonymised"
+}
+
 const summariseCourtResult = (aho: AnnotatedHearingOutcome): CourtResultSummary => ({
   AnnotatedHearingOutcome: {
     HearingOutcome: {
@@ -56,16 +66,11 @@ const summariseCourtResult = (aho: AnnotatedHearingOutcome): CourtResultSummary 
       Case: {
         HearingDefendant: {
           Offence: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
-            CourtOffenceSequenceNumber: offence.CourtOffenceSequenceNumber,
-            CriminalProsecutionReference: {
-              OffenceReason: offence.CriminalProsecutionReference.OffenceReason,
-              OffenceReasonSequence: offence.CriminalProsecutionReference.OffenceReasonSequence
-            },
-            Result: offence.Result.map(({ CJSresultCode }) => ({ CJSresultCode })),
-            ActualOffenceStartDate: offence.ActualOffenceStartDate,
-            ActualOffenceEndDate: offence.ActualOffenceEndDate,
-            ManualSequenceNumber: offence.ManualSequenceNumber,
-            ManualCourtCaseReference: offence.ManualCourtCaseReference
+            ...offence,
+            Result: offence.Result.map((r) => ({
+              ...r,
+              ResultVariableText: sanitiseResultVariableText(r.ResultVariableText)
+            }))
           }))
         }
       }
