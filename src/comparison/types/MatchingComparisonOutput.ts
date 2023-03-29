@@ -1,28 +1,57 @@
+import type { OffenceReason } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 
+export type ResultSummary = {
+  CJSresultCode: number
+}
+
+export type OffenceSummary = {
+  CourtOffenceSequenceNumber: number
+  CriminalProsecutionReference: {
+    OffenceReason?: OffenceReason
+  }
+  Result: ResultSummary[]
+  ActualOffenceStartDate: { StartDate: Date }
+  ActualOffenceEndDate?: { EndDate: Date }
+}
+
 export type CourtResultSummary = {
-  dateOfHearing: Date
-  defendant: {
-    offences: {
-      sequenceNumber: number
-      offenceCode: string
-      resultCodes: number[]
-      startDate: Date
-      endDate?: Date
-    }[]
+  AnnotatedHearingOutcome: {
+    HearingOutcome: {
+      Hearing: {
+        DateOfHearing: Date
+      }
+      Case: {
+        HearingDefendant: {
+          Offence: OffenceSummary[]
+        }
+      }
+    }
   }
 }
 
+export type PncOffenceSummary = {
+  offence: {
+    sequenceNumber: number
+    cjsOffenceCode: string
+    startDate: Date
+    endDate?: Date
+  }
+}
+
+export type PncCourtCaseSummary = {
+  courtCaseReference: string
+  offences: PncOffenceSummary[]
+}
+
+export type PncPenaltyCaseSummary = {
+  penaltyCaseReference: string
+  offences: PncOffenceSummary[]
+}
+
 export type PncSummary = {
-  courtCases?: {
-    reference: string
-    offences: {
-      sequenceNumber: number
-      offenceCode: string
-      startDate: Date
-      endDate?: Date
-    }[]
-  }[]
+  courtCases?: PncCourtCaseSummary[]
+  penaltyCases?: PncPenaltyCaseSummary[]
 }
 
 export type CourtResultMatchingSummary = {

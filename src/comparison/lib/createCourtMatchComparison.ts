@@ -3,19 +3,19 @@ import fs from "fs"
 import orderBy from "lodash.orderby"
 import { dateReviver } from "src/lib/axiosDateTransformer"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import getOffenceCode from "../../lib/offence/getOffenceCode"
 import { parseAhoXml } from "../../parse/parseAhoXml"
 import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
 import parseSpiResult from "../../parse/parseSpiResult"
 import transformSpiToAho from "../../parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
-import type { PncCourtCase, PncOffence } from "../../types/PncQueryResult"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import type { Trigger } from "../../types/Trigger"
 import type {
   CourtResultMatchingSummary,
   CourtResultSummary,
   MatchingComparisonOutput,
+  PncOffenceSummary,
   PncSummary
 } from "../types/MatchingComparisonOutput"
 
@@ -48,15 +48,37 @@ interface ComparisonFile {
 }
 
 const summariseCourtResult = (aho: AnnotatedHearingOutcome): CourtResultSummary => ({
-  dateOfHearing: aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
-  defendant: {
-    offences: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
-      sequenceNumber: offence.CourtOffenceSequenceNumber,
-      offenceCode: getOffenceCode(offence) ?? "",
-      resultCodes: offence.Result.map((result) => result.CJSresultCode),
-      startDate: offence.ActualOffenceStartDate.StartDate,
-      endDate: offence.ActualOffenceEndDate?.EndDate
-    }))
+  AnnotatedHearingOutcome: {
+    HearingOutcome: {
+      Hearing: {
+        DateOfHearing: aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
+      },
+      Case: {
+        HearingDefendant: {
+          Offence: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
+            CourtOffenceSequenceNumber: offence.CourtOffenceSequenceNumber,
+            CriminalProsecutionReference: {
+              OffenceReason: offence.CriminalProsecutionReference.OffenceReason,
+              OffenceReasonSequence: offence.CriminalProsecutionReference.OffenceReasonSequence
+            },
+            Result: offence.Result.map(({ CJSresultCode }) => ({ CJSresultCode })),
+            ActualOffenceStartDate: offence.ActualOffenceStartDate,
+            ActualOffenceEndDate: offence.ActualOffenceEndDate,
+            ManualSequenceNumber: offence.ManualSequenceNumber,
+            ManualCourtCaseReference: offence.ManualCourtCaseReference
+          }))
+        }
+      }
+    }
+  }
+})
+
+const summarisePncOffence = (offence: PncOffence): PncOffenceSummary => ({
+  offence: {
+    sequenceNumber: offence.offence.sequenceNumber,
+    cjsOffenceCode: offence.offence.cjsOffenceCode,
+    startDate: offence.offence.startDate,
+    endDate: offence.offence.endDate
   }
 })
 
@@ -66,13 +88,12 @@ const summarisePnc = (aho: AnnotatedHearingOutcome): PncSummary | undefined => {
   } else {
     return {
       courtCases: aho.PncQuery.courtCases?.map((courtCase: PncCourtCase) => ({
-        reference: sha256(courtCase.courtCaseReference) ?? "",
-        offences: courtCase.offences.map((offence: PncOffence) => ({
-          sequenceNumber: offence.offence.sequenceNumber,
-          offenceCode: offence.offence.cjsOffenceCode,
-          startDate: offence.offence.startDate,
-          endDate: offence.offence.endDate
-        }))
+        courtCaseReference: sha256(courtCase.courtCaseReference) ?? "",
+        offences: courtCase.offences.map(summarisePncOffence)
+      })),
+      penaltyCases: aho.PncQuery.penaltyCases?.map((penaltyCase: PncPenaltyCase) => ({
+        penaltyCaseReference: sha256(penaltyCase.penaltyCaseReference) ?? "",
+        offences: penaltyCase.offences.map(summarisePncOffence)
       }))
     }
   }

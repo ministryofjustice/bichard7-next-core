@@ -4,16 +4,8 @@ import "jest-xml-matcher"
 import orderBy from "lodash.orderby"
 import createCourtMatchComparison from "src/comparison/lib/createCourtMatchComparison"
 import type { CourtResultSummary, PncSummary } from "src/comparison/types/MatchingComparisonOutput"
-import type {
-  AnnotatedHearingOutcome,
-  Case,
-  CriminalProsecutionReference,
-  HearingDefendant,
-  HearingOutcome,
-  Offence
-} from "src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
-import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
 import enrichCourtCases from "../src/enrichAho/enrichFunctions/enrichCourtCases"
 
 const filePath = "test-data/e2e-comparison"
@@ -25,60 +17,12 @@ const tests = fs
   .map((name) => `${filePath}/${name}`)
   .map(createCourtMatchComparison)
 
-const createMockAho = (
-  result: CourtResultSummary,
-  exceptions: Exception[],
-  pncQuery?: PncSummary
-): AnnotatedHearingOutcome => {
+const createMockAho = (result: CourtResultSummary, pncQuery?: PncSummary): AnnotatedHearingOutcome => {
   return {
-    AnnotatedHearingOutcome: {
-      HearingOutcome: {
-        Hearing: {
-          DateOfHearing: result.dateOfHearing
-        },
-        Case: {
-          HearingDefendant: {
-            Offence: result.defendant.offences.map(
-              (o) =>
-                ({
-                  CourtOffenceSequenceNumber: o.sequenceNumber,
-                  CriminalProsecutionReference: {
-                    OffenceReason: { __type: "NationalOffenceReason", OffenceCode: { FullCode: o.offenceCode } }
-                  } as CriminalProsecutionReference,
-                  Result: o.resultCodes.map((r) => ({
-                    CJSresultCode: r
-                  })),
-                  ActualOffenceStartDate: { StartDate: o.startDate },
-                  ActualOffenceEndDate: o.endDate ? { EndDate: o.endDate } : undefined
-                } as Offence)
-            )
-          } as HearingDefendant
-        } as Case
-      } as HearingOutcome
-    },
-    Exceptions: exceptions,
+    ...result,
+    Exceptions: [],
     PncQuery: pncQuery
-      ? {
-          courtCases: pncQuery.courtCases?.map(
-            (c) =>
-              ({
-                courtCaseReference: c.reference,
-                offences: c.offences.map(
-                  (o) =>
-                    ({
-                      offence: {
-                        sequenceNumber: o.sequenceNumber,
-                        cjsOffenceCode: o.offenceCode,
-                        startDate: o.startDate,
-                        endDate: o.endDate
-                      }
-                    } as PncOffence)
-                )
-              } as PncCourtCase)
-          )
-        }
-      : undefined
-  } as AnnotatedHearingOutcome
+  } as unknown as AnnotatedHearingOutcome
 }
 
 const parseNumber = (input: string | null | undefined): number | null | undefined => {
@@ -96,7 +40,7 @@ const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(excepti
 describe("Comparison testing court case matching", () => {
   describe.each(tests)("for test file $file", ({ courtResult, pnc, matching, exceptions }) => {
     it("should match", () => {
-      const aho = createMockAho(courtResult, exceptions, pnc)
+      const aho = createMockAho(courtResult, pnc)
       const result = enrichCourtCases(aho)
       if (exceptions.length > 0) {
         expect(sortExceptions(exceptions)).toStrictEqual(sortExceptions(result.Exceptions))
