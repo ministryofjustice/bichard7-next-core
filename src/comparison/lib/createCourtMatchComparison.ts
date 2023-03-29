@@ -1,16 +1,23 @@
 import { createHash } from "crypto"
 import fs from "fs"
 import orderBy from "lodash.orderby"
+import { dateReviver } from "src/lib/axiosDateTransformer"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import getOffenceCode from "../src/lib/offence/getOffenceCode"
-import { parseAhoXml } from "../src/parse/parseAhoXml"
-import extractExceptionsFromAho from "../src/parse/parseAhoXml/extractExceptionsFromAho"
-import parseSpiResult from "../src/parse/parseSpiResult"
-import transformSpiToAho from "../src/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../src/types/AnnotatedHearingOutcome"
-import type Exception from "../src/types/Exception"
-import type { PncCourtCase, PncOffence } from "../src/types/PncQueryResult"
-import type { Trigger } from "../src/types/Trigger"
+import getOffenceCode from "../../lib/offence/getOffenceCode"
+import { parseAhoXml } from "../../parse/parseAhoXml"
+import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type Exception from "../../types/Exception"
+import type { PncCourtCase, PncOffence } from "../../types/PncQueryResult"
+import type { Trigger } from "../../types/Trigger"
+import type {
+  CourtResultMatchingSummary,
+  CourtResultSummary,
+  MatchingComparisonOutput,
+  PncSummary
+} from "../types/MatchingComparisonOutput"
 
 const sha256 = (content: string | null | undefined): string | null | undefined => {
   if (!content) {
@@ -40,31 +47,8 @@ interface ComparisonFile {
   exceptions?: Exception[]
 }
 
-type CourtResultSummary = {
-  defendant: {
-    offences: {
-      sequenceNumber: number
-      offenceCode: string
-      resultCodes: number[]
-      startDate: Date
-      endDate?: Date
-    }[]
-  }
-}
-
-type CourtResultMatchingSummary = {
-  courtCaseReference?: string
-  defendant: {
-    offences: {
-      hoSequenceNumber: number
-      courtCaseReference?: string | null
-      addedByCourt?: boolean
-      pncSequenceNumber?: number
-    }[]
-  }
-}
-
 const summariseCourtResult = (aho: AnnotatedHearingOutcome): CourtResultSummary => ({
+  dateOfHearing: aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
   defendant: {
     offences: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
       sequenceNumber: offence.CourtOffenceSequenceNumber,
@@ -76,13 +60,13 @@ const summariseCourtResult = (aho: AnnotatedHearingOutcome): CourtResultSummary 
   }
 })
 
-const summarisePnc = (aho: AnnotatedHearingOutcome): Record<string, any> | undefined => {
+const summarisePnc = (aho: AnnotatedHearingOutcome): PncSummary | undefined => {
   if (!aho.PncQuery) {
     return undefined
   } else {
     return {
       courtCases: aho.PncQuery.courtCases?.map((courtCase: PncCourtCase) => ({
-        reference: sha256(courtCase.courtCaseReference),
+        reference: sha256(courtCase.courtCaseReference) ?? "",
         offences: courtCase.offences.map((offence: PncOffence) => ({
           sequenceNumber: offence.offence.sequenceNumber,
           offenceCode: offence.offence.cjsOffenceCode,
@@ -114,11 +98,13 @@ const summariseMatching = (aho: AnnotatedHearingOutcome): CourtResultMatchingSum
     return null
   }
   return {
-    courtCaseReference: sha256(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber) ?? undefined,
+    ...(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+      ? { courtCaseReference: sha256(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber) }
+      : {}),
     defendant: {
       offences: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
         hoSequenceNumber: offence.CourtOffenceSequenceNumber,
-        courtCaseReference: sha256(offence.CourtCaseReferenceNumber),
+        ...(offence.CourtCaseReferenceNumber ? { courtCaseReference: sha256(offence.CourtCaseReferenceNumber) } : {}),
         addedByCourt: !!offence.AddedByTheCourt,
         pncSequenceNumber: parseOffenceReasonSequence(offence.CriminalProsecutionReference.OffenceReasonSequence)
       }))
@@ -129,48 +115,36 @@ const summariseMatching = (aho: AnnotatedHearingOutcome): CourtResultMatchingSum
 const summariseExceptions = (ahoXml: string): Exception[] =>
   sortExceptions(extractExceptionsFromAho(ahoXml)).filter(({ code }) => validExceptions.includes(code))
 
-const fileName = process.argv[2]
-if (!fileName) {
-  console.error("No file provided")
-  process.exit()
+const createCourtMatchComparison = (fileName: string): MatchingComparisonOutput => {
+  const fileContents = fs.readFileSync(fileName)
+  const fileJson = JSON.parse(fileContents.toString(), dateReviver) as ComparisonFile
+
+  let inputAho: AnnotatedHearingOutcome | Error
+
+  if (fileJson.incomingMessage.match(/DeliverRequest/)) {
+    const parsedSpi = parseSpiResult(fileJson.incomingMessage)
+    inputAho = transformSpiToAho(parsedSpi)
+  } else {
+    inputAho = parseAhoXml(fileJson.incomingMessage)
+  }
+  if (inputAho instanceof Error) {
+    console.error("Error parsing incoming message")
+    throw inputAho
+  }
+
+  const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
+  if (outputAho instanceof Error) {
+    console.error("Error parsing output message")
+    throw outputAho
+  }
+
+  return {
+    courtResult: summariseCourtResult(inputAho),
+    pnc: summarisePnc(outputAho),
+    matching: summariseMatching(outputAho),
+    exceptions: summariseExceptions(fileJson.annotatedHearingOutcome),
+    file: fileName
+  }
 }
 
-const localFileName = fileName.startsWith("s3://")
-  ? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
-  : fileName
-
-const fileContents = fs.readFileSync(localFileName)
-const fileJson = JSON.parse(fileContents.toString()) as ComparisonFile
-
-let inputAho: AnnotatedHearingOutcome | Error
-
-if (fileJson.incomingMessage.match(/DeliverRequest/)) {
-  const parsedSpi = parseSpiResult(fileJson.incomingMessage)
-  inputAho = transformSpiToAho(parsedSpi)
-} else {
-  inputAho = parseAhoXml(fileJson.incomingMessage)
-}
-if (inputAho instanceof Error) {
-  console.error("Error parsing incoming message")
-  process.exit(1)
-}
-
-const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
-if (outputAho instanceof Error) {
-  console.error("Error parsing output message")
-  process.exit(1)
-}
-
-const output = {
-  courtResult: summariseCourtResult(inputAho),
-  pnc: summarisePnc(outputAho),
-  matching: summariseMatching(outputAho),
-  exceptions: summariseExceptions(fileJson.annotatedHearingOutcome)
-}
-
-console.log(JSON.stringify(output, null, 2))
-// const outFileName = localFileName.replace(".json", ".summary.txt")
-
-// fs.writeFileSync(outFileName, textOutput)
-
-// exec(`code ${outFileName}`)
+export default createCourtMatchComparison
