@@ -14,6 +14,9 @@ const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<Pn
   return matches
 }
 
+const matchContainsHoOffence = (match: Map<PncOffence, Offence>, hoOffence: Offence): boolean =>
+  [...match.values()].includes(hoOffence)
+
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
   const hoOffences = caseElem.HearingDefendant.Offence
@@ -23,6 +26,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
   }
   const matches = matchOffences(hoOffences, pncOffences)
 
+  // Update the matched offences in the AHO with the PNC offence data
   for (const [pncOffence, hoOffence] of matches.entries()) {
     hoOffence.CriminalProsecutionReference.OffenceReasonSequence = pncOffence.offence.sequenceNumber
       .toString()
@@ -30,6 +34,14 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     hoOffence.AddedByTheCourt = false
   }
   caseElem.CourtCaseReferenceNumber = aho.PncQuery?.courtCases?.[0].courtCaseReference
+
+  // Identify offences added by the court
+  for (const hoOffence of hoOffences) {
+    if (!matchContainsHoOffence(matches, hoOffence)) {
+      hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+      hoOffence.AddedByTheCourt = true
+    }
+  }
 
   return aho
 }
