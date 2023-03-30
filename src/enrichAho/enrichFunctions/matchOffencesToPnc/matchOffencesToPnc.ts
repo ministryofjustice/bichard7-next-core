@@ -1,21 +1,12 @@
-import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "src/types/PncQueryResult"
-
-const offenceMatches = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  return (
-    hoOffence.CourtOffenceSequenceNumber === pncOffence.offence.sequenceNumber &&
-    getOffenceCode(hoOffence) === pncOffence.offence.cjsOffenceCode &&
-    hoOffence.ActualOffenceStartDate.StartDate === pncOffence.offence.startDate &&
-    hoOffence.ActualOffenceEndDate?.EndDate === pncOffence.offence.endDate
-  )
-}
+import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
 const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<PncOffence, Offence> => {
   const matches = new Map()
   hoOffences.forEach((hoOffence) => {
     pncOffences.forEach((pncOffence) => {
-      if (!matches.get(pncOffence) && offenceMatches(hoOffence, pncOffence)) {
+      if (!matches.get(pncOffence) && offencesMatch(hoOffence, pncOffence, true)) {
         matches.set(pncOffence, hoOffence)
       }
     })
