@@ -73,37 +73,55 @@ const exceptionTests = remainingTests.filter((test) => {
 })
 remainingTests = remainingTests.filter((t) => !exceptionTests.includes(t))
 
+// Select the tests where multiple court cases were matched
+const multipleCourtCaseTests = remainingTests.filter((test) => {
+  const [expectedAho, expectedMatch] = parseAho(test.annotatedHearingOutcome)
+  return (
+    expectedMatch &&
+    !expectedMatch.courtCaseReference &&
+    expectedMatch.offences.every(
+      (o) => (o.hoSequenceNumber && o.pncSequenceNumber && o.courtCaseReference) || o.addedByCourt
+    ) &&
+    expectedAho.PncQuery?.courtCases &&
+    expectedAho.PncQuery.courtCases.length > 1
+  )
+})
+remainingTests = remainingTests.filter((t) => !multipleCourtCaseTests.includes(t))
+
 const testGroups = [
   { description: "perfectly matching", tests: perfectlyMatchingTests },
   { description: "added by court", tests: addedByCourtTests },
   { description: "exceptions generated", tests: exceptionTests },
+  { description: "multiple court cases", tests: multipleCourtCaseTests },
   { description: "remaining tests", tests: remainingTests }
 ].filter((g) => g.tests.length > 0)
 
 describe("Comparison testing", () => {
   describe.each(testGroups)("$description", ({ tests }) => {
-    describe.each(tests)("for file $file", ({ incomingMessage, annotatedHearingOutcome }) => {
-      describe("matching court results to the PNC", () => {
-        let coreResult: Phase1SuccessResult
+    if (tests.length > 0) {
+      describe.each(tests)("for file $file", ({ incomingMessage, annotatedHearingOutcome }) => {
+        describe("matching court results to the PNC", () => {
+          let coreResult: Phase1SuccessResult
 
-        beforeEach(async () => {
-          const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
-          const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
-          const pncGateway = new MockPncGateway(response, pncQueryTime)
-          const auditLogger = new CoreAuditLogger()
-          coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
-        })
+          beforeEach(async () => {
+            const response = generateMockPncQueryResultFromAho(annotatedHearingOutcome)
+            const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
+            const pncGateway = new MockPncGateway(response, pncQueryTime)
+            const auditLogger = new CoreAuditLogger()
+            coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
+          })
 
-        it("should correctly match pnc offences", () => {
-          const expectedAho = parseAhoXml(annotatedHearingOutcome)
-          if (isError(expectedAho)) {
-            throw expectedAho as Error
-          }
-          const expectedMatch = summariseMatching(expectedAho)
-          const actualMatch = summariseMatching(coreResult.hearingOutcome)
-          expect(actualMatch).toStrictEqual(expectedMatch)
+          it("should correctly match pnc offences", () => {
+            const expectedAho = parseAhoXml(annotatedHearingOutcome)
+            if (isError(expectedAho)) {
+              throw expectedAho as Error
+            }
+            const expectedMatch = summariseMatching(expectedAho)
+            const actualMatch = summariseMatching(coreResult.hearingOutcome)
+            expect(actualMatch).toStrictEqual(expectedMatch)
+          })
         })
       })
-    })
+    }
   })
 })
