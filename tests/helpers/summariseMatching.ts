@@ -32,7 +32,7 @@ const parseOffenceReasonSequence = (input: string | null | undefined): number | 
 const summariseMatching = (aho: AnnotatedHearingOutcome): CourtResultMatchingSummary | null => {
   const matchingExceptionsGenerated = aho.Exceptions.filter((e) => matchingExceptions.includes(e.code))
   if (matchingExceptionsGenerated.length > 0) {
-    return null
+    return { exceptions: matchingExceptionsGenerated }
   }
   if (!hasMatch(aho)) {
     return null
