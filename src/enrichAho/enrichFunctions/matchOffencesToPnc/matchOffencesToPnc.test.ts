@@ -9,10 +9,14 @@ type OffenceData = {
   sequence: number
 }
 
+type PncCourtCaseData = {
+  courtCaseReference: string
+  offences: OffenceData[]
+}
+
 const generateMockAhoWithOffences = (
   offences: OffenceData[],
-  courtCaseReference: string,
-  pncOffences: OffenceData[]
+  pncCases: PncCourtCaseData[]
 ): AnnotatedHearingOutcome => {
   return {
     AnnotatedHearingOutcome: {
@@ -41,19 +45,17 @@ const generateMockAhoWithOffences = (
       }
     },
     PncQuery: {
-      courtCases: [
-        {
-          courtCaseReference,
-          offences: pncOffences.map((o) => ({
-            offence: {
-              cjsOffenceCode: o.code,
-              startDate: o.start,
-              endDate: o.end,
-              sequenceNumber: o.sequence
-            }
-          }))
-        }
-      ]
+      courtCases: pncCases.map((pncCase) => ({
+        courtCaseReference: pncCase.courtCaseReference,
+        offences: pncCase.offences.map((o) => ({
+          offence: {
+            cjsOffenceCode: o.code,
+            startDate: o.start,
+            endDate: o.end,
+            sequenceNumber: o.sequence
+          }
+        }))
+      }))
     },
     Exceptions: []
   } as unknown as AnnotatedHearingOutcome
@@ -63,7 +65,7 @@ describe("matchOffencesToPnc", () => {
   describe("perfect matches", () => {
     it("should match single offences where everything matches", () => {
       const offence = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
-      const aho = generateMockAhoWithOffences([offence], "abcd/1234", [offence])
+      const aho = generateMockAhoWithOffences([offence], [{ courtCaseReference: "abcd/1234", offences: [offence] }])
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -81,7 +83,10 @@ describe("matchOffencesToPnc", () => {
     it("should match multiple offences where everything matches", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
-      const aho = generateMockAhoWithOffences([offence1, offence2], "abcd/1234", [offence1, offence2])
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2],
+        [{ courtCaseReference: "abcd/1234", offences: [offence1, offence2] }]
+      )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -105,7 +110,10 @@ describe("matchOffencesToPnc", () => {
   describe("mismatched sequence numbers", () => {
     it("should match single offences where everything else matches", () => {
       const offence = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
-      const aho = generateMockAhoWithOffences([offence], "abcd/1234", [{ ...offence, sequence: 2 }])
+      const aho = generateMockAhoWithOffences(
+        [offence],
+        [{ courtCaseReference: "abcd/1234", offences: [{ ...offence, sequence: 2 }] }]
+      )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -123,10 +131,11 @@ describe("matchOffencesToPnc", () => {
     it("should prioritise matching fully matching offences", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
-      const aho = generateMockAhoWithOffences([offence1, offence2], "abcd/1234", [
-        offence1,
-        { ...offence2, sequence: 3 }
-      ])
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2],
+        [{ courtCaseReference: "abcd/1234", offences: [offence1, { ...offence2, sequence: 3 }] }]
+      )
+
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -151,7 +160,10 @@ describe("matchOffencesToPnc", () => {
     it("should flag ho offences as being added in court", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
-      const aho = generateMockAhoWithOffences([offence1, offence2], "abcd/1234", [offence1])
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2],
+        [{ courtCaseReference: "abcd/1234", offences: [offence1] }]
+      )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -175,7 +187,10 @@ describe("matchOffencesToPnc", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
       const offence3 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 3 }
-      const aho = generateMockAhoWithOffences([offence1, offence2, offence3], "abcd/1234", [offence1])
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2, offence3],
+        [{ courtCaseReference: "abcd/1234", offences: [offence1] }]
+      )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
@@ -195,6 +210,32 @@ describe("matchOffencesToPnc", () => {
             hoSequenceNumber: 3,
             addedByCourt: true,
             pncSequenceNumber: undefined
+          }
+        ]
+      })
+    })
+  })
+
+  describe("multiple court cases with a single offence matching", () => {
+    it("should match the offence to the correct court case", () => {
+      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences(
+        [offence2],
+        [
+          { courtCaseReference: "abcd/1234", offences: [offence1] },
+          { courtCaseReference: "efgh/1234", offences: [offence2] }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        courtCaseReference: "efgh/1234",
+        offences: [
+          {
+            hoSequenceNumber: 2,
+            addedByCourt: false,
+            pncSequenceNumber: 2
           }
         ]
       })
