@@ -4,9 +4,19 @@ import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
 const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<PncOffence, Offence> => {
   const matches = new Map()
+  // First, try and do a direct match including sequence numbers
   hoOffences.forEach((hoOffence) => {
     pncOffences.forEach((pncOffence) => {
       if (!matches.get(pncOffence) && offencesMatch(hoOffence, pncOffence, true)) {
+        matches.set(pncOffence, hoOffence)
+      }
+    })
+  })
+
+  // Then try and match ignoring the sequence number
+  hoOffences.forEach((hoOffence) => {
+    pncOffences.forEach((pncOffence) => {
+      if (!matches.get(pncOffence) && offencesMatch(hoOffence, pncOffence, false)) {
         matches.set(pncOffence, hoOffence)
       }
     })
