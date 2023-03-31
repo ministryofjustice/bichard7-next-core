@@ -6,20 +6,20 @@ const toPercent = (quotient: number, total: number): string => `${((quotient / t
 
 const printSummary = (results: PncComparisonResultDetail[]): void => {
   const total = results.length
-  const matched = results.filter((result) => result.matched)
-  const passed = matched.filter((result) => result.pass).length
-  const failed = matched.length - passed
+  const attemptedMatch = results.filter((result) => !!result.expected)
+  const passed = attemptedMatch.filter((result) => result.pass).length
+  const failed = attemptedMatch.length - passed
 
   console.log("\nSummary:")
-  console.log(`${results.length} comparisons in total`)
-  console.log(`${matched.length} results matched to PNC`)
+  console.log(`${total} comparisons in total`)
+  console.log(`${attemptedMatch.length} results matched to PNC`)
 
   if (passed > 0) {
-    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, matched.length)})`))
+    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, attemptedMatch.length)})`))
   }
 
   if (failed > 0) {
-    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, matched.length)})`))
+    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, attemptedMatch.length)})`))
   }
 }
 

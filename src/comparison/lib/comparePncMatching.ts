@@ -42,7 +42,6 @@ const comparePncMatching = async (
   }
   return {
     pass,
-    matched: !!actualMatch,
     expected: expectedMatch,
     actual: actualMatch
   }
