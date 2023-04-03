@@ -1,4 +1,6 @@
+import errorPaths from "src/lib/errorPaths"
 import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncOffence } from "src/types/PncQueryResult"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
@@ -96,6 +98,11 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
       offenceMatches: matchOffences(hoOffences, courtCase.offences)
     }))
     .filter((match) => match.offenceMatches.size > 0)
+
+  if (courtCaseMatches.length === 0) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
+    return aho
+  }
 
   if (matchesHaveConflict(courtCaseMatches)) {
     return aho

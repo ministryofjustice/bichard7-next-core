@@ -1,3 +1,4 @@
+import errorPaths from "src/lib/errorPaths"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import summariseMatching from "tests/helpers/summariseMatching"
 import matchOffencesToPnc from "./matchOffencesToPnc"
@@ -264,6 +265,24 @@ describe("matchOffencesToPnc", () => {
             hoSequenceNumber: 2,
             addedByCourt: false,
             pncSequenceNumber: 2
+          }
+        ]
+      })
+    })
+  })
+
+  describe("HO100304", () => {
+    it("should raise an exception if there aren't any matches at all", () => {
+      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = { code: "CD5678", start: new Date("2023-01-01"), end: new Date("2023-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences([offence1], [{ courtCaseReference: "abcd/1234", offences: [offence2] }])
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100304",
+            path: errorPaths.case.asn
           }
         ]
       })
