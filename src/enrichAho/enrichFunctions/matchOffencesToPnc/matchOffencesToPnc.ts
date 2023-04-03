@@ -1,7 +1,7 @@
 import errorPaths from "src/lib/errorPaths"
 import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncOffence } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
 type CourtCaseMatch = {
@@ -122,6 +122,38 @@ const matchesHaveConflict = (courtCaseMatches: CourtCaseMatch[]): boolean => {
   return false
 }
 
+const hasUnmatchedPncOffences = (courtCases: PncCourtCase[], courtCaseMatches: CourtCaseMatch[]): boolean => {
+  const matchedPncOffences = courtCaseMatches.map((courtCaseMatch) => [...courtCaseMatch.offenceMatches.keys()]).flat()
+
+  const casesFullyMatched = courtCases.filter((courtCase) => {
+    for (const pncOffence of courtCase.offences) {
+      if (!matchedPncOffences.includes(pncOffence)) {
+        return false
+      }
+    }
+
+    return true
+  })
+
+  if (casesFullyMatched.length === 0) {
+    return true
+  }
+
+  const casesPartiallyMatched = courtCases
+    .filter((courtCase) => !casesFullyMatched.includes(courtCase))
+    .filter((courtCase) => {
+      for (const pncOffence of courtCase.offences) {
+        if (matchedPncOffences.includes(pncOffence)) {
+          return true
+        }
+      }
+
+      return false
+    })
+
+  return casesPartiallyMatched.length > 0
+}
+
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
   const hoOffences = caseElem.HearingDefendant.Offence
@@ -137,7 +169,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     }))
     .filter((match) => match.offenceMatches.size > 0)
 
-  if (courtCaseMatches.length === 0) {
+  if (courtCaseMatches.length === 0 || hasUnmatchedPncOffences(courtCases, courtCaseMatches)) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
