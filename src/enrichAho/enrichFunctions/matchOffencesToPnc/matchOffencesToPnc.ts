@@ -43,10 +43,14 @@ const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<Pn
   const pncMatches = new Map<PncOffence, Offence>()
   const hoMatches = new Map<Offence, PncOffence>()
 
-  // First, try and do a direct match including sequence numbers
+  // First, try and do a direct match including sequence numbers and exact dates
   for (const hoOffence of hoOffences) {
     for (const pncOffence of pncOffences) {
-      if (!pncMatches.get(pncOffence) && !hoMatches.get(hoOffence) && offencesMatch(hoOffence, pncOffence, true)) {
+      if (
+        !pncMatches.get(pncOffence) &&
+        !hoMatches.get(hoOffence) &&
+        offencesMatch(hoOffence, pncOffence, true, true)
+      ) {
         pncMatches.set(pncOffence, hoOffence)
         hoMatches.set(hoOffence, pncOffence)
         break
@@ -54,10 +58,44 @@ const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<Pn
     }
   }
 
-  // Then try and match ignoring the sequence number
+  // Then try and do a direct match ignoring sequence numbers and but exact dates
   for (const hoOffence of hoOffences) {
     for (const pncOffence of pncOffences) {
-      if (!pncMatches.get(pncOffence) && !hoMatches.get(hoOffence) && offencesMatch(hoOffence, pncOffence, false)) {
+      if (
+        !pncMatches.get(pncOffence) &&
+        !hoMatches.get(hoOffence) &&
+        offencesMatch(hoOffence, pncOffence, false, true)
+      ) {
+        pncMatches.set(pncOffence, hoOffence)
+        hoMatches.set(hoOffence, pncOffence)
+        break
+      }
+    }
+  }
+
+  // Then try and do a direct match including sequence numbers and but approximate dates
+  for (const hoOffence of hoOffences) {
+    for (const pncOffence of pncOffences) {
+      if (
+        !pncMatches.get(pncOffence) &&
+        !hoMatches.get(hoOffence) &&
+        offencesMatch(hoOffence, pncOffence, true, false)
+      ) {
+        pncMatches.set(pncOffence, hoOffence)
+        hoMatches.set(hoOffence, pncOffence)
+        break
+      }
+    }
+  }
+
+  // Then try and match ignoring the sequence number and approximate dates
+  for (const hoOffence of hoOffences) {
+    for (const pncOffence of pncOffences) {
+      if (
+        !pncMatches.get(pncOffence) &&
+        !hoMatches.get(hoOffence) &&
+        offencesMatch(hoOffence, pncOffence, false, false)
+      ) {
         pncMatches.set(pncOffence, hoOffence)
         hoMatches.set(hoOffence, pncOffence)
         break
