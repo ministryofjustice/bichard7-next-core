@@ -260,13 +260,10 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
-    it("should raise an exception if a PNC case is only partially matched", () => {
+    it("should raise an exception if a PNC offence only partially matches a HO offence", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
-      const offence2 = { code: "CD5678", start: new Date("2023-01-01"), end: new Date("2023-01-01"), sequence: 2 }
-      const aho = generateMockAhoWithOffences(
-        [offence1],
-        [{ courtCaseReference: "abcd/1234", offences: [offence1, offence2] }]
-      )
+      const offence2 = { code: "AB1234", start: new Date("2023-01-01"), end: new Date("2023-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences([offence1], [{ courtCaseReference: "abcd/1234", offences: [offence2] }])
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({

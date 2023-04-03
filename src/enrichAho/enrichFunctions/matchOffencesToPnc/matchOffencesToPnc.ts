@@ -1,4 +1,5 @@
 import errorPaths from "src/lib/errorPaths"
+import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
@@ -122,36 +123,21 @@ const matchesHaveConflict = (courtCaseMatches: CourtCaseMatch[]): boolean => {
   return false
 }
 
-const hasUnmatchedPncOffences = (courtCases: PncCourtCase[], courtCaseMatches: CourtCaseMatch[]): boolean => {
-  const matchedPncOffences = courtCaseMatches.map((courtCaseMatch) => [...courtCaseMatch.offenceMatches.keys()]).flat()
+const hasPartiallyMatchedPncOffences = (
+  hoOffences: Offence[],
+  courtCases: PncCourtCase[],
+  courtCaseMatches: CourtCaseMatch[]
+): boolean => {
+  const matchedHoOffences = courtCaseMatches.map((courtCase) => [...courtCase.offenceMatches.values()]).flat()
+  const matchedPncOffences = courtCaseMatches.map((courtCase) => [...courtCase.offenceMatches.keys()]).flat()
+  const allPncOffences = courtCases.map((courtCase) => courtCase.offences).flat()
 
-  const casesFullyMatched = courtCases.filter((courtCase) => {
-    for (const pncOffence of courtCase.offences) {
-      if (!matchedPncOffences.includes(pncOffence)) {
-        return false
-      }
-    }
+  const unmatchedHoOffences = hoOffences.filter((hoOffence) => !matchedHoOffences.includes(hoOffence))
+  const unmatchedPncOffences = allPncOffences.filter((pncOffence) => !matchedPncOffences.includes(pncOffence))
 
-    return true
-  })
-
-  if (casesFullyMatched.length === 0) {
-    return true
-  }
-
-  const casesPartiallyMatched = courtCases
-    .filter((courtCase) => !casesFullyMatched.includes(courtCase))
-    .filter((courtCase) => {
-      for (const pncOffence of courtCase.offences) {
-        if (matchedPncOffences.includes(pncOffence)) {
-          return true
-        }
-      }
-
-      return false
-    })
-
-  return casesPartiallyMatched.length > 0
+  return unmatchedHoOffences.some((hoOffence) =>
+    unmatchedPncOffences.some((pncOffence) => getOffenceCode(hoOffence) === pncOffence.offence.cjsOffenceCode)
+  )
 }
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
@@ -169,7 +155,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     }))
     .filter((match) => match.offenceMatches.size > 0)
 
-  if (courtCaseMatches.length === 0 || hasUnmatchedPncOffences(courtCases, courtCaseMatches)) {
+  if (courtCaseMatches.length === 0 || hasPartiallyMatchedPncOffences(hoOffences, courtCases, courtCaseMatches)) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
