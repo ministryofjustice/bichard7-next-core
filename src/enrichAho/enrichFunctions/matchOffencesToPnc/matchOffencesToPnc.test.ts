@@ -217,34 +217,6 @@ describe("matchOffencesToPnc", () => {
     })
   })
 
-  describe("duplicate offences", () => {
-    it("should not match the same offence more than once", () => {
-      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
-      const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
-      const aho = generateMockAhoWithOffences(
-        [{ ...offence1, sequence: 3 }, offence2],
-        [{ courtCaseReference: "abcd/1234", offences: [{ ...offence1, sequence: 2 }, offence1] }]
-      )
-      const result = matchOffencesToPnc(aho)
-      const matchingSummary = summariseMatching(result)
-      expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
-        offences: [
-          {
-            hoSequenceNumber: 3,
-            addedByCourt: false,
-            pncSequenceNumber: 2
-          },
-          {
-            hoSequenceNumber: 2,
-            addedByCourt: true,
-            pncSequenceNumber: undefined
-          }
-        ]
-      })
-    })
-  })
-
   describe("multiple court cases with a single offence matching", () => {
     it("should match the offence to the correct court case", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
@@ -276,6 +248,47 @@ describe("matchOffencesToPnc", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "CD5678", start: new Date("2023-01-01"), end: new Date("2023-01-01"), sequence: 2 }
       const aho = generateMockAhoWithOffences([offence1], [{ courtCaseReference: "abcd/1234", offences: [offence2] }])
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100304",
+            path: errorPaths.case.asn
+          }
+        ]
+      })
+    })
+
+    it("should raise an exception if a PNC case is only partially matched", () => {
+      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = { code: "CD5678", start: new Date("2023-01-01"), end: new Date("2023-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [{ courtCaseReference: "abcd/1234", offences: [offence1, offence2] }]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100304",
+            path: errorPaths.case.asn
+          }
+        ]
+      })
+    })
+
+    it("should raise an exception if a court offence matches more than one PNC offence", () => {
+      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences(
+        [{ ...offence1, sequence: 3 }, offence2],
+        [
+          { courtCaseReference: "abcd/1234", offences: [{ ...offence1, sequence: 2 }, offence2] },
+          { courtCaseReference: "efgh/1234", offences: [{ ...offence1, sequence: 1 }] }
+        ]
+      )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
