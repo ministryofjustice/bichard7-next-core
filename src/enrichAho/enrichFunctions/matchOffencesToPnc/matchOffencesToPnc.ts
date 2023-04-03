@@ -175,6 +175,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
   }
 
   if (matchesHaveConflict(courtCaseMatches)) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
 
