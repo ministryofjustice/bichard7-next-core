@@ -8,7 +8,8 @@ import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
 type PncOffenceWithCaseRef = {
   courtCaseReference: string
-} & PncOffence
+  pncOffence: PncOffence
+}
 
 type OffenceMatches = {
   perfectMatches: Map<Offence, PncOffence>
@@ -36,7 +37,7 @@ type ResolvedResult =
 
 const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
   offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
-    offenceMatch.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
+    offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
   offenceMatch.hoOffence.AddedByTheCourt = false
 
   if (addCaseRefToOffences) {
@@ -141,11 +142,11 @@ const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[
   // Identify any conflicts with loose matches that have different result codes
 
   // Use the perfect matches first
-  const matched = courtCaseMatches
+  const matched: OffenceMatch[] = courtCaseMatches
     .map((courtCaseMatch) =>
       [...courtCaseMatch.offenceMatches.perfectMatches.entries()].map(([hoOffence, pncOffence]) => ({
         hoOffence,
-        pncOffence: { ...pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }
+        pncOffence: { pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }
       }))
     )
     .flat()
@@ -162,7 +163,7 @@ const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[
       acc
         .get(hoOffence)
         ?.push(
-          ...pncOffences.map((pncOffence) => ({ ...pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }))
+          ...pncOffences.map((pncOffence) => ({ pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }))
         )
     }
     return acc
@@ -173,7 +174,7 @@ const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[
     if (looselyMatchedOffences && looselyMatchedOffences.length === 1) {
       matched.push({
         hoOffence: unmatchedOffence,
-        pncOffence: { ...looselyMatchedOffences[0] }
+        pncOffence: looselyMatchedOffences[0]
       })
     }
   }
@@ -182,6 +183,15 @@ const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[
   // Identify unmatched offences for added in court
 
   return { matched, unmatched: unmatchedOffences }
+}
+
+const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
+  for (const hoOffence of hoOffences) {
+    if (pncOffences.some((offence) => offence.offence.cjsOffenceCode === getOffenceCode(hoOffence))) {
+      return true
+    }
+  }
+  return false
 }
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
@@ -199,7 +209,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     }))
     .filter((match) => match.offenceMatches.perfectMatches.size > 0 || match.offenceMatches.looseMatches.size > 0)
 
-  if (courtCaseMatches.length === 0 || hasPartiallyMatchedPncOffences(hoOffences, courtCases, courtCaseMatches)) {
+  if (courtCaseMatches.length === 0) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
@@ -211,14 +221,23 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
+  // If any unmatched ho offences match the offence code of a pnc offence, then raise a HO100304 because it could be a typo
+  const unmatchedPncOffences = courtCases
+    .map((courtCase) => courtCase.offences)
+    .flat()
+    .filter((pncOffence) => !matches.matched.some((match) => match.pncOffence.pncOffence === pncOffence))
+  if (hasMatchingOffenceCodes(matches.unmatched, unmatchedPncOffences)) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
+    return aho
+  }
+
+  // Check whether we have matched more than one court case
   const multipleMatches =
     matches.matched.reduce((acc, match) => {
       acc.add(match.pncOffence.courtCaseReference)
       return acc
     }, new Set<string>()).size > 1
-
   matches.matched.forEach((match) => annotatePncMatch(match, caseElem, multipleMatches))
-
   matches.unmatched.forEach((hoOffence) => (hoOffence.AddedByTheCourt = true))
 
   return aho
