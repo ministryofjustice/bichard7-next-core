@@ -9,7 +9,7 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
     return false
   }
 
-  if ((hoOffence.ActualOffenceEndDate?.EndDate === pncOffence.offence.endDate) === undefined) {
+  if (hoOffence.ActualOffenceEndDate?.EndDate === undefined && pncOffence.offence.endDate === undefined) {
     return true
   }
 

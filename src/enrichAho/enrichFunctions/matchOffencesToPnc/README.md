@@ -19,3 +19,69 @@ If there are matches in multiple cases:
 - If they do conflict, then raise an exception
 
 Exceptions to raise are:
+
+## HO100304
+When the offences from the court don't match with the offences on the PNC
+
+## HO100310
+Multiple Court Offences with different Results match a PNC Offence
+
+## HO100311
+Duplicate Court Offence Sequence Number
+
+## HO100312
+No PNC Offence with this Sequence Number (and it was manually set?)
+
+## HO100320
+Sequence number identifies a non-matching Offence (and it was manually set?)
+
+## HO100328
+Unable to determine whether fixed penalty or court case should be resulted
+
+## HO100329
+Unable to identify correct fixed penalty
+
+## HO100332
+Offences match more than one CCR
+
+## HO100333
+Manual match detected but no case matches upon resubmission, suggesting ASN updated or PNC data updated manually before resubmission
+
+
+# Scenarios
+
+## Scenario 1
+
+Multiple matches, but same result code, so it doesn't matter which one matches to which
+
+Incoming Records
+
+003   CJ88159   2023-03-11                4027
+004   CJ88159   2023-03-11                4027
+
+PNC Records
+
+AAAA/1234
+001   CJ88159   2023-03-11                
+002   CJ88159   2023-03-11  
+
+Matches
+003 -> 001
+004 -> 002
+
+## Scenario 2
+
+Multiple matches, but different result code, so we don't know which one matches to which
+
+Incoming Records
+
+003   CJ88159   2023-03-11                4028
+004   CJ88159   2023-03-11                4027
+
+PNC Records
+
+AAAA/1234
+001   CJ88159   2023-03-11                
+002   CJ88159   2023-03-11  
+
+Exception HO100304 raised
