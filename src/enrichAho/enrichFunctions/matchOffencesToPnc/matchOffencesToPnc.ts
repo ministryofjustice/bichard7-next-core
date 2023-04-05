@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/Annotated
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncOffence } from "src/types/PncQueryResult"
+import offencesAreEqual from "../enrichCourtCases/offenceMatcher/offencesAreEqual"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 
@@ -185,6 +186,38 @@ const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[
         hoOffence: unmatchedOffence,
         pncOffence: looselyMatchedOffences[0]
       })
+    }
+  }
+
+  unmatchedOffences = getUnmatchedHoOffences(hoOffences, matched)
+
+  // Attempt to group remaining unmatched offences
+  const groups = []
+  for (const unmatchedOffence of unmatchedOffences) {
+    let foundMatch = false
+    for (const group of groups) {
+      if (offencesAreEqual(unmatchedOffence, group[0])) {
+        group.push(unmatchedOffence)
+        foundMatch = true
+      }
+    }
+
+    if (!foundMatch) {
+      groups.push([unmatchedOffence])
+    }
+  }
+
+  for (const group of groups) {
+    if (group.length > 1) {
+      const matchedPncOffences = looseMatches.get(group[0])
+      if (matchedPncOffences && matchedPncOffences.length === group.length) {
+        for (let i = 0; i < matchedPncOffences.length; i++) {
+          matched.push({
+            hoOffence: group[i],
+            pncOffence: matchedPncOffences[i]
+          })
+        }
+      }
     }
   }
 
