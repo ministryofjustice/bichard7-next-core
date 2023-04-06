@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/Annotated
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
+import offencesAreEqual from "../enrichCourtCases/offenceMatcher/offencesAreEqual"
 import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 
@@ -133,6 +134,24 @@ const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[
   return false
 }
 
+const groupSimilarOffences = (hoOffences: Offence[]): Offence[][] => {
+  const groups: Offence[][] = []
+  for (const hoOffence of hoOffences) {
+    let foundMatch = false
+    for (const group of groups) {
+      if (offencesAreEqual(hoOffence, group[0])) {
+        group.push(hoOffence)
+        foundMatch = true
+      }
+    }
+
+    if (!foundMatch) {
+      groups.push([hoOffence])
+    }
+  }
+  return groups
+}
+
 const resolveMatch = (
   hoOffences: Offence[],
   pncOffences: PncOffenceWithCaseRef[],
@@ -140,20 +159,35 @@ const resolveMatch = (
 ): ResolvedResult => {
   const exceptions: Exception[] = []
   const result: MatchingResult = { matched: [], unmatched: [] }
+  const multipleMatches = []
   if (candidate.size === pncOffences.length || candidate.size === hoOffences.length) {
     for (const [hoOffence, candidatePncOffences] of candidate.entries()) {
-      if (candidatePncOffences.length > 1) {
-        exceptions.push(ho100304)
-      } else {
+      if (candidatePncOffences.length === 1) {
         result.matched.push({
           hoOffence,
           pncOffence: candidatePncOffences[0]
         })
+      } else {
+        multipleMatches.push(hoOffence)
       }
     }
     for (const hoOffence of hoOffences) {
       if (!candidate.has(hoOffence)) {
         result.unmatched.push(hoOffence)
+      }
+    }
+    const groupedMatches = groupSimilarOffences(multipleMatches)
+    for (const group of groupedMatches) {
+      if (group.length > 1) {
+        const matchedPncOffences = candidate.get(group[0])
+        if (matchedPncOffences && matchedPncOffences.length === group.length) {
+          for (let i = 0; i < matchedPncOffences.length; i++) {
+            result.matched.push({
+              hoOffence: group[i],
+              pncOffence: matchedPncOffences[i]
+            })
+          }
+        }
       }
     }
   } else {
@@ -258,7 +292,7 @@ const performMatching = (hoOffences: Offence[], courtCases: PncCourtCase[]): Res
   }
 
   matches = resolveMatchesAcrossCourtCases(hoOffences, pncOffences, matchCandidatesWithFuzzyDates)
-  if ("exceptions" in matches || matches.matched.length === hoOffences.length) {
+  if ("exceptions" in matches || matches.matched.length + matches.unmatched.length === hoOffences.length) {
     return matches
   }
 
