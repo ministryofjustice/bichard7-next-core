@@ -108,6 +108,32 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it("should match multiple offences across different court cases", () => {
+      const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence3 = { code: "AD1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence3],
+        [
+          { courtCaseReference: "abcd/1234", offences: [offence1] },
+          { courtCaseReference: "efgh/5678", offences: [offence2, offence3] }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        offences: [
+          {
+            courtCaseReference: "abcd/1234",
+            hoSequenceNumber: 1,
+            addedByCourt: false,
+            pncSequenceNumber: 1
+          },
+          { courtCaseReference: "efgh/5678", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
+        ]
+      })
+    })
   })
 
   describe("mismatched sequence numbers", () => {

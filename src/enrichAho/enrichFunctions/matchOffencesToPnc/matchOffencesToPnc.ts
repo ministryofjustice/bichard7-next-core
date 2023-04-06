@@ -3,39 +3,33 @@ import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncOffence } from "src/types/PncQueryResult"
-import offencesAreEqual from "../enrichCourtCases/offenceMatcher/offencesAreEqual"
+import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
-import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
+
+const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
 
 type PncOffenceWithCaseRef = {
   courtCaseReference: string
   pncOffence: PncOffence
 }
 
-type OffenceMatches = {
-  perfectMatches: Map<Offence, PncOffence>
-  looseMatches: Map<Offence, PncOffence[]>
-}
-
-type CourtCaseMatch = {
-  courtCaseReference: string
-  offenceMatches: OffenceMatches
-}
+type CandidateOffenceMatches = Map<Offence, PncOffenceWithCaseRef[]>
 
 type OffenceMatch = {
   hoOffence: Offence
   pncOffence: PncOffenceWithCaseRef
 }
 
+type MatchingResult = {
+  matched: OffenceMatch[]
+  unmatched: Offence[]
+}
+
 type ResolvedResult =
   | {
       exceptions: Exception[]
     }
-  | {
-      matched: OffenceMatch[]
-      unmatched: Offence[]
-    }
+  | MatchingResult
 
 const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) => {
   if (!map.has(key)) {
@@ -43,6 +37,14 @@ const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) => {
   }
   map.get(key)!.push(...items)
 }
+
+const flattenMapArray = <K, V>(maps: Map<K, V[]>[]): Map<K, V[]> =>
+  maps.reduce((acc, map) => {
+    for (const [key, value] of map.entries()) {
+      pushToArrayInMap(acc, key, ...value)
+    }
+    return acc
+  }, new Map<K, V[]>())
 
 const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
   offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
@@ -56,184 +58,23 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
   }
 }
 
-const perfectlyMatchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<Offence, PncOffence> => {
-  const matches = new Map<Offence, PncOffence>()
-
-  // Try and do a direct match including sequence numbers and exact dates
-  for (const hoOffence of hoOffences) {
-    for (const pncOffence of pncOffences) {
-      if (offencesMatch(hoOffence, pncOffence, true, true)) {
-        matches.set(hoOffence, pncOffence)
-        break
-      }
-    }
-  }
-  return matches
-}
-
-const looselyMatchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): Map<Offence, PncOffence[]> => {
-  const matches = new Map<Offence, PncOffence[]>()
-  for (const hoOffence of hoOffences) {
-    for (const pncOffence of pncOffences) {
-      if (
-        offencesMatch(hoOffence, pncOffence, false, true) ||
-        offencesMatch(hoOffence, pncOffence, true, false) ||
-        offencesMatch(hoOffence, pncOffence, false, false)
-      ) {
-        pushToArrayInMap(matches, hoOffence, pncOffence)
-      }
-    }
-  }
-
-  return matches
-}
-
-const matchOffences = (hoOffences: Offence[], pncOffences: PncOffence[]): OffenceMatches => {
-  const perfectMatches = perfectlyMatchOffences(hoOffences, pncOffences)
-  const unmatchedHoOffences = hoOffences.filter((hoOffence) => !perfectMatches.has(hoOffence))
-  const unmatchedPncOffences = pncOffences.filter((pncOffence) => ![...perfectMatches.values()].includes(pncOffence))
-  const looseMatches = looselyMatchOffences(unmatchedHoOffences, unmatchedPncOffences)
-  return { perfectMatches, looseMatches }
-}
-
-const matchesHaveConflict = (courtCaseMatches: CourtCaseMatch[]): boolean => {
-  const seen: Map<Offence, true> = new Map()
-
-  for (const courtCaseMatch of courtCaseMatches) {
-    for (const hoOffence of courtCaseMatch.offenceMatches.perfectMatches.keys()) {
-      if (seen.has(hoOffence)) {
-        return true
-      }
-
-      seen.set(hoOffence, true)
-    }
-  }
-
-  return false
-}
-
-const aggregatePerfectMatches = (courtCaseMatches: CourtCaseMatch[]): OffenceMatch[] =>
-  courtCaseMatches
-    .map((courtCaseMatch) =>
-      [...courtCaseMatch.offenceMatches.perfectMatches.entries()].map(([hoOffence, pncOffence]) => ({
-        hoOffence,
-        pncOffence: { pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }
-      }))
-    )
-    .flat()
-
-const aggregateLooseMatches = (courtCaseMatches: CourtCaseMatch[]): Map<Offence, PncOffenceWithCaseRef[]> =>
-  courtCaseMatches.reduce((acc, courtCaseMatch) => {
-    for (const [hoOffence, pncOffences] of courtCaseMatch.offenceMatches.looseMatches.entries()) {
-      pushToArrayInMap(
-        acc,
-        hoOffence,
-        ...pncOffences.map((pncOffence) => ({ pncOffence, courtCaseReference: courtCaseMatch.courtCaseReference }))
-      )
-    }
-    return acc
-  }, new Map<Offence, PncOffenceWithCaseRef[]>())
-
-const getUnmatchedHoOffences = (hoOffences: Offence[], matches: OffenceMatch[]): Offence[] =>
-  hoOffences.filter((hoOffence) => !matches.some((match) => match.hoOffence === hoOffence))
-
-const getUncertainOffences = (
-  unmatchedOffences: Offence[],
-  looseMatches: Map<Offence, PncOffenceWithCaseRef[]>
-): Offence[] => {
-  const pncToHoOffenceMatches = new Map<PncOffence, Offence[]>()
-
-  for (const unmatchedOffence of unmatchedOffences) {
-    const looselyMatchedOffences = looseMatches.get(unmatchedOffence)
-    if (looselyMatchedOffences) {
-      looselyMatchedOffences.forEach((pncOffence) => {
-        pushToArrayInMap(pncToHoOffenceMatches, pncOffence.pncOffence, unmatchedOffence)
-      })
-    }
-  }
-
-  const uncertainOffences = new Set<Offence>()
-  for (const possibleConflictingHoOffences of pncToHoOffenceMatches.values()) {
-    if (possibleConflictingHoOffences.length > 1) {
-      const uncertainOffencesforPncOffence = possibleConflictingHoOffences.filter((hoOffence) =>
-        possibleConflictingHoOffences.some((otherHoOffence) => !offencesHaveEqualResults([hoOffence, otherHoOffence]))
-      )
-      uncertainOffencesforPncOffence.forEach((hoOffence) => uncertainOffences.add(hoOffence))
-    }
-  }
-
-  return [...uncertainOffences.values()]
-}
-
-const resolveMatches = (hoOffences: Offence[], courtCaseMatches: CourtCaseMatch[]): ResolvedResult => {
-  // Identify any conflicts with perfect matches across multiple court cases
-  if (matchesHaveConflict(courtCaseMatches)) {
-    return { exceptions: [{ code: ExceptionCode.HO100304, path: errorPaths.case.asn }] }
-  }
-
-  // Use the perfect matches first
-  const matched: OffenceMatch[] = aggregatePerfectMatches(courtCaseMatches)
-
-  // Then choose how to use the loose matches
-  let unmatchedOffences = getUnmatchedHoOffences(hoOffences, matched)
-  const looseMatches = aggregateLooseMatches(courtCaseMatches)
-
-  // If a loose match only matches one to one, then use it
-  for (const unmatchedOffence of unmatchedOffences) {
-    const looselyMatchedOffences = looseMatches.get(unmatchedOffence)
-    if (looselyMatchedOffences && looselyMatchedOffences.length === 1) {
-      matched.push({
-        hoOffence: unmatchedOffence,
-        pncOffence: looselyMatchedOffences[0]
-      })
-    }
-  }
-
-  unmatchedOffences = getUnmatchedHoOffences(hoOffences, matched)
-
-  // Attempt to group remaining unmatched offences
-  const groups = []
-  for (const unmatchedOffence of unmatchedOffences) {
-    let foundMatch = false
-    for (const group of groups) {
-      if (offencesAreEqual(unmatchedOffence, group[0])) {
-        group.push(unmatchedOffence)
-        foundMatch = true
-      }
-    }
-
-    if (!foundMatch) {
-      groups.push([unmatchedOffence])
-    }
-  }
-
-  for (const group of groups) {
-    if (group.length > 1) {
-      const matchedPncOffences = looseMatches.get(group[0])
-      if (matchedPncOffences && matchedPncOffences.length === group.length) {
-        for (let i = 0; i < matchedPncOffences.length; i++) {
-          matched.push({
-            hoOffence: group[i],
-            pncOffence: matchedPncOffences[i]
-          })
+const findPerfectMatchCandidates = (hoOffences: Offence[], courtCases: PncCourtCase[]): CandidateOffenceMatches[] => {
+  const output = []
+  for (const courtCase of courtCases) {
+    const matches = new Map<Offence, PncOffenceWithCaseRef[]>()
+    // Try and do a direct match including sequence numbers and exact dates
+    for (const hoOffence of hoOffences) {
+      for (const pncOffence of courtCase.offences) {
+        if (offencesMatch(hoOffence, pncOffence, true, true)) {
+          pushToArrayInMap(matches, hoOffence, { pncOffence, courtCaseReference: courtCase.courtCaseReference })
         }
       }
     }
+    if (matches.size > 0) {
+      output.push(matches)
+    }
   }
-
-  // Identify HO100310 exceptions where loose matches are uncertain
-  unmatchedOffences = getUnmatchedHoOffences(hoOffences, matched)
-  const uncertainOffences = getUncertainOffences(unmatchedOffences, looseMatches)
-
-  if (uncertainOffences.length > 1) {
-    const exceptions = uncertainOffences.map((hoOffence) => ({
-      code: ExceptionCode.HO100310,
-      path: errorPaths.offence(hoOffences.indexOf(hoOffence)).reasonSequence
-    }))
-    return { exceptions }
-  }
-
-  return { matched, unmatched: unmatchedOffences }
+  return output
 }
 
 const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
@@ -245,6 +86,62 @@ const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[
   return false
 }
 
+const resolvePerfectMatch = (hoOffences: Offence[], candidate: CandidateOffenceMatches): ResolvedResult => {
+  const exceptions: Exception[] = []
+  const result: MatchingResult = { matched: [], unmatched: [] }
+  if (candidate.size === hoOffences.length) {
+    for (const [hoOffence, pncOffences] of candidate.entries()) {
+      if (pncOffences.length > 1) {
+        exceptions.push(ho100304)
+      } else {
+        result.matched.push({
+          hoOffence,
+          pncOffence: pncOffences[0]
+        })
+      }
+    }
+  } else {
+    result.unmatched = hoOffences
+  }
+  if (exceptions.length > 0) {
+    return { exceptions }
+  }
+  return result
+}
+
+const resolvePerfectMatches = (hoOffences: Offence[], candidates: CandidateOffenceMatches[]): ResolvedResult => {
+  const perfectCandidates = candidates.filter((candidate) => candidate.size === hoOffences.length)
+  if (perfectCandidates.length === 1) {
+    return resolvePerfectMatch(hoOffences, perfectCandidates[0])
+  } else {
+    return { matched: [], unmatched: hoOffences }
+  }
+}
+
+const resolvePerfectMatchesAcrossCourtCases = (
+  hoOffences: Offence[],
+  candidates: CandidateOffenceMatches[]
+): ResolvedResult => {
+  const combinedCandidates = flattenMapArray(candidates)
+  return resolvePerfectMatch(hoOffences, combinedCandidates)
+}
+
+const performMatching = (hoOffences: Offence[], courtCases: PncCourtCase[]): ResolvedResult => {
+  const perfectMatchCandidates = findPerfectMatchCandidates(hoOffences, courtCases)
+
+  let matches = resolvePerfectMatches(hoOffences, perfectMatchCandidates)
+  if (("matched" in matches && matches.matched.length === hoOffences.length) || "exceptions" in matches) {
+    return matches
+  }
+
+  matches = resolvePerfectMatchesAcrossCourtCases(hoOffences, perfectMatchCandidates)
+  if (("matched" in matches && matches.matched.length === hoOffences.length) || "exceptions" in matches) {
+    return matches
+  }
+
+  return { exceptions: [ho100304] }
+}
+
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
   const hoOffences = caseElem.HearingDefendant.Offence
@@ -253,19 +150,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
-  const courtCaseMatches = courtCases
-    .map((courtCase) => ({
-      courtCaseReference: courtCase.courtCaseReference,
-      offenceMatches: matchOffences(hoOffences, courtCase.offences)
-    }))
-    .filter((match) => match.offenceMatches.perfectMatches.size > 0 || match.offenceMatches.looseMatches.size > 0)
-
-  if (courtCaseMatches.length === 0) {
-    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
-    return aho
-  }
-
-  const matches = resolveMatches(hoOffences, courtCaseMatches)
+  const matches = performMatching(hoOffences, courtCases)
 
   if ("exceptions" in matches) {
     aho.Exceptions.push(...matches.exceptions)
@@ -288,6 +173,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
       acc.add(match.pncOffence.courtCaseReference)
       return acc
     }, new Set<string>()).size > 1
+  // Annotate the AHO with the matches
   matches.matched.forEach((match) => annotatePncMatch(match, caseElem, multipleMatches))
   matches.unmatched.forEach((hoOffence) => (hoOffence.AddedByTheCourt = true))
 
