@@ -178,16 +178,16 @@ const resolveMatch = (
     }
     const groupedMatches = groupSimilarOffences(multipleMatches)
     for (const group of groupedMatches) {
-      if (group.length > 1) {
-        const matchedPncOffences = candidate.get(group[0])
-        if (matchedPncOffences && matchedPncOffences.length === group.length) {
-          for (let i = 0; i < matchedPncOffences.length; i++) {
-            result.matched.push({
-              hoOffence: group[i],
-              pncOffence: matchedPncOffences[i]
-            })
-          }
+      const matchedPncOffences = candidate.get(group[0])
+      if (matchedPncOffences && matchedPncOffences.length === group.length) {
+        for (let i = 0; i < matchedPncOffences.length; i++) {
+          result.matched.push({
+            hoOffence: group[i],
+            pncOffence: matchedPncOffences[i]
+          })
         }
+      } else {
+        exceptions.push(ho100304)
       }
     }
   } else {
@@ -204,9 +204,10 @@ const resolveMatches = (
   pncOffences: PncOffenceWithCaseRef[],
   candidates: CandidateOffenceMatches[]
 ): ResolvedResult => {
-  const exactCandidates = candidates.filter((candidate) => candidate.size === pncOffences.length)
-  if (exactCandidates.length === 1) {
-    return resolveMatch(hoOffences, pncOffences, exactCandidates[0])
+  const fullyMatchedCandidates = candidates.filter((candidate) => candidate.size === pncOffences.length)
+  if (fullyMatchedCandidates.length === 1) {
+    // If we only have one fully matched case then resolve it
+    return resolveMatch(hoOffences, pncOffences, fullyMatchedCandidates[0])
   } else {
     return { matched: [], unmatched: hoOffences }
   }
@@ -292,13 +293,11 @@ const performMatching = (hoOffences: Offence[], courtCases: PncCourtCase[]): Res
   }
 
   matches = resolveMatchesAcrossCourtCases(hoOffences, pncOffences, matchCandidatesWithFuzzyDates)
-  if ("exceptions" in matches || matches.matched.length + matches.unmatched.length === hoOffences.length) {
-    return matches
+  if ("matched" in matches && matches.matched.length === 0) {
+    return { exceptions: [ho100304] }
   }
 
-  // matches =
-
-  return { exceptions: [ho100304] }
+  return matches
 }
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {

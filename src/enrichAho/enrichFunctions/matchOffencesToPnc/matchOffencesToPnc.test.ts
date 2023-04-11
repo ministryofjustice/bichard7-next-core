@@ -607,10 +607,10 @@ describe("matchOffencesToPnc", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
       const aho = generateMockAhoWithOffences(
-        [{ ...offence1, sequence: 3 }, offence2],
+        [offence1, offence2],
         [
-          { courtCaseReference: "abcd/1234", offences: [{ ...offence1, sequence: 2 }, offence2] },
-          { courtCaseReference: "efgh/1234", offences: [{ ...offence1, sequence: 1 }] }
+          { courtCaseReference: "abcd/1234", offences: [offence1, offence2] },
+          { courtCaseReference: "efgh/1234", offences: [offence1] }
         ]
       )
       const result = matchOffencesToPnc(aho)
