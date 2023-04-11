@@ -49,6 +49,16 @@ const flattenMapArray = <K, V>(maps: Map<K, V[]>[]): Map<K, V[]> =>
     return acc
   }, new Map<K, V[]>())
 
+const invertMap = <K, V>(map: Map<K, V[]>): Map<V, K[]> => {
+  const reverseLookup = new Map<V, K[]>()
+  for (const [key, values] of map.entries()) {
+    for (const value of values) {
+      pushToArrayInMap(reverseLookup, value, key)
+    }
+  }
+  return reverseLookup
+}
+
 const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
   offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
     offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
@@ -63,7 +73,7 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
 
 const findMatchCandidates = (
   hoOffences: Offence[],
-  courtCases: PncCourtCase[],
+  courtCases: PncOffenceWithCaseRef[][],
   options: OffenceMatchOptions = {}
 ): CandidateOffenceMatches[] => {
   const output = []
@@ -71,9 +81,9 @@ const findMatchCandidates = (
     const matches = new Map<Offence, PncOffenceWithCaseRef[]>()
     // Try and do a direct match including sequence numbers and exact dates
     for (const hoOffence of hoOffences) {
-      for (const pncOffence of courtCase.offences) {
-        if (offencesMatch(hoOffence, pncOffence, options)) {
-          pushToArrayInMap(matches, hoOffence, { pncOffence, courtCaseReference: courtCase.courtCaseReference })
+      for (const pncOffence of courtCase) {
+        if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+          pushToArrayInMap(matches, hoOffence, pncOffence)
         }
       }
     }
@@ -87,10 +97,13 @@ const findMatchCandidates = (
 const hoOffenceAlreadyMatched = (candidates: CandidateOffenceMatches[], hoOffence: Offence): boolean =>
   candidates.some((candidate) => candidate.has(hoOffence))
 
-const pncOffenceAlreadyMatched = (candidates: CandidateOffenceMatches[], pncOffence: PncOffence): boolean => {
+const pncOffenceAlreadyMatched = (
+  candidates: CandidateOffenceMatches[],
+  pncOffence: PncOffenceWithCaseRef
+): boolean => {
   for (const candidate of candidates) {
     for (const value of candidate.values()) {
-      if (value.some((pncOff) => pncOff.pncOffence === pncOffence)) {
+      if (value.some((pncOff) => pncOff === pncOffence)) {
         return true
       }
     }
@@ -101,7 +114,7 @@ const pncOffenceAlreadyMatched = (candidates: CandidateOffenceMatches[], pncOffe
 const addMatchCandidates = (
   candidates: CandidateOffenceMatches[],
   hoOffences: Offence[],
-  courtCases: PncCourtCase[],
+  courtCases: PncOffenceWithCaseRef[][],
   options: OffenceMatchOptions = {}
 ): CandidateOffenceMatches[] => {
   for (const courtCase of courtCases) {
@@ -110,17 +123,38 @@ const addMatchCandidates = (
       if (hoOffenceAlreadyMatched(candidates, hoOffence)) {
         continue
       }
-      for (const pncOffence of courtCase.offences) {
+      for (const pncOffence of courtCase) {
         if (pncOffenceAlreadyMatched(candidates, pncOffence)) {
           continue
         }
-        if (offencesMatch(hoOffence, pncOffence, options)) {
-          pushToArrayInMap(matches, hoOffence, { pncOffence, courtCaseReference: courtCase.courtCaseReference })
+        if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+          pushToArrayInMap(matches, hoOffence, pncOffence)
         }
       }
     }
+
+    const matchingCandidate = candidates.find((candidate) =>
+      [...candidate.values()].some((pncOffences) =>
+        pncOffences.some((pncOffence) => pncOffence.courtCaseReference === courtCase[0].courtCaseReference)
+      )
+    )
+
     if (matches.size > 0) {
-      candidates.push(matches)
+      if (!matchingCandidate) {
+        candidates.push(matches)
+      } else {
+        for (const [hoOffence, pncOffences] of matches.entries()) {
+          if (!matchingCandidate.has(hoOffence)) {
+            matchingCandidate.set(hoOffence, [])
+          }
+          for (const pncOffence of pncOffences) {
+            const matchedPncOffences = matchingCandidate.get(hoOffence)
+            if (!matchedPncOffences!.includes(pncOffence)) {
+              matchedPncOffences!.push(pncOffence)
+            }
+          }
+        }
+      }
     }
   }
   return candidates
@@ -157,12 +191,7 @@ const checkForMatchesWithConflictingResults = (
   candidate: CandidateOffenceMatches,
   originalHoOffences: Offence[]
 ): Exception[] | undefined => {
-  const reverseLookup = new Map<PncOffence, Offence[]>()
-  for (const [hoOffence, pncOffences] of candidate.entries()) {
-    for (const pncOffence of pncOffences) {
-      pushToArrayInMap(reverseLookup, pncOffence.pncOffence, hoOffence)
-    }
-  }
+  const reverseLookup = invertMap(candidate)
 
   for (const hoOffences of reverseLookup.values()) {
     if (!offencesHaveEqualResults(hoOffences)) {
@@ -183,8 +212,10 @@ const resolveMatch = (hoOffences: Offence[], candidate: CandidateOffenceMatches)
     return { exceptions }
   }
 
+  const reverseLookup = invertMap(candidate)
+
   for (const [hoOffence, candidatePncOffences] of candidate.entries()) {
-    if (candidatePncOffences.length === 1) {
+    if (candidatePncOffences.length === 1 && reverseLookup.get(candidatePncOffences[0])?.length === 1) {
       result.matched.push({
         hoOffence,
         pncOffence: candidatePncOffences[0]
@@ -193,23 +224,34 @@ const resolveMatch = (hoOffences: Offence[], candidate: CandidateOffenceMatches)
       multipleMatches.push(hoOffence)
     }
   }
-  for (const hoOffence of hoOffences) {
-    if (!candidate.has(hoOffence)) {
-      result.unmatched.push(hoOffence)
-    }
-  }
+
   const groupedMatches = groupSimilarOffences(multipleMatches)
+
+  const pncOffenceWasAlreadyMatched = (pncOffence: PncOffenceWithCaseRef): boolean =>
+    "matched" in result && result.matched.some((match) => match.pncOffence === pncOffence)
+
+  const hoOffenceWasAlreadyMatched = (hoOffence: Offence): boolean =>
+    "matched" in result && result.matched.some((match) => match.hoOffence === hoOffence)
+
   for (const group of groupedMatches) {
     const matchedPncOffences = candidate.get(group[0])
-    if (matchedPncOffences && matchedPncOffences.length === group.length) {
+    if (matchedPncOffences && matchedPncOffences.length <= group.length) {
       for (let i = 0; i < matchedPncOffences.length; i++) {
-        result.matched.push({
-          hoOffence: group[i],
-          pncOffence: matchedPncOffences[i]
-        })
+        if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i])) {
+          result.matched.push({
+            hoOffence: group[i],
+            pncOffence: matchedPncOffences[i]
+          })
+        }
       }
     } else {
       return { exceptions: [ho100304] }
+    }
+  }
+
+  for (const hoOffence of hoOffences) {
+    if (!hoOffenceWasAlreadyMatched(hoOffence)) {
+      result.unmatched.push(hoOffence)
     }
   }
 
@@ -238,14 +280,16 @@ const resolveMatchesInMultipleCourtCases = (
   return resolveMatch(hoOffences, combinedCandidates)
 }
 
-const performMatching = (hoOffences: Offence[], courtCases: PncCourtCase[]): ResolvedResult => {
+const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): ResolvedResult => {
+  const courtCases: PncOffenceWithCaseRef[][] = pncCourtCases.map((cc) =>
+    cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference }))
+  )
   const exactMatchCandidates = findMatchCandidates(hoOffences, courtCases, {
     checkSequenceNumbers: true,
     exactDateMatch: true
   })
-  const pncOffences: PncOffenceWithCaseRef[] = courtCases
-    .map((cc) => cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference })))
-    .flat()
+
+  const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
 
   const successfulMatch = (result: ResolvedResult): boolean =>
     "matched" in result && (result.matched.length === hoOffences.length || result.matched.length === pncOffences.length)
