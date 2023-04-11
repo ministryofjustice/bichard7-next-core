@@ -416,22 +416,16 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
-    describe("in multiple court cases with exact matches", () => {
+    describe("in multiple court cases with inexact matches", () => {
       it("should flag extra ho offences as being added in court if all pnc offences are matched", () => {
         const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
         const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
         const offence3 = { code: "AD1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 3 }
-        const fillerOffence = {
-          code: "XX1234",
-          start: new Date("2022-01-01"),
-          end: new Date("2022-01-01"),
-          sequence: 1
-        }
         const aho = generateMockAhoWithOffences(
           [offence1, offence2, offence3],
           [
             { courtCaseReference: "abcd/1234", offences: [offence1] },
-            { courtCaseReference: "efgh/1234", offences: [fillerOffence, offence2] }
+            { courtCaseReference: "efgh/1234", offences: [{ ...offence2, sequence: 1 }] }
           ]
         )
         const result = matchOffencesToPnc(aho)
@@ -448,7 +442,7 @@ describe("matchOffencesToPnc", () => {
               courtCaseReference: "efgh/1234",
               hoSequenceNumber: 2,
               addedByCourt: false,
-              pncSequenceNumber: 2
+              pncSequenceNumber: 1
             },
             {
               hoSequenceNumber: 3,
@@ -464,17 +458,12 @@ describe("matchOffencesToPnc", () => {
         const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
         const offence3 = { code: "AD1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 3 }
         const offence4 = { code: "AD1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 4 }
-        const fillerOffence = {
-          code: "XX1234",
-          start: new Date("2022-01-01"),
-          end: new Date("2022-01-01"),
-          sequence: 1
-        }
+
         const aho = generateMockAhoWithOffences(
           [offence1, offence2, offence3, offence4],
           [
             { courtCaseReference: "abcd/1234", offences: [offence1] },
-            { courtCaseReference: "efgh/1234", offences: [fillerOffence, offence2] }
+            { courtCaseReference: "efgh/1234", offences: [{ ...offence2, sequence: 1 }] }
           ]
         )
         const result = matchOffencesToPnc(aho)
@@ -491,7 +480,7 @@ describe("matchOffencesToPnc", () => {
               courtCaseReference: "efgh/1234",
               hoSequenceNumber: 2,
               addedByCourt: false,
-              pncSequenceNumber: 2
+              pncSequenceNumber: 1
             },
             {
               hoSequenceNumber: 3,
