@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/Annotated
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
+import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import offencesAreEqual from "../enrichCourtCases/offenceMatcher/offencesAreEqual"
 import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
@@ -82,7 +83,7 @@ const findMatchCandidates = (
     // Try and do a direct match including sequence numbers and exact dates
     for (const hoOffence of hoOffences) {
       for (const pncOffence of courtCase) {
-        if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+        if (!offenceHasFinalResult(pncOffence.pncOffence) && offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
           pushToArrayInMap(matches, hoOffence, pncOffence)
         }
       }
@@ -377,6 +378,23 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     .flat()
     .filter((pncOffence) => !matches.matched.some((match) => match.pncOffence.pncOffence === pncOffence))
   if (hasMatchingOffenceCodes(matches.unmatched, unmatchedPncOffences)) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
+    return aho
+  }
+
+  // If there are still any unmatched PNC offences that don't already have final results in the court cases we have matched, raise an exception
+  const matchedCourtCases = matches.matched.reduce((acc, match) => {
+    acc.add(match.pncOffence.courtCaseReference)
+    return acc
+  }, new Set<string>())
+
+  const unmatchedNonFinalPncOffences = courtCases
+    .filter((courtCase) => matchedCourtCases.has(courtCase.courtCaseReference))
+    .map((courtCase) => courtCase.offences.filter((pncOffence) => !offenceHasFinalResult(pncOffence)))
+    .flat()
+    .filter((pncOffence) => unmatchedPncOffences.includes(pncOffence))
+
+  if (unmatchedNonFinalPncOffences.length > 0) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }

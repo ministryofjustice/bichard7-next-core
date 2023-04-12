@@ -9,12 +9,16 @@ type OffenceData = {
   end?: Date
   sequence: number
   resultCodes?: number[]
+  disposals?: number[]
 }
 
 type PncCourtCaseData = {
   courtCaseReference: string
   offences: OffenceData[]
 }
+
+const finalDisposal = 2063
+const nonFinalDisposal = 2507
 
 const generateMockAhoWithOffences = (
   offences: OffenceData[],
@@ -60,7 +64,8 @@ const generateMockAhoWithOffences = (
             startDate: o.start,
             endDate: o.end,
             sequenceNumber: o.sequence
-          }
+          },
+          ...(o.disposals && o.disposals?.length > 0 ? { disposals: o.disposals.map((adj) => ({ type: adj })) } : {})
         }))
       }))
     },
@@ -115,7 +120,13 @@ describe("matchOffencesToPnc", () => {
 
     it("should match multiple offences across different court cases", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
-      const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
+      const offence2 = {
+        code: "AC1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1,
+        disposals: [finalDisposal]
+      }
       const offence3 = { code: "AD1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
       const aho = generateMockAhoWithOffences(
         [offence1, offence3],
@@ -715,10 +726,7 @@ describe("matchOffencesToPnc", () => {
       const offence2 = { code: "AC1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 2 }
       const aho = generateMockAhoWithOffences(
         [offence1, offence2],
-        [
-          { courtCaseReference: "abcd/1234", offences: [offence1, offence2] },
-          { courtCaseReference: "efgh/1234", offences: [offence1] }
-        ]
+        [{ courtCaseReference: "abcd/1234", offences: [offence1, offence2, { ...offence2, sequence: 3 }] }]
       )
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
@@ -765,6 +773,78 @@ describe("matchOffencesToPnc", () => {
           {
             code: "HO100304",
             path: errorPaths.case.asn
+          }
+        ]
+      })
+    })
+
+    it("should raise an exception for unmatched pnc offences with a non-final disposal", () => {
+      const offence1 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1
+      }
+      const offence2 = {
+        code: "AD1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        disposals: [nonFinalDisposal],
+        sequence: 2
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [offence1, offence2]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100304",
+            path: errorPaths.case.asn
+          }
+        ]
+      })
+    })
+
+    it("should not raise an exception for unmatched pnc offences with a final disposal", () => {
+      const offence1 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1
+      }
+      const offence2 = {
+        code: "AD1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        disposals: [finalDisposal],
+        sequence: 2
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [offence1, offence2]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        courtCaseReference: "abcd/1234",
+        offences: [
+          {
+            hoSequenceNumber: 1,
+            addedByCourt: false,
+            pncSequenceNumber: 1
           }
         ]
       })
