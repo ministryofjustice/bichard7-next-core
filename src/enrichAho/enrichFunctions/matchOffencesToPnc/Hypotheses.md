@@ -62,12 +62,6 @@ All of the offences in the court case match one of the court cases in the PNC ex
 - s3://bichard-7-production-processing-validation/2023/03/27/13/23/ProcessingValidation-5733a9ac-5e7e-43b7-8591-1eb117a5d764.json
 
 
-# Multiple offences matched a single PNC offence
-
-Bichard marked one of them as being added in court, but we don't know which one this should be, so we are raising a HO100304
-
-- s3://bichard-7-production-processing-validation/2023/03/27/13/35/ProcessingValidation-5355ad2d-a742-4519-bc6b-1a98b90f5cb1.json ****
-
 # Need to fix:
 
 - s3://bichard-7-production-processing-validation/2023/03/27/13/01/ProcessingValidation-c91248b1-caf0-4be7-b3d3-4c930181f3a8.json
@@ -76,9 +70,7 @@ Bichard marked one of them as being added in court, but we don't know which one 
 - s3://bichard-7-production-processing-validation/2023/03/27/13/35/ProcessingValidation-f5029d15-4e9f-4907-8f5d-6aacd8dee3b1.json
 - s3://bichard-7-production-processing-validation/2023/03/27/13/37/ProcessingValidation-d38d6e8a-017d-497a-8ab5-b2b07fe4a20e.json
 - s3://bichard-7-production-processing-validation/2023/03/27/13/42/ProcessingValidation-d9db8c7a-881c-428e-99c4-1b8ce3223884.json
-- s3://bichard-7-production-processing-validation/2023/03/27/13/43/ProcessingValidation-3fd04150-ca02-45b7-9b79-b99c7f5ad602.json
 - s3://bichard-7-production-processing-validation/2023/03/27/13/54/ProcessingValidation-3746b9a6-b204-44cb-b1c3-d0be127bffb3.json
-- s3://bichard-7-production-processing-validation/2023/03/27/13/57/ProcessingValidation-a2cdd155-92df-4de8-8d8f-7d6ff948a60f.json
 
 # Need to implement
 

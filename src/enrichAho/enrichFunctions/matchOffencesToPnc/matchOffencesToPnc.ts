@@ -258,15 +258,24 @@ const resolveMatch = (hoOffences: Offence[], candidate: CandidateOffenceMatches)
   return result
 }
 
+const successfulMatch = (
+  result: ResolvedResult,
+  hoOffences: Offence[],
+  pncOffences: PncOffenceWithCaseRef[]
+): boolean =>
+  "matched" in result && (result.matched.length === hoOffences.length || result.matched.length === pncOffences.length)
+
 const resolveMatchesInSingleCourtCase = (
   hoOffences: Offence[],
   pncOffences: PncOffenceWithCaseRef[],
   candidates: CandidateOffenceMatches[]
 ): ResolvedResult => {
-  const fullyMatchedCandidates = candidates.filter((candidate) => candidate.size === pncOffences.length)
-  if (fullyMatchedCandidates.length === 1) {
-    // If we only have one fully matched case then resolve it
-    return resolveMatch(hoOffences, fullyMatchedCandidates[0])
+  const successfulMatches = candidates
+    .map((candidate) => resolveMatch(hoOffences, candidate))
+    .filter((match) => successfulMatch(match, hoOffences, pncOffences))
+  if (successfulMatches.length === 1) {
+    // If we only have one fully matched case then return it
+    return successfulMatches[0]
   } else {
     return { matched: [], unmatched: hoOffences }
   }
@@ -291,17 +300,14 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
 
   const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
 
-  const successfulMatch = (result: ResolvedResult): boolean =>
-    "matched" in result && (result.matched.length === hoOffences.length || result.matched.length === pncOffences.length)
-
   let matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, exactMatchCandidates)
-  if (successfulMatch(matches)) {
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
     // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
 
   matches = resolveMatchesInMultipleCourtCases(hoOffences, exactMatchCandidates)
-  if (successfulMatch(matches)) {
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
     // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
@@ -312,13 +318,13 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
     exactDateMatch: true
   })
   matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, matchCandidatesIgnoringSequenceNumber)
-  if (successfulMatch(matches)) {
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
     // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
 
   matches = resolveMatchesInMultipleCourtCases(hoOffences, matchCandidatesIgnoringSequenceNumber)
-  if (successfulMatch(matches)) {
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
     // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
@@ -337,7 +343,7 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
   if ("exceptions" in matches) {
     // Errors were found in the matching
     return matches
-  } else if (successfulMatch(matches)) {
+  } else if (successfulMatch(matches, hoOffences, pncOffences)) {
     // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
