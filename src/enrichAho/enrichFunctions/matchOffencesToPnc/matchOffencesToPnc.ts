@@ -219,12 +219,16 @@ const checkForMatchesWithConflictingResults = (
   const reverseLookup = invertMap(candidate)
 
   for (const hoOffences of reverseLookup.values()) {
-    if (!offencesHaveEqualResults(hoOffences)) {
-      const matchingCourtCaseReferences = hoOffences.reduce((acc, hoOffence) => {
-        candidate.get(hoOffence)?.forEach((pncOffence) => acc.add(pncOffence.courtCaseReference))
-        return acc
-      }, new Set<string>())
+    const matchingCourtCaseReferences = hoOffences.reduce((acc, hoOffence) => {
+      candidate.get(hoOffence)?.forEach((pncOffence) => acc.add(pncOffence.courtCaseReference))
+      return acc
+    }, new Set<string>())
 
+    const allOffencesMatchedInGroup = hoOffences.every(
+      (hoOffence) => candidate.get(hoOffence)?.length === hoOffences.length
+    )
+
+    if (!offencesHaveEqualResults(hoOffences) || (matchingCourtCaseReferences.size > 1 && !allOffencesMatchedInGroup)) {
       const code = matchingCourtCaseReferences.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
       return hoOffences.map((hoOffence) => ({
         code,

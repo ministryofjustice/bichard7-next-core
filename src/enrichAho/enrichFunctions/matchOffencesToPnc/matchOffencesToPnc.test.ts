@@ -1158,5 +1158,38 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it("should raise an exception when there are near-identical offences with identical results but not all are matched across multiple court cases", () => {
+      const offence1 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1,
+        resultCodes: [1234]
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [{ ...offence1, sequence: 1 }]
+          },
+          {
+            courtCaseReference: "efgh/1234",
+            offences: [{ ...offence1, sequence: 1 }]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100332",
+            path: errorPaths.offence(0).reasonSequence
+          }
+        ]
+      })
+    })
   })
 })
