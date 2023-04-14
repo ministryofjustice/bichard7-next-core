@@ -1039,4 +1039,66 @@ describe("matchOffencesToPnc", () => {
       })
     })
   })
+
+  describe("HO100312", () => {
+    it("should raise an exception when a manual sequence number doesn't match any pnc offences", () => {
+      const offence1: OffenceData = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1,
+        manualSequence: 2
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [offence1]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100312",
+            path: errorPaths.offence(0).reasonSequence
+          }
+        ]
+      })
+    })
+  })
+
+  describe("HO100320", () => {
+    it("should raise an exception when a manual sequence number identifies a non-matching PNC offence", () => {
+      const offence1: OffenceData = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1,
+        manualSequence: 1
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [{ ...offence1, code: "CD1234" }]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100320",
+            path: errorPaths.offence(0).reasonSequence
+          }
+        ]
+      })
+    })
+  })
 })
