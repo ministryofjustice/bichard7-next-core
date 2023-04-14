@@ -207,8 +207,14 @@ const checkForMatchesWithConflictingResults = (
 
   for (const hoOffences of reverseLookup.values()) {
     if (!offencesHaveEqualResults(hoOffences)) {
+      const matchingCourtCaseReferences = hoOffences.reduce((acc, hoOffence) => {
+        candidate.get(hoOffence)?.forEach((pncOffence) => acc.add(pncOffence.courtCaseReference))
+        return acc
+      }, new Set<string>())
+
+      const code = matchingCourtCaseReferences.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
       return hoOffences.map((hoOffence) => ({
-        code: ExceptionCode.HO100310,
+        code,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
       }))
     }
