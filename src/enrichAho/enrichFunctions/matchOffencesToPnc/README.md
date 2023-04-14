@@ -43,10 +43,10 @@ Court Case Number: 22/2041/222222Y
 | 001        | 001         | 22/2041/111111X |
 | 002        | 002         | 22/2041/111111X |
 
-
 ### 2. Try to match all offences exactly across multiple court cases
 
 If there are exact matches (sequence number, offence code, dates) for every offence in a hearing outcome across multiple court cases, and all offences are matched, then we will accept these as correct matches. e.g.
+
 #### Hearing Outcome Offences
 
 | Sequence Number | Offence Code | Start Date | End Date | Result codes |
@@ -76,9 +76,7 @@ Court Case Number: 22/2041/222222Y
 | 001        | 001         | 22/2041/222222Y |
 | 002        | 002         | 22/2041/111111X |
 
-
 ### 3. Try to match again ignoring the sequence numbers but with exact dates, prioritising a single court case with all matches
-
 
 If there are matches (offence code, dates) for every offence in a hearing outcome in a single court case, and all offences are matched, then we will accept these as correct matches. e.g.
 
@@ -110,7 +108,6 @@ Court Case Number: 22/2041/222222Y
 | ---------- | ----------- | --------------- |
 | 003        | 001         | 22/2041/111111X |
 | 004        | 002         | 22/2041/111111X |
-
 
 ### 4. Try to match again ignoring the sequence numbers but with exact dates, acros multiple court cases
 
@@ -144,7 +141,6 @@ Court Case Number: 22/2041/222222Y
 | ---------- | ----------- | --------------- |
 | 003        | 001         | 22/2041/222222Y |
 | 004        | 002         | 22/2041/111111X |
-
 
 Exceptions to raise are:
 
