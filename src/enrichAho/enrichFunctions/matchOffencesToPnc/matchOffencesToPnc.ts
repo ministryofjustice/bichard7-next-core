@@ -228,10 +228,14 @@ const checkForMatchesWithConflictingResults = (
       (hoOffence) => candidate.get(hoOffence)?.length === hoOffences.length
     )
 
-    if (!offencesHaveEqualResults(hoOffences) || (matchingCourtCaseReferences.size > 1 && !allOffencesMatchedInGroup)) {
-      const code = matchingCourtCaseReferences.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+    if (!offencesHaveEqualResults(hoOffences)) {
       return hoOffences.map((hoOffence) => ({
-        code,
+        code: ExceptionCode.HO100310,
+        path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
+      }))
+    } else if (matchingCourtCaseReferences.size > 1 && !allOffencesMatchedInGroup) {
+      return hoOffences.map((hoOffence) => ({
+        code: ExceptionCode.HO100332,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
       }))
     }
