@@ -74,7 +74,7 @@ describe("offencesMatch()", () => {
     const match1 = offencesMatch(hoOffence, pncOffence)
     expect(match1).toBe(true)
 
-    const match2 = offencesMatch(hoOffence, pncOffence, true)
+    const match2 = offencesMatch(hoOffence, pncOffence, { checkSequenceNumbers: true })
     expect(match2).toBe(false)
   })
 
