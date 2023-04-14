@@ -689,6 +689,62 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it("should match multiple groups of near-identical HO offences with the same results successfully", () => {
+      const offence1 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1
+      }
+      const offence2 = {
+        code: "CD1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 2
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2, { ...offence1, sequence: 3 }, { ...offence2, sequence: 4 }],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [
+              { ...offence1, sequence: 1 },
+              { ...offence1, sequence: 2 },
+              { ...offence2, sequence: 3 },
+              { ...offence2, sequence: 4 }
+            ]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        courtCaseReference: "abcd/1234",
+        offences: [
+          {
+            hoSequenceNumber: 1,
+            addedByCourt: false,
+            pncSequenceNumber: 1
+          },
+          {
+            hoSequenceNumber: 2,
+            addedByCourt: false,
+            pncSequenceNumber: 3
+          },
+          {
+            hoSequenceNumber: 3,
+            addedByCourt: false,
+            pncSequenceNumber: 2
+          },
+          {
+            hoSequenceNumber: 4,
+            addedByCourt: false,
+            pncSequenceNumber: 4
+          }
+        ]
+      })
+    })
   })
 
   describe("manual matches", () => {

@@ -181,12 +181,25 @@ const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[
   return false
 }
 
-const groupSimilarOffences = (hoOffences: Offence[]): Offence[][] => {
+const hoOffencesSharePncOffenceMatch = (
+  hoOffence1: Offence,
+  hoOffence2: Offence,
+  candidate: CandidateOffenceMatches
+): boolean => {
+  const pncOffences1 = candidate.get(hoOffence1)
+  const pncOffences2 = candidate.get(hoOffence2)
+  return !!pncOffences1?.some((pncOffence1) => !!pncOffences2?.some((pncOffence2) => pncOffence1 === pncOffence2))
+}
+
+const groupSimilarOffences = (candidate: CandidateOffenceMatches): Offence[][] => {
   const groups: Offence[][] = []
-  for (const hoOffence of hoOffences) {
+  for (const hoOffence of candidate.keys()) {
     let foundMatch = false
     for (const group of groups) {
-      if (offencesHaveEqualResults([hoOffence, group[0]])) {
+      if (
+        hoOffencesSharePncOffenceMatch(hoOffence, group[0], candidate) &&
+        offencesHaveEqualResults([hoOffence, group[0]])
+      ) {
         group.push(hoOffence)
         foundMatch = true
       }
@@ -299,7 +312,8 @@ const resolveMatch = (
     }
   }
 
-  const groupedMatches = groupSimilarOffences(multipleMatches)
+  const unmatchedCandidates = filterMatchedCandidates(nonManualCandidates, result)
+  const groupedMatches = groupSimilarOffences(unmatchedCandidates)
 
   const pncOffenceWasAlreadyMatched = (pncOffence: PncOffenceWithCaseRef): boolean =>
     "matched" in result && result.matched.some((match) => match.pncOffence === pncOffence)
