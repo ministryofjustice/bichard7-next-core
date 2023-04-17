@@ -10,6 +10,7 @@ interface IArguments {
   help?: boolean
   cache?: boolean
   noTruncate?: boolean
+  matching?: boolean
 }
 
 export const getArgs = () =>
@@ -50,6 +51,13 @@ export const getArgs = () =>
         optional: true,
         alias: "t",
         description: "Stops truncating the unchanged sections of XML diffs"
+      },
+      matching: {
+        type: Boolean,
+        optional: true,
+        defaultValue: false,
+        alias: "x",
+        description: "Runs using the PNC offence matching algorithm"
       }
     },
     {

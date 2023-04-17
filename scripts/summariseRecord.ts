@@ -4,7 +4,7 @@ import getOffenceCode from "../src/lib/offence/getOffenceCode"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import parseSpiResult from "../src/parse/parseSpiResult"
 import transformSpiToAho from "../src/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../src/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../src/types/AnnotatedHearingOutcome"
 import type Exception from "../src/types/Exception"
 import type { PncCourtCase, PncOffence } from "../src/types/PncQueryResult"
 import type { Trigger } from "../src/types/Trigger"
@@ -31,15 +31,24 @@ const formatDate = (date: Date | undefined): string => (date ? date.toISOString(
 const fileContents = fs.readFileSync(localFileName)
 const fileJson = JSON.parse(fileContents.toString()) as ComparisonFile
 
+const getManualSequenceNumber = (offence: Offence): string | undefined => {
+  if (offence.ManualSequenceNumber && offence.CriminalProsecutionReference.OffenceReasonSequence) {
+    return offence.CriminalProsecutionReference.OffenceReasonSequence
+  }
+}
+
 // const summariseAho = null
 const summariseAho = (aho: AnnotatedHearingOutcome): string[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
-    const courtOffenceSequenceNumber = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0").padEnd(6, " ")
+    const courtOffenceSequenceNumber = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0")
+    const manualSequenceNumber = getManualSequenceNumber(offence)
+    const manualSequenceNumberStr = manualSequenceNumber ? ` (${manualSequenceNumber}) ` : ""
+    const sequenceNumbers = `${courtOffenceSequenceNumber}${manualSequenceNumberStr}`.padEnd(10, " ")
     const offenceCode = (getOffenceCode(offence) ?? "").padEnd(10, " ")
     const resultCodes = offence.Result.map((result) => result.CJSresultCode.toString()).join(",")
     const startDate = formatDate(offence.ActualOffenceStartDate.StartDate).padEnd(13, " ")
     const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(13, " ")
-    return `${courtOffenceSequenceNumber}${offenceCode}${startDate}${endDate}${resultCodes}`
+    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${resultCodes}`
   })
 
 let aho: AnnotatedHearingOutcome | Error
@@ -66,7 +75,7 @@ if (!(outputAho instanceof Error) && outputAho.PncQuery) {
     output.push("")
     output.push(courtCase.courtCaseReference)
     courtCase.offences.forEach((offence: PncOffence) => {
-      const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(6, " ")
+      const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(10, " ")
       const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
       const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
       const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
