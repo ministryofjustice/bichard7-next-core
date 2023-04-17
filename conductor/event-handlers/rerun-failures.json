@@ -1,0 +1,14 @@
+{
+    "name": "rerun_failures",
+    "event": "sqs:rerunFailures",
+    "active": true,
+    "actions": [
+      {
+        "action": "start_workflow",
+        "start_workflow": {
+          "name": "rerun_failures"
+        }
+      }
+    ]
+  }
+  
