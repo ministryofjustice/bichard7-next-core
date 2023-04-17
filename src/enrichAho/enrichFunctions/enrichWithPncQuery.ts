@@ -8,6 +8,7 @@ import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
+import { matchOffencesToPnc } from "./matchOffencesToPnc"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -99,7 +100,11 @@ export default async (
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 
-  annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
+  if (process.env.USE_NEW_MATCHER === "true") {
+    annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
+  } else {
+    annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
+  }
 
   return annotatedHearingOutcome
 }

@@ -1,9 +1,7 @@
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import fetchFile from "./fetchFile"
-import processFile from "./processFile"
 import skippedFile from "./skippedFile"
 
 process.env.PHASE1_COMPARISON_TABLE_NAME =
@@ -18,12 +16,15 @@ process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-
 
 const dynamoConfig = createDynamoDbConfig()
 
-const processRange = async (
+type ProcessFunction<T> = (contents: string, fileName: string, date: Date) => Promise<T | undefined>
+
+const processRange = async <T>(
   start: string,
   end: string,
   filter: string,
-  cache: boolean
-): Promise<ComparisonResultDetail[]> => {
+  cache: boolean,
+  processFunction: ProcessFunction<T>
+): Promise<T[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
   const results = []
@@ -43,7 +44,7 @@ const processRange = async (
     for (const { fileName, contents } of files) {
       if (contents) {
         const date = getDateFromComparisonFilePath(fileName)
-        const result = await processFile(contents, fileName, date)
+        const result = await processFunction(contents, fileName, date)
         if (result) {
           results.push(result)
         }

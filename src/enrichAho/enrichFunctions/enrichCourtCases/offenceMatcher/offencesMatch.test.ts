@@ -8,6 +8,7 @@ type MockOffenceOptions = {
   startDate: Date
   endDate?: Date
   dateCode?: number
+  sequenceNumber?: number
 }
 
 const createMockHoOffence = ({
@@ -15,7 +16,8 @@ const createMockHoOffence = ({
   category = "XX",
   startDate,
   endDate,
-  dateCode
+  dateCode,
+  sequenceNumber = 1
 }: MockOffenceOptions): Offence =>
   ({
     CriminalProsecutionReference: {
@@ -36,7 +38,8 @@ const createMockHoOffence = ({
     ActualOffenceEndDate: {
       EndDate: endDate
     },
-    ActualOffenceDateCode: dateCode?.toString()
+    ActualOffenceDateCode: dateCode?.toString(),
+    CourtOffenceSequenceNumber: sequenceNumber
   } as Offence)
 
 const createMockPncOffence = ({ fullCode, startDate, endDate }: MockOffenceOptions): PncOffence =>
@@ -62,6 +65,17 @@ describe("offencesMatch()", () => {
     const match = offencesMatch(hoOffence, pncOffence)
 
     expect(match).toBe(true)
+  })
+
+  it("not should say otherwise identical offences match if their sequence number differs and we are checking that", () => {
+    const hoOffence = createMockHoOffence({ ...offenceDetails, sequenceNumber: 1 })
+    const pncOffence = createMockPncOffence({ ...offenceDetails, sequenceNumber: 2 })
+
+    const match1 = offencesMatch(hoOffence, pncOffence)
+    expect(match1).toBe(true)
+
+    const match2 = offencesMatch(hoOffence, pncOffence, { checkSequenceNumbers: true })
+    expect(match2).toBe(false)
   })
 
   it("should say offences with different codes don't match", () => {
