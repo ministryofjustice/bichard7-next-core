@@ -10,6 +10,8 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name $COMPARISON_QUEUE --
 awslocal sqs create-queue --region $AWS_REGION --queue-name $PHASE1_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_COMPLETED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_FAILED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name rerunFailures --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name rerunAll --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 
 # Create the incoming message bucket
 awslocal s3 mb s3://$COMPARISON_BUCKET
