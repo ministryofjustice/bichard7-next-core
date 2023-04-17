@@ -5,7 +5,7 @@ import type { TriggerGenerator } from "../types/TriggerGenerator"
 const triggerCode = TriggerCode.TRPR0003
 const mainResultCodes = [
   1100, 1177, 1178, 3034, 3041, 3047, 3068, 3078, 3080, 3082, 3106, 3100, 3115, 3121, 3122, 3123, 3124, 3125, 3133,
-  3284, 3285, 3288, 4590
+  3284, 3285, 3288, 4590, 3324
 ]
 const yroResultCodes = [1141, 1142, 1143]
 const yroSpeceficRequirementResultCodes = [3104, 3105, 3107]
