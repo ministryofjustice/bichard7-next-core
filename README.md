@@ -37,7 +37,7 @@ We can't pull the images down from ECR for an M1 Mac because they are not in ARM
 1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
 1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
 1. In the [bichard7-next-user-service](https://github.com/ministryofjustice/bichard7-next-user-service/) repository run `make build`
-1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-ui/) repository run `make build`
+1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-ui/) repository, run `make build`
 
 ## Publishing package updates
 
@@ -51,7 +51,7 @@ To deploy a new version of the package:
 
 ## Testing
 
-To run unit tests against new Bichard:
+To run unit tests against the new Bichard:
 
 ```bash
 npm i # If packages not already installed
