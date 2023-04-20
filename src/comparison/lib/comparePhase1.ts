@@ -16,6 +16,7 @@ import type { Trigger } from "../../types/Trigger"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+import isIntentionalMatchingDifference from "./isIntentionalMatchingDifference"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
@@ -65,6 +66,19 @@ const comparePhase1 = async (
     const parsedAho = parseAhoXml(normalisedAho)
     if (parsedAho instanceof Error) {
       throw parsedAho
+    }
+
+    if (
+      process.env.USE_NEW_MATCHER === "true" &&
+      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome)
+    ) {
+      return {
+        triggersMatch: true,
+        exceptionsMatch: true,
+        xmlOutputMatches: true,
+        xmlParsingMatches: true,
+        intentionalDifference: true
+      }
     }
 
     const isIgnored = !hasOffences(parsedAho)

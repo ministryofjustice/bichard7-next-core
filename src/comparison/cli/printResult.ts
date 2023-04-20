@@ -10,28 +10,35 @@ const toPercent = (quotient: number, total: number): string => `${((quotient / t
 
 const printSummary = (results: ComparisonResultDetail[]): void => {
   const total = results.length
-  const passed = results.filter((result) => !result.skipped && resultMatches(result)).length
+  const passed = results.filter(
+    (result) => !result.skipped && !result.intentionalDifference && resultMatches(result)
+  ).length
   const skipped = results.filter((result) => result.skipped).length
   const errored = results.filter((result) => result.error).length
-  const failed = total - passed - skipped - errored
+  const intentional = results.filter((result) => result.intentionalDifference).length
+  const failed = total - passed - skipped - errored - intentional
 
   console.log("\nSummary:")
   console.log(`${results.length} comparisons`)
 
   if (passed > 0) {
-    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total - skipped)})`))
+    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)})`))
   }
 
   if (failed > 0) {
-    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total - skipped)})`))
+    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total - skipped - intentional)})`))
   }
 
   if (skipped > 0) {
     console.log(chalk.yellow(`○ ${skipped} skipped`))
   }
 
+  if (intentional > 0) {
+    console.log(chalk.yellow(`○ ${intentional} intentional differences skipped`))
+  }
+
   if (errored > 0) {
-    console.log(chalk.bgRed(`● ${errored} errored (${toPercent(errored, total - skipped)})`))
+    console.log(chalk.bgRed(`● ${errored} errored (${toPercent(errored, total - skipped - intentional)})`))
   }
 }
 
