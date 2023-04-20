@@ -4,9 +4,9 @@ import type { Task } from "conductor/src/types/Task"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "conductor/src/utils"
 import pLimit from "p-limit"
 import getTaskConcurrency from "../../../conductor/src/getTaskConcurrency"
+import DynamoGateway from "../lib/DynamoGateway"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import DynamoGateway from "../lib/DynamoGateway"
 import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import { isError } from "../types"
@@ -27,6 +27,10 @@ const rerunDay: ConductorWorker = {
     const start = task.inputData?.start
     const end = task.inputData?.end
     const onlyFailures = task.inputData?.onlyFailures ?? false
+    const persistResults = task.inputData?.persistResults ?? true
+    const newMatcher = task.inputData?.newMatcher ?? false
+
+    process.env.USE_NEW_MATCHER = newMatcher.toString()
 
     if (!start || !end) {
       return {
@@ -69,11 +73,13 @@ const rerunDay: ConductorWorker = {
 
       const nonErrorTestResults = allTestResults.filter((res) => !isError(res)) as ComparisonResult[]
 
-      const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
-      if (isError(recordResultsInDynamoResult)) {
-        return {
-          logs: [conductorLog("Failed to write results to Dynamo")],
-          status: "FAILED"
+      if (persistResults) {
+        const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
+        if (isError(recordResultsInDynamoResult)) {
+          return {
+            logs: [conductorLog("Failed to write results to Dynamo")],
+            status: "FAILED"
+          }
         }
       }
 

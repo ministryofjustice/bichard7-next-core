@@ -9,6 +9,8 @@ export type GenerateDayTasksOutput = {
   start: string
   end: string
   onlyFailures: boolean
+  persistResults: boolean
+  newMatcher: boolean
 }
 
 const generateDayTasks: ConductorWorker = {
@@ -16,10 +18,12 @@ const generateDayTasks: ConductorWorker = {
   concurrency: getTaskConcurrency(taskDefName),
   execute: (task: Task) => {
     logWorkingMessage(task)
-    const startDate = task.inputData?.startDate ?? "2022-07-01"
-    const endDate = task.inputData?.endDate ?? new Date().toISOString()
+    const startDate = new Date(task.inputData?.startDate ?? "2022-07-01")
+    const endDate = new Date(task.inputData?.endDate ?? new Date().toISOString())
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
+    const persistResults = task.inputData?.persistResults ?? true
+    const newMatcher = task.inputData?.newMatcher ?? false
 
     if (!taskName) {
       return Promise.resolve({
@@ -31,11 +35,14 @@ const generateDayTasks: ConductorWorker = {
     const logs: ConductorLog[] = []
     const ranges: GenerateDayTasksOutput[] = []
 
-    for (const d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
+    for (const d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
       const start = d.toISOString()
-      const end = new Date(d)
+      let end = new Date(d)
       end.setDate(d.getDate() + 1)
-      ranges.push({ start, end: end.toISOString(), onlyFailures })
+      if (end > endDate) {
+        end = endDate
+      }
+      ranges.push({ start, end: end.toISOString(), onlyFailures, persistResults, newMatcher })
     }
 
     logs.push(conductorLog(`Generated ${ranges.length} day intervals`))

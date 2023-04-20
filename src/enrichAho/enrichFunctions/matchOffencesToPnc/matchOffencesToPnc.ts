@@ -4,10 +4,46 @@ import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/Annotated
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
+import offenceCategoryIsNonRecordable from "../enrichCourtCases/offenceCategoryIsNonRecordable"
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
+
+const matchingCourtCases = (cases: PncCourtCase[], matches: MatchingResult): PncCourtCase[] =>
+  cases.filter((courtCase) => matches.matched.some((match) => courtCase.offences.includes(match.pncOffence.pncOffence)))
+
+const getFirstMatchingCourtCaseWith2060Result = (
+  cases: PncCourtCase[],
+  matches: MatchingResult
+): string | undefined => {
+  const matchedCases = matchingCourtCases(cases, matches)
+  const matchedCasesWith2060Result = matchedCases.filter((courtCase) =>
+    courtCase.offences.some((pncOffence) =>
+      matches.matched.some(
+        (match) =>
+          match.pncOffence.pncOffence === pncOffence &&
+          match.hoOffence.Result.some((result) => result.CJSresultCode === 2060)
+      )
+    )
+  )
+  return matchedCasesWith2060Result[0]?.courtCaseReference
+}
+
+const getFirstMatchingCourtCaseWithoutAdjudications = (
+  cases: PncCourtCase[],
+  matches: MatchingResult
+): string | undefined => {
+  const matchedCases = matchingCourtCases(cases, matches)
+  const matchedCasesWithNoAdjudications = matchedCases.filter((courtCase) =>
+    courtCase.offences.every((pncOffence) => !pncOffence.adjudication)
+  )
+  return matchedCasesWithNoAdjudications[0]?.courtCaseReference
+}
+
+const getFirstMatchingCourtCase = (cases: PncCourtCase[], matches: MatchingResult): string | undefined =>
+  matchingCourtCases(cases, matches)[0]?.courtCaseReference
 
 const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
 
@@ -60,9 +96,23 @@ const invertMap = <K, V>(map: Map<K, V[]>): Map<V, K[]> => {
 }
 
 const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
-  offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
-    offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
-  offenceMatch.hoOffence.AddedByTheCourt = false
+  // TODO: In the future we should make this a number in the schema but this check is for compatibility
+  if (
+    Number(offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !==
+    offenceMatch.pncOffence.pncOffence.offence.sequenceNumber
+  ) {
+    offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
+      offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
+  }
+  offenceMatch.hoOffence.Result.forEach((result) => {
+    result.PNCAdjudicationExists = !!offenceMatch.pncOffence.pncOffence.adjudication
+  })
+  if (offenceIsBreach(offenceMatch.hoOffence)) {
+    offenceMatch.hoOffence.ActualOffenceStartDate.StartDate = offenceMatch.pncOffence.pncOffence.offence.startDate
+    if (offenceMatch.pncOffence.pncOffence.offence.endDate) {
+      offenceMatch.hoOffence.ActualOffenceEndDate = { EndDate: offenceMatch.pncOffence.pncOffence.offence.endDate }
+    }
+  }
 
   if (addCaseRefToOffences) {
     offenceMatch.hoOffence.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
@@ -224,18 +274,14 @@ const checkForMatchesWithConflictingResults = (
       return acc
     }, new Set<string>())
 
-    const allOffencesMatchedInGroup = hoOffences.every(
-      (hoOffence) => candidate.get(hoOffence)?.length === hoOffences.length
-    )
-
-    if (!offencesHaveEqualResults(hoOffences)) {
-      return hoOffences.map((hoOffence) => ({
-        code: ExceptionCode.HO100310,
-        path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
-      }))
-    } else if (matchingCourtCaseReferences.size > 1 && !allOffencesMatchedInGroup) {
+    if (matchingCourtCaseReferences.size > 1) {
       return hoOffences.map((hoOffence) => ({
         code: ExceptionCode.HO100332,
+        path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
+      }))
+    } else if (!offencesHaveEqualResults(hoOffences)) {
+      return hoOffences.map((hoOffence) => ({
+        code: ExceptionCode.HO100310,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
       }))
     }
@@ -495,15 +541,41 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
-  // Check whether we have matched more than one court case
-  const multipleMatches =
-    matches.matched.reduce((acc, match) => {
-      acc.add(match.pncOffence.courtCaseReference)
-      return acc
-    }, new Set<string>()).size > 1
-  // Annotate the AHO with the matches
-  matches.matched.forEach((match) => annotatePncMatch(match, caseElem, multipleMatches))
-  matches.unmatched.forEach((hoOffence) => (hoOffence.AddedByTheCourt = true))
+  if (matches.matched.length > 0) {
+    // Check whether we have matched more than one court case
+    const multipleMatches =
+      matches.matched.reduce((acc, match) => {
+        acc.add(match.pncOffence.courtCaseReference)
+        return acc
+      }, new Set<string>()).size > 1
+    // Annotate the AHO with the matches
+    matches.matched.forEach((match) => annotatePncMatch(match, caseElem, multipleMatches))
+    matches.unmatched.forEach((hoOffence) => {
+      hoOffence.AddedByTheCourt = true
+
+      if (multipleMatches) {
+        // TODO: We need to come back and understand the logic for which court case to allocate the new offence to
+        if (offenceCategoryIsNonRecordable(hoOffence)) {
+          hoOffence.CourtCaseReferenceNumber = courtCases[0].courtCaseReference
+        } else {
+          hoOffence.CourtCaseReferenceNumber =
+            getFirstMatchingCourtCaseWith2060Result(courtCases, matches) ||
+            getFirstMatchingCourtCaseWithoutAdjudications(courtCases, matches) ||
+            getFirstMatchingCourtCase(courtCases, matches)
+        }
+      }
+      hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
+      if (!multipleMatches || !offenceCategoryIsNonRecordable(hoOffence)) {
+        // TODO: When we're not trying to maintain compatibility with Bichard, all offences added by the court should have this set to false
+        hoOffence.Result.forEach((result) => {
+          result.PNCAdjudicationExists = false
+        })
+      }
+    })
+
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = aho.PncQuery?.pncId
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = aho.PncQuery?.checkName
+  }
 
   return aho
 }

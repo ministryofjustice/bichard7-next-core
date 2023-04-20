@@ -1,3 +1,4 @@
+import { isAsnFormatValid } from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
 import errorPaths from "../lib/errorPaths"
 import type Exception from "../types/Exception"
@@ -9,7 +10,7 @@ const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const asn = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   const generatedExceptions: Exception[] = []
 
-  if (recordableOnPNCindicator && isDummyAsn(asn)) {
+  if (recordableOnPNCindicator && isDummyAsn(asn) && isAsnFormatValid(asn)) {
     generatedExceptions.push({ code: ExceptionCode.HO100321, path: errorPaths.case.asn })
   }
 
