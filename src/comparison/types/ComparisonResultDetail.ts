@@ -25,6 +25,7 @@ type ComparisonResultDetail = {
   file?: string
   skipped?: boolean
   correlationId?: string
+  intentionalDifference?: boolean
 }
 
 export default ComparisonResultDetail
