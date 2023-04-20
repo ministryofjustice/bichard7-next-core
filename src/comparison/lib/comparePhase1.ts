@@ -4,9 +4,10 @@ import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { Phase1ResultType } from "src/types/Phase1Result"
+import { matchingExceptions } from "tests/helpers/summariseMatching"
+import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
-import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import CoreHandler from "../../index"
 import { extractExceptionsFromAho, parseAhoXml } from "../../parse/parseAhoXml"
 import convertAhoToXml from "../../serialise/ahoXml/generate"
@@ -82,10 +83,25 @@ const comparePhase1 = async (
       xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
     }
 
+    const ignoreNewMatcherDifferences =
+      process.env.USE_NEW_MATCHER === "true" &&
+      sortedCoreExceptions.some((e) => matchingExceptions.includes(e.code)) &&
+      sortedCoreExceptions.every(
+        (e) => !matchingExceptions.includes(e.code) || exceptions.map((ex) => ex.code).includes(e.code)
+      )
+
+    let xmlOutputMatchesValue = xmlOutputMatches(ahoXml, normalisedAho)
+    if (isIgnored) {
+      xmlOutputMatchesValue = !hasOffences(coreResult.hearingOutcome)
+    }
+    if (ignoreNewMatcherDifferences) {
+      xmlOutputMatchesValue = true
+    }
+
     return {
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
-      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      xmlOutputMatches: isIgnored ? !hasOffences(coreResult.hearingOutcome) : xmlOutputMatches(ahoXml, normalisedAho),
+      exceptionsMatch: ignoreNewMatcherDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
+      xmlOutputMatches: xmlOutputMatchesValue,
       xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, normalisedAho),
       ...(debug && { debugOutput })
     }

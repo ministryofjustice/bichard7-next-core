@@ -10,6 +10,8 @@
       "inputParameters": {
         "startDate": "${workflow.input.startDate}",
         "endDate": "${workflow.input.endDate}",
+        "persistResults": "${workflow.input.persistResults}",
+        "newMatcher": "${workflow.input.newMatcher}",
         "taskName": "rerun_day",
         "onlyFailures": false
       },
@@ -51,7 +53,7 @@
       "type": "JSON_JQ_TRANSFORM"
     }
   ],
-  "inputParameters": ["startDate", "endDate"],
+  "inputParameters": ["startDate", "endDate", "persistResults", "newMatcher"],
   "outputParameters": {
     "pass": "${aggregate_results.output.result.pass}",
     "fail": "${aggregate_results.output.result.fail}"
