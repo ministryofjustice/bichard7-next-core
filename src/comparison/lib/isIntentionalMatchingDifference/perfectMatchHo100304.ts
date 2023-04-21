@@ -1,7 +1,13 @@
 import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 
-const perfectMatchHo100304 = (expected: CourtResultMatchingSummary, actual: CourtResultMatchingSummary): boolean => {
+const perfectMatchHo100304 = (
+  expected: CourtResultMatchingSummary,
+  actual: CourtResultMatchingSummary,
+  _: AnnotatedHearingOutcome,
+  __: AnnotatedHearingOutcome
+): boolean => {
   if ("exceptions" in actual || !("exceptions" in expected)) {
     return false
   }

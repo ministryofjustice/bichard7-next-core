@@ -1,18 +1,5 @@
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
-
-// const groupOffences = (offences: OffenceMatchingSummary[]): Record<string, number[]> =>
-//   offences.reduce((acc: Record<string, number[]>, offence) => {
-//     if (!offence.offenceCode || offence.addedByCourt) {
-//       return acc
-//     }
-
-//     if (!(offence.offenceCode in acc)) {
-//       acc[offence.offenceCode] = []
-//     }
-
-//     acc[offence.offenceCode].push(offence.hoSequenceNumber)
-//     return acc
-//   }, {})
+import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 
 type MatchGroup = {
   pncRecords: number[]
@@ -40,7 +27,9 @@ const groupOffences = (offences: OffenceMatchingSummary[]): GroupedMatches => {
 
 const perfectMatchSwitchedSequenceNumbers = (
   expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary
+  actual: CourtResultMatchingSummary,
+  _: AnnotatedHearingOutcome,
+  __: AnnotatedHearingOutcome
 ): boolean => {
   if ("exceptions" in actual || "exceptions" in expected) {
     return false
