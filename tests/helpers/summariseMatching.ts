@@ -1,4 +1,5 @@
 import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
+import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 
@@ -43,6 +44,7 @@ const summariseMatching = (aho: AnnotatedHearingOutcome): CourtResultMatchingSum
       : {}),
     offences: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
       hoSequenceNumber: offence.CourtOffenceSequenceNumber,
+      offenceCode: getOffenceCode(offence),
       ...(offence.CourtCaseReferenceNumber ? { courtCaseReference: offence.CourtCaseReferenceNumber } : {}),
       addedByCourt: !!offence.AddedByTheCourt,
       pncSequenceNumber: parseOffenceReasonSequence(offence.CriminalProsecutionReference.OffenceReasonSequence)

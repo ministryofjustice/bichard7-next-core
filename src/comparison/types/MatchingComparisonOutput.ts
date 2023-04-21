@@ -54,15 +54,18 @@ export type PncSummary = {
   penaltyCases?: PncPenaltyCaseSummary[]
 }
 
+export type OffenceMatchingSummary = {
+  hoSequenceNumber: number
+  offenceCode?: string
+  courtCaseReference?: string | null
+  addedByCourt?: boolean
+  pncSequenceNumber?: number
+}
+
 export type CourtResultMatchingSummary =
   | {
       courtCaseReference?: string | null
-      offences: {
-        hoSequenceNumber: number
-        courtCaseReference?: string | null
-        addedByCourt?: boolean
-        pncSequenceNumber?: number
-      }[]
+      offences: OffenceMatchingSummary[]
     }
   | {
       exceptions: Exception[]
