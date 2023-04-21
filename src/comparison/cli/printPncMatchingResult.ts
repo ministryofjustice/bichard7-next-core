@@ -1,14 +1,16 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
+import type { SkippedFile } from "./processRange"
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
-const printSummary = (results: PncComparisonResultDetail[]): void => {
+const printSummary = (results: (PncComparisonResultDetail | SkippedFile)[]): void => {
   const total = results.length
-  const attemptedMatch = results.filter((result) => !!result.expected)
-  const passed = attemptedMatch.filter((result) => result.pass).length
-  const failed = attemptedMatch.length - passed
+  const attemptedMatch = results.filter((result) => "expected" in result && !!result.expected)
+  const passed = attemptedMatch.filter((result) => "pass" in result && result.pass).length
+  const skipped = results.filter((result) => "skipped" in result).length
+  const failed = attemptedMatch.length - passed - skipped
 
   console.log("\nSummary:")
   console.log(`${total} comparisons in total`)
@@ -40,7 +42,7 @@ export const printSingleSummary = (result: PncComparisonResultDetail): void => {
 }
 
 const printPncMatchingResult = (
-  result?: PncComparisonResultDetail | PncComparisonResultDetail[],
+  result?: (PncComparisonResultDetail | SkippedFile) | (PncComparisonResultDetail | SkippedFile)[],
   truncate = false
 ): void => {
   if (!result) {
@@ -52,7 +54,7 @@ const printPncMatchingResult = (
     return
   }
 
-  if (!result.pass) {
+  if ("pass" in result && !result.pass) {
     console.log(`\nProcessing file:\n${result.file}\n`)
     printSingleSummary(result)
   }

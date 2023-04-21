@@ -8,6 +8,7 @@ export default interface ComparisonLog {
   skipped?: boolean
   skippedBy?: string
   skippedReason?: string
+  intentionalDifference?: boolean
   history: [
     {
       runAt: string

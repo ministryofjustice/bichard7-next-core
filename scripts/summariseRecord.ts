@@ -1,5 +1,7 @@
 import fs from "fs"
 import { exec } from "node:child_process"
+import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
+import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import parseSpiResult from "../src/parse/parseSpiResult"
@@ -37,9 +39,29 @@ const getManualSequenceNumber = (offence: Offence): string | undefined => {
   }
 }
 
+const groupOffences = (offences: Offence[]): Offence[][] => {
+  const output = []
+  for (const offence of offences) {
+    let found = false
+    for (const group of output) {
+      const otherOffence = group[0]
+      if (offencesAreEqual(offence, otherOffence) && offencesHaveEqualResults([offence, otherOffence])) {
+        group.push(offence)
+        found = true
+        break
+      }
+    }
+    if (!found) {
+      output.push([offence])
+    }
+  }
+  return output
+}
+
 // const summariseAho = null
-const summariseAho = (aho: AnnotatedHearingOutcome): string[] =>
-  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
+const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
+  const groupedOffences = groupOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
+  return aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
     const courtOffenceSequenceNumber = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0")
     const manualSequenceNumber = getManualSequenceNumber(offence)
     const manualSequenceNumberStr = manualSequenceNumber ? ` (${manualSequenceNumber}) ` : ""
@@ -48,8 +70,10 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] =>
     const resultCodes = offence.Result.map((result) => result.CJSresultCode.toString()).join(",")
     const startDate = formatDate(offence.ActualOffenceStartDate.StartDate).padEnd(13, " ")
     const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(13, " ")
-    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${resultCodes}`
+    const offenceGroupIndex = groupedOffences.findIndex((group) => group.includes(offence))
+    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${resultCodes} ${offenceGroupIndex}`
   })
+}
 
 let aho: AnnotatedHearingOutcome | Error
 const output: string[] = []

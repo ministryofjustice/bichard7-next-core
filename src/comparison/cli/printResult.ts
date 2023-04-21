@@ -2,20 +2,23 @@
 import chalk from "chalk"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { SkippedFile } from "./processRange"
 
 const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
-const printSummary = (results: ComparisonResultDetail[]): void => {
+const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void => {
   const total = results.length
   const passed = results.filter(
     (result) => !result.skipped && !result.intentionalDifference && resultMatches(result)
   ).length
-  const skipped = results.filter((result) => result.skipped).length
-  const errored = results.filter((result) => result.error).length
-  const intentional = results.filter((result) => result.intentionalDifference).length
+  const skipped = results.filter((result) => result.skipped && !result.intentionalDifference).length
+  const errored = results.filter((result) => "error" in result && result.error).length
+  const intentional = results.filter(
+    (result) => "intentionalDifference" in result && result.intentionalDifference
+  ).length
   const failed = total - passed - skipped - errored - intentional
 
   console.log("\nSummary:")
@@ -57,7 +60,10 @@ export const printSingleSummary = (result: ComparisonResultDetail): void => {
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
-const printResult = (result?: ComparisonResultDetail | ComparisonResultDetail[], truncate = false): void => {
+const printResult = (
+  result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
+  truncate = false
+): void => {
   if (!result) {
     return
   }

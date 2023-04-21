@@ -2,7 +2,6 @@ import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import DynamoGateway from "../lib/DynamoGateway"
 import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import fetchFile from "./fetchFile"
-import skippedFile from "./skippedFile"
 
 process.env.PHASE1_COMPARISON_TABLE_NAME =
   process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
@@ -18,16 +17,22 @@ const dynamoConfig = createDynamoDbConfig()
 
 type ProcessFunction<T> = (contents: string, fileName: string, date: Date) => Promise<T | undefined>
 
+export type SkippedFile = {
+  file: string
+  skipped: true
+  intentionalDifference?: boolean
+}
+
 const processRange = async <T>(
   start: string,
   end: string,
   filter: string,
   cache: boolean,
   processFunction: ProcessFunction<T>
-): Promise<T[]> => {
+): Promise<(T | SkippedFile)[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
-  const results = []
+  const results: (T | SkippedFile)[] = []
   let count = 0
 
   for await (const batch of dynamo.getRange(start, end, filterValue, 1000)) {
@@ -38,18 +43,23 @@ const processRange = async <T>(
 
     count += batch.length
 
-    const filePromises = batch.map((record) => fetchFile(record, cache))
+    const filePromises = batch.map(async (record) => ({ file: await fetchFile(record, cache), record }))
     const files = await Promise.all(filePromises)
 
-    for (const { fileName, contents } of files) {
-      if (contents) {
+    for (const {
+      file: { contents, fileName },
+      record
+    } of files) {
+      if (record.intentionalDifference) {
+        results.push({ file: fileName, skipped: true, intentionalDifference: true })
+      } else if (contents) {
         const date = getDateFromComparisonFilePath(fileName)
         const result = await processFunction(contents, fileName, date)
         if (result) {
           results.push(result)
         }
       } else {
-        results.push(skippedFile(fileName))
+        results.push({ file: fileName, skipped: true })
       }
     }
 
