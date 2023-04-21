@@ -10,8 +10,8 @@ const isIntentionalMatchingDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome
 ): boolean => {
-  const expectedMatch = summariseMatching(expected)
-  const actualMatch = summariseMatching(actual)
+  const expectedMatch = summariseMatching(expected, true)
+  const actualMatch = summariseMatching(actual, true)
 
   if (!expectedMatch || !actualMatch) {
     return false
