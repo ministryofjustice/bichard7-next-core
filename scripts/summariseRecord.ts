@@ -52,7 +52,7 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] =>
   })
 
 let aho: AnnotatedHearingOutcome | Error
-const output: string[] = ["Incoming Records\n"]
+const output: string[] = []
 
 if (fileJson.incomingMessage.match(/DeliverRequest/)) {
   const parsedSpi = parseSpiResult(fileJson.incomingMessage)
@@ -65,6 +65,9 @@ if (aho instanceof Error) {
   process.exit(1)
 }
 
+output.push(`Correlation ID: ${aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID}\n`)
+
+output.push("Incoming Records\n")
 output.push(...summariseAho(aho))
 output.push("\nPNC Records")
 
