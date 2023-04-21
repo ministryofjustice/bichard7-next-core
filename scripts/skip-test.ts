@@ -8,9 +8,9 @@ const config: DynamoDB.ClientConfiguration = {
 }
 const client = new DocumentClient(config)
 
-const main = async (file: string, skippedBy: string, skippedReason: string) => {
+const main = async (skippedBy: string, skippedReason: string, file: string, intentionalDifference?: string) => {
   if (!file || !skippedBy || !skippedReason) {
-    console.error("Usage: skip-test.ts <file> <skippedBy> <skippedReason>")
+    console.error("Usage: skip-test.ts <skippedBy> <skippedReason> [intentionalDifference] <file>")
     return
   }
 
@@ -31,6 +31,7 @@ const main = async (file: string, skippedBy: string, skippedReason: string) => {
   test.skipped = true
   test.skippedBy = skippedBy
   test.skippedReason = skippedReason
+  test.intentionalDifference = intentionalDifference === "true"
 
   await client
     .put({
@@ -44,4 +45,8 @@ const main = async (file: string, skippedBy: string, skippedReason: string) => {
     .promise()
 }
 
-main(process.argv[2], process.argv[3], process.argv[4])
+if (process.argv.length === 6) {
+  main(process.argv[2], process.argv[3], process.argv[5], process.argv[4])
+} else {
+  main(process.argv[2], process.argv[3], process.argv[4])
+}
