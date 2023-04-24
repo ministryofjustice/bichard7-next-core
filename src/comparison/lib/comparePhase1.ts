@@ -68,6 +68,10 @@ const comparePhase1 = async (
       throw parsedAho
     }
 
+    if ((comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
+      debugger
+    }
+
     if (
       process.env.USE_NEW_MATCHER === "true" &&
       isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome)
