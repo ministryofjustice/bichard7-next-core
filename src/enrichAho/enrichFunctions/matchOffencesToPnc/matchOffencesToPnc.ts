@@ -1,5 +1,4 @@
 import errorPaths from "src/lib/errorPaths"
-import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
@@ -222,9 +221,9 @@ const addMatchCandidates = (
   return candidates
 }
 
-const hasMatchingOffenceCodes = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
+const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
   for (const hoOffence of hoOffences) {
-    if (pncOffences.some((offence) => offence.offence.cjsOffenceCode === getOffenceCode(hoOffence))) {
+    if (pncOffences.some((pncOffence) => offencesMatch(hoOffence, pncOffence))) {
       return true
     }
   }
@@ -519,7 +518,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     .map((courtCase) => courtCase.offences)
     .flat()
     .filter((pncOffence) => !matches.matched.some((match) => match.pncOffence.pncOffence === pncOffence))
-  if (hasMatchingOffenceCodes(matches.unmatched, unmatchedPncOffences)) {
+  if (hasMatchingOffence(matches.unmatched, unmatchedPncOffences)) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
