@@ -120,13 +120,22 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
   }
 }
 
-const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  const manuallyMatched = hoOffence.ManualSequenceNumber
-  if (manuallyMatched) {
+const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
+  const manualSequence = hoOffence.ManualSequenceNumber
+  const manualCourtCase = hoOffence.ManualCourtCaseReference
+  if (manualSequence) {
     const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
     if (offenceReasonSequence !== undefined) {
       const sequence = Number(offenceReasonSequence)
-      return !isNaN(sequence) && sequence === pncOffence.offence.sequenceNumber
+      if (isNaN(sequence)) {
+        return false
+      }
+      if (manualCourtCase) {
+        const courtCase = hoOffence.CourtCaseReferenceNumber
+        return sequence === pncOffence.pncOffence.offence.sequenceNumber && courtCase === pncOffence.courtCaseReference
+      } else {
+        return sequence === pncOffence.pncOffence.offence.sequenceNumber
+      }
     }
   }
   return true
@@ -317,7 +326,7 @@ const resolveMatch = (
     if (hoOffence.ManualSequenceNumber) {
       const candidatePncOffences = candidate.get(hoOffence)
       const pncOffencesWithMatchingSequence = pncOffences.some((pncOffence) =>
-        offenceManuallyMatches(hoOffence, pncOffence.pncOffence)
+        offenceManuallyMatches(hoOffence, pncOffence)
       )
       if (!pncOffencesWithMatchingSequence) {
         exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
@@ -325,7 +334,7 @@ const resolveMatch = (
       }
 
       const matchingPncOffence = candidatePncOffences?.find((pncOffence) =>
-        offenceManuallyMatches(hoOffence, pncOffence.pncOffence)
+        offenceManuallyMatches(hoOffence, pncOffence)
       )
       if (!matchingPncOffence) {
         exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
