@@ -1,5 +1,6 @@
 import fs from "fs"
 import { exec } from "node:child_process"
+import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
 import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
@@ -106,7 +107,8 @@ if (!(outputAho instanceof Error) && outputAho.PncQuery) {
       const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
       const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
       const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
-      output.push(`${sequence}${offenceCode}${startDate}${endDate}`)
+      const finalDisposal = offenceHasFinalResult(offence) ? "F" : ""
+      output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
     })
   })
 }
