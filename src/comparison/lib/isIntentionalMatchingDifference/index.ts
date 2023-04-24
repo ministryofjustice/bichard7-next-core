@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import summariseMatching from "tests/helpers/summariseMatching"
+import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import perfectMatchHo100304 from "./perfectMatchHo100304"
 import perfectMatchHo100310 from "./perfectMatchHo100310"
@@ -9,7 +10,8 @@ const filters = [
   perfectMatchHo100310,
   perfectMatchHo100304,
   perfectMatchSwitchedSequenceNumbers,
-  invalidManualSequenceNumber
+  invalidManualSequenceNumber,
+  identicalOffenceSwitchedSequenceNumbers
 ]
 
 const isIntentionalMatchingDifference = (
