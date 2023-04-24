@@ -282,7 +282,7 @@ const checkForMatchesWithConflictingResults = (
       return acc
     }, new Set<string>())
 
-    if (matchingCourtCaseReferences.size > 1) {
+    if (matchingCourtCaseReferences.size > 1 && (!offencesHaveEqualResults(hoOffences) || hoOffences.length === 1)) {
       return hoOffences.map((hoOffence) => ({
         code: ExceptionCode.HO100332,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
