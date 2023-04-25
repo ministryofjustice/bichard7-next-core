@@ -463,6 +463,23 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
     return matches
   }
 
+  const exactMatchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
+    checkSequenceNumbers: true,
+    exactDateMatch: false
+  })
+
+  matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, exactMatchCandidatesWithFuzzyDates)
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
+    // Either all HO offences or all PNC offences are exactly matched
+    return matches
+  }
+
+  matches = resolveMatchesInMultipleCourtCases(hoOffences, pncOffences, exactMatchCandidatesWithFuzzyDates)
+  if (successfulMatch(matches, hoOffences, pncOffences)) {
+    // Either all HO offences or all PNC offences are exactly matched
+    return matches
+  }
+
   // At this point, if we haven't already returned then we need to stop trusting the sequence numbers and re-match
   const matchCandidatesIgnoringSequenceNumber = findMatchCandidates(hoOffences, courtCases, {
     checkSequenceNumbers: false,
