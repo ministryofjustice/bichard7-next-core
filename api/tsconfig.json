@@ -18,6 +18,8 @@
     "strictPropertyInitialization": false,
     "composite": true,
     "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "baseUrl": "./"
   },
   "include": ["src"],
