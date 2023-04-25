@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import "reflect-metadata"
 import type { DataSource } from "typeorm"
-import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
-import listCourtCases from "../../src/services/listCourtCases"
-import type { ListCourtCaseResult } from "../../src/types/ListCourtCasesResult"
-import deleteFromEntity from "../utils/deleteFromEntity"
-import {
-  insertDummyCourtCasesWithNotes,
-  insertDummyCourtCasesWithTriggers,
-  insertCourtCasesWithFields
-} from "../utils/insertCourtCases"
-import insertException from "../utils/manageExceptions"
-import { isError } from "../../src/types/Result"
 import CourtCase from "../../src/services/entities/CourtCase"
+import Note from "../../src/services/entities/Note"
 import Trigger from "../../src/services/entities/Trigger"
 import getDataSource from "../../src/services/getDataSource"
-import { insertTriggers } from "../../tests/utils/manageTriggers"
-import type { TestTrigger } from "../../tests/utils/manageTriggers"
-import Note from "../../src/services/entities/Note"
+import listCourtCases from "../../src/services/listCourtCases"
+import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
+import type { ListCourtCaseResult } from "../../src/types/ListCourtCasesResult"
 import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
+import { isError } from "../../src/types/Result"
+import type { TestTrigger } from "../../tests/utils/manageTriggers"
+import { insertTriggers } from "../../tests/utils/manageTriggers"
+import deleteFromEntity from "../utils/deleteFromEntity"
+import {
+  insertCourtCasesWithFields,
+  insertDummyCourtCasesWithNotes,
+  insertDummyCourtCasesWithTriggers
+} from "../utils/insertCourtCases"
+import insertException from "../utils/manageExceptions"
 
 jest.mock(
-  "../../src/services/queries/courtCasesByVisibleForcesQuery",
+  "../../src/services/queries/courtCasesByVisbleForcesQuery",
   jest.fn(() =>
     jest.fn((query) => {
       return query
@@ -420,7 +420,11 @@ describe("listCourtCases", () => {
     const orgCode = "36FPA1"
     await insertDummyCourtCasesWithNotes(caseNotes, "01")
 
-    const resultAsc = await listCourtCases(dataSource, { forces: [orgCode], maxPageItems: "100", orderBy: "notes" })
+    const resultAsc = await listCourtCases(dataSource, {
+      forces: [orgCode],
+      maxPageItems: "100",
+      orderBy: "notes"
+    })
     expect(isError(resultAsc)).toBe(false)
     const { result: casesAsc, totalCases: totalCasesAsc } = resultAsc as ListCourtCaseResult
 

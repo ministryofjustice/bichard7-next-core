@@ -1,5 +1,5 @@
 import type { DataSource, SelectQueryBuilder } from "typeorm"
-import { Brackets, IsNull, LessThanOrEqual, ILike, MoreThan, MoreThanOrEqual, Not } from "typeorm"
+import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm"
 import type { CaseListQueryParams } from "../types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "../types/ListCourtCasesResult"
 import type PromiseResult from "../types/PromiseResult"
@@ -7,6 +7,7 @@ import { isError } from "../types/Result"
 import { BailCodes } from "../utils/bailCodes"
 import CourtCase from "./entities/CourtCase"
 import courtCasesByVisibleForcesQuery from "./queries/courtCasesByVisibleForcesQuery"
+import Note from "./entities/Note"
 
 const listCourtCases = async (
   connection: DataSource,
@@ -32,6 +33,11 @@ const listCourtCases = async (
   const pageNumValidated = (pageNum ? parseInt(pageNum, 10) : 1) - 1 // -1 because the db index starts at 0
   const maxPageItemsValidated = maxPageItems ? parseInt(maxPageItems, 10) : 25
   const repository = connection.getRepository(CourtCase)
+  const subquery = connection
+    .getRepository(Note)
+    .createQueryBuilder("notes")
+    .select("COUNT(note_id)")
+    .where("error_id = courtCase.errorId")
   let query = repository.createQueryBuilder("courtCase")
   query = courtCasesByVisibleForcesQuery(query, forces) as SelectQueryBuilder<CourtCase>
   query
@@ -51,6 +57,10 @@ const listCourtCases = async (
       .addOrderBy("courtCase.triggerLockedByUsername", sortOrder)
   } else if (orderBy === "isUrgent") {
     query.orderBy("courtCase.isUrgent", sortOrder === "ASC" ? "DESC" : "ASC")
+  } else if (orderBy === "notes") {
+    query
+      .addSelect(`(${subquery.getQuery()})`, "note_count")
+      .orderBy("note_count", sortOrder === "ASC" ? "ASC" : "DESC")
   } else {
     const orderByQuery = `courtCase.${orderBy ?? "errorId"}`
     query.orderBy(orderByQuery, sortOrder)
