@@ -3,7 +3,7 @@ import "reflect-metadata"
 import type { DataSource } from "typeorm"
 import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
 import listCourtCases from "../../src/services/listCourtCases"
-import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { ListCourtCaseResult } from "../../src/types/ListCourtCasesResult"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import {
   insertDummyCourtCasesWithNotes,
@@ -15,9 +15,10 @@ import { isError } from "../../src/types/Result"
 import CourtCase from "../../src/services/entities/CourtCase"
 import Trigger from "../../src/services/entities/Trigger"
 import getDataSource from "../../src/services/getDataSource"
-import { insertTriggers, TestTrigger } from "../utils/manageTriggers"
-import Note from "services/entities/Note"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import { insertTriggers } from "../../tests/utils/manageTriggers"
+import type { TestTrigger } from "../../tests/utils/manageTriggers"
+import Note from "../../src/services/entities/Note"
+import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
 
 jest.mock(
   "../../src/services/queries/courtCasesByVisibleForcesQuery",
