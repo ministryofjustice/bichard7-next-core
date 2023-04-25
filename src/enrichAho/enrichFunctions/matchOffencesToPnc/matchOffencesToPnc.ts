@@ -144,20 +144,6 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
 const hoOffenceAlreadyMatched = (candidates: Map<string, CandidateOffenceMatches>, hoOffence: Offence): boolean =>
   [...candidates.values()].some((candidate) => candidate.has(hoOffence))
 
-const pncOffenceAlreadyMatched = (
-  candidates: Map<string, CandidateOffenceMatches>,
-  pncOffence: PncOffenceWithCaseRef
-): boolean => {
-  for (const candidate of candidates.values()) {
-    for (const value of candidate.values()) {
-      if (value.some((pncOff) => pncOff === pncOffence)) {
-        return true
-      }
-    }
-  }
-  return false
-}
-
 const findMatchCandidates = (
   hoOffences: Offence[],
   courtCases: PncOffenceWithCaseRef[][],
@@ -189,10 +175,6 @@ const findMatchCandidates = (
         }
 
         for (const pncOffence of courtCase) {
-          if (pncOffenceAlreadyMatched(output, pncOffence)) {
-            continue
-          }
-
           if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
             pushToArrayInMap(matches, hoOffence, pncOffence)
           }

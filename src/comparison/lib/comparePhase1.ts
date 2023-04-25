@@ -54,6 +54,9 @@ const comparePhase1 = async (
   const auditLogger = new CoreAuditLogger()
 
   try {
+    if ((comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
+      debugger
+    }
     const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
     if (coreResult.resultType === Phase1ResultType.failure) {
       throw Error("Failed to process")
@@ -66,10 +69,6 @@ const comparePhase1 = async (
     const parsedAho = parseAhoXml(normalisedAho)
     if (parsedAho instanceof Error) {
       throw parsedAho
-    }
-
-    if ((comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
-      debugger
     }
 
     if (
