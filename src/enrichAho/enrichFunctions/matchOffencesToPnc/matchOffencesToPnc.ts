@@ -141,37 +141,14 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
   return true
 }
 
-const findMatchCandidates = (
-  hoOffences: Offence[],
-  courtCases: PncOffenceWithCaseRef[][],
-  options: OffenceMatchOptions = {}
-): CandidateOffenceMatches[] => {
-  const output = []
-  for (const courtCase of courtCases) {
-    const matches = new Map<Offence, PncOffenceWithCaseRef[]>()
-    // Try and do a direct match including sequence numbers and exact dates
-    for (const hoOffence of hoOffences) {
-      for (const pncOffence of courtCase) {
-        if (!offenceHasFinalResult(pncOffence.pncOffence) && offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
-          pushToArrayInMap(matches, hoOffence, pncOffence)
-        }
-      }
-    }
-    if (matches.size > 0) {
-      output.push(matches)
-    }
-  }
-  return output
-}
-
-const hoOffenceAlreadyMatched = (candidates: CandidateOffenceMatches[], hoOffence: Offence): boolean =>
-  candidates.some((candidate) => candidate.has(hoOffence))
+const hoOffenceAlreadyMatched = (candidates: Map<string, CandidateOffenceMatches>, hoOffence: Offence): boolean =>
+  [...candidates.values()].some((candidate) => candidate.has(hoOffence))
 
 const pncOffenceAlreadyMatched = (
-  candidates: CandidateOffenceMatches[],
+  candidates: Map<string, CandidateOffenceMatches>,
   pncOffence: PncOffenceWithCaseRef
 ): boolean => {
-  for (const candidate of candidates) {
+  for (const candidate of candidates.values()) {
     for (const value of candidate.values()) {
       if (value.some((pncOff) => pncOff === pncOffence)) {
         return true
@@ -181,53 +158,54 @@ const pncOffenceAlreadyMatched = (
   return false
 }
 
-const addMatchCandidates = (
-  candidates: CandidateOffenceMatches[],
+const findMatchCandidates = (
   hoOffences: Offence[],
   courtCases: PncOffenceWithCaseRef[][],
   options: OffenceMatchOptions = {}
 ): CandidateOffenceMatches[] => {
+  const output = new Map<string, CandidateOffenceMatches>()
   for (const courtCase of courtCases) {
     const matches = new Map<Offence, PncOffenceWithCaseRef[]>()
+    // Try and do a direct match including sequence numbers and exact dates
     for (const hoOffence of hoOffences) {
-      if (hoOffenceAlreadyMatched(candidates, hoOffence)) {
-        continue
-      }
       for (const pncOffence of courtCase) {
-        if (pncOffenceAlreadyMatched(candidates, pncOffence)) {
-          continue
-        }
-        if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+        if (offencesMatch(hoOffence, pncOffence.pncOffence, { ...options, exactDateMatch: true })) {
           pushToArrayInMap(matches, hoOffence, pncOffence)
         }
       }
     }
-
-    const matchingCandidate = candidates.find((candidate) =>
-      [...candidate.values()].some((pncOffences) =>
-        pncOffences.some((pncOffence) => pncOffence.courtCaseReference === courtCase[0].courtCaseReference)
-      )
-    )
-
     if (matches.size > 0) {
-      if (!matchingCandidate) {
-        candidates.push(matches)
-      } else {
-        for (const [hoOffence, pncOffences] of matches.entries()) {
-          if (!matchingCandidate.has(hoOffence)) {
-            matchingCandidate.set(hoOffence, [])
+      output.set(courtCase[0].courtCaseReference, matches)
+    }
+  }
+
+  if (!options.exactDateMatch) {
+    for (const courtCase of courtCases) {
+      const matches = output.get(courtCase[0].courtCaseReference) ?? new Map<Offence, PncOffenceWithCaseRef[]>()
+
+      for (const hoOffence of hoOffences) {
+        if (hoOffenceAlreadyMatched(output, hoOffence)) {
+          continue
+        }
+
+        for (const pncOffence of courtCase) {
+          if (pncOffenceAlreadyMatched(output, pncOffence)) {
+            continue
           }
-          for (const pncOffence of pncOffences) {
-            const matchedPncOffences = matchingCandidate.get(hoOffence)
-            if (!matchedPncOffences!.includes(pncOffence)) {
-              matchedPncOffences!.push(pncOffence)
-            }
+
+          if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+            pushToArrayInMap(matches, hoOffence, pncOffence)
           }
         }
       }
+
+      if (matches.size > 0) {
+        output.set(courtCase[0].courtCaseReference, matches)
+      }
     }
   }
-  return candidates
+
+  return [...output.values()]
 }
 
 const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
@@ -444,75 +422,37 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
   const courtCases: PncOffenceWithCaseRef[][] = pncCourtCases.map((cc) =>
     cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference }))
   )
-  const exactMatchCandidates = findMatchCandidates(hoOffences, courtCases, {
-    checkSequenceNumbers: true,
-    exactDateMatch: true
-  })
 
   const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
 
-  let matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, exactMatchCandidates)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
+  const conditions: OffenceMatchOptions[] = [
+    { checkSequenceNumbers: true, exactDateMatch: true },
+    { checkSequenceNumbers: true, exactDateMatch: false },
+    { checkSequenceNumbers: false, exactDateMatch: true }
+  ]
+
+  for (const condition of conditions) {
+    const candidates = findMatchCandidates(hoOffences, courtCases, condition)
+    let matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, candidates)
+    if (successfulMatch(matches, hoOffences, pncOffences)) {
+      return matches
+    }
+
+    matches = resolveMatchesInMultipleCourtCases(hoOffences, pncOffences, candidates)
+    if (successfulMatch(matches, hoOffences, pncOffences)) {
+      return matches
+    }
   }
 
-  matches = resolveMatchesInMultipleCourtCases(hoOffences, pncOffences, exactMatchCandidates)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
-  }
-
-  const exactMatchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
-    checkSequenceNumbers: true,
+  const matchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
+    checkSequenceNumbers: false,
     exactDateMatch: false
   })
 
-  matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, exactMatchCandidatesWithFuzzyDates)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
-  }
-
-  matches = resolveMatchesInMultipleCourtCases(hoOffences, pncOffences, exactMatchCandidatesWithFuzzyDates)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
-  }
-
-  // At this point, if we haven't already returned then we need to stop trusting the sequence numbers and re-match
-  const matchCandidatesIgnoringSequenceNumber = findMatchCandidates(hoOffences, courtCases, {
-    checkSequenceNumbers: false,
-    exactDateMatch: true
-  })
-  matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, matchCandidatesIgnoringSequenceNumber)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
-  }
-
-  matches = resolveMatchesInMultipleCourtCases(hoOffences, pncOffences, matchCandidatesIgnoringSequenceNumber)
-  if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
-    return matches
-  }
-
-  // Now we have some unmatched offences which we will try to match by loosening the date matching to see if we can get a full match
-  const matchCandidatesWithFuzzyDates = addMatchCandidates(
-    matchCandidatesIgnoringSequenceNumber,
-    hoOffences,
-    courtCases,
-    {
-      checkSequenceNumbers: false,
-      exactDateMatch: false
-    }
-  )
-  matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, matchCandidatesWithFuzzyDates)
+  let matches = resolveMatchesInSingleCourtCase(hoOffences, pncOffences, matchCandidatesWithFuzzyDates)
   if ("exceptions" in matches) {
-    // Errors were found in the matching
     return matches
   } else if (successfulMatch(matches, hoOffences, pncOffences)) {
-    // Either all HO offences or all PNC offences are exactly matched
     return matches
   }
 
