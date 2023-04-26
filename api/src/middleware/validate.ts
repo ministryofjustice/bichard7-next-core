@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express"
-import { z } from "zod"
+import { z, ZodError } from "zod"
 
 const caseListQuerySchema: z.Schema = z.object({
   forces: z.array(z.string()),
@@ -12,7 +12,11 @@ export const validateCaseListQueryParams = (req: Request, res: Response, next: N
 
     next()
   } catch (err) {
-    console.log(err)
-    res.status(400).json(err)
+    if (err instanceof ZodError) {
+      const { issues } = err
+      res.status(400).json({ issues })
+    } else {
+      res.status(500).json({ message: "internal server error" })
+    }
   }
 }

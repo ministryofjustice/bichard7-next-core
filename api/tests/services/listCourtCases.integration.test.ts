@@ -21,7 +21,7 @@ import {
 import insertException from "../utils/manageExceptions"
 
 jest.mock(
-  "../../src/services/queries/courtCasesByVisbleForcesQuery",
+  "../../src/services/queries/courtCasesByVisibleForcesQuery",
   jest.fn(() =>
     jest.fn((query) => {
       return query
