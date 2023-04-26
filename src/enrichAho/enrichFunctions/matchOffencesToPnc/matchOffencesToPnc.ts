@@ -141,9 +141,6 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
   return true
 }
 
-const hoOffenceAlreadyMatched = (candidates: Map<string, CandidateOffenceMatches>, hoOffence: Offence): boolean =>
-  [...candidates.values()].some((candidate) => candidate.has(hoOffence))
-
 const findMatchCandidates = (
   hoOffences: Offence[],
   courtCases: PncOffenceWithCaseRef[][],
@@ -170,12 +167,11 @@ const findMatchCandidates = (
       const matches = output.get(courtCase[0].courtCaseReference) ?? new Map<Offence, PncOffenceWithCaseRef[]>()
 
       for (const hoOffence of hoOffences) {
-        if (hoOffenceAlreadyMatched(output, hoOffence)) {
-          continue
-        }
-
         for (const pncOffence of courtCase) {
-          if (offencesMatch(hoOffence, pncOffence.pncOffence, options)) {
+          if (
+            offencesMatch(hoOffence, pncOffence.pncOffence, options) &&
+            !matches.get(hoOffence)?.includes(pncOffence)
+          ) {
             pushToArrayInMap(matches, hoOffence, pncOffence)
           }
         }
@@ -281,6 +277,13 @@ const resolveMatch = (
   const result: MatchingResult = { matched: [], unmatched: [] }
   const exceptions: Exception[] = []
   const multipleMatches = []
+
+  for (const [hoOffence, matchedPncOffences] of candidate.entries()) {
+    const nonFinalResults = matchedPncOffences.filter((pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence))
+    if (nonFinalResults.length > 0) {
+      candidate.set(hoOffence, nonFinalResults)
+    }
+  }
 
   for (const [i, hoOffence] of hoOffences.entries()) {
     if (hoOffence.ManualSequenceNumber) {
