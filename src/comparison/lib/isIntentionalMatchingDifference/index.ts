@@ -4,18 +4,12 @@ import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
-import perfectMatchHo100304 from "./perfectMatchHo100304"
-import perfectMatchHo100310 from "./perfectMatchHo100310"
-import perfectMatchSwitchedSequenceNumbers from "./perfectMatchSwitchedSequenceNumbers"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
-  nonMatchingManualSequenceNumber,
-  perfectMatchHo100304,
-  perfectMatchHo100310,
-  perfectMatchSwitchedSequenceNumbers
+  nonMatchingManualSequenceNumber
 ]
 
 const isIntentionalMatchingDifference = (

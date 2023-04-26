@@ -1,14 +1,6 @@
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
-import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
-import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
-
-type MatchGroup = {
-  pncRecords: number[]
-  hoRecords: number[]
-}
-
-type GroupedMatches = Record<string, MatchGroup>
+import hoOffencesAreEqual from "../hoOffencesAreEqual"
 
 const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
   const output = []
@@ -16,7 +8,7 @@ const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
     let found = false
     for (const group of output) {
       const otherOffence = group[0]
-      if (offencesAreEqual(offence, otherOffence) && offencesHaveEqualResults([offence, otherOffence])) {
+      if (hoOffencesAreEqual(offence, otherOffence)) {
         group.push(offence)
         found = true
         break

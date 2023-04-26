@@ -1,8 +1,7 @@
 import fs from "fs"
 import { exec } from "node:child_process"
+import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
 import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
-import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import parseSpiResult from "../src/parse/parseSpiResult"
@@ -40,13 +39,13 @@ const getManualSequenceNumber = (offence: Offence): string | undefined => {
   }
 }
 
-const groupOffences = (offences: Offence[]): Offence[][] => {
+const groupEqualOffences = (offences: Offence[]): Offence[][] => {
   const output = []
   for (const offence of offences) {
     let found = false
     for (const group of output) {
       const otherOffence = group[0]
-      if (offencesAreEqual(offence, otherOffence) && offencesHaveEqualResults([offence, otherOffence])) {
+      if (hoOffencesAreEqual(offence, otherOffence)) {
         group.push(offence)
         found = true
         break
@@ -61,7 +60,7 @@ const groupOffences = (offences: Offence[]): Offence[][] => {
 
 // const summariseAho = null
 const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
-  const groupedOffences = groupOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
+  const groupedOffences = groupEqualOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
   return aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
     const courtOffenceSequenceNumber = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0")
     const manualSequenceNumber = getManualSequenceNumber(offence)
