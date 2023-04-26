@@ -7,7 +7,6 @@ const caseListQuerySchema: z.Schema = z.object({
 })
 
 export const validateCaseListQueryParams = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.query)
   try {
     caseListQuerySchema.parse(req.query)
 
