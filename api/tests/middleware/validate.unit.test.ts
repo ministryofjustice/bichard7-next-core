@@ -37,6 +37,7 @@ describe("validateCourtCaseListQueryParams", () => {
         }
       ]
     })
+    expect(next).not.toHaveBeenCalled()
   })
 
   it("returns 400 status code if maxPageItems are absent", () => {
@@ -60,6 +61,7 @@ describe("validateCourtCaseListQueryParams", () => {
         }
       ]
     })
+    expect(next).not.toHaveBeenCalled()
   })
 
   it("calls the next function if query has all optional fields", () => {
@@ -75,6 +77,32 @@ describe("validateCourtCaseListQueryParams", () => {
     validateCaseListQueryParams(req, res, next)
 
     expect(next).toHaveBeenCalled()
+  })
+  it("returns 400 if query has an unexpected field", () => {
+    const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.foo = "bar"
+    const req = {
+      query: caseListQuery
+    } as unknown as Request
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          code: "unrecognized_keys",
+          keys: ["foo"],
+          path: [],
+          message: "Unrecognized key(s) in object: 'foo'"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
   })
 })
 
