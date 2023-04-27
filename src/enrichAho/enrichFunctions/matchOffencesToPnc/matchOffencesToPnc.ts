@@ -158,10 +158,12 @@ const findMatchCandidates = (
   const match = (matcherOptions: OffenceMatchOptions): void => {
     for (const courtCase of courtCases) {
       for (const hoOffence of hoOffences) {
+        if (matches.has(hoOffence)) {
+          continue
+        }
         for (const pncOffence of courtCase) {
           if (
             !matches.get(hoOffence)?.includes(pncOffence) &&
-            (matcherOptions.exactDateMatch || !matches.has(hoOffence)) &&
             offencesMatch(hoOffence, pncOffence.pncOffence, matcherOptions)
           ) {
             pushToArrayInMap(matches, hoOffence, pncOffence)
