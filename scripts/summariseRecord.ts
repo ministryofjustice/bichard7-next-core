@@ -2,6 +2,7 @@ import fs from "fs"
 import { exec } from "node:child_process"
 import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
 import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import summariseMatching from "tests/helpers/summariseMatching"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import parseSpiResult from "../src/parse/parseSpiResult"
@@ -110,6 +111,25 @@ if (!(outputAho instanceof Error) && outputAho.PncQuery) {
       output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
     })
   })
+}
+
+if (!(outputAho instanceof Error)) {
+  const matchingSummary = summariseMatching(outputAho)
+  output.push("\n")
+  if (matchingSummary && "offences" in matchingSummary) {
+    output.push("Offence matches\n")
+    matchingSummary.offences.forEach((match) =>
+      output.push(
+        `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.courtCaseReference} / ${
+          match.pncSequenceNumber ?? "Added in court"
+        }`
+      )
+    )
+  } else if (matchingSummary && "exceptions" in matchingSummary) {
+    output.push(JSON.stringify(matchingSummary, null, 2))
+  } else {
+    output.push("No matches")
+  }
 }
 
 const textOutput = output.join("\n")
