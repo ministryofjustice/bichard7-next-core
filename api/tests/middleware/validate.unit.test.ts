@@ -106,5 +106,4 @@ describe("validateCourtCaseListQueryParams", () => {
   })
 })
 
-// all optional fields then next will get called
-// send something not expecting, send 400
+// TODO: test for enum types.
