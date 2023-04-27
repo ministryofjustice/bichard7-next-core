@@ -7,7 +7,7 @@ const caseListQuerySchema: z.Schema = z
     maxPageItems: z.string(),
     orderBy: z.string().optional(),
     order: z.string().optional(),
-    reasons: z.string().optional(),
+    reasons: z.array(z.string()).optional(),
     defendantName: z.string().optional(),
     courtName: z.string().optional(),
     ptiurn: z.string().optional(),
@@ -30,6 +30,7 @@ export const validateCaseListQueryParams = (req: Request, res: Response, next: N
   } catch (err) {
     if (err instanceof ZodError) {
       const { issues } = err
+      console.log(issues)
       res.status(400).json({ issues })
     } else {
       res.status(500).json({ message: "internal server error" })
