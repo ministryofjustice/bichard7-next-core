@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express"
-import { validateCaseListQueryParams } from "../../src/middleware/validate"
+import { caseListQuerySchema, validateCaseListQueryParams } from "../../src/middleware/validate"
+import { createFixture } from "zod-fixture"
+import type { CaseListQueryParams } from "../../src/types/CaseListQueryParams"
 
 describe("validateCourtCaseListQueryParams", () => {
   it("calls the next function if query has all required fields", () => {
@@ -61,28 +63,9 @@ describe("validateCourtCaseListQueryParams", () => {
   })
 
   it("calls the next function if query has all optional fields", () => {
+    const caseListQuery: CaseListQueryParams = createFixture(caseListQuerySchema)
     const req = {
-      query: {
-        forces: ["01"],
-        maxPageItems: "10",
-        orderBy: "a column",
-        order: "desc",
-        reasons: ["Triggers"],
-        defendantName: "WAYNE Bruce",
-        courtName: "A court",
-        ptiurn: "PTIURN",
-        urgent: "Urgent",
-        pageNum: "1",
-        courtDateRange: [
-          { from: new Date(), to: new Date() },
-          { from: new Date(), to: new Date() }
-        ],
-        locked: true,
-        caseState: "Resolved",
-        allocatedToUserName: "a user",
-        reasonCode: "reasonCode",
-        resolvedByUsername: "resolvedBy"
-      }
+      query: caseListQuery
     } as unknown as Request
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)

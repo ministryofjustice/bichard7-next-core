@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express"
 import { z, ZodError } from "zod"
 
-const caseListQuerySchema: z.Schema = z
+export const caseListQuerySchema: z.Schema = z
   .object({
     forces: z.array(z.string()),
     maxPageItems: z.string(),
