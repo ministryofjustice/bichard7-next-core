@@ -18,7 +18,7 @@ export const caseListQuerySchema: z.Schema = z
     reasonCode: z.string().optional(),
     reasons: z.array(z.string()).optional(),
     resolvedByUsername: z.string().optional(),
-    urgent: z.string().optional()
+    urgent: z.enum(["Urgent", "Non-urgent"]).optional()
   })
   .strict()
 

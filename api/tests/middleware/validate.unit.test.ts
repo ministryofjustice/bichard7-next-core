@@ -105,7 +105,7 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it("returns 400 if case state is set to an unexpected value", () => {
+  it("returns 400 if caseState is set to an unexpected value", () => {
     const caseListQuery = createFixture(caseListQuerySchema)
     caseListQuery.caseState = "bar"
     const req = {
@@ -127,6 +127,60 @@ describe("validateCourtCaseListQueryParams", () => {
           options: ["Resolved", "Unresolved and resolved"],
           path: ["caseState"],
           message: "Invalid enum value. Expected 'Resolved' | 'Unresolved and resolved', received 'bar'"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
+  })
+  it("returns 400 if reasons is set to an unexpected value", () => {
+    const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.reasons = "foo"
+    const req = {
+      query: caseListQuery
+    } as unknown as Request
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          code: "invalid_type",
+          expected: "array",
+          received: "string",
+          path: ["reasons"],
+          message: "Expected array, received string"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
+  })
+  it("returns 400 if urgency is set to an unexpected value", () => {
+    const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.urgent = "foo"
+    const req = {
+      query: caseListQuery
+    } as unknown as Request
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          received: "foo",
+          code: "invalid_enum_value",
+          options: ["Urgent", "Non-urgent"],
+          path: ["urgent"],
+          message: "Invalid enum value. Expected 'Urgent' | 'Non-urgent', received 'foo'"
         }
       ]
     })
