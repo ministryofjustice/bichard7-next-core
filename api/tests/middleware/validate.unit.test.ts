@@ -187,5 +187,3 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).not.toHaveBeenCalled()
   })
 })
-
-// TODO: test for enum types.

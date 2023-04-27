@@ -15,3 +15,4 @@ export const getCourtCases = async (req: Request, res: Response) => {
     res.status(500).json(err)
   }
 }
+// TODO: extend request type to have caseListQueryParams property
