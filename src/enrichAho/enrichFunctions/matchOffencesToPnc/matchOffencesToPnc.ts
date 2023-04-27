@@ -155,17 +155,25 @@ const findMatchCandidates = (
 ): CandidateOffenceMatches => {
   const matches = new Map<Offence, PncOffenceWithCaseRef[]>()
 
-  for (const courtCase of courtCases) {
-    for (const hoOffence of hoOffences) {
-      for (const pncOffence of courtCase) {
-        if (
-          offencesMatch(hoOffence, pncOffence.pncOffence, { ...options, exactDateMatch: true }) ||
-          (!options.exactDateMatch && offencesMatch(hoOffence, pncOffence.pncOffence, options))
-        ) {
-          pushToArrayInMap(matches, hoOffence, pncOffence)
+  const match = (matcherOptions: OffenceMatchOptions): void => {
+    for (const courtCase of courtCases) {
+      for (const hoOffence of hoOffences) {
+        for (const pncOffence of courtCase) {
+          if (
+            !matches.get(hoOffence)?.includes(pncOffence) &&
+            (matcherOptions.exactDateMatch || !matches.has(hoOffence)) &&
+            offencesMatch(hoOffence, pncOffence.pncOffence, matcherOptions)
+          ) {
+            pushToArrayInMap(matches, hoOffence, pncOffence)
+          }
         }
       }
     }
+  }
+
+  match({ ...options, exactDateMatch: true })
+  if (!options.exactDateMatch) {
+    match(options)
   }
 
   return matches
