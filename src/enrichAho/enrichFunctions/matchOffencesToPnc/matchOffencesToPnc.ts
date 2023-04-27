@@ -114,6 +114,15 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
   }
 }
 
+const normaliseCCR = (ccr: string): string => {
+  const splitCCR = ccr.split("/")
+  if (splitCCR.length !== 3) {
+    return ccr
+  }
+  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
+  return splitCCR.join("/")
+}
+
 const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
   const manualSequence = hoOffence.ManualSequenceNumber
   const manualCourtCase = hoOffence.ManualCourtCaseReference
@@ -126,7 +135,11 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
       }
       if (manualCourtCase) {
         const courtCase = hoOffence.CourtCaseReferenceNumber
-        return sequence === pncOffence.pncOffence.offence.sequenceNumber && courtCase === pncOffence.courtCaseReference
+        return (
+          sequence === pncOffence.pncOffence.offence.sequenceNumber &&
+          !!courtCase &&
+          normaliseCCR(courtCase) === normaliseCCR(pncOffence.courtCaseReference)
+        )
       } else {
         return sequence === pncOffence.pncOffence.offence.sequenceNumber
       }
