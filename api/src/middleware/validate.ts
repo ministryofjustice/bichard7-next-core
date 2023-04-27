@@ -5,20 +5,20 @@ export const caseListQuerySchema: z.Schema = z
   .object({
     forces: z.array(z.string()),
     maxPageItems: z.string(),
-    orderBy: z.string().optional(),
-    order: z.string().optional(),
-    reasons: z.array(z.string()).optional(),
-    defendantName: z.string().optional(),
-    courtName: z.string().optional(),
-    ptiurn: z.string().optional(),
-    urgent: z.string().optional(),
-    pageNum: z.string().optional(),
-    courtDateRange: z.array(z.object({ from: z.date(), to: z.date() }).optional()).optional(),
-    locked: z.boolean().optional(),
-    caseState: z.string().optional(),
     allocatedToUserName: z.string().optional(),
+    caseState: z.enum(["Resolved", "Unresolved and resolved"]).optional(),
+    courtDateRange: z.array(z.object({ from: z.date(), to: z.date() }).optional()).optional(),
+    courtName: z.string().optional(),
+    defendantName: z.string().optional(),
+    locked: z.boolean().optional(),
+    order: z.string().optional(),
+    orderBy: z.string().optional(),
+    pageNum: z.string().optional(),
+    ptiurn: z.string().optional(),
     reasonCode: z.string().optional(),
-    resolvedByUsername: z.string().optional()
+    reasons: z.array(z.string()).optional(),
+    resolvedByUsername: z.string().optional(),
+    urgent: z.string().optional()
   })
   .strict()
 
