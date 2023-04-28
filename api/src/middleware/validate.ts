@@ -1,5 +1,6 @@
-import type { Request, Response, NextFunction } from "express"
+import type { Response, NextFunction } from "express"
 import { z, ZodError } from "zod"
+import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
 
 export const caseListQuerySchema: z.Schema = z
   .object({
@@ -22,15 +23,14 @@ export const caseListQuerySchema: z.Schema = z
   })
   .strict()
 
-export const validateCaseListQueryParams = (req: Request, res: Response, next: NextFunction) => {
+export const validateCaseListQueryParams = (req: CaseListQueryRequest, res: Response, next: NextFunction) => {
   try {
-    req.query = caseListQuerySchema.parse(req.query)
+    req.caseListQueryParams = caseListQuerySchema.parse(req.query)
 
     next()
   } catch (err) {
     if (err instanceof ZodError) {
       const { issues } = err
-      console.log(issues)
       res.status(400).json({ issues })
     } else {
       res.status(500).json({ message: "internal server error" })

@@ -1,11 +1,12 @@
-import type { Request, Response, NextFunction } from "express"
+import type { Response, NextFunction } from "express"
 import { caseListQuerySchema, validateCaseListQueryParams } from "../../src/middleware/validate"
 import { createFixture } from "zod-fixture"
 import type { CaseListQueryParams } from "../../src/types/CaseListQueryParams"
+import type { CaseListQueryRequest } from "../../src/types/CaseListQueryRequest"
 
 describe("validateCourtCaseListQueryParams", () => {
   it("calls the next function if query has all required fields", () => {
-    const req = { query: { forces: ["01"], maxPageItems: "10" } } as unknown as Request
+    const req = { query: { forces: ["01"], maxPageItems: "10" } } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -16,8 +17,20 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).toHaveBeenCalled()
   })
 
+  it("stores the validated query in the request object", () => {
+    const req = { query: { forces: ["01"], maxPageItems: "10" } } as unknown as CaseListQueryRequest
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(req.caseListQueryParams).toEqual({ forces: ["01"], maxPageItems: "10" })
+  })
+
   it("returns 400 status code if forces are absent", () => {
-    const req = { query: { maxPageItems: "10" } } as unknown as Request
+    const req = { query: { maxPageItems: "10" } } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -41,7 +54,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
 
   it("returns 400 status code if maxPageItems are absent", () => {
-    const req = { query: { forces: ["01"] } } as unknown as Request
+    const req = { query: { forces: ["01"] } } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -68,7 +81,7 @@ describe("validateCourtCaseListQueryParams", () => {
     const caseListQuery: CaseListQueryParams = createFixture(caseListQuerySchema)
     const req = {
       query: caseListQuery
-    } as unknown as Request
+    } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -83,7 +96,7 @@ describe("validateCourtCaseListQueryParams", () => {
     caseListQuery.foo = "bar"
     const req = {
       query: caseListQuery
-    } as unknown as Request
+    } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -110,7 +123,7 @@ describe("validateCourtCaseListQueryParams", () => {
     caseListQuery.caseState = "bar"
     const req = {
       query: caseListQuery
-    } as unknown as Request
+    } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -137,7 +150,7 @@ describe("validateCourtCaseListQueryParams", () => {
     caseListQuery.reasons = "foo"
     const req = {
       query: caseListQuery
-    } as unknown as Request
+    } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
@@ -164,7 +177,7 @@ describe("validateCourtCaseListQueryParams", () => {
     caseListQuery.urgent = "foo"
     const req = {
       query: caseListQuery
-    } as unknown as Request
+    } as unknown as CaseListQueryRequest
     const res = {} as Response
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)

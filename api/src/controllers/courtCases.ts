@@ -1,18 +1,17 @@
-import type { Request, Response } from "express"
+import type { Response } from "express"
 import type { DataSource } from "typeorm"
 import getDataSource from "../services/getDataSource"
 import listCourtCases from "../services/listCourtCases"
-import type { CaseListQueryParams } from "src/types/CaseListQueryParams"
+import type { CaseListQueryRequest } from "src/types/CaseListQueryRequest"
 
-export const getCourtCases = async (req: Request, res: Response) => {
+export const getCourtCases = async (req: CaseListQueryRequest, res: Response) => {
+  const { caseListQueryParams } = req
   try {
     const dataSource: DataSource = await getDataSource()
-    const filter = req.query as unknown as CaseListQueryParams
-    const data = await listCourtCases(dataSource, filter)
+    const data = await listCourtCases(dataSource, caseListQueryParams!)
 
     res.status(200).json(data)
   } catch (err) {
     res.status(500).json(err)
   }
 }
-// TODO: extend request type to have caseListQueryParams property
