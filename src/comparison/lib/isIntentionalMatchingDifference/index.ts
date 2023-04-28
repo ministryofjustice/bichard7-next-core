@@ -3,12 +3,14 @@ import summariseMatching from "tests/helpers/summariseMatching"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
+import matchingToFinalOffences from "./matchingToFinalOffences"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
+  matchingToFinalOffences,
   nonMatchingManualSequenceNumber
 ]
 
