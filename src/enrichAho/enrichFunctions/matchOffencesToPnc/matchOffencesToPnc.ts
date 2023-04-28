@@ -158,6 +158,9 @@ const findMatchCandidates = (
   const match = (matcherOptions: OffenceMatchOptions): void => {
     for (const courtCase of courtCases) {
       for (const hoOffence of hoOffences) {
+        // if (!matcherOptions.exactDateMatch && matches.has(hoOffence)) {
+        //   continue
+        // }
         for (const pncOffence of courtCase) {
           if (
             !matches.get(hoOffence)?.includes(pncOffence) &&
@@ -268,7 +271,6 @@ const resolveMatch = (
 ): ResolvedResult => {
   const result: MatchingResult = { matched: [], unmatched: [] }
   const exceptions: Exception[] = []
-  const multipleMatches = []
 
   for (const [hoOffence, matchedPncOffences] of candidate.entries()) {
     const nonFinalResults = matchedPncOffences.filter((pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence))
@@ -306,30 +308,58 @@ const resolveMatch = (
     return { exceptions }
   }
 
-  const nonManualCandidates = filterMatchedCandidates(candidate, result)
+  const shouldMatch = (
+    hoOffence: Offence,
+    candidatePncOffences: PncOffenceWithCaseRef[],
+    candidates: CandidateOffenceMatches
+  ): boolean => {
+    const reverseLookup = invertMap(candidates)
+    if (candidatePncOffences.length === 1) {
+      const candidatePncOffence = candidatePncOffences[0]
+      if (reverseLookup.get(candidatePncOffences[0])?.length === 1) {
+        return true
+      } else {
+        const reverseCandidates = reverseLookup.get(candidatePncOffence)
+        if (!reverseCandidates) {
+          return false
+        }
+        return reverseCandidates.every((candidateHoOffence) => {
+          const filteredPncMatchCandidates = candidates
+            .get(candidateHoOffence)
+            ?.filter((pncOffence) => pncOffence !== candidatePncOffence)
+          return candidateHoOffence === hoOffence || filteredPncMatchCandidates?.length === 1
+        })
+      }
+    }
+    return false
+  }
 
-  exceptions.push(...(checkForMatchesWithConflictingResults(nonManualCandidates, hoOffences) ?? []))
+  let loop = true
+  while (loop) {
+    const remainingCandidates = filterMatchedCandidates(candidate, result)
+    let foundMatch = false
+
+    for (const [hoOffence, candidatePncOffences] of remainingCandidates.entries()) {
+      const unMatched = candidatePncOffences.filter(
+        (pncOffence) => !result.matched.some((match) => match.pncOffence === pncOffence)
+      )
+      if (shouldMatch(hoOffence, unMatched, remainingCandidates)) {
+        result.matched.push({
+          hoOffence,
+          pncOffence: candidatePncOffences[0]
+        })
+        foundMatch = true
+      }
+    }
+    loop = foundMatch
+  }
+
+  const unmatchedCandidates = filterMatchedCandidates(candidate, result)
+  exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
   if (exceptions.length > 0) {
     return { exceptions }
   }
 
-  const reverseLookup = invertMap(nonManualCandidates)
-
-  for (const [hoOffence, candidatePncOffences] of nonManualCandidates.entries()) {
-    const unMatched = candidatePncOffences.filter(
-      (pncOffence) => !result.matched.some((match) => match.pncOffence === pncOffence)
-    )
-    if (unMatched.length === 1 && reverseLookup.get(unMatched[0])?.length === 1) {
-      result.matched.push({
-        hoOffence,
-        pncOffence: candidatePncOffences[0]
-      })
-    } else {
-      multipleMatches.push(hoOffence)
-    }
-  }
-
-  const unmatchedCandidates = filterMatchedCandidates(nonManualCandidates, result)
   const groupedMatches = groupSimilarOffences(unmatchedCandidates)
 
   const pncOffenceWasAlreadyMatched = (pncOffence: PncOffenceWithCaseRef): boolean =>
