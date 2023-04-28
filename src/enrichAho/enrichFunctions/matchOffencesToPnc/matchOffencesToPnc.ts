@@ -111,6 +111,7 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
   } else {
     caseElem.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
     offenceMatch.hoOffence.CourtCaseReferenceNumber = undefined
+    offenceMatch.hoOffence.ManualCourtCaseReference = undefined
   }
 }
 
