@@ -9,8 +9,6 @@ describe("/cases", () => {
         .get("/cases")
         .query(stringify({ forces: ["01"], maxPageItems: "10" }))
 
-      console.log(response.body)
-
       expect(response.statusCode).toBe(200)
     })
 
