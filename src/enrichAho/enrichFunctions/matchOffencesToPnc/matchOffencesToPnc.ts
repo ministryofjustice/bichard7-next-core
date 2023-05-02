@@ -159,9 +159,6 @@ const findMatchCandidates = (
   const match = (matcherOptions: OffenceMatchOptions): void => {
     for (const courtCase of courtCases) {
       for (const hoOffence of hoOffences) {
-        // if (!matcherOptions.exactDateMatch && matches.has(hoOffence)) {
-        //   continue
-        // }
         for (const pncOffence of courtCase) {
           if (
             !matches.get(hoOffence)?.includes(pncOffence) &&

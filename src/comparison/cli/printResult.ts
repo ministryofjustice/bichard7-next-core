@@ -74,7 +74,6 @@ const printResult = (
   }
 
   if (result.skipped) {
-    console.log(`\nSkipping file:\n${result.file}\n`)
     return
   }
 
