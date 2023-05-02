@@ -27,14 +27,14 @@ class MatchCandidates {
   }
 
   forHoOffence(hoOffence: Offence, exact?: boolean): PncOffenceWithCaseRef[] {
-    return this.matches
-      .filter((match) => match.hoOffence === hoOffence && (exact === undefined || match.exact === exact))
+    return (this.hoOffenceIndex.get(hoOffence) ?? [])
+      .filter((match) => exact === undefined || match.exact === exact)
       .map((match) => match.pncOffence)
   }
 
   forPncOffence(pncOffence: PncOffenceWithCaseRef, exact?: boolean): Offence[] {
-    return this.matches
-      .filter((match) => match.pncOffence === pncOffence && (exact === undefined || match.exact === exact))
+    return (this.pncOffenceIndex.get(pncOffence) ?? [])
+      .filter((match) => exact === undefined || match.exact === exact)
       .map((match) => match.hoOffence)
   }
 
@@ -56,14 +56,6 @@ class MatchCandidates {
 
   matchedPncOffences(): PncOffenceWithCaseRef[] {
     return [...this.pncOffenceIndex.keys()]
-  }
-
-  hoOffenceMatches(hoOffence: Offence): PncOffenceWithCaseRef[] {
-    return this.hoOffenceIndex.get(hoOffence)?.map((match) => match.pncOffence) ?? []
-  }
-
-  pncOffenceMatches(pncOffence: PncOffenceWithCaseRef): Offence[] {
-    return this.pncOffenceIndex.get(pncOffence)?.map((match) => match.hoOffence) ?? []
   }
 
   filterNonFinal(): MatchCandidates {
