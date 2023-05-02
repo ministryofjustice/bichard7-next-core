@@ -76,9 +76,83 @@ describe("validateCourtCaseListQueryParams", () => {
     })
     expect(next).not.toHaveBeenCalled()
   })
+  it("returns 400 status code if maxPageItems is NaN", () => {
+    const req = {
+      query: { forces: ["01"], maxPageItems: "Not a number" }
+    } as unknown as CaseListQueryRequest
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          code: "invalid_string",
+          path: ["maxPageItems"],
+          message: "Invalid",
+          validation: "regex"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
+  })
+  it("returns 400 status code if maxPageItems is less than 10", () => {
+    const req = {
+      query: { forces: ["01"], maxPageItems: "9" }
+    } as unknown as CaseListQueryRequest
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          code: "invalid_string",
+          path: ["maxPageItems"],
+          message: "Invalid",
+          validation: "regex"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
+  })
+  it("returns 400 status code if maxPageItems is greater than 100", () => {
+    const req = {
+      query: { forces: ["01"], maxPageItems: "101" }
+    } as unknown as CaseListQueryRequest
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+    const next = jest.fn() as NextFunction
+
+    validateCaseListQueryParams(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledWith({
+      issues: [
+        {
+          code: "invalid_string",
+          path: ["maxPageItems"],
+          message: "Invalid",
+          validation: "regex"
+        }
+      ]
+    })
+    expect(next).not.toHaveBeenCalled()
+  })
 
   it("calls the next function if query has all optional fields", () => {
     const caseListQuery: CaseListQueryParams = createFixture(caseListQuerySchema)
+    console.log(caseListQuery)
+    caseListQuery.maxPageItems = "100"
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
@@ -93,6 +167,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
   it("returns 400 if query has an unexpected field", () => {
     const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.maxPageItems = "100"
     caseListQuery.foo = "bar"
     const req = {
       query: caseListQuery
@@ -120,6 +195,7 @@ describe("validateCourtCaseListQueryParams", () => {
 
   it("returns 400 if caseState is set to an unexpected value", () => {
     const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.maxPageItems = "100"
     caseListQuery.caseState = "bar"
     const req = {
       query: caseListQuery
@@ -147,6 +223,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
   it("returns 400 if reasons is set to an unexpected value", () => {
     const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.maxPageItems = "100"
     caseListQuery.reasons = "foo"
     const req = {
       query: caseListQuery
@@ -174,6 +251,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
   it("returns 400 if urgency is set to an unexpected value", () => {
     const caseListQuery = createFixture(caseListQuerySchema)
+    caseListQuery.maxPageItems = "100"
     caseListQuery.urgent = "foo"
     const req = {
       query: caseListQuery

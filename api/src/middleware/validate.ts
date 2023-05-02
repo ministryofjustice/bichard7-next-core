@@ -5,7 +5,7 @@ import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
 export const caseListQuerySchema: z.Schema = z
   .object({
     forces: z.array(z.string()),
-    maxPageItems: z.string(),
+    maxPageItems: z.string().regex(new RegExp(/^((100)|([1-9][0-9]{1}))$/gm)),
     allocatedToUserName: z.string().optional(),
     caseState: z.enum(["Resolved", "Unresolved and resolved"]).optional(),
     courtDateRange: z.array(z.object({ from: z.date(), to: z.date() }).optional()).optional(),
