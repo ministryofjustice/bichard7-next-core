@@ -21,6 +21,20 @@ describe("getCourtCases", () => {
     expect(res.status).toHaveBeenCalledWith(200)
   })
 
+  it("returns a 500 status code when database returns an error", async () => {
+    const expectedError = new Error("Something went wrong")
+    ;(listCourtCases as jest.Mock).mockReturnValue(Promise.resolve(expectedError))
+    const req = { caseListQueryParams: { forces: ["01"], maxPageItems: "10" } } as CaseListQueryRequest
+    const res = {} as Response
+    res.status = jest.fn().mockReturnValue(res)
+    res.json = jest.fn().mockReturnValue(res)
+
+    await getCourtCases(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.json).toHaveBeenCalledWith(expectedError)
+  })
+
   it("returns the court cases from the database", async () => {
     const expected = {
       result: [new CourtCase(), new CourtCase(), new CourtCase()],
