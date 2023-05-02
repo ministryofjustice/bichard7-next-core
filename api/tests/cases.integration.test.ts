@@ -11,6 +11,12 @@ describe("/cases", () => {
 
       expect(response.statusCode).toBe(200)
     })
+    it("returns a list of results and the total result count", async () => {
+      const response = await request(app)
+        .get("/cases")
+        .query(stringify({ forces: ["01"], maxPageItems: "10" }))
+      expect(response.body.result).toHaveLength(response.body.totalCases)
+    })
 
     it("returns a 400 status code if required query attributes are missing", async () => {
       const response = await request(app).get("/cases").query({})
