@@ -249,11 +249,14 @@ const resolveMatch = (
   for (const [i, hoOffence] of hoOffences.entries()) {
     if (hoOffence.ManualSequenceNumber) {
       const candidatePncOffences = unmatchedCandidates.forHoOffence(hoOffence)
-      const pncOffencesWithMatchingSequence = pncOffences.some((pncOffence) =>
+      const pncOffencesWithMatchingSequence = pncOffences.filter((pncOffence) =>
         offenceManuallyMatches(hoOffence, pncOffence)
       )
-      if (!pncOffencesWithMatchingSequence) {
+      if (pncOffencesWithMatchingSequence.length === 0) {
         exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+        continue
+      } else if (pncOffencesWithMatchingSequence.length > 1) {
+        exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
         continue
       }
 
