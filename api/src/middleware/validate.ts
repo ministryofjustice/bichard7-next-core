@@ -1,20 +1,27 @@
+import url from "url"
+import { parse } from "qs"
 import type { Response, NextFunction } from "express"
 import { z, ZodError } from "zod"
 import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
 
+const parseBoolean = z.preprocess((value) => Boolean(value), z.boolean())
+
 export const caseListQuerySchema: z.Schema = z
   .object({
     forces: z.array(z.string()),
-    maxPageItems: z.string().regex(new RegExp(/^((100)|([1-9][0-9]{1}))$/gm)),
+    maxPageItems: z.string().regex(new RegExp(/^((100)|([1-9][0-9]{1}))$/gm)), // numeric strings between 10 and 100
     allocatedToUserName: z.string().optional(),
     caseState: z.enum(["Resolved", "Unresolved and resolved"]).optional(),
-    courtDateRange: z.array(z.object({ from: z.date(), to: z.date() }).optional()).optional(),
+    courtDateRange: z.array(z.object({ from: z.string().datetime(), to: z.string().datetime() }).optional()).optional(),
     courtName: z.string().optional(),
     defendantName: z.string().optional(),
-    locked: z.boolean().optional(),
+    locked: parseBoolean.optional(),
     order: z.string().optional(),
     orderBy: z.string().optional(),
-    pageNum: z.string().optional(),
+    pageNum: z
+      .string()
+      .regex(new RegExp(/^[0-9]*$/gm))
+      .optional(), // only numeric characters
     ptiurn: z.string().optional(),
     reasonCode: z.string().optional(),
     reasons: z.array(z.string()).optional(),
@@ -25,7 +32,9 @@ export const caseListQuerySchema: z.Schema = z
 
 export const validateCaseListQueryParams = (req: CaseListQueryRequest, res: Response, next: NextFunction) => {
   try {
-    req.caseListQueryParams = caseListQuerySchema.parse(req.query)
+    const rawQuery = url.parse(req.url).query
+    const query = parse(rawQuery as string)
+    req.caseListQueryParams = caseListQuerySchema.parse(query)
 
     next()
   } catch (err) {
