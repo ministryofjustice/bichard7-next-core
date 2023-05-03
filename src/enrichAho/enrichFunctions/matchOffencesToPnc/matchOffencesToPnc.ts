@@ -10,6 +10,7 @@ import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/off
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import MatchCandidates from "./MatchCandidates"
+import { selectMatch } from "./selectMatch"
 
 const matchingCourtCases = (cases: PncCourtCase[], matches: MatchingResult): PncCourtCase[] =>
   cases.filter((courtCase) => matches.matched.some((match) => courtCase.offences.includes(match.pncOffence.pncOffence)))
@@ -274,49 +275,6 @@ const resolveMatch = (
     return { exceptions }
   }
 
-  const hasNoMatchConflicts = (
-    hoOffence: Offence,
-    pncOffence: PncOffenceWithCaseRef,
-    candidates: MatchCandidates,
-    exact?: boolean
-  ): boolean => {
-    const otherMatchingHoOffences = candidates.forPncOffence(pncOffence, exact)
-    if (!otherMatchingHoOffences) {
-      return false
-    }
-
-    return otherMatchingHoOffences.every((candidateHoOffence) => {
-      const filteredPncMatchCandidates = candidates
-        .forHoOffence(candidateHoOffence)
-        ?.filter((candidatePncOffence) => candidatePncOffence !== pncOffence)
-
-      return candidateHoOffence === hoOffence || filteredPncMatchCandidates?.length >= 1
-    })
-  }
-
-  const selectMatch = (hoOffence: Offence, candidates: MatchCandidates): PncOffenceWithCaseRef | undefined => {
-    const candidatePncOffences = candidates.forHoOffence(hoOffence)
-    if (candidatePncOffences.length === 1) {
-      const candidatePncOffence = candidatePncOffences[0]
-      if (candidates.forPncOffence(candidatePncOffence)?.length === 1) {
-        return candidatePncOffence
-      } else {
-        if (hasNoMatchConflicts(hoOffence, candidatePncOffence, candidates)) {
-          return candidatePncOffence
-        }
-      }
-    } else {
-      const exactMatches = candidates.forHoOffence(hoOffence, true)
-      if (exactMatches.length === 1) {
-        const candidatePncOffence = exactMatches[0]
-        if (hasNoMatchConflicts(hoOffence, candidatePncOffence, candidates, true)) {
-          return candidatePncOffence
-        }
-      }
-    }
-    return undefined
-  }
-
   // Repeatedly match up all 1-to-1 matches
   let loop = true
   unmatchedCandidates = unmatchedCandidates.filter(result)
@@ -337,7 +295,7 @@ const resolveMatch = (
     loop = foundMatch
   }
 
-  unmatchedCandidates = candidate.filter(result)
+  unmatchedCandidates = unmatchedCandidates.filter(result)
   exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
   if (exceptions.length > 0) {
     return { exceptions }
