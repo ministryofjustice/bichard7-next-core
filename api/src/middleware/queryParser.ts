@@ -1,15 +1,11 @@
-import type { Request, Response, NextFunction } from "express"
-import url from "url"
+import type { NextFunction, Request, Response } from "express"
 import { parse } from "qs"
+import url from "url"
 
-export default (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const rawQuery = url.parse(req.url).query
-    const query = parse(rawQuery as string)
-    req.query = query
+export default (req: Request, _: Response, next: NextFunction) => {
+  const rawQuery = url.parse(req.url).query
+  const query = parse(rawQuery as string)
+  req.query = query
 
-    next()
-  } catch (err) {
-    res.status(500).json(err)
-  }
+  next()
 }

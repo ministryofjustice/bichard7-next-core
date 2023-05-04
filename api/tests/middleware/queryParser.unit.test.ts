@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express"
+import type { NextFunction, Request, Response } from "express"
 import queryParser from "../../src/middleware/queryParser"
 
 describe("queryParser", () => {
@@ -17,5 +17,6 @@ describe("queryParser", () => {
       number: "3",
       string: "string"
     })
+    expect(next).toHaveBeenCalled()
   })
 })
