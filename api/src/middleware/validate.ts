@@ -1,5 +1,3 @@
-import url from "url"
-import { parse } from "qs"
 import type { Response, NextFunction } from "express"
 import { z, ZodError } from "zod"
 import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
@@ -31,9 +29,8 @@ export const caseListQuerySchema: z.Schema = z
   .strict()
 
 export const validateCaseListQueryParams = (req: CaseListQueryRequest, res: Response, next: NextFunction) => {
+  const { query } = req
   try {
-    const rawQuery = url.parse(req.url).query
-    const query = parse(rawQuery as string)
     req.caseListQueryParams = caseListQuerySchema.parse(query)
 
     next()
