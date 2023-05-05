@@ -1,12 +1,16 @@
 import type { Response } from "express"
-import type { CaseListQueryRequest } from "../src/types/CaseListQueryRequest"
-import listCourtCases from "../src/services/listCourtCases"
 import { getCourtCases } from "../src/controllers/courtCases"
-import type { ListCourtCaseResult } from "../src/types/ListCourtCasesResult"
 import CourtCase from "../src/services/entities/CourtCase"
+import getDataSource from "../src/services/getDataSource"
+import listCourtCases from "../src/services/listCourtCases"
+import type { CaseListQueryRequest } from "../src/types/CaseListQueryRequest"
+import type { ListCourtCaseResult } from "../src/types/ListCourtCasesResult"
 
 jest.mock("../src/services/getDataSource")
 jest.mock("../src/services/listCourtCases", () => jest.fn())
+;(getDataSource as jest.Mock).mockReturnValue({
+  destroy: jest.fn()
+})
 
 describe("getCourtCases", () => {
   it("returns a 200 status code", async () => {

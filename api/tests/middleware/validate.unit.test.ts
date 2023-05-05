@@ -1,7 +1,15 @@
-import type { Response, NextFunction } from "express"
-import { caseListQuerySchema, validateCaseListQueryParams } from "../../src/middleware/validate"
+import type { NextFunction, Response } from "express"
 import { createFixture } from "zod-fixture"
+import { caseListQuerySchema, validateCaseListQueryParams } from "../../src/middleware/validate"
 import type { CaseListQueryRequest } from "../../src/types/CaseListQueryRequest"
+
+const createTestQuery = () => {
+  const caseListQuery = createFixture(caseListQuerySchema)
+  caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
+  caseListQuery.maxPageItems = "100"
+  caseListQuery.pageNum = "1"
+  return caseListQuery
+}
 
 describe("validateCourtCaseListQueryParams", () => {
   it("calls the next function if query has all required fields", () => {
@@ -149,10 +157,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
 
   it("calls the next function if query has all optional fields", () => {
-    const caseListQuery = createFixture(caseListQuerySchema)
-    caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
-    caseListQuery.maxPageItems = "100"
-    caseListQuery.pageNum = "1"
+    const caseListQuery = createTestQuery()
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
@@ -166,10 +171,7 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).toHaveBeenCalled()
   })
   it("returns 400 if query has an unexpected field", () => {
-    const caseListQuery = createFixture(caseListQuerySchema)
-    caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
-    caseListQuery.maxPageItems = "100"
-    caseListQuery.pageNum = "1"
+    const caseListQuery = createTestQuery()
     caseListQuery.foo = "bar"
     const req = {
       query: caseListQuery
@@ -196,10 +198,7 @@ describe("validateCourtCaseListQueryParams", () => {
   })
 
   it("returns 400 if caseState is set to an unexpected value", () => {
-    const caseListQuery = createFixture(caseListQuerySchema)
-    caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
-    caseListQuery.maxPageItems = "100"
-    caseListQuery.pageNum = "1"
+    const caseListQuery = createTestQuery()
     caseListQuery.caseState = "bar"
     const req = {
       query: caseListQuery
@@ -226,10 +225,7 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).not.toHaveBeenCalled()
   })
   it("returns 400 if reasons is set to an unexpected value", () => {
-    const caseListQuery = createFixture(caseListQuerySchema)
-    caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
-    caseListQuery.maxPageItems = "100"
-    caseListQuery.pageNum = "1"
+    const caseListQuery = createTestQuery()
     caseListQuery.reasons = "foo"
     const req = {
       query: caseListQuery
@@ -256,10 +252,7 @@ describe("validateCourtCaseListQueryParams", () => {
     expect(next).not.toHaveBeenCalled()
   })
   it("returns 400 if urgency is set to an unexpected value", () => {
-    const caseListQuery = createFixture(caseListQuerySchema)
-    caseListQuery.courtDateRange = [{ from: new Date().toISOString(), to: new Date().toISOString() }]
-    caseListQuery.maxPageItems = "100"
-    caseListQuery.pageNum = "1"
+    const caseListQuery = createTestQuery()
     caseListQuery.urgent = "foo"
     const req = {
       query: caseListQuery
