@@ -10,6 +10,6 @@ app.use(cors())
 app.use(queryParser)
 
 app.use("/health", healthRouter)
-app.use("/cases", courtCaseRouter)
+app.use("/court-cases", courtCaseRouter)
 
 export default app
