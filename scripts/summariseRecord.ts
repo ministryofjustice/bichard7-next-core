@@ -1,7 +1,8 @@
 import fs from "fs"
 import { exec } from "node:child_process"
-import offencesAreEqual from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offencesAreEqual"
-import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
+import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
+import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import summariseMatching from "tests/helpers/summariseMatching"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
 import { parseAhoXml } from "../src/parse/parseAhoXml"
 import parseSpiResult from "../src/parse/parseSpiResult"
@@ -39,13 +40,13 @@ const getManualSequenceNumber = (offence: Offence): string | undefined => {
   }
 }
 
-const groupOffences = (offences: Offence[]): Offence[][] => {
+const groupEqualOffences = (offences: Offence[]): Offence[][] => {
   const output = []
   for (const offence of offences) {
     let found = false
     for (const group of output) {
       const otherOffence = group[0]
-      if (offencesAreEqual(offence, otherOffence) && offencesHaveEqualResults([offence, otherOffence])) {
+      if (hoOffencesAreEqual(offence, otherOffence)) {
         group.push(offence)
         found = true
         break
@@ -60,7 +61,7 @@ const groupOffences = (offences: Offence[]): Offence[][] => {
 
 // const summariseAho = null
 const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
-  const groupedOffences = groupOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
+  const groupedOffences = groupEqualOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
   return aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
     const courtOffenceSequenceNumber = offence.CourtOffenceSequenceNumber.toString().padStart(3, "0")
     const manualSequenceNumber = getManualSequenceNumber(offence)
@@ -106,9 +107,29 @@ if (!(outputAho instanceof Error) && outputAho.PncQuery) {
       const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
       const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
       const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
-      output.push(`${sequence}${offenceCode}${startDate}${endDate}`)
+      const finalDisposal = offenceHasFinalResult(offence) ? "F" : ""
+      output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
     })
   })
+}
+
+if (!(outputAho instanceof Error)) {
+  const matchingSummary = summariseMatching(outputAho)
+  output.push("\n")
+  if (matchingSummary && "offences" in matchingSummary) {
+    output.push("Offence matches\n")
+    matchingSummary.offences.forEach((match) =>
+      output.push(
+        `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.courtCaseReference} / ${
+          match.pncSequenceNumber ?? "Added in court"
+        }`
+      )
+    )
+  } else if (matchingSummary && "exceptions" in matchingSummary) {
+    output.push(JSON.stringify(matchingSummary, null, 2))
+  } else {
+    output.push("No matches")
+  }
 }
 
 const textOutput = output.join("\n")

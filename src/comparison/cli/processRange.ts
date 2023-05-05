@@ -35,7 +35,7 @@ const processRange = async <T>(
   const results: (T | SkippedFile)[] = []
   let count = 0
 
-  for await (const batch of dynamo.getRange(start, end, filterValue, 1000)) {
+  for await (const batch of dynamo.getRange(start, end, filterValue, 1000, true)) {
     if (!batch || batch instanceof Error) {
       console.error(batch)
       throw new Error("Error fetching batch from Dynamo")
