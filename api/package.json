@@ -13,7 +13,7 @@
     "start": "node build/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
-    "test:integration": "jest --verbose ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
+    "test:integration": "jest --verbose --runInBand ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
   },
   "keywords": [],
   "author": "",
