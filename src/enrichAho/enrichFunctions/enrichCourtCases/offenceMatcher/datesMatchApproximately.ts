@@ -18,10 +18,6 @@ const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): bo
     return hoStartDate.toISOString() === pncStartDate.toISOString()
   }
 
-  if (pncEndDate && pncStartDate.toISOString() === pncEndDate.toISOString()) {
-    return hoStartDate.toISOString() === pncStartDate.toISOString()
-  }
-
   if (!hoEndDate && !pncEndDate) {
     return hoStartDate.getTime() === pncStartDate.getTime()
   }

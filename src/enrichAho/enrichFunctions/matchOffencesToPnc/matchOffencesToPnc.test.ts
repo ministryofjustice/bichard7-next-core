@@ -396,6 +396,7 @@ describe("matchOffencesToPnc", () => {
           }
         ]
       )
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].ActualOffenceDateCode = "1"
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
