@@ -13,7 +13,7 @@ require("esbuild")
       ignorePlugin([
         {
           resourceRegExp: /pg-native$/,
-          contextRegExp: /node_modules\/pg/
+          contextRegExp: /node_modules\//
         }
       ])
     ]
