@@ -255,22 +255,23 @@ const resolveMatch = (
       if (pncOffencesWithMatchingSequence.length === 0) {
         exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
         continue
-      } else if (pncOffencesWithMatchingSequence.length > 1) {
+      }
+
+      const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
+        offenceManuallyMatches(hoOffence, pncOffence)
+      )
+      if (matchingPncOffences.length === 1) {
+        result.matched.push({
+          hoOffence,
+          pncOffence: matchingPncOffences[0]
+        })
+      } else if (matchingPncOffences.length === 0) {
+        exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
+        continue
+      } else if (matchingPncOffences.length > 1) {
         exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
         continue
       }
-
-      const matchingPncOffence = candidatePncOffences?.find((pncOffence) =>
-        offenceManuallyMatches(hoOffence, pncOffence)
-      )
-      if (!matchingPncOffence) {
-        exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-        continue
-      }
-      result.matched.push({
-        hoOffence,
-        pncOffence: matchingPncOffence
-      })
     }
   }
 
