@@ -1,5 +1,6 @@
 import fs from "fs"
 import { exec } from "node:child_process"
+import getFile from "src/comparison/lib/getFile"
 import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
 import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import summariseMatching from "tests/helpers/summariseMatching"
@@ -25,14 +26,7 @@ if (!fileName) {
   process.exit()
 }
 
-const localFileName = fileName.startsWith("s3://")
-  ? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
-  : fileName
-
 const formatDate = (date: Date | undefined): string => (date ? date.toISOString().split("T")[0] : "")
-
-const fileContents = fs.readFileSync(localFileName)
-const fileJson = JSON.parse(fileContents.toString()) as ComparisonFile
 
 const getManualSequenceNumber = (offence: Offence): string | undefined => {
   if (offence.ManualSequenceNumber && offence.CriminalProsecutionReference.OffenceReasonSequence) {
@@ -59,7 +53,6 @@ const groupEqualOffences = (offences: Offence[]): Offence[][] => {
   return output
 }
 
-// const summariseAho = null
 const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
   const groupedOffences = groupEqualOffences(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence)
   return aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => {
@@ -76,66 +69,74 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
   })
 }
 
-let aho: AnnotatedHearingOutcome | Error
-const output: string[] = []
+const main = async () => {
+  const fileContents = await getFile(fileName, true)
+  const fileJson = JSON.parse(fileContents.toString()) as ComparisonFile
 
-if (fileJson.incomingMessage.match(/DeliverRequest/)) {
-  const parsedSpi = parseSpiResult(fileJson.incomingMessage)
-  aho = transformSpiToAho(parsedSpi)
-} else {
-  aho = parseAhoXml(fileJson.incomingMessage)
-}
-if (aho instanceof Error) {
-  console.error("Error parsing incoming message")
-  process.exit(1)
-}
+  let aho: AnnotatedHearingOutcome | Error
+  const output: string[] = []
 
-output.push(`Correlation ID: ${aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID}\n`)
-
-output.push("Incoming Records\n")
-output.push(...summariseAho(aho))
-output.push("\nPNC Records")
-
-const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
-
-if (!(outputAho instanceof Error) && outputAho.PncQuery) {
-  outputAho.PncQuery.courtCases?.forEach((courtCase: PncCourtCase) => {
-    output.push("")
-    output.push(courtCase.courtCaseReference)
-    courtCase.offences.forEach((offence: PncOffence) => {
-      const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(10, " ")
-      const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
-      const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
-      const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
-      const finalDisposal = offenceHasFinalResult(offence) ? "F" : ""
-      output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
-    })
-  })
-}
-
-if (!(outputAho instanceof Error)) {
-  const matchingSummary = summariseMatching(outputAho)
-  output.push("\n")
-  if (matchingSummary && "offences" in matchingSummary) {
-    output.push("Offence matches\n")
-    matchingSummary.offences.forEach((match) =>
-      output.push(
-        `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.courtCaseReference} / ${
-          match.pncSequenceNumber ?? "Added in court"
-        }`
-      )
-    )
-  } else if (matchingSummary && "exceptions" in matchingSummary) {
-    output.push(JSON.stringify(matchingSummary, null, 2))
+  if (fileJson.incomingMessage.match(/DeliverRequest/)) {
+    const parsedSpi = parseSpiResult(fileJson.incomingMessage)
+    aho = transformSpiToAho(parsedSpi)
   } else {
-    output.push("No matches")
+    aho = parseAhoXml(fileJson.incomingMessage)
   }
+  if (aho instanceof Error) {
+    console.error("Error parsing incoming message")
+    process.exit(1)
+  }
+
+  output.push(`Correlation ID: ${aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID}\n`)
+
+  output.push("Incoming Records\n")
+  output.push(...summariseAho(aho))
+  output.push("\nPNC Records")
+
+  const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
+
+  if (!(outputAho instanceof Error) && outputAho.PncQuery) {
+    outputAho.PncQuery.courtCases?.forEach((courtCase: PncCourtCase) => {
+      output.push("")
+      output.push(courtCase.courtCaseReference)
+      courtCase.offences.forEach((offence: PncOffence) => {
+        const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(10, " ")
+        const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
+        const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
+        const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
+        const finalDisposal = offenceHasFinalResult(offence) ? "F" : ""
+        output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
+      })
+    })
+  }
+
+  if (!(outputAho instanceof Error)) {
+    const matchingSummary = summariseMatching(outputAho)
+    output.push("\n")
+    if (matchingSummary && "offences" in matchingSummary) {
+      output.push("Offence matches\n")
+      matchingSummary.offences.forEach((match) =>
+        output.push(
+          `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.courtCaseReference} / ${
+            match.pncSequenceNumber ?? "Added in court"
+          }`
+        )
+      )
+    } else if (matchingSummary && "exceptions" in matchingSummary) {
+      output.push(JSON.stringify(matchingSummary, null, 2))
+    } else {
+      output.push("No matches")
+    }
+  }
+
+  const textOutput = output.join("\n")
+
+  const localFileName = fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
+  const outFileName = localFileName.replace(".json", ".summary.txt")
+
+  fs.writeFileSync(outFileName, textOutput)
+
+  exec(`code ${outFileName}`)
 }
 
-const textOutput = output.join("\n")
-
-const outFileName = localFileName.replace(".json", ".summary.txt")
-
-fs.writeFileSync(outFileName, textOutput)
-
-exec(`code ${outFileName}`)
+main()
