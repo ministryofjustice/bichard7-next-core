@@ -22,20 +22,6 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
     return hoOffence.ActualOffenceEndDate.EndDate.toISOString() === pncOffence.offence.endDate.toISOString()
   }
 
-  if (
-    hoOffence.ActualOffenceEndDate?.EndDate &&
-    hoOffence.ActualOffenceStartDate.StartDate.toISOString() === hoOffence.ActualOffenceEndDate.EndDate.toISOString()
-  ) {
-    return hoOffence.ActualOffenceStartDate.StartDate.toISOString() === pncOffence.offence.startDate.toISOString()
-  }
-
-  if (
-    pncOffence.offence.endDate &&
-    pncOffence.offence.startDate.toISOString() === pncOffence.offence.endDate.toISOString()
-  ) {
-    return hoOffence.ActualOffenceStartDate.StartDate.toISOString() === pncOffence.offence.startDate.toISOString()
-  }
-
   return false
 }
 

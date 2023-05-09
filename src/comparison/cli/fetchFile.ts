@@ -7,7 +7,7 @@ export type FileLookup = {
 }
 
 const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLookup> => {
-  const skip = !!record.skipped || !!record.intentionalDifference
+  const skip = !!record.skipped
   const s3Url = `s3://${process.env.COMPARISON_S3_BUCKET}/${record.s3Path}`
   if (skip) {
     return { fileName: s3Url }
