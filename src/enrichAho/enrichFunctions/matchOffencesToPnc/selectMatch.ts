@@ -18,7 +18,9 @@ export const hasNoMatchConflicts = (
       .forHoOffence(candidateHoOffence)
       ?.filter((candidatePncOffence) => candidatePncOffence !== pncOffence)
 
-    return candidateHoOffence === hoOffence || filteredPncMatchCandidates?.length >= 1
+    const hasExactMatchToPncOffence = candidates.exactMatched(candidateHoOffence, pncOffence)
+
+    return candidateHoOffence === hoOffence || (!hasExactMatchToPncOffence && filteredPncMatchCandidates?.length >= 1)
   })
 }
 
