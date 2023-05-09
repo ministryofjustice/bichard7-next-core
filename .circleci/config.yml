@@ -51,7 +51,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - 56:12:d8:11:e2:11:41:bc:f3:29:b7:ba:cc:d5:0c:5a
+            - fa:99:cf:93:ab:74:30:81:b5:b8:d3:c6:08:4e:0e:1c
       - run:
           name: Clone Bichard7 Next
           command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
