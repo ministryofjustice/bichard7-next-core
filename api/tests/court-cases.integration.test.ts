@@ -39,6 +39,30 @@ describe("/court-cases", () => {
       const response = await request(app)
         .get("/court-cases")
         .query(stringify({ forces: ["01"], maxPageItems: "10" }))
+
+      expect(response.body.result).toHaveLength(1)
+    })
+
+    it("can filter on ptirun", async () => {
+      const orgCode = "01"
+      const firstCase = "00001"
+      const secondCase = "00002"
+      const thirdCase = "00003"
+
+      await insertCourtCasesWithFields([
+        { ptiurn: firstCase, orgForPoliceFilter: orgCode },
+        { ptiurn: secondCase, orgForPoliceFilter: orgCode },
+        { ptiurn: thirdCase, orgForPoliceFilter: orgCode }
+      ])
+      const response = await request(app)
+        .get("/court-cases")
+        .query(
+          stringify({
+            forces: ["01"],
+            maxPageItems: "10",
+            ptiurn: firstCase
+          })
+        )
       expect(response.body.result).toHaveLength(1)
     })
   })
