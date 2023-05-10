@@ -95,13 +95,10 @@ describe("/court-cases", () => {
         { courtDate: thirdDate, orgForPoliceFilter: orgCode },
         { courtDate: fourthDate, orgForPoliceFilter: orgCode }
       ])
-      const encodedUrl = encodeURIComponent(
-        JSON.stringify({ from: "2008-01-01T00:00:00Z", to: "2008-12-30T00:00:00Z" })
-      )
-      const url = "/court-cases?forces[]=01&maxPageItems=10courtDateRange[]=" + encodedUrl
-      const response = await request(app).get(url)
-      // .query(JSON.stringify({ from: "2008-01-01T00:00:00Z", to: "2008-12-30T00:00:00Z" }))
-      console.log(url)
+
+      const courtDateRangeQueryParams =
+        "courtDateRange[0][from]=2008-01-01T00:00:00Z&courtDateRange[0][to]=2008-12-30T00:00:00Z"
+      const response = await request(app).get(`/court-cases?forces[]=01&maxPageItems=10&${courtDateRangeQueryParams}`)
 
       expect(response.body.result).toHaveLength(2)
     })
