@@ -312,7 +312,15 @@ const resolveMatch = (
     "matched" in result && result.matched.some((match) => match.hoOffence === hoOffence)
 
   for (const group of groupedMatches) {
-    const matchedPncOffences = unmatchedCandidates.forHoOffence(group[0])
+    const matchedPncOffences = [
+      ...group
+        .reduce((acc: Set<PncOffenceWithCaseRef>, hoOffence: Offence) => {
+          unmatchedCandidates.forHoOffence(hoOffence).forEach((pncOffence) => acc.add(pncOffence))
+          return acc
+        }, new Set<PncOffenceWithCaseRef>())
+        .values()
+    ]
+
     if (matchedPncOffences && matchedPncOffences.length <= group.length) {
       for (let i = 0; i < matchedPncOffences.length; i++) {
         if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i])) {
