@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import summariseMatching from "tests/helpers/summariseMatching"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
+import ho100332NotHo100304 from "./ho100332NotHo100304"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import matchingToFinalOffences from "./matchingToFinalOffences"
@@ -8,6 +9,7 @@ import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
+  ho100332NotHo100304,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
   matchingToFinalOffences,
