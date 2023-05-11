@@ -265,7 +265,7 @@ workflows:
       - build_core:
           requires:
             - lint
-      - build_and_start_api:
+      - build_api:
           requires:
             - lint
       - test:
@@ -285,4 +285,4 @@ workflows:
             - build_core
       - test_api:
           requires:
-            - build_and_start_api
+            - build_api
