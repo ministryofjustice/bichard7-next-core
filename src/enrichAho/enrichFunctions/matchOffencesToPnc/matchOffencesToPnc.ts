@@ -215,12 +215,16 @@ const checkForMatchesWithConflictingResults = (
 ): Exception[] | undefined => {
   for (const pncOffence of candidates.matchedPncOffences()) {
     const hoOffences = candidates.forPncOffence(pncOffence)
-    const matchingCourtCaseReferences = hoOffences.reduce((acc, hoOffence) => {
-      candidates.forHoOffence(hoOffence)?.forEach((o) => acc.add(o.courtCaseReference))
+    const candidatePncOffences = candidates.forHoOffence(hoOffences[0])
+    const matchingCourtCaseReferences = candidatePncOffences.reduce((acc, pncOff) => {
+      acc.add(pncOff.courtCaseReference)
       return acc
     }, new Set<string>())
 
-    if (matchingCourtCaseReferences.size > 1 && (!offencesHaveEqualResults(hoOffences) || hoOffences.length === 1)) {
+    if (
+      matchingCourtCaseReferences.size > 1 &&
+      (!offencesHaveEqualResults(hoOffences) || candidatePncOffences.length !== hoOffences.length)
+    ) {
       return hoOffences.map((hoOffence) => ({
         code: ExceptionCode.HO100332,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
