@@ -92,7 +92,7 @@ jobs:
           root: .
           paths: build
 
-  build_and_start_api:
+  build_api:
     machine:
       image: ubuntu-2204:2022.10.2
     resource_class: xlarge
@@ -102,7 +102,7 @@ jobs:
       - install_api
       - run:
           name: Build the API
-          command: cd api && npm run build && npm run start
+          command: cd api && npm run build
       - persist_to_workspace:
           root: ./api
           paths: build
@@ -265,7 +265,7 @@ workflows:
       - build_core:
           requires:
             - lint
-      - build_and_start_api:
+      - build_api:
           requires:
             - lint
       - test:
@@ -285,4 +285,4 @@ workflows:
             - build_core
       - test_api:
           requires:
-            - build_and_start_api
+            - build_api
