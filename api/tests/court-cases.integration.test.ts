@@ -88,5 +88,23 @@ describe("/court-cases", () => {
 
       expect(response.body.result).toHaveLength(2)
     })
+
+    it("should filter on many fields", async () => {
+      const orgCode = "01"
+      await insertCourtCasesWithFields([
+        { ptiurn: "00001", errorCount: 3, triggerCount: 0, orgForPoliceFilter: orgCode },
+        { ptiurn: "00002", errorCount: 0, triggerCount: 2, orgForPoliceFilter: orgCode }
+      ])
+      let response = await request(app)
+        .get("/court-cases")
+        .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Exceptions"] }))
+      expect(response.body.result[0].ptiurn).toBe("00001")
+      expect(response.body.result).toHaveLength(1)
+      response = await request(app)
+        .get("/court-cases")
+        .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers"] }))
+      expect(response.body.result[0].ptiurn).toBe("00002")
+      expect(response.body.result).toHaveLength(1)
+    })
   })
 })
