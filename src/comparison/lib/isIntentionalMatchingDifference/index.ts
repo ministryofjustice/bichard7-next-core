@@ -6,6 +6,7 @@ import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedS
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import matchingToFinalOffences from "./matchingToFinalOffences"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
+import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -13,7 +14,8 @@ const filters = [
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
   matchingToFinalOffences,
-  nonMatchingManualSequenceNumber
+  nonMatchingManualSequenceNumber,
+  offenceReasonSequenceFormat
 ]
 
 const isIntentionalMatchingDifference = (
