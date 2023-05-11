@@ -1,14 +1,19 @@
 # Bichard 7 API
 
+The bichard7 api acts as a single point of access for the database.
+
 ## Endpoints
+---
 
 ### GET /health
+---
 
 Endpoint for checking the application is running
 
 If succesful will return a 200
 
 ### GET /courts-cases
+---
 
 Returns a list of court cases filtered by the following parameters
 
@@ -38,12 +43,17 @@ If succesful will return 200 and the following response attributes:
 | result     | courtCase[] |
 | totalCases | number      |
 
----
-
-## Example request
-
----
+Example request:
 
 ```bash
 curl http://localhost:3333/court-cases?forces%5B0%5D=01&maxPageItems=10&allocatedToUserName=username&caseState=Resolved&courtDateRange%5B0%5D%5Bfrom%5D=2023-05-02T15%3A06%3A58.412Z&courtDateRange%5B0%5D%5Bto%5D=2023-05-02T15%3A06%3A58.412Z&courtName=courtName&defendantName=defendantName&locked=false&order=asc&orderBy=defendantName&pageNum=1&ptiurn=ptirun&reasonCode=reason&reasons%5B0%5D=Bails&resolvedByUsername=username&urgent=Urgent
+```
+
+Example response:
+
+```json
+{
+  "result": [],
+  "totalCasses": 0
+}
 ```
