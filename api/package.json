@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js",
+    "build": "tsc",
     "lint": "cd .. && eslint . && cd -",
     "lint:fix": "cd .. && eslint . --fix && cd -",
     "postinstall": "tsc",
     "test:api": "jest --runInBand --forceExit --testPathPattern=api/*.test",
     "test:file": "jest --runInBand --forceExit --testPathPattern",
-    "start": "node build/index.js",
+    "start": "node build/src/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
     "test:integration": "jest --verbose --runInBand ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
