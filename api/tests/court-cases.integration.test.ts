@@ -63,22 +63,8 @@ describe("/court-cases", () => {
             ptiurn: firstCase
           })
         )
-      expect(response.body.result).toHaveLength(1)
-    })
-    it("can filter on ptirun2", async () => {
-      const orgCode = "01"
-      const firstCase = "00001"
-      const secondCase = "00002"
-      const thirdCase = "00003"
-
-      await insertCourtCasesWithFields([
-        { ptiurn: firstCase, orgForPoliceFilter: orgCode },
-        { ptiurn: secondCase, orgForPoliceFilter: orgCode },
-        { ptiurn: thirdCase, orgForPoliceFilter: orgCode }
-      ])
-      const response = await request(app).get("/court-cases?forces[]=01&maxPageItems=10&ptiurn=00001")
-      console.log(response.body)
-
+      const resultedPtiurn = response.body.result[0].ptiurn
+      expect(resultedPtiurn).toBe("00001")
       expect(response.body.result).toHaveLength(1)
     })
 
