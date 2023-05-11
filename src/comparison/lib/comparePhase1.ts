@@ -72,7 +72,7 @@ const comparePhase1 = async (
     }
 
     if (
-      process.env.USE_NEW_MATCHER === "true" &&
+      process.env.USE_NEW_MATCHER !== "false" &&
       isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome)
     ) {
       return {
@@ -101,7 +101,7 @@ const comparePhase1 = async (
     }
 
     const ignoreNewMatcherDifferences =
-      process.env.USE_NEW_MATCHER === "true" &&
+      process.env.USE_NEW_MATCHER !== "false" &&
       sortedCoreExceptions.some((e) => matchingExceptions.includes(e.code)) &&
       sortedCoreExceptions.every(
         (e) => !matchingExceptions.includes(e.code) || exceptions.map((ex) => ex.code).includes(e.code)
