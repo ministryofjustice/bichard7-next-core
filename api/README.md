@@ -8,15 +8,11 @@ The bichard7 api acts as a single point of access for the database.
 
 ---
 
----
-
 Endpoint for checking the application is running
 
 If succesful will return a 200
 
 ### GET /courts-cases
-
----
 
 ---
 
