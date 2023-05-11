@@ -100,7 +100,7 @@ export default async (
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 
-  if (process.env.USE_NEW_MATCHER === "true") {
+  if (process.env.USE_NEW_MATCHER !== "false") {
     annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
   } else {
     annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)

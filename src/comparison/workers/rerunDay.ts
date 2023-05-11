@@ -28,7 +28,7 @@ const rerunDay: ConductorWorker = {
     const end = task.inputData?.end
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const persistResults = task.inputData?.persistResults ?? true
-    const newMatcher = task.inputData?.newMatcher ?? false
+    const newMatcher = task.inputData?.newMatcher ?? true
 
     process.env.USE_NEW_MATCHER = newMatcher.toString()
 
