@@ -47,7 +47,7 @@ const offencesMatch = (hoOffence: Offence, pncOffence: PncOffence, options: Offe
     !pncOffence.adjudication ||
     (!!pncOffence.adjudication &&
       hoOffence.Result.every(
-        (result) => result.ResultHearingDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
+        (result) => result.ResultHearingDate?.getTime() === pncOffence.adjudication?.sentenceDate?.getTime()
       ))
 
   if (exactDateMatch) {
