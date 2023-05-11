@@ -43,31 +43,6 @@ describe("/court-cases", () => {
       expect(response.body.result).toHaveLength(1)
     })
 
-    it("can filter on ptirun", async () => {
-      const orgCode = "01"
-      const firstCase = "00001"
-      const secondCase = "00002"
-      const thirdCase = "00003"
-
-      await insertCourtCasesWithFields([
-        { ptiurn: firstCase, orgForPoliceFilter: orgCode },
-        { ptiurn: secondCase, orgForPoliceFilter: orgCode },
-        { ptiurn: thirdCase, orgForPoliceFilter: orgCode }
-      ])
-      const response = await request(app)
-        .get("/court-cases")
-        .query(
-          stringify({
-            forces: ["01"],
-            maxPageItems: "10",
-            ptiurn: firstCase
-          })
-        )
-      const resultedPtiurn = response.body.result[0].ptiurn
-      expect(resultedPtiurn).toBe("00001")
-      expect(response.body.result).toHaveLength(1)
-    })
-
     it("can filter on courtDate", async () => {
       const orgCode = "01"
       const firstDate = new Date("2001-09-26")
@@ -92,17 +67,48 @@ describe("/court-cases", () => {
     it("should filter on many fields", async () => {
       const orgCode = "01"
       await insertCourtCasesWithFields([
-        { ptiurn: "00001", errorCount: 3, triggerCount: 0, orgForPoliceFilter: orgCode },
-        { ptiurn: "00002", errorCount: 0, triggerCount: 2, orgForPoliceFilter: orgCode }
+        { ptiurn: "00001", errorCount: 3, triggerCount: 0, orgForPoliceFilter: orgCode, errorReason: "HO00001" },
+        { ptiurn: "00002", errorCount: 0, triggerCount: 2, orgForPoliceFilter: orgCode, errorReason: "HO002222" }
       ])
       let response = await request(app)
         .get("/court-cases")
         .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Exceptions"] }))
       expect(response.body.result[0].ptiurn).toBe("00001")
       expect(response.body.result).toHaveLength(1)
+
       response = await request(app)
         .get("/court-cases")
         .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers"] }))
+      expect(response.body.result[0].ptiurn).toBe("00002")
+      expect(response.body.result).toHaveLength(1)
+
+      response = await request(app)
+        .get("/court-cases")
+        .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers", "Exceptions"] }))
+      expect(response.body.result[0].ptiurn).toBe("00001")
+      expect(response.body.result[1].ptiurn).toBe("00002")
+      expect(response.body.result).toHaveLength(2)
+
+      response = await request(app)
+        .get("/court-cases")
+        .query(
+          stringify({
+            forces: [orgCode],
+            maxPageItems: "10",
+            reasons: ["Triggers", "Exceptions"],
+            orderBy: "reason",
+            order: "desc"
+          })
+        )
+      expect(response.body.result[0].errorReason).toBe("HO002222")
+      expect(response.body.result[1].errorReason).toBe("HO00001")
+      expect(response.body.result).toHaveLength(2)
+
+      response = await request(app)
+        .get("/court-cases")
+        .query(
+          stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers", "Exceptions"], ptiurn: "00002" })
+        )
       expect(response.body.result[0].ptiurn).toBe("00002")
       expect(response.body.result).toHaveLength(1)
     })
