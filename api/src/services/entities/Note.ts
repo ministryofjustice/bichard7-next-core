@@ -7,16 +7,16 @@ import dateTransformer from "./transformers/dateTransformer"
 
 @Entity({ name: "error_list_notes" })
 export default class Note extends BaseEntity {
-  @PrimaryColumn({ name: "note_id" })
+  @PrimaryColumn("int4", { name: "note_id" })
   noteId!: number
 
-  @Column({ name: "note_text" })
+  @Column("varchar", { name: "note_text", nullable: true })
   noteText!: string
 
-  @Column({ name: "error_id" })
+  @Column("int4", { name: "error_id" })
   errorId?: number
 
-  @Column({ name: "user_id" })
+  @Column("int4", { name: "user_id" })
   userId!: string
 
   @Column({ name: "create_ts", type: "timestamp", transformer: dateTransformer })

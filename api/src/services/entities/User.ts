@@ -7,19 +7,19 @@ import featureFlagTransformer from "./transformers/featureFlagTransformer"
 
 @Entity({ name: "users" })
 export default class User extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn("varchar")
   username!: string
 
-  @Column()
+  @Column("varchar")
   password!: string
 
-  @Column()
+  @Column("varchar")
   email!: string
 
-  @Column()
+  @Column("varchar")
   forenames?: string
 
-  @Column()
+  @Column("varchar")
   surname?: string
 
   @Column({ name: "visible_forces", transformer: delimitedPrefixedString(",", "0"), type: "varchar" })

@@ -9,13 +9,13 @@ import resolutionStatusTransformer from "./transformers/resolutionStatusTransfor
 
 @Entity({ name: "error_list_triggers" })
 export default class Trigger extends BaseEntity {
-  @PrimaryColumn({ name: "trigger_id" })
+  @PrimaryColumn("int4", { name: "trigger_id" })
   triggerId!: number
 
-  @Column({ name: "trigger_code" })
+  @Column("varchar", { name: "trigger_code" })
   triggerCode!: string
 
-  @Column({ name: "error_id" })
+  @Column("int4", { name: "error_id" })
   errorId!: number
 
   @Column({ type: "int4", transformer: resolutionStatusTransformer })
@@ -30,7 +30,7 @@ export default class Trigger extends BaseEntity {
   @Column({ name: "resolved_ts", type: "timestamp", transformer: dateTransformer })
   resolvedAt!: Date | null
 
-  @Column({ name: "trigger_item_identity" })
+  @Column("varchar", { name: "trigger_item_identity" })
   triggerItemIdentity?: number
 
   @ManyToOne(() => CourtCase)
