@@ -46,6 +46,24 @@ commands:
           key: v1-npm-deps-{{ checksum "api/package-lock.json.md5" }}
           paths: node_modules
 
+  clone_bichard_repo:
+    description: Check out the bichard7-next repo
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - fa:99:cf:93:ab:74:30:81:b5:b8:d3:c6:08:4e:0e:1c
+      - run:
+          name: Clone Bichard7 Next
+          command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
+
+  run_postgres:
+    description: Run the PostgreSQL database
+    steps:
+      - run:
+          name: Spin up the PostgreSQL database
+          working_directory: ~/bichard7-next
+          command: make run-pg
+
 jobs:
   lint:
     machine:
@@ -233,6 +251,8 @@ jobs:
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
+      - clone_bichard_repo
+      - run_postgres
       - run:
           name: Run unit tests against API code
           command: nvm use && cd api && npm run test:api
