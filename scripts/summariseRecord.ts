@@ -62,10 +62,11 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     const sequenceNumbers = `${courtOffenceSequenceNumber}${manualSequenceNumberStr}`.padEnd(10, " ")
     const offenceCode = (getOffenceCode(offence) ?? "").padEnd(10, " ")
     const resultCodes = offence.Result.map((result) => result.CJSresultCode.toString()).join(",")
-    const startDate = formatDate(offence.ActualOffenceStartDate.StartDate).padEnd(13, " ")
-    const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(13, " ")
+    const startDate = formatDate(offence.ActualOffenceStartDate.StartDate).padEnd(11, " ")
+    const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(11, " ")
+    const convictionDate = formatDate(offence.ConvictionDate).padEnd(12, " ")
     const offenceGroupIndex = groupedOffences.findIndex((group) => group.includes(offence))
-    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${resultCodes} ${offenceGroupIndex}`
+    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}`
   })
 }
 
@@ -102,10 +103,14 @@ const main = async () => {
       courtCase.offences.forEach((offence: PncOffence) => {
         const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(10, " ")
         const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
-        const startDate = formatDate(offence.offence.startDate).padEnd(13, " ")
-        const endDate = formatDate(offence.offence.endDate).padEnd(13, " ")
-        const finalDisposal = offenceHasFinalResult(offence) ? "F" : ""
-        output.push(`${sequence}${offenceCode}${startDate}${endDate}${finalDisposal}`)
+        const startDate = formatDate(offence.offence.startDate).padEnd(11, " ")
+        const endDate = formatDate(offence.offence.endDate).padEnd(11, " ")
+        const adjudicationDate = formatDate(offence.adjudication?.sentenceDate).padEnd(12, " ")
+        const hasFinalDisposal = offenceHasFinalResult(offence) ? "F " : ""
+        const hasAdjudication = !!offence.adjudication ? "A " : ""
+        output.push(
+          `${sequence}${offenceCode}${startDate}${endDate}${adjudicationDate}${hasAdjudication}${hasFinalDisposal}`
+        )
       })
     })
   }
