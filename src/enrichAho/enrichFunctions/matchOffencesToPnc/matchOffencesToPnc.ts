@@ -362,7 +362,7 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
 
   const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
 
-  const candidates = findMatchCandidates(hoOffences, courtCases, { checkSequenceNumbers: false, exactDateMatch: true })
+  const candidates = findMatchCandidates(hoOffences, courtCases, { exactDateMatch: true })
 
   const exactDateMatches = resolveMatch(hoOffences, pncOffences, candidates)
   if (successfulMatch(exactDateMatches, hoOffences, pncOffences)) {
@@ -370,7 +370,6 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
   }
 
   const matchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
-    checkSequenceNumbers: false,
     exactDateMatch: false
   })
 
