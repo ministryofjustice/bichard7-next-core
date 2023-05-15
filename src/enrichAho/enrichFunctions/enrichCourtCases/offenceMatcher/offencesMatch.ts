@@ -43,18 +43,11 @@ const offencesMatch = (hoOffence: Offence, pncOffence: PncOffence, options: Offe
     return true
   }
 
-  const adjudicationMatches =
-    !pncOffence.adjudication ||
-    (!!pncOffence.adjudication &&
-      hoOffence.Result.every(
-        (result) => result.ResultHearingDate?.getTime() === pncOffence.adjudication?.sentenceDate?.getTime()
-      ))
-
   if (exactDateMatch) {
-    return adjudicationMatches && datesMatchExactly(hoOffence, pncOffence)
+    return datesMatchExactly(hoOffence, pncOffence)
   }
 
-  return adjudicationMatches && datesMatchApproximately(hoOffence, pncOffence)
+  return datesMatchApproximately(hoOffence, pncOffence)
 }
 
 export default offencesMatch
