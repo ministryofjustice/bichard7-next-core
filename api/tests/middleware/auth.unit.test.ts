@@ -2,7 +2,7 @@ import type { NextFunction, Response, Request } from "express"
 import auth from "../../src/middleware/auth"
 
 describe("auth", () => {
-  it("returns a 401 unauthorised response if password is not in Authorization header", () => {
+  it("returns a 401 unauthorised response if password is not in authorization header", () => {
     const req = {} as unknown as Request
     const res = {
       sendStatus: jest.fn().mockReturnThis()
@@ -14,8 +14,8 @@ describe("auth", () => {
     expect(res.sendStatus).toHaveBeenCalledWith(401)
   })
 
-  it("returns a 401 unauthorised response if incorrect password is in the Authorization header", () => {
-    const req = { headers: { Authorization: "not-the-password" } } as unknown as Request
+  it("returns a 401 unauthorised response if incorrect password is in the authorization header", () => {
+    const req = { headers: { authorization: "not-the-password" } } as unknown as Request
     const res = {
       sendStatus: jest.fn().mockReturnThis()
     } as unknown as Response
@@ -26,8 +26,8 @@ describe("auth", () => {
     expect(res.sendStatus).toHaveBeenCalledWith(401)
   })
 
-  it("call next if correct password is in Authorization header", () => {
-    const req = { headers: { Authorization: "password" } } as unknown as Request
+  it("call next if correct password is in authorization header", () => {
+    const req = { headers: { authorization: "password" } } as unknown as Request
     const res = {
       sendStatus: jest.fn().mockReturnThis()
     } as unknown as Response
