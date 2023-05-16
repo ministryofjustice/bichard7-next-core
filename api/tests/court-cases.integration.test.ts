@@ -15,16 +15,34 @@ describe("/court-cases", () => {
   })
 
   describe("GET", () => {
+    it("returns a 401 status code if authorization header is not set", async () => {
+      const response = await request(app)
+        .get("/court-cases")
+        .query(stringify({ forces: ["01"], maxPageItems: "10" }))
+
+      expect(response.statusCode).toBe(401)
+    })
+
+    it("returns a 401 status code if authorization contains incorrect password", async () => {
+      const response = await request(app)
+        .get("/court-cases")
+        .set("authorization", "not-the-password")
+        .query(stringify({ forces: ["01"], maxPageItems: "10" }))
+
+      expect(response.statusCode).toBe(401)
+    })
+
     it("returns a 200 status code", async () => {
       const response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(stringify({ forces: ["01"], maxPageItems: "10" }))
 
       expect(response.statusCode).toBe(200)
     })
 
     it("returns a 400 status code if required query attributes are missing", async () => {
-      const response = await request(app).get("/court-cases").query({})
+      const response = await request(app).get("/court-cases").set("authorization", "password").query({})
 
       expect(response.statusCode).toBe(400)
     })
@@ -38,6 +56,7 @@ describe("/court-cases", () => {
       await insertCourtCasesWithFields(casesToInsert)
       const response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(stringify({ forces: ["01"], maxPageItems: "10" }))
 
       expect(response.body.result).toHaveLength(1)
@@ -59,7 +78,9 @@ describe("/court-cases", () => {
 
       const courtDateRangeQueryParams =
         "courtDateRange[0][from]=2008-01-01T00:00:00Z&courtDateRange[0][to]=2008-12-30T00:00:00Z"
-      const response = await request(app).get(`/court-cases?forces[]=01&maxPageItems=10&${courtDateRangeQueryParams}`)
+      const response = await request(app)
+        .get(`/court-cases?forces[]=01&maxPageItems=10&${courtDateRangeQueryParams}`)
+        .set("authorization", "password")
 
       expect(response.body.result).toHaveLength(2)
     })
@@ -72,18 +93,21 @@ describe("/court-cases", () => {
       ])
       let response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Exceptions"] }))
       expect(response.body.result[0].ptiurn).toBe("00001")
       expect(response.body.result).toHaveLength(1)
 
       response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers"] }))
       expect(response.body.result[0].ptiurn).toBe("00002")
       expect(response.body.result).toHaveLength(1)
 
       response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers", "Exceptions"] }))
       expect(response.body.result[0].ptiurn).toBe("00001")
       expect(response.body.result[1].ptiurn).toBe("00002")
@@ -91,6 +115,7 @@ describe("/court-cases", () => {
 
       response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(
           stringify({
             forces: [orgCode],
@@ -106,6 +131,7 @@ describe("/court-cases", () => {
 
       response = await request(app)
         .get("/court-cases")
+        .set("authorization", "password")
         .query(
           stringify({ forces: [orgCode], maxPageItems: "10", reasons: ["Triggers", "Exceptions"], ptiurn: "00002" })
         )
