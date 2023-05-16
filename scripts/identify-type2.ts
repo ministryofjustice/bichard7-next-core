@@ -3,6 +3,7 @@ import DynamoGateway from "src/comparison/lib/DynamoGateway"
 import comparePncMatching from "src/comparison/lib/comparePncMatching"
 import createDynamoDbConfig from "src/comparison/lib/createDynamoDbConfig"
 import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
+import badlyAnnotatedSingleCaseMatch from "src/comparison/lib/isIntentionalMatchingDifference/badlyAnnotatedSingleCaseMatch"
 import { isError } from "src/comparison/types"
 import type { OldPhase1Comparison, Phase1Comparison } from "src/comparison/types/ComparisonFile"
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
@@ -81,7 +82,7 @@ const groupHoOffences = (offenceMatches: OffenceMatch[]): Offence[][] => {
   return groups
 }
 
-const identifyCandidates = (summary: CourtResultMatchingSummary | null, aho: AnnotatedHearingOutcome): boolean => {
+const identifyCandidatesA = (summary: CourtResultMatchingSummary | null, aho: AnnotatedHearingOutcome): boolean => {
   if (!summary || "exceptions" in summary) {
     return false
   }
@@ -103,8 +104,70 @@ const identifyCandidates = (summary: CourtResultMatchingSummary | null, aho: Ann
   return false
 }
 
+type Group = {
+  hoOffences: Set<Offence>
+  pncOffences: Set<PncOffenceWithCaseRef>
+}
+
+const identifyCandidatesB = (aho: AnnotatedHearingOutcome): boolean => {
+  if (aho.Exceptions.length > 0) {
+    return false
+  }
+
+  const hoOffences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const pncOffences: PncOffenceWithCaseRef[] | undefined = aho.PncQuery?.courtCases
+    ?.map((cc) => cc.offences.map((pncOffence) => ({ pncOffence, courtCaseReference: cc.courtCaseReference })))
+    .flat()
+
+  if (!pncOffences) {
+    return false
+  }
+
+  const candidates = findMatchCandidates(hoOffences, [pncOffences])
+
+  const groups: Group[] = []
+  for (const hoOffence of candidates.matchedHoOffences()) {
+    for (const pncOffence of candidates.forHoOffence(hoOffence)) {
+      let group = groups.find((g) => g.hoOffences.has(hoOffence) || g.pncOffences.has(pncOffence))
+      if (!group) {
+        group = {
+          hoOffences: new Set<Offence>(),
+          pncOffences: new Set<PncOffenceWithCaseRef>()
+        }
+        groups.push(group)
+      }
+
+      group.pncOffences.add(pncOffence)
+
+      for (const otherHoOffence of candidates.forPncOffence(pncOffence)) {
+        group.hoOffences.add(otherHoOffence)
+      }
+    }
+  }
+
+  for (const group of groups) {
+    if (group.hoOffences.size !== group.pncOffences.size) {
+      return true
+    }
+  }
+
+  return false
+}
+
 const comparisonFails = async (comparison: OldPhase1Comparison | Phase1Comparison): Promise<boolean> => {
   const result = await comparePncMatching(comparison)
+  if (
+    result.expected &&
+    result.actual &&
+    badlyAnnotatedSingleCaseMatch(
+      result.expected,
+      result.actual,
+      {} as AnnotatedHearingOutcome,
+      {} as AnnotatedHearingOutcome
+    )
+  ) {
+    return false
+  }
   return !result.pass
 }
 
@@ -128,7 +191,7 @@ const main = async () => {
       if (contents) {
         if (
           fileName ===
-          "s3://bichard-7-production-processing-validation/2023/03/27/11/06/ProcessingValidation-1fd7a10e-43e7-4994-9fb4-cd33a756b018.json"
+          "s3://bichard-7-production-processing-validation/2023/03/28/08/33/ProcessingValidation-bb5cd6f5-9fa9-48b5-acaa-3e9ee2ba0871.json"
         ) {
           debugger
         }
@@ -140,7 +203,7 @@ const main = async () => {
           }
 
           const summary = summariseMatching(aho)
-          const isCandidate = identifyCandidates(summary, aho)
+          const isCandidate = identifyCandidatesA(summary, aho) || identifyCandidatesB(aho)
 
           if (isCandidate) {
             const failedComparison = await comparisonFails(comparison)
