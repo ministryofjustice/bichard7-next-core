@@ -2,7 +2,7 @@ import type { NextFunction, Response, Request } from "express"
 import auth from "../../src/middleware/auth"
 
 describe("auth", () => {
-  it("returns a 401 unauthorised response if password is not in authorization header", () => {
+  it("returns a 401 unauthorised response if password is not in the authorization header", () => {
     const req = {} as unknown as Request
     const res = {
       sendStatus: jest.fn().mockReturnThis()
@@ -26,7 +26,7 @@ describe("auth", () => {
     expect(res.sendStatus).toHaveBeenCalledWith(401)
   })
 
-  it("call next if correct password is in authorization header", () => {
+  it("calls next if correct password is in the authorization header", () => {
     const req = { headers: { authorization: "password" } } as unknown as Request
     const res = {
       sendStatus: jest.fn().mockReturnThis()
