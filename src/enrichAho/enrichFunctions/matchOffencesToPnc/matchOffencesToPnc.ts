@@ -215,12 +215,16 @@ const checkForMatchesWithConflictingResults = (
 ): Exception[] | undefined => {
   for (const pncOffence of candidates.matchedPncOffences()) {
     const hoOffences = candidates.forPncOffence(pncOffence)
-    const matchingCourtCaseReferences = hoOffences.reduce((acc, hoOffence) => {
-      candidates.forHoOffence(hoOffence)?.forEach((o) => acc.add(o.courtCaseReference))
+    const candidatePncOffences = candidates.forHoOffence(hoOffences[0])
+    const matchingCourtCaseReferences = candidatePncOffences.reduce((acc, pncOff) => {
+      acc.add(pncOff.courtCaseReference)
       return acc
     }, new Set<string>())
 
-    if (matchingCourtCaseReferences.size > 1 && (!offencesHaveEqualResults(hoOffences) || hoOffences.length === 1)) {
+    if (
+      matchingCourtCaseReferences.size > 1 &&
+      (!offencesHaveEqualResults(hoOffences) || candidatePncOffences.length !== hoOffences.length)
+    ) {
       return hoOffences.map((hoOffence) => ({
         code: ExceptionCode.HO100332,
         path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
@@ -255,22 +259,21 @@ const resolveMatch = (
       if (pncOffencesWithMatchingSequence.length === 0) {
         exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
         continue
-      } else if (pncOffencesWithMatchingSequence.length > 1) {
-        exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
-        continue
       }
 
-      const matchingPncOffence = candidatePncOffences?.find((pncOffence) =>
+      const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
         offenceManuallyMatches(hoOffence, pncOffence)
       )
-      if (!matchingPncOffence) {
+      if (matchingPncOffences.length === 1) {
+        result.matched.push({
+          hoOffence,
+          pncOffence: matchingPncOffences[0]
+        })
+      } else if (matchingPncOffences.length === 0) {
         exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-        continue
+      } else if (matchingPncOffences.length > 1) {
+        exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
       }
-      result.matched.push({
-        hoOffence,
-        pncOffence: matchingPncOffence
-      })
     }
   }
 
@@ -313,7 +316,15 @@ const resolveMatch = (
     "matched" in result && result.matched.some((match) => match.hoOffence === hoOffence)
 
   for (const group of groupedMatches) {
-    const matchedPncOffences = unmatchedCandidates.forHoOffence(group[0])
+    const matchedPncOffences = [
+      ...group
+        .reduce((acc: Set<PncOffenceWithCaseRef>, hoOffence: Offence) => {
+          unmatchedCandidates.forHoOffence(hoOffence).forEach((pncOffence) => acc.add(pncOffence))
+          return acc
+        }, new Set<PncOffenceWithCaseRef>())
+        .values()
+    ]
+
     if (matchedPncOffences && matchedPncOffences.length <= group.length) {
       for (let i = 0; i < matchedPncOffences.length; i++) {
         if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i])) {
@@ -351,7 +362,7 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
 
   const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
 
-  const candidates = findMatchCandidates(hoOffences, courtCases, { checkSequenceNumbers: false, exactDateMatch: true })
+  const candidates = findMatchCandidates(hoOffences, courtCases, { exactDateMatch: true })
 
   const exactDateMatches = resolveMatch(hoOffences, pncOffences, candidates)
   if (successfulMatch(exactDateMatches, hoOffences, pncOffences)) {
@@ -359,7 +370,6 @@ const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): 
   }
 
   const matchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
-    checkSequenceNumbers: false,
     exactDateMatch: false
   })
 
