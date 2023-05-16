@@ -83,7 +83,7 @@ const groupHoOffences = (offenceMatches: OffenceMatch[]): Offence[][] => {
 }
 
 const identifyCandidatesA = (summary: CourtResultMatchingSummary | null, aho: AnnotatedHearingOutcome): boolean => {
-  if (!summary || "exceptions" in summary) {
+  if (!summary || "exceptions" in summary || aho.Exceptions.length > 0) {
     return false
   }
 
@@ -147,7 +147,7 @@ const identifyCandidatesB = (aho: AnnotatedHearingOutcome): boolean => {
 
   for (const group of groups) {
     if (group.hoOffences.size !== group.pncOffences.size) {
-      return true
+      return ![...group.hoOffences].some((hoOffence) => hoOffence.ManualSequenceNumber)
     }
   }
 
@@ -191,7 +191,7 @@ const main = async () => {
       if (contents) {
         if (
           fileName ===
-          "s3://bichard-7-production-processing-validation/2023/03/28/08/33/ProcessingValidation-bb5cd6f5-9fa9-48b5-acaa-3e9ee2ba0871.json"
+          "s3://bichard-7-production-processing-validation/2023/03/20/11/58/ProcessingValidation-12052ae2-e48f-4ac6-9a87-9edd90605c5e.json"
         ) {
           debugger
         }
