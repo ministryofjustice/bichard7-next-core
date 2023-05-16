@@ -42,6 +42,10 @@ class MatchCandidates {
     return this.matches.some((match) => match.hoOffence === hoOffence && match.pncOffence === pncOffence)
   }
 
+  exactMatched(hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean {
+    return this.matches.some((match) => match.hoOffence === hoOffence && match.pncOffence === pncOffence && match.exact)
+  }
+
   filter(result: MatchingResult): MatchCandidates {
     const remainingMatches = this.matches.filter(
       (match) => !result.matched.some((m) => m.hoOffence === match.hoOffence || m.pncOffence === match.pncOffence)

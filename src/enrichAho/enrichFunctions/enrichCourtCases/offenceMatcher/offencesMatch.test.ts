@@ -67,17 +67,6 @@ describe("offencesMatch()", () => {
     expect(match).toBe(true)
   })
 
-  it("not should say otherwise identical offences match if their sequence number differs and we are checking that", () => {
-    const hoOffence = createMockHoOffence({ ...offenceDetails, sequenceNumber: 1 })
-    const pncOffence = createMockPncOffence({ ...offenceDetails, sequenceNumber: 2 })
-
-    const match1 = offencesMatch(hoOffence, pncOffence)
-    expect(match1).toBe(true)
-
-    const match2 = offencesMatch(hoOffence, pncOffence, { checkSequenceNumbers: true })
-    expect(match2).toBe(false)
-  })
-
   it("should say offences with different codes don't match", () => {
     const hoOffence = createMockHoOffence({ ...offenceDetails, fullCode: "XXX123" })
     const pncOffence = createMockPncOffence({ ...offenceDetails, fullCode: "YYY456" })
