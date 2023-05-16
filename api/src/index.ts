@@ -4,9 +4,9 @@ import app from "./app"
 
 const PORT: string = process.env.PORT || "3333"
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.USE_SSL === "true") {
   const config = { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") }
-  https.createServer(config, app).listen(PORT, () => console.log(`app is listening on ${PORT}`))
+  https.createServer(config, app).listen(PORT, () => console.log(`app is listening on https port ${PORT}`))
 } else {
-  app.listen(PORT, () => console.log(`app is listening on ${PORT}`))
+  app.listen(PORT, () => console.log(`app is listening on http port ${PORT}`))
 }
