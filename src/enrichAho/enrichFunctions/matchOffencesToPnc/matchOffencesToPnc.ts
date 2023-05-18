@@ -139,7 +139,7 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
   return true
 }
 
-const findMatchCandidates = (
+export const findMatchCandidates = (
   hoOffences: Offence[],
   courtCases: PncOffenceWithCaseRef[][],
   options: OffenceMatchOptions = {}
