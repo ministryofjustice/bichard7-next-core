@@ -61,7 +61,9 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     const manualSequenceNumberStr = manualSequenceNumber ? ` (${manualSequenceNumber}) ` : ""
     const sequenceNumbers = `${courtOffenceSequenceNumber}${manualSequenceNumberStr}`.padEnd(10, " ")
     const offenceCode = (getOffenceCode(offence) ?? "").padEnd(10, " ")
-    const resultCodes = offence.Result.map((result) => result.CJSresultCode.toString()).join(",")
+    const resultCodes = offence.Result.map((result) => result.CJSresultCode.toString())
+      .sort()
+      .join(",")
     const startDate = formatDate(offence.ActualOffenceStartDate.StartDate).padEnd(11, " ")
     const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(11, " ")
     const convictionDate = formatDate(offence.ConvictionDate).padEnd(12, " ")
