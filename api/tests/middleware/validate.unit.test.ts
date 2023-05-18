@@ -14,9 +14,10 @@ const createTestQuery = () => {
 describe("validateCourtCaseListQueryParams", () => {
   it("calls the next function if query has all required fields", () => {
     const req = { query: { forces: ["01"], maxPageItems: "10" } } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -26,9 +27,10 @@ describe("validateCourtCaseListQueryParams", () => {
 
   it("stores the validated query in the request object", () => {
     const req = { query: { forces: ["01"], maxPageItems: "10" } } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -38,9 +40,10 @@ describe("validateCourtCaseListQueryParams", () => {
 
   it("returns 400 status code if forces are absent", () => {
     const req = { query: { maxPageItems: "10" } } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -62,9 +65,10 @@ describe("validateCourtCaseListQueryParams", () => {
 
   it("returns 400 status code if maxPageItems are absent", () => {
     const req = { query: { forces: ["01"] } } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -87,9 +91,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: { forces: ["01"], maxPageItems: "Not a number" }
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -111,9 +116,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: { forces: ["01"], maxPageItems: "9" }
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -135,9 +141,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: { forces: ["01"], maxPageItems: "101" }
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -161,9 +168,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -176,9 +184,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -203,9 +212,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -230,9 +240,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
@@ -257,9 +268,10 @@ describe("validateCourtCaseListQueryParams", () => {
     const req = {
       query: caseListQuery
     } as unknown as CaseListQueryRequest
-    const res = {} as Response
-    res.status = jest.fn().mockReturnValue(res)
-    res.json = jest.fn().mockReturnValue(res)
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis()
+    } as unknown as Response
     const next = jest.fn() as NextFunction
 
     validateCaseListQueryParams(req, res, next)
