@@ -34,7 +34,7 @@ const summariseMatching = (
   aho: AnnotatedHearingOutcome,
   includeOffenceCode = false
 ): CourtResultMatchingSummary | null => {
-  const matchingExceptionsGenerated = aho.Exceptions.filter((e) => matchingExceptions.includes(e.code))
+  const matchingExceptionsGenerated = aho.Exceptions?.filter((e) => matchingExceptions.includes(e.code))
   if (matchingExceptionsGenerated.length > 0) {
     return { exceptions: matchingExceptionsGenerated }
   }

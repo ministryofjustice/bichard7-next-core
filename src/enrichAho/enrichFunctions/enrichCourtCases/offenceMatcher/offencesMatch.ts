@@ -13,6 +13,13 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
     return false
   }
 
+  const convictionDatesMatch =
+    !pncOffence.adjudication?.sentenceDate ||
+    hoOffence.ConvictionDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
+  if (!convictionDatesMatch) {
+    return false
+  }
+
   if (hoOffence.ActualOffenceEndDate?.EndDate === undefined && pncOffence.offence.endDate === undefined) {
     return true
   }

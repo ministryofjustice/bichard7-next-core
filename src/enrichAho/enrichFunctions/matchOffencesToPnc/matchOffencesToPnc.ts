@@ -302,10 +302,10 @@ const resolveMatch = (
   }
 
   unmatchedCandidates = unmatchedCandidates.filter(result)
-  exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
-  if (exceptions.length > 0) {
-    return { exceptions }
-  }
+  // exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
+  // if (exceptions.length > 0) {
+  //   return { exceptions }
+  // }
 
   const groupedMatches = groupSimilarOffences(unmatchedCandidates)
 
@@ -315,9 +315,27 @@ const resolveMatch = (
   const hoOffenceWasAlreadyMatched = (hoOffence: Offence): boolean =>
     "matched" in result && result.matched.some((match) => match.hoOffence === hoOffence)
 
+  const nothingElseMatchesWithConvictionDatesAndConflictingResults = (
+    candidates: MatchCandidates,
+    hoOffence: Offence,
+    pncOffence: PncOffenceWithCaseRef
+  ): boolean => {
+    for (const otherHoOffence of candidates.forPncOffence(pncOffence)) {
+      if (otherHoOffence !== hoOffence) {
+        const convictionDatesMatch =
+          hoOffence.ConvictionDate?.getTime() === pncOffence.pncOffence.adjudication?.sentenceDate.getTime()
+        if (convictionDatesMatch && !offencesHaveEqualResults([hoOffence, otherHoOffence])) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
   for (const group of groupedMatches) {
-    const matchedPncOffences = [
+    let matchedPncOffences = [
       ...group
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
         .reduce((acc: Set<PncOffenceWithCaseRef>, hoOffence: Offence) => {
           unmatchedCandidates.forHoOffence(hoOffence).forEach((pncOffence) => acc.add(pncOffence))
           return acc
@@ -325,18 +343,44 @@ const resolveMatch = (
         .values()
     ]
 
+    for (const hoOffence of group) {
+      for (const pncOffence of matchedPncOffences) {
+        const convictionDatesMatch =
+          hoOffence.ConvictionDate?.getTime() === pncOffence.pncOffence.adjudication?.sentenceDate.getTime()
+        if (
+          !pncOffenceWasAlreadyMatched(pncOffence) &&
+          convictionDatesMatch &&
+          nothingElseMatchesWithConvictionDatesAndConflictingResults(unmatchedCandidates, hoOffence, pncOffence)
+        ) {
+          result.matched.push({
+            hoOffence: hoOffence,
+            pncOffence: pncOffence
+          })
+          break
+        }
+      }
+    }
+
+    matchedPncOffences = matchedPncOffences.filter((pncOffence) => !pncOffenceWasAlreadyMatched(pncOffence))
+
     if (matchedPncOffences && matchedPncOffences.length <= group.length) {
       for (let i = 0; i < matchedPncOffences.length; i++) {
-        if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i])) {
+        if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i]) && !hoOffenceWasAlreadyMatched(group[i])) {
           result.matched.push({
             hoOffence: group[i],
             pncOffence: matchedPncOffences[i]
           })
         }
       }
-    } else {
-      return { exceptions: [ho100304] }
+      // } else {
+      //   return { exceptions: [ho100304] }
     }
+  }
+
+  unmatchedCandidates = unmatchedCandidates.filter(result)
+  exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
+  if (exceptions.length > 0) {
+    return { exceptions }
   }
 
   for (const hoOffence of hoOffences) {
