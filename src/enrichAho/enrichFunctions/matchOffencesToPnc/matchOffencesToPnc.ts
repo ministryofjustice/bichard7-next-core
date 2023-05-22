@@ -8,24 +8,25 @@ import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHas
 import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
-import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import MatchCandidates from "./MatchCandidates"
-import { selectMatch } from "./selectMatch"
+import OffenceMatcher from "./OffenceMatcher"
 
-const matchingCourtCases = (cases: PncCourtCase[], matches: MatchingResult): PncCourtCase[] =>
-  cases.filter((courtCase) => matches.matched.some((match) => courtCase.offences.includes(match.pncOffence.pncOffence)))
+const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PncCourtCase[] =>
+  cases.filter((courtCase) =>
+    pncOffences.some((pncOffence) => pncOffence.courtCaseReference === courtCase.courtCaseReference)
+  )
 
 const getFirstMatchingCourtCaseWith2060Result = (
   cases: PncCourtCase[],
-  matches: MatchingResult
+  offenceMatcher: OffenceMatcher
 ): string | undefined => {
-  const matchedCases = matchingCourtCases(cases, matches)
+  const matchedCases = matchingCourtCases(cases, offenceMatcher.matchedPncOffences)
   const matchedCasesWith2060Result = matchedCases.filter((courtCase) =>
     courtCase.offences.some((pncOffence) =>
-      matches.matched.some(
-        (match) =>
-          match.pncOffence.pncOffence === pncOffence &&
-          match.hoOffence.Result.some((result) => result.CJSresultCode === 2060)
+      [...offenceMatcher.matches.entries()].some(
+        ([matchedHoOffence, matchedPncOffence]) =>
+          matchedPncOffence.pncOffence === pncOffence &&
+          matchedHoOffence.Result.some((result) => result.CJSresultCode === 2060)
       )
     )
   )
@@ -34,19 +35,17 @@ const getFirstMatchingCourtCaseWith2060Result = (
 
 const getFirstMatchingCourtCaseWithoutAdjudications = (
   cases: PncCourtCase[],
-  matches: MatchingResult
+  offenceMatcher: OffenceMatcher
 ): string | undefined => {
-  const matchedCases = matchingCourtCases(cases, matches)
+  const matchedCases = matchingCourtCases(cases, offenceMatcher.matchedPncOffences)
   const matchedCasesWithNoAdjudications = matchedCases.filter((courtCase) =>
     courtCase.offences.every((pncOffence) => !pncOffence.adjudication)
   )
   return matchedCasesWithNoAdjudications[0]?.courtCaseReference
 }
 
-const getFirstMatchingCourtCase = (cases: PncCourtCase[], matches: MatchingResult): string | undefined =>
-  matchingCourtCases(cases, matches)[0]?.courtCaseReference
-
-const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
+const getFirstMatchingCourtCase = (cases: PncCourtCase[], offenceMatcher: OffenceMatcher): string | undefined =>
+  matchingCourtCases(cases, offenceMatcher.matchedPncOffences)[0]?.courtCaseReference
 
 export type PncOffenceWithCaseRef = {
   courtCaseReference: string
@@ -63,11 +62,11 @@ export type MatchingResult = {
   unmatched: Offence[]
 }
 
-type ExceptionResult = {
+export type ExceptionResult = {
   exceptions: Exception[]
 }
 
-type ResolvedResult = ExceptionResult | MatchingResult
+export type ResolvedResult = ExceptionResult | MatchingResult
 
 export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) => {
   if (!map.has(key)) {
@@ -114,7 +113,7 @@ const normaliseCCR = (ccr: string): string => {
   return splitCCR.join("/")
 }
 
-const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
+export const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
   const manualSequence = hoOffence.ManualSequenceNumber
   const manualCourtCase = hoOffence.ManualCourtCaseReference
   if (manualSequence) {
@@ -169,217 +168,17 @@ export const findMatchCandidates = (
   return matches
 }
 
-const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffence[]): boolean => {
+const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffenceWithCaseRef[]): boolean => {
   for (const hoOffence of hoOffences) {
-    if (pncOffences.some((pncOffence) => offencesMatch(hoOffence, pncOffence))) {
+    if (pncOffences.some((pncOffence) => offencesMatch(hoOffence, pncOffence.pncOffence))) {
       return true
     }
   }
   return false
 }
 
-const hoOffencesSharePncOffenceMatch = (
-  hoOffence1: Offence,
-  hoOffence2: Offence,
-  candidate: MatchCandidates
-): boolean => {
-  const pncOffences1 = candidate.forHoOffence(hoOffence1)
-  const pncOffences2 = candidate.forHoOffence(hoOffence2)
-  return !!pncOffences1?.some((pncOffence1) => !!pncOffences2?.some((pncOffence2) => pncOffence1 === pncOffence2))
-}
-
-const groupSimilarOffences = (candidates: MatchCandidates): Offence[][] => {
-  const groups: Offence[][] = []
-  for (const hoOffence of candidates.matchedHoOffences()) {
-    let foundMatch = false
-    for (const group of groups) {
-      if (
-        hoOffencesSharePncOffenceMatch(hoOffence, group[0], candidates) &&
-        offencesHaveEqualResults([hoOffence, group[0]])
-      ) {
-        group.push(hoOffence)
-        foundMatch = true
-      }
-    }
-
-    if (!foundMatch) {
-      groups.push([hoOffence])
-    }
-  }
-  return groups
-}
-
-const checkForMatchesWithConflictingResults = (
-  candidates: MatchCandidates,
-  originalHoOffences: Offence[]
-): Exception[] | undefined => {
-  for (const pncOffence of candidates.matchedPncOffences()) {
-    const hoOffences = candidates.forPncOffence(pncOffence)
-    const candidatePncOffences = candidates.forHoOffence(hoOffences[0])
-    const matchingCourtCaseReferences = candidatePncOffences.reduce((acc, pncOff) => {
-      acc.add(pncOff.courtCaseReference)
-      return acc
-    }, new Set<string>())
-
-    if (
-      matchingCourtCaseReferences.size > 1 &&
-      (!offencesHaveEqualResults(hoOffences) || candidatePncOffences.length !== hoOffences.length)
-    ) {
-      return hoOffences.map((hoOffence) => ({
-        code: ExceptionCode.HO100332,
-        path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
-      }))
-    } else if (!offencesHaveEqualResults(hoOffences)) {
-      return hoOffences.map((hoOffence) => ({
-        code: ExceptionCode.HO100310,
-        path: errorPaths.offence(originalHoOffences.indexOf(hoOffence)).reasonSequence
-      }))
-    }
-  }
-}
-
-const resolveMatch = (
-  hoOffences: Offence[],
-  pncOffences: PncOffenceWithCaseRef[],
-  candidate: MatchCandidates
-): ResolvedResult => {
-  const result: MatchingResult = { matched: [], unmatched: [] }
-  const exceptions: Exception[] = []
-
-  // Filter out offences with final results from groups containing offences with non-final results
-  let unmatchedCandidates = candidate.filterNonFinal()
-
-  // Match up manual sequence numbers
-  for (const [i, hoOffence] of hoOffences.entries()) {
-    if (hoOffence.ManualSequenceNumber) {
-      const candidatePncOffences = unmatchedCandidates.forHoOffence(hoOffence)
-      const pncOffencesWithMatchingSequence = pncOffences.filter((pncOffence) =>
-        offenceManuallyMatches(hoOffence, pncOffence)
-      )
-      if (pncOffencesWithMatchingSequence.length === 0) {
-        exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
-        continue
-      }
-
-      const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-        offenceManuallyMatches(hoOffence, pncOffence)
-      )
-      if (matchingPncOffences.length === 1) {
-        result.matched.push({
-          hoOffence,
-          pncOffence: matchingPncOffences[0]
-        })
-      } else if (matchingPncOffences.length === 0) {
-        exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-      } else if (matchingPncOffences.length > 1) {
-        exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
-      }
-    }
-  }
-
-  if (exceptions.length > 0) {
-    return { exceptions }
-  }
-
-  // Repeatedly match up all 1-to-1 matches
-  let loop = true
-  unmatchedCandidates = unmatchedCandidates.filter(result)
-  while (loop) {
-    let foundMatch = false
-
-    for (const hoOffence of unmatchedCandidates.matchedHoOffences()) {
-      const selectedMatch = selectMatch(hoOffence, unmatchedCandidates)
-      if (selectedMatch) {
-        result.matched.push({
-          hoOffence,
-          pncOffence: selectedMatch
-        })
-        foundMatch = true
-        unmatchedCandidates = unmatchedCandidates.filter(result)
-      }
-    }
-    loop = foundMatch
-  }
-
-  unmatchedCandidates = unmatchedCandidates.filter(result)
-  exceptions.push(...(checkForMatchesWithConflictingResults(unmatchedCandidates, hoOffences) ?? []))
-  if (exceptions.length > 0) {
-    return { exceptions }
-  }
-
-  const groupedMatches = groupSimilarOffences(unmatchedCandidates)
-
-  const pncOffenceWasAlreadyMatched = (pncOffence: PncOffenceWithCaseRef): boolean =>
-    "matched" in result && result.matched.some((match) => match.pncOffence === pncOffence)
-
-  const hoOffenceWasAlreadyMatched = (hoOffence: Offence): boolean =>
-    "matched" in result && result.matched.some((match) => match.hoOffence === hoOffence)
-
-  for (const group of groupedMatches) {
-    const matchedPncOffences = [
-      ...group
-        .reduce((acc: Set<PncOffenceWithCaseRef>, hoOffence: Offence) => {
-          unmatchedCandidates.forHoOffence(hoOffence).forEach((pncOffence) => acc.add(pncOffence))
-          return acc
-        }, new Set<PncOffenceWithCaseRef>())
-        .values()
-    ]
-
-    if (matchedPncOffences && matchedPncOffences.length <= group.length) {
-      for (let i = 0; i < matchedPncOffences.length; i++) {
-        if (!pncOffenceWasAlreadyMatched(matchedPncOffences[i])) {
-          result.matched.push({
-            hoOffence: group[i],
-            pncOffence: matchedPncOffences[i]
-          })
-        }
-      }
-    } else {
-      return { exceptions: [ho100304] }
-    }
-  }
-
-  for (const hoOffence of hoOffences) {
-    if (!hoOffenceWasAlreadyMatched(hoOffence)) {
-      result.unmatched.push(hoOffence)
-    }
-  }
-
-  return result
-}
-
-const successfulMatch = (
-  result: ResolvedResult,
-  hoOffences: Offence[],
-  pncOffences: PncOffenceWithCaseRef[]
-): boolean =>
-  "matched" in result && (result.matched.length === hoOffences.length || result.matched.length === pncOffences.length)
-
-const performMatching = (hoOffences: Offence[], pncCourtCases: PncCourtCase[]): ResolvedResult => {
-  const courtCases: PncOffenceWithCaseRef[][] = pncCourtCases.map((cc) =>
-    cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference }))
-  )
-
-  const pncOffences: PncOffenceWithCaseRef[] = courtCases.flat()
-
-  const candidates = findMatchCandidates(hoOffences, courtCases, { exactDateMatch: true })
-
-  const exactDateMatches = resolveMatch(hoOffences, pncOffences, candidates)
-  if (successfulMatch(exactDateMatches, hoOffences, pncOffences)) {
-    return exactDateMatches
-  }
-
-  const matchCandidatesWithFuzzyDates = findMatchCandidates(hoOffences, courtCases, {
-    exactDateMatch: false
-  })
-
-  const fuzzyDateMatches = resolveMatch(hoOffences, pncOffences, matchCandidatesWithFuzzyDates)
-  if ("matched" in fuzzyDateMatches && fuzzyDateMatches.matched.length === 0) {
-    return { exceptions: [ho100304] }
-  }
-
-  return fuzzyDateMatches
-}
+const flattenCourtCases = (courtCases: PncCourtCase[]): PncOffenceWithCaseRef[] =>
+  courtCases.map((cc) => cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference }))).flat()
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
@@ -388,51 +187,48 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
   if (!courtCases || courtCases.length === 0 || hoOffences.length === 0) {
     return aho
   }
+  const pncOffences = flattenCourtCases(courtCases)
 
-  const matches = performMatching(hoOffences, courtCases)
+  const offenceMatcher = new OffenceMatcher(hoOffences, pncOffences)
+  offenceMatcher.match()
 
-  if ("exceptions" in matches) {
-    aho.Exceptions.push(...matches.exceptions)
+  if (offenceMatcher.hasExceptions) {
+    aho.Exceptions.push(...offenceMatcher.exceptions)
     return aho
   }
 
   // If any unmatched ho offences match the offence code of a pnc offence, then raise a HO100304 because it could be a typo
-  const unmatchedPncOffences = courtCases
-    .map((courtCase) => courtCase.offences)
-    .flat()
-    .filter((pncOffence) => !matches.matched.some((match) => match.pncOffence.pncOffence === pncOffence))
-  if (hasMatchingOffence(matches.unmatched, unmatchedPncOffences)) {
+  if (hasMatchingOffence(offenceMatcher.unmatchedHoOffences, offenceMatcher.unmatchedPncOffences)) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
 
   // If there are still any unmatched PNC offences that don't already have final results in the court cases we have matched, raise an exception
-  const matchedCourtCases = matches.matched.reduce((acc, match) => {
-    acc.add(match.pncOffence.courtCaseReference)
+  const matchedCourtCases = offenceMatcher.matchedPncOffences.reduce((acc, pncOffence) => {
+    acc.add(pncOffence.courtCaseReference)
     return acc
   }, new Set<string>())
 
-  const unmatchedNonFinalPncOffences = courtCases
-    .filter((courtCase) => matchedCourtCases.has(courtCase.courtCaseReference))
-    .map((courtCase) => courtCase.offences.filter((pncOffence) => !offenceHasFinalResult(pncOffence)))
-    .flat()
-    .filter((pncOffence) => unmatchedPncOffences.includes(pncOffence))
+  const unmatchedNonFinalPncOffences = pncOffences.filter(
+    (pncOffence) =>
+      matchedCourtCases.has(pncOffence.courtCaseReference) &&
+      !offenceHasFinalResult(pncOffence.pncOffence) &&
+      offenceMatcher.unmatchedPncOffences.includes(pncOffence)
+  )
 
   if (unmatchedNonFinalPncOffences.length > 0) {
     aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
 
-  if (matches.matched.length > 0) {
+  if (offenceMatcher.matches.size > 0) {
     // Check whether we have matched more than one court case
-    const multipleMatches =
-      matches.matched.reduce((acc, match) => {
-        acc.add(match.pncOffence.courtCaseReference)
-        return acc
-      }, new Set<string>()).size > 1
+    const multipleMatches = matchedCourtCases.size > 1
     // Annotate the AHO with the matches
-    matches.matched.forEach((match) => annotatePncMatch(match, caseElem, multipleMatches))
-    matches.unmatched.forEach((hoOffence) => {
+    offenceMatcher.matches.forEach((pncOffence, hoOffence) =>
+      annotatePncMatch({ hoOffence, pncOffence }, caseElem, multipleMatches)
+    )
+    offenceMatcher.unmatchedHoOffences.forEach((hoOffence) => {
       hoOffence.AddedByTheCourt = true
 
       if (multipleMatches) {
@@ -441,9 +237,9 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
           hoOffence.CourtCaseReferenceNumber = courtCases[0].courtCaseReference
         } else {
           hoOffence.CourtCaseReferenceNumber =
-            getFirstMatchingCourtCaseWith2060Result(courtCases, matches) ||
-            getFirstMatchingCourtCaseWithoutAdjudications(courtCases, matches) ||
-            getFirstMatchingCourtCase(courtCases, matches)
+            getFirstMatchingCourtCaseWith2060Result(courtCases, offenceMatcher) ||
+            getFirstMatchingCourtCaseWithoutAdjudications(courtCases, offenceMatcher) ||
+            getFirstMatchingCourtCase(courtCases, offenceMatcher)
         }
       }
       hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
