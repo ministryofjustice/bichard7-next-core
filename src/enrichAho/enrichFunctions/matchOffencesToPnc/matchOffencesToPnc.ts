@@ -1,15 +1,22 @@
 import errorPaths from "src/lib/errorPaths"
-import type { AnnotatedHearingOutcome, Case, Offence } from "src/types/AnnotatedHearingOutcome"
-import type Exception from "src/types/Exception"
+import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
 import offenceCategoryIsNonRecordable from "../enrichCourtCases/offenceCategoryIsNonRecordable"
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
-import type { OffenceMatchOptions } from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
-import MatchCandidates from "./MatchCandidates"
 import OffenceMatcher from "./OffenceMatcher"
+import annotatePncMatch from "./annotatePncMatch"
+
+export type PncOffenceWithCaseRef = {
+  courtCaseReference: string
+  pncOffence: PncOffence
+}
+
+export type OffenceMatch = {
+  hoOffence: Offence
+  pncOffence: PncOffenceWithCaseRef
+}
 
 const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PncCourtCase[] =>
   cases.filter((courtCase) =>
@@ -47,125 +54,11 @@ const getFirstMatchingCourtCaseWithoutAdjudications = (
 const getFirstMatchingCourtCase = (cases: PncCourtCase[], offenceMatcher: OffenceMatcher): string | undefined =>
   matchingCourtCases(cases, offenceMatcher.matchedPncOffences)[0]?.courtCaseReference
 
-export type PncOffenceWithCaseRef = {
-  courtCaseReference: string
-  pncOffence: PncOffence
-}
-
-type OffenceMatch = {
-  hoOffence: Offence
-  pncOffence: PncOffenceWithCaseRef
-}
-
-export type MatchingResult = {
-  matched: OffenceMatch[]
-  unmatched: Offence[]
-}
-
-export type ExceptionResult = {
-  exceptions: Exception[]
-}
-
-export type ResolvedResult = ExceptionResult | MatchingResult
-
 export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) => {
   if (!map.has(key)) {
     map.set(key, [])
   }
   map.get(key)!.push(...items)
-}
-
-const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
-  // TODO: In the future we should make this a number in the schema but this check is for compatibility
-  if (
-    Number(offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !==
-    offenceMatch.pncOffence.pncOffence.offence.sequenceNumber
-  ) {
-    offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
-      offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
-  }
-  offenceMatch.hoOffence.Result.forEach((result) => {
-    result.PNCAdjudicationExists = !!offenceMatch.pncOffence.pncOffence.adjudication
-  })
-  if (offenceIsBreach(offenceMatch.hoOffence)) {
-    offenceMatch.hoOffence.ActualOffenceStartDate.StartDate = offenceMatch.pncOffence.pncOffence.offence.startDate
-    if (offenceMatch.pncOffence.pncOffence.offence.endDate) {
-      offenceMatch.hoOffence.ActualOffenceEndDate = { EndDate: offenceMatch.pncOffence.pncOffence.offence.endDate }
-    }
-  }
-
-  if (addCaseRefToOffences) {
-    offenceMatch.hoOffence.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
-    caseElem.CourtCaseReferenceNumber = undefined
-  } else {
-    caseElem.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
-    offenceMatch.hoOffence.CourtCaseReferenceNumber = undefined
-    offenceMatch.hoOffence.ManualCourtCaseReference = undefined
-  }
-}
-
-const normaliseCCR = (ccr: string): string => {
-  const splitCCR = ccr.split("/")
-  if (splitCCR.length !== 3) {
-    return ccr
-  }
-  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
-  return splitCCR.join("/")
-}
-
-export const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
-  const manualSequence = hoOffence.ManualSequenceNumber
-  const manualCourtCase = hoOffence.ManualCourtCaseReference
-  if (manualSequence) {
-    const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-    if (offenceReasonSequence !== undefined) {
-      const sequence = Number(offenceReasonSequence)
-      if (isNaN(sequence)) {
-        return false
-      }
-      if (manualCourtCase) {
-        const courtCase = hoOffence.CourtCaseReferenceNumber
-        return (
-          sequence === pncOffence.pncOffence.offence.sequenceNumber &&
-          !!courtCase &&
-          normaliseCCR(courtCase) === normaliseCCR(pncOffence.courtCaseReference)
-        )
-      } else {
-        return sequence === pncOffence.pncOffence.offence.sequenceNumber
-      }
-    }
-  }
-  return true
-}
-
-export const findMatchCandidates = (
-  hoOffences: Offence[],
-  courtCases: PncOffenceWithCaseRef[][],
-  options: OffenceMatchOptions = {}
-): MatchCandidates => {
-  const matches = new MatchCandidates()
-
-  const match = (matcherOptions: OffenceMatchOptions): void => {
-    for (const courtCase of courtCases) {
-      for (const hoOffence of hoOffences) {
-        for (const pncOffence of courtCase) {
-          if (
-            !matches.matched(hoOffence, pncOffence) &&
-            offencesMatch(hoOffence, pncOffence.pncOffence, matcherOptions)
-          ) {
-            matches.add({ hoOffence, pncOffence, exact: !!matcherOptions.exactDateMatch })
-          }
-        }
-      }
-    }
-  }
-
-  match({ ...options, exactDateMatch: true })
-  if (!options.exactDateMatch) {
-    match(options)
-  }
-
-  return matches
 }
 
 const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffenceWithCaseRef[]): boolean => {

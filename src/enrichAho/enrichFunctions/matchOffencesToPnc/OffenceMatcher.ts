@@ -6,7 +6,7 @@ import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHas
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
-import { offenceManuallyMatches, pushToArrayInMap } from "./matchOffencesToPnc"
+import { pushToArrayInMap } from "./matchOffencesToPnc"
 
 type Candidate = {
   hoOffence: Offence
@@ -17,6 +17,40 @@ type Candidate = {
 type OffenceMatchingGroup = {
   hoOffences: Set<Offence>
   pncOffences: Set<PncOffenceWithCaseRef>
+}
+
+const normaliseCCR = (ccr: string): string => {
+  const splitCCR = ccr.split("/")
+  if (splitCCR.length !== 3) {
+    return ccr
+  }
+  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
+  return splitCCR.join("/")
+}
+
+const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
+  const manualSequence = hoOffence.ManualSequenceNumber
+  const manualCourtCase = hoOffence.ManualCourtCaseReference
+  if (manualSequence) {
+    const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+    if (offenceReasonSequence !== undefined) {
+      const sequence = Number(offenceReasonSequence)
+      if (isNaN(sequence)) {
+        return false
+      }
+      if (manualCourtCase) {
+        const courtCase = hoOffence.CourtCaseReferenceNumber
+        return (
+          sequence === pncOffence.pncOffence.offence.sequenceNumber &&
+          !!courtCase &&
+          normaliseCCR(courtCase) === normaliseCCR(pncOffence.courtCaseReference)
+        )
+      } else {
+        return sequence === pncOffence.pncOffence.offence.sequenceNumber
+      }
+    }
+  }
+  return true
 }
 
 const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
