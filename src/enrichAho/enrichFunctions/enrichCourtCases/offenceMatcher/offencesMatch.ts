@@ -6,10 +6,19 @@ import offenceIsBreach from "./offenceIsBreach"
 
 export type OffenceMatchOptions = {
   exactDateMatch?: boolean
+  checkConvictionDate?: boolean
 }
 
-const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence, checkConvictionDate: boolean): boolean => {
   if (hoOffence.ActualOffenceStartDate.StartDate.toISOString() !== pncOffence.offence.startDate.toISOString()) {
+    return false
+  }
+
+  const convictionDatesMatch =
+    hoOffence.ConvictionDate &&
+    pncOffence.adjudication?.sentenceDate &&
+    hoOffence.ConvictionDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
+  if (checkConvictionDate && !convictionDatesMatch) {
     return false
   }
 
@@ -25,7 +34,7 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
 }
 
 const offencesMatch = (hoOffence: Offence, pncOffence: PncOffence, options: OffenceMatchOptions = {}): boolean => {
-  const { exactDateMatch } = { exactDateMatch: false, ...options }
+  const { exactDateMatch, checkConvictionDate } = { exactDateMatch: false, checkConvictionDate: false, ...options }
   const ignoreDates = offenceIsBreach(hoOffence)
   const hoOffenceCode = getOffenceCode(hoOffence)
   const pncOffenceCode = pncOffence.offence.cjsOffenceCode
@@ -39,7 +48,7 @@ const offencesMatch = (hoOffence: Offence, pncOffence: PncOffence, options: Offe
   }
 
   if (exactDateMatch) {
-    return datesMatchExactly(hoOffence, pncOffence)
+    return datesMatchExactly(hoOffence, pncOffence, checkConvictionDate)
   }
 
   return datesMatchApproximately(hoOffence, pncOffence)
