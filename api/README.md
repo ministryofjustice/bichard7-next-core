@@ -18,9 +18,9 @@ If succesful will return a 200
 
 Request Headers:
 
-| Attribute                | Type   | Required |
-| ------------------------ | ------ | -------- |
-| authorization            | string | Yes      |
+| Attribute     | Type   | Required |
+| ------------- | ------ | -------- |
+| authorization | string | Yes      |
 
 Returns a list of court cases filtered by the following parameters
 
