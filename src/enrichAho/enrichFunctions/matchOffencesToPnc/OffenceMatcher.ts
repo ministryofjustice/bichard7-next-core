@@ -102,25 +102,24 @@ class OffenceMatcher {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
   }
 
-  reset(): void {
-    this.exceptions = []
-    this.matches = new Map<Offence, PncOffenceWithCaseRef>()
-  }
-
   hasCandidate(candidate: Candidate): boolean {
     return !!this.candidates.get(candidate.hoOffence)?.some((c) => c.pncOffence === candidate.pncOffence)
   }
 
-  findCandidates(exact: boolean) {
+  findCandidates() {
+    const checkAndAddCandidate = (candidate: Candidate) => {
+      if (
+        !this.hasCandidate(candidate) &&
+        offencesMatch(candidate.hoOffence, candidate.pncOffence.pncOffence, { exactDateMatch: candidate.exact })
+      ) {
+        pushToArrayInMap(this.candidates, candidate.hoOffence, candidate)
+      }
+    }
+
     for (const hoOffence of this.hoOffences) {
       for (const pncOffence of this.pncOffences) {
-        const candidate = { hoOffence, pncOffence, exact }
-        if (
-          !this.hasCandidate(candidate) &&
-          offencesMatch(hoOffence, pncOffence.pncOffence, { exactDateMatch: exact })
-        ) {
-          pushToArrayInMap(this.candidates, hoOffence, candidate)
-        }
+        checkAndAddCandidate({ hoOffence, pncOffence, exact: true })
+        checkAndAddCandidate({ hoOffence, pncOffence, exact: false })
       }
     }
   }
@@ -342,7 +341,8 @@ class OffenceMatcher {
     }
   }
 
-  resolveMatches() {
+  match() {
+    this.findCandidates()
     this.filterNonFinalCandidates()
     this.matchManualSequenceNumbers()
     if (this.exceptions.length > 0) {
@@ -353,18 +353,6 @@ class OffenceMatcher {
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.exceptions.push(ho100304)
     }
-  }
-
-  match() {
-    this.findCandidates(true)
-    this.resolveMatches()
-
-    if (this.successfulMatch()) {
-      return
-    }
-    this.reset()
-    this.findCandidates(false)
-    this.resolveMatches()
   }
 }
 
