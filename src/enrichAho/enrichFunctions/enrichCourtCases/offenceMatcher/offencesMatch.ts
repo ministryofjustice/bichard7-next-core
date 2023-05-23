@@ -14,11 +14,9 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence, checkConv
     return false
   }
 
-  const convictionDatesMatch =
-    hoOffence.ConvictionDate &&
-    pncOffence.adjudication?.sentenceDate &&
-    hoOffence.ConvictionDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
-  if (checkConvictionDate && !convictionDatesMatch) {
+  const hasConvictionDates = hoOffence.ConvictionDate && pncOffence.adjudication?.sentenceDate
+  const convictionDatesMatch = hoOffence.ConvictionDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
+  if (checkConvictionDate && (!hasConvictionDates || !convictionDatesMatch)) {
     return false
   }
 

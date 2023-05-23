@@ -365,6 +365,7 @@ class OffenceMatcher {
       } else {
         if (!checkConvictionDate) {
           this.exceptions.push(ho100304)
+          return
         }
       }
     }
