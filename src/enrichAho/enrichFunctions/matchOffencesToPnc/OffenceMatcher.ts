@@ -91,24 +91,6 @@ class OffenceMatcher {
     return candidates
   }
 
-  get unmatchedCandidatesWithConvictionDateMatch(): Map<Offence, Candidate[]> {
-    const candidates = new Map<Offence, Candidate[]>()
-    for (const [hoOffence, candidatePncOffences] of this.candidates.entries()) {
-      if ([...this.matches.keys()].includes(hoOffence)) {
-        continue
-      }
-
-      const unmatchedCandidatePncOffences = candidatePncOffences.filter(
-        (candidate) => !this.matchedPncOffences.includes(candidate.pncOffence) && candidate.convictionDatesMatch
-      )
-
-      if (unmatchedCandidatePncOffences.length > 0) {
-        candidates.set(hoOffence, unmatchedCandidatePncOffences)
-      }
-    }
-    return candidates
-  }
-
   get unmatchedHoOffences(): Offence[] {
     return this.hoOffences.filter((hoOffence) => !this.matchedHoOffences.includes(hoOffence))
   }
