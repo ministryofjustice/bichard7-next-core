@@ -221,41 +221,29 @@ class OffenceMatcher {
   hoOffencesSharePncOffenceMatch = (
     hoOffence1: Offence,
     hoOffence2: Offence,
-    options: OffenceMatchOptions = {}
   ): boolean => {
-    const pncOffences1 = this.candidatesForHoOffence(hoOffence1, options)
-    const pncOffences2 = this.candidatesForHoOffence(hoOffence2, options)
+    const pncOffences1 = this.candidatesForHoOffence(hoOffence1)
+    const pncOffences2 = this.candidatesForHoOffence(hoOffence2)
     return !!pncOffences1?.some((pncOffence1) => !!pncOffences2?.some((pncOffence2) => pncOffence1 === pncOffence2))
   }
 
-  groupOffences(checkConvictionDate: boolean): OffenceMatchingGroup[] {
-    const groups: OffenceMatchingGroup[] = []
-    const unmatched = checkConvictionDate ? this.unmatchedCandidatesWithConvictionDateMatch : this.unmatchedCandidates
-    for (const hoOffence of unmatched.keys()) {
+  groupOffences(): Candidate[][] {
+    const groups: Candidate[][] = []
+
+    for (const [hoOffence, candidates] of this.unmatchedCandidates.entries()) {
       let foundMatch = false
       for (const group of groups) {
-        if (
-          this.hoOffencesSharePncOffenceMatch(hoOffence, group.hoOffences.values().next().value, {
-            checkConvictionDate
-          })
-        ) {
-          group.hoOffences.add(hoOffence)
-          this.candidatesForHoOffence(hoOffence, {
-            checkConvictionDate
-          }).forEach((c) => group.pncOffences.add(c))
+        if (this.hoOffencesSharePncOffenceMatch(hoOffence, group[0].hoOffence)) {
+          group.push(...candidates)
           foundMatch = true
         }
       }
 
       if (!foundMatch) {
-        const newGroup = { hoOffences: new Set<Offence>(), pncOffences: new Set<PncOffenceWithCaseRef>() }
-        newGroup.hoOffences.add(hoOffence)
-        this.candidatesForHoOffence(hoOffence, {
-          checkConvictionDate
-        }).forEach((c) => newGroup.pncOffences.add(c))
-        groups.push(newGroup)
+        groups.push(candidates)
       }
     }
+
     return groups
   }
 
@@ -344,13 +332,21 @@ class OffenceMatcher {
     }
   }
 
-  matchGroups(checkConvictionDate: boolean) {
-    const groupedMatches = this.groupOffences(checkConvictionDate)
-    for (const group of groupedMatches) {
+  matchGroups() {
+    const groupedCandidates = this.groupOffences()
+
+    for (const group of groupedCandidates) {
       const groupsHasConflicts = this.checkGroupForConflicts(group)
       if (groupsHasConflicts) {
         continue
       }
+
+      // Prioritise!
+      // - Exact dates, conviction dates
+      let candidates = group.
+      // - Fuzzy dates, conviction dates
+      // - Fuzzy dates
+
       if (group.pncOffences.size <= group.hoOffences.size) {
         const pncIterator = group.pncOffences.values()
         for (const hoOffence of group.hoOffences.values()) {
