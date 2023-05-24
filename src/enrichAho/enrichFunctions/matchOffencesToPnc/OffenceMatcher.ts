@@ -4,7 +4,8 @@ import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
-import generateCandidate, { OffenceMatchOptions } from "./generateCandidate"
+import type { OffenceMatchOptions } from "./generateCandidate"
+import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
 
@@ -13,11 +14,6 @@ export type Candidate = {
   pncOffence: PncOffenceWithCaseRef
   exact: boolean
   convictionDatesMatch: boolean
-}
-
-type OffenceMatchingGroup = {
-  hoOffences: Set<Offence>
-  pncOffences: Set<PncOffenceWithCaseRef>
 }
 
 const normaliseCCR = (ccr: string): string => {
@@ -178,6 +174,10 @@ class OffenceMatcher {
     return !!this.candidates.get(hoOffence)?.some((match) => match.pncOffence === pncOffence && (!exact || match.exact))
   }
 
+  hasMatch(candidate: Candidate): boolean {
+    return !!this.matches.get(candidate.hoOffence) || Array.from(this.matches.values()).includes(candidate.pncOffence)
+  }
+
   hasNoMatchConflicts(hoOffence: Offence, pncOffence: PncOffenceWithCaseRef, exact?: boolean): boolean {
     const otherMatchingHoOffences = this.candidatesForPncOffence(pncOffence, { exactDateMatch: exact })
     if (!otherMatchingHoOffences) {
@@ -218,10 +218,7 @@ class OffenceMatcher {
     return undefined
   }
 
-  hoOffencesSharePncOffenceMatch = (
-    hoOffence1: Offence,
-    hoOffence2: Offence,
-  ): boolean => {
+  hoOffencesSharePncOffenceMatch = (hoOffence1: Offence, hoOffence2: Offence): boolean => {
     const pncOffences1 = this.candidatesForHoOffence(hoOffence1)
     const pncOffences2 = this.candidatesForHoOffence(hoOffence2)
     return !!pncOffences1?.some((pncOffence1) => !!pncOffences2?.some((pncOffence2) => pncOffence1 === pncOffence2))
@@ -251,35 +248,49 @@ class OffenceMatcher {
     return this.matchedPncOffences.includes(pncOffence)
   }
 
-  checkGroupForConflicts(group: OffenceMatchingGroup): boolean {
-    let conflicts = false
-    const matchingCourtCaseReferences = [...group.pncOffences.values()].reduce((acc, pncOff) => {
-      acc.add(pncOff.courtCaseReference)
+  hoOffenceWasAlreadyMatched(hoOffence: Offence): boolean {
+    return this.matchedHoOffences.includes(hoOffence)
+  }
+
+  checkGroupForConflicts(group: Candidate[]): void | Exception[] {
+    const exceptions: Exception[] = []
+
+    const matchingCourtCaseReferences = group.reduce((acc, candidate) => {
+      acc.add(candidate.pncOffence.courtCaseReference)
       return acc
     }, new Set<string>())
 
+    const hoOffences = group.reduce((acc, candidate) => acc.add(candidate.hoOffence), new Set<Offence>())
+    const pncOffences = group.reduce(
+      (acc, candidate) => acc.add(candidate.pncOffence),
+      new Set<PncOffenceWithCaseRef>()
+    )
+
     if (
       matchingCourtCaseReferences.size > 1 &&
-      (!offencesHaveEqualResults([...group.hoOffences.values()]) || group.pncOffences.size !== group.hoOffences.size)
+      (!offencesHaveEqualResults(Array.from(hoOffences)) || pncOffences.size !== hoOffences.size)
     ) {
-      for (const hoOffence of group.hoOffences.values()) {
-        this.exceptions.push({
+      for (const hoOffence of hoOffences) {
+        exceptions.push({
           code: ExceptionCode.HO100332,
           path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
         })
       }
-      conflicts = true
-    } else if (!offencesHaveEqualResults([...group.hoOffences.values()])) {
-      for (const hoOffence of group.hoOffences.values()) {
-        this.exceptions.push({
+      return exceptions
+    } else if (!offencesHaveEqualResults(Array.from(hoOffences))) {
+      for (const hoOffence of hoOffences) {
+        exceptions.push({
           code: ExceptionCode.HO100310,
           path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
         })
       }
-      conflicts = true
+      return exceptions
     }
 
-    return conflicts
+    if (hoOffences.size < pncOffences.size) {
+      exceptions.push(ho100304)
+      return exceptions
+    }
   }
 
   successfulMatch(): boolean {
@@ -332,37 +343,39 @@ class OffenceMatcher {
     }
   }
 
+  matchGroup(candidates: Candidate[]): void | Exception[] {
+    const exceptions = this.checkGroupForConflicts(candidates)
+    if (exceptions) {
+      return exceptions
+    }
+
+    for (const candidate of candidates) {
+      if (
+        !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
+        !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
+      ) {
+        this.matches.set(candidate.hoOffence, candidate.pncOffence)
+      }
+    }
+  }
+
   matchGroups() {
     const groupedCandidates = this.groupOffences()
 
     for (const group of groupedCandidates) {
-      const groupsHasConflicts = this.checkGroupForConflicts(group)
-      if (groupsHasConflicts) {
-        continue
-      }
+      const exactAndConvictionDateMatch = group.filter((c) => c.exact && c.convictionDatesMatch && !this.hasMatch(c))
+      this.matchGroup(exactAndConvictionDateMatch)
 
-      // Prioritise!
-      // - Exact dates, conviction dates
-      let candidates = group.
-      // - Fuzzy dates, conviction dates
-      // - Fuzzy dates
+      const exactMatch = group.filter((c) => c.exact && !this.hasMatch(c))
+      this.matchGroup(exactMatch)
 
-      if (group.pncOffences.size <= group.hoOffences.size) {
-        const pncIterator = group.pncOffences.values()
-        for (const hoOffence of group.hoOffences.values()) {
-          const pncOffence = pncIterator.next().value
-          if (!pncOffence) {
-            break
-          }
-          if (!this.pncOffenceWasAlreadyMatched(pncOffence)) {
-            this.matches.set(hoOffence, pncOffence)
-          }
-        }
-      } else {
-        if (!checkConvictionDate) {
-          this.exceptions.push(ho100304)
-          return
-        }
+      const fuzzyAndConvictionDateMatch = group.filter((c) => c.convictionDatesMatch && !this.hasMatch(c))
+      this.matchGroup(fuzzyAndConvictionDateMatch)
+
+      const fuzzyMatch = group.filter((c) => !this.hasMatch(c))
+      const exceptions = this.matchGroup(fuzzyMatch)
+      if (exceptions) {
+        this.exceptions.push(...exceptions)
       }
     }
   }
@@ -375,11 +388,7 @@ class OffenceMatcher {
       return
     }
     this.matchOneToOneMatches()
-    this.matchGroups(true)
-    if (this.exceptions.length > 0) {
-      return
-    }
-    this.matchGroups(false)
+    this.matchGroups()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.exceptions.push(ho100304)
     }
