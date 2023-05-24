@@ -3,15 +3,16 @@ import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
+import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
 
-type Candidate = {
+export type Candidate = {
   hoOffence: Offence
   pncOffence: PncOffenceWithCaseRef
   exact: boolean
+  convictionDatesMatch: boolean
 }
 
 type OffenceMatchingGroup = {
@@ -107,19 +108,12 @@ class OffenceMatcher {
   }
 
   findCandidates() {
-    const checkAndAddCandidate = (candidate: Candidate) => {
-      if (
-        !this.hasCandidate(candidate) &&
-        offencesMatch(candidate.hoOffence, candidate.pncOffence.pncOffence, { exactDateMatch: candidate.exact })
-      ) {
-        pushToArrayInMap(this.candidates, candidate.hoOffence, candidate)
-      }
-    }
-
     for (const hoOffence of this.hoOffences) {
       for (const pncOffence of this.pncOffences) {
-        checkAndAddCandidate({ hoOffence, pncOffence, exact: true })
-        checkAndAddCandidate({ hoOffence, pncOffence, exact: false })
+        const candidate = generateCandidate(hoOffence, pncOffence)
+        if (candidate && !this.hasCandidate(candidate)) {
+          pushToArrayInMap(this.candidates, candidate.hoOffence, candidate)
+        }
       }
     }
   }
