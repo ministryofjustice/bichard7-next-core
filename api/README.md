@@ -16,6 +16,12 @@ If succesful will return a 200
 
 ---
 
+Request Headers:
+
+| Attribute     | Type   | Required |
+| ------------- | ------ | -------- |
+| authorization | string | Yes      |
+
 Returns a list of court cases filtered by the following parameters
 
 | Attribute           | Type                                     | Required |
@@ -47,7 +53,7 @@ If succesful will return 200 and the following response attributes:
 Example request:
 
 ```bash
-curl http://localhost:3333/court-cases?forces%5B0%5D=01&maxPageItems=10&allocatedToUserName=username&caseState=Resolved&courtDateRange%5B0%5D%5Bfrom%5D=2023-05-02T15%3A06%3A58.412Z&courtDateRange%5B0%5D%5Bto%5D=2023-05-02T15%3A06%3A58.412Z&courtName=courtName&defendantName=defendantName&locked=false&order=asc&orderBy=defendantName&pageNum=1&ptiurn=ptirun&reasonCode=reason&reasons%5B0%5D=Bails&resolvedByUsername=username&urgent=Urgent
+curl --header "authorization: <api_key_stored_in_secrets_manager>" http://localhost:3333/court-cases?forces%5B0%5D=01&maxPageItems=10&allocatedToUserName=username&caseState=Resolved&courtDateRange%5B0%5D%5Bfrom%5D=2023-05-02T15%3A06%3A58.412Z&courtDateRange%5B0%5D%5Bto%5D=2023-05-02T15%3A06%3A58.412Z&courtName=courtName&defendantName=defendantName&locked=false&order=asc&orderBy=defendantName&pageNum=1&ptiurn=ptirun&reasonCode=reason&reasons%5B0%5D=Bails&resolvedByUsername=username&urgent=Urgent
 ```
 
 Example response:
