@@ -7,6 +7,7 @@ import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
 export type OffenceMatchOptions = {
   exactDateMatch?: boolean
+  checkConvictionDate?: boolean
 }
 
 const convictionDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
