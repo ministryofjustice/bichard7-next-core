@@ -3,7 +3,9 @@ import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "src/types/ExceptionCode"
 import { Phase1ResultType } from "src/types/Phase1Result"
+import { TriggerCode } from "src/types/TriggerCode"
 import { matchingExceptions } from "tests/helpers/summariseMatching"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
@@ -54,7 +56,7 @@ const comparePhase1 = async (
   const auditLogger = new CoreAuditLogger()
 
   try {
-    if ((comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
+    if (!!(comparison as any).correlationId && (comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
     const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
@@ -100,24 +102,29 @@ const comparePhase1 = async (
       xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
     }
 
-    const ignoreNewMatcherDifferences =
+    const ignoreNewMatcherXmlDifferences =
       process.env.USE_NEW_MATCHER !== "false" &&
       sortedCoreExceptions.some((e) => matchingExceptions.includes(e.code)) &&
       sortedCoreExceptions.every(
         (e) => !matchingExceptions.includes(e.code) || exceptions.map((ex) => ex.code).includes(e.code)
       )
 
+    const ignoreNewMatcherTrigger18Differences =
+      process.env.USE_NEW_MATCHER !== "false" &&
+      triggers.some((t) => t.code === TriggerCode.TRPR0018) &&
+      exceptions.some((e) => e.code === ExceptionCode.HO100310)
+
     let xmlOutputMatchesValue = xmlOutputMatches(ahoXml, normalisedAho)
     if (isIgnored) {
       xmlOutputMatchesValue = !hasOffences(coreResult.hearingOutcome)
     }
-    if (ignoreNewMatcherDifferences) {
+    if (ignoreNewMatcherXmlDifferences) {
       xmlOutputMatchesValue = true
     }
 
     return {
-      triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
-      exceptionsMatch: ignoreNewMatcherDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
+      triggersMatch: ignoreNewMatcherTrigger18Differences ? true : isEqual(sortedCoreTriggers, sortedTriggers),
+      exceptionsMatch: ignoreNewMatcherXmlDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatchesValue,
       xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, normalisedAho),
       ...(debug && { debugOutput })

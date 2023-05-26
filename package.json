@@ -9,7 +9,7 @@
     "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",
-    "test:compare": "jest tests/comparison.test.ts",
+    "test:compare": "NODE_ENV=test ts-node -T src/comparison/cli.ts -d ./test-data/e2e-comparison",
     "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test",
     "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
     "test:conductor": "jest --forceExit --runInBand --testPathPattern=conductor",

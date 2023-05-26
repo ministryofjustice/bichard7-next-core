@@ -63,24 +63,24 @@ export const printSingleSummary = (result: ComparisonResultDetail): void => {
 const printResult = (
   result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
   truncate = false
-): void => {
+): boolean => {
   if (!result) {
-    return
+    return false
   }
   if (Array.isArray(result)) {
-    result.forEach((r) => printResult(r, truncate))
+    const results = result.map((r) => printResult(r, truncate))
     printSummary(result)
-    return
+    return results.every((res) => res)
   }
 
   if (result.skipped) {
-    return
+    return true
   }
 
   if (result.error) {
     console.error(`\nFile threw an error!\n${result.file}\n`)
     console.error(result.error)
-    return
+    return false
   }
 
   if (!resultMatches(result)) {
@@ -113,7 +113,9 @@ const printResult = (
 
   if (!resultMatches(result)) {
     printSingleSummary(result)
+    return false
   }
+  return true
 }
 
 export default printResult

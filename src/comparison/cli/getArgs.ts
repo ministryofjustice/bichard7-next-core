@@ -2,6 +2,7 @@
 import { parse } from "ts-command-line-args"
 
 interface IArguments {
+  directory?: string
   file?: string
   runMissing?: string
   start?: string
@@ -21,6 +22,12 @@ export const getArgs = () =>
         alias: "f",
         optional: true,
         description: "Specify either the local file path or an S3 URL"
+      },
+      directory: {
+        type: String,
+        alias: "d",
+        optional: true,
+        description: "Specify a local directory to run the tests from"
       },
       runMissing: {
         type: String,

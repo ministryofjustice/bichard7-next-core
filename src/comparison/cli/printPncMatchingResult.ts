@@ -44,20 +44,22 @@ export const printSingleSummary = (result: PncComparisonResultDetail): void => {
 const printPncMatchingResult = (
   result?: (PncComparisonResultDetail | SkippedFile) | (PncComparisonResultDetail | SkippedFile)[],
   truncate = false
-): void => {
+): boolean => {
   if (!result) {
-    return
+    return false
   }
   if (Array.isArray(result)) {
-    result.forEach((r) => printPncMatchingResult(r, truncate))
+    const results = result.map((r) => printPncMatchingResult(r, truncate))
     printSummary(result)
-    return
+    return results.every((res) => res)
   }
 
   if ("pass" in result && !result.pass) {
     console.log(`\nProcessing file:\n${result.file}\n`)
     printSingleSummary(result)
+    return false
   }
+  return true
 }
 
 export default printPncMatchingResult
