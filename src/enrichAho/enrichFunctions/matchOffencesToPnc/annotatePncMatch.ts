@@ -22,10 +22,10 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
   }
 
   if (addCaseRefToOffences) {
-    offenceMatch.hoOffence.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
+    offenceMatch.hoOffence.CourtCaseReferenceNumber = offenceMatch.pncOffence.caseReference
     caseElem.CourtCaseReferenceNumber = undefined
   } else {
-    caseElem.CourtCaseReferenceNumber = offenceMatch.pncOffence.courtCaseReference
+    caseElem.CourtCaseReferenceNumber = offenceMatch.pncOffence.caseReference
     offenceMatch.hoOffence.CourtCaseReferenceNumber = undefined
     offenceMatch.hoOffence.ManualCourtCaseReference = undefined
   }

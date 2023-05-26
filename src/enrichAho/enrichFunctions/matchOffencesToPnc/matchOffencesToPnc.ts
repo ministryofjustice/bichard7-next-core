@@ -1,7 +1,7 @@
 import errorPaths from "src/lib/errorPaths"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import type { PncCourtCase, PncOffence } from "src/types/PncQueryResult"
+import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "src/types/PncQueryResult"
 import offenceCategoryIsNonRecordable from "../enrichCourtCases/offenceCategoryIsNonRecordable"
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
@@ -9,7 +9,7 @@ import OffenceMatcher from "./OffenceMatcher"
 import annotatePncMatch from "./annotatePncMatch"
 
 export type PncOffenceWithCaseRef = {
-  courtCaseReference: string
+  caseReference: string
   pncOffence: PncOffence
 }
 
@@ -20,8 +20,26 @@ export type OffenceMatch = {
 
 const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PncCourtCase[] =>
   cases.filter((courtCase) =>
-    pncOffences.some((pncOffence) => pncOffence.courtCaseReference === courtCase.courtCaseReference)
+    pncOffences.some((pncOffence) => pncOffence.caseReference === courtCase.courtCaseReference)
   )
+
+const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCourtCase | PncPenaltyCase => {
+  if (pncQuery.courtCases) {
+    for (const courtCase of pncQuery.courtCases) {
+      if (courtCase.courtCaseReference === reference) {
+        return courtCase
+      }
+    }
+  }
+  if (pncQuery.penaltyCases) {
+    for (const penaltyCase of pncQuery.penaltyCases) {
+      if (penaltyCase.penaltyCaseReference === reference) {
+        return penaltyCase
+      }
+    }
+  }
+  throw new Error("Could not find case by reference")
+}
 
 const getFirstMatchingCourtCaseWith2060Result = (
   cases: PncCourtCase[],
@@ -70,17 +88,26 @@ const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffenceWithCa
   return false
 }
 
-const flattenCourtCases = (courtCases: PncCourtCase[]): PncOffenceWithCaseRef[] =>
-  courtCases.map((cc) => cc.offences.map((o) => ({ pncOffence: o, courtCaseReference: cc.courtCaseReference }))).flat()
+const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
+  if ("courtCaseReference" in pncCase) {
+    return pncCase.courtCaseReference
+  }
+  return pncCase.penaltyCaseReference
+}
+
+const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
+  courtCases?.map((cc) => cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc) }))).flat() ?? []
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
   const hoOffences = caseElem.HearingDefendant.Offence
   const courtCases = aho.PncQuery?.courtCases
-  if (!courtCases || courtCases.length === 0 || hoOffences.length === 0) {
+  const penaltyCases = aho.PncQuery?.penaltyCases
+  const pncOffences = flattenCases(courtCases).concat(flattenCases(penaltyCases))
+
+  if (!aho.PncQuery || pncOffences.length === 0 || hoOffences.length === 0) {
     return aho
   }
-  const pncOffences = flattenCourtCases(courtCases)
 
   const offenceMatcher = new OffenceMatcher(hoOffences, pncOffences)
   offenceMatcher.match()
@@ -97,14 +124,31 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
   }
 
   // If there are still any unmatched PNC offences that don't already have final results in the court cases we have matched, raise an exception
-  const matchedCourtCases = offenceMatcher.matchedPncOffences.reduce((acc, pncOffence) => {
-    acc.add(pncOffence.courtCaseReference)
+  const matchedCases = offenceMatcher.matchedPncOffences.reduce((acc, pncOffence) => {
+    acc.add(getCaseByReference(aho.PncQuery!, pncOffence.caseReference))
     return acc
-  }, new Set<string>())
+  }, new Set<PncCourtCase | PncPenaltyCase>())
+
+  const matchedCourtCases = Array.from(matchedCases.values()).filter(
+    (matchedCase) => "courtCaseReference" in matchedCase
+  )
+  const matchedPenaltyCases = Array.from(matchedCases.values()).filter(
+    (matchedCase) => "penaltyCaseReference" in matchedCase
+  )
+
+  if (matchedCourtCases.length > 0 && matchedPenaltyCases.length > 0) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100328, path: errorPaths.case.asn })
+    return aho
+  }
+
+  if (matchedPenaltyCases.length > 0 && offenceMatcher.matches.size > 1) {
+    aho.Exceptions.push({ code: ExceptionCode.HO100329, path: errorPaths.case.asn })
+    return aho
+  }
 
   const unmatchedNonFinalPncOffences = pncOffences.filter(
     (pncOffence) =>
-      matchedCourtCases.has(pncOffence.courtCaseReference) &&
+      Array.from(matchedCases).some((matchedCase) => getCaseReference(matchedCase) === pncOffence.caseReference) &&
       !offenceHasFinalResult(pncOffence.pncOffence) &&
       offenceMatcher.unmatchedPncOffences.includes(pncOffence)
   )
@@ -114,13 +158,15 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
-  if (offenceMatcher.matches.size > 0) {
+  if (matchedCourtCases.length > 0 && courtCases) {
     // Check whether we have matched more than one court case
-    const multipleMatches = matchedCourtCases.size > 1
+    const multipleMatches = matchedCases.size > 1
     // Annotate the AHO with the matches
     offenceMatcher.matches.forEach((pncOffence, hoOffence) =>
       annotatePncMatch({ hoOffence, pncOffence }, caseElem, multipleMatches)
     )
+
+    // Add offences in court
     offenceMatcher.unmatchedHoOffences.forEach((hoOffence) => {
       hoOffence.AddedByTheCourt = true
 
@@ -143,10 +189,21 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
         })
       }
     })
-
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = aho.PncQuery?.pncId
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = aho.PncQuery?.checkName
   }
+
+  if (matchedPenaltyCases.length > 0) {
+    if (offenceMatcher.unmatchedHoOffences.length > 0) {
+      aho.Exceptions.push({ code: ExceptionCode.HO100507, path: errorPaths.case.asn })
+      return aho
+    }
+
+    offenceMatcher.matches.forEach((pncOffence, hoOffence) =>
+      annotatePncMatch({ hoOffence, pncOffence }, caseElem, false)
+    )
+  }
+
+  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = aho.PncQuery?.pncId
+  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = aho.PncQuery?.checkName
 
   return aho
 }
