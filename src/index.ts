@@ -2,6 +2,7 @@ import { isError } from "./comparison/types/Result"
 import enrichAho from "./enrichAho"
 import addExceptionsToAho from "./exceptions/addExceptionsToAho"
 import generateExceptions from "./exceptions/generate"
+import addNullElementsForExceptions from "./lib/addNullElementsForExceptions"
 import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
 import getExceptionsGeneratedLog from "./lib/auditLog/getExceptionsGeneratedLog"
 import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
@@ -77,6 +78,8 @@ export default async (
     exceptions.forEach(({ code, path }) => {
       addExceptionsToAho(hearingOutcome as AnnotatedHearingOutcome, code, path)
     })
+
+    addNullElementsForExceptions(hearingOutcome)
 
     const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
     let resultType: Phase1ResultType
