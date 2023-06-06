@@ -6,7 +6,7 @@ import offenceCategoryIsNonRecordable from "../enrichCourtCases/offenceCategoryI
 import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import OffenceMatcher from "./OffenceMatcher"
-import annotatePncMatch from "./annotatePncMatch"
+import annotatePncMatch, { CaseType } from "./annotatePncMatch"
 
 export type PncOffenceWithCaseRef = {
   caseReference: string
@@ -163,7 +163,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     const multipleMatches = matchedCases.size > 1
     // Annotate the AHO with the matches
     offenceMatcher.matches.forEach((pncOffence, hoOffence) =>
-      annotatePncMatch({ hoOffence, pncOffence }, caseElem, multipleMatches)
+      annotatePncMatch({ hoOffence, pncOffence }, caseElem, multipleMatches, CaseType.court)
     )
 
     // Add offences in court
@@ -198,7 +198,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     }
 
     offenceMatcher.matches.forEach((pncOffence, hoOffence) =>
-      annotatePncMatch({ hoOffence, pncOffence }, caseElem, false)
+      annotatePncMatch({ hoOffence, pncOffence }, caseElem, false, CaseType.penalty)
     )
   }
 

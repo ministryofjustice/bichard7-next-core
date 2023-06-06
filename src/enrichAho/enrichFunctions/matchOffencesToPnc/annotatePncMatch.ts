@@ -2,7 +2,17 @@ import type { Case } from "src/types/AnnotatedHearingOutcome"
 import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { OffenceMatch } from "./matchOffencesToPnc"
 
-const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRefToOffences: boolean) => {
+export enum CaseType {
+  court = "court",
+  penalty = "penalty"
+}
+
+const annotatePncMatch = (
+  offenceMatch: OffenceMatch,
+  caseElem: Case,
+  addCaseRefToOffences: boolean,
+  caseType: CaseType
+) => {
   // TODO: In the future we should make this a number in the schema but this check is for compatibility
   if (
     Number(offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence) !==
@@ -21,7 +31,9 @@ const annotatePncMatch = (offenceMatch: OffenceMatch, caseElem: Case, addCaseRef
     }
   }
 
-  if (addCaseRefToOffences) {
+  if (caseType === CaseType.penalty) {
+    caseElem.PenaltyNoticeCaseReferenceNumber = offenceMatch.pncOffence.caseReference
+  } else if (addCaseRefToOffences) {
     offenceMatch.hoOffence.CourtCaseReferenceNumber = offenceMatch.pncOffence.caseReference
     caseElem.CourtCaseReferenceNumber = undefined
   } else {
