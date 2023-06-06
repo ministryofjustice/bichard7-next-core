@@ -22,7 +22,7 @@ REGION=eu-west-2
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 
 if [[ -z "${IMAGE_HASH}" ]]; then
-    IMAGE_HASH=$(aws ecr describe-images --repository-name ${IMAGE} --query "to_string(sort_by(imageDetails,& imagePushedAt)[-1].imageDigest)" --output text | head -1)
+    IMAGE_HASH=$(aws ecr describe-images --repository-name ${IMAGE} --query "sort_by(imageDetails, &imagePushedAt)[-1].imageDigest" --output json | tr -d '"' | head -1)
 fi
 
 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
