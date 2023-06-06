@@ -135,7 +135,7 @@ const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit
   "ds:SecondLevelCode": nullText(orgUnit.SecondLevelCode),
   "ds:ThirdLevelCode": nullText(orgUnit.ThirdLevelCode),
   "ds:BottomLevelCode": nullText(orgUnit.BottomLevelCode),
-  "ds:OrganisationUnitCode": text(orgUnit.OrganisationUnitCode),
+  "ds:OrganisationUnitCode": nullText(orgUnit.OrganisationUnitCode),
   "@_SchemaVersion": "2.0"
 })
 

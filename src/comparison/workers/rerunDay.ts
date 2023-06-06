@@ -28,7 +28,7 @@ const rerunDay: ConductorWorker = {
     const end = task.inputData?.end
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const persistResults = task.inputData?.persistResults ?? true
-    const newMatcher = task.inputData?.newMatcher ?? false
+    const newMatcher = task.inputData?.newMatcher ?? true
 
     process.env.USE_NEW_MATCHER = newMatcher.toString()
 
@@ -40,7 +40,7 @@ const rerunDay: ConductorWorker = {
     }
 
     const logs: ConductorLog[] = []
-    const count = { pass: 0, fail: 0 }
+    const count = { pass: 0, fail: 0, intentionalDifference: 0 }
 
     const successFilter = onlyFailures ? false : undefined
 
@@ -64,6 +64,8 @@ const rerunDay: ConductorWorker = {
         } else {
           if (isPass(res.comparisonResult)) {
             count.pass += 1
+          } else if (res.comparisonResult.intentionalDifference) {
+            count.intentionalDifference += 1
           } else {
             count.fail += 1
             logs.push(conductorLog(`Comparison failed: ${res.s3Path}`))
@@ -83,7 +85,11 @@ const rerunDay: ConductorWorker = {
         }
       }
 
-      logs.push(conductorLog(`Results of processing: ${count.pass} passed. ${count.fail} failed`))
+      logs.push(
+        conductorLog(
+          `Results of processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
+        )
+      )
     }
 
     logCompletedMessage(task)

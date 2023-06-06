@@ -68,7 +68,6 @@ const processPhase1: ConductorWorker = {
     const correlationId = extractCorrelationIdFromAhoXml(message)
 
     const result = await phase1(message, pncGateway, auditLogger)
-
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,

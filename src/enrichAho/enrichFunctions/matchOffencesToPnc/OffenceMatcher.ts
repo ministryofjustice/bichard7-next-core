@@ -40,7 +40,7 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
         return (
           sequence === pncOffence.pncOffence.offence.sequenceNumber &&
           !!courtCase &&
-          normaliseCCR(courtCase) === normaliseCCR(pncOffence.courtCaseReference)
+          normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
         )
       } else {
         return sequence === pncOffence.pncOffence.offence.sequenceNumber
@@ -238,7 +238,7 @@ class OffenceMatcher {
     const exceptions: Exception[] = []
 
     const matchingCourtCaseReferences = group.reduce((acc, candidate) => {
-      acc.add(candidate.pncOffence.courtCaseReference)
+      acc.add(candidate.pncOffence.caseReference)
       return acc
     }, new Set<string>())
 
