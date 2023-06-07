@@ -40,7 +40,7 @@ const rerunDay: ConductorWorker = {
     }
 
     const logs: ConductorLog[] = []
-    const count = { pass: 0, fail: 0, intentionalDifference: 0 }
+    const count = { pass: 0, fail: 0, intentionalDifference: 0, skipped: 0 }
 
     const successFilter = onlyFailures ? false : undefined
 
@@ -62,10 +62,12 @@ const rerunDay: ConductorWorker = {
         if (isError(res)) {
           logs.push(conductorLog(res.message))
         } else {
-          if (isPass(res.comparisonResult)) {
-            count.pass += 1
-          } else if (res.comparisonResult.intentionalDifference) {
+          if (res.comparisonResult.intentionalDifference) {
             count.intentionalDifference += 1
+          } else if (res.comparisonResult.skipped) {
+            count.skipped += 1
+          } else if (isPass(res.comparisonResult)) {
+            count.pass += 1
           } else {
             count.fail += 1
             logs.push(conductorLog(`Comparison failed: ${res.s3Path}`))
