@@ -23,7 +23,7 @@ const generateDayTasks: ConductorWorker = {
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
     const persistResults = task.inputData?.persistResults ?? true
-    const newMatcher = task.inputData?.newMatcher ?? false
+    const newMatcher = task.inputData?.newMatcher ?? true
 
     if (!taskName) {
       return Promise.resolve({
