@@ -3,12 +3,11 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 
 const invalidManualSequenceNumber = (
-  expected: CourtResultMatchingSummary,
+  _: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
-  _: AnnotatedHearingOutcome,
+  __: AnnotatedHearingOutcome,
   actualAho: AnnotatedHearingOutcome
 ): boolean => {
-  const noBichardException = !("exceptions" in expected)
   const coreRaisesHo100312 =
     "exceptions" in actual && actual.exceptions.some((exception) => exception.code === ExceptionCode.HO100312)
 
@@ -22,7 +21,7 @@ const invalidManualSequenceNumber = (
       !pncSequenceNumbers?.includes(Number(offence.CriminalProsecutionReference.OffenceReasonSequence))
   )
 
-  return noBichardException && coreRaisesHo100312 && invalidSequenceNumber
+  return coreRaisesHo100312 && invalidSequenceNumber
 }
 
 export default invalidManualSequenceNumber
