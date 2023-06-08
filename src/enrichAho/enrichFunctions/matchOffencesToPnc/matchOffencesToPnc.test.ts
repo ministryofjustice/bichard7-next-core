@@ -97,7 +97,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -118,7 +118,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -177,7 +177,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -206,7 +206,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -270,7 +270,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -298,7 +298,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -369,7 +369,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -401,7 +401,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 2,
@@ -427,7 +427,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 2,
@@ -451,7 +451,7 @@ describe("matchOffencesToPnc", () => {
         const result = matchOffencesToPnc(aho)
         const matchingSummary = summariseMatching(result)
         expect(matchingSummary).toStrictEqual({
-          courtCaseReference: "abcd/1234",
+          caseReference: "abcd/1234",
           offences: [
             {
               hoSequenceNumber: 1,
@@ -478,7 +478,7 @@ describe("matchOffencesToPnc", () => {
         const result = matchOffencesToPnc(aho)
         const matchingSummary = summariseMatching(result)
         expect(matchingSummary).toStrictEqual({
-          courtCaseReference: "abcd/1234",
+          caseReference: "abcd/1234",
           offences: [
             {
               hoSequenceNumber: 1,
@@ -826,7 +826,7 @@ describe("matchOffencesToPnc", () => {
         const result = matchOffencesToPnc(aho)
         const matchingSummary = summariseMatching(result)
         expect(matchingSummary).toStrictEqual({
-          courtCaseReference: "abcd/1234",
+          caseReference: "abcd/1234",
           offences: [
             {
               hoSequenceNumber: 1,
@@ -863,7 +863,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "efgh/1234",
+        caseReference: "efgh/1234",
         offences: [
           {
             hoSequenceNumber: 2,
@@ -904,7 +904,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -950,7 +950,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
@@ -1049,7 +1049,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 3,
@@ -1097,7 +1097,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 3,
@@ -1310,7 +1310,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        courtCaseReference: "abcd/1234",
+        caseReference: "abcd/1234",
         offences: [
           {
             hoSequenceNumber: 1,
