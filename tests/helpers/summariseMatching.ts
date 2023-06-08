@@ -17,10 +17,11 @@ export const matchingExceptions: ExceptionCode[] = [
 
 const hasMatch = (aho: AnnotatedHearingOutcome): boolean => {
   const hasCaseRef = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+  const hasPenaltyCaseRef = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const hasOffenceRef = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
     (o) => !!o.CourtCaseReferenceNumber
   )
-  return hasCaseRef || hasOffenceRef
+  return hasCaseRef || hasPenaltyCaseRef || hasOffenceRef
 }
 
 const parseOffenceReasonSequence = (input: string | null | undefined): number | undefined => {
@@ -41,10 +42,10 @@ const summariseMatching = (
   if (!hasMatch(aho)) {
     return null
   }
+  const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
+  const caseReference = caseElem.CourtCaseReferenceNumber ?? caseElem.PenaltyNoticeCaseReferenceNumber
   return {
-    ...(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
-      ? { courtCaseReference: aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber }
-      : {}),
+    ...(caseReference ? { caseReference } : {}),
     offences: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map((offence) => ({
       hoSequenceNumber: offence.CourtOffenceSequenceNumber,
       ...(includeOffenceCode ? { offenceCode: getOffenceCode(offence) } : {}),

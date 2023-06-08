@@ -10,7 +10,7 @@ import parseSpiResult from "../src/parse/parseSpiResult"
 import transformSpiToAho from "../src/parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome, Offence } from "../src/types/AnnotatedHearingOutcome"
 import type Exception from "../src/types/Exception"
-import type { PncCourtCase, PncOffence } from "../src/types/PncQueryResult"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../src/types/PncQueryResult"
 import type { Trigger } from "../src/types/Trigger"
 
 interface ComparisonFile {
@@ -99,9 +99,12 @@ const main = async () => {
   const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
 
   if (!(outputAho instanceof Error) && outputAho.PncQuery) {
-    outputAho.PncQuery.courtCases?.forEach((courtCase: PncCourtCase) => {
+    const theCases = outputAho.PncQuery.courtCases ?? outputAho.PncQuery.penaltyCases
+    theCases?.forEach((courtCase: PncCourtCase | PncPenaltyCase) => {
       output.push("")
-      output.push(courtCase.courtCaseReference)
+      const caseReference =
+        "courtCaseReference" in courtCase ? courtCase.courtCaseReference : `${courtCase.penaltyCaseReference} PENALTY`
+      output.push(caseReference)
       courtCase.offences.forEach((offence: PncOffence) => {
         const sequence = offence.offence.sequenceNumber.toString().padStart(3, "0").padEnd(10, " ")
         const offenceCode = offence.offence.cjsOffenceCode.padEnd(10, " ")
@@ -124,7 +127,7 @@ const main = async () => {
       output.push("Offence matches\n")
       matchingSummary.offences.forEach((match) =>
         output.push(
-          `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.courtCaseReference} / ${
+          `${match.hoSequenceNumber} => ${match.courtCaseReference ?? matchingSummary.caseReference} / ${
             match.pncSequenceNumber ?? "Added in court"
           }`
         )

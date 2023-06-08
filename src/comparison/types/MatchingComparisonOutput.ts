@@ -64,7 +64,7 @@ export type OffenceMatchingSummary = {
 
 export type CourtResultMatchingSummary =
   | {
-      courtCaseReference?: string | null
+      caseReference?: string | null
       offences: OffenceMatchingSummary[]
     }
   | {
