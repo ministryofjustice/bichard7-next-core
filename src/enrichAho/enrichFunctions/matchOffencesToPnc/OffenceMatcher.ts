@@ -2,7 +2,6 @@ import errorPaths from "src/lib/errorPaths"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { OffenceMatchOptions } from "./generateCandidate"
 import generateCandidate from "./generateCandidate"
@@ -112,24 +111,6 @@ class OffenceMatcher {
         }
       }
     }
-  }
-
-  filterNonFinalCandidates() {
-    const filteredCandidates = new Map<Offence, Candidate[]>()
-
-    for (const matchCandidates of this.candidates.values()) {
-      const nonFinalCandidates = matchCandidates.filter(
-        (candidate) => !offenceHasFinalResult(candidate.pncOffence.pncOffence)
-      )
-
-      if (nonFinalCandidates.length > 0) {
-        nonFinalCandidates.forEach((c) => pushToArrayInMap(filteredCandidates, c.hoOffence, c))
-      } else {
-        matchCandidates.forEach((c) => pushToArrayInMap(filteredCandidates, c.hoOffence, c))
-      }
-    }
-
-    this.candidates = filteredCandidates
   }
 
   candidatesForHoOffence(hoOffence: Offence, options: OffenceMatchOptions = {}): PncOffenceWithCaseRef[] {
@@ -364,7 +345,6 @@ class OffenceMatcher {
 
   match() {
     this.findCandidates()
-    this.filterNonFinalCandidates()
     this.matchManualSequenceNumbers()
     if (this.exceptions.length > 0) {
       return
