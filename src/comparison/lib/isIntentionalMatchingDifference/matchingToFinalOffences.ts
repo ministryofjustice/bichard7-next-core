@@ -37,7 +37,7 @@ const matchingToFinalOffences = (
         (match) =>
           match.addedByCourt ||
           ((match.courtCaseReference === pncOffence.courtCaseReference ||
-            actual.courtCaseReference === pncOffence.courtCaseReference) &&
+            actual.caseReference === pncOffence.courtCaseReference) &&
             match.pncSequenceNumber === pncOffence.pncOffence.offence.sequenceNumber)
       )
     )
