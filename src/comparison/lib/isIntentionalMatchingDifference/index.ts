@@ -3,6 +3,7 @@ import summariseMatching from "tests/helpers/summariseMatching"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"
 import ho100332NotHo100304 from "./ho100332NotHo100304"
+import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
@@ -12,6 +13,7 @@ const filters = [
   badlyAnnotatedSingleCaseMatch,
   convictionDateMatching,
   ho100332NotHo100304,
+  ho100333AndCCRHasLeadingZero,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
   nonMatchingManualSequenceNumber,

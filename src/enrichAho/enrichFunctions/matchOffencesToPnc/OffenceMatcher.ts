@@ -15,7 +15,7 @@ export type Candidate = {
   convictionDatesMatch: boolean
 }
 
-const normaliseCCR = (ccr: string): string => {
+export const normaliseCCR = (ccr: string): string => {
   const splitCCR = ccr.split("/")
   if (splitCCR.length !== 3) {
     return ccr
