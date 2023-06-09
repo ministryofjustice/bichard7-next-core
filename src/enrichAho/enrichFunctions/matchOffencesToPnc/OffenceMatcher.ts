@@ -2,7 +2,6 @@ import errorPaths from "src/lib/errorPaths"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { OffenceMatchOptions } from "./generateCandidate"
 import generateCandidate from "./generateCandidate"
@@ -16,7 +15,7 @@ export type Candidate = {
   convictionDatesMatch: boolean
 }
 
-const normaliseCCR = (ccr: string): string => {
+export const normaliseCCR = (ccr: string): string => {
   const splitCCR = ccr.split("/")
   if (splitCCR.length !== 3) {
     return ccr
@@ -112,24 +111,6 @@ class OffenceMatcher {
         }
       }
     }
-  }
-
-  filterNonFinalCandidates() {
-    const filteredCandidates = new Map<Offence, Candidate[]>()
-
-    for (const matchCandidates of this.candidates.values()) {
-      const nonFinalCandidates = matchCandidates.filter(
-        (candidate) => !offenceHasFinalResult(candidate.pncOffence.pncOffence)
-      )
-
-      if (nonFinalCandidates.length > 0) {
-        nonFinalCandidates.forEach((c) => pushToArrayInMap(filteredCandidates, c.hoOffence, c))
-      } else {
-        matchCandidates.forEach((c) => pushToArrayInMap(filteredCandidates, c.hoOffence, c))
-      }
-    }
-
-    this.candidates = filteredCandidates
   }
 
   candidatesForHoOffence(hoOffence: Offence, options: OffenceMatchOptions = {}): PncOffenceWithCaseRef[] {
@@ -283,30 +264,37 @@ class OffenceMatcher {
   }
 
   matchManualSequenceNumbers() {
-    for (const [i, hoOffence] of this.hoOffences.entries()) {
-      if (hoOffence.ManualSequenceNumber) {
-        const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
-        const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
-          offenceManuallyMatches(hoOffence, pncOffence)
-        )
+    let exceptions: Exception[] = []
 
-        if (pncOffencesWithMatchingSequence.length === 0) {
-          this.exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
-          continue
-        }
+    for (const checkConvictionDate of [true, false]) {
+      exceptions = []
+      for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
+        if (hoOffence.ManualSequenceNumber) {
+          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
+          const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
+            offenceManuallyMatches(hoOffence, pncOffence)
+          )
 
-        const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-          offenceManuallyMatches(hoOffence, pncOffence)
-        )
-        if (matchingPncOffences.length === 1) {
-          this.matches.set(hoOffence, matchingPncOffences[0])
-        } else if (matchingPncOffences.length === 0) {
-          this.exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-        } else if (matchingPncOffences.length > 1) {
-          this.exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+          if (pncOffencesWithMatchingSequence.length === 0) {
+            exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+            continue
+          }
+
+          const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
+            offenceManuallyMatches(hoOffence, pncOffence)
+          )
+          if (matchingPncOffences.length === 1) {
+            this.matches.set(hoOffence, matchingPncOffences[0])
+          } else if (matchingPncOffences.length === 0) {
+            exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
+          } else if (matchingPncOffences.length > 1) {
+            exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+          }
         }
       }
     }
+
+    this.exceptions.push(...exceptions)
   }
 
   matchOneToOneMatches() {
@@ -364,7 +352,6 @@ class OffenceMatcher {
 
   match() {
     this.findCandidates()
-    this.filterNonFinalCandidates()
     this.matchManualSequenceNumbers()
     if (this.exceptions.length > 0) {
       return

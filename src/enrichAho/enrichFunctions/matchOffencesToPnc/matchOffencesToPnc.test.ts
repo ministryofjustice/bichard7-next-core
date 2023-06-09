@@ -1015,6 +1015,8 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it.todo("should use the conviction date to distinguish between two identical offences")
   })
 
   describe("manual matches", () => {
@@ -1157,6 +1159,14 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it.todo("should use conviction date to identify how to match manual sequence number")
+
+    it.todo("should normalise leading zeroes in the manual CCR")
+  })
+
+  describe("penalty cases", () => {
+    it.todo("should match to penalty cases")
   })
 
   describe("HO100304", () => {
@@ -1429,6 +1439,14 @@ describe("matchOffencesToPnc", () => {
     })
   })
 
+  describe("HO100328", () => {
+    it.todo("should raise exception when penalty and court cases are matched")
+  })
+
+  describe("HO100329", () => {
+    it.todo("should raise exception when there's more than one penalty case match")
+  })
+
   describe("HO100332", () => {
     it("should raise an exception when there are near-identical offences with different results and there are no exact matches in multiple court cases", () => {
       const offence: OffenceData = {
@@ -1544,49 +1562,57 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it("should raise an exception when there are near-identical offences with non-identical results in multiple court cases", () => {
+      const offence1 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 1,
+        resultCodes: [1234]
+      }
+      const offence2 = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        sequence: 2,
+        resultCodes: [5678]
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1, offence2],
+        [
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [offence1]
+          },
+          {
+            courtCaseReference: "efgh/1234",
+            offences: [{ ...offence2, sequence: 1 }]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          {
+            code: "HO100332",
+            path: errorPaths.offence(0).reasonSequence
+          },
+          {
+            code: "HO100332",
+            path: errorPaths.offence(1).reasonSequence
+          }
+        ]
+      })
+    })
   })
 
-  it("should raise an exception when there are near-identical offences with non-identical results in multiple court cases", () => {
-    const offence1 = {
-      code: "AB1234",
-      start: new Date("2022-01-01"),
-      end: new Date("2022-01-01"),
-      sequence: 1,
-      resultCodes: [1234]
-    }
-    const offence2 = {
-      code: "AB1234",
-      start: new Date("2022-01-01"),
-      end: new Date("2022-01-01"),
-      sequence: 2,
-      resultCodes: [5678]
-    }
-    const aho = generateMockAhoWithOffences(
-      [offence1, offence2],
-      [
-        {
-          courtCaseReference: "abcd/1234",
-          offences: [offence1]
-        },
-        {
-          courtCaseReference: "efgh/1234",
-          offences: [{ ...offence2, sequence: 1 }]
-        }
-      ]
-    )
-    const result = matchOffencesToPnc(aho)
-    const matchingSummary = summariseMatching(result)
-    expect(matchingSummary).toStrictEqual({
-      exceptions: [
-        {
-          code: "HO100332",
-          path: errorPaths.offence(0).reasonSequence
-        },
-        {
-          code: "HO100332",
-          path: errorPaths.offence(1).reasonSequence
-        }
-      ]
-    })
+  describe("HO100333", () => {
+    it.todo("should raise exception when manual CCR doesn't match any CCRs on PNC")
+  })
+
+  describe("HO100507", () => {
+    it.todo("should raise exception when there are unmatched HO offences for a penalty case")
   })
 })

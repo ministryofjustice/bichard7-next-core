@@ -68,7 +68,11 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(11, " ")
     const convictionDate = formatDate(offence.ConvictionDate).padEnd(12, " ")
     const offenceGroupIndex = groupedOffences.findIndex((group) => group.includes(offence))
-    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}`
+    let manualCCR = ""
+    if (offence.ManualCourtCaseReference) {
+      manualCCR = `${offence.CourtCaseReferenceNumber}\n`
+    }
+    return `${manualCCR}${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}`
   })
 }
 
