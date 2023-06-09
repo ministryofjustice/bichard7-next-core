@@ -264,30 +264,37 @@ class OffenceMatcher {
   }
 
   matchManualSequenceNumbers() {
-    for (const [i, hoOffence] of this.hoOffences.entries()) {
-      if (hoOffence.ManualSequenceNumber) {
-        const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
-        const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
-          offenceManuallyMatches(hoOffence, pncOffence)
-        )
+    let exceptions: Exception[] = []
 
-        if (pncOffencesWithMatchingSequence.length === 0) {
-          this.exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
-          continue
-        }
+    for (const checkConvictionDate of [true, false]) {
+      exceptions = []
+      for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
+        if (hoOffence.ManualSequenceNumber) {
+          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
+          const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
+            offenceManuallyMatches(hoOffence, pncOffence)
+          )
 
-        const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-          offenceManuallyMatches(hoOffence, pncOffence)
-        )
-        if (matchingPncOffences.length === 1) {
-          this.matches.set(hoOffence, matchingPncOffences[0])
-        } else if (matchingPncOffences.length === 0) {
-          this.exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-        } else if (matchingPncOffences.length > 1) {
-          this.exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+          if (pncOffencesWithMatchingSequence.length === 0) {
+            exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+            continue
+          }
+
+          const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
+            offenceManuallyMatches(hoOffence, pncOffence)
+          )
+          if (matchingPncOffences.length === 1) {
+            this.matches.set(hoOffence, matchingPncOffences[0])
+          } else if (matchingPncOffences.length === 0) {
+            exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
+          } else if (matchingPncOffences.length > 1) {
+            exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+          }
         }
       }
     }
+
+    this.exceptions.push(...exceptions)
   }
 
   matchOneToOneMatches() {
