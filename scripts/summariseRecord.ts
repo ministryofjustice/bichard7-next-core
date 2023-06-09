@@ -70,9 +70,9 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     const offenceGroupIndex = groupedOffences.findIndex((group) => group.includes(offence))
     let manualCCR = ""
     if (offence.ManualCourtCaseReference) {
-      manualCCR = `${offence.CourtCaseReferenceNumber}\n`
+      manualCCR = `\n    ${offence.CourtCaseReferenceNumber}`
     }
-    return `${manualCCR}${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}`
+    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}${manualCCR}`
   })
 }
 
