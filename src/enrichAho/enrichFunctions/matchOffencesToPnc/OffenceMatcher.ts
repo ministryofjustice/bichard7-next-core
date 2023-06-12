@@ -1,4 +1,5 @@
 import errorPaths from "src/lib/errorPaths"
+import isCcrValid from "src/lib/isCcrValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
@@ -25,8 +26,8 @@ export const normaliseCCR = (ccr: string): string => {
 }
 
 const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
-  const manualSequence = hoOffence.ManualSequenceNumber
-  const manualCourtCase = hoOffence.ManualCourtCaseReference
+  const manualSequence = !!hoOffence.ManualSequenceNumber
+  const manualCourtCase = !!hoOffence.ManualCourtCaseReference
   const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
   const sequence = Number(offenceReasonSequence)
   const courtCase = hoOffence.CourtCaseReferenceNumber
@@ -281,17 +282,24 @@ class OffenceMatcher {
       for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
         const hasManualSequence =
           !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-        const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
-        if (hasManualSequence || hasManualCCR) {
-          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
-          const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
-            offenceManuallyMatches(hoOffence, pncOffence)
+        const hasManualCCR =
+          !!hoOffence.ManualCourtCaseReference &&
+          !!hoOffence.CourtCaseReferenceNumber &&
+          isCcrValid(hoOffence.CourtCaseReferenceNumber)
+        if (hasManualSequence) {
+          const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
+          const pncOffencesWithMatchingSequence = this.pncOffences.filter(
+            (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
           )
 
           if (pncOffencesWithMatchingSequence.length === 0) {
             exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
             continue
           }
+        }
+
+        if (hasManualSequence || hasManualCCR) {
+          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
 
           const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
             offenceManuallyMatches(hoOffence, pncOffence)
