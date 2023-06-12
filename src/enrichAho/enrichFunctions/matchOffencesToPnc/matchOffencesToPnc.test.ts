@@ -1163,6 +1163,8 @@ describe("matchOffencesToPnc", () => {
     it.todo("should use conviction date to identify how to match manual sequence number")
 
     it.todo("should normalise leading zeroes in the manual CCR")
+
+    it.todo("should normalise case in the manual CCR")
   })
 
   describe("penalty cases", () => {

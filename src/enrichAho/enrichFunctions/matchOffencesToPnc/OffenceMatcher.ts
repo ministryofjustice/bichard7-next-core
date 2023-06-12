@@ -21,7 +21,7 @@ export const normaliseCCR = (ccr: string): string => {
     return ccr
   }
   splitCCR[2] = splitCCR[2].replace(/^0+/, "")
-  return splitCCR.join("/")
+  return splitCCR.map((el) => el.toUpperCase()).join("/")
 }
 
 const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
