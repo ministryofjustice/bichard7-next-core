@@ -3,6 +3,7 @@ import isCcrValid from "src/lib/isCcrValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
+import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { OffenceMatchOptions } from "./generateCandidate"
 import generateCandidate from "./generateCandidate"
@@ -335,17 +336,22 @@ class OffenceMatcher {
   }
 
   matchGroup(candidates: Candidate[]): void | Exception[] {
-    const exceptions = this.checkGroupForConflicts(candidates)
-    if (exceptions) {
-      return exceptions
-    }
+    for (const nonFinal of [true, false]) {
+      const filteredCandidates = nonFinal
+        ? candidates.filter((c) => !offenceHasFinalResult(c.pncOffence.pncOffence))
+        : candidates
+      const exceptions = this.checkGroupForConflicts(filteredCandidates)
+      if (exceptions) {
+        return exceptions
+      }
 
-    for (const candidate of candidates) {
-      if (
-        !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
-        !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
-      ) {
-        this.matches.set(candidate.hoOffence, candidate.pncOffence)
+      for (const candidate of filteredCandidates) {
+        if (
+          !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
+          !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
+        ) {
+          this.matches.set(candidate.hoOffence, candidate.pncOffence)
+        }
       }
     }
   }
@@ -354,14 +360,8 @@ class OffenceMatcher {
     const groupedCandidates = this.groupOffences()
 
     for (const group of groupedCandidates) {
-      const exactAndConvictionDateMatch = group.filter((c) => c.exact && c.convictionDatesMatch && !this.hasMatch(c))
-      this.matchGroup(exactAndConvictionDateMatch)
-
       const exactMatch = group.filter((c) => c.exact && !this.hasMatch(c))
       this.matchGroup(exactMatch)
-
-      const fuzzyAndConvictionDateMatch = group.filter((c) => c.convictionDatesMatch && !this.hasMatch(c))
-      this.matchGroup(fuzzyAndConvictionDateMatch)
 
       const fuzzyMatch = group.filter((c) => !this.hasMatch(c))
       const exceptions = this.matchGroup(fuzzyMatch)
