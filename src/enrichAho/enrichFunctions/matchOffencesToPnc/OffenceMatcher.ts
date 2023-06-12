@@ -98,6 +98,18 @@ class OffenceMatcher {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
   }
 
+  hasException(exception: Exception): boolean {
+    return this.exceptions.some(
+      (e) => e.code === exception.code && JSON.stringify(e.path) === JSON.stringify(exception.path)
+    )
+  }
+
+  addException(exception: Exception): void {
+    if (!this.hasException(exception)) {
+      this.exceptions.push(exception)
+    }
+  }
+
   hasCandidate(candidate: Candidate): boolean {
     return !!this.candidates.get(candidate.hoOffence)?.some((c) => c.pncOffence === candidate.pncOffence)
   }
@@ -294,7 +306,7 @@ class OffenceMatcher {
       }
     }
 
-    this.exceptions.push(...exceptions)
+    exceptions.forEach(this.addException, this)
   }
 
   matchOneToOneMatches() {
@@ -345,7 +357,7 @@ class OffenceMatcher {
       const fuzzyMatch = group.filter((c) => !this.hasMatch(c))
       const exceptions = this.matchGroup(fuzzyMatch)
       if (exceptions) {
-        this.exceptions.push(...exceptions)
+        exceptions.forEach(this.addException, this)
       }
     }
   }
@@ -359,7 +371,7 @@ class OffenceMatcher {
     this.matchOneToOneMatches()
     this.matchGroups()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
-      this.exceptions.push(ho100304)
+      this.addException(ho100304)
     }
   }
 }
