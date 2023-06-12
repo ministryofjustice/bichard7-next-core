@@ -1160,6 +1160,10 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
+    it.todo("should not raise an exception if the manual sequence number is empty")
+
+    it.todo("should not raise an exception if the manual ccr is empty")
+
     it("should match with just the court case reference", () => {
       const offence1: OffenceData = {
         code: "AB1234",

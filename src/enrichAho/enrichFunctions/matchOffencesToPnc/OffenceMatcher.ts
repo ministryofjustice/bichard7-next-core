@@ -279,7 +279,10 @@ class OffenceMatcher {
     for (const checkConvictionDate of [true, false]) {
       exceptions = []
       for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
-        if (hoOffence.ManualSequenceNumber || hoOffence.ManualCourtCaseReference) {
+        const hasManualSequence =
+          !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
+        if (hasManualSequence || hasManualCCR) {
           const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
           const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
             offenceManuallyMatches(hoOffence, pncOffence)
