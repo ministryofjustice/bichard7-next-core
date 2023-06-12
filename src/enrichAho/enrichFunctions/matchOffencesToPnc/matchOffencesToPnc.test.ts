@@ -1160,6 +1160,42 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
+    it("should match with just the court case reference", () => {
+      const offence1: OffenceData = {
+        code: "AB1234",
+        start: new Date("2022-01-01"),
+        end: new Date("2022-01-01"),
+        resultCodes: [1000],
+        sequence: 3,
+        manualCourtCase: "abcd/1234"
+      }
+      const aho = generateMockAhoWithOffences(
+        [offence1],
+        [
+          {
+            courtCaseReference: "efgh/1234",
+            offences: [{ ...offence1, sequence: 1 }]
+          },
+          {
+            courtCaseReference: "abcd/1234",
+            offences: [{ ...offence1, sequence: 1 }]
+          }
+        ]
+      )
+      const result = matchOffencesToPnc(aho)
+      const matchingSummary = summariseMatching(result)
+      expect(matchingSummary).toStrictEqual({
+        caseReference: "abcd/1234",
+        offences: [
+          {
+            hoSequenceNumber: 3,
+            addedByCourt: false,
+            pncSequenceNumber: 1
+          }
+        ]
+      })
+    })
+
     it.todo("should use conviction date to identify how to match manual sequence number")
 
     it.todo("should normalise leading zeroes in the manual CCR")

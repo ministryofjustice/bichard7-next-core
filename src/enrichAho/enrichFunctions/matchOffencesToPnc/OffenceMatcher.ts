@@ -27,26 +27,24 @@ export const normaliseCCR = (ccr: string): string => {
 const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
   const manualSequence = hoOffence.ManualSequenceNumber
   const manualCourtCase = hoOffence.ManualCourtCaseReference
-  if (manualSequence) {
-    const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-    if (offenceReasonSequence !== undefined) {
-      const sequence = Number(offenceReasonSequence)
-      if (isNaN(sequence)) {
-        return false
-      }
-      if (manualCourtCase) {
-        const courtCase = hoOffence.CourtCaseReferenceNumber
-        return (
-          sequence === pncOffence.pncOffence.offence.sequenceNumber &&
-          !!courtCase &&
-          normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
-        )
-      } else {
-        return sequence === pncOffence.pncOffence.offence.sequenceNumber
-      }
-    }
+  const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+  const sequence = Number(offenceReasonSequence)
+  const courtCase = hoOffence.CourtCaseReferenceNumber
+  if (manualSequence && isNaN(sequence)) {
+    return false
   }
-  return true
+  const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
+  const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
+
+  if (manualSequence && manualCourtCase) {
+    return sequenceMatches && ccrMatches
+  } else if (manualSequence) {
+    return sequenceMatches
+  } else if (manualCourtCase) {
+    return ccrMatches
+  }
+
+  return false
 }
 
 const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
@@ -281,7 +279,7 @@ class OffenceMatcher {
     for (const checkConvictionDate of [true, false]) {
       exceptions = []
       for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
-        if (hoOffence.ManualSequenceNumber) {
+        if (hoOffence.ManualSequenceNumber || hoOffence.ManualCourtCaseReference) {
           const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
           const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
             offenceManuallyMatches(hoOffence, pncOffence)
