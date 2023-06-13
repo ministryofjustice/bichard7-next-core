@@ -2,6 +2,7 @@ import getOffenceCode from "../../../lib/offence/getOffenceCode"
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
 import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
+import { hoResultMatchesPncAdjudication } from "../enrichCourtCases/offenceMatcher/offenceMatcher"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
@@ -74,7 +75,11 @@ const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): bo
   return hoStartDate >= pncStartDate && !!hoEndDate && hoEndDate <= pncEndDate
 }
 
-const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): void | Candidate => {
+const generateCandidate = (
+  hoOffence: Offence,
+  pncOffence: PncOffenceWithCaseRef,
+  hearingDate: Date
+): void | Candidate => {
   const ignoreDates = offenceIsBreach(hoOffence)
   const hoOffenceCode = getOffenceCode(hoOffence)
   const pncOffenceCode = pncOffence.pncOffence.offence.cjsOffenceCode
@@ -83,7 +88,13 @@ const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef
     return
   }
 
-  const candidate: Candidate = { pncOffence, hoOffence, exact: false, convictionDatesMatch: false }
+  const candidate: Candidate = {
+    pncOffence,
+    hoOffence,
+    exact: false,
+    convictionDatesMatch: false,
+    adjudicationMatch: false
+  }
 
   if (ignoreDates) {
     return candidate
@@ -93,13 +104,10 @@ const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef
     return
   }
 
-  if (convictionDatesMatch(hoOffence, pncOffence.pncOffence)) {
-    candidate.convictionDatesMatch = true
-  }
+  candidate.convictionDatesMatch = convictionDatesMatch(hoOffence, pncOffence.pncOffence)
+  candidate.exact = datesMatchExactly(hoOffence, pncOffence.pncOffence)
+  candidate.adjudicationMatch = hoResultMatchesPncAdjudication(hoOffence, pncOffence.pncOffence, hearingDate)
 
-  if (datesMatchExactly(hoOffence, pncOffence.pncOffence)) {
-    candidate.exact = true
-  }
   return candidate
 }
 

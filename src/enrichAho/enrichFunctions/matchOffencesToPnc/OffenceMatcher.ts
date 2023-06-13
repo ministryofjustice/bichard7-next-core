@@ -15,6 +15,7 @@ export type Candidate = {
   pncOffence: PncOffenceWithCaseRef
   exact: boolean
   convictionDatesMatch: boolean
+  adjudicationMatch: boolean
 }
 
 export const normaliseCCR = (ccr: string): string => {
@@ -58,7 +59,7 @@ class OffenceMatcher {
 
   public exceptions: Exception[] = []
 
-  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[]) {}
+  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[], private hearingDate: Date) {}
 
   get hasExceptions(): boolean {
     return this.exceptions.length > 0
@@ -117,7 +118,7 @@ class OffenceMatcher {
   findCandidates() {
     for (const hoOffence of this.hoOffences) {
       for (const pncOffence of this.pncOffences) {
-        const candidate = generateCandidate(hoOffence, pncOffence)
+        const candidate = generateCandidate(hoOffence, pncOffence, this.hearingDate)
         if (candidate && !this.hasCandidate(candidate)) {
           pushToArrayInMap(this.candidates, candidate.hoOffence, candidate)
         }
@@ -360,8 +361,14 @@ class OffenceMatcher {
     const groupedCandidates = this.groupOffences()
 
     for (const group of groupedCandidates) {
+      const exactAndAdjudicationMatch = group.filter((c) => c.exact && c.adjudicationMatch && !this.hasMatch(c))
+      this.matchGroup(exactAndAdjudicationMatch)
+
       const exactMatch = group.filter((c) => c.exact && !this.hasMatch(c))
       this.matchGroup(exactMatch)
+
+      const fuzzyAndAdjudicationMatch = group.filter((c) => c.adjudicationMatch && !this.hasMatch(c))
+      this.matchGroup(fuzzyAndAdjudicationMatch)
 
       const fuzzyMatch = group.filter((c) => !this.hasMatch(c))
       const exceptions = this.matchGroup(fuzzyMatch)
