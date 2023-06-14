@@ -315,11 +315,11 @@ class OffenceMatcher {
     const exactAndAdjudicationGroups = this.groupOffences({ exactDateMatch: true, adjudicationMatch: true })
     exactAndAdjudicationGroups.forEach(this.matchGroup, this)
 
-    const exactMatchGroups = this.groupOffences({ exactDateMatch: true })
-    exactMatchGroups.forEach(this.matchGroup, this)
-
     const fuzzyAndAdjudicationGroups = this.groupOffences({ adjudicationMatch: true })
     fuzzyAndAdjudicationGroups.forEach(this.matchGroup, this)
+
+    const exactMatchGroups = this.groupOffences({ exactDateMatch: true })
+    exactMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences()
     const exceptions = fuzzyGroups
