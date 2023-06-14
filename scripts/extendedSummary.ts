@@ -154,7 +154,7 @@ const main = async () => {
   const textOutput = output.join("\n")
 
   const localFileName = fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
-  const outFileName = localFileName.replace(".json", ".summary.txt")
+  const outFileName = localFileName.replace(".json", ".extended.summary.txt")
 
   fs.writeFileSync(outFileName, textOutput)
 
