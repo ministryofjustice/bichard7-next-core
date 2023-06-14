@@ -100,6 +100,7 @@ const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined)
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearingDate = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
   const hoOffences = caseElem.HearingDefendant.Offence
   const courtCases = aho.PncQuery?.courtCases
   const penaltyCases = aho.PncQuery?.penaltyCases
@@ -109,7 +110,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
-  const offenceMatcher = new OffenceMatcher(hoOffences, pncOffences)
+  const offenceMatcher = new OffenceMatcher(hoOffences, pncOffences, hearingDate)
   offenceMatcher.match()
 
   if (offenceMatcher.hasExceptions) {

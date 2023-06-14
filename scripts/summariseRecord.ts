@@ -2,6 +2,7 @@ import fs from "fs"
 import { exec } from "node:child_process"
 import getFile from "src/comparison/lib/getFile"
 import hoOffencesAreEqual from "src/comparison/lib/hoOffencesAreEqual"
+import { lookupOffenceByCjsCode } from "src/dataLookup"
 import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import summariseMatching from "tests/helpers/summariseMatching"
 import getOffenceCode from "../src/lib/offence/getOffenceCode"
@@ -68,11 +69,13 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     const endDate = formatDate(offence.ActualOffenceEndDate?.EndDate).padEnd(11, " ")
     const convictionDate = formatDate(offence.ConvictionDate).padEnd(12, " ")
     const offenceGroupIndex = groupedOffences.findIndex((group) => group.includes(offence))
+    const offenceLookup = lookupOffenceByCjsCode(offenceCode.trim())
+    const breach = offenceLookup?.offenceCategory === "CB" ? " Breach" : ""
     let manualCCR = ""
     if (offence.ManualCourtCaseReference) {
       manualCCR = `\n    ${offence.CourtCaseReferenceNumber}`
     }
-    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes} ${offenceGroupIndex}${manualCCR}`
+    return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes}${breach} ${offenceGroupIndex}${manualCCR}`
   })
 }
 

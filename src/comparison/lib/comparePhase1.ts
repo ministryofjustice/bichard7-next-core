@@ -3,7 +3,6 @@ import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "src/types/ExceptionCode"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { TriggerCode } from "src/types/TriggerCode"
 import { matchingExceptions } from "tests/helpers/summariseMatching"
@@ -112,7 +111,7 @@ const comparePhase1 = async (
     const ignoreNewMatcherTrigger18Differences =
       process.env.USE_NEW_MATCHER !== "false" &&
       triggers.some((t) => t.code === TriggerCode.TRPR0018) &&
-      exceptions.some((e) => e.code === ExceptionCode.HO100310)
+      exceptions.some((e) => matchingExceptions.includes(e.code))
 
     let xmlOutputMatchesValue = xmlOutputMatches(ahoXml, normalisedAho)
     if (isIgnored) {

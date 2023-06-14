@@ -74,7 +74,11 @@ const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): bo
   return hoStartDate >= pncStartDate && !!hoEndDate && hoEndDate <= pncEndDate
 }
 
-const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): void | Candidate => {
+const generateCandidate = (
+  hoOffence: Offence,
+  pncOffence: PncOffenceWithCaseRef,
+  hearingDate: Date
+): void | Candidate => {
   const ignoreDates = offenceIsBreach(hoOffence)
   const hoOffenceCode = getOffenceCode(hoOffence)
   const pncOffenceCode = pncOffence.pncOffence.offence.cjsOffenceCode
@@ -83,7 +87,17 @@ const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef
     return
   }
 
-  const candidate: Candidate = { pncOffence, hoOffence, exact: false, convictionDatesMatch: false }
+  const candidate: Candidate = {
+    pncOffence,
+    hoOffence,
+    exact: false,
+    convictionDatesMatch: convictionDatesMatch(hoOffence, pncOffence.pncOffence),
+    adjudicationMatch: false
+  }
+
+  if (hoOffence.ConvictionDate && pncOffence.pncOffence.adjudication) {
+    candidate.adjudicationMatch = hoOffence.ConvictionDate < hearingDate
+  }
 
   if (ignoreDates) {
     return candidate
@@ -92,14 +106,8 @@ const generateCandidate = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef
   if (!datesMatchApproximately(hoOffence, pncOffence.pncOffence)) {
     return
   }
+  candidate.exact = datesMatchExactly(hoOffence, pncOffence.pncOffence)
 
-  if (convictionDatesMatch(hoOffence, pncOffence.pncOffence)) {
-    candidate.convictionDatesMatch = true
-  }
-
-  if (datesMatchExactly(hoOffence, pncOffence.pncOffence)) {
-    candidate.exact = true
-  }
   return candidate
 }
 

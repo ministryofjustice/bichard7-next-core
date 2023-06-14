@@ -1,7 +1,9 @@
 import errorPaths from "src/lib/errorPaths"
+import isCcrValid from "src/lib/isCcrValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
+import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
 import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { OffenceMatchOptions } from "./generateCandidate"
 import generateCandidate from "./generateCandidate"
@@ -13,6 +15,7 @@ export type Candidate = {
   pncOffence: PncOffenceWithCaseRef
   exact: boolean
   convictionDatesMatch: boolean
+  adjudicationMatch: boolean
 }
 
 export const normaliseCCR = (ccr: string): string => {
@@ -25,28 +28,26 @@ export const normaliseCCR = (ccr: string): string => {
 }
 
 const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
-  const manualSequence = hoOffence.ManualSequenceNumber
-  const manualCourtCase = hoOffence.ManualCourtCaseReference
-  if (manualSequence) {
-    const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-    if (offenceReasonSequence !== undefined) {
-      const sequence = Number(offenceReasonSequence)
-      if (isNaN(sequence)) {
-        return false
-      }
-      if (manualCourtCase) {
-        const courtCase = hoOffence.CourtCaseReferenceNumber
-        return (
-          sequence === pncOffence.pncOffence.offence.sequenceNumber &&
-          !!courtCase &&
-          normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
-        )
-      } else {
-        return sequence === pncOffence.pncOffence.offence.sequenceNumber
-      }
-    }
+  const manualSequence = !!hoOffence.ManualSequenceNumber
+  const manualCourtCase = !!hoOffence.ManualCourtCaseReference
+  const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+  const sequence = Number(offenceReasonSequence)
+  const courtCase = hoOffence.CourtCaseReferenceNumber
+  if (manualSequence && isNaN(sequence)) {
+    return false
   }
-  return true
+  const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
+  const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
+
+  if (manualSequence && manualCourtCase) {
+    return sequenceMatches && ccrMatches
+  } else if (manualSequence) {
+    return sequenceMatches
+  } else if (manualCourtCase) {
+    return ccrMatches
+  }
+
+  return false
 }
 
 const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
@@ -58,7 +59,7 @@ class OffenceMatcher {
 
   public exceptions: Exception[] = []
 
-  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[]) {}
+  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[], private hearingDate: Date) {}
 
   get hasExceptions(): boolean {
     return this.exceptions.length > 0
@@ -98,6 +99,18 @@ class OffenceMatcher {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
   }
 
+  hasException(exception: Exception): boolean {
+    return this.exceptions.some(
+      (e) => e.code === exception.code && JSON.stringify(e.path) === JSON.stringify(exception.path)
+    )
+  }
+
+  addException(exception: Exception): void {
+    if (!this.hasException(exception)) {
+      this.exceptions.push(exception)
+    }
+  }
+
   hasCandidate(candidate: Candidate): boolean {
     return !!this.candidates.get(candidate.hoOffence)?.some((c) => c.pncOffence === candidate.pncOffence)
   }
@@ -105,7 +118,7 @@ class OffenceMatcher {
   findCandidates() {
     for (const hoOffence of this.hoOffences) {
       for (const pncOffence of this.pncOffences) {
-        const candidate = generateCandidate(hoOffence, pncOffence)
+        const candidate = generateCandidate(hoOffence, pncOffence, this.hearingDate)
         if (candidate && !this.hasCandidate(candidate)) {
           pushToArrayInMap(this.candidates, candidate.hoOffence, candidate)
         }
@@ -269,16 +282,26 @@ class OffenceMatcher {
     for (const checkConvictionDate of [true, false]) {
       exceptions = []
       for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
-        if (hoOffence.ManualSequenceNumber) {
-          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
-          const pncOffencesWithMatchingSequence = this.pncOffences.filter((pncOffence) =>
-            offenceManuallyMatches(hoOffence, pncOffence)
+        const hasManualSequence =
+          !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        const hasManualCCR =
+          !!hoOffence.ManualCourtCaseReference &&
+          !!hoOffence.CourtCaseReferenceNumber &&
+          isCcrValid(hoOffence.CourtCaseReferenceNumber)
+        if (hasManualSequence) {
+          const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
+          const pncOffencesWithMatchingSequence = this.pncOffences.filter(
+            (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
           )
 
           if (pncOffencesWithMatchingSequence.length === 0) {
             exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
             continue
           }
+        }
+
+        if (hasManualSequence || hasManualCCR) {
+          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { checkConvictionDate })
 
           const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
             offenceManuallyMatches(hoOffence, pncOffence)
@@ -294,7 +317,7 @@ class OffenceMatcher {
       }
     }
 
-    this.exceptions.push(...exceptions)
+    exceptions.forEach(this.addException, this)
   }
 
   matchOneToOneMatches() {
@@ -314,17 +337,22 @@ class OffenceMatcher {
   }
 
   matchGroup(candidates: Candidate[]): void | Exception[] {
-    const exceptions = this.checkGroupForConflicts(candidates)
-    if (exceptions) {
-      return exceptions
-    }
+    for (const nonFinal of [true, false]) {
+      const filteredCandidates = nonFinal
+        ? candidates.filter((c) => !offenceHasFinalResult(c.pncOffence.pncOffence))
+        : candidates
+      const exceptions = this.checkGroupForConflicts(filteredCandidates)
+      if (exceptions) {
+        return exceptions
+      }
 
-    for (const candidate of candidates) {
-      if (
-        !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
-        !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
-      ) {
-        this.matches.set(candidate.hoOffence, candidate.pncOffence)
+      for (const candidate of filteredCandidates) {
+        if (
+          !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
+          !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
+        ) {
+          this.matches.set(candidate.hoOffence, candidate.pncOffence)
+        }
       }
     }
   }
@@ -333,19 +361,19 @@ class OffenceMatcher {
     const groupedCandidates = this.groupOffences()
 
     for (const group of groupedCandidates) {
-      const exactAndConvictionDateMatch = group.filter((c) => c.exact && c.convictionDatesMatch && !this.hasMatch(c))
-      this.matchGroup(exactAndConvictionDateMatch)
+      const exactAndAdjudicationMatch = group.filter((c) => c.exact && c.adjudicationMatch && !this.hasMatch(c))
+      this.matchGroup(exactAndAdjudicationMatch)
 
       const exactMatch = group.filter((c) => c.exact && !this.hasMatch(c))
       this.matchGroup(exactMatch)
 
-      const fuzzyAndConvictionDateMatch = group.filter((c) => c.convictionDatesMatch && !this.hasMatch(c))
-      this.matchGroup(fuzzyAndConvictionDateMatch)
+      const fuzzyAndAdjudicationMatch = group.filter((c) => c.adjudicationMatch && !this.hasMatch(c))
+      this.matchGroup(fuzzyAndAdjudicationMatch)
 
       const fuzzyMatch = group.filter((c) => !this.hasMatch(c))
       const exceptions = this.matchGroup(fuzzyMatch)
       if (exceptions) {
-        this.exceptions.push(...exceptions)
+        exceptions.forEach(this.addException, this)
       }
     }
   }
@@ -359,7 +387,7 @@ class OffenceMatcher {
     this.matchOneToOneMatches()
     this.matchGroups()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
-      this.exceptions.push(ho100304)
+      this.addException(ho100304)
     }
   }
 }

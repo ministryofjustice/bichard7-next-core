@@ -189,4 +189,4 @@ const matchOffences = (
   return result
 }
 
-export { matchOffences, OffenceMatch, OffenceMatcherOutcome }
+export { OffenceMatch, OffenceMatcherOutcome, matchOffences }
