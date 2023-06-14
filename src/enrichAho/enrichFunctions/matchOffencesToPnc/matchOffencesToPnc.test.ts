@@ -67,7 +67,8 @@ const generateMockAhoWithOffences = (
               OffenceCategory: o.category ?? "XX"
             }))
           }
-        }
+        },
+        Hearing: { DateOfHearing: new Date() }
       }
     },
     PncQuery: {
@@ -1171,17 +1172,17 @@ describe("matchOffencesToPnc", () => {
         end: new Date("2022-01-01"),
         resultCodes: [1000],
         sequence: 3,
-        manualCourtCase: "abcd/1234"
+        manualCourtCase: "23/1234/1234A"
       }
       const aho = generateMockAhoWithOffences(
         [offence1],
         [
           {
-            courtCaseReference: "efgh/1234",
+            courtCaseReference: "23/4321/1234A",
             offences: [{ ...offence1, sequence: 1 }]
           },
           {
-            courtCaseReference: "abcd/1234",
+            courtCaseReference: "23/1234/1234A",
             offences: [{ ...offence1, sequence: 1 }]
           }
         ]
@@ -1189,7 +1190,7 @@ describe("matchOffencesToPnc", () => {
       const result = matchOffencesToPnc(aho)
       const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
-        caseReference: "abcd/1234",
+        caseReference: "23/1234/1234A",
         offences: [
           {
             hoSequenceNumber: 3,
