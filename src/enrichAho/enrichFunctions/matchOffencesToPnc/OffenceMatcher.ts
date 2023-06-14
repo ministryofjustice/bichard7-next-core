@@ -157,46 +157,6 @@ class OffenceMatcher {
     return !!this.matches.get(candidate.hoOffence) || Array.from(this.matches.values()).includes(candidate.pncOffence)
   }
 
-  hasNoMatchConflicts(hoOffence: Offence, pncOffence: PncOffenceWithCaseRef, exact?: boolean): boolean {
-    const otherMatchingHoOffences = this.candidatesForPncOffence(pncOffence, { exactDateMatch: exact })
-    if (!otherMatchingHoOffences) {
-      return false
-    }
-
-    return otherMatchingHoOffences.every((candidateHoOffence) => {
-      const filteredPncMatchCandidates = this.candidatesForHoOffence(candidateHoOffence).filter(
-        (candidatePncOffence) => candidatePncOffence !== pncOffence
-      )
-
-      const hasExactMatchToPncOffence = this.hasMatchCandidate(candidateHoOffence, pncOffence, true)
-
-      return candidateHoOffence === hoOffence || (!hasExactMatchToPncOffence && filteredPncMatchCandidates?.length >= 1)
-    })
-  }
-
-  selectMatch(hoOffence: Offence): PncOffenceWithCaseRef | undefined {
-    const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
-    if (candidatePncOffences.length === 1) {
-      const candidatePncOffence = candidatePncOffences[0]
-      if (this.candidatesForPncOffence(candidatePncOffence)?.length === 1) {
-        return candidatePncOffence
-      } else {
-        if (this.hasNoMatchConflicts(hoOffence, candidatePncOffence)) {
-          return candidatePncOffence
-        }
-      }
-    } else {
-      const exactMatches = this.candidatesForHoOffence(hoOffence, { exactDateMatch: true })
-      if (exactMatches.length === 1) {
-        const candidatePncOffence = exactMatches[0]
-        if (this.hasNoMatchConflicts(hoOffence, candidatePncOffence, true)) {
-          return candidatePncOffence
-        }
-      }
-    }
-    return undefined
-  }
-
   hoOffencesSharePncOffenceMatch = (
     hoOffence1: Offence,
     hoOffence2: Offence,
@@ -330,22 +290,6 @@ class OffenceMatcher {
     exceptions.forEach(this.addException, this)
   }
 
-  matchOneToOneMatches() {
-    let loop = true
-    while (loop) {
-      let foundMatch = false
-
-      for (const hoOffence of this.unmatchedCandidates().keys()) {
-        const selectedMatch = this.selectMatch(hoOffence)
-        if (selectedMatch) {
-          this.matches.set(hoOffence, selectedMatch)
-          foundMatch = true
-        }
-      }
-      loop = foundMatch
-    }
-  }
-
   matchGroup(candidates: Candidate[]): void | Exception[] {
     for (const nonFinal of [true, false]) {
       const filteredCandidates = nonFinal
@@ -394,7 +338,6 @@ class OffenceMatcher {
     if (this.exceptions.length > 0) {
       return
     }
-    this.matchOneToOneMatches()
     this.matchGroups()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.addException(ho100304)
