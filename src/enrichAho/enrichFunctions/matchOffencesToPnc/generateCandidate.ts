@@ -106,7 +106,10 @@ const generateCandidate = (
 
   candidate.convictionDatesMatch = convictionDatesMatch(hoOffence, pncOffence.pncOffence)
   candidate.exact = datesMatchExactly(hoOffence, pncOffence.pncOffence)
-  candidate.adjudicationMatch = hoResultMatchesPncAdjudication(hoOffence, pncOffence.pncOffence, hearingDate)
+
+  if (hoOffence.ConvictionDate) {
+    candidate.adjudicationMatch = hoResultMatchesPncAdjudication(hoOffence, pncOffence.pncOffence, hearingDate)
+  }
 
   return candidate
 }
