@@ -2,7 +2,6 @@ import getOffenceCode from "../../../lib/offence/getOffenceCode"
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
 import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
-import { hoResultMatchesPncAdjudication } from "../enrichCourtCases/offenceMatcher/offenceMatcher"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
@@ -96,8 +95,8 @@ const generateCandidate = (
     adjudicationMatch: false
   }
 
-  if (hoOffence.ConvictionDate) {
-    candidate.adjudicationMatch = hoResultMatchesPncAdjudication(hoOffence, pncOffence.pncOffence, hearingDate)
+  if (hoOffence.ConvictionDate && pncOffence.pncOffence.adjudication) {
+    candidate.adjudicationMatch = hoOffence.ConvictionDate < hearingDate
   }
 
   if (ignoreDates) {

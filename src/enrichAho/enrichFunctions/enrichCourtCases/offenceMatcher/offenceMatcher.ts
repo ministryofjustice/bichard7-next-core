@@ -27,11 +27,7 @@ type OffenceMatcherOutcome = {
   nonMatchingExplicitMatches: OffenceMatch[]
 }
 
-export const hoResultMatchesPncAdjudication = (
-  hoOffence: Offence,
-  pncOffence: PncOffence,
-  hearingDate?: Date
-): boolean => {
+const hoResultMatchesPncAdjudication = (hoOffence: Offence, pncOffence: PncOffence, hearingDate?: Date): boolean => {
   const hasPncAdjudication = !!pncOffence.adjudication
   const hoConvictionDate = hoOffence.ConvictionDate
   return (
