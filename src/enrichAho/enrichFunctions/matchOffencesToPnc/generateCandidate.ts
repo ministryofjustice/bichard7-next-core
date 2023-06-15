@@ -5,11 +5,6 @@ import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
-export type OffenceMatchOptions = {
-  exactDateMatch?: boolean
-  checkConvictionDate?: boolean
-}
-
 const convictionDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const matchingConvictionDates =
     !!pncOffence.adjudication?.sentenceDate &&
