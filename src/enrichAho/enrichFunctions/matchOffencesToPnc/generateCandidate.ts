@@ -90,8 +90,10 @@ const generateCandidate = (
     adjudicationMatch: false
   }
 
-  if (hoOffence.ConvictionDate && pncOffence.pncOffence.adjudication) {
-    candidate.adjudicationMatch = hoOffence.ConvictionDate < hearingDate
+  if (hoOffence.ConvictionDate) {
+    candidate.adjudicationMatch =
+      (hoOffence.ConvictionDate.getTime() === hearingDate.getTime() && !pncOffence.pncOffence.adjudication) ||
+      hoOffence.ConvictionDate < hearingDate
   }
 
   if (ignoreDates) {
