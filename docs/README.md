@@ -7,9 +7,9 @@ Structure:
 
 ## Generating the documentation
 
-* `npm run structurizr-site-generatr-build` => will build a microsite, for hosting on GitHub pages for example.
-* `npm run structurizr-site-generatr-serve` => will serve a local webserver whilst developing the microsite
-* `npm run structurizr-lite` => will serve a local webserver that's like: [HMPPS Architecture](https://structurizr.com/share/56937)
+- `npm run structurizr-site-generatr-build` => will build a microsite, for hosting on GitHub pages for example.
+- `npm run structurizr-site-generatr-serve` => will serve a local webserver whilst developing the microsite
+- `npm run structurizr-lite` => will serve a local webserver that's like: [HMPPS Architecture](https://structurizr.com/share/56937)
 
 ## [Structurizr DSL](https://github.com/structurizr/dsl)
 
