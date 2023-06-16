@@ -1,0 +1,22 @@
+version: "3.2"
+services:
+  structurizr-site-generatr-build:
+    image: ghcr.io/avisi-cloud/structurizr-site-generatr
+    volumes:
+      - ../docs:/var/model
+    command: generate-site -w workspace.dsl --default-branch main
+
+  structurizr-site-generatr-serve:
+    image: ghcr.io/avisi-cloud/structurizr-site-generatr
+    volumes:
+      - ../docs/architecture:/var/model
+    ports:
+      - 8080:8080
+    command: serve -w workspace.dsl
+
+  structurizr-lite:
+    image: structurizr/lite
+    volumes:
+      - ../docs/architecture:/usr/local/structurizr
+    ports:
+      - 8080:8080

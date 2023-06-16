@@ -7,3 +7,7 @@ node_modules
 # codebuild job for this repo to fail.
 .npmrc
 dist
+
+docs/architecture/.structurizr
+# Remove the `docs/architecture/workspace.json` if you turn off Automatic layout
+docs/architecture/workspace.json
