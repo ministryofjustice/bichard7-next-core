@@ -1,14 +1,14 @@
 import { isError } from "src/comparison/types"
-import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
+import createAuditLogEvent from "src/lib/auditLog/createAuditLogEvent"
 import { isAsnFormatValid } from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
-import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import { matchOffencesToPnc } from "./matchOffencesToPnc"
+import type AuditLogEvent from "src/types/AuditLogEvent"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -42,7 +42,7 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger
+  events: AuditLogEvent[]
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -68,8 +68,8 @@ export default async (
   }
 
   if (isError(pncResult)) {
-    auditLogger.logEvent(
-      getAuditLogEvent(
+    events.push(
+      createAuditLogEvent(
         "pnc.response-not-received",
         "warning",
         "PNC Response not received",
@@ -79,8 +79,8 @@ export default async (
     )
     annotatedHearingOutcome.PncErrorMessage = pncResult.message
   } else {
-    auditLogger.logEvent(
-      getAuditLogEvent(
+    events.push(
+      createAuditLogEvent(
         "pnc.response-received",
         "information",
         "PNC Response received",

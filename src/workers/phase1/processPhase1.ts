@@ -6,8 +6,7 @@ import { conductorLog } from "conductor/src/utils"
 import postgres from "postgres"
 import { isError } from "src/comparison/types"
 import phase1 from "src/index"
-import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import createAuditLogEvent from "src/lib/auditLog/createAuditLogEvent"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
@@ -16,6 +15,7 @@ import insertErrorListNotes from "src/lib/insertErrorListNotes"
 import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import logger from "src/lib/logging"
 import PncGateway from "src/lib/PncGateway"
+import type AuditLogEvent from "src/types/AuditLogEvent"
 import { Phase1ResultType } from "src/types/Phase1Result"
 
 const taskDefName = "process_phase1"
@@ -41,7 +41,7 @@ const processPhase1: ConductorWorker = {
   execute: async (task: Task) => {
     const db = postgres(dbConfig)
     const pncGateway = new PncGateway(pncApiConfig)
-    const auditLogger = new CoreAuditLogger()
+    const events: AuditLogEvent[] = []
     const s3Path: string | undefined = task.inputData?.s3Path
     const logs: ConductorLog[] = []
 
@@ -61,13 +61,11 @@ const processPhase1: ConductorWorker = {
       })
     }
 
-    auditLogger.logEvent(
-      getAuditLogEvent("hearing-outcome.received", "debug", "Hearing outcome received", "CoreHandler", {})
-    )
+    events.push(createAuditLogEvent("hearing-outcome.received", "debug", "Hearing outcome received", "CoreHandler", {}))
 
     const correlationId = extractCorrelationIdFromAhoXml(message)
 
-    const result = await phase1(message, pncGateway, auditLogger)
+    const result = await phase1(message, pncGateway, events)
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,

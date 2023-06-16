@@ -1,6 +1,5 @@
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { Phase1ResultType } from "src/types/Phase1Result"
@@ -19,6 +18,7 @@ import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import isIntentionalMatchingDifference from "./isIntentionalMatchingDifference"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import type AuditLogEvent from "src/types/AuditLogEvent"
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
@@ -32,6 +32,7 @@ const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
 
 const comparePhase1 = async (
   comparison: OldPhase1Comparison | Phase1Comparison,
+  events: AuditLogEvent[],
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<ComparisonResultDetail> => {
@@ -52,13 +53,12 @@ const comparePhase1 = async (
   const pncResponse = generateMockPncQueryResultFromAho(normalisedAho)
   const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)
   const pncGateway = new MockPncGateway(pncResponse, pncQueryTime)
-  const auditLogger = new CoreAuditLogger()
 
   try {
     if (!!(comparison as any).correlationId && (comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
-    const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
+    const coreResult = await CoreHandler(incomingMessage, pncGateway, events)
     if (coreResult.resultType === Phase1ResultType.failure) {
       throw Error("Failed to process")
     }

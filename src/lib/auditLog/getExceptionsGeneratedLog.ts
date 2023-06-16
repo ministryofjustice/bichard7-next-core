@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type AuditLogEvent from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
-import getAuditLogEvent from "./getAuditLogEvent"
+import createAuditLogEvent from "./createAuditLogEvent"
 
 const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): AuditLogEvent => {
   const errorDetails = hearingOutcome.Exceptions.reduce((acc: KeyValuePair<string, unknown>, exception, i) => {
@@ -16,7 +16,7 @@ const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): Aud
     ...errorDetails
   }
 
-  return getAuditLogEvent("exceptions.generated", "information", "Exceptions generated", "CoreHandler", attributes)
+  return createAuditLogEvent("exceptions.generated", "information", "Exceptions generated", "CoreHandler", attributes)
 }
 
 export default getExceptionsGeneratedLog

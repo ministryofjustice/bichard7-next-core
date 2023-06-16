@@ -2,7 +2,7 @@ import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { HearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type AuditLogEvent from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
-import getAuditLogEvent from "./getAuditLogEvent"
+import createAuditLogEvent from "./createAuditLogEvent"
 
 const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
   offences.reduce((acc: KeyValuePair<string, string>, offence, i) => {
@@ -37,7 +37,7 @@ const getIncomingMessageLog = (
     ...getOffenceDetails(hearingOutcome.Case.HearingDefendant.Offence)
   }
 
-  return getAuditLogEvent(
+  return createAuditLogEvent(
     "hearing-outcome.details",
     "information",
     "Hearing outcome details",

@@ -1,5 +1,4 @@
 import promisePoller from "promise-poller"
-import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import { v4 as uuid } from "uuid"
 import CoreHandler from "../../src"
 import extractExceptionsFromAho from "../../src/parse/parseAhoXml/extractExceptionsFromAho"
@@ -13,6 +12,7 @@ import generateMockPncQueryResult from "./generateMockPncQueryResult"
 import MockPncGateway from "./MockPncGateway"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
 import PostgresHelper from "./PostgresHelper"
+import type AuditLogEvent from "src/types/AuditLogEvent"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
@@ -39,8 +39,8 @@ const processMessageCore = (
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
   const pncGateway = new MockPncGateway(response)
-  const auditLogger = new CoreAuditLogger()
-  return CoreHandler(messageXml, pncGateway, auditLogger)
+  const events: AuditLogEvent[] = []
+  return CoreHandler(messageXml, pncGateway, events)
 }
 
 type ProcessMessageOptions = {

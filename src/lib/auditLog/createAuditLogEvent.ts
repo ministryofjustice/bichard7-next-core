@@ -2,7 +2,7 @@ import type AuditLogEvent from "src/types/AuditLogEvent"
 import type EventCategory from "src/types/EventCategory"
 import type KeyValuePair from "src/types/KeyValuePair"
 
-const getAuditLogEvent = (
+const createAuditLogEvent = (
   eventCode: string,
   category: EventCategory,
   eventType: string,
@@ -19,4 +19,4 @@ const getAuditLogEvent = (
   }
 }
 
-export default getAuditLogEvent
+export default createAuditLogEvent
