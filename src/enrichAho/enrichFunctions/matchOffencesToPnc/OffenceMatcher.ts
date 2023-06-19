@@ -1,5 +1,6 @@
 import errorPaths from "src/lib/errorPaths"
 import isCcrValid from "src/lib/isCcrValid"
+import isSequenceValid from "src/lib/isSequenceValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
@@ -254,11 +255,14 @@ class OffenceMatcher {
       for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
         const hasManualSequence =
           !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-        const hasManualCCR =
-          !!hoOffence.ManualCourtCaseReference &&
-          !!hoOffence.CourtCaseReferenceNumber &&
-          isCcrValid(hoOffence.CourtCaseReferenceNumber)
+
         if (hasManualSequence) {
+          const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+          if (!!rawSequence && isSequenceValid(rawSequence)) {
+            exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
+            continue
+          }
+
           const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
           const pncOffencesWithMatchingSequence = this.pncOffences.filter(
             (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
@@ -266,6 +270,15 @@ class OffenceMatcher {
 
           if (pncOffencesWithMatchingSequence.length === 0) {
             exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+            continue
+          }
+        }
+
+        const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
+
+        if (hasManualCCR) {
+          if (!isCcrValid(hoOffence.CourtCaseReferenceNumber!)) {
+            exceptions.push({ code: ExceptionCode.HO100203, path: errorPaths.offence(i).courtCaseReference })
             continue
           }
         }

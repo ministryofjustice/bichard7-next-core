@@ -24,6 +24,7 @@ const result = (offenceIndex: number) => (resultIndex: number) => ({
 })
 
 const offence = (offenceIndex: number) => ({
+  courtCaseReference: offencePath(offenceIndex).concat("CourtCaseReferenceNumber"),
   reasonSequence: offencePath(offenceIndex).concat("CriminalProsecutionReference", "OffenceReasonSequence"),
   result: result(offenceIndex)
 })
