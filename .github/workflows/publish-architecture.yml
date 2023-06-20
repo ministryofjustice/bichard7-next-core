@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+    - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy_github_pages:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Install Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.13.0
+
+    - name: Build the site
+      run: npm run structurizr-site-generatr-build
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: docs/architecture/build/site
+        clean: true
