@@ -258,7 +258,7 @@ class OffenceMatcher {
 
         if (hasManualSequence) {
           const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-          if (!!rawSequence && isSequenceValid(rawSequence)) {
+          if (!!rawSequence && !isSequenceValid(rawSequence)) {
             exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
             continue
           }

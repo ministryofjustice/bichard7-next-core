@@ -39,7 +39,8 @@ const ho100304WithExistingFinalOffence = (
       return pncCase?.offences.every((pncOffence) => {
         const hasFinal = offenceHasFinalResult(pncOffence)
         const isMatched = hoOffencesWithCCR.some(
-          (hoOffence) => hoOffence.CourtOffenceSequenceNumber === pncOffence.offence.sequenceNumber
+          (hoOffence) =>
+            Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence) === pncOffence.offence.sequenceNumber
         )
         return hasFinal || isMatched
       })
