@@ -34,11 +34,15 @@ const getCorrelationId = (comparison: OldPhase1Comparison | Phase1Comparison): s
   if ("correlationId" in comparison) {
     return comparison.correlationId
   }
-  const match = comparison.incomingMessage.match(
+  const spiMatch = comparison.incomingMessage.match(
     /<msg:MessageIdentifier>(?<correlationId>[^<]*)<\/msg:MessageIdentifier>/
   )
-  if (match) {
-    return match.groups?.correlationId
+  if (spiMatch) {
+    return spiMatch.groups?.correlationId
+  }
+  const hoMatch = comparison.incomingMessage.match(/<br7:UniqueID>(?<correlationId>[^<]*)<\/br7:UniqueID>/)
+  if (hoMatch) {
+    return hoMatch.groups?.correlationId
   }
 }
 
