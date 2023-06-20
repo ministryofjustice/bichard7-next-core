@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import summariseMatching from "tests/helpers/summariseMatching"
+import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"
 import ho100304WithExistingFinalOffence from "./ho100304WithExistingFinalOffence"
@@ -12,6 +13,7 @@ import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
+  badManualMatch,
   convictionDateMatching,
   ho100304WithExistingFinalOffence,
   ho100332NotHo100304,
