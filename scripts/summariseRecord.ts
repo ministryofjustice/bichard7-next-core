@@ -153,7 +153,9 @@ const main = async () => {
 
   fs.writeFileSync(outFileName, textOutput)
 
-  exec(`code ${outFileName}`)
+  if (process.env.NO_OPEN !== "true") {
+    exec(`code ${outFileName}`)
+  }
 }
 
 main()
