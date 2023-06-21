@@ -10,7 +10,8 @@ const printList = (
     return false
   }
   if (Array.isArray(result)) {
-    return result.every((res) => printList(res))
+    const results = result.map((r) => printList(r))
+    return results.every((res) => res)
   }
 
   if (result.skipped) {
