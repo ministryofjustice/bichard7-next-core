@@ -30,12 +30,29 @@ type CompareOptions = {
 const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
   !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
 
+const getCorrelationId = (comparison: OldPhase1Comparison | Phase1Comparison): string | undefined => {
+  if ("correlationId" in comparison) {
+    return comparison.correlationId
+  }
+  const spiMatch = comparison.incomingMessage.match(
+    /<msg:MessageIdentifier>(?<correlationId>[^<]*)<\/msg:MessageIdentifier>/
+  )
+  if (spiMatch) {
+    return spiMatch.groups?.correlationId
+  }
+  const hoMatch = comparison.incomingMessage.match(/<br7:UniqueID>(?<correlationId>[^<]*)<\/br7:UniqueID>/)
+  if (hoMatch) {
+    return hoMatch.groups?.correlationId
+  }
+}
+
 const comparePhase1 = async (
   comparison: OldPhase1Comparison | Phase1Comparison,
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<ComparisonResultDetail> => {
   const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = comparison
+  const correlationId = getCorrelationId(comparison)
   const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
 
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
@@ -55,7 +72,7 @@ const comparePhase1 = async (
   const auditLogger = new CoreAuditLogger()
 
   try {
-    if (!!(comparison as any).correlationId && (comparison as any).correlationId === process.env.DEBUG_CORRELATION_ID) {
+    if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
     const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)

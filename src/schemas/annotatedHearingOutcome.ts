@@ -167,6 +167,10 @@ export const courtReferenceSchema = z.object({
   MagistratesCourtReference: z.string()
 })
 
+export const courtCaseReferenceNumberSchema = z
+  .string()
+  .regex(/^[0-9]{2}\/[0-9]{4}\/[0-9]{1,6}[A-HJ-NP-RT-Z]{1}$/i, ExceptionCode.HO100203)
+
 export const sourceReferenceSchema = z.object({
   DocumentName: z.string(),
   UniqueID: z.string(),
@@ -282,11 +286,7 @@ export const offenceSchema = z.object({
   OffenceTime: timeSchema.optional(),
   ConvictionDate: z.date().optional(),
   CommittedOnBail: z.string().refine(validateYesNo),
-  CourtCaseReferenceNumber: z
-    .string()
-    .regex(/^[0-9]{2}\/[0-9]{4}\/[0-9]{1,6}[A-HJ-NP-RT-Z]{1}$/i, ExceptionCode.HO100203)
-    .or(z.null())
-    .optional(),
+  CourtCaseReferenceNumber: courtCaseReferenceNumberSchema.or(z.null()).optional(),
   ManualCourtCaseReference: z.boolean().optional(),
   CourtOffenceSequenceNumber: z.number().min(0, ExceptionCode.HO100239).max(999, ExceptionCode.HO100239),
   ManualSequenceNumber: z.boolean().optional(),
@@ -328,10 +328,7 @@ export const caseSchema = z.object({
   CaseMarker: z.string().min(0, ExceptionCode.HO100202).max(255, ExceptionCode.HO100202).optional(), // Note: This doesn't seem to ever be set in the original code
   CPSOrganisation: organisationUnitSchema.optional(),
   PreChargeDecisionIndicator: z.boolean(),
-  CourtCaseReferenceNumber: z
-    .string()
-    .regex(/[0-9]{2}\/[0-9]{4}\/[0-9]{6}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100203)
-    .optional(),
+  CourtCaseReferenceNumber: courtCaseReferenceNumberSchema.optional(),
   PenaltyNoticeCaseReferenceNumber: z.string().optional(),
   CourtReference: courtReferenceSchema,
   CourtOfAppealResult: z.string().optional(),

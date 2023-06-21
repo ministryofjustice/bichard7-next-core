@@ -2,9 +2,10 @@
 import chalk from "chalk"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import printList from "./printList"
 import type { SkippedFile } from "./processRange"
 
-const resultMatches = (result: ComparisonResultDetail): boolean =>
+export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
@@ -53,7 +54,6 @@ const formatTest = (name: string, success: boolean): string => {
 }
 
 export const printSingleSummary = (result: ComparisonResultDetail): void => {
-  console.log(`\n${result.file}`)
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
   console.log(formatTest("XML Output", result.xmlOutputMatches))
@@ -62,10 +62,14 @@ export const printSingleSummary = (result: ComparisonResultDetail): void => {
 
 const printResult = (
   result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
-  truncate = false
+  truncate = false,
+  list = false
 ): boolean => {
   if (!result) {
     return false
+  }
+  if (list) {
+    return printList(result)
   }
   if (Array.isArray(result)) {
     const results = result.map((r) => printResult(r, truncate))

@@ -2,16 +2,17 @@
 import { parse } from "ts-command-line-args"
 
 interface IArguments {
+  cache?: boolean
   directory?: string
-  file?: string
-  runMissing?: string
-  start?: string
   end?: string
+  file?: string
   filter?: string
   help?: boolean
-  cache?: boolean
-  noTruncate?: boolean
+  list?: boolean
   matching?: boolean
+  noTruncate?: boolean
+  runMissing?: string
+  start?: string
 }
 
 export const getArgs = () =>
@@ -28,6 +29,12 @@ export const getArgs = () =>
         alias: "d",
         optional: true,
         description: "Specify a local directory to run the tests from"
+      },
+      list: {
+        type: Boolean,
+        alias: "l",
+        optional: true,
+        description: "Just output the failure paths as a list"
       },
       runMissing: {
         type: String,

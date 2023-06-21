@@ -22,24 +22,24 @@ const main = async () => {
       success = printPncMatchingResult(result, !args.noTruncate)
     } else {
       const result = await processFile(contents, args.file, date)
-      success = printResult(result, !args.noTruncate)
+      success = printResult(result, !args.noTruncate, !!args.list)
     }
   } else if ("directory" in args && args.directory) {
     const results = await processDirectory(args.directory)
-    success = printResult(results, !args.noTruncate)
+    success = printResult(results, !args.noTruncate, !!args.list)
   } else if ("runMissing" in args && args.runMissing) {
     await runMissingComparisons(args.runMissing)
   } else if ("matching" in args && args.matching) {
     if ("start" in args && "end" in args && args.start && args.end) {
-      const results = await processRange(args.start, args.end, "all", !!args.cache, checkPncMatching)
+      const results = await processRange(args.start, args.end, "all", !!args.cache, !!args.list, checkPncMatching)
       success = printPncMatchingResult(results, !args.noTruncate)
     } else {
       console.error("You must specify both a start and end time")
     }
   } else if ("start" in args || "end" in args) {
     if ("start" in args && "end" in args && args.start && args.end) {
-      const results = await processRange(args.start, args.end, filter, !!args.cache, processFile)
-      success = printResult(results, !args.noTruncate)
+      const results = await processRange(args.start, args.end, filter, !!args.cache, !!args.list, processFile)
+      success = printResult(results, !args.noTruncate, !!args.list)
     } else {
       console.error("You must specify both a start and end time")
     }

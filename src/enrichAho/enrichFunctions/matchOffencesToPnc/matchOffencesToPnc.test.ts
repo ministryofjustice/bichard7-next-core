@@ -1127,16 +1127,16 @@ describe("matchOffencesToPnc", () => {
       }
       const aho = generateMockAhoWithOffences(
         [
-          { ...offence1, manualCourtCase: "efgh/1234" },
-          { ...offence1, manualCourtCase: "abcd/1234", sequence: 2 }
+          { ...offence1, manualCourtCase: "23/1234/1234A" },
+          { ...offence1, manualCourtCase: "23/4321/1234A", sequence: 2 }
         ],
         [
           {
-            courtCaseReference: "abcd/1234",
+            courtCaseReference: "23/1234/1234A",
             offences: [{ ...offence1, sequence: 1 }]
           },
           {
-            courtCaseReference: "efgh/1234",
+            courtCaseReference: "23/4321/1234A",
             offences: [{ ...offence1, sequence: 1 }]
           }
         ]
@@ -1146,13 +1146,13 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         offences: [
           {
-            courtCaseReference: "efgh/1234",
+            courtCaseReference: "23/1234/1234A",
             hoSequenceNumber: 1,
             addedByCourt: false,
             pncSequenceNumber: 1
           },
           {
-            courtCaseReference: "abcd/1234",
+            courtCaseReference: "23/4321/1234A",
             hoSequenceNumber: 2,
             addedByCourt: false,
             pncSequenceNumber: 1
