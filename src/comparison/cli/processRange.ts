@@ -28,6 +28,7 @@ const processRange = async <T>(
   end: string,
   filter: string,
   cache: boolean,
+  list: boolean,
   processFunction: ProcessFunction<T>
 ): Promise<(T | SkippedFile)[]> => {
   const dynamo = new DynamoGateway(dynamoConfig)
@@ -63,7 +64,7 @@ const processRange = async <T>(
       }
     }
 
-    if (batch.length !== 0) {
+    if (batch.length !== 0 && !list) {
       console.log(`Processed ${count} records`)
     }
   }

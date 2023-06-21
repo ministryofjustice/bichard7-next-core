@@ -33,7 +33,6 @@ const formatTest = (name: string, success: boolean): string => {
 }
 
 export const printSingleSummary = (result: PncComparisonResultDetail): void => {
-  console.log(`\n${result.file}`)
   console.log("Expected:")
   console.log(JSON.stringify(result.expected, null, 2))
   console.log("Actual:")
