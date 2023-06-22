@@ -28,7 +28,7 @@ workspace "Bichard Next" {
         url "https://github.com/ministryofjustice/bichard7-next-core"
 
         amazonS3 = container "Amazon S3 - Incoming Bucket" "" "Amazon S3"
-        amazonS3Transfered = container "Amazon S3 - Transfered Bucket" "" "Amazon S3"
+        amazonS3Transferred = container "Amazon S3 - Transferred Bucket" "" "Amazon S3"
         incomingMessageHandler = container "Incoming Message Handler Step Function"
         amazonMQ = container "Amazon MQ" "" "Amazon MQ"
         auditLogApi = container "Audit Log API"
@@ -86,7 +86,9 @@ workspace "Bichard Next" {
     }
 
     group "Home Office - Police" {
-      pnc = softwareSystem "Police National Computer"
+      pnc = softwareSystem "Police National Computer" {
+        tags "Existing System"
+      }
     }
 
     # Relationships between people and software systems
@@ -104,8 +106,8 @@ workspace "Bichard Next" {
 
     ## Court handler
     exiss -> amazonS3 "Sends results of court cases"
-    amazonS3 -> amazonS3Transfered "Transfers"
-    amazonS3Transfered -> incomingMessageHandler
+    amazonS3 -> amazonS3Transferred "Transfers"
+    amazonS3Transferred -> incomingMessageHandler
 
     ## Logging
     auditLogApi -> dynamo
@@ -139,7 +141,7 @@ workspace "Bichard Next" {
 
     ## Phase 1
     amazonMQ -> amazonLambda
-    amazonLambda -> amazonS3Transfered
+    amazonLambda -> amazonS3Transferred
 
     # Relationships to/from components
     postfix -> cjsm "Relays email"
