@@ -1289,6 +1289,7 @@ COPY br7own.users_groups (user_id, group_id) FROM stdin;
 25	8
 24	9
 25	9
+1	10
 15	10
 16	10
 17	10
