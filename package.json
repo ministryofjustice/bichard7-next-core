@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "husky install",
-    "update-deps": "ncu -u --reject chalk --reject p-limit && npm install",
+    "update-deps": "ncu -u --reject chalk --reject p-limit && scripts/install-standing-data.sh && npm install",
     "all": "./environment/boot.sh",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
