@@ -9,6 +9,17 @@ workspace "Bichard Old" {
       tags "Existing System"
     }
 
+    slack = softwareSystem "Slack" "An instant messaging service used by Made Tech" {
+      url "https://slack.com/"
+      tags "External"
+    }
+
+    pagerDuty = softwareSystem "PagerDuty" "An alert tool for instances when the systems trigger an alarm" {
+      url "https://www.pagerduty.com/"
+      tags "External"
+    }
+
+
     group "CJSE" {
       qsolution = softwareSystem "PSN Proxy" "Q-Solution" "Nginx" {
         tags "Existing System"
@@ -112,13 +123,15 @@ workspace "Bichard Old" {
         monitoring = container "Monitoring" {
           openSearch = component "OpenSearch"
           prometheus = component "Prometheus"
-          prometheusExporter = component "Prometheus Exporter"
+          prometheusCloudWatchExporter = component "Prometheus CloudWatch Exporter"
           prometheusBlackBoxExporter = component "Prometheus Black Box Exporter"
           grafana = component "Grafana"
           logStash = component "LogStash"
-          pagerDuty = component "PagerDuty"
-          cloudWatchLogs = component "CloudWatch Logs"
+          cloudWatchLogs = component "CloudWatch Logs" "Logs gathered from all AWS services"
           cloudWatchMetrics = component "CloudWatch Metrics"
+          slackLambda = component "Slack message handler" {
+            tags "Lambda"
+          }
         }
       }
     }
@@ -178,13 +191,26 @@ workspace "Bichard Old" {
     # Reporting
     automationReport -> auditLogApi
     commonPlatformReport -> auditLogApi
+    automationReport -> staticFileService
+    topExceptionsReport -> staticFileService
     commonPlatformReport -> emailSystem
     MPSReport -> database
     topExceptionsReport -> auditLogApi
 
     # Monitoring
-    prometheusExporter -> prometheusBlackBoxExporter
-    prometheusExporter -> cloudWatchLogs
+    prometheusBlackBoxExporter -> nginxAuthProxy "Healthcheck" "via HTTPS"
+    prometheusBlackBoxExporter -> prometheus
+    prometheusCloudWatchExporter -> prometheus
+    prometheusCloudWatchExporter -> cloudWatchMetrics
+
+    prometheus -> slackLambda "Sends message" "via SNS"
+    cloudWatchMetrics -> slackLambda "Sends message" "via SNS"
+    prometheus -> grafana
+    logStash -> openSearch
+    cloudWatchLogs -> logStash
+
+    prometheus -> pagerDuty "Sends message" "via SNS"
+    slackLambda -> slack "Sends message" "via TLS Webhook"
   }
 
   views {
@@ -254,6 +280,11 @@ workspace "Bichard Old" {
 
       element "Lambda" {
         shape "Diamond"
+      }
+
+      element "External" {
+        background #9b76ff
+        color #ffffff
       }
 
       element "Existing System" {
