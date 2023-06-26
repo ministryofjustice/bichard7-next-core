@@ -3,6 +3,7 @@ workspace "Bichard Old" {
     !include lib/users.dsl
 
     !include lib/hmcts.dsl
+    !include lib/home-office.dsl
 
     cjsm = softwareSystem "CJSM" {
       tags "Existing System"
@@ -17,8 +18,7 @@ workspace "Bichard Old" {
         tags "Existing System"
       }
 
-
-      bichard = softwareSystem "Bichard" {
+      oldBichard = softwareSystem "Old Bichard" {
         beanconnect = container "Beanconnect"
 
         messageTransfer = container "Message Transfer Lambda" {
@@ -91,16 +91,42 @@ workspace "Bichard Old" {
           auditLogApiLambda = component "Audit Log API Lambda"
           dynamoDB = component "DynamoDB" "" "DynamoDB"
         }
+
+        staticFileService = container "Static File Service"
+
+        reportingService = container "Reporting" {
+          automationReport = component "Automation Report" {
+            tags "Lambda"
+          }
+          commonPlatformReport = component "Common Platform Report"{
+            tags "Lambda"
+          }
+          MPSReport = component "MPS Report"{
+            tags "Lambda"
+          }
+          topExceptionsReport = component "Top Exceptions Report"{
+            tags "Lambda"
+          }
+        }
+
+        monitoring = container "Monitoring" {
+          openSearch = component "OpenSearch"
+          prometheus = component "Prometheus"
+          prometheusExporter = component "Prometheus Exporter"
+          prometheusBlackBoxExporter = component "Prometheus Black Box Exporter"
+          grafana = component "Grafana"
+          logStash = component "LogStash"
+          pagerDuty = component "PagerDuty"
+          cloudWatchLogs = component "CloudWatch Logs"
+          cloudWatchMetrics = component "CloudWatch Metrics"
+        }
       }
     }
-
-    !include lib/home-office.dsl
 
     # Relationships between people and software systems
     policeUser -> qsolution "Uses"
     policeUser -> pnc "Uses"
     cjsm -> policeUser "Gets email"
-    policeUser -> nginxAuthProxy "Uses"
 
     # Relationships between software systems
     commonPlatform -> exiss "Sends result of a court case"
@@ -112,13 +138,15 @@ workspace "Bichard Old" {
     beanconnect -> qsolution
 
     qsolution -> pnc
+    qsolution -> nginxAuthProxy
 
     # Relationships to/from components
     emailSystem -> cjsm "Sends verification code"
-
     bichardUserService -> emailSystem "Sends verification code"
+
     nginxAuthProxy -> bichardJavaApplication
     nginxAuthProxy -> bichardUserService "Uses"
+    nginxAuthProxy -> staticFileService
 
     bichardUserService -> database "Reads from / Writes to"
     bichardJavaApplication -> database "Reads from / Writes to"
@@ -135,6 +163,8 @@ workspace "Bichard Old" {
 
     activeMQ -> eventLambda
     eventLambda -> eventS3Bucket
+    eventS3Bucket -> writeToAuditLog
+    writeToAuditLog -> auditLogApi
 
     activeMQ -> bichardJavaApplication
     bichardJavaApplication -> activeMQ
@@ -142,21 +172,33 @@ workspace "Bichard Old" {
     # Audit Logger
     auditLogApiGateway -> auditLogApiLambda
     auditLogApiLambda -> dynamoDB
+    auditLogApiLambda -> database
+    auditLogApiLambda -> activeMQ
 
+    # Reporting
+    automationReport -> auditLogApi
+    commonPlatformReport -> auditLogApi
+    commonPlatformReport -> emailSystem
+    MPSReport -> database
+    topExceptionsReport -> auditLogApi
+
+    # Monitoring
+    prometheusExporter -> prometheusBlackBoxExporter
+    prometheusExporter -> cloudWatchLogs
   }
 
   views {
-    systemlandscape "SystemLandscape" {
+    systemLandscape "SystemLandscape" {
       include *
       autoLayout lr
     }
 
-    systemContext bichard {
+    systemContext oldBichard {
       include *
       autoLayout lr
     }
 
-    container bichard {
+    container oldBichard "OldBichard" {
       include *
       autoLayout
     }
@@ -172,6 +214,21 @@ workspace "Bichard Old" {
     }
 
     component auditLogApi {
+      include *
+      autoLayout lr
+    }
+
+    component eventHandler {
+      include *
+      autoLayout lr
+    }
+
+    component reportingService {
+      include *
+      autoLayout lr
+    }
+
+    component monitoring {
       include *
       autoLayout lr
     }
