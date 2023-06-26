@@ -132,6 +132,9 @@ workspace "Bichard Old" {
           slackLambda = component "Slack message handler" {
             tags "Lambda"
           }
+          sns = component "SNS" {
+            tags "SNS"
+          }
         }
       }
     }
@@ -203,29 +206,34 @@ workspace "Bichard Old" {
     prometheusCloudWatchExporter -> prometheus
     prometheusCloudWatchExporter -> cloudWatchMetrics
 
-    prometheus -> slackLambda "Sends message" "via SNS"
-    cloudWatchMetrics -> slackLambda "Sends message" "via SNS"
+    prometheus -> sns
+    cloudWatchMetrics -> sns
     prometheus -> grafana
     logStash -> openSearch
     cloudWatchLogs -> logStash
 
-    prometheus -> pagerDuty "Sends message" "via SNS"
+    prometheus -> sns
+    sns -> pagerDuty "Sends message"
+    sns -> slackLambda "Sends message"
     slackLambda -> slack "Sends message" "via TLS Webhook"
   }
 
   views {
     systemLandscape "SystemLandscape" {
       include *
+      exclude slack pagerDuty
       autoLayout lr
     }
 
     systemContext oldBichard {
       include *
+      exclude slack pagerDuty
       autoLayout lr
     }
 
     container oldBichard "OldBichard" {
       include *
+      exclude slack pagerDuty
       autoLayout
     }
 
@@ -280,6 +288,10 @@ workspace "Bichard Old" {
 
       element "Lambda" {
         shape "Diamond"
+      }
+
+      element "SNS" {
+        shape Pipe
       }
 
       element "External" {
