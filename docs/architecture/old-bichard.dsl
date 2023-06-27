@@ -1,4 +1,7 @@
-workspace "Bichard Old" {
+workspace "Bichard" {
+  !docs docs
+  !adrs adrs
+
   model {
     !include lib/users.dsl
 
@@ -19,7 +22,7 @@ workspace "Bichard Old" {
         tags "Existing System"
       }
 
-      oldBichard = softwareSystem "Old Bichard" {
+      bichard = softwareSystem "Bichard" {
         beanconnect = container "Beanconnect"
 
         messageTransfer = container "Message Transfer Lambda" {
@@ -33,7 +36,7 @@ workspace "Bichard Old" {
         }
 
         incomingMessageHandler = container "Incoming Message Handler Step Function" {
-          internalIncomingS3Bucket = component "Internal Incoming S3 bucket" {
+          internalIncomingS3Bucket = component "Internal Incoming S3 bucket" "Blah blah" {
             tags "Queue"
           }
 
@@ -126,6 +129,22 @@ workspace "Bichard Old" {
             tags "SNS"
           }
         }
+
+        ####### Hybrid
+        pncApi = container "PNC API" {
+          tags "API"
+        }
+
+        bichardUI = container "Bichard UI" "A new way of interacting with Bichard, complying with Gov.uk standards" "TypeScript & React" "Web Browser" {
+          url "https://github.com/ministryofjustice/bichard7-next-ui"
+          tags "Web Browser"
+        }
+
+        conductor = container "Conductor" {
+          bichardNextCore = component "Bichard Next Core" "The code to replace the processing logic of Bichard7" "Next.js, TypeScript" {
+            url "https://github.com/ministryofjustice/bichard7-next-core"
+          }
+        }
       }
     }
 
@@ -208,6 +227,17 @@ workspace "Bichard Old" {
     sns -> pagerDuty "Sends message"
     sns -> slackLambda "Sends message"
     slackLambda -> slack "Sends message" "via TLS Webhook"
+
+
+    ####### Hybrid
+    nginxAuthProxy -> bichardUI
+    bichardUI -> database
+
+    bichardNextCore -> auditLogApi
+    bichardNextCore -> database "Reads from and writes to"
+    bichardNextCore -> pncApi
+    pncApi -> beanconnect
+
   }
 
   views {
@@ -217,16 +247,28 @@ workspace "Bichard Old" {
       autoLayout lr
     }
 
-    systemContext oldBichard {
+    systemContext bichard "BichardSystemContext" {
       include *
       exclude slack pagerDuty
       autoLayout lr
     }
 
-    container oldBichard "OldBichard" {
+    container bichard "OldBichard" {
+      include *
+      exclude slack pagerDuty bichardUI bichardNextCore conductor pncApi
+      autoLayout
+      title "Old Bichard"
+    }
+
+    container bichard "HybridBichard" {
       include *
       exclude slack pagerDuty
-      autoLayout
+      title "Hybrid Bichard"
+    }
+
+    component conductor {
+      include *
+      autoLayout lr
     }
 
     component incomingMessageHandler {
