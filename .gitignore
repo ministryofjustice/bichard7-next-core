@@ -1,6 +1,7 @@
 build
 node_modules
 .eslintcache
+.vscode
 
 # .npmrc is generated inline by the release GitHub action, and then deliberately not committed
 # because the contents of the file (specifically the NPM_TOKEN variable reference) cause the
@@ -9,5 +10,3 @@ node_modules
 dist
 
 docs/architecture/.structurizr
-# Remove the `docs/architecture/workspace.json` if you turn off Automatic layout
-docs/architecture/workspace.json
