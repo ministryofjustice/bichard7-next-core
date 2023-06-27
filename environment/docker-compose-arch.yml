@@ -4,7 +4,7 @@ services:
     image: ghcr.io/avisi-cloud/structurizr-site-generatr
     volumes:
       - ../docs/architecture:/var/model
-    command: generate-site -w workspace.dsl --default-branch main
+    command: generate-site -w workspace.dsl -a assets --default-branch main
 
   structurizr-site-generatr-serve:
     image: ghcr.io/avisi-cloud/structurizr-site-generatr
@@ -12,7 +12,7 @@ services:
       - ../docs/architecture:/var/model
     ports:
       - 8080:8080
-    command: serve -w workspace.dsl
+    command: serve -w workspace.dsl -a assets
 
   structurizr-lite:
     image: structurizr/lite
