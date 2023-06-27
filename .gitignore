@@ -1,9 +1,12 @@
 build
 node_modules
 .eslintcache
+.vscode
 
 # .npmrc is generated inline by the release GitHub action, and then deliberately not committed
 # because the contents of the file (specifically the NPM_TOKEN variable reference) cause the
 # codebuild job for this repo to fail.
 .npmrc
 dist
+
+docs/architecture/.structurizr
