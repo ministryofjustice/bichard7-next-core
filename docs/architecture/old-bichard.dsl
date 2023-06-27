@@ -4,21 +4,11 @@ workspace "Bichard Old" {
 
     !include lib/hmcts.dsl
     !include lib/home-office.dsl
+    !include lib/external.dsl
 
     cjsm = softwareSystem "CJSM" {
       tags "Existing System"
     }
-
-    slack = softwareSystem "Slack" "An instant messaging service used by Made Tech" {
-      url "https://slack.com/"
-      tags "External"
-    }
-
-    pagerDuty = softwareSystem "PagerDuty" "An alert tool for instances when the systems trigger an alarm" {
-      url "https://www.pagerduty.com/"
-      tags "External"
-    }
-
 
     group "CJSE" {
       qsolution = softwareSystem "PSN Proxy" "Q-Solution" "Nginx" {
@@ -201,8 +191,10 @@ workspace "Bichard Old" {
     topExceptionsReport -> auditLogApi
 
     # Monitoring
-    prometheusBlackBoxExporter -> nginxAuthProxy "Healthcheck" "via HTTPS"
     prometheusBlackBoxExporter -> prometheus
+    prometheusBlackBoxExporter -> bichardJavaApplication
+    prometheusBlackBoxExporter -> grafana
+    prometheusBlackBoxExporter -> openSearch
     prometheusCloudWatchExporter -> prometheus
     prometheusCloudWatchExporter -> cloudWatchMetrics
 
