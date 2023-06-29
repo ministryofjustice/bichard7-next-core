@@ -1,0 +1,44 @@
+@startuml
+set separator none
+title System Landscape
+
+left to right direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+
+AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
+Boundary(group_1, "CJSE", $tags="CJSE") {
+  System(Bichard, "Bichard", "", $tags="")
+  System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")
+  System(ExISS, "ExISS", "", $tags="")
+}
+
+AddBoundaryTag("HMCTS", $borderColor="#cccccc", $fontColor="#cccccc")
+Boundary(group_2, "HMCTS", $tags="HMCTS") {
+  System(CommonPlatform, "Common Platform", "", $tags="")
+  System(Libra, "Libra", "", $tags="")
+}
+
+AddBoundaryTag("Home Office - Police", $borderColor="#cccccc", $fontColor="#cccccc")
+Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
+  System(PoliceNationalComputer, "Police National Computer", "", $tags="")
+}
+
+Person(PoliceUser, "Police User", "", $tags="")
+System(CJSM, "CJSM", "", $tags="")
+
+Rel_D(PoliceUser, PSNProxy, "Uses", $tags="")
+Rel_D(PoliceUser, PoliceNationalComputer, "Uses", $tags="")
+Rel_D(CJSM, PoliceUser, "Gets email", $tags="")
+Rel_D(CommonPlatform, ExISS, "Sends result of a court case", $tags="")
+Rel_D(Libra, ExISS, "Sends result of a court case", $tags="")
+Rel_D(PSNProxy, PoliceNationalComputer, "Uses", $tags="")
+Rel_D(Bichard, PSNProxy, "", $tags="")
+Rel_D(PSNProxy, PoliceNationalComputer, "", $tags="")
+Rel_D(PSNProxy, Bichard, "", $tags="")
+Rel_D(Bichard, CJSM, "Sends verification code", $tags="")
+Rel_D(ExISS, Bichard, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml

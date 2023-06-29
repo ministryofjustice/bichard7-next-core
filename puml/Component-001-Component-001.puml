@@ -1,0 +1,28 @@
+@startuml
+set separator none
+title Bichard - Conductor - Components
+
+left to right direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+skinparam svgDimensionStyle false
+skinparam preserveAspectRatio meet
+ContainerDb(Bichard.BichardDatabase, "Bichard Database", "PostgreSQL", "", $tags="")
+Container(Bichard.PNCAPI, "PNC API", "", $tags="")
+Container(Bichard.AuditLog, "Audit Log", "", $tags="")
+
+Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
+  Component(Bichard.Conductor.BichardNextCore, "Bichard Next Core", "Next.js, TypeScript", "The code to replace the processing logic of Bichard7", $tags="")
+}
+
+Rel_D(Bichard.AuditLog, Bichard.BichardDatabase, "", $tags="")
+Rel_D(Bichard.Conductor.BichardNextCore, Bichard.AuditLog, "", $tags="")
+Rel_D(Bichard.Conductor.BichardNextCore, Bichard.BichardDatabase, "Reads from and writes to", $tags="")
+Rel_D(Bichard.Conductor.BichardNextCore, Bichard.PNCAPI, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml

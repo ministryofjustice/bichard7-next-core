@@ -1,0 +1,27 @@
+@startuml
+set separator none
+title Bichard - System Context
+
+left to right direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+
+skinparam svgDimensionStyle false
+skinparam preserveAspectRatio meet
+AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
+Boundary(group_1, "CJSE", $tags="CJSE") {
+  System(Bichard, "Bichard", "", $tags="")[[../container/]]
+  System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")[[../../psn-proxy/context/]]
+  System(ExISS, "ExISS", "", $tags="")[[../../exiss/context/]]
+}
+
+System(CJSM, "CJSM", "", $tags="")[[../../cjsm/context/]]
+
+Rel_D(Bichard, PSNProxy, "", $tags="")
+Rel_D(PSNProxy, Bichard, "", $tags="")
+Rel_D(Bichard, CJSM, "Sends verification code", $tags="")
+Rel_D(ExISS, Bichard, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml

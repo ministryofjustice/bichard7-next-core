@@ -1,0 +1,35 @@
+@startuml
+set separator none
+title Bichard - Incoming Message Handler Step Function - Components
+
+left to right direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+skinparam svgDimensionStyle false
+skinparam preserveAspectRatio meet
+Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", "", $tags="")
+Container(Bichard.ActiveMQ, "Active MQ", "Active MQ", "", $tags="")
+Container(Bichard.AuditLog, "Audit Log", "", $tags="")
+
+Container_Boundary("Bichard.IncomingMessageHandlerStepFunction_boundary", "Incoming Message Handler Step Function", $tags="") {
+  Component(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "Internal Incoming S3 bucket", "Blah blah", $tags="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "Store Message", "", $tags="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "Send to Bichard", "", $tags="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", "", $tags="")
+}
+
+Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $tags="")
+Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $tags="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+set separator none
+title Bichard - Event Handler Step Function - Components
+
+left to right direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+skinparam svgDimensionStyle false
+skinparam preserveAspectRatio meet
+Container(Bichard.AuditLog, "Audit Log", "", $tags="")
+Container(Bichard.EventLambda, "Event Lambda", "", $tags="")
+
+Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler Step Function", $tags="") {
+  Component(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", "", $tags="")
+  Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", "", $tags="")
+}
+
+Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction.EventS3bucket, "", $tags="")
+Rel_D(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $tags="")
+Rel_D(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLog, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml

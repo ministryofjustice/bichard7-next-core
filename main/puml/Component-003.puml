@@ -1,0 +1,25 @@
+@startuml
+set separator none
+title Bichard - Message Transfer Lambda - Components
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", "", $tags="")
+System(ExISS, "ExISS", "", $tags="")
+
+Container_Boundary("Bichard.MessageTransferLambda_boundary", "Message Transfer Lambda", $tags="") {
+  Component(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", "", $tags="")
+  Component(Bichard.MessageTransferLambda.Transferlambda, "Transfer lambda", "", $tags="")
+}
+
+Rel_D(ExISS, Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "", $tags="")
+Rel_D(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, Bichard.MessageTransferLambda.Transferlambda, "", $tags="")
+Rel_D(Bichard.MessageTransferLambda.Transferlambda, Bichard.IncomingMessageHandlerStepFunction, "", $tags="")
+
+SHOW_LEGEND(true)
+@enduml
