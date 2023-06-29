@@ -2,8 +2,8 @@ name: Build and Deploy Architecture and Documentation
 
 on:
   push:
-    branches:
-    - main
+    # branches:
+    # - main
 
 permissions:
   contents: write
