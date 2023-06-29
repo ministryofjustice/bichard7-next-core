@@ -3,6 +3,7 @@ import summariseMatching from "tests/helpers/summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"
+import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import ho100304WithExistingFinalOffence from "./ho100304WithExistingFinalOffence"
 import ho100310AndHo100332Equivalent from "./ho100310AndHo100332Equivalent"
 import ho100332NotHo100304 from "./ho100332NotHo100304"
@@ -16,6 +17,7 @@ const filters = [
   badlyAnnotatedSingleCaseMatch,
   badManualMatch,
   convictionDateMatching,
+  coreMatchesBichardAddsInCourt,
   ho100304WithExistingFinalOffence,
   ho100310AndHo100332Equivalent,
   ho100332NotHo100304,
