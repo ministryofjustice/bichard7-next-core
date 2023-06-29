@@ -7,6 +7,7 @@ import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import ho100304WithExistingFinalOffence from "./ho100304WithExistingFinalOffence"
 import ho100310AndHo100332Equivalent from "./ho100310AndHo100332Equivalent"
 import ho100332NotHo100304 from "./ho100332NotHo100304"
+import ho100332WithConvictionDate from "./ho100332WithConvictionDate"
 import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
@@ -21,6 +22,7 @@ const filters = [
   ho100304WithExistingFinalOffence,
   ho100310AndHo100332Equivalent,
   ho100332NotHo100304,
+  ho100332WithConvictionDate,
   ho100333AndCCRHasLeadingZero,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,

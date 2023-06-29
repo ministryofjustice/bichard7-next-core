@@ -17,10 +17,10 @@ const convictionDateMatching = (
 
   const coreMatches = "offences" in actual
 
-  const offenceIds = expected.exceptions.map((e) => e.path[5])
+  const offenceIndices = expected.exceptions.map((e) => e.path[5])
 
   const exceptionOffences = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
-    (_, id) => id in offenceIds
+    (_, index) => offenceIndices.includes(index)
   )
 
   const exceptionOffencesHaveConvictionDate = exceptionOffences.some((offence) => offence.ConvictionDate)
