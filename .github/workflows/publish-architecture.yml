@@ -24,6 +24,7 @@ jobs:
       run: |
         brew install docker
         colima start
+        brew install docker-compose
 
     - name: Build the site
       run: npm run structurizr-site-generatr-build
