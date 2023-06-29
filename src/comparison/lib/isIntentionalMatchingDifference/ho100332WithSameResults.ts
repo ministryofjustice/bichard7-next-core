@@ -1,7 +1,7 @@
 import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
-import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
+import hoOffencesAreEqual from "../hoOffencesAreEqual"
 
 // Bichard sometimes raises a HO100332 for offences that have identical results. Core detects this and
 // assigns a match anyway (as it doesn't matter!)
@@ -27,7 +27,7 @@ const ho100332WithSameResults = (
     (_, index) => offenceIndices.includes(index)
   )
 
-  const ho100332OffencesHaveSameResults = offencesHaveEqualResults(exceptionOffences)
+  const ho100332OffencesHaveSameResults = exceptionOffences.every((o) => hoOffencesAreEqual(exceptionOffences[0], o))
 
   return bichardRaisesHo100332 && coreMatches && ho100332OffencesHaveSameResults
 }
