@@ -19,26 +19,33 @@ import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
 
+export const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome, string] => {
+  let hearingOutcome: AnnotatedHearingOutcome | Error
+  const messageType = getMessageType(message)
+
+  if (messageType === "SPIResults") {
+    const spiResult = parseSpiResult(message)
+    hearingOutcome = transformSpiToAho(spiResult)
+  } else if (messageType === "HearingOutcome") {
+    hearingOutcome = parseAhoXml(message)
+  } else {
+    throw new Error("Invalid incoming message format")
+  }
+
+  if (hearingOutcome instanceof Error) {
+    throw hearingOutcome
+  }
+
+  return [hearingOutcome, messageType]
+}
+
 export default async (
   message: string,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<Phase1Result> => {
   try {
-    let hearingOutcome: AnnotatedHearingOutcome | Error
-    const messageType = getMessageType(message)
-
-    if (messageType === "SPIResults") {
-      const spiResult = parseSpiResult(message)
-      hearingOutcome = transformSpiToAho(spiResult)
-    } else if (messageType === "HearingOutcome") {
-      hearingOutcome = parseAhoXml(message)
-    } else {
-      throw new Error("Invalid incoming message format")
-    }
-    if (hearingOutcome instanceof Error) {
-      throw hearingOutcome
-    }
+    const [hearingOutcome, messageType] = parseIncomingMessage(message)
     const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
@@ -63,25 +70,25 @@ export default async (
       }
     }
 
-    hearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
+    const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
 
     auditLogger.logEvent(
-      getIncomingMessageLog(hearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
+      getIncomingMessageLog(enrichedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
     )
 
-    if (isError(hearingOutcome)) {
-      throw hearingOutcome
+    if (isError(enrichedHearingOutcome)) {
+      throw enrichedHearingOutcome
     }
-    const triggers = generateTriggers(hearingOutcome)
-    const exceptions = generateExceptions(hearingOutcome)
+    const triggers = generateTriggers(enrichedHearingOutcome)
+    const exceptions = generateExceptions(enrichedHearingOutcome)
 
     exceptions.forEach(({ code, path }) => {
-      addExceptionsToAho(hearingOutcome as AnnotatedHearingOutcome, code, path)
+      addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
     })
 
-    addNullElementsForExceptions(hearingOutcome)
+    addNullElementsForExceptions(enrichedHearingOutcome)
 
-    const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
+    const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
     let resultType: Phase1ResultType
     if (isIgnored) {
       auditLogger.logEvent(
@@ -95,19 +102,19 @@ export default async (
       )
       resultType = Phase1ResultType.ignored
     } else {
-      if (hearingOutcome.Exceptions.length > 0) {
-        auditLogger.logEvent(getExceptionsGeneratedLog(hearingOutcome))
+      if (enrichedHearingOutcome.Exceptions.length > 0) {
+        auditLogger.logEvent(getExceptionsGeneratedLog(enrichedHearingOutcome))
       }
       if (triggers.length > 0) {
-        auditLogger.logEvent(getTriggersGeneratedLog(triggers, hearingOutcome.Exceptions.length > 0))
+        auditLogger.logEvent(getTriggersGeneratedLog(triggers, enrichedHearingOutcome.Exceptions.length > 0))
       }
-      resultType = hearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
+      resultType = enrichedHearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
     }
 
     return {
       correlationId,
       triggers,
-      hearingOutcome,
+      hearingOutcome: enrichedHearingOutcome,
       auditLogEvents: auditLogger.getEvents(),
       resultType
     }

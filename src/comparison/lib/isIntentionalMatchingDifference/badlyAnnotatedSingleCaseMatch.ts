@@ -5,7 +5,8 @@ const badlyAnnotatedSingleCaseMatch = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   _: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome
+  __: AnnotatedHearingOutcome,
+  ___: AnnotatedHearingOutcome
 ): boolean => {
   if ("exceptions" in actual || "exceptions" in expected) {
     return false

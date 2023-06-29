@@ -36,7 +36,8 @@ const filters = [
 
 const isIntentionalMatchingDifference = (
   expected: AnnotatedHearingOutcome,
-  actual: AnnotatedHearingOutcome
+  actual: AnnotatedHearingOutcome,
+  incoming: AnnotatedHearingOutcome
 ): boolean => {
   const expectedMatch = summariseMatching(expected, true)
   const actualMatch = summariseMatching(actual, true)
@@ -45,7 +46,9 @@ const isIntentionalMatchingDifference = (
     return false
   }
 
-  return filters.some((filter) => filter(expectedMatch, actualMatch, expected, actual))
+  const filterResults = filters.map((filter) => filter(expectedMatch, actualMatch, expected, actual, incoming))
+
+  return filterResults.some((result) => result)
 }
 
 export default isIntentionalMatchingDifference

@@ -6,7 +6,8 @@ const convictionDateMatching = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome
+  __: AnnotatedHearingOutcome,
+  ___: AnnotatedHearingOutcome
 ): boolean => {
   if (!("exceptions" in expected)) {
     return false

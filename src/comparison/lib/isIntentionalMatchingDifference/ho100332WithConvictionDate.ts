@@ -9,6 +9,7 @@ const ho100332WithConvictionDate = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
+  _: AnnotatedHearingOutcome,
   __: AnnotatedHearingOutcome
 ): boolean => {
   if (!("exceptions" in expected) || "exceptions" in actual) {
@@ -23,7 +24,7 @@ const ho100332WithConvictionDate = (
   const offenceIndices = ho100332s.map((e) => e.path[5])
 
   const exceptionOffences = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
-    (_, index) => offenceIndices.includes(index)
+    (___, index) => offenceIndices.includes(index)
   )
 
   const ho100332HasConvictionDate = exceptionOffences.some((hoOffence) => !!hoOffence.ConvictionDate)

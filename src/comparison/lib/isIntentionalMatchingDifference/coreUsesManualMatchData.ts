@@ -9,13 +9,14 @@ const coreUsesManualMatchData = (
   _: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome
+  __: AnnotatedHearingOutcome,
+  incomingAho: AnnotatedHearingOutcome
 ): boolean => {
   if ("exceptions" in actual) {
     return false
   }
 
-  const manualCCRs = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+  const manualCCRs = incomingAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
     (hoOffence) => hoOffence.ManualCourtCaseReference && hoOffence.CourtCaseReferenceNumber
   ).map((hoOffence) => hoOffence.CourtCaseReferenceNumber!)
 

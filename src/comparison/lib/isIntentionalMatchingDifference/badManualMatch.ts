@@ -6,7 +6,8 @@ const badManualMatch = (
   _: CourtResultMatchingSummary,
   __: CourtResultMatchingSummary,
   ___: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome
+  actualAho: AnnotatedHearingOutcome,
+  ____: AnnotatedHearingOutcome
 ): boolean => {
   if (actualAho.Exceptions.length === 0) {
     return false

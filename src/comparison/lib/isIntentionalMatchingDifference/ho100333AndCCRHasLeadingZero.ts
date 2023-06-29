@@ -7,7 +7,8 @@ const ho100333AndCCRHasLeadingZero = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  _: AnnotatedHearingOutcome
+  _: AnnotatedHearingOutcome,
+  __: AnnotatedHearingOutcome
 ): boolean => {
   const bichardRaisesHo100333 =
     "exceptions" in expected && expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100333)

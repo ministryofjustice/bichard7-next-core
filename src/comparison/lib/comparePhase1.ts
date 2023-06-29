@@ -9,7 +9,7 @@ import { matchingExceptions } from "tests/helpers/summariseMatching"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
-import CoreHandler from "../../index"
+import CoreHandler, { parseIncomingMessage } from "../../index"
 import { extractExceptionsFromAho, parseAhoXml } from "../../parse/parseAhoXml"
 import convertAhoToXml from "../../serialise/ahoXml/generate"
 import type Exception from "../../types/Exception"
@@ -89,9 +89,11 @@ const comparePhase1 = async (
       throw parsedAho
     }
 
+    const [inputAho] = parseIncomingMessage(incomingMessage)
+
     if (
       process.env.USE_NEW_MATCHER !== "false" &&
-      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome)
+      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome, inputAho)
     ) {
       return {
         triggersMatch: true,

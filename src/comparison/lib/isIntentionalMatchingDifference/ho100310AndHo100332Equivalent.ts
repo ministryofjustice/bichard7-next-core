@@ -6,7 +6,8 @@ const ho100310AndHo100332Equivalent = (
   _: CourtResultMatchingSummary,
   __: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome
+  actualAho: AnnotatedHearingOutcome,
+  ___: AnnotatedHearingOutcome
 ): boolean => {
   if (actualAho.Exceptions.length === 0) {
     return false

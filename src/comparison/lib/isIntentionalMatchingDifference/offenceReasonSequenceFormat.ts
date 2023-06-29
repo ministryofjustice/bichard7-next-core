@@ -10,7 +10,8 @@ const offenceReasonSequenceFormat = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome
+  actualAho: AnnotatedHearingOutcome,
+  _: AnnotatedHearingOutcome
 ): boolean => {
   if ("exceptions" in actual || "exceptions" in expected) {
     return false
