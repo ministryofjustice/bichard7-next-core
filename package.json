@@ -41,9 +41,9 @@
     "conductor-worker-noenv": "npx ts-node -T conductor/src/worker.ts",
     "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest .",
     "phase1": "DB_PORT=${DB_PORT:-5432} AUDIT_LOG_API_URL=${AUDIT_LOG_API_URL:-http://localhost:3010}  AUDIT_LOG_API_KEY=${AUDIT_LOG_API_KEY:-xxx} AWS_ACCESS_KEY_ID=S3RVER AWS_SECRET_ACCESS_KEY=S3RVER S3_ENDPOINT=http://localhost:4570 MQ_USER=${MQ_USER:-admin} MQ_PASSWORD=${MQ_PASSWORD:-admin} MQ_URL=${MQ_URL:-stomp://localhost:61613} PHASE_1_BUCKET_NAME=phase1 ts-node -T scripts/phase1.ts",
-    "structurizr-site-generatr-build": "docker compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
-    "structurizr-site-generatr-serve": "docker compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
-    "structurizr-lite": "docker compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite"
+    "structurizr-site-generatr-build": "docker-compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
+    "structurizr-site-generatr-serve": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
+    "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite"
   },
   "repository": {
     "type": "git",
