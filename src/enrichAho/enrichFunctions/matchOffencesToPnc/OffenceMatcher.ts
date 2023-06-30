@@ -111,6 +111,10 @@ class OffenceMatcher {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
   }
 
+  unmatchedPncOffencesInCase(caseReferences: string[]): PncOffenceWithCaseRef[] {
+    return this.unmatchedPncOffences.filter((pncOffence) => caseReferences.includes(pncOffence.caseReference))
+  }
+
   hasException(exception: Exception): boolean {
     return this.exceptions.some(
       (e) => e.code === exception.code && JSON.stringify(e.path) === JSON.stringify(exception.path)
@@ -366,6 +370,7 @@ class OffenceMatcher {
 
     const courtCasesGroupedByCount = Object.entries(courtCaseCounts).reduce(
       (acc: Map<number, string[]>, [ccr, count]) => {
+        // TODO: take final disposals into account
         pushToArrayInMap(acc, count, ccr)
         return acc
       },
@@ -374,10 +379,29 @@ class OffenceMatcher {
 
     const sortedCases = Array.from(courtCasesGroupedByCount.keys()).sort().reverse()
 
+    // try and match
     for (const key of sortedCases) {
       const courtCaseReferences = courtCasesGroupedByCount.get(key)
-      const singleCaseGroups = this.groupOffences({ courtCaseReferences })
-      singleCaseGroups.forEach(this.matchGroup, this)
+      const singleCaseOffenceMatcher = new OffenceMatcher(
+        this.unmatchedHoOffences,
+        this.unmatchedPncOffencesInCase(courtCaseReferences!),
+        this.hearingDate
+      )
+
+      singleCaseOffenceMatcher.findCandidates()
+      singleCaseOffenceMatcher.matchGroups()
+
+      const totalCount = courtCaseReferences?.reduce((acc, ccr) => {
+        acc += courtCaseCounts[ccr]
+        return acc
+      }, 0)
+
+      // if fully matched, store the results
+      if (singleCaseOffenceMatcher.matches.size === totalCount) {
+        for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
+          this.matches.set(hoOffence, pncOffence)
+        }
+      }
     }
   }
 
@@ -387,8 +411,8 @@ class OffenceMatcher {
     if (this.exceptions.length > 0) {
       return
     }
-    this.matchGroups()
     this.matchFullCourtCases()
+    this.matchGroups()
     this.checkForExceptions()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.addException(ho100304)
