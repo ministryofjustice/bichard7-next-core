@@ -21,13 +21,13 @@ const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
   return output
 }
 
-const groupOffences = (offences: Offence[], matches: OffenceMatchingSummary[]): (number | undefined)[][] => {
+const groupOffences = (offences: Offence[], matches: OffenceMatchingSummary[]): string[][] => {
   const identicalOffenceGroups = groupIdenticalOffences(offences)
   return identicalOffenceGroups.map((group) =>
-    group.map(
-      (hoOffence) =>
-        matches.find((match) => match.hoSequenceNumber === hoOffence.CourtOffenceSequenceNumber)?.pncSequenceNumber
-    )
+    group.map((hoOffence) => {
+      const matchedOffence = matches.find((match) => match.hoSequenceNumber === hoOffence.CourtOffenceSequenceNumber)
+      return `${matchedOffence?.courtCaseReference}/${matchedOffence?.pncSequenceNumber}`
+    })
   )
 }
 
@@ -35,7 +35,8 @@ const identicalOffenceSwitchedSequenceNumbers = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome
+  actualAho: AnnotatedHearingOutcome,
+  _: AnnotatedHearingOutcome
 ): boolean => {
   if ("exceptions" in actual || "exceptions" in expected) {
     return false
@@ -50,7 +51,11 @@ const identicalOffenceSwitchedSequenceNumbers = (
   expectedOffenceGroups.forEach((group) => group.sort())
   actualOffenceGroups.forEach((group) => group.sort())
 
-  return differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
+  const result = differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
+  if (result) {
+    debugger
+  }
+  return result
 }
 
 export default identicalOffenceSwitchedSequenceNumbers

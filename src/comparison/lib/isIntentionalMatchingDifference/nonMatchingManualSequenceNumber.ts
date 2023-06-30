@@ -6,7 +6,8 @@ const nonMatchingManualSequenceNumber = (
   _: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
+  ___: AnnotatedHearingOutcome,
+  ____: AnnotatedHearingOutcome
 ): boolean => {
   const coreRaisesHo100320 =
     "exceptions" in actual && actual.exceptions.some((exception) => exception.code === ExceptionCode.HO100320)

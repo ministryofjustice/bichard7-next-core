@@ -10,7 +10,8 @@ const ho100304WithExistingFinalOffence = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   _: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome
+  actualAho: AnnotatedHearingOutcome,
+  __: AnnotatedHearingOutcome
 ): boolean => {
   const bichardRaisesHo100304 =
     "exceptions" in expected && expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
