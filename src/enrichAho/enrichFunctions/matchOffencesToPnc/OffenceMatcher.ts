@@ -111,6 +111,10 @@ class OffenceMatcher {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
   }
 
+  get matchedNonFinalPncOffences(): PncOffenceWithCaseRef[] {
+    return Array.from(this.matches.values()).filter((pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence))
+  }
+
   unmatchedPncOffencesInCase(caseReferences: string[]): PncOffenceWithCaseRef[] {
     return this.unmatchedPncOffences.filter((pncOffence) => caseReferences.includes(pncOffence.caseReference))
   }
@@ -357,8 +361,13 @@ class OffenceMatcher {
   }
 
   matchFullCourtCases() {
-    const courtCaseCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
+    // for each court case (ordered by largest first)
+    const courtCaseNonFinalCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
       const ccr = pncOffence.caseReference
+
+      if (offenceHasFinalResult(pncOffence.pncOffence)) {
+        return acc
+      }
 
       if (!(ccr in acc)) {
         acc[ccr] = 0
@@ -368,7 +377,7 @@ class OffenceMatcher {
       return acc
     }, {})
 
-    const courtCasesGroupedByCount = Object.entries(courtCaseCounts).reduce(
+    const courtCasesGroupedByNonFinalCount = Object.entries(courtCaseNonFinalCounts).reduce(
       (acc: Map<number, string[]>, [ccr, count]) => {
         // TODO: take final disposals into account
         pushToArrayInMap(acc, count, ccr)
@@ -377,11 +386,12 @@ class OffenceMatcher {
       new Map<number, string[]>()
     )
 
-    const sortedCases = Array.from(courtCasesGroupedByCount.keys()).sort().reverse()
+    const sortedCases = Array.from(courtCasesGroupedByNonFinalCount.entries())
+      .sort((a, b) => b[0] - a[0])
+      .map((entry) => entry[1])
 
     // try and match
-    for (const key of sortedCases) {
-      const courtCaseReferences = courtCasesGroupedByCount.get(key)
+    for (const courtCaseReferences of sortedCases) {
       const singleCaseOffenceMatcher = new OffenceMatcher(
         this.unmatchedHoOffences,
         this.unmatchedPncOffencesInCase(courtCaseReferences!),
@@ -391,13 +401,13 @@ class OffenceMatcher {
       singleCaseOffenceMatcher.findCandidates()
       singleCaseOffenceMatcher.matchGroups()
 
-      const totalCount = courtCaseReferences?.reduce((acc, ccr) => {
-        acc += courtCaseCounts[ccr]
+      const totalNonFinalCount = courtCaseReferences.reduce((acc, ccr) => {
+        acc += courtCaseNonFinalCounts[ccr]
         return acc
       }, 0)
 
-      // if fully matched, store the results
-      if (singleCaseOffenceMatcher.matches.size === totalCount) {
+      // if all non-final offences are fully matched, store the results
+      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinalCount) {
         for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
           this.matches.set(hoOffence, pncOffence)
         }
