@@ -1212,6 +1212,12 @@ describe("matchOffencesToPnc", () => {
     it.todo("should match to penalty cases")
   })
 
+  describe("prioritising matching whole cases", () => {
+    it.todo("should match a whole case if it can, even if there are conflicts with another case")
+    it.todo("should prioritise matching the larger of two cases")
+    it.todo("should raise an exception if there are conficts between two whole case matches")
+  })
+
   describe("HO100304", () => {
     it("should raise an exception if there aren't any matches at all", () => {
       const offence1 = { code: "AB1234", start: new Date("2022-01-01"), end: new Date("2022-01-01"), sequence: 1 }
