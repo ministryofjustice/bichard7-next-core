@@ -22,6 +22,7 @@ type CandidateFilterOptions = {
   exactDateMatch?: boolean
   convictionDateMatch?: boolean
   adjudicationMatch?: boolean
+  courtCaseReference?: string
 }
 
 export const normaliseCCR = (ccr: string): string => {
@@ -91,6 +92,7 @@ class OffenceMatcher {
         .filter((c) => !options.exactDateMatch || c.exact === options.exactDateMatch)
         .filter((c) => !options.convictionDateMatch || c.convictionDatesMatch === options.convictionDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
+        .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
 
       if (unmatchedCandidatePncOffences.length > 0) {
         candidates.set(hoOffence, unmatchedCandidatePncOffences)
@@ -105,6 +107,14 @@ class OffenceMatcher {
 
   get unmatchedPncOffences(): PncOffenceWithCaseRef[] {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
+  }
+
+  get matchedCourtCases(): string[] {
+    const courtCases = this.matchedPncOffences.reduce((acc: Set<string>, pncOffence) => {
+      acc.add(pncOffence.caseReference)
+      return acc
+    }, new Set<string>())
+    return Array.from(courtCases.values())
   }
 
   hasException(exception: Exception): boolean {
@@ -348,6 +358,47 @@ class OffenceMatcher {
     }
   }
 
+  matchFullCourtCases() {
+    const courtCasesWithCandidate = Array.from(this.candidates.values())
+      .flat()
+      .reduce((acc: Set<string>, candidate) => {
+        acc.add(candidate.pncOffence.caseReference)
+        return acc
+      }, new Set<string>())
+
+    const potentiallyFullyMatchedCourtCases = Array.from(courtCasesWithCandidate.values()).filter((ccr) => {
+      const pncOffences = this.pncOffences.filter((pncOffence) => pncOffence.caseReference === ccr)
+      return pncOffences.every((pncOffence) =>
+        Array.from(this.candidates.values())
+          .flat()
+          .some((candidate) => candidate.pncOffence === pncOffence)
+      )
+    })
+
+    const courtCaseCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
+      const ccr = pncOffence.caseReference
+      if (!potentiallyFullyMatchedCourtCases.includes(ccr)) {
+        return acc
+      }
+
+      if (!(ccr in acc)) {
+        acc[ccr] = 0
+      }
+
+      acc[ccr] += 1
+      return acc
+    }, {})
+
+    const courtCasesSortedByCount = Object.entries(courtCaseCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map((entry) => entry[0])
+
+    for (const courtCaseReference of courtCasesSortedByCount) {
+      const singleCaseGroups = this.groupOffences({ courtCaseReference })
+      singleCaseGroups.forEach(this.matchGroup, this)
+    }
+  }
+
   match() {
     this.findCandidates()
     this.matchManualSequenceNumbers()
@@ -355,6 +406,7 @@ class OffenceMatcher {
       return
     }
     this.matchGroups()
+    this.matchFullCourtCases()
     this.checkForExceptions()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.addException(ho100304)
