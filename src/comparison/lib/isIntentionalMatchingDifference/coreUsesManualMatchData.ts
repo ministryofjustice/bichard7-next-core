@@ -30,7 +30,7 @@ const coreUsesManualMatchData = (
 
   const matchedCCRs = actual.offences
     .map((offence) => offence.courtCaseReference || actual.caseReference)
-    .map((ccr) => normaliseCCR(ccr!))
+    .map((ccr) => (ccr ? normaliseCCR(ccr) : ""))
 
   const coreUsesMatchedManualCCRs = manualCCRs.every((manualCCR) => matchedCCRs.includes(manualCCR))
 
