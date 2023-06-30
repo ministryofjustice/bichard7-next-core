@@ -199,7 +199,7 @@ class OffenceMatcher {
     return this.matchedHoOffences.includes(hoOffence)
   }
 
-  checkGroupForConflicts(group: Candidate[]): void | Exception[] {
+  checkGroupForExceptions(group: Candidate[]): void | Exception[] {
     const exceptions: Exception[] = []
 
     const matchingCourtCaseReferences = group.reduce((acc, candidate) => {
@@ -303,14 +303,14 @@ class OffenceMatcher {
     exceptions.forEach(this.addException, this)
   }
 
-  matchGroup(candidates: Candidate[]): void | Exception[] {
+  matchGroup(candidates: Candidate[]): void {
     for (const nonFinal of [true, false]) {
       const filteredCandidates = nonFinal
         ? candidates.filter((c) => !offenceHasFinalResult(c.pncOffence.pncOffence))
         : candidates
-      const exceptions = this.checkGroupForConflicts(filteredCandidates)
+      const exceptions = this.checkGroupForExceptions(filteredCandidates)
       if (exceptions) {
-        return exceptions
+        return
       }
 
       for (const candidate of filteredCandidates) {
@@ -335,13 +335,16 @@ class OffenceMatcher {
     exactMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences()
-    const exceptions = fuzzyGroups
-      .map(this.matchGroup, this)
-      .filter((x) => !!x)
-      .flat() as Exception[]
+    fuzzyGroups.forEach(this.matchGroup, this)
+  }
 
-    if (exceptions) {
-      exceptions.forEach(this.addException, this)
+  checkForExceptions() {
+    const groups = this.groupOffences()
+    for (const group of groups) {
+      const exceptions = this.checkGroupForExceptions(group)
+      if (exceptions) {
+        exceptions.forEach(this.addException, this)
+      }
     }
   }
 
@@ -352,6 +355,7 @@ class OffenceMatcher {
       return
     }
     this.matchGroups()
+    this.checkForExceptions()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.addException(ho100304)
     }
