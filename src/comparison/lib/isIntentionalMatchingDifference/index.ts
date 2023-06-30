@@ -13,6 +13,7 @@ import ho100332WithSameResults from "./ho100332WithSameResults"
 import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
+import missingEmptyCcr from "./missingEmptyCcr"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 
@@ -41,6 +42,10 @@ const isIntentionalMatchingDifference = (
 ): boolean => {
   const expectedMatch = summariseMatching(expected, true)
   const actualMatch = summariseMatching(actual, true)
+
+  if (missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming)) {
+    return true
+  }
 
   if (!expectedMatch || !actualMatch) {
     return false
