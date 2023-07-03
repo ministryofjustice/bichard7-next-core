@@ -405,13 +405,12 @@ class OffenceMatcher {
       singleCaseOffenceMatcher.findCandidates()
       singleCaseOffenceMatcher.matchGroups()
 
-      const totalNonFinalCount = courtCaseReferences.reduce((acc, ccr) => {
-        acc += courtCaseNonFinalCounts[ccr]
-        return acc
-      }, 0)
+      const totalNonFinal = this.unmatchedPncOffencesInCase(courtCaseReferences).filter(
+        (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+      )
 
       // if all non-final offences are fully matched, store the results
-      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinalCount) {
+      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinal.length) {
         for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
           this.matches.set(hoOffence, pncOffence)
         }
