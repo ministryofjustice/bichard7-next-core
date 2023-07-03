@@ -365,7 +365,11 @@ class OffenceMatcher {
     const courtCaseNonFinalCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
       const ccr = pncOffence.caseReference
 
-      if (offenceHasFinalResult(pncOffence.pncOffence)) {
+      const caseHasNonFinalOffences = this.unmatchedPncOffencesInCase([ccr]).some(
+        (offence) => !offenceHasFinalResult(offence.pncOffence)
+      )
+
+      if (caseHasNonFinalOffences && offenceHasFinalResult(pncOffence.pncOffence)) {
         return acc
       }
 
