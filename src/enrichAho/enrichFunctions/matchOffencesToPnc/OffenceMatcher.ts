@@ -22,6 +22,8 @@ type CandidateFilterOptions = {
   exactDateMatch?: boolean
   convictionDateMatch?: boolean
   adjudicationMatch?: boolean
+  courtCaseReference?: string
+  courtCaseReferences?: string[]
 }
 
 export const normaliseCCR = (ccr: string): string => {
@@ -91,6 +93,8 @@ class OffenceMatcher {
         .filter((c) => !options.exactDateMatch || c.exact === options.exactDateMatch)
         .filter((c) => !options.convictionDateMatch || c.convictionDatesMatch === options.convictionDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
+        .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
+        .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
 
       if (unmatchedCandidatePncOffences.length > 0) {
         candidates.set(hoOffence, unmatchedCandidatePncOffences)
@@ -105,6 +109,14 @@ class OffenceMatcher {
 
   get unmatchedPncOffences(): PncOffenceWithCaseRef[] {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
+  }
+
+  get matchedNonFinalPncOffences(): PncOffenceWithCaseRef[] {
+    return Array.from(this.matches.values()).filter((pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence))
+  }
+
+  unmatchedPncOffencesInCase(caseReferences: string[]): PncOffenceWithCaseRef[] {
+    return this.unmatchedPncOffences.filter((pncOffence) => caseReferences.includes(pncOffence.caseReference))
   }
 
   hasException(exception: Exception): boolean {
@@ -199,7 +211,7 @@ class OffenceMatcher {
     return this.matchedHoOffences.includes(hoOffence)
   }
 
-  checkGroupForConflicts(group: Candidate[]): void | Exception[] {
+  checkGroupForExceptions(group: Candidate[]): void | Exception[] {
     const exceptions: Exception[] = []
 
     const matchingCourtCaseReferences = group.reduce((acc, candidate) => {
@@ -303,14 +315,14 @@ class OffenceMatcher {
     exceptions.forEach(this.addException, this)
   }
 
-  matchGroup(candidates: Candidate[]): void | Exception[] {
+  matchGroup(candidates: Candidate[]): void {
     for (const nonFinal of [true, false]) {
       const filteredCandidates = nonFinal
         ? candidates.filter((c) => !offenceHasFinalResult(c.pncOffence.pncOffence))
         : candidates
-      const exceptions = this.checkGroupForConflicts(filteredCandidates)
+      const exceptions = this.checkGroupForExceptions(filteredCandidates)
       if (exceptions) {
-        return exceptions
+        return
       }
 
       for (const candidate of filteredCandidates) {
@@ -335,13 +347,74 @@ class OffenceMatcher {
     exactMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences()
-    const exceptions = fuzzyGroups
-      .map(this.matchGroup, this)
-      .filter((x) => !!x)
-      .flat() as Exception[]
+    fuzzyGroups.forEach(this.matchGroup, this)
+  }
 
-    if (exceptions) {
-      exceptions.forEach(this.addException, this)
+  checkForExceptions() {
+    const groups = this.groupOffences()
+    for (const group of groups) {
+      const exceptions = this.checkGroupForExceptions(group)
+      if (exceptions) {
+        exceptions.forEach(this.addException, this)
+      }
+    }
+  }
+
+  matchFullCourtCases() {
+    // for each court case (ordered by largest first)
+    const courtCaseNonFinalCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
+      const ccr = pncOffence.caseReference
+
+      const caseHasNonFinalOffences = this.unmatchedPncOffencesInCase([ccr]).some(
+        (offence) => !offenceHasFinalResult(offence.pncOffence)
+      )
+
+      if (caseHasNonFinalOffences && offenceHasFinalResult(pncOffence.pncOffence)) {
+        return acc
+      }
+
+      if (!(ccr in acc)) {
+        acc[ccr] = 0
+      }
+
+      acc[ccr] += 1
+      return acc
+    }, {})
+
+    const courtCasesGroupedByNonFinalCount = Object.entries(courtCaseNonFinalCounts).reduce(
+      (acc: Map<number, string[]>, [ccr, count]) => {
+        // TODO: take final disposals into account
+        pushToArrayInMap(acc, count, ccr)
+        return acc
+      },
+      new Map<number, string[]>()
+    )
+
+    const sortedCases = Array.from(courtCasesGroupedByNonFinalCount.entries())
+      .sort((a, b) => b[0] - a[0])
+      .map((entry) => entry[1])
+
+    // try and match
+    for (const courtCaseReferences of sortedCases) {
+      const singleCaseOffenceMatcher = new OffenceMatcher(
+        this.unmatchedHoOffences,
+        this.unmatchedPncOffencesInCase(courtCaseReferences!),
+        this.hearingDate
+      )
+
+      singleCaseOffenceMatcher.findCandidates()
+      singleCaseOffenceMatcher.matchGroups()
+
+      const totalNonFinal = this.unmatchedPncOffencesInCase(courtCaseReferences).filter(
+        (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+      )
+
+      // if all non-final offences are fully matched, store the results
+      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinal.length) {
+        for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
+          this.matches.set(hoOffence, pncOffence)
+        }
+      }
     }
   }
 
@@ -351,7 +424,9 @@ class OffenceMatcher {
     if (this.exceptions.length > 0) {
       return
     }
+    this.matchFullCourtCases()
     this.matchGroups()
+    this.checkForExceptions()
     if (this.matches.size === 0 && this.exceptions.length === 0) {
       this.addException(ho100304)
     }
