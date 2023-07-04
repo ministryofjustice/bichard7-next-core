@@ -306,7 +306,12 @@ class OffenceMatcher {
           } else if (matchingPncOffences.length === 0) {
             exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
           } else if (matchingPncOffences.length > 1) {
-            exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+            const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
+              acc.add(pncOffence.caseReference)
+              return acc
+            }, new Set<string>())
+            const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+            exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
           }
         }
       }
