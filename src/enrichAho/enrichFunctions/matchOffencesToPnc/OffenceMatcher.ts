@@ -396,22 +396,38 @@ class OffenceMatcher {
 
     // try and match
     for (const courtCaseReferences of sortedCases) {
-      const singleCaseOffenceMatcher = new OffenceMatcher(
-        this.unmatchedHoOffences,
-        this.unmatchedPncOffencesInCase(courtCaseReferences!),
-        this.hearingDate
+      const matchers = courtCaseReferences.map((courtCaseReference) => {
+        const singleCaseOffenceMatcher = new OffenceMatcher(
+          this.unmatchedHoOffences,
+          this.unmatchedPncOffencesInCase([courtCaseReference]),
+          this.hearingDate
+        )
+
+        singleCaseOffenceMatcher.findCandidates()
+        singleCaseOffenceMatcher.matchGroups()
+
+        const totalNonFinal = this.unmatchedPncOffencesInCase([courtCaseReference]).filter(
+          (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+        )
+
+        return { matcher: singleCaseOffenceMatcher, totalNonFinal }
+      })
+
+      const successfulMatchers = matchers.filter(
+        ({ matcher, totalNonFinal }) => matcher.matchedNonFinalPncOffences.length >= totalNonFinal.length
       )
 
-      singleCaseOffenceMatcher.findCandidates()
-      singleCaseOffenceMatcher.matchGroups()
-
-      const totalNonFinal = this.unmatchedPncOffencesInCase(courtCaseReferences).filter(
-        (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+      const matchedHoOffences = successfulMatchers.map(({ matcher }) => Array.from(matcher.matches.keys())).flat()
+      const hasConflicts = matchedHoOffences.some(
+        (hoOffence) => matchedHoOffences.filter((otherHoOffence) => hoOffence === otherHoOffence).length > 1
       )
 
-      // if all non-final offences are fully matched, store the results
-      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinal.length) {
-        for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
+      if (hasConflicts) {
+        continue
+      }
+
+      for (const { matcher } of successfulMatchers) {
+        for (const [hoOffence, pncOffence] of matcher.matches.entries()) {
           this.matches.set(hoOffence, pncOffence)
         }
       }
