@@ -1395,6 +1395,8 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it.todo("should ignore final offences for full case matching")
   })
 
   describe("HO100304", () => {
