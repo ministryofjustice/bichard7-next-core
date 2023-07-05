@@ -306,7 +306,12 @@ class OffenceMatcher {
           } else if (matchingPncOffences.length === 0) {
             exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
           } else if (matchingPncOffences.length > 1) {
-            exceptions.push({ code: ExceptionCode.HO100332, path: errorPaths.offence(i).reasonSequence })
+            const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
+              acc.add(pncOffence.caseReference)
+              return acc
+            }, new Set<string>())
+            const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+            exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
           }
         }
       }
@@ -365,11 +370,7 @@ class OffenceMatcher {
     const courtCaseNonFinalCounts = this.pncOffences.reduce((acc: Record<string, number>, pncOffence) => {
       const ccr = pncOffence.caseReference
 
-      const caseHasNonFinalOffences = this.unmatchedPncOffencesInCase([ccr]).some(
-        (offence) => !offenceHasFinalResult(offence.pncOffence)
-      )
-
-      if (caseHasNonFinalOffences && offenceHasFinalResult(pncOffence.pncOffence)) {
+      if (offenceHasFinalResult(pncOffence.pncOffence)) {
         return acc
       }
 
@@ -396,22 +397,38 @@ class OffenceMatcher {
 
     // try and match
     for (const courtCaseReferences of sortedCases) {
-      const singleCaseOffenceMatcher = new OffenceMatcher(
-        this.unmatchedHoOffences,
-        this.unmatchedPncOffencesInCase(courtCaseReferences!),
-        this.hearingDate
+      const matchers = courtCaseReferences.map((courtCaseReference) => {
+        const nonFinalOffences = this.unmatchedPncOffencesInCase([courtCaseReference]).filter(
+          (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+        )
+
+        const singleCaseOffenceMatcher = new OffenceMatcher(
+          this.unmatchedHoOffences,
+          nonFinalOffences,
+          this.hearingDate
+        )
+
+        singleCaseOffenceMatcher.findCandidates()
+        singleCaseOffenceMatcher.matchGroups()
+
+        return { matcher: singleCaseOffenceMatcher, nonFinalCount: nonFinalOffences.length }
+      })
+
+      const successfulMatchers = matchers.filter(
+        ({ matcher, nonFinalCount }) => matcher.matchedPncOffences.length >= nonFinalCount
       )
 
-      singleCaseOffenceMatcher.findCandidates()
-      singleCaseOffenceMatcher.matchGroups()
-
-      const totalNonFinal = this.unmatchedPncOffencesInCase(courtCaseReferences).filter(
-        (pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence)
+      const matchedHoOffences = successfulMatchers.map(({ matcher }) => Array.from(matcher.matches.keys())).flat()
+      const hasConflicts = matchedHoOffences.some(
+        (hoOffence) => matchedHoOffences.filter((otherHoOffence) => hoOffence === otherHoOffence).length > 1
       )
 
-      // if all non-final offences are fully matched, store the results
-      if (singleCaseOffenceMatcher.matchedNonFinalPncOffences.length >= totalNonFinal.length) {
-        for (const [hoOffence, pncOffence] of singleCaseOffenceMatcher.matches.entries()) {
+      if (hasConflicts) {
+        continue
+      }
+
+      for (const { matcher } of successfulMatchers) {
+        for (const [hoOffence, pncOffence] of matcher.matches.entries()) {
           this.matches.set(hoOffence, pncOffence)
         }
       }

@@ -106,7 +106,7 @@ const main = async () => {
   const outputAho: AnnotatedHearingOutcome | Error = parseAhoXml(fileJson.annotatedHearingOutcome)
 
   if (!(outputAho instanceof Error) && outputAho.PncQuery) {
-    const theCases = outputAho.PncQuery.courtCases ?? outputAho.PncQuery.penaltyCases
+    const theCases = [...(outputAho.PncQuery.courtCases ?? []), ...(outputAho.PncQuery.penaltyCases ?? [])]
     theCases?.forEach((courtCase: PncCourtCase | PncPenaltyCase) => {
       output.push("")
       const caseReference =
