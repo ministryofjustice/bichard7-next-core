@@ -15,7 +15,7 @@ import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
-import { AuditLogEventSource, AuditLogEventType } from "./types/AuditLogEvent"
+import { AuditLogEventSource, AuditLogEventOptions } from "./types/AuditLogEvent"
 import EventCategory from "./types/EventCategory"
 import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
@@ -53,9 +53,8 @@ export default async (
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          AuditLogEventType.HEARING_OUTCOME_IGNORED_NO_OFFENCES.code,
+          AuditLogEventOptions.HEARING_OUTCOME_IGNORED_NO_OFFENCES,
           EventCategory.information,
-          AuditLogEventType.HEARING_OUTCOME_IGNORED_NO_OFFENCES.type,
           AuditLogEventSource.CoreHandler,
           {
             ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -95,9 +94,8 @@ export default async (
     if (isIgnored) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          AuditLogEventType.HEARING_OUTCOME_IGNORED_REOPENED.code,
+          AuditLogEventOptions.HEARING_OUTCOME_IGNORED_REOPENED,
           EventCategory.information,
-          AuditLogEventType.HEARING_OUTCOME_IGNORED_REOPENED.type,
           AuditLogEventSource.CoreHandler,
           {}
         )
@@ -125,9 +123,8 @@ export default async (
 
     auditLogger.logEvent(
       getAuditLogEvent(
-        AuditLogEventType.MESSAGE_REJECTED_BY_CORE_HANDLER.code,
+        AuditLogEventOptions.MESSAGE_REJECTED_BY_CORE_HANDLER,
         EventCategory.error,
-        AuditLogEventType.MESSAGE_REJECTED_BY_CORE_HANDLER.type,
         AuditLogEventSource.CoreHandler,
         {
           "Exception Message": errorMessage,

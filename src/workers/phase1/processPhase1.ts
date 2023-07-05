@@ -18,7 +18,7 @@ import logger from "src/lib/logging"
 import PncGateway from "src/lib/PncGateway"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource } from "../../types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 
 const taskDefName = "process_phase1"
 const bucket = process.env.PHASE1_BUCKET_NAME
@@ -65,9 +65,8 @@ const processPhase1: ConductorWorker = {
 
     auditLogger.logEvent(
       getAuditLogEvent(
-        "hearing-outcome.received",
+        AuditLogEventOptions.HEARING_OUTCOME_RECEIVED_PHASE_1,
         EventCategory.debug,
-        "Hearing outcome received",
         AuditLogEventSource.CoreHandler,
         {}
       )

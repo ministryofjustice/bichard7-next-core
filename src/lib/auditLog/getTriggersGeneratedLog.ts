@@ -3,7 +3,7 @@ import type KeyValuePair from "src/types/KeyValuePair"
 import type { Trigger } from "src/types/Trigger"
 import getAuditLogEvent from "./getAuditLogEvent"
 import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource, AuditLogEventType } from "src/types/AuditLogEvent"
+import { AuditLogEventSource, AuditLogEventOptions } from "src/types/AuditLogEvent"
 
 const getTriggersGeneratedLog = (triggers: Trigger[], hasExceptions: boolean): AuditLogEvent => {
   const triggerDetails = triggers.reduce((acc: KeyValuePair<string, unknown>, trigger, i) => {
@@ -19,9 +19,8 @@ const getTriggersGeneratedLog = (triggers: Trigger[], hasExceptions: boolean): A
   }
 
   return getAuditLogEvent(
-    AuditLogEventType.TRIGGER_GENERATED.code,
+    AuditLogEventOptions.TRIGGER_GENERATED,
     EventCategory.information,
-    AuditLogEventType.TRIGGER_GENERATED.type,
     AuditLogEventSource.CoreHandler,
     attributes
   )

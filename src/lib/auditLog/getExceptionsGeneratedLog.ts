@@ -2,7 +2,7 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type AuditLogEvent from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
 import getAuditLogEvent from "./getAuditLogEvent"
-import { AuditLogEventSource, AuditLogEventType } from "src/types/AuditLogEvent"
+import { AuditLogEventSource, AuditLogEventOptions } from "src/types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
 
 const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): AuditLogEvent => {
@@ -19,9 +19,8 @@ const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): Aud
   }
 
   return getAuditLogEvent(
-    AuditLogEventType.EXCEPTIONS_GENERATED.code,
+    AuditLogEventOptions.EXCEPTIONS_GENERATED,
     EventCategory.information,
-    AuditLogEventType.EXCEPTIONS_GENERATED.type,
     AuditLogEventSource.CoreHandler,
     attributes
   )

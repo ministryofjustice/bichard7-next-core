@@ -10,7 +10,7 @@ import { MqGateway } from "src/lib/MqGateway"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource, AuditLogEventType } from "../../types/AuditLogEvent"
+import { AuditLogEventSource, AuditLogEventOptions } from "../../types/AuditLogEvent"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)
@@ -43,8 +43,8 @@ const sendToPhase2: ConductorWorker = {
       }
 
       const auditLog = {
-        eventCode: AuditLogEventType.SUBMITTED_TO_PHASE_2.code,
-        eventType: AuditLogEventType.SUBMITTED_TO_PHASE_2.type,
+        eventCode: AuditLogEventOptions.SUBMITTED_TO_PHASE_2.code,
+        eventType: AuditLogEventOptions.SUBMITTED_TO_PHASE_2.type,
         category: EventCategory.debug,
         eventSource: AuditLogEventSource.CoreHandler,
         timestamp: new Date().toISOString(),

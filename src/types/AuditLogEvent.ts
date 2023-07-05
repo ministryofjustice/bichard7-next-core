@@ -19,7 +19,12 @@ export enum AuditLogEventSource {
   EnrichWithPncQuery = "EnrichWithPncQuery"
 }
 
-export const AuditLogEventType = {
+export type AuditLogEventOption = {
+  code: string
+  type: string
+}
+
+export const AuditLogEventOptions = {
   HEARING_OUTCOME_RECEIVED_PHASE_1: {
     code: "hearing-outcome.received-phase-1",
     type: "Hearing outcome received by phase 1"
