@@ -9,6 +9,8 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import { matchOffencesToPnc } from "./matchOffencesToPnc"
+import EventCategory from "../../types/EventCategory"
+import { AuditLogEventSource, AuditLogEventType } from "../../types/AuditLogEvent"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -71,10 +73,10 @@ export default async (
   if (isError(pncResult)) {
     auditLogger.logEvent(
       getAuditLogEvent(
-        "pnc.response-not-received",
-        "warning",
-        "PNC Response not received",
-        "EnrichWithPncQuery",
+        AuditLogEventType.PNC_RESPONSE_NOT_RECEIVED.code,
+        EventCategory.warning,
+        AuditLogEventType.PNC_RESPONSE_NOT_RECEIVED.type,
+        AuditLogEventSource.EnrichWithPncQuery,
         auditLogAttributes
       )
     )
@@ -82,10 +84,10 @@ export default async (
   } else {
     auditLogger.logEvent(
       getAuditLogEvent(
-        "pnc.response-received",
-        "information",
-        "PNC Response received",
-        "EnrichWithPncQuery",
+        AuditLogEventType.PNC_RESPONSE_RECEIVED.code,
+        EventCategory.information,
+        AuditLogEventType.PNC_RESPONSE_RECEIVED.type,
+        AuditLogEventSource.EnrichWithPncQuery,
         auditLogAttributes
       )
     )
