@@ -1,7 +1,7 @@
 import type EventCategory from "./EventCategory"
 import type KeyValuePair from "./KeyValuePair"
 
-type AuditLogEvent = {
+export type AuditLogEvent = {
   attributes?: KeyValuePair<string, unknown>
   category: EventCategory
   eventCode: string
@@ -11,8 +11,6 @@ type AuditLogEvent = {
   timestamp: string
   user?: string
 }
-
-export default AuditLogEvent
 
 export enum AuditLogEventSource {
   CoreHandler = "CoreHandler",

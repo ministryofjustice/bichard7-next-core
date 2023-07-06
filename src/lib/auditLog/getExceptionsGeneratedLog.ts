@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
-import type AuditLogEvent from "src/types/AuditLogEvent"
+import type { AuditLogEvent } from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
 import getAuditLogEvent from "./getAuditLogEvent"
 import { AuditLogEventSource, AuditLogEventOptions } from "src/types/AuditLogEvent"

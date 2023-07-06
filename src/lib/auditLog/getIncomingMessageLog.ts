@@ -1,6 +1,6 @@
 import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { HearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
-import type AuditLogEvent from "src/types/AuditLogEvent"
+import type { AuditLogEvent } from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
 import getAuditLogEvent from "./getAuditLogEvent"
 import EventCategory from "../../types/EventCategory"

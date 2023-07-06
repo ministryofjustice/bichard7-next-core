@@ -1,4 +1,4 @@
-import type AuditLogEvent from "src/types/AuditLogEvent"
+import type { AuditLogEvent } from "src/types/AuditLogEvent"
 import type { AuditLogEventOption, AuditLogEventSource } from "src/types/AuditLogEvent"
 import type EventCategory from "src/types/EventCategory"
 import type KeyValuePair from "src/types/KeyValuePair"
