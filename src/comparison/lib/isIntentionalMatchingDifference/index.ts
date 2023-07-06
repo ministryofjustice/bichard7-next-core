@@ -17,6 +17,7 @@ import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import missingEmptyCcr from "./missingEmptyCcr"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
+import trailingSpace from "./trailingSpace"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -46,7 +47,8 @@ const isIntentionalMatchingDifference = (
 
   if (
     missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
-    fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming)
+    fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
+    trailingSpace(expectedMatch, actualMatch, expected, actual, incoming)
   ) {
     return true
   }
