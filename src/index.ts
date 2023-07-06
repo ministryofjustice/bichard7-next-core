@@ -15,6 +15,8 @@ import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
 import type AuditLogger from "./types/AuditLogger"
+import { AuditLogEventSource, AuditLogEventOptions } from "./types/AuditLogEvent"
+import EventCategory from "./types/EventCategory"
 import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
@@ -51,10 +53,9 @@ export default async (
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          "hearing-outcome.ignored.no-offences",
-          "information",
-          "Hearing Outcome ignored as it contains no offences",
-          "CoreHandler",
+          AuditLogEventOptions.hearingOutcomeIgnoredNoOffences,
+          EventCategory.information,
+          AuditLogEventSource.CoreHandler,
           {
             ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
           }
@@ -93,10 +94,9 @@ export default async (
     if (isIgnored) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          "hearing-outcome.ignored.reopened",
-          "information",
-          "Re-opened / Statutory Declaration case ignored",
-          "CoreHandler",
+          AuditLogEventOptions.hearingOutcomeIgnoredReopened,
+          EventCategory.information,
+          AuditLogEventSource.CoreHandler,
           {}
         )
       )
@@ -122,10 +122,15 @@ export default async (
     const { message: errorMessage, stack } = e as Error
 
     auditLogger.logEvent(
-      getAuditLogEvent("message-rejected", "error", "Message Rejected by CoreHandler", "CoreHandler", {
-        "Exception Message": errorMessage,
-        "Exception Stack Trace": stack
-      })
+      getAuditLogEvent(
+        AuditLogEventOptions.messageRejectedByCoreHandler,
+        EventCategory.error,
+        AuditLogEventSource.CoreHandler,
+        {
+          "Exception Message": errorMessage,
+          "Exception Stack Trace": stack
+        }
+      )
     )
 
     return {

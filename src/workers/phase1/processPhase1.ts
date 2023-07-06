@@ -17,6 +17,8 @@ import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import logger from "src/lib/logging"
 import PncGateway from "src/lib/PncGateway"
 import { Phase1ResultType } from "src/types/Phase1Result"
+import EventCategory from "../../types/EventCategory"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 
 const taskDefName = "process_phase1"
 const bucket = process.env.PHASE1_BUCKET_NAME
@@ -62,7 +64,12 @@ const processPhase1: ConductorWorker = {
     }
 
     auditLogger.logEvent(
-      getAuditLogEvent("hearing-outcome.received", "debug", "Hearing outcome received", "CoreHandler", {})
+      getAuditLogEvent(
+        AuditLogEventOptions.hearingOutcomeReceivedPhase1,
+        EventCategory.debug,
+        AuditLogEventSource.CoreHandler,
+        {}
+      )
     )
 
     const correlationId = extractCorrelationIdFromAhoXml(message)

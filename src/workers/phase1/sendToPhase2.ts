@@ -9,6 +9,8 @@ import logger from "src/lib/logging"
 import { MqGateway } from "src/lib/MqGateway"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import EventCategory from "../../types/EventCategory"
+import { AuditLogEventSource, AuditLogEventOptions } from "../../types/AuditLogEvent"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)
@@ -41,10 +43,10 @@ const sendToPhase2: ConductorWorker = {
       }
 
       const auditLog = {
-        eventCode: "hearing-outcome.submitted-phase-2",
-        eventType: "Hearing outcome submitted to phase 2",
-        category: "debug",
-        eventSource: "CoreHandler",
+        eventCode: AuditLogEventOptions.submittedToPhase2.code,
+        eventType: AuditLogEventOptions.submittedToPhase2.type,
+        category: EventCategory.debug,
+        eventSource: AuditLogEventSource.CoreHandler,
         timestamp: new Date().toISOString(),
         attributes: {}
       }

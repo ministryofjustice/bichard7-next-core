@@ -1,4 +1,4 @@
-import type EventCategory from "src/types/EventCategory"
+import EventCategory from "src/types/EventCategory"
 import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
@@ -9,7 +9,7 @@ describe("CoreAuditLogger", () => {
     eventSourceArn: "Dummy source arn",
     eventSourceQueueName: "DUMMY_QUEUE",
     eventSource: "Dummy Event Source",
-    category: "information" as EventCategory
+    category: EventCategory.information
   }
 
   it("should store and retrieve the logs", () => {

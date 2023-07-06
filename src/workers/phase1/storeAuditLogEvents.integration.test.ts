@@ -7,6 +7,7 @@ import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import storeAuditLogEvents from "./storeAuditLogEvents"
+import EventCategory from "../../types/EventCategory"
 
 describe("storeAuditLogEvents", () => {
   let auditLogApi: MockServer
@@ -24,14 +25,14 @@ describe("storeAuditLogEvents", () => {
           eventCode: "dummyEventCode",
           eventSource: "Test",
           eventType: "Type",
-          category: "information",
+          category: EventCategory.information,
           timestamp: new Date().toISOString()
         },
         {
           eventCode: "dummyEventCode2",
           eventSource: "Test2",
           eventType: "Type2",
-          category: "error",
+          category: EventCategory.error,
           timestamp: new Date().toISOString()
         }
       ],
@@ -60,7 +61,7 @@ describe("storeAuditLogEvents", () => {
           eventCode: "dummyEventCode",
           eventSource: "Test",
           eventType: "Type",
-          category: "error",
+          category: EventCategory.error,
           timestamp: new Date().toISOString()
         }
       ],

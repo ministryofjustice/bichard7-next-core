@@ -1,8 +1,10 @@
 import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { HearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
-import type AuditLogEvent from "src/types/AuditLogEvent"
+import type { AuditLogEvent } from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
 import getAuditLogEvent from "./getAuditLogEvent"
+import EventCategory from "../../types/EventCategory"
+import { AuditLogEventSource, AuditLogEventOptions } from "src/types/AuditLogEvent"
 
 const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
   offences.reduce((acc: KeyValuePair<string, string>, offence, i) => {
@@ -38,10 +40,9 @@ const getIncomingMessageLog = (
   }
 
   return getAuditLogEvent(
-    "hearing-outcome.details",
-    "information",
-    "Hearing outcome details",
-    "CoreHandler",
+    AuditLogEventOptions.hearingOutcomeDetails,
+    EventCategory.information,
+    AuditLogEventSource.CoreHandler,
     attributes
   )
 }
