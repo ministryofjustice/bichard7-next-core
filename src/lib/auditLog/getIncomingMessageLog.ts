@@ -40,7 +40,7 @@ const getIncomingMessageLog = (
   }
 
   return getAuditLogEvent(
-    AuditLogEventOptions.HEARING_OUTCOME_DETAILS,
+    AuditLogEventOptions.hearingOutcomeDetails,
     EventCategory.information,
     AuditLogEventSource.CoreHandler,
     attributes

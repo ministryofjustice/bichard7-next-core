@@ -23,131 +23,131 @@ export type AuditLogEventOption = {
 }
 
 export const AuditLogEventOptions = {
-  HEARING_OUTCOME_RECEIVED_PHASE_1: {
+  hearingOutcomeReceivedPhase1: {
     code: "hearing-outcome.received-phase-1",
     type: "Hearing outcome received by phase 1"
   },
-  HEARING_OUTCOME_RECEIVED_PHASE_2: {
+  hearingOutcomeReceivedPhase2: {
     code: "hearing-outcome.received-phase-2",
     type: "Hearing outcome received by phase 2"
   },
-  HEARING_OUTCOME_RECEIVED_PHASE_3: {
+  hearingOutcomeReceivedPhase3: {
     code: "hearing-outcome.received-phase-3",
     type: "Hearing outcome received by phase 3"
   },
-  EXCEPTION_RESOLVED: {
+  exceptionResolved: {
     code: "exceptions.resolved",
     type: "Exception marked as resolved by user"
   },
-  TRIGGER_RESOLVED: {
+  triggerResolved: {
     code: "triggers.resolved",
     type: "Trigger marked as resolved by user"
   },
-  ALL_TRIGGERS_RESOLVED: {
+  allTriggersResolved: {
     code: "triggers.all-resolved",
     type: "All triggers marked as resolved"
   },
-  HEARING_OUTCOME_REALLOCATED: {
+  hearingOutcomeReallocated: {
     code: "hearing-outcome.reallocated",
     type: "Hearing outcome reallocated by user"
   },
-  RESUBMITTED_TO_PHASE_1: {
+  resubmittedToPhase1: {
     code: "hearing-outcome.resubmitted-phase-1",
     type: "Hearing outcome resubmitted to phase 1"
   },
-  SUBMITTED_TO_PHASE_2: {
+  submittedToPhase2: {
     code: "hearing-outcome.submitted-phase-2",
     type: "Hearing outcome submitted to phase 2"
   },
-  RESUBMITTED_TO_PHASE_2: {
+  resubmittedToPhase2: {
     code: "hearing-outcome.resubmitted-phase-2",
     type: "Hearing outcome resubmitted to phase 2"
   },
-  SUBMITTED_TO_PHASE_3: {
+  submittedToPhase3: {
     code: "hearing-outcome.submitted-phase-3",
     type: "Hearing outcome submitted to phase 3"
   },
-  EXCEPTION_LOCKED: {
+  exceptionLocked: {
     code: "exceptions.locked",
     type: "Exception locked"
   },
-  EXCEPTION_UNLOCKED: {
+  exceptionUnlocked: {
     code: "exceptions.unlocked",
     type: "Exception unlocked"
   },
-  TRIGGER_LOCKED: {
+  triggerLocked: {
     code: "triggers.locked",
     type: "Trigger locked"
   },
-  TRIGGER_UNLOCKED: {
+  triggerUnlocked: {
     code: "triggers.unlocked",
     type: "Trigger unlocked"
   },
-  EXCEPTIONS_GENERATED: {
+  exceptionsGenerated: {
     code: "exceptions.generated",
     type: "Exceptions generated"
   },
-  TRIGGER_GENERATED: {
+  triggerGenerated: {
     code: "triggers.generated",
     type: "Triggers generated"
   },
-  TRIGGER_DELETED: {
+  triggerDeleted: {
     code: "triggers.deleted",
     type: "Triggers deleted"
   },
-  HEARING_OUTCOME_IGNORED_NO_OFFENCES: {
+  hearingOutcomeIgnoredNoOffences: {
     code: "hearing-outcome.ignored.no-offences",
     type: "Hearing Outcome ignored as it contains no offences"
   },
-  HEARING_OUTCOME_IGNORED_REOPENED: {
+  hearingOutcomeIgnoredReopened: {
     code: "hearing-outcome.ignored.reopened",
     type: "Re-opened / Statutory Declaration case ignored"
   },
-  HEARING_OUTCOME_IGNORED_COURT_DISABLED: {
+  hearingOutcomeIgnoredCourtDisabled: {
     code: "hearing-outcome.ignored.court-disabled",
     type: "Hearing outcome ignored - PNC update is not enabled for this court"
   },
-  HEARING_OUTCOME_IGNORED_APPEAL: {
+  hearingOutcomeIgnoredAppeal: {
     code: "hearing-outcome.ignored.appeal",
     type: "Hearing outcome ignored - Appeal result did not amend disposal"
   },
-  HEARING_OUTCOME_IGNORED_NONRECORDABLE: {
+  hearingOutcomeIgnoredNonrecordable: {
     code: "hearing-outcome.ignored.nonrecordable",
     type: "Hearing Outcome ignored as no offences are recordable"
   },
-  HEARING_OUTCOME_IGNORED_ANCILLARY: {
+  hearingOutcomeIgnoredAncillary: {
     code: "hearing-outcome.ignored.ancillary",
     type: "Interim hearing with ancillary only court results. PNC not updated"
   },
-  HEARING_OUTCOME_DETAILS: {
+  hearingOutcomeDetails: {
     code: "hearing-outcome.details",
     type: "Hearing outcome details"
   },
-  MESSAGE_REJECTED_BY_CORE_HANDLER: {
+  messageRejectedByCoreHandler: {
     code: "message-rejected",
     type: "Message Rejected by CoreHandler"
   },
-  RESUBMITTED_HEARING_OUTCOME_RECEIVED: {
+  resubmittedHearingOutcomeReceived: {
     code: "hearing-outcome.resubmitted-received",
     type: "Resubmitted hearing outcome received"
   },
-  RESULTS_ALREADY_ON_PNC: {
+  resultsAlreadyOnPNC: {
     code: "hearing-outcome.ignored.results-already-on-pnc",
     type: "Results already on PNC"
   },
-  PNC_UPDATED: {
+  pncUpdated: {
     code: "pnc.updated",
     type: "PNC Update applied successfully"
   },
-  REPORT_RUN: {
+  reportRun: {
     code: "report-run",
     type: "Report run"
   },
-  PNC_RESPONSE_RECEIVED: {
+  pncResponseReceived: {
     code: "pnc.response-received",
     type: "PNC Response received"
   },
-  PNC_RESPONSE_NOT_RECEIVED: {
+  pncResponseNotReceived: {
     code: "pnc.response-not-received",
     type: "PNC Response not received"
   }

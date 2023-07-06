@@ -19,7 +19,7 @@ const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): Aud
   }
 
   return getAuditLogEvent(
-    AuditLogEventOptions.EXCEPTIONS_GENERATED,
+    AuditLogEventOptions.exceptionsGenerated,
     EventCategory.information,
     AuditLogEventSource.CoreHandler,
     attributes

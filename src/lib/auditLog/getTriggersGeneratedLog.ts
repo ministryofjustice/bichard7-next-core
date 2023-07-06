@@ -19,7 +19,7 @@ const getTriggersGeneratedLog = (triggers: Trigger[], hasExceptions: boolean): A
   }
 
   return getAuditLogEvent(
-    AuditLogEventOptions.TRIGGER_GENERATED,
+    AuditLogEventOptions.triggerGenerated,
     EventCategory.information,
     AuditLogEventSource.CoreHandler,
     attributes

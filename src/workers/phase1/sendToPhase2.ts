@@ -43,8 +43,8 @@ const sendToPhase2: ConductorWorker = {
       }
 
       const auditLog = {
-        eventCode: AuditLogEventOptions.SUBMITTED_TO_PHASE_2.code,
-        eventType: AuditLogEventOptions.SUBMITTED_TO_PHASE_2.type,
+        eventCode: AuditLogEventOptions.submittedToPhase2.code,
+        eventType: AuditLogEventOptions.submittedToPhase2.type,
         category: EventCategory.debug,
         eventSource: AuditLogEventSource.CoreHandler,
         timestamp: new Date().toISOString(),

@@ -73,7 +73,7 @@ export default async (
   if (isError(pncResult)) {
     auditLogger.logEvent(
       getAuditLogEvent(
-        AuditLogEventOptions.PNC_RESPONSE_NOT_RECEIVED,
+        AuditLogEventOptions.pncResponseNotReceived,
         EventCategory.warning,
         AuditLogEventSource.EnrichWithPncQuery,
         auditLogAttributes
@@ -83,7 +83,7 @@ export default async (
   } else {
     auditLogger.logEvent(
       getAuditLogEvent(
-        AuditLogEventOptions.PNC_RESPONSE_RECEIVED,
+        AuditLogEventOptions.pncResponseReceived,
         EventCategory.information,
         AuditLogEventSource.EnrichWithPncQuery,
         auditLogAttributes

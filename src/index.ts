@@ -53,7 +53,7 @@ export default async (
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          AuditLogEventOptions.HEARING_OUTCOME_IGNORED_NO_OFFENCES,
+          AuditLogEventOptions.hearingOutcomeIgnoredNoOffences,
           EventCategory.information,
           AuditLogEventSource.CoreHandler,
           {
@@ -94,7 +94,7 @@ export default async (
     if (isIgnored) {
       auditLogger.logEvent(
         getAuditLogEvent(
-          AuditLogEventOptions.HEARING_OUTCOME_IGNORED_REOPENED,
+          AuditLogEventOptions.hearingOutcomeIgnoredReopened,
           EventCategory.information,
           AuditLogEventSource.CoreHandler,
           {}
@@ -123,7 +123,7 @@ export default async (
 
     auditLogger.logEvent(
       getAuditLogEvent(
-        AuditLogEventOptions.MESSAGE_REJECTED_BY_CORE_HANDLER,
+        AuditLogEventOptions.messageRejectedByCoreHandler,
         EventCategory.error,
         AuditLogEventSource.CoreHandler,
         {

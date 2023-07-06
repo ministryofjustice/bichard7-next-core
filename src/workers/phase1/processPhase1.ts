@@ -65,7 +65,7 @@ const processPhase1: ConductorWorker = {
 
     auditLogger.logEvent(
       getAuditLogEvent(
-        AuditLogEventOptions.HEARING_OUTCOME_RECEIVED_PHASE_1,
+        AuditLogEventOptions.hearingOutcomeReceivedPhase1,
         EventCategory.debug,
         AuditLogEventSource.CoreHandler,
         {}
