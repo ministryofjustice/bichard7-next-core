@@ -250,7 +250,9 @@ class OffenceMatcher {
       return exceptions
     }
 
-    if (hoOffences.size < pncOffences.size) {
+    const nonFinalPncOffences = Array.from(pncOffences.values()).filter((o) => !offenceHasFinalResult(o.pncOffence))
+
+    if (hoOffences.size < nonFinalPncOffences.length) {
       exceptions.push(ho100304)
       return exceptions
     }
