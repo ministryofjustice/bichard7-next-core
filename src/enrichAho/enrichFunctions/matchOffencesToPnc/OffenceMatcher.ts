@@ -268,57 +268,55 @@ class OffenceMatcher {
   matchManualSequenceNumbers() {
     let exceptions: Exception[] = []
 
-    for (const convictionDateMatch of [true, false]) {
-      exceptions = []
-      for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
-        const hasManualSequence =
-          !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+    exceptions = []
+    for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
+      const hasManualSequence =
+        !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
 
-        if (hasManualSequence) {
-          const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-          if (!!rawSequence && !isSequenceValid(rawSequence)) {
-            exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
-            continue
-          }
-
-          const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
-          const pncOffencesWithMatchingSequence = this.pncOffences.filter(
-            (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
-          )
-
-          if (pncOffencesWithMatchingSequence.length === 0) {
-            exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
-            continue
-          }
+      if (hasManualSequence) {
+        const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        if (!!rawSequence && !isSequenceValid(rawSequence)) {
+          exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
+          continue
         }
 
-        const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
+        const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
+        const pncOffencesWithMatchingSequence = this.pncOffences.filter(
+          (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
+        )
 
-        if (hasManualCCR) {
-          if (!isCcrValid(hoOffence.CourtCaseReferenceNumber!)) {
-            exceptions.push({ code: ExceptionCode.HO100203, path: errorPaths.offence(i).courtCaseReference })
-            continue
-          }
+        if (pncOffencesWithMatchingSequence.length === 0) {
+          exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+          continue
         }
+      }
 
-        if (hasManualSequence || hasManualCCR) {
-          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { convictionDateMatch })
+      const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
 
-          const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-            offenceManuallyMatches(hoOffence, pncOffence)
-          )
-          if (matchingPncOffences.length === 1) {
-            this.matches.set(hoOffence, matchingPncOffences[0])
-          } else if (matchingPncOffences.length === 0) {
-            exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-          } else if (matchingPncOffences.length > 1) {
-            const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
-              acc.add(pncOffence.caseReference)
-              return acc
-            }, new Set<string>())
-            const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
-            exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
-          }
+      if (hasManualCCR) {
+        if (!isCcrValid(hoOffence.CourtCaseReferenceNumber!)) {
+          exceptions.push({ code: ExceptionCode.HO100203, path: errorPaths.offence(i).courtCaseReference })
+          continue
+        }
+      }
+
+      if (hasManualSequence || hasManualCCR) {
+        const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
+
+        const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
+          offenceManuallyMatches(hoOffence, pncOffence)
+        )
+        if (matchingPncOffences.length === 1) {
+          this.matches.set(hoOffence, matchingPncOffences[0])
+        } else if (matchingPncOffences.length === 0) {
+          exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
+        } else if (matchingPncOffences.length > 1) {
+          const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
+            acc.add(pncOffence.caseReference)
+            return acc
+          }, new Set<string>())
+          const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+          exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
         }
       }
     }
@@ -396,7 +394,6 @@ class OffenceMatcher {
 
     const courtCasesGroupedByCount = Object.entries(courtCaseCounts).reduce(
       (acc: Map<number, string[]>, [ccr, count]) => {
-        // TODO: take final disposals into account
         pushToArrayInMap(acc, count, ccr)
         return acc
       },
