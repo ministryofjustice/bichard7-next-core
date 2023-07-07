@@ -13,13 +13,16 @@ import { pushToArrayInMap } from "./matchOffencesToPnc"
 export type Candidate = {
   hoOffence: Offence
   pncOffence: PncOffenceWithCaseRef
-  exact: boolean
-  convictionDatesMatch: boolean
+  exactDateMatch: boolean
+  startDateMatch: boolean
+  fuzzyDateMatch: true
+  convictionDateMatch: boolean
   adjudicationMatch: boolean
 }
 
 type CandidateFilterOptions = {
   exactDateMatch?: boolean
+  startDateMatch?: boolean
   convictionDateMatch?: boolean
   adjudicationMatch?: boolean
   courtCaseReference?: string
@@ -93,8 +96,9 @@ class OffenceMatcher {
 
       const unmatchedCandidatePncOffences = candidatePncOffences
         .filter((candidate) => !this.matchedPncOffences.includes(candidate.pncOffence))
-        .filter((c) => !options.exactDateMatch || c.exact === options.exactDateMatch)
-        .filter((c) => !options.convictionDateMatch || c.convictionDatesMatch === options.convictionDateMatch)
+        .filter((c) => !options.exactDateMatch || c.exactDateMatch === options.exactDateMatch)
+        .filter((c) => !options.startDateMatch || c.startDateMatch === options.startDateMatch)
+        .filter((c) => !options.convictionDateMatch || c.convictionDateMatch === options.convictionDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
         .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
         .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
@@ -164,10 +168,6 @@ class OffenceMatcher {
         .get(hoOffence)
         ?.some((candidate) => candidate.pncOffence === pncOffence)
     )
-  }
-
-  hasMatchCandidate(hoOffence: Offence, pncOffence: PncOffenceWithCaseRef, exact: boolean): boolean {
-    return !!this.candidates.get(hoOffence)?.some((match) => match.pncOffence === pncOffence && (!exact || match.exact))
   }
 
   hasMatch(candidate: Candidate): boolean {
@@ -348,11 +348,21 @@ class OffenceMatcher {
     })
     exactAndAdjudicationGroups.forEach(this.matchGroup, this)
 
+    const startDateAndAdjudicationGroups = this.groupOffences({
+      startDateMatch: true,
+      adjudicationMatch: true,
+      includeFinal
+    })
+    startDateAndAdjudicationGroups.forEach(this.matchGroup, this)
+
     const fuzzyAndAdjudicationGroups = this.groupOffences({ adjudicationMatch: true, includeFinal })
     fuzzyAndAdjudicationGroups.forEach(this.matchGroup, this)
 
     const exactMatchGroups = this.groupOffences({ exactDateMatch: true, includeFinal })
     exactMatchGroups.forEach(this.matchGroup, this)
+
+    const startDateMatchGroups = this.groupOffences({ startDateMatch: true, includeFinal })
+    startDateMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences({ includeFinal })
     fuzzyGroups.forEach(this.matchGroup, this)
