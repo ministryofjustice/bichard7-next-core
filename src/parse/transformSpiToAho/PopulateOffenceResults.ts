@@ -18,8 +18,7 @@ import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 const freeTextResultCode = 1000
 const otherValue = "OTHER"
 const warrantIssueDateResultCodes = [4505, 4575, 4576, 4577, 4585, 4586]
-const offencesTicResultText = "other offences admitted and taken into consideration"
-const offencesTicResultCode = -1
+const offencesTicRegex = /(\d+) other offences admitted and taken into consideration/i
 const libraMaxQualifiers = 4
 const libraElectronicTaggingText = "to be electronically monitored"
 const taggingFixAdd = 3105
@@ -215,11 +214,9 @@ export default class {
       result.WarrantIssueDate = new Date(spiDateOfHearing)
     }
 
-    const containsNumberOfOffencesTIC = (resultText: string): boolean =>
-      resultText.toLowerCase().includes(offencesTicResultText)
-
-    if (containsNumberOfOffencesTIC(spiResult.ResultText) || spiResultCodeNumber === offencesTicResultCode) {
-      result.NumberOfOffencesTIC = Number(spiResult.ResultText.trim().split(" ")[0])
+    const offencesTicMatch = spiResult.ResultText.match(offencesTicRegex)
+    if (offencesTicMatch) {
+      result.NumberOfOffencesTIC = Number(offencesTicMatch[1])
     }
 
     if (
