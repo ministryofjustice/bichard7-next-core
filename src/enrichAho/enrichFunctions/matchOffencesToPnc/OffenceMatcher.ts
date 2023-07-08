@@ -13,13 +13,16 @@ import { pushToArrayInMap } from "./matchOffencesToPnc"
 export type Candidate = {
   hoOffence: Offence
   pncOffence: PncOffenceWithCaseRef
-  exact: boolean
-  convictionDatesMatch: boolean
+  exactDateMatch: boolean
+  startDateMatch: boolean
+  fuzzyDateMatch: true
+  convictionDateMatch: boolean
   adjudicationMatch: boolean
 }
 
 type CandidateFilterOptions = {
   exactDateMatch?: boolean
+  startDateMatch?: boolean
   convictionDateMatch?: boolean
   adjudicationMatch?: boolean
   courtCaseReference?: string
@@ -93,8 +96,9 @@ class OffenceMatcher {
 
       const unmatchedCandidatePncOffences = candidatePncOffences
         .filter((candidate) => !this.matchedPncOffences.includes(candidate.pncOffence))
-        .filter((c) => !options.exactDateMatch || c.exact === options.exactDateMatch)
-        .filter((c) => !options.convictionDateMatch || c.convictionDatesMatch === options.convictionDateMatch)
+        .filter((c) => !options.exactDateMatch || c.exactDateMatch === options.exactDateMatch)
+        .filter((c) => !options.startDateMatch || c.startDateMatch === options.startDateMatch)
+        .filter((c) => !options.convictionDateMatch || c.convictionDateMatch === options.convictionDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
         .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
         .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
@@ -164,10 +168,6 @@ class OffenceMatcher {
         .get(hoOffence)
         ?.some((candidate) => candidate.pncOffence === pncOffence)
     )
-  }
-
-  hasMatchCandidate(hoOffence: Offence, pncOffence: PncOffenceWithCaseRef, exact: boolean): boolean {
-    return !!this.candidates.get(hoOffence)?.some((match) => match.pncOffence === pncOffence && (!exact || match.exact))
   }
 
   hasMatch(candidate: Candidate): boolean {
@@ -268,57 +268,55 @@ class OffenceMatcher {
   matchManualSequenceNumbers() {
     let exceptions: Exception[] = []
 
-    for (const convictionDateMatch of [true, false]) {
-      exceptions = []
-      for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
-        const hasManualSequence =
-          !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+    exceptions = []
+    for (const [i, hoOffence] of this.unmatchedHoOffences.entries()) {
+      const hasManualSequence =
+        !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
 
-        if (hasManualSequence) {
-          const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-          if (!!rawSequence && !isSequenceValid(rawSequence)) {
-            exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
-            continue
-          }
-
-          const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
-          const pncOffencesWithMatchingSequence = this.pncOffences.filter(
-            (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
-          )
-
-          if (pncOffencesWithMatchingSequence.length === 0) {
-            exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
-            continue
-          }
+      if (hasManualSequence) {
+        const rawSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+        if (!!rawSequence && !isSequenceValid(rawSequence)) {
+          exceptions.push({ code: ExceptionCode.HO100228, path: errorPaths.offence(i).reasonSequence })
+          continue
         }
 
-        const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
+        const sequence = Number(hoOffence.CriminalProsecutionReference.OffenceReasonSequence)
+        const pncOffencesWithMatchingSequence = this.pncOffences.filter(
+          (pncOffence) => pncOffence.pncOffence.offence.sequenceNumber === sequence
+        )
 
-        if (hasManualCCR) {
-          if (!isCcrValid(hoOffence.CourtCaseReferenceNumber!)) {
-            exceptions.push({ code: ExceptionCode.HO100203, path: errorPaths.offence(i).courtCaseReference })
-            continue
-          }
+        if (pncOffencesWithMatchingSequence.length === 0) {
+          exceptions.push({ code: ExceptionCode.HO100312, path: errorPaths.offence(i).reasonSequence })
+          continue
         }
+      }
 
-        if (hasManualSequence || hasManualCCR) {
-          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, { convictionDateMatch })
+      const hasManualCCR = !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
 
-          const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-            offenceManuallyMatches(hoOffence, pncOffence)
-          )
-          if (matchingPncOffences.length === 1) {
-            this.matches.set(hoOffence, matchingPncOffences[0])
-          } else if (matchingPncOffences.length === 0) {
-            exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-          } else if (matchingPncOffences.length > 1) {
-            const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
-              acc.add(pncOffence.caseReference)
-              return acc
-            }, new Set<string>())
-            const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
-            exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
-          }
+      if (hasManualCCR) {
+        if (!isCcrValid(hoOffence.CourtCaseReferenceNumber!)) {
+          exceptions.push({ code: ExceptionCode.HO100203, path: errorPaths.offence(i).courtCaseReference })
+          continue
+        }
+      }
+
+      if (hasManualSequence || hasManualCCR) {
+        const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
+
+        const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
+          offenceManuallyMatches(hoOffence, pncOffence)
+        )
+        if (matchingPncOffences.length === 1) {
+          this.matches.set(hoOffence, matchingPncOffences[0])
+        } else if (matchingPncOffences.length === 0) {
+          exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
+        } else if (matchingPncOffences.length > 1) {
+          const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
+            acc.add(pncOffence.caseReference)
+            return acc
+          }, new Set<string>())
+          const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+          exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
         }
       }
     }
@@ -350,11 +348,21 @@ class OffenceMatcher {
     })
     exactAndAdjudicationGroups.forEach(this.matchGroup, this)
 
+    const startDateAndAdjudicationGroups = this.groupOffences({
+      startDateMatch: true,
+      adjudicationMatch: true,
+      includeFinal
+    })
+    startDateAndAdjudicationGroups.forEach(this.matchGroup, this)
+
     const fuzzyAndAdjudicationGroups = this.groupOffences({ adjudicationMatch: true, includeFinal })
     fuzzyAndAdjudicationGroups.forEach(this.matchGroup, this)
 
     const exactMatchGroups = this.groupOffences({ exactDateMatch: true, includeFinal })
     exactMatchGroups.forEach(this.matchGroup, this)
+
+    const startDateMatchGroups = this.groupOffences({ startDateMatch: true, includeFinal })
+    startDateMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences({ includeFinal })
     fuzzyGroups.forEach(this.matchGroup, this)
@@ -396,7 +404,6 @@ class OffenceMatcher {
 
     const courtCasesGroupedByCount = Object.entries(courtCaseCounts).reduce(
       (acc: Map<number, string[]>, [ccr, count]) => {
-        // TODO: take final disposals into account
         pushToArrayInMap(acc, count, ccr)
         return acc
       },

@@ -29,6 +29,12 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
   return false
 }
 
+const startDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+  const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
+  const pncStartDate = pncOffence.offence.startDate
+  return hoStartDate.getTime() === pncStartDate.getTime()
+}
+
 const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
   const pncStartDate = pncOffence.offence.startDate
@@ -85,8 +91,10 @@ const generateCandidate = (
   const candidate: Candidate = {
     pncOffence,
     hoOffence,
-    exact: false,
-    convictionDatesMatch: convictionDatesMatch(hoOffence, pncOffence.pncOffence),
+    exactDateMatch: false,
+    startDateMatch: false,
+    fuzzyDateMatch: true,
+    convictionDateMatch: convictionDatesMatch(hoOffence, pncOffence.pncOffence),
     adjudicationMatch: false
   }
 
@@ -101,7 +109,12 @@ const generateCandidate = (
   if (!datesMatchApproximately(hoOffence, pncOffence.pncOffence)) {
     return
   }
-  candidate.exact = datesMatchExactly(hoOffence, pncOffence.pncOffence)
+
+  if (startDatesMatch(hoOffence, pncOffence.pncOffence)) {
+    candidate.startDateMatch = true
+  }
+
+  candidate.exactDateMatch = datesMatchExactly(hoOffence, pncOffence.pncOffence)
 
   return candidate
 }
