@@ -18,7 +18,7 @@ const fixedForce91 = (
   const expectedOuCode = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
   const actualOuCode = actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
 
-  return expectedOuCode === "010000" && actualOuCode === "91HQ00"
+  return !!expectedOuCode && !!actualOuCode && expectedOuCode !== actualOuCode && actualOuCode.startsWith("91")
 }
 
 export default fixedForce91
