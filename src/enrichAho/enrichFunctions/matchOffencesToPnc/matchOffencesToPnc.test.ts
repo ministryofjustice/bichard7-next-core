@@ -1206,6 +1206,8 @@ describe("matchOffencesToPnc", () => {
     it.todo("should normalise leading zeroes in the manual CCR")
 
     it.todo("should normalise case in the manual CCR")
+
+    it.todo("should match the most specific manual match first")
   })
 
   describe("penalty cases", () => {

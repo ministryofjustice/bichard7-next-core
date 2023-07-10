@@ -11,55 +11,27 @@ import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
 
 export type Candidate = {
-  hoOffence: Offence
-  pncOffence: PncOffenceWithCaseRef
-  exactDateMatch: boolean
-  startDateMatch: boolean
-  fuzzyDateMatch: true
-  convictionDateMatch: boolean
   adjudicationMatch: boolean
+  convictionDateMatch: boolean
+  exactDateMatch: boolean
+  fuzzyDateMatch: true
+  hoOffence: Offence
+  manualCcrMatch: boolean
+  manualSequenceMatch: boolean
+  pncOffence: PncOffenceWithCaseRef
+  startDateMatch: boolean
 }
 
 type CandidateFilterOptions = {
-  exactDateMatch?: boolean
-  startDateMatch?: boolean
-  convictionDateMatch?: boolean
   adjudicationMatch?: boolean
+  convictionDateMatch?: boolean
   courtCaseReference?: string
   courtCaseReferences?: string[]
+  exactDateMatch?: boolean
   includeFinal?: boolean
-}
-
-export const normaliseCCR = (ccr: string): string => {
-  const splitCCR = ccr.split("/")
-  if (splitCCR.length !== 3) {
-    return ccr
-  }
-  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
-  return splitCCR.map((el) => el.toUpperCase()).join("/")
-}
-
-const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
-  const manualSequence = !!hoOffence.ManualSequenceNumber
-  const manualCourtCase = !!hoOffence.ManualCourtCaseReference
-  const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-  const sequence = Number(offenceReasonSequence)
-  const courtCase = hoOffence.CourtCaseReferenceNumber
-  if (manualSequence && isNaN(sequence)) {
-    return false
-  }
-  const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
-  const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
-
-  if (manualSequence && manualCourtCase) {
-    return sequenceMatches && ccrMatches
-  } else if (manualSequence) {
-    return sequenceMatches
-  } else if (manualCourtCase) {
-    return ccrMatches
-  }
-
-  return false
+  manualCcrMatch?: boolean
+  manualSequenceMatch?: boolean
+  startDateMatch?: boolean
 }
 
 const ho100304 = { code: ExceptionCode.HO100304, path: errorPaths.case.asn }
@@ -107,6 +79,8 @@ class OffenceMatcher {
         .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
         .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
         .filter((c) => options.includeFinal || !offenceHasFinalResult(c.pncOffence.pncOffence))
+        .filter((c) => !options.manualSequenceMatch || c.manualSequenceMatch)
+        .filter((c) => !options.manualCcrMatch || c.manualCcrMatch)
 
       if (unmatchedCandidatePncOffences.length > 0) {
         candidates.set(hoOffence, unmatchedCandidatePncOffences)
@@ -306,22 +280,32 @@ class OffenceMatcher {
       }
 
       if (hasManualSequence || hasManualCCR) {
-        const candidatePncOffences = this.candidatesForHoOffence(hoOffence)
+        const optionSets: CandidateFilterOptions[] = [
+          { manualCcrMatch: true, manualSequenceMatch: true },
+          { manualSequenceMatch: true },
+          { manualCcrMatch: true }
+        ]
 
-        const matchingPncOffences = candidatePncOffences?.filter((pncOffence) =>
-          offenceManuallyMatches(hoOffence, pncOffence)
-        )
-        if (matchingPncOffences.length === 1) {
-          this.matches.set(hoOffence, matchingPncOffences[0])
-        } else if (matchingPncOffences.length === 0) {
+        for (const options of optionSets) {
+          const candidatePncOffences = this.candidatesForHoOffence(hoOffence, options)
+
+          if (candidatePncOffences.length === 1) {
+            this.matches.set(hoOffence, candidatePncOffences[0])
+            break
+          } else if (candidatePncOffences.length > 1) {
+            const courtCases = candidatePncOffences.reduce((acc: Set<string>, pncOffence) => {
+              acc.add(pncOffence.caseReference)
+              return acc
+            }, new Set<string>())
+            const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
+            exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
+            break
+          }
+        }
+        const remainingCandidates = this.candidatesForHoOffence(hoOffence)
+
+        if (!this.hoOffenceWasAlreadyMatched(hoOffence) && remainingCandidates.length === 0) {
           exceptions.push({ code: ExceptionCode.HO100320, path: errorPaths.offence(i).reasonSequence })
-        } else if (matchingPncOffences.length > 1) {
-          const courtCases = matchingPncOffences.reduce((acc: Set<string>, pncOffence) => {
-            acc.add(pncOffence.caseReference)
-            return acc
-          }, new Set<string>())
-          const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
-          exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
         }
       }
     }

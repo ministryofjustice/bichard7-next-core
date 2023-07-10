@@ -1,5 +1,5 @@
 import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
-import { normaliseCCR } from "src/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
+import { normaliseCCR } from "src/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 

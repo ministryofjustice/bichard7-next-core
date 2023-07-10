@@ -5,6 +5,38 @@ import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
+export const normaliseCCR = (ccr: string): string => {
+  const splitCCR = ccr.split("/")
+  if (splitCCR.length !== 3) {
+    return ccr
+  }
+  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
+  return splitCCR.map((el) => el.toUpperCase()).join("/")
+}
+
+const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
+  const manualSequence = !!hoOffence.ManualSequenceNumber
+  const manualCourtCase = !!hoOffence.ManualCourtCaseReference
+  const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+  const sequence = Number(offenceReasonSequence)
+  const courtCase = hoOffence.CourtCaseReferenceNumber
+  if (manualSequence && isNaN(sequence)) {
+    return false
+  }
+  const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
+  const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
+
+  if (manualSequence && manualCourtCase) {
+    return sequenceMatches && ccrMatches
+  } else if (manualSequence) {
+    return sequenceMatches
+  } else if (manualCourtCase) {
+    return ccrMatches
+  }
+
+  return false
+}
+
 const convictionDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const matchingConvictionDates =
     !!pncOffence.adjudication?.sentenceDate &&
@@ -75,6 +107,15 @@ const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): bo
   return hoStartDate >= pncStartDate && !!hoEndDate && hoEndDate <= pncEndDate
 }
 
+const hasManualSequenceMatch = (hoOffence: Offence): boolean =>
+  !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
+
+const hasManualCcrMatch = (hoOffence: Offence): boolean =>
+  !!hoOffence.ManualCourtCaseReference && !!hoOffence.CourtCaseReferenceNumber
+
+const hasManualMatch = (hoOffence: Offence): boolean =>
+  hasManualSequenceMatch(hoOffence) || hasManualCcrMatch(hoOffence)
+
 const generateCandidate = (
   hoOffence: Offence,
   pncOffence: PncOffenceWithCaseRef,
@@ -87,15 +128,25 @@ const generateCandidate = (
   if (hoOffenceCode !== pncOffenceCode) {
     return
   }
-
   const candidate: Candidate = {
-    pncOffence,
-    hoOffence,
-    exactDateMatch: false,
-    startDateMatch: false,
-    fuzzyDateMatch: true,
+    adjudicationMatch: false,
     convictionDateMatch: convictionDatesMatch(hoOffence, pncOffence.pncOffence),
-    adjudicationMatch: false
+    exactDateMatch: false,
+    fuzzyDateMatch: true,
+    hoOffence,
+    manualCcrMatch: false,
+    manualSequenceMatch: false,
+    pncOffence,
+    startDateMatch: false
+  }
+
+  if (hasManualMatch(hoOffence)) {
+    if (offenceManuallyMatches(hoOffence, pncOffence)) {
+      candidate.manualSequenceMatch = hasManualSequenceMatch(hoOffence)
+      candidate.manualCcrMatch = hasManualSequenceMatch(hoOffence)
+    } else {
+      return
+    }
   }
 
   if (hoOffence.ConvictionDate && pncOffence.pncOffence.adjudication) {
