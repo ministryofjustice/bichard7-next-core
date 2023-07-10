@@ -54,7 +54,7 @@ const insertDummyCourtCasesWithNotes = (caseNotes: { user: string; text: string 
             noteText: note.text,
             userId: note.user,
             errorId: index
-          } as unknown as Note)
+          }) as unknown as Note
       )
     }))
   )
@@ -74,7 +74,7 @@ const insertDummyCourtCasesWithTriggers = (
             triggerCode: trigger.code,
             errorId: index,
             status: trigger.status
-          } as unknown as Trigger)
+          }) as unknown as Trigger
       )
     }))
   )

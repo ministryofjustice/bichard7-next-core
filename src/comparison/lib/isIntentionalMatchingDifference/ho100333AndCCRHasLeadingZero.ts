@@ -24,8 +24,8 @@ const ho100333AndCCRHasLeadingZero = (
 
   const normalisedInputCCRs = inputCCRs.map((inputCCR) => normaliseCCR(inputCCR))
   const normalisedPNCCCRs = pncCCRs.map((pncCCR) => normaliseCCR(pncCCR))
-  const allInputCCRsMatchAfterNormalising = normalisedInputCCRs.every((inputCCR) =>
-    normalisedPNCCCRs?.includes(inputCCR)
+  const allInputCCRsMatchAfterNormalising = normalisedInputCCRs.every(
+    (inputCCR) => normalisedPNCCCRs?.includes(inputCCR)
   )
 
   return bichardRaisesHo100333 && coreMatches && !allInputCCRsMatch && allInputCCRsMatchAfterNormalising

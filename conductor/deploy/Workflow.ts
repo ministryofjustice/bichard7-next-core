@@ -13,7 +13,10 @@ class Workflow {
 
   private localWorkflowHash: string
 
-  constructor(filename: string, private conductor: ConductorGateway) {
+  constructor(
+    filename: string,
+    private conductor: ConductorGateway
+  ) {
     const fileContent = fs.readFileSync(filename)
     this.localWorkflow = JSON.parse(fileContent.toString()) as WorkflowDef
     this.localWorkflowHash = hashFile(fileContent)
