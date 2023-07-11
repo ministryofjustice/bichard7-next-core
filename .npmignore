@@ -9,8 +9,15 @@ node_modules
 # Things we don't need
 
 src/
+api/
+conductor/
 tests/
 test-data/
+environment/
+build/
+data/
+scripts/
+docs/
 .github/
 .circleci/
 .husky/
@@ -19,7 +26,11 @@ test-data/
 .gitignore
 .nvmrc
 .prettierrc
+.editorconfig
+.dockerignore
+build.js
+build.package.js
 buildspec.yml
 jest.config.js
-tsconfig.eslint.json
 tsconfig.json
+tsconfig.eslint.json
