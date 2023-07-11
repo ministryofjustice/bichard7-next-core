@@ -4,11 +4,11 @@ import isSequenceValid from "src/lib/isSequenceValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
+import offenceHasFinalResult from "./offenceHasFinalResult"
+import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 export type Candidate = {
   adjudicationMatch: boolean
@@ -43,11 +43,7 @@ class OffenceMatcher {
 
   public exceptions: Exception[] = []
 
-  constructor(
-    private hoOffences: Offence[],
-    private pncOffences: PncOffenceWithCaseRef[],
-    private hearingDate: Date
-  ) {}
+  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[], private hearingDate: Date) {}
 
   get hasExceptions(): boolean {
     return this.exceptions.length > 0
@@ -141,11 +137,10 @@ class OffenceMatcher {
   }
 
   candidatesForPncOffence(pncOffence: PncOffenceWithCaseRef, options: CandidateFilterOptions = {}): Offence[] {
-    return [...this.unmatchedCandidates(options).keys()].filter(
-      (hoOffence) =>
-        this.unmatchedCandidates(options)
-          .get(hoOffence)
-          ?.some((candidate) => candidate.pncOffence === pncOffence)
+    return [...this.unmatchedCandidates(options).keys()].filter((hoOffence) =>
+      this.unmatchedCandidates(options)
+        .get(hoOffence)
+        ?.some((candidate) => candidate.pncOffence === pncOffence)
     )
   }
 

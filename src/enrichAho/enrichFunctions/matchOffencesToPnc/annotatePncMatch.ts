@@ -1,6 +1,6 @@
 import type { Case } from "src/types/AnnotatedHearingOutcome"
-import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { OffenceMatch } from "./matchOffencesToPnc"
+import offenceIsBreach from "./offenceIsBreach"
 
 export enum CaseType {
   court = "court",

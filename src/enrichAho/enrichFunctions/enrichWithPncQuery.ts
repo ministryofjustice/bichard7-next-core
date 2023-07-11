@@ -4,13 +4,12 @@ import { isAsnFormatValid } from "src/lib/isAsnValid"
 import isDummyAsn from "src/lib/isDummyAsn"
 import type AuditLogger from "src/types/AuditLogger"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
-import enrichCourtCases from "../../enrichAho/enrichFunctions/enrichCourtCases"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
+import EventCategory from "../../types/EventCategory"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import { matchOffencesToPnc } from "./matchOffencesToPnc"
-import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource, AuditLogEventOptions } from "../../types/AuditLogEvent"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -101,11 +100,7 @@ export default async (
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 
-  if (process.env.USE_NEW_MATCHER !== "false") {
-    annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
-  } else {
-    annotatedHearingOutcome = enrichCourtCases(annotatedHearingOutcome)
-  }
+  annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
 
   return annotatedHearingOutcome
 }

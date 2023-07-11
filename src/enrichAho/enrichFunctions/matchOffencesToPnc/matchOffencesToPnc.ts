@@ -2,11 +2,10 @@ import errorPaths from "src/lib/errorPaths"
 import type { AnnotatedHearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "src/types/PncQueryResult"
-import offenceCategoryIsNonRecordable from "../enrichCourtCases/offenceCategoryIsNonRecordable"
-import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import offencesMatch from "../enrichCourtCases/offenceMatcher/offencesMatch"
 import OffenceMatcher from "./OffenceMatcher"
 import annotatePncMatch, { CaseType } from "./annotatePncMatch"
+import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
+import offenceHasFinalResult from "./offenceHasFinalResult"
 
 export type PncOffenceWithCaseRef = {
   caseReference: string
@@ -79,15 +78,6 @@ export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) 
   map.get(key)!.push(...items)
 }
 
-const hasMatchingOffence = (hoOffences: Offence[], pncOffences: PncOffenceWithCaseRef[]): boolean => {
-  for (const hoOffence of hoOffences) {
-    if (pncOffences.some((pncOffence) => offencesMatch(hoOffence, pncOffence.pncOffence))) {
-      return true
-    }
-  }
-  return false
-}
-
 const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
   if ("courtCaseReference" in pncCase) {
     return pncCase.courtCaseReference
@@ -115,12 +105,6 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
 
   if (offenceMatcher.hasExceptions) {
     aho.Exceptions.push(...offenceMatcher.exceptions)
-    return aho
-  }
-
-  // If any unmatched ho offences match the offence code of a pnc offence, then raise a HO100304 because it could be a typo
-  if (hasMatchingOffence(offenceMatcher.unmatchedHoOffences, offenceMatcher.unmatchedPncOffences)) {
-    aho.Exceptions.push({ code: ExceptionCode.HO100304, path: errorPaths.case.asn })
     return aho
   }
 
