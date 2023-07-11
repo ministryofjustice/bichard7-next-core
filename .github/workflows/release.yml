@@ -48,7 +48,7 @@ jobs:
         run: npm ci
 
       - name: Build output package
-        run: npm run build
+        run: npm run build:package
 
       - name: Add registry config for npm
         run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc

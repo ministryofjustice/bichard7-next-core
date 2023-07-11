@@ -1,6 +1,6 @@
 {
   "name": "@moj-bichard7-developers/bichard7-next-core",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "The core processing logic of Bichard 7",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
     "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
     "build": "node build.js",
+    "build:package": "./scripts/build-package.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "husky install",

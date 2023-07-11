@@ -1,19 +1,19 @@
 import type { AuditLogEvent } from "src/types/AuditLogEvent"
-import type { AuditLogEventOption, AuditLogEventSource } from "src/types/AuditLogEvent"
+import type { AuditLogEventOption } from "src/types/AuditLogEvent"
 import type EventCategory from "src/types/EventCategory"
 import type KeyValuePair from "src/types/KeyValuePair"
 
 const getAuditLogEvent = (
-  AuditLogEventOptions: AuditLogEventOption,
+  option: AuditLogEventOption,
   category: EventCategory,
-  eventSource: AuditLogEventSource,
+  eventSource: string,
   attributes: KeyValuePair<string, unknown>
 ): AuditLogEvent => {
   return {
-    eventCode: AuditLogEventOptions.code,
+    eventCode: option.code,
     attributes,
     timestamp: new Date().toISOString(),
-    eventType: AuditLogEventOptions.type,
+    eventType: option.type,
     eventSource,
     category
   }
