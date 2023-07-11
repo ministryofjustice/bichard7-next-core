@@ -666,7 +666,22 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
-    it.todo("should ignore final offences for full case matching")
+    it("should ignore final offences for full case matching", () => {
+      const offence1 = {}
+      const offence2 = { code: "CD1234" }
+      const offence3 = { code: "EF1234", disposals: [finalDisposal] }
+      const matchingSummary = matchOffences(
+        [offence1, offence2],
+        [{ offences: [offence1] }, { offences: [offence1, offence2, offence3] }]
+      )
+      expect(matchingSummary).toStrictEqual({
+        caseReference: "22/5678/005678B",
+        offences: [
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
+        ]
+      })
+    })
   })
 
   describe("HO100304", () => {
