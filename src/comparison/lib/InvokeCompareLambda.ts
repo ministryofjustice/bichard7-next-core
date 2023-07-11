@@ -3,7 +3,10 @@ import { Lambda } from "aws-sdk"
 import type { PromiseResult } from "aws-sdk/lib/request"
 
 export default class InvokeCompareBatchLambda {
-  constructor(private comparisonLambdaName: string, private comparisonBucketName: string) {}
+  constructor(
+    private comparisonLambdaName: string,
+    private comparisonBucketName: string
+  ) {}
 
   call(s3Paths: string[], batchSize = 1000): Promise<PromiseResult<Lambda.InvocationResponse, AWSError>[]> {
     const batches = s3Paths.reduce(

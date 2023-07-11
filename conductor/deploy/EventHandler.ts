@@ -6,7 +6,10 @@ import type ConductorGateway from "./ConductorGateway"
 class EventHandler {
   private localEventHandler: EventHandlerDef
 
-  constructor(filename: string, private conductor: ConductorGateway) {
+  constructor(
+    filename: string,
+    private conductor: ConductorGateway
+  ) {
     const fileContent = fs.readFileSync(filename)
     this.localEventHandler = JSON.parse(fileContent.toString()) as EventHandlerDef
   }

@@ -70,7 +70,10 @@ export default class {
 
   private baQualifierAdded = false
 
-  constructor(private courtResult: ResultedCaseMessageParsedXml, private spiOffence: SpiOffence) {}
+  constructor(
+    private courtResult: ResultedCaseMessageParsedXml,
+    private spiOffence: SpiOffence
+  ) {}
 
   private populateResult(spiResult: SpiResult): Result {
     const {

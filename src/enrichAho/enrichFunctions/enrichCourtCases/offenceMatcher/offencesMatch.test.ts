@@ -40,7 +40,7 @@ const createMockHoOffence = ({
     },
     ActualOffenceDateCode: dateCode?.toString(),
     CourtOffenceSequenceNumber: sequenceNumber
-  } as Offence)
+  }) as Offence
 
 const createMockPncOffence = ({ fullCode, startDate, endDate }: MockOffenceOptions): PncOffence =>
   ({
@@ -49,7 +49,7 @@ const createMockPncOffence = ({ fullCode, startDate, endDate }: MockOffenceOptio
       startDate,
       endDate
     }
-  } as PncOffence)
+  }) as PncOffence
 
 describe("offencesMatch()", () => {
   const offenceDetails = {

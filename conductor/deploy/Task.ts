@@ -6,7 +6,10 @@ import type ConductorGateway from "./ConductorGateway"
 class Task {
   private localTask: TaskDef
 
-  constructor(filename: string, private conductor: ConductorGateway) {
+  constructor(
+    filename: string,
+    private conductor: ConductorGateway
+  ) {
     const fileContent = fs.readFileSync(filename)
     this.localTask = JSON.parse(fileContent.toString()) as TaskDef
   }
