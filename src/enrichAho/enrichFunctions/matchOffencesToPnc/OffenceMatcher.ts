@@ -43,7 +43,11 @@ class OffenceMatcher {
 
   public exceptions: Exception[] = []
 
-  constructor(private hoOffences: Offence[], private pncOffences: PncOffenceWithCaseRef[], private hearingDate: Date) {}
+  constructor(
+    private hoOffences: Offence[],
+    private pncOffences: PncOffenceWithCaseRef[],
+    private hearingDate: Date
+  ) {}
 
   get hasExceptions(): boolean {
     return this.exceptions.length > 0
@@ -137,10 +141,11 @@ class OffenceMatcher {
   }
 
   candidatesForPncOffence(pncOffence: PncOffenceWithCaseRef, options: CandidateFilterOptions = {}): Offence[] {
-    return [...this.unmatchedCandidates(options).keys()].filter((hoOffence) =>
-      this.unmatchedCandidates(options)
-        .get(hoOffence)
-        ?.some((candidate) => candidate.pncOffence === pncOffence)
+    return [...this.unmatchedCandidates(options).keys()].filter(
+      (hoOffence) =>
+        this.unmatchedCandidates(options)
+          .get(hoOffence)
+          ?.some((candidate) => candidate.pncOffence === pncOffence)
     )
   }
 
