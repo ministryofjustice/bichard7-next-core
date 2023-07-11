@@ -54,7 +54,9 @@
   "inputParameters": ["startDate", "endDate"],
   "outputParameters": {
     "pass": "${aggregate_results.output.result.pass}",
-    "fail": "${aggregate_results.output.result.fail}"
+    "fail": "${aggregate_results.output.result.fail}",
+    "intentionalDifference": "${aggregate_results.output.result.intentionalDifference}",
+    "skipped": "${aggregate_results.output.result.skipped}"
   },
   "schemaVersion": 2,
   "restartable": true,

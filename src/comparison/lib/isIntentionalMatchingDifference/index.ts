@@ -5,6 +5,8 @@ import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"
 import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import coreUsesManualMatchData from "./coreUsesManualMatchData"
+import fixedForce91 from "./fixedForce91"
+import fixedNumberOfOffencesTic from "./fixedNumberOfOffencesTic"
 import ho100304WithExistingFinalOffence from "./ho100304WithExistingFinalOffence"
 import ho100310AndHo100332Equivalent from "./ho100310AndHo100332Equivalent"
 import ho100332NotHo100304 from "./ho100332NotHo100304"
@@ -16,6 +18,7 @@ import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import missingEmptyCcr from "./missingEmptyCcr"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
+import trailingSpace from "./trailingSpace"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -43,7 +46,12 @@ const isIntentionalMatchingDifference = (
   const expectedMatch = summariseMatching(expected, true)
   const actualMatch = summariseMatching(actual, true)
 
-  if (missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming)) {
+  if (
+    fixedForce91(expectedMatch, actualMatch, expected, actual, incoming) ||
+    fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
+    missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
+    trailingSpace(expectedMatch, actualMatch, expected, actual, incoming)
+  ) {
     return true
   }
 
