@@ -18,6 +18,7 @@ import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import missingEmptyCcr from "./missingEmptyCcr"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
+import prioritiseNonFinal from "./prioritiseNonFinal"
 import trailingSpace from "./trailingSpace"
 
 const filters = [
@@ -35,7 +36,8 @@ const filters = [
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
   nonMatchingManualSequenceNumber,
-  offenceReasonSequenceFormat
+  offenceReasonSequenceFormat,
+  prioritiseNonFinal
 ]
 
 const isIntentionalMatchingDifference = (
