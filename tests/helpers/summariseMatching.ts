@@ -14,7 +14,8 @@ export const matchingExceptions: ExceptionCode[] = [
   ExceptionCode.HO100328,
   ExceptionCode.HO100329,
   ExceptionCode.HO100332,
-  ExceptionCode.HO100333
+  ExceptionCode.HO100333,
+  ExceptionCode.HO100507
 ]
 
 const hasMatch = (aho: AnnotatedHearingOutcome): boolean => {
