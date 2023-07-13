@@ -12,14 +12,12 @@ import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 export type Candidate = {
   adjudicationMatch: boolean
-  convictionDateMatch: boolean
   exactDateMatch: boolean
   fuzzyDateMatch: true
   hoOffence: Offence
   manualCcrMatch: boolean
   manualSequenceMatch: boolean
   pncOffence: PncOffenceWithCaseRef
-  startDateMatch: boolean
 }
 
 type CandidateFilterOptions = {
@@ -73,8 +71,6 @@ class OffenceMatcher {
       const unmatchedCandidatePncOffences = candidatePncOffences
         .filter((candidate) => !this.matchedPncOffences.includes(candidate.pncOffence))
         .filter((c) => !options.exactDateMatch || c.exactDateMatch === options.exactDateMatch)
-        .filter((c) => !options.startDateMatch || c.startDateMatch === options.startDateMatch)
-        .filter((c) => !options.convictionDateMatch || c.convictionDateMatch === options.convictionDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
         .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
         .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
@@ -337,21 +333,11 @@ class OffenceMatcher {
     })
     exactAndAdjudicationGroups.forEach(this.matchGroup, this)
 
-    const startDateAndAdjudicationGroups = this.groupOffences({
-      startDateMatch: true,
-      adjudicationMatch: true,
-      includeFinal
-    })
-    startDateAndAdjudicationGroups.forEach(this.matchGroup, this)
-
     const fuzzyAndAdjudicationGroups = this.groupOffences({ adjudicationMatch: true, includeFinal })
     fuzzyAndAdjudicationGroups.forEach(this.matchGroup, this)
 
     const exactMatchGroups = this.groupOffences({ exactDateMatch: true, includeFinal })
     exactMatchGroups.forEach(this.matchGroup, this)
-
-    const startDateMatchGroups = this.groupOffences({ startDateMatch: true, includeFinal })
-    startDateMatchGroups.forEach(this.matchGroup, this)
 
     const fuzzyGroups = this.groupOffences({ includeFinal })
     fuzzyGroups.forEach(this.matchGroup, this)
