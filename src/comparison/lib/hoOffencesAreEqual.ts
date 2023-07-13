@@ -1,4 +1,4 @@
-import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/resultsAreEqual"
+import { offencesHaveEqualResults } from "src/enrichAho/enrichFunctions/matchOffencesToPnc/resultsAreEqual"
 import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 

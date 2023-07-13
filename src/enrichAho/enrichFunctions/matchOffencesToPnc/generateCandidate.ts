@@ -1,9 +1,9 @@
 import getOffenceCode from "../../../lib/offence/getOffenceCode"
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
-import offenceIsBreach from "../enrichCourtCases/offenceMatcher/offenceIsBreach"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
+import offenceIsBreach from "./offenceIsBreach"
 
 export const normaliseCCR = (ccr: string): string => {
   const splitCCR = ccr.split("/")

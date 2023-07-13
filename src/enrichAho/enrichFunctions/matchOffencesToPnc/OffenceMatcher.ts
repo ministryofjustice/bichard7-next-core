@@ -4,11 +4,11 @@ import isSequenceValid from "src/lib/isSequenceValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
-import offenceHasFinalResult from "../enrichCourtCases/offenceMatcher/offenceHasFinalResult"
-import { offencesHaveEqualResults } from "../enrichCourtCases/offenceMatcher/resultsAreEqual"
 import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
+import offenceHasFinalResult from "./offenceHasFinalResult"
+import { offencesHaveEqualResults } from "./resultsAreEqual"
 
 export type Candidate = {
   adjudicationMatch: boolean

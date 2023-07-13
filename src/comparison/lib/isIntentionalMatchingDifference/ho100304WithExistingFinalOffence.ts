@@ -1,5 +1,5 @@
 import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingComparisonOutput"
-import offenceHasFinalResult from "src/enrichAho/enrichFunctions/enrichCourtCases/offenceMatcher/offenceHasFinalResult"
+import offenceHasFinalResult from "src/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "src/types/ExceptionCode"
 
