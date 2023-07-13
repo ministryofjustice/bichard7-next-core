@@ -37,14 +37,6 @@ const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCa
   return false
 }
 
-const convictionDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  const matchingConvictionDates =
-    !!pncOffence.adjudication?.sentenceDate &&
-    !!hoOffence.ConvictionDate &&
-    hoOffence.ConvictionDate?.getTime() === pncOffence.adjudication?.sentenceDate.getTime()
-  return matchingConvictionDates
-}
-
 const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   if (hoOffence.ActualOffenceStartDate.StartDate.toISOString() !== pncOffence.offence.startDate.toISOString()) {
     return false
@@ -59,12 +51,6 @@ const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean 
   }
 
   return false
-}
-
-const startDatesMatch = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
-  const pncStartDate = pncOffence.offence.startDate
-  return hoStartDate.getTime() === pncStartDate.getTime()
 }
 
 const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
@@ -130,14 +116,12 @@ const generateCandidate = (
   }
   const candidate: Candidate = {
     adjudicationMatch: false,
-    convictionDateMatch: convictionDatesMatch(hoOffence, pncOffence.pncOffence),
     exactDateMatch: false,
     fuzzyDateMatch: true,
     hoOffence,
     manualCcrMatch: false,
     manualSequenceMatch: false,
-    pncOffence,
-    startDateMatch: false
+    pncOffence
   }
 
   if (hasManualMatch(hoOffence)) {
@@ -164,10 +148,6 @@ const generateCandidate = (
 
   if (!datesMatchApproximately(hoOffence, pncOffence.pncOffence)) {
     return
-  }
-
-  if (startDatesMatch(hoOffence, pncOffence.pncOffence)) {
-    candidate.startDateMatch = true
   }
 
   candidate.exactDateMatch = datesMatchExactly(hoOffence, pncOffence.pncOffence)
