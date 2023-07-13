@@ -4,6 +4,7 @@ INPUT_FILE=$1
 outdir="./summary"
 cache_dir=/tmp/comparison
 
+rm -rf $outdir
 mkdir -p $outdir
 
 while read line; do
