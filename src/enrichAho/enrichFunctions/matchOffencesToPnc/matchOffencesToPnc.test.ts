@@ -777,6 +777,9 @@ describe("matchOffencesToPnc", () => {
 
   describe("HO100328", () => {
     it.todo("should raise exception when penalty and court cases are matched")
+    it.todo(
+      "should raise exception when penalty and court cases are matched even if the penalty case has final disposals"
+    )
   })
 
   describe("HO100329", () => {

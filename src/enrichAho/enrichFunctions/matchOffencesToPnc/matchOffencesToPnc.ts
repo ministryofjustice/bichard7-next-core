@@ -9,6 +9,7 @@ import offenceHasFinalResult from "./offenceHasFinalResult"
 
 export type PncOffenceWithCaseRef = {
   caseReference: string
+  caseType: CaseType
   pncOffence: PncOffence
 }
 
@@ -85,8 +86,15 @@ const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
   return pncCase.penaltyCaseReference
 }
 
+const getCaseType = (pncCase: PncCourtCase | PncPenaltyCase): CaseType =>
+  "courtCaseReference" in pncCase ? CaseType.court : CaseType.penalty
+
 const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
-  courtCases?.map((cc) => cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc) }))).flat() ?? []
+  courtCases
+    ?.map((cc) =>
+      cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc), caseType: getCaseType(cc) }))
+    )
+    .flat() ?? []
 
 const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome => {
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
