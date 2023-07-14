@@ -1,20 +1,19 @@
 import type { HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
-import type { KeyValue } from "../../../types/KeyValue"
 import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
 const GENERATED_PNC_FILENAME_MAX_LENGTH = 54
 
 const deduplicate = (input: string[]): string[] =>
-  Object.values(
-    input.reduce((acc: KeyValue<string>, val) => {
+  input
+    .reduce((acc: { key: string; val: string }[], val) => {
       const key = val.trim().toLowerCase().replace(/\s+/g, " ")
-      if (!(key in acc)) {
-        acc[key] = val
+      if (!acc.find((x) => x.key === key)) {
+        acc.push({ key, val })
       }
       return acc
-    }, {})
-  )
+    }, [])
+    .map((x) => x.val)
 
 const deduplicateBailConditions = (conditions: string[]): string[] =>
   deduplicate(conditions.filter((c) => c.length > 0))
