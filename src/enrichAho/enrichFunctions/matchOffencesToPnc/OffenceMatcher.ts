@@ -4,6 +4,7 @@ import isSequenceValid from "src/lib/isSequenceValid"
 import type { Offence } from "src/types/AnnotatedHearingOutcome"
 import type Exception from "src/types/Exception"
 import { ExceptionCode } from "src/types/ExceptionCode"
+import { CaseType } from "./annotatePncMatch"
 import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
@@ -57,6 +58,10 @@ class OffenceMatcher {
 
   get matchedPncOffences(): PncOffenceWithCaseRef[] {
     return [...this.matches.values()]
+  }
+
+  get hasPenaltyCase(): boolean {
+    return this.pncOffences.some((pncOffence) => pncOffence.caseType === CaseType.penalty)
   }
 
   unmatchedCandidates(options: CandidateFilterOptions = {}): Map<Offence, Candidate[]> {
@@ -199,20 +204,29 @@ class OffenceMatcher {
     }, new Set<string>())
 
     const hoOffences = group.reduce((acc, candidate) => acc.add(candidate.hoOffence), new Set<Offence>())
-    const pncOffences = group.reduce(
-      (acc, candidate) => acc.add(candidate.pncOffence),
-      new Set<PncOffenceWithCaseRef>()
+    const pncOffences = Array.from(
+      group.reduce((acc, candidate) => acc.add(candidate.pncOffence), new Set<PncOffenceWithCaseRef>())
     )
 
     if (
       matchingCourtCaseReferences.size > 1 &&
-      (!offencesHaveEqualResults(Array.from(hoOffences)) || pncOffences.size !== hoOffences.size)
+      (!offencesHaveEqualResults(Array.from(hoOffences)) || pncOffences.length !== hoOffences.size)
     ) {
+      const courtCaseMatched = pncOffences.some((pncOffence) => pncOffence.caseType === CaseType.court)
+      const penaltyCaseMatched = pncOffences.some((pncOffence) => pncOffence.caseType === CaseType.penalty)
+
       for (const hoOffence of hoOffences) {
-        exceptions.push({
-          code: ExceptionCode.HO100332,
-          path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
-        })
+        if (courtCaseMatched && penaltyCaseMatched) {
+          exceptions.push({
+            code: ExceptionCode.HO100328,
+            path: errorPaths.case.asn
+          })
+        } else {
+          exceptions.push({
+            code: ExceptionCode.HO100332,
+            path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
+          })
+        }
       }
       return exceptions
     } else if (!offencesHaveEqualResults(Array.from(hoOffences))) {
@@ -225,7 +239,7 @@ class OffenceMatcher {
       return exceptions
     }
 
-    const nonFinalPncOffences = Array.from(pncOffences.values()).filter((o) => !offenceHasFinalResult(o.pncOffence))
+    const nonFinalPncOffences = pncOffences.filter((o) => !offenceHasFinalResult(o.pncOffence))
 
     if (hoOffences.size < nonFinalPncOffences.length) {
       exceptions.push(ho100304)
@@ -344,9 +358,11 @@ class OffenceMatcher {
   }
 
   matchOffences() {
-    this.matchFullCourtCases({ includeFinal: false })
-    this.matchGroups({ includeFinal: false })
-    this.matchFullCourtCases({ includeFinal: true })
+    if (!this.hasPenaltyCase) {
+      this.matchFullCourtCases({ includeFinal: false })
+      this.matchGroups({ includeFinal: false })
+      this.matchFullCourtCases({ includeFinal: true })
+    }
     this.matchGroups({ includeFinal: true })
   }
 
