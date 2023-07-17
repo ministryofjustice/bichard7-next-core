@@ -162,6 +162,8 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     // Add offences in court
     offenceMatcher.unmatchedHoOffences.forEach((hoOffence) => {
       hoOffence.AddedByTheCourt = true
+      hoOffence.ManualCourtCaseReference = undefined
+      hoOffence.CourtCaseReferenceNumber = undefined
 
       if (multipleMatches) {
         // TODO: We need to come back and understand the logic for which court case to allocate the new offence to
