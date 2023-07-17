@@ -1,8 +1,8 @@
 import { readFileSync } from "fs"
 import parseSpiResult from "../../parse/parseSpiResult"
-import populateDefendant from "./populateDefendant"
 import type { OffencesResult } from "./PopulateOffences"
 import PopulateOffences from "./PopulateOffences"
+import populateDefendant from "./populateDefendant"
 
 describe("populateDefendant", () => {
   const message = readFileSync("test-data/input-message-001.xml", "utf-8")
@@ -14,5 +14,14 @@ describe("populateDefendant", () => {
     jest.spyOn(PopulateOffences.prototype, "execute").mockReturnValue({} as OffencesResult)
     expect(result).toBeDefined()
     expect(result).toMatchSnapshot()
+  })
+
+  it("should remove excess spaces from the given name", () => {
+    courtResult.Session.Case.Defendant.CourtIndividualDefendant!.PersonDefendant.BasePersonDetails.PersonName.PersonGivenName1 =
+      "John  Smith"
+    const result = populateDefendant(courtResult)
+
+    jest.spyOn(PopulateOffences.prototype, "execute").mockReturnValue({} as OffencesResult)
+    expect(result.DefendantDetail?.PersonName.GivenName).toStrictEqual(["John Smith"])
   })
 })
