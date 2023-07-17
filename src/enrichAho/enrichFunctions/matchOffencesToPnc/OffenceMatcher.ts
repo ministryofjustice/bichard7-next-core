@@ -167,20 +167,39 @@ class OffenceMatcher {
   groupOffences(options: CandidateFilterOptions = {}): Candidate[][] {
     const groups: Candidate[][] = []
 
-    for (const [hoOffence, candidates] of this.unmatchedCandidates(options).entries()) {
-      let foundMatch = false
+    const candidates = new Set<Candidate>(Array.from(this.unmatchedCandidates(options).values()).flat())
 
-      for (const group of groups) {
-        if (this.hoOffencesSharePncOffenceMatch(hoOffence, group[0].hoOffence, options)) {
-          group.push(...candidates)
-          foundMatch = true
+    const findGroup = (candidateSet: Set<Candidate>): Candidate[] => {
+      const startingPoint = candidates.values().next().value
+      const group = new Set<Candidate>([startingPoint])
+
+      let addedToGroup = true
+      while (addedToGroup) {
+        addedToGroup = false
+        for (const candidate of candidateSet.values()) {
+          if (group.has(candidate)) {
+            continue
+          }
+          for (const groupCandidate of group) {
+            if (
+              candidate.hoOffence === groupCandidate.hoOffence ||
+              candidate.pncOffence === groupCandidate.pncOffence
+            ) {
+              group.add(candidate)
+              addedToGroup = true
+            }
+          }
         }
       }
 
-      if (!foundMatch) {
-        if (candidates.length > 0) {
-          groups.push(candidates)
-        }
+      return Array.from(group.values())
+    }
+
+    while (candidates.size > 0) {
+      const group = findGroup(candidates)
+      groups.push(group)
+      for (const candidate of group) {
+        candidates.delete(candidate)
       }
     }
 
@@ -327,13 +346,15 @@ class OffenceMatcher {
       return
     }
 
-    for (const candidate of candidates) {
-      if (
-        !this.pncOffenceWasAlreadyMatched(candidate.pncOffence) &&
-        !this.hoOffenceWasAlreadyMatched(candidate.hoOffence)
-      ) {
-        this.matches.set(candidate.hoOffence, candidate.pncOffence)
-      }
+    const hoOffences = Array.from(
+      candidates.reduce((acc, candidate) => acc.add(candidate.hoOffence), new Set<Offence>())
+    )
+    const pncOffences = Array.from(
+      candidates.reduce((acc, candidate) => acc.add(candidate.pncOffence), new Set<PncOffenceWithCaseRef>())
+    )
+
+    for (const index of pncOffences.keys()) {
+      this.matches.set(hoOffences[index], pncOffences[index])
     }
   }
 
