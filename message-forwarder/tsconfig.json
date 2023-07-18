@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020", "dom"],
+    "module": "CommonJS",
+    "target": "ES2020",
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "build",
+    "types": ["node", "jest"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "composite": true,
+    "declaration": true,
+    "baseUrl": "./"
+  },
+  "include": ["src/**/*.ts"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
+}
