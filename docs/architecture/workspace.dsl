@@ -223,7 +223,6 @@ workspace "Bichard" {
     logStash -> openSearch
     cloudWatchLogs -> logStash
 
-    prometheus -> sns
     sns -> pagerDuty "Sends message"
     sns -> slackLambda "Sends message"
     slackLambda -> slack "Sends message" "via TLS Webhook"
