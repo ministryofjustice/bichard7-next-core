@@ -13,6 +13,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.370.0",
     "mqtt": "^4.3.7"
   }
 }
