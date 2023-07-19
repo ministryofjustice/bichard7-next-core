@@ -76,7 +76,7 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4566:4566"
+      - 4566:4566
     volumes:
       - "${PWD}/environment/localstack/init:/etc/localstack/init"
     environment:
