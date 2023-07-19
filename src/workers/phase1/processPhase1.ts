@@ -6,19 +6,18 @@ import { conductorLog } from "conductor/src/utils"
 import postgres from "postgres"
 import { isError } from "src/comparison/types"
 import phase1 from "src/index"
-import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import PncGateway from "src/lib/PncGateway"
+import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
-import insertErrorListNotes from "src/lib/insertErrorListNotes"
-import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import logger from "src/lib/logging"
-import PncGateway from "src/lib/PncGateway"
+import saveErrorListRecord from "src/lib/saveErrorListRecord"
 import { Phase1ResultType } from "src/types/Phase1Result"
-import EventCategory from "../../types/EventCategory"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
+import EventCategory from "../../types/EventCategory"
 
 const taskDefName = "process_phase1"
 const bucket = process.env.PHASE1_BUCKET_NAME
@@ -87,8 +86,7 @@ const processPhase1: ConductorWorker = {
       // Store in Bichard DB if necessary
       const dbResult = await db
         .begin(async () => {
-          const recordId = await insertErrorListRecord(db, result)
-          await insertErrorListNotes(db, recordId, result)
+          await saveErrorListRecord(db, result)
         })
         .catch((e) => e)
 

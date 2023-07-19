@@ -32,7 +32,7 @@ const generateTriggersNoteText = (result: Phase1SuccessResult): string => {
   return `Trigger codes: ${segments.join(", ")}.`
 }
 
-const insertErrorListRecord = async (sql: Sql, error_id: number, result: Phase1SuccessResult): Promise<void> => {
+const insertErrorListNotes = async (sql: Sql, error_id: number, result: Phase1SuccessResult): Promise<void> => {
   const notesText = [generateTriggersNoteText(result), generateExceptionsNoteText(result)]
   try {
     for (const noteText of notesText) {
@@ -54,4 +54,4 @@ const insertErrorListRecord = async (sql: Sql, error_id: number, result: Phase1S
   }
 }
 
-export default insertErrorListRecord
+export default insertErrorListNotes
