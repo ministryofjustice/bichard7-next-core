@@ -12,6 +12,7 @@ const main = async () => {
       console.log("Received message")
       await forwardMessage(message, mqGateway)
     })
+    console.log(`Subscribed to ${sourceQueue}`)
   } catch (e) {
     console.error(e)
   }

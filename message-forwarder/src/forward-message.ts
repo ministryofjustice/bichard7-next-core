@@ -11,10 +11,9 @@ const destination = process.env.DESTINATION ?? "HEARING_OUTCOME_INPUT_QUEUE"
 
 const forwardMessage = async (message: string, mqGateway: MqGateway): PromiseResult<void> => {
   if (destinationType === "mq") {
-    console.log("Sending to MQ")
-    return mqGateway.sendMessage(message, destination)
+    await mqGateway.sendMessage(message, destination)
+    console.log("Sent to MQ")
   } else if (destinationType === "s3") {
-    console.log("Sending to S3")
     const client = new S3Client(s3Config)
     const command = new PutObjectCommand({
       Body: message,
@@ -24,6 +23,7 @@ const forwardMessage = async (message: string, mqGateway: MqGateway): PromiseRes
 
     try {
       await client.send(command)
+      console.log("Sent to S3")
     } catch (e) {
       return e as Error
     }
