@@ -5,6 +5,8 @@ import { isError } from "../Result"
 import type MqConfig from "./MqConfig"
 import deconstructServers from "./deconstructServers"
 
+type SubscriptionCallback = (message: string) => void
+
 const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
   initialReconnectDelay: 1000,
   maxReconnectDelay: 3000,
@@ -12,7 +14,7 @@ const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
   useExponentialBackOff: false
 }
 
-const readMessage = (message: Client.Message): PromiseResult<string> => {
+const readMessage = (message: Client.Message): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     message.readString("utf-8", (error: Error | null, buffer?: string) => {
       if (error) {
@@ -26,23 +28,6 @@ const readMessage = (message: Client.Message): PromiseResult<string> => {
   })
 }
 
-const getMessage = (client: Client, queueName: string): Promise<Client.Message> => {
-  const headers = {
-    destination: queueName
-  }
-
-  return new Promise<Client.Message>((resolve, reject) => {
-    const callback: Client.MessageCallback = (error: Error | null, message: Client.Message) => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve(message)
-      }
-    }
-
-    client.subscribe(headers, callback)
-  })
-}
 export default class MqGateway {
   private readonly connectionOptions: connect.ConnectOptions[]
 
@@ -141,19 +126,21 @@ export default class MqGateway {
     })
   }
 
-  async getMessage(queueName: string): PromiseResult<string> {
-    const client = await this.connectIfRequired()
+  async subscribe(queueName: string, callback: SubscriptionCallback): Promise<void> {
+    await this.connectIfRequired()
 
-    if (isError(client)) {
-      return client
+    const headers = {
+      destination: queueName
     }
 
-    try {
-      const message = await getMessage(client, queueName)
-      const messageContent = await readMessage(message)
-      return messageContent
-    } catch (error) {
-      return <Error>error
-    }
+    this.client?.subscribe(headers, (error: Error | null, message: Client.Message) => {
+      if (error) {
+        console.error(error)
+      } else {
+        readMessage(message)
+          .then((messageContent) => callback(messageContent))
+          .catch((e) => e)
+      }
+    })
   }
 }
