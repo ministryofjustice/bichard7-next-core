@@ -9,17 +9,17 @@ top to bottom direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", "", $tags="")
-System(ExISS, "ExISS", "", $tags="")
+Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="")
+System(ExISS, "ExISS", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.MessageTransferLambda_boundary", "Message Transfer Lambda", $tags="") {
-  Component(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", "", $tags="")
-  Component(Bichard.MessageTransferLambda.Transferlambda, "Transfer lambda", "", $tags="")
+  ComponentQueue(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.MessageTransferLambda.Transferlambda, "Transfer lambda", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(ExISS, Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "", $tags="")
-Rel_D(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, Bichard.MessageTransferLambda.Transferlambda, "", $tags="")
-Rel_D(Bichard.MessageTransferLambda.Transferlambda, Bichard.IncomingMessageHandlerStepFunction, "", $tags="")
+Rel_D(ExISS, Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, Bichard.MessageTransferLambda.Transferlambda, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.MessageTransferLambda.Transferlambda, Bichard.IncomingMessageHandlerStepFunction, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

@@ -9,36 +9,36 @@ left to right direction
 
 AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_1, "CJSE", $tags="CJSE") {
-  System(Bichard, "Bichard", "", $tags="")
-  System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")
-  System(ExISS, "ExISS", "", $tags="")
+  System(Bichard, "Bichard", $descr="", $tags="", $link="")
+  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
+  System(ExISS, "ExISS", $descr="", $tags="", $link="")
 }
 
 AddBoundaryTag("HMCTS", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_2, "HMCTS", $tags="HMCTS") {
-  System(CommonPlatform, "Common Platform", "", $tags="")
-  System(Libra, "Libra", "", $tags="")
+  System(CommonPlatform, "Common Platform", $descr="", $tags="", $link="")
+  System(Libra, "Libra", $descr="", $tags="", $link="")
 }
 
 AddBoundaryTag("Home Office - Police", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
-  System(PoliceNationalComputer, "Police National Computer", "", $tags="")
+  System(PoliceNationalComputer, "Police National Computer", $descr="", $tags="", $link="")
 }
 
-Person(PoliceUser, "Police User", "", $tags="")
-System(CJSM, "CJSM", "", $tags="")
+Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
+System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
-Rel_D(PoliceUser, PSNProxy, "Uses", $tags="")
-Rel_D(PoliceUser, PoliceNationalComputer, "Uses", $tags="")
-Rel_D(CJSM, PoliceUser, "Gets email", $tags="")
-Rel_D(CommonPlatform, ExISS, "Sends result of a court case", $tags="")
-Rel_D(Libra, ExISS, "Sends result of a court case", $tags="")
-Rel_D(PSNProxy, PoliceNationalComputer, "Uses", $tags="")
-Rel_D(Bichard, PSNProxy, "", $tags="")
-Rel_D(PSNProxy, PoliceNationalComputer, "", $tags="")
-Rel_D(PSNProxy, Bichard, "", $tags="")
-Rel_D(Bichard, CJSM, "Sends verification code", $tags="")
-Rel_D(ExISS, Bichard, "", $tags="")
+Rel_D(PoliceUser, PSNProxy, "Uses", $techn="", $tags="", $link="")
+Rel_D(PoliceUser, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
+Rel_D(CJSM, PoliceUser, "Gets email", $techn="", $tags="", $link="")
+Rel_D(CommonPlatform, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
+Rel_D(Libra, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
+Rel_D(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, PoliceNationalComputer, "", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
+Rel_D(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
+Rel_D(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

@@ -11,17 +11,17 @@ skinparam svgDimensionStyle false
 skinparam preserveAspectRatio meet
 AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_1, "CJSE", $tags="CJSE") {
-  System(Bichard, "Bichard", "", $tags="")[[../container/]]
-  System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")[[../../psn-proxy/context/]]
-  System(ExISS, "ExISS", "", $tags="")[[../../exiss/context/]]
+  System(Bichard, "Bichard", $descr="", $tags="", $link="../container/")
+  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="../../psn-proxy/context/")
+  System(ExISS, "ExISS", $descr="", $tags="", $link="../../exiss/context/")
 }
 
-System(CJSM, "CJSM", "", $tags="")[[../../cjsm/context/]]
+System(CJSM, "CJSM", $descr="", $tags="", $link="../../cjsm/context/")
 
-Rel_D(Bichard, PSNProxy, "", $tags="")
-Rel_D(PSNProxy, Bichard, "", $tags="")
-Rel_D(Bichard, CJSM, "Sends verification code", $tags="")
-Rel_D(ExISS, Bichard, "", $tags="")
+Rel_D(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
+Rel_D(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
+Rel_D(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

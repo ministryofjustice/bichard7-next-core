@@ -10,54 +10,54 @@ top to bottom direction
 
 skinparam svgDimensionStyle false
 skinparam preserveAspectRatio meet
-System(CJSM, "CJSM", "", $tags="")[[../../cjsm/context/]]
-System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")[[../../psn-proxy/context/]]
-System(ExISS, "ExISS", "", $tags="")[[../../exiss/context/]]
+System(CJSM, "CJSM", $descr="", $tags="", $link="../../cjsm/context/")
+System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="../../psn-proxy/context/")
+System(ExISS, "ExISS", $descr="", $tags="", $link="../../exiss/context/")
 
 System_Boundary("Bichard_boundary", "Bichard", $tags="") {
-  Container(Bichard.Beanconnect, "Beanconnect", "", $tags="")
-  Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", "", $tags="")[[../component/]]
-  Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", "", $tags="")[[../component/]]
-  Container(Bichard.EventLambda, "Event Lambda", "", $tags="")
-  Container(Bichard.EventHandlerStepFunction, "Event Handler Step Function", "", $tags="")[[../component/]]
-  Container(Bichard.ActiveMQ, "Active MQ", "Active MQ", "", $tags="")
-  Container(Bichard.NginxAuthProxy, "Nginx Auth Proxy", "Nginx", "", $tags="")
-  ContainerDb(Bichard.BichardDatabase, "Bichard Database", "PostgreSQL", "", $tags="")
-  Container(Bichard.EmailSystem, "Email System", "Postfix", "", $tags="")
-  Container(Bichard.BichardJavaApplication, "Bichard Java Application", "Java EE", "", $tags="")
-  Container(Bichard.BichardUserService, "Bichard User Service", "Next.js, TypeScript & React", "An application to provide user authentication and user management", $tags="")
-  Container(Bichard.AuditLog, "Audit Log", "", $tags="")[[../component/]]
-  Container(Bichard.StaticFileService, "Static File Service", "", $tags="")
-  Container(Bichard.Reporting, "Reporting", "", $tags="")[[../component/]]
-  Container(Bichard.Monitoring, "Monitoring", "", $tags="")[[../component/]]
+  Container(Bichard.Beanconnect, "Beanconnect", $techn="", $descr="", $tags="", $link="")
+  Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="", $descr="", $tags="", $link="../component/")
+  Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="../component/")
+  Container(Bichard.EventLambda, "Event Lambda", $techn="", $descr="", $tags="", $link="")
+  Container(Bichard.EventHandlerStepFunction, "Event Handler Step Function", $techn="", $descr="", $tags="", $link="../component/")
+  Container(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
+  Container(Bichard.NginxAuthProxy, "Nginx Auth Proxy", $techn="Nginx", $descr="", $tags="", $link="")
+  ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
+  Container(Bichard.EmailSystem, "Email System", $techn="Postfix", $descr="", $tags="", $link="")
+  Container(Bichard.BichardJavaApplication, "Bichard Java Application", $techn="Java EE", $descr="", $tags="", $link="")
+  Container(Bichard.BichardUserService, "Bichard User Service", $techn="Next.js, TypeScript & React", $descr="An application to provide user authentication and user management", $tags="", $link="")
+  Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="../component/")
+  Container(Bichard.StaticFileService, "Static File Service", $techn="", $descr="", $tags="", $link="")
+  Container(Bichard.Reporting, "Reporting", $techn="", $descr="", $tags="", $link="../component/")
+  Container(Bichard.Monitoring, "Monitoring", $techn="", $descr="", $tags="", $link="../component/")
 }
 
-Rel_D(Bichard.AuditLog, Bichard.BichardDatabase, "", $tags="")
-Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $tags="")
-Rel_D(Bichard.Reporting, Bichard.AuditLog, "", $tags="")
-Rel_D(Bichard.Reporting, Bichard.StaticFileService, "", $tags="")
-Rel_D(Bichard.Reporting, Bichard.EmailSystem, "", $tags="")
-Rel_D(Bichard.Reporting, Bichard.BichardDatabase, "", $tags="")
-Rel_D(Bichard.Monitoring, Bichard.BichardJavaApplication, "", $tags="")
-Rel_D(Bichard.BichardJavaApplication, Bichard.Beanconnect, "", $tags="")
-Rel_D(Bichard.Beanconnect, PSNProxy, "", $tags="")
-Rel_D(PSNProxy, Bichard.NginxAuthProxy, "", $tags="")
-Rel_D(Bichard.EmailSystem, CJSM, "Sends verification code", $tags="")
-Rel_D(Bichard.BichardUserService, Bichard.EmailSystem, "Sends verification code", $tags="")
-Rel_D(Bichard.NginxAuthProxy, Bichard.BichardJavaApplication, "", $tags="")
-Rel_D(Bichard.NginxAuthProxy, Bichard.BichardUserService, "Uses", $tags="")
-Rel_D(Bichard.NginxAuthProxy, Bichard.StaticFileService, "", $tags="")
-Rel_D(Bichard.BichardUserService, Bichard.BichardDatabase, "Reads from / Writes to", $tags="")
-Rel_D(Bichard.BichardJavaApplication, Bichard.BichardDatabase, "Reads from / Writes to", $tags="")
-Rel_D(ExISS, Bichard.MessageTransferLambda, "", $tags="")
-Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction, Bichard.AuditLog, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction, Bichard.ActiveMQ, "", $tags="")
-Rel_D(Bichard.ActiveMQ, Bichard.EventLambda, "", $tags="")
-Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction, "", $tags="")
-Rel_D(Bichard.EventHandlerStepFunction, Bichard.AuditLog, "", $tags="")
-Rel_D(Bichard.ActiveMQ, Bichard.BichardJavaApplication, "", $tags="")
-Rel_D(Bichard.BichardJavaApplication, Bichard.ActiveMQ, "", $tags="")
+Rel_D(Bichard.AuditLog, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Reporting, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Reporting, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Reporting, Bichard.EmailSystem, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Reporting, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Monitoring, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.BichardJavaApplication, Bichard.Beanconnect, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.Beanconnect, PSNProxy, "", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, Bichard.NginxAuthProxy, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.EmailSystem, CJSM, "Sends verification code", $techn="", $tags="", $link="")
+Rel_D(Bichard.BichardUserService, Bichard.EmailSystem, "Sends verification code", $techn="", $tags="", $link="")
+Rel_D(Bichard.NginxAuthProxy, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.NginxAuthProxy, Bichard.BichardUserService, "Uses", $techn="", $tags="", $link="")
+Rel_D(Bichard.NginxAuthProxy, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.BichardUserService, Bichard.BichardDatabase, "Reads from / Writes to", $techn="", $tags="", $link="")
+Rel_D(Bichard.BichardJavaApplication, Bichard.BichardDatabase, "Reads from / Writes to", $techn="", $tags="", $link="")
+Rel_D(ExISS, Bichard.MessageTransferLambda, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.ActiveMQ, Bichard.EventLambda, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.EventHandlerStepFunction, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.ActiveMQ, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.BichardJavaApplication, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

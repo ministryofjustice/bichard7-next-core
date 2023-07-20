@@ -9,17 +9,17 @@ left to right direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.AuditLog, "Audit Log", "", $tags="")
-Container(Bichard.EventLambda, "Event Lambda", "", $tags="")
+Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
+Container(Bichard.EventLambda, "Event Lambda", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler Step Function", $tags="") {
-  Component(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", "", $tags="")
-  Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", "", $tags="")
+  ComponentQueue(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction.EventS3bucket, "", $tags="")
-Rel_D(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $tags="")
-Rel_D(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLog, "", $tags="")
+Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction.EventS3bucket, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

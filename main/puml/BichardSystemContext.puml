@@ -9,17 +9,17 @@ left to right direction
 
 AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_1, "CJSE", $tags="CJSE") {
-  System(Bichard, "Bichard", "", $tags="")
-  System(PSNProxy, "PSN Proxy", "Q-Solution", $tags="")
-  System(ExISS, "ExISS", "", $tags="")
+  System(Bichard, "Bichard", $descr="", $tags="", $link="")
+  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
+  System(ExISS, "ExISS", $descr="", $tags="", $link="")
 }
 
-System(CJSM, "CJSM", "", $tags="")
+System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
-Rel_D(Bichard, PSNProxy, "", $tags="")
-Rel_D(PSNProxy, Bichard, "", $tags="")
-Rel_D(Bichard, CJSM, "Sends verification code", $tags="")
-Rel_D(ExISS, Bichard, "", $tags="")
+Rel_D(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
+Rel_D(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
+Rel_D(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
+Rel_D(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

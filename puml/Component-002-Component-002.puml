@@ -11,25 +11,25 @@ left to right direction
 
 skinparam svgDimensionStyle false
 skinparam preserveAspectRatio meet
-Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", "", $tags="")
-Container(Bichard.ActiveMQ, "Active MQ", "Active MQ", "", $tags="")
-Container(Bichard.AuditLog, "Audit Log", "", $tags="")
+Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="", $descr="", $tags="", $link="")
+Container(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
+Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.IncomingMessageHandlerStepFunction_boundary", "Incoming Message Handler Step Function", $tags="") {
-  Component(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "Internal Incoming S3 bucket", "Blah blah", $tags="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "Store Message", "", $tags="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "Send to Bichard", "", $tags="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", "", $tags="")
+  ComponentQueue(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "Internal Incoming S3 bucket", $techn="", $descr="Blah blah", $tags="", $link="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "Store Message", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "Send to Bichard", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $tags="")
-Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $tags="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $tags="")
+Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $techn="", $tags="", $link="")
+Rel_D(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml
