@@ -1,9 +1,7 @@
-import type { PostgresError, Sql } from "postgres"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "src/types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import { QualityCheckStatus } from "src/types/ErrorListRecord"
-import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import ResolutionStatus from "src/types/ResolutionStatus"
 
@@ -75,42 +73,4 @@ const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListR
   }
 }
 
-const insertErrorListRecord = async (sql: Sql, result: Phase1SuccessResult): Promise<number> => {
-  const errorListRecord = convertResultToErrorListRecord(result)
-  let newRecordId: number | undefined
-  try {
-    const newRecordResult = await sql<ErrorListRecord[]>`
-      INSERT INTO br7own.error_list ${sql(errorListRecord)} RETURNING *`
-
-    if (!newRecordResult[0].error_id) {
-      throw new Error("Error inserting to error_list table")
-    }
-    newRecordId = newRecordResult[0].error_id
-
-    for (const trigger of result.triggers) {
-      const triggerRecord: ErrorListTriggerRecord = {
-        error_id: newRecordResult[0].error_id,
-        trigger_code: trigger.code,
-        status: ResolutionStatus.UNRESOLVED,
-        create_ts: new Date()
-      }
-      if (trigger.offenceSequenceNumber) {
-        triggerRecord.trigger_item_identity = String(trigger.offenceSequenceNumber)
-      }
-      await sql`
-        INSERT INTO br7own.error_list_triggers ${sql(triggerRecord)}`
-    }
-  } catch (e) {
-    const error = e as PostgresError
-    if (error.severity !== "NOTICE") {
-      console.error(e)
-      throw error
-    }
-  }
-  if (newRecordId === undefined) {
-    throw new Error("Error inserting new error_list record")
-  }
-  return newRecordId
-}
-
-export default insertErrorListRecord
+export default convertResultToErrorListRecord

@@ -2,7 +2,7 @@ import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 
-const getErrorListRecord = async (db: Sql, result: Phase1SuccessResult): Promise<number | undefined> => {
+const fetchErrorListRecordId = async (db: Sql, result: Phase1SuccessResult): Promise<number | undefined> => {
   const correlationId = result.correlationId
 
   try {
@@ -19,4 +19,4 @@ const getErrorListRecord = async (db: Sql, result: Phase1SuccessResult): Promise
   }
 }
 
-export default getErrorListRecord
+export default fetchErrorListRecordId

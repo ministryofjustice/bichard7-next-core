@@ -31,9 +31,9 @@ type ErrorListRecord = {
   court_name?: string
   resolution_ts?: Date
   msg_received_ts: Date
-  error_resolved_by?: string
-  trigger_resolved_by?: string
-  error_resolved_ts?: Date
+  error_resolved_by?: string | null
+  trigger_resolved_by?: string | null
+  error_resolved_ts?: Date | null
   trigger_resolved_ts?: Date
   defendant_name?: string
   org_for_police_filter?: string

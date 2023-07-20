@@ -12,9 +12,9 @@ import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
+import saveErrorListRecord from "src/lib/database/saveErrorListRecord"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import logger from "src/lib/logging"
-import saveErrorListRecord from "src/lib/saveErrorListRecord"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
@@ -71,13 +71,11 @@ const processPhase1: ConductorWorker = {
       )
     )
 
-    const correlationId = extractCorrelationIdFromAhoXml(message)
-
     const result = await phase1(message, pncGateway, auditLogger)
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,
-        outputData: { result: { ...result, correlationId } },
+        outputData: { result: { ...result } },
         status: "FAILED_WITH_TERMINAL_ERROR"
       }
     }
@@ -95,7 +93,7 @@ const processPhase1: ConductorWorker = {
           logs,
           outputData: {
             result: {
-              correlationId,
+              correlationId: result.correlationId,
               auditLogEvents: [],
               resultType: Phase1ResultType.failure
             }
