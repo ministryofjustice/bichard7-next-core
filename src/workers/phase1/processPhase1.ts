@@ -86,7 +86,7 @@ const processPhase1: ConductorWorker = {
         .begin(async () => {
           await saveErrorListRecord(db, result)
         })
-        .catch((e) => e)
+        .catch((e) => console.error(e))
 
       if (isError(dbResult)) {
         return {

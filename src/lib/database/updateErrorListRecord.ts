@@ -28,7 +28,7 @@ const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRec
 
 const updateErrorListTriggers = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
   const existingTriggers = await db<ErrorListTriggerRecord[]>`
-    SELECT * FROM br7own.error_list_triggers WHERE error_id = ${result.correlationId}`
+    SELECT * FROM br7own.error_list_triggers WHERE error_id = ${recordId}`
 
   const newTriggers = result.triggers.filter((trigger) =>
     existingTriggers.some(
@@ -47,7 +47,9 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1Su
     const updateFields = generateUpdateFields(result)
     const updateResult = await db<ErrorListRecord[]>`
       UPDATE br7own.error_list SET ${db(updateFields)} WHERE error_id = ${recordId}`
-
+    if (updateResult.count !== 1) {
+      throw new Error("Error updating error_list table - no rows updated")
+    }
     await updateErrorListTriggers(db, recordId, result)
   } catch (e) {
     const error = e as PostgresError
