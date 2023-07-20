@@ -1,21 +1,28 @@
-import MqGateway from "./MqGateway/MqGateway"
+import type { Message } from "@stomp/stompjs"
+import { Client } from "@stomp/stompjs"
+import { WebSocket } from "ws"
 import createMqConfig from "./MqGateway/createMqConfig"
 import forwardMessage from "./forward-message"
+Object.assign(global, { WebSocket })
 
 const mqConfig = createMqConfig()
-const mqGateway = new MqGateway(mqConfig)
 const sourceQueue = process.env.SOURCE_QUEUE ?? "PHASE_1_RESUBMIT_QUEUE"
 
-const main = async () => {
-  try {
-    await mqGateway.subscribe(sourceQueue, async (message) => {
-      console.log("Received message")
-      await forwardMessage(message, mqGateway)
-    })
-    console.log(`Subscribed to ${sourceQueue}`)
-  } catch (e) {
-    console.error(e)
+const client = new Client({
+  brokerURL: mqConfig.url,
+  connectHeaders: {
+    login: mqConfig.username,
+    passcode: mqConfig.password
   }
+})
+
+console.log(`Connecting to ${mqConfig.url}`)
+client.onConnect = () => {
+  console.log("Connected")
+  client.subscribe(sourceQueue, async (message: Message) => {
+    console.log("Received message")
+    await forwardMessage(message.body, client)
+  })
 }
 
-main()
+client.activate()
