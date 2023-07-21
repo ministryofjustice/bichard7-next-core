@@ -1,7 +1,7 @@
+import type { z } from "zod"
 import type {
   addressSchema,
   amountSpecifiedInResultSchema,
-  annotatedHearingOutcomeSchema,
   caseSchema,
   criminalProsecutionReferenceSchema,
   dateSpecifiedInResultSchema,
@@ -21,7 +21,7 @@ import type {
   resultSchema,
   urgentSchema
 } from "../schemas/annotatedHearingOutcome"
-import type { z } from "zod"
+import { annotatedHearingOutcomeSchema } from "../schemas/annotatedHearingOutcome"
 
 export type AnnotatedHearingOutcome = z.infer<typeof annotatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>
@@ -44,3 +44,6 @@ export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSche
 export type DateSpecifiedInResult = z.infer<typeof dateSpecifiedInResultSchema>
 export type NumberSpecifiedInResult = z.infer<typeof numberSpecifiedInResultSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>
+
+const partialAho = annotatedHearingOutcomeSchema.deepPartial()
+export type PartialAho = z.infer<typeof partialAho>

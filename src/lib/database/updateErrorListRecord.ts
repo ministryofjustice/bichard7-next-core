@@ -1,10 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "src/types/ErrorListRecord"
-import type ErrorListTriggerRecord from "src/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import ResolutionStatus from "src/types/ResolutionStatus"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
-import insertErrorListTriggers from "./insertErrorListTriggers"
 
 const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)
@@ -26,23 +24,7 @@ const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRec
   }
 }
 
-const updateErrorListTriggers = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
-  const existingTriggers = await db<ErrorListTriggerRecord[]>`
-    SELECT * FROM br7own.error_list_triggers WHERE error_id = ${recordId}`
-
-  const newTriggers = result.triggers.filter((trigger) =>
-    existingTriggers.some(
-      (existingTrigger) =>
-        trigger.code === existingTrigger.trigger_code &&
-        trigger.offenceSequenceNumber === existingTrigger.trigger_item_identity
-    )
-  )
-
-  return insertErrorListTriggers(db, recordId, newTriggers)
-}
-
-const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<number> => {
-  let updateId: number | undefined
+const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
   try {
     const updateFields = generateUpdateFields(result)
     const updateResult = await db<ErrorListRecord[]>`
@@ -50,7 +32,6 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1Su
     if (updateResult.count !== 1) {
       throw new Error("Error updating error_list table - no rows updated")
     }
-    await updateErrorListTriggers(db, recordId, result)
   } catch (e) {
     const error = e as PostgresError
     if (error.severity !== "NOTICE") {
@@ -58,10 +39,6 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1Su
       throw error
     }
   }
-  if (!updateId) {
-    throw new Error("Error updating error_list table")
-  }
-  return updateId
 }
 
 export default updateErrorListRecord

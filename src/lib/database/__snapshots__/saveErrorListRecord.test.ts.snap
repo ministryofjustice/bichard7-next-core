@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`saveErrorListRecord should insert the appropriate resources 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Trigger codes: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should insert the appropriate resources 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add and remove triggers with notes 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Trigger codes: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add and remove triggers with notes 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add and remove triggers with notes 3`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Triggers added: 1 x TRPR0002.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add and remove triggers with notes 4`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Triggers deleted: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add and remove triggers with notes 5`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100, 1 x HO100310.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add new triggers with notes 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Trigger codes: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add new triggers with notes 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add new triggers with notes 3`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Triggers added: 1 x TRPR0002.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and add new triggers with notes 4`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100, 1 x HO100310.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and delete removed triggers with notes 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Trigger codes: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and delete removed triggers with notes 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and delete removed triggers with notes 3`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Triggers deleted: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`saveErrorListRecord should update the error record and delete removed triggers with notes 4`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;

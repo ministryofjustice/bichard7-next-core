@@ -2,7 +2,6 @@ import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
-import insertErrorListTriggers from "./insertErrorListTriggers"
 
 const insertErrorListRecord = async (db: Sql, result: Phase1SuccessResult): Promise<number> => {
   const errorListRecord = convertResultToErrorListRecord(result)
@@ -15,7 +14,6 @@ const insertErrorListRecord = async (db: Sql, result: Phase1SuccessResult): Prom
       throw new Error("Error inserting to error_list table")
     }
     newRecordId = newRecordResult[0].error_id
-    await insertErrorListTriggers(db, newRecordId, result.triggers)
   } catch (e) {
     const error = e as PostgresError
     if (error.severity !== "NOTICE") {

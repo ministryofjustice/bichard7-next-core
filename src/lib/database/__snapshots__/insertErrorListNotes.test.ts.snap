@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`insertErrorListNotes should insert the error list notes 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Trigger codes: 1 x TRPR0001.",
+  "user_id": "System",
+}
+`;
+
+exports[`insertErrorListNotes should insert the error list notes 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "note_id": Any<Number>,
+  "note_text": "Error codes: 1 x HO100100.",
+  "user_id": "System",
+}
+`;

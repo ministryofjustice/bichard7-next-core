@@ -28,14 +28,6 @@ const s3Config = createS3Config()
 const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
 
-const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
-  const matchResult = ahoXml.match(/<msg:MessageIdentifier>([^<]*)<\/msg:MessageIdentifier>/)
-  if (matchResult) {
-    return matchResult[1]
-  }
-  return "Correlation ID Not Found"
-}
-
 const processPhase1: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
@@ -81,12 +73,7 @@ const processPhase1: ConductorWorker = {
     }
 
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
-      // Store in Bichard DB if necessary
-      const dbResult = await db
-        .begin(async () => {
-          await saveErrorListRecord(db, result)
-        })
-        .catch((e) => console.error(e))
+      const dbResult = await saveErrorListRecord(db, result)
 
       if (isError(dbResult)) {
         return {

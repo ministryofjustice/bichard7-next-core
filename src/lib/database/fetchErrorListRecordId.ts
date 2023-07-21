@@ -1,10 +1,7 @@
 import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "src/types/ErrorListRecord"
-import type { Phase1SuccessResult } from "src/types/Phase1Result"
 
-const fetchErrorListRecordId = async (db: Sql, result: Phase1SuccessResult): Promise<number | undefined> => {
-  const correlationId = result.correlationId
-
+const fetchErrorListRecordId = async (db: Sql, correlationId: string): Promise<number | undefined> => {
   try {
     const queryResult = await db<ErrorListRecord[]>`
       SELECT error_id FROM br7own.error_list WHERE message_id = ${correlationId}`
