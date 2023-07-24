@@ -1,6 +1,7 @@
 import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "src/types/ErrorListRecord"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import ResolutionStatus from "src/types/ResolutionStatus"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRecord> => {
@@ -10,14 +11,14 @@ const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRec
     ptiurn: record.ptiurn,
     org_for_police_filter: record.org_for_police_filter,
     error_count: record.error_count,
-    // error_report: record.error_report,
+    error_report: record.error_report,
     error_reason: record.error_reason,
     error_quality_checked: record.error_quality_checked,
     annotated_msg: record.annotated_msg,
     updated_msg: record.updated_msg,
-    // error_status: ResolutionStatus.UNRESOLVED,
-    // error_resolved_by: null,
-    // error_resolved_ts: null,
+    error_status: ResolutionStatus.UNRESOLVED,
+    error_resolved_by: null,
+    error_resolved_ts: null,
     user_updated_flag: record.user_updated_flag,
     error_insert_ts: record.error_insert_ts
   }
