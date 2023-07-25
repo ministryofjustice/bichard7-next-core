@@ -136,6 +136,7 @@ services:
       TAC_SUFFIX: M5B
       ENVIRONMENT: test
       PROCESSING_VALIDATION_PERCENTAGE: 100
+      ENABLE_PHASE_1: "${ENABLE_PHASE_1:-false}"
       ENABLE_PHASE_2: "${ENABLE_PHASE_2:-true}"
       ENABLE_PHASE_3: "${ENABLE_PHASE_3:-true}"
       PNC_API_KEY: "${PNC_API_KEY}"
