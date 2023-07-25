@@ -19,8 +19,7 @@ const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRec
     error_status: ResolutionStatus.UNRESOLVED,
     error_resolved_by: null,
     error_resolved_ts: null,
-    user_updated_flag: record.user_updated_flag,
-    error_insert_ts: record.error_insert_ts
+    user_updated_flag: record.user_updated_flag
   }
 }
 
