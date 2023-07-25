@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`insertErrorListTriggers should insert the error list triggers 1`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "resolved_by": null,
+  "resolved_ts": null,
+  "status": 1,
+  "trigger_code": "TRPR0001",
+  "trigger_id": Any<Number>,
+  "trigger_item_identity": null,
+}
+`;
+
+exports[`insertErrorListTriggers should insert the error list triggers 2`] = `
+{
+  "create_ts": Any<Date>,
+  "error_id": Any<Number>,
+  "resolved_by": null,
+  "resolved_ts": null,
+  "status": 1,
+  "trigger_code": "TRPR0001",
+  "trigger_id": Any<Number>,
+  "trigger_item_identity": "3",
+}
+`;

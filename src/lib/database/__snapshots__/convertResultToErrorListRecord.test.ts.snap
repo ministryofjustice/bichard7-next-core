@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convertResultToErrorListRecord should generate the error list record 1`] = `
+{
+  "annotated_msg": Any<String>,
+  "asn": "1101ZD0100000410770Y",
+  "court_code": "B01EF01",
+  "court_date": 2011-09-26T00:00:00.000Z,
+  "court_name": "Magistrates' Courts London Croydon",
+  "court_reference": "01ZD0304208",
+  "court_room": "01",
+  "create_ts": Any<Date>,
+  "defendant_name": "TRTHREE TRPSTWO",
+  "error_count": 1,
+  "error_insert_ts": Any<Date>,
+  "error_quality_checked": 1,
+  "error_reason": "HO100100",
+  "error_report": "HO100100||br7:ArrestSummonsNumber",
+  "error_status": 1,
+  "is_urgent": 0,
+  "message_id": Any<String>,
+  "msg_received_ts": Any<Date>,
+  "org_for_police_filter": "01ZD",
+  "phase": 1,
+  "pnc_update_enabled": "Y",
+  "ptiurn": "01ZD0304208",
+  "trigger_count": 1,
+  "trigger_insert_ts": Any<Date>,
+  "trigger_quality_checked": 1,
+  "trigger_reason": "TRPR0001",
+  "trigger_status": 1,
+  "updated_msg": Any<String>,
+  "user_updated_flag": 0,
+}
+`;

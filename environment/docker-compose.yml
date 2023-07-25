@@ -11,6 +11,7 @@ services:
       ACTIVEMQ_WEBADMIN_PASSWORD: ${DEFAULT_PASSWORD}
     ports:
       - 61616:61616
+      - 61614:61614
       - 61613:61613
       - 8161:8161
     healthcheck:
@@ -19,6 +20,27 @@ services:
       timeout: 2s
       retries: 10
       start_period: 20s
+
+  message-forwarder:
+    image: message-forwarder
+    build: ../message-forwarder
+    environment:
+      DESTINATION_TYPE: s3
+      DESTINATION: phase1
+      # DESTINATION_TYPE: mq
+      # DESTINATION: HEARING_OUTCOME_INPUT_QUEUE
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_URL: ws://activemq:61614
+      S3_AWS_ACCESS_KEY_ID: FAKE
+      S3_AWS_SECRET_ACCESS_KEY: FAKE
+      S3_ENDPOINT: http://localstack:4566
+      S3_REGION: eu-west-2
+    depends_on:
+      activemq:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
 
   postgres:
     image: postgres:14
@@ -45,24 +67,22 @@ services:
       AWS_ACCESS_KEY_ID: FAKE
       AWS_REGION: eu-west-2
       AWS_SECRET_ACCESS_KEY: FAKE
-      CJSE_CONDUCTOR_DB_TYPE: postgres
-      CJSE_CONDUCTOR_ELASTICSEARCH_URL: http://elasticsearch:9200
-      CJSE_CONDUCTOR_ELASTICSEARCH_VERSION: 6
       CJSE_CONDUCTOR_ENABLE_HTTP: "true"
-      CJSE_CONDUCTOR_INDEXING_ENABLED: "true"
-      CJSE_CONDUCTOR_POSTGRES_PASSWORD: conductor
-      CJSE_CONDUCTOR_POSTGRES_URL: jdbc:postgresql://postgres:5432/conductor
-      CJSE_CONDUCTOR_POSTGRES_USER: conductor
-      CJSE_CONDUCTOR_QUEUE_BATCHSIZE: 10
-      CJSE_CONDUCTOR_QUEUE_ENDPOINT: http://localstack:4566
-      CJSE_CONDUCTOR_QUEUE_TYPE: sqs
       CJSE_CONDUCTOR_UI_USERNAME: ${DEFAULT_USER}
       CJSE_CONDUCTOR_UI_PASSWORD: ${DEFAULT_PASSWORD}
+      CONDUCTOR_EVENTQUEUES_SQS_BATCHSIZE: 10
+      CONDUCTOR_EVENTQUEUES_SQS_POLLTIMEDURATION: 100ms
+      CONDUCTOR_EVENTQUEUES_SQS_ENDPOINT: http://localstack:4566
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/conductor
+      SPRING_DATASOURCE_USERNAME: conductor
+      SPRING_DATASOURCE_PASSWORD: conductor
     depends_on:
       postgres:
         condition: service_healthy
       localstack:
         condition: service_healthy
+      message-forwarder:
+        condition: service_started
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
@@ -76,7 +96,7 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4566:4566"
+      - 4566:4566
     volumes:
       - "${PWD}/environment/localstack/init:/etc/localstack/init"
     environment:
@@ -116,9 +136,11 @@ services:
       TAC_SUFFIX: M5B
       ENVIRONMENT: test
       PROCESSING_VALIDATION_PERCENTAGE: 100
+      ENABLE_PHASE_1: "${ENABLE_PHASE_1:-false}"
       ENABLE_PHASE_2: "${ENABLE_PHASE_2:-true}"
       ENABLE_PHASE_3: "${ENABLE_PHASE_3:-true}"
       PNC_API_KEY: "${PNC_API_KEY}"
+      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/Phase1ResubmitQueue"
     healthcheck:
       test: curl --insecure --fail https://localhost:9443/bichard-ui/Health
       interval: 2s
@@ -132,6 +154,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      message-forwarder:
+        condition: service_started
 
   beanconnect:
     image: beanconnect
