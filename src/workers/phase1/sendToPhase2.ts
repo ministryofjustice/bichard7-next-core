@@ -1,16 +1,16 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "conductor/src/getTaskConcurrency"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog } from "conductor/src/utils"
 import { isError } from "src/comparison/types"
+import { MqGateway } from "src/lib/MqGateway"
 import { dateReviver } from "src/lib/axiosDateTransformer"
 import createMqConfig from "src/lib/createMqConfig"
 import logger from "src/lib/logging"
-import { MqGateway } from "src/lib/MqGateway"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource, AuditLogEventOptions } from "../../types/AuditLogEvent"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)

@@ -1,4 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
 import logger from "src/lib/logging"

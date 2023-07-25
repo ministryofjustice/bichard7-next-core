@@ -1,4 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import axios from "axios"
 import getTaskConcurrency from "conductor/src/getTaskConcurrency"
 import type { Task } from "conductor/src/types/Task"

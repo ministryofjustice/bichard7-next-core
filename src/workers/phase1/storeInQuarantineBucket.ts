@@ -1,4 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "conductor/src/getTaskConcurrency"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog } from "conductor/src/utils"

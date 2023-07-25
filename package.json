@@ -119,7 +119,7 @@
     "@aws-sdk/client-dynamodb": "^3.363.0",
     "@aws-sdk/client-s3": "^3.367.0",
     "@aws-sdk/signature-v4-crt": "^3.363.0",
-    "@io-orkes/conductor-typescript": "^0.0.2",
+    "@io-orkes/conductor-javascript": "^1.2.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.96",
     "aws-sdk": "^2.1413.0",
     "axios": "^1.4.0",

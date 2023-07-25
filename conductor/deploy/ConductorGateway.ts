@@ -1,4 +1,4 @@
-import type { WorkflowDef } from "@io-orkes/conductor-typescript"
+import type { WorkflowDef } from "@io-orkes/conductor-javascript"
 import axios from "axios"
 import type { EventHandlerDef } from "conductor/src/types/EventHandlerDef"
 import type { TaskDef } from "conductor/src/types/TaskDef"
