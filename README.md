@@ -14,7 +14,7 @@ This will pull down the images from ECR so you don't need to build them. On an M
 
 You can also run subsets of the infrastructure using:
 
-- `npm run bichard` will run old Bichard, ActiveMQ, Postgres, BeanConnect, PNC Emulator, User Service, Auth Proxy and the new UI
+- `npm run bichard-legacy` will run old Bichard, ActiveMQ, Postgres, BeanConnect, PNC Emulator, User Service, Auth Proxy and the new UI
 - `npm run conductor` will run Conductor, ElasticSearch, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, ElasticSearch, Postgres, Localstack and will not run the worker (for development purposes)
 
