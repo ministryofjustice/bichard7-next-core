@@ -29,4 +29,18 @@ const tasks = [
 const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })
 
 logger.info("Starting polling...")
+
+const signalHandler = (signal: string) => {
+  logger.info(`${signal} signal received.`)
+  taskManager.stopPolling()
+}
+
+process.on("SIGINT", signalHandler)
+process.on("SIGTERM", signalHandler)
+process.on("SIGQUIT", signalHandler)
+
+process.on("beforeExit", (code) => {
+  logger.info("Exiting gracefully with code: ", code)
+})
+
 taskManager.startPolling()
