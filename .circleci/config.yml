@@ -227,6 +227,11 @@ jobs:
       - install_core
       - attach_workspace:
           at: .
+      - fetch_docker_image:
+          image: nodejs
+      - run:
+          name: Build message forwarder image
+          command: docker-compose -f environment/docker-compose.yml build message-forwarder
       - run:
           name: Run the infrastructure
           command: npm run all-no-worker

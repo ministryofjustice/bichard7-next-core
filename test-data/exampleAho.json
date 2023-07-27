@@ -1,0 +1,250 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "Y",
+        "SourceReference": {
+          "DocumentName": "SPI TRPSTWO TRTHREE",
+          "DocumentType": "SPI Case Result",
+          "UniqueID": "CID-332cc4c7-f0cd-44c8-9b05-c460bdfd2184"
+        },
+        "CourtHouseCode": 2576,
+        "CourtType": "MCA",
+        "CourtHouseName": "Magistrates' Courts London Croydon"
+      },
+      "Case": {
+        "PTIURN": "01ZD0304208",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": {
+          "MagistratesCourtReference": "01ZD0304208"
+        },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000410770Y",
+          "DefendantDetail": {
+            "PersonName": {
+              "Title": "Mr",
+              "GivenName": ["TRPSTWO"],
+              "FamilyName": "TRTHREE"
+            },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1,
+            "GeneratedPNCFilename": "TRTHREE/TRPSTWO"
+          },
+          "Address": {
+            "AddressLine1": "Scenario1 Address Line 1",
+            "AddressLine2": "Scenario1 Address Line 2",
+            "AddressLine3": "Scenario1 Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "__type": "NationalOffenceReason",
+                  "OffenceCode": {
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68",
+                    "Reason": "006",
+                    "FullCode": "TH68006"
+                  }
+                },
+                "DefendantOrOffender": {
+                  "Year": "11",
+                  "OrganisationUnitIdentifierCode": {
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "ZD",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "01ZD01"
+                  },
+                  "DefendantOrOffenderSequenceNumber": "00000410770",
+                  "CheckDigit": "Y"
+                },
+                "OffenceReasonSequence": "001"
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2010-11-28T00:00:00.000Z"
+              },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft of pedal cycle.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 1,
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 1015,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "Duration": [],
+                  "AmountSpecifiedInResult": [
+                    {
+                      "Amount": 100,
+                      "DecimalPlaces": 2,
+                      "Type": "Fine"
+                    }
+                  ],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Fined 100.",
+                  "ResultQualifierVariable": [],
+                  "ResultHalfLifeHours": 72,
+                  "BailCondition": [],
+                  "PNCAdjudicationExists": false,
+                  "ResultApplicableQualifierCode": [],
+                  "ResultClass": "Judgement with final result",
+                  "PNCDisposalType": 1015,
+                  "CourtType": "MCA"
+                }
+              ],
+              "OffenceCategory": "CE",
+              "RecordableOnPNCindicator": true,
+              "NotifiableToHOindicator": true,
+              "HomeOfficeClassification": "044/00",
+              "OffenceTitle": "Theft of pedal cycle"
+            },
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "__type": "NationalOffenceReason",
+                  "OffenceCode": {
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "RT",
+                    "Year": "88",
+                    "Reason": "191",
+                    "FullCode": "RT88191"
+                  }
+                },
+                "DefendantOrOffender": {
+                  "Year": "11",
+                  "OrganisationUnitIdentifierCode": {
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "ZD",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "01ZD01"
+                  },
+                  "DefendantOrOffenderSequenceNumber": "00000410770",
+                  "CheckDigit": "Y"
+                },
+                "OffenceReasonSequence": "002"
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2010-11-28T00:00:00.000Z"
+              },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 2,
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 3107,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "DEFENDANT MUST LIVE AT OUR HOUSE IN THE MIDDLE OF OUR STREET",
+                  "ResultQualifierVariable": [],
+                  "ResultHalfLifeHours": 72,
+                  "BailCondition": [],
+                  "PNCAdjudicationExists": false,
+                  "ResultApplicableQualifierCode": [],
+                  "ResultClass": "Judgement with final result",
+                  "PNCDisposalType": 3107,
+                  "CourtType": "MCA"
+                }
+              ],
+              "OffenceCategory": "CM",
+              "RecordableOnPNCindicator": false,
+              "NotifiableToHOindicator": false,
+              "HomeOfficeClassification": "809/01",
+              "OffenceTitle": "Use a motor vehicle on a road / public place without third party insurance"
+            }
+          ],
+          "PNCCheckname": "TRTHREE",
+          "PNCIdentifier": "2000/0410770Y"
+        },
+        "RecordableOnPNCindicator": true,
+        "CourtCaseReferenceNumber": "97/1626/008395Q",
+        "ForceOwner": {
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "ZD",
+          "BottomLevelCode": "00",
+          "OrganisationUnitCode": "01ZD00"
+        }
+      }
+    }
+  },
+  "Exceptions": [],
+  "PncQuery": {
+    "forceStationCode": "01ZD",
+    "checkName": "TRTHREE",
+    "pncId": "2000/0410770Y",
+    "courtCases": [
+      {
+        "courtCaseReference": "97/1626/008395Q",
+        "offences": [
+          {
+            "offence": {
+              "acpoOffenceCode": "12:15:24:1",
+              "cjsOffenceCode": "TH68006",
+              "title": "Theft of pedal cycle",
+              "sequenceNumber": 1,
+              "qualifier1": "",
+              "qualifier2": "",
+              "startDate": "2010-11-28T00:00:00.000Z",
+              "startTime": "00:00"
+            }
+          },
+          {
+            "offence": {
+              "acpoOffenceCode": "12:15:24:1",
+              "cjsOffenceCode": "RT88191",
+              "title": "Use a motor vehicle on a road / public place without third party insurance",
+              "sequenceNumber": 2,
+              "qualifier1": "",
+              "qualifier2": "",
+              "startDate": "2010-11-28T00:00:00.000Z",
+              "startTime": "00:00"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "PncQueryDate": "2022-12-15T00:00:00.000Z"
+}

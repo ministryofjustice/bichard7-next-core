@@ -6,19 +6,18 @@ import { conductorLog } from "conductor/src/utils"
 import postgres from "postgres"
 import { isError } from "src/comparison/types"
 import phase1 from "src/index"
-import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import PncGateway from "src/lib/PncGateway"
+import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
 import createS3Config from "src/lib/createS3Config"
+import saveErrorListRecord from "src/lib/database/saveErrorListRecord"
 import getFileFromS3 from "src/lib/getFileFromS3"
-import insertErrorListNotes from "src/lib/insertErrorListNotes"
-import insertErrorListRecord from "src/lib/insertErrorListRecord"
 import logger from "src/lib/logging"
-import PncGateway from "src/lib/PncGateway"
 import { Phase1ResultType } from "src/types/Phase1Result"
-import EventCategory from "../../types/EventCategory"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
+import EventCategory from "../../types/EventCategory"
 
 const taskDefName = "process_phase1"
 const bucket = process.env.PHASE1_BUCKET_NAME
@@ -28,14 +27,6 @@ if (!bucket) {
 const s3Config = createS3Config()
 const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
-
-const extractCorrelationIdFromAhoXml = (ahoXml: string): string => {
-  const matchResult = ahoXml.match(/<msg:MessageIdentifier>([^<]*)<\/msg:MessageIdentifier>/)
-  if (matchResult) {
-    return matchResult[1]
-  }
-  return "Correlation ID Not Found"
-}
 
 const processPhase1: ConductorWorker = {
   taskDefName,
@@ -72,32 +63,24 @@ const processPhase1: ConductorWorker = {
       )
     )
 
-    const correlationId = extractCorrelationIdFromAhoXml(message)
-
     const result = await phase1(message, pncGateway, auditLogger)
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,
-        outputData: { result: { ...result, correlationId } },
+        outputData: { result: { ...result } },
         status: "FAILED_WITH_TERMINAL_ERROR"
       }
     }
 
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
-      // Store in Bichard DB if necessary
-      const dbResult = await db
-        .begin(async () => {
-          const recordId = await insertErrorListRecord(db, result)
-          await insertErrorListNotes(db, recordId, result)
-        })
-        .catch((e) => e)
+      const dbResult = await saveErrorListRecord(db, result)
 
       if (isError(dbResult)) {
         return {
           logs,
           outputData: {
             result: {
-              correlationId,
+              correlationId: result.correlationId,
               auditLogEvents: [],
               resultType: Phase1ResultType.failure
             }
