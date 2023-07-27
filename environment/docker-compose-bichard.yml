@@ -1,0 +1,6 @@
+version: "3.2"
+services:
+  bichard7-liberty:
+    environment:
+      ENABLE_PHASE_1: "true"
+      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/HearingOutcomeInputQueue"
