@@ -267,13 +267,11 @@ services:
         condition: service_healthy
 
   audit-log-api:
-    image: natenho/mockaco
+    image: audit-log-api
     ports:
-      - 3011:5000
-    volumes:
-      - ./audit-log-api:/app/Mocks
+      - 7010:7010
     healthcheck:
-      test: wget -q http://localhost:5000/health -O -
+      test: curl --fail http://localhost:7010/health
       interval: 2s
       timeout: 2s
       retries: 10
