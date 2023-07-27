@@ -241,7 +241,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+          command: git clone --branch use-audit-log-api --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: Run the infrastructure
           command: npm run all-no-worker
@@ -258,7 +258,9 @@ jobs:
             MESSAGE_ENTRY_POINT: s3phase1
             AWS_URL: http://localhost:4566
             AUDIT_LOG_API_URL: http://localhost:7010
-          command: TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX npm run test:chunk
+          command: |
+            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
 
   test_api:
     machine:
