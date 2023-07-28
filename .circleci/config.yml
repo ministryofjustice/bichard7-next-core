@@ -80,6 +80,8 @@ commands:
           command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
+      - store_test_results:
+          path: /home/circleci/bichard7-next-tests/test-results.xml
 
 jobs:
   lint:
