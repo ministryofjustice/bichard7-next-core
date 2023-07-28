@@ -281,7 +281,7 @@ jobs:
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC and not @NextUI'
       - save_artifacts
 
   test_api:
