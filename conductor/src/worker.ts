@@ -39,7 +39,7 @@ process.on("SIGINT", signalHandler)
 process.on("SIGTERM", signalHandler)
 process.on("SIGQUIT", signalHandler)
 
-process.on("beforeExit", (code) => {
+process.on("exit", (code) => {
   logger.info("Exiting gracefully with code: ", code)
 })
 
