@@ -64,6 +64,23 @@ commands:
           working_directory: ~/bichard7-next
           command: make run-pg
 
+  save_artifacts:
+    steps:
+      - run:
+          name: Compress the artifacts for easier downloading
+          when: always
+          command: for file in ~/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
+      - run:
+          name: Create the saved_artifacts directory
+          when: always
+          command: mkdir ./saved_artifacts
+      - run:
+          name: Move the gzipped files across
+          when: always
+          command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
+      - store_artifacts:
+          path: /home/circleci/project/saved_artifacts
+
 jobs:
   lint:
     machine:
@@ -265,6 +282,7 @@ jobs:
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
             bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+      - save_artifacts
 
   test_api:
     machine:
