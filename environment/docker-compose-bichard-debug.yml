@@ -1,0 +1,14 @@
+version: "3.2"
+services:
+  bichard7-liberty:
+    image: bichard7-liberty-debug
+    ports:
+      - 9443:9443
+      - 7777:7777
+    command: "server debug defaultServer"
+    environment:
+      ENABLE_PHASE_1: "true"
+      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/HearingOutcomeInputQueue"
+      WLP_DEBUG_SUSPEND: "n"
+      WLP_DEBUG_ADDRESS: "7777"
+      WLP_DEBUG_REMOTE: "y"
