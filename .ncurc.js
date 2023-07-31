@@ -3,8 +3,8 @@
 const semver = new RegExp(
   /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?/
 ) // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-const pinned = []
-const ignored = [`bichard7-next-data-(${semver.source})`]
+const pinned = ["chalk"]
+const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit"]
 
 module.exports = {
   target: (package) => {
