@@ -1,6 +1,9 @@
 import type Exception from "src/types/Exception"
 
-const generateExceptionsNoteText = (exceptions: Exception[]): string => {
+const generateExceptionsNoteText = (exceptions: Exception[]): string | null => {
+  if (exceptions.length === 0) {
+    return null
+  }
   const counts = exceptions.reduce((acc: Record<string, number>, e: Exception) => {
     if (!acc[e.code]) {
       acc[e.code] = 0

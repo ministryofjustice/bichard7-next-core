@@ -30,6 +30,18 @@ Finally, to bring all of that infrastructure down again, you can use:
 npm run destroy
 ```
 
+### Running legacy Bichard in debug mode
+
+1. Use Intellij (VS Code doesn't work for debugging) to open the [bichard7-next](https://github.com/ministryofjustice/bichard7-next) project
+1. Build a debug image using `make clean build-liberty-debug`
+1. Run the legacy infrastructure using `npm run bichard-legacy-debug`
+1. In IntelliJ select `Run >> Edit Configurations` from the menu
+1. Click the `+` button in the top left and select `Remote JVM Debug`
+1. Set the port to `7777` and give the configuration a name
+1. Select `Run >> Debug` and then choose the configuration you just created
+1. Click the green bug icon and you should see `Connected to the target VM, address: 'localhost:7777', transport: 'socket'` printed out
+1. Set breakpoints then use Bichard and IntelliJ will let you step through the code
+
 ### Building on an M1 Mac
 
 We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore it is necessary to build the relevant images yourself.

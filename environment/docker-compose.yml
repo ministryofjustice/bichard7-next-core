@@ -120,6 +120,8 @@ services:
       WLP_LOGGING_CONSOLE_LOGLEVEL: "info"
       WLP_LOGGING_CONSOLE_SOURCE: "message,trace,accessLog,ffdc,audit"
       WLP_LOGGING_APPS_WRITE_JSON: "true"
+      AUDIT_LOGGING_API_URL: http://audit-log-api:7010
+      AUDIT_LOGGING_API_KEY: dummy
       DB_USER: ${DEFAULT_USER}
       DB_PASSWORD: ${DEFAULT_PASSWORD}
       DB_HOST: postgres
@@ -155,6 +157,10 @@ services:
       postgres:
         condition: service_healthy
       message-forwarder:
+        condition: service_started
+      audit-log-api:
+        condition: service_healthy
+      event-handler:
         condition: service_started
 
   beanconnect:
@@ -263,14 +269,51 @@ services:
         condition: service_healthy
 
   audit-log-api:
-    image: natenho/mockaco
+    image: audit-log-api
     ports:
-      - 3011:5000
-    volumes:
-      - ./audit-log-api:/app/Mocks
+      - 7010:7010
     healthcheck:
-      test: wget -q http://localhost:5000/health -O -
+      test: curl --fail http://localhost:7010/health
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 10s
+    environment:
+      PORT: 7010
+      AWS_URL: http://localstack:4566
+      AWS_REGION: eu-west-2
+      DYNAMO_REGION: eu-west-2
+      AUDIT_LOG_TABLE_NAME: auditLogTable
+      AUDIT_LOG_EVENTS_TABLE_NAME: auditLogEventsTable
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_URL: tcp://activemq:61613
+      INTERNAL_INCOMING_MESSAGES_BUCKET: internalIncomingBucket
+      AUDIT_LOG_EVENTS_BUCKET: auditLogEventsBucket
+      S3_URL: http://localstack:4566
+      S3_REGION: eu-west-2
+      API_URL: http://localhost:7010
+      API_KEY: dummy
+      S3_AWS_ACCESS_KEY_ID: S3RVER
+      S3_AWS_SECRET_ACCESS_KEY: S3RVER
+      DYNAMO_AWS_ACCESS_KEY_ID: S3RVER
+      DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DEFAULT_USER}
+      DB_PASSWORD: ${DEFAULT_PASSWORD}
+      DB_SSL: "false"
+    depends_on:
+      localstack:
+        condition: service_healthy
+
+  event-handler:
+    image: event-handler
+    environment:
+      API_URL: http://audit-log-api:7010
+      API_KEY: dummy
+      MQ_USER: ${DEFAULT_USER}
+      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_URL: ws://activemq:61614
+    depends_on:
+      localstack:
+        condition: service_healthy

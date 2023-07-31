@@ -64,6 +64,25 @@ commands:
           working_directory: ~/bichard7-next
           command: make run-pg
 
+  save_artifacts:
+    steps:
+      - run:
+          name: Compress the artifacts for easier downloading
+          when: always
+          command: for file in ~/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
+      - run:
+          name: Create the saved_artifacts directory
+          when: always
+          command: mkdir ./saved_artifacts
+      - run:
+          name: Move the gzipped files across
+          when: always
+          command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
+      - store_artifacts:
+          path: /home/circleci/project/saved_artifacts
+      - store_test_results:
+          path: /home/circleci/bichard7-next-tests/test-results.xml
+
 jobs:
   lint:
     machine:
@@ -233,15 +252,39 @@ jobs:
           name: Build message forwarder image
           command: docker-compose -f environment/docker-compose.yml build message-forwarder
       - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+      - run:
+          name: NPM install tests dependencies
+          working_directory: ~/bichard7-next-tests
+          command: npm i
+      - run:
           name: Run the infrastructure
           command: npm run all-no-worker
       - run:
+          # currently quicker to run the worker separately due to data install
           name: Run the worker
           command: npm run conductor-worker
           background: true
       - run:
           name: Run e2e tests against core code
-          command: TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX npm run test:e2e:ci
+          working_directory: ~/bichard7-next-tests
+          environment:
+            RECORD: "true"
+            MESSAGE_ENTRY_POINT: s3phase1
+            AWS_URL: http://localhost:4566
+            AUDIT_LOG_API_URL: http://localhost:7010
+          command: |
+            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC and not @NextUI'
+      - save_artifacts
 
   test_api:
     machine:
