@@ -1,6 +1,6 @@
+const fs = require("fs")
 const path = require("path")
 const esbuild = require("esbuild")
-const fs = require("fs")
 const { buildOptions } = require("./build")
 
 async function findFiles(directory, extension, files = []) {

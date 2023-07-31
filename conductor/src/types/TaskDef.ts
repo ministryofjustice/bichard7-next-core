@@ -15,6 +15,7 @@ export type TaskDef = {
   retryDelaySeconds?: number
   responseTimeoutSeconds?: number
   concurrentExecLimit?: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   inputTemplate?: Record<string, any>
   rateLimitPerFrequency?: number
   rateLimitFrequencyInSeconds?: number
