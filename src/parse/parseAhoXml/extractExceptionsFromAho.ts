@@ -42,6 +42,7 @@ export default (xml: string): Exception[] => {
   }
   const offenceArray = rawParsedObj?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant?.Offence
   if (offenceArray) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     offenceArray.forEach((offence: any) => {
       const results = offence.Result
       if (results && !Array.isArray(results)) {
