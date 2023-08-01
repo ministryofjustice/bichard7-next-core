@@ -215,7 +215,7 @@
     "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.108",
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
-    "esbuild": "^0.18.17",
+    "esbuild": "^0.18.16",
     "esbuild-plugin-ignore": "^1.1.1",
     "fast-xml-parser": "^4.2.7",
     "lodash.differencewith": "^4.5.0",
