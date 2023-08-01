@@ -15,6 +15,7 @@ COPY scripts ./scripts
 COPY package.json .
 COPY package-lock.json .
 RUN npm ci
+RUN npm run install-standing-data
 
 COPY conductor ./conductor
 COPY src ./src
