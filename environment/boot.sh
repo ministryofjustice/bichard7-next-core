@@ -16,19 +16,20 @@ for image in "${IMAGES[@]}"; do
     fi
 done
 
-if [ "$NOWORKER" == "true" ]; then
-    DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
-else
-    DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml"
+
+DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
+if [ "$LEGACY" == "true" ]; then
+    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
+fi
+
+# should run by default
+if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
+    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
     eval "$DOCKER_COMPOSE build worker"
 fi
 
-if [ "$CI" == "true" ]; then
-    ATTEMPTS=5
-else
-    ATTEMPTS=1
-fi
 
+[ "$CI" == "true" ] && ATTEMPTS=5 || ATTEMPTS=1
 for i in $(seq 1 $ATTEMPTS); do
     echo "Setting up infrastructure"
     eval "$DOCKER_COMPOSE up -d --wait $SERVICES" && break
@@ -37,7 +38,9 @@ for i in $(seq 1 $ATTEMPTS); do
     fi
 done;
 
-for i in $(seq 1 $ATTEMPTS); do
-    echo "Setting up conductor"
-    npm run conductor-setup && break || sleep 5
-done;
+if [ "$LEGACY" == "false" ]; then
+    for i in $(seq 1 $ATTEMPTS); do
+        echo "Setting up conductor"
+        npm run conductor-setup && break || sleep 5
+    done;
+fi
