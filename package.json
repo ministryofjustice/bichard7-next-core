@@ -32,6 +32,7 @@
     "install-standing-data": "scripts/install-standing-data.sh",
     "all": "./environment/boot.sh",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
+    "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
     "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
     "activemq": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
     "conductor": "./environment/boot.sh conductor",
