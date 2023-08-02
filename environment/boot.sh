@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+LEGACY=${LEGACY:-"false"}
+NOWORKER=${NOWORKER:-"false"}
+
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
 
