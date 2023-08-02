@@ -63,7 +63,7 @@
     "tag": "latest"
   },
   "devDependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.379.1",
+    "@aws-sdk/lib-dynamodb": "^3.382.0",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
     "@types/diff": "^5.0.3",
@@ -118,17 +118,17 @@
     "wait-for-expect": "^3.0.2"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.379.1",
-    "@aws-sdk/client-s3": "^3.379.1",
+    "@aws-sdk/client-dynamodb": "^3.382.0",
+    "@aws-sdk/client-s3": "^3.382.0",
     "@aws-sdk/signature-v4-crt": "^3.378.0",
     "@io-orkes/conductor-typescript": "^0.0.2",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.107",
-    "aws-sdk": "^2.1426.0",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.108",
+    "aws-sdk": "^2.1427.0",
     "axios": "^1.4.0",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.107",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.108",
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
-    "esbuild": "^0.18.17",
+    "esbuild": "^0.18.16",
     "esbuild-plugin-ignore": "^1.1.1",
     "fast-xml-parser": "^4.2.7",
     "lodash.differencewith": "^4.5.0",
