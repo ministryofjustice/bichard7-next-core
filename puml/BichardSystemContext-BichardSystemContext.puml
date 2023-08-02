@@ -13,7 +13,7 @@ AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_1, "CJSE", $tags="CJSE") {
   System(Bichard, "Bichard", $descr="", $tags="", $link="../container/")
   System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="../../psn-proxy/context/")
-  System(ExISS, "ExISS", $descr="", $tags="", $link="../../exiss/context/")
+  System(ExISS, "ExISS", $descr="", $tags="", $link="")
 }
 
 System(CJSM, "CJSM", $descr="", $tags="", $link="../../cjsm/context/")
