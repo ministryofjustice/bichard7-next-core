@@ -4,6 +4,7 @@ import compareFiles from "src/comparison/workers/compareFiles"
 import generateDayTasks from "src/comparison/workers/generateDayTasks"
 import rerunDay from "src/comparison/workers/rerunDay"
 import logger from "src/lib/logging"
+import convertSpiToAho from "src/workers/incomingMessageHandler/convertSpiToAho"
 import processPhase1 from "src/workers/phase1/processPhase1"
 import sendToPhase2 from "src/workers/phase1/sendToPhase2"
 import storeAuditLogEvents from "src/workers/phase1/storeAuditLogEvents"
@@ -17,6 +18,7 @@ const client = new ConductorClient({
 })
 
 const tasks = [
+  convertSpiToAho,
   generateDayTasks,
   rerunDay,
   compareFiles,

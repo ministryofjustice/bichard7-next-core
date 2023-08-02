@@ -6,7 +6,7 @@
     {
       "action": "start_workflow",
       "start_workflow": {
-        "name": "core_phase1",
+        "name": "incoming_message_handler",
         "input": { "records": "${Records}" }
       }
     }

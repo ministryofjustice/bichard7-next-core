@@ -1,0 +1,111 @@
+{
+  "accessPolicy": {},
+  "name": "bichard_process",
+  "description": "The main processing workflow for Bichard",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "Process Until No Exceptions",
+      "taskReferenceName": "loop_process_phase_1",
+      "type": "DO_WHILE",
+      "inputParameters": {
+        "value": "${workflow.input.aho}"
+      },
+      "loopCondition": "$.process_phase1['result']['resultType'] !== 'exceptions'",
+      "loopOver": [
+        {
+          "name": "process_phase_1",
+          "taskReferenceName": "process_phase_1",
+          "inputParameters": {
+            "s3Path": "${extract_paths.output.result}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false
+        },
+        {
+          "name": "store_audit_log_events",
+          "taskReferenceName": "store_audit_log_events",
+          "inputParameters": {
+            "correlationId": "${process_phase1.output.result.correlationId}",
+            "auditLogEvents": "${merge_audit_log_events.output.result.auditLogEvents}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false
+        },
+        {
+          "name": "check_phase1_result",
+          "taskReferenceName": "check_phase1_result",
+          "inputParameters": {
+            "switchCaseValue": "${process_phase1.output.result.resultType}"
+          },
+          "type": "SWITCH",
+          "evaluatorType": "value-param",
+          "expression": "switchCaseValue",
+          "decisionCases": {
+            "exceptions": [
+              {
+                "name": "wait_for_resubmission",
+                "taskReferenceName": "wait_for_resubmission",
+                "inputParameters": {},
+                "type": "HUMAN",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              }
+            ],
+            "ignored": [
+              {
+                "name": "end_processing",
+                "taskReferenceName": "end_processing",
+                "inputParameters": {
+                  "terminationStatus": "COMPLETED"
+                },
+                "type": "TERMINATE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              }
+            ]
+          }
+        }
+      ],
+      "startDelay": 0,
+      "optional": false
+    },
+    {
+      "name": "store_audit_log_events",
+      "taskReferenceName": "record_send_to_phase2",
+      "inputParameters": {
+        "correlationId": "xxx"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "send_to_phase2",
+      "taskReferenceName": "send_to_phase2",
+      "inputParameters": {
+        "phase1Result": "xxx"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}
