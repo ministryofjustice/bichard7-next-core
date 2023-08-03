@@ -1,14 +1,11 @@
 import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
 import { defaultConcurrency } from "conductor/src/getTaskConcurrency"
-import compareFiles from "src/comparison/workers/compareFiles"
-import generateDayTasks from "src/comparison/workers/generateDayTasks"
-import rerunDay from "src/comparison/workers/rerunDay"
 import logger from "src/lib/logging"
+import processPhase1 from "src/workers/bichard_process/processPhase1"
+import readAhoFromDb from "src/workers/bichard_process/readAhoFromDb"
+import storeAuditLogEvents from "src/workers/common/storeAuditLogEvents"
 import convertSpiToAho from "src/workers/incomingMessageHandler/convertSpiToAho"
-import processPhase1 from "src/workers/phase1/processPhase1"
 import sendToPhase2 from "src/workers/phase1/sendToPhase2"
-import storeAuditLogEvents from "src/workers/phase1/storeAuditLogEvents"
-import storeInQuarantineBucket from "src/workers/phase1/storeInQuarantineBucket"
 import { captureWorkerExceptions } from "./utils"
 
 const client = new ConductorClient({
@@ -19,13 +16,13 @@ const client = new ConductorClient({
 
 const tasks = [
   convertSpiToAho,
-  generateDayTasks,
-  rerunDay,
-  compareFiles,
+  readAhoFromDb,
+  // generateDayTasks,
+  // rerunDay,
+  // compareFiles,
   processPhase1,
   sendToPhase2,
-  storeAuditLogEvents,
-  storeInQuarantineBucket
+  storeAuditLogEvents
 ].map(captureWorkerExceptions)
 
 const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })

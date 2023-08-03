@@ -5,19 +5,24 @@
   "version": 1,
   "tasks": [
     {
+      "name": "initialise_current_aho",
+      "taskReferenceName": "initialise_current_aho",
+      "type": "SET_VARIABLE",
+      "inputParameters": {
+        "current_aho": "${workflow.input.aho}"
+      }
+    },
+    {
       "name": "Process Until No Exceptions",
       "taskReferenceName": "loop_process_phase_1",
       "type": "DO_WHILE",
-      "inputParameters": {
-        "value": "${workflow.input.aho}"
-      },
-      "loopCondition": "$.process_phase1['result']['resultType'] !== 'exceptions'",
+      "loopCondition": "$.process_phase1['result']['resultType'] === 'exceptions'",
       "loopOver": [
         {
-          "name": "process_phase_1",
-          "taskReferenceName": "process_phase_1",
+          "name": "process_phase1",
+          "taskReferenceName": "process_phase1",
           "inputParameters": {
-            "s3Path": "${extract_paths.output.result}"
+            "aho": "${workflow.variables.current_aho}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -29,7 +34,7 @@
           "taskReferenceName": "store_audit_log_events",
           "inputParameters": {
             "correlationId": "${process_phase1.output.result.correlationId}",
-            "auditLogEvents": "${merge_audit_log_events.output.result.auditLogEvents}"
+            "auditLogEvents": "${process_phase1.output.result.auditLogEvents}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -55,6 +60,25 @@
                 "startDelay": 0,
                 "optional": false,
                 "asyncComplete": false
+              },
+              {
+                "name": "read_aho_from_db",
+                "taskReferenceName": "read_aho_from_db",
+                "inputParameters": {
+                  "correlationId": "${process_phase1.output.result.correlationId}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              },
+              {
+                "name": "set_current_aho_phase_1",
+                "taskReferenceName": "set_current_aho_phase_1",
+                "type": "SET_VARIABLE",
+                "inputParameters": {
+                  "current_aho": "${read_aho_from_db.output.aho}"
+                }
               }
             ],
             "ignored": [

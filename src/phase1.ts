@@ -7,47 +7,22 @@ import getAuditLogEvent from "./lib/auditLog/getAuditLogEvent"
 import getExceptionsGeneratedLog from "./lib/auditLog/getExceptionsGeneratedLog"
 import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
 import getTriggersGeneratedLog from "./lib/auditLog/getTriggersGeneratedLog"
-import getMessageType from "./lib/getMessageType"
 import isReopenedOrStatutoryDeclarationCase from "./lib/isReopenedOrStatutoryDeclarationCase"
-import { parseAhoXml } from "./parse/parseAhoXml"
-import parseSpiResult from "./parse/parseSpiResult"
-import transformSpiToAho from "./parse/transformSpiToAho"
 import generateTriggers from "./triggers/generate"
 import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
+import { AuditLogEventOptions, AuditLogEventSource } from "./types/AuditLogEvent"
 import type AuditLogger from "./types/AuditLogger"
-import { AuditLogEventSource, AuditLogEventOptions } from "./types/AuditLogEvent"
 import EventCategory from "./types/EventCategory"
 import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
 import type PncGatewayInterface from "./types/PncGatewayInterface"
 
-export const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome, string] => {
-  let hearingOutcome: AnnotatedHearingOutcome | Error
-  const messageType = getMessageType(message)
-
-  if (messageType === "SPIResults") {
-    const spiResult = parseSpiResult(message)
-    hearingOutcome = transformSpiToAho(spiResult)
-  } else if (messageType === "HearingOutcome") {
-    hearingOutcome = parseAhoXml(message)
-  } else {
-    throw new Error("Invalid incoming message format")
-  }
-
-  if (hearingOutcome instanceof Error) {
-    throw hearingOutcome
-  }
-
-  return [hearingOutcome, messageType]
-}
-
-export default async (
-  message: string,
+const phase1 = async (
+  hearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<Phase1Result> => {
   try {
-    const [hearingOutcome, messageType] = parseIncomingMessage(message)
     const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
     if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
@@ -73,9 +48,7 @@ export default async (
 
     const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
 
-    auditLogger.logEvent(
-      getIncomingMessageLog(enrichedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome, message, messageType)
-    )
+    auditLogger.logEvent(getIncomingMessageLog(enrichedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome))
 
     if (isError(enrichedHearingOutcome)) {
       throw enrichedHearingOutcome
@@ -139,3 +112,5 @@ export default async (
     }
   }
 }
+
+export default phase1
