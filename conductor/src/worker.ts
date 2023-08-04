@@ -1,11 +1,14 @@
 import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
 import { defaultConcurrency } from "conductor/src/getTaskConcurrency"
+import compareFiles from "src/comparison/workers/compareFiles"
+import generateDayTasks from "src/comparison/workers/generateDayTasks"
+import rerunDay from "src/comparison/workers/rerunDay"
 import logger from "src/lib/logging"
 import processPhase1 from "src/workers/bichard_process/processPhase1"
 import readAhoFromDb from "src/workers/bichard_process/readAhoFromDb"
+import sendToPhase2 from "src/workers/bichard_process/sendToPhase2"
 import storeAuditLogEvents from "src/workers/common/storeAuditLogEvents"
 import convertSpiToAho from "src/workers/incomingMessageHandler/convertSpiToAho"
-import sendToPhase2 from "src/workers/phase1/sendToPhase2"
 import { captureWorkerExceptions } from "./utils"
 
 const client = new ConductorClient({
@@ -17,9 +20,9 @@ const client = new ConductorClient({
 const tasks = [
   convertSpiToAho,
   readAhoFromDb,
-  // generateDayTasks,
-  // rerunDay,
-  // compareFiles,
+  generateDayTasks,
+  rerunDay,
+  compareFiles,
   processPhase1,
   sendToPhase2,
   storeAuditLogEvents

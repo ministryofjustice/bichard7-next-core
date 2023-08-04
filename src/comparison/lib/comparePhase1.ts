@@ -2,6 +2,7 @@ import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import logger from "src/lib/logging"
+import parseIncomingMessage from "src/parse/parseIncomingMessage"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { TriggerCode } from "src/types/TriggerCode"
@@ -9,8 +10,8 @@ import { matchingExceptions } from "tests/helpers/summariseMatching"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "../../../tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../../tests/helpers/getPncQueryTimeFromAho"
-import CoreHandler, { parseIncomingMessage } from "../../index"
 import { extractExceptionsFromAho, parseAhoXml } from "../../parse/parseAhoXml"
+import phase1Handler from "../../phase1"
 import convertAhoToXml from "../../serialise/ahoXml/generate"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
@@ -75,7 +76,9 @@ const comparePhase1 = async (
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
-    const coreResult = await CoreHandler(incomingMessage, pncGateway, auditLogger)
+
+    const [inputAho] = parseIncomingMessage(incomingMessage)
+    const coreResult = await phase1Handler(inputAho, pncGateway, auditLogger)
     if (coreResult.resultType === Phase1ResultType.failure) {
       throw Error("Failed to process")
     }
@@ -88,8 +91,6 @@ const comparePhase1 = async (
     if (parsedAho instanceof Error) {
       throw parsedAho
     }
-
-    const [inputAho] = parseIncomingMessage(incomingMessage)
 
     if (
       process.env.USE_NEW_MATCHER !== "false" &&
