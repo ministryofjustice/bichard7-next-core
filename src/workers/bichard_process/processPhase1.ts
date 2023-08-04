@@ -14,6 +14,7 @@ import createS3Config from "src/lib/createS3Config"
 import saveErrorListRecord from "src/lib/database/saveErrorListRecord"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import logger from "src/lib/logging"
+import putFileToS3 from "src/lib/putFileToS3"
 import parseAhoJson from "src/parse/parseAhoJson"
 import phase1 from "src/phase1"
 import { Phase1ResultType } from "src/types/Phase1Result"
@@ -92,6 +93,15 @@ const processPhase1: ConductorWorker = {
           status: "FAILED"
         }
       }
+    }
+
+    const maybeError = await putFileToS3(JSON.stringify(result.hearingOutcome), ahoS3Path, taskDataBucket, s3Config)
+    if (isError(maybeError)) {
+      logger.error(maybeError)
+      return Promise.resolve({
+        logs: [conductorLog("Could not put file to S3")],
+        status: "FAILED"
+      })
     }
 
     return {
