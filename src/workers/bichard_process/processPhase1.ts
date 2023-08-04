@@ -10,7 +10,10 @@ import PncGateway from "src/lib/PncGateway"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
 import createDbConfig from "src/lib/createDbConfig"
 import createPncApiConfig from "src/lib/createPncApiConfig"
+import createS3Config from "src/lib/createS3Config"
 import saveErrorListRecord from "src/lib/database/saveErrorListRecord"
+import getFileFromS3 from "src/lib/getFileFromS3"
+import logger from "src/lib/logging"
 import parseAhoJson from "src/parse/parseAhoJson"
 import phase1 from "src/phase1"
 import { Phase1ResultType } from "src/types/Phase1Result"
@@ -21,6 +24,12 @@ const taskDefName = "process_phase1"
 const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
 
+const s3Config = createS3Config()
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
+if (!taskDataBucket) {
+  throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
+}
+
 const processPhase1: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
@@ -28,17 +37,26 @@ const processPhase1: ConductorWorker = {
     const db = postgres(dbConfig)
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger()
-    const aho: unknown = task.inputData?.aho
     const logs: ConductorLog[] = []
+    const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
 
-    if (!aho) {
+    if (!ahoS3Path) {
       return Promise.resolve({
-        logs: [conductorLog("input aho must be supplied")],
+        logs: [conductorLog("s3Path must be specified")],
         status: "FAILED_WITH_TERMINAL_ERROR"
       })
     }
 
-    const parsedAho = parseAhoJson(aho)
+    const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
+    if (isError(ahoFileContent)) {
+      logger.error(ahoFileContent)
+      return Promise.resolve({
+        logs: [conductorLog("Could not retrieve file from S3")],
+        status: "FAILED"
+      })
+    }
+
+    const parsedAho = parseAhoJson(JSON.parse(ahoFileContent))
 
     auditLogger.logEvent(
       getAuditLogEvent(
@@ -78,7 +96,7 @@ const processPhase1: ConductorWorker = {
 
     return {
       logs,
-      outputData: { result },
+      outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents },
       status: "COMPLETED"
     }
   }

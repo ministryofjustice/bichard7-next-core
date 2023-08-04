@@ -5,24 +5,16 @@
   "version": 1,
   "tasks": [
     {
-      "name": "initialise_current_aho",
-      "taskReferenceName": "initialise_current_aho",
-      "type": "SET_VARIABLE",
-      "inputParameters": {
-        "current_aho": "${workflow.input.aho}"
-      }
-    },
-    {
       "name": "Process Until No Exceptions",
       "taskReferenceName": "loop_process_phase_1",
       "type": "DO_WHILE",
-      "loopCondition": "$.process_phase1['result']['resultType'] === 'exceptions'",
+      "loopCondition": "$.process_phase1['resultType'] === 'exceptions'",
       "loopOver": [
         {
           "name": "process_phase1",
           "taskReferenceName": "process_phase1",
           "inputParameters": {
-            "aho": "${workflow.variables.current_aho}"
+            "ahoS3Path": "${workflow.input.ahoS3Path}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -33,8 +25,8 @@
           "name": "store_audit_log_events",
           "taskReferenceName": "store_audit_log_events",
           "inputParameters": {
-            "correlationId": "${process_phase1.output.result.correlationId}",
-            "auditLogEvents": "${process_phase1.output.result.auditLogEvents}"
+            "correlationId": "${workflow.correlationId}",
+            "auditLogEvents": "${process_phase1.output.auditLogEvents}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -45,7 +37,7 @@
           "name": "check_phase1_result",
           "taskReferenceName": "check_phase1_result",
           "inputParameters": {
-            "switchCaseValue": "${process_phase1.output.result.resultType}"
+            "switchCaseValue": "${process_phase1.output.resultType}"
           },
           "type": "SWITCH",
           "evaluatorType": "value-param",
@@ -65,20 +57,13 @@
                 "name": "read_aho_from_db",
                 "taskReferenceName": "read_aho_from_db",
                 "inputParameters": {
-                  "correlationId": "${process_phase1.output.result.correlationId}"
+                  "correlationId": "${workflow.correlationId}",
+                  "ahoS3Path": "${workflow.input.ahoS3Path}"
                 },
                 "type": "SIMPLE",
                 "startDelay": 0,
                 "optional": false,
                 "asyncComplete": false
-              },
-              {
-                "name": "set_current_aho_phase_1",
-                "taskReferenceName": "set_current_aho_phase_1",
-                "type": "SET_VARIABLE",
-                "inputParameters": {
-                  "current_aho": "${read_aho_from_db.output.aho}"
-                }
               }
             ],
             "ignored": [
@@ -104,7 +89,7 @@
       "name": "send_to_phase2",
       "taskReferenceName": "send_to_phase2",
       "inputParameters": {
-        "aho": "${process_phase1.output.result.hearingOutcome}"
+        "ahoS3Path": "${workflow.input.ahoS3Path}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
@@ -115,7 +100,7 @@
       "name": "store_audit_log_events",
       "taskReferenceName": "record_send_to_phase2",
       "inputParameters": {
-        "correlationId": "${process_phase1.output.result.correlationId}",
+        "correlationId": "${workflow.correlationId}",
         "auditLogEvents": "${send_to_phase2.output.auditLogEvents}"
       },
       "type": "SIMPLE",
@@ -124,7 +109,7 @@
       "asyncComplete": false
     }
   ],
-  "inputParameters": [],
+  "inputParameters": ["ahoS3Path"],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,

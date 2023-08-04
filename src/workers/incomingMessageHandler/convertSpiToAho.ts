@@ -6,15 +6,23 @@ import { isError } from "src/comparison/types"
 import createS3Config from "src/lib/createS3Config"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import logger from "src/lib/logging"
+import putFileToS3 from "src/lib/putFileToS3"
 import parseSpiResult from "src/parse/parseSpiResult"
 import transformSpiToAho from "src/parse/transformSpiToAho/transformSpiToAho"
+import { v4 as uuid } from "uuid"
 
 const taskDefName = "convert_spi_to_aho"
-const bucket = process.env.PHASE1_BUCKET_NAME
-if (!bucket) {
+
+const s3Config = createS3Config()
+const incomingBucket = process.env.PHASE1_BUCKET_NAME
+if (!incomingBucket) {
   throw Error("PHASE1_BUCKET_NAME environment variable is required")
 }
-const s3Config = createS3Config()
+
+const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
+if (!outgoingBucket) {
+  throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
+}
 
 const convertSpiToAho: ConductorWorker = {
   taskDefName,
@@ -28,7 +36,7 @@ const convertSpiToAho: ConductorWorker = {
       })
     }
 
-    const message = await getFileFromS3(s3Path, bucket, s3Config)
+    const message = await getFileFromS3(s3Path, incomingBucket, s3Config)
     if (isError(message)) {
       logger.error(message)
       return Promise.resolve({
@@ -41,10 +49,21 @@ const convertSpiToAho: ConductorWorker = {
     const aho = transformSpiToAho(spiResult)
     const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
+    // put aho in s3
+    const putPath = `${uuid()}.json`
+    const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
+    if (isError(maybeError)) {
+      logger.error(maybeError)
+      return {
+        logs: [conductorLog("Could not put file to S3")],
+        status: "FAILED"
+      }
+    }
+
     return Promise.resolve({
       logs: [],
       status: "COMPLETED",
-      outputData: { correlationId, aho }
+      outputData: { correlationId, ahoS3Path: putPath }
     })
   }
 }
