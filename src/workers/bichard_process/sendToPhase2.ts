@@ -5,6 +5,8 @@ import { conductorLog } from "conductor/src/utils"
 import { isError } from "src/comparison/types"
 import { MqGateway } from "src/lib/MqGateway"
 import createMqConfig from "src/lib/createMqConfig"
+import createS3Config from "src/lib/createS3Config"
+import getFileFromS3 from "src/lib/getFileFromS3"
 import logger from "src/lib/logging"
 import parseAhoJson from "src/parse/parseAhoJson"
 import convertAhoToXml from "src/serialise/ahoXml/generate"
@@ -17,20 +19,35 @@ const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QU
 
 const taskDefName = "send_to_phase2"
 
+const s3Config = createS3Config()
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
+if (!taskDataBucket) {
+  throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
+}
+
 const sendToPhase2: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: async (task: Task) => {
     try {
-      if (!task.inputData?.aho) {
+      const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
+      if (!ahoS3Path) {
         return {
-          logs: [conductorLog("aho must be provided")],
+          logs: [conductorLog("ahoS3Path must be provided")],
           status: "FAILED_WITH_TERMINAL_ERROR"
         }
       }
 
-      const aho = parseAhoJson(task.inputData.aho)
+      const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
+      if (isError(ahoFileContent)) {
+        logger.error(ahoFileContent)
+        return {
+          logs: [conductorLog("Could not retrieve file from S3")],
+          status: "FAILED"
+        }
+      }
 
+      const aho = parseAhoJson(JSON.parse(ahoFileContent))
       const result = await mqGateway.sendMessage(convertAhoToXml(aho), mqQueue)
       if (isError(result)) {
         return {
