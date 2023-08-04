@@ -21,7 +21,6 @@ const convertSpiToAho: ConductorWorker = {
   concurrency: getTaskConcurrency(taskDefName),
   execute: async (task: Task) => {
     const s3Path: string | undefined = task.inputData?.s3Path
-
     if (!s3Path) {
       return Promise.resolve({
         logs: [conductorLog("s3Path must be specified")],

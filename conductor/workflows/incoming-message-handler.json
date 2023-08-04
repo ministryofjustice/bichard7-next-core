@@ -2,6 +2,7 @@
   "accessPolicy": {},
   "name": "incoming_message_handler",
   "description": "Runs phase 1 processing for Bichard in Core",
+  "failureWorkflow": "bichard_failure_handler",
   "version": 1,
   "tasks": [
     {

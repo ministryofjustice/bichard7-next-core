@@ -101,10 +101,10 @@
       "optional": false
     },
     {
-      "name": "store_audit_log_events",
-      "taskReferenceName": "record_send_to_phase2",
+      "name": "send_to_phase2",
+      "taskReferenceName": "send_to_phase2",
       "inputParameters": {
-        "correlationId": "xxx"
+        "aho": "${process_phase1.output.result.hearingOutcome}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
@@ -112,10 +112,11 @@
       "asyncComplete": false
     },
     {
-      "name": "send_to_phase2",
-      "taskReferenceName": "send_to_phase2",
+      "name": "store_audit_log_events",
+      "taskReferenceName": "record_send_to_phase2",
       "inputParameters": {
-        "phase1Result": "xxx"
+        "correlationId": "${process_phase1.output.result.correlationId}",
+        "auditLogEvents": "${send_to_phase2.output.auditLogEvents}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
