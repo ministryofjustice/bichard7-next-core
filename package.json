@@ -126,7 +126,7 @@
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.108",
     "aws-sdk": "^2.1427.0",
     "axios": "^1.4.0",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.108",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.109",
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
     "esbuild": "^0.18.16",
