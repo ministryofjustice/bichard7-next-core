@@ -26,10 +26,7 @@ const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
 
 const s3Config = createS3Config()
-const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
-if (!taskDataBucket) {
-  throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
-}
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
 const processPhase1: ConductorWorker = {
   taskDefName,

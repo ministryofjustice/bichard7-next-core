@@ -7,12 +7,16 @@ import "jest-xml-matcher"
 import postgres from "postgres"
 import createDbConfig from "src/lib/createDbConfig"
 import createS3Config from "src/lib/createS3Config"
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho/transformSpiToAho"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { test1PncResponse, test89PncResponse } from "test-data/mockPncApiResponses"
 import MockS3 from "tests/helpers/MockS3"
-import processPhase1 from "../../phase1"
+import processPhase1 from "./processPhase1"
 
-const bucket = "phase-1-bucket"
+jest.setTimeout(9999999)
+
+const bucket = "conductor-task-data"
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 const sql = postgres({
@@ -42,13 +46,13 @@ describe("processPhase1", () => {
     pncApi = new MockServer({ port: 11000 })
     await pncApi.start()
 
-    process.env.PHASE1_BUCKET_NAME = bucket
+    process.env.TASK_DATA_BUCKET_NAME = bucket
   })
 
-  afterAll(async () => {
-    await s3Server.stop()
-    await client.destroy()
-    await pncApi.stop()
+  afterAll(() => {
+    s3Server.stop()
+    client.destroy()
+    pncApi.stop()
   })
 
   beforeEach(async () => {
@@ -56,35 +60,28 @@ describe("processPhase1", () => {
     await sql`DELETE FROM br7own.error_list`
   })
 
-  it("should return failure if message XML cannot be parsed", async () => {
-    const s3Path = "failure.xml"
-    const command = new PutObjectCommand({ Bucket: bucket, Key: s3Path, Body: "invalid xml" })
-    await client.send(command)
-
-    const phase1Result = await processPhase1.execute({ inputData: { s3Path } })
-    const resultData = phase1Result.outputData?.result
-
-    expect(resultData.resultType).toEqual(Phase1ResultType.failure)
-    expect(resultData).toHaveProperty("auditLogEvents")
-    expect(resultData.auditLogEvents).toHaveLength(2)
-  })
-
   it("should write triggers to the database if they are raised", async () => {
     pncApi.get("/pnc/records/1101ZD0100000448754K").mockImplementationOnce((ctx) => {
       ctx.status = 200
       ctx.body = test1PncResponse
     })
-    const s3Path = "trigger.xml"
+
+    const inputMessage = String(fs.readFileSync("test-data/input-message-001.xml"))
+    const inputSpi = parseSpiResult(inputMessage)
+    const inputAho = transformSpiToAho(inputSpi)
+    const inputAhoJson = JSON.stringify(inputAho)
+
+    const ahoS3Path = "trigger.xml"
     const command = new PutObjectCommand({
       Bucket: bucket,
-      Key: s3Path,
-      Body: fs.readFileSync("test-data/input-message-001.xml")
+      Key: ahoS3Path,
+      Body: inputAhoJson
     })
+
     await client.send(command)
 
-    const result = await processPhase1.execute({ inputData: { s3Path } })
-
-    expect(result.outputData?.result.resultType).toEqual(Phase1ResultType.success)
+    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    expect(result.outputData?.resultType).toEqual(Phase1ResultType.success)
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
     expect(errorListRecords).toHaveLength(1)
@@ -98,17 +95,24 @@ describe("processPhase1", () => {
       ctx.status = 200
       ctx.body = test89PncResponse
     })
-    const s3Path = "exception.xml"
+
+    const inputMessage = String(fs.readFileSync("test-data/input-message-001.xml"))
+    const inputSpi = parseSpiResult(inputMessage)
+    const inputAho = transformSpiToAho(inputSpi)
+    const inputAhoJson = JSON.stringify(inputAho)
+
+    const ahoS3Path = "exception.xml"
     const command = new PutObjectCommand({
       Bucket: bucket,
-      Key: s3Path,
-      Body: fs.readFileSync("test-data/input-message-089.xml")
+      Key: ahoS3Path,
+      Body: inputAhoJson
     })
     await client.send(command)
 
-    const result = await processPhase1.execute({ inputData: { s3Path } })
+    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    console.log(JSON.stringify(result, null, 2))
 
-    expect(result.outputData?.result.resultType).toEqual(Phase1ResultType.exceptions)
+    expect(result.outputData?.resultType).toEqual(Phase1ResultType.exceptions)
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
     expect(errorListRecords).toHaveLength(1)

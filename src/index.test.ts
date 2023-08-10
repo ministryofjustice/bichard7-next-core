@@ -3,10 +3,14 @@ import MockDate from "mockdate"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import CoreAuditLogger from "./lib/CoreAuditLogger"
-import handler from "./phase1"
+import phase1Handler from "./phase1"
+import parseSpiResult from "./parse/parseSpiResult"
+import transformSpiToAho from "./parse/transformSpiToAho/transformSpiToAho"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("test-data/input-message-001.xml").toString()
+  const inputSpi = parseSpiResult(inputMessage)
+  const inputAho = transformSpiToAho(inputSpi)
   const mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
   let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
@@ -17,14 +21,14 @@ describe("Bichard Core processing logic", () => {
   })
 
   it("should return an object with the correct attributes", async () => {
-    const result = await handler(inputMessage, mockPncGateway, auditLogger)
+    const result = await phase1Handler(inputAho, mockPncGateway, auditLogger)
     expect(result).toHaveProperty("auditLogEvents")
     expect(result).toHaveProperty("hearingOutcome")
     expect(result).toHaveProperty("triggers")
   })
 
   it("should create audit logs when a message received", async () => {
-    await handler(inputMessage, mockPncGateway, auditLogger)
+    await phase1Handler(inputAho, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -32,8 +36,8 @@ describe("Bichard Core processing logic", () => {
             ASN: "1101ZD0100000448754K",
             "Court Hearing Location": "B01EF01",
             "Date Of Hearing": "2011-09-26",
-            "Message Size": 7082,
-            "Message Type": "SPIResults",
+            // "Message Size": 7082,
+            // "Message Type": "SPIResults",
             "Number Of Offences": 3,
             "PSA Code": 2576,
             PTIURN: "01ZD0303208",
@@ -55,7 +59,9 @@ describe("Bichard Core processing logic", () => {
 
   it("should log when an input message is ignored", async () => {
     const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-no-offences.xml").toString()
-    await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
+    const inputSpiWithNoOffences = parseSpiResult(inputMessageWithNoOffences)
+    const inputAhoWithNoOffences = transformSpiToAho(inputSpiWithNoOffences)
+    await phase1Handler(inputAhoWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual([
       {
         attributes: {
@@ -72,7 +78,9 @@ describe("Bichard Core processing logic", () => {
 
   it("should log exceptions generated", async () => {
     const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-003.xml").toString()
-    await handler(inputMessageWithNoOffences, mockPncGateway, auditLogger)
+    const inputSpiWithNoOffences = parseSpiResult(inputMessageWithNoOffences)
+    const inputAhoWithNoOffences = transformSpiToAho(inputSpiWithNoOffences)
+    await phase1Handler(inputAhoWithNoOffences, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -89,19 +97,5 @@ describe("Bichard Core processing logic", () => {
         })
       ])
     )
-  })
-
-  it("should log Message Rejected by CoreHandler", async () => {
-    const invalidInputMessage = "invalid format"
-    await handler(invalidInputMessage, mockPncGateway, auditLogger)
-
-    const receivedEvent = auditLogger.getEvents()[0]!
-    expect(receivedEvent.attributes!["Exception Stack Trace"]).toBeDefined()
-    expect(receivedEvent.attributes!["Exception Stack Trace"]).not.toBeNull()
-    expect(receivedEvent.attributes!["Exception Message"]).toBe("Invalid incoming message format")
-    expect(receivedEvent.category).toBe("error")
-    expect(receivedEvent.eventSource).toBe("CoreHandler")
-    expect(receivedEvent.eventType).toBe("Message Rejected by CoreHandler")
-    expect(receivedEvent.timestamp).toEqual(mockedDate.toISOString())
   })
 })

@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import express from "express"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho/transformSpiToAho"
 import CoreHandler from "../src/phase1"
 import type { PncQueryResult } from "../src/types/PncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
@@ -27,8 +29,12 @@ app.post("/", async (req, res) => {
   const testData = JSON.parse(req.body.toString(), formatter) as TestInput
   const pncGateway = new MockPncGateway(testData.pncQueryResult)
   const auditLogger = new CoreAuditLogger()
+
+  const inputSpi = parseSpiResult(testData.inputMessage)
+  const inputAho = transformSpiToAho(inputSpi)
+
   try {
-    const coreResult = await CoreHandler(testData.inputMessage, pncGateway, auditLogger)
+    const coreResult = await CoreHandler(inputAho, pncGateway, auditLogger)
     res.json(coreResult)
   } catch (e) {
     console.error(e)
