@@ -229,6 +229,7 @@ services:
       MQ_URL: tcp://activemq:61613
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      AUDIT_LOG_API_URL: http://audit-log-api:7010
     ports:
       - 4080:443
     healthcheck:
