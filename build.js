@@ -1,7 +1,7 @@
 const ignorePlugin = require("esbuild-plugin-ignore")
 
 const buildOptions = {
-  entryPoints: ["src/index.ts"],
+  entryPoints: ["src/phase1.ts"],
   bundle: true,
   logLevel: "info",
   outdir: "build",

@@ -1,9 +1,9 @@
 import fs from "fs"
 import MockDate from "mockdate"
-import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
-import handler from "./index"
+import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import CoreAuditLogger from "./lib/CoreAuditLogger"
+import handler from "./phase1"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("test-data/input-message-001.xml").toString()

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import express from "express"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
-import CoreHandler from "../src"
+import CoreHandler from "../src/phase1"
 import type { PncQueryResult } from "../src/types/PncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 

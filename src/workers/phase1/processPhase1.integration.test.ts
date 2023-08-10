@@ -10,7 +10,7 @@ import createS3Config from "src/lib/createS3Config"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { test1PncResponse, test89PncResponse } from "test-data/mockPncApiResponses"
 import MockS3 from "tests/helpers/MockS3"
-import processPhase1 from "./processPhase1"
+import processPhase1 from "../../phase1"
 
 const bucket = "phase-1-bucket"
 const s3Config = createS3Config()

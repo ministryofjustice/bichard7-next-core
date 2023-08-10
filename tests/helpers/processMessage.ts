@@ -1,18 +1,18 @@
 import promisePoller from "promise-poller"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import { v4 as uuid } from "uuid"
-import CoreHandler from "../../src"
 import extractExceptionsFromAho from "../../src/parse/parseAhoXml/extractExceptionsFromAho"
+import CoreHandler from "../../src/phase1"
 import type { AnnotatedHearingOutcome } from "../../src/types/AnnotatedHearingOutcome"
 import type Phase1Result from "../../src/types/Phase1Result"
 import { Phase1ResultType } from "../../src/types/Phase1Result"
 import type { ResultedCaseMessageParsedXml } from "../../src/types/SpiResult"
 import ActiveMqHelper from "./ActiveMqHelper"
+import MockPncGateway from "./MockPncGateway"
+import PostgresHelper from "./PostgresHelper"
 import defaults from "./defaults"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
-import MockPncGateway from "./MockPncGateway"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
-import PostgresHelper from "./PostgresHelper"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,
