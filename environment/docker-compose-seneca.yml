@@ -59,30 +59,30 @@ services:
       postgres:
         condition: service_healthy
 
-  nginx-auth-proxy:
-    image: nginx-auth-proxy
-    ports:
-      - 4443:4443
-    environment:
-      CJSE_NGINX_APP_DOMAIN: bichard7-liberty:9443
-      CJSE_NGINX_AUDITLOGGING_DOMAIN: nginx-auth-proxy:4443/elb-status
-      CJSE_NGINX_BICHARDBACKEND_DOMAIN: bichard7-liberty:9443
-      CJSE_NGINX_PORT_HTTPS: 4443
-      CJSE_NGINX_PROXYSSLVERIFY: "off"
-      CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
-      CJSE_NGINX_UI_DOMAIN: ui
-      CJSE_NGINX_USERSERVICE_DOMAIN: user-service
-    healthcheck:
-      test: curl --insecure --fail -v https://localhost:4443/elb-status
-      interval: 2s
-      timeout: 2s
-      retries: 10
-      start_period: 20s
-    depends_on:
-      user-service:
-        condition: service_healthy
-      ui:
-        condition: service_healthy
+  # nginx-auth-proxy:
+  #   image: nginx-auth-proxy
+  #   ports:
+  #     - 4443:4443
+  #   environment:
+  #     CJSE_NGINX_APP_DOMAIN: bichard7-liberty:9443
+  #     CJSE_NGINX_AUDITLOGGING_DOMAIN: nginx-auth-proxy:4443/elb-status
+  #     CJSE_NGINX_BICHARDBACKEND_DOMAIN: bichard7-liberty:9443
+  #     CJSE_NGINX_PORT_HTTPS: 4443
+  #     CJSE_NGINX_PROXYSSLVERIFY: "off"
+  #     CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
+  #     CJSE_NGINX_UI_DOMAIN: ui
+  #     CJSE_NGINX_USERSERVICE_DOMAIN: user-service
+  #   healthcheck:
+  #     test: curl --insecure --fail -v https://localhost:4443/elb-status
+  #     interval: 2s
+  #     timeout: 2s
+  #     retries: 10
+  #     start_period: 20s
+  #   depends_on:
+  #     user-service:
+  #       condition: service_healthy
+  #     ui:
+  #       condition: service_healthy
 
   audit-log-api:
     image: natenho/mockaco

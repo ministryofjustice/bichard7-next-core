@@ -231,8 +231,8 @@ services:
       retries: 10
       start_period: 20s
     depends_on:
-      bichard7-liberty:
-        condition: service_healthy
+      # bichard7-liberty:
+      #   condition: service_healthy
       user-service:
         condition: service_healthy
       ui:
