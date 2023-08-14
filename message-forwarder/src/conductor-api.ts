@@ -1,3 +1,4 @@
+import fetch from "node-fetch"
 import type ConductorConfig from "./ConductorConfig"
 
 type Task = {
