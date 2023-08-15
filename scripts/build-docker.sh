@@ -83,6 +83,7 @@ function pull_and_build_from_aws() {
       -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
       -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
       -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \
+      -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
       -e AUDIT_LOG_API_URL="http://localhost:3011" \
       -e COMPARISON_BUCKET="comparisons" \
