@@ -14,8 +14,6 @@ import { test1PncResponse, test89PncResponse } from "test-data/mockPncApiRespons
 import MockS3 from "tests/helpers/MockS3"
 import processPhase1 from "./processPhase1"
 
-jest.setTimeout(9999999)
-
 const bucket = "conductor-task-data"
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
@@ -96,7 +94,7 @@ describe("processPhase1", () => {
       ctx.body = test89PncResponse
     })
 
-    const inputMessage = String(fs.readFileSync("test-data/input-message-001.xml"))
+    const inputMessage = String(fs.readFileSync("test-data/input-message-089.xml"))
     const inputSpi = parseSpiResult(inputMessage)
     const inputAho = transformSpiToAho(inputSpi)
     const inputAhoJson = JSON.stringify(inputAho)
@@ -110,7 +108,6 @@ describe("processPhase1", () => {
     await client.send(command)
 
     const result = await processPhase1.execute({ inputData: { ahoS3Path } })
-    console.log(JSON.stringify(result, null, 2))
 
     expect(result.outputData?.resultType).toEqual(Phase1ResultType.exceptions)
 
