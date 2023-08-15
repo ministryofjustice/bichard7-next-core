@@ -2,6 +2,7 @@
 AWS_REGION=eu-west-2
 COMPARISON_QUEUE="comparisonQueue"
 COMPARISON_BUCKET="comparisons"
+CONDUCTOR_TASK_DATA_BUCKET="conductor-task-data"
 PHASE1_QUEUE="phase1Queue"
 PHASE1_BUCKET_NAME="phase1"
 
@@ -15,6 +16,7 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name rerunAll --attribute
 
 # Create the incoming message bucket
 awslocal s3 mb s3://$COMPARISON_BUCKET
+awslocal s3 mb s3://$CONDUCTOR_TASK_DATA_BUCKET
 awslocal s3 mb s3://$PHASE1_BUCKET_NAME
 
 # Configure the incoming messages bucket to push to SQS on create

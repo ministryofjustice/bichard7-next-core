@@ -2,14 +2,14 @@ import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import stompit from "stompit"
-import CoreHandler from "../src/index"
 import logger from "../src/lib/logging"
+import CoreHandler from "../src/phase1"
 import type Exception from "../src/types/Exception"
 import type Phase1Result from "../src/types/Phase1Result"
 import { Phase1ResultType } from "../src/types/Phase1Result"
 import type { Trigger } from "../src/types/Trigger"
-import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
+import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 
 interface BichardResult {
   incomingMessage: string

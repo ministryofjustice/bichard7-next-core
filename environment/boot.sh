@@ -35,13 +35,17 @@ fi
 [ "$CI" == "true" ] && ATTEMPTS=5 || ATTEMPTS=1
 for i in $(seq 1 $ATTEMPTS); do
     echo "Setting up infrastructure"
-    eval "$DOCKER_COMPOSE up -d --wait $SERVICES" && break
+    eval "$DOCKER_COMPOSE up -d --wait $SERVICES"
+
+    SUCCESS=$?
+    [ $SUCCESS ] && break
+
     if [ "$CI" == "true" ]; then
         eval "$DOCKER_COMPOSE down"
     fi
 done;
 
-if [ "$LEGACY" == "false" ]; then
+if [ "$LEGACY" == "false" ] && [ $SUCCESS ]; then
     for i in $(seq 1 $ATTEMPTS); do
         echo "Setting up conductor"
         npm run conductor-setup && break || sleep 5

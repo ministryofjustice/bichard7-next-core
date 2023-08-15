@@ -1,10 +1,10 @@
 import getOffenceCode from "src/lib/offence/getOffenceCode"
 import type { HearingOutcome, Offence } from "src/types/AnnotatedHearingOutcome"
 import type { AuditLogEvent } from "src/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "src/types/AuditLogEvent"
 import type KeyValuePair from "src/types/KeyValuePair"
-import getAuditLogEvent from "./getAuditLogEvent"
 import EventCategory from "../../types/EventCategory"
-import { AuditLogEventSource, AuditLogEventOptions } from "src/types/AuditLogEvent"
+import getAuditLogEvent from "./getAuditLogEvent"
 
 const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
   offences.reduce((acc: KeyValuePair<string, string>, offence, i) => {
@@ -16,11 +16,7 @@ const getOffenceDetails = (offences: Offence[]): KeyValuePair<string, string> =>
     return acc
   }, {})
 
-const getIncomingMessageLog = (
-  hearingOutcome: HearingOutcome,
-  originalMessage: string,
-  messageType: string
-): AuditLogEvent => {
+const getIncomingMessageLog = (hearingOutcome: HearingOutcome): AuditLogEvent => {
   const attributes = {
     "Date Of Hearing": hearingOutcome.Hearing.DateOfHearing.toISOString().split("T")[0],
     ...(!!hearingOutcome.Hearing.TimeOfHearing && {
@@ -28,8 +24,6 @@ const getIncomingMessageLog = (
     }),
     ASN: hearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
     "Number Of Offences": hearingOutcome.Case.HearingDefendant.Offence.length,
-    "Message Type": messageType,
-    "Message Size": new TextEncoder().encode(originalMessage).length,
     "Court Hearing Location": hearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode,
     PTIURN: hearingOutcome.Case.PTIURN,
     "PSA Code": hearingOutcome.Hearing.CourtHouseCode,

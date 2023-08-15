@@ -1,0 +1,58 @@
+{
+  "accessPolicy": {},
+  "name": "incoming_message_handler",
+  "description": "Runs phase 1 processing for Bichard in Core",
+  "failureWorkflow": "bichard_failure_handler",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "extract_paths",
+      "taskReferenceName": "extract_paths",
+      "inputParameters": {
+        "records": "${workflow.input.records}",
+        "queryExpression": ".records[0].s3.object.key"
+      },
+      "type": "JSON_JQ_TRANSFORM",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "convert_spi_to_aho",
+      "taskReferenceName": "convert_spi_to_aho",
+      "inputParameters": {
+        "s3Path": "${extract_paths.output.result}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "begin_processing",
+      "taskReferenceName": "begin_processing",
+      "inputParameters": {
+        "startWorkflow": {
+          "correlationId": "${convert_spi_to_aho.output.correlationId}",
+          "input": {
+            "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+          },
+          "name": "bichard_process"
+        }
+      },
+      "type": "START_WORKFLOW",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    }
+  ],
+  "inputParameters": ["s3Path"],
+  "outputParameters": { "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}" },
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}

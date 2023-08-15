@@ -25,10 +25,10 @@ services:
     image: message-forwarder
     build: ../message-forwarder
     environment:
-      DESTINATION_TYPE: s3
-      DESTINATION: phase1
-      # DESTINATION_TYPE: mq
-      # DESTINATION: HEARING_OUTCOME_INPUT_QUEUE
+      DESTINATION_TYPE: conductor
+      CONDUCTOR_URL: http://conductor:4000
+      CONDUCTOR_USERNAME: ${DEFAULT_USER}
+      CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_URL: ws://activemq:61614

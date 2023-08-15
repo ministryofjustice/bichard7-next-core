@@ -5,7 +5,6 @@ import type { Task } from "conductor/src/types/Task"
 import { conductorLog } from "conductor/src/utils"
 import postgres from "postgres"
 import { isError } from "src/comparison/types"
-import phase1 from "src/index"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import PncGateway from "src/lib/PncGateway"
 import getAuditLogEvent from "src/lib/auditLog/getAuditLogEvent"
@@ -15,18 +14,19 @@ import createS3Config from "src/lib/createS3Config"
 import saveErrorListRecord from "src/lib/database/saveErrorListRecord"
 import getFileFromS3 from "src/lib/getFileFromS3"
 import logger from "src/lib/logging"
+import putFileToS3 from "src/lib/putFileToS3"
+import parseAhoJson from "src/parse/parseAhoJson"
+import phase1 from "src/phase1"
 import { Phase1ResultType } from "src/types/Phase1Result"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
 
 const taskDefName = "process_phase1"
-const bucket = process.env.PHASE1_BUCKET_NAME
-if (!bucket) {
-  throw Error("PHASE1_BUCKET_NAME environment variable is required")
-}
-const s3Config = createS3Config()
 const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
+
+const s3Config = createS3Config()
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
 const processPhase1: ConductorWorker = {
   taskDefName,
@@ -35,24 +35,26 @@ const processPhase1: ConductorWorker = {
     const db = postgres(dbConfig)
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger()
-    const s3Path: string | undefined = task.inputData?.s3Path
     const logs: ConductorLog[] = []
+    const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
 
-    if (!s3Path) {
+    if (!ahoS3Path) {
       return Promise.resolve({
         logs: [conductorLog("s3Path must be specified")],
         status: "FAILED_WITH_TERMINAL_ERROR"
       })
     }
 
-    const message = await getFileFromS3(s3Path, bucket, s3Config)
-    if (isError(message)) {
-      logger.error(message)
+    const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
+    if (isError(ahoFileContent)) {
+      logger.error(ahoFileContent)
       return Promise.resolve({
         logs: [conductorLog("Could not retrieve file from S3")],
         status: "FAILED"
       })
     }
+
+    const parsedAho = parseAhoJson(JSON.parse(ahoFileContent))
 
     auditLogger.logEvent(
       getAuditLogEvent(
@@ -63,7 +65,7 @@ const processPhase1: ConductorWorker = {
       )
     )
 
-    const result = await phase1(message, pncGateway, auditLogger)
+    const result = await phase1(parsedAho, pncGateway, auditLogger)
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
         logs,
@@ -90,9 +92,18 @@ const processPhase1: ConductorWorker = {
       }
     }
 
+    const maybeError = await putFileToS3(JSON.stringify(result.hearingOutcome), ahoS3Path, taskDataBucket, s3Config)
+    if (isError(maybeError)) {
+      logger.error(maybeError)
+      return Promise.resolve({
+        logs: [conductorLog("Could not put file to S3")],
+        status: "FAILED"
+      })
+    }
+
     return {
       logs,
-      outputData: { result },
+      outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents },
       status: "COMPLETED"
     }
   }
