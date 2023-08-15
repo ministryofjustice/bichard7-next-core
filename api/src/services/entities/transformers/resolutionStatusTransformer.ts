@@ -1,9 +1,8 @@
 import type { FindOperator, ValueTransformer } from "typeorm"
-import type { KeyValuePair } from "../../../types/KeyValuePair"
 import type { ResolutionStatus } from "../../../types/ResolutionStatus"
 import resolveFindOperator from "./resolveFindOperator"
 
-const resolutionStatusByCode: KeyValuePair<number, ResolutionStatus> = {
+const resolutionStatusByCode: Record<number, ResolutionStatus> = {
   1: "Unresolved",
   2: "Resolved",
   3: "Submitted"

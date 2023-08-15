@@ -20,7 +20,15 @@
     "declaration": true,
     "baseUrl": "./"
   },
-  "include": ["conductor/**/*.ts", "src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts", "test-data/**/*.ts", "package.json"],
+  "include": [
+    "conductor/**/*.ts",
+    "core/**/*.ts",
+    "common/**/*.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.ts",
+    "test-data/**/*.ts",
+    "package.json"
+  ],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }

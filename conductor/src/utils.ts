@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import type { ConductorLog } from "conductor/src/types"
 import type { Task } from "conductor/src/types/Task"
-import logger from "src/lib/logging"
+import logger from "core/phase1/src/lib/logging"
 
 export const conductorLog = (log: string): ConductorLog => ({ log, createdTime: new Date().getTime() })
 export const logWorkingMessage = (task: Task) => logger.debug(`working on ${task.taskDefName} (${task.taskId})`)

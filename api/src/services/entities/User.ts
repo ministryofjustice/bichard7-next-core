@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryColumn } from "typeorm"
 import type GroupName from "../../types/GroupName"
-import type { KeyValuePair } from "../../types/KeyValuePair"
 import BaseEntity from "./BaseEntity"
 import delimitedPrefixedString from "./transformers/delimitedPrefixedString"
 import featureFlagTransformer from "./transformers/featureFlagTransformer"
@@ -29,7 +28,7 @@ export default class User extends BaseEntity {
   visibleCourts!: string[]
 
   @Column({ name: "feature_flags", transformer: featureFlagTransformer, type: "jsonb" })
-  featureFlags!: KeyValuePair<string, boolean>
+  featureFlags!: Record<string, boolean>
 
   groups: GroupName[] = []
 

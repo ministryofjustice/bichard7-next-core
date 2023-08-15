@@ -1,0 +1,28 @@
+import type { AuditLogEvent } from "core/phase1/src/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "core/phase1/src/types/AuditLogEvent"
+import type { Trigger } from "core/phase1/src/types/Trigger"
+import EventCategory from "../../types/EventCategory"
+import getAuditLogEvent from "./getAuditLogEvent"
+
+const getTriggersGeneratedLog = (triggers: Trigger[], hasExceptions: boolean): AuditLogEvent => {
+  const triggerDetails = triggers.reduce((acc: Record<string, unknown>, trigger, i) => {
+    acc[`Trigger ${i + 1} Details`] = trigger.code
+
+    return acc
+  }, {})
+
+  const attributes = {
+    "Number of Triggers": triggers.length,
+    "Trigger and Exception Flag": hasExceptions,
+    ...triggerDetails
+  }
+
+  return getAuditLogEvent(
+    AuditLogEventOptions.triggerGenerated,
+    EventCategory.information,
+    AuditLogEventSource.CoreHandler,
+    attributes
+  )
+}
+
+export default getTriggersGeneratedLog

@@ -3,8 +3,8 @@ jest.retryTimes(10)
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb"
+import createS3Config from "common/s3/createS3Config"
 import fs from "fs"
-import createS3Config from "src/lib/createS3Config"
 import waitForExpect from "wait-for-expect"
 
 const endpoint = (process.env.S3_ENDPOINT = "http://localhost:4566")

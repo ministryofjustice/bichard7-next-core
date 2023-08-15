@@ -1,8 +1,8 @@
-import getFile from "src/comparison/lib/getFile"
-import type { ImportedComparison } from "../src/comparison/types/ImportedComparison"
-import ActiveMqHelper from "../tests/helpers/ActiveMqHelper"
-import defaults from "../tests/helpers/defaults"
-import { mockAhoRecordInPnc } from "../tests/helpers/mockRecordInPnc"
+import getFile from "core/phase1/src/comparison/lib/getFile"
+import type { ImportedComparison } from "core/phase1/src/comparison/types/ImportedComparison"
+import ActiveMqHelper from "core/phase1/tests/helpers/ActiveMqHelper"
+import defaults from "core/phase1/tests/helpers/defaults"
+import { mockAhoRecordInPnc } from "core/phase1/tests/helpers/mockRecordInPnc"
 
 const runFileOnBichard = async (comparison: ImportedComparison): Promise<void> => {
   // Insert matching record in PNC
