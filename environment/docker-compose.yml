@@ -26,7 +26,7 @@ services:
     build: ../message-forwarder
     environment:
       DESTINATION_TYPE: conductor
-      CONDUCTOR_URL: http://conductor:5002
+      CONDUCTOR_URL: http://conductor:4000
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_USER: ${DEFAULT_USER}
