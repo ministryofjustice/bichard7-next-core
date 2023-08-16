@@ -1,6 +1,8 @@
 import { isMatch } from "lodash"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import { parseAhoXml } from "src/parse/parseAhoXml"
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
 import summariseMatching from "tests/helpers/summariseMatching"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
@@ -28,7 +30,9 @@ const comparePncMatching = async (
   const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
   const pncGateway = new MockPncGateway(response, pncQueryTime)
   const auditLogger = new CoreAuditLogger()
-  const coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
+  const incomingSpi = parseSpiResult(incomingMessage)
+  const incomingAho = transformSpiToAho(incomingSpi)
+  const coreResult = (await CoreHandler(incomingAho, pncGateway, auditLogger)) as Phase1SuccessResult
   const expectedAho = parseAhoXml(annotatedHearingOutcome)
   if (isError(expectedAho)) {
     throw expectedAho as Error

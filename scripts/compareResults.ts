@@ -1,6 +1,8 @@
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho"
 import stompit from "stompit"
 import logger from "../src/lib/logging"
 import CoreHandler from "../src/phase1"
@@ -91,7 +93,9 @@ const processResultCore = (incomingMessage: string): Promise<Phase1Result | unde
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
     const auditLogger = new CoreAuditLogger()
-    return CoreHandler(incomingMessage, pncGateway, auditLogger)
+    const incomingSpi = parseSpiResult(incomingMessage)
+    const incomingAho = transformSpiToAho(incomingSpi)
+    return CoreHandler(incomingAho, pncGateway, auditLogger)
   } catch (e) {
     results.failed++
     logger.warn(`Application failed to process message: ${e}`)

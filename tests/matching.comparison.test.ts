@@ -6,11 +6,13 @@ import type { CourtResultMatchingSummary } from "src/comparison/types/MatchingCo
 import CoreHandler from "src/index"
 import CoreAuditLogger from "src/lib/CoreAuditLogger"
 import { parseAhoXml } from "src/parse/parseAhoXml"
+import parseSpiResult from "src/parse/parseSpiResult"
+import transformSpiToAho from "src/parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome } from "src/types/AnnotatedHearingOutcome"
 import type { Phase1SuccessResult } from "src/types/Phase1Result"
+import MockPncGateway from "./helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "./helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./helpers/getPncQueryTimeFromAho"
-import MockPncGateway from "./helpers/MockPncGateway"
 import processTestFile from "./helpers/processTestFile"
 import summariseMatching, { matchingExceptions } from "./helpers/summariseMatching"
 
@@ -108,7 +110,9 @@ describe("Comparison testing", () => {
             const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
             const pncGateway = new MockPncGateway(response, pncQueryTime)
             const auditLogger = new CoreAuditLogger()
-            coreResult = (await CoreHandler(incomingMessage, pncGateway, auditLogger)) as Phase1SuccessResult
+            const incomingSpi = parseSpiResult(incomingMessage)
+            const incomingAho = transformSpiToAho(incomingSpi)
+            coreResult = (await CoreHandler(incomingAho, pncGateway, auditLogger)) as Phase1SuccessResult
           })
 
           it("should correctly match pnc offences", () => {
