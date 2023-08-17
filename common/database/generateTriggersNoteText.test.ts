@@ -1,5 +1,5 @@
-import { TriggerCode } from "core/common/types/TriggerCode"
-import type { Trigger } from "core/phase1/types/Trigger"
+import { TriggerCode } from "@moj-bichard7/core/common/types/TriggerCode"
+import type { Trigger } from "@moj-bichard7/core/phase1/types/Trigger"
 import generateTriggersNoteText, { TriggerCreationType } from "./generateTriggersNoteText"
 
 const mockTriggers: Trigger[] = [

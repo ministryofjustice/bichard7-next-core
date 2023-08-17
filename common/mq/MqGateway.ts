@@ -1,6 +1,6 @@
+import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/Result"
+import { isError } from "@moj-bichard7/core/phase1/comparison/types/Result"
 import type MqConfig from "common/mq/MqConfig"
-import type { PromiseResult } from "core/phase1/comparison/types/Result"
-import { isError } from "core/phase1/comparison/types/Result"
 import type { Client, connect } from "stompit"
 import { ConnectFailover } from "stompit"
 import deconstructServers from "./deconstructServers"

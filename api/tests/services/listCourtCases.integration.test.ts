@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import "reflect-metadata"
 import type { DataSource } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
 import Note from "../../src/services/entities/Note"

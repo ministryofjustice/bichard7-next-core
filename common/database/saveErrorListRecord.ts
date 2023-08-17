@@ -1,5 +1,5 @@
-import type { PromiseResult } from "core/phase1/comparison/types/Result"
-import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
+import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/Result"
+import type { Phase1SuccessResult } from "@moj-bichard7/core/phase1/types/Phase1Result"
 import type { Sql } from "postgres"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"

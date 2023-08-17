@@ -1,4 +1,4 @@
-import { parseAhoXml } from "@moj-bichard7-developers/bichard7-next-core/dist/parse/parseAhoXml"
+import { parseAhoXml } from "@moj-bichard7/core/phase1/parse/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { completeWaitingTask, getWaitingTaskForWorkflow, getWorkflowByCorrelationId } from "./conductor-api"
 import createConductorConfig from "./createConductorConfig"

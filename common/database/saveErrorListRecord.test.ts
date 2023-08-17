@@ -1,11 +1,11 @@
 jest.setTimeout(9999999)
 
-import { ExceptionCode } from "core/common/types/ExceptionCode"
-import { TriggerCode } from "core/common/types/TriggerCode"
-import errorPaths from "core/phase1/lib/errorPaths"
-import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
-import type ErrorListRecord from "core/phase1/types/ErrorListRecord"
-import type ErrorListTriggerRecord from "core/phase1/types/ErrorListTriggerRecord"
+import { ExceptionCode } from "@moj-bichard7/core/common/types/ExceptionCode"
+import { TriggerCode } from "@moj-bichard7/core/common/types/TriggerCode"
+import errorPaths from "@moj-bichard7/core/phase1/lib/errorPaths"
+import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListRecord from "@moj-bichard7/core/phase1/types/ErrorListRecord"
+import type ErrorListTriggerRecord from "@moj-bichard7/core/phase1/types/ErrorListTriggerRecord"
 import postgres from "postgres"
 import createDbConfig from "./createDbConfig"
 import saveErrorListRecord from "./saveErrorListRecord"

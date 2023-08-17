@@ -1,6 +1,6 @@
-import ResolutionStatus from "core/common/types/ResolutionStatus"
-import type ErrorListTriggerRecord from "core/phase1/types/ErrorListTriggerRecord"
-import type { Trigger } from "core/phase1/types/Trigger"
+import ResolutionStatus from "@moj-bichard7/core/common/types/ResolutionStatus"
+import type ErrorListTriggerRecord from "@moj-bichard7/core/phase1/types/ErrorListTriggerRecord"
+import type { Trigger } from "@moj-bichard7/core/phase1/types/Trigger"
 import type { Sql } from "postgres"
 
 const insertErrorListTriggers = async (db: Sql, recordId: number, triggers: Trigger[]): Promise<void> => {

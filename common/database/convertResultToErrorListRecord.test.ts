@@ -1,7 +1,7 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
-import { TriggerCode } from "core/common/types/TriggerCode"
-import errorPaths from "core/phase1/lib/errorPaths"
-import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
+import { ExceptionCode } from "@moj-bichard7/core/common/types/ExceptionCode"
+import { TriggerCode } from "@moj-bichard7/core/common/types/TriggerCode"
+import errorPaths from "@moj-bichard7/core/phase1/lib/errorPaths"
+import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/generateMockPhase1Result"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {

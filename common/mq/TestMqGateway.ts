@@ -1,5 +1,5 @@
-import type { PromiseResult } from "core/phase1/comparison/types/Result"
-import { isError } from "core/phase1/comparison/types/Result"
+import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/Result"
+import { isError } from "@moj-bichard7/core/phase1/comparison/types/Result"
 import type { Client } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
 import MqGateway from "./MqGateway"
