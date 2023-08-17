@@ -1,4 +1,4 @@
-import type { AuditLogEvent, AuditLogEventOption } from "core/phase1/types/AuditLogEvent"
+import type { AuditLogEvent, AuditLogEventOption } from "common/types/AuditLogEvent"
 import type EventCategory from "core/phase1/types/EventCategory"
 
 const getAuditLogEvent = (

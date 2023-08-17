@@ -1,6 +1,6 @@
+import type { PncOffence } from "common/pnc/PncQueryResult"
+import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
 import getOffenceCode from "../../../lib/offence/getOffenceCode"
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { PncOffence } from "../../../types/PncQueryResult"
 import type { Candidate } from "./OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import offenceIsBreach from "./offenceIsBreach"

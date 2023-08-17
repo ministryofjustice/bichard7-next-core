@@ -1,8 +1,8 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import errorPaths from "../lib/errorPaths"
 import isCaseRecordable from "../lib/isCaseRecordable"
 import isAdjourned from "../lib/result/isAdjourned"
 import type Exception from "../types/Exception"
-import { ExceptionCode } from "../types/ExceptionCode"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const HO100322: ExceptionGenerator = (hearingOutcome) => {

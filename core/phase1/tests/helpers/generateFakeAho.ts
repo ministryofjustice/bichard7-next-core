@@ -1,5 +1,5 @@
 import { dateReviver } from "common/axiosDateTransformer"
-import type { AnnotatedHearingOutcome, PartialAho } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, PartialAho } from "core/common/types/AnnotatedHearingOutcome"
 import fs from "fs"
 import merge from "lodash.merge"
 

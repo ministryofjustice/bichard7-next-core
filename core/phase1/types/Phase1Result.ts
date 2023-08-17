@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
-import type { AuditLogEvent } from "./AuditLogEvent"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { AuditLogEvent } from "../../../common/types/AuditLogEvent"
 import type { Trigger } from "./Trigger"
 
 export enum Phase1ResultType {

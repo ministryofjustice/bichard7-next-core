@@ -1,6 +1,6 @@
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
 import generateMessage from "core/phase1/tests/helpers/generateMessage"
-import parseSpiResult from "../parse/parseSpiResult"
-import transformSpiToAho from "../parse/transformSpiToAho"
 import generateExceptions from "./generate"
 
 const generateAho = () => {
@@ -22,7 +22,7 @@ describe("getExceptions()", () => {
     const result = generateExceptions(aho)
     expect(result).toContainEqual({
       code: "HO100100",
-      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+      path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
     })
   })
 
@@ -32,7 +32,7 @@ describe("getExceptions()", () => {
     const result = generateExceptions(aho)
     expect(result).toContainEqual({
       code: "HO100101",
-      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+      path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
     })
   })
 })

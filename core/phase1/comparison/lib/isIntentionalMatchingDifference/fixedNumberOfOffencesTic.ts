@@ -1,6 +1,6 @@
 import { dateReviver } from "common/axiosDateTransformer"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import convertAhoToXml from "core/phase1/serialise/ahoXml/generate"
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core parses the offences TIC string more accurately so will now add it to the AHO

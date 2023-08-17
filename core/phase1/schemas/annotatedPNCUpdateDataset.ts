@@ -1,7 +1,7 @@
+import { pncQueryResultSchema } from "core/phase1/schemas/pncQueryResult"
 import { z } from "zod"
 import { hearingOutcomeSchema } from "./annotatedHearingOutcome"
 import { exceptionSchema } from "./exception"
-import { pncQueryResultSchema } from "./pncQueryResult"
 
 export const annotatedPNCUpdateDatasetSchema = z.object({
   AnnotatedPNCUpdateDataset: z.object({

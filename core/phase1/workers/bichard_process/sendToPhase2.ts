@@ -7,10 +7,10 @@ import getTaskConcurrency from "conductor/src/getTaskConcurrency"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog } from "conductor/src/utils"
 import convertAhoToXml from "core/phase1/serialise/ahoXml/generate"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../../../common/types/AuditLogEvent"
 import { isError } from "../../comparison/types"
 import logger from "../../lib/logging"
 import parseAhoJson from "../../parse/parseAhoJson"
-import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
 
 const mqConfig = createMqConfig()

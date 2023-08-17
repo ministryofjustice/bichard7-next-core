@@ -1,5 +1,5 @@
-import type { AuditLogEvent } from "core/phase1/types/AuditLogEvent"
-import { AuditLogEventOptions, AuditLogEventSource } from "core/phase1/types/AuditLogEvent"
+import type { AuditLogEvent } from "common/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "common/types/AuditLogEvent"
 import type { Trigger } from "core/phase1/types/Trigger"
 import EventCategory from "../../types/EventCategory"
 import getAuditLogEvent from "./getAuditLogEvent"

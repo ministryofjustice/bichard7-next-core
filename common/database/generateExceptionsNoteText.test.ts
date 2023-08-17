@@ -1,5 +1,5 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import type Exception from "core/phase1/types/Exception"
-import { ExceptionCode } from "core/phase1/types/ExceptionCode"
 import errorPaths from "../../core/phase1/lib/errorPaths"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 

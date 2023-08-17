@@ -1,4 +1,4 @@
-import type MqConfig from "core/phase1/types/MqConfig"
+import type MqConfig from "common/mq/MqConfig"
 import type { connect } from "stompit"
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
 import parseConnectionOptions from "./parseConnectionOptions"

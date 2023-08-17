@@ -1,6 +1,6 @@
+import type { Address, DefendantDetail, HearingDefendant } from "core/common/types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "core/phase1/types/SpiResult"
 import { lookupRemandStatusBySpiCode } from "../../dataLookup"
-import type { Address, DefendantDetail, HearingDefendant } from "../../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "../../types/SpiResult"
 import PopulateOffences from "./PopulateOffences"
 
 const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>

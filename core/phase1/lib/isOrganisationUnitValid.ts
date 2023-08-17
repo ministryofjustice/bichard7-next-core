@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
 import lookupOrganisationUnitByCode from "../dataLookup/lookupOrganisationUnitByCode"
 import populateOrganisationUnitFields from "./organisationUnit/populateOrganisationUnitFields"
 

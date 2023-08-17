@@ -1,9 +1,8 @@
+import type { AnnotatedHearingOutcome, Offence } from "core/common/types/AnnotatedHearingOutcome"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import isCaseRecordable from "../lib/isCaseRecordable"
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
-import type { Offence } from "../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 
 const triggerCode = TriggerCode.TRPR0030
 const offenceCodes = ["PL84504", "PL84505", "PL84506"]

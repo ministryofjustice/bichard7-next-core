@@ -1,7 +1,7 @@
+import type { IncomingMessageParsedXml } from "core/phase1/types/SpiResult"
+import { incomingMessageParsedXmlSchema } from "core/phase1/types/SpiResult"
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../lib/encoding"
-import type { IncomingMessageParsedXml } from "../types/SpiResult"
-import { incomingMessageParsedXmlSchema } from "../types/SpiResult"
 
 export default (message: string): IncomingMessageParsedXml => {
   const options = {

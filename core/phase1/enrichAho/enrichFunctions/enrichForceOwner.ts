@@ -1,7 +1,7 @@
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByCode } from "../../dataLookup"
 import isAsnValid from "../../lib/isAsnValid"
 import logger from "../../lib/logging"
-import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
 // prettier-ignore

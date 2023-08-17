@@ -1,9 +1,9 @@
 jest.mock("src/dataLookup")
 jest.mock("src/dataLookup/getCourtDetails")
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import type { AnnotatedHearingOutcome, Result } from "core/common/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByCode } from "../../../dataLookup"
 import getCourtDetails from "../../../dataLookup/getCourtDetails"
-import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
 import populateCourt from "./populateCourt"
 
 const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.MockedFunction<

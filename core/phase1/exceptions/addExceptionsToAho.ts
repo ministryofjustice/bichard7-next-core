@@ -1,8 +1,8 @@
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { ExceptionCode } from "core/common/types/ExceptionCode"
 import isPncException from "../lib/isPncException"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type Exception from "../types/Exception"
 import type { ExceptionPath } from "../types/Exception"
-import type { ExceptionCode } from "../types/ExceptionCode"
 
 const hasExceptionWithPath = (path: ExceptionPath, existingExceptions: Exception[]): boolean =>
   existingExceptions.some((e) => JSON.stringify(e.path) === JSON.stringify(path))

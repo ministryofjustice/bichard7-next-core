@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 
 const addNullElementsForExceptions = (aho: AnnotatedHearingOutcome) => {
   aho.Exceptions.forEach((exception) => {

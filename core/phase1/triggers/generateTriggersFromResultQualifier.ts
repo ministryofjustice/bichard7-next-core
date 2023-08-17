@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import type TriggerConfig from "../types/TriggerConfig"
 

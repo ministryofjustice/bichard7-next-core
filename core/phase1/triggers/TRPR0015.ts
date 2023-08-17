@@ -1,7 +1,7 @@
+import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import isCaseRecordable from "../lib/isCaseRecordable"
-import type { Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
-import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0015

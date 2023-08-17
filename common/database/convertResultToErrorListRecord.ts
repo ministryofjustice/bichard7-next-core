@@ -1,9 +1,9 @@
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
+import ResolutionStatus from "core/common/types/ResolutionStatus"
 import convertAhoToXml from "core/phase1/serialise/ahoXml/generate"
-import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "core/phase1/types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "core/phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "core/phase1/types/ErrorListRecord"
 import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
-import ResolutionStatus from "core/phase1/types/ResolutionStatus"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
   const personName = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail?.PersonName

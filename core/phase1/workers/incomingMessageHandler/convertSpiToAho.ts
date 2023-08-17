@@ -5,11 +5,11 @@ import putFileToS3 from "common/s3/putFileToS3"
 import getTaskConcurrency from "conductor/src/getTaskConcurrency"
 import type { Task } from "conductor/src/types/Task"
 import { conductorLog } from "conductor/src/utils"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
 import { v4 as uuid } from "uuid"
 import { isError } from "../../comparison/types"
 import logger from "../../lib/logging"
-import parseSpiResult from "../../parse/parseSpiResult"
-import transformSpiToAho from "../../parse/transformSpiToAho"
 
 const taskDefName = "convert_spi_to_aho"
 

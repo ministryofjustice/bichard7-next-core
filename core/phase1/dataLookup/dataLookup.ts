@@ -20,8 +20,8 @@ import type {
   YesNo
 } from "bichard7-next-data-latest/dist/types/types"
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import type { SpiPlea } from "core/phase1/types/Plea"
 import requireStandingData from "../lib/requireStandingData"
-import type { SpiPlea } from "../types/Plea"
 
 interface DataLookupResult {
   cjsCode: string
@@ -127,34 +127,34 @@ const lookupGenderByCjsCode = (cjsCode: string): Gender | undefined =>
   requireStandingData().gender.find((g) => g.cjsCode === cjsCode)
 
 export {
-  lookupRemandStatusBySpiCode,
-  lookupRemandStatusByCjsCode,
-  lookupPleaStatusBySpiCode,
-  lookupPleaStatusByCjsCode,
-  lookupVerdictBySpiCode,
-  lookupVerdictByCjsCode,
-  lookupModeOfTrialReasonBySpiCode,
-  lookupModeOfTrialReasonByCjsCode,
-  lookupQualifierCodeByCjsCode,
-  lookupAlcoholLevelMethodBySpiCode,
+  forceCodeExists,
   lookupAlcoholLevelMethodByCjsCode,
-  lookupOrganisationUnitByThirdLevelPsaCode,
-  lookupResultCodeByCjsCode,
-  lookupPncDisposalByCjsCode,
+  lookupAlcoholLevelMethodBySpiCode,
   lookupCourtTypeByCjsCode,
-  lookupTypeOfHearingByCjsCode,
-  lookupTargetCourtTypeByCjsCode,
-  lookupResultClassByCjsCode,
-  lookupResultQualifierCodeByCjsCode,
+  lookupDefendantPresentAtHearingByCjsCode,
   lookupDurationTypeByCjsCode,
   lookupDurationUnitByCjsCode,
-  lookupOffenceCategoryByCjsCode,
-  lookupOffenceInitiationCodeByCjsCode,
-  lookupSummonsCodeByCjsCode,
-  lookupVehicleCodeByCjsCode,
-  lookupYesNoByCjsCode,
-  lookupOffenceDateCodeByCjsCode,
-  lookupDefendantPresentAtHearingByCjsCode,
   lookupGenderByCjsCode,
-  forceCodeExists
+  lookupModeOfTrialReasonByCjsCode,
+  lookupModeOfTrialReasonBySpiCode,
+  lookupOffenceCategoryByCjsCode,
+  lookupOffenceDateCodeByCjsCode,
+  lookupOffenceInitiationCodeByCjsCode,
+  lookupOrganisationUnitByThirdLevelPsaCode,
+  lookupPleaStatusByCjsCode,
+  lookupPleaStatusBySpiCode,
+  lookupPncDisposalByCjsCode,
+  lookupQualifierCodeByCjsCode,
+  lookupRemandStatusByCjsCode,
+  lookupRemandStatusBySpiCode,
+  lookupResultClassByCjsCode,
+  lookupResultCodeByCjsCode,
+  lookupResultQualifierCodeByCjsCode,
+  lookupSummonsCodeByCjsCode,
+  lookupTargetCourtTypeByCjsCode,
+  lookupTypeOfHearingByCjsCode,
+  lookupVehicleCodeByCjsCode,
+  lookupVerdictByCjsCode,
+  lookupVerdictBySpiCode,
+  lookupYesNoByCjsCode
 }

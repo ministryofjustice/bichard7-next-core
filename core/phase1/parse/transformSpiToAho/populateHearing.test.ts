@@ -1,5 +1,5 @@
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
 import { readFileSync } from "fs"
-import parseSpiResult from "../../parse/parseSpiResult"
 import populateHearing from "./populateHearing"
 
 const message = readFileSync("test-data/input-message-001.xml", "utf-8")

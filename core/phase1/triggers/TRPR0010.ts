@@ -1,6 +1,6 @@
+import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import { lookupRemandStatusByCjsCode } from "../dataLookup"
-import type { Offence } from "../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0010

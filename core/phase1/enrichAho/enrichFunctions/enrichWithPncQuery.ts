@@ -1,14 +1,14 @@
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "common/pnc/PncQueryResult"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import type AuditLogger from "core/phase1/types/AuditLogger"
+import type PncGatewayInterface from "../../../../common/pnc/PncGatewayInterface"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../../../common/types/AuditLogEvent"
 import { isError } from "../../comparison/types"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
 import getAuditLogEvent from "../../lib/auditLog/getAuditLogEvent"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import isDummyAsn from "../../lib/isDummyAsn"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import { AuditLogEventOptions, AuditLogEventSource } from "../../types/AuditLogEvent"
 import EventCategory from "../../types/EventCategory"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../types/PncQueryResult"
 import { matchOffencesToPnc } from "./matchOffencesToPnc"
 
 const addTitle = (offence: PncOffence): void => {

@@ -1,8 +1,8 @@
+import ResolutionStatus from "core/common/types/ResolutionStatus"
+import type { TriggerCode } from "core/common/types/TriggerCode"
 import type ErrorListTriggerRecord from "core/phase1/types/ErrorListTriggerRecord"
 import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
-import ResolutionStatus from "core/phase1/types/ResolutionStatus"
 import type { Trigger } from "core/phase1/types/Trigger"
-import type { TriggerCode } from "core/phase1/types/TriggerCode"
 import type { Sql } from "postgres"
 import insertErrorListTriggers from "./insertErrorListTriggers"
 

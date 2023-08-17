@@ -1,11 +1,11 @@
 import CoreAuditLogger from "core/common/CoreAuditLogger"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import type { Phase1Comparison } from "core/phase1/comparison/types/ComparisonFile"
 import type { CourtResultMatchingSummary } from "core/phase1/comparison/types/MatchingComparisonOutput"
 import { parseAhoXml } from "core/phase1/parse/parseAhoXml"
 import parseSpiResult from "core/phase1/parse/parseSpiResult"
 import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
 import CoreHandler from "core/phase1/phase1"
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
 import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
 import fs from "fs"
 import "jest-xml-matcher"
@@ -47,7 +47,8 @@ const perfectlyMatchingTests = pncQueryTests.filter((test) => {
   const [expectedAho, expectedMatch] = parseAho(test.annotatedHearingOutcome)
   return (
     expectedMatch &&
-    expectedMatch.courtCaseReference &&
+    "caseReference" in expectedMatch &&
+    expectedMatch.caseReference &&
     !expectedMatch.offences.some((o) => o.addedByCourt) &&
     expectedMatch.offences.every((o) => o.hoSequenceNumber === o.pncSequenceNumber) &&
     expectedAho.PncQuery?.courtCases?.length === 1
@@ -60,7 +61,8 @@ const addedByCourtTests = remainingTests.filter((test) => {
   const [expectedAho, expectedMatch] = parseAho(test.annotatedHearingOutcome)
   return (
     expectedMatch &&
-    expectedMatch.courtCaseReference &&
+    "caseReference" in expectedMatch &&
+    expectedMatch.caseReference &&
     expectedMatch.offences.every((o) => o.hoSequenceNumber === o.pncSequenceNumber || o.addedByCourt) &&
     expectedAho.PncQuery?.courtCases?.length === 1
   )
@@ -80,7 +82,8 @@ const multipleCourtCaseTests = remainingTests.filter((test) => {
   const [expectedAho, expectedMatch] = parseAho(test.annotatedHearingOutcome)
   return (
     expectedMatch &&
-    !expectedMatch.courtCaseReference &&
+    "caseReference" in expectedMatch &&
+    expectedMatch.caseReference &&
     expectedMatch.offences.every(
       (o) => (o.hoSequenceNumber && o.pncSequenceNumber && o.courtCaseReference) || o.addedByCourt
     ) &&

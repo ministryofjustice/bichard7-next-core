@@ -1,6 +1,7 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { pncQueryResultSchema } from "core/phase1/schemas/pncQueryResult"
+import { CjsPlea } from "core/phase1/types/Plea"
 import { z } from "zod"
-import { ExceptionCode } from "../types/ExceptionCode"
-import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
 import {
   invalid,
@@ -25,7 +26,6 @@ import {
   validateYesNo
 } from "./ahoValidations"
 import { exceptionSchema } from "./exception"
-import { pncQueryResultSchema } from "./pncQueryResult"
 import toArray from "./toArray"
 
 export const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)

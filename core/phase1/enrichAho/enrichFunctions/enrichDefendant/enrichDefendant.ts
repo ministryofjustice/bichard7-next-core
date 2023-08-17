@@ -1,4 +1,4 @@
-import type { HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
+import type { HearingDefendant } from "core/common/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
 import convertAsnToLongFormat from "./convertAsnToLongFormat"
 

@@ -1,4 +1,4 @@
-import type { XML } from "./Xml"
+import type { XML } from "../../../common/types/Xml"
 
 export interface AhoXml {
   "?xml": XML
@@ -57,7 +57,7 @@ export interface Adj {
   "@_DateOfSentence": string
   "@_IntfcUpdateType": string
   "@_OffenceTICNumber": string
-  "@_Plea": string
+  "core/phase1/types/Plea": string
   "@_WeedFlag"?: string
 }
 
@@ -238,7 +238,7 @@ export interface Br7Result {
   "ds:BailCondition"?: Br7TextString[]
   "ds:AmountSpecifiedInResult"?: Br7TypeTextString[]
   "ds:PleaStatus"?: Br7LiteralTextString
-  "ds:Verdict"?: Br7LiteralTextString
+  "core/phase1/types/Verdict"?: Br7LiteralTextString
   "ds:ModeOfTrialReason"?: Br7LiteralTextString
   "ds:ResultVariableText"?: Br7TextString
   "ds:WarrantIssueDate"?: Br7TextString

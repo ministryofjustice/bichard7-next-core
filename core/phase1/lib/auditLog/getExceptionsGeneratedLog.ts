@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
-import type { AuditLogEvent } from "core/phase1/types/AuditLogEvent"
-import { AuditLogEventOptions, AuditLogEventSource } from "core/phase1/types/AuditLogEvent"
+import type { AuditLogEvent } from "common/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "common/types/AuditLogEvent"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import EventCategory from "../../types/EventCategory"
 import getAuditLogEvent from "./getAuditLogEvent"
 

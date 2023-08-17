@@ -1,6 +1,6 @@
+import type MqConfig from "common/mq/MqConfig"
 import type { PromiseResult } from "core/phase1/comparison/types/Result"
 import { isError } from "core/phase1/comparison/types/Result"
-import type MqConfig from "core/phase1/types/MqConfig"
 import type { Client, connect } from "stompit"
 import { ConnectFailover } from "stompit"
 import deconstructServers from "./deconstructServers"

@@ -4,7 +4,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
 {
   "AnnotatedPNCUpdateDataset": {
     "PNCUpdateDataset": {
-      "AnnotatedHearingOutcome": {
+      "core/common/types/AnnotatedHearingOutcome": {
         "HearingOutcome": {
           "Case": {
             "CourtCaseReferenceNumber": "97/1626/008395Q",
@@ -133,7 +133,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
                         "TopLevelCode": "B",
                       },
                       "Urgent": undefined,
-                      "Verdict": "G",
+                      "core/phase1/types/Verdict": "G",
                       "WarrantIssueDate": undefined,
                     },
                   ],
@@ -223,7 +223,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
                         "TopLevelCode": "B",
                       },
                       "Urgent": undefined,
-                      "Verdict": "G",
+                      "core/phase1/types/Verdict": "G",
                       "WarrantIssueDate": undefined,
                     },
                   ],

@@ -1,12 +1,12 @@
-import type { z } from "zod"
 import type {
   pncAdjudicationSchema,
   pncCourtCaseSchema,
   pncDisposalSchema,
   pncOffenceSchema,
   pncPenaltyCaseSchema
-} from "../schemas/pncQueryResult"
-import { pncQueryResultSchema } from "../schemas/pncQueryResult"
+} from "core/phase1/schemas/pncQueryResult"
+import { pncQueryResultSchema } from "core/phase1/schemas/pncQueryResult"
+import type { z } from "zod"
 
 export type PncOffence = z.infer<typeof pncOffenceSchema>
 export type PncQueryResult = z.infer<typeof pncQueryResultSchema>

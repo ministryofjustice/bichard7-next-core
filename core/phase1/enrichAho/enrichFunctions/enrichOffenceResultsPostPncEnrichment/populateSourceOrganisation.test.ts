@@ -1,7 +1,7 @@
 jest.mock("src/dataLookup")
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+import type { AnnotatedHearingOutcome, Result } from "core/common/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../dataLookup"
-import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 
 describe("populateSourceOrganisation", () => {

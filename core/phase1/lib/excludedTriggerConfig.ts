@@ -1,4 +1,4 @@
-import { TriggerCode } from "../types/TriggerCode"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import requireStandingData from "./requireStandingData"
 
 const excludedTriggerConfig = () => {

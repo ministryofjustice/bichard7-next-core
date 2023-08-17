@@ -1,10 +1,10 @@
+import type { OffenceReason } from "core/common/types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import getAreaCode from "../lib/offence/getAreaCode"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 import isOffenceIgnored from "../lib/offence/isOffenceIgnored"
 import lookupOffenceCode from "../lib/offence/lookupOffenceCode"
-import type { OffenceReason } from "../types/AnnotatedHearingOutcome"
 import type Exception from "../types/Exception"
-import { ExceptionCode } from "../types/ExceptionCode"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const isNationalOffenceCode = (offenceReason: OffenceReason): boolean =>
@@ -36,7 +36,7 @@ const HO100306: ExceptionGenerator = (hearingOutcome) => {
         generatedExceptions.push({
           code: ExceptionCode.HO100306,
           path: [
-            "AnnotatedHearingOutcome",
+            "core/common/types/AnnotatedHearingOutcome",
             "HearingOutcome",
             "Case",
             "HearingDefendant",

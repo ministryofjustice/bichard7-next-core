@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { TriggerCode } from "../types/TriggerCode"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const modules = Object.keys(TriggerCode).reduce((acc: Record<string, TriggerGenerator>, code) => {

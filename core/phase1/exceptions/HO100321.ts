@@ -1,8 +1,8 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import errorPaths from "../lib/errorPaths"
 import { isAsnFormatValid } from "../lib/isAsnValid"
 import isDummyAsn from "../lib/isDummyAsn"
 import type Exception from "../types/Exception"
-import { ExceptionCode } from "../types/ExceptionCode"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {

@@ -1,7 +1,7 @@
+import type { Result } from "core/common/types/AnnotatedHearingOutcome"
 import isAdjourned from "../../../lib/result/isAdjourned"
 import isAdjournedNoNextHearing from "../../../lib/result/isAdjournedNoNextHearing"
 import isWarrantIssued from "../../../lib/result/isWarrantIssued"
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../types/ResultClass"
 import isNotGuiltyVerdict from "./isNotGuiltyVerdict"
 import isResultClassCode from "./isResultClassCode"

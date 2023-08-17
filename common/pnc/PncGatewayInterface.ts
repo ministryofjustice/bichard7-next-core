@@ -1,4 +1,4 @@
-import type { PncQueryResult } from "./PncQueryResult"
+import type { PncQueryResult } from "common/pnc/PncQueryResult"
 
 interface PncGatewayInterface {
   query: (asn: string) => Promise<PncQueryResult | Error | undefined>

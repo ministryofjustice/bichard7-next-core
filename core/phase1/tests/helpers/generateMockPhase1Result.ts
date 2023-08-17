@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome, PartialAho } from "core/phase1/types/AnnotatedHearingOutcome"
-import type { AuditLogEvent } from "core/phase1/types/AuditLogEvent"
+import type { AuditLogEvent } from "common/types/AuditLogEvent"
+import type { AnnotatedHearingOutcome, PartialAho } from "core/common/types/AnnotatedHearingOutcome"
 import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
 import { Phase1ResultType } from "core/phase1/types/Phase1Result"
 import type { Trigger } from "core/phase1/types/Trigger"

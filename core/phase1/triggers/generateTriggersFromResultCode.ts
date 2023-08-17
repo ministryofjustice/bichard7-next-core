@@ -1,5 +1,5 @@
+import type { AnnotatedHearingOutcome, Offence } from "core/common/types/AnnotatedHearingOutcome"
 import isCaseRecordable from "../lib/isCaseRecordable"
-import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
 import type TriggerConfig from "../types/TriggerConfig"
 import TriggerRecordable from "../types/TriggerRecordable"

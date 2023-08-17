@@ -1,4 +1,4 @@
-import { TriggerCode } from "../types/TriggerCode"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0002

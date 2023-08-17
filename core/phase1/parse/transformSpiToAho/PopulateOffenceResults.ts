@@ -1,3 +1,12 @@
+import type { Duration, OrganisationUnitCodes, Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "core/phase1/types/Plea"
+import type {
+  ResultedCaseMessageParsedXml,
+  SpiNextHearingDetails,
+  SpiOffence,
+  SpiResult
+} from "core/phase1/types/SpiResult"
+import type { CjsVerdict } from "core/phase1/types/Verdict"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
@@ -8,10 +17,6 @@ import {
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
 import countDecimalPlaces from "../../lib/countDecimalPlaces"
 import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
-import type { Duration, OrganisationUnitCodes, Result } from "../../types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "../../types/Plea"
-import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "../../types/SpiResult"
-import type { CjsVerdict } from "../../types/Verdict"
 import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 

@@ -1,5 +1,5 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import type Exception from "../types/Exception"
-import { ExceptionCode } from "../types/ExceptionCode"
 import deduplicateExceptions from "./deduplicateExceptions"
 
 describe("deduplicateExceptions", () => {

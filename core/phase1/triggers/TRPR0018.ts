@@ -1,7 +1,7 @@
-import type { Offence } from "../types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
+import type { PncOffence, PncQueryResult } from "common/pnc/PncQueryResult"
+import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
+import { TriggerCode } from "core/common/types/TriggerCode"
 import type { Trigger } from "../types/Trigger"
-import { TriggerCode } from "../types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0018

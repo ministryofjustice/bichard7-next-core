@@ -1,13 +1,12 @@
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "common/pnc/PncQueryResult"
+import type { AnnotatedHearingOutcome, Offence } from "core/common/types/AnnotatedHearingOutcome"
 import getFile from "core/phase1/comparison/lib/getFile"
-import hoOffencesAreEqual from "core/phase1/comparison/lib/hoOffencesAreEqual"
 import { lookupOffenceByCjsCode, lookupResultCodeByCjsCode, lookupVerdictByCjsCode } from "core/phase1/dataLookup"
 import getOffenceCode from "core/phase1/lib/offence/getOffenceCode"
 import { parseAhoXml } from "core/phase1/parse/parseAhoXml"
 import parseSpiResult from "core/phase1/parse/parseSpiResult"
 import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome, Offence } from "core/phase1/types/AnnotatedHearingOutcome"
 import type Exception from "core/phase1/types/Exception"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "core/phase1/types/PncQueryResult"
 import type { Trigger } from "core/phase1/types/Trigger"
 import fs from "fs"
 import { exec } from "node:child_process"
@@ -31,25 +30,6 @@ const getManualSequenceNumber = (offence: Offence): string | undefined => {
   if (offence.ManualSequenceNumber && offence.CriminalProsecutionReference.OffenceReasonSequence) {
     return offence.CriminalProsecutionReference.OffenceReasonSequence
   }
-}
-
-const groupEqualOffences = (offences: Offence[]): Offence[][] => {
-  const output = []
-  for (const offence of offences) {
-    let found = false
-    for (const group of output) {
-      const otherOffence = group[0]
-      if (hoOffencesAreEqual(offence, otherOffence)) {
-        group.push(offence)
-        found = true
-        break
-      }
-    }
-    if (!found) {
-      output.push([offence])
-    }
-  }
-  return output
 }
 
 const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {

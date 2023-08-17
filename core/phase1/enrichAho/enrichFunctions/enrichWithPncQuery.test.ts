@@ -1,13 +1,13 @@
 import CoreAuditLogger from "core/common/CoreAuditLogger"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
 import MockPncGateway from "core/phase1/tests/helpers/MockPncGateway"
 import generateMessage from "core/phase1/tests/helpers/generateMessage"
 import generateMockPncQueryResult from "core/phase1/tests/helpers/generateMockPncQueryResult"
 import type AuditLogger from "core/phase1/types/AuditLogger"
 import MockDate from "mockdate"
-import parseSpiResult from "../../parse/parseSpiResult"
-import transformSpiToAho from "../../parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type PncGatewayInterface from "../../../../common/pnc/PncGatewayInterface"
 import enrichWithPncQuery from "./enrichWithPncQuery"
 
 describe("enrichWithQuery()", () => {

@@ -1,7 +1,7 @@
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAnnotatedHearingOutcome from "core/phase1/parse/transformSpiToAho"
 import merge from "lodash.merge"
-import parseSpiResult from "../../src/parse/parseSpiResult"
-import transformSpiToAnnotatedHearingOutcome from "../../src/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../src/types/AnnotatedHearingOutcome"
 import type { GenerateMessageOptions } from "./generateMessage"
 import generateMessage from "./generateMessage"
 

@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (string | undefined | null)[] =>

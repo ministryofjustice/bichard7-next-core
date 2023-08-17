@@ -1,3 +1,19 @@
+import type {
+  AmountSpecifiedInResult,
+  AnnotatedHearingOutcome,
+  Case,
+  CriminalProsecutionReference,
+  DateSpecifiedInResult,
+  Duration,
+  Hearing,
+  NumberSpecifiedInResult,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result,
+  ResultQualifierVariable
+} from "core/common/types/AnnotatedHearingOutcome"
+import type { CjsPlea } from "core/phase1/types/Plea"
 import { XMLParser } from "fast-xml-parser"
 import countDecimalPlaces from "../../lib/countDecimalPlaces"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
@@ -23,22 +39,6 @@ import type {
   IndictmentOffenceCode,
   NonMatchingOffenceCode
 } from "../../types/AhoXml"
-import type {
-  AmountSpecifiedInResult,
-  AnnotatedHearingOutcome,
-  Case,
-  CriminalProsecutionReference,
-  DateSpecifiedInResult,
-  Duration,
-  Hearing,
-  NumberSpecifiedInResult,
-  Offence,
-  OffenceReason,
-  OrganisationUnitCodes,
-  Result,
-  ResultQualifierVariable
-} from "../../types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "../../types/Plea"
 import type ResultClass from "../../types/ResultClass"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
@@ -160,7 +160,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   NextHearingDate: parseDateOrFallbackToString(xmlResult["ds:NextHearingDate"]),
   NextHearingTime: xmlResult["ds:NextHearingTime"]?.["#text"],
   PleaStatus: xmlResult["ds:PleaStatus"]?.["#text"] as CjsPlea,
-  Verdict: xmlResult["ds:Verdict"]?.["#text"],
+  Verdict: xmlResult["core/phase1/types/Verdict"]?.["#text"],
   ResultVariableText: xmlResult["ds:ResultVariableText"]?.["#text"],
   WarrantIssueDate: xmlResult["ds:WarrantIssueDate"] ? new Date(xmlResult["ds:WarrantIssueDate"]["#text"]) : undefined,
   // TargetCourtType: xmlResult.

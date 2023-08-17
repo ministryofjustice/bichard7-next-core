@@ -1,10 +1,10 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
 import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
 import errorPaths from "../lib/errorPaths"
 import isCaseRecordable from "../lib/isCaseRecordable"
 import resultCodeIsOnStopList from "../lib/result/resultCodeIsOnStopList"
 import type Exception from "../types/Exception"
-import { ExceptionCode } from "../types/ExceptionCode"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 import ResultClass from "../types/ResultClass"
 

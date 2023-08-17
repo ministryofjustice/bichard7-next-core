@@ -1,6 +1,6 @@
+import type { HearingDefendant } from "core/common/types/AnnotatedHearingOutcome"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
 import { readFileSync } from "fs"
-import parseSpiResult from "../../parse/parseSpiResult"
-import type { HearingDefendant } from "../../types/AnnotatedHearingOutcome"
 import populateCase from "./populateCase"
 import populateDefendant from "./populateDefendant"
 

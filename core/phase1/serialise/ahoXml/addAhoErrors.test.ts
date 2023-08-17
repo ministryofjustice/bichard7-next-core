@@ -1,5 +1,5 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import type { AhoXml, Br7Result } from "../../types/AhoXml"
-import { ExceptionCode } from "../../types/ExceptionCode"
 import addAhoErrors from "./addAhoErrors"
 
 describe("addAhoErrors()", () => {
@@ -26,7 +26,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
+        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
       }
     ]
 
@@ -58,7 +58,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       }
     ]
 
@@ -90,7 +90,13 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        path: [
+          "core/common/types/AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "ArrestSummonsNumber"
+        ]
       }
     ]
 
@@ -127,7 +133,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
+        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
       }
     ]
 
@@ -167,7 +173,16 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1, "Result", 0]
+        path: [
+          "core/common/types/AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          0
+        ]
       }
     ]
 

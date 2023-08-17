@@ -1,4 +1,4 @@
-import type { OffenceReason } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { OffenceReason } from "core/common/types/AnnotatedHearingOutcome"
 import type Exception from "core/phase1/types/Exception"
 
 export type ResultSummary = {

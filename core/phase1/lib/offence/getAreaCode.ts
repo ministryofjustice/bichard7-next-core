@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 
 export default (hearingOutCome: AnnotatedHearingOutcome): string => {
   const asn = hearingOutCome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber

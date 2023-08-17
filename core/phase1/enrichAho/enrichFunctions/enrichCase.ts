@@ -1,4 +1,4 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 const HALF_LIFE_HOURS_URGENT_THRESHOLD = 48
 

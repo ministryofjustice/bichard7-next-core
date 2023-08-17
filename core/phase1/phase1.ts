@@ -1,3 +1,6 @@
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type PncGatewayInterface from "../../common/pnc/PncGatewayInterface"
+import { AuditLogEventOptions, AuditLogEventSource } from "../../common/types/AuditLogEvent"
 import { isError } from "./comparison/types/Result"
 import enrichAho from "./enrichAho"
 import addExceptionsToAho from "./exceptions/addExceptionsToAho"
@@ -9,13 +12,10 @@ import getIncomingMessageLog from "./lib/auditLog/getIncomingMessageLog"
 import getTriggersGeneratedLog from "./lib/auditLog/getTriggersGeneratedLog"
 import isReopenedOrStatutoryDeclarationCase from "./lib/isReopenedOrStatutoryDeclarationCase"
 import generateTriggers from "./triggers/generate"
-import type { AnnotatedHearingOutcome } from "./types/AnnotatedHearingOutcome"
-import { AuditLogEventOptions, AuditLogEventSource } from "./types/AuditLogEvent"
 import type AuditLogger from "./types/AuditLogger"
 import EventCategory from "./types/EventCategory"
 import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
-import type PncGatewayInterface from "./types/PncGatewayInterface"
 
 const phase1 = async (
   hearingOutcome: AnnotatedHearingOutcome,

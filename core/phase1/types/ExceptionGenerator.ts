@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import type Exception from "./Exception"
 
 export type ExceptionGenerator = (

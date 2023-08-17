@@ -1,7 +1,7 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import errorPaths from "core/phase1/lib/errorPaths"
 import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListRecord from "core/phase1/types/ErrorListRecord"
-import { ExceptionCode } from "core/phase1/types/ExceptionCode"
 import postgres from "postgres"
 import createDbConfig from "./createDbConfig"
 import insertErrorListRecord from "./insertErrorListRecord"

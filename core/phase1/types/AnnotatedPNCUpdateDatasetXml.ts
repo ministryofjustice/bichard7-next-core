@@ -1,5 +1,5 @@
+import type { XML } from "../../../common/types/Xml"
 import type { Br7AnnotatedHearingOutcome } from "./AhoXml"
-import type { XML } from "./Xml"
 
 export interface AnnotatedPNCUpdateDatasetXml {
   "?xml": XML

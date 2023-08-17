@@ -1,8 +1,8 @@
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
 import getMessageType from "../lib/getMessageType"
 import { parseAhoXml } from "./parseAhoXml"
-import parseSpiResult from "./parseSpiResult"
-import transformSpiToAho from "./transformSpiToAho/transformSpiToAho"
 
 const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome, string] => {
   let hearingOutcome: AnnotatedHearingOutcome | Error

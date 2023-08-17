@@ -1,7 +1,7 @@
 import type { ExceptionPath } from "../types/Exception"
 
 const offencePath = (offenceIndex: number): ExceptionPath => [
-  "AnnotatedHearingOutcome",
+  "core/common/types/AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",
   "HearingDefendant",
@@ -29,7 +29,7 @@ const offence = (offenceIndex: number) => ({
   result: result(offenceIndex)
 })
 
-const casePath = ["AnnotatedHearingOutcome", "HearingOutcome", "Case"]
+const casePath = ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case"]
 const $case = {
   asn: casePath.concat("HearingDefendant", "ArrestSummonsNumber"),
   magistratesCourtReference: casePath.concat("CourtReference", "MagistratesCourtReference")

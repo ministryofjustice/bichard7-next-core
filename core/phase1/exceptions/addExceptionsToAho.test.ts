@@ -1,5 +1,5 @@
+import { ExceptionCode } from "core/common/types/ExceptionCode"
 import generateMockAho from "core/phase1/tests/helpers/generateMockAho"
-import { ExceptionCode } from "core/phase1/types/ExceptionCode"
 import addExceptionsToAho from "./addExceptionsToAho"
 
 describe("addExceptionsToAho", () => {

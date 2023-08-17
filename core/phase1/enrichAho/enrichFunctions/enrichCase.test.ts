@@ -1,5 +1,5 @@
+import type { AnnotatedHearingOutcome, Urgent } from "core/common/types/AnnotatedHearingOutcome"
 import generateMockAho from "core/phase1/tests/helpers/generateMockAho"
-import type { AnnotatedHearingOutcome, Urgent } from "../../types/AnnotatedHearingOutcome"
 import enrichCase from "./enrichCase"
 
 let aho: AnnotatedHearingOutcome

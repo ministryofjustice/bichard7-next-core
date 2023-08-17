@@ -1,7 +1,7 @@
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { TriggerCode } from "core/common/types/TriggerCode"
 import excludedTriggerConfig from "../lib/excludedTriggerConfig"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../types/Trigger"
-import type { TriggerCode } from "../types/TriggerCode"
 
 const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome, triggers: Trigger[]): Trigger[] => {
   const excludedTriggers = excludedTriggerConfig()

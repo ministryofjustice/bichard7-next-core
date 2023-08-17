@@ -1,6 +1,6 @@
+import type { PncOffence } from "common/pnc/PncQueryResult"
+import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
 import offenceHasFinalResult from "core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "core/phase1/types/PncQueryResult"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 type PncOffenceRef = {

@@ -1,5 +1,5 @@
+import type { OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByCode } from "."
-import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
 
 const topLevelMagistratesCourtCode = "B"
 const youthCourt = "YOUTH"
