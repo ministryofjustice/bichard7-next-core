@@ -1,4 +1,4 @@
-import type Exception from "core/phase1/src/types/Exception"
+import type Exception from "core/phase1/types/Exception"
 
 const generateExceptionsNoteText = (exceptions: Exception[]): string | null => {
   if (exceptions.length === 0) {

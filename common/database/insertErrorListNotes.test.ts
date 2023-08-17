@@ -1,5 +1,5 @@
-import type ErrorListNoteRecord from "core/phase1/src/types/ErrorListNoteRecord"
 import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListNoteRecord from "core/phase1/types/ErrorListNoteRecord"
 import postgres from "postgres"
 import createDbConfig from "./createDbConfig"
 import insertErrorListNotes from "./insertErrorListNotes"

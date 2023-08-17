@@ -1,4 +1,4 @@
-import type MqConfig from "core/phase1/src/types/MqConfig"
+import type MqConfig from "core/phase1/types/MqConfig"
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
 import deconstructServers from "./deconstructServers"
 

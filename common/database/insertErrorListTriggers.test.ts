@@ -1,6 +1,6 @@
-import type ErrorListNoteRecord from "core/phase1/src/types/ErrorListNoteRecord"
-import { TriggerCode } from "core/phase1/src/types/TriggerCode"
 import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListNoteRecord from "core/phase1/types/ErrorListNoteRecord"
+import { TriggerCode } from "core/phase1/types/TriggerCode"
 import postgres from "postgres"
 import createDbConfig from "./createDbConfig"
 import insertErrorListRecord from "./insertErrorListRecord"

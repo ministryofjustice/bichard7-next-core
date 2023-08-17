@@ -1,8 +1,8 @@
 import type { Trigger } from "aws-sdk/clients/elasticbeanstalk"
-import getFile from "core/phase1/src/comparison/lib/getFile"
-import { parseAhoXml } from "core/phase1/src/parse/parseAhoXml"
-import type { AnnotatedHearingOutcome } from "core/phase1/src/types/AnnotatedHearingOutcome"
-import type Exception from "core/phase1/src/types/Exception"
+import getFile from "core/phase1/comparison/lib/getFile"
+import { parseAhoXml } from "core/phase1/parse/parseAhoXml"
+import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
+import type Exception from "core/phase1/types/Exception"
 import readline from "readline"
 
 interface ComparisonFile {

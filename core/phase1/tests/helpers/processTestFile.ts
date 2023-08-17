@@ -1,5 +1,5 @@
 import { dateReviver } from "common/axiosDateTransformer"
-import type { Comparison } from "core/phase1/src/comparison/types/ComparisonFile"
+import type { Comparison } from "core/phase1/comparison/types/ComparisonFile"
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"

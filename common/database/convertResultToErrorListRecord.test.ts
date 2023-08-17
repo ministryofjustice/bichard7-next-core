@@ -1,7 +1,7 @@
-import errorPaths from "core/phase1/src/lib/errorPaths"
-import { ExceptionCode } from "core/phase1/src/types/ExceptionCode"
-import { TriggerCode } from "core/phase1/src/types/TriggerCode"
+import errorPaths from "core/phase1/lib/errorPaths"
 import generateMockPhase1Result from "core/phase1/tests/helpers/generateMockPhase1Result"
+import { ExceptionCode } from "core/phase1/types/ExceptionCode"
+import { TriggerCode } from "core/phase1/types/TriggerCode"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {

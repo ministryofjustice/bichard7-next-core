@@ -1,5 +1,5 @@
-import type { AuditLogEvent } from "core/phase1/src/types/AuditLogEvent"
-import type AuditLogger from "core/phase1/src/types/AuditLogger"
+import type { AuditLogEvent } from "core/phase1/types/AuditLogEvent"
+import type AuditLogger from "core/phase1/types/AuditLogger"
 
 export default class CoreAuditLogger implements AuditLogger {
   private events: AuditLogEvent[] = []

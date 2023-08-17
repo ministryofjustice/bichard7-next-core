@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import CoreAuditLogger from "core/common/CoreAuditLogger"
-import parseSpiResult from "core/phase1/src/parse/parseSpiResult"
-import transformSpiToAho from "core/phase1/src/parse/transformSpiToAho"
-import CoreHandler from "core/phase1/src/phase1"
-import type { PncQueryResult } from "core/phase1/src/types/PncQueryResult"
+import parseSpiResult from "core/phase1/parse/parseSpiResult"
+import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
+import CoreHandler from "core/phase1/phase1"
 import MockPncGateway from "core/phase1/tests/helpers/MockPncGateway"
+import type { PncQueryResult } from "core/phase1/types/PncQueryResult"
 import express from "express"
 
 const app = express()

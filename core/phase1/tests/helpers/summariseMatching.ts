@@ -1,7 +1,7 @@
-import type { CourtResultMatchingSummary } from "core/phase1/src/comparison/types/MatchingComparisonOutput"
-import getOffenceCode from "core/phase1/src/lib/offence/getOffenceCode"
-import type { AnnotatedHearingOutcome } from "core/phase1/src/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "core/phase1/src/types/ExceptionCode"
+import type { CourtResultMatchingSummary } from "core/phase1/comparison/types/MatchingComparisonOutput"
+import getOffenceCode from "core/phase1/lib/offence/getOffenceCode"
+import type { AnnotatedHearingOutcome } from "core/phase1/types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "core/phase1/types/ExceptionCode"
 
 export const matchingExceptions: ExceptionCode[] = [
   ExceptionCode.HO100203,

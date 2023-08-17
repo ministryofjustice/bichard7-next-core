@@ -1,4 +1,4 @@
-import type ErrorListRecord from "core/phase1/src/types/ErrorListRecord"
+import type ErrorListRecord from "core/phase1/types/ErrorListRecord"
 import { randomUUID } from "crypto"
 import postgres from "postgres"
 import createDbConfig from "./createDbConfig"

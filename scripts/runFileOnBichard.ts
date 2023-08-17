@@ -1,5 +1,5 @@
-import getFile from "core/phase1/src/comparison/lib/getFile"
-import type { ImportedComparison } from "core/phase1/src/comparison/types/ImportedComparison"
+import getFile from "core/phase1/comparison/lib/getFile"
+import type { ImportedComparison } from "core/phase1/comparison/types/ImportedComparison"
 import ActiveMqHelper from "core/phase1/tests/helpers/ActiveMqHelper"
 import defaults from "core/phase1/tests/helpers/defaults"
 import { mockAhoRecordInPnc } from "core/phase1/tests/helpers/mockRecordInPnc"

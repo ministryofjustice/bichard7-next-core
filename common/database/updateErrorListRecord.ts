@@ -1,6 +1,6 @@
-import type ErrorListRecord from "core/phase1/src/types/ErrorListRecord"
-import type { Phase1SuccessResult } from "core/phase1/src/types/Phase1Result"
-import ResolutionStatus from "core/phase1/src/types/ResolutionStatus"
+import type ErrorListRecord from "core/phase1/types/ErrorListRecord"
+import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
+import ResolutionStatus from "core/phase1/types/ResolutionStatus"
 import type { PostgresError, Sql } from "postgres"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 

@@ -1,4 +1,4 @@
-import EventCategory from "core/phase1/src/types/EventCategory"
+import EventCategory from "core/phase1/types/EventCategory"
 import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {

@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
-import type { ImportedComparison } from "core/phase1/src/comparison/types/ImportedComparison"
+import type { ImportedComparison } from "core/phase1/comparison/types/ImportedComparison"
 import ActiveMqHelper from "core/phase1/tests/helpers/ActiveMqHelper"
 import defaults from "core/phase1/tests/helpers/defaults"
 import crypto from "crypto"

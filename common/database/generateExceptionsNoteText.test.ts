@@ -1,6 +1,6 @@
-import type Exception from "core/phase1/src/types/Exception"
-import { ExceptionCode } from "core/phase1/src/types/ExceptionCode"
-import errorPaths from "../../core/phase1/src/lib/errorPaths"
+import type Exception from "core/phase1/types/Exception"
+import { ExceptionCode } from "core/phase1/types/ExceptionCode"
+import errorPaths from "../../core/phase1/lib/errorPaths"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 
 const mockExceptions: Exception[] = [
