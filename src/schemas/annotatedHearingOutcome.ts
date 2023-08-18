@@ -1,4 +1,4 @@
-import { ZodType, z } from "zod"
+import { z } from "zod"
 import { ExceptionCode } from "../types/ExceptionCode"
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
@@ -27,44 +27,10 @@ import {
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
 import toArray from "./toArray"
+import { ahoDescription, organisationUnitDescription } from "./schema-description"
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-interface ZodType<T, K, I> {
-  describeIt(valueDescription: string | null, example: string | null): ZodType<T, K, I>
-}
-
-const generateLinkQuery = (path: string) =>
-  path
-    .split(">")
-    .map((p) => p.trim())
-    .join("_")
-
-ZodType.prototype.describeIt = function (
-  valueDescription: string,
-  example: string | null,
-  spiMessageFields: string[] | null
-) {
-  let description = ""
-  if (valueDescription) {
-    description += "<h5>Value</h5>"
-    if (Array.isArray(valueDescription)) {
-      description += `<p><ul>${valueDescription.map((v) => `<li>${v}</li>`).join("")}</ul></p>`
-    } else {
-      description += `<p>${valueDescription}</p>`
-    }
-  }
-
-  if (spiMessageFields && spiMessageFields.length > 0) {
-    description += `<h5>SPI Result fields used to populate the value</h5><p><ul>${spiMessageFields
-      .map((f) => `<li><a href="spi.schema.html#${generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
-      .join("")}</ul></p>`
-  }
-
-  if (example) {
-    description += `<h5>Example</h5><p>${example}</p>`
-  }
-  return this.describe(description)
-}
+const hearingDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Hearing
+const caseDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Case
 
 export const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
 
@@ -123,38 +89,14 @@ export const offenceReasonSchema = z.discriminatedUnion("__type", [
 ])
 
 export const organisationUnitSchema = z.object({
-  TopLevelCode: z
-    .string()
-    .optional()
-    .describeIt(
-      "First letter of the Organisation Unit Code",
-      "<span style='font-weight: 600; color: red'>B</span>03AX00"
-    ),
-  SecondLevelCode: z
-    .string()
-    .or(z.null())
-    .describeIt(
-      "Second and third letters of the Organisation Unit Code",
-      "B<span style='font-weight: 600; color: red'>03</span>AX00"
-    ),
-  ThirdLevelCode: z
-    .string()
-    .or(z.null())
-    .describeIt(
-      "Fourth and fifth letters of the Organisation Unit Code",
-      "B03<span style='font-weight: 600; color: red'>AX</span>00"
-    ),
-  BottomLevelCode: z
-    .string()
-    .or(z.null())
-    .describeIt(
-      "Sixth and seventh letters of the Organisation Unit Code",
-      "B03AX<span style='font-weight: 600; color: red'>00</span>"
-    ),
+  TopLevelCode: z.string().optional().describe(organisationUnitDescription.TopLevelCode.$description),
+  SecondLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.SecondLevelCode.$description),
+  ThirdLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.ThirdLevelCode.$description),
+  BottomLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.BottomLevelCode.$description),
   OrganisationUnitCode: z
     .string()
     .regex(/^[A-JZ0-9]{0,1}[A-Z0-9]{6}$/, ExceptionCode.HO100200)
-    .describeIt("Top level + Second level + Third level + Bottom level", "B03AX00")
+    .describe(organisationUnitDescription.OrganisationUnitCode.$description)
 })
 
 export const defendantOrOffenderSchema = z.object({
@@ -228,8 +170,8 @@ export const defendantDetailSchema = z.object({
 })
 
 export const courtReferenceSchema = z.object({
-  CrownCourtReference: z.string().optional(),
-  MagistratesCourtReference: z.string()
+  CrownCourtReference: z.string().optional().describe("Not used"),
+  MagistratesCourtReference: z.string().describe(caseDescription.CourtReference.MagistratesCourtReference.$description)
 })
 
 export const courtCaseReferenceNumberSchema = z
@@ -248,52 +190,21 @@ export const sourceReferenceSchema = z.object({
 })
 
 export const hearingSchema = z.object({
-  CourtHearingLocation: organisationUnitSchema.describeIt(null, null, [
-    "DeliverRequest > Message > ResultedCaseMessage > Session > CourtHearing > Hearing > CourtHearingLocation"
-  ]),
-  DateOfHearing: z
-    .date()
-    .describeIt(null, null, [
-      "DeliverRequest > Message > ResultedCaseMessage > Session > CourtHearing > Hearing > DateOfHearing"
-    ]),
-  TimeOfHearing: timeSchema.describeIt(null, null, [
-    "DeliverRequest > Message > ResultedCaseMessage > Session > CourtHearing > Hearing > TimeOfHearing"
-  ]),
-  HearingLanguage: z.string().describeIt("`D`"),
-  HearingDocumentationLanguage: z.string().describeIt("`D`"),
-  DefendantPresentAtHearing: z
-    .string()
-    .describeIt(
-      "Whichever has value in SPI Result: `CourtIndividualDefendant.PresentAtHearing` or `CourtCorporateDefendant.PresentAtHearing`",
-      null,
-      [
-        "DeliverRequest > Message > ResultedCaseMessage > Session > Case > Defendant > CourtIndividualDefendant > PresentAtHearing",
-        "DeliverRequest > Message > ResultedCaseMessage > Session > Case > Defendant > CourtCorporateDefendant > PresentAtHearing"
-      ]
-    ),
+  CourtHearingLocation: organisationUnitSchema.describe(hearingDescription.CourtHearingLocation.$description),
+  DateOfHearing: z.date().describe(hearingDescription.DateOfHearing.$description),
+  TimeOfHearing: timeSchema.describe(hearingDescription.TimeOfHearing.$description),
+  HearingLanguage: z.string().describe(hearingDescription.HearingLanguage.$description),
+  HearingDocumentationLanguage: z.string().describe(hearingDescription.HearingDocumentationLanguage.$description),
+  DefendantPresentAtHearing: z.string().describe(hearingDescription.DefendantPresentAtHearing.$description),
   ReportRequestedDate: z.date().optional(),
   ReportCompletedDate: z.date().optional(),
-  SourceReference: sourceReferenceSchema.describeIt(
-    [
-      "`DocumentName` is populated from `CourtIndividualDefendant` or `CourtCorporateDefendant` in SPI Result",
-      "`DocumentType` value is `SPI Case Result`",
-      "`UniqueID` value is `DeliverRequest.MessageIdentifier` in SPI Result"
-    ],
-    null,
-    [
-      "DeliverRequest > Message > ResultedCaseMessage > Session > Case > Defendant > CourtIndividualDefendant > PersonDefendant > BasePersonDetails > PersonName",
-      "DeliverRequest > Message > ResultedCaseMessage > Session > Case > Defendant > CourtCorporateDefendant > OrganisationName > OrganisationName",
-      "DeliverRequest > MessageIdentifier"
-    ]
-  ),
+  SourceReference: sourceReferenceSchema.describe(hearingDescription.SourceReference.$description),
   CourtType: z.string().or(z.null()).refine(validateCourtType, ExceptionCode.HO100108).optional(), // Can't test this in Bichard because it is always set to a valid value
   CourtHouseCode: z
     .number()
     .min(100, ExceptionCode.HO100249)
     .max(9999, ExceptionCode.HO100249)
-    .describeIt(null, null, [
-      "DeliverRequest > Message > ResultedCaseMessage > Session > CourtHearing > Hearing > PSAcode"
-    ]),
+    .describe(hearingDescription.CourtHouseCode.$description),
   CourtHouseName: z.string().optional()
 })
 
@@ -427,13 +338,13 @@ export const caseSchema = z.object({
   PTIURN: z
     .string()
     .regex(/^[A-Z0-9]{4}[0-9]{3,7}$/, ExceptionCode.HO100201)
-    .describeIt(null, null, ["DeliverRequest > Message > ResultedCaseMessage > Session > Case > PTIURN"]),
+    .describe(caseDescription.PTIURN.$description),
   CaseMarker: z.string().min(0, ExceptionCode.HO100202).max(255, ExceptionCode.HO100202).optional(), // Note: This doesn't seem to ever be set in the original code
   CPSOrganisation: organisationUnitSchema.optional(),
-  PreChargeDecisionIndicator: z.boolean(),
+  PreChargeDecisionIndicator: z.boolean().describe(caseDescription.PreChargeDecisionIndicator.$description),
   CourtCaseReferenceNumber: courtCaseReferenceNumberSchema.optional(),
   PenaltyNoticeCaseReferenceNumber: z.string().optional(),
-  CourtReference: courtReferenceSchema,
+  CourtReference: courtReferenceSchema.describe(caseDescription.CourtReference.$description),
   CourtOfAppealResult: z.string().optional(),
   ForceOwner: organisationUnitSchema.optional(),
   RecordableOnPNCindicator: z.boolean().optional(),
@@ -443,11 +354,8 @@ export const caseSchema = z.object({
 })
 
 export const hearingOutcomeSchema = z.object({
-  Hearing: hearingSchema.describeIt(null, null, [
-    "DeliverRequest > Message > ResultedCaseMessage",
-    "DeliverRequest > MessageIdentifier"
-  ]),
-  Case: caseSchema.describeIt(null, null, ["DeliverRequest > Message > ResultedCaseMessage"])
+  Hearing: hearingSchema.describe(hearingDescription.$description),
+  Case: caseSchema.describe(caseDescription.$description)
 })
 
 export const annotatedHearingOutcomeSchema = z.object({
