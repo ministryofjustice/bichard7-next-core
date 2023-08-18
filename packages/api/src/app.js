@@ -1,0 +1,13 @@
+"use strict";
+exports.__esModule = true;
+var express_1 = require("express");
+var cors_1 = require("cors");
+var queryParser_1 = require("./middleware/queryParser");
+var health_1 = require("./routes/health");
+var courtCases_1 = require("./routes/courtCases");
+var app = (0, express_1["default"])();
+app.use((0, cors_1["default"])());
+app.use(queryParser_1["default"]);
+app.use("/health", health_1["default"]);
+app.use("/court-cases", courtCases_1["default"]);
+exports["default"] = app;

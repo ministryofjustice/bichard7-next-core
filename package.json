@@ -62,9 +62,7 @@
     "*.{js,ts,tsx}": "eslint --cache --fix"
   },
   "workspaces": [
-    "api",
-    "core",
-    "common"
+    "packages/*"
   ],
   "devDependencies": {
     "eslint": "^8.47.0",
