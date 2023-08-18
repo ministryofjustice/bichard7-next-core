@@ -27,7 +27,6 @@
     "build:package": "./scripts/build-package.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky install",
     "update-deps": "ncu -u && npm install",
     "install-standing-data": "scripts/install-standing-data.sh",
     "all": "./environment/boot.sh",
