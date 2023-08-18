@@ -1,4 +1,4 @@
-import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
+import type { Offence } from "types/AnnotatedHearingOutcome"
 import isOffenceIgnored from "./isOffenceIgnored"
 
 describe("isOffenceIgnored()", () => {

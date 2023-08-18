@@ -1,6 +1,6 @@
-import type { AuditLogEvent } from "common/types/AuditLogEvent"
-import { AuditLogEventOptions, AuditLogEventSource } from "common/types/AuditLogEvent"
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import EventCategory from "../../types/EventCategory"
 import getAuditLogEvent from "./getAuditLogEvent"
 

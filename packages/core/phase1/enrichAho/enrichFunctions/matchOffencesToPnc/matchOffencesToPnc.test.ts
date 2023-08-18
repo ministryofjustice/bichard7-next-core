@@ -1,7 +1,7 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "core/phase1/comparison/types/MatchingComparisonOutput"
-import errorPaths from "core/phase1/lib/errorPaths"
-import summariseMatching from "core/phase1/tests/helpers/summariseMatching"
+import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import errorPaths from "phase1/lib/errorPaths"
+import summariseMatching from "phase1/tests/helpers/summariseMatching"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
 type Adjudication = {

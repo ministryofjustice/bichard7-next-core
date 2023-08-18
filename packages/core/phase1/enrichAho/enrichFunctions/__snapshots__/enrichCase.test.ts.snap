@@ -2,7 +2,7 @@
 
 exports[`enrich case should return AHO enriched with case 1`] = `
 {
-  "core/common/types/AnnotatedHearingOutcome": {
+  "types/AnnotatedHearingOutcome": {
     "HearingOutcome": {
       "Case": {
         "CourtReference": {
@@ -74,7 +74,7 @@ exports[`enrich case should return AHO enriched with case 1`] = `
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
-                  "core/phase1/types/Verdict": "G",
+                  "phase1/types/Verdict": "G",
                 },
               ],
             },
@@ -121,7 +121,7 @@ exports[`enrich case should return AHO enriched with case 1`] = `
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
-                  "core/phase1/types/Verdict": "G",
+                  "phase1/types/Verdict": "G",
                 },
               ],
             },

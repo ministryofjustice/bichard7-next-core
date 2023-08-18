@@ -1,4 +1,6 @@
-import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "common/pnc/PncQueryResult"
+import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
+import type { XmlBuilderOptions } from "fast-xml-parser"
+import { XMLBuilder } from "fast-xml-parser"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -11,9 +13,7 @@ import type {
   OrganisationUnitCodes,
   Result,
   Urgent
-} from "core/common/types/AnnotatedHearingOutcome"
-import type { XmlBuilderOptions } from "fast-xml-parser"
-import { XMLBuilder } from "fast-xml-parser"
+} from "types/AnnotatedHearingOutcome"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -214,7 +214,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
       result.NextHearingDate === null ? nullText(result.NextHearingDate) : optionalFormatText(result.NextHearingDate),
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
-    "core/phase1/types/Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
+    "phase1/types/Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),
     "ds:ResultVariableText": optionalText(result.ResultVariableText),
     "ds:WarrantIssueDate": optionalFormatText(result.WarrantIssueDate),
@@ -395,7 +395,7 @@ const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_DateOfSentence": toPNCDate(adjudication.sentenceDate),
   "@_IntfcUpdateType": "I",
   "@_OffenceTICNumber": adjudication.offenceTICNumber.toString().padStart(4, "0"),
-  "core/phase1/types/Plea": adjudication.plea
+  "phase1/types/Plea": adjudication.plea
 })
 
 const mapOffenceDIS = (disposals: PncDisposal[]): DISList => ({
@@ -501,7 +501,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
     ...(validate
       ? {
-          "core/common/types/AnnotatedHearingOutcome": {
+          "types/AnnotatedHearingOutcome": {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
             "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,

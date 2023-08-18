@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "types/ExceptionCode"
 import addNullElementsForExceptions from "./addNullElementsForExceptions"
 
 describe("addNullElementsForExceptions()", () => {
@@ -15,13 +15,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: [
-            "core/common/types/AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "ArrestSummonsNumber"
-          ]
+          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome
@@ -40,13 +34,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: [
-            "core/common/types/AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "ArrestSummonsNumber"
-          ]
+          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome
@@ -74,7 +62,7 @@ describe("addNullElementsForExceptions()", () => {
         {
           code: ExceptionCode.HO100100,
           path: [
-            "core/common/types/AnnotatedHearingOutcome",
+            "types/AnnotatedHearingOutcome",
             "HearingOutcome",
             "Case",
             "HearingDefendant",
@@ -107,13 +95,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: [
-            "core/common/types/AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "ArrestSummonsNumber"
-          ]
+          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome

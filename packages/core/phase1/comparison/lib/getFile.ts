@@ -1,5 +1,5 @@
-import createS3Config from "common/s3/createS3Config"
-import getFileFromS3 from "common/s3/getFileFromS3"
+import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import fs from "fs"
 import { cacheFileExists, clearCache, getCacheFile, storeCacheFile } from "../cli/cache"
 

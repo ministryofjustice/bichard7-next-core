@@ -1,12 +1,7 @@
-import type { Duration, OrganisationUnitCodes, Result } from "core/common/types/AnnotatedHearingOutcome"
-import type { CjsPlea } from "core/phase1/types/Plea"
-import type {
-  ResultedCaseMessageParsedXml,
-  SpiNextHearingDetails,
-  SpiOffence,
-  SpiResult
-} from "core/phase1/types/SpiResult"
-import type { CjsVerdict } from "core/phase1/types/Verdict"
+import type { CjsPlea } from "phase1/types/Plea"
+import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "phase1/types/SpiResult"
+import type { CjsVerdict } from "phase1/types/Verdict"
+import type { Duration, OrganisationUnitCodes, Result } from "types/AnnotatedHearingOutcome"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,

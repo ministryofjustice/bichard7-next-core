@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import type { IncomingMessageParsedXml } from "core/phase1/types/SpiResult"
+import type { IncomingMessageParsedXml } from "phase1/types/SpiResult"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import populateCase from "./populateCase"
 import populateHearing from "./populateHearing"
 

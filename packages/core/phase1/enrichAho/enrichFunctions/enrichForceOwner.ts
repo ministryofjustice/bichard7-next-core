@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByCode } from "../../dataLookup"
 import isAsnValid from "../../lib/isAsnValid"
 import logger from "../../lib/logging"

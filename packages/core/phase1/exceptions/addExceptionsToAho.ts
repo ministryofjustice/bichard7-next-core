@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import type { ExceptionCode } from "core/common/types/ExceptionCode"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import type { ExceptionCode } from "types/ExceptionCode"
 import isPncException from "../lib/isPncException"
 import type Exception from "../types/Exception"
 import type { ExceptionPath } from "../types/Exception"

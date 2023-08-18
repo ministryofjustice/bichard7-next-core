@@ -1,8 +1,8 @@
 import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/Result"
 import { isError } from "@moj-bichard7/core/phase1/comparison/types/Result"
-import type MqConfig from "common/mq/MqConfig"
 import type { Client, connect } from "stompit"
 import { ConnectFailover } from "stompit"
+import type MqConfig from "./MqConfig"
 import deconstructServers from "./deconstructServers"
 
 const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {

@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 

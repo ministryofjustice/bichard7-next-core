@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import summariseMatching from "core/phase1/tests/helpers/summariseMatching"
+import summariseMatching from "phase1/tests/helpers/summariseMatching"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"

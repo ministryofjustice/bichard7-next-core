@@ -1,5 +1,5 @@
 {
-  "core/common/types/AnnotatedHearingOutcome": {
+  "types/AnnotatedHearingOutcome": {
     "HearingOutcome": {
       "Hearing": {
         "CourtHearingLocation": {
@@ -107,7 +107,7 @@
                   ],
                   "NumberSpecifiedInResult": [],
                   "PleaStatus": "NG",
-                  "core/phase1/types/Verdict": "G",
+                  "phase1/types/Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "Fined 100.",
                   "ResultQualifierVariable": [],
@@ -175,7 +175,7 @@
                   "ResultHearingType": "OTHER",
                   "ResultHearingDate": "2011-09-26T00:00:00.000Z",
                   "PleaStatus": "NG",
-                  "core/phase1/types/Verdict": "G",
+                  "phase1/types/Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "DEFENDANT MUST LIVE AT OUR HOUSE IN THE MIDDLE OF OUR STREET",
                   "ResultQualifierVariable": [],

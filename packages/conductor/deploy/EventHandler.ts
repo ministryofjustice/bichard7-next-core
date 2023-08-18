@@ -1,6 +1,6 @@
 import fs from "fs"
-import { isMatch } from "lodash"
-import type { EventHandlerDef } from "packages/conductor/src/types/EventHandlerDef"
+import { isMatch } from "lodash.ismatch"
+import type { EventHandlerDef } from "../src/types/EventHandlerDef"
 import type ConductorGateway from "./ConductorGateway"
 
 class EventHandler {

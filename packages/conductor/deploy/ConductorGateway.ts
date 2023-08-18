@@ -1,7 +1,7 @@
 import type { WorkflowDef } from "@io-orkes/conductor-typescript"
 import axios from "axios"
-import type { EventHandlerDef } from "packages/conductor/src/types/EventHandlerDef"
-import type { TaskDef } from "packages/conductor/src/types/TaskDef"
+import type { EventHandlerDef } from "../src/types/EventHandlerDef"
+import type { TaskDef } from "../src/types/TaskDef"
 
 type ConductorOptions = {
   url: string

@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core normalises CCRs when checking for matching CCRs on the PNC, so it can handle extra leading 0s

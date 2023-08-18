@@ -1,6 +1,6 @@
 import fs from "fs"
 import { isMatch } from "lodash"
-import type { TaskDef } from "packages/conductor/src/types/TaskDef"
+import type { TaskDef } from "../src/types/TaskDef"
 import type ConductorGateway from "./ConductorGateway"
 
 class Task {

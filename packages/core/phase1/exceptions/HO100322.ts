@@ -1,4 +1,4 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { ExceptionCode } from "types/ExceptionCode"
 import errorPaths from "../lib/errorPaths"
 import isCaseRecordable from "../lib/isCaseRecordable"
 import isAdjourned from "../lib/result/isAdjourned"

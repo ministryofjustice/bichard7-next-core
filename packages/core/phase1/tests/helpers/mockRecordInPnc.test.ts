@@ -1,10 +1,10 @@
-import type { PncQueryResult } from "common/pnc/PncQueryResult"
+import type { PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
 import { mockEnquiryFromPncResult } from "./mockRecordInPnc"
 
 const normaliseResponse = (response: string): string[] => response.split("\n").map((line) => line.trim())
 
 describe("mockEnquiryFromPncResult()", () => {
-  it("common/pnc/PncQueryResult", () => {
+  it("@moj-bichard7/common/pnc/PncQueryResult", () => {
     const pncResult: PncQueryResult = {
       forceStationCode: "01ZD",
       checkName: "SEXOFFENCE",

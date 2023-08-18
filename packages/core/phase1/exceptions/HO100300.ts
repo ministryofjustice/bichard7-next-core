@@ -1,4 +1,4 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { ExceptionCode } from "types/ExceptionCode"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../dataLookup"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
@@ -12,7 +12,7 @@ const COURT_HEARING_LOCATION_PATH: ExceptionPath =
 const COURT_HOUSE_CODE_PATH: ExceptionPath = "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode".split(".")
 
 const getResultPath = (offenceIndex: number, resultIndex: number): ExceptionPath => [
-  "core/common/types/AnnotatedHearingOutcome",
+  "types/AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",
   "HearingDefendant",

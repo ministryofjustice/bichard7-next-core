@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes, Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes, Result } from "types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
 import lookupCrownCourtByNameAndFirstPsaCode from "../../dataLookup/lookupCrownCourtByNameAndFirstPsaCode"

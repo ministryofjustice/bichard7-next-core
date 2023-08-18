@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import type AuditLogger from "core/phase1/types/AuditLogger"
-import type PncGatewayInterface from "../../../common/pnc/PncGatewayInterface"
+import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
+import type AuditLogger from "phase1/types/AuditLogger"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
 import {
   enrichCase,

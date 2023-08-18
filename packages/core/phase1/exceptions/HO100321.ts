@@ -1,4 +1,4 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { ExceptionCode } from "types/ExceptionCode"
 import errorPaths from "../lib/errorPaths"
 import { isAsnFormatValid } from "../lib/isAsnValid"
 import isDummyAsn from "../lib/isDummyAsn"

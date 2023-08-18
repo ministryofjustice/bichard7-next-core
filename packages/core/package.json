@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "devDependencies": {
     "@types/diff": "^5.0.3",
+    "@types/lodash.differencewith": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/lodash.merge": "^4.6.7",
     "@types/lodash.orderby": "^4.6.7",
@@ -57,6 +58,7 @@
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
     "fast-xml-parser": "^4.2.7",
+    "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
     "p-limit": "^3.1.0",

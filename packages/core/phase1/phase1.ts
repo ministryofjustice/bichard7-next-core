@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import type PncGatewayInterface from "../../common/pnc/PncGatewayInterface"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../common/types/AuditLogEvent"
 import { isError } from "./comparison/types/Result"

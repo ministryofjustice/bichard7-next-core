@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
-import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
+import type PncComparisonResultDetail from "phase1/comparison/types/PncComparisonResultDetail"
 import type { SkippedFile } from "./processRange"
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`

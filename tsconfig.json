@@ -17,7 +17,6 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "composite": true,
-    "declaration": true,
-    "baseUrl": "./"
+    "declaration": true
   }
 }

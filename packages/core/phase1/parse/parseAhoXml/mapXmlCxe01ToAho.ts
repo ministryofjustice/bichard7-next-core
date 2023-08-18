@@ -5,8 +5,8 @@ import type {
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
-} from "common/pnc/PncQueryResult"
-import parsePncDate from "core/phase1/lib/parsePncDate"
+} from "@moj-bichard7/common/pnc/PncQueryResult"
+import parsePncDate from "phase1/lib/parsePncDate"
 import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "../../types/AhoXml"
 
 type OffenceDates = {
@@ -74,7 +74,7 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   return {
     verdict: adj["@_Adjudication1"],
     sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
-    plea: adj["core/phase1/types/Plea"],
+    plea: adj["phase1/types/Plea"],
     offenceTICNumber: Number(adj["@_OffenceTICNumber"]),
     weedFlag: adj["@_WeedFlag"]
   }

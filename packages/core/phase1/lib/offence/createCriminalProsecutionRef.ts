@@ -1,4 +1,4 @@
-import type { CriminalProsecutionReference, OffenceReason } from "core/common/types/AnnotatedHearingOutcome"
+import type { CriminalProsecutionReference, OffenceReason } from "types/AnnotatedHearingOutcome"
 import type { ParsedAsn } from "../../types/ParsedAsn"
 
 const formatOuCode = (

@@ -1,4 +1,4 @@
-import type { Case } from "core/common/types/AnnotatedHearingOutcome"
+import type { Case } from "types/AnnotatedHearingOutcome"
 import type { OffenceMatch } from "./matchOffencesToPnc"
 import offenceIsBreach from "./offenceIsBreach"
 

@@ -1,6 +1,6 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
-import { pncQueryResultSchema } from "core/phase1/schemas/pncQueryResult"
-import { CjsPlea } from "core/phase1/types/Plea"
+import { pncQueryResultSchema } from "phase1/schemas/pncQueryResult"
+import { CjsPlea } from "phase1/types/Plea"
+import { ExceptionCode } from "types/ExceptionCode"
 import { z } from "zod"
 import ResultClass from "../types/ResultClass"
 import {

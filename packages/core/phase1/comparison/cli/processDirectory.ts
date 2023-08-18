@@ -1,5 +1,5 @@
 import fs from "fs"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
 import processFile from "./processFile"
 import type { SkippedFile } from "./processRange"
 

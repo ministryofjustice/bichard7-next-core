@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import { TriggerCode } from "core/common/types/TriggerCode"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import { TriggerCode } from "types/TriggerCode"
 import triggers from "."
 import type { Trigger } from "../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"

@@ -1,6 +1,6 @@
+import errorPaths from "@moj-bichard7/core/phase1/lib/errorPaths"
 import type Exception from "@moj-bichard7/core/phase1/types/Exception"
 import { ExceptionCode } from "@moj-bichard7/core/types/ExceptionCode"
-import errorPaths from "../../core/phase1/lib/errorPaths"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 
 const mockExceptions: Exception[] = [

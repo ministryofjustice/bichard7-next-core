@@ -1,8 +1,8 @@
-import generateMessage from "core/phase1/tests/helpers/generateMessage"
-import processMessage from "core/phase1/tests/helpers/processMessage"
-import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
 import "jest-xml-matcher"
 import MockDate from "mockdate"
+import generateMessage from "phase1/tests/helpers/generateMessage"
+import processMessage from "phase1/tests/helpers/processMessage"
+import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import convertAhoToXml from "./generate"
 
 describe("generateLegacyAhoXml", () => {

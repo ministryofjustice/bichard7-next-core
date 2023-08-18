@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import parseSpiResult from "core/phase1/parse/parseSpiResult"
-import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
+import parseSpiResult from "phase1/parse/parseSpiResult"
+import transformSpiToAho from "phase1/parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import getMessageType from "../lib/getMessageType"
 import { parseAhoXml } from "./parseAhoXml"
 

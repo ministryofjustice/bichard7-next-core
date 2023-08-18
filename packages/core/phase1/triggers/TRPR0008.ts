@@ -1,7 +1,7 @@
-import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
-import { TriggerCode } from "core/common/types/TriggerCode"
-import { CjsPlea } from "core/phase1/types/Plea"
-import { CjsVerdict } from "core/phase1/types/Verdict"
+import { CjsPlea } from "phase1/types/Plea"
+import { CjsVerdict } from "phase1/types/Verdict"
+import type { Offence } from "types/AnnotatedHearingOutcome"
+import { TriggerCode } from "types/TriggerCode"
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 

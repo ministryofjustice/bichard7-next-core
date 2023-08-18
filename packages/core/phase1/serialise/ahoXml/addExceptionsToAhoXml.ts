@@ -1,4 +1,4 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { ExceptionCode } from "types/ExceptionCode"
 import errorPaths from "../../lib/errorPaths"
 import isPncException from "../../lib/isPncException"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"

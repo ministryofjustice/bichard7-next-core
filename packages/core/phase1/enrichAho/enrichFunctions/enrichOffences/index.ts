@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
 import constructOffenceReason from "../../../lib/offence/constructOffenceReason"
 import createCriminalProsecutionRef from "../../../lib/offence/createCriminalProsecutionRef"
 import getAreaCode from "../../../lib/offence/getAreaCode"

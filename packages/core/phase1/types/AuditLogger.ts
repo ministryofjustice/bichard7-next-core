@@ -1,4 +1,4 @@
-import type { AuditLogEvent } from "../../../common/types/AuditLogEvent"
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 
 export default interface AuditLogger {
   /**

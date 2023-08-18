@@ -1,5 +1,5 @@
-import type { OffenceReason } from "core/common/types/AnnotatedHearingOutcome"
-import type Exception from "core/phase1/types/Exception"
+import type Exception from "phase1/types/Exception"
+import type { OffenceReason } from "types/AnnotatedHearingOutcome"
 
 export type ResultSummary = {
   CJSresultCode: number

@@ -1,4 +1,4 @@
-import { TriggerCode } from "core/common/types/TriggerCode"
+import { TriggerCode } from "types/TriggerCode"
 import requireStandingData from "../lib/requireStandingData"
 import type { Trigger } from "../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"

@@ -1,5 +1,5 @@
-import type { Address, DefendantDetail, HearingDefendant } from "core/common/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "core/phase1/types/SpiResult"
+import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "phase1/types/SpiResult"
+import type { Address, DefendantDetail, HearingDefendant } from "types/AnnotatedHearingOutcome"
 import { lookupRemandStatusBySpiCode } from "../../dataLookup"
 import PopulateOffences from "./PopulateOffences"
 

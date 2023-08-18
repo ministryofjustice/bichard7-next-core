@@ -1,4 +1,4 @@
-import processTestFile from "core/phase1/tests/helpers/processTestFile"
+import processTestFile from "phase1/tests/helpers/processTestFile"
 import type { OldPhase1Comparison } from "../types/ComparisonFile"
 import comparePhase1 from "./comparePhase1"
 

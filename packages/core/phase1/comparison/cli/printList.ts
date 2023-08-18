@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
 import { resultMatches } from "./printResult"
 import type { SkippedFile } from "./processRange"
 

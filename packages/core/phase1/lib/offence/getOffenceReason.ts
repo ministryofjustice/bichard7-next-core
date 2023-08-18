@@ -1,4 +1,4 @@
-import type { OffenceReason } from "core/common/types/AnnotatedHearingOutcome"
+import type { OffenceReason } from "types/AnnotatedHearingOutcome"
 import { COMMON_LAWS, INDICTMENT } from "../offenceTypes"
 import { isCommonLaw, isIndictment } from "./isOffenceType"
 

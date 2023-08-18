@@ -1,5 +1,5 @@
-import type { Offence, Result } from "core/common/types/AnnotatedHearingOutcome"
 import isEqual from "lodash.isequal"
+import type { Offence, Result } from "types/AnnotatedHearingOutcome"
 
 const nonRecordableResultCodes = [
   1000, 1505, 1509, 1510, 1511, 1513, 1514, 2069, 2501, 2505, 2507, 2508, 2509, 2511, 2514, 3501, 3502, 3503, 3504,

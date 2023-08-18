@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "core/common/types/ExceptionCode"
-import offenceHasFinalResult from "core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import offenceHasFinalResult from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const matchingToFinalOffences = (

@@ -1,6 +1,6 @@
-import type { PncOffence, PncQueryResult } from "common/pnc/PncQueryResult"
-import type { Offence } from "core/common/types/AnnotatedHearingOutcome"
-import { TriggerCode } from "core/common/types/TriggerCode"
+import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
+import type { Offence } from "types/AnnotatedHearingOutcome"
+import { TriggerCode } from "types/TriggerCode"
 import type { Trigger } from "../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 

@@ -1,4 +1,4 @@
-import { TriggerCode } from "core/common/types/TriggerCode"
+import { TriggerCode } from "types/TriggerCode"
 import type TriggerConfig from "../types/TriggerConfig"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 import TriggerRecordable from "../types/TriggerRecordable"

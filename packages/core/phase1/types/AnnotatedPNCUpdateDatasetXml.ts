@@ -1,4 +1,4 @@
-import type { XML } from "../../../common/types/Xml"
+import type { XML } from "@moj-bichard7/common/types/Xml"
 import type { Br7AnnotatedHearingOutcome } from "./AhoXml"
 
 export interface AnnotatedPNCUpdateDatasetXml {

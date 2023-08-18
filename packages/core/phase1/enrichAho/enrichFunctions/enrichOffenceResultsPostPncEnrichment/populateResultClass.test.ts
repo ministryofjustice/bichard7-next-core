@@ -1,4 +1,4 @@
-import type { Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { Result } from "types/AnnotatedHearingOutcome"
 import ResultClass from "../../../types/ResultClass"
 import populateResultClass from "./populateResultClass"
 
@@ -153,7 +153,7 @@ describe("populateResultClass", () => {
     const result = {
       ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      Verdict: "core/phase1/types/Verdict"
+      Verdict: "phase1/types/Verdict"
     } as Result
 
     populateResultClass(result, undefined, new Date())

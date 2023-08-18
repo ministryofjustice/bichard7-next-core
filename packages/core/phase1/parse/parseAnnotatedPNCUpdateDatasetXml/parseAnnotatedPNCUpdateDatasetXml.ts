@@ -1,5 +1,5 @@
-import type { AnnotatedPNCUpdateDatasetXml } from "core/phase1/types/AnnotatedPNCUpdateDatasetXml"
 import { XMLParser } from "fast-xml-parser"
+import type { AnnotatedPNCUpdateDatasetXml } from "phase1/types/AnnotatedPNCUpdateDatasetXml"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
 import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
 import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"

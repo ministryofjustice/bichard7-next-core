@@ -1,4 +1,4 @@
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import { ExceptionCode } from "types/ExceptionCode"
 import type { AhoXml, Br7Result } from "../../types/AhoXml"
 import addAhoErrors from "./addAhoErrors"
 
@@ -26,7 +26,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
+        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
       }
     ]
 
@@ -58,7 +58,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       }
     ]
 
@@ -90,13 +90,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: [
-          "core/common/types/AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "ArrestSummonsNumber"
-        ]
+        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
       }
     ]
 
@@ -133,7 +127,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
+        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
       }
     ]
 
@@ -173,16 +167,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: [
-          "core/common/types/AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          0
-        ]
+        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1, "Result", 0]
       }
     ]
 

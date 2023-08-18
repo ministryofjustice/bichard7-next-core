@@ -1,4 +1,4 @@
-import type { Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { Result } from "types/AnnotatedHearingOutcome"
 import isAdjourned from "../../../lib/result/isAdjourned"
 import isAdjournedNoNextHearing from "../../../lib/result/isAdjournedNoNextHearing"
 import isWarrantIssued from "../../../lib/result/isWarrantIssued"

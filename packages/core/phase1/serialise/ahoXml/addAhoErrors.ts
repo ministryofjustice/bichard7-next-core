@@ -5,7 +5,7 @@ import hasError from "./hasError"
 const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
   if (aho["br7:AnnotatedHearingOutcome"]) {
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = hasError(exceptions, [
-      "core/common/types/AnnotatedHearingOutcome",
+      "types/AnnotatedHearingOutcome",
       "HearingOutcome",
       "Hearing"
     ])
@@ -26,7 +26,7 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_SchemaVersion"] = "4.0"
 
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_hasError"] = hasError(exceptions, [
-      "core/common/types/AnnotatedHearingOutcome",
+      "types/AnnotatedHearingOutcome",
       "HearingOutcome",
       "Case"
     ])
@@ -35,7 +35,7 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_SchemaVersion"] = "4.0"
 
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["@_hasError"] =
-      hasError(exceptions, ["core/common/types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
+      hasError(exceptions, ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
 
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["br7:Offence"] = aho[
       "br7:AnnotatedHearingOutcome"
@@ -47,7 +47,7 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
             return {
               ...result,
               "@_hasError": hasError(exceptions, [
-                "core/common/types/AnnotatedHearingOutcome",
+                "types/AnnotatedHearingOutcome",
                 "HearingOutcome",
                 "Case",
                 "HearingDefendant",
@@ -67,7 +67,7 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
         ...offence,
         "br7:Result": results,
         "@_hasError": hasError(exceptions, [
-          "core/common/types/AnnotatedHearingOutcome",
+          "types/AnnotatedHearingOutcome",
           "HearingOutcome",
           "Case",
           "HearingDefendant",

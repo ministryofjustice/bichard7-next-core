@@ -1,6 +1,6 @@
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
-import "core/phase1/tests/helpers/setEnvironmentVariables"
 import MockDate from "mockdate"
+import "phase1/tests/helpers/setEnvironmentVariables"
 import MockDynamo from "../../tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
 import type { ComparisonLog } from "../types"

@@ -1,5 +1,5 @@
-import type { CriminalProsecutionReference, Offence, OffenceCode } from "core/common/types/AnnotatedHearingOutcome"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "core/phase1/types/SpiResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "phase1/types/SpiResult"
+import type { CriminalProsecutionReference, Offence, OffenceCode } from "types/AnnotatedHearingOutcome"
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
 import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
 import resultCodeIsOnStopList from "../../lib/result/resultCodeIsOnStopList"

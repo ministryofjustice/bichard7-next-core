@@ -1,5 +1,5 @@
-import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "core/common/types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "core/common/types/ExceptionCode"
+import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "types/ExceptionCode"
 import { z } from "zod"
 import {
   lookupCourtTypeByCjsCode,

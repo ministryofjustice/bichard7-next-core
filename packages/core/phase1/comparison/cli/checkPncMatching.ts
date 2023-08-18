@@ -1,7 +1,7 @@
-import { parseComparisonFile } from "core/phase1/tests/helpers/processTestFile"
+import type PncComparisonResultDetail from "phase1/comparison/types/PncComparisonResultDetail"
+import { parseComparisonFile } from "phase1/tests/helpers/processTestFile"
 import { isPhase1 } from "../lib/checkPhase"
 import comparePncMatching from "../lib/comparePncMatching"
-import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 import getStandingDataVersionByDate from "./getStandingDataVersionByDate"
 
 const checkPncMatching = async (

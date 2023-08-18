@@ -1,5 +1,5 @@
-import type { Hearing } from "core/common/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "core/phase1/types/SpiResult"
+import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
+import type { Hearing } from "types/AnnotatedHearingOutcome"
 import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
 import removeSeconds from "./removeSeconds"
 

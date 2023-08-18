@@ -1,5 +1,5 @@
-import type PncGatewayInterface from "common/pnc/PncGatewayInterface"
-import type { PncQueryResult } from "common/pnc/PncQueryResult"
+import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
+import type { PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
 
 export default class MockPncGateway implements PncGatewayInterface {
   constructor(

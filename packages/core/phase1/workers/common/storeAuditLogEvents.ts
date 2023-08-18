@@ -1,8 +1,8 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import getTaskConcurrency from "@moj-bichard7/conductor/src/getTaskConcurrency"
+import type { Task } from "@moj-bichard7/conductor/src/types/Task"
+import { conductorLog } from "@moj-bichard7/conductor/src/utils"
 import axios from "axios"
-import getTaskConcurrency from "packages/conductor/src/getTaskConcurrency"
-import type { Task } from "packages/conductor/src/types/Task"
-import { conductorLog } from "packages/conductor/src/utils"
 
 const taskDefName = "store_audit_log_events"
 

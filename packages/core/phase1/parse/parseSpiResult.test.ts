@@ -1,13 +1,13 @@
-import parseSpiResult from "core/phase1/parse/parseSpiResult"
-import type { ResultedCaseMessageParsedXml } from "core/phase1/types/SpiResult"
 import fs from "fs"
+import parseSpiResult from "phase1/parse/parseSpiResult"
+import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
 
 const parseFile = (file: string): ResultedCaseMessageParsedXml => {
   const inputMessage = fs.readFileSync(file).toString()
   return parseSpiResult(inputMessage).DeliverRequest.Message.ResultedCaseMessage
 }
 
-describe("core/phase1/types/SpiResult", () => {
+describe("phase1/types/SpiResult", () => {
   it("should handle messages with multiple offences", () => {
     const result = parseFile("test-data/input-message-001.xml")
     expect(Array.isArray(result.Session.Case.Defendant.Offence)).toBe(true)

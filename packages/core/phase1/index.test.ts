@@ -1,10 +1,10 @@
-import CoreAuditLogger from "core/common/CoreAuditLogger"
-import parseSpiResult from "core/phase1/parse/parseSpiResult"
-import transformSpiToAho from "core/phase1/parse/transformSpiToAho"
-import MockPncGateway from "core/phase1/tests/helpers/MockPncGateway"
-import generateMockPncQueryResult from "core/phase1/tests/helpers/generateMockPncQueryResult"
+import CoreAuditLogger from "CoreAuditLogger"
 import fs from "fs"
 import MockDate from "mockdate"
+import parseSpiResult from "phase1/parse/parseSpiResult"
+import transformSpiToAho from "phase1/parse/transformSpiToAho"
+import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
+import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQueryResult"
 import phase1Handler from "./phase1"
 
 describe("Bichard Core processing logic", () => {

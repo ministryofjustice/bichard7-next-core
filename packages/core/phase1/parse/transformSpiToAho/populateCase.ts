@@ -1,5 +1,5 @@
-import type { Case } from "core/common/types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "core/phase1/types/SpiResult"
+import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
+import type { Case } from "types/AnnotatedHearingOutcome"
 import populateDefendant from "./populateDefendant"
 
 export default (courtResult: ResultedCaseMessageParsedXml): Case => {

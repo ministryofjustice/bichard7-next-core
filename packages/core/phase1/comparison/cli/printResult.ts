@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
+import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
 

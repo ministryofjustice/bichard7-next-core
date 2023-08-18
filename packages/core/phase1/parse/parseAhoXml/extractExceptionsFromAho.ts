@@ -1,5 +1,5 @@
-import type { Result } from "core/common/types/AnnotatedHearingOutcome"
 import { XMLParser } from "fast-xml-parser"
+import type { Result } from "types/AnnotatedHearingOutcome"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../lib/errorPaths"
 import type Exception from "../../types/Exception"

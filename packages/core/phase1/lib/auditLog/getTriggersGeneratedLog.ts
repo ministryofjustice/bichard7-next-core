@@ -1,6 +1,6 @@
-import type { AuditLogEvent } from "common/types/AuditLogEvent"
-import { AuditLogEventOptions, AuditLogEventSource } from "common/types/AuditLogEvent"
-import type { Trigger } from "core/phase1/types/Trigger"
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { Trigger } from "phase1/types/Trigger"
 import EventCategory from "../../types/EventCategory"
 import getAuditLogEvent from "./getAuditLogEvent"
 

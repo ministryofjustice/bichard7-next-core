@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import type { Offence, Result } from "core/common/types/AnnotatedHearingOutcome"
-import { TriggerCode } from "core/common/types/TriggerCode"
-import { CjsVerdict } from "core/phase1/types/Verdict"
+import { CjsVerdict } from "phase1/types/Verdict"
+import type { Offence, Result } from "types/AnnotatedHearingOutcome"
+import { TriggerCode } from "types/TriggerCode"
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
 import resultCodeIsFinal from "../lib/result/resultCodeIsFinal"
 import type { Trigger } from "../types/Trigger"

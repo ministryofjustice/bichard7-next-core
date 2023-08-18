@@ -1,4 +1,4 @@
-import type { Offence, Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "types/AnnotatedHearingOutcome"
 import { compareTwoResults, offencesHaveEqualResults } from "./resultsAreEqual"
 
 const createResult = (resultCode: number, date: Date, adjudicationExists?: boolean): Result => {

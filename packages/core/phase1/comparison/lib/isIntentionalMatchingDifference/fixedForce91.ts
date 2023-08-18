@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // We added force 91 to Bichard and core, but there was an overlap where we were handling

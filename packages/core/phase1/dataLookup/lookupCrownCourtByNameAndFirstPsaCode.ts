@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "core/common/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
 import requireStandingData from "../lib/requireStandingData"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"

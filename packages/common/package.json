@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test|e2e.test' --testNamePattern=",
+    "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test"
   },
   "repository": {
     "type": "git",

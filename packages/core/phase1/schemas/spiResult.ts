@@ -1,4 +1,4 @@
-import { SpiPlea } from "core/phase1/types/Plea"
+import { SpiPlea } from "phase1/types/Plea"
 import { z } from "zod"
 import toArray from "./toArray"
 

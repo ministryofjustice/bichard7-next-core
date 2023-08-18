@@ -2,10 +2,10 @@ jest.setTimeout(999999999)
 process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
 process.env.AUDIT_LOG_API_KEY = "dummy"
 
-import type { AnnotatedHearingOutcome } from "core/common/types/AnnotatedHearingOutcome"
-import type { Phase1SuccessResult } from "core/phase1/types/Phase1Result"
-import { Phase1ResultType } from "core/phase1/types/Phase1Result"
 import { MockServer } from "jest-mock-server"
+import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
+import { Phase1ResultType } from "phase1/types/Phase1Result"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import EventCategory from "../../types/EventCategory"
 import storeAuditLogEvents from "./storeAuditLogEvents"
 

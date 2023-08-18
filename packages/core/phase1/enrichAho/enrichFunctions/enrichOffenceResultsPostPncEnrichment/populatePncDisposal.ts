@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Result } from "core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
 import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
 import ResultClass from "../../../types/ResultClass"
 

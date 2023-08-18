@@ -1,4 +1,4 @@
-import type { TriggerCode } from "core/common/types/TriggerCode"
+import type { TriggerCode } from "types/TriggerCode"
 
 export type Trigger = {
   code: TriggerCode
