@@ -116,7 +116,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6",
     "uuid": "^9.0.0",
-    "wait-for-expect": "^3.0.2"
+    "wait-for-expect": "^3.0.2",
+    "zod-to-json-schema": "^3.21.4"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.395.0",
