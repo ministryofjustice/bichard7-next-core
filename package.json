@@ -4,8 +4,6 @@
   "version": "2.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js",
-    "build:package": "./scripts/build-package.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "all": "./environment/boot.sh",

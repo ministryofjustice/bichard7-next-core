@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const ignorePlugin = require("esbuild-plugin-ignore")
 
 const buildOptions = {
-  entryPoints: ["src/phase1.ts"],
+  entryPoints: ["phase1/phase1.ts"],
   bundle: true,
   logLevel: "info",
   outdir: "build",
@@ -19,6 +20,7 @@ const buildOptions = {
   ]
 }
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 require("esbuild")
   .build(buildOptions)
   .catch(() => process.exit(1))

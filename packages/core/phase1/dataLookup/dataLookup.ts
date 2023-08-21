@@ -158,4 +158,3 @@ export {
   lookupVerdictBySpiCode,
   lookupYesNoByCjsCode
 }
-

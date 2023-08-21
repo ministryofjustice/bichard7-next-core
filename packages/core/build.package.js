@@ -1,5 +1,6 @@
 const fs = require("fs")
 const path = require("path")
+// eslint-disable-next-line import/no-extraneous-dependencies
 const esbuild = require("esbuild")
 const { buildOptions } = require("./build")
 
@@ -36,7 +37,7 @@ async function resolveImportPaths() {
 }
 
 async function run() {
-  const files = await findFiles(path.resolve(__dirname, "src"), "ts")
+  const files = await findFiles(path.resolve(__dirname), "ts")
   await esbuild.build({
     ...buildOptions,
     entryPoints: files,
