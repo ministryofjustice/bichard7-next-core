@@ -759,7 +759,6 @@ ALTER TABLE br7own.service_messages_id_seq OWNER TO bichard;
 
 ALTER SEQUENCE br7own.service_messages_id_seq OWNED BY br7own.service_messages.id;
 
-
 --
 -- Name: team; Type: TABLE; Schema: br7own; Owner: bichard
 --
@@ -901,6 +900,7 @@ CREATE TABLE br7own.work_allocation_report (
 
 
 ALTER TABLE br7own.work_allocation_report OWNER TO bichard;
+
 
 --
 -- Name: databasechangelog; Type: TABLE; Schema: public; Owner: bichard
@@ -1788,6 +1788,22 @@ ALTER TABLE ONLY br7own.users_groups
 
 ALTER TABLE ONLY br7own.users_groups
     ADD CONSTRAINT users_groups_user_id_fkey FOREIGN KEY (user_id) REFERENCES br7own.users(id);
+
+
+
+-- Sequence and defined type
+CREATE SEQUENCE IF NOT EXISTS br7own.survey_feedback_id_seq;
+
+-- Table Definition
+CREATE TABLE br7own.survey_feedback (
+    id int4 NOT NULL DEFAULT nextval('br7own.survey_feedback_id_seq'::regclass),
+    response jsonb NOT NULL,
+    feedback_type int4 NOT NULL,
+    user_id int4,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT survey_feedback_user_id_fkey FOREIGN KEY (user_id) REFERENCES br7own.users(id),
+    PRIMARY KEY (id)
+);
 
 
 --
