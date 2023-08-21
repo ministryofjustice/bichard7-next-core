@@ -66,6 +66,6 @@ done;
 if [ "$LEGACY" == "false" ] && [ $SUCCESS ]; then
     for i in $(seq 1 $ATTEMPTS); do
         echo "Setting up conductor"
-        npm run conductor-setup && break || sleep 5
+        npm run -w packages/conductor setup && break || sleep 5
     done;
 fi

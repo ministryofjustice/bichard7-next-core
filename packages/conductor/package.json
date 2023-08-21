@@ -10,7 +10,11 @@
   },
   "scripts": {
     "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest .",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u && npm install",
+    "test": "jest --forceExit --runInBand",
+    "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -T ./deploy/deploy.ts",
+    "worker": ". ../environment/local-conductor-worker.env && npm run worker-noenv",
+    "worker-noenv": "npx ts-node -T src/worker.ts"
   },
   "repository": {
     "type": "git",

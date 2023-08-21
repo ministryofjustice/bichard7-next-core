@@ -126,7 +126,7 @@ jobs:
           root: ./api
           paths: build
 
-  test:
+  test_core:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
@@ -147,10 +147,10 @@ jobs:
           command: nvm install
       - run:
           name: Run unit tests against core code
-          command: nvm use && npm run test:unit
+          command: nvm use && npm run -w packages/core test:unit
       - run:
           name: Run integration tests against core code
-          command: nvm use && npm run test:integration
+          command: nvm use && npm run -w packages/core test:integration
 
   comparison_test:
     machine:
@@ -164,7 +164,7 @@ jobs:
           at: .
       - run:
           name: Run integration tests against core code
-          command: npm run test:compare
+          command: npm run -w packages/core test:compare
 
   characterisation_test:
     docker:
@@ -181,7 +181,7 @@ jobs:
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: Start the test server in the background
-          command: npm run test:server
+          command: npm run -w packages/core test:server
           background: true
       - run:
           name: Wait for Core
@@ -225,14 +225,14 @@ jobs:
           command: npm run conductor-no-worker
       - run:
           name: Set up Conductor
-          command: npm run conductor-setup
+          command: npm run -w packages/conductor setup
       - run:
           name: Run the worker
-          command: npm run conductor-worker
+          command: npm run -w packages/conductor conductor-worker
           background: true
       - run:
           name: Test the workflows
-          command: npm run test:conductor
+          command: npm run -w packages/conductor test
 
   e2e_test:
     machine:
@@ -271,7 +271,7 @@ jobs:
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
-          command: npm run conductor-worker
+          command: npm run -w packages/conductor worker
           background: true
       - run:
           name: Run e2e tests against core code
@@ -303,7 +303,7 @@ jobs:
       - run_postgres
       - run:
           name: Run unit tests against API code
-          command: nvm use && cd api && npm run test:api
+          command: nvm use && npm run -w packages/api test
 
 workflows:
   version: 2
@@ -316,7 +316,7 @@ workflows:
       - build_api:
           requires:
             - lint
-      - test:
+      - test_core:
           requires:
             - build_core
       - characterisation_test:

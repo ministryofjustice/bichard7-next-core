@@ -1,8 +1,8 @@
 import "phase1/tests/helpers/setEnvironmentVariables"
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import createDbConfig from "@moj-bichard7/common/database/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import createDbConfig from "@moj-bichard7/core/lib/database/createDbConfig"
 import fs from "fs"
 import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
