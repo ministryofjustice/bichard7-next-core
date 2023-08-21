@@ -23,7 +23,7 @@ commands:
             - v1-npm-deps-
       - run:
           name: Install npm dependencies
-          command: npm i
+          command: npm i --workspaces --include-workspace-root
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
