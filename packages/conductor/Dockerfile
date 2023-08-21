@@ -14,12 +14,9 @@ COPY scripts ./scripts
 
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
-RUN npm run install-standing-data
-
-COPY conductor ./conductor
-COPY src ./src
-COPY tests ./tests
+COPY packages ./packages
 COPY tsconfig.json .
+RUN npm ci --workspaces --include-workspace-root
+RUN npm run install-standing-data -w packages/core
 
-CMD [ "npm", "run", "conductor-worker-noenv" ]
+CMD [ "npm", "run", "worker-noenv", "-w", "packages/conductor" ]

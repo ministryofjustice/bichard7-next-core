@@ -4,9 +4,9 @@ import EventHandler from "./EventHandler"
 import Task from "./Task"
 import Workflow from "./Workflow"
 
-const workflowDir = "./conductor/workflows"
-const taskDir = "./conductor/tasks"
-const eventHandlerDir = "./conductor/event-handlers"
+const workflowDir = "./workflows"
+const taskDir = "./tasks"
+const eventHandlerDir = "./event-handlers"
 
 const conductor = new ConductorGateway({
   url: process.env.CONDUCTOR_URL ?? "http://localhost:5002",
