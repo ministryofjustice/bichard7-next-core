@@ -23,7 +23,7 @@ services:
 
   message-forwarder:
     image: message-forwarder
-    build: ../message-forwarder
+    build: ../packages/message-forwarder
     environment:
       DESTINATION_TYPE: conductor
       CONDUCTOR_URL: http://conductor:4000
