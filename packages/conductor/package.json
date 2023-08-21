@@ -9,7 +9,8 @@
     "wait-for-expect": "^3.0.2"
   },
   "scripts": {
-    "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest ."
+    "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest .",
+    "update-deps": "ncu -u && npm install"
   },
   "repository": {
     "type": "git",

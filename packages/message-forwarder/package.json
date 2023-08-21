@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A small service to listen to a queue and forward to another queue or S3",
   "scripts": {
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "update-deps": "ncu -u && npm install"
   },
   "license": "MIT",
   "devDependencies": {

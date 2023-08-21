@@ -13,7 +13,8 @@
     "start": "node build/src/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
-    "test:integration": "jest --verbose --runInBand ./tests --testRegex '\\.(?:integration)\\.test.ts$'"
+    "test:integration": "jest --verbose --runInBand ./tests --testRegex '\\.(?:integration)\\.test.ts$'",
+    "update-deps": "ncu -u && npm install"
   },
   "keywords": [],
   "author": "",
