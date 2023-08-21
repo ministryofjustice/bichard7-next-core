@@ -95,21 +95,10 @@ jobs:
       - run:
           name: Check the code for linting errors
           command: npm run lint
-
-  build_core:
-    machine:
-      image: ubuntu-2204:2022.10.2
-    resource_class: xlarge
-    working_directory: ~
-    steps:
-      - checkout
-      - install_core
-      - run:
-          name: Build the core
-          command: npm run build
       - persist_to_workspace:
-          root: .
-          paths: build
+          root: /home/circleci
+          paths:
+            - project
 
   build_api:
     machine:
@@ -132,10 +121,8 @@ jobs:
       docker_layer_caching: true
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -158,10 +145,8 @@ jobs:
       docker_layer_caching: true
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Run integration tests against core code
           command: npm run -w packages/core test:compare
@@ -172,10 +157,8 @@ jobs:
     resource_class: xlarge
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Checkout the tests repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
@@ -212,10 +195,8 @@ jobs:
     resource_class: xlarge
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - fetch_docker_image:
           image: conductor
       - fetch_docker_image:
@@ -242,10 +223,8 @@ jobs:
     working_directory: ~
     parallelism: 10
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - fetch_docker_image:
           image: nodejs
       - run:
@@ -295,7 +274,7 @@ jobs:
       - checkout
       - install_api
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
@@ -310,27 +289,24 @@ workflows:
   build-and-test:
     jobs:
       - lint
-      - build_core:
-          requires:
-            - lint
       - build_api:
           requires:
             - lint
       - test_core:
           requires:
-            - build_core
+            - lint
       - characterisation_test:
           requires:
-            - build_core
+            - lint
       - comparison_test:
           requires:
-            - build_core
+            - lint
       - conductor_test:
           requires:
-            - build_core
+            - lint
       - e2e_test:
           requires:
-            - build_core
+            - lint
       - test_api:
           requires:
             - build_api
