@@ -74,7 +74,7 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   return {
     verdict: adj["@_Adjudication1"],
     sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
-    plea: adj["phase1/types/Plea"],
+    plea: adj["@_Plea"],
     offenceTICNumber: Number(adj["@_OffenceTICNumber"]),
     weedFlag: adj["@_WeedFlag"]
   }

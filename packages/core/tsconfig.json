@@ -4,5 +4,8 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "baseUrl": "./"
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

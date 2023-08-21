@@ -395,7 +395,7 @@ const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_DateOfSentence": toPNCDate(adjudication.sentenceDate),
   "@_IntfcUpdateType": "I",
   "@_OffenceTICNumber": adjudication.offenceTICNumber.toString().padStart(4, "0"),
-  "phase1/types/Plea": adjudication.plea
+  "@_Plea": adjudication.plea
 })
 
 const mapOffenceDIS = (disposals: PncDisposal[]): DISList => ({

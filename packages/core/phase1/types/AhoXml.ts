@@ -57,7 +57,7 @@ export interface Adj {
   "@_DateOfSentence": string
   "@_IntfcUpdateType": string
   "@_OffenceTICNumber": string
-  "phase1/types/Plea": string
+  "@_Plea": string
   "@_WeedFlag"?: string
 }
 
