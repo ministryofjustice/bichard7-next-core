@@ -64,7 +64,7 @@ describe("processPhase1", () => {
       ctx.body = test1PncResponse
     })
 
-    const inputMessage = String(fs.readFileSync("test-data/input-message-001.xml"))
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-001.xml"))
     const inputSpi = parseSpiResult(inputMessage)
     const inputAho = transformSpiToAho(inputSpi)
     const inputAhoJson = JSON.stringify(inputAho)
@@ -94,7 +94,7 @@ describe("processPhase1", () => {
       ctx.body = test89PncResponse
     })
 
-    const inputMessage = String(fs.readFileSync("test-data/input-message-089.xml"))
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-089.xml"))
     const inputSpi = parseSpiResult(inputMessage)
     const inputAho = transformSpiToAho(inputSpi)
     const inputAhoJson = JSON.stringify(inputAho)

@@ -214,7 +214,7 @@ const mapAhoResultsToXml = (results: Result[]): Br7Result[] =>
       result.NextHearingDate === null ? nullText(result.NextHearingDate) : optionalFormatText(result.NextHearingDate),
     "ds:NextHearingTime": optionalText(result.NextHearingTime?.split(":").slice(0, 2).join(":")),
     "ds:PleaStatus": optionalLiteral(result.PleaStatus, LiteralType.PleaStatus),
-    "phase1/types/Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
+    "ds:Verdict": optionalLiteral(result.Verdict, LiteralType.Verdict),
     "ds:ModeOfTrialReason": optionalLiteral(result.ModeOfTrialReason, LiteralType.ModeOfTrialReason),
     "ds:ResultVariableText": optionalText(result.ResultVariableText),
     "ds:WarrantIssueDate": optionalFormatText(result.WarrantIssueDate),
@@ -501,7 +501,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
     ...(validate
       ? {
-          "types/AnnotatedHearingOutcome": {
+          "br7:AnnotatedHearingOutcome": {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
             "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,

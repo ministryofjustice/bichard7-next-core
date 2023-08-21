@@ -20,7 +20,7 @@ exports[`PopulateOffenceResults should transform SPI Offences to Hearing Outcome
         "ThirdLevelCode": "EF",
         "TopLevelCode": "B",
       },
-      "phase1/types/Verdict": "G",
+      "Verdict": "G",
     },
   ],
 }

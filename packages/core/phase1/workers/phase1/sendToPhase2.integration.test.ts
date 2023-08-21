@@ -13,7 +13,7 @@ import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import { parseAhoXml } from "../../parse/parseAhoXml"
 import sendToPhase2 from "./sendToPhase2"
 
-const inputXml = fs.readFileSync("test-data/AnnotatedHO1.xml").toString()
+const inputXml = fs.readFileSync("phase1/tests/fixtures/AnnotatedHO1.xml").toString()
 const hearingOutcome = parseAhoXml(inputXml) as AnnotatedHearingOutcome
 
 const testMqGateway = new TestMqGateway(createMqConfig())

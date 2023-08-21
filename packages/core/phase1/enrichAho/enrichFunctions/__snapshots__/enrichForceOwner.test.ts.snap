@@ -2,7 +2,7 @@
 
 exports[`enrichForceOwner should return AHO enriched with force owner 1`] = `
 {
-  "types/AnnotatedHearingOutcome": {
+  "AnnotatedHearingOutcome": {
     "HearingOutcome": {
       "Case": {
         "CourtReference": {
@@ -80,7 +80,7 @@ exports[`enrichForceOwner should return AHO enriched with force owner 1`] = `
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
-                  "phase1/types/Verdict": "G",
+                  "Verdict": "G",
                 },
               ],
             },
@@ -127,7 +127,7 @@ exports[`enrichForceOwner should return AHO enriched with force owner 1`] = `
                     "ThirdLevelCode": "EF",
                     "TopLevelCode": "B",
                   },
-                  "phase1/types/Verdict": "G",
+                  "Verdict": "G",
                 },
               ],
             },

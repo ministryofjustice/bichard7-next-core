@@ -1,4 +1,4 @@
-import CoreAuditLogger from "CoreAuditLogger"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
 import logger from "phase1/lib/logging"

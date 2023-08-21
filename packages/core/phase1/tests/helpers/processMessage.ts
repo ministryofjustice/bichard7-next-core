@@ -1,4 +1,4 @@
-import CoreAuditLogger from "CoreAuditLogger"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import extractExceptionsFromAho from "phase1/parse/parseAhoXml/extractExceptionsFromAho"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"

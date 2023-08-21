@@ -1,6 +1,6 @@
-import CoreAuditLogger from "CoreAuditLogger"
 import fs from "fs"
 import "jest-xml-matcher"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import type { Phase1Comparison } from "phase1/comparison/types/ComparisonFile"
 import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
 import { parseAhoXml } from "phase1/parse/parseAhoXml"
@@ -16,7 +16,7 @@ import getPncQueryTimeFromAho from "./helpers/getPncQueryTimeFromAho"
 import processTestFile from "./helpers/processTestFile"
 import summariseMatching, { matchingExceptions } from "./helpers/summariseMatching"
 
-const filePath = "test-data/e2e-comparison"
+const filePath = "phase1/tests/fixtures/e2e-comparison"
 
 const filter = process.env.FILTER_TEST
 

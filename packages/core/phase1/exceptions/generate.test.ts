@@ -22,7 +22,7 @@ describe("getExceptions()", () => {
     const result = generateExceptions(aho)
     expect(result).toContainEqual({
       code: "HO100100",
-      path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
     })
   })
 
@@ -32,7 +32,7 @@ describe("getExceptions()", () => {
     const result = generateExceptions(aho)
     expect(result).toContainEqual({
       code: "HO100101",
-      path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
     })
   })
 })

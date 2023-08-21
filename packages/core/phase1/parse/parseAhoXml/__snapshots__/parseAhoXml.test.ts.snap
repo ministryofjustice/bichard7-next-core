@@ -2,7 +2,7 @@
 
 exports[`parseAhoXml converts XML to Aho 1`] = `
 {
-  "types/AnnotatedHearingOutcome": {
+  "AnnotatedHearingOutcome": {
     "HearingOutcome": {
       "Case": {
         "CourtCaseReferenceNumber": "97/1626/008395Q",
@@ -125,7 +125,7 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
                     "TopLevelCode": "B",
                   },
                   "Urgent": undefined,
-                  "phase1/types/Verdict": "G",
+                  "Verdict": "G",
                   "WarrantIssueDate": undefined,
                 },
               ],
@@ -218,7 +218,7 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
                     "urgency": 24,
                     "urgent": true,
                   },
-                  "phase1/types/Verdict": "G",
+                  "Verdict": "G",
                   "WarrantIssueDate": undefined,
                 },
               ],
@@ -314,7 +314,7 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
                     "TopLevelCode": "B",
                   },
                   "Urgent": undefined,
-                  "phase1/types/Verdict": "G",
+                  "Verdict": "G",
                   "WarrantIssueDate": undefined,
                 },
               ],

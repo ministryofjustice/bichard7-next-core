@@ -5,7 +5,7 @@ import PopulateOffences from "./PopulateOffences"
 import populateDefendant from "./populateDefendant"
 
 describe("populateDefendant", () => {
-  const message = readFileSync("test-data/input-message-001.xml", "utf-8")
+  const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
   const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
   it("should transform SPI Defendant to Hearing Outcome Defendant for individual defendant", () => {

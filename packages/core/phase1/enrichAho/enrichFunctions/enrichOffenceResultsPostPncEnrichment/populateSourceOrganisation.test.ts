@@ -1,4 +1,4 @@
-jest.mock("src/dataLookup")
+jest.mock("phase1/dataLookup")
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
 import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../dataLookup"

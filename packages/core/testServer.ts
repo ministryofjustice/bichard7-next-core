@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import type { PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
-import CoreAuditLogger from "CoreAuditLogger"
 import express from "express"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import CoreHandler from "phase1/phase1"

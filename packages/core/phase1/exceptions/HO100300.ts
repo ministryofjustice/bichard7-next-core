@@ -12,7 +12,7 @@ const COURT_HEARING_LOCATION_PATH: ExceptionPath =
 const COURT_HOUSE_CODE_PATH: ExceptionPath = "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode".split(".")
 
 const getResultPath = (offenceIndex: number, resultIndex: number): ExceptionPath => [
-  "types/AnnotatedHearingOutcome",
+  "AnnotatedHearingOutcome",
   "HearingOutcome",
   "Case",
   "HearingDefendant",

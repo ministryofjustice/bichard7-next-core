@@ -3,7 +3,7 @@ import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import enrichCourt from "./enrichCourt"
 
-const message = readFileSync("test-data/input-message-001.xml", "utf-8")
+const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
 const spiResult = parseSpiResult(message)
 const aho = transformSpiToAho(spiResult)
 

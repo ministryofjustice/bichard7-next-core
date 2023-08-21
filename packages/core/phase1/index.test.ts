@@ -1,5 +1,5 @@
-import CoreAuditLogger from "CoreAuditLogger"
 import fs from "fs"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import MockDate from "mockdate"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
@@ -8,7 +8,7 @@ import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQuer
 import phase1Handler from "./phase1"
 
 describe("Bichard Core processing logic", () => {
-  const inputMessage = fs.readFileSync("test-data/input-message-001.xml").toString()
+  const inputMessage = fs.readFileSync("phase1/tests/fixtures/input-message-001.xml").toString()
   const inputSpi = parseSpiResult(inputMessage)
   const inputAho = transformSpiToAho(inputSpi)
   const mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
@@ -58,7 +58,7 @@ describe("Bichard Core processing logic", () => {
   })
 
   it("should log when an input message is ignored", async () => {
-    const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-no-offences.xml").toString()
+    const inputMessageWithNoOffences = fs.readFileSync("phase1/tests/fixtures/input-message-no-offences.xml").toString()
     const inputSpiWithNoOffences = parseSpiResult(inputMessageWithNoOffences)
     const inputAhoWithNoOffences = transformSpiToAho(inputSpiWithNoOffences)
     await phase1Handler(inputAhoWithNoOffences, mockPncGateway, auditLogger)
@@ -77,7 +77,7 @@ describe("Bichard Core processing logic", () => {
   })
 
   it("should log exceptions generated", async () => {
-    const inputMessageWithNoOffences = fs.readFileSync("test-data/input-message-003.xml").toString()
+    const inputMessageWithNoOffences = fs.readFileSync("phase1/tests/fixtures/input-message-003.xml").toString()
     const inputSpiWithNoOffences = parseSpiResult(inputMessageWithNoOffences)
     const inputAhoWithNoOffences = transformSpiToAho(inputSpiWithNoOffences)
     await phase1Handler(inputAhoWithNoOffences, mockPncGateway, auditLogger)

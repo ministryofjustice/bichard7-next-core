@@ -15,7 +15,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome
@@ -34,7 +34,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome
@@ -62,7 +62,7 @@ describe("addNullElementsForExceptions()", () => {
         {
           code: ExceptionCode.HO100100,
           path: [
-            "types/AnnotatedHearingOutcome",
+            "AnnotatedHearingOutcome",
             "HearingOutcome",
             "Case",
             "HearingDefendant",
@@ -95,7 +95,7 @@ describe("addNullElementsForExceptions()", () => {
       Exceptions: [
         {
           code: ExceptionCode.HO100100,
-          path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
         }
       ]
     } as AnnotatedHearingOutcome

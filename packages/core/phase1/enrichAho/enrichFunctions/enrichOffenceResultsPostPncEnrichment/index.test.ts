@@ -1,7 +1,7 @@
-jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt")
-jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass")
-jest.mock("src/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal")
-jest.mock("src/lib/isCaseRecordable")
+jest.mock("phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt")
+jest.mock("phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass")
+jest.mock("phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal")
+jest.mock("phase1/lib/isCaseRecordable")
 
 import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
 import isCaseRecordable from "../../../lib/isCaseRecordable"

@@ -36,7 +36,7 @@ const HO100306: ExceptionGenerator = (hearingOutcome) => {
         generatedExceptions.push({
           code: ExceptionCode.HO100306,
           path: [
-            "types/AnnotatedHearingOutcome",
+            "AnnotatedHearingOutcome",
             "HearingOutcome",
             "Case",
             "HearingDefendant",

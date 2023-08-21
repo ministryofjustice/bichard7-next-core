@@ -25,7 +25,7 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       }
     ]
     addExceptionsToAhoXml(rawAho, exceptions)
@@ -56,11 +56,11 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       },
       {
         code: ExceptionCode.HO100200,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "CourtCaseReferenceNumber"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "CourtCaseReferenceNumber"]
       }
     ]
     addExceptionsToAhoXml(rawAho, exceptions)
@@ -98,7 +98,7 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
       }
     ]
     addExceptionsToAhoXml(rawAho, exceptions)
@@ -132,11 +132,11 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 0]
       },
       {
         code: ExceptionCode.HO100200,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 1]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 1]
       }
     ]
     addExceptionsToAhoXml(rawAho, exceptions)
@@ -174,7 +174,7 @@ describe("addExceptionsToAhoXml", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "Foo"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "Foo"]
       }
     ]
     const result = addExceptionsToAhoXml(rawAho, exceptions)

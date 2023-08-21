@@ -4,9 +4,9 @@ import type { HearingDefendant } from "types/AnnotatedHearingOutcome"
 import populateCase from "./populateCase"
 import populateDefendant from "./populateDefendant"
 
-jest.mock("src/parse/transformSpiToAho/populateDefendant")
+jest.mock("phase1/parse/transformSpiToAho/populateDefendant")
 
-const message = readFileSync("test-data/input-message-001.xml", "utf-8")
+const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
 const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
 describe("populateCase", () => {

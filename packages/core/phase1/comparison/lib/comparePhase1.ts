@@ -1,4 +1,4 @@
-import CoreAuditLogger from "CoreAuditLogger"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
 import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"

@@ -26,7 +26,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing", "HearingDocumentationLanguage"]
       }
     ]
 
@@ -58,7 +58,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
       }
     ]
 
@@ -90,7 +90,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
       }
     ]
 
@@ -127,7 +127,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1]
       }
     ]
 
@@ -167,7 +167,7 @@ describe("addAhoErrors()", () => {
     const exceptions = [
       {
         code: ExceptionCode.HO100100,
-        path: ["types/AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1, "Result", 0]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 1, "Result", 0]
       }
     ]
 

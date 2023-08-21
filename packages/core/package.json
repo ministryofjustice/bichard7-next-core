@@ -4,7 +4,27 @@
   "description": "The core processing logic of Bichard 7",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand --forceExit --testNamePattern=",
+    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test|e2e.test' --testNamePattern=",
+    "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
+    "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
+    "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",
+    "test:compare": "NODE_ENV=test ts-node -T src/comparison/cli.ts -d ./test-data/e2e-comparison",
+    "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test",
+    "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
+    "test:conductor": "jest --forceExit --runInBand --testPathPattern=conductor",
+    "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
+    "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
+    "test:e2e:ci": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
+    "compare": "TS_NODE_TRANSPILE_ONLY=true ts-node src/comparison/cli.ts",
+    "compare:files": "scripts/files-from-comparison.js",
+    "compare:summarise": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/summariseRecord.ts",
+    "compare:summarise:extended": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/extendedSummary.ts",
+    "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/repeatTestBichard.ts",
+    "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
+    "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
+    "update-deps": "ncu -u && npm install",
+    "install-standing-data": "scripts/install-standing-data.sh"
   },
   "repository": {
     "type": "git",
@@ -18,6 +38,7 @@
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "devDependencies": {
     "@types/diff": "^5.0.3",
+    "@types/jest": "^29.5.3",
     "@types/lodash.differencewith": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/lodash.merge": "^4.6.7",

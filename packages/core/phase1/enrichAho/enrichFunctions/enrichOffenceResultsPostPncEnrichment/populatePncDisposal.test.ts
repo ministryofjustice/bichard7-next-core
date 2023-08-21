@@ -1,4 +1,4 @@
-jest.mock("src/dataLookup")
+jest.mock("phase1/dataLookup")
 import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
 import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
 import ResultClass from "../../../types/ResultClass"

@@ -1,5 +1,5 @@
 import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
-import CoreAuditLogger from "CoreAuditLogger"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 import MockDate from "mockdate"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"

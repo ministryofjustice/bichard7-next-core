@@ -1,5 +1,5 @@
+import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type PncGatewayInterface from "../../common/pnc/PncGatewayInterface"
 import { AuditLogEventOptions, AuditLogEventSource } from "../../common/types/AuditLogEvent"
 import { isError } from "./comparison/types/Result"
 import enrichAho from "./enrichAho"

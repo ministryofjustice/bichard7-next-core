@@ -62,7 +62,7 @@ const formatDate = function (date: Date): string {
 }
 
 export default (options: GenerateMessageOptions): string => {
-  const template = readFileSync("test-data/input-message.xml.njk", "utf-8")
+  const template = readFileSync("phase1/tests/fixtures/input-message.xml.njk", "utf-8")
 
   return new nunjucks.Environment()
     .addFilter("padStart", padStart)
