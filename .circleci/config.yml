@@ -203,7 +203,7 @@ jobs:
           command: npm run conductor-no-worker
       - run:
           name: Run the worker
-          command: npm run -w packages/conductor conductor-worker
+          command: npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
