@@ -202,9 +202,6 @@ jobs:
           name: Boot Conductor infrastructure
           command: npm run conductor-no-worker
       - run:
-          name: Set up Conductor
-          command: npm run -w packages/conductor setup
-      - run:
           name: Run the worker
           command: npm run -w packages/conductor conductor-worker
           background: true
