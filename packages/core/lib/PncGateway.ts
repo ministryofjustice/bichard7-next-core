@@ -1,15 +1,17 @@
 import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
-import type PncApiConfig from "@moj-bichard7/common/pnc/PncApiConfig"
-import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
 import type {
   PncAdjudication,
+  PncApiConfig,
+  PncApiDisposal,
+  PncApiOffence,
+  PncApiResult,
   PncCourtCase,
   PncDisposal,
+  PncGatewayInterface,
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
-} from "@moj-bichard7/common/pnc/PncQueryResult"
-import type { PncApiDisposal, PncApiOffence, PncApiResult } from "@moj-bichard7/common/pnc/pncApiResult"
+} from "@moj-bichard7/common/pnc"
 import axios from "axios"
 import https from "https"
 import { pncApiResultSchema } from "phase1/schemas/pncApiResult"
