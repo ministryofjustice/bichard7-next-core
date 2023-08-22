@@ -27,12 +27,7 @@ import {
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
 import toArray from "./toArray"
-import {
-  ahoDescription,
-  offenceDescription,
-  organisationUnitDescription,
-  resultDescription
-} from "./schema-description"
+import { ahoDescription, offenceDescription, organisationUnitDescription, resultDescription } from "./schemaDescription"
 
 const hearingDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Hearing
 const caseDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Case
