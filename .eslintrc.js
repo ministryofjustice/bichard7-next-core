@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: { es6: true },
-  ignorePatterns: ["build/*", "api/build/*", "jest.setup.ts"],
+  ignorePatterns: ["build/*", "api/build/*", "jest.setup.ts", "docs/*"],
   overrides: [
     {
       // Plain JavaScript files
