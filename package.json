@@ -5,6 +5,9 @@
   "scripts": {
     "lint": "npm run lint --ws",
     "lint:fix": "npm run lint:fix --ws",
+    "build": "npm run build --ws",
+    "clean": "npm run clean --ws",
+    "watch": "tsc --build --watch",
     "all": "./environment/boot.sh",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
@@ -20,7 +23,11 @@
     "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite"
   },
   "workspaces": [
-    "packages/*"
+    "packages/common",
+    "packages/core",
+    "packages/conductor",
+    "packages/api",
+    "packages/message-forwarder"
   ],
   "license": "MIT",
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",

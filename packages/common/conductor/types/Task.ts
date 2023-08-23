@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Task = {
+type Task = {
   taskType?: string
   status?:
     | "IN_PROGRESS"
@@ -51,3 +51,5 @@ export type Task = {
   // taskDefinition?: TaskDef
   loopOverTask?: boolean
 }
+
+export default Task

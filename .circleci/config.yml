@@ -93,6 +93,9 @@ jobs:
       - checkout
       - install_core
       - run:
+          name: Build the code
+          command: npm run build
+      - run:
           name: Check the code for linting errors
           command: npm run lint
       - persist_to_workspace:

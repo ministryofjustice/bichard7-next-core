@@ -1,17 +1,17 @@
+import { isError } from "@moj-bichard7/common/types/Result"
 import CoreAuditLogger from "lib/CoreAuditLogger"
 import isMatch from "lodash.ismatch"
+import type { OldPhase1Comparison, Phase1Comparison } from "phase1/comparison/types/ComparisonFile"
 import type PncComparisonResultDetail from "phase1/comparison/types/PncComparisonResultDetail"
+import { parseAhoXml } from "phase1/parse/parseAhoXml"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
-import summariseMatching from "phase1/tests/helpers/summariseMatching"
-import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
-import { parseAhoXml } from "phase1/parse/parseAhoXml"
 import CoreHandler from "phase1/phase1"
 import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
 import generateMockPncQueryResultFromAho from "phase1/tests/helpers/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "phase1/tests/helpers/getPncQueryTimeFromAho"
-import type { OldPhase1Comparison, Phase1Comparison } from "phase1/comparison/types/ComparisonFile"
-import { isError } from "phase1/comparison/types/Result"
+import summariseMatching from "phase1/tests/helpers/summariseMatching"
+import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 
 type CompareOptions = {
   defaultStandingDataVersion?: string

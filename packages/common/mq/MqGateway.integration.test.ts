@@ -1,7 +1,7 @@
-import { isError } from "@moj-bichard7/core/phase1/comparison/types"
 import type MqConfig from "mq/MqConfig"
 import MqGateway from "mq/MqGateway"
 import TestMqGateway from "mq/TestMqGateway"
+import { isError } from "types/Result"
 
 jest.setTimeout(30000)
 

@@ -1,4 +1,4 @@
-export type TaskDef = {
+type TaskDef = {
   ownerApp?: string
   createTime?: number
   updateTime?: number
@@ -25,3 +25,5 @@ export type TaskDef = {
   pollTimeoutSeconds?: number
   backoffScaleFactor?: number
 }
+
+export default TaskDef

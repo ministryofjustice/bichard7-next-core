@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "watch": "tsc --build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test|e2e.test' --testNamePattern=",
@@ -21,9 +24,20 @@
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.391.0",
     "axios": "^1.4.0",
+    "pino": "^8.15.0",
     "postgres": "^3.3.5",
     "stompit": "^1.0.0",
     "zod": "^3.22.1"

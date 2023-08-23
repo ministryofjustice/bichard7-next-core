@@ -45,14 +45,11 @@ async function run() {
     minify: false,
     bundle: false
   })
-
-  console.log("Resolving import paths...")
   await resolveImportPaths()
-
-  console.log("Build finished.")
 }
 
 run().catch((error) => {
+  // eslint-disable-next-line no-console
   console.error(error)
   process.exit(1)
 })

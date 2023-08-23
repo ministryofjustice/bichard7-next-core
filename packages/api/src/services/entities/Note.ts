@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
-import type { Relation } from "typeorm"
+import { Relation } from "typeorm"
 import BaseEntity from "src/services/entities/BaseEntity"
 // eslint-disable-next-line import/no-cycle
 import CourtCase from "src/services/entities/CourtCase"

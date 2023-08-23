@@ -1,7 +1,7 @@
+import enrichOffences from "phase1/enrichAho/enrichFunctions/enrichOffences"
+import { COMMON_LAWS, INDICTMENT } from "phase1/lib/offenceTypes"
 import generateMockAho from "phase1/tests/helpers/generateMockAho"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { COMMON_LAWS, INDICTMENT } from "phase1/lib/offenceTypes"
-import enrichOffences from "phase1/enrichAho/enrichFunctions/enrichOffences"
 
 const mockNationalIndictmmentOffence = [
   {
@@ -197,6 +197,7 @@ describe("enrichOffences", () => {
     })
   })
 
+  // eslint-disable-next-line jest/no-disabled-tests
   it.skip("SHOULD get National Offence Code for Indictment", () => {
     // we are skipping Indictment as there are no Indictment code in `offence-code.json`
     // @ts-ignore - ts doesn't like how type is assigned it treats it as a string and not the value

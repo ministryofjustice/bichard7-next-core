@@ -6,12 +6,12 @@ process.env.MQ_PASSWORD = "admin"
 import TestMqGateway from "@moj-bichard7/common/mq/TestMqGateway"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import fs from "fs"
+import { parseAhoXml } from "phase1/parse/parseAhoXml"
 import convertAhoToXml from "phase1/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import { Phase1ResultType } from "phase1/types/Phase1Result"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { parseAhoXml } from "phase1/parse/parseAhoXml"
 import sendToPhase2 from "phase1/workers/phase1/sendToPhase2"
+import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 
 const inputXml = fs.readFileSync("phase1/tests/fixtures/AnnotatedHO1.xml").toString()
 const hearingOutcome = parseAhoXml(inputXml) as AnnotatedHearingOutcome

@@ -1,4 +1,3 @@
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "@moj-bichard7/common/pnc/PncQueryResult"
 import fs from "fs"
 import { exec } from "node:child_process"
 import getFile from "phase1/comparison/lib/getFile"
@@ -13,6 +12,7 @@ import summariseMatching from "phase1/tests/helpers/summariseMatching"
 import type Exception from "phase1/types/Exception"
 import type { Trigger } from "phase1/types/Trigger"
 import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "types/PncQueryResult"
 
 interface ComparisonFile {
   incomingMessage: string

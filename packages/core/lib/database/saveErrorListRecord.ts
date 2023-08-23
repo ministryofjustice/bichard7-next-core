@@ -1,6 +1,4 @@
-import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/Result"
-import type { Phase1SuccessResult } from "@moj-bichard7/core/phase1/types/Phase1Result"
-import type { Sql } from "postgres"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import fetchErrorListRecordId from "lib/database/fetchErrorListRecordId"
 import generateExceptionsNoteText from "lib/database/generateExceptionsNoteText"
 import generateTriggersNoteText, { TriggerCreationType } from "lib/database/generateTriggersNoteText"
@@ -9,6 +7,8 @@ import insertErrorListRecord from "lib/database/insertErrorListRecord"
 import insertErrorListTriggers from "lib/database/insertErrorListTriggers"
 import updateErrorListRecord from "lib/database/updateErrorListRecord"
 import updateErrorListTriggers from "lib/database/updateErrorListTriggers"
+import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
+import type { Sql } from "postgres"
 
 const handleUpdate = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
   if (result.hearingOutcome.Exceptions.length > 0) {

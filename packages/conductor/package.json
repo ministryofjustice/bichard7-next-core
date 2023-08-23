@@ -17,6 +17,9 @@
     "wait-for-expect": "^3.0.2"
   },
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "watch": "tsc --build --watch",
     "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -34,6 +37,16 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
+  },
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {

@@ -4,8 +4,8 @@ import type {
   pncDisposalSchema,
   pncOffenceSchema,
   pncPenaltyCaseSchema
-} from "@moj-bichard7/core/phase1/schemas/pncQueryResult"
-import { pncQueryResultSchema } from "@moj-bichard7/core/phase1/schemas/pncQueryResult"
+} from "phase1/schemas/pncQueryResult"
+import { pncQueryResultSchema } from "phase1/schemas/pncQueryResult"
 import type { z } from "zod"
 
 export type PncOffence = z.infer<typeof pncOffenceSchema>

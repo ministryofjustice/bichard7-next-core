@@ -1,6 +1,6 @@
-import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
 import CoreAuditLogger from "lib/CoreAuditLogger"
 import MockDate from "mockdate"
+import enrichWithPncQuery from "phase1/enrichAho/enrichFunctions/enrichWithPncQuery"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
@@ -8,7 +8,7 @@ import generateMessage from "phase1/tests/helpers/generateMessage"
 import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQueryResult"
 import type AuditLogger from "phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import enrichWithPncQuery from "phase1/enrichAho/enrichFunctions/enrichWithPncQuery"
+import type PncGatewayInterface from "types/PncGatewayInterface"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string

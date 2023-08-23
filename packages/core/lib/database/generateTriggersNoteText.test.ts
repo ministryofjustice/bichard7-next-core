@@ -1,6 +1,6 @@
-import type { Trigger } from "@moj-bichard7/core/phase1/types/Trigger"
-import { TriggerCode } from "@moj-bichard7/core/types/TriggerCode"
 import generateTriggersNoteText, { TriggerCreationType } from "lib/database/generateTriggersNoteText"
+import type { Trigger } from "phase1/types/Trigger"
+import { TriggerCode } from "types/TriggerCode"
 
 const mockTriggers: Trigger[] = [
   {

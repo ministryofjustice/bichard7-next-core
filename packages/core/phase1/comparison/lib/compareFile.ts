@@ -1,13 +1,13 @@
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
-import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
-import { parseComparisonFile } from "phase1/tests/helpers/processTestFile"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import getStandingDataVersionByDate from "phase1/comparison/cli/getStandingDataVersionByDate"
-import type { PromiseResult } from "phase1/comparison/types"
-import type ComparisonResult from "phase1/comparison/types/ComparisonResult"
 import { isPhase1 } from "phase1/comparison/lib/checkPhase"
 import comparePhase1 from "phase1/comparison/lib/comparePhase1"
 import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
+import type ComparisonResult from "phase1/comparison/types/ComparisonResult"
+import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
+import { parseComparisonFile } from "phase1/tests/helpers/processTestFile"
 
 const failResult: ComparisonResultDetail = {
   triggersMatch: false,

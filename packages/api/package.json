@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "watch": "tsc --build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "postinstall": "tsc",
@@ -18,6 +20,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
   "devDependencies": {
     "@jest/globals": "^29.6.2",
     "@types/cors": "^2.8.13",

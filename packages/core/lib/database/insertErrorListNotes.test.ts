@@ -1,9 +1,9 @@
-import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/generateMockPhase1Result"
-import type ErrorListNoteRecord from "@moj-bichard7/core/phase1/types/ErrorListNoteRecord"
-import postgres from "postgres"
 import createDbConfig from "lib/database/createDbConfig"
 import insertErrorListNotes from "lib/database/insertErrorListNotes"
 import insertErrorListRecord from "lib/database/insertErrorListRecord"
+import generateMockPhase1Result from "phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListNoteRecord from "phase1/types/ErrorListNoteRecord"
+import postgres from "postgres"
 
 const dbConfig = createDbConfig()
 const db = postgres({

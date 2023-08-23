@@ -1,5 +1,5 @@
+import { isError } from "@moj-bichard7/common/types/Result"
 import { S3 } from "aws-sdk"
-import { isError } from "phase1/comparison/types/Result"
 import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
 import InvokeCompareLambda from "phase1/comparison/lib/InvokeCompareLambda"
 

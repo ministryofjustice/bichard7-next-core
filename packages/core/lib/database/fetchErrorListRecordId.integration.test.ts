@@ -1,8 +1,8 @@
-import type ErrorListRecord from "@moj-bichard7/core/phase1/types/ErrorListRecord"
 import { randomUUID } from "crypto"
-import postgres from "postgres"
 import createDbConfig from "lib/database/createDbConfig"
 import fetchErrorListRecordId from "lib/database/fetchErrorListRecordId"
+import type ErrorListRecord from "phase1/types/ErrorListRecord"
+import postgres from "postgres"
 
 const dbConfig = createDbConfig()
 const db = postgres({

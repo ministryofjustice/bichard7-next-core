@@ -1,8 +1,8 @@
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
-import type { Offence } from "types/AnnotatedHearingOutcome"
-import { TriggerCode } from "types/TriggerCode"
 import type { Trigger } from "phase1/types/Trigger"
 import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
+import type { Offence } from "types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "types/PncQueryResult"
+import { TriggerCode } from "types/TriggerCode"
 
 const triggerCode = TriggerCode.TRPR0018
 

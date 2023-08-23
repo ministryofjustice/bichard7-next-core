@@ -1,7 +1,7 @@
+import type TaskDef from "@moj-bichard7/common/conductor/types/TaskDef"
+import type ConductorGateway from "deploy/ConductorGateway"
 import fs from "fs"
 import { isMatch } from "lodash"
-import type { TaskDef } from "src/types/TaskDef"
-import type ConductorGateway from "deploy/ConductorGateway"
 
 class Task {
   private localTask: TaskDef

@@ -1,8 +1,8 @@
-import type { PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "phase1/lib/encoding"
 import { mapXmlCxe01ToAho } from "phase1/parse/parseAhoXml"
 import type { AhoXml } from "phase1/types/AhoXml"
+import type { PncQueryResult } from "types/PncQueryResult"
 
 /*
 Sample CXE element

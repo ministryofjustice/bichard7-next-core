@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: { es6: true },
-  ignorePatterns: ["build/*", "api/build/*", "jest.setup.ts", "docs/*"],
+  ignorePatterns: ["dist/*", "packages/*/dist/*", "jest.setup.ts", "docs/*"],
   overrides: [
     {
       // Plain JavaScript files
@@ -22,9 +22,7 @@ module.exports = {
       files: ["**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
-        ecmaVersion: 2020,
-        tsconfigRootDir: __dirname,
-        project: ["tsconfig.json"]
+        ecmaVersion: 2020
       },
       plugins: ["@typescript-eslint", "jest", "import", "eslint-plugin-absolute-imports"],
       extends: [

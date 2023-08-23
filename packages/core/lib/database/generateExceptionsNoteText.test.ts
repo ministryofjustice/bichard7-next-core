@@ -1,7 +1,7 @@
-import errorPaths from "@moj-bichard7/core/phase1/lib/errorPaths"
-import type Exception from "@moj-bichard7/core/phase1/types/Exception"
-import { ExceptionCode } from "@moj-bichard7/core/types/ExceptionCode"
 import generateExceptionsNoteText from "lib/database/generateExceptionsNoteText"
+import errorPaths from "phase1/lib/errorPaths"
+import type Exception from "phase1/types/Exception"
+import { ExceptionCode } from "types/ExceptionCode"
 
 const mockExceptions: Exception[] = [
   {

@@ -1,5 +1,5 @@
 import type { AuditLogEvent, AuditLogEventOption } from "@moj-bichard7/common/types/AuditLogEvent"
-import type EventCategory from "phase1/types/EventCategory"
+import type EventCategory from "@moj-bichard7/common/types/EventCategory"
 
 const getAuditLogEvent = (
   option: AuditLogEventOption,

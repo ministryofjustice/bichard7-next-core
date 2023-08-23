@@ -1,11 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import type { PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
 import express from "express"
 import CoreAuditLogger from "lib/CoreAuditLogger"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import CoreHandler from "phase1/phase1"
 import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
+import type { PncQueryResult } from "types/PncQueryResult"
 
 const app = express()
 app.use(express.raw({ type: "*/*", limit: 10_000_000 }))

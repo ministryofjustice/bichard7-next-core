@@ -5,6 +5,7 @@ const { exec } = require("node:child_process")
 
 const fileName = process.argv[2]
 if (!fileName) {
+  // eslint-disable-next-line no-console
   console.error("No file provided")
   process.exit()
 }

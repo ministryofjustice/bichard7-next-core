@@ -4,7 +4,10 @@
   "description": "The core processing logic of Bichard 7",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "watch": "tsc --build --watch",
+    "build:esbuild": "node build.js",
     "build:package": "./scripts/build-package.sh",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -37,6 +40,16 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
+  },
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "devDependencies": {
@@ -96,7 +109,6 @@
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
     "p-limit": "^3.1.0",
-    "pino": "^8.15.0",
     "postgres": "^3.3.5",
     "pretty-data": "^0.40.0",
     "stompit": "^1.0.0",

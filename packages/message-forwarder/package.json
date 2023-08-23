@@ -3,13 +3,26 @@
   "version": "1.0.0",
   "description": "A small service to listen to a queue and forward to another queue or S3",
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "watch": "tsc --build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "ts-node src/server.ts",
-    "build": "node build.js",
+    "esbuild": "node build.js",
     "update-deps": "ncu -u && npm install"
   },
   "license": "MIT",
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
   "devDependencies": {
     "@types/node-fetch": "^2.6.4",
     "@types/ws": "^8.5.5",

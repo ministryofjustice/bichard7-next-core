@@ -1,19 +1,5 @@
-import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "@moj-bichard7/common/pnc/PncQueryResult"
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
-import type {
-  AnnotatedHearingOutcome,
-  Case,
-  DateSpecifiedInResult,
-  Duration,
-  Hearing,
-  NumberSpecifiedInResult,
-  Offence,
-  OffenceReason,
-  OrganisationUnitCodes,
-  Result,
-  Urgent
-} from "types/AnnotatedHearingOutcome"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -28,6 +14,8 @@ import {
 } from "phase1/dataLookup"
 import { toISODate, toPNCDate } from "phase1/lib/dates"
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "phase1/lib/encoding"
+import addExceptionsToAhoXml from "phase1/serialise/ahoXml/addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "phase1/serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
 import type {
   Adj,
   AhoXml,
@@ -47,8 +35,20 @@ import type {
   Cxe01,
   DISList
 } from "phase1/types/AhoXml"
-import addExceptionsToAhoXml from "phase1/serialise/ahoXml/addExceptionsToAhoXml"
-import addFalseHasErrorAttributesToAhoXml from "phase1/serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
+import type {
+  AnnotatedHearingOutcome,
+  Case,
+  DateSpecifiedInResult,
+  Duration,
+  Hearing,
+  NumberSpecifiedInResult,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result,
+  Urgent
+} from "types/AnnotatedHearingOutcome"
+import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "types/PncQueryResult"
 
 enum LiteralType {
   ActualOffenceDateCode,

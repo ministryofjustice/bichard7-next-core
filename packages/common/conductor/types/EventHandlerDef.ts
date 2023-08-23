@@ -23,7 +23,7 @@ type Action = {
   expandInlineJSON?: boolean
 }
 
-export type EventHandlerDef = {
+type EventHandlerDef = {
   name: string
   event: string
   condition?: string
@@ -31,3 +31,5 @@ export type EventHandlerDef = {
   active?: boolean
   evaluatorType?: string
 }
+
+export default EventHandlerDef
