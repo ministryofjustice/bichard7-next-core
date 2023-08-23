@@ -6,8 +6,8 @@ import { MockServer } from "jest-mock-server"
 import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import { Phase1ResultType } from "phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import EventCategory from "../../types/EventCategory"
-import storeAuditLogEvents from "./storeAuditLogEvents"
+import EventCategory from "phase1/types/EventCategory"
+import storeAuditLogEvents from "phase1/workers/common/storeAuditLogEvents"
 
 describe("storeAuditLogEvents", () => {
   let auditLogApi: MockServer

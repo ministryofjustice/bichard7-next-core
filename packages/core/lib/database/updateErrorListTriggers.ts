@@ -4,7 +4,7 @@ import type { Trigger } from "@moj-bichard7/core/phase1/types/Trigger"
 import ResolutionStatus from "@moj-bichard7/core/types/ResolutionStatus"
 import type { TriggerCode } from "@moj-bichard7/core/types/TriggerCode"
 import type { Sql } from "postgres"
-import insertErrorListTriggers from "./insertErrorListTriggers"
+import insertErrorListTriggers from "lib/database/insertErrorListTriggers"
 
 type TriggerUpdates = {
   added: Trigger[]

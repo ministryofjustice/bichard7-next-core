@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import CourtCase from "../../src/services/entities/CourtCase"
-import type Note from "../../src/services/entities/Note"
-import type Trigger from "../../src/services/entities/Trigger"
-import getDataSource from "../../src/services/getDataSource"
-import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
-import DummyMultipleOffencesAho from "../test-data/HO100102_1.json"
-import DummyCourtCase from "./DummyCourtCase"
+import CourtCase from "src/services/entities/CourtCase"
+import type Note from "src/services/entities/Note"
+import type Trigger from "src/services/entities/Trigger"
+import getDataSource from "src/services/getDataSource"
+import type { ResolutionStatus } from "src/types/ResolutionStatus"
+import DummyMultipleOffencesAho from "tests/test-data/HO100102_1.json"
+import DummyCourtCase from "tests/utils/DummyCourtCase"
 
 const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtCase> =>
   (await getDataSource()).getRepository(CourtCase).create({

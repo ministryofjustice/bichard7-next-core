@@ -1,8 +1,8 @@
 import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import requireStandingData from "../lib/requireStandingData"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
-import extractCodesFromOU from "./extractCodesFromOU"
-import matchCourtNames from "./matchCourtNames"
+import requireStandingData from "phase1/lib/requireStandingData"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup/dataLookup"
+import extractCodesFromOU from "phase1/dataLookup/extractCodesFromOU"
+import matchCourtNames from "phase1/dataLookup/matchCourtNames"
 
 const crownCourtTopLevelCode = "C"
 

@@ -3,7 +3,7 @@ import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import generateMessage from "phase1/tests/helpers/generateMessage"
 import generateMockAho from "phase1/tests/helpers/generateMockAho"
 import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import enrichForceOwner from "./enrichForceOwner"
+import enrichForceOwner from "phase1/enrichAho/enrichFunctions/enrichForceOwner"
 
 describe("enrichForceOwner", () => {
   it("should return AHO enriched with force owner", () => {

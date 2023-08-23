@@ -1,4 +1,4 @@
-import removeSeconds from "./removeSeconds"
+import removeSeconds from "phase1/parse/transformSpiToAho/removeSeconds"
 
 it("should remove seconds from the time", () => {
   const result = removeSeconds("12:10:33")

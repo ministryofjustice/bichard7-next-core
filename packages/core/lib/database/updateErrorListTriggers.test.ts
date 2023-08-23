@@ -2,10 +2,10 @@ import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/ge
 import type ErrorListNoteRecord from "@moj-bichard7/core/phase1/types/ErrorListNoteRecord"
 import { TriggerCode } from "@moj-bichard7/core/types/TriggerCode"
 import postgres from "postgres"
-import createDbConfig from "./createDbConfig"
-import insertErrorListRecord from "./insertErrorListRecord"
-import insertErrorListTriggers from "./insertErrorListTriggers"
-import updateErrorListTriggers from "./updateErrorListTriggers"
+import createDbConfig from "lib/database/createDbConfig"
+import insertErrorListRecord from "lib/database/insertErrorListRecord"
+import insertErrorListTriggers from "lib/database/insertErrorListTriggers"
+import updateErrorListTriggers from "lib/database/updateErrorListTriggers"
 
 const dbConfig = createDbConfig()
 const db = postgres({

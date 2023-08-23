@@ -8,8 +8,8 @@ import readAhoFromDb from "@moj-bichard7/core/phase1/workers/bichard_process/rea
 import sendToPhase2 from "@moj-bichard7/core/phase1/workers/bichard_process/sendToPhase2"
 import storeAuditLogEvents from "@moj-bichard7/core/phase1/workers/common/storeAuditLogEvents"
 import convertSpiToAho from "@moj-bichard7/core/phase1/workers/incomingMessageHandler/convertSpiToAho"
-import { defaultConcurrency } from "../src/getTaskConcurrency"
-import { captureWorkerExceptions } from "./utils"
+import { defaultConcurrency } from "src/getTaskConcurrency"
+import { captureWorkerExceptions } from "src/utils"
 
 const client = new ConductorClient({
   serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",

@@ -1,6 +1,6 @@
 import type { FindOperator, ValueTransformer } from "typeorm"
-import type { ResolutionStatus } from "../../../types/ResolutionStatus"
-import resolveFindOperator from "./resolveFindOperator"
+import type { ResolutionStatus } from "src/types/ResolutionStatus"
+import resolveFindOperator from "src/services/entities/transformers/resolveFindOperator"
 
 const resolutionStatusByCode: Record<number, ResolutionStatus> = {
   1: "Unresolved",

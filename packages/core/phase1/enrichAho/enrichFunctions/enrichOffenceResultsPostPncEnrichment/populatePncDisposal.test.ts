@@ -1,8 +1,8 @@
 jest.mock("phase1/dataLookup")
 import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
-import ResultClass from "../../../types/ResultClass"
-import populatePncDisposal from "./populatePncDisposal"
+import { lookupPncDisposalByCjsCode } from "phase1/dataLookup"
+import ResultClass from "phase1/types/ResultClass"
+import populatePncDisposal from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal"
 
 describe("populatePncDisposal", () => {
   it("should set PNCDisposalType to VICTIM_SURCHARGE", () => {

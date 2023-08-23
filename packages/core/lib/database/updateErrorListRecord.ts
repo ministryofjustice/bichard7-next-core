@@ -2,7 +2,7 @@ import type ErrorListRecord from "@moj-bichard7/core/phase1/types/ErrorListRecor
 import type { Phase1SuccessResult } from "@moj-bichard7/core/phase1/types/Phase1Result"
 import ResolutionStatus from "@moj-bichard7/core/types/ResolutionStatus"
 import type { PostgresError, Sql } from "postgres"
-import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
+import convertResultToErrorListRecord from "lib/database/convertResultToErrorListRecord"
 
 const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)

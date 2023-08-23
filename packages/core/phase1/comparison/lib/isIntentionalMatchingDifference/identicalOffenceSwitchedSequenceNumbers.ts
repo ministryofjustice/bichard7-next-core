@@ -1,6 +1,9 @@
 import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
-import hoOffencesAreEqual from "../hoOffencesAreEqual"
+import type {
+  CourtResultMatchingSummary,
+  OffenceMatchingSummary
+} from "phase1/comparison/types/MatchingComparisonOutput"
+import hoOffencesAreEqual from "phase1/comparison/lib/hoOffencesAreEqual"
 
 const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
   const output = []

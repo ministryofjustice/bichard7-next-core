@@ -26,7 +26,7 @@ module.exports = {
         tsconfigRootDir: __dirname,
         project: ["tsconfig.json"]
       },
-      plugins: ["@typescript-eslint", "jest", "import"],
+      plugins: ["@typescript-eslint", "jest", "import", "eslint-plugin-absolute-imports"],
       extends: [
         "airbnb-typescript/base",
         "plugin:@typescript-eslint/recommended",
@@ -45,7 +45,8 @@ module.exports = {
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+$", varsIgnorePattern: "^_+$" }],
-        "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }]
+        "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }],
+        "absolute-imports/only-absolute-imports": "error"
       }
     },
     {

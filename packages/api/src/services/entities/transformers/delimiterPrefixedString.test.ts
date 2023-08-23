@@ -1,5 +1,5 @@
 import type { ValueTransformer } from "typeorm"
-import delimitedPrefixedString from "./delimitedPrefixedString"
+import delimitedPrefixedString from "src/services/entities/transformers/delimitedPrefixedString"
 let transformer: ValueTransformer
 
 describe("delimiterPrefixedString value transformer", () => {

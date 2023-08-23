@@ -1,5 +1,5 @@
 import { expect } from "@jest/globals"
-import CourtCase from "../../../src/services/entities/CourtCase"
+import CourtCase from "src/services/entities/CourtCase"
 
 describe("CourtCase", () => {
   it("should be locked by another user when error is locked by another user", () => {

@@ -1,4 +1,4 @@
-import { validateAmountSpecifiedInResult } from "./ahoValidations"
+import { validateAmountSpecifiedInResult } from "phase1/schemas/ahoValidations"
 
 describe("validations", () => {
   describe("validateAmountSpecifiedInResult", () => {

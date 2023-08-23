@@ -1,11 +1,11 @@
-import logger from "../../lib/logging"
-import type { ComparisonLog, PromiseResult } from "../types"
-import { isError } from "../types"
-import type ComparisonResult from "../types/ComparisonResult"
-import createDynamoDbConfig from "./createDynamoDbConfig"
-import type DynamoGateway from "./DynamoGateway"
-import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
-import isPass from "./isPass"
+import logger from "phase1/lib/logging"
+import type { ComparisonLog, PromiseResult } from "phase1/comparison/types"
+import { isError } from "phase1/comparison/types"
+import type ComparisonResult from "phase1/comparison/types/ComparisonResult"
+import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
+import type DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
+import isPass from "phase1/comparison/lib/isPass"
 
 const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
 const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]

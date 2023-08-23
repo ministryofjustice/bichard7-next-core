@@ -1,8 +1,8 @@
 import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "../../../dataLookup"
-import getCourtDetails from "../../../dataLookup/getCourtDetails"
-import populateOrganisationUnitFields from "../../../lib/organisationUnit/populateOrganisationUnitFields"
-import populateSourceOrganisation from "./populateSourceOrganisation"
+import { lookupOrganisationUnitByCode } from "phase1/dataLookup"
+import getCourtDetails from "phase1/dataLookup/getCourtDetails"
+import populateOrganisationUnitFields from "phase1/lib/organisationUnit/populateOrganisationUnitFields"
+import populateSourceOrganisation from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateSourceOrganisation"
 
 const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
   populateSourceOrganisation(result, hearingOutcome)

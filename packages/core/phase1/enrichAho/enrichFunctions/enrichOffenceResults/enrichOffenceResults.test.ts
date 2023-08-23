@@ -1,6 +1,6 @@
 import generateMockAho from "phase1/tests/helpers/generateMockAho"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import enrichOffenceResults from "./enrichOffenceResults"
+import enrichOffenceResults from "phase1/enrichAho/enrichFunctions/enrichOffenceResults/enrichOffenceResults"
 
 describe("EnrichOffenceResults", () => {
   let aho: AnnotatedHearingOutcome

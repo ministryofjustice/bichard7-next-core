@@ -1,4 +1,4 @@
-import type ResolutionStatus from "../../types/ResolutionStatus"
+import type ResolutionStatus from "types/ResolutionStatus"
 
 export enum QualityCheckStatus {
   UNCHECKED = 1

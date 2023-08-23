@@ -1,8 +1,8 @@
 import type { Offence } from "types/AnnotatedHearingOutcome"
 import { TriggerCode } from "types/TriggerCode"
-import isCaseRecordable from "../lib/isCaseRecordable"
-import type { Trigger } from "../types/Trigger"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import isCaseRecordable from "phase1/lib/isCaseRecordable"
+import type { Trigger } from "phase1/types/Trigger"
+import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0015
 const resultCode = 4592

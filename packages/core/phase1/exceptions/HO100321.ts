@@ -1,9 +1,9 @@
 import { ExceptionCode } from "types/ExceptionCode"
-import errorPaths from "../lib/errorPaths"
-import { isAsnFormatValid } from "../lib/isAsnValid"
-import isDummyAsn from "../lib/isDummyAsn"
-import type Exception from "../types/Exception"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import errorPaths from "phase1/lib/errorPaths"
+import { isAsnFormatValid } from "phase1/lib/isAsnValid"
+import isDummyAsn from "phase1/lib/isDummyAsn"
+import type Exception from "phase1/types/Exception"
+import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const recordableOnPNCindicator = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator

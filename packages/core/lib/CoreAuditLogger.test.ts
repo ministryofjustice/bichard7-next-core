@@ -1,5 +1,5 @@
 import EventCategory from "phase1/types/EventCategory"
-import CoreAuditLogger from "./CoreAuditLogger"
+import CoreAuditLogger from "lib/CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
   const testEvent = {

@@ -7,9 +7,9 @@ import { conductorLog } from "@moj-bichard7/conductor/src/utils"
 import createDbConfig from "lib/database/createDbConfig"
 import type ErrorListRecord from "phase1/types/ErrorListRecord"
 import postgres from "postgres"
-import { isError } from "../../comparison/types"
-import logger from "../../lib/logging"
-import { parseAhoXml } from "../../parse/parseAhoXml"
+import { isError } from "phase1/comparison/types"
+import logger from "phase1/lib/logging"
+import { parseAhoXml } from "phase1/parse/parseAhoXml"
 
 const taskDefName = "read_aho_from_db"
 const dbConfig = createDbConfig()

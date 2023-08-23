@@ -1,7 +1,7 @@
 import { S3 } from "aws-sdk"
-import { isError } from "../types/Result"
-import DynamoGateway from "./DynamoGateway"
-import InvokeCompareLambda from "./InvokeCompareLambda"
+import { isError } from "phase1/comparison/types/Result"
+import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import InvokeCompareLambda from "phase1/comparison/lib/InvokeCompareLambda"
 
 const workspace = process.env.WORKSPACE || "production"
 const region = "eu-west-2"

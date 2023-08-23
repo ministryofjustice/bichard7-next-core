@@ -1,7 +1,7 @@
 import type PncGatewayInterface from "@moj-bichard7/common/pnc/PncGatewayInterface"
 import type AuditLogger from "phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
+import type { EnrichAhoFunction } from "phase1/types/EnrichAhoFunction"
 import {
   enrichCase,
   enrichCourt,
@@ -11,7 +11,7 @@ import {
   enrichOffenceResultsPostPncEnrichment,
   enrichOffences,
   enrichWithPncQuery
-} from "./enrichFunctions"
+} from "phase1/enrichAho/enrichFunctions"
 
 const enrichAho = async (
   hearingOutcome: AnnotatedHearingOutcome,

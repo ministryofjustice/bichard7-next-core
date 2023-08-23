@@ -7,8 +7,8 @@ import type ErrorListTriggerRecord from "@moj-bichard7/core/phase1/types/ErrorLi
 import { ExceptionCode } from "@moj-bichard7/core/types/ExceptionCode"
 import { TriggerCode } from "@moj-bichard7/core/types/TriggerCode"
 import postgres from "postgres"
-import createDbConfig from "./createDbConfig"
-import saveErrorListRecord from "./saveErrorListRecord"
+import createDbConfig from "lib/database/createDbConfig"
+import saveErrorListRecord from "lib/database/saveErrorListRecord"
 
 const dbConfig = createDbConfig()
 const db = postgres({

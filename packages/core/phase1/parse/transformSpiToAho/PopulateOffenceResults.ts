@@ -8,12 +8,12 @@ import {
   lookupPleaStatusBySpiCode,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
-} from "../../dataLookup"
-import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
-import countDecimalPlaces from "../../lib/countDecimalPlaces"
-import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
-import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
-import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
+} from "phase1/dataLookup"
+import extractCodesFromOU from "phase1/dataLookup/extractCodesFromOU"
+import countDecimalPlaces from "phase1/lib/countDecimalPlaces"
+import getOrganisationUnit from "phase1/lib/organisationUnit/getOrganisationUnit"
+import getRemandDetailsFromResultText from "phase1/parse/transformSpiToAho/getRemandDetailsFromResultText"
+import lookupAmountTypeByCjsCode from "phase1/parse/transformSpiToAho/lookupAmountTypeByCjsCode"
 
 const freeTextResultCode = 1000
 const otherValue = "OTHER"

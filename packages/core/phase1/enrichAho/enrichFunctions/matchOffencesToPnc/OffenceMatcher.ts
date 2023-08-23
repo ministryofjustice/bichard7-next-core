@@ -4,12 +4,12 @@ import isSequenceValid from "phase1/lib/isSequenceValid"
 import type Exception from "phase1/types/Exception"
 import type { Offence } from "types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "types/ExceptionCode"
-import { CaseType } from "./annotatePncMatch"
-import generateCandidate from "./generateCandidate"
-import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
-import { pushToArrayInMap } from "./matchOffencesToPnc"
-import offenceHasFinalResult from "./offenceHasFinalResult"
-import { offencesHaveEqualResults } from "./resultsAreEqual"
+import { CaseType } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
+import generateCandidate from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+import type { PncOffenceWithCaseRef } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
+import { pushToArrayInMap } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
+import offenceHasFinalResult from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import { offencesHaveEqualResults } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/resultsAreEqual"
 
 export type Candidate = {
   adjudicationMatch: boolean

@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from "express"
 import { z, ZodError } from "zod"
-import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
+import type { CaseListQueryRequest } from "src/types/CaseListQueryRequest"
 
 const parseBoolean = z.preprocess((value) => Boolean(value), z.boolean())
 

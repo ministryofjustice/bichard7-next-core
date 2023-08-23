@@ -1,7 +1,7 @@
 import fs from "fs"
 import { isMatch } from "lodash.ismatch"
-import type { EventHandlerDef } from "../src/types/EventHandlerDef"
-import type ConductorGateway from "./ConductorGateway"
+import type { EventHandlerDef } from "src/types/EventHandlerDef"
+import type ConductorGateway from "deploy/ConductorGateway"
 
 class EventHandler {
   private localEventHandler: EventHandlerDef

@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type Exception from "./Exception"
+import type Exception from "phase1/types/Exception"
 
 export type ExceptionGenerator = (
   hearingOutcome: AnnotatedHearingOutcome,

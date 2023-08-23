@@ -1,10 +1,10 @@
 import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
-import DynamoGateway from "../lib/DynamoGateway"
-import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import fetchFile from "./fetchFile"
-import processFile from "./processFile"
-import skippedFile from "./skippedFile"
+import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
+import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
+import fetchFile from "phase1/comparison/cli/fetchFile"
+import processFile from "phase1/comparison/cli/processFile"
+import skippedFile from "phase1/comparison/cli/skippedFile"
 
 process.env.PHASE1_COMPARISON_TABLE_NAME =
   process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"

@@ -1,7 +1,7 @@
-import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import DynamoGateway from "../lib/DynamoGateway"
-import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
-import fetchFile from "./fetchFile"
+import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
+import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
+import fetchFile from "phase1/comparison/cli/fetchFile"
 
 process.env.PHASE1_COMPARISON_TABLE_NAME =
   process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"

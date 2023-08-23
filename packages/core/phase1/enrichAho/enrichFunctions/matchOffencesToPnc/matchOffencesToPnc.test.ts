@@ -2,7 +2,7 @@ import type { CourtResultMatchingSummary } from "phase1/comparison/types/Matchin
 import errorPaths from "phase1/lib/errorPaths"
 import summariseMatching from "phase1/tests/helpers/summariseMatching"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import matchOffencesToPnc from "./matchOffencesToPnc"
+import matchOffencesToPnc from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 
 type Adjudication = {
   verdict: string

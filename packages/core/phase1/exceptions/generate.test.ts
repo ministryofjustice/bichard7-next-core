@@ -1,7 +1,7 @@
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import generateMessage from "phase1/tests/helpers/generateMessage"
-import generateExceptions from "./generate"
+import generateExceptions from "phase1/exceptions/generate"
 
 const generateAho = () => {
   const spi = generateMessage({

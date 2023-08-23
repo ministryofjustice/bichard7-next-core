@@ -1,8 +1,8 @@
 import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
 import { parseComparisonFile } from "phase1/tests/helpers/processTestFile"
-import { isPhase1 } from "../lib/checkPhase"
-import comparePhase1 from "../lib/comparePhase1"
-import getStandingDataVersionByDate from "./getStandingDataVersionByDate"
+import { isPhase1 } from "phase1/comparison/lib/checkPhase"
+import comparePhase1 from "phase1/comparison/lib/comparePhase1"
+import getStandingDataVersionByDate from "phase1/comparison/cli/getStandingDataVersionByDate"
 
 const processFile = async (
   contents: string,

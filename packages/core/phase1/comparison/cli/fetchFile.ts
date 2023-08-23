@@ -1,5 +1,5 @@
-import getFile from "../lib/getFile"
-import type { ComparisonLog } from "../types"
+import getFile from "phase1/comparison/lib/getFile"
+import type { ComparisonLog } from "phase1/comparison/types"
 
 export type FileLookup = {
   fileName: string

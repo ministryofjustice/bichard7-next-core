@@ -1,10 +1,10 @@
 import type { Response } from "express"
-import { getCourtCases } from "../src/controllers/courtCases"
-import CourtCase from "../src/services/entities/CourtCase"
-import getDataSource from "../src/services/getDataSource"
-import listCourtCases from "../src/services/listCourtCases"
-import type { CaseListQueryRequest } from "../src/types/CaseListQueryRequest"
-import type { ListCourtCaseResult } from "../src/types/ListCourtCasesResult"
+import { getCourtCases } from "src/controllers/courtCases"
+import CourtCase from "src/services/entities/CourtCase"
+import getDataSource from "src/services/getDataSource"
+import listCourtCases from "src/services/listCourtCases"
+import type { CaseListQueryRequest } from "src/types/CaseListQueryRequest"
+import type { ListCourtCaseResult } from "src/types/ListCourtCasesResult"
 
 jest.mock("../src/services/getDataSource")
 jest.mock("../src/services/listCourtCases", () => jest.fn())

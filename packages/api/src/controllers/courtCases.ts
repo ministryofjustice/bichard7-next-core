@@ -1,8 +1,8 @@
 import type { Response } from "express"
 import type { DataSource } from "typeorm"
-import getDataSource from "../services/getDataSource"
-import listCourtCases from "../services/listCourtCases"
-import type { CaseListQueryRequest } from "../types/CaseListQueryRequest"
+import getDataSource from "src/services/getDataSource"
+import listCourtCases from "src/services/listCourtCases"
+import type { CaseListQueryRequest } from "src/types/CaseListQueryRequest"
 
 export const getCourtCases = async (req: CaseListQueryRequest, res: Response) => {
   const { caseListQueryParams } = req

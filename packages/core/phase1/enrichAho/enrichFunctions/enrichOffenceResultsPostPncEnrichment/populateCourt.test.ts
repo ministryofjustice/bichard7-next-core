@@ -2,9 +2,9 @@ jest.mock("phase1/dataLookup")
 jest.mock("phase1/dataLookup/getCourtDetails")
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
 import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "../../../dataLookup"
-import getCourtDetails from "../../../dataLookup/getCourtDetails"
-import populateCourt from "./populateCourt"
+import { lookupOrganisationUnitByCode } from "phase1/dataLookup"
+import getCourtDetails from "phase1/dataLookup/getCourtDetails"
+import populateCourt from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt"
 
 const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.MockedFunction<
   typeof lookupOrganisationUnitByCode

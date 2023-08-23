@@ -2,7 +2,7 @@ import errorPaths from "@moj-bichard7/core/phase1/lib/errorPaths"
 import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/generateMockPhase1Result"
 import { ExceptionCode } from "@moj-bichard7/core/types/ExceptionCode"
 import { TriggerCode } from "@moj-bichard7/core/types/TriggerCode"
-import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
+import convertResultToErrorListRecord from "lib/database/convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {
   it("should generate the error list record", () => {

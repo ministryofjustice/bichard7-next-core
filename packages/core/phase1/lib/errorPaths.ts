@@ -1,4 +1,4 @@
-import type { ExceptionPath } from "../types/Exception"
+import type { ExceptionPath } from "phase1/types/Exception"
 
 const offencePath = (offenceIndex: number): ExceptionPath => [
   "AnnotatedHearingOutcome",

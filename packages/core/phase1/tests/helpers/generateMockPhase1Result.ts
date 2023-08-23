@@ -5,7 +5,7 @@ import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import { Phase1ResultType } from "phase1/types/Phase1Result"
 import type { Trigger } from "phase1/types/Trigger"
 import type { AnnotatedHearingOutcome, PartialAho } from "types/AnnotatedHearingOutcome"
-import generateFakeAho from "./generateFakeAho"
+import generateFakeAho from "phase1/tests/helpers/generateFakeAho"
 
 type PartialPhase1SuccessResult = {
   correlationId?: string

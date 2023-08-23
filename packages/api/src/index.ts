@@ -1,6 +1,6 @@
 import https from "https"
 import fs from "fs"
-import app from "./app"
+import app from "src/app"
 
 const PORT: string = process.env.PORT || "3333"
 

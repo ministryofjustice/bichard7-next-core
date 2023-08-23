@@ -1,9 +1,9 @@
 import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
-import type { PromiseResult } from "../types"
-import { isError } from "../types"
-import type DynamoGateway from "./DynamoGateway"
-import createDynamoDbConfig from "./createDynamoDbConfig"
-import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
+import type { PromiseResult } from "phase1/comparison/types"
+import { isError } from "phase1/comparison/types"
+import type DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
+import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
 
 const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
 const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]

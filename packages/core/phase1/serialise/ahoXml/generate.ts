@@ -25,9 +25,9 @@ import {
   lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
-} from "../../dataLookup"
-import { toISODate, toPNCDate } from "../../lib/dates"
-import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
+} from "phase1/dataLookup"
+import { toISODate, toPNCDate } from "phase1/lib/dates"
+import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "phase1/lib/encoding"
 import type {
   Adj,
   AhoXml,
@@ -46,9 +46,9 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList
-} from "../../types/AhoXml"
-import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
-import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
+} from "phase1/types/AhoXml"
+import addExceptionsToAhoXml from "phase1/serialise/ahoXml/addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "phase1/serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
 
 enum LiteralType {
   ActualOffenceDateCode,

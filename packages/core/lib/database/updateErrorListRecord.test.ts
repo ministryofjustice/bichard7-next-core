@@ -3,9 +3,9 @@ import generateMockPhase1Result from "@moj-bichard7/core/phase1/tests/helpers/ge
 import type ErrorListRecord from "@moj-bichard7/core/phase1/types/ErrorListRecord"
 import { ExceptionCode } from "@moj-bichard7/core/types/ExceptionCode"
 import postgres from "postgres"
-import createDbConfig from "./createDbConfig"
-import insertErrorListRecord from "./insertErrorListRecord"
-import updateErrorListRecord from "./updateErrorListRecord"
+import createDbConfig from "lib/database/createDbConfig"
+import insertErrorListRecord from "lib/database/insertErrorListRecord"
+import updateErrorListRecord from "lib/database/updateErrorListRecord"
 
 const dbConfig = createDbConfig()
 const db = postgres({

@@ -1,8 +1,8 @@
 import { readFileSync } from "fs"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import type { HearingDefendant } from "types/AnnotatedHearingOutcome"
-import populateCase from "./populateCase"
-import populateDefendant from "./populateDefendant"
+import populateCase from "phase1/parse/transformSpiToAho/populateCase"
+import populateDefendant from "phase1/parse/transformSpiToAho/populateDefendant"
 
 jest.mock("phase1/parse/transformSpiToAho/populateDefendant")
 

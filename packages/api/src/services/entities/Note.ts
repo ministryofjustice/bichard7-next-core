@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
 import type { Relation } from "typeorm"
-import BaseEntity from "./BaseEntity"
+import BaseEntity from "src/services/entities/BaseEntity"
 // eslint-disable-next-line import/no-cycle
-import CourtCase from "./CourtCase"
-import dateTransformer from "./transformers/dateTransformer"
+import CourtCase from "src/services/entities/CourtCase"
+import dateTransformer from "src/services/entities/transformers/dateTransformer"
 
 @Entity({ name: "error_list_notes" })
 export default class Note extends BaseEntity {

@@ -15,10 +15,10 @@ import type {
   Result,
   ResultQualifierVariable
 } from "types/AnnotatedHearingOutcome"
-import countDecimalPlaces from "../../lib/countDecimalPlaces"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
-import mapXmlCxe01ToAho from "../../parse/parseAhoXml/mapXmlCxe01ToAho"
+import countDecimalPlaces from "phase1/lib/countDecimalPlaces"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "phase1/lib/encoding"
+import extractExceptionsFromAho from "phase1/parse/parseAhoXml/extractExceptionsFromAho"
+import mapXmlCxe01ToAho from "phase1/parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
   AhoXml,
   Br7Case,
@@ -38,8 +38,8 @@ import type {
   CommonLawOffenceCode,
   IndictmentOffenceCode,
   NonMatchingOffenceCode
-} from "../../types/AhoXml"
-import type ResultClass from "../../types/ResultClass"
+} from "phase1/types/AhoXml"
+import type ResultClass from "phase1/types/ResultClass"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],

@@ -1,8 +1,8 @@
 import { readFileSync } from "fs"
 import parseSpiResult from "phase1/parse/parseSpiResult"
-import type { OffencesResult } from "./PopulateOffences"
-import PopulateOffences from "./PopulateOffences"
-import populateDefendant from "./populateDefendant"
+import type { OffencesResult } from "phase1/parse/transformSpiToAho/PopulateOffences"
+import PopulateOffences from "phase1/parse/transformSpiToAho/PopulateOffences"
+import populateDefendant from "phase1/parse/transformSpiToAho/populateDefendant"
 
 describe("populateDefendant", () => {
   const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")

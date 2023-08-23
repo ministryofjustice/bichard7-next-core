@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
-import { formatXmlDiff } from "../lib/xmlOutputComparison"
-import printList from "./printList"
-import type { SkippedFile } from "./processRange"
+import { formatXmlDiff } from "phase1/comparison/lib/xmlOutputComparison"
+import printList from "phase1/comparison/cli/printList"
+import type { SkippedFile } from "phase1/comparison/cli/processRange"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches

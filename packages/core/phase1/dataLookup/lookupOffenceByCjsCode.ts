@@ -1,5 +1,5 @@
 import type { OffenceCode } from "bichard7-next-data-latest/dist/types/types"
-import requireStandingData from "../lib/requireStandingData"
+import requireStandingData from "phase1/lib/requireStandingData"
 
 export const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   requireStandingData().offenceCode.find((x) => x.cjsCode === cjsCode)

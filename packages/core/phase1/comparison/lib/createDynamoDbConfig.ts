@@ -1,4 +1,4 @@
-import type { DynamoDbConfig } from "../types"
+import type { DynamoDbConfig } from "phase1/comparison/types"
 
 export default function createDynamoDbConfig(): DynamoDbConfig {
   const {

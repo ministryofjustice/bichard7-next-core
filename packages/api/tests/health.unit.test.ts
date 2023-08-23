@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { checkStatus } from "../src/controllers/health"
+import { checkStatus } from "src/controllers/health"
 
 describe("checkStatus", () => {
   it("returns a 200 status code", () => {

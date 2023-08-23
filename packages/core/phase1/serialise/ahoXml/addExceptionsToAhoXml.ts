@@ -1,9 +1,9 @@
 import { ExceptionCode } from "types/ExceptionCode"
-import errorPaths from "../../lib/errorPaths"
-import isPncException from "../../lib/isPncException"
-import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"
-import type Exception from "../../types/Exception"
-import addAhoErrors from "./addAhoErrors"
+import errorPaths from "phase1/lib/errorPaths"
+import isPncException from "phase1/lib/isPncException"
+import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "phase1/types/AhoXml"
+import type Exception from "phase1/types/Exception"
+import addAhoErrors from "phase1/serialise/ahoXml/addAhoErrors"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 

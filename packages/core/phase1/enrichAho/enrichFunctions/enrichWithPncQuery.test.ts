@@ -8,7 +8,7 @@ import generateMessage from "phase1/tests/helpers/generateMessage"
 import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQueryResult"
 import type AuditLogger from "phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import enrichWithPncQuery from "./enrichWithPncQuery"
+import enrichWithPncQuery from "phase1/enrichAho/enrichFunctions/enrichWithPncQuery"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string

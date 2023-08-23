@@ -1,6 +1,6 @@
 import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import Asn from "./Asn"
-import isOrganisationUnitValid from "./isOrganisationUnitValid"
+import Asn from "phase1/lib/Asn"
+import isOrganisationUnitValid from "phase1/lib/isOrganisationUnitValid"
 
 const convertAsnToOrganisationUnit = (asn: string): OrganisationUnitCodes => {
   let topLevelCode = ""

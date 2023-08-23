@@ -21,7 +21,7 @@ import type {
 } from "bichard7-next-data-latest/dist/types/types"
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
 import type { SpiPlea } from "phase1/types/Plea"
-import requireStandingData from "../lib/requireStandingData"
+import requireStandingData from "phase1/lib/requireStandingData"
 
 interface DataLookupResult {
   cjsCode: string

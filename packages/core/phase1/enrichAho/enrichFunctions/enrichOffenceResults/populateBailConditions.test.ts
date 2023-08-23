@@ -1,5 +1,5 @@
 import type { Result } from "types/AnnotatedHearingOutcome"
-import populateBailConditions from "./populateBailConditions"
+import populateBailConditions from "phase1/enrichAho/enrichFunctions/enrichOffenceResults/populateBailConditions"
 
 describe("populateBailConditions", () => {
   it("should populate the BailCondition elements with matching descriptions", () => {

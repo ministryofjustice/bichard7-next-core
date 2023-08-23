@@ -1,6 +1,6 @@
 import { ExceptionCode } from "types/ExceptionCode"
-import type Exception from "../types/Exception"
-import deduplicateExceptions from "./deduplicateExceptions"
+import type Exception from "phase1/types/Exception"
+import deduplicateExceptions from "phase1/exceptions/deduplicateExceptions"
 
 describe("deduplicateExceptions", () => {
   it("should remove duplicates", () => {

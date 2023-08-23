@@ -2,10 +2,9 @@
   "name": "moj-bichard7",
   "private": true,
   "version": "2.0.0",
-  "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "npm run lint --ws",
+    "lint:fix": "npm run lint:fix --ws",
     "all": "./environment/boot.sh",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
@@ -20,29 +19,16 @@
     "structurizr-site-generatr-serve": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
     "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite"
   },
+  "workspaces": [
+    "packages/*"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ministryofjustice/bichard7-next-core.git"
   },
-  "author": "",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
-  },
-  "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "devDependencies": {
-    "eslint": "^8.47.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-jest": "^27.2.3",
-    "eslint-plugin-prettier": "^5.0.0"
   }
 }

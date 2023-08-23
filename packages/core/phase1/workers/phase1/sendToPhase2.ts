@@ -8,9 +8,9 @@ import type { Task } from "@moj-bichard7/conductor/src/types/Task"
 import { conductorLog } from "@moj-bichard7/conductor/src/utils"
 import convertAhoToXml from "phase1/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
-import { isError } from "../../comparison/types"
-import logger from "../../lib/logging"
-import EventCategory from "../../types/EventCategory"
+import { isError } from "phase1/comparison/types"
+import logger from "phase1/lib/logging"
+import EventCategory from "phase1/types/EventCategory"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)

@@ -1,11 +1,11 @@
 import type { OffenceReason } from "types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "types/ExceptionCode"
-import getAreaCode from "../lib/offence/getAreaCode"
-import getOffenceCode from "../lib/offence/getOffenceCode"
-import isOffenceIgnored from "../lib/offence/isOffenceIgnored"
-import lookupOffenceCode from "../lib/offence/lookupOffenceCode"
-import type Exception from "../types/Exception"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import getAreaCode from "phase1/lib/offence/getAreaCode"
+import getOffenceCode from "phase1/lib/offence/getOffenceCode"
+import isOffenceIgnored from "phase1/lib/offence/isOffenceIgnored"
+import lookupOffenceCode from "phase1/lib/offence/lookupOffenceCode"
+import type Exception from "phase1/types/Exception"
+import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
 
 const isNationalOffenceCode = (offenceReason: OffenceReason): boolean =>
   offenceReason.__type === "NationalOffenceReason"

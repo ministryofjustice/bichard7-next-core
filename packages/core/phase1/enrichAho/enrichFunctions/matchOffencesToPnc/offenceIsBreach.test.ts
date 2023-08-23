@@ -1,5 +1,5 @@
 import type { Offence } from "types/AnnotatedHearingOutcome"
-import offenceIsBreach from "./offenceIsBreach"
+import offenceIsBreach from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
 
 describe("offenceIsBreach()", () => {
   it("should say an offence in a breach category is a breach offence", () => {

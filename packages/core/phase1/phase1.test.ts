@@ -5,7 +5,7 @@ import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
 import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQueryResult"
-import phase1Handler from "./phase1"
+import phase1Handler from "phase1/phase1"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("phase1/tests/fixtures/input-message-001.xml").toString()

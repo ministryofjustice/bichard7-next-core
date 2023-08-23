@@ -10,8 +10,8 @@ import convertAhoToXml from "phase1/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import { Phase1ResultType } from "phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { parseAhoXml } from "../../parse/parseAhoXml"
-import sendToPhase2 from "./sendToPhase2"
+import { parseAhoXml } from "phase1/parse/parseAhoXml"
+import sendToPhase2 from "phase1/workers/phase1/sendToPhase2"
 
 const inputXml = fs.readFileSync("phase1/tests/fixtures/AnnotatedHO1.xml").toString()
 const hearingOutcome = parseAhoXml(inputXml) as AnnotatedHearingOutcome

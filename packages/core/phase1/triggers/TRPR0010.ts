@@ -1,7 +1,7 @@
 import type { Offence } from "types/AnnotatedHearingOutcome"
 import { TriggerCode } from "types/TriggerCode"
-import { lookupRemandStatusByCjsCode } from "../dataLookup"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import { lookupRemandStatusByCjsCode } from "phase1/dataLookup"
+import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0010
 const resultCode = 4597

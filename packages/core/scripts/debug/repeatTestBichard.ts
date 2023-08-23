@@ -5,7 +5,7 @@ import fs from "fs"
 import type { ImportedComparison } from "phase1/comparison/types/ImportedComparison"
 import ActiveMqHelper from "phase1/tests/helpers/ActiveMqHelper"
 import defaults from "phase1/tests/helpers/defaults"
-import runFileOnBichard from "../runFileOnBichard"
+import runFileOnBichard from "scripts/runFileOnBichard"
 
 const queueName = "PROCESSING_VALIDATION_QUEUE"
 

@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "types/ExceptionCode"
-import addNullElementsForExceptions from "./addNullElementsForExceptions"
+import addNullElementsForExceptions from "phase1/lib/addNullElementsForExceptions"
 
 describe("addNullElementsForExceptions()", () => {
   it("should add a null element when it doesn't exist", () => {

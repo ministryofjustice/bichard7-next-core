@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { TriggerCode } from "types/TriggerCode"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
 
 const modules = Object.keys(TriggerCode).reduce((acc: Record<string, TriggerGenerator>, code) => {
   acc[code] = require(`./${code}`).default

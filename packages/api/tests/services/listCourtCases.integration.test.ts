@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { DataSource } from "typeorm"
-import CourtCase from "../../src/services/entities/CourtCase"
-import Note from "../../src/services/entities/Note"
-import Trigger from "../../src/services/entities/Trigger"
-import getDataSource from "../../src/services/getDataSource"
-import listCourtCases from "../../src/services/listCourtCases"
-import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
-import type { ListCourtCaseResult } from "../../src/types/ListCourtCasesResult"
-import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
-import { isError } from "../../src/types/Result"
-import deleteFromEntity from "../utils/deleteFromEntity"
+import CourtCase from "src/services/entities/CourtCase"
+import Note from "src/services/entities/Note"
+import Trigger from "src/services/entities/Trigger"
+import getDataSource from "src/services/getDataSource"
+import listCourtCases from "src/services/listCourtCases"
+import courtCasesByVisibleForcesQuery from "src/services/queries/courtCasesByVisibleForcesQuery"
+import type { ListCourtCaseResult } from "src/types/ListCourtCasesResult"
+import type { ResolutionStatus } from "src/types/ResolutionStatus"
+import { isError } from "src/types/Result"
+import deleteFromEntity from "tests/utils/deleteFromEntity"
 import {
   insertCourtCasesWithFields,
   insertDummyCourtCasesWithNotes,
   insertDummyCourtCasesWithTriggers
-} from "../utils/insertCourtCases"
-import insertException from "../utils/manageExceptions"
-import type { TestTrigger } from "../utils/manageTriggers"
-import { insertTriggers } from "../utils/manageTriggers"
+} from "tests/utils/insertCourtCases"
+import insertException from "tests/utils/manageExceptions"
+import type { TestTrigger } from "tests/utils/manageTriggers"
+import { insertTriggers } from "tests/utils/manageTriggers"
 
 jest.mock(
   "../../src/services/queries/courtCasesByVisibleForcesQuery",

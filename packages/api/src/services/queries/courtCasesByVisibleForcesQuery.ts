@@ -1,4 +1,4 @@
-import type CourtCase from "../entities/CourtCase"
+import type CourtCase from "src/services/entities/CourtCase"
 import type { SelectQueryBuilder, UpdateQueryBuilder } from "typeorm"
 import { Brackets, In, Like } from "typeorm"
 

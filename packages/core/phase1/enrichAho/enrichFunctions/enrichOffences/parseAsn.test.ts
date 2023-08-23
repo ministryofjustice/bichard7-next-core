@@ -1,4 +1,4 @@
-import parseAsn from "./parseAsn"
+import parseAsn from "phase1/enrichAho/enrichFunctions/enrichOffences/parseAsn"
 
 describe("parseAsn", () => {
   it("should handle 20 character ASNs", () => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import logger from "./logging"
+import logger from "phase1/lib/logging"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type StandingData = typeof import("bichard7-next-data-latest").default

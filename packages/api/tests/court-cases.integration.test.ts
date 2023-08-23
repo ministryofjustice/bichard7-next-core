@@ -1,9 +1,9 @@
 import request from "supertest"
 import { stringify } from "qs"
-import app from "../src/app"
-import { insertCourtCasesWithFields } from "./utils/insertCourtCases"
-import CourtCase from "../src/services/entities/CourtCase"
-import deleteFromEntity from "./utils/deleteFromEntity"
+import app from "src/app"
+import { insertCourtCasesWithFields } from "tests/utils/insertCourtCases"
+import CourtCase from "src/services/entities/CourtCase"
+import deleteFromEntity from "tests/utils/deleteFromEntity"
 
 describe("/court-cases", () => {
   beforeEach(async () => {

@@ -1,13 +1,13 @@
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import "phase1/tests/helpers/setEnvironmentVariables"
-import MockDynamo from "../../tests/helpers/MockDynamo"
-import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
-import type { ComparisonLog } from "../types"
-import { isError } from "../types"
-import DynamoGateway from "./DynamoGateway"
-import createDynamoDbConfig from "./createDynamoDbConfig"
-import recordResultInDynamo from "./recordResultInDynamo"
+import MockDynamo from "phase1/tests/helpers/MockDynamo"
+import dynamoDbTableConfig from "phase1/tests/helpers/testDynamoDbTableConfig"
+import type { ComparisonLog } from "phase1/comparison/types"
+import { isError } from "phase1/comparison/types"
+import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
+import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
+import recordResultInDynamo from "phase1/comparison/lib/recordResultInDynamo"
 
 const config = createDynamoDbConfig()
 const dynamoGateway = new DynamoGateway(config)

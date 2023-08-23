@@ -1,5 +1,5 @@
 import type { TriggerCode } from "types/TriggerCode"
-import type TriggerRecordable from "./TriggerRecordable"
+import type TriggerRecordable from "phase1/types/TriggerRecordable"
 
 type TriggerConfig = {
   triggerCode: TriggerCode

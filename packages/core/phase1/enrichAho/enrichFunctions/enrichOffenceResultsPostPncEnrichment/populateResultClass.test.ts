@@ -1,6 +1,6 @@
 import type { Result } from "types/AnnotatedHearingOutcome"
-import ResultClass from "../../../types/ResultClass"
-import populateResultClass from "./populateResultClass"
+import ResultClass from "phase1/types/ResultClass"
+import populateResultClass from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass"
 
 const ADJOURNED_RESULT_CODE = 4001
 const NON_ADJOURNED_RESULT_CODE = 0

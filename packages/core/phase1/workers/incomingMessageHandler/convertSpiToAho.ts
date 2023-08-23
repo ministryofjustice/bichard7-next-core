@@ -8,8 +8,8 @@ import { conductorLog } from "@moj-bichard7/conductor/src/utils"
 import parseSpiResult from "phase1/parse/parseSpiResult"
 import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import { v4 as uuid } from "uuid"
-import { isError } from "../../comparison/types"
-import logger from "../../lib/logging"
+import { isError } from "phase1/comparison/types"
+import logger from "phase1/lib/logging"
 
 const taskDefName = "convert_spi_to_aho"
 

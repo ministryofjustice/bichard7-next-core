@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
 
 const ho100310AndHo100332Equivalent = (
   _: CourtResultMatchingSummary,

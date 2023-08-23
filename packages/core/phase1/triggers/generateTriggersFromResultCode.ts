@@ -1,8 +1,8 @@
 import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
-import isCaseRecordable from "../lib/isCaseRecordable"
-import type { Trigger } from "../types/Trigger"
-import type TriggerConfig from "../types/TriggerConfig"
-import TriggerRecordable from "../types/TriggerRecordable"
+import isCaseRecordable from "phase1/lib/isCaseRecordable"
+import type { Trigger } from "phase1/types/Trigger"
+import type TriggerConfig from "phase1/types/TriggerConfig"
+import TriggerRecordable from "phase1/types/TriggerRecordable"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,

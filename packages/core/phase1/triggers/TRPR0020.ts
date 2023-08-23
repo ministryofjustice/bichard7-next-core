@@ -2,10 +2,10 @@
 import { CjsVerdict } from "phase1/types/Verdict"
 import type { Offence, Result } from "types/AnnotatedHearingOutcome"
 import { TriggerCode } from "types/TriggerCode"
-import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
-import resultCodeIsFinal from "../lib/result/resultCodeIsFinal"
-import type { Trigger } from "../types/Trigger"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import getOffenceFullCode from "phase1/lib/offence/getOffenceFullCode"
+import resultCodeIsFinal from "phase1/lib/result/resultCodeIsFinal"
+import type { Trigger } from "phase1/types/Trigger"
+import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0020
 const resultCodes = [1029, 1030, 1031, 1032, 3501]

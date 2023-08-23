@@ -8,10 +8,10 @@ import getTaskConcurrency from "@moj-bichard7/conductor/src/getTaskConcurrency"
 import type { Task } from "@moj-bichard7/conductor/src/types/Task"
 import { conductorLog } from "@moj-bichard7/conductor/src/utils"
 import convertAhoToXml from "phase1/serialise/ahoXml/generate"
-import { isError } from "../../comparison/types"
-import logger from "../../lib/logging"
-import parseAhoJson from "../../parse/parseAhoJson"
-import EventCategory from "../../types/EventCategory"
+import { isError } from "phase1/comparison/types"
+import logger from "phase1/lib/logging"
+import parseAhoJson from "phase1/parse/parseAhoJson"
+import EventCategory from "phase1/types/EventCategory"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)

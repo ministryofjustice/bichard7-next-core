@@ -1,7 +1,7 @@
 import type { NextFunction, Response } from "express"
 import { createFixture } from "zod-fixture"
-import { caseListQuerySchema, validateCaseListQueryParams } from "../../src/middleware/validate"
-import type { CaseListQueryRequest } from "../../src/types/CaseListQueryRequest"
+import { caseListQuerySchema, validateCaseListQueryParams } from "src/middleware/validate"
+import type { CaseListQueryRequest } from "src/types/CaseListQueryRequest"
 
 const createTestQuery = () => {
   const caseListQuery = createFixture(caseListQuerySchema)

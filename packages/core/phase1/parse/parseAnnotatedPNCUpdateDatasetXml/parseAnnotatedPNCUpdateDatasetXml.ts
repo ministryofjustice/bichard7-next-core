@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
 import type { AnnotatedPNCUpdateDatasetXml } from "phase1/types/AnnotatedPNCUpdateDatasetXml"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
-import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "phase1/lib/encoding"
+import type { AnnotatedPNCUpdateDataset } from "phase1/types/AnnotatedPNCUpdateDataset"
+import { mapXmlCaseToAho, mapXmlHearingToAho } from "phase1/parse/parseAhoXml/parseAhoXml"
 
 const mapXmlToAnnotatedPNCUpdateDataset = (
   annotatedPNCUpdateDataset: AnnotatedPNCUpdateDatasetXml

@@ -1,4 +1,4 @@
-import parseConnectionOptions from "./parseConnectionOptions"
+import parseConnectionOptions from "mq/parseConnectionOptions"
 
 describe("parseConnectionOptions()", () => {
   it("should parse a non-SSL host and port when the protocol is HTTP", () => {

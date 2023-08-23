@@ -1,7 +1,7 @@
 import { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "../types"
-import { isError } from "../types"
+import type { ComparisonLog, DynamoDbConfig, PromiseResult } from "phase1/comparison/types"
+import { isError } from "phase1/comparison/types"
 
 type GetRangePageOptions = {
   batchSize?: number

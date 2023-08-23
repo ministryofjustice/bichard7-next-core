@@ -2,7 +2,7 @@ import type { PromiseResult } from "@moj-bichard7/core/phase1/comparison/types/R
 import { isError } from "@moj-bichard7/core/phase1/comparison/types/Result"
 import type { Client } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
-import MqGateway from "./MqGateway"
+import MqGateway from "mq/MqGateway"
 
 const readMessage = (message: Client.Message): Promise<string> => {
   return new Promise<string>((resolve, reject) => {

@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
 import { TriggerCode } from "types/TriggerCode"
-import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import getOffenceFullCode from "phase1/lib/offence/getOffenceFullCode"
+import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0025
 const validMatches = [

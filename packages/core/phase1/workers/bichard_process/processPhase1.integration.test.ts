@@ -12,7 +12,7 @@ import { test1PncResponse, test89PncResponse } from "phase1/tests/fixtures/mockP
 import MockS3 from "phase1/tests/helpers/MockS3"
 import { Phase1ResultType } from "phase1/types/Phase1Result"
 import postgres from "postgres"
-import processPhase1 from "./processPhase1"
+import processPhase1 from "phase1/workers/bichard_process/processPhase1"
 
 const bucket = "conductor-task-data"
 const s3Config = createS3Config()

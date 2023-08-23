@@ -10,11 +10,11 @@ import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
 import promisePoller from "promise-poller"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import { v4 as uuid } from "uuid"
-import ActiveMqHelper from "./ActiveMqHelper"
-import MockPncGateway from "./MockPncGateway"
-import PostgresHelper from "./PostgresHelper"
-import defaults from "./defaults"
-import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
+import ActiveMqHelper from "phase1/tests/helpers/ActiveMqHelper"
+import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
+import PostgresHelper from "phase1/tests/helpers/PostgresHelper"
+import defaults from "phase1/tests/helpers/defaults"
+import { mockEnquiryErrorInPnc, mockRecordInPnc } from "phase1/tests/helpers/mockRecordInPnc"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,

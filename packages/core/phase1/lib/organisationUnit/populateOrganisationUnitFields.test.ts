@@ -1,5 +1,5 @@
 import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import populateOrganisationUnitFields from "./populateOrganisationUnitFields"
+import populateOrganisationUnitFields from "phase1/lib/organisationUnit/populateOrganisationUnitFields"
 
 describe("populateOrganisationUnitFields", () => {
   it("should populate top, second, third, and bottom levels by organisation unit code", () => {

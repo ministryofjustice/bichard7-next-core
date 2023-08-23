@@ -1,9 +1,9 @@
 import { ExceptionCode } from "types/ExceptionCode"
-import errorPaths from "../lib/errorPaths"
-import isCaseRecordable from "../lib/isCaseRecordable"
-import isAdjourned from "../lib/result/isAdjourned"
-import type Exception from "../types/Exception"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import errorPaths from "phase1/lib/errorPaths"
+import isCaseRecordable from "phase1/lib/isCaseRecordable"
+import isAdjourned from "phase1/lib/result/isAdjourned"
+import type Exception from "phase1/types/Exception"
+import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
 
 const HO100322: ExceptionGenerator = (hearingOutcome) => {
   if (!isCaseRecordable(hearingOutcome)) {

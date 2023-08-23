@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryColumn } from "typeorm"
-import type GroupName from "../../types/GroupName"
-import BaseEntity from "./BaseEntity"
-import delimitedPrefixedString from "./transformers/delimitedPrefixedString"
-import featureFlagTransformer from "./transformers/featureFlagTransformer"
+import type GroupName from "src/types/GroupName"
+import BaseEntity from "src/services/entities/BaseEntity"
+import delimitedPrefixedString from "src/services/entities/transformers/delimitedPrefixedString"
+import featureFlagTransformer from "src/services/entities/transformers/featureFlagTransformer"
 
 @Entity({ name: "users" })
 export default class User extends BaseEntity {
