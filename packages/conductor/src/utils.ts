@@ -1,6 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
-import { conductorLog } from "@moj-bichard7/common/conductor/utils"
 import logger from "@moj-bichard7/common/utils/logger"
 
 export const captureWorkerExceptions = (worker: ConductorWorker): ConductorWorker => ({

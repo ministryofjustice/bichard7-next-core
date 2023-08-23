@@ -1,8 +1,8 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
-import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/utils"
 const taskDefName = "generate_day_tasks"
 
 export type GenerateDayTasksOutput = {

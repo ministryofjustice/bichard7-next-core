@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
-import { conductorLog } from "@moj-bichard7/common/conductor/utils"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
