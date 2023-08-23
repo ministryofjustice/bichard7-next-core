@@ -3,12 +3,15 @@ FROM ${BUILD_IMAGE} as builder
 
 WORKDIR /message-forwarder
 
-COPY ./tsconfig.json ./tsconfig.json
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
 COPY ./packages ./packages
-RUN npm ci --workspaces
-RUN npm run build -w packages/message-forwarder
+RUN npm ci
+
+COPY ./tsconfig.json ./tsconfig.json
+COPY ./tsconfig.base.json ./tsconfig.base.json
+
+RUN npm run esbuild -w packages/message-forwarder
 
 FROM ${BUILD_IMAGE}
 
