@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A small service to listen to a queue and forward to another queue or S3",
   "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "watch": "tsc --build --watch",
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf ./dist",
+    "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "ts-node src/server.ts",

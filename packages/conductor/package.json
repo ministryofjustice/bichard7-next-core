@@ -17,9 +17,9 @@
     "wait-for-expect": "^3.0.2"
   },
   "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "watch": "tsc --build --watch",
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf ./dist",
+    "watch": "tsc --project tsconfig.build.json --watch",
     "build-worker": "docker build -f conductor/Dockerfile -t core-worker:latest .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
