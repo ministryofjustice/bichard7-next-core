@@ -1,9 +1,9 @@
-import type MqConfig from "mq/MqConfig"
-import deconstructServers from "mq/deconstructServers"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import { isError } from "@moj-bichard7/common/types/Result"
+import type MqConfig from "lib/mq/MqConfig"
+import deconstructServers from "lib/mq/deconstructServers"
 import type { Client, connect } from "stompit"
 import { ConnectFailover } from "stompit"
-import type { PromiseResult } from "types/Result"
-import { isError } from "types/Result"
 
 const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
   initialReconnectDelay: 1000,

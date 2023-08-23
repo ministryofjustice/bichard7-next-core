@@ -1,7 +1,7 @@
-import type MqConfig from "mq/MqConfig"
-import MqGateway from "mq/MqGateway"
-import TestMqGateway from "mq/TestMqGateway"
-import { isError } from "types/Result"
+import { isError } from "@moj-bichard7/common/types/Result"
+import type MqConfig from "lib/mq/MqConfig"
+import MqGateway from "lib/mq/MqGateway"
+import TestMqGateway from "lib/mq/TestMqGateway"
 
 jest.setTimeout(30000)
 
