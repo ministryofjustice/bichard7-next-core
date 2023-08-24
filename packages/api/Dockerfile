@@ -8,13 +8,11 @@ WORKDIR /api
 
 RUN yum install jq -y
 
-COPY scripts ./scripts
-COPY api/files/openssl.cnf /tmp/openssl.cnf
-COPY api/package.json .
-COPY api/package-lock.json .
-COPY api/src ./src
-COPY api/tsconfig.json .
-COPY api/build.js .
+COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
+COPY package.json .
+COPY package-lock.json .
+COPY packages/api ./packages/api
+COPY tsconfig*.json .
 
 RUN mkdir -p /certs && \
     openssl req \
@@ -32,6 +30,6 @@ EXPOSE     80
 EXPOSE     443
 
 RUN npm ci
-RUN npm run build
+RUN npm run build -w packages/api
 
 CMD [ "npm", "run", "start" ]
