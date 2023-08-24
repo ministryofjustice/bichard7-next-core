@@ -25,7 +25,7 @@
     "update-deps": "ncu -u && npm install",
     "test": "jest --forceExit --runInBand",
     "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -T ./deploy/deploy.ts",
-    "worker": ". ../environment/local-conductor-worker.env && npm run worker-noenv",
+    "worker": ". ../../environment/local-conductor-worker.env && npm run worker-noenv",
     "worker-noenv": "npx ts-node -T src/worker.ts"
   },
   "repository": {
