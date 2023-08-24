@@ -1,7 +1,7 @@
-import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "phase1/types/SpiResult"
-import type { Address, DefendantDetail, HearingDefendant } from "types/AnnotatedHearingOutcome"
-import { lookupRemandStatusBySpiCode } from "phase1/dataLookup"
-import PopulateOffences from "phase1/parse/transformSpiToAho/PopulateOffences"
+import type { Address, DefendantDetail, HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
+import { lookupRemandStatusBySpiCode } from "../../dataLookup"
+import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "../../types/SpiResult"
+import PopulateOffences from "./PopulateOffences"
 
 const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>
   spiPNCIdentifier ? spiPNCIdentifier.substring(0, 4) + "/" + spiPNCIdentifier.substring(4) : undefined

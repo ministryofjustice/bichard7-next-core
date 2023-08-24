@@ -1,12 +1,12 @@
-import { ExceptionCode } from "types/ExceptionCode"
-import isNotGuiltyVerdict from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
-import isResultClassCode from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
-import errorPaths from "phase1/lib/errorPaths"
-import isCaseRecordable from "phase1/lib/isCaseRecordable"
-import resultCodeIsOnStopList from "phase1/lib/result/resultCodeIsOnStopList"
-import type Exception from "phase1/types/Exception"
-import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
-import ResultClass from "phase1/types/ResultClass"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
+import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
+import errorPaths from "../lib/errorPaths"
+import isCaseRecordable from "../lib/isCaseRecordable"
+import resultCodeIsOnStopList from "../lib/result/resultCodeIsOnStopList"
+import type Exception from "../types/Exception"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import ResultClass from "../types/ResultClass"
 
 const HO100305: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []

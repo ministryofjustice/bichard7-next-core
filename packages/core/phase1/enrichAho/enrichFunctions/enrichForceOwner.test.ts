@@ -1,9 +1,9 @@
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import transformSpiToAho from "phase1/parse/transformSpiToAho"
-import generateMessage from "phase1/tests/helpers/generateMessage"
-import generateMockAho from "phase1/tests/helpers/generateMockAho"
-import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import enrichForceOwner from "phase1/enrichAho/enrichFunctions/enrichForceOwner"
+import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import generateMessage from "../../tests/helpers/generateMessage"
+import generateMockAho from "../../tests/helpers/generateMockAho"
+import enrichForceOwner from "./enrichForceOwner"
 
 describe("enrichForceOwner", () => {
   it("should return AHO enriched with force owner", () => {

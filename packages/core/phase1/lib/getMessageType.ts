@@ -1,4 +1,4 @@
-import type MessageType from "phase1/types/MessageType"
+import type MessageType from "../types/MessageType"
 
 const getMessageType = (message: string): MessageType | undefined => {
   if (message.match(/ResultedCaseMessage/)) {

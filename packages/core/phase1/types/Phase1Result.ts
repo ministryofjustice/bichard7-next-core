@@ -1,6 +1,6 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type { Trigger } from "phase1/types/Trigger"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../types/Trigger"
 
 export enum Phase1ResultType {
   success = "success",

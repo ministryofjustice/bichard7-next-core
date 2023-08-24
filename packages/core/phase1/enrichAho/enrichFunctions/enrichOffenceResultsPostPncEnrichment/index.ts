@@ -1,8 +1,8 @@
-import isCaseRecordable from "phase1/lib/isCaseRecordable"
-import type { EnrichAhoFunction } from "phase1/types/EnrichAhoFunction"
-import populateCourt from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateCourt"
-import populatePncDisposal from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populatePncDisposal"
-import populateResultClass from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateResultClass"
+import isCaseRecordable from "../../../lib/isCaseRecordable"
+import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+import populateCourt from "./populateCourt"
+import populatePncDisposal from "./populatePncDisposal"
+import populateResultClass from "./populateResultClass"
 
 const suspendedSecondDurationResults = [1115, 1134]
 const suspended = "Suspended"

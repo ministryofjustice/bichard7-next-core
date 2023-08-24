@@ -1,7 +1,7 @@
-import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup"
-import getCourtDetails from "phase1/dataLookup/getCourtDetails"
-import populateOrganisationUnitFields from "phase1/lib/organisationUnit/populateOrganisationUnitFields"
-import type { EnrichAhoFunction } from "phase1/types/EnrichAhoFunction"
+import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
+import getCourtDetails from "../../dataLookup/getCourtDetails"
+import populateOrganisationUnitFields from "../../lib/organisationUnit/populateOrganisationUnitFields"
+import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
 const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
   let { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing

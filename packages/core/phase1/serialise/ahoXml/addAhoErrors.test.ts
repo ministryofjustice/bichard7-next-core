@@ -1,6 +1,6 @@
-import { ExceptionCode } from "types/ExceptionCode"
-import type { AhoXml, Br7Result } from "phase1/types/AhoXml"
-import addAhoErrors from "phase1/serialise/ahoXml/addAhoErrors"
+import { ExceptionCode } from "../../../types/ExceptionCode"
+import type { AhoXml, Br7Result } from "../../types/AhoXml"
+import addAhoErrors from "./addAhoErrors"
 
 describe("addAhoErrors()", () => {
   it("should add an '@_hasError' tag to the Hearing", () => {

@@ -1,6 +1,6 @@
-import { TriggerCode } from "types/TriggerCode"
-import type { Trigger } from "phase1/types/Trigger"
-import deduplicateTriggers from "phase1/triggers/deduplicateTriggers"
+import { TriggerCode } from "../../types/TriggerCode"
+import deduplicateTriggers from "../triggers/deduplicateTriggers"
+import type { Trigger } from "../types/Trigger"
 
 describe("deduplicateTriggers", () => {
   it("should remove duplicates", () => {

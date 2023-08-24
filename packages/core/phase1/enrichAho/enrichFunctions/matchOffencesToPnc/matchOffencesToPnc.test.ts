@@ -1,8 +1,8 @@
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
-import errorPaths from "phase1/lib/errorPaths"
-import summariseMatching from "phase1/tests/helpers/summariseMatching"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import matchOffencesToPnc from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import summariseMatching from "../../../comparison/lib/summariseMatching"
+import type { CourtResultMatchingSummary } from "../../../comparison/types/MatchingComparisonOutput"
+import errorPaths from "../../../lib/errorPaths"
+import matchOffencesToPnc from "./matchOffencesToPnc"
 
 type Adjudication = {
   verdict: string

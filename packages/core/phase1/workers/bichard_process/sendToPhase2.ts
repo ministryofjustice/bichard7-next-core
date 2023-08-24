@@ -8,10 +8,10 @@ import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import MqGateway from "lib/mq/MqGateway"
-import createMqConfig from "lib/mq/createMqConfig"
-import parseAhoJson from "phase1/parse/parseAhoJson"
-import convertAhoToXml from "phase1/serialise/ahoXml/generate"
+import MqGateway from "../../../lib/mq/MqGateway"
+import createMqConfig from "../../../lib/mq/createMqConfig"
+import parseAhoJson from "../../../phase1/parse/parseAhoJson"
+import convertAhoToXml from "../../../phase1/serialise/ahoXml/generate"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)

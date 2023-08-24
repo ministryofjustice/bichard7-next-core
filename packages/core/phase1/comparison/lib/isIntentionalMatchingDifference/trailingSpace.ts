@@ -1,6 +1,6 @@
-import convertAhoToXml from "phase1/serialise/ahoXml/generate"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import convertAhoToXml from "../../../serialise/ahoXml/generate"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core will remove a trailing space in the bail conditions
 

@@ -1,9 +1,9 @@
-import type { Candidate } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
-import type { PncOffenceWithCaseRef } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
-import offenceIsBreach from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
-import getOffenceCode from "phase1/lib/offence/getOffenceCode"
-import type { Offence } from "types/AnnotatedHearingOutcome"
-import type { PncOffence } from "types/PncQueryResult"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../../../types/PncQueryResult"
+import type { Candidate } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
+import type { PncOffenceWithCaseRef } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
+import offenceIsBreach from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
+import getOffenceCode from "../../../lib/offence/getOffenceCode"
 
 export const normaliseCCR = (ccr: string): string => {
   const splitCCR = ccr.split("/")

@@ -1,7 +1,7 @@
-import offenceHasFinalResult from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import offenceHasFinalResult from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const matchingToFinalOffences = (
   expected: CourtResultMatchingSummary,

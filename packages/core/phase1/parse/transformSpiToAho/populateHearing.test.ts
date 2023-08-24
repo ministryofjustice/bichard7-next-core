@@ -1,6 +1,6 @@
 import { readFileSync } from "fs"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import populateHearing from "phase1/parse/transformSpiToAho/populateHearing"
+import parseSpiResult from "../parseSpiResult"
+import populateHearing from "./populateHearing"
 
 const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
 const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage

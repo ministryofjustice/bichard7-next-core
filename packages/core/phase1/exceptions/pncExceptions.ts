@@ -1,6 +1,6 @@
-import { ExceptionCode } from "types/ExceptionCode"
-import errorPaths from "phase1/lib/errorPaths"
-import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import errorPaths from "../lib/errorPaths"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 type ErrorRange = {
   start: string

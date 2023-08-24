@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupPncDisposalByCjsCode } from "phase1/dataLookup"
-import ResultClass from "phase1/types/ResultClass"
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
+import ResultClass from "../../../types/ResultClass"
 
 const victimSurchargeCrestCodes = [
   "COM",

@@ -1,19 +1,19 @@
-import type { CjsPlea } from "phase1/types/Plea"
-import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "phase1/types/SpiResult"
-import type { CjsVerdict } from "phase1/types/Verdict"
-import type { Duration, OrganisationUnitCodes, Result } from "types/AnnotatedHearingOutcome"
+import type { Duration, OrganisationUnitCodes, Result } from "../../../types/AnnotatedHearingOutcome"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
   lookupPleaStatusBySpiCode,
   lookupRemandStatusBySpiCode,
   lookupVerdictBySpiCode
-} from "phase1/dataLookup"
-import extractCodesFromOU from "phase1/dataLookup/extractCodesFromOU"
-import countDecimalPlaces from "phase1/lib/countDecimalPlaces"
-import getOrganisationUnit from "phase1/lib/organisationUnit/getOrganisationUnit"
-import getRemandDetailsFromResultText from "phase1/parse/transformSpiToAho/getRemandDetailsFromResultText"
-import lookupAmountTypeByCjsCode from "phase1/parse/transformSpiToAho/lookupAmountTypeByCjsCode"
+} from "../../dataLookup"
+import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
+import countDecimalPlaces from "../../lib/countDecimalPlaces"
+import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
+import type { CjsPlea } from "../../types/Plea"
+import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "../../types/SpiResult"
+import type { CjsVerdict } from "../../types/Verdict"
+import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
+import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
 const freeTextResultCode = 1000
 const otherValue = "OTHER"

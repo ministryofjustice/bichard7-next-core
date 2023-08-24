@@ -1,8 +1,8 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import getAuditLogEvent from "phase1/lib/auditLog/getAuditLogEvent"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import getAuditLogEvent from "./getAuditLogEvent"
 
 const getExceptionsGeneratedLog = (hearingOutcome: AnnotatedHearingOutcome): AuditLogEvent => {
   const errorDetails = hearingOutcome.Exceptions.reduce((acc: Record<string, unknown>, exception, i) => {

@@ -1,13 +1,13 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 import merge from "lodash.merge"
-import { toPNCDate } from "phase1/lib/dates"
-import { parseAhoXml } from "phase1/parse/parseAhoXml"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import defaults from "phase1/tests/helpers/defaults"
-import reformatDate from "phase1/tests/helpers/reformatDate"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
-import type { PncCourtCase, PncQueryResult } from "types/PncQueryResult"
+import type { PncCourtCase, PncQueryResult } from "../../../types/PncQueryResult"
+import { toPNCDate } from "../../lib/dates"
+import { parseAhoXml } from "../../parse/parseAhoXml"
+import parseSpiResult from "../../parse/parseSpiResult"
+import defaults from "../../tests/helpers/defaults"
+import reformatDate from "../../tests/helpers/reformatDate"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 
 type PncMock = {
   matchRegex: string

@@ -1,6 +1,6 @@
-import type { OffenceReason } from "types/AnnotatedHearingOutcome"
-import { COMMON_LAWS, INDICTMENT } from "phase1/lib/offenceTypes"
-import { isCommonLaw, isIndictment } from "phase1/lib/offence/isOffenceType"
+import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import { COMMON_LAWS, INDICTMENT } from "../offenceTypes"
+import { isCommonLaw, isIndictment } from "./isOffenceType"
 
 const createReasonProp = (offenceCode: string): { Reason: string } => ({
   Reason: offenceCode.length > 4 ? offenceCode.substring(4, Math.min(7, offenceCode.length)) : ""

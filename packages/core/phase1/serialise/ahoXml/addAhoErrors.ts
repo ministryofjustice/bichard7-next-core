@@ -1,6 +1,6 @@
-import type { AhoXml } from "phase1/types/AhoXml"
-import type Exception from "phase1/types/Exception"
-import hasError from "phase1/serialise/ahoXml/hasError"
+import hasError from "../../serialise/ahoXml/hasError"
+import type { AhoXml } from "../../types/AhoXml"
+import type Exception from "../../types/Exception"
 
 const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
   if (aho["br7:AnnotatedHearingOutcome"]) {

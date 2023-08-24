@@ -1,5 +1,5 @@
-import { TriggerCode } from "types/TriggerCode"
-import requireStandingData from "phase1/lib/requireStandingData"
+import { TriggerCode } from "../../types/TriggerCode"
+import requireStandingData from "../lib/requireStandingData"
 
 const excludedTriggerConfig = () => {
   const { excludedTriggerConfig: excludedTriggers } = requireStandingData()

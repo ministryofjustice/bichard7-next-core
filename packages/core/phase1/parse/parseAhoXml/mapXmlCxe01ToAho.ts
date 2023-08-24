@@ -1,5 +1,3 @@
-import parsePncDate from "phase1/lib/parsePncDate"
-import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "phase1/types/AhoXml"
 import type {
   PncAdjudication,
   PncCourtCase,
@@ -7,7 +5,9 @@ import type {
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
-} from "types/PncQueryResult"
+} from "../../../types/PncQueryResult"
+import parsePncDate from "../../lib/parsePncDate"
+import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "../../types/AhoXml"
 
 type OffenceDates = {
   startDate: Date

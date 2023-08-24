@@ -1,4 +1,4 @@
-import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
+import type ComparisonResultDetail from "./ComparisonResultDetail"
 
 type ComparisonResult = {
   s3Path: string

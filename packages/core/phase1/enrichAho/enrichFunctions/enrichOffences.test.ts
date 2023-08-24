@@ -1,7 +1,7 @@
-import enrichOffences from "phase1/enrichAho/enrichFunctions/enrichOffences"
-import { COMMON_LAWS, INDICTMENT } from "phase1/lib/offenceTypes"
-import generateMockAho from "phase1/tests/helpers/generateMockAho"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import enrichOffences from "../../enrichAho/enrichFunctions/enrichOffences"
+import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
+import generateMockAho from "../../tests/helpers/generateMockAho"
 
 const mockNationalIndictmmentOffence = [
   {

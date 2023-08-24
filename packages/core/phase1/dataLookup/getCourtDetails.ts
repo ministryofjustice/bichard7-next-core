@@ -1,5 +1,5 @@
-import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByCode } from "phase1/dataLookup"
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByCode } from "./"
 
 const topLevelMagistratesCourtCode = "B"
 const youthCourt = "YOUTH"

@@ -1,7 +1,7 @@
-import type { OffenceReason } from "types/AnnotatedHearingOutcome"
-import { lookupOffenceByCjsCode } from "phase1/dataLookup"
-import { getLocalOffenceReason, getNationalOffenceReason } from "phase1/lib/offence/getOffenceReason"
-import regexTestNationalOffenceCode from "phase1/lib/offence/regexTestNationalOffenceCode"
+import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import { lookupOffenceByCjsCode } from "../../dataLookup"
+import { getLocalOffenceReason, getNationalOffenceReason } from "./getOffenceReason"
+import regexTestNationalOffenceCode from "./regexTestNationalOffenceCode"
 
 // parse an offence code into an national offence reason or a local offence reason if the national reason isn't valid
 export default (offenceCode: string, areaCode: string, reason?: OffenceReason): OffenceReason | undefined => {

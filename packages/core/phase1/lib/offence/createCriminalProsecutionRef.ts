@@ -1,5 +1,5 @@
-import type { CriminalProsecutionReference, OffenceReason } from "types/AnnotatedHearingOutcome"
-import type { ParsedAsn } from "phase1/types/ParsedAsn"
+import type { CriminalProsecutionReference, OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import type { ParsedAsn } from "../../types/ParsedAsn"
 
 const formatOuCode = (
   topLevelCode: string | undefined,

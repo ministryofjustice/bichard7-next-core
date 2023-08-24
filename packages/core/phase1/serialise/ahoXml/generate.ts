@@ -1,5 +1,19 @@
 import type { XmlBuilderOptions } from "fast-xml-parser"
 import { XMLBuilder } from "fast-xml-parser"
+import type {
+  AnnotatedHearingOutcome,
+  Case,
+  DateSpecifiedInResult,
+  Duration,
+  Hearing,
+  NumberSpecifiedInResult,
+  Offence,
+  OffenceReason,
+  OrganisationUnitCodes,
+  Result,
+  Urgent
+} from "../../../types/AnnotatedHearingOutcome"
+import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -11,11 +25,11 @@ import {
   lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
-} from "phase1/dataLookup"
-import { toISODate, toPNCDate } from "phase1/lib/dates"
-import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "phase1/lib/encoding"
-import addExceptionsToAhoXml from "phase1/serialise/ahoXml/addExceptionsToAhoXml"
-import addFalseHasErrorAttributesToAhoXml from "phase1/serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
+} from "../../dataLookup"
+import { toISODate, toPNCDate } from "../../lib/dates"
+import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
+import addExceptionsToAhoXml from "../../serialise/ahoXml/addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "../../serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
 import type {
   Adj,
   AhoXml,
@@ -34,21 +48,7 @@ import type {
   Br7Urgent,
   Cxe01,
   DISList
-} from "phase1/types/AhoXml"
-import type {
-  AnnotatedHearingOutcome,
-  Case,
-  DateSpecifiedInResult,
-  Duration,
-  Hearing,
-  NumberSpecifiedInResult,
-  Offence,
-  OffenceReason,
-  OrganisationUnitCodes,
-  Result,
-  Urgent
-} from "types/AnnotatedHearingOutcome"
-import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "types/PncQueryResult"
+} from "../../types/AhoXml"
 
 enum LiteralType {
   ActualOffenceDateCode,

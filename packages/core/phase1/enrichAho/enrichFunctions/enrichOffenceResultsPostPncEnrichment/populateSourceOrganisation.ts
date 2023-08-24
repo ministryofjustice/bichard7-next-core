@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup"
-import populateOrganisationUnitFields from "phase1/lib/organisationUnit/populateOrganisationUnitFields"
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../dataLookup"
+import populateOrganisationUnitFields from "../../../lib/organisationUnit/populateOrganisationUnitFields"
 
 const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
   const { CourtHearingLocation, CourtHouseCode } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing

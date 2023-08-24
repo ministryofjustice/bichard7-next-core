@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import transformSpiToAho from "phase1/parse/transformSpiToAho"
-import enrichCourt from "phase1/enrichAho/enrichFunctions/enrichCourt"
+import parseSpiResult from "../../parse/parseSpiResult"
+import transformSpiToAho from "../../parse/transformSpiToAho"
+import enrichCourt from "./enrichCourt"
 
 const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
 const spiResult = parseSpiResult(message)

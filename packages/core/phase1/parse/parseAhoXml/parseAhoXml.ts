@@ -1,5 +1,4 @@
 import { XMLParser } from "fast-xml-parser"
-import type { CjsPlea } from "phase1/types/Plea"
 import type {
   AmountSpecifiedInResult,
   AnnotatedHearingOutcome,
@@ -14,11 +13,11 @@ import type {
   OrganisationUnitCodes,
   Result,
   ResultQualifierVariable
-} from "types/AnnotatedHearingOutcome"
-import countDecimalPlaces from "phase1/lib/countDecimalPlaces"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "phase1/lib/encoding"
-import extractExceptionsFromAho from "phase1/parse/parseAhoXml/extractExceptionsFromAho"
-import mapXmlCxe01ToAho from "phase1/parse/parseAhoXml/mapXmlCxe01ToAho"
+} from "../../../types/AnnotatedHearingOutcome"
+import countDecimalPlaces from "../../lib/countDecimalPlaces"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
+import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
+import mapXmlCxe01ToAho from "../../parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
   AhoXml,
   Br7Case,
@@ -38,8 +37,9 @@ import type {
   CommonLawOffenceCode,
   IndictmentOffenceCode,
   NonMatchingOffenceCode
-} from "phase1/types/AhoXml"
-import type ResultClass from "phase1/types/ResultClass"
+} from "../../types/AhoXml"
+import type { CjsPlea } from "../../types/Plea"
+import type ResultClass from "../../types/ResultClass"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],

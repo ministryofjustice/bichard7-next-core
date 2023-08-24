@@ -1,8 +1,5 @@
-import type { Offence, Result } from "types/AnnotatedHearingOutcome"
-import {
-  compareTwoResults,
-  offencesHaveEqualResults
-} from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/resultsAreEqual"
+import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+import { compareTwoResults, offencesHaveEqualResults } from "./resultsAreEqual"
 
 const createResult = (resultCode: number, date: Date, adjudicationExists?: boolean): Result => {
   const result: Partial<Result> = {

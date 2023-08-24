@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
-import type { SpiPlea } from "phase1/types/Plea"
-import type { SpiVerdict } from "phase1/types/Verdict"
+import type { SpiPlea } from "../../types/Plea"
+import type { SpiVerdict } from "../../types/Verdict"
 
 type NextHearingDetails = {
   courtHearingLocation?: string

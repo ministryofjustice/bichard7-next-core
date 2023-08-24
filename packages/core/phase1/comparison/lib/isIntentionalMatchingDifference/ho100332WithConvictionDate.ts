@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core uses Conviction Date on the incoming offences to disambiguate between offence matches. This means it
 // is able to match in some cases where Bichard can't.

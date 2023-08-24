@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "phase1/lib/encoding"
-import { mapXmlCxe01ToAho } from "phase1/parse/parseAhoXml"
-import type { AhoXml } from "phase1/types/AhoXml"
-import type { PncQueryResult } from "types/PncQueryResult"
+import type { PncQueryResult } from "../../../types/PncQueryResult"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
+import { mapXmlCxe01ToAho } from "../../parse/parseAhoXml"
+import type { AhoXml } from "../../types/AhoXml"
 
 /*
 Sample CXE element

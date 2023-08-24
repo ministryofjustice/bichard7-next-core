@@ -1,6 +1,6 @@
-import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
-import type { Case } from "types/AnnotatedHearingOutcome"
-import populateDefendant from "phase1/parse/transformSpiToAho/populateDefendant"
+import type { Case } from "../../../types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
+import populateDefendant from "./populateDefendant"
 
 export default (courtResult: ResultedCaseMessageParsedXml): Case => {
   const {

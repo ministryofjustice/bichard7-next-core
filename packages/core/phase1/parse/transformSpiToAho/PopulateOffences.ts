@@ -1,10 +1,10 @@
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "phase1/types/SpiResult"
-import type { CriminalProsecutionReference, Offence, OffenceCode } from "types/AnnotatedHearingOutcome"
-import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "phase1/dataLookup"
-import { COMMON_LAWS, INDICTMENT } from "phase1/lib/offenceTypes"
-import resultCodeIsOnStopList from "phase1/lib/result/resultCodeIsOnStopList"
-import PopulateOffenceResults from "phase1/parse/transformSpiToAho/PopulateOffenceResults"
-import removeSeconds from "phase1/parse/transformSpiToAho/removeSeconds"
+import type { CriminalProsecutionReference, Offence, OffenceCode } from "../../../types/AnnotatedHearingOutcome"
+import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
+import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
+import resultCodeIsOnStopList from "../../lib/result/resultCodeIsOnStopList"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../types/SpiResult"
+import PopulateOffenceResults from "./PopulateOffenceResults"
+import removeSeconds from "./removeSeconds"
 
 const enteredInErrorResultCode = 4583 // Hearing Removed
 const dontKnowValue = "D"

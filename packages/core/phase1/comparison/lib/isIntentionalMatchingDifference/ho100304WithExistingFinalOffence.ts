@@ -1,7 +1,7 @@
-import offenceHasFinalResult from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import offenceHasFinalResult from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Often we receive results for the remaining non-final offences in the PNC
 // If there are also some final offences, Bichard will raise a HO100304 but Core will match

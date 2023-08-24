@@ -1,10 +1,10 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
-import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
-import type { ComparisonLog } from "phase1/comparison/types"
-import MockDynamo from "phase1/tests/helpers/MockDynamo"
 import "phase1/tests/helpers/setEnvironmentVariables"
-import dynamoDbTableConfig from "phase1/tests/helpers/testDynamoDbTableConfig"
+import type { ComparisonLog } from "../../comparison/types"
+import MockDynamo from "../../tests/helpers/MockDynamo"
+import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
+import DynamoGateway from "./DynamoGateway"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig()
 

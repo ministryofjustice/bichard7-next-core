@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // We added force 91 to Bichard and core, but there was an overlap where we were handling
 // incoming messages for force 91 when it was not configured

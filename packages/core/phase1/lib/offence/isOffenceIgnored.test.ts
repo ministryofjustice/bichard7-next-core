@@ -1,5 +1,5 @@
-import type { Offence } from "types/AnnotatedHearingOutcome"
-import isOffenceIgnored from "phase1/lib/offence/isOffenceIgnored"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import isOffenceIgnored from "./isOffenceIgnored"
 
 describe("isOffenceIgnored()", () => {
   it("should return true if the offence is in the ignore list", () => {

@@ -1,9 +1,9 @@
-import { ExceptionCode } from "types/ExceptionCode"
-import errorPaths from "phase1/lib/errorPaths"
-import findException from "phase1/lib/findException"
-import isCaseRecordable from "phase1/lib/isCaseRecordable"
-import type Exception from "phase1/types/Exception"
-import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import errorPaths from "../lib/errorPaths"
+import findException from "../lib/findException"
+import isCaseRecordable from "../lib/isCaseRecordable"
+import type Exception from "../types/Exception"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const hasHO100322 = (exceptions: Exception[], offenceIndex: number, resultIndex: number): boolean =>
   !!findException(

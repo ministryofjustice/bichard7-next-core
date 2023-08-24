@@ -1,11 +1,11 @@
-import OffenceMatcher from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
-import annotatePncMatch, { CaseType } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
-import offenceCategoryIsNonRecordable from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceCategoryIsNonRecordable"
-import offenceHasFinalResult from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import errorPaths from "phase1/lib/errorPaths"
-import type { AnnotatedHearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "types/PncQueryResult"
+import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "../../../../types/PncQueryResult"
+import errorPaths from "../../../lib/errorPaths"
+import OffenceMatcher from "./OffenceMatcher"
+import annotatePncMatch, { CaseType } from "./annotatePncMatch"
+import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
+import offenceHasFinalResult from "./offenceHasFinalResult"
 
 export type PncOffenceWithCaseRef = {
   caseReference: string

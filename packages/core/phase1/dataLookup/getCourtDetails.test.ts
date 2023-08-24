@@ -1,5 +1,5 @@
-import type { OrganisationUnitCodes } from "types/AnnotatedHearingOutcome"
-import getCourtDetails from "phase1/dataLookup/getCourtDetails"
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import getCourtDetails from "./getCourtDetails"
 
 describe("getCourtDetails", () => {
   it("should set Court Type to  MCY when top level code is for Magistrates Court and court name contains word YOUTH", () => {

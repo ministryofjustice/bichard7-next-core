@@ -1,4 +1,4 @@
-import convertAsnToLongFormat from "phase1/enrichAho/enrichFunctions/enrichDefendant/convertAsnToLongFormat"
+import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
 describe("convertAsnToLongFormat", () => {
   test.each([

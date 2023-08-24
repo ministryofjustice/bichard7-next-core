@@ -1,12 +1,12 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import type DynamoGateway from "phase1/comparison/lib/DynamoGateway"
-import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
-import getDateFromComparisonFilePath from "phase1/comparison/lib/getDateFromComparisonFilePath"
-import isPass from "phase1/comparison/lib/isPass"
-import type { ComparisonLog } from "phase1/comparison/types"
-import type ComparisonResult from "phase1/comparison/types/ComparisonResult"
+import type DynamoGateway from "../../comparison/lib/DynamoGateway"
+import createDynamoDbConfig from "../../comparison/lib/createDynamoDbConfig"
+import type { ComparisonLog } from "../types"
+import type ComparisonResult from "../types/ComparisonResult"
+import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
+import isPass from "./isPass"
 
 const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
 const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]

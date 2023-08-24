@@ -1,7 +1,7 @@
 import type { OffenceCode } from "bichard7-next-data-latest/types/types"
-import type { Offence } from "types/AnnotatedHearingOutcome"
-import lookupOffenceCode from "phase1/lib/offence/lookupOffenceCode"
-import enrichOffence from "phase1/enrichAho/enrichFunctions/enrichOffences/enrichOffence"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import lookupOffenceCode from "../../../lib/offence/lookupOffenceCode"
+import enrichOffence from "./enrichOffence"
 
 const localOffence = {
   CriminalProsecutionReference: {

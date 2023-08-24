@@ -1,3 +1,4 @@
+import type { z } from "zod"
 import type {
   addressSchema,
   amountSpecifiedInResultSchema,
@@ -19,9 +20,8 @@ import type {
   resultQualifierVariableSchema,
   resultSchema,
   urgentSchema
-} from "phase1/schemas/annotatedHearingOutcome"
-import { annotatedHearingOutcomeSchema } from "phase1/schemas/annotatedHearingOutcome"
-import type { z } from "zod"
+} from "../phase1/schemas/annotatedHearingOutcome"
+import { annotatedHearingOutcomeSchema } from "../phase1/schemas/annotatedHearingOutcome"
 
 export type AnnotatedHearingOutcome = z.infer<typeof annotatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>

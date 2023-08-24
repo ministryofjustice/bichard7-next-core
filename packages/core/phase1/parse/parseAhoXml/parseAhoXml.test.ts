@@ -1,6 +1,6 @@
 import fs from "fs"
 import "jest-xml-matcher"
-import parseAhoXml from "phase1/parse/parseAhoXml/parseAhoXml"
+import parseAhoXml from "../../parse/parseAhoXml/parseAhoXml"
 
 describe("parseAhoXml", () => {
   it("converts XML to Aho", () => {

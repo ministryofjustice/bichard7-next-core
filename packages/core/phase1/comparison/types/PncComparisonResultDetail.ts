@@ -1,4 +1,4 @@
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { CourtResultMatchingSummary } from "./MatchingComparisonOutput"
 
 type PncComparisonResultDetail = {
   pass: boolean

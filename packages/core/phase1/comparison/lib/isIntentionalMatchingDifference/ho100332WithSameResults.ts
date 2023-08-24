@@ -1,7 +1,7 @@
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
-import hoOffencesAreEqual from "phase1/comparison/lib/hoOffencesAreEqual"
+import type { CourtResultMatchingSummary } from "../../../../phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import hoOffencesAreEqual from "../hoOffencesAreEqual"
 
 // Bichard sometimes raises a HO100332 for offences that have identical results. Core detects this and
 // assigns a match anyway (as it doesn't matter!)

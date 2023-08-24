@@ -1,7 +1,7 @@
-import type { IncomingMessageParsedXml } from "phase1/types/SpiResult"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import populateCase from "phase1/parse/transformSpiToAho/populateCase"
-import populateHearing from "phase1/parse/transformSpiToAho/populateHearing"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { IncomingMessageParsedXml } from "../../types/SpiResult"
+import populateCase from "./populateCase"
+import populateHearing from "./populateHearing"
 
 export default (spiResult: IncomingMessageParsedXml): AnnotatedHearingOutcome => ({
   AnnotatedHearingOutcome: {

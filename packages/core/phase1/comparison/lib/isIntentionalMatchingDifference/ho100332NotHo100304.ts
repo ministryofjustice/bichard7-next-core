@@ -1,7 +1,7 @@
-import getOffenceCode from "phase1/lib/offence/getOffenceCode"
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
+import getOffenceCode from "../../../lib/offence/getOffenceCode"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const ho100332NotHo100304 = (
   expected: CourtResultMatchingSummary,

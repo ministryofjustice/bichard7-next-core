@@ -1,5 +1,5 @@
-import { COMMON_LAWS } from "phase1/lib/offenceTypes"
-import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "phase1/dataLookup/lookupOffenceByCjsCode"
+import { COMMON_LAWS } from "../lib/offenceTypes"
+import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
 
 const localOffenceCode = "01CP001"
 const areaCode = "01"

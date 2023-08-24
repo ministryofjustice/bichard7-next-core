@@ -1,9 +1,9 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import getAuditLogEvent from "phase1/lib/auditLog/getAuditLogEvent"
-import getOffenceCode from "phase1/lib/offence/getOffenceCode"
-import type { HearingOutcome, Offence } from "types/AnnotatedHearingOutcome"
+import type { HearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import getOffenceCode from "../offence/getOffenceCode"
+import getAuditLogEvent from "./getAuditLogEvent"
 
 const getOffenceDetails = (offences: Offence[]): Record<string, string> =>
   offences.reduce((acc: Record<string, string>, offence, i) => {

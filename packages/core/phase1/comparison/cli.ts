@@ -1,3 +1,3 @@
-import main from "phase1/comparison/cli/main"
+import main from "./cli/main"
 
 main()

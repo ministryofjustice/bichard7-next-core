@@ -1,10 +1,10 @@
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import { TriggerCode } from "types/TriggerCode"
-import triggers from "phase1/triggers"
-import type { Trigger } from "phase1/types/Trigger"
-import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
-import deduplicateTriggers from "phase1/triggers/deduplicateTriggers"
-import filterExcludedTriggers from "phase1/triggers/filterExcludedTriggers"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import { TriggerCode } from "../../types/TriggerCode"
+import triggers from "../triggers"
+import deduplicateTriggers from "../triggers/deduplicateTriggers"
+import filterExcludedTriggers from "../triggers/filterExcludedTriggers"
+import type { Trigger } from "../types/Trigger"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const independentTriggerFn = (aho: AnnotatedHearingOutcome) =>
   Object.entries(triggers)

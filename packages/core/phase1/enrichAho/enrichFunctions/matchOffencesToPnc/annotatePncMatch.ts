@@ -1,6 +1,6 @@
-import type { Case } from "types/AnnotatedHearingOutcome"
-import type { OffenceMatch } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
-import offenceIsBreach from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
+import type { Case } from "../../../../types/AnnotatedHearingOutcome"
+import type { OffenceMatch } from "./matchOffencesToPnc"
+import offenceIsBreach from "./offenceIsBreach"
 
 export enum CaseType {
   court = "court",

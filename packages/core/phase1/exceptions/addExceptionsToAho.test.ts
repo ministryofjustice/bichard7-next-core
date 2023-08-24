@@ -1,6 +1,6 @@
-import generateMockAho from "phase1/tests/helpers/generateMockAho"
-import { ExceptionCode } from "types/ExceptionCode"
-import addExceptionsToAho from "phase1/exceptions/addExceptionsToAho"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import generateMockAho from "../tests/helpers/generateMockAho"
+import addExceptionsToAho from "./addExceptionsToAho"
 
 describe("addExceptionsToAho", () => {
   it("can add exceptions to a hearing outcome", () => {

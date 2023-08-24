@@ -1,6 +1,6 @@
-import { TriggerCode } from "types/TriggerCode"
-import type { Trigger } from "phase1/types/Trigger"
-import type { TriggerGenerator } from "phase1/types/TriggerGenerator"
+import { TriggerCode } from "../../types/TriggerCode"
+import type { Trigger } from "../types/Trigger"
+import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0003
 const mainResultCodes = [

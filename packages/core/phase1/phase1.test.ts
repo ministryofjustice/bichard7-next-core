@@ -1,11 +1,11 @@
 import fs from "fs"
-import CoreAuditLogger from "lib/CoreAuditLogger"
 import MockDate from "mockdate"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import transformSpiToAho from "phase1/parse/transformSpiToAho"
-import MockPncGateway from "phase1/tests/helpers/MockPncGateway"
-import generateMockPncQueryResult from "phase1/tests/helpers/generateMockPncQueryResult"
-import phase1Handler from "phase1/phase1"
+import CoreAuditLogger from "../lib/CoreAuditLogger"
+import parseSpiResult from "./parse/parseSpiResult"
+import transformSpiToAho from "./parse/transformSpiToAho"
+import phase1Handler from "./phase1"
+import MockPncGateway from "./tests/helpers/MockPncGateway"
+import generateMockPncQueryResult from "./tests/helpers/generateMockPncQueryResult"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("phase1/tests/fixtures/input-message-001.xml").toString()

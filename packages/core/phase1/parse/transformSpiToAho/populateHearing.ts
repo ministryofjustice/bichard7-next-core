@@ -1,7 +1,7 @@
-import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
-import type { Hearing } from "types/AnnotatedHearingOutcome"
-import getOrganisationUnit from "phase1/lib/organisationUnit/getOrganisationUnit"
-import removeSeconds from "phase1/parse/transformSpiToAho/removeSeconds"
+import type { Hearing } from "../../../types/AnnotatedHearingOutcome"
+import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
+import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
+import removeSeconds from "./removeSeconds"
 
 export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {

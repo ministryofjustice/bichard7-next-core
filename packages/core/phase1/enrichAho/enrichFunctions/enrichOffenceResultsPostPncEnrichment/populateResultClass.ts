@@ -1,10 +1,10 @@
-import type { Result } from "types/AnnotatedHearingOutcome"
-import isAdjourned from "phase1/lib/result/isAdjourned"
-import isAdjournedNoNextHearing from "phase1/lib/result/isAdjournedNoNextHearing"
-import isWarrantIssued from "phase1/lib/result/isWarrantIssued"
-import ResultClass from "phase1/types/ResultClass"
-import isNotGuiltyVerdict from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
-import isResultClassCode from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import isAdjourned from "../../../lib/result/isAdjourned"
+import isAdjournedNoNextHearing from "../../../lib/result/isAdjournedNoNextHearing"
+import isWarrantIssued from "../../../lib/result/isWarrantIssued"
+import ResultClass from "../../../types/ResultClass"
+import isNotGuiltyVerdict from "./isNotGuiltyVerdict"
+import isResultClassCode from "./isResultClassCode"
 
 const resultClassPleas = ["ADM"]
 

@@ -1,7 +1,7 @@
-import type { OrganisationUnitCodes, Result } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup"
-import extractCodesFromOU from "phase1/dataLookup/extractCodesFromOU"
-import lookupCrownCourtByNameAndFirstPsaCode from "phase1/dataLookup/lookupCrownCourtByNameAndFirstPsaCode"
+import type { OrganisationUnitCodes, Result } from "../../../types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
+import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
+import lookupCrownCourtByNameAndFirstPsaCode from "../../dataLookup/lookupCrownCourtByNameAndFirstPsaCode"
 
 export interface RemandDetails {
   location?: OrganisationUnitCodes

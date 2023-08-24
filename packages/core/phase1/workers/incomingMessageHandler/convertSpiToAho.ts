@@ -7,9 +7,9 @@ import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import transformSpiToAho from "phase1/parse/transformSpiToAho"
 import { v4 as uuid } from "uuid"
+import parseSpiResult from "../../../phase1/parse/parseSpiResult"
+import transformSpiToAho from "../../../phase1/parse/transformSpiToAho"
 
 const taskDefName = "convert_spi_to_aho"
 

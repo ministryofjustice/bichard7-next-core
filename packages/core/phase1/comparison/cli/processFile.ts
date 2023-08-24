@@ -1,6 +1,6 @@
-import { parseComparisonFile } from "../../tests/helpers/processTestFile"
 import { isPhase1 } from "../lib/checkPhase"
 import comparePhase1 from "../lib/comparePhase1"
+import { parseComparisonFile } from "../lib/processTestFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import getStandingDataVersionByDate from "./getStandingDataVersionByDate"
 

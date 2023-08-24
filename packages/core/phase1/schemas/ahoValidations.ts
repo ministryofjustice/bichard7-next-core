@@ -1,6 +1,6 @@
-import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "types/ExceptionCode"
 import { z } from "zod"
+import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../../types/ExceptionCode"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -18,9 +18,9 @@ import {
   lookupVehicleCodeByCjsCode,
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
-} from "phase1/dataLookup"
-import { isAsnFormatValid, isAsnOrganisationUnitValid } from "phase1/lib/isAsnValid"
-import requireStandingData from "phase1/lib/requireStandingData"
+} from "../dataLookup"
+import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../lib/isAsnValid"
+import requireStandingData from "../lib/requireStandingData"
 const { remandStatus } = requireStandingData()
 
 const invalid = () => false

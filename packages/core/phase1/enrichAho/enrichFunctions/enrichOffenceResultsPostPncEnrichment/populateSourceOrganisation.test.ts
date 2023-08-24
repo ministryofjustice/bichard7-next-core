@@ -1,8 +1,8 @@
 jest.mock("phase1/dataLookup")
 import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
-import type { AnnotatedHearingOutcome, Result } from "types/AnnotatedHearingOutcome"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup"
-import populateSourceOrganisation from "phase1/enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/populateSourceOrganisation"
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../dataLookup"
+import populateSourceOrganisation from "./populateSourceOrganisation"
 
 describe("populateSourceOrganisation", () => {
   it("should populate Source Organisation by Court Hearing Location", () => {

@@ -1,6 +1,6 @@
-import type ErrorListRecord from "phase1/types/ErrorListRecord"
-import type ErrorListTriggerRecord from "phase1/types/ErrorListTriggerRecord"
-import type { TriggerCode } from "types/TriggerCode"
+import type { TriggerCode } from "../../../types/TriggerCode"
+import type ErrorListRecord from "../../types/ErrorListRecord"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 
 export type ComparisonTrigger = {
   code: TriggerCode

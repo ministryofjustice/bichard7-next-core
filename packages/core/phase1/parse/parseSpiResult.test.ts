@@ -1,6 +1,6 @@
 import fs from "fs"
-import parseSpiResult from "phase1/parse/parseSpiResult"
-import type { ResultedCaseMessageParsedXml } from "phase1/types/SpiResult"
+import type { ResultedCaseMessageParsedXml } from "../types/SpiResult"
+import parseSpiResult from "./parseSpiResult"
 
 const parseFile = (file: string): ResultedCaseMessageParsedXml => {
   const inputMessage = fs.readFileSync(file).toString()

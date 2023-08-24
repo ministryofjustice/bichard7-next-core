@@ -1,10 +1,10 @@
-import { ExceptionCode } from "types/ExceptionCode"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "phase1/dataLookup"
-import findException from "phase1/lib/findException"
-import isOrganisationUnitValid from "phase1/lib/isOrganisationUnitValid"
-import type Exception from "phase1/types/Exception"
-import type { ExceptionPath } from "phase1/types/Exception"
-import type { ExceptionGenerator } from "phase1/types/ExceptionGenerator"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../dataLookup"
+import findException from "../lib/findException"
+import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
+import type Exception from "../types/Exception"
+import type { ExceptionPath } from "../types/Exception"
+import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")

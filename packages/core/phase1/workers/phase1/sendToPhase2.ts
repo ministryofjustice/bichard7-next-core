@@ -7,10 +7,10 @@ import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import MqGateway from "lib/mq/MqGateway"
-import createMqConfig from "lib/mq/createMqConfig"
-import convertAhoToXml from "phase1/serialise/ahoXml/generate"
-import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
+import MqGateway from "../../../lib/mq/MqGateway"
+import createMqConfig from "../../../lib/mq/createMqConfig"
+import convertAhoToXml from "../../../phase1/serialise/ahoXml/generate"
+import type { Phase1SuccessResult } from "../../../phase1/types/Phase1Result"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)

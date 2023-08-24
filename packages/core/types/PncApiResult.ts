@@ -1,11 +1,11 @@
+import type { z } from "zod"
 import type {
   pncApiCourtCaseSchema,
   pncApiDisposalSchema,
   pncApiOffenceSchema,
   pncApiPenaltyCaseSchema,
   pncApiResultSchema
-} from "phase1/schemas/pncApiResult"
-import type { z } from "zod"
+} from "../phase1/schemas/pncApiResult"
 
 export type PncApiOffence = z.infer<typeof pncApiOffenceSchema>
 export type PncApiDisposal = z.infer<typeof pncApiDisposalSchema>

@@ -4,7 +4,7 @@ import type {
   Phase1Comparison,
   Phase2Comparison,
   Phase3Comparison
-} from "phase1/comparison/types/ComparisonFile"
+} from "../types/ComparisonFile"
 
 export const isPhase1 = (comparison: Comparison): comparison is OldPhase1Comparison | Phase1Comparison =>
   !("phase" in comparison) || comparison.phase === 1

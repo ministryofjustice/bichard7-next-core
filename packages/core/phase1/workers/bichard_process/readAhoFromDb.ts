@@ -6,10 +6,10 @@ import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import createDbConfig from "lib/database/createDbConfig"
-import { parseAhoXml } from "phase1/parse/parseAhoXml"
-import type ErrorListRecord from "phase1/types/ErrorListRecord"
 import postgres from "postgres"
+import createDbConfig from "../../../lib/database/createDbConfig"
+import { parseAhoXml } from "../../../phase1/parse/parseAhoXml"
+import type ErrorListRecord from "../../../phase1/types/ErrorListRecord"
 
 const taskDefName = "read_aho_from_db"
 const dbConfig = createDbConfig()

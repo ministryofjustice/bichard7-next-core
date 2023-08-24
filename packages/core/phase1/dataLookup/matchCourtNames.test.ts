@@ -1,4 +1,4 @@
-import matchCourtNames from "phase1/dataLookup/matchCourtNames"
+import matchCourtNames from "./matchCourtNames"
 
 describe("matchCourtNames()", () => {
   it("shouldReturnFalseWhenNoMatch()", () => {

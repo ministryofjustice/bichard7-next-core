@@ -5,12 +5,12 @@ import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { isError } from "@moj-bichard7/common/types/Result"
 import pLimit from "p-limit"
-import DynamoGateway from "phase1/comparison/lib/DynamoGateway"
-import compareFile from "phase1/comparison/lib/compareFile"
-import createDynamoDbConfig from "phase1/comparison/lib/createDynamoDbConfig"
-import isPass from "phase1/comparison/lib/isPass"
-import recordResultsInDynamo from "phase1/comparison/lib/recordResultsInDynamo"
-import type ComparisonResult from "phase1/comparison/types/ComparisonResult"
+import type ComparisonResult from "../../comparison/types/ComparisonResult"
+import DynamoGateway from "../lib/DynamoGateway"
+import compareFile from "../lib/compareFile"
+import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import isPass from "../lib/isPass"
+import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)

@@ -1,4 +1,4 @@
-import { toISODate, toPNCDate } from "phase1/lib/dates"
+import { toISODate, toPNCDate } from "./dates"
 
 describe("date processing", () => {
   describe("toISODate()", () => {

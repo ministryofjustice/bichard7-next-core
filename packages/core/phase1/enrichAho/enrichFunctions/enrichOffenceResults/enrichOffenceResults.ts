@@ -1,6 +1,6 @@
-import { lookupResultCodeByCjsCode } from "phase1/dataLookup"
-import type { EnrichAhoFunction } from "phase1/types/EnrichAhoFunction"
-import populateBailConditions from "phase1/enrichAho/enrichFunctions/enrichOffenceResults/populateBailConditions"
+import { lookupResultCodeByCjsCode } from "../../../dataLookup"
+import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+import populateBailConditions from "./populateBailConditions"
 
 const urgencyThresholdInHours = 48
 
