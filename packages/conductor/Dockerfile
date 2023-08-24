@@ -15,8 +15,9 @@ COPY scripts ./scripts
 COPY package.json .
 COPY package-lock.json .
 COPY packages ./packages
-COPY tsconfig.json .
-RUN npm ci --workspaces --include-workspace-root
+COPY tsconfig*.json .
+RUN npm ci
+RUN npm run build --workspaces
 RUN npm run install-standing-data -w packages/core
 
 CMD [ "npm", "run", "worker-noenv", "-w", "packages/conductor" ]
