@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import type ConductorConfig from "src/ConductorConfig"
+import type ConductorConfig from "./ConductorConfig"
 
 type Task = {
   status: string

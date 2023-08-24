@@ -1,8 +1,8 @@
 import type { Message } from "@stomp/stompjs"
 import { Client } from "@stomp/stompjs"
 import { WebSocket } from "ws"
-import createMqConfig from "src/createMqConfig"
-import forwardMessage from "src/forward-message"
+import createMqConfig from "./createMqConfig"
+import forwardMessage from "./forward-message"
 Object.assign(global, { WebSocket })
 
 const mqConfig = createMqConfig()

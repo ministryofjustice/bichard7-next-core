@@ -24,7 +24,7 @@ module.exports = {
       parserOptions: {
         ecmaVersion: 2020
       },
-      plugins: ["@typescript-eslint", "jest", "import", "eslint-plugin-absolute-imports"],
+      plugins: ["@typescript-eslint", "jest", "import"],
       extends: [
         "airbnb-typescript/base",
         "plugin:@typescript-eslint/recommended",

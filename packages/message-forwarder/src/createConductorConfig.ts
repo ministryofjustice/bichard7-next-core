@@ -1,4 +1,4 @@
-import type ConductorConfig from "src/ConductorConfig"
+import type ConductorConfig from "./ConductorConfig"
 
 const createConductorConfig = () => {
   const conductorConfig: ConductorConfig = {

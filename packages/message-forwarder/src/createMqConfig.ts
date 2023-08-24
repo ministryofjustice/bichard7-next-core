@@ -1,4 +1,4 @@
-import type MqConfig from "src/MqConfig"
+import type MqConfig from "./MqConfig"
 
 export default (): MqConfig => {
   const { MQ_USER, MQ_PASSWORD, MQ_URL } = process.env
