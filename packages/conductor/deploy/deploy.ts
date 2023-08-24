@@ -1,8 +1,8 @@
 import fs from "fs/promises"
-import ConductorGateway from "deploy/ConductorGateway"
-import EventHandler from "deploy/EventHandler"
-import Task from "deploy/Task"
-import Workflow from "deploy/Workflow"
+import ConductorGateway from "./ConductorGateway"
+import EventHandler from "./EventHandler"
+import Task from "./Task"
+import Workflow from "./Workflow"
 
 const workflowDir = "./workflows"
 const taskDir = "./tasks"

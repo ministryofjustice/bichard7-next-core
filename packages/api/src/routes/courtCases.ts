@@ -1,7 +1,7 @@
 import { Router } from "express"
-import auth from "src/middleware/auth"
-import { validateCaseListQueryParams } from "src/middleware/validate"
-import { getCourtCases } from "src/controllers/courtCases"
+import { getCourtCases } from "../controllers/courtCases"
+import auth from "../middleware/auth"
+import { validateCaseListQueryParams } from "../middleware/validate"
 
 const router: Router = Router()
 

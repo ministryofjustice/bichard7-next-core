@@ -1,11 +1,11 @@
-import createDbConfig from "lib/database/createDbConfig"
-import insertErrorListRecord from "lib/database/insertErrorListRecord"
-import updateErrorListRecord from "lib/database/updateErrorListRecord"
-import errorPaths from "phase1/lib/errorPaths"
-import generateMockPhase1Result from "phase1/tests/helpers/generateMockPhase1Result"
-import type ErrorListRecord from "phase1/types/ErrorListRecord"
 import postgres from "postgres"
-import { ExceptionCode } from "types/ExceptionCode"
+import errorPaths from "../../phase1/lib/errorPaths"
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import createDbConfig from "./createDbConfig"
+import insertErrorListRecord from "./insertErrorListRecord"
+import updateErrorListRecord from "./updateErrorListRecord"
 
 const dbConfig = createDbConfig()
 const db = postgres({

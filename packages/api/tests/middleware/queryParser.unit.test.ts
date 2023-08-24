@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express"
-import queryParser from "src/middleware/queryParser"
+import queryParser from "../../src/middleware/queryParser"
 
 describe("queryParser", () => {
   it("parses the query string correctly", () => {

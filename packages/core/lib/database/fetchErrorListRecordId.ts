@@ -1,5 +1,5 @@
-import type ErrorListRecord from "phase1/types/ErrorListRecord"
 import type { PostgresError, Sql } from "postgres"
+import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 
 const fetchErrorListRecordId = async (db: Sql, correlationId: string): Promise<number | undefined> => {
   try {

@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const badlyAnnotatedSingleCaseMatch = (
   expected: CourtResultMatchingSummary,

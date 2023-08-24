@@ -1,8 +1,8 @@
-import convertResultToErrorListRecord from "lib/database/convertResultToErrorListRecord"
-import errorPaths from "phase1/lib/errorPaths"
-import generateMockPhase1Result from "phase1/tests/helpers/generateMockPhase1Result"
-import { ExceptionCode } from "types/ExceptionCode"
-import { TriggerCode } from "types/TriggerCode"
+import errorPaths from "../../phase1/lib/errorPaths"
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+import { ExceptionCode } from "../../types/ExceptionCode"
+import { TriggerCode } from "../../types/TriggerCode"
+import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {
   it("should generate the error list record", () => {

@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
-import { resultMatches } from "phase1/comparison/cli/printResult"
-import type { SkippedFile } from "phase1/comparison/cli/processRange"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import { resultMatches } from "./printResult"
+import type { SkippedFile } from "./processRange"
 
 const printList = (
   result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[]

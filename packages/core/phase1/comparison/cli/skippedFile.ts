@@ -1,4 +1,4 @@
-import type ComparisonResultDetail from "phase1/comparison/types/ComparisonResultDetail"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
 const skippedFile = (file: string): ComparisonResultDetail => ({
   file,

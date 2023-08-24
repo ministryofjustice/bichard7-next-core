@@ -1,4 +1,4 @@
-import type EventCategory from "types/EventCategory"
+import type EventCategory from "../types/EventCategory"
 
 export type AuditLogEvent = {
   attributes?: Record<string, unknown>

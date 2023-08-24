@@ -1,4 +1,4 @@
-import type PncApiConfig from "types/PncApiConfig"
+import type PncApiConfig from "../types/PncApiConfig"
 
 const createPncApiConfig = (): PncApiConfig => ({
   url: process.env.PNC_API_URL ?? "https://localhost:9443/bichard-api/pnc",

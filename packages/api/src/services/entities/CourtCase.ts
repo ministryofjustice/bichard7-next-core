@@ -1,13 +1,13 @@
 /* eslint-disable import/no-cycle */
 import type { Relation } from "typeorm"
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm"
-import type { ResolutionStatus } from "src/types/ResolutionStatus"
-import BaseEntity from "src/services/entities/BaseEntity"
-import Note from "src/services/entities/Note"
-import Trigger from "src/services/entities/Trigger"
-import booleanIntTransformer from "src/services/entities/transformers/booleanIntTransformer"
-import dateTransformer from "src/services/entities/transformers/dateTransformer"
-import resolutionStatusTransformer from "src/services/entities/transformers/resolutionStatusTransformer"
+import BaseEntity from "../../services/entities/BaseEntity"
+import Note from "../../services/entities/Note"
+import Trigger from "../../services/entities/Trigger"
+import booleanIntTransformer from "../../services/entities/transformers/booleanIntTransformer"
+import dateTransformer from "../../services/entities/transformers/dateTransformer"
+import resolutionStatusTransformer from "../../services/entities/transformers/resolutionStatusTransformer"
+import type { ResolutionStatus } from "../../types/ResolutionStatus"
 
 @Entity({ name: "error_list" })
 export default class CourtCase extends BaseEntity {

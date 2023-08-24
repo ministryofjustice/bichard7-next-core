@@ -1,5 +1,5 @@
-import type ErrorListNoteRecord from "phase1/types/ErrorListNoteRecord"
 import type { PostgresError, Sql } from "postgres"
+import type ErrorListNoteRecord from "../../phase1/types/ErrorListNoteRecord"
 
 const insertErrorListNotes = async (db: Sql, error_id: number, notes: (string | null)[]): Promise<void> => {
   try {

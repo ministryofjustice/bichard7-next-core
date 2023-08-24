@@ -1,7 +1,7 @@
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import { isError } from "types/Result"
-import logger from "utils/logger"
+import { isError } from "../types/Result"
+import logger from "../utils/logger"
 
 const putFileToS3 = async (
   body: string,

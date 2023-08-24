@@ -1,11 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
-import { Relation } from "typeorm"
-import BaseEntity from "src/services/entities/BaseEntity"
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Relation } from "typeorm"
+import BaseEntity from "../../services/entities/BaseEntity"
 // eslint-disable-next-line import/no-cycle
-import CourtCase from "src/services/entities/CourtCase"
-import dateTransformer from "src/services/entities/transformers/dateTransformer"
-import { ResolutionStatus } from "src/types/ResolutionStatus"
-import resolutionStatusTransformer from "src/services/entities/transformers/resolutionStatusTransformer"
+import CourtCase from "../../services/entities/CourtCase"
+import dateTransformer from "../../services/entities/transformers/dateTransformer"
+import resolutionStatusTransformer from "../../services/entities/transformers/resolutionStatusTransformer"
+import { ResolutionStatus } from "../../types/ResolutionStatus"
 
 @Entity({ name: "error_list_triggers" })
 export default class Trigger extends BaseEntity {

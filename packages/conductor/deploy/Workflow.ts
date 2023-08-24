@@ -1,7 +1,7 @@
 import type { WorkflowDef } from "@io-orkes/conductor-typescript"
 import fs from "fs"
-import type ConductorGateway from "deploy/ConductorGateway"
-import { hashFile } from "deploy/utils"
+import type ConductorGateway from "./ConductorGateway"
+import { hashFile } from "./utils"
 
 const commitHash = process.env.GIT_COMMIT_HASH
 if (!commitHash) {

@@ -1,4 +1,4 @@
-import { normaliseCCR } from "phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+import { normaliseCCR } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
 import type { AnnotatedHearingOutcome } from "types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "phase1/comparison/types/MatchingComparisonOutput"
 

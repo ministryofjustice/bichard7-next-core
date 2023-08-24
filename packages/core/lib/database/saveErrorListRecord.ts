@@ -1,14 +1,14 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import fetchErrorListRecordId from "lib/database/fetchErrorListRecordId"
-import generateExceptionsNoteText from "lib/database/generateExceptionsNoteText"
-import generateTriggersNoteText, { TriggerCreationType } from "lib/database/generateTriggersNoteText"
-import { default as insertErrorListNotes } from "lib/database/insertErrorListNotes"
-import insertErrorListRecord from "lib/database/insertErrorListRecord"
-import insertErrorListTriggers from "lib/database/insertErrorListTriggers"
-import updateErrorListRecord from "lib/database/updateErrorListRecord"
-import updateErrorListTriggers from "lib/database/updateErrorListTriggers"
-import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
 import type { Sql } from "postgres"
+import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import fetchErrorListRecordId from "./fetchErrorListRecordId"
+import generateExceptionsNoteText from "./generateExceptionsNoteText"
+import generateTriggersNoteText, { TriggerCreationType } from "./generateTriggersNoteText"
+import { default as insertErrorListNotes } from "./insertErrorListNotes"
+import insertErrorListRecord from "./insertErrorListRecord"
+import insertErrorListTriggers from "./insertErrorListTriggers"
+import updateErrorListRecord from "./updateErrorListRecord"
+import updateErrorListTriggers from "./updateErrorListTriggers"
 
 const handleUpdate = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
   if (result.hearingOutcome.Exceptions.length > 0) {

@@ -1,10 +1,10 @@
-import CourtCase from "src/services/entities/CourtCase"
 import type { DataSourceOptions } from "typeorm"
 import { DataSource } from "typeorm"
-import type DatabaseConfig from "src/services/DatabaseConfig"
-import User from "src/services/entities/User"
-import Trigger from "src/services/entities/Trigger"
-import Note from "src/services/entities/Note"
+import type DatabaseConfig from "../services/DatabaseConfig"
+import CourtCase from "../services/entities/CourtCase"
+import Note from "../services/entities/Note"
+import Trigger from "../services/entities/Trigger"
+import User from "../services/entities/User"
 
 const databaseConfig: DatabaseConfig = {
   host: process.env.DB_HOST ?? process.env.DB_AUTH_HOST ?? "localhost",

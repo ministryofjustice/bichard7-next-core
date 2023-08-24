@@ -1,5 +1,5 @@
-import type { NextFunction, Response, Request } from "express"
-import auth from "src/middleware/auth"
+import type { NextFunction, Request, Response } from "express"
+import auth from "../../src/middleware/auth"
 
 describe("auth", () => {
   it("returns a 401 unauthorised response if password is not in the authorization header", () => {

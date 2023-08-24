@@ -10,7 +10,7 @@ import sendToPhase2 from "@moj-bichard7/core/phase1/workers/bichard_process/send
 import storeAuditLogEvents from "@moj-bichard7/core/phase1/workers/common/storeAuditLogEvents"
 import convertSpiToAho from "@moj-bichard7/core/phase1/workers/incomingMessageHandler/convertSpiToAho"
 
-import { captureWorkerExceptions } from "src/utils"
+import { captureWorkerExceptions } from "./utils"
 
 const client = new ConductorClient({
   serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",

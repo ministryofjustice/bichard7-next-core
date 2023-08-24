@@ -1,4 +1,4 @@
-import type { Result } from "src/types/Result"
+import type { Result } from "../types/Result"
 
 type PromiseResult<T> = Promise<Result<T>>
 

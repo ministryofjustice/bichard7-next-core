@@ -1,7 +1,7 @@
-import type ErrorListTriggerRecord from "phase1/types/ErrorListTriggerRecord"
-import type { Trigger } from "phase1/types/Trigger"
 import type { Sql } from "postgres"
-import ResolutionStatus from "types/ResolutionStatus"
+import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
+import type { Trigger } from "../../phase1/types/Trigger"
+import ResolutionStatus from "../../types/ResolutionStatus"
 
 const insertErrorListTriggers = async (db: Sql, recordId: number, triggers: Trigger[]): Promise<void> => {
   for (const trigger of triggers) {

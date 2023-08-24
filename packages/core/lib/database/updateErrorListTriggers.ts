@@ -1,10 +1,10 @@
-import insertErrorListTriggers from "lib/database/insertErrorListTriggers"
-import type ErrorListTriggerRecord from "phase1/types/ErrorListTriggerRecord"
-import type { Phase1SuccessResult } from "phase1/types/Phase1Result"
-import type { Trigger } from "phase1/types/Trigger"
 import type { Sql } from "postgres"
-import ResolutionStatus from "types/ResolutionStatus"
-import type { TriggerCode } from "types/TriggerCode"
+import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
+import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import type { Trigger } from "../../phase1/types/Trigger"
+import ResolutionStatus from "../../types/ResolutionStatus"
+import type { TriggerCode } from "../../types/TriggerCode"
+import insertErrorListTriggers from "./insertErrorListTriggers"
 
 type TriggerUpdates = {
   added: Trigger[]

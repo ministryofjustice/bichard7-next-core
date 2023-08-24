@@ -1,9 +1,9 @@
+import cors from "cors"
 import type { Application } from "express"
 import express from "express"
-import cors from "cors"
-import queryParser from "src/middleware/queryParser"
-import healthRouter from "src/routes/health"
-import courtCaseRouter from "src/routes/courtCases"
+import queryParser from "./middleware/queryParser"
+import courtCaseRouter from "./routes/courtCases"
+import healthRouter from "./routes/health"
 
 const app: Application = express()
 app.use(cors())

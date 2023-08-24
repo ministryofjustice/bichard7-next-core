@@ -1,7 +1,7 @@
-import type { ResolutionStatus } from "src/types/ResolutionStatus"
-import CourtCase from "src/services/entities/CourtCase"
-import Trigger from "src/services/entities/Trigger"
-import getDataSource from "src/services/getDataSource"
+import CourtCase from "../../src/services/entities/CourtCase"
+import Trigger from "../../src/services/entities/Trigger"
+import getDataSource from "../../src/services/getDataSource"
+import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
 
 type TestTrigger = {
   triggerId: number
@@ -39,5 +39,5 @@ const insertTriggers = async (caseId: number, triggers: TestTrigger[]): Promise<
   return true
 }
 
-export type { TestTrigger }
 export { insertTriggers }
+export type { TestTrigger }
