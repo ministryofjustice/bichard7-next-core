@@ -1,10 +1,10 @@
 import fs from "fs"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
+import MockPncGateway from "./comparison/lib/MockPncGateway"
 import parseSpiResult from "./parse/parseSpiResult"
 import transformSpiToAho from "./parse/transformSpiToAho"
 import phase1Handler from "./phase1"
-import MockPncGateway from "./tests/helpers/MockPncGateway"
 import generateMockPncQueryResult from "./tests/helpers/generateMockPncQueryResult"
 
 describe("Bichard Core processing logic", () => {
