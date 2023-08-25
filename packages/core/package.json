@@ -1,0 +1,119 @@
+{
+  "name": "@moj-bichard7/core",
+  "version": "2.0.0",
+  "description": "The core processing logic of Bichard 7",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf ./dist",
+    "watch": "tsc --project tsconfig.build.json --watch",
+    "build:esbuild": "node build.js",
+    "build:package": "./scripts/build-package.sh",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "jest --runInBand --forceExit --testNamePattern=",
+    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test|e2e.test' --testNamePattern=",
+    "test:update": "jest -u --testPathIgnorePatterns='comparison.test|integration.test' 'integration.test'",
+    "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='comparison.test|integration.test' --testNamePattern=",
+    "test:watch": "jest --watch --testPathIgnorePatterns='comparison.test|integration.test'",
+    "test:compare": "NODE_ENV=test ts-node -T phase1/comparison/cli.ts -d ./phase1/tests/fixtures/e2e-comparison",
+    "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test",
+    "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
+    "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
+    "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
+    "test:e2e:ci": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
+    "compare": "TS_NODE_TRANSPILE_ONLY=true ts-node src/comparison/cli.ts",
+    "compare:files": "scripts/files-from-comparison.js",
+    "compare:summarise": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/summariseRecord.ts",
+    "compare:summarise:extended": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/extendedSummary.ts",
+    "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/repeatTestBichard.ts",
+    "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
+    "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
+    "update-deps": "ncu -u && npm install",
+    "install-standing-data": "scripts/install-standing-data.sh"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ministryofjustice/bichard7-next-core.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
+  },
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
+  "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
+  "devDependencies": {
+    "@types/diff": "^5.0.3",
+    "@types/jest": "^29.5.4",
+    "@types/lodash.differencewith": "^4.5.7",
+    "@types/lodash.isequal": "^4.5.6",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/lodash.orderby": "^4.6.7",
+    "@types/node": "^20.5.6",
+    "@types/nunjucks": "^3.2.3",
+    "@types/pretty-data": "^0.40.0",
+    "@types/promise-poller": "^1.7.1",
+    "@types/s3rver": "^3.7.0",
+    "@types/stompit": "^0.26.3",
+    "@types/uuid": "^9.0.2",
+    "chalk": "^4.1.2",
+    "esbuild": "^0.19.2",
+    "esbuild-plugin-ignore": "^1.1.1",
+    "eslint": "^8.47.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.6.4",
+    "jest-mock-server": "^0.1.0",
+    "jest-xml-matcher": "^1.2.0",
+    "lodash.ismatch": "^4.4.0",
+    "lodash.merge": "^4.6.2",
+    "mockdate": "^3.0.5",
+    "nunjucks": "^3.2.4",
+    "pg-promise": "^11.5.4",
+    "promise-poller": "^1.9.1",
+    "s3rver": "^3.7.1",
+    "ts-command-line-args": "^2.5.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.398.0",
+    "@aws-sdk/client-s3": "^3.398.0",
+    "@io-orkes/conductor-typescript": "^0.0.2",
+    "@types/lodash.ismatch": "^4.4.7",
+    "aws-sdk": "^2.1444.0",
+    "axios": "^1.4.0",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.115",
+    "diff": "^5.1.0",
+    "dynalite": "^3.2.2",
+    "fast-xml-parser": "^4.2.7",
+    "lodash.differencewith": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.orderby": "^4.6.0",
+    "p-limit": "^3.1.0",
+    "postgres": "^3.3.5",
+    "pretty-data": "^0.40.0",
+    "stompit": "^1.0.0",
+    "zod": "^3.22.2"
+  }
+}

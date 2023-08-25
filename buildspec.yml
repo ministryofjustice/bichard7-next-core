@@ -8,7 +8,7 @@ env:
 phases:
   build:
     commands:
-      - npm ci
       - ./scripts/build-docker.sh
+      - ./scripts/build-api-docker.sh
 ---
 

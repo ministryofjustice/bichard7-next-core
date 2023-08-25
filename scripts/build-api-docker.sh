@@ -17,7 +17,7 @@ function pull_and_build_from_aws() {
       --output text \
       2>/dev/null
   )
-  
+
   AWS_STATUS=$?
   if [[ $AWS_STATUS -ne 0 ]]; then
     echo "Unable to authenticate with AWS - are you running this with aws-vault?" >&2
@@ -112,7 +112,7 @@ EOF
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
   echo "Building local image"
-  docker build -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
+  docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
 else
   pull_and_build_from_aws
 fi

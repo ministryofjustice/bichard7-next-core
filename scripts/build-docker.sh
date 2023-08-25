@@ -129,10 +129,10 @@ EOF
 if [[ "$(has_local_image)" -gt 0 ]]; then
   if [ $(arch) = "arm64" ]; then
     echo "Building for ARM"
-    docker build --platform=linux/amd64 -t ${DOCKER_OUTPUT_TAG}:latest .
+    docker build -f packages/conductor/Dockerfile --platform=linux/amd64 -t ${DOCKER_OUTPUT_TAG}:latest .
   else
     echo "Building regular image"
-    docker build -t ${DOCKER_OUTPUT_TAG}:latest .
+    docker build -f packages/conductor/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
   fi
 else
   pull_and_build_from_aws

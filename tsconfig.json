@@ -1,27 +1,10 @@
 {
-  "compilerOptions": {
-    "lib": ["ES2020", "dom"],
-    "module": "CommonJS",
-    "target": "ES2020",
-    "strict": true,
-    "sourceMap": true,
-    "outDir": "build",
-    "types": ["node", "jest"],
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "preserveConstEnums": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "composite": true,
-    "declaration": true,
-    "baseUrl": "./"
-  },
-  "include": ["conductor/**/*.ts", "src/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts", "test-data/**/*.ts", "package.json"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "files": [],
+  "references": [
+    { "path": "./packages/api/tsconfig.ref.json" },
+    { "path": "./packages/common/tsconfig.ref.json" },
+    { "path": "./packages/conductor/tsconfig.ref.json" },
+    { "path": "./packages/core/tsconfig.ref.json" },
+    { "path": "./packages/message-forwarder/tsconfig.ref.json" }
+  ]
 }

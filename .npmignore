@@ -33,4 +33,3 @@ build.package.js
 buildspec.yml
 jest.config.js
 tsconfig.json
-tsconfig.eslint.json

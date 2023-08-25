@@ -23,7 +23,7 @@ commands:
             - v1-npm-deps-
       - run:
           name: Install npm dependencies
-          command: npm i
+          command: npm i --workspaces --include-workspace-root
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
@@ -37,7 +37,7 @@ commands:
       - restore_cache:
           name: Load node_modules from the cache if they haven't changed
           keys:
-            - v1-npm-deps-{{ checksum "api/package-lock.json.md5" }}
+            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
             - v1-npm-deps-
       - run:
           name: Install npm dependencies
@@ -84,7 +84,7 @@ commands:
           path: /home/circleci/bichard7-next-tests/test-results.xml
 
 jobs:
-  lint:
+  build:
     machine:
       image: ubuntu-2204:2022.10.2
     resource_class: xlarge
@@ -92,50 +92,25 @@ jobs:
     steps:
       - checkout
       - install_core
+      - run:
+          name: Build the code
+          command: npm run build
       - run:
           name: Check the code for linting errors
           command: npm run lint
-
-  build_core:
-    machine:
-      image: ubuntu-2204:2022.10.2
-    resource_class: xlarge
-    working_directory: ~
-    steps:
-      - checkout
-      - install_core
-      - run:
-          name: Build the core
-          command: npm run build
       - persist_to_workspace:
-          root: .
-          paths: build
+          root: /home/circleci
+          paths:
+            - project
 
-  build_api:
-    machine:
-      image: ubuntu-2204:2022.10.2
-    resource_class: xlarge
-    working_directory: ~
-    steps:
-      - checkout
-      - install_api
-      - run:
-          name: Build the API
-          command: cd api && npm run build
-      - persist_to_workspace:
-          root: ./api
-          paths: build
-
-  test:
+  test_core:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -147,10 +122,10 @@ jobs:
           command: nvm install
       - run:
           name: Run unit tests against core code
-          command: nvm use && npm run test:unit
+          command: nvm use && npm run -w packages/core test:unit
       - run:
           name: Run integration tests against core code
-          command: nvm use && npm run test:integration
+          command: nvm use && npm run -w packages/core test:integration
 
   comparison_test:
     machine:
@@ -158,13 +133,11 @@ jobs:
       docker_layer_caching: true
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Run integration tests against core code
-          command: npm run test:compare
+          command: npm run -w packages/core test:compare
 
   characterisation_test:
     docker:
@@ -172,16 +145,14 @@ jobs:
     resource_class: xlarge
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Checkout the tests repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: Start the test server in the background
-          command: npm run test:server
+          command: npm run -w packages/core test:server
           background: true
       - run:
           name: Wait for Core
@@ -212,10 +183,8 @@ jobs:
     resource_class: xlarge
     working_directory: ~
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - fetch_docker_image:
           image: conductor
       - fetch_docker_image:
@@ -224,15 +193,12 @@ jobs:
           name: Boot Conductor infrastructure
           command: npm run conductor-no-worker
       - run:
-          name: Set up Conductor
-          command: npm run conductor-setup
-      - run:
           name: Run the worker
-          command: npm run conductor-worker
+          command: npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
-          command: npm run test:conductor
+          command: npm run -w packages/conductor test
 
   e2e_test:
     machine:
@@ -242,10 +208,8 @@ jobs:
     working_directory: ~
     parallelism: 10
     steps:
-      - checkout
-      - install_core
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - fetch_docker_image:
           image: nodejs
       - run:
@@ -271,7 +235,7 @@ jobs:
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
-          command: npm run conductor-worker
+          command: npm run -w packages/conductor worker
           background: true
       - run:
           name: Run e2e tests against core code
@@ -292,10 +256,8 @@ jobs:
       docker_layer_caching: true
     working_directory: ~
     steps:
-      - checkout
-      - install_api
       - attach_workspace:
-          at: .
+          at: /home/circleci
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
@@ -303,34 +265,28 @@ jobs:
       - run_postgres
       - run:
           name: Run unit tests against API code
-          command: nvm use && cd api && npm run test:api
+          command: nvm use && npm run -w packages/api test
 
 workflows:
   version: 2
   build-and-test:
     jobs:
-      - lint
-      - build_core:
+      - build
+      - test_core:
           requires:
-            - lint
-      - build_api:
-          requires:
-            - lint
-      - test:
-          requires:
-            - build_core
+            - build
       - characterisation_test:
           requires:
-            - build_core
+            - build
       - comparison_test:
           requires:
-            - build_core
+            - build
       - conductor_test:
           requires:
-            - build_core
+            - build
       - e2e_test:
           requires:
-            - build_core
+            - build
       - test_api:
           requires:
-            - build_api
+            - build
