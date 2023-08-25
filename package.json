@@ -3,24 +3,25 @@
   "private": true,
   "version": "2.0.0",
   "scripts": {
-    "lint": "npm run lint --ws",
-    "lint:fix": "npm run lint:fix --ws",
-    "build": "npm run build --ws",
-    "clean": "npm run clean --ws",
-    "watch": "tsc --build --watch",
-    "all": "./environment/boot.sh",
-    "all-no-worker": "NOWORKER=true ./environment/boot.sh",
-    "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
-    "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
     "activemq": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
-    "conductor": "./environment/boot.sh conductor",
-    "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor",
+    "all": "./environment/boot.sh",
+    "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
+    "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "bichard-legacy": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-bichard.yml up -d --wait nginx-auth-proxy",
     "bichard-legacy-debug": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-bichard-debug.yml up -d --wait nginx-auth-proxy",
+    "build": "npm run build --ws",
+    "clean": "npm run clean --ws",
+    "conductor": "./environment/boot.sh conductor",
+    "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor",
     "destroy": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml down -v",
+    "lint": "npm run lint --ws",
+    "lint:fix": "npm run lint:fix --ws",
+    "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
+    "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite",
     "structurizr-site-generatr-build": "docker-compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
     "structurizr-site-generatr-serve": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
-    "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite"
+    "update-deps": "ncu -u --deep && npm install",
+    "watch": "tsc --build --watch"
   },
   "workspaces": [
     "packages/common",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.1"
+    "lint-staged": "^14.0.1",
+    "npm-check-updates": "^16.13.1"
   }
 }
