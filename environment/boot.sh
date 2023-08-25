@@ -3,6 +3,7 @@ set -e
 
 LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
+SKIP_IMAGES=($SKIP_IMAGES)
 
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
@@ -11,6 +12,23 @@ PLATFORM=$(uname -m)
 if [ $PLATFORM != "arm64" ]; then
     IMAGES+=(bichard7-liberty conductor e2etests nginx-auth-proxy ui user-service)
 fi
+
+FILTERED_IMAGES=()
+for image in "${IMAGES[@]}"; do
+  found=false
+  for skip_image in "${SKIP_IMAGES[@]}"; do
+    if [[ "$image" == "$skip_image" ]]; then
+      found=true
+      break
+    fi
+  done
+
+  if [[ "$found" == "false" ]]; then
+    FILTERED_IMAGES+=("${image}")
+  fi
+done
+
+IMAGES=("${FILTERED_IMAGES[@]}")
 
 for image in "${IMAGES[@]}"; do
     if [[ "$CI" == "true" || "$(docker images -q $image 2> /dev/null)" == "" ]]; then
