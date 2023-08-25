@@ -28,6 +28,9 @@
     "worker": ". ../../environment/local-conductor-worker.env && npm run worker-noenv",
     "worker-noenv": "npx ts-node -T src/worker.ts"
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ministryofjustice/bichard7-next-core.git"

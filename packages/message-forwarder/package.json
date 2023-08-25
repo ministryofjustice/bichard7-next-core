@@ -23,6 +23,9 @@
       ]
     }
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
   "devDependencies": {
     "@types/node-fetch": "^2.6.4",
     "@types/ws": "^8.5.5",

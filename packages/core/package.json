@@ -32,6 +32,9 @@
     "update-deps": "ncu -u && npm install",
     "install-standing-data": "scripts/install-standing-data.sh"
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ministryofjustice/bichard7-next-core.git"

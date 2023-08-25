@@ -29,6 +29,9 @@
       ]
     }
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
   "devDependencies": {
     "@jest/globals": "^29.6.2",
     "@types/cors": "^2.8.13",

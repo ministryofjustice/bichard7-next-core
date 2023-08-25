@@ -37,5 +37,9 @@
   },
   "bugs": {
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
   }
 }
