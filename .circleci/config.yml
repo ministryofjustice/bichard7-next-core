@@ -106,7 +106,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     working_directory: ~
     steps:
       - attach_workspace:
@@ -130,7 +130,7 @@ jobs:
   comparison_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     working_directory: ~
     steps:
       - attach_workspace:
@@ -179,7 +179,7 @@ jobs:
   conductor_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     resource_class: xlarge
     working_directory: ~
     steps:
@@ -203,7 +203,7 @@ jobs:
   e2e_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     resource_class: xlarge
     working_directory: ~
     parallelism: 10
