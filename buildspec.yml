@@ -8,6 +8,7 @@ env:
 phases:
   build:
     commands:
+      - ./scripts/install-codebuild-tools.sh
       - ./scripts/build-core-worker-docker.sh
       - ./scripts/build-api-docker.sh
       - ./scripts/build-message-forwarder-docker.sh
