@@ -3,7 +3,7 @@
 set -e
 
 readonly DOCKER_BUILD_IMAGE="nodejs"
-readonly DOCKER_OUTPUT_TAG="api"
+readonly DOCKER_OUTPUT_TAG="core-worker"
 
 function has_local_image() {
   IMAGES=$(docker images --filter=reference="${DOCKER_BUILD_IMAGE}:*" -q | wc -l)
@@ -42,9 +42,10 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
 
-  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
+  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/conductor/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
+
     ## Install goss/trivy
     curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
     chmod +rx /usr/local/bin/goss
@@ -78,14 +79,29 @@ function pull_and_build_from_aws() {
     pull_trivy_db
 
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/api/goss.yaml dgoss run \
+    GOSS_SLEEP=5 GOSS_FILE=packages/conductor/goss.yaml dgoss run \
+      -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
+      -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
+      -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \
+      -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+      -e AUDIT_LOG_API_KEY="xxx" \
+      -e AUDIT_LOG_API_URL="http://localhost:3011" \
+      -e COMPARISON_BUCKET="comparisons" \
+      -e MQ_URL="mq" \
+      -e MQ_USER="bichard" \
+      -e MQ_PASSWORD="password" \
+      -e PHASE1_BUCKET_NAME="phase1" \
+      -e DYNAMO_REGION="eu-west-2" \
+      -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
+      -e S3_REGION="eu-west-2" \
+      -e CONDUCTOR_URL="http://conductor:4000/api" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     ## Run Trivy scan
     TRIVY_CACHE_DIR=trivy trivy image \
       --exit-code 1 \
       --severity "CRITICAL" \
-      --skip-update "${DOCKER_OUTPUT_TAG}:latest"
+      --skip-update "${DOCKER_OUTPUT_TAG}:latest" # we have the most recent db pulled locally
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
@@ -105,14 +121,19 @@ function pull_and_build_from_aws() {
         }
 EOF
       aws s3 cp /tmp/${DOCKER_OUTPUT_TAG}.json s3://${ARTIFACT_BUCKET}/semaphores/${DOCKER_OUTPUT_TAG}.json
-      export API_HASH="${IMAGE_SHA_HASH}"
+      export CORE_WORKER_HASH="${IMAGE_SHA_HASH}"
     fi
   fi
 }
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
-  echo "Building local image"
-  docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
+  if [ $(arch) = "arm64" ]; then
+    echo "Building for ARM"
+    docker build -f packages/conductor/Dockerfile --platform=linux/amd64 -t ${DOCKER_OUTPUT_TAG}:latest .
+  else
+    echo "Building regular image"
+    docker build -f packages/conductor/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
+  fi
 else
   pull_and_build_from_aws
 fi
