@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: { es6: true },
-  ignorePatterns: ["build/*", "api/build/*", "jest.setup.ts", "docs/*"],
+  ignorePatterns: ["dist/*", "docs/*", "jest.setup.ts", "node_modules", "packages/*/dist/*"],
   overrides: [
     {
       // Plain JavaScript files
@@ -22,9 +22,7 @@ module.exports = {
       files: ["**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
-        ecmaVersion: 2020,
-        project: "tsconfig.eslint.json",
-        tsconfigRootDir: __dirname
+        ecmaVersion: 2020
       },
       plugins: ["@typescript-eslint", "jest", "import"],
       extends: [
@@ -51,20 +49,11 @@ module.exports = {
     {
       // Just the TypeScript test files
       // These settings will only affect the tests
-      files: ["*.test.ts", "tests/**/*.ts"],
+      files: ["*.test.ts"],
       rules: {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "jest/no-standalone-expect": "off"
-      }
-    },
-    {
-      // Just the TypeScript script files
-      // These settings will only affect the scripts
-      files: ["scripts/**/*.ts"],
-      rules: {
-        "import/no-relative-packages": "off",
-        "import/no-relative-parent-imports": "off"
       }
     }
   ]

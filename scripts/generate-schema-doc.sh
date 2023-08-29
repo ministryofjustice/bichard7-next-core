@@ -1,8 +1,8 @@
 JSON_SCHEMA_SCRIPT=$(cat <<-END
-import fs from "fs";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { annotatedHearingOutcomeSchema } from "./src/schemas/annotatedHearingOutcome";
-import { incomingMessageParsedXmlSchema } from "./src/schemas/spiResult";
+import { annotatedHearingOutcomeSchema } from "./packages/core/phase1/schemas/annotatedHearingOutcome";
+import { incomingMessageParsedXmlSchema } from "./packages/core/phase1/schemas/spiResult";
+const fs = require("fs");
 fs.writeFileSync("aho.schema.json", JSON.stringify(zodToJsonSchema(annotatedHearingOutcomeSchema)));
 fs.writeFileSync("spi.schema.json", JSON.stringify(zodToJsonSchema(incomingMessageParsedXmlSchema)));
 END

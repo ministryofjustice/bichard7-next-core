@@ -3,7 +3,7 @@ name: Build and Deploy Architecture and Documentation
 on:
   push:
     branches:
-    - main
+      - main
 
 permissions:
   contents: write
@@ -12,26 +12,28 @@ jobs:
   deploy_github_pages:
     runs-on: macos-latest
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Install Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16.13.0
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.0
 
-    - name: Set up Docker
-      run: |
-        brew install docker
-        colima start
-        brew install docker-compose
+      - name: Set up Docker
+        run: |
+          curl -OSL https://raw.githubusercontent.com/Homebrew/homebrew-core/dc0669eca9479e9eeb495397ba3a7480aaa45c2e/Formula/qemu.rb
+          brew install ./qemu.rb
+          brew install docker
+          colima start
+          brew install docker-compose
 
-    - name: Build the site
-      run: npm run structurizr-site-generatr-build
+      - name: Build the site
+        run: npm run structurizr-site-generatr-build
 
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: gh-pages
-        folder: docs/architecture/build/site
-        clean: true
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: docs/architecture/build/site
+          clean: true

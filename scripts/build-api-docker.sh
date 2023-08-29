@@ -17,7 +17,7 @@ function pull_and_build_from_aws() {
       --output text \
       2>/dev/null
   )
-  
+
   AWS_STATUS=$?
   if [[ $AWS_STATUS -ne 0 ]]; then
     echo "Unable to authenticate with AWS - are you running this with aws-vault?" >&2
@@ -42,43 +42,12 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
 
-  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
+  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    ## Install goss/trivy
-    curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-    chmod +rx /usr/local/bin/goss
-    curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-    chmod +rx /usr/local/bin/dgoss
-
-    export GOSS_PATH="/usr/local/bin/goss"
-
-    install_trivy() {
-      echo "Pulling trivy binary from s3"
-      aws s3 cp \
-        s3://"${ARTIFACT_BUCKET}"/trivy/binary/trivy_latest_Linux-64bit.rpm \
-        .
-
-      echo "Installing trivy binary"
-      rpm -ivh trivy_latest_Linux-64bit.rpm
-    }
-
-    pull_trivy_db() {
-      echo "Pulling trivy db from s3..."
-      aws s3 cp \
-        s3://"${ARTIFACT_BUCKET}"/trivy/db/trivy-offline.db.tgz \
-        trivy/db/
-
-      echo "Extracting trivy db to $(pwd)/trivy/db/"
-      tar -xvf trivy/db/trivy-offline.db.tgz -C trivy/db/
-    }
-
-    mkdir -p trivy/db
-    install_trivy
-    pull_trivy_db
-
+    
     ## Run goss tests
-    GOSS_SLEEP=15 GOSS_FILE=api/goss.yaml dgoss run \
+    GOSS_SLEEP=5 GOSS_FILE=packages/api/goss.yaml dgoss run \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     ## Run Trivy scan
@@ -112,7 +81,7 @@ EOF
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
   echo "Building local image"
-  docker build -t ${DOCKER_OUTPUT_TAG}:latest -f api/Dockerfile .
+  docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
 else
   pull_and_build_from_aws
 fi

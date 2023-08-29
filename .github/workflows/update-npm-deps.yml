@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Update dependencies
-        run: npm run update-deps
+        run: npm run update-deps --workspaces
 
       - name: Report Status
         if: always()
