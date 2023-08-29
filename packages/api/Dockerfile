@@ -32,4 +32,4 @@ EXPOSE     443
 RUN npm ci
 RUN npm run build -w packages/api
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start", "-w", "packages/api" ]
