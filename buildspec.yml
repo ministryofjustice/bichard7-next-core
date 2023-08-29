@@ -12,3 +12,4 @@ phases:
       - ./scripts/build-api-docker.sh
       - ./scripts/build-message-forwarder-docker.sh
 ---
+
