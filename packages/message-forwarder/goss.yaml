@@ -1,0 +1,19 @@
+user:
+  node:
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+      - node
+    home: /home/node
+    shell: /bin/bash
+process:
+  node:
+    running: true
+command:
+  node --version:
+    exit-status: 0
+    stdout:
+      - v16.18.1
+    stderr: []
+    timeout: 10000
