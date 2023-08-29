@@ -3,7 +3,7 @@
 set -e
 
 readonly DOCKER_BUILD_IMAGE="nodejs"
-readonly DOCKER_OUTPUT_TAG="api"
+readonly DOCKER_OUTPUT_TAG="message-forwarder"
 
 function has_local_image() {
   IMAGES=$(docker images --filter=reference="${DOCKER_BUILD_IMAGE}:*" -q | wc -l)
@@ -42,12 +42,15 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
 
-  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
+  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/message-forwarder/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
     
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/api/goss.yaml dgoss run \
+    GOSS_SLEEP=5 GOSS_FILE=packages/message-forwarder/goss.yaml dgoss run \
+      -e MQ_URL="mq" \
+      -e MQ_USER="bichard" \
+      -e MQ_PASSWORD="password" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     ## Run Trivy scan
