@@ -15,7 +15,7 @@ COPY scripts ./scripts
 COPY package.json .
 COPY package-lock.json .
 COPY packages ./packages
-COPY tsconfig*.json .
+COPY tsconfig*.json ./
 RUN npm ci
 RUN npm run build --workspaces
 RUN npm run install-standing-data -w packages/core
