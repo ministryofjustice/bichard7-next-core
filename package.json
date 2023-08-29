@@ -43,5 +43,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "npm-check-updates": "^16.13.1"
+  },
+  "dependencies": {
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.116"
   }
 }
