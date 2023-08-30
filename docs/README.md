@@ -20,3 +20,17 @@ with.
 
 If you turn off Automatic layout and manually arrange systems you need to remove the `docs/architecture/workspace.json`
 in the `.gitignore` if you want to persist the layout.
+
+# Data model schema
+
+Structure:
+- Annotated hearing outcome documentation: `docs/schema/aho.schema.html`
+- SPI message documentation: `docs/schema/spi.schema.html`
+
+## Generating the documentation
+
+```
+npm run generate-schema-doc
+```
+
+We use `zod-to-json-schema` NPM package to create JSON schema files. Then, with `json-schema-for-humans` tool, we turn these JSON schema files into HTML pages.
