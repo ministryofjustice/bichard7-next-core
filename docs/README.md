@@ -24,8 +24,9 @@ in the `.gitignore` if you want to persist the layout.
 # Data model schema
 
 Structure:
-- Annotated hearing outcome documentation: `docs/schema/aho.schema.html`
-- SPI message documentation: `docs/schema/spi.schema.html`
+
+- `docs/schema/aho.schema.html` -> Annotated hearing outcome documentation
+- `docs/schema/spi.schema.html` -> SPI message documentation
 
 ## Generating the documentation
 
