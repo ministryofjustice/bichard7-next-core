@@ -31,6 +31,12 @@ jobs:
       - name: Build the site
         run: npm run structurizr-site-generatr-build
 
+      - name: Build the data schema site
+        run: npm run generate-schema-doc
+      
+      - name: Move data schema site to the main site folder
+        run: mv docs/schema docs/architecture/build/site
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
