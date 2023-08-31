@@ -67,13 +67,13 @@ class Describer {
         description += "<h5>Relations</h5>"
         if (spiRelations.length > 0) {
           description += `<p>SPI Result</p><p><ul>${spiRelations
-            .map((f) => `<li><a href="spi.schema.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
+            .map((f) => `<li><a href="../spi/index.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
             .join("")}</ul></p>`
         }
 
         if (ahoRelations.length > 0) {
           description += `<p>AHO</p><p><ul>${ahoRelations
-            .map((f) => `<li><a href="aho.schema.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
+            .map((f) => `<li><a href="index.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
             .join("")}</ul></p>`
         }
       }

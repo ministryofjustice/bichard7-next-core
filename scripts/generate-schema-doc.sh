@@ -15,12 +15,16 @@ if [[ "$(which generate-schema-doc 1>/dev/null 2>/dev/null || echo $?)x" == "1x"
   pip3 install json-schema-for-humans
 fi
 
-OUTPUT_DIR="docs/schema"
+AHO_OUTPUT_DIR="docs/schema/aho"
+SPI_OUTPUT_DIR="docs/schema/spi"
+mkdir -p $AHO_OUTPUT_DIR
+mkdir -p $SPI_OUTPUT_DIR
+
 SCHEMA_DOC_CONFIG="--config expand_buttons=true --config collapse_long_descriptions=false --config template_name=js"
-generate-schema-doc $SCHEMA_DOC_CONFIG aho.schema.json $OUTPUT_DIR/aho.schema.html
-generate-schema-doc $SCHEMA_DOC_CONFIG spi.schema.json $OUTPUT_DIR/spi.schema.html
+generate-schema-doc $SCHEMA_DOC_CONFIG aho.schema.json $AHO_OUTPUT_DIR/index.html
+generate-schema-doc $SCHEMA_DOC_CONFIG spi.schema.json $SPI_OUTPUT_DIR/index.html
 rm aho.schema.json
 rm spi.schema.json
 
-echo "View the generated AHO schema page at file://$(realpath $OUTPUT_DIR/aho.schema.html)"
-echo "View the generated SPI Result schema page at file://$(realpath $OUTPUT_DIR/spi.schema.html)"
+echo "View the generated AHO schema page at file://$(realpath $AHO_OUTPUT_DIR/index.html)"
+echo "View the generated SPI Result schema page at file://$(realpath $SPI_OUTPUT_DIR/index.html)"
