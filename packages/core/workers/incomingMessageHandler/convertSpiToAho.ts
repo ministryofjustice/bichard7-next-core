@@ -8,8 +8,8 @@ import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { v4 as uuid } from "uuid"
-import parseSpiResult from "../../../phase1/parse/parseSpiResult"
-import transformSpiToAho from "../../../phase1/parse/transformSpiToAho"
+import parseS3Path from "../../phase1/lib/parseS3Path"
+import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
 const taskDefName = "convert_spi_to_aho"
 
@@ -45,9 +45,33 @@ const convertSpiToAho: ConductorWorker = {
       })
     }
 
-    const spiResult = parseSpiResult(message)
-    const aho = transformSpiToAho(spiResult)
-    const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+    const transformResult = transformIncomingMessageToAho(message)
+    if (isError(transformResult)) {
+      return Promise.resolve({
+        logs: [conductorLog("Could not convert incoming message to AHO")],
+        status: "FAILED_WITH_TERMINAL_ERROR"
+      })
+    }
+
+    const { aho, messageHash, systemId } = transformResult
+
+    const externalCorrelationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+    const messageId = uuid()
+    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = messageId
+
+    const { externalId, receivedDate } = parseS3Path(s3Path)
+    const auditLogRecord = {
+      caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
+      createdBy: "Incoming message handler",
+      externalCorrelationId,
+      externalId: externalId,
+      isSanitised: 0,
+      messageHash,
+      messageId,
+      receivedDate,
+      s3Path,
+      systemId
+    }
 
     // put aho in s3
     const putPath = `${uuid()}.json`
@@ -63,7 +87,7 @@ const convertSpiToAho: ConductorWorker = {
     return Promise.resolve({
       logs: [],
       status: "COMPLETED",
-      outputData: { correlationId, ahoS3Path: putPath }
+      outputData: { correlationId: messageId, ahoS3Path: putPath, auditLogRecord }
     })
   }
 }

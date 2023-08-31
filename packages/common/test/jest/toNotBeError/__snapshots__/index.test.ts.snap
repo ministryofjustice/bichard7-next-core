@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`.toNotBeError() fails when given an error 1`] = `"Error: this is an expected error"`;

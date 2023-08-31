@@ -29,6 +29,17 @@
       "asyncComplete": false
     },
     {
+      "name": "create_audit_log_record",
+      "taskReferenceName": "create_audit_log_record",
+      "inputParameters": {
+        "auditLogRecord": "${convert_spi_to_aho.output.auditLogRecord}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
       "name": "begin_processing",
       "taskReferenceName": "begin_processing",
       "inputParameters": {
