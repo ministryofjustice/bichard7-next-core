@@ -16,7 +16,7 @@ Boundary(group_1, "CJSE", $tags="CJSE") {
   System(ExISS, "ExISS", $descr="", $tags="", $link="../../exiss/context/")
 }
 
-System(CJSM, "CJSM", $descr="", $tags="", $link="")
+System(CJSM, "CJSM", $descr="", $tags="", $link="../../cjsm/context/")
 
 Rel_D(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
 Rel_D(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
