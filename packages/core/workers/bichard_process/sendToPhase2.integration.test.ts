@@ -1,17 +1,19 @@
-const queueName = (process.env.PHASE_2_QUEUE_NAME = "TEST_PHASE_2_QUEUE")
-process.env.MQ_URL = "failover:(stomp://localhost:61613)"
-process.env.MQ_USER = "admin"
-process.env.MQ_PASSWORD = "admin"
+jest.setTimeout(999999999)
+import "../../phase1/tests/helpers/setEnvironmentVariables"
 
+import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import fs from "fs"
+import { v4 as uuid } from "uuid"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import { parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
-import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
-import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import sendToPhase2 from "./sendToPhase2"
+
+const queueName = process.env.PHASE_2_QUEUE_NAME
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
 
 const inputXml = fs.readFileSync("phase1/tests/fixtures/AnnotatedHO1.xml").toString()
 const hearingOutcome = parseAhoXml(inputXml) as AnnotatedHearingOutcome
@@ -20,7 +22,7 @@ const testMqGateway = new TestMqGateway(createMqConfig())
 
 describe("sendToPhase2", () => {
   beforeEach(async () => {
-    await testMqGateway.getMessages(queueName)
+    await testMqGateway.getMessages(queueName!)
   })
 
   afterAll(async () => {
@@ -28,34 +30,28 @@ describe("sendToPhase2", () => {
   })
 
   it("should send a message to the queue", async () => {
-    const phase1Result: Phase1SuccessResult = {
-      correlationId: "dummy-id",
-      auditLogEvents: [],
-      triggers: [],
-      hearingOutcome,
-      resultType: Phase1ResultType.success
-    }
-    const result = await sendToPhase2.execute({ inputData: { phase1Result: phase1Result } })
+    const ahoS3Path = `${uuid()}.json`
+    const s3Config = createS3Config()
+    await putFileToS3(JSON.stringify(hearingOutcome), ahoS3Path, taskDataBucket!, s3Config)
+    const result = await sendToPhase2.execute({ inputData: { ahoS3Path } })
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("auditLogEvents")
     expect(result.outputData?.auditLogEvents).toHaveLength(1)
     expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
 
-    const message = await testMqGateway.getMessage(queueName)
-    expect(message).toEqual(convertAhoToXml(phase1Result.hearingOutcome))
+    const message = await testMqGateway.getMessage(queueName!)
+    expect(message).toEqual(convertAhoToXml(hearingOutcome))
   })
 
-  it("should return an error if there is a problem", async () => {
-    const phase1Result: Phase1SuccessResult = {
-      correlationId: "dummy-id",
-      auditLogEvents: [],
-      triggers: [],
-      hearingOutcome: {} as AnnotatedHearingOutcome,
-      resultType: Phase1ResultType.success
-    }
+  it("should fail if the aho S3 path hasn't been provided", async () => {
+    const result = await sendToPhase2.execute({ inputData: {} })
 
-    const result = await sendToPhase2.execute({ inputData: { phase1Result: phase1Result } })
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+  })
+
+  it("should fail if there is a problem retrieving the file", async () => {
+    const result = await sendToPhase2.execute({ inputData: { ahoS3Path: "unknown.json" } })
 
     expect(result.status).toBe("FAILED")
   })

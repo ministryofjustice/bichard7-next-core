@@ -1,4 +1,4 @@
-import "phase1/tests/helpers/setEnvironmentVariables"
+import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
