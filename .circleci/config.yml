@@ -118,6 +118,9 @@ jobs:
           name: Run ActiveMQ
           command: npm run activemq
       - run:
+          name: Run Localstack
+          command: npm run localstack
+      - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
       - run:
@@ -149,7 +152,7 @@ jobs:
           at: /home/circleci
       - run:
           name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+          command: git clone --branch update-tests-for-core --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: Start the test server in the background
           command: npm run -w packages/core test:server
