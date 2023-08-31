@@ -43,7 +43,16 @@ module.exports = {
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+$", varsIgnorePattern: "^_+$" }],
-        "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }]
+        "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }],
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            extendDefaults: true,
+            types: {
+              "{}": false
+            }
+          }
+        ]
       }
     },
     {

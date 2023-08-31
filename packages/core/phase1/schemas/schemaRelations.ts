@@ -325,8 +325,8 @@ const schemaRelations = {
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > SourceOrganisation",
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > NextHearingDate"
   ],
-  "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ForceOwner": [
-    "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ManualForceOwner",
+  "AnnotatedHearingOutcome > HearingOutcome > Case > ForceOwner": [
+    "AnnotatedHearingOutcome > HearingOutcome > Case > ManualForceOwner",
     "PncQuery > forceStationCode",
     "AnnotatedHearingOutcome > HearingOutcome > Case > PTIURN",
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > ArrestSummonsNumber",
