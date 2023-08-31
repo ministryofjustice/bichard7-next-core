@@ -46,7 +46,7 @@ class Describer {
   }
 
   get = () => {
-    let description = this._content ? `<p>${this._content}</p>` : ""
+    let description = this._content ? `<div><p>${this._content}</p></div>` : ""
 
     if (this._value.length > 0) {
       description += "<h5>Value</h5>"
@@ -61,7 +61,7 @@ class Describer {
 
     if (relations) {
       const spiRelations = relations.filter((x) => x.startsWith("DeliverRequest"))
-      const ahoRelations = relations.filter((x) => x.startsWith("AnnotatedHearingOutcome"))
+      const ahoRelations = relations.filter((x) => !x.startsWith("DeliverRequest"))
 
       if (spiRelations.length > 0 || ahoRelations.length > 0) {
         description += "<h5>Relations</h5>"
@@ -296,7 +296,8 @@ export const resultDescription = {
   ),
   CourtType: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > CourtType")
     .content(
-      "Populated during the enrichment.\nCourt name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
+      "Populated during the enrichment.",
+      "Court name mentioned in value section is **top level name** + **second level name** + **third level name** + **bottom level name** of `SourceOrganisation`"
     )
     .value(
       "`MCY` (Magistrates Court for Youth) when `SourceOrganisation.TopLevelCode` is `B` (Magistrates Court) and court name contains word `YOUTH`",
@@ -308,7 +309,8 @@ export const resultDescription = {
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > NextCourtType"
   )
     .content(
-      "Populated during the enrichment.\nCourt name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
+      "Populated during the enrichment.",
+      "Court name mentioned in value section is **top level name** + **second level name** + **third level name** + **bottom level name** of `SourceOrganisation`"
     )
     .value(
       "No value when `NextResultSourceOrganisation` and `NextHearingDate` have no value",
@@ -516,12 +518,9 @@ const hearingDescription = {
     .get(),
   CourtHouseCode: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Hearing > CourtHouseCode").get(),
   CourtType: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Hearing > CourtType")
-    .content(
-      "Court name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
-    )
     .value(
-      "`MCY` (Magistrates Court for Youth) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and court name contains word `YOUTH`",
-      "`MCA` (Magistrates Court for Adult) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and court name does not contain word `YOUTH`",
+      "`MCY` (Magistrates Court for Youth) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and `CourtHouseName` contains word `YOUTH`",
+      "`MCA` (Magistrates Court for Adult) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and `CourtHouseName` does not contain word `YOUTH`",
       "Otherwise `CC` (Crown Court)"
     )
     .get(),
@@ -538,11 +537,11 @@ const caseDescription = {
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ForceOwner"
   )
     .value(
-      "No value when `ManualForceOwner` has value",
-      "`PncQuery.forceStationCode`",
-      "otherwise, `Case.PTIURN` when it's not a dummy PTIURN",
-      "otherwise, `HearingDefendant.ArrestSummonsNumber` when it's not a dummy ASN",
-      "otherwise, `CourtHearingLocation.SecondLevelCode`"
+      "No value when `ManualForceOwner` has value, or",
+      "`PncQuery.forceStationCode`, or",
+      "`Case.PTIURN` when it's not a dummy PTIURN, or",
+      "`HearingDefendant.ArrestSummonsNumber` when it's not a dummy ASN, or",
+      "`CourtHearingLocation.SecondLevelCode`"
     )
     .get(),
   RecordableOnPNCindicator: Describer.$.path(
