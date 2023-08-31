@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -ex
+
 JSON_SCHEMA_SCRIPT=$(cat <<-END
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { annotatedHearingOutcomeSchema } from "./packages/core/phase1/schemas/annotatedHearingOutcome";
@@ -10,7 +14,7 @@ END
 
 echo $JSON_SCHEMA_SCRIPT | npx ts-node -T
 
-if [[ "$(which generate-schema-doc 1>/dev/null 2>/dev/null || echo $?)x" == "1x" ]]; then
+if [[ "$(command -v generate-schema-doc 1>/dev/null 2>/dev/null || echo $?)x" == "1x" ]]; then
   echo "Installing json-schema-for-humans..."
   pip3 install json-schema-for-humans
 fi
