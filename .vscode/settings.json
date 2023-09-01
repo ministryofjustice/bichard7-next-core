@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    "packages/api",
+    "packages/common",
+    "packages/conductor",
+    "packages/core",
+    "packages/message-forwarder"
+  ]
+}
