@@ -1,4 +1,3 @@
-jest.setTimeout(999999999)
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"

@@ -1,5 +1,3 @@
-jest.setTimeout(999999999)
-
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"

@@ -1,4 +1,3 @@
-jest.setTimeout(999999999)
 process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
 process.env.AUDIT_LOG_API_KEY = "dummy"
 
