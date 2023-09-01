@@ -21,7 +21,6 @@ const sql = postgres({
   }
 })
 
-
 describe("readAhoFromDb", () => {
   let s3Server: MockS3
   let s3Client: S3Client
@@ -29,7 +28,7 @@ describe("readAhoFromDb", () => {
   beforeAll(async () => {
     s3Server = new MockS3(bucket)
     await s3Server.start()
-    
+
     s3Client = new S3Client(s3Config)
 
     process.env.TASK_DATA_BUCKET_NAME = bucket
@@ -40,7 +39,5 @@ describe("readAhoFromDb", () => {
     s3Client.destroy()
   })
 
-  it("should work", () => {
-    
-  })
+  it("should read AHO from database", () => {})
 })

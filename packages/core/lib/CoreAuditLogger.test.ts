@@ -1,11 +1,12 @@
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
   const testEvent = {
     timestamp: new Date().toISOString(),
     eventType: "Test Event Type",
-    eventCode: "dummy.code",
+    eventCode: EventCode.ExceptionsGenerated,
     eventSourceArn: "Dummy source arn",
     eventSourceQueueName: "DUMMY_QUEUE",
     eventSource: "Dummy Event Source",

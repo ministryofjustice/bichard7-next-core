@@ -1,8 +1,8 @@
-jest.setTimeout(999999999)
 process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
 process.env.AUDIT_LOG_API_KEY = "dummy"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { MockServer } from "jest-mock-server"
 import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
@@ -22,14 +22,14 @@ describe("storeAuditLogEvents", () => {
       correlationId: "dummy-id",
       auditLogEvents: [
         {
-          eventCode: "dummyEventCode",
+          eventCode: EventCode.AllTriggersResolved,
           eventSource: "Test",
           eventType: "Type",
           category: EventCategory.information,
           timestamp: new Date().toISOString()
         },
         {
-          eventCode: "dummyEventCode2",
+          eventCode: EventCode.DuplicateMessage,
           eventSource: "Test2",
           eventType: "Type2",
           category: EventCategory.error,
@@ -58,7 +58,7 @@ describe("storeAuditLogEvents", () => {
       correlationId: "dummy-id",
       auditLogEvents: [
         {
-          eventCode: "dummyEventCode",
+          eventCode: EventCode.AllTriggersResolved,
           eventSource: "Test",
           eventType: "Type",
           category: EventCategory.error,

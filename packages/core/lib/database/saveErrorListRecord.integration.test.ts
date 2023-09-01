@@ -1,5 +1,3 @@
-jest.setTimeout(9999999)
-
 import postgres from "postgres"
 import errorPaths from "../../phase1/lib/errorPaths"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"

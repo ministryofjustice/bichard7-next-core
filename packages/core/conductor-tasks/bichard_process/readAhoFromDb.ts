@@ -63,7 +63,7 @@ const readAhoFromDb: ConductorWorker = {
     }
 
     return {
-      logs: [conductorLog("Audit logs written to API")],
+      logs: [conductorLog("AHO successfully read from database")],
       status: "COMPLETED"
     }
   }
