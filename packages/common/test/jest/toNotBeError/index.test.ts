@@ -1,4 +1,4 @@
-import type { Result } from "src/shared/types"
+import type { Result } from "../../../types/Result"
 import "./index"
 
 describe(".toNotBeError()", () => {
