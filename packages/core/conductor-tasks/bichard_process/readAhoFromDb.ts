@@ -26,6 +26,12 @@ const readAhoFromDb: ConductorWorker = {
   concurrency: getTaskConcurrency(taskDefName),
   execute: async (task: Task) => {
     const correlationId = task.inputData?.correlationId
+    if (!correlationId) {
+      return Promise.resolve({
+        logs: [conductorLog("correlationId must be specified")],
+        status: "FAILED_WITH_TERMINAL_ERROR"
+      })
+    }
 
     const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
     if (!ahoS3Path) {
@@ -39,7 +45,7 @@ const readAhoFromDb: ConductorWorker = {
       ErrorListRecord[]
     >`SELECT updated_msg from br7own.error_list WHERE message_id = ${correlationId}`
 
-    const ahoXml = dbResult[0].updated_msg
+    const ahoXml = dbResult[0]?.updated_msg
     if (!ahoXml) {
       return {
         status: "FAILED"
