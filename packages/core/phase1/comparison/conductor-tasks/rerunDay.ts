@@ -5,7 +5,7 @@ import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { isError } from "@moj-bichard7/common/types/Result"
 import pLimit from "p-limit"
-import type ComparisonResult from "../../comparison/types/ComparisonResult"
+import type ComparisonResult from "../types/ComparisonResult"
 import DynamoGateway from "../lib/DynamoGateway"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
