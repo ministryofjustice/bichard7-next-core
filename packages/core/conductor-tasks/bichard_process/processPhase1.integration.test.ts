@@ -1,7 +1,7 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import fs from "fs"
 import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
@@ -10,7 +10,6 @@ import createDbConfig from "../../lib/database/createDbConfig"
 import parseSpiResult from "../../phase1/parse/parseSpiResult"
 import transformSpiToAho from "../../phase1/parse/transformSpiToAho"
 import { test1PncResponse, test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
-import MockS3 from "../../phase1/tests/helpers/MockS3"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import processPhase1 from "./processPhase1"
 
@@ -32,15 +31,9 @@ const sql = postgres({
 })
 
 describe("processPhase1", () => {
-  let s3Server: MockS3
-  let client: S3Client
   let pncApi: MockServer
 
   beforeAll(async () => {
-    s3Server = new MockS3(bucket)
-    await s3Server.start()
-    client = new S3Client(s3Config)
-
     pncApi = new MockServer({ port: 11000 })
     await pncApi.start()
 
@@ -48,8 +41,6 @@ describe("processPhase1", () => {
   })
 
   afterAll(() => {
-    s3Server.stop()
-    client.destroy()
     pncApi.stop()
   })
 
@@ -70,13 +61,7 @@ describe("processPhase1", () => {
     const inputAhoJson = JSON.stringify(inputAho)
 
     const ahoS3Path = "trigger.xml"
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: ahoS3Path,
-      Body: inputAhoJson
-    })
-
-    await client.send(command)
+    await putFileToS3(inputAhoJson, ahoS3Path, bucket, s3Config)
 
     const result = await processPhase1.execute({ inputData: { ahoS3Path } })
     expect(result.outputData?.resultType).toEqual(Phase1ResultType.success)
@@ -100,12 +85,7 @@ describe("processPhase1", () => {
     const inputAhoJson = JSON.stringify(inputAho)
 
     const ahoS3Path = "exception.xml"
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: ahoS3Path,
-      Body: inputAhoJson
-    })
-    await client.send(command)
+    await putFileToS3(inputAhoJson, ahoS3Path, bucket, s3Config)
 
     const result = await processPhase1.execute({ inputData: { ahoS3Path } })
 
