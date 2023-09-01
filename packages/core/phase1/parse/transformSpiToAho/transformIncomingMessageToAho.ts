@@ -8,7 +8,7 @@ import { fullResultedCaseMessageParsedXmlSchema } from "../../schemas/spiResult"
 import populateCase from "./populateCase"
 import populateHearing from "./populateHearing"
 
-type TransformedOutput = {
+export type TransformedOutput = {
   aho: AnnotatedHearingOutcome
   messageHash: string
   systemId: string
