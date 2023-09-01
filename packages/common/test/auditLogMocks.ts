@@ -3,13 +3,14 @@ import type { AuditLogEvent } from "../types/AuditLogEvent"
 import type { InputApiAuditLog, OutputApiAuditLog } from "../types/AuditLogRecord"
 import AuditLogStatus from "../types/AuditLogStatus"
 import type EventCategory from "../types/EventCategory"
+import EventCode from "../types/EventCode"
 import PncStatus from "../types/PncStatus"
 import TriggerStatus from "../types/TriggerStatus"
 
 export const mockApiAuditLogEvent = (overrides: Partial<AuditLogEvent> = {}): AuditLogEvent => ({
   category: "information" as EventCategory,
   timestamp: new Date().toISOString(),
-  eventCode: "dummy.event.code",
+  eventCode: EventCode.PncResponseNotReceived,
   eventType: "Test event",
   eventSource: "Test",
   eventSourceQueueName: "Test event source queue name",

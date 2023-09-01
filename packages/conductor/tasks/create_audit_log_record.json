@@ -6,5 +6,5 @@
   "timeoutSeconds": 4000,
   "timeoutPolicy": "TIME_OUT_WF",
   "inputKeys": ["auditLogRecord"],
-  "outputKeys": []
+  "outputKeys": ["duplicateMessage", "duplicateCorrelationId", "auditLogEvents"]
 }

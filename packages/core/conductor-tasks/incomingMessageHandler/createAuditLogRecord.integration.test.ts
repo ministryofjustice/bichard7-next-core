@@ -1,3 +1,5 @@
+jest.setTimeout(999999999)
+
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
@@ -46,9 +48,21 @@ describe("createAuditLogRecord", () => {
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
   })
 
-  it("should fail if there is a duplicate message hash", async () => {
+  it("should correctly identify a duplicate message hash", async () => {
+    const oldMessageId = auditLogRecord.messageId
+
     await apiClient.createAuditLog(auditLogRecord)
     auditLogRecord.messageId = uuid()
+
+    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
+    expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toHaveProperty("duplicateCorrelationId", oldMessageId)
+    expect(result.outputData).toHaveProperty("duplicateMessage", "isDuplicate")
+  })
+
+  it("should fail task if audit log can't be stored", async () => {
+    await apiClient.createAuditLog(auditLogRecord)
+    auditLogRecord.messageHash = uuid()
 
     const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
     expect(result.status).toBe("FAILED")

@@ -28,8 +28,8 @@ const storeAuditLogEvents: ConductorWorker = {
     }
 
     return {
-      logs: [conductorLog("Audit logs written to API")],
-      status: "COMPLETED"
+      status: "COMPLETED",
+      logs: [conductorLog(`${auditLogEvents.length} audit log events written to API`)]
     }
   }
 }
