@@ -227,7 +227,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+          command: git clone --depth 1 -b update-tests-for-core https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
       - run:
           name: NPM install tests dependencies
           working_directory: ~/bichard7-next-tests
