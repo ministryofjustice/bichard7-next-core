@@ -90,12 +90,13 @@ export default class PncGateway implements PncGatewayInterface {
 
   queryTime: Date | undefined
 
-  query(asn: string): Promise<PncQueryResult | Error | undefined> {
+  query(asn: string, correlationId: string): Promise<PncQueryResult | Error | undefined> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {
         headers: {
           "X-Api-Key": this.config.key,
+          correlationId,
           accept: "application/json"
         },
         httpsAgent: new https.Agent({

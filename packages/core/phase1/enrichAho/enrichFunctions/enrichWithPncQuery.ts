@@ -48,6 +48,7 @@ export default async (
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  const correlationId = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   const offenceCount =
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
   // TODO: Bichard currently only checks the format, but we should use 'isAsnValid' here instead
@@ -57,7 +58,7 @@ export default async (
 
   const requestStartTime = new Date()
 
-  const pncResult = await pncGateway.query(asn)
+  const pncResult = await pncGateway.query(asn, correlationId)
 
   const auditLogAttributes = {
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
