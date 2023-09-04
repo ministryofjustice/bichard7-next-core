@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "scripts": {
     "activemq": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
+    "audit-log": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait audit-log-api",
     "all": "./environment/boot.sh",
     "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",

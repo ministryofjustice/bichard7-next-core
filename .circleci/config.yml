@@ -121,6 +121,9 @@ jobs:
           name: Run Localstack
           command: npm run localstack
       - run:
+          name: Run Audit Logging API
+          command: npm run audit-log
+      - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
       - run:
