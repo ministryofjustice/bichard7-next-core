@@ -111,6 +111,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - fetch_docker_image:
+          image: nodejs
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -120,6 +122,16 @@ jobs:
       - run:
           name: Run Localstack
           command: npm run localstack
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging API server
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server
+      - run:
+          name: Run Audit Logging API
+          command: npm run audit-log
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
