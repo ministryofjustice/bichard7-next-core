@@ -31,7 +31,7 @@ describe("convertSpiToAho", () => {
       isSanitised: 0,
       messageHash: "bb64ea8b30fa72e8b3c655c4208dccd06a12cd642f06147cf57d7d79c6253bc5",
       messageId: expect.any(String),
-      receivedDate: new Date("2023-08-31T13:48:00.000Z"),
+      receivedDate: new Date("2023-08-31T14:48:00.000Z"),
       s3Path,
       systemId: "B00LIBRA"
     }

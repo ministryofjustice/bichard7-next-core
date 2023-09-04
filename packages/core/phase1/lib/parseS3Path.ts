@@ -12,16 +12,8 @@ const readReceivedDateFromS3ObjectKey = (key: string): Date => {
     throw new Error(`The object key "${key}" is in an invalid format`)
   }
 
-  const year = Number(segments[0])
-
-  // Subtract 1 from the month to account for the zero-based offset
-  const month = Number(segments[1]) - 1
-
-  const day = Number(segments[2])
-  const hour = Number(segments[3])
-  const minute = Number(segments[4])
-
-  return new Date(year, month, day, hour, minute)
+  const iso = `${segments[0]}-${segments[1]}-${segments[2]}T${segments[3]}:${segments[4]}:00Z`
+  return new Date(iso)
 }
 
 const parseS3Path = (s3Path: string): IncomingMessageMetadata => {
