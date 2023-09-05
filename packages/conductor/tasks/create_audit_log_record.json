@@ -1,7 +1,7 @@
 {
   "name": "create_audit_log_record",
-  "retryCount": 0,
-  "retryLogic": "FIXED",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 4000,
   "timeoutPolicy": "TIME_OUT_WF",

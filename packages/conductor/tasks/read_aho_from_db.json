@@ -1,7 +1,7 @@
 {
   "name": "read_aho_from_db",
-  "retryCount": 3,
-  "retryLogic": "FIXED",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 4000,
   "timeoutPolicy": "TIME_OUT_WF",
