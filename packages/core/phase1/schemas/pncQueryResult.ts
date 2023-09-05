@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { ahoDescription } from "./schemaDescription"
 
 export const pncDisposalSchema = z.object({
   qtyDate: z.string().optional(),
@@ -47,7 +48,7 @@ export const pncPenaltyCaseSchema = z.object({
 })
 
 export const pncQueryResultSchema = z.object({
-  forceStationCode: z.string(),
+  forceStationCode: z.string().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.forceStationCode.$description),
   croNumber: z.string().optional(),
   checkName: z.string(),
   pncId: z.string(),

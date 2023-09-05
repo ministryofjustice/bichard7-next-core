@@ -10,26 +10,27 @@ permissions:
 
 jobs:
   deploy_github_pages:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Install Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16.13.0
 
-      - name: Set up Docker
-        run: |
-          curl -OSL https://raw.githubusercontent.com/Homebrew/homebrew-core/dc0669eca9479e9eeb495397ba3a7480aaa45c2e/Formula/qemu.rb
-          brew install ./qemu.rb
-          brew install docker
-          colima start
-          brew install docker-compose
+      - name: Give permission to docs folder
+        run: chmod -R +666 docs
 
-      - name: Build the site
+      - name: Build the architecture site
         run: npm run structurizr-site-generatr-build
+
+      - name: Build the data schema site
+        run: npm i && npm run build && npm run generate-schema-doc
+
+      - name: Copy data schema site to the main site folder
+        run: sudo cp -r docs/schema docs/architecture/build/site
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

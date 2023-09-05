@@ -34,7 +34,7 @@ const schemaRelations = {
   "AnnotatedHearingOutcome > HearingOutcome > Case": ["DeliverRequest > Message > ResultedCaseMessage"],
   "AnnotatedHearingOutcome > HearingOutcome > Case > RecordableOnPNCindicator": [
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Offence > RecordableOnPNCindicator",
-    "AnnotatedHearingOutcome > PncQuery"
+    "PncQuery"
   ],
   "AnnotatedHearingOutcome > HearingOutcome > Case > Urgent": [
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > Urgent > urgency"
@@ -325,9 +325,9 @@ const schemaRelations = {
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > SourceOrganisation",
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > NextHearingDate"
   ],
-  "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ForceOwner": [
-    "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ManualForceOwner",
-    "AnnotatedHearingOutcome > PncQuery > forceStationCode",
+  "AnnotatedHearingOutcome > HearingOutcome > Case > ForceOwner": [
+    "AnnotatedHearingOutcome > HearingOutcome > Case > ManualForceOwner",
+    "PncQuery > forceStationCode",
     "AnnotatedHearingOutcome > HearingOutcome > Case > PTIURN",
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > ArrestSummonsNumber",
     "AnnotatedHearingOutcome > HearingOutcome > Hearing > CourtHearingLocation"

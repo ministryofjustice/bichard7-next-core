@@ -1,6 +1,7 @@
-import schemaRelations from "./schemaRelations"
+import { default as rawSchemaRelations } from "./schemaRelations"
 
-type AhoKey = keyof typeof schemaRelations
+const schemaRelations = rawSchemaRelations as Record<string, string[]>
+type AhoKey = keyof typeof rawSchemaRelations | (string & {})
 
 class Describer {
   private _content: string
@@ -46,7 +47,7 @@ class Describer {
   }
 
   get = () => {
-    let description = this._content ? `<p>${this._content}</p>` : ""
+    let description = this._content ? `<div><p>${this._content}</p></div>` : ""
 
     if (this._value.length > 0) {
       description += "<h5>Value</h5>"
@@ -57,28 +58,66 @@ class Describer {
       }
     }
 
-    const relations = (schemaRelations as Record<string, string[]>)[this._path]
+    const relations = schemaRelations[this._path]
 
-    if (relations) {
+    if (relations && relations.length > 0) {
       const spiRelations = relations.filter((x) => x.startsWith("DeliverRequest"))
-      const ahoRelations = relations.filter((x) => x.startsWith("AnnotatedHearingOutcome"))
+      const ahoRelations = relations.filter((x) => !x.startsWith("DeliverRequest"))
 
-      if (spiRelations.length > 0 || ahoRelations.length > 0) {
-        description += "<h5>Relations</h5>"
-        if (spiRelations.length > 0) {
-          description += `<p>SPI Result</p><p><ul>${spiRelations
-            .map((f) => `<li><a href="spi.schema.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
-            .join("")}</ul></p>`
-        }
-
-        if (ahoRelations.length > 0) {
-          description += `<p>AHO</p><p><ul>${ahoRelations
-            .map((f) => `<li><a href="aho.schema.html#${this.generateLinkQuery(f)}" target="_blank">${f}</a></li>`)
-            .join("")}</ul></p>`
-        }
+      description += "<h5>Relations</h5>"
+      if (spiRelations.length > 0) {
+        description += `<p><ul>${spiRelations
+          .map(
+            (f) =>
+              `<li><strong>SPI: </strong><a href="../spi/index.html#${this.generateLinkQuery(
+                f
+              )}" target="_blank">${f}</a></li>`
+          )
+          .join("")}</ul></p>`
       }
-    } else if (this._path) {
-      throw Error(`No relation found for ${this._path}`)
+
+      if (ahoRelations.length > 0) {
+        description += `<p><ul>${ahoRelations
+          .map(
+            (f) =>
+              `<li><strong>AHO: </strong><a href="index.html#${this.generateLinkQuery(
+                f
+              )}" target="_blank">${f}</a></li>`
+          )
+          .join("")}</ul></p>`
+      }
+    }
+
+    const fieldsDependOnThisField = Object.keys(schemaRelations).filter((key) =>
+      schemaRelations[key].includes(this._path)
+    )
+
+    if (fieldsDependOnThisField.length > 0) {
+      const spiFields = fieldsDependOnThisField.filter((x) => x.startsWith("DeliverRequest"))
+      const ahoFields = fieldsDependOnThisField.filter((x) => !x.startsWith("DeliverRequest"))
+
+      description += "<h5>Fields that rely on this field</h5>"
+      if (spiFields.length > 0) {
+        description += `<p><ul>${spiFields
+          .map(
+            (f) =>
+              `<li><strong>SPI: </strong><a href="../spi/index.html#${this.generateLinkQuery(
+                f
+              )}" target="_blank">${f}</a></li>`
+          )
+          .join("")}</ul></p>`
+      }
+
+      if (ahoFields.length > 0) {
+        description += `<p><ul>${ahoFields
+          .map(
+            (f) =>
+              `<li><strong>AHO: </strong><a href="index.html#${this.generateLinkQuery(
+                f
+              )}" target="_blank">${f}</a></li>`
+          )
+          .join("")}</ul></p>`
+      }
     }
 
     if (this._example) {
@@ -296,7 +335,8 @@ export const resultDescription = {
   ),
   CourtType: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > CourtType")
     .content(
-      "Populated during the enrichment.\nCourt name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
+      "Populated during the enrichment.",
+      "Court name mentioned in value section is **top level name** + **second level name** + **third level name** + **bottom level name** of `SourceOrganisation`"
     )
     .value(
       "`MCY` (Magistrates Court for Youth) when `SourceOrganisation.TopLevelCode` is `B` (Magistrates Court) and court name contains word `YOUTH`",
@@ -308,7 +348,8 @@ export const resultDescription = {
     "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > NextCourtType"
   )
     .content(
-      "Populated during the enrichment.\nCourt name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
+      "Populated during the enrichment.",
+      "Court name mentioned in value section is **top level name** + **second level name** + **third level name** + **bottom level name** of `SourceOrganisation`"
     )
     .value(
       "No value when `NextResultSourceOrganisation` and `NextHearingDate` have no value",
@@ -516,12 +557,9 @@ const hearingDescription = {
     .get(),
   CourtHouseCode: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Hearing > CourtHouseCode").get(),
   CourtType: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Hearing > CourtType")
-    .content(
-      "Court name mentioned in value section is top level name + second level name + third level name + bottom level name of the organisation unit"
-    )
     .value(
-      "`MCY` (Magistrates Court for Youth) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and court name contains word `YOUTH`",
-      "`MCA` (Magistrates Court for Adult) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and court name does not contain word `YOUTH`",
+      "`MCY` (Magistrates Court for Youth) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and `CourtHouseName` contains word `YOUTH`",
+      "`MCA` (Magistrates Court for Adult) when organisation unit `TopLevelCode` is `B` (Magistrates Court) and `CourtHouseName` does not contain word `YOUTH`",
       "Otherwise `CC` (Crown Court)"
     )
     .get(),
@@ -534,15 +572,13 @@ const hearingDescription = {
 
 const caseDescription = {
   ...Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Case").get(),
-  ForceOwner: Describer.$.path(
-    "AnnotatedHearingOutcome > HearingOutcome > Case > HearingDefendant > Result > ForceOwner"
-  )
+  ForceOwner: Describer.$.path("AnnotatedHearingOutcome > HearingOutcome > Case > ForceOwner")
     .value(
-      "No value when `ManualForceOwner` has value",
-      "`PncQuery.forceStationCode`",
-      "otherwise, `Case.PTIURN` when it's not a dummy PTIURN",
-      "otherwise, `HearingDefendant.ArrestSummonsNumber` when it's not a dummy ASN",
-      "otherwise, `CourtHearingLocation.SecondLevelCode`"
+      "No value when `ManualForceOwner` has value, or",
+      "`PncQuery.forceStationCode`, or",
+      "`Case.PTIURN` when it's not a dummy PTIURN, or",
+      "`HearingDefendant.ArrestSummonsNumber` when it's not a dummy ASN, or",
+      "`CourtHearingLocation.SecondLevelCode`"
     )
     .get(),
   RecordableOnPNCindicator: Describer.$.path(
@@ -659,11 +695,14 @@ export const ahoDescription = {
     PncErrorMessage: Describer.$.content("Present if PNC gateway throws exception")
       .value("Error message returned from PNC gateway")
       .get(),
-    PncQuery: Describer.$.content(
-      "Present if ASN is not dummy and is valid, and there are not more than 100 offences in the case"
-    )
-      .value("PNC query result")
-      .get(),
+    PncQuery: {
+      ...Describer.$.content(
+        "Present if ASN is not dummy and is valid, and there are not more than 100 offences in the case"
+      )
+        .value("PNC query result")
+        .get(),
+      forceStationCode: Describer.$.path("PncQuery > forceStationCode").get()
+    },
     PncQueryDate: Describer.$.content(
       "Present if ASN is not dummy and is valid, and there are not more than 100 offences in the case"
     )
