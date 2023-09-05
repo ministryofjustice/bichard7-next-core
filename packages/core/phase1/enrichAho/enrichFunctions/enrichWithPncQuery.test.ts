@@ -43,7 +43,7 @@ describe("enrichWithQuery()", () => {
   it("should enrich AHO with results from PNC query", async () => {
     expect(aho.PncQuery).toBeUndefined()
     const resultAho = await enrichWithPncQuery(aho, pncGateway, auditLogger)
-    const expected = await pncGateway.query("MockASN")
+    const expected = await pncGateway.query("MockASN", "Mock correlation ID")
     expect(resultAho.PncQuery).toBe(expected)
   })
 
@@ -116,7 +116,7 @@ describe("enrichWithQuery()", () => {
         "PNC Response Time": 0,
         "PNC Request Type": "enquiry",
         "PNC Attempts Made": 1,
-        "PNC Response Message": await pncGateway.query("1101ZD0100000448754K"),
+        "PNC Response Message": await pncGateway.query("1101ZD0100000448754K", "Mock correlation ID"),
         sensitiveAttributes: "PNC Request Message,PNC Response Message"
       }
     })

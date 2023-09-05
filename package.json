@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "scripts": {
     "activemq": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
+    "audit-log": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait audit-log-api",
     "all": "./environment/boot.sh",
     "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
@@ -18,6 +19,7 @@
     "lint": "npm run lint --ws",
     "lint:fix": "npm run lint:fix --ws",
     "postgres": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait postgres",
+    "localstack": "docker-compose --project-name bichard -f environment/docker-compose.yml up -d --wait localstack",
     "structurizr-lite": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite",
     "structurizr-site-generatr-build": "docker-compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
     "structurizr-site-generatr-serve": "docker-compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
@@ -44,7 +46,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "npm-check-updates": "^16.13.1",
-	"zod-to-json-schema": "^3.21.4"
+    "zod-to-json-schema": "^3.21.4"
   },
   "dependencies": {
     "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.116"

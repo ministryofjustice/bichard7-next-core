@@ -167,11 +167,13 @@ export const resultedCaseMessageParsedXmlSchema = z.object({
   })
 })
 
+export const fullResultedCaseMessageParsedXmlSchema = z.object({
+  ResultedCaseMessage: resultedCaseMessageParsedXmlSchema
+})
+
 export const incomingMessageParsedXmlSchema = z.object({
   DeliverRequest: z.object({
     MessageIdentifier: z.string(),
-    Message: z.object({
-      ResultedCaseMessage: resultedCaseMessageParsedXmlSchema
-    })
+    Message: fullResultedCaseMessageParsedXmlSchema
   })
 })

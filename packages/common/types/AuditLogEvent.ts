@@ -1,9 +1,10 @@
 import type EventCategory from "../types/EventCategory"
+import type EventCode from "./EventCode"
 
 export type AuditLogEvent = {
   attributes?: Record<string, unknown>
   category: EventCategory
-  eventCode: string
+  eventCode: EventCode
   eventSource: string
   eventSourceQueueName?: string
   eventType: string

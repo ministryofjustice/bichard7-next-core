@@ -29,21 +29,60 @@
       "asyncComplete": false
     },
     {
-      "name": "begin_processing",
-      "taskReferenceName": "begin_processing",
+      "name": "create_audit_log_record",
+      "taskReferenceName": "create_audit_log_record",
       "inputParameters": {
-        "startWorkflow": {
-          "correlationId": "${convert_spi_to_aho.output.correlationId}",
-          "input": {
-            "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
-          },
-          "name": "bichard_process"
-        }
+        "auditLogRecord": "${convert_spi_to_aho.output.auditLogRecord}"
       },
-      "type": "START_WORKFLOW",
+      "type": "SIMPLE",
       "startDelay": 0,
       "optional": false,
       "asyncComplete": false
+    },
+    {
+      "name": "switch_task",
+      "taskReferenceName": "switch_task",
+      "inputParameters": {
+        "duplicateMessage": "${create_audit_log_record.output.duplicateMessage}"
+      },
+      "type": "SWITCH",
+      "evaluatorType": "value-param",
+      "expression": "duplicateMessage",
+      "defaultCase": [
+        {
+          "name": "begin_processing",
+          "taskReferenceName": "begin_processing",
+          "inputParameters": {
+            "startWorkflow": {
+              "correlationId": "${convert_spi_to_aho.output.correlationId}",
+              "input": {
+                "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+              },
+              "name": "bichard_process"
+            }
+          },
+          "type": "START_WORKFLOW",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false
+        }
+      ],
+      "decisionCases": {
+        "isDuplicate": [
+          {
+            "name": "store_audit_log_events",
+            "taskReferenceName": "record_duplicate_message",
+            "inputParameters": {
+              "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
+              "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          }
+        ]
+      }
     }
   ],
   "inputParameters": ["s3Path"],
