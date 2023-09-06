@@ -8,7 +8,7 @@ Before we can boot core you will need to checkout [audit-logging](https://github
 
 ```
 make build-api-server build-event-handler-server
-```     
+```
 
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
