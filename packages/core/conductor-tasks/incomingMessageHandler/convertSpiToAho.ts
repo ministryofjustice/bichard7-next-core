@@ -5,6 +5,7 @@ import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { v4 as uuid } from "uuid"
@@ -22,6 +23,19 @@ if (!incomingBucket) {
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
+}
+
+const extractExternalCorrelationId = (message: string) => {
+  if (!message) {
+    return "UNKNOWN"
+  }
+
+  const parts = message.match(/<CorrelationID>([^<]*)<\/CorrelationID>/)
+  if (!parts || !parts.length) {
+    return "UNKNOWN"
+  }
+
+  return parts[1]?.trim()
 }
 
 const convertSpiToAho: ConductorWorker = {
@@ -45,21 +59,48 @@ const convertSpiToAho: ConductorWorker = {
       })
     }
 
+    const messageId = uuid()
+    const { externalId, receivedDate } = parseS3Path(s3Path)
+
     const transformResult = transformIncomingMessageToAho(message)
     if (isError(transformResult)) {
+      const correlationId = extractExternalCorrelationId(message)
       return Promise.resolve({
         logs: [conductorLog("Could not convert incoming message to AHO")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
+        status: "COMPLETED",
+        outputData: {
+          correlationId: messageId,
+          error: "parsing_failed",
+          auditLogRecord: {
+            caseId: "UNKNOWN",
+            createdBy: "Incoming message handler",
+            externalCorrelationId: correlationId,
+            externalId: externalId,
+            isSanitised: 0,
+            messageHash: uuid(),
+            messageId,
+            receivedDate,
+            s3Path,
+            systemId: "UNKNOWN"
+          },
+          auditLogEvents: [
+            {
+              category: "error",
+              eventCode: EventCode.MessageRejected,
+              eventSource: "Incoming Message Handler",
+              eventType: "Failed to parse incoming message",
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }
       })
     }
 
     const { aho, messageHash, systemId } = transformResult
 
     const externalCorrelationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-    const messageId = uuid()
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = messageId
 
-    const { externalId, receivedDate } = parseS3Path(s3Path)
     const auditLogRecord = {
       caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
       createdBy: "Incoming message handler",

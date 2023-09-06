@@ -10,6 +10,7 @@ import addQueryParams from "./addQueryParams"
 export type GetMessagesOptions = {
   status?: string
   lastMessageId?: string
+  externalCorrelationId?: string
   limit?: number
   largeObjects?: boolean
 }

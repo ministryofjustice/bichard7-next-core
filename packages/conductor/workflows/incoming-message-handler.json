@@ -1,9 +1,10 @@
 {
+  "updateTime": 1693922094738,
+  "updatedBy": "Workflow file: f5a9274c30e4b87e, Commit hash: 8d4e38f3",
   "accessPolicy": {},
   "name": "incoming_message_handler",
   "description": "Runs phase 1 processing for Bichard in Core",
-  "failureWorkflow": "bichard_failure_handler",
-  "version": 1,
+  "version": 4,
   "tasks": [
     {
       "name": "extract_paths",
@@ -40,53 +41,99 @@
       "asyncComplete": false
     },
     {
-      "name": "switch_task",
-      "taskReferenceName": "switch_task",
+      "name": "parsing_failure",
+      "taskReferenceName": "parsing_failure",
       "inputParameters": {
-        "duplicateMessage": "${create_audit_log_record.output.duplicateMessage}"
+        "error": "${convert_spi_to_aho.output.error}"
       },
       "type": "SWITCH",
-      "evaluatorType": "value-param",
-      "expression": "duplicateMessage",
-      "defaultCase": [
-        {
-          "name": "begin_processing",
-          "taskReferenceName": "begin_processing",
-          "inputParameters": {
-            "startWorkflow": {
-              "correlationId": "${convert_spi_to_aho.output.correlationId}",
-              "input": {
-                "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
-              },
-              "name": "bichard_process"
-            }
-          },
-          "type": "START_WORKFLOW",
-          "startDelay": 0,
-          "optional": false,
-          "asyncComplete": false
-        }
-      ],
       "decisionCases": {
-        "isDuplicate": [
+        "parsing_failed": [
           {
             "name": "store_audit_log_events",
-            "taskReferenceName": "record_duplicate_message",
+            "taskReferenceName": "record_parsing_failure",
             "inputParameters": {
-              "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
-              "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
+              "correlationId": "${convert_spi_to_aho.output.correlationId}",
+              "auditLogEvents": "${convert_spi_to_aho.output.auditLogEvents}"
             },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": false,
+            "asyncComplete": false
+          },
+          {
+            "name": "send_cjsm_message",
+            "taskReferenceName": "email_common_platform",
+            "inputParameters": {},
             "type": "SIMPLE",
             "startDelay": 0,
             "optional": false,
             "asyncComplete": false
           }
         ]
-      }
+      },
+      "defaultCase": [
+        {
+          "name": "duplicate_message",
+          "taskReferenceName": "duplicate_message",
+          "inputParameters": {
+            "duplicateMessage": "${create_audit_log_record.output.duplicateMessage}"
+          },
+          "type": "SWITCH",
+          "decisionCases": {
+            "isDuplicate": [
+              {
+                "name": "store_audit_log_events",
+                "taskReferenceName": "record_duplicate_message",
+                "inputParameters": {
+                  "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
+                  "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              }
+            ]
+          },
+          "defaultCase": [
+            {
+              "name": "begin_processing",
+              "taskReferenceName": "begin_processing",
+              "inputParameters": {
+                "startWorkflow": {
+                  "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                  "input": {
+                    "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+                  },
+                  "name": "bichard_process"
+                }
+              },
+              "type": "START_WORKFLOW",
+              "startDelay": 0,
+              "optional": false,
+              "asyncComplete": false
+            }
+          ],
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "evaluatorType": "value-param",
+          "expression": "duplicateMessage"
+        }
+      ],
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "evaluatorType": "value-param",
+      "expression": "error"
     }
   ],
   "inputParameters": ["s3Path"],
-  "outputParameters": { "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}" },
+  "outputParameters": {
+    "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+  },
+  "failureWorkflow": "bichard_failure_handler",
   "schemaVersion": 2,
   "restartable": true,
   "workflowStatusListenerEnabled": false,

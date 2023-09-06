@@ -1,6 +1,6 @@
 import type { AxiosError } from "axios"
 import axios from "axios"
-import "src/shared/testing"
+import "../test/jest"
 import { mockApiAuditLogEvent, mockOutputApiAuditLog } from "../test/auditLogMocks"
 import type { OutputApiAuditLog } from "../types/AuditLogRecord"
 import AuditLogApiClient from "./AuditLogApiClient"
