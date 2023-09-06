@@ -62,8 +62,8 @@
             "asyncComplete": false
           },
           {
-            "name": "send_cjsm_message",
-            "taskReferenceName": "email_common_platform",
+            "name": "alert_common_platform",
+            "taskReferenceName": "alert_common_platform",
             "inputParameters": {
               "subject": "${}",
               "message": "${}",
