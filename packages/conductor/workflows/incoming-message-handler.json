@@ -64,7 +64,11 @@
           {
             "name": "send_cjsm_message",
             "taskReferenceName": "email_common_platform",
-            "inputParameters": {},
+            "inputParameters": {
+              "subject": "${}",
+              "message": "${}",
+              "send_to": ""
+            },
             "type": "SIMPLE",
             "startDelay": 0,
             "optional": false,

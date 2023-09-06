@@ -6,6 +6,6 @@
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
-  "inputKeys": ["message", "emails"],
+  "inputKeys": ["subject", "message", "send_to"],
   "outputKeys": []
 }
