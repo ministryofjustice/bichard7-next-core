@@ -10,7 +10,10 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { v4 as uuid } from "uuid"
 import parseS3Path from "../../phase1/lib/parseS3Path"
-import { extractIncomingMessage } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
+import {
+  extractIncomingMessage,
+  getDataStreamContent
+} from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
 const taskDefName = "convert_spi_to_aho"
@@ -31,7 +34,7 @@ const extractXMLEntityContent = (content: string, tag: string) => {
     return "UNKNOWN"
   }
 
-  const parts = content.match(`/<${tag}>([^<]*)<\/${tag}>/`)
+  const parts = content.match(new RegExp(`<${tag}>([^<]*)<\/${tag}>`))
   if (!parts || !parts.length) {
     return "UNKNOWN"
   }
@@ -75,7 +78,15 @@ const convertSpiToAho: ConductorWorker = {
       }
 
       const externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
-      const ptiUrn = extractXMLEntityContent(extractedMessage.RouteData.DataStream.DataStreamContent, "PTIURN")
+      const stream = getDataStreamContent(extractedMessage)
+      const ptiUrn = extractXMLEntityContent(stream, "PTIURN")
+
+      // TODO:
+      // pull inline stuff into separate functions
+      // write integration tests for alertCommonPlatform
+      // pull out data extraction into a function with fallbacks
+      // remove unknowns below
+      // finish e2e tests
 
       return Promise.resolve({
         logs: [conductorLog("Could not convert incoming message to AHO")],
@@ -84,7 +95,7 @@ const convertSpiToAho: ConductorWorker = {
           correlationId: messageId,
           error: "parsing_failed",
           auditLogRecord: {
-            caseId: "UNKNOWN",
+            caseId: ptiUrn,
             createdBy: "Incoming message handler",
             externalCorrelationId,
             externalId: externalId,

@@ -110,8 +110,10 @@ describe("Incoming message handler", () => {
       throw mail
     }
 
-    expect(mail.body).toMatch("Content")
-    // message common platform?
+    expect(mail.body).toMatch("Received date: 2023-08-31T14:48:00.000Z")
+    expect(mail.body).toMatch(`Bichard internal message ID: ${message.messageId}`)
+    expect(mail.body).toMatch(`Common Platform ID: ${externalId}`)
+    expect(mail.body).toMatch(`PTIURN: ${message.caseId}`)
   })
 
   // eslint-disable-next-line

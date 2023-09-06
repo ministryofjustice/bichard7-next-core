@@ -65,9 +65,7 @@
             "name": "alert_common_platform",
             "taskReferenceName": "alert_common_platform",
             "inputParameters": {
-              "subject": "${}",
-              "message": "${}",
-              "send_to": ""
+              "errorReportData": "${convert_spi_to_aho.output.errorReportData}"
             },
             "type": "SIMPLE",
             "startDelay": 0,
