@@ -94,7 +94,7 @@ describe("Incoming message handler", () => {
     expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
     expect(message).toHaveProperty("externalId", externalId)
 
-    // expect message common platform?
+    // message common platform?
   })
 
   // eslint-disable-next-line
