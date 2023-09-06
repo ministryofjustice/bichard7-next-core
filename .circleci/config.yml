@@ -261,8 +261,8 @@ jobs:
             AWS_URL: http://localhost:4566
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
-            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
+            echo "$CHUNK" | circleci tests run "bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'" --verbose
       - save_artifacts
 
   test_api:
