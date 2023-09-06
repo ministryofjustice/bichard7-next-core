@@ -1,10 +1,14 @@
-import type { Result } from "@moj-bichard7/common/types/Result"
+import { isError, type Result } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import crypto from "crypto"
-import { XMLParser } from "fast-xml-parser"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import { incomingMessageSchema } from "../../schemas/incomingMessage"
 import { fullResultedCaseMessageParsedXmlSchema } from "../../schemas/spiResult"
+import {
+  extractIncomingMessage,
+  getDataStreamContent,
+  getResultedCaseMessage,
+  getSystemId
+} from "./extractIncomingMessageData"
 import populateCase from "./populateCase"
 import populateHearing from "./populateHearing"
 
@@ -17,29 +21,17 @@ export type TransformedOutput = {
 const generateHash = (text: string) => crypto.createHash("sha256").update(text, "utf-8").digest("hex")
 
 const transformIncomingMessageToAho = (incomingMessage: string): Result<TransformedOutput> => {
-  const options = {
-    ignoreAttributes: true,
-    removeNSPrefix: true,
-    parseTagValue: false,
-    trimValues: true,
-    processEntities: false
+  const message = extractIncomingMessage(incomingMessage)
+  if (isError(message)) {
+    logger.error(message)
+    return new Error("Could not extract incoming message")
   }
 
-  const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(incomingMessage) as unknown
-  const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
-
-  if (!parsedMessage.success) {
-    logger.error(parsedMessage)
-    return new Error("Error parsing incoming message")
-  }
-
-  const routeData = parsedMessage.data.RouteData
-  const systemId = routeData.RequestFromSystem.SourceID
-  const convertedXml = routeData.DataStream.DataStreamContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+  const systemId = getSystemId(message)
+  const convertedXml = getDataStreamContent(message)
   const messageHash = generateHash(convertedXml)
 
-  const parsedResultedCaseMessage = parser.parse(convertedXml) as unknown
+  const parsedResultedCaseMessage = getResultedCaseMessage(message)
   const resultedCaseMessage = fullResultedCaseMessageParsedXmlSchema.safeParse(parsedResultedCaseMessage)
 
   if (!resultedCaseMessage.success) {
@@ -51,7 +43,7 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
     AnnotatedHearingOutcome: {
       HearingOutcome: {
         Hearing: populateHearing(
-          routeData.RequestFromSystem.CorrelationID,
+          message.RouteData.RequestFromSystem.CorrelationID,
           resultedCaseMessage.data.ResultedCaseMessage
         ),
         Case: populateCase(resultedCaseMessage.data.ResultedCaseMessage)
@@ -60,7 +52,7 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
     Exceptions: []
   }
 
-  return { aho, messageHash, systemId }
+  return { aho, messageHash, systemId: systemId }
 }
 
 export default transformIncomingMessageToAho

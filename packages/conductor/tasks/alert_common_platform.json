@@ -1,11 +1,11 @@
 {
-  "name": "send_cjsm_message",
+  "name": "alert_common_platform",
   "retryCount": 10,
   "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
-  "inputKeys": ["subject", "message", "send_to"],
+  "inputKeys": ["subject", "message", "send_to", "errorReportData"],
   "outputKeys": []
 }

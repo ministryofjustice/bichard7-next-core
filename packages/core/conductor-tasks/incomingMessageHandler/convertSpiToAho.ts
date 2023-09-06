@@ -10,6 +10,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { v4 as uuid } from "uuid"
 import parseS3Path from "../../phase1/lib/parseS3Path"
+import { extractIncomingMessage } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
 const taskDefName = "convert_spi_to_aho"
@@ -25,12 +26,12 @@ if (!outgoingBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
 }
 
-const extractExternalCorrelationId = (message: string) => {
-  if (!message) {
+const extractXMLEntityContent = (content: string, tag: string) => {
+  if (!content) {
     return "UNKNOWN"
   }
 
-  const parts = message.match(/<CorrelationID>([^<]*)<\/CorrelationID>/)
+  const parts = content.match(`/<${tag}>([^<]*)<\/${tag}>/`)
   if (!parts || !parts.length) {
     return "UNKNOWN"
   }
@@ -64,7 +65,18 @@ const convertSpiToAho: ConductorWorker = {
 
     const transformResult = transformIncomingMessageToAho(message)
     if (isError(transformResult)) {
-      const correlationId = extractExternalCorrelationId(message)
+      const extractedMessage = extractIncomingMessage(message)
+      if (isError(extractedMessage)) {
+        logger.error(extractedMessage)
+        return Promise.resolve({
+          logs: [conductorLog("Could not extract incoming message")],
+          status: "FAILED"
+        })
+      }
+
+      const externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
+      const ptiUrn = extractXMLEntityContent(extractedMessage.RouteData.DataStream.DataStreamContent, "PTIURN")
+
       return Promise.resolve({
         logs: [conductorLog("Could not convert incoming message to AHO")],
         status: "COMPLETED",
@@ -74,7 +86,7 @@ const convertSpiToAho: ConductorWorker = {
           auditLogRecord: {
             caseId: "UNKNOWN",
             createdBy: "Incoming message handler",
-            externalCorrelationId: correlationId,
+            externalCorrelationId,
             externalId: externalId,
             isSanitised: 0,
             messageHash: uuid(),
@@ -91,7 +103,13 @@ const convertSpiToAho: ConductorWorker = {
               eventType: "Failed to parse incoming message",
               timestamp: new Date().toISOString()
             }
-          ]
+          ],
+          errorReportData: {
+            receivedDate,
+            messageId,
+            externalId,
+            ptiUrn
+          }
         }
       })
     }
