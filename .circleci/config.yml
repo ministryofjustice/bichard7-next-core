@@ -262,7 +262,6 @@ jobs:
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
             CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
-            TAGS=
             echo "$CHUNK" | \
               circleci tests run --verbose --command="\
                 ./node_modules/.bin/cucumber-js --require steps --retry 5 \
