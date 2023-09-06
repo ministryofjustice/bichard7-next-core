@@ -6,8 +6,10 @@ process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
 import { type OutputApiAuditLog } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 import { randomUUID } from "crypto"
 import fs from "fs"
@@ -58,6 +60,16 @@ const findWorkflowByQuery = (query: WorkflowSearchParams) =>
   })
 
 describe("Incoming message handler", () => {
+  let mailServer: MockMailServer
+
+  beforeAll(() => {
+    mailServer = new MockMailServer(20002)
+  })
+
+  afterAll(() => {
+    mailServer.stop()
+  })
+
   it("records parsing failures as audit log events and messages common platform", async () => {
     // start the workflow
     const externalId = randomUUID()
@@ -81,7 +93,6 @@ describe("Incoming message handler", () => {
     })
     expect(workflows).toHaveLength(1)
 
-    console.log(workflows)
     // expect audit log and audit log event
     const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
     const messages = await apiClient.getMessages({
@@ -94,6 +105,12 @@ describe("Incoming message handler", () => {
     expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
     expect(message).toHaveProperty("externalId", externalId)
 
+    const mail = await mailServer.getEmail("moj-bichard7@madetech.cjsm.net")
+    if (isError(mail)) {
+      throw mail
+    }
+
+    expect(mail.body).toMatch("Content")
     // message common platform?
   })
 
