@@ -11,14 +11,15 @@ const taskDefName = "alert_common_platform"
 
 const emailer = getEmailer(getSmtpConfig())
 
-const generateEmailContent = (inputData: ErrorReportData) => {
-  return `There was a problem processing the message with the following details:
+const generateEmailContent = (
+  inputData: ErrorReportData
+) => `There was a problem processing the message with the following details:
+
 Received date: ${inputData.receivedDate}
 Bichard internal message ID: ${inputData.messageId}
 Common Platform ID: ${inputData.externalId}
 PTIURN: ${inputData.ptiUrn}
   `
-}
 
 const alertCommonPlatform: ConductorWorker = {
   taskDefName,
@@ -44,11 +45,19 @@ const alertCommonPlatform: ConductorWorker = {
       text: generateEmailContent(errorReportData.data)
     }
 
-    await emailer.sendMail(email)
+    try {
+      await emailer.sendMail(email)
+    } catch (e) {
+      return Promise.resolve({
+        status: "FAILED",
+        logs: [conductorLog((e as Error).message)]
+      })
+    }
 
     // send the email
     return Promise.resolve({
-      status: "COMPLETED"
+      status: "COMPLETED",
+      logs: [conductorLog("Message sent to Common Platform")]
     })
   }
 }
