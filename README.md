@@ -4,6 +4,12 @@ The code to replace the processing logic of Bichard 7
 
 ## Booting the infrastructure
 
+Before we can boot core you will need to checkout [audit-logging](https://github.com/ministryofjustice/bichard7-next-audit-logging) repo and run the following command to build the audit log api and event handler servers:
+
+```
+make build-api-server build-event-handler-server
+```     
+
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
 ```
