@@ -4,6 +4,7 @@
   "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["auditLog"],
   "outputKeys": []

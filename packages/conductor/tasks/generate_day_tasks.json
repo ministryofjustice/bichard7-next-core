@@ -4,6 +4,7 @@
   "retryLogic": "FIXED",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
   "timeoutPolicy": "TIME_OUT_WF",
   "inputKeys": ["start", "end", "onlyFailures", "taskName"],
   "outputKeys": ["dynamicTasks", "dynamicTasksInput"]
