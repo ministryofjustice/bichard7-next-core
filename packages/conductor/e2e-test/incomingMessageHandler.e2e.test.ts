@@ -76,7 +76,7 @@ describe("Incoming message handler", () => {
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
 
     const externalCorrelationId = randomUUID()
-    const inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-routedata-001.xml")).replace(
+    const inputMessage = String(fs.readFileSync("e2e-test/fixtures/invalid-input-message.xml")).replace(
       "EXTERNAL_CORRELATION_ID",
       externalCorrelationId
     )
@@ -117,15 +117,13 @@ describe("Incoming message handler", () => {
   })
 
   it("records duplicate message failures as audit log events", async () => {
-    // start the workflow
     const externalId = randomUUID()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
 
     const externalCorrelationId = randomUUID()
-    const inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-routedata-001.xml")).replace(
-      "EXTERNAL_CORRELATION_ID",
-      externalCorrelationId
-    )
+    let inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-001.xml"))
+      .replace("EXTERNAL_CORRELATION_ID", externalCorrelationId)
+      .replace("UNIQUE_HASH", randomUUID())
     await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
 
     // search for the workflow
@@ -139,8 +137,9 @@ describe("Incoming message handler", () => {
     expect(workflows).toHaveLength(1)
 
     const duplicateCorrelationId = randomUUID()
-    inputMessage.replace(externalCorrelationId, duplicateCorrelationId)
-    const duplicateMessageS3Path = `2023/08/31/14/49/${externalId}.xml`
+    const duplicateExternalId = randomUUID()
+    inputMessage = String(inputMessage.replace(externalCorrelationId, duplicateCorrelationId))
+    const duplicateMessageS3Path = `2023/08/31/14/49/${duplicateExternalId}.xml`
     await putFileToS3(inputMessage, duplicateMessageS3Path, PHASE1_BUCKET_NAME!, s3Config)
 
     // search for the workflow
@@ -161,8 +160,13 @@ describe("Incoming message handler", () => {
     expect(messages).toHaveLength(1)
 
     const [message] = messages as OutputApiAuditLog[]
-    expect(message.events).toHaveLength(1)
-    expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
-    expect(message).toHaveProperty("externalId", externalId)
+    const duplicateEvents = message.events.filter((e) => e.eventCode === EventCode.DuplicateMessage)
+    expect(duplicateEvents).toHaveLength(1)
+
+    const [event] = duplicateEvents
+    expect(event.attributes).toHaveProperty("s3Path", duplicateMessageS3Path)
+    expect(event.attributes).toHaveProperty("receivedDate", "2023-08-31T14:49:00.000Z")
+    expect(event.attributes).toHaveProperty("externalId", duplicateExternalId)
+    expect(event.attributes).toHaveProperty("externalCorrelationId", duplicateCorrelationId)
   })
 })
