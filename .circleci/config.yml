@@ -261,7 +261,7 @@ jobs:
             AWS_URL: http://localhost:4566
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
-            CHUNK=$(circleci tests glob "features/**/*.feature")
+            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings)
             echo "$CHUNK" | circleci tests run --verbose --split-by=timings --command=" \
               ./node_modules/.bin/cucumber-js --require steps --retry 5 \
               --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter \
