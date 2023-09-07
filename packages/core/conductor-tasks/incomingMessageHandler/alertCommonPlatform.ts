@@ -9,8 +9,6 @@ import { errorReportDataSchema, type ErrorReportData } from "../types/errorRepor
 
 const taskDefName = "alert_common_platform"
 
-const emailer = getEmailer(getSmtpConfig())
-console.log(emailer)
 const generateEmailContent = (
   inputData: ErrorReportData
 ) => `There was a problem processing the message with the following details:
@@ -42,6 +40,8 @@ const alertCommonPlatform: ConductorWorker = {
     }
 
     try {
+      const config = getSmtpConfig()
+      const emailer = getEmailer(config)
       await emailer.sendMail(email)
     } catch (e) {
       return Promise.resolve({
