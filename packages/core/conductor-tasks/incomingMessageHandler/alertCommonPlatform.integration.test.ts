@@ -13,14 +13,12 @@ const mockGetEmailer = getEmailer as { default: any }
 const originalGetEmailer = mockGetEmailer.default
 
 const getEmailerThrowsException = () => ({
-  sendMail: jest.fn().mockImplementation(() => {
+  sendMail: () => {
     throw new Error("Mock error")
-  })
+  }
 })
 const getEmailerDefault = (config: getEmailer.SmtpConfig) => ({
-  sendMail: (email: Email) => {
-    return originalGetEmailer(config).sendMail(email)
-  }
+  sendMail: (email: Email) => originalGetEmailer(config).sendMail(email)
 })
 
 const errorReportData: ErrorReportData = {
