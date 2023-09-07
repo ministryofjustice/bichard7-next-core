@@ -72,7 +72,6 @@ const convertSpiToAho: ConductorWorker = {
 
       // TODO:
       // pull inline stuff into separate functions
-      // write integration tests for alertCommonPlatform
       // pull out data extraction into a function with fallbacks
       // finish e2e tests
 

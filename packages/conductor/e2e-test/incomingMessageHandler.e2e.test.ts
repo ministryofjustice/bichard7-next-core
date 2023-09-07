@@ -116,6 +116,53 @@ describe("Incoming message handler", () => {
     expect(mail.body).toMatch(`PTIURN: ${message.caseId}`)
   })
 
-  // eslint-disable-next-line
-  // it("records duplicate message failures as audit log events", () => {})
+  it("records duplicate message failures as audit log events", async () => {
+    // start the workflow
+    const externalId = randomUUID()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+
+    const externalCorrelationId = randomUUID()
+    const inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-routedata-001.xml")).replace(
+      "EXTERNAL_CORRELATION_ID",
+      externalCorrelationId
+    )
+    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+
+    // search for the workflow
+    const workflows = await findWorkflowByQuery({
+      freeText: s3Path,
+      query: {
+        workflowType: "incoming_message_handler",
+        status: "COMPLETED"
+      }
+    })
+    expect(workflows).toHaveLength(1)
+
+    const duplicateCorrelationId = randomUUID()
+    inputMessage.replace(externalCorrelationId, duplicateCorrelationId)
+    const duplicateMessageS3Path = `2023/08/31/14/49/${externalId}.xml`
+    await putFileToS3(inputMessage, duplicateMessageS3Path, PHASE1_BUCKET_NAME!, s3Config)
+
+    // search for the workflow
+    const duplicateWorkflows = await findWorkflowByQuery({
+      freeText: duplicateMessageS3Path,
+      query: {
+        workflowType: "incoming_message_handler",
+        status: "COMPLETED"
+      }
+    })
+    expect(duplicateWorkflows).toHaveLength(1)
+
+    // expect audit log and audit log event
+    const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
+    const messages = await apiClient.getMessages({
+      externalCorrelationId
+    })
+    expect(messages).toHaveLength(1)
+
+    const [message] = messages as OutputApiAuditLog[]
+    expect(message.events).toHaveLength(1)
+    expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
+    expect(message).toHaveProperty("externalId", externalId)
+  })
 })
