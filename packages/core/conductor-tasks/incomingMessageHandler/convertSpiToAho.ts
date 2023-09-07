@@ -12,7 +12,9 @@ import { v4 as uuid } from "uuid"
 import parseS3Path from "../../phase1/lib/parseS3Path"
 import {
   extractIncomingMessage,
-  getDataStreamContent
+  extractXMLEntityContent,
+  getDataStreamContent,
+  getSystemId
 } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
@@ -27,19 +29,6 @@ if (!incomingBucket) {
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
-}
-
-const extractXMLEntityContent = (content: string, tag: string) => {
-  if (!content) {
-    return "UNKNOWN"
-  }
-
-  const parts = content.match(new RegExp(`<${tag}>([^<]*)<\/${tag}>`))
-  if (!parts || !parts.length) {
-    return "UNKNOWN"
-  }
-
-  return parts[1]?.trim()
 }
 
 const convertSpiToAho: ConductorWorker = {
@@ -85,7 +74,6 @@ const convertSpiToAho: ConductorWorker = {
       // pull inline stuff into separate functions
       // write integration tests for alertCommonPlatform
       // pull out data extraction into a function with fallbacks
-      // remove unknowns below
       // finish e2e tests
 
       return Promise.resolve({
@@ -104,7 +92,7 @@ const convertSpiToAho: ConductorWorker = {
             messageId,
             receivedDate,
             s3Path,
-            systemId: "UNKNOWN"
+            systemId: getSystemId(extractedMessage)
           },
           auditLogEvents: [
             {
