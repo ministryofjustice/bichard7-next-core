@@ -10,7 +10,7 @@ import { errorReportDataSchema, type ErrorReportData } from "../types/errorRepor
 const taskDefName = "alert_common_platform"
 
 const emailer = getEmailer(getSmtpConfig())
-
+console.log(emailer)
 const generateEmailContent = (
   inputData: ErrorReportData
 ) => `There was a problem processing the message with the following details:
@@ -33,12 +33,8 @@ const alertCommonPlatform: ConductorWorker = {
       })
     }
 
-    // pull out emails and content from inputs
-    // error if no emails provided
-    // error if no message provided
-    // error if no subject provided
-
     const email: Email = {
+      // TODO: get email addresses from SSM
       from: "no-reply@mail.bichard7.service.justice.gov.uk",
       to: "moj-bichard7@madetech.cjsm.net",
       subject: "Failed to ingest SPI message, schema mismatch",
@@ -54,7 +50,6 @@ const alertCommonPlatform: ConductorWorker = {
       })
     }
 
-    // send the email
     return Promise.resolve({
       status: "COMPLETED",
       logs: [conductorLog("Message sent to Common Platform")]
