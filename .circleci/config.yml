@@ -262,10 +262,10 @@ jobs:
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
             CHUNK=$(circleci tests glob "features/**/*.feature")
-            circleci tests run --verbose --split-by=timings --command=" \
+            echo "$CHUNK" | circleci tests run --verbose --split-by=timings --command=" \
               ./node_modules/.bin/cucumber-js --require steps --retry 5 \
               --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter \
-              --format junit:test-results.xml --tags 'not @Excluded and not @OnlyRunsOnPNC' $CHUNK"
+              --format junit:test-results.xml --tags 'not @Excluded and not @OnlyRunsOnPNC'"
       - save_artifacts
 
   test_api:
