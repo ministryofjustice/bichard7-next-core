@@ -1,5 +1,4 @@
 import { type Result } from "@moj-bichard7/common/types/Result"
-import logger from "@moj-bichard7/common/utils/logger"
 import { XMLParser } from "fast-xml-parser"
 import { incomingMessageSchema } from "../../schemas/incomingMessage"
 import type IncomingMessage from "../../types/IncomingMessage"
@@ -17,7 +16,6 @@ export const extractIncomingMessage = (incomingMessage: string): Result<Incoming
   const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
 
   if (!parsedMessage.success) {
-    logger.error(parsedMessage)
     return new Error("Error parsing incoming message")
   }
 

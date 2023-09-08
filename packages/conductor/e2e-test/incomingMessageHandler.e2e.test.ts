@@ -34,7 +34,7 @@ type WorkflowSearchParams = {
   }
 }
 
-const fetchWorkflowsByQuery = async (params: WorkflowSearchParams) => {
+const searchWorkflows = async (params: WorkflowSearchParams) => {
   const { freeText } = params
   const query = Object.entries(params.query)
     .map(([k, v]) => `${k}=${v}`)
@@ -50,9 +50,9 @@ const fetchWorkflowsByQuery = async (params: WorkflowSearchParams) => {
   }
   return response.data.results
 }
-const findWorkflowByQuery = (query: WorkflowSearchParams) =>
+const waitForWorkflows = (query: WorkflowSearchParams) =>
   promisePoller({
-    taskFn: () => fetchWorkflowsByQuery(query),
+    taskFn: () => searchWorkflows(query),
     retries: 100,
     interval: 100
   }).catch(() => {
@@ -84,7 +84,7 @@ describe("Incoming message handler", () => {
     await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
 
     // search for the workflow
-    const workflows = await findWorkflowByQuery({
+    const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
         workflowType: "incoming_message_handler",
@@ -127,7 +127,7 @@ describe("Incoming message handler", () => {
     await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
 
     // search for the workflow
-    const workflows = await findWorkflowByQuery({
+    const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
         workflowType: "incoming_message_handler",
@@ -143,7 +143,7 @@ describe("Incoming message handler", () => {
     await putFileToS3(inputMessage, duplicateMessageS3Path, PHASE1_BUCKET_NAME!, s3Config)
 
     // search for the workflow
-    const duplicateWorkflows = await findWorkflowByQuery({
+    const duplicateWorkflows = await waitForWorkflows({
       freeText: duplicateMessageS3Path,
       query: {
         workflowType: "incoming_message_handler",
