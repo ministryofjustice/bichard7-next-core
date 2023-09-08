@@ -12,15 +12,23 @@ const parser = new XMLParser({
 })
 
 export const extractIncomingMessage = (incomingMessage: string): Result<IncomingMessage> => {
-  const rawParsedObj = parser.parse(incomingMessage) as unknown
-  const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
+  try {
+    const rawParsedObj = parser.parse(incomingMessage, true) as unknown
+    const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
 
-  if (!parsedMessage.success) {
-    return new Error("Error parsing incoming message")
+    if (!parsedMessage.success) {
+      return new Error("Error parsing incoming message")
+    }
+
+    return parsedMessage.data
+  } catch (e) {
+    return e as Error
   }
-
-  return parsedMessage.data
 }
+
+export const getSystemId = (message: IncomingMessage) => message.RouteData.RequestFromSystem.SourceID
+
+export const getCorrelationId = (message: IncomingMessage) => message.RouteData.RequestFromSystem.CorrelationID
 
 export const getDataStreamContent = (message: IncomingMessage) =>
   message.RouteData.DataStream.DataStreamContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">")

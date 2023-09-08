@@ -15,7 +15,9 @@ import parseS3Path from "../../phase1/lib/parseS3Path"
 import {
   extractIncomingMessage,
   extractXMLEntityContent,
-  getDataStreamContent
+  getCorrelationId,
+  getDataStreamContent,
+  getSystemId
 } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
@@ -36,7 +38,7 @@ type MessageMetadata = {
 }
 
 // If incoming message doesn't match Zod schema
-// then we will fall back to XML parsing
+// then we will fall back to XML parsing and then regex
 const fallbackAuditLogRecord = (
   message: string,
   messageMetadata: MessageMetadata,
@@ -50,8 +52,8 @@ const fallbackAuditLogRecord = (
   if (isError(extractedMessage)) {
     externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
   } else {
-    externalCorrelationId = extractedMessage.RouteData.RequestFromSystem.CorrelationID
-    systemId = extractedMessage.RouteData.RequestFromSystem.SourceID
+    externalCorrelationId = getCorrelationId(extractedMessage)
+    systemId = getSystemId(extractedMessage)
 
     const stream = getDataStreamContent(extractedMessage)
     ptiUrn = extractXMLEntityContent(stream, "PTIURN")
@@ -67,7 +69,7 @@ const fallbackAuditLogRecord = (
     isSanitised: 0,
     messageHash: uuid(),
     messageId,
-    receivedDate: receivedDate.toString(),
+    receivedDate: receivedDate.toISOString(),
     s3Path,
     systemId
   }
