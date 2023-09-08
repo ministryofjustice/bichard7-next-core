@@ -34,7 +34,9 @@ type MessageMetadata = {
   receivedDate: Date
 }
 
-const buildAuditLogRecord = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+// If incoming message doesn't match Zod schema
+// then we will fall back to XML parsing
+const fallbackAuditLogRecord = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
   const extractedMessage = extractIncomingMessage(message)
   if (isError(extractedMessage)) {
     return extractedMessage
@@ -59,10 +61,10 @@ const buildAuditLogRecord = (message: string, messageMetadata: MessageMetadata, 
   }
 }
 
-const generateErrorReportOutput = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+const buildParsingFailedOutput = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
   const { messageId, externalId, receivedDate } = messageMetadata
 
-  const auditLogRecord = buildAuditLogRecord(message, messageMetadata, s3Path)
+  const auditLogRecord = fallbackAuditLogRecord(message, messageMetadata, s3Path)
   if (isError(auditLogRecord)) {
     return auditLogRecord
   }
@@ -114,38 +116,20 @@ const convertSpiToAho: ConductorWorker = {
 
     const messageId = uuid()
     const { externalId, receivedDate } = parseS3Path(s3Path)
-
     const transformResult = transformIncomingMessageToAho(message)
     if (isError(transformResult)) {
-      // TODO:
-      // pull out data extraction into a function with fallbacks
-
       return Promise.resolve({
         logs: [conductorLog("Could not convert incoming message to AHO")],
-        status: "COMPLETED",
-        outputData: generateErrorReportOutput(message, { messageId, externalId, receivedDate }, s3Path)
+        status: "COMPLETED", // complete so we can move to alerting task
+        outputData: buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path)
       })
     }
 
+    // Zod parsed correctly, continue as normal
     const { aho, messageHash, systemId } = transformResult
-
     const externalCorrelationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = messageId
 
-    const auditLogRecord = {
-      caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
-      createdBy: "Incoming message handler",
-      externalCorrelationId,
-      externalId: externalId,
-      isSanitised: 0,
-      messageHash,
-      messageId,
-      receivedDate,
-      s3Path,
-      systemId
-    }
-
-    // put aho in s3
     const putPath = `${uuid()}.json`
     const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
     if (isError(maybeError)) {
@@ -159,7 +143,22 @@ const convertSpiToAho: ConductorWorker = {
     return Promise.resolve({
       logs: [],
       status: "COMPLETED",
-      outputData: { correlationId: messageId, ahoS3Path: putPath, auditLogRecord }
+      outputData: {
+        correlationId: messageId,
+        ahoS3Path: putPath,
+        auditLogRecord: {
+          caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
+          createdBy: "Incoming message handler",
+          externalCorrelationId,
+          externalId,
+          isSanitised: 0,
+          messageHash,
+          messageId,
+          receivedDate,
+          s3Path,
+          systemId
+        }
+      }
     })
   }
 }
