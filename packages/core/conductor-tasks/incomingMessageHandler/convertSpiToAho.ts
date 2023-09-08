@@ -18,9 +18,6 @@ import {
 } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
-const taskDefName = "convert_spi_to_aho"
-
-const s3Config = createS3Config()
 const incomingBucket = process.env.PHASE1_BUCKET_NAME
 if (!incomingBucket) {
   throw Error("PHASE1_BUCKET_NAME environment variable is required")
@@ -31,6 +28,68 @@ if (!outgoingBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
 }
 
+type MessageMetadata = {
+  messageId: string
+  externalId: string
+  receivedDate: Date
+}
+
+const buildAuditLogRecord = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+  const extractedMessage = extractIncomingMessage(message)
+  if (isError(extractedMessage)) {
+    return extractedMessage
+  }
+
+  const externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
+  const stream = getDataStreamContent(extractedMessage)
+  const ptiUrn = extractXMLEntityContent(stream, "PTIURN")
+  const { externalId, messageId, receivedDate } = messageMetadata
+
+  return {
+    caseId: ptiUrn,
+    createdBy: "Incoming message handler",
+    externalCorrelationId,
+    externalId: externalId,
+    isSanitised: 0,
+    messageHash: uuid(),
+    messageId,
+    receivedDate,
+    s3Path,
+    systemId: getSystemId(extractedMessage)
+  }
+}
+
+const generateErrorReportOutput = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+  const { messageId, externalId, receivedDate } = messageMetadata
+
+  const auditLogRecord = buildAuditLogRecord(message, messageMetadata, s3Path)
+  if (isError(auditLogRecord)) {
+    return auditLogRecord
+  }
+
+  return {
+    correlationId: messageId,
+    error: "parsing_failed",
+    auditLogRecord,
+    auditLogEvents: [
+      {
+        category: "error",
+        eventCode: EventCode.MessageRejected,
+        eventSource: "Incoming Message Handler",
+        eventType: "Failed to parse incoming message",
+        timestamp: new Date().toISOString()
+      }
+    ],
+    errorReportData: {
+      receivedDate,
+      messageId,
+      externalId,
+      ptiUrn: auditLogRecord.caseId
+    }
+  }
+}
+
+const taskDefName = "convert_spi_to_aho"
 const convertSpiToAho: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
@@ -43,6 +102,7 @@ const convertSpiToAho: ConductorWorker = {
       })
     }
 
+    const s3Config = createS3Config()
     const message = await getFileFromS3(s3Path, incomingBucket, s3Config)
     if (isError(message)) {
       logger.error(message)
@@ -57,58 +117,13 @@ const convertSpiToAho: ConductorWorker = {
 
     const transformResult = transformIncomingMessageToAho(message)
     if (isError(transformResult)) {
-      const extractedMessage = extractIncomingMessage(message)
-      if (isError(extractedMessage)) {
-        logger.error(extractedMessage)
-        return Promise.resolve({
-          logs: [conductorLog("Could not extract incoming message")],
-          status: "FAILED"
-        })
-      }
-
-      const externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
-      const stream = getDataStreamContent(extractedMessage)
-      const ptiUrn = extractXMLEntityContent(stream, "PTIURN")
-
       // TODO:
-      // pull inline stuff into separate functions
       // pull out data extraction into a function with fallbacks
-      // finish e2e tests
 
       return Promise.resolve({
         logs: [conductorLog("Could not convert incoming message to AHO")],
         status: "COMPLETED",
-        outputData: {
-          correlationId: messageId,
-          error: "parsing_failed",
-          auditLogRecord: {
-            caseId: ptiUrn,
-            createdBy: "Incoming message handler",
-            externalCorrelationId,
-            externalId: externalId,
-            isSanitised: 0,
-            messageHash: uuid(),
-            messageId,
-            receivedDate,
-            s3Path,
-            systemId: getSystemId(extractedMessage)
-          },
-          auditLogEvents: [
-            {
-              category: "error",
-              eventCode: EventCode.MessageRejected,
-              eventSource: "Incoming Message Handler",
-              eventType: "Failed to parse incoming message",
-              timestamp: new Date().toISOString()
-            }
-          ],
-          errorReportData: {
-            receivedDate,
-            messageId,
-            externalId,
-            ptiUrn
-          }
-        }
+        outputData: generateErrorReportOutput(message, { messageId, externalId, receivedDate }, s3Path)
       })
     }
 
