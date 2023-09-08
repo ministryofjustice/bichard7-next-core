@@ -1,10 +1,11 @@
 {
   "name": "process_phase1",
-  "retryCount": 3,
-  "retryLogic": "FIXED",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
-  "timeoutSeconds": 4000,
-  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutSeconds": 60,
+  "responseTimeoutSeconds": 55,
+  "timeoutPolicy": "RETRY",
   "inputKeys": ["ahoS3Path"],
   "outputKeys": ["result"]
 }

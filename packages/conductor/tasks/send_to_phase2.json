@@ -1,10 +1,11 @@
 {
   "name": "send_to_phase2",
-  "retryCount": 3,
-  "retryLogic": "FIXED",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
-  "timeoutSeconds": 4000,
-  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
+  "timeoutPolicy": "RETRY",
   "inputKeys": ["ahoS3Path"],
   "outputKeys": ["auditLogEvents"]
 }
