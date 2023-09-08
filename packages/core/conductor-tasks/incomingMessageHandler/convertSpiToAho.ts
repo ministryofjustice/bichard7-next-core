@@ -5,7 +5,9 @@ import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import type { InputApiAuditLog } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { v4 as uuid } from "uuid"
@@ -13,8 +15,7 @@ import parseS3Path from "../../phase1/lib/parseS3Path"
 import {
   extractIncomingMessage,
   extractXMLEntityContent,
-  getDataStreamContent,
-  getSystemId
+  getDataStreamContent
 } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
@@ -36,15 +37,26 @@ type MessageMetadata = {
 
 // If incoming message doesn't match Zod schema
 // then we will fall back to XML parsing
-const fallbackAuditLogRecord = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+const fallbackAuditLogRecord = (
+  message: string,
+  messageMetadata: MessageMetadata,
+  s3Path: string
+): Result<InputApiAuditLog> => {
   const extractedMessage = extractIncomingMessage(message)
+  let externalCorrelationId: string = "UNKNOWN"
+  let ptiUrn: string = "UNKNOWN"
+  let systemId: string = "UNKNOWN"
+
   if (isError(extractedMessage)) {
-    return extractedMessage
+    externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
+  } else {
+    externalCorrelationId = extractedMessage.RouteData.RequestFromSystem.CorrelationID
+    systemId = extractedMessage.RouteData.RequestFromSystem.SourceID
+
+    const stream = getDataStreamContent(extractedMessage)
+    ptiUrn = extractXMLEntityContent(stream, "PTIURN")
   }
 
-  const externalCorrelationId = extractXMLEntityContent(message, "CorrelationID")
-  const stream = getDataStreamContent(extractedMessage)
-  const ptiUrn = extractXMLEntityContent(stream, "PTIURN")
   const { externalId, messageId, receivedDate } = messageMetadata
 
   return {
@@ -55,9 +67,9 @@ const fallbackAuditLogRecord = (message: string, messageMetadata: MessageMetadat
     isSanitised: 0,
     messageHash: uuid(),
     messageId,
-    receivedDate,
+    receivedDate: receivedDate.toString(),
     s3Path,
-    systemId: getSystemId(extractedMessage)
+    systemId
   }
 }
 
@@ -127,10 +139,13 @@ const convertSpiToAho: ConductorWorker = {
 
     // Zod parsed correctly, continue as normal
     const { aho, messageHash, systemId } = transformResult
+
+    // We replace the correlation ID to ensure it
+    // doesn't clash with any other records in the database
     const externalCorrelationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = messageId
 
-    const putPath = `${uuid()}.json`
+    const putPath = `${messageId}.json`
     const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)

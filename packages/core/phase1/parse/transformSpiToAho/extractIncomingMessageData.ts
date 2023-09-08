@@ -22,8 +22,6 @@ export const extractIncomingMessage = (incomingMessage: string): Result<Incoming
   return parsedMessage.data
 }
 
-export const getSystemId = (message: IncomingMessage) => message.RouteData.RequestFromSystem.SourceID
-
 export const getDataStreamContent = (message: IncomingMessage) =>
   message.RouteData.DataStream.DataStreamContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
 
