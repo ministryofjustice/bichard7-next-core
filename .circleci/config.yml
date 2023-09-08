@@ -261,12 +261,8 @@ jobs:
             AWS_URL: http://localhost:4566
             AUDIT_LOG_API_URL: http://localhost:7010
           command: |
-            circleci tests glob "features/**/*.feature" | \
-            circleci tests run  --command=" \
-                xargs ./node_modules/.bin/cucumber-js --require steps --retry 5 \
-                --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter \
-                --format junit:test-results.xml --tags 'not @Excluded and not @OnlyRunsOnPNC'" \
-            --verbose --split-by=timings
+            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
       - save_artifacts
 
   test_api:
