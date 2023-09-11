@@ -1,4 +1,3 @@
-jest.setTimeout(9999999)
 process.env.S3_ENDPOINT = "http://localhost:4566"
 process.env.S3_AWS_ACCESS_KEY_ID = "test"
 process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
@@ -53,8 +52,8 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
 const waitForWorkflows = (query: WorkflowSearchParams) =>
   promisePoller({
     taskFn: () => searchWorkflows(query),
-    retries: 30,
-    interval: 2000 // milliseconds
+    retries: 100,
+    interval: 100 // milliseconds
   }).catch(() => {
     throw new Error("Could not find workflow")
   })
