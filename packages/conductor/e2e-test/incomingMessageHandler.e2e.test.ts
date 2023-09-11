@@ -52,7 +52,7 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
 const waitForWorkflows = (query: WorkflowSearchParams) =>
   promisePoller({
     taskFn: () => searchWorkflows(query),
-    retries: 300,
+    retries: 900,
     interval: 100 // milliseconds
   }).catch(() => {
     throw new Error("Could not find workflow")
