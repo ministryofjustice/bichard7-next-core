@@ -1,11 +1,11 @@
 {
-  "name": "convert_spi_to_aho",
+  "name": "alert_common_platform",
   "retryCount": 10,
   "retryLogic": "EXPONENTIAL_BACKOFF",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
-  "inputKeys": ["s3Path"],
-  "outputKeys": ["ahoS3Path", "auditLogRecord", "auditLogEvents", "error", "correlationId"]
+  "inputKeys": ["errorReportData"],
+  "outputKeys": []
 }

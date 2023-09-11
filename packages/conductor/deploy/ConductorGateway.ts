@@ -1,7 +1,7 @@
 import type { WorkflowDef } from "@io-orkes/conductor-typescript"
 import type EventHandlerDef from "@moj-bichard7/common/conductor/types/EventHandlerDef"
 import type TaskDef from "@moj-bichard7/common/conductor/types/TaskDef"
-import axios from "axios"
+import axios, { type AxiosResponse } from "axios"
 
 type ConductorOptions = {
   url: string
@@ -69,11 +69,15 @@ class ConductorGateway {
       })
   }
 
-  postTask(definition: TaskDef): Promise<void> {
-    return axios.post(`${this.conductorOptions.url}/api/metadata/taskdefs`, [definition], {
-      auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
-      headers: { "Content-Type": "application/json" }
-    })
+  postTask(definition: TaskDef): Promise<void | AxiosResponse> {
+    return axios
+      .post(`${this.conductorOptions.url}/api/metadata/taskdefs`, [definition], {
+        auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
+        headers: { "Content-Type": "application/json" }
+      })
+      .catch((e) => {
+        console.error(e.response.data)
+      })
   }
 
   postEventHandler(definition: EventHandlerDef): Promise<void> {

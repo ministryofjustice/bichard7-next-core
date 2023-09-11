@@ -35,6 +35,12 @@ services:
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
       NODE_ENV: ${NODE_ENV:-test}
+      SMTP_HOST: mailserver
+      SMTP_USER: ${DEFAULT_USER}
+      SMTP_PASSWORD: ${DEFAULT_PASSWORD}
+      SMTP_PORT: 1025
+      SMTP_TLS: "false"
+      SMTP_DEBUG: "true"
     depends_on:
       audit-log-api:
         condition: service_healthy

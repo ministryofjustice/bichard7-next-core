@@ -48,4 +48,81 @@ describe("convertSpiToAho", () => {
 
     expect(JSON.stringify(s3aho)).toEqual(JSON.stringify(aho))
   })
+
+  it("should extract the correlation ID from the message if the whole XML is invalid", async () => {
+    const externalId = uuid()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-001.xml"))
+    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+
+    const result = await convertSpiToAho.execute({ inputData: { s3Path } })
+
+    expect(result.status).toBe("COMPLETED")
+
+    const auditLogRecord = {
+      caseId: "UNKNOWN",
+      createdBy: "Incoming message handler",
+      externalCorrelationId: "CID-test-001",
+      externalId,
+      isSanitised: 0,
+      messageHash: expect.any(String),
+      messageId: expect.any(String),
+      receivedDate: "2023-08-31T14:48:00.000Z",
+      s3Path,
+      systemId: "UNKNOWN"
+    }
+
+    expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
+  })
+
+  it("should extract the correlation ID and PTIURN from the message if it fails to parse with zod", async () => {
+    const externalId = uuid()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-002.xml"))
+    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+
+    const result = await convertSpiToAho.execute({ inputData: { s3Path } })
+
+    expect(result.status).toBe("COMPLETED")
+
+    const auditLogRecord = {
+      caseId: "UNKNOWN",
+      createdBy: "Incoming message handler",
+      externalCorrelationId: "CID-test-001",
+      externalId,
+      isSanitised: 0,
+      messageHash: expect.any(String),
+      messageId: expect.any(String),
+      receivedDate: "2023-08-31T14:48:00.000Z",
+      s3Path,
+      systemId: "B00LIBRA"
+    }
+
+    expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
+  })
+
+  it("should still log something even if the file has no valid data in it", async () => {
+    const externalId = uuid()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+    await putFileToS3("invalid", s3Path, PHASE1_BUCKET_NAME!, s3Config)
+
+    const result = await convertSpiToAho.execute({ inputData: { s3Path } })
+
+    expect(result.status).toBe("COMPLETED")
+
+    const auditLogRecord = {
+      caseId: "UNKNOWN",
+      createdBy: "Incoming message handler",
+      externalCorrelationId: "UNKNOWN",
+      externalId,
+      isSanitised: 0,
+      messageHash: expect.any(String),
+      messageId: expect.any(String),
+      receivedDate: "2023-08-31T14:48:00.000Z",
+      s3Path,
+      systemId: "UNKNOWN"
+    }
+
+    expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
+  })
 })

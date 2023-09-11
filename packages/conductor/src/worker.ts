@@ -1,15 +1,16 @@
 import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
 import { defaultConcurrency } from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import logger from "@moj-bichard7/common/utils/logger"
-import compareFiles from "@moj-bichard7/core/phase1/comparison/conductor-tasks/compareFiles"
-import generateDayTasks from "@moj-bichard7/core/phase1/comparison/conductor-tasks/generateDayTasks"
-import rerunDay from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunDay"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/processPhase1"
 import readAhoFromDb from "@moj-bichard7/core/conductor-tasks/bichard_process/readAhoFromDb"
 import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_process/sendToPhase2"
 import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/storeAuditLogEvents"
+import alertCommonPlatform from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/alertCommonPlatform"
 import convertSpiToAho from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/convertSpiToAho"
 import createAuditLogRecord from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/createAuditLogRecord"
+import compareFiles from "@moj-bichard7/core/phase1/comparison/conductor-tasks/compareFiles"
+import generateDayTasks from "@moj-bichard7/core/phase1/comparison/conductor-tasks/generateDayTasks"
+import rerunDay from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunDay"
 
 import { captureWorkerExceptions } from "./utils"
 
@@ -27,6 +28,7 @@ const tasks = [
   compareFiles,
   processPhase1,
   sendToPhase2,
+  alertCommonPlatform,
   storeAuditLogEvents,
   createAuditLogRecord
 ].map(captureWorkerExceptions)
