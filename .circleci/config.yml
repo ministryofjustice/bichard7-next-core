@@ -213,7 +213,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: npm run conductor-no-worker
+          command: SKIP_DOWNLOADS=true npm run conductor-no-worker
       - run:
           name: Run the worker
           command: npm run -w packages/conductor worker

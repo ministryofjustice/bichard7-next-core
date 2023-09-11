@@ -4,6 +4,7 @@ set -e
 LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
+SKIP_DOWNLOADS=${SKIP_DOWNLOADS:-"false"}
 
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
@@ -31,7 +32,7 @@ done
 IMAGES=("${FILTERED_IMAGES[@]}")
 
 for image in "${IMAGES[@]}"; do
-    if [[ "$CI" == "true" || "$(docker images -q $image 2> /dev/null)" == "" ]]; then
+    if [[ $SKIP_DOWNLOADS == "false" && ("$CI" == "true" || "$(docker images -q $image 2> /dev/null)" == "") ]]; then
         echo "Fetching $image..."
         scripts/fetch-docker-image.sh $image
     fi
