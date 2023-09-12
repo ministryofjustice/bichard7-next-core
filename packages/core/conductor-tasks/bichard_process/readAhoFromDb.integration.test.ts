@@ -1,5 +1,3 @@
-jest.setTimeout(999999)
-
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
