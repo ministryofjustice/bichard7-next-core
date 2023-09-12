@@ -10,6 +10,7 @@ import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 import createDbConfig from "../../lib/database/createDbConfig"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
+import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
 import { type Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 
 const taskDefName = "persist_phase1"
@@ -42,7 +43,13 @@ const persistPhase1: ConductorWorker = {
       })
     }
 
-    // TODO: zod schema parsing for Phase1Result type
+    const parsedResult = phase1ResultSchema.safeParse(ahoFileContent)
+    if (!parsedResult.success) {
+      return {
+        status: "FAILED_WITH_TERMINAL_ERROR",
+        logs: [conductorLog("Failed parsing phase 1 result")] // TODO: add zod issues here?
+      }
+    }
 
     const logs: string[] = []
     const result = JSON.parse(ahoFileContent, dateReviver) as Phase1SuccessResult
