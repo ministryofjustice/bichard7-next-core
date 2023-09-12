@@ -2,6 +2,7 @@ import { ConductorClient, TaskManager } from "@io-orkes/conductor-typescript"
 import { defaultConcurrency } from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import logger from "@moj-bichard7/common/utils/logger"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/processPhase1"
+import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/persistPhase1"
 import readAhoFromDb from "@moj-bichard7/core/conductor-tasks/bichard_process/readAhoFromDb"
 import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_process/sendToPhase2"
 import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/storeAuditLogEvents"
@@ -26,6 +27,7 @@ const tasks = [
   generateDayTasks,
   rerunDay,
   compareFiles,
+  persistPhase1,
   processPhase1,
   sendToPhase2,
   alertCommonPlatform,

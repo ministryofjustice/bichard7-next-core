@@ -9,12 +9,9 @@ import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import postgres from "postgres"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
-import createDbConfig from "../../lib/database/createDbConfig"
-import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
 import getAuditLogEvent from "../../phase1/lib/auditLog/getAuditLogEvent"
 import parseAhoJson from "../../phase1/parse/parseAhoJson"
 import phase1 from "../../phase1/phase1"
@@ -22,7 +19,6 @@ import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 
 const taskDefName = "process_phase1"
 const pncApiConfig = createPncApiConfig()
-const dbConfig = createDbConfig()
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
@@ -31,7 +27,6 @@ const processPhase1: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: async (task: Task) => {
-    const db = postgres(dbConfig)
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger()
     const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
@@ -72,26 +67,7 @@ const processPhase1: ConductorWorker = {
       }
     }
 
-    // TODO: Move this out into its own task
-    if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
-      const dbResult = await saveErrorListRecord(db, result)
-
-      if (isError(dbResult)) {
-        return {
-          status: "FAILED",
-          logs: [conductorLog("Error saving to the database"), conductorLog(dbResult.message)],
-          outputData: {
-            result: {
-              correlationId: result.correlationId,
-              auditLogEvents: [],
-              resultType: Phase1ResultType.failure
-            }
-          }
-        }
-      }
-    }
-
-    const maybeError = await putFileToS3(JSON.stringify(result.hearingOutcome), ahoS3Path, taskDataBucket, s3Config)
+    const maybeError = await putFileToS3(JSON.stringify(result), ahoS3Path, taskDataBucket, s3Config)
     if (isError(maybeError)) {
       return Promise.resolve({
         status: "FAILED",

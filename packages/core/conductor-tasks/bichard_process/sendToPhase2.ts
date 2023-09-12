@@ -1,4 +1,5 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -10,8 +11,8 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import MqGateway from "../../lib/mq/MqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
-import parseAhoJson from "../../phase1/parse/parseAhoJson"
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
+import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 
 const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)
@@ -47,8 +48,9 @@ const sendToPhase2: ConductorWorker = {
         }
       }
 
-      const aho = parseAhoJson(JSON.parse(ahoFileContent))
-      const result = await mqGateway.sendMessage(convertAhoToXml(aho), mqQueue)
+      // TODO: zod schema parsing for Phase1Result type
+      const phase1SuccessResult = JSON.parse(ahoFileContent, dateReviver) as Phase1SuccessResult
+      const result = await mqGateway.sendMessage(convertAhoToXml(phase1SuccessResult.hearingOutcome), mqQueue)
       if (isError(result)) {
         return {
           logs: [conductorLog("Failed to write to MQ")],

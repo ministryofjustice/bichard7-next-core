@@ -22,6 +22,17 @@
           "asyncComplete": false
         },
         {
+          "name": "persist_phase1",
+          "taskReferenceName": "persist_phase1",
+          "inputParameters": {
+            "ahoS3Path": "${workflow.input.ahoS3Path}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false
+        },
+        {
           "name": "store_audit_log_events",
           "taskReferenceName": "store_audit_log_events",
           "inputParameters": {
