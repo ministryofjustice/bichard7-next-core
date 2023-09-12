@@ -4,17 +4,21 @@ import { annotatedHearingOutcomeSchema } from "./annotatedHearingOutcome"
 import { auditLogEventSchema } from "./auditLogEvent"
 import { triggerSchema } from "./trigger"
 
-export const phase1ResultTypeSchema = z.nativeEnum(Phase1ResultType)
-
 export const phase1ResultSchema = z.object({
   correlationId: z.string(),
-  auditLogEvents: z.array(auditLogEventSchema),
-  resultType: phase1ResultTypeSchema
+  auditLogEvents: z.array(auditLogEventSchema)
 })
 
 export const phase1SuccessResultSchema = phase1ResultSchema.extend({
   hearingOutcome: annotatedHearingOutcomeSchema,
-  triggers: z.array(triggerSchema)
+  triggers: z.array(triggerSchema),
+  resultType: z.union([
+    z.literal(Phase1ResultType.success),
+    z.literal(Phase1ResultType.exceptions),
+    z.literal(Phase1ResultType.ignored)
+  ])
 })
 
-export const phase1FailureResultSchema = phase1ResultSchema
+export const phase1FailureResultSchema = phase1ResultSchema.extend({
+  resultType: z.literal(Phase1ResultType.failure)
+})
