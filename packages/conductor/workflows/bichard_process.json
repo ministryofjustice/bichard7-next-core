@@ -40,8 +40,6 @@
             "switchCaseValue": "${process_phase1.output.resultType}"
           },
           "type": "SWITCH",
-          "evaluatorType": "value-param",
-          "expression": "switchCaseValue",
           "decisionCases": {
             "exceptions": [
               {
@@ -66,7 +64,19 @@
                 "asyncComplete": false
               }
             ],
-            "ignored": [
+            "end_processing": [
+              {
+                "name": "store_audit_log_events",
+                "taskReferenceName": "store_audit_log_events_terminated",
+                "inputParameters": {
+                  "correlationId": "${workflow.correlationId}",
+                  "auditLogEvents": "${send_to_phase2.output.auditLogEvents}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              },
               {
                 "name": "end_processing",
                 "taskReferenceName": "end_processing",
@@ -79,11 +89,14 @@
                 "asyncComplete": false
               }
             ]
-          }
+          },
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "evaluatorType": "javascript",
+          "expression": "$.switchCaseValue === 'ignored' || $.switchCaseValue === 'failure' ? 'end_processing' : $.switchCaseValue"
         }
-      ],
-      "startDelay": 0,
-      "optional": false
+      ]
     },
     {
       "name": "send_to_phase2",

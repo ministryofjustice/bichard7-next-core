@@ -1,7 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
-import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
@@ -35,13 +34,12 @@ const processPhase1: ConductorWorker = {
     const db = postgres(dbConfig)
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger()
-    const logs: ConductorLog[] = []
     const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
 
     if (!ahoS3Path) {
       return Promise.resolve({
-        logs: [conductorLog("s3Path must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
+        status: "FAILED_WITH_TERMINAL_ERROR",
+        logs: [conductorLog("s3Path must be specified")]
       })
     }
 
@@ -49,8 +47,8 @@ const processPhase1: ConductorWorker = {
     if (isError(ahoFileContent)) {
       logger.error(ahoFileContent)
       return Promise.resolve({
-        logs: [conductorLog("Could not retrieve file from S3")],
-        status: "FAILED"
+        status: "FAILED",
+        logs: [conductorLog(`Could not retrieve file from S3: ${ahoS3Path}`), conductorLog(ahoFileContent.message)]
       })
     }
 
@@ -68,43 +66,43 @@ const processPhase1: ConductorWorker = {
     const result = await phase1(parsedAho, pncGateway, auditLogger)
     if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
       return {
-        logs,
-        outputData: { result: { ...result } },
-        status: "FAILED_WITH_TERMINAL_ERROR"
+        status: "COMPLETED",
+        logs: result.auditLogEvents.map((event) => conductorLog(event.eventType)),
+        outputData: { phase1Result: result }
       }
     }
 
+    // TODO: Move this out into its own task
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
       const dbResult = await saveErrorListRecord(db, result)
 
       if (isError(dbResult)) {
         return {
-          logs,
+          status: "FAILED",
+          logs: [conductorLog("Error saving to the database"), conductorLog(dbResult.message)],
           outputData: {
             result: {
               correlationId: result.correlationId,
               auditLogEvents: [],
               resultType: Phase1ResultType.failure
             }
-          },
-          status: "FAILED"
+          }
         }
       }
     }
 
     const maybeError = await putFileToS3(JSON.stringify(result.hearingOutcome), ahoS3Path, taskDataBucket, s3Config)
     if (isError(maybeError)) {
-      logger.error(maybeError)
       return Promise.resolve({
-        logs: [conductorLog("Could not put file to S3")],
-        status: "FAILED"
+        status: "FAILED",
+        logs: [conductorLog(`Could not put file to S3: ${ahoS3Path}`), conductorLog(maybeError.message)]
       })
     }
 
     return {
-      logs,
-      outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents },
-      status: "COMPLETED"
+      status: "COMPLETED",
+      logs: result.auditLogEvents.map((event) => conductorLog(event.eventType)),
+      outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents }
     }
   }
 }
