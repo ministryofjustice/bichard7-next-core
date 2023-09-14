@@ -1,6 +1,5 @@
-import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { Trigger } from "../types/Trigger"
+import type { z } from "zod"
+import type { phase1FailureResultSchema, phase1ResultSchema, phase1SuccessResultSchema } from "../schemas/phase1Result"
 
 export enum Phase1ResultType {
   success = "success",
@@ -9,20 +8,10 @@ export enum Phase1ResultType {
   ignored = "ignored"
 }
 
-export type Phase1SuccessResult = {
-  correlationId: string
-  hearingOutcome: AnnotatedHearingOutcome
-  auditLogEvents: AuditLogEvent[]
-  triggers: Trigger[]
-  resultType: Phase1ResultType.success | Phase1ResultType.exceptions | Phase1ResultType.ignored
-}
+export type Phase1SuccessResult = z.infer<typeof phase1SuccessResultSchema>
 
-export type Phase1FailureResult = {
-  correlationId?: string
-  auditLogEvents: AuditLogEvent[]
-  resultType: Phase1ResultType.failure
-}
+export type Phase1FailureResult = z.infer<typeof phase1FailureResultSchema>
 
-type Phase1Result = Phase1SuccessResult | Phase1FailureResult
+type Phase1Result = z.infer<typeof phase1ResultSchema>
 
 export default Phase1Result

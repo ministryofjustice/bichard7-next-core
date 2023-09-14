@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-typescript"
-import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -10,8 +9,7 @@ import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 import createDbConfig from "../../lib/database/createDbConfig"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
-import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
-import { type Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import { phase1SuccessResultSchema } from "../../phase1/schemas/phase1Result"
 
 const taskDefName = "persist_phase1"
 
@@ -34,25 +32,27 @@ const persistPhase1: ConductorWorker = {
       })
     }
 
-    const ahoFileContent = await getFileFromS3(taskDataS3Path, taskDataBucket, s3Config)
-    if (isError(ahoFileContent)) {
-      logger.error(ahoFileContent)
+    const s3Phase1Result = await getFileFromS3(taskDataS3Path, taskDataBucket, s3Config)
+    if (isError(s3Phase1Result)) {
+      logger.error(s3Phase1Result)
       return Promise.resolve({
         status: "FAILED",
-        logs: [conductorLog(`Could not retrieve file from S3: ${taskDataS3Path}`), conductorLog(ahoFileContent.message)]
+        logs: [conductorLog(`Could not retrieve file from S3: ${taskDataS3Path}`), conductorLog(s3Phase1Result.message)]
       })
     }
 
-    const parsedResult = phase1ResultSchema.safeParse(ahoFileContent)
-    if (!parsedResult.success) {
+    const maybePhase1Result = JSON.parse(s3Phase1Result)
+    const parseAttempt = phase1SuccessResultSchema.safeParse(maybePhase1Result)
+    if (!parseAttempt.success) {
+      const issues = JSON.stringify(parseAttempt.error.issues)
       return {
         status: "FAILED_WITH_TERMINAL_ERROR",
-        logs: [conductorLog("Failed parsing phase 1 result")] // TODO: add zod issues here?
+        logs: [conductorLog("Failed parsing phase 1 result"), conductorLog(issues)]
       }
     }
 
+    const result = parseAttempt.data
     const logs: string[] = []
-    const result = JSON.parse(ahoFileContent, dateReviver) as Phase1SuccessResult
     if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
       const dbResult = await saveErrorListRecord(db, result)
       if (isError(dbResult)) {

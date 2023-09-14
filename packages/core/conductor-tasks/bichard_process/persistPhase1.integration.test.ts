@@ -105,13 +105,18 @@ describe("persistPhase1", () => {
 
   it("should fail with terminal error if the result cannot be parsed", async () => {
     const phase1Result = String(
-      fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result-not-parseable.json")
+      fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result-missing-result-type.json")
     )
 
-    const ahoS3Path = "not_parseable.xml"
+    const ahoS3Path = "missing_result_type.xml"
     await putFileToS3(phase1Result, ahoS3Path, bucket, s3Config)
 
     const result = await persistPhase1.execute({ inputData: { ahoS3Path } })
-    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR") // confirm?
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+
+    const [generalError, zodError] = result.logs!
+    expect(generalError.log).toBe("Failed parsing phase 1 result")
+    expect(zodError.log).toContain('"path":["resultType"],"message":"Required"')
+    // TODO: expect zod error
   })
 })
