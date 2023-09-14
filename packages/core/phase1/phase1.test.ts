@@ -27,7 +27,7 @@ describe("Bichard Core processing logic", () => {
     expect(result).toHaveProperty("triggers")
   })
 
-  it("should create audit logs when a message received", async () => {
+  it("should create audit logs when a message is received", async () => {
     await phase1Handler(inputAho, mockPncGateway, auditLogger)
     expect(auditLogger.getEvents()).toEqual(
       expect.arrayContaining([
@@ -51,7 +51,7 @@ describe("Bichard Core processing logic", () => {
           eventCode: "hearing-outcome.details",
           eventSource: "CoreHandler",
           category: "information",
-          timestamp: mockedDate.toISOString()
+          timestamp: mockedDate
         })
       ])
     )
@@ -71,7 +71,7 @@ describe("Bichard Core processing logic", () => {
         eventCode: "hearing-outcome.ignored.no-offences",
         eventSource: "CoreHandler",
         category: "information",
-        timestamp: mockedDate.toISOString()
+        timestamp: mockedDate
       }
     ])
   })
@@ -93,7 +93,7 @@ describe("Bichard Core processing logic", () => {
           eventCode: "exceptions.generated",
           eventSource: "CoreHandler",
           category: "information",
-          timestamp: mockedDate.toISOString()
+          timestamp: mockedDate
         })
       ])
     )

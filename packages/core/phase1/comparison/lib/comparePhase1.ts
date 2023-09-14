@@ -86,7 +86,7 @@ const comparePhase1 = async (
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
 
-    const ahoXml = convertAhoToXml(coreResult.hearingOutcome)
+    const ahoXml = convertAhoToXml(coreResult.hearingOutcome as AnnotatedHearingOutcome)
     const parsedAho = parseAhoXml(normalisedAho)
     if (parsedAho instanceof Error) {
       throw parsedAho
@@ -94,7 +94,7 @@ const comparePhase1 = async (
 
     if (
       process.env.USE_NEW_MATCHER !== "false" &&
-      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome, inputAho)
+      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, inputAho)
     ) {
       return {
         triggersMatch: true,
@@ -135,7 +135,7 @@ const comparePhase1 = async (
 
     let xmlOutputMatchesValue = xmlOutputMatches(ahoXml, normalisedAho)
     if (isIgnored) {
-      xmlOutputMatchesValue = !hasOffences(coreResult.hearingOutcome)
+      xmlOutputMatchesValue = !hasOffences(coreResult.hearingOutcome as AnnotatedHearingOutcome)
     }
     if (ignoreNewMatcherXmlDifferences) {
       xmlOutputMatchesValue = true

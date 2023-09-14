@@ -1,154 +1,145 @@
-import type EventCategory from "../types/EventCategory"
-import type EventCode from "./EventCode"
+import type { z } from "zod"
+import type { auditLogEventSchema } from "../schemas/auditLogEvent"
+import EventCode from "./EventCode"
 
-export type AuditLogEvent = {
-  attributes?: Record<string, unknown>
-  category: EventCategory
-  eventCode: EventCode
-  eventSource: string
-  eventSourceQueueName?: string
-  eventType: string
-  timestamp: string
-  user?: string
-}
-
+export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 export enum AuditLogEventSource {
   CoreHandler = "CoreHandler",
   EnrichWithPncQuery = "EnrichWithPncQuery"
 }
 
 export type AuditLogEventOption = {
-  code: string
+  code: EventCode
   type: string
 }
 
-export const AuditLogEventOptions = {
+export const AuditLogEventOptions: Record<string, AuditLogEventOption> = {
   hearingOutcomeReceivedPhase1: {
-    code: "hearing-outcome.received-phase-1",
+    code: EventCode.HearingOutcomeReceivedPhase1,
     type: "Hearing outcome received by phase 1"
   },
   hearingOutcomeReceivedPhase2: {
-    code: "hearing-outcome.received-phase-2",
+    code: EventCode.HearingOutcomeReceivedPhase2,
     type: "Hearing outcome received by phase 2"
   },
   hearingOutcomeReceivedPhase3: {
-    code: "hearing-outcome.received-phase-3",
+    code: EventCode.HearingOutcomeReceivedPhase3,
     type: "Hearing outcome received by phase 3"
   },
   exceptionResolved: {
-    code: "exceptions.resolved",
+    code: EventCode.ExceptionsResolved,
     type: "Exception marked as resolved by user"
   },
   triggerResolved: {
-    code: "triggers.resolved",
+    code: EventCode.TriggersResolved,
     type: "Trigger marked as resolved by user"
   },
   allTriggersResolved: {
-    code: "triggers.all-resolved",
+    code: EventCode.AllTriggersResolved,
     type: "All triggers marked as resolved"
   },
   hearingOutcomeReallocated: {
-    code: "hearing-outcome.reallocated",
+    code: EventCode.HearingOutcomeReallocated,
     type: "Hearing outcome reallocated by user"
   },
   resubmittedToPhase1: {
-    code: "hearing-outcome.resubmitted-phase-1",
+    code: EventCode.HearingOutcomeResubmittedPhase1,
     type: "Hearing outcome resubmitted to phase 1"
   },
   submittedToPhase2: {
-    code: "hearing-outcome.submitted-phase-2",
+    code: EventCode.HearingOutcomeSubmittedPhase2,
     type: "Hearing outcome submitted to phase 2"
   },
   resubmittedToPhase2: {
-    code: "hearing-outcome.resubmitted-phase-2",
+    code: EventCode.HearingOutcomeResubmittedPhase2,
     type: "Hearing outcome resubmitted to phase 2"
   },
   submittedToPhase3: {
-    code: "hearing-outcome.submitted-phase-3",
+    code: EventCode.HearingOutcomeSubmittedPhase3,
     type: "Hearing outcome submitted to phase 3"
   },
   exceptionLocked: {
-    code: "exceptions.locked",
+    code: EventCode.ExceptionsLocked,
     type: "Exception locked"
   },
   exceptionUnlocked: {
-    code: "exceptions.unlocked",
+    code: EventCode.ExceptionsUnlocked,
     type: "Exception unlocked"
   },
   triggerLocked: {
-    code: "triggers.locked",
+    code: EventCode.TriggersLocked,
     type: "Trigger locked"
   },
   triggerUnlocked: {
-    code: "triggers.unlocked",
+    code: EventCode.TriggersUnlocked,
     type: "Trigger unlocked"
   },
   exceptionsGenerated: {
-    code: "exceptions.generated",
+    code: EventCode.ExceptionsGenerated,
     type: "Exceptions generated"
   },
   triggerGenerated: {
-    code: "triggers.generated",
+    code: EventCode.TriggersGenerated,
     type: "Triggers generated"
   },
   triggerDeleted: {
-    code: "triggers.deleted",
+    code: EventCode.TriggersDeleted,
     type: "Triggers deleted"
   },
   hearingOutcomeIgnoredNoOffences: {
-    code: "hearing-outcome.ignored.no-offences",
+    code: EventCode.IgnoredNoOffences,
     type: "Hearing Outcome ignored as it contains no offences"
   },
   hearingOutcomeIgnoredReopened: {
-    code: "hearing-outcome.ignored.reopened",
+    code: EventCode.IgnoredReopened,
     type: "Re-opened / Statutory Declaration case ignored"
   },
   hearingOutcomeIgnoredCourtDisabled: {
-    code: "hearing-outcome.ignored.court-disabled",
+    code: EventCode.IgnoredDisabled,
     type: "Hearing outcome ignored - PNC update is not enabled for this court"
   },
   hearingOutcomeIgnoredAppeal: {
-    code: "hearing-outcome.ignored.appeal",
+    code: EventCode.IgnoredAppeal,
     type: "Hearing outcome ignored - Appeal result did not amend disposal"
   },
   hearingOutcomeIgnoredNonrecordable: {
-    code: "hearing-outcome.ignored.nonrecordable",
+    code: EventCode.IgnoredNonrecordable,
     type: "Hearing Outcome ignored as no offences are recordable"
   },
   hearingOutcomeIgnoredAncillary: {
-    code: "hearing-outcome.ignored.ancillary",
+    code: EventCode.IgnoredAncillary,
     type: "Interim hearing with ancillary only court results. PNC not updated"
   },
   hearingOutcomeDetails: {
-    code: "hearing-outcome.details",
+    code: EventCode.HearingOutcomeDetails,
     type: "Hearing outcome details"
   },
   messageRejectedByCoreHandler: {
-    code: "message-rejected",
+    code: EventCode.MessageRejected,
     type: "Message Rejected by CoreHandler"
   },
   resubmittedHearingOutcomeReceived: {
-    code: "hearing-outcome.resubmitted-received",
+    code: EventCode.ReceivedResubmittedHearingOutcome,
     type: "Resubmitted hearing outcome received"
   },
   resultsAlreadyOnPNC: {
-    code: "hearing-outcome.ignored.results-already-on-pnc",
+    code: EventCode.IgnoredAlreadyOnPNC,
     type: "Results already on PNC"
   },
   pncUpdated: {
-    code: "pnc.updated",
+    code: EventCode.PncUpdated,
     type: "PNC Update applied successfully"
   },
   reportRun: {
-    code: "report-run",
+    code: EventCode.ReportRun,
     type: "Report run"
   },
   pncResponseReceived: {
-    code: "pnc.response-received",
+    code: EventCode.PncResponseReceived,
     type: "PNC Response received"
   },
   pncResponseNotReceived: {
-    code: "pnc.response-not-received",
+    code: EventCode.PncResponseNotReceived,
     type: "PNC Response not received"
   }
 }

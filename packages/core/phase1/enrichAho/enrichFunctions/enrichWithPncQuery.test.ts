@@ -110,7 +110,7 @@ describe("enrichWithQuery()", () => {
       eventSource: "EnrichWithPncQuery",
       eventCode: "pnc.response-received",
       category: "information",
-      timestamp: mockedDate.toISOString(),
+      timestamp: mockedDate,
       attributes: {
         "PNC Request Message": "1101ZD0100000448754K",
         "PNC Response Time": 0,
@@ -136,7 +136,7 @@ describe("enrichWithQuery()", () => {
       eventCode: "pnc.response-not-received",
       eventSource: "EnrichWithPncQuery",
       category: "warning",
-      timestamp: mockedDate.toISOString(),
+      timestamp: mockedDate,
       attributes: {
         "PNC Response Time": 0,
         "PNC Attempts Made": 1,

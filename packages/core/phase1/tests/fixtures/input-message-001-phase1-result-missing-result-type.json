@@ -1,0 +1,411 @@
+{
+  "correlationId": "EXTERNAL_CORRELATION_ID",
+  "triggers": [
+    { "code": "TRPR0003", "offenceSequenceNumber": 1 },
+    { "code": "TRPR0004", "offenceSequenceNumber": 1 },
+    { "code": "TRPR0004", "offenceSequenceNumber": 2 }
+  ],
+  "hearingOutcome": {
+    "AnnotatedHearingOutcome": {
+      "HearingOutcome": {
+        "Hearing": {
+          "CourtHearingLocation": {
+            "TopLevelCode": "B",
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "EF",
+            "BottomLevelCode": "01",
+            "OrganisationUnitCode": "B01EF01"
+          },
+          "DateOfHearing": "2011-09-26T00:00:00.000Z",
+          "TimeOfHearing": "10:00",
+          "HearingLanguage": "D",
+          "HearingDocumentationLanguage": "D",
+          "DefendantPresentAtHearing": "A",
+          "SourceReference": {
+            "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
+            "DocumentType": "SPI Case Result",
+            "UniqueID": "EXTERNAL_CORRELATION_ID"
+          },
+          "CourtHouseCode": 2576,
+          "CourtType": "MCA",
+          "CourtHouseName": "Magistrates' Courts London Croydon"
+        },
+        "Case": {
+          "PTIURN": "01ZD0303208",
+          "PreChargeDecisionIndicator": false,
+          "CourtReference": { "MagistratesCourtReference": "01ZD0303208" },
+          "HearingDefendant": {
+            "ArrestSummonsNumber": "1101ZD0100000448754K",
+            "DefendantDetail": {
+              "PersonName": { "Title": "Mr", "GivenName": ["TRPRFOUR"], "FamilyName": "SEXOFFENCE" },
+              "BirthDate": "1948-11-11T00:00:00.000Z",
+              "Gender": 1,
+              "GeneratedPNCFilename": "SEXOFFENCE/TRPRFOUR"
+            },
+            "Address": {
+              "AddressLine1": "Scenario1 Address Line 1",
+              "AddressLine2": "Scenario1 Address Line 2",
+              "AddressLine3": "Scenario1 Address Line 3"
+            },
+            "RemandStatus": "UB",
+            "BailConditions": [],
+            "Offence": [
+              {
+                "CriminalProsecutionReference": {
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "Qualifier": "A",
+                      "FullCode": "SX03001A"
+                    }
+                  },
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReasonSequence": "001"
+                },
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 1,
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "Result": [
+                  {
+                    "CJSresultCode": 3078,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ModeOfTrialReason": "SUM",
+                    "ResultVariableText": "Travel Restriction Order",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "BailCondition": [],
+                    "PNCAdjudicationExists": false,
+                    "ResultApplicableQualifierCode": [],
+                    "ResultClass": "Judgement with final result",
+                    "PNCDisposalType": 3078,
+                    "CourtType": "MCA"
+                  }
+                ],
+                "OffenceCategory": "CI",
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/11",
+                "OffenceTitle": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "FullCode": "SX03001"
+                    }
+                  },
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Rape of a Female",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 2,
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "Result": [
+                  {
+                    "CJSresultCode": 3052,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ModeOfTrialReason": "SUM",
+                    "ResultVariableText": "defendant must never be allowed out",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 24,
+                    "Urgent": { "urgent": true, "urgency": 24 },
+                    "BailCondition": [],
+                    "PNCAdjudicationExists": false,
+                    "ResultApplicableQualifierCode": [],
+                    "ResultClass": "Judgement with final result",
+                    "PNCDisposalType": 3052,
+                    "CourtType": "MCA"
+                  }
+                ],
+                "OffenceCategory": "CI",
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/07",
+                "OffenceTitle": "Rape a girl aged 13 / 14 / 15 - SOA 2003"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "RT",
+                      "Year": "88",
+                      "Reason": "191",
+                      "FullCode": "RT88191"
+                    }
+                  },
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReasonSequence": "003"
+                },
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 3,
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "Result": [
+                  {
+                    "CJSresultCode": 1015,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "Duration": [],
+                    "AmountSpecifiedInResult": [{ "Amount": 100, "DecimalPlaces": 2, "Type": "Fine" }],
+                    "NumberSpecifiedInResult": [],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ModeOfTrialReason": "SUM",
+                    "ResultVariableText": "Fined 100.",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "BailCondition": [],
+                    "PNCAdjudicationExists": false,
+                    "ResultApplicableQualifierCode": [],
+                    "ResultClass": "Judgement with final result",
+                    "PNCDisposalType": 1015,
+                    "CourtType": "MCA"
+                  }
+                ],
+                "OffenceCategory": "CM",
+                "RecordableOnPNCindicator": false,
+                "NotifiableToHOindicator": false,
+                "HomeOfficeClassification": "809/01",
+                "OffenceTitle": "Use a motor vehicle on a road / public place without third party insurance"
+              }
+            ],
+            "PNCCheckname": "SEXOFFENCE",
+            "PNCIdentifier": "2000/0448754K"
+          },
+          "RecordableOnPNCindicator": true,
+          "Urgent": { "urgency": 24, "urgent": true },
+          "CourtCaseReferenceNumber": "97/1626/008395Q",
+          "ForceOwner": {
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "ZD",
+            "BottomLevelCode": "00",
+            "OrganisationUnitCode": "01ZD00"
+          }
+        }
+      }
+    },
+    "Exceptions": [],
+    "PncQuery": {
+      "forceStationCode": "01ZD",
+      "checkName": "SEXOFFENCE",
+      "pncId": "2000/0448754K",
+      "courtCases": [
+        {
+          "courtCaseReference": "97/1626/008395Q",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "SX03001A",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00",
+                "title": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
+                "sequenceNumber": 1
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "SX03001",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00",
+                "title": "Rape a girl aged 13 / 14 / 15 - SOA 2003",
+                "sequenceNumber": 2
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "RT88191",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00",
+                "title": "Use a motor vehicle on a road / public place without third party insurance",
+                "sequenceNumber": 3
+              }
+            }
+          ]
+        }
+      ],
+      "penaltyCases": []
+    },
+    "PncQueryDate": "2023-09-12T10:47:39.850Z"
+  },
+  "auditLogEvents": [
+    {
+      "eventCode": "pnc.response-received",
+      "attributes": {
+        "PNC Response Time": 10,
+        "PNC Attempts Made": 1,
+        "PNC Request Type": "enquiry",
+        "PNC Request Message": "1101ZD0100000448754K",
+        "PNC Response Message": {
+          "forceStationCode": "01ZD",
+          "checkName": "SEXOFFENCE",
+          "pncId": "2000/0448754K",
+          "courtCases": [
+            {
+              "courtCaseReference": "97/1626/008395Q",
+              "offences": [
+                {
+                  "offence": {
+                    "acpoOffenceCode": "12:15:24:1",
+                    "cjsOffenceCode": "SX03001A",
+                    "startDate": "2010-11-28T00:00:00.000Z",
+                    "startTime": "00:00",
+                    "title": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
+                    "sequenceNumber": 1
+                  }
+                },
+                {
+                  "offence": {
+                    "acpoOffenceCode": "12:15:24:1",
+                    "cjsOffenceCode": "SX03001",
+                    "startDate": "2010-11-28T00:00:00.000Z",
+                    "startTime": "00:00",
+                    "title": "Rape a girl aged 13 / 14 / 15 - SOA 2003",
+                    "sequenceNumber": 2
+                  }
+                },
+                {
+                  "offence": {
+                    "acpoOffenceCode": "12:15:24:1",
+                    "cjsOffenceCode": "RT88191",
+                    "startDate": "2010-11-28T00:00:00.000Z",
+                    "startTime": "00:00",
+                    "title": "Use a motor vehicle on a road / public place without third party insurance",
+                    "sequenceNumber": 3
+                  }
+                }
+              ]
+            }
+          ],
+          "penaltyCases": []
+        },
+        "sensitiveAttributes": "PNC Request Message,PNC Response Message"
+      },
+      "timestamp": "2023-09-12T10:47:39.860Z",
+      "eventType": "PNC Response received",
+      "eventSource": "EnrichWithPncQuery",
+      "category": "information"
+    },
+    {
+      "eventCode": "hearing-outcome.details",
+      "attributes": {
+        "Date Of Hearing": "2011-09-26",
+        "Time Of Hearing": "10:00",
+        "ASN": "1101ZD0100000448754K",
+        "Number Of Offences": 3,
+        "Court Hearing Location": "B01EF01",
+        "PTIURN": "01ZD0303208",
+        "PSA Code": 2576,
+        "Force Owner": "01ZD00",
+        "Offence 1 Details": "SX03001A||001||3078",
+        "Offence 2 Details": "SX03001||002||3052",
+        "Offence 3 Details": "RT88191||003||1015"
+      },
+      "timestamp": "2023-09-12T10:47:39.865Z",
+      "eventType": "Hearing outcome details",
+      "eventSource": "CoreHandler",
+      "category": "information"
+    },
+    {
+      "eventCode": "triggers.generated",
+      "attributes": {
+        "Number of Triggers": 3,
+        "Trigger and Exception Flag": false,
+        "Trigger 1 Details": "TRPR0003",
+        "Trigger 2 Details": "TRPR0004",
+        "Trigger 3 Details": "TRPR0004"
+      },
+      "timestamp": "2023-09-12T10:47:39.871Z",
+      "eventType": "Triggers generated",
+      "eventSource": "CoreHandler",
+      "category": "information"
+    }
+  ]
+}

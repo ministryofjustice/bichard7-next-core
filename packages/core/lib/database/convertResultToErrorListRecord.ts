@@ -1,7 +1,7 @@
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
-import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import ResolutionStatus from "../../types/ResolutionStatus"
 
@@ -34,33 +34,35 @@ const generateOrgForPoliceFilter = (forceOwner?: OrganisationUnitCodes): string 
   return `${forceOwner.SecondLevelCode}${forceOwner.ThirdLevelCode}`
 }
 
-const convertResultToErrorListRecord = (result: Phase1SuccessResult): ErrorListRecord => {
-  const generateFalseHasErrorAttributes = result.triggers.length > 0 && result.hearingOutcome.Exceptions.length === 0
+const convertResultToErrorListRecord = (result: PersistablePhase1Result): ErrorListRecord => {
+  const hearingOutcome = result.hearingOutcome as AnnotatedHearingOutcome
 
-  const caseElem = result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
-  const hearing = result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
-  const errorReport = generateErrorReport(result.hearingOutcome)
+  const generateFalseHasErrorAttributes = result.triggers.length > 0 && hearingOutcome.Exceptions.length === 0
+
+  const caseElem = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearing = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
+  const errorReport = generateErrorReport(hearingOutcome)
   return {
     message_id: hearing.SourceReference.UniqueID,
     phase: 1,
-    error_status: result.hearingOutcome.Exceptions.length > 0 ? ResolutionStatus.UNRESOLVED : null,
+    error_status: hearingOutcome.Exceptions.length > 0 ? ResolutionStatus.UNRESOLVED : null,
     trigger_status: result.triggers.length > 0 ? ResolutionStatus.UNRESOLVED : null,
-    error_quality_checked: result.hearingOutcome.Exceptions.length > 0 ? QualityCheckStatus.UNCHECKED : null,
+    error_quality_checked: hearingOutcome.Exceptions.length > 0 ? QualityCheckStatus.UNCHECKED : null,
     trigger_quality_checked: result.triggers.length > 0 ? QualityCheckStatus.UNCHECKED : null,
-    defendant_name: generateDefendantName(result.hearingOutcome),
+    defendant_name: generateDefendantName(hearingOutcome),
     trigger_count: result.triggers.length,
     is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
     asn: caseElem.HearingDefendant.ArrestSummonsNumber,
     court_code: hearing.CourtHearingLocation.OrganisationUnitCode,
-    annotated_msg: convertAhoToXml(result.hearingOutcome),
-    updated_msg: convertAhoToXml(result.hearingOutcome, false, generateFalseHasErrorAttributes),
+    annotated_msg: convertAhoToXml(hearingOutcome),
+    updated_msg: convertAhoToXml(hearingOutcome, false, generateFalseHasErrorAttributes),
     error_report: errorReport,
     create_ts: new Date(),
     error_reason: errorReport.length > 0 ? errorReport.split("||")[0] : null,
     error_insert_ts: new Date(),
     trigger_insert_ts: new Date(),
     trigger_reason: result.triggers.length > 0 ? result.triggers[0].code : null,
-    error_count: result.hearingOutcome.Exceptions.length,
+    error_count: hearingOutcome.Exceptions.length,
     user_updated_flag: 0,
     msg_received_ts: new Date(),
     court_reference: caseElem.CourtReference.MagistratesCourtReference.slice(0, 11),

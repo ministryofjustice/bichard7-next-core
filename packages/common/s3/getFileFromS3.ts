@@ -1,4 +1,4 @@
-import type { S3ClientConfig } from "@aws-sdk/client-s3"
+import type { GetObjectCommandOutput, S3ClientConfig } from "@aws-sdk/client-s3"
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import type { Readable } from "stream"
 import { isError } from "../types/Result"
@@ -15,18 +15,22 @@ const streamToBuffer = (stream: Readable) =>
 const getFileFromS3 = async (fileName: string, bucket: string, config: S3ClientConfig): Promise<string | Error> => {
   const client = new S3Client(config)
   const command = new GetObjectCommand({ Bucket: bucket, Key: fileName })
+  let lastResponse: Error | GetObjectCommandOutput | undefined = undefined
 
   for (let retries = 0; retries < 5; retries++) {
-    const response = await client.send(command).catch((err: Error) => err)
+    lastResponse = await client.send(command).catch((err: Error) => err)
 
-    if (response && !isError(response) && "Body" in response) {
-      const stream = response.Body as Readable
+    if (lastResponse && !isError(lastResponse) && "Body" in lastResponse) {
+      const stream = lastResponse.Body as Readable
       const buffer = await streamToBuffer(stream)
       return buffer.toString()
     }
-    logger.error(response)
+    logger.error(lastResponse)
   }
-  return new Error(`Couldn't retrieve file from S3: ${fileName}`)
+  if (!isError(lastResponse)) {
+    return new Error("No body in get object output")
+  }
+  return lastResponse ? lastResponse : new Error("Couldn't retrieve file from S3")
 }
 
 export default getFileFromS3

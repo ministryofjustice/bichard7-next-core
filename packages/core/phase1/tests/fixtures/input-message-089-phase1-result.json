@@ -1,0 +1,345 @@
+{
+  "correlationId": "EXTERNAL_CORRELATION_ID",
+  "triggers": [],
+  "hearingOutcome": {
+    "AnnotatedHearingOutcome": {
+      "HearingOutcome": {
+        "Hearing": {
+          "CourtHearingLocation": {
+            "TopLevelCode": "B",
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "EF",
+            "BottomLevelCode": "01",
+            "OrganisationUnitCode": "B01EF01"
+          },
+          "DateOfHearing": "2011-09-26T00:00:00.000Z",
+          "TimeOfHearing": "10:00",
+          "HearingLanguage": "D",
+          "HearingDocumentationLanguage": "D",
+          "DefendantPresentAtHearing": "A",
+          "SourceReference": {
+            "DocumentName": "SPI Nigel Harp",
+            "DocumentType": "SPI Case Result",
+            "UniqueID": "EXTERNAL_CORRELATION_ID"
+          },
+          "CourtHouseCode": 2576,
+          "CourtType": "MCA",
+          "CourtHouseName": "Magistrates' Courts London Croydon"
+        },
+        "Case": {
+          "PTIURN": "01ZD0300108",
+          "PreChargeDecisionIndicator": false,
+          "CourtReference": { "MagistratesCourtReference": "01ZD0300108" },
+          "HearingDefendant": {
+            "ArrestSummonsNumber": "1101ZD0100000410837W",
+            "DefendantDetail": {
+              "PersonName": { "Title": "Mr", "GivenName": ["Nigel"], "FamilyName": "Harp" },
+              "BirthDate": "1948-11-11T00:00:00.000Z",
+              "Gender": 1,
+              "GeneratedPNCFilename": "HARP/NIGEL"
+            },
+            "Address": {
+              "AddressLine1": "ScenarioA Address Line 1",
+              "AddressLine2": "ScenarioA Address Line 2",
+              "AddressLine3": "ScenarioA Address Line 3"
+            },
+            "RemandStatus": "CB",
+            "BailConditions": [],
+            "Offence": [
+              {
+                "CriminalProsecutionReference": {
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "TH",
+                      "Year": "68",
+                      "Reason": "006",
+                      "FullCode": "TH68006"
+                    }
+                  },
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410837",
+                    "CheckDigit": "W"
+                  },
+                  "OffenceReasonSequence": "001"
+                },
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Theft of pedal cycle.",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 1,
+                "Result": [
+                  {
+                    "CJSresultCode": 4014,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NG",
+                    "ModeOfTrialReason": "SUM",
+                    "ResultVariableText": "Committed to Great Something Crown Court for sentence (Section 3 Powers of Criminal Courts (Sentencing) Act 2000) on 08/10/2011 at 09:45 or such other date, time or place as the Crown Court directs on unconditional bail",
+                    "ResultQualifierVariable": [],
+                    "NextHearingDate": "2011-10-08T00:00:00.000Z",
+                    "ResultHalfLifeHours": 72,
+                    "BailCondition": [],
+                    "PNCAdjudicationExists": false,
+                    "ResultApplicableQualifierCode": [],
+                    "NextResultSourceOrganisation": { "OrganisationUnitCode": null },
+                    "ResultClass": "Adjournment pre Judgement",
+                    "PNCDisposalType": 4014,
+                    "CourtType": "MCA"
+                  }
+                ],
+                "OffenceCategory": "CE",
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "044/00",
+                "OffenceTitle": "Theft of pedal cycle"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "TH",
+                      "Year": "68",
+                      "Reason": "020",
+                      "FullCode": "TH68020"
+                    }
+                  },
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410837",
+                    "CheckDigit": "W"
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Theft",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 2,
+                "Result": [
+                  {
+                    "CJSresultCode": 4014,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NG",
+                    "ModeOfTrialReason": "SUM",
+                    "ResultVariableText": "Committed to Great Something Crown Court for sentence (Section 3 Powers of Criminal Courts (Sentencing) Act 2000) on 08/11/2011 at 09:45 or such other date, time or place as the Crown Court directs on unconditional bail",
+                    "ResultQualifierVariable": [],
+                    "NextHearingDate": "2011-11-08T00:00:00.000Z",
+                    "ResultHalfLifeHours": 72,
+                    "BailCondition": [],
+                    "PNCAdjudicationExists": false,
+                    "ResultApplicableQualifierCode": [],
+                    "NextResultSourceOrganisation": { "OrganisationUnitCode": null },
+                    "ResultClass": "Adjournment pre Judgement",
+                    "PNCDisposalType": 4014,
+                    "CourtType": "MCA"
+                  }
+                ],
+                "OffenceCategory": "CE",
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "049/10",
+                "OffenceTitle": "Theft - other - including theft by finding"
+              }
+            ],
+            "PNCCheckname": "Harp",
+            "PNCIdentifier": "2000/0410837W"
+          },
+          "RecordableOnPNCindicator": true,
+          "CourtCaseReferenceNumber": "97/1626/008395Q",
+          "ForceOwner": {
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "ZD",
+            "BottomLevelCode": "00",
+            "OrganisationUnitCode": "01ZD00"
+          }
+        }
+      }
+    },
+    "Exceptions": [
+      {
+        "code": "HO100322",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      },
+      {
+        "code": "HO100322",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      }
+    ],
+    "PncQuery": {
+      "forceStationCode": "01ZD",
+      "checkName": "Harp",
+      "pncId": "2000/0410837W",
+      "courtCases": [
+        {
+          "courtCaseReference": "97/1626/008395Q",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "TH68006",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00",
+                "title": "Theft of pedal cycle",
+                "sequenceNumber": 1
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "TH68020",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00",
+                "title": "Theft - other - including theft by finding",
+                "sequenceNumber": 2
+              }
+            }
+          ]
+        }
+      ],
+      "penaltyCases": []
+    },
+    "PncQueryDate": "2023-09-12T10:56:47.254Z"
+  },
+  "auditLogEvents": [
+    {
+      "eventCode": "pnc.response-received",
+      "attributes": {
+        "PNC Response Time": 10,
+        "PNC Attempts Made": 1,
+        "PNC Request Type": "enquiry",
+        "PNC Request Message": "1101ZD0100000410837W",
+        "PNC Response Message": {
+          "forceStationCode": "01ZD",
+          "checkName": "Harp",
+          "pncId": "2000/0410837W",
+          "courtCases": [
+            {
+              "courtCaseReference": "97/1626/008395Q",
+              "offences": [
+                {
+                  "offence": {
+                    "acpoOffenceCode": "12:15:24:1",
+                    "cjsOffenceCode": "TH68006",
+                    "startDate": "2010-11-28T00:00:00.000Z",
+                    "startTime": "00:00",
+                    "title": "Theft of pedal cycle",
+                    "sequenceNumber": 1
+                  }
+                },
+                {
+                  "offence": {
+                    "acpoOffenceCode": "12:15:24:1",
+                    "cjsOffenceCode": "TH68020",
+                    "startDate": "2010-11-28T00:00:00.000Z",
+                    "startTime": "00:00",
+                    "title": "Theft - other - including theft by finding",
+                    "sequenceNumber": 2
+                  }
+                }
+              ]
+            }
+          ],
+          "penaltyCases": []
+        },
+        "sensitiveAttributes": "PNC Request Message,PNC Response Message"
+      },
+      "timestamp": "2023-09-12T10:56:47.264Z",
+      "eventType": "PNC Response received",
+      "eventSource": "EnrichWithPncQuery",
+      "category": "information"
+    },
+    {
+      "eventCode": "hearing-outcome.details",
+      "attributes": {
+        "Date Of Hearing": "2011-09-26",
+        "Time Of Hearing": "10:00",
+        "ASN": "1101ZD0100000410837W",
+        "Number Of Offences": 2,
+        "Court Hearing Location": "B01EF01",
+        "PTIURN": "01ZD0300108",
+        "PSA Code": 2576,
+        "Force Owner": "01ZD00",
+        "Offence 1 Details": "TH68006||001||4014",
+        "Offence 2 Details": "TH68020||002||4014"
+      },
+      "timestamp": "2023-09-12T10:56:47.268Z",
+      "eventType": "Hearing outcome details",
+      "eventSource": "CoreHandler",
+      "category": "information"
+    },
+    {
+      "eventCode": "exceptions.generated",
+      "attributes": {
+        "Exception Type": "HO100322",
+        "Number Of Errors": 2,
+        "Error 1 Details": "HO100322||OrganisationUnitCode",
+        "Error 2 Details": "HO100322||OrganisationUnitCode"
+      },
+      "timestamp": "2023-09-12T10:56:47.281Z",
+      "eventType": "Exceptions generated",
+      "eventSource": "CoreHandler",
+      "category": "information"
+    }
+  ],
+  "resultType": "exceptions"
+}

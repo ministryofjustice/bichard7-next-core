@@ -101,7 +101,7 @@ describe("convertSpiToAho", () => {
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
   })
 
-  it("should still log something even if the file has no valid data in it", async () => {
+  it("should stillp something even if the file has no valid data in it", async () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     await putFileToS3("invalid", s3Path, PHASE1_BUCKET_NAME!, s3Config)

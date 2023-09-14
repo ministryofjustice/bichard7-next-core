@@ -1,0 +1,131 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": {
+          "DocumentName": "SPI Nigel Harp",
+          "DocumentType": "SPI Case Result",
+          "UniqueID": "EXTERNAL_CORRELATION_ID"
+        },
+        "CourtHouseCode": 2576
+      },
+      "Case": {
+        "PTIURN": "01ZD0300108",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": { "MagistratesCourtReference": "01ZD0300108" },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000410837W",
+          "DefendantDetail": {
+            "PersonName": { "Title": "Mr", "GivenName": ["Nigel"], "FamilyName": "Harp" },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "ScenarioA Address Line 1",
+            "AddressLine2": "ScenarioA Address Line 2",
+            "AddressLine3": "ScenarioA Address Line 3"
+          },
+          "RemandStatus": "CB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "006",
+                    "FullCode": "TH68006",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft of pedal cycle.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 1,
+              "Result": [
+                {
+                  "CJSresultCode": 4014,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Committed to Great Something Crown Court for sentence (Section 3 Powers of Criminal Courts (Sentencing) Act 2000) on 08/10/2011 at 09:45 or such other date, time or place as the Crown Court directs on unconditional bail",
+                  "ResultQualifierVariable": [],
+                  "NextHearingDate": "2011-10-08T00:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "020",
+                    "FullCode": "TH68020",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 2,
+              "Result": [
+                {
+                  "CJSresultCode": 4014,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Committed to Great Something Crown Court for sentence (Section 3 Powers of Criminal Courts (Sentencing) Act 2000) on 08/11/2011 at 09:45 or such other date, time or place as the Crown Court directs on unconditional bail",
+                  "ResultQualifierVariable": [],
+                  "NextHearingDate": "2011-11-08T00:00:00.000Z"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Exceptions": []
+}

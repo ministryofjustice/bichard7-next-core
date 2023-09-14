@@ -1,6 +1,7 @@
 import postgres from "postgres"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
+import { type AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import createDbConfig from "./createDbConfig"
 import insertErrorListRecord from "./insertErrorListRecord"
 
@@ -35,7 +36,8 @@ describe("insertErrorListRecord", () => {
       SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
     )[0]
 
-    const messageId = result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+    const hearingOutcome = result.hearingOutcome as AnnotatedHearingOutcome
+    const messageId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
     expect(insertedRecord.message_id).toBe(messageId)
   })
 })

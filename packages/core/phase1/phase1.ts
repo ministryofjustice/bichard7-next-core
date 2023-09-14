@@ -92,7 +92,7 @@ const phase1 = async (
       resultType
     }
   } catch (e) {
-    const { message: errorMessage, stack } = e as Error
+    const { message: failureMessage, stack } = e as Error
 
     auditLogger.logEvent(
       getAuditLogEvent(
@@ -100,7 +100,7 @@ const phase1 = async (
         EventCategory.error,
         AuditLogEventSource.CoreHandler,
         {
-          "Exception Message": errorMessage,
+          "Exception Message": failureMessage,
           "Exception Stack Trace": stack
         }
       )
@@ -108,7 +108,8 @@ const phase1 = async (
 
     return {
       auditLogEvents: auditLogger.getEvents(),
-      resultType: Phase1ResultType.failure
+      resultType: Phase1ResultType.failure,
+      failureMessage
     }
   }
 }
