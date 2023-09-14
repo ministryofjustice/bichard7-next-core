@@ -10,7 +10,7 @@ import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 import createDbConfig from "../../lib/database/createDbConfig"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
-import { phase1SuccessResultSchema } from "../../phase1/schemas/phase1Result"
+import { persistablePhase1ResultSchema } from "../../phase1/schemas/phase1Result"
 
 const taskDefName = "persist_phase1"
 
@@ -43,7 +43,7 @@ const persistPhase1: ConductorWorker = {
     }
 
     const maybePhase1Result = JSON.parse(s3Phase1Result, dateReviver)
-    const parseAttempt = phase1SuccessResultSchema.safeParse(maybePhase1Result)
+    const parseAttempt = persistablePhase1ResultSchema.safeParse(maybePhase1Result)
     if (!parseAttempt.success) {
       const issues = JSON.stringify(parseAttempt.error.issues)
       return {
@@ -52,10 +52,10 @@ const persistPhase1: ConductorWorker = {
       }
     }
 
-    const result = parseAttempt.data
+    const data = parseAttempt.data
     const logs: string[] = []
-    if (result.triggers.length > 0 || result.hearingOutcome.Exceptions.length > 0) {
-      const dbResult = await saveErrorListRecord(db, result)
+    if (data.triggers.length > 0 || data.hearingOutcome.Exceptions.length > 0) {
+      const dbResult = await saveErrorListRecord(db, data)
       if (isError(dbResult)) {
         return {
           status: "FAILED",

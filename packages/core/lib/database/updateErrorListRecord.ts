@@ -1,10 +1,10 @@
 import type { PostgresError, Sql } from "postgres"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
-import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
-const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRecord> => {
+const generateUpdateFields = (result: PersistablePhase1Result): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)
   return {
     asn: record.asn,
@@ -23,7 +23,7 @@ const generateUpdateFields = (result: Phase1SuccessResult): Partial<ErrorListRec
   }
 }
 
-const updateErrorListRecord = async (db: Sql, recordId: number, result: Phase1SuccessResult): Promise<void> => {
+const updateErrorListRecord = async (db: Sql, recordId: number, result: PersistablePhase1Result): Promise<void> => {
   try {
     const updateFields = generateUpdateFields(result)
     const updateResult = await db<ErrorListRecord[]>`

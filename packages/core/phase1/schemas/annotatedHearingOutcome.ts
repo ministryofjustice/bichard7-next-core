@@ -1,5 +1,7 @@
 import { z } from "zod"
 import { ExceptionCode } from "../../types/ExceptionCode"
+import { CjsPlea } from "../types/Plea"
+import ResultClass from "../types/ResultClass"
 import {
   invalid,
   validateActualOffenceDateCode,
@@ -24,10 +26,8 @@ import {
 } from "./ahoValidations"
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
-import toArray from "./toArray"
 import { ahoDescription, offenceDescription, organisationUnitDescription, resultDescription } from "./schemaDescription"
-import { CjsPlea } from "../types/Plea"
-import ResultClass from "../types/ResultClass"
+import toArray from "./toArray"
 
 const hearingDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Hearing
 const caseDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Case
@@ -502,4 +502,8 @@ export const annotatedHearingOutcomeSchema = z.object({
   PncQueryDate: z.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
   PncErrorMessage: z.string().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncErrorMessage.$description),
   Ignored: z.boolean().optional()
+})
+
+export const invalidAnnotatedHearingOutcomeSchema = annotatedHearingOutcomeSchema.extend({
+  AnnotatedHearingOutcome: z.unknown()
 })

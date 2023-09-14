@@ -70,7 +70,7 @@ describe("persistPhase1", () => {
     expect(triggerRecords).toHaveLength(3)
   })
 
-  it.only("should write exceptions to the database if they are raised", async () => {
+  it("should write exceptions to the database if they are raised", async () => {
     pncApi.get("/pnc/records/1101ZD0100000410837W").mockImplementationOnce((ctx) => {
       ctx.status = 200
       ctx.body = test89PncResponse
@@ -116,7 +116,6 @@ describe("persistPhase1", () => {
 
     const [generalError, zodError] = result.logs!
     expect(generalError.log).toBe("Failed parsing phase 1 result")
-    expect(zodError.log).toContain('"path":["resultType"],"message":"Required"')
-    // TODO: expect zod error
+    expect(zodError.log).toContain("ZodError")
   })
 })

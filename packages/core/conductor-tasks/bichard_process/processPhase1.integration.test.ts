@@ -7,9 +7,10 @@ import "jest-xml-matcher"
 import postgres from "postgres"
 import createDbConfig from "../../lib/database/createDbConfig"
 import { test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
-import { Phase1ResultType } from "../../phase1/types/Phase1Result"
+import { Phase1ResultType, type Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 import processPhase1 from "./processPhase1"
 
+import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -73,8 +74,8 @@ describe("processPhase1", () => {
 
     expect(result).toHaveProperty("status", "COMPLETED")
     expect(result.logs?.map((l) => l.log)).toContain("Message Rejected by CoreHandler")
-    expect(result.outputData?.phase1Result).toHaveProperty("resultType", Phase1ResultType.failure)
-    expect(result.outputData?.phase1Result.auditLogEvents).toHaveLength(2)
+    expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.failure)
+    expect(result.outputData?.auditLogEvents).toHaveLength(2)
   })
 
   it("should complete correctly if the phase 1 output was ignored", async () => {
@@ -85,8 +86,8 @@ describe("processPhase1", () => {
     const result = await processPhase1.execute({ inputData: { ahoS3Path } })
     expect(result).toHaveProperty("status", "COMPLETED")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing Outcome ignored as it contains no offences")
-    expect(result.outputData?.phase1Result).toHaveProperty("resultType", Phase1ResultType.ignored)
-    expect(result.outputData?.phase1Result.auditLogEvents).toHaveLength(2)
+    expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.ignored)
+    expect(result.outputData?.auditLogEvents).toHaveLength(2)
   })
 
   it("should fail if it can't put the file to S3", async () => {
@@ -130,9 +131,9 @@ describe("processPhase1", () => {
     }
     expect(updatedFile).not.toEqual(inputAhoJson)
 
-    const parsedUpdatedFile = JSON.parse(updatedFile)
-    expect(parsedUpdatedFile).toHaveProperty("PncQuery")
-    expect(parsedUpdatedFile).toHaveProperty("PncQueryDate")
+    const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver) as Phase1SuccessResult
+    expect(parsedUpdatedFile.hearingOutcome).toHaveProperty("PncQuery")
+    expect(parsedUpdatedFile.hearingOutcome).toHaveProperty("PncQueryDate")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome details")
     expect(result.logs?.map((l) => l.log)).toContain("Exceptions generated")
   })

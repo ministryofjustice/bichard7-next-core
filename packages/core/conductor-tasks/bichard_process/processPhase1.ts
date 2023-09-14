@@ -59,20 +59,15 @@ const processPhase1: ConductorWorker = {
     )
 
     const result = await phase1(parsedAho, pncGateway, auditLogger)
-    if (result.resultType === Phase1ResultType.failure || result.resultType === Phase1ResultType.ignored) {
-      return {
-        status: "COMPLETED",
-        logs: result.auditLogEvents.map((event) => conductorLog(event.eventType)),
-        outputData: { phase1Result: result }
-      }
-    }
 
-    const maybeError = await putFileToS3(JSON.stringify(result), ahoS3Path, taskDataBucket, s3Config)
-    if (isError(maybeError)) {
-      return Promise.resolve({
-        status: "FAILED",
-        logs: [conductorLog(`Could not put file to S3: ${ahoS3Path}`), conductorLog(maybeError.message)]
-      })
+    if (result.resultType === Phase1ResultType.success || result.resultType === Phase1ResultType.exceptions) {
+      const maybeError = await putFileToS3(JSON.stringify(result), ahoS3Path, taskDataBucket, s3Config)
+      if (isError(maybeError)) {
+        return Promise.resolve({
+          status: "FAILED",
+          logs: [conductorLog(`Could not put file to S3: ${ahoS3Path}`), conductorLog(maybeError.message)]
+        })
+      }
     }
 
     return {
