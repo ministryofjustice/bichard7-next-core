@@ -9,7 +9,7 @@ import TriggerStatus from "../types/TriggerStatus"
 
 export const mockApiAuditLogEvent = (overrides: Partial<AuditLogEvent> = {}): AuditLogEvent => ({
   category: "information" as EventCategory,
-  timestamp: new Date().toISOString(),
+  timestamp: new Date(),
   eventCode: EventCode.PncResponseNotReceived,
   eventType: "Test event",
   eventSource: "Test",

@@ -11,7 +11,7 @@ const getAuditLogEvent = (
   return {
     eventCode: option.code as EventCode,
     attributes,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
     eventType: option.type,
     eventSource,
     category

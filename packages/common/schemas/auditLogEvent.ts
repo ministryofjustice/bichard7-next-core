@@ -1,6 +1,6 @@
-import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 import { z } from "zod"
+import EventCategory from "../types/EventCategory"
+import EventCode from "../types/EventCode"
 
 export const eventCategorySchema = z.nativeEnum(EventCategory)
 export const eventCodeSchema = z.nativeEnum(EventCode)
@@ -12,6 +12,6 @@ export const auditLogEventSchema = z.object({
   eventSource: z.string(),
   eventSourceQueueName: z.string().optional(),
   eventType: z.string(),
-  timestamp: z.string(),
+  timestamp: z.date(),
   user: z.string().optional()
 })

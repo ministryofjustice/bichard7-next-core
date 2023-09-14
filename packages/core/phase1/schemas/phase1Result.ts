@@ -1,14 +1,14 @@
+import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { z } from "zod"
 import { Phase1ResultType } from "../types/Phase1Result"
 import { annotatedHearingOutcomeSchema } from "./annotatedHearingOutcome"
-import { auditLogEventSchema } from "./auditLogEvent"
+
 import { triggerSchema } from "./trigger"
 
 export const phase1ResultTypeSchema = z.nativeEnum(Phase1ResultType)
 
 export const phase1ResultBaseSchema = z.object({
-  auditLogEvents: z.array(auditLogEventSchema),
-  resultType: phase1ResultTypeSchema
+  auditLogEvents: z.array(auditLogEventSchema)
 })
 
 export const phase1SuccessResultSchema = phase1ResultBaseSchema.extend({
@@ -27,7 +27,4 @@ export const phase1FailureResultSchema = phase1ResultBaseSchema.extend({
   resultType: z.literal(Phase1ResultType.failure)
 })
 
-export const phase1ResultSchema = z.discriminatedUnion("resultType", [
-  phase1SuccessResultSchema,
-  phase1FailureResultSchema
-])
+export const phase1ResultSchema = z.union([phase1SuccessResultSchema, phase1FailureResultSchema])

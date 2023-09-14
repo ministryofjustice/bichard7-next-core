@@ -1,17 +1,8 @@
-import type EventCategory from "../types/EventCategory"
+import type { z } from "zod"
+import type { auditLogEventSchema } from "../schemas/auditLogEvent"
 import EventCode from "./EventCode"
 
-export type AuditLogEvent = {
-  attributes?: Record<string, unknown>
-  category: EventCategory
-  eventCode: EventCode
-  eventSource: string
-  eventSourceQueueName?: string
-  eventType: string
-  timestamp: string
-  user?: string
-}
-
+export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 export enum AuditLogEventSource {
   CoreHandler = "CoreHandler",
   EnrichWithPncQuery = "EnrichWithPncQuery"
