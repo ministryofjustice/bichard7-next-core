@@ -5,7 +5,7 @@ import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
-import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventOptions, AuditLogEventSource, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
@@ -58,12 +58,12 @@ const sendToPhase2: ConductorWorker = {
         }
       }
 
-      const auditLog = {
+      const auditLog: AuditLogEvent = {
         eventCode: AuditLogEventOptions.submittedToPhase2.code,
         eventType: AuditLogEventOptions.submittedToPhase2.type,
         category: EventCategory.debug,
         eventSource: AuditLogEventSource.CoreHandler,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(),
         attributes: {}
       }
 

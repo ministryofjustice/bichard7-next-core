@@ -26,14 +26,14 @@ describe("storeAuditLogEvents", () => {
           eventSource: "Test",
           eventType: "Type",
           category: EventCategory.information,
-          timestamp: new Date().toISOString()
+          timestamp: new Date()
         },
         {
           eventCode: EventCode.DuplicateMessage,
           eventSource: "Test2",
           eventType: "Type2",
           category: EventCategory.error,
-          timestamp: new Date().toISOString()
+          timestamp: new Date()
         }
       ],
       triggers: [],
@@ -62,7 +62,7 @@ describe("storeAuditLogEvents", () => {
           eventSource: "Test",
           eventType: "Type",
           category: EventCategory.error,
-          timestamp: new Date().toISOString()
+          timestamp: new Date()
         }
       ],
       triggers: [],

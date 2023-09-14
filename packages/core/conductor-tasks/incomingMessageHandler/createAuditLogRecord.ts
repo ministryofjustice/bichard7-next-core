@@ -55,7 +55,7 @@ const createAuditLogRecord: ConductorWorker = {
                 eventCode: EventCode.DuplicateMessage,
                 eventSource: "Incoming Message Handler",
                 eventType: "Duplicate message",
-                timestamp: new Date().toISOString()
+                timestamp: new Date()
               }
             ]
           }

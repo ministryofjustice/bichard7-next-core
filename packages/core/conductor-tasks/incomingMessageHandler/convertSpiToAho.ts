@@ -93,7 +93,7 @@ const buildParsingFailedOutput = (message: string, messageMetadata: MessageMetad
         eventCode: EventCode.MessageRejected,
         eventSource: "Incoming Message Handler",
         eventType: "Failed to parse incoming message",
-        timestamp: new Date().toISOString()
+        timestamp: new Date()
       }
     ],
     errorReportData: {
