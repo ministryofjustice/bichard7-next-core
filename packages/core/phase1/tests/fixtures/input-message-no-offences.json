@@ -1,1 +1,44 @@
-{"AnnotatedHearingOutcome":{"HearingOutcome":{"Hearing":{"CourtHearingLocation":{"TopLevelCode":"B","SecondLevelCode":"01","ThirdLevelCode":"EF","BottomLevelCode":"01","OrganisationUnitCode":"B01EF01"},"DateOfHearing":"2011-09-26T00:00:00.000Z","TimeOfHearing":"10:00","HearingLanguage":"D","HearingDocumentationLanguage":"D","DefendantPresentAtHearing":"A","SourceReference":{"DocumentName":"SPI TRPRFOUR SEXOFFENCE","DocumentType":"SPI Case Result","UniqueID":"EXTERNAL_CORRELATION_ID"},"CourtHouseCode":2576},"Case":{"PTIURN":"01ZD0303208","PreChargeDecisionIndicator":false,"CourtReference":{"MagistratesCourtReference":"01ZD0303208"},"HearingDefendant":{"ArrestSummonsNumber":"1101ZD0100000448754K","DefendantDetail":{"PersonName":{"Title":"Mr","GivenName":["TRPRFOUR"],"FamilyName":"SEXOFFENCE"},"BirthDate":"1948-11-11T00:00:00.000Z","Gender":1},"Address":{"AddressLine1":"Scenario1 Address Line 1","AddressLine2":"Scenario1 Address Line 2","AddressLine3":"Scenario1 Address Line 3"},"RemandStatus":"UB","BailConditions":[],"Offence":[]}}}},"Exceptions":[]}
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": { "DocumentName": "SPI TRPRFOUR SEXOFFENCE", "DocumentType": "SPI Case Result", "UniqueID": "EXTERNAL_CORRELATION_ID" },
+        "CourtHouseCode": 2576
+      },
+      "Case": {
+        "PTIURN": "01ZD0303208",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": { "MagistratesCourtReference": "01ZD0303208" },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000448754K",
+          "DefendantDetail": {
+            "PersonName": { "Title": "Mr", "GivenName": ["TRPRFOUR"], "FamilyName": "SEXOFFENCE" },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "Scenario1 Address Line 1",
+            "AddressLine2": "Scenario1 Address Line 2",
+            "AddressLine3": "Scenario1 Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": []
+        }
+      }
+    }
+  },
+  "Exceptions": []
+}
