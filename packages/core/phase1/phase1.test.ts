@@ -71,7 +71,7 @@ describe("Bichard Core processing logic", () => {
         eventCode: "hearing-outcome.ignored.no-offences",
         eventSource: "CoreHandler",
         category: "information",
-        timestamp: mockedDate.toISOString()
+        timestamp: mockedDate
       }
     ])
   })
@@ -93,7 +93,7 @@ describe("Bichard Core processing logic", () => {
           eventCode: "exceptions.generated",
           eventSource: "CoreHandler",
           category: "information",
-          timestamp: mockedDate.toISOString()
+          timestamp: mockedDate
         })
       ])
     )

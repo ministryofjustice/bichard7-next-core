@@ -50,7 +50,11 @@ describe("storeAuditLogEvents", () => {
       inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
     })
     expect(mockApiCall).toHaveBeenCalledTimes(1)
-    expect(mockApiCall.mock.calls[0][0].request).toHaveProperty("body", phase1Result.auditLogEvents)
+    const expectedAuditLogEvents = phase1Result.auditLogEvents.map((e) => ({
+      ...e,
+      timestamp: e.timestamp.toISOString()
+    }))
+    expect(mockApiCall.mock.calls[0][0].request).toHaveProperty("body", expectedAuditLogEvents)
   })
 
   it("should throw an exception if it fails to write to the audit log", async () => {
