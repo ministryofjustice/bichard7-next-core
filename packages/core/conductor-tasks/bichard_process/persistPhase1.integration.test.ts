@@ -70,7 +70,7 @@ describe("persistPhase1", () => {
     expect(triggerRecords).toHaveLength(3)
   })
 
-  it("should write exceptions to the database if they are raised", async () => {
+  it.only("should write exceptions to the database if they are raised", async () => {
     pncApi.get("/pnc/records/1101ZD0100000410837W").mockImplementationOnce((ctx) => {
       ctx.status = 200
       ctx.body = test89PncResponse

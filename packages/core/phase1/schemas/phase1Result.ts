@@ -15,12 +15,14 @@ export const phase1SuccessResultSchema = phase1ResultBaseSchema.extend({
   correlationId: z.string(),
   hearingOutcome: annotatedHearingOutcomeSchema,
   triggers: z.array(triggerSchema),
-  resultType: z.union([
-    z.literal(Phase1ResultType.success),
-    z.literal(Phase1ResultType.exceptions),
-    z.literal(Phase1ResultType.ignored)
-  ])
+  resultType: z.union([z.literal(Phase1ResultType.success), z.literal(Phase1ResultType.ignored)])
 })
+
+export const phase1ExceptionsResultSchema = phase1SuccessResultSchema.extend({
+  hearingOutcome: z.unknown(),
+  resultType: z.literal(Phase1ResultType.exceptions)
+})
+
 
 export const phase1FailureResultSchema = phase1ResultBaseSchema.extend({
   correlationId: z.string().optional(),
