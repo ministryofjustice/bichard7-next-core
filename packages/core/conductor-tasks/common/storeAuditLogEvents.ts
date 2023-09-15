@@ -1,10 +1,10 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
-import type Task from "@moj-bichard7/conductor/src/Task"
-import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
 import axios from "axios"
 import { z } from "zod"
 

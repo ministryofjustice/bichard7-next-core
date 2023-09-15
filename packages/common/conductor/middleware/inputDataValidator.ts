@@ -1,8 +1,8 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type { z } from "zod"
 import { ZodIssueCode } from "zod"
-import type Task from "../Task"
+import { conductorLog } from "../logging"
+import type Task from "../types/Task"
 
 type OriginalHandler = ConductorWorker["execute"]
 type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "workflowInstanceId" | "taskId">>

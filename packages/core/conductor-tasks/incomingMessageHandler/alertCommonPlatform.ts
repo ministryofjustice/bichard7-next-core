@@ -1,11 +1,11 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
 import type Email from "@moj-bichard7/common/email/Email"
 import getEmailer from "@moj-bichard7/common/email/getEmailer"
 import getSmtpConfig from "@moj-bichard7/common/email/getSmtpConfig"
-import type Task from "@moj-bichard7/conductor/src/Task"
-import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
 import { z } from "zod"
 import { errorReportDataSchema, type ErrorReportData } from "../types/errorReportData"
 

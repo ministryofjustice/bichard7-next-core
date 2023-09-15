@@ -3,11 +3,11 @@ import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogAp
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { auditLogApiRecordInputSchema } from "@moj-bichard7/common/schemas/auditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import type Task from "@moj-bichard7/conductor/src/Task"
-import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
 import { z } from "zod"
 
 const taskDefName = "create_audit_log_record"

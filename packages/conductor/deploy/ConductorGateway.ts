@@ -1,6 +1,5 @@
-import type { WorkflowDef } from "@io-orkes/conductor-javascript"
+import type { TaskDef, WorkflowDef } from "@io-orkes/conductor-javascript"
 import type EventHandlerDef from "@moj-bichard7/common/conductor/types/EventHandlerDef"
-import type TaskDef from "@moj-bichard7/common/conductor/types/TaskDef"
 import axios, { type AxiosResponse } from "axios"
 
 type ConductorOptions = {
