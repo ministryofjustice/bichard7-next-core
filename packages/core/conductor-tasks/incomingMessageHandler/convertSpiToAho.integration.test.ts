@@ -126,5 +126,10 @@ describe("convertSpiToAho", () => {
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
   })
 
-  it.todo("should fail with terminal error if the S3 path is missing")
+  it("should fail with terminal error if the S3 path is missing", async () => {
+    const result = await convertSpiToAho.execute({ inputData: {} })
+
+    expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3Path")
+  })
 })

@@ -46,7 +46,14 @@ describe("createAuditLogRecord", () => {
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
   })
 
-  it.todo("should fail with terminal error if the audit log record is invalid")
+  it("should fail with terminal error if the audit log record is invalid", async () => {
+    const result = await createAuditLogRecord.execute({
+      inputData: { auditLogRecord: { ...auditLogRecord, caseId: false } }
+    })
+
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for auditLogRecord.caseId")
+  })
 
   it("should correctly identify a duplicate message hash", async () => {
     const oldMessageId = auditLogRecord.messageId

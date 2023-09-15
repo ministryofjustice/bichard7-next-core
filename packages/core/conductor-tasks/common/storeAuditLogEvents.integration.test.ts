@@ -9,6 +9,21 @@ import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import storeAuditLogEvents from "./storeAuditLogEvents"
 
+const dummyAuditLogEvent = {
+  eventCode: EventCode.AllTriggersResolved,
+  eventSource: "Test",
+  eventType: "Type",
+  category: EventCategory.error,
+  timestamp: new Date()
+}
+
+const invalidAuditLogEvent = {
+  eventCode: EventCode.AllTriggersResolved,
+  eventType: "Type",
+  category: EventCategory.error,
+  timestamp: new Date()
+}
+
 describe("storeAuditLogEvents", () => {
   let auditLogApi: MockServer
 
@@ -60,15 +75,7 @@ describe("storeAuditLogEvents", () => {
   it("should return FAILED if it fails to write to the audit log", async () => {
     const phase1Result: Phase1SuccessResult = {
       correlationId: "dummy-id",
-      auditLogEvents: [
-        {
-          eventCode: EventCode.AllTriggersResolved,
-          eventSource: "Test",
-          eventType: "Type",
-          category: EventCategory.error,
-          timestamp: new Date()
-        }
-      ],
+      auditLogEvents: [dummyAuditLogEvent],
       triggers: [],
       hearingOutcome: {} as AnnotatedHearingOutcome,
       resultType: Phase1ResultType.success
@@ -84,6 +91,30 @@ describe("storeAuditLogEvents", () => {
     expect(result.status).toBe("FAILED")
   })
 
-  it.todo("should fail with terminal error if the correlation id is missing")
-  it.todo("should fail with terminal error if the audit logs are invalid")
+  it("should fail with terminal error if the correlation id is missing", async () => {
+    const result = await storeAuditLogEvents.execute({
+      inputData: { auditLogEvents: [dummyAuditLogEvent] }
+    })
+
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for correlationId")
+  })
+
+  it("should fail with terminal error if the audit logs are missing", async () => {
+    const result = await storeAuditLogEvents.execute({ inputData: { correlationId: "foo" } })
+
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected array for auditLogEvents")
+  })
+
+  it("should fail with terminal error if the audit logs are invalid", async () => {
+    const result = await storeAuditLogEvents.execute({
+      inputData: { correlationId: "foo", auditLogEvents: [invalidAuditLogEvent] }
+    })
+
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain(
+      "InputData error: Expected string for auditLogEvents.0.eventSource"
+    )
+  })
 })

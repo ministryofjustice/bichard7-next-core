@@ -36,7 +36,16 @@ describe("alertCommonPlatform", () => {
     expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected object for errorReportData")
   })
 
-  it.todo("should fail with terminal error if errorReportData is invalid")
+  it("should fail with terminal error if errorReportData is invalid", async () => {
+    const result = await alertCommonPlatform.execute({
+      inputData: { errorReportData: { ...errorReportData, receivedDate: false } }
+    })
+
+    expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain(
+      "InputData error: Expected string for errorReportData.receivedDate"
+    )
+  })
 
   it("should fail if emailer throws", async () => {
     mockGetEmailer.default = getEmailerThrowsException
