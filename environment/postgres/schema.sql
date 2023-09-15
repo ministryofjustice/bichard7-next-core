@@ -732,7 +732,8 @@ ALTER SEQUENCE br7own.pnc_event_sequence_event_sequence_id_seq OWNED BY br7own.p
 CREATE TABLE br7own.service_messages (
     id integer NOT NULL,
     message text,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    incident_date timestamp without time zone DEFAULT NULL
 );
 
 
