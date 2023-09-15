@@ -2,7 +2,7 @@ import type { AxiosError } from "axios"
 import axios, { HttpStatusCode } from "axios"
 import * as https from "https"
 import type { AuditLogEvent } from "../types/AuditLogEvent"
-import type { InputApiAuditLog, OutputApiAuditLog } from "../types/AuditLogRecord"
+import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 import type { PromiseResult } from "../types/Result"
 import ApplicationError from "./ApplicationError"
 import addQueryParams from "./addQueryParams"
@@ -36,7 +36,7 @@ export default class AuditLogApiClient {
     return typeof message === "string" ? message : JSON.stringify(message)
   }
 
-  getMessages(options?: GetMessagesOptions): PromiseResult<OutputApiAuditLog[]> {
+  getMessages(options?: GetMessagesOptions): PromiseResult<AuditLogApiRecordOutput[]> {
     const url = addQueryParams(`${this.apiUrl}/messages`, options)
 
     return axios
@@ -57,7 +57,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessage(messageId: string, options: GetMessageOptions = {}): PromiseResult<OutputApiAuditLog> {
+  getMessage(messageId: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
     const queryParams: string[] = []
     let queryString = ""
     if (options?.includeColumns) {
@@ -88,7 +88,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessageByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<OutputApiAuditLog> {
+  getMessageByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
     const queryParams: string[] = [`messageHash=${messageHash}`]
 
     if (options?.includeColumns) {
@@ -119,7 +119,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  createAuditLog(auditLog: InputApiAuditLog): PromiseResult<void> {
+  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<void> {
     return axios
       .post(`${this.apiUrl}/messages`, this.stringify(auditLog), {
         headers: {
@@ -243,7 +243,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  fetchUnsanitised(options: GetMessageOptions = {}): PromiseResult<OutputApiAuditLog[]> {
+  fetchUnsanitised(options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
     const url = addQueryParams(`${this.apiUrl}/messages`, {
       limit: options.limit,
       includeColumns: options.includeColumns?.join(","),

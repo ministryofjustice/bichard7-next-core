@@ -1,12 +1,20 @@
-import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import type Email from "@moj-bichard7/common/email/Email"
 import getEmailer from "@moj-bichard7/common/email/getEmailer"
 import getSmtpConfig from "@moj-bichard7/common/email/getSmtpConfig"
+import type Task from "@moj-bichard7/conductor/src/Task"
+import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
+import { z } from "zod"
 import { errorReportDataSchema, type ErrorReportData } from "../types/errorReportData"
 
 const taskDefName = "alert_common_platform"
+
+const inputDataSchema = z.object({
+  errorReportData: errorReportDataSchema
+})
+type InputData = z.infer<typeof inputDataSchema>
 
 const generateEmailContent = (
   inputData: ErrorReportData
@@ -21,21 +29,15 @@ PTIURN: ${inputData.ptiUrn}
 const alertCommonPlatform: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
-    const errorReportData = errorReportDataSchema.safeParse(task.inputData?.errorReportData)
-    if (!errorReportData.success) {
-      return Promise.resolve({
-        logs: [conductorLog("errorReportData is missing or invalid")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
-    }
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
+    const { errorReportData } = task.inputData
 
     const email: Email = {
       // TODO: get email addresses from SSM
       from: "no-reply@mail.bichard7.service.justice.gov.uk",
       to: "moj-bichard7@madetech.cjsm.net",
       subject: "Failed to ingest SPI message, schema mismatch",
-      text: generateEmailContent(errorReportData.data)
+      text: generateEmailContent(errorReportData)
     }
 
     try {
@@ -53,7 +55,7 @@ const alertCommonPlatform: ConductorWorker = {
       status: "COMPLETED",
       logs: [conductorLog("Message sent to Common Platform")]
     })
-  }
+  })
 }
 
 export default alertCommonPlatform

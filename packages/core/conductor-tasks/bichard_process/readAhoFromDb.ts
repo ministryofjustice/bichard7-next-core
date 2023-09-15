@@ -1,11 +1,14 @@
-import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
+import type Task from "@moj-bichard7/conductor/src/Task"
+import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
 import postgres from "postgres"
+import { z } from "zod"
 import createDbConfig from "../../lib/database/createDbConfig"
 import { parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
@@ -20,25 +23,17 @@ if (!taskDataBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
 }
 
+const inputDataSchema = z.object({
+  correlationId: z.string(),
+  ahoS3Path: z.string()
+})
+type InputData = z.infer<typeof inputDataSchema>
+
 const readAhoFromDb: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
-    const correlationId = task.inputData?.correlationId
-    if (!correlationId) {
-      return Promise.resolve({
-        logs: [conductorLog("correlationId must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
-    }
-
-    const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
-    if (!ahoS3Path) {
-      return Promise.resolve({
-        logs: [conductorLog("s3Path must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
-    }
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
+    const { correlationId, ahoS3Path } = task.inputData
 
     const dbResult = await db<
       ErrorListRecord[]
@@ -71,7 +66,7 @@ const readAhoFromDb: ConductorWorker = {
       logs: [conductorLog("AHO successfully read from database")],
       status: "COMPLETED"
     }
-  }
+  })
 }
 
 export default readAhoFromDb

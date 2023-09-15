@@ -1,4 +1,4 @@
-import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -8,6 +8,9 @@ import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
+import type Task from "@moj-bichard7/conductor/src/Task"
+import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
+import { z } from "zod"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
@@ -22,20 +25,18 @@ const pncApiConfig = createPncApiConfig()
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
+const inputDataSchema = z.object({
+  ahoS3Path: z.string()
+})
+type InputData = z.infer<typeof inputDataSchema>
+
 const processPhase1: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger()
-    const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
-
-    if (!ahoS3Path) {
-      return Promise.resolve({
-        status: "FAILED_WITH_TERMINAL_ERROR",
-        logs: [conductorLog("s3Path must be specified")]
-      })
-    }
+    const { ahoS3Path } = task.inputData
 
     const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
     if (isError(ahoFileContent)) {
@@ -74,7 +75,7 @@ const processPhase1: ConductorWorker = {
       logs: result.auditLogEvents.map((event) => conductorLog(event.eventType)),
       outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents }
     }
-  }
+  })
 }
 
 export default processPhase1

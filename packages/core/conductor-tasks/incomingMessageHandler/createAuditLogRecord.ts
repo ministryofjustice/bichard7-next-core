@@ -1,31 +1,32 @@
-import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
-import { type InputApiAuditLog } from "@moj-bichard7/common/types/AuditLogRecord"
+import { auditLogApiRecordInputSchema } from "@moj-bichard7/common/schemas/auditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import type Task from "@moj-bichard7/conductor/src/Task"
+import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
+import { z } from "zod"
 
 const taskDefName = "create_audit_log_record"
 
 const { apiKey, apiUrl } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000)
 
+const inputDataSchema = z.object({
+  auditLogRecord: auditLogApiRecordInputSchema
+})
+type InputData = z.infer<typeof inputDataSchema>
+
 const createAuditLogRecord: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
-    const auditLogRecord = task.inputData?.auditLogRecord as InputApiAuditLog
-    if (!auditLogRecord) {
-      return Promise.resolve({
-        status: "FAILED_WITH_TERMINAL_ERROR",
-        logs: [conductorLog("auditLogRecord must be specified")]
-      })
-    }
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
+    const { auditLogRecord } = task.inputData
 
     const apiResult = await apiClient.createAuditLog(auditLogRecord)
-
     if (isError(apiResult)) {
       if (/Message hash already exists/i.test(apiResult.message)) {
         const existingAuditLog = await apiClient.getMessageByHash(auditLogRecord.messageHash)
@@ -71,7 +72,7 @@ const createAuditLogRecord: ConductorWorker = {
       status: "COMPLETED",
       logs: [conductorLog(`Created audit log for message: ${auditLogRecord.messageId}`)]
     })
-  }
+  })
 }
 
 export default createAuditLogRecord

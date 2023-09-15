@@ -57,6 +57,7 @@
     "@aws-sdk/lib-dynamodb": "^3.398.0",
     "@io-orkes/conductor-javascript": "^1.2.3",
     "axios": "^1.4.0",
-    "lodash.ismatch": "^4.4.0"
+    "lodash.ismatch": "^4.4.0",
+    "zod": "^3.22.2"
   }
 }

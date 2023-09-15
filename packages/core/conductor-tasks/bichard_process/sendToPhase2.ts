@@ -1,4 +1,4 @@
-import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
@@ -8,6 +8,9 @@ import { AuditLogEventOptions, AuditLogEventSource, type AuditLogEvent } from "@
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
+import type Task from "@moj-bichard7/conductor/src/Task"
+import inputDataValidator from "@moj-bichard7/conductor/src/middleware/inputDataValidator"
+import { z } from "zod"
 import MqGateway from "../../lib/mq/MqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
@@ -25,18 +28,17 @@ if (!taskDataBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
 }
 
+const inputDataSchema = z.object({
+  ahoS3Path: z.string()
+})
+type InputData = z.infer<typeof inputDataSchema>
+
 const sendToPhase2: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     try {
-      const ahoS3Path: string | undefined = task.inputData?.ahoS3Path
-      if (!ahoS3Path) {
-        return {
-          logs: [conductorLog("ahoS3Path must be provided")],
-          status: "FAILED_WITH_TERMINAL_ERROR"
-        }
-      }
+      const { ahoS3Path } = task.inputData
 
       const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
       if (isError(ahoFileContent)) {
@@ -78,7 +80,7 @@ const sendToPhase2: ConductorWorker = {
         status: "FAILED"
       }
     }
-  }
+  })
 }
 
 export default sendToPhase2

@@ -125,4 +125,6 @@ describe("convertSpiToAho", () => {
 
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
   })
+
+  it.todo("should fail with terminal error if the S3 path is missing")
 })

@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 import type { AuditLogEvent } from "../types/AuditLogEvent"
-import type { InputApiAuditLog, OutputApiAuditLog } from "../types/AuditLogRecord"
+import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 import AuditLogStatus from "../types/AuditLogStatus"
 import type EventCategory from "../types/EventCategory"
 import EventCode from "../types/EventCode"
@@ -21,7 +21,9 @@ export const mockApiAuditLogEvent = (overrides: Partial<AuditLogEvent> = {}): Au
   ...overrides
 })
 
-export const mockInputApiAuditLog = (overrides: Partial<InputApiAuditLog> = {}): InputApiAuditLog => ({
+export const mockAuditLogApiRecordInput = (
+  overrides: Partial<AuditLogApiRecordInput> = {}
+): AuditLogApiRecordInput => ({
   caseId: "Case ID",
   createdBy: "Create audit log test",
   externalCorrelationId: uuid(),
@@ -37,8 +39,10 @@ export const mockInputApiAuditLog = (overrides: Partial<InputApiAuditLog> = {}):
   ...overrides
 })
 
-export const mockOutputApiAuditLog = (overrides: Partial<OutputApiAuditLog> = {}): OutputApiAuditLog => ({
-  ...mockInputApiAuditLog(overrides),
+export const mockAuditLogApiRecordOutput = (
+  overrides: Partial<AuditLogApiRecordOutput> = {}
+): AuditLogApiRecordOutput => ({
+  ...mockAuditLogApiRecordInput(overrides),
   pncStatus: PncStatus.Processing,
   triggerStatus: TriggerStatus.NoTriggers,
   status: AuditLogStatus.processing,

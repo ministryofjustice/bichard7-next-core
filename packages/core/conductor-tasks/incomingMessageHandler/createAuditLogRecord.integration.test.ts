@@ -3,7 +3,7 @@ import "../../phase1/tests/helpers/setEnvironmentVariables"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
-import { type InputApiAuditLog } from "@moj-bichard7/common/types/AuditLogRecord"
+import { type AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
 import { v4 as uuid } from "uuid"
 import createAuditLogRecord from "./createAuditLogRecord"
 
@@ -11,7 +11,7 @@ const { apiKey, apiUrl } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000)
 
 describe("createAuditLogRecord", () => {
-  let auditLogRecord: InputApiAuditLog
+  let auditLogRecord: AuditLogApiRecordInput
 
   beforeEach(() => {
     const externalId = uuid()
@@ -40,11 +40,13 @@ describe("createAuditLogRecord", () => {
     expect(auditLog).toHaveProperty("messageId", auditLogRecord.messageId)
   })
 
-  it("should fail if the auditLogRecord hasn't been provided", async () => {
+  it("should fail with terminal error if the auditLogRecord hasn't been provided", async () => {
     const result = await createAuditLogRecord.execute({ inputData: {} })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
   })
+
+  it.todo("should fail with terminal error if the audit log record is invalid")
 
   it("should correctly identify a duplicate message hash", async () => {
     const oldMessageId = auditLogRecord.messageId

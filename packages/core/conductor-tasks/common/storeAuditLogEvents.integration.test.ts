@@ -57,7 +57,7 @@ describe("storeAuditLogEvents", () => {
     expect(mockApiCall.mock.calls[0][0].request).toHaveProperty("body", expectedAuditLogEvents)
   })
 
-  it("should throw an exception if it fails to write to the audit log", async () => {
+  it("should return FAILED if it fails to write to the audit log", async () => {
     const phase1Result: Phase1SuccessResult = {
       correlationId: "dummy-id",
       auditLogEvents: [
@@ -73,21 +73,17 @@ describe("storeAuditLogEvents", () => {
       hearingOutcome: {} as AnnotatedHearingOutcome,
       resultType: Phase1ResultType.success
     }
-    const mockApiCall = auditLogApi
-      .post(`/messages/${phase1Result.correlationId}/events`)
-      .mockImplementationOnce((ctx) => {
-        ctx.status = 500
-      })
+    auditLogApi.post(`/messages/${phase1Result.correlationId}/events`).mockImplementationOnce((ctx) => {
+      ctx.status = 500
+    })
 
-    let errorThrown = false
-    try {
-      await storeAuditLogEvents.execute({
-        inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
-      })
-    } catch (e) {
-      errorThrown = true
-    }
-    expect(errorThrown).toBeTruthy()
-    expect(mockApiCall).toHaveBeenCalledTimes(1)
+    const result = await storeAuditLogEvents.execute({
+      inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
+    })
+
+    expect(result.status).toBe("FAILED")
   })
+
+  it.todo("should fail with terminal error if the correlation id is missing")
+  it.todo("should fail with terminal error if the audit logs are invalid")
 })
