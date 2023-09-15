@@ -1,4 +1,4 @@
-import type { WorkflowDef } from "@io-orkes/conductor-typescript"
+import type { WorkflowDef } from "@io-orkes/conductor-javascript"
 import fs from "fs"
 import type ConductorGateway from "./ConductorGateway"
 import { hashFile } from "./utils"

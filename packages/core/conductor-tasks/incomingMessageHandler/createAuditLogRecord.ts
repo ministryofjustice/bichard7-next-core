@@ -1,4 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"

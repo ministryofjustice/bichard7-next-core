@@ -1,4 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
