@@ -135,7 +135,6 @@
   "outputParameters": {
     "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
   },
-  "failureWorkflow": "bichard_failure_handler",
   "schemaVersion": 2,
   "restartable": true,
   "workflowStatusListenerEnabled": false,
