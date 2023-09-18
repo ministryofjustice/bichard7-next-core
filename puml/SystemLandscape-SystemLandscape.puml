@@ -28,7 +28,7 @@ Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
 }
 
 Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
-System(CJSM, "CJSM", $descr="", $tags="", $link="cjsm/context/")
+System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
 Rel_D(PoliceUser, PSNProxy, "Uses", $techn="", $tags="", $link="")
 Rel_D(PoliceUser, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
