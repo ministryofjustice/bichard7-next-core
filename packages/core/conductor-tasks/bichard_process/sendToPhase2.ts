@@ -1,7 +1,8 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -37,49 +38,31 @@ const sendToPhase2: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    try {
-      const { ahoS3Path } = task.inputData
+    const { ahoS3Path } = task.inputData
 
-      const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
-      if (isError(ahoFileContent)) {
-        logger.error(ahoFileContent)
-        return {
-          logs: [conductorLog("Could not retrieve file from S3")],
-          status: "FAILED"
-        }
-      }
-
-      // TODO: zod schema parsing for Phase1Result type
-      const phase1SuccessResult = JSON.parse(ahoFileContent, dateReviver) as Phase1SuccessResult
-      const result = await mqGateway.sendMessage(convertAhoToXml(phase1SuccessResult.hearingOutcome), mqQueue)
-      if (isError(result)) {
-        return {
-          logs: [conductorLog("Failed to write to MQ")],
-          status: "FAILED"
-        }
-      }
-
-      const auditLog: AuditLogEvent = {
-        eventCode: AuditLogEventOptions.submittedToPhase2.code,
-        eventType: AuditLogEventOptions.submittedToPhase2.type,
-        category: EventCategory.debug,
-        eventSource: AuditLogEventSource.CoreHandler,
-        timestamp: new Date(),
-        attributes: {}
-      }
-
-      return {
-        logs: [conductorLog("Sent to Phase 2 via MQ")],
-        outputData: { auditLogEvents: [auditLog] },
-        status: "COMPLETED"
-      }
-    } catch (e) {
-      logger.error(e)
-      return {
-        logs: [conductorLog(`Send to phase 2 failed: ${(e as Error).message}`)],
-        status: "FAILED"
-      }
+    const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
+    if (isError(ahoFileContent)) {
+      logger.error(ahoFileContent)
+      return failed("Could not retrieve file from S3")
     }
+
+    // TODO: zod schema parsing for Phase1Result type
+    const phase1SuccessResult = JSON.parse(ahoFileContent, dateReviver) as Phase1SuccessResult
+    const result = await mqGateway.sendMessage(convertAhoToXml(phase1SuccessResult.hearingOutcome), mqQueue)
+    if (isError(result)) {
+      return failed("Failed to write to MQ")
+    }
+
+    const auditLog: AuditLogEvent = {
+      eventCode: AuditLogEventOptions.submittedToPhase2.code,
+      eventType: AuditLogEventOptions.submittedToPhase2.type,
+      category: EventCategory.debug,
+      eventSource: AuditLogEventSource.CoreHandler,
+      timestamp: new Date(),
+      attributes: {}
+    }
+
+    return completed({ auditLogEvents: [auditLog] }, "Sent to Phase 2 via MQ")
   })
 }
 

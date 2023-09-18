@@ -1,6 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -41,10 +42,7 @@ const processPhase1: ConductorWorker = {
     const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
     if (isError(ahoFileContent)) {
       logger.error(ahoFileContent)
-      return Promise.resolve({
-        status: "FAILED",
-        logs: [conductorLog(`Could not retrieve file from S3: ${ahoS3Path}`), conductorLog(ahoFileContent.message)]
-      })
+      return failed(`Could not retrieve file from S3: ${ahoS3Path}`, ahoFileContent.message)
     }
 
     const parsedAho = parseAhoJson(JSON.parse(ahoFileContent))
@@ -63,18 +61,14 @@ const processPhase1: ConductorWorker = {
     if (result.resultType === Phase1ResultType.success || result.resultType === Phase1ResultType.exceptions) {
       const maybeError = await putFileToS3(JSON.stringify(result), ahoS3Path, taskDataBucket, s3Config)
       if (isError(maybeError)) {
-        return Promise.resolve({
-          status: "FAILED",
-          logs: [conductorLog(`Could not put file to S3: ${ahoS3Path}`), conductorLog(maybeError.message)]
-        })
+        return failed(`Could not put file to S3: ${ahoS3Path}`, maybeError.message)
       }
     }
 
-    return {
-      status: "COMPLETED",
-      logs: result.auditLogEvents.map((event) => conductorLog(event.eventType)),
-      outputData: { resultType: result.resultType, auditLogEvents: result.auditLogEvents }
-    }
+    return completed(
+      { resultType: result.resultType, auditLogEvents: result.auditLogEvents },
+      ...result.auditLogEvents.map((e) => e.eventType)
+    )
   })
 }
 

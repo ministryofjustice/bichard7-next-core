@@ -1,7 +1,8 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
-import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
-import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
+import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import { isError } from "@moj-bichard7/common/types/Result"
 import DynamoGateway from "../lib/DynamoGateway"
 import compareFile from "../lib/compareFile"
@@ -19,18 +20,13 @@ const compareFiles: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName, 10),
   execute: async (task: Task) => {
-    logWorkingMessage(task)
-
     const records = task.inputData?.records as string[]
 
     if (!records) {
-      return {
-        logs: [conductorLog("start and end must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      }
+      return failedTerminal("start and end must be specified")
     }
 
-    const logs: ConductorLog[] = []
+    const logs: string[] = []
     const count = { pass: 0, fail: 0 }
 
     const resultPromises = records.map((s3Path) => compareFile(s3Path, bucket))
@@ -39,13 +35,13 @@ const compareFiles: ConductorWorker = {
 
     allTestResults.forEach((res) => {
       if (isError(res)) {
-        logs.push(conductorLog(res.message))
+        logs.push(res.message)
       } else {
         if (isPass(res.comparisonResult)) {
           count.pass += 1
         } else {
           count.fail += 1
-          logs.push(conductorLog(`Comparison failed: ${res.s3Path}`))
+          logs.push(`Comparison failed: ${res.s3Path}`)
         }
       }
     })
@@ -54,20 +50,12 @@ const compareFiles: ConductorWorker = {
 
     const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
     if (isError(recordResultsInDynamoResult)) {
-      return {
-        logs: [conductorLog("Failed to write results to Dynamo")],
-        status: "FAILED"
-      }
+      return failed("Failed to write results to Dynamo")
     }
 
-    logs.push(conductorLog(`Results of processing: ${count.pass} passed. ${count.fail} failed`))
+    logs.push(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
 
-    logCompletedMessage(task)
-    return {
-      logs,
-      outputData: { ...count },
-      status: "COMPLETED"
-    }
+    return completed(count, ...logs)
   }
 }
 

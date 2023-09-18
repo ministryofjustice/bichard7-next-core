@@ -1,7 +1,7 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
 import type { z } from "zod"
 import { ZodIssueCode } from "zod"
-import { conductorLog } from "../logging"
+import { failedTerminal } from "../helpers"
 import type Task from "../types/Task"
 
 type OriginalHandler = ConductorWorker["execute"]
@@ -21,10 +21,7 @@ const inputDataValidator = <T>(schema: z.AnyZodObject, handler: Handler<T>): Ori
       return "InputData error. Schema mismatch"
     })
 
-    return Promise.resolve({
-      status: "FAILED_WITH_TERMINAL_ERROR",
-      logs: messages.map(conductorLog)
-    })
+    return failedTerminal(...messages)
   }
 }
 
