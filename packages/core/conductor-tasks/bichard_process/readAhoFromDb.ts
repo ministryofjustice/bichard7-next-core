@@ -26,7 +26,7 @@ if (!taskDataBucket) {
 
 const inputDataSchema = z.object({
   correlationId: z.string(),
-  ahoS3Path: z.string()
+  s3TaskDataPath: z.string()
 })
 type InputData = z.infer<typeof inputDataSchema>
 
@@ -34,7 +34,7 @@ const readAhoFromDb: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { correlationId, ahoS3Path } = task.inputData
+    const { correlationId, s3TaskDataPath } = task.inputData
 
     const dbResult = await db<
       ErrorListRecord[]
@@ -50,7 +50,7 @@ const readAhoFromDb: ConductorWorker = {
       return failed("Failed to parse AHO from database", aho.message)
     }
 
-    const maybeError = await putFileToS3(JSON.stringify(aho), ahoS3Path, taskDataBucket, s3Config)
+    const maybeError = await putFileToS3(JSON.stringify(aho), s3TaskDataPath, taskDataBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)
       return failed("Could not put file to S3")

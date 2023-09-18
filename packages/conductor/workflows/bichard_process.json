@@ -14,7 +14,7 @@
           "name": "process_phase1",
           "taskReferenceName": "process_phase1",
           "inputParameters": {
-            "ahoS3Path": "${workflow.input.ahoS3Path}"
+            "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -25,7 +25,7 @@
           "name": "persist_phase1",
           "taskReferenceName": "persist_phase1",
           "inputParameters": {
-            "ahoS3Path": "${workflow.input.ahoS3Path}"
+            "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
           },
           "type": "SIMPLE",
           "startDelay": 0,
@@ -67,7 +67,7 @@
                 "taskReferenceName": "read_aho_from_db",
                 "inputParameters": {
                   "correlationId": "${workflow.correlationId}",
-                  "ahoS3Path": "${workflow.input.ahoS3Path}"
+                  "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
                 },
                 "type": "SIMPLE",
                 "startDelay": 0,
@@ -113,7 +113,7 @@
       "name": "send_to_phase2",
       "taskReferenceName": "send_to_phase2",
       "inputParameters": {
-        "ahoS3Path": "${workflow.input.ahoS3Path}"
+        "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
@@ -133,7 +133,7 @@
       "asyncComplete": false
     }
   ],
-  "inputParameters": ["ahoS3Path"],
+  "inputParameters": ["s3TaskDataPath"],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,

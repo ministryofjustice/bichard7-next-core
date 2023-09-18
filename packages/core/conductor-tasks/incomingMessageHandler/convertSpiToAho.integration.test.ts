@@ -38,11 +38,14 @@ describe("convertSpiToAho", () => {
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
-    expect(result.outputData).toHaveProperty("ahoS3Path")
+    expect(result.outputData).toHaveProperty("s3TaskDataPath")
     expect(result.outputData).toHaveProperty("correlationId")
 
-    const { ahoS3Path } = result.outputData!
-    const s3aho = JSON.parse((await getFileFromS3(ahoS3Path, TASK_DATA_BUCKET_NAME!, s3Config)) as string, dateReviver)
+    const { s3TaskDataPath } = result.outputData!
+    const s3aho = JSON.parse(
+      (await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config)) as string,
+      dateReviver
+    )
     const { aho } = transformIncomingMessageToAho(inputMessage) as TransformedOutput
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = result.outputData!.correlationId
 

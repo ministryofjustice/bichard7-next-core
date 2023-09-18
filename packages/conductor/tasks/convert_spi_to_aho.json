@@ -7,5 +7,5 @@
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["s3Path"],
-  "outputKeys": ["ahoS3Path", "auditLogRecord", "auditLogEvents", "error", "correlationId"]
+  "outputKeys": ["s3TaskDataPath", "auditLogRecord", "auditLogEvents", "error", "correlationId"]
 }

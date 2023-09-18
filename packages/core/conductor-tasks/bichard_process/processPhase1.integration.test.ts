@@ -59,19 +59,27 @@ describe("processPhase1", () => {
     const result = await processPhase1.execute({ inputData: {} })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3TaskDataPath")
   })
 
   it("should fail if it can't fetch the file from S3", async () => {
-    const result = await processPhase1.execute({ inputData: { ahoS3Path: "missing.json" } })
+    const result = await processPhase1.execute({ inputData: { s3TaskDataPath: "missing.json" } })
 
     expect(result).toHaveProperty("status", "FAILED")
   })
 
   it("should complete correctly if the phase 1 output was a failure", async () => {
-    const ahoS3Path = "bad-aho.json"
-    await putFileToS3("{}", ahoS3Path, bucket, s3Config)
-    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    const s3TaskDataPath = "bad-aho.json"
+    await putFileToS3(
+      JSON.stringify({
+        Exceptions: [],
+        AnnotatedHearingOutcome: {}
+      }),
+      s3TaskDataPath,
+      bucket,
+      s3Config
+    )
+    const result = await processPhase1.execute({ inputData: { s3TaskDataPath } })
 
     expect(result).toHaveProperty("status", "COMPLETED")
     expect(result.logs?.map((l) => l.log)).toContain("Message Rejected by CoreHandler")
@@ -82,9 +90,9 @@ describe("processPhase1", () => {
   it("should complete correctly if the phase 1 output was ignored", async () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-no-offences.json"))
 
-    const ahoS3Path = "bad-aho.json"
-    await putFileToS3(inputMessage, ahoS3Path, bucket, s3Config)
-    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    const s3TaskDataPath = "bad-aho.json"
+    await putFileToS3(inputMessage, s3TaskDataPath, bucket, s3Config)
+    const result = await processPhase1.execute({ inputData: { s3TaskDataPath } })
     expect(result).toHaveProperty("status", "COMPLETED")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing Outcome ignored as it contains no offences")
     expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.ignored)
@@ -102,13 +110,13 @@ describe("processPhase1", () => {
     })
 
     const inputAhoJson = String(fs.readFileSync("phase1/tests/fixtures/input-message-089.json"))
-    const ahoS3Path = `${randomUUID()}.json`
-    await putFileToS3(inputAhoJson, ahoS3Path, bucket, s3Config)
+    const s3TaskDataPath = `${randomUUID()}.json`
+    await putFileToS3(inputAhoJson, s3TaskDataPath, bucket, s3Config)
 
-    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    const result = await processPhase1.execute({ inputData: { s3TaskDataPath } })
 
     expect(result).toHaveProperty("status", "FAILED")
-    expect(result.logs?.map((l) => l.log)).toContain(`Could not put file to S3: ${ahoS3Path}`)
+    expect(result.logs?.map((l) => l.log)).toContain(`Could not put file to S3: ${s3TaskDataPath}`)
     expect(result.logs?.map((l) => l.log)).toContain("Mock error")
   })
 
@@ -119,14 +127,14 @@ describe("processPhase1", () => {
     })
 
     const inputAhoJson = String(fs.readFileSync("phase1/tests/fixtures/input-message-089.json"))
-    const ahoS3Path = `${randomUUID()}.json`
-    await putFileToS3(inputAhoJson, ahoS3Path, bucket, s3Config)
+    const s3TaskDataPath = `${randomUUID()}.json`
+    await putFileToS3(inputAhoJson, s3TaskDataPath, bucket, s3Config)
 
-    const result = await processPhase1.execute({ inputData: { ahoS3Path } })
+    const result = await processPhase1.execute({ inputData: { s3TaskDataPath } })
 
     expect(result).toHaveProperty("status", "COMPLETED")
 
-    const updatedFile = await getFileFromS3(ahoS3Path, bucket, s3Config)
+    const updatedFile = await getFileFromS3(s3TaskDataPath, bucket, s3Config)
     if (isError(updatedFile)) {
       throw updatedFile
     }

@@ -106,7 +106,7 @@
                 "startWorkflow": {
                   "correlationId": "${convert_spi_to_aho.output.correlationId}",
                   "input": {
-                    "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+                    "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
                   },
                   "name": "bichard_process"
                 }
@@ -133,7 +133,7 @@
   ],
   "inputParameters": ["s3Path"],
   "outputParameters": {
-    "ahoS3Path": "${convert_spi_to_aho.output.ahoS3Path}"
+    "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
   },
   "schemaVersion": 2,
   "restartable": true,

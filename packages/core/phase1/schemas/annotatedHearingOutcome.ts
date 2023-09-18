@@ -504,6 +504,6 @@ export const annotatedHearingOutcomeSchema = z.object({
   Ignored: z.boolean().optional()
 })
 
-export const invalidAnnotatedHearingOutcomeSchema = annotatedHearingOutcomeSchema.extend({
+export const unvalidatedAHOSchema = annotatedHearingOutcomeSchema.extend({
   AnnotatedHearingOutcome: z.unknown()
 })
