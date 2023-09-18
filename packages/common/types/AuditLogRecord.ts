@@ -1,25 +1,6 @@
-import type { AuditLogEvent } from "./AuditLogEvent"
-import type AuditLogStatus from "./AuditLogStatus"
+import type { z } from "zod"
+import type { auditLogApiRecordInputSchema, auditLogApiRecordOutputSchema } from "../schemas/auditLogRecord"
 
-export type InputApiAuditLog = {
-  caseId: string
-  createdBy: string
-  externalId?: string
-  externalCorrelationId: string
-  isSanitised: number
-  messageHash: string
-  messageId: string
-  nextSanitiseCheck?: string
-  receivedDate: string
-  s3Path?: string
-  stepExecutionId?: string
-  systemId?: string
-}
+export type AuditLogApiRecordInput = z.infer<typeof auditLogApiRecordInputSchema>
 
-export type OutputApiAuditLog = InputApiAuditLog & {
-  events: AuditLogEvent[]
-  forceOwner?: number
-  pncStatus: string
-  status: AuditLogStatus
-  triggerStatus: string
-}
+export type AuditLogApiRecordOutput = z.infer<typeof auditLogApiRecordOutputSchema>

@@ -1,13 +1,15 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
+import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
+import { z } from "zod"
 import createDbConfig from "../../lib/database/createDbConfig"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
 import { persistablePhase1ResultSchema } from "../../phase1/schemas/phase1Result"
@@ -18,20 +20,19 @@ const dbConfig = createDbConfig()
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
+const inputDataSchema = z.object({
+  ahoS3Path: z.string()
+})
+type InputData = z.infer<typeof inputDataSchema>
+
 const persistPhase1: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
-  execute: async (task: Task) => {
+  execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const db = postgres(dbConfig)
 
     // TODO: replace ahoS3Path everywhere
-    const taskDataS3Path: string | undefined = task.inputData?.ahoS3Path
-    if (!taskDataS3Path) {
-      return Promise.resolve({
-        status: "FAILED_WITH_TERMINAL_ERROR",
-        logs: [conductorLog("s3Path must be specified")]
-      })
-    }
+    const taskDataS3Path = task.inputData.ahoS3Path
 
     const s3Phase1Result = await getFileFromS3(taskDataS3Path, taskDataBucket, s3Config)
     if (isError(s3Phase1Result)) {
@@ -71,7 +72,7 @@ const persistPhase1: ConductorWorker = {
       status: "COMPLETED",
       logs: logs.map(conductorLog)
     })
-  }
+  })
 }
 
 export default persistPhase1

@@ -1,16 +1,15 @@
-import type { ConductorWorker } from "@io-orkes/conductor-typescript"
+import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { isError } from "@moj-bichard7/common/types/Result"
 import pLimit from "p-limit"
-import type ComparisonResult from "../types/ComparisonResult"
 import DynamoGateway from "../lib/DynamoGateway"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
 import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
+import type ComparisonResult from "../types/ComparisonResult"
 
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)

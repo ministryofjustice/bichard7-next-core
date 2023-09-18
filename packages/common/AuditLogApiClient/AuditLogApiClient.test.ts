@@ -1,16 +1,16 @@
 import type { AxiosError } from "axios"
 import axios from "axios"
+import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
 import "../test/jest"
-import { mockApiAuditLogEvent, mockOutputApiAuditLog } from "../test/auditLogMocks"
-import type { OutputApiAuditLog } from "../types/AuditLogRecord"
+import type { AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 import AuditLogApiClient from "./AuditLogApiClient"
 
 const apiClient = new AuditLogApiClient("http://localhost", "dummy")
-const message = mockOutputApiAuditLog({
+const message = mockAuditLogApiRecordOutput({
   externalCorrelationId: "b5edf595-16a9-450f-a52b-40628cd58c29",
   messageHash: "hash-1"
 })
-const message2 = mockOutputApiAuditLog({
+const message2 = mockAuditLogApiRecordOutput({
   externalCorrelationId: "b5edf595-16a9-450f-a52b-40628cd58c28",
   messageHash: "hash-2"
 })
@@ -94,7 +94,7 @@ describe("getMessage()", () => {
 
     expect(result).toNotBeError()
 
-    const actualMessage = <OutputApiAuditLog>result
+    const actualMessage = <AuditLogApiRecordOutput>result
     expect(actualMessage.messageId).toBe(message.messageId)
     expect(actualMessage.externalCorrelationId).toBe(message.externalCorrelationId)
     expect(actualMessage.receivedDate).toBe(message.receivedDate)

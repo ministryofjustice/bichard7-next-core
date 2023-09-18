@@ -59,6 +59,7 @@ describe("processPhase1", () => {
     const result = await processPhase1.execute({ inputData: {} })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
   })
 
   it("should fail if it can't fetch the file from S3", async () => {

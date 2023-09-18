@@ -6,7 +6,7 @@ import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogAp
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
-import { type OutputApiAuditLog } from "@moj-bichard7/common/types/AuditLogRecord"
+import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
@@ -99,7 +99,7 @@ describe("Incoming message handler", () => {
     })
     expect(messages).toHaveLength(1)
 
-    const [message] = messages as OutputApiAuditLog[]
+    const [message] = messages as AuditLogApiRecordOutput[]
     expect(message.events).toHaveLength(1)
     expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
     expect(message).toHaveProperty("externalId", externalId)
@@ -158,7 +158,7 @@ describe("Incoming message handler", () => {
     })
     expect(messages).toHaveLength(1)
 
-    const [message] = messages as OutputApiAuditLog[]
+    const [message] = messages as AuditLogApiRecordOutput[]
     const duplicateEvents = message.events.filter((e) => e.eventCode === EventCode.DuplicateMessage)
     expect(duplicateEvents).toHaveLength(1)
 

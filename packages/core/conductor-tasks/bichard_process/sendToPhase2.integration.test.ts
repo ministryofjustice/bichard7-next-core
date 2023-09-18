@@ -48,6 +48,7 @@ describe("sendToPhase2", () => {
     const result = await sendToPhase2.execute({ inputData: {} })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
   })
 
   it("should fail if there is a problem retrieving the file", async () => {
