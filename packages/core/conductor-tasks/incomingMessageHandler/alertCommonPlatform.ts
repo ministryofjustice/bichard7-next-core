@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import type Email from "@moj-bichard7/common/email/Email"
@@ -49,10 +49,7 @@ const alertCommonPlatform: ConductorWorker = {
       return failed((e as Error).message)
     }
 
-    return Promise.resolve({
-      status: "COMPLETED",
-      logs: [conductorLog("Message sent to Common Platform")]
-    })
+    return completed("Message sent to Common Platform")
   })
 }
 

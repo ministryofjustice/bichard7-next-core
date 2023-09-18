@@ -2,8 +2,8 @@ import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { auditLogApiRecordInputSchema } from "@moj-bichard7/common/schemas/auditLogRecord"
@@ -35,38 +35,33 @@ const createAuditLogRecord: ConductorWorker = {
           return failed("Could not fetch audit log with same message hash")
         }
 
-        return Promise.resolve({
-          status: "COMPLETED",
-          logs: [conductorLog(`Duplicate message hash identified: ${auditLogRecord.messageHash}`)],
-          outputData: {
-            duplicateMessage: "isDuplicate",
-            duplicateCorrelationId: existingAuditLog.messageId,
-            auditLogEvents: [
-              {
-                attributes: {
-                  s3Path: auditLogRecord.s3Path ?? "unknown",
-                  receivedDate: auditLogRecord.receivedDate,
-                  externalId: auditLogRecord.externalId ?? "unknown",
-                  externalCorrelationId: auditLogRecord.externalCorrelationId
-                },
-                category: "information",
-                eventCode: EventCode.DuplicateMessage,
-                eventSource: "Incoming Message Handler",
-                eventType: "Duplicate message",
-                timestamp: new Date()
-              }
-            ]
-          }
-        })
+        const outputData = {
+          duplicateMessage: "isDuplicate",
+          duplicateCorrelationId: existingAuditLog.messageId,
+          auditLogEvents: [
+            {
+              attributes: {
+                s3Path: auditLogRecord.s3Path ?? "unknown",
+                receivedDate: auditLogRecord.receivedDate,
+                externalId: auditLogRecord.externalId ?? "unknown",
+                externalCorrelationId: auditLogRecord.externalCorrelationId
+              },
+              category: "information",
+              eventCode: EventCode.DuplicateMessage,
+              eventSource: "Incoming Message Handler",
+              eventType: "Duplicate message",
+              timestamp: new Date()
+            }
+          ]
+        }
+
+        return completed(outputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
       }
 
       return failed("Could not create audit log", apiResult.message)
     }
 
-    return Promise.resolve({
-      status: "COMPLETED",
-      logs: [conductorLog(`Created audit log for message: ${auditLogRecord.messageId}`)]
-    })
+    return completed(`Created audit log for message: ${auditLogRecord.messageId}`)
   })
 }
 

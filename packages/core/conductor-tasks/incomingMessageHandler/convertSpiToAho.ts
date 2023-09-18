@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -132,11 +132,11 @@ const convertSpiToAho: ConductorWorker = {
     const { externalId, receivedDate } = parseS3Path(s3Path)
     const transformResult = transformIncomingMessageToAho(message)
     if (isError(transformResult)) {
-      return Promise.resolve({
-        logs: [conductorLog("Could not convert incoming message to AHO")],
-        status: "COMPLETED", // complete so we can move to alerting task
-        outputData: buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path)
-      })
+      // completed so we can move to alerting task
+      return completed(
+        buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path),
+        "Could not convert incoming message to AHO"
+      )
     }
 
     // Zod parsed correctly, continue as normal
@@ -154,26 +154,24 @@ const convertSpiToAho: ConductorWorker = {
       failed("Could not put file to S3")
     }
 
-    return Promise.resolve({
-      logs: [],
-      status: "COMPLETED",
-      outputData: {
-        correlationId: messageId,
-        ahoS3Path: putPath,
-        auditLogRecord: {
-          caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
-          createdBy: "Incoming message handler",
-          externalCorrelationId,
-          externalId,
-          isSanitised: 0,
-          messageHash,
-          messageId,
-          receivedDate,
-          s3Path,
-          systemId
-        }
+    const outputData = {
+      correlationId: messageId,
+      ahoS3Path: putPath,
+      auditLogRecord: {
+        caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
+        createdBy: "Incoming message handler",
+        externalCorrelationId,
+        externalId,
+        isSanitised: 0,
+        messageHash,
+        messageId,
+        receivedDate,
+        s3Path,
+        systemId
       }
-    })
+    }
+
+    return completed(outputData, "Incoming message successfully converted to AHO")
   })
 }
 

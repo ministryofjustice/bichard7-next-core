@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
-import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -56,10 +56,7 @@ const readAhoFromDb: ConductorWorker = {
       return failed("Could not put file to S3")
     }
 
-    return {
-      logs: [conductorLog("AHO successfully read from database")],
-      status: "COMPLETED"
-    }
+    return completed("AHO successfully read from database")
   })
 }
 

@@ -1,9 +1,8 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
-import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
-import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import { isError } from "@moj-bichard7/common/types/Result"
 import pLimit from "p-limit"
 import DynamoGateway from "../lib/DynamoGateway"
@@ -23,8 +22,6 @@ const rerunDay: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName, 1),
   execute: async (task: Task) => {
-    logWorkingMessage(task)
-
     const start = task.inputData?.start
     const end = task.inputData?.end
     const onlyFailures = task.inputData?.onlyFailures ?? false
@@ -37,7 +34,7 @@ const rerunDay: ConductorWorker = {
       return failedTerminal("start and end must be specified")
     }
 
-    const logs: ConductorLog[] = []
+    const logs: string[] = []
     const count = { pass: 0, fail: 0, intentionalDifference: 0, skipped: 0 }
 
     const successFilter = onlyFailures ? false : undefined
@@ -47,7 +44,7 @@ const rerunDay: ConductorWorker = {
         return failed("Failed to get batch from Dynamo")
       }
 
-      logs.push(conductorLog(`Processing ${batch.length} comparison tests...`))
+      logs.push(`Processing ${batch.length} comparison tests...`)
 
       const limit = pLimit(s3Concurrency)
       const resultPromises = batch.map(({ s3Path }) => limit(() => compareFile(s3Path, bucket)))
@@ -55,7 +52,7 @@ const rerunDay: ConductorWorker = {
 
       allTestResults.forEach((res) => {
         if (isError(res)) {
-          logs.push(conductorLog(res.message))
+          logs.push(res.message)
         } else {
           if (res.comparisonResult.intentionalDifference) {
             count.intentionalDifference += 1
@@ -65,7 +62,7 @@ const rerunDay: ConductorWorker = {
             count.pass += 1
           } else {
             count.fail += 1
-            logs.push(conductorLog(`Comparison failed: ${res.s3Path}`))
+            logs.push(`Comparison failed: ${res.s3Path}`)
           }
         }
       })
@@ -80,18 +77,11 @@ const rerunDay: ConductorWorker = {
       }
 
       logs.push(
-        conductorLog(
-          `Results of processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
-        )
+        `Results of processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
       )
     }
 
-    logCompletedMessage(task)
-    return {
-      logs,
-      outputData: { ...count },
-      status: "COMPLETED"
-    }
+    return completed(count, ...logs)
   }
 }
 
