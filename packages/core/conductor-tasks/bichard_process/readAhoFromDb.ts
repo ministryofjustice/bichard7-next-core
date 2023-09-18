@@ -1,5 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -41,25 +42,18 @@ const readAhoFromDb: ConductorWorker = {
 
     const ahoXml = dbResult[0]?.updated_msg
     if (!ahoXml) {
-      return {
-        status: "FAILED"
-      }
+      return failed(`Could not find message id in database: ${correlationId}`)
     }
 
     const aho = parseAhoXml(ahoXml)
     if (isError(aho)) {
-      return {
-        status: "FAILED"
-      }
+      return failed("Failed to parse AHO from database", aho.message)
     }
 
     const maybeError = await putFileToS3(JSON.stringify(aho), ahoS3Path, taskDataBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)
-      return Promise.resolve({
-        logs: [conductorLog("Could not put file to S3")],
-        status: "FAILED"
-      })
+      return failed("Could not put file to S3")
     }
 
     return {

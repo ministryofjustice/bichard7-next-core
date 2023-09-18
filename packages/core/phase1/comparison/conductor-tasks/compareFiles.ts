@@ -1,5 +1,6 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -54,10 +55,7 @@ const compareFiles: ConductorWorker = {
 
     const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
     if (isError(recordResultsInDynamoResult)) {
-      return {
-        logs: [conductorLog("Failed to write results to Dynamo")],
-        status: "FAILED"
-      }
+      return failed("Failed to write results to Dynamo")
     }
 
     logs.push(conductorLog(`Results of processing: ${count.pass} passed. ${count.fail} failed`))

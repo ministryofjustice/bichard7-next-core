@@ -1,5 +1,6 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -45,10 +46,7 @@ const rerunDay: ConductorWorker = {
 
     for await (const batch of gateway.getRange(start, end, successFilter, 1000)) {
       if (!batch || isError(batch)) {
-        return {
-          logs: [conductorLog("Failed to get batch from Dynamo")],
-          status: "FAILED"
-        }
+        return failed("Failed to get batch from Dynamo")
       }
 
       logs.push(conductorLog(`Processing ${batch.length} comparison tests...`))
@@ -79,10 +77,7 @@ const rerunDay: ConductorWorker = {
       if (persistResults) {
         const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
         if (isError(recordResultsInDynamoResult)) {
-          return {
-            logs: [conductorLog("Failed to write results to Dynamo")],
-            status: "FAILED"
-          }
+          return failed("Failed to write results to Dynamo")
         }
       }
 

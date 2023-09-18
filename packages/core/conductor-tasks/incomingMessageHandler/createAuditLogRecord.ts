@@ -2,6 +2,7 @@ import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -31,10 +32,7 @@ const createAuditLogRecord: ConductorWorker = {
       if (/Message hash already exists/i.test(apiResult.message)) {
         const existingAuditLog = await apiClient.getMessageByHash(auditLogRecord.messageHash)
         if (isError(existingAuditLog)) {
-          return Promise.resolve({
-            status: "FAILED",
-            logs: [conductorLog("Could not fetch audit log with same message hash")]
-          })
+          return failed("Could not fetch audit log with same message hash")
         }
 
         return Promise.resolve({
@@ -62,10 +60,7 @@ const createAuditLogRecord: ConductorWorker = {
         })
       }
 
-      return Promise.resolve({
-        status: "FAILED",
-        logs: [conductorLog("Could not create audit log"), conductorLog(apiResult.message)]
-      })
+      return failed("Could not create audit log", apiResult.message)
     }
 
     return Promise.resolve({

@@ -1,5 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -38,10 +39,7 @@ const storeAuditLogEvents: ConductorWorker = {
         .catch((e) => e as Error)
 
       if (isError(result)) {
-        return {
-          status: "FAILED",
-          logs: [conductorLog(result.message)]
-        }
+        return failed(result.message)
       }
     }
 

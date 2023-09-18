@@ -1,5 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -41,10 +42,7 @@ const processPhase1: ConductorWorker = {
     const ahoFileContent = await getFileFromS3(ahoS3Path, taskDataBucket, s3Config)
     if (isError(ahoFileContent)) {
       logger.error(ahoFileContent)
-      return Promise.resolve({
-        status: "FAILED",
-        logs: [conductorLog(`Could not retrieve file from S3: ${ahoS3Path}`), conductorLog(ahoFileContent.message)]
-      })
+      return failed(`Could not retrieve file from S3: ${ahoS3Path}`, ahoFileContent.message)
     }
 
     const parsedAho = parseAhoJson(JSON.parse(ahoFileContent))
@@ -63,10 +61,7 @@ const processPhase1: ConductorWorker = {
     if (result.resultType === Phase1ResultType.success || result.resultType === Phase1ResultType.exceptions) {
       const maybeError = await putFileToS3(JSON.stringify(result), ahoS3Path, taskDataBucket, s3Config)
       if (isError(maybeError)) {
-        return Promise.resolve({
-          status: "FAILED",
-          logs: [conductorLog(`Could not put file to S3: ${ahoS3Path}`), conductorLog(maybeError.message)]
-        })
+        return failed(`Could not put file to S3: ${ahoS3Path}`, maybeError.message)
       }
     }
 

@@ -1,5 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -124,10 +125,7 @@ const convertSpiToAho: ConductorWorker = {
     const message = await getFileFromS3(s3Path, incomingBucket, s3Config)
     if (isError(message)) {
       logger.error(message)
-      return Promise.resolve({
-        logs: [conductorLog("Could not retrieve file from S3")],
-        status: "FAILED"
-      })
+      return failed("Could not retrieve file from S3")
     }
 
     const messageId = uuid()
@@ -153,10 +151,7 @@ const convertSpiToAho: ConductorWorker = {
     const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)
-      return {
-        logs: [conductorLog("Could not put file to S3")],
-        status: "FAILED"
-      }
+      failed("Could not put file to S3")
     }
 
     return Promise.resolve({
