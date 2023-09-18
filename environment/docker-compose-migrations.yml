@@ -1,0 +1,9 @@
+version: "3.2"
+services:
+  liquibase:
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    volumes:
+      - ./postgres/liquibase:/liquibase/changelog
+    environment:
+      LIQUIBASE_PROPERTIES: "${LIQUIBASE_PROPERTIES:-/liquibase/changelog/liquibase.migrations.properties}"
+    command: --logLevel info --defaultsFile=$LIQUIBASE_PROPERTIES update
