@@ -2,6 +2,7 @@ import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
+import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import { conductorLog } from "@moj-bichard7/common/conductor/logging"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
@@ -45,10 +46,7 @@ const persistPhase1: ConductorWorker = {
     const parseAttempt = persistablePhase1ResultSchema.safeParse(maybePhase1Result)
     if (!parseAttempt.success) {
       const issues = JSON.stringify(parseAttempt.error.issues)
-      return {
-        status: "FAILED_WITH_TERMINAL_ERROR",
-        logs: [conductorLog("Failed parsing phase 1 result"), conductorLog(issues)]
-      }
+      return failedTerminal("Failed parsing phase 1 result", issues)
     }
 
     const data = parseAttempt.data

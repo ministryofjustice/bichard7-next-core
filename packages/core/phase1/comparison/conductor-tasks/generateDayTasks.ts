@@ -1,5 +1,6 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
+import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 const taskDefName = "generate_day_tasks"
@@ -25,10 +26,7 @@ const generateDayTasks: ConductorWorker = {
     const newMatcher = task.inputData?.newMatcher ?? true
 
     if (!taskName) {
-      return Promise.resolve({
-        logs: [conductorLog("taskName must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      })
+      return failedTerminal("taskName must be specified")
     }
 
     const logs: ConductorLog[] = []

@@ -1,6 +1,7 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
+import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import { conductorLog, logCompletedMessage, logWorkingMessage } from "@moj-bichard7/common/conductor/logging"
 import type ConductorLog from "@moj-bichard7/common/conductor/types/ConductorLog"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -33,10 +34,7 @@ const rerunDay: ConductorWorker = {
     process.env.USE_NEW_MATCHER = newMatcher.toString()
 
     if (!start || !end) {
-      return {
-        logs: [conductorLog("start and end must be specified")],
-        status: "FAILED_WITH_TERMINAL_ERROR"
-      }
+      return failedTerminal("start and end must be specified")
     }
 
     const logs: ConductorLog[] = []
