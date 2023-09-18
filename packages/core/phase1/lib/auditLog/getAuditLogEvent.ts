@@ -1,18 +1,18 @@
-import type { AuditLogEvent, AuditLogEventOption } from "@moj-bichard7/common/types/AuditLogEvent"
+import { auditLogEventLookup, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type EventCategory from "@moj-bichard7/common/types/EventCategory"
 import type EventCode from "@moj-bichard7/common/types/EventCode"
 
 const getAuditLogEvent = (
-  option: AuditLogEventOption,
+  eventCode: EventCode,
   category: EventCategory,
   eventSource: string,
-  attributes: Record<string, unknown>
+  attributes: Record<string, unknown> = {}
 ): AuditLogEvent => {
   return {
-    eventCode: option.code as EventCode,
+    eventCode,
     attributes,
     timestamp: new Date(),
-    eventType: option.type,
+    eventType: auditLogEventLookup[eventCode],
     eventSource,
     category
   }

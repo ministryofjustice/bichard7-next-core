@@ -1,3 +1,6 @@
+import { AuditLogEventSource, auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
@@ -16,7 +19,7 @@ describe("Bichard Core processing logic", () => {
   const mockedDate = new Date()
 
   beforeEach(() => {
-    auditLogger = new CoreAuditLogger()
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     MockDate.set(mockedDate)
   })
 
@@ -47,10 +50,10 @@ describe("Bichard Core processing logic", () => {
             "Offence 3 Details": "RT88191||003||1015",
             "Force Owner": "010000"
           },
-          eventType: "Hearing outcome details",
-          eventCode: "hearing-outcome.details",
-          eventSource: "CoreHandler",
-          category: "information",
+          eventType: auditLogEventLookup[EventCode.HearingOutcomeDetails],
+          eventCode: EventCode.HearingOutcomeDetails,
+          eventSource: AuditLogEventSource.CorePhase1,
+          category: EventCategory.information,
           timestamp: mockedDate
         })
       ])
@@ -67,10 +70,10 @@ describe("Bichard Core processing logic", () => {
         attributes: {
           ASN: "1101ZD0100000448754K"
         },
-        eventType: "Hearing Outcome ignored as it contains no offences",
-        eventCode: "hearing-outcome.ignored.no-offences",
-        eventSource: "CoreHandler",
-        category: "information",
+        eventType: auditLogEventLookup[EventCode.IgnoredNoOffences],
+        eventCode: EventCode.IgnoredNoOffences,
+        eventSource: AuditLogEventSource.CorePhase1,
+        category: EventCategory.information,
         timestamp: mockedDate
       }
     ])
@@ -89,10 +92,10 @@ describe("Bichard Core processing logic", () => {
             "Exception Type": "HO100304",
             "Number Of Errors": 1
           },
-          eventType: "Exceptions generated",
-          eventCode: "exceptions.generated",
-          eventSource: "CoreHandler",
-          category: "information",
+          eventType: auditLogEventLookup[EventCode.ExceptionsGenerated],
+          eventCode: EventCode.ExceptionsGenerated,
+          eventSource: AuditLogEventSource.CorePhase1,
+          category: EventCategory.information,
           timestamp: mockedDate
         })
       ])

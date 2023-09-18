@@ -1,3 +1,4 @@
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
@@ -6,7 +7,7 @@ import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseSpiResult from "../parse/parseSpiResult"
 import transformSpiToAho from "../parse/transformSpiToAho"
-import CoreHandler from "../phase1"
+import CorePhase1 from "../phase1"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
 import type Exception from "../types/Exception"
 import type Phase1Result from "../types/Phase1Result"
@@ -92,10 +93,10 @@ const processResultCore = (incomingMessage: string): Promise<Phase1Result | unde
   try {
     const response = generateMockPncQueryResult(incomingMessage)
     const pncGateway = new MockPncGateway(response)
-    const auditLogger = new CoreAuditLogger()
+    const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     const incomingSpi = parseSpiResult(incomingMessage)
     const incomingAho = transformSpiToAho(incomingSpi)
-    return CoreHandler(incomingAho, pncGateway, auditLogger)
+    return CorePhase1(incomingAho, pncGateway, auditLogger)
   } catch (e) {
     results.failed++
     logger.warn(`Application failed to process message: ${e}`)
