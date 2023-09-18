@@ -1,3 +1,4 @@
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import promisePoller from "promise-poller"
 import { v4 as uuid } from "uuid"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
@@ -41,7 +42,7 @@ const processMessageCore = (
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
   const pncGateway = new MockPncGateway(response)
-  const auditLogger = new CoreAuditLogger()
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   const inputSpi = parseSpiResult(messageXml)
   const inputAho = transformSpiToAho(inputSpi)
   return phase1Handler(inputAho, pncGateway, auditLogger)

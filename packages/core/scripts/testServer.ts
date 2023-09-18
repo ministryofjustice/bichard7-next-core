@@ -1,10 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import express from "express"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import MockPncGateway from "../phase1/comparison/lib/MockPncGateway"
 import parseSpiResult from "../phase1/parse/parseSpiResult"
 import transformSpiToAho from "../phase1/parse/transformSpiToAho"
-import CoreHandler from "../phase1/phase1"
+import CorePhase1 from "../phase1/phase1"
 import type { PncQueryResult } from "../types/PncQueryResult"
 
 const app = express()
@@ -28,13 +29,13 @@ function formatter(_: string, value: unknown) {
 app.post("/", async (req, res) => {
   const testData = JSON.parse(req.body.toString(), formatter) as TestInput
   const pncGateway = new MockPncGateway(testData.pncQueryResult)
-  const auditLogger = new CoreAuditLogger()
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
 
   const inputSpi = parseSpiResult(testData.inputMessage)
   const inputAho = transformSpiToAho(inputSpi)
 
   try {
-    const coreResult = await CoreHandler(inputAho, pncGateway, auditLogger)
+    const coreResult = await CorePhase1(inputAho, pncGateway, auditLogger)
     res.json(coreResult)
   } catch (e) {
     console.error(e)

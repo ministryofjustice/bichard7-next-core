@@ -1,11 +1,9 @@
-import { AuditLogEventOptions, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
-import getAuditLogEvent from "../../lib/auditLog/getAuditLogEvent"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import isDummyAsn from "../../lib/isDummyAsn"
 import type AuditLogger from "../../types/AuditLogger"
@@ -71,25 +69,10 @@ export default async (
   }
 
   if (isError(pncResult)) {
-    auditLogger.logEvent(
-      getAuditLogEvent(
-        AuditLogEventOptions.pncResponseNotReceived,
-        EventCategory.warning,
-        AuditLogEventSource.EnrichWithPncQuery,
-        auditLogAttributes
-      )
-    )
+    auditLogger.warn(EventCode.PncResponseNotReceived, auditLogAttributes)
     annotatedHearingOutcome.PncErrorMessage = pncResult.message
   } else {
-    auditLogger.logEvent(
-      getAuditLogEvent(
-        AuditLogEventOptions.pncResponseReceived,
-        EventCategory.information,
-        AuditLogEventSource.EnrichWithPncQuery,
-        auditLogAttributes
-      )
-    )
-
+    auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
     annotatedHearingOutcome.PncQuery = pncResult
   }
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime

@@ -4,8 +4,7 @@ import EventCode from "./EventCode"
 
 export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 export enum AuditLogEventSource {
-  CoreHandler = "CoreHandler",
-  EnrichWithPncQuery = "EnrichWithPncQuery"
+  CorePhase1 = "CorePhase1"
 }
 
 export const auditLogEventLookup: Record<EventCode, string> = {

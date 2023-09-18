@@ -1,3 +1,4 @@
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
@@ -70,7 +71,7 @@ const comparePhase1 = async (
   const pncResponse = generateMockPncQueryResultFromAho(normalisedAho)
   const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)
   const pncGateway = new MockPncGateway(pncResponse, pncQueryTime)
-  const auditLogger = new CoreAuditLogger()
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {

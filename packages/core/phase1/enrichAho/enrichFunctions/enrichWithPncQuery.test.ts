@@ -1,3 +1,5 @@
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
@@ -19,7 +21,7 @@ describe("enrichWithQuery()", () => {
 
   beforeEach(() => {
     MockDate.set(mockedDate)
-    auditLogger = new CoreAuditLogger()
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
 
     const options = {
       offences: [
@@ -101,29 +103,22 @@ describe("enrichWithQuery()", () => {
   })
 
   it("should log a successful PNC query", async () => {
-    const auditLoggerSpy = jest.spyOn(auditLogger, "logEvent")
+    const auditLoggerSpy = jest.spyOn(auditLogger, "info")
     await enrichWithPncQuery(aho, pncGateway, auditLogger)
 
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
-    expect(auditLoggerSpy).toHaveBeenCalledWith({
-      eventType: "PNC Response received",
-      eventSource: "EnrichWithPncQuery",
-      eventCode: "pnc.response-received",
-      category: "information",
-      timestamp: mockedDate,
-      attributes: {
-        "PNC Request Message": "1101ZD0100000448754K",
-        "PNC Response Time": 0,
-        "PNC Request Type": "enquiry",
-        "PNC Attempts Made": 1,
-        "PNC Response Message": await pncGateway.query("1101ZD0100000448754K", "Mock correlation ID"),
-        sensitiveAttributes: "PNC Request Message,PNC Response Message"
-      }
+    expect(auditLoggerSpy).toHaveBeenCalledWith(EventCode.PncResponseReceived, {
+      "PNC Request Message": "1101ZD0100000448754K",
+      "PNC Response Time": 0,
+      "PNC Request Type": "enquiry",
+      "PNC Attempts Made": 1,
+      "PNC Response Message": await pncGateway.query("1101ZD0100000448754K", "Mock correlation ID"),
+      sensitiveAttributes: "PNC Request Message,PNC Response Message"
     })
   })
 
   it("should log a failed PNC query", async () => {
-    const auditLoggerSpy = jest.spyOn(auditLogger, "logEvent")
+    const auditLoggerSpy = jest.spyOn(auditLogger, "warn")
     jest.spyOn(pncGateway, "query").mockImplementation(() => {
       return Promise.resolve(new Error("PNC error"))
     })
@@ -131,20 +126,13 @@ describe("enrichWithQuery()", () => {
     await enrichWithPncQuery(aho, pncGateway, auditLogger)
 
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
-    expect(auditLoggerSpy).toHaveBeenCalledWith({
-      eventType: "PNC Response not received",
-      eventCode: "pnc.response-not-received",
-      eventSource: "EnrichWithPncQuery",
-      category: "warning",
-      timestamp: mockedDate,
-      attributes: {
-        "PNC Response Time": 0,
-        "PNC Attempts Made": 1,
-        "PNC Request Message": "1101ZD0100000448754K",
-        "PNC Request Type": "enquiry",
-        "PNC Response Message": "PNC error",
-        sensitiveAttributes: "PNC Request Message,PNC Response Message"
-      }
+    expect(auditLoggerSpy).toHaveBeenCalledWith(EventCode.PncResponseNotReceived, {
+      "PNC Response Time": 0,
+      "PNC Attempts Made": 1,
+      "PNC Request Message": "1101ZD0100000448754K",
+      "PNC Request Type": "enquiry",
+      "PNC Response Message": "PNC error",
+      sensitiveAttributes: "PNC Request Message,PNC Response Message"
     })
   })
 })

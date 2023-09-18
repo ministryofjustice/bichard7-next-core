@@ -7,8 +7,9 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
-import { AuditLogEventOptions, AuditLogEventSource, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventSource, auditLogEventLookup, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { z } from "zod"
@@ -54,10 +55,10 @@ const sendToPhase2: ConductorWorker = {
     }
 
     const auditLog: AuditLogEvent = {
-      eventCode: AuditLogEventOptions.submittedToPhase2.code,
-      eventType: AuditLogEventOptions.submittedToPhase2.type,
+      eventCode: EventCode.HearingOutcomeSubmittedPhase2,
+      eventType: auditLogEventLookup[EventCode.HearingOutcomeSubmittedPhase2],
       category: EventCategory.debug,
-      eventSource: AuditLogEventSource.CoreHandler,
+      eventSource: AuditLogEventSource.CorePhase1,
       timestamp: new Date(),
       attributes: {}
     }
