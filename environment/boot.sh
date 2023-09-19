@@ -6,7 +6,7 @@ NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
 SKIP_DOWNLOADS=${SKIP_DOWNLOADS:-"false"}
 
-IMAGES=(beanconnect pncemulator nodejs-20-2023)
+IMAGES=(beanconnect pncemulator)
 SERVICES=$@
 
 PLATFORM=$(uname -m)
