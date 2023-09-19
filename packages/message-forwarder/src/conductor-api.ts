@@ -25,7 +25,6 @@ export const getWorkflowByCorrelationId = (
   })
     .then((result) => result.json())
     .then((json) => ((json as Workflow[]).length > 0 ? (json as Workflow[])[0] : undefined))
-    .catch((_) => undefined)
 
 export const getWaitingTaskForWorkflow = (
   workflowId: string,
