@@ -27,15 +27,15 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.4",
+    "@types/node-fetch": "^2.6.5",
     "@types/ws": "^8.5.5",
     "esbuild": "^0.19.2",
-    "eslint": "^8.47.0",
+    "eslint": "^8.49.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-jest": "^27.4.0",
     "eslint-plugin-prettier": "^5.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
@@ -43,7 +43,7 @@
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
     "node-fetch": "^3.3.2",
-    "uuid": "^9.0.0",
-    "ws": "^8.13.0"
+    "uuid": "^9.0.1",
+    "ws": "^8.14.1"
   }
 }
