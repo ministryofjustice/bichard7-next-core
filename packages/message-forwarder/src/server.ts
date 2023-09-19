@@ -12,7 +12,12 @@ client.onConnect = () => {
   console.log("Connected")
   client.subscribe(sourceQueue, async (message: Message) => {
     console.log("Received message")
-    await forwardMessage(message.body, client)
+
+    try {
+      await forwardMessage(message.body, client)
+    } catch (e) {
+      console.error(e)
+    }
   })
 }
 
