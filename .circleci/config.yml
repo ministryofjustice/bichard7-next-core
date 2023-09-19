@@ -59,13 +59,15 @@ commands:
   exit_if_no_tests:
     description: Checks if the current parallel runner has any tests to run, exits if not
     steps:
-      - run: |
-          mkdir -p ./tmp && \
-          >./tmp/tests.txt && \
-          circleci tests glob "spec/**/*_spec.rb" | \
-          circleci tests run --command=">./tmp/tests.txt xargs echo" --split-by=timings
+      - run:
+          working_directory: ~/bichard7-next-tests
+          command: |
+            mkdir -p ./tmp && \
+            >./tmp/tests.txt && \
+            circleci tests glob "features/**/*.feature" | \
+            circleci tests run --command=">./tmp/tests.txt xargs echo" --split-by=timings
 
-          [ -s tmp/tests.txt ] || circleci-agent step halt
+            [ -s tmp/tests.txt ] || circleci-agent step halt
 
   save_artifacts:
     steps:
