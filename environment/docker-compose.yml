@@ -66,6 +66,22 @@ services:
       retries: 10
       start_period: 20s
 
+  db-migrate:
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.migrations.properties update
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  db-seed:
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.seeds.properties update
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
   conductor:
     image: conductor
     environment:
@@ -88,6 +104,8 @@ services:
         condition: service_healthy
       message-forwarder:
         condition: service_started
+      db-seed:
+        condition: service_completed_successfully
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
@@ -161,6 +179,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
       message-forwarder:
         condition: service_started
       audit-log-api:
@@ -225,6 +245,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
 
   ui:
     image: ui
@@ -247,6 +269,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
 
   nginx-auth-proxy:
     image: nginx-auth-proxy

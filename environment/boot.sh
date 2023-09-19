@@ -70,7 +70,3 @@ if [ "$LEGACY" == "false" ] && [ $SUCCESS ]; then
         npm run -w packages/conductor setup && break || sleep 5
     done;
 fi
-
-# run db scripts for migrations and seeding
-./environment/migrate-db.sh
-./environment/seed-db.sh
