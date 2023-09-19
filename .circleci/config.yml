@@ -282,7 +282,7 @@ jobs:
           name: Run unit tests against API code
           command: nvm use && npm run -w packages/api test
 
-  run_postgres_tests:
+  postgres_test:
     machine:
       image: ubuntu-2004:2022.07.1
       docker_layer_caching: true
@@ -300,6 +300,7 @@ workflows:
   build-and-test:
     jobs:
       - build
+      - postgres_test
       - test_core:
           requires:
             - build
@@ -318,4 +319,3 @@ workflows:
       - test_api:
           requires:
             - build
-      - run_postgres_tests
