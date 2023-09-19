@@ -7,7 +7,7 @@ import type Task from "../types/Task"
 type OriginalHandler = ConductorWorker["execute"]
 type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "workflowInstanceId" | "taskId">>
 
-const inputDataValidator = <T>(schema: z.AnyZodObject, handler: Handler<T>): OriginalHandler => {
+const inputDataValidator = <T>(schema: z.ZodSchema, handler: Handler<T>): OriginalHandler => {
   return (task: ConductorTask) => {
     const parseResult = schema.safeParse(task.inputData)
     if (parseResult.success) {

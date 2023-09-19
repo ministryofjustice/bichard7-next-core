@@ -156,7 +156,7 @@ const convertSpiToAho: ConductorWorker = {
 
     const outputData = {
       correlationId: messageId,
-      ahoS3Path: putPath,
+      s3TaskDataPath: putPath,
       auditLogRecord: {
         caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
         createdBy: "Incoming message handler",

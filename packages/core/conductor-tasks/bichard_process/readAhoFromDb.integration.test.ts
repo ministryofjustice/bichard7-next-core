@@ -48,7 +48,7 @@ describe("readAhoFromDb", () => {
 
     const ahoFile = `${uniqueId}.json`
     const result = await readAhoFromDb.execute({
-      inputData: { ahoS3Path: ahoFile, correlationId: successResult.correlationId }
+      inputData: { s3TaskDataPath: ahoFile, correlationId: successResult.correlationId }
     })
 
     expect(result).toHaveProperty("status", "COMPLETED")
@@ -61,25 +61,25 @@ describe("readAhoFromDb", () => {
 
   it("should fail if there is no correlationId", async () => {
     const result = await readAhoFromDb.execute({
-      inputData: { ahoS3Path: "ahoFile" }
+      inputData: { s3TaskDataPath: "ahoFile" }
     })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
     expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for correlationId")
   })
 
-  it("should fail if there is no ahoS3Path", async () => {
+  it("should fail if there is no s3TaskDataPath", async () => {
     const result = await readAhoFromDb.execute({
       inputData: { correlationId: "correlationId" }
     })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3TaskDataPath")
   })
 
   it("should fail if there is no ahoXml", async () => {
     const result = await readAhoFromDb.execute({
-      inputData: { correlationId: "correlationId", ahoS3Path: "ahoFile" }
+      inputData: { correlationId: "correlationId", s3TaskDataPath: "ahoFile" }
     })
 
     expect(result).toHaveProperty("status", "FAILED")
@@ -105,7 +105,7 @@ describe("readAhoFromDb", () => {
     await sql`update br7own.error_list set updated_msg = 'Bad MSG' where message_id = ${uniqueId}`
 
     const result = await readAhoFromDb.execute({
-      inputData: { correlationId: uniqueId, ahoS3Path: "ahoFile" }
+      inputData: { correlationId: uniqueId, s3TaskDataPath: "ahoFile" }
     })
 
     expect(result).toHaveProperty("status", "FAILED")

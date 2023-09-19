@@ -26,14 +26,12 @@ describe("sendToPhase2", () => {
   })
 
   it("should send a message to the queue", async () => {
-    const ahoS3Path = `${uuid()}.json`
+    const s3TaskDataPath = `${uuid()}.json`
     const s3Config = createS3Config()
-    const phase1Result = String(
-      fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result-missing-result-type.json")
-    )
+    const phase1Result = String(fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result.json"))
     const parsedResult = JSON.parse(phase1Result, dateReviver) as Phase1SuccessResult
-    await putFileToS3(phase1Result, ahoS3Path, taskDataBucket!, s3Config)
-    const result = await sendToPhase2.execute({ inputData: { ahoS3Path } })
+    await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+    const result = await sendToPhase2.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("auditLogEvents")
@@ -48,11 +46,11 @@ describe("sendToPhase2", () => {
     const result = await sendToPhase2.execute({ inputData: {} })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3TaskDataPath")
   })
 
   it("should fail if there is a problem retrieving the file", async () => {
-    const result = await sendToPhase2.execute({ inputData: { ahoS3Path: "unknown.json" } })
+    const result = await sendToPhase2.execute({ inputData: { s3TaskDataPath: "unknown.json" } })
 
     expect(result.status).toBe("FAILED")
   })

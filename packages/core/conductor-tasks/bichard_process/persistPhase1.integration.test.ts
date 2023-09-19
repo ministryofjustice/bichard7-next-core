@@ -57,10 +57,10 @@ describe("persistPhase1", () => {
     })
 
     const phase1Result = String(fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result.json"))
-    const ahoS3Path = "trigger.xml"
-    await putFileToS3(phase1Result, ahoS3Path, bucket, s3Config)
+    const s3TaskDataPath = "trigger.xml"
+    await putFileToS3(phase1Result, s3TaskDataPath, bucket, s3Config)
 
-    const result = await persistPhase1.execute({ inputData: { ahoS3Path } })
+    const result = await persistPhase1.execute({ inputData: { s3TaskDataPath } })
     expect(result.status).toBe("COMPLETED")
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
@@ -77,10 +77,10 @@ describe("persistPhase1", () => {
     })
 
     const phase1Result = String(fs.readFileSync("phase1/tests/fixtures/input-message-089-phase1-result.json"))
-    const ahoS3Path = "exception.xml"
-    await putFileToS3(phase1Result, ahoS3Path, bucket, s3Config)
+    const s3TaskDataPath = "exception.xml"
+    await putFileToS3(phase1Result, s3TaskDataPath, bucket, s3Config)
 
-    const result = await persistPhase1.execute({ inputData: { ahoS3Path } })
+    const result = await persistPhase1.execute({ inputData: { s3TaskDataPath } })
     expect(result.status).toBe("COMPLETED")
 
     const errorListRecords = await sql`SELECT * FROM br7own.error_list`
@@ -95,11 +95,11 @@ describe("persistPhase1", () => {
     const result = await persistPhase1.execute({ inputData: {} })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for ahoS3Path")
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3TaskDataPath")
   })
 
   it("should fail if it can't fetch the file from S3", async () => {
-    const result = await persistPhase1.execute({ inputData: { ahoS3Path: "missing.json" } })
+    const result = await persistPhase1.execute({ inputData: { s3TaskDataPath: "missing.json" } })
 
     expect(result).toHaveProperty("status", "FAILED")
   })
@@ -109,14 +109,13 @@ describe("persistPhase1", () => {
       fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result-missing-result-type.json")
     )
 
-    const ahoS3Path = "missing_result_type.xml"
-    await putFileToS3(phase1Result, ahoS3Path, bucket, s3Config)
+    const s3TaskDataPath = "missing_result_type.xml"
+    await putFileToS3(phase1Result, s3TaskDataPath, bucket, s3Config)
 
-    const result = await persistPhase1.execute({ inputData: { ahoS3Path } })
+    const result = await persistPhase1.execute({ inputData: { s3TaskDataPath } })
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
 
-    const [generalError, zodError] = result.logs!
-    expect(generalError.log).toBe("Failed parsing phase 1 result")
-    expect(zodError.log).toContain("ZodError")
+    const [generalError] = result.logs!
+    expect(generalError.log).toBe("S3TaskData error. Schema mismatch")
   })
 })

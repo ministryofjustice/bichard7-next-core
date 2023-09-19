@@ -6,5 +6,5 @@
   "timeoutSeconds": 60,
   "responseTimeoutSeconds": 55,
   "timeoutPolicy": "RETRY",
-  "inputKeys": ["ahoS3Path"]
+  "inputKeys": ["s3TaskDataPath"]
 }

@@ -1,7 +1,7 @@
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { z } from "zod"
 import { Phase1ResultType } from "../types/Phase1Result"
-import { annotatedHearingOutcomeSchema, invalidAnnotatedHearingOutcomeSchema } from "./annotatedHearingOutcome"
+import { annotatedHearingOutcomeSchema, unvalidatedAHOSchema } from "./annotatedHearingOutcome"
 
 import { triggerSchema } from "./trigger"
 
@@ -23,7 +23,7 @@ export const phase1IgnoredResultSchema = phase1SuccessResultSchema.extend({
 })
 
 export const phase1ExceptionsResultSchema = phase1SuccessResultSchema.extend({
-  hearingOutcome: invalidAnnotatedHearingOutcomeSchema,
+  hearingOutcome: unvalidatedAHOSchema,
   resultType: z.literal(Phase1ResultType.exceptions)
 })
 
