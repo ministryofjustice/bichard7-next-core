@@ -60,6 +60,7 @@ commands:
     description: Checks if the current parallel runner has any tests to run, exits if not
     steps:
       - run:
+          name: Exit early if no tests need running
           working_directory: ~/bichard7-next-tests
           command: |
             mkdir -p ./tmp && \
