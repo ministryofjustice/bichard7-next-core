@@ -25,6 +25,7 @@ export const getWorkflowByCorrelationId = (
   })
     .then((result) => result.json())
     .then((json) => ((json as Workflow[]).length > 0 ? (json as Workflow[])[0] : undefined))
+    .catch((_) => undefined)
 
 export const getWaitingTaskForWorkflow = (
   workflowId: string,
@@ -54,9 +55,9 @@ export const startWorkflow = (
   input: Record<string, unknown>,
   correlationId: string,
   conductorConfig: ConductorConfig
-): Promise<object> =>
+): Promise<void> =>
   fetch(`${conductorConfig.url}/api/workflow`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
     body: JSON.stringify({ name, input, correlationId })
-  }).then((result) => result.json())
+  }).then((_) => {})
