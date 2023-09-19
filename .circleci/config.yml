@@ -56,14 +56,6 @@ commands:
           name: Clone Bichard7 Next
           command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
 
-  run_postgres:
-    description: Run the PostgreSQL database
-    steps:
-      - run:
-          name: Spin up the PostgreSQL database
-          working_directory: ~/bichard7-next
-          command: make run-pg
-
   save_artifacts:
     steps:
       - run:
@@ -289,17 +281,32 @@ jobs:
       - run:
           name: Install Nodejs version in .nvmrc
           command: nvm install
-      - clone_bichard_repo
-      - run_postgres
+      - run:
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
       - run:
           name: Run unit tests against API code
           command: nvm use && npm run -w packages/api test
+
+  postgres_test:
+    machine:
+      image: ubuntu-2004:2022.07.1
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
+          name: run Postgres function tests
 
 workflows:
   version: 2
   build-and-test:
     jobs:
       - build
+      - postgres_test
       - test_core:
           requires:
             - build

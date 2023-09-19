@@ -1,0 +1,23 @@
+--liquibase formatted sql
+--changeset bjpirt:004-error-list-triggers
+
+------------------------------------------------
+-- DDL Statements for table BR7OWN.ERROR_LIST_TRIGGERS
+------------------------------------------------
+ CREATE TABLE br7own.ERROR_LIST_TRIGGERS  (
+		  TRIGGER_ID SERIAL,
+		  ERROR_ID INTEGER REFERENCES br7own.ERROR_LIST(ERROR_ID) ON DELETE CASCADE,
+		  TRIGGER_CODE VARCHAR(8) NOT NULL,
+		  TRIGGER_ITEM_IDENTITY VARCHAR(10),
+		  STATUS INTEGER NOT NULL,
+		  CREATE_TS TIMESTAMP NOT NULL,
+		  RESOLVED_BY VARCHAR(32),
+		  RESOLVED_TS TIMESTAMP );
+
+-- DDL Statements for index on ERROR_ID on Table BR7OWN.ERROR_LIST_TRIGGERS
+CREATE INDEX ERR_LST_TRGRS_IX
+        ON br7own.ERROR_LIST_TRIGGERS (ERROR_ID);
+
+-- DDL Statements for index on TRIGGER_CODE, ERROR_ID on Table BR7OWN.ERROR_LIST_TRIGGERS
+CREATE INDEX ERR_LST_TRG_TCE_IX
+        ON br7own.ERROR_LIST_TRIGGERS (TRIGGER_CODE, ERROR_ID);

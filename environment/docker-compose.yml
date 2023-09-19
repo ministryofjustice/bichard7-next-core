@@ -46,23 +46,42 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:14
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${DEFAULT_USER}
-      POSTGRES_PASSWORD: ${DEFAULT_PASSWORD}
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bichard
+      POSTGRES_USER: bichard
       PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
-    volumes:
-      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
       test: "pg_isready -U $${POSTGRES_USER}"
       interval: 2s
       timeout: 2s
       retries: 10
       start_period: 20s
+
+  db-migrate:
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.migrations.properties update
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  db-seed:
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.seeds.properties update
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
 
   conductor:
     image: conductor
@@ -86,6 +105,8 @@ services:
         condition: service_healthy
       message-forwarder:
         condition: service_started
+      db-seed:
+        condition: service_completed_successfully
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
@@ -159,6 +180,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
       message-forwarder:
         condition: service_started
       audit-log-api:
@@ -223,6 +246,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
 
   ui:
     image: ui
@@ -245,6 +270,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
 
   nginx-auth-proxy:
     image: nginx-auth-proxy
