@@ -74,6 +74,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      disable: true
 
   db-seed:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
@@ -82,6 +84,8 @@ services:
     depends_on:
       db-migrate:
         condition: service_completed_successfully
+    healthcheck:
+      disable: true
 
   conductor:
     image: conductor
