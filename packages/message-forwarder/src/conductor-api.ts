@@ -1,4 +1,3 @@
-import fetch from "node-fetch"
 import type ConductorConfig from "./ConductorConfig"
 
 type Task = {
@@ -48,4 +47,16 @@ export const completeWaitingTask = (
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
     body: JSON.stringify({ taskId, workflowInstanceId: workflowId, status: "COMPLETED" })
+  }).then((_) => {})
+
+export const startWorkflow = (
+  name: string,
+  input: Record<string, unknown>,
+  correlationId: string,
+  conductorConfig: ConductorConfig
+): Promise<void> =>
+  fetch(`${conductorConfig.url}/api/workflow`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
+    body: JSON.stringify({ name, input, correlationId })
   }).then((_) => {})

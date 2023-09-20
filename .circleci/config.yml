@@ -105,6 +105,8 @@ jobs:
           at: /home/circleci
       - fetch_docker_image:
           image: nodejs
+      - fetch_docker_image:
+          image: nodejs-20-2023
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -196,6 +198,8 @@ jobs:
           image: conductor
       - fetch_docker_image:
           image: nodejs
+      - fetch_docker_image:
+          image: nodejs-20-2023
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -226,6 +230,8 @@ jobs:
           at: /home/circleci
       - fetch_docker_image:
           image: nodejs
+      - fetch_docker_image:
+          image: nodejs-20-2023
       - run:
           name: Build message forwarder image
           command: docker-compose -f environment/docker-compose.yml build message-forwarder
