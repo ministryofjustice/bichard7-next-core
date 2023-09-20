@@ -70,22 +70,36 @@ services:
   db-migrate:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
-    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.migrations.properties update
+    entrypoint: |
+      sh -c "/liquibase/docker-entrypoint.sh --logLevel info --defaultsFile=/liquibase/changelog/liquibase.migrations.properties update && 
+        touch ~/completed && tail -f /dev/null"
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      disable: true
+      test: "cat ~/completed"
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+
 
   db-seed:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
-    command: --logLevel info --defaultsFile=/liquibase/changelog/liquibase.seeds.properties update
+    entrypoint: |
+      sh -c "/liquibase/docker-entrypoint.sh --logLevel info --defaultsFile=/liquibase/changelog/liquibase.seeds.properties update && 
+        touch ~/completed && tail -f /dev/null"
     depends_on:
       db-migrate:
-        condition: service_completed_successfully
+        condition: service_healthy
     healthcheck:
-      disable: true
+      test: "cat ~/completed"
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 20s
+
 
   conductor:
     image: conductor
@@ -110,7 +124,7 @@ services:
       message-forwarder:
         condition: service_started
       db-seed:
-        condition: service_completed_successfully
+        condition: service_started
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
@@ -185,7 +199,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_completed_successfully
+        condition: service_started
       message-forwarder:
         condition: service_started
       audit-log-api:
@@ -251,7 +265,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_completed_successfully
+        condition: service_started
 
   ui:
     image: ui
@@ -275,7 +289,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_completed_successfully
+        condition: service_started
 
   nginx-auth-proxy:
     image: nginx-auth-proxy
