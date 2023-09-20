@@ -63,6 +63,34 @@
                 "asyncComplete": false
               },
               {
+                "name": "is_manually_resolved",
+                "taskReferenceName": "is_manually_resolved",
+                "inputParameters": {
+                  "isManuallyResolved": "${wait_for_resubmission.output.isManuallyResolved}"
+                },
+                "type": "SWITCH",
+                "decisionCases": {
+                  "true": [
+                    {
+                      "name": "manually_resolved",
+                      "taskReferenceName": "manually_resolved",
+                      "inputParameters": {
+                        "terminationStatus": "COMPLETED"
+                      },
+                      "type": "TERMINATE",
+                      "startDelay": 0,
+                      "optional": false,
+                      "asyncComplete": false
+                    }
+                  ]
+                },
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false,
+                "evaluatorType": "value-param",
+                "expression": "isManuallyResolved"
+              },
+              {
                 "name": "read_aho_from_db",
                 "taskReferenceName": "read_aho_from_db",
                 "inputParameters": {
