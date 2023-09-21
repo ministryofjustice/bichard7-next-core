@@ -51,6 +51,7 @@ function pull_and_build_from_aws() {
       -e MQ_URL="ws://mq" \
       -e MQ_USER="bichard" \
       -e MQ_PASSWORD="password" \
+      -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     ## Run Trivy scan
