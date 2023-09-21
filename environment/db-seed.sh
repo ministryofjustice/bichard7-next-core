@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker compose \
+docker-compose \
     --project-name bichard \
     -f environment/docker-compose.yml \
-    run --no-deps --rm db-seed
+    up --no-deps --wait db-seed
