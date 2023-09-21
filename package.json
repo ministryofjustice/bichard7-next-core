@@ -18,7 +18,7 @@
     "generate-schema-doc": "./scripts/generate-schema-doc.sh",
     "lint": "npm run lint --ws",
     "lint:fix": "npm run lint:fix --ws",
-    "postgres": "docker compose --project-name bichard -f environment/docker-compose.yml up -d db-seed",
+    "postgres": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed",
     "localstack": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait localstack",
     "structurizr-lite": "docker compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-lite",
     "structurizr-site-generatr-build": "docker compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
