@@ -63,6 +63,7 @@ function pull_and_build_from_aws() {
       -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
       -e S3_REGION="eu-west-2" \
       -e CONDUCTOR_URL="http://conductor:4000/api" \
+      -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     ## Run Trivy scan
