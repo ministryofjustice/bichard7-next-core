@@ -70,9 +70,10 @@ services:
   db-migrate:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
-    entrypoint: |
-      sh -c "/liquibase/docker-entrypoint.sh --logLevel info --defaultsFile=/liquibase/changelog/liquibase.migrations.properties update && 
-        touch ~/completed && tail -f /dev/null"
+    environment:
+      LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.migrations.properties"
+      EXIT_AFTER_SCRIPT: "${EXIT_AFTER_SCRIPT:-false}"
+    entrypoint: /bin/bash /liquibase/changelog/update.sh
     depends_on:
       postgres:
         condition: service_healthy
@@ -86,9 +87,10 @@ services:
   db-seed:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
-    entrypoint: |
-      sh -c "/liquibase/docker-entrypoint.sh --logLevel info --defaultsFile=/liquibase/changelog/liquibase.seeds.properties update && 
-        touch ~/completed && tail -f /dev/null"
+    environment:
+      LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.seeds.properties"
+      EXIT_AFTER_SCRIPT: "${EXIT_AFTER_SCRIPT:-false}"
+    entrypoint: /bin/bash /liquibase/changelog/update.sh
     depends_on:
       db-migrate:
         condition: service_healthy
