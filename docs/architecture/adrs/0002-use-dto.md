@@ -34,4 +34,5 @@ We can control the levels of data we want share. E.g. `displayPartialObj` or `di
 ## Consequences
 
 - It's more complex than just using the Database Record
+- It's more secure than sending out raw database records into the UI
 - You have to be disciplined in it's use and following the architectural pattern
