@@ -25,10 +25,11 @@ We have chosen the naming convention of:
   - `objToDisplayObjDto`
   - `objToDisplayPartialObjDto`
 
-A DTO object is a new object mirror some of a Entity's attributes. We are actively using `Pick<T, "field">` to select
-what we want to use out of the Entity and mapping via a function (e.g. `const displayObj = objToDisplayObjDto(obj)`).
+A DTO object is a new object mirror with some of a Entity's attributes. We are actively using `Pick<T, "field">` to
+select what we want to use out of the Entity and mapping via a function (e.g.
+`const displayObj = objToDisplayObjDto(obj)`).
 
-We can control the vary levels of data we want share. E.g. `displayPartialObj` or `displayFullObj`.
+We can control the levels of data we want share. E.g. `displayPartialObj` or `displayFullObj`.
 
 ## Consequences
 
