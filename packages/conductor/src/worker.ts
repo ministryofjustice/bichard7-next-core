@@ -5,6 +5,7 @@ import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/pe
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/processPhase1"
 import readAhoFromDb from "@moj-bichard7/core/conductor-tasks/bichard_process/readAhoFromDb"
 import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_process/sendToPhase2"
+import deleteS3File from "@moj-bichard7/core/conductor-tasks/common/deleteS3File"
 import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/storeAuditLogEvents"
 import alertCommonPlatform from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/alertCommonPlatform"
 import convertSpiToAho from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/convertSpiToAho"
@@ -22,17 +23,18 @@ const client = new ConductorClient({
 })
 
 const tasks = [
-  convertSpiToAho,
-  readAhoFromDb,
-  generateDayTasks,
-  rerunDay,
+  alertCommonPlatform,
   compareFiles,
+  convertSpiToAho,
+  createAuditLogRecord,
+  deleteS3File,
+  generateDayTasks,
   persistPhase1,
   processPhase1,
+  readAhoFromDb,
+  rerunDay,
   sendToPhase2,
-  alertCommonPlatform,
-  storeAuditLogEvents,
-  createAuditLogRecord
+  storeAuditLogEvents
 ].map(captureWorkerExceptions)
 
 const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency } })

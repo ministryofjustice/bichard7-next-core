@@ -72,6 +72,18 @@
                 "decisionCases": {
                   "true": [
                     {
+                      "name": "delete_s3_file",
+                      "taskReferenceName": "delete_temp_file_manually_resolved",
+                      "inputParameters": {
+                        "bucketId": "task-data",
+                        "fileName": "${workflow.input.s3TaskDataPath}"
+                      },
+                      "type": "SIMPLE",
+                      "startDelay": 0,
+                      "optional": false,
+                      "asyncComplete": false
+                    },
+                    {
                       "name": "manually_resolved",
                       "taskReferenceName": "manually_resolved",
                       "inputParameters": {
@@ -117,6 +129,18 @@
                 "asyncComplete": false
               },
               {
+                "name": "delete_s3_file",
+                "taskReferenceName": "delete_temp_file_terminated",
+                "inputParameters": {
+                  "bucketId": "task-data",
+                  "fileName": "${workflow.input.s3TaskDataPath}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              },
+              {
                 "name": "end_processing",
                 "taskReferenceName": "end_processing",
                 "inputParameters": {
@@ -154,6 +178,18 @@
       "inputParameters": {
         "correlationId": "${workflow.correlationId}",
         "auditLogEvents": "${send_to_phase2.output.auditLogEvents}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "delete_s3_file",
+      "taskReferenceName": "delete_temp_file_complete",
+      "inputParameters": {
+        "bucketId": "task-data",
+        "fileName": "${workflow.input.s3TaskDataPath}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
