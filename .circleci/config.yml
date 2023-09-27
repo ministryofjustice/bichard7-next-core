@@ -262,9 +262,6 @@ jobs:
           working_directory: ~/bichard7-next-tests
           environment:
             RECORD: "true"
-            MESSAGE_ENTRY_POINT: s3phase1
-            AWS_URL: http://localhost:4566
-            AUDIT_LOG_API_URL: http://localhost:7010
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
             bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'

@@ -24,9 +24,9 @@ import {
 } from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
 import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 
-const incomingBucket = process.env.PHASE1_BUCKET_NAME
+const incomingBucket = process.env.INCOMING_BUCKET_NAME
 if (!incomingBucket) {
-  throw Error("PHASE1_BUCKET_NAME environment variable is required")
+  throw Error("INCOMING_BUCKET_NAME environment variable is required")
 }
 
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME

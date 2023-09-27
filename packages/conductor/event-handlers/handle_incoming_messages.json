@@ -1,6 +1,6 @@
 {
-  "name": "handle_phase1",
-  "event": "sqs:phase1Queue",
+  "name": "handle_incoming_messages",
+  "event": "sqs:incomingMessageQueue",
   "active": true,
   "actions": [
     {
