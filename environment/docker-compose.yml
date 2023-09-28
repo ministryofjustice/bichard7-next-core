@@ -277,6 +277,7 @@ services:
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       AUDIT_LOG_API_URL: http://audit-log-api:7010
+      CONDUCTOR_API_URL: ${CONDUCTOR_API_URL:-http://conductor:4000}
     ports:
       - 4080:443
     healthcheck:

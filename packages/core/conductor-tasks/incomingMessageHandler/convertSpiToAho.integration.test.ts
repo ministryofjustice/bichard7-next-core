@@ -11,7 +11,7 @@ import transformIncomingMessageToAho, {
 } from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
 import convertSpiToAho from "./convertSpiToAho"
 
-const { PHASE1_BUCKET_NAME, TASK_DATA_BUCKET_NAME } = process.env
+const { INCOMING_BUCKET_NAME, TASK_DATA_BUCKET_NAME } = process.env
 const s3Config = createS3Config()
 
 describe("convertSpiToAho", () => {
@@ -19,7 +19,7 @@ describe("convertSpiToAho", () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
-    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -56,7 +56,7 @@ describe("convertSpiToAho", () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-001.xml"))
-    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -82,7 +82,7 @@ describe("convertSpiToAho", () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-002.xml"))
-    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -107,7 +107,7 @@ describe("convertSpiToAho", () => {
   it("should stillp something even if the file has no valid data in it", async () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
-    await putFileToS3("invalid", s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3("invalid", s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
