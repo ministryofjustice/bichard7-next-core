@@ -3,12 +3,12 @@ AWS_REGION=eu-west-2
 COMPARISON_QUEUE="comparisonQueue"
 COMPARISON_BUCKET="comparisons"
 CONDUCTOR_TASK_DATA_BUCKET="conductor-task-data"
-PHASE1_QUEUE="phase1Queue"
-PHASE1_BUCKET_NAME="phase1"
+INCOMING_QUEUE="incomingMessageQueue"
+INCOMING_BUCKET_NAME="incoming-messages"
 
 # Create the comparison queue
 awslocal sqs create-queue --region $AWS_REGION --queue-name $COMPARISON_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
-awslocal sqs create-queue --region $AWS_REGION --queue-name $PHASE1_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name $INCOMING_QUEUE --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_COMPLETED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name conductor_FAILED --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 awslocal sqs create-queue --region $AWS_REGION --queue-name rerunFailures --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
@@ -17,7 +17,7 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name rerunAll --attribute
 # Create the incoming message bucket
 awslocal s3 mb s3://$COMPARISON_BUCKET
 awslocal s3 mb s3://$CONDUCTOR_TASK_DATA_BUCKET
-awslocal s3 mb s3://$PHASE1_BUCKET_NAME
+awslocal s3 mb s3://$INCOMING_BUCKET_NAME
 
 # Configure the incoming messages bucket to push to SQS on create
 awslocal s3api put-bucket-notification-configuration \
@@ -33,12 +33,12 @@ awslocal s3api put-bucket-notification-configuration \
                                   }'
 
 awslocal s3api put-bucket-notification-configuration \
-  --bucket $PHASE1_BUCKET_NAME \
+  --bucket $INCOMING_BUCKET_NAME \
   --region $AWS_REGION \
   --notification-configuration  '{
                                     "QueueConfigurations": [
                                       {
-                                        "QueueArn": "arn:aws:sqs:'"$AWS_REGION"':000000000000:'"$PHASE1_QUEUE"'",
+                                        "QueueArn": "arn:aws:sqs:'"$AWS_REGION"':000000000000:'"$INCOMING_QUEUE"'",
                                         "Events": ["s3:ObjectCreated:*"]
                                       }
                                     ]
