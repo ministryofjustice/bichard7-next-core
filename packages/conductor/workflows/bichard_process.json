@@ -72,6 +72,18 @@
                 "decisionCases": {
                   "manually_resolved": [
                     {
+                      "name": "store_audit_log_events",
+                      "taskReferenceName": "record_manual_resolution",
+                      "inputParameters": {
+                        "correlationId": "${workflow.correlationId}",
+                        "auditLogEvents": "${wait_for_resubmission.output.auditLogEvents}"
+                      },
+                      "type": "SIMPLE",
+                      "startDelay": 0,
+                      "optional": false,
+                      "asyncComplete": false
+                    },
+                    {
                       "name": "manually_resolved",
                       "taskReferenceName": "manually_resolved",
                       "inputParameters": {
