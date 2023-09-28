@@ -14,7 +14,7 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 import promisePoller from "promise-poller"
 
-const PHASE1_BUCKET_NAME = "phase1"
+const INCOMING_BUCKET_NAME = "incoming-messages"
 const s3Config = createS3Config()
 
 const conductorUrl = process.env.CONDUCTOR_URL ?? "http://localhost:5002"
@@ -80,7 +80,7 @@ describe("Incoming message handler", () => {
       externalCorrelationId
     )
 
-    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     // search for the workflow
     const workflows = await waitForWorkflows({
@@ -123,7 +123,7 @@ describe("Incoming message handler", () => {
     let inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-001.xml"))
       .replace("EXTERNAL_CORRELATION_ID", externalCorrelationId)
       .replace("UNIQUE_HASH", randomUUID())
-    await putFileToS3(inputMessage, s3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     // search for the workflow
     const workflows = await waitForWorkflows({
@@ -139,7 +139,7 @@ describe("Incoming message handler", () => {
     const duplicateExternalId = randomUUID()
     inputMessage = String(inputMessage.replace(externalCorrelationId, duplicateCorrelationId))
     const duplicateMessageS3Path = `2023/08/31/14/49/${duplicateExternalId}.xml`
-    await putFileToS3(inputMessage, duplicateMessageS3Path, PHASE1_BUCKET_NAME!, s3Config)
+    await putFileToS3(inputMessage, duplicateMessageS3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     // search for the workflow
     const duplicateWorkflows = await waitForWorkflows({
