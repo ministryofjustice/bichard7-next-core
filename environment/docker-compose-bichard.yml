@@ -3,4 +3,8 @@ services:
   bichard7-liberty:
     environment:
       ENABLE_PHASE_1: "true"
-      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/HearingOutcomeInputQueue"
+      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/Phase1ResubmitQueue"
+  
+  message-forwarder:
+    environment:
+      DESTINATION_TYPE: mq

@@ -4,6 +4,7 @@ import Workflow from "@moj-bichard7/conductor/src/workflow"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
+import { isError, type PromiseResult } from "./Result"
 import {
   completeWaitingTask,
   getWaitingTaskForWorkflow,
@@ -11,7 +12,6 @@ import {
   startWorkflow
 } from "./conductor-api"
 import createConductorConfig from "./createConductorConfig"
-import { isError, type PromiseResult } from "./Result"
 
 const s3Config = createS3Config()
 const conductorConfig = createConductorConfig()
@@ -26,7 +26,7 @@ if (!taskDataBucket) {
 
 const forwardMessage = async (message: string, client: Client): PromiseResult<void> => {
   if (destinationType === "mq") {
-    client.publish({ destination: destination, body: message })
+    client.publish({ destination: destination, body: message, skipContentLengthHeader: true })
     console.log("Sent to MQ")
   } else if (destinationType === "conductor") {
     // Extract the correlation ID
