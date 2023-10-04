@@ -30,8 +30,16 @@ export const getSystemId = (message: IncomingMessage) => message.RouteData.Reque
 
 export const getCorrelationId = (message: IncomingMessage) => message.RouteData.RequestFromSystem.CorrelationID
 
+const unescape = (input: string) =>
+  input
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, ">")
+    .replace(/&lt;/g, "<")
+    .replace(/&amp;/g, "&")
+
 export const getDataStreamContent = (message: IncomingMessage) =>
-  message.RouteData.DataStream.DataStreamContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+  unescape(message.RouteData.DataStream.DataStreamContent)
 
 export const getResultedCaseMessage = (message: IncomingMessage) => {
   const convertedXml = getDataStreamContent(message)
