@@ -2,13 +2,35 @@
 
 The code to replace the processing logic of Bichard 7
 
-## Booting the infrastructure
+## Quickstart
 
-Before we can boot core you will need to checkout [audit-logging](https://github.com/ministryofjustice/bichard7-next-audit-logging) repo and run the following command to build the audit log api and event handler servers:
+### Pre-Requisites
 
-```
-make build-api-server build-event-handler-server
-```
+Install the following required components:
+
+- [Docker desktop](https://www.docker.com/products/docker-desktop/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
+- [aws-vault](https://github.com/99designs/aws-vault)
+- [jq](https://stedolan.github.io/jq/download/)
+
+### Booting the infrastructure
+
+This project has a number of external dependencies that need building in order to run the whole stack. Check the
+following out and run `make build` in each repository:
+
+- [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
+  - Make command is `make build-local` for this repo
+- [Bichard7 Liberty](https://github.com/ministryofjustice/bichard7-next)
+  - Make command is `make buid` for this repo, or
+  - `make build-debug` if you need to run Bichard in debug mode
+- [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
+- [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
+- [End-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests)
+- [Nginx Authentication Proxy](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy)
+- [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
+  - Make command is `make build-api-server build-event-handler-server` for this repo
+- [User Service](https://github.com/ministryofjustice/bichard7-next-user-service)
+  - Make command is `make build` for this repo
 
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
@@ -39,7 +61,7 @@ npm run destroy
 ### Running legacy Bichard in debug mode
 
 1. Use Intellij (VS Code doesn't work for debugging) to open the [bichard7-next](https://github.com/ministryofjustice/bichard7-next) project
-1. Build a debug image using `make clean build-liberty-debug`
+1. Build a debug image using `make clean build-debug`
 1. Run the legacy infrastructure using `npm run bichard-legacy-debug`
 1. In IntelliJ select `Run >> Edit Configurations` from the menu
 1. Click the `+` button in the top left and select `Remote JVM Debug`
