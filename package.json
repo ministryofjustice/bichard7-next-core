@@ -24,7 +24,7 @@
     "structurizr-site-generatr-build": "docker compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
     "structurizr-site-generatr-serve": "docker compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
     "update-deps": "ncu -u --deep && npm install",
-    "ui": "npm run postgres && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api localstack ui",
+    "ui": "npm run postgres && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api localstack ui activemq",
     "watch": "tsc --build --watch"
   },
   "workspaces": [
