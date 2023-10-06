@@ -1,3 +1,4 @@
+import logger from "@moj-bichard7/common/utils/logger"
 import type { Message } from "@stomp/stompjs"
 import { WebSocket } from "ws"
 import createStompClient from "./createStompClient"
@@ -9,14 +10,12 @@ const sourceQueue = process.env.SOURCE_QUEUE ?? "PHASE_1_RESUBMIT_QUEUE"
 const client = createStompClient()
 
 client.onConnect = () => {
-  console.log("Connected")
+  logger.info("Connected to MQ")
   client.subscribe(sourceQueue, async (message: Message) => {
-    console.log("Received message")
-
     try {
       await forwardMessage(message.body, client)
     } catch (e) {
-      console.error(e)
+      logger.error(e)
     }
   })
 }

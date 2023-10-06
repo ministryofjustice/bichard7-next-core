@@ -27,7 +27,7 @@ services:
       dockerfile: packages/message-forwarder/Dockerfile
       context: ..
     environment:
-      DESTINATION_TYPE: conductor
+      DESTINATION_TYPE: auto
       CONDUCTOR_URL: http://conductor:4000
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
@@ -306,7 +306,7 @@ services:
       CJSE_NGINX_UI_DOMAIN: ui
       CJSE_NGINX_USERSERVICE_DOMAIN: user-service
     healthcheck:
-      test: curl --insecure --fail -v https://localhost:4443/elb-status
+      test: curl --insecure --fail https://localhost:4443/elb-status
       interval: 2s
       timeout: 2s
       retries: 10

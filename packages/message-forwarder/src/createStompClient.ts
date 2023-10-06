@@ -1,3 +1,4 @@
+import logger from "@moj-bichard7/common/utils/logger"
 import { Client } from "@stomp/stompjs"
 
 const createStompClient = (): Client => {
@@ -21,7 +22,7 @@ const createStompClient = (): Client => {
     },
     beforeConnect: () => {
       client.brokerURL = brokerUrls[activeBrokerIndex]
-      console.log(`Connecting to ${client.brokerURL}`)
+      logger.info(`Connecting to ${client.brokerURL}`)
       activeBrokerIndex += 1
       if (!brokerUrls[activeBrokerIndex]) {
         activeBrokerIndex = 0
