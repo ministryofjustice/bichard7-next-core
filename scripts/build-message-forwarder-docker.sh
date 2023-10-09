@@ -49,8 +49,7 @@ function pull_and_build_from_aws() {
     ## Run goss tests
     GOSS_SLEEP=5 GOSS_FILE=packages/message-forwarder/goss.yaml dgoss run \
       -e MQ_URL="ws://mq" \
-      -e MQ_USER="bichard" \
-      -e MQ_PASSWORD="password" \
+      -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
