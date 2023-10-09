@@ -12,7 +12,7 @@ skinparam preserveAspectRatio meet
 AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc")
 Boundary(group_1, "CJSE", $tags="CJSE") {
   System(Bichard, "Bichard", $descr="", $tags="", $link="../container/")
-  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="../../psn-proxy/context/")
+  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
   System(ExISS, "ExISS", $descr="", $tags="", $link="../../exiss/context/")
 }
 
