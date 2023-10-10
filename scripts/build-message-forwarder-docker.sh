@@ -2,7 +2,7 @@
 
 set -e
 
-readonly DOCKER_BUILD_IMAGE="nodejs"
+readonly DOCKER_BUILD_IMAGE="nodejs-20-2023"
 readonly DOCKER_OUTPUT_TAG="message-forwarder"
 
 function has_local_image() {
