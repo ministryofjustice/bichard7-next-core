@@ -5,7 +5,6 @@ import Workflow from "@moj-bichard7/conductor/src/workflow"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
-import { isError, type PromiseResult } from "./Result"
 import {
   completeWaitingTask,
   getWaitingTaskForWorkflow,
@@ -13,6 +12,7 @@ import {
   startWorkflow
 } from "./conductor-api"
 import createConductorConfig from "./createConductorConfig"
+import { isError, type PromiseResult } from "./Result"
 
 const s3Config = createS3Config()
 const conductorConfig = createConductorConfig()
@@ -33,7 +33,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
   }
   const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   const workflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
-  const workflowExists = workflow && "workflowId" in workflow
+  const workflowExists = !isError(workflow) && workflow && "workflowId" in workflow
 
   if (destinationType === "mq" || (destinationType === "auto" && !workflowExists)) {
     client.publish({ destination: destination, body: message, skipContentLengthHeader: true })
