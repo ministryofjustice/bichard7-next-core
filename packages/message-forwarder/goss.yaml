@@ -14,6 +14,6 @@ command:
   node --version:
     exit-status: 0
     stdout:
-      - v16.18.1
+      - /v20.\d+.\d+/
     stderr: []
     timeout: 10000

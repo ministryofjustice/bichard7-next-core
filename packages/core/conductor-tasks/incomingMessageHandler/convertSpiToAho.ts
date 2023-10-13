@@ -151,7 +151,7 @@ const convertSpiToAho: ConductorWorker = {
     const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)
-      failed("Could not put file to S3")
+      return failed("Could not put file to S3", maybeError.message)
     }
 
     const outputData = {

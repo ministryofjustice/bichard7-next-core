@@ -1,10 +1,10 @@
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import logger from "@moj-bichard7/common/utils/logger"
 import Workflow from "@moj-bichard7/conductor/src/workflow"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
-import { isError, type PromiseResult } from "./Result"
 import {
   completeWaitingTask,
   getWaitingTaskForWorkflow,
@@ -12,11 +12,12 @@ import {
   startWorkflow
 } from "./conductor-api"
 import createConductorConfig from "./createConductorConfig"
+import { isError, type PromiseResult } from "./Result"
 
 const s3Config = createS3Config()
 const conductorConfig = createConductorConfig()
 
-const destinationType = process.env.DESTINATION_TYPE ?? "mq"
+const destinationType = process.env.DESTINATION_TYPE ?? "auto"
 const destination = process.env.DESTINATION ?? "HEARING_OUTCOME_INPUT_QUEUE"
 
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
@@ -25,21 +26,21 @@ if (!taskDataBucket) {
 }
 
 const forwardMessage = async (message: string, client: Client): PromiseResult<void> => {
-  if (destinationType === "mq") {
+  // Extract the correlation ID
+  const aho = parseAhoXml(message)
+  if (isError(aho)) {
+    throw aho
+  }
+  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const workflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
+  const workflowExists = !isError(workflow) && workflow && "workflowId" in workflow
+
+  if (destinationType === "mq" || (destinationType === "auto" && !workflowExists)) {
     client.publish({ destination: destination, body: message, skipContentLengthHeader: true })
-    console.log("Sent to MQ")
-  } else if (destinationType === "conductor") {
-    // Extract the correlation ID
-    const aho = parseAhoXml(message)
-    if (isError(aho)) {
-      throw aho
-    }
-
-    const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-
+    logger.info(`Sent message to MQ (${correlationId})`)
+  } else {
     // Check to see if there's already a workflow with that ID
-    const workflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
-    if (workflow && "workflowId" in workflow) {
+    if (workflowExists) {
       // COMPLETE the HUMAN task
       const workflowId = workflow.workflowId as string
       const task = await getWaitingTaskForWorkflow(workflowId, conductorConfig)
@@ -48,7 +49,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
       }
 
       await completeWaitingTask(workflowId, task.taskId, conductorConfig)
-      console.log("Completed task in Conductor")
+      logger.info(`Completed task in Conductor (${correlationId})`)
     } else {
       // Start a new workflow
       const s3TaskDataPath = `${randomUUID()}.json`
@@ -58,6 +59,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
       }
 
       await startWorkflow(Workflow.BICHARD_PROCESS, { s3TaskDataPath }, correlationId, conductorConfig)
+      logger.info(`Started new workflow in Conductor (${correlationId})`)
     }
   }
 }

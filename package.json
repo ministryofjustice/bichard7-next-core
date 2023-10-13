@@ -24,6 +24,7 @@
     "structurizr-site-generatr-build": "docker compose -f docs/docker-compose-arch.yml run --rm structurizr-site-generatr-build",
     "structurizr-site-generatr-serve": "docker compose -f docs/docker-compose-arch.yml run --rm --service-ports structurizr-site-generatr-serve",
     "update-deps": "ncu -u --deep && npm install",
+    "ui": "npm run postgres && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api localstack activemq ui",
     "watch": "tsc --build --watch"
   },
   "workspaces": [
@@ -49,6 +50,6 @@
     "zod-to-json-schema": "^3.21.4"
   },
   "dependencies": {
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.121"
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.123"
   }
 }

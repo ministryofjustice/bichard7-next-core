@@ -1,4 +1,5 @@
 import type ConductorConfig from "./ConductorConfig"
+import type { PromiseResult } from "./Result"
 
 type Task = {
   status: string
@@ -19,12 +20,13 @@ const basicAuthHeaders = (conductorConfig: ConductorConfig) => ({
 export const getWorkflowByCorrelationId = (
   correlationId: string,
   conductorConfig: ConductorConfig
-): Promise<object | undefined> =>
+): PromiseResult<object | undefined> =>
   fetch(`${conductorConfig.url}/api/workflow/bichard_process/correlated/${correlationId}`, {
     headers: basicAuthHeaders(conductorConfig)
   })
     .then((result) => result.json())
     .then((json) => ((json as Workflow[]).length > 0 ? (json as Workflow[])[0] : undefined))
+    .catch((e) => e as Error)
 
 export const getWaitingTaskForWorkflow = (
   workflowId: string,
