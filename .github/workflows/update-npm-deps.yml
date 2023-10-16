@@ -15,6 +15,9 @@ jobs:
 
       - name: Setup node version
         uses: actions/setup-node@v2
+        
+      - name: Print node version  
+        run: node -v
 
       - name: Install dependencies
         run: npm install
