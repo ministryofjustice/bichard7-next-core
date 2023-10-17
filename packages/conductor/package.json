@@ -52,9 +52,9 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.428.0",
-    "@aws-sdk/client-s3": "^3.428.0",
-    "@aws-sdk/lib-dynamodb": "^3.428.0",
+    "@aws-sdk/client-dynamodb": "^3.429.0",
+    "@aws-sdk/client-s3": "^3.429.0",
+    "@aws-sdk/lib-dynamodb": "^3.429.0",
     "@io-orkes/conductor-javascript": "^1.2.3",
     "axios": "^1.5.1",
     "lodash.ismatch": "^4.4.0",
