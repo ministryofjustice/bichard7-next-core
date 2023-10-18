@@ -56,6 +56,10 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Publish output package
-        run: npm publish --access=public --workspace packages/core
+        run: |
+          cat packages/core/package.json \
+            | jq -r ".name = \"@moj-bichard7-developers/bichard7-next-core\"" \
+            | tee packages/core/package.json
+          npm publish --access=public --workspace packages/core
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
