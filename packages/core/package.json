@@ -1,6 +1,6 @@
 {
   "name": "@moj-bichard7/core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The core processing logic of Bichard 7",
   "main": "index.js",
   "scripts": {
