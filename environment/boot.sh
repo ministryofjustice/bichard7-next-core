@@ -41,7 +41,7 @@ done
 
 DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
 if [ "$LEGACY" == "true" ]; then
-    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
+    DOCKER_COMPOSE="LEGACY_PHASE1=true ${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
 fi
 
 # should run by default
