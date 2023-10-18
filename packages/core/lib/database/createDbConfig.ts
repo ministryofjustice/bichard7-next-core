@@ -6,6 +6,7 @@ export type DbConfig = {
   max: number
   idle_timeout: number
   max_lifetime: number
+  ssl: boolean | { rejectUnauthorized: false }
 }
 
 const createDbConfig = (): DbConfig => ({
@@ -13,6 +14,7 @@ const createDbConfig = (): DbConfig => ({
   port: Number(process.env.DB_PORT ?? "5432"),
   username: process.env.DB_USER ?? "bichard",
   password: process.env.DB_PASSWORD ?? "password",
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
   max: 10,
   idle_timeout: 20,
   max_lifetime: 60 * 30

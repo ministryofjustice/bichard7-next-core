@@ -261,6 +261,7 @@ jobs:
           name: Run e2e tests against core code
           working_directory: ~/bichard7-next-tests
           environment:
+            AWS_URL: http://localhost:4566
             RECORD: "true"
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \

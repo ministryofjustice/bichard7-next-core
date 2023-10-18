@@ -27,7 +27,7 @@ services:
       INCOMING_BUCKET_NAME: incoming-messages
       TASK_DATA_BUCKET_NAME: conductor-task-data
       MQ_USER: ${DEFAULT_USER}
-      MQ_PASSWORD: ${DEFAULT_PASSWORD}
+      MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(stomp://activemq:61613)
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       AUDIT_LOG_API_KEY: toBeSet
