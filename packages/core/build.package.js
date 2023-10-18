@@ -4,7 +4,17 @@ const path = require("path")
 const esbuild = require("esbuild")
 const { buildOptions } = require("./build")
 
+const pathsToIgnore = [
+  `${path.resolve(__dirname)}/node_modules`,
+  `${path.resolve(__dirname)}/scripts`,
+  `${path.resolve(__dirname)}/conductor-tasks`
+]
+
 async function findFiles(directory, extension, files = []) {
+  if (pathsToIgnore.includes(directory)) {
+    return files
+  }
+
   await Promise.all(
     fs.readdirSync(directory).map(async (filePath) => {
       const absolute = path.join(directory, filePath)

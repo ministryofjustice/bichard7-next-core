@@ -42,18 +42,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16.13.1"
+          node-version-file: '.nvmrc'
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --ws
 
       - name: Build output package
-        run: npm run build:package
+        run: |
+          npm run build --workspace packages/common
+          npm run build:package --workspace packages/core
 
       - name: Add registry config for npm
         run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Publish output package
-        run: npm publish
+        run: npm publish --workspace packages/core
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

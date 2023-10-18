@@ -11,5 +11,7 @@ echo "Generating types..."
 npx -y tsc --emitDeclarationOnly --outDir dist/definitions >/dev/null || true
 
 echo "Moving types..."
-cp -R ./dist/definitions/* ./dist
+cp -R ./dist/definitions/lib ./dist
+cp -R ./dist/definitions/phase1 ./dist
+cp -R ./dist/definitions/types ./dist
 rm -rf ./dist/definitions
