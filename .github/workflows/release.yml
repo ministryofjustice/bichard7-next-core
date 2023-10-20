@@ -57,7 +57,7 @@ jobs:
         run: |
           cat ./package.json \
             | jq -r ".name = \"@moj-bichard7-developers/bichard7-next-core\" | \
-              .scripts[\"post-install\"] = \"./scripts/post-install.sh\"" \
+              .scripts.postinstall = \"./scripts/post-install.sh\"" \
             | tee ./package.json
           npm publish --access=public
         env:
