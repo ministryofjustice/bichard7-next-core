@@ -60,7 +60,7 @@ services:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     healthcheck:
-      test: "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+      test: "pg_isready -U $${POSTGRES_USER}"
       interval: 2s
       timeout: 2s
       retries: 10
