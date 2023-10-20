@@ -1,6 +1,5 @@
 {
   "name": "moj-bichard7",
-  "private": true,
   "version": "2.0.2",
   "scripts": {
     "activemq": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
