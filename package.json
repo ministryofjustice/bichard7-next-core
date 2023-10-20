@@ -1,6 +1,6 @@
 {
   "name": "moj-bichard7",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "activemq": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq",
     "audit-log": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait audit-log-api",
