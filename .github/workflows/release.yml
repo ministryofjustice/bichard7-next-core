@@ -48,18 +48,17 @@ jobs:
         run: npm ci --ws
 
       - name: Build output package
-        run: |
-          npm run build --workspace packages/common
-          npm run build:package --workspace packages/core
+        run: npm run build:package
 
       - name: Add registry config for npm
         run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Publish output package
         run: |
-          cat packages/core/package.json \
-            | jq -r ".name = \"@moj-bichard7-developers/bichard7-next-core\"" \
-            | tee packages/core/package.json
-          npm publish --access=public --workspace packages/core
+          cat ./package.json \
+            | jq -r ".name = \"@moj-bichard7-developers/bichard7-next-core\" | \
+              .scripts[\"post-install\"] = \"./scripts/post-install.sh\"" \
+            | tee ./package.json
+          npm publish --access=public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

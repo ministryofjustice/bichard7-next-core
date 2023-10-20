@@ -8,7 +8,6 @@
     "clean": "rm -rf ./dist",
     "watch": "tsc --project tsconfig.build.json --watch",
     "build:esbuild": "node build.js",
-    "build:package": "./scripts/build-package.sh",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest --runInBand --forceExit --testNamePattern=",

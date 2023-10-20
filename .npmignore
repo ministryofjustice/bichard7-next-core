@@ -5,6 +5,7 @@ build
 node_modules
 .eslintcache
 .npmrc
+.vscode
 
 # Things we don't need
 
@@ -16,8 +17,10 @@ test-data/
 environment/
 build/
 data/
-scripts/
+scripts/*
+!scripts/post-install.sh
 docs/
+packages/
 .github/
 .circleci/
 .husky/

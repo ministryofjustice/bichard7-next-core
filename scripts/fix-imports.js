@@ -1,20 +1,9 @@
 const fs = require("fs")
 const path = require("path")
-// eslint-disable-next-line import/no-extraneous-dependencies
-const esbuild = require("esbuild")
-const { buildOptions } = require("./build")
 
-const pathsToIgnore = [
-  `${path.resolve(__dirname)}/node_modules`,
-  `${path.resolve(__dirname)}/scripts`,
-  `${path.resolve(__dirname)}/conductor-tasks`
-]
+const currentPath = process.cwd()
 
 async function findFiles(directory, extension, files = []) {
-  if (pathsToIgnore.includes(directory)) {
-    return files
-  }
-
   await Promise.all(
     fs.readdirSync(directory).map(async (filePath) => {
       const absolute = path.join(directory, filePath)
@@ -30,8 +19,8 @@ async function findFiles(directory, extension, files = []) {
 }
 
 async function resolveImportPaths() {
-  const transpiledFiles = await findFiles(path.resolve(__dirname, "dist"), "js")
-  const srcPath = path.resolve(__dirname, "dist")
+  const transpiledFiles = await findFiles(path.resolve(currentPath, "dist"), "js")
+  const srcPath = path.resolve(currentPath, "dist")
   await Promise.all(
     transpiledFiles.map(
       (file) =>
@@ -39,7 +28,8 @@ async function resolveImportPaths() {
           const content = fs.readFileSync(file).toString()
           const filePath = path.dirname(file)
           const relativePath = path.relative(filePath, srcPath)
-          fs.writeFileSync(file, content.replace(/(require\(")(src)(\/.*"\))/g, `$1${relativePath}$3`))
+          const updatedContent = content.replace(/(require\(")(@moj-bichard7)(\/.*"\))/g, `$1${relativePath}/..$3`)
+          fs.writeFileSync(file, updatedContent)
           resolve()
         })
     )
@@ -47,14 +37,6 @@ async function resolveImportPaths() {
 }
 
 async function run() {
-  const files = await findFiles(path.resolve(__dirname), "ts")
-  await esbuild.build({
-    ...buildOptions,
-    entryPoints: files,
-    outdir: "dist",
-    minify: false,
-    bundle: false
-  })
   await resolveImportPaths()
 }
 
