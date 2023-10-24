@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" class="has-background-light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Record architecture decisions | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded has-site-branding" id="search" type="search" size="30" maxlength="50" placeholder="Search (requires 3 characters)..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../libra/" class="">Libra</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../police-national-computer/" class="">Police National Computer</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid has-background-white">
+        <div class="content p-3">
+          <div><h1>1. Record architecture decisions</h1>
+<p>Date: 2023-09-22</p>
+<h2>Status</h2>
+<p>Accepted</p>
+<h2>Context</h2>
+<p>Using a Data Transfer Object (DTO) in the <code>bichard-next-ui</code> repo will help separate the User Interface (React) from the Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at compile time.</p>
+<p>We have chosen the naming convention of:</p>
+<ul>
+ <li>Types: 
+  <ul>
+   <li><code>Display</code> - Prefix for the object to be consumed in the UI</li>
+   <li><code>DisplayPartial</code> - Prefix for the object which has limited fields</li>
+   <li><code>DisplayFull</code> - Prefix for the object which has all fields (that aren't a security risk)</li>
+  </ul></li>
+ <li>File structure for DTOs 
+  <ul>
+   <li><code>src/services/dto</code> top level</li>
+   <li>Then for example: <code>objectDto.ts</code></li>
+  </ul></li>
+ <li>Which holds functions like: 
+  <ul>
+   <li><code>objToDisplayObjDto</code></li>
+   <li><code>objToDisplayPartialObjDto</code></li>
+  </ul></li>
+</ul>
+<p>A DTO object is a new object mirror with some of a Entity's attributes. We are actively using <code>Pick&lt;T, "field"&gt;</code> to select what we want to use out of the Entity and mapping via a function (e.g. <code>const displayObj = objToDisplayObjDto(obj)</code>).</p>
+<p>We can control the levels of data we want share. E.g. <code>displayPartialObj</code> or <code>displayFullObj</code>.</p>
+<h2>Consequences</h2>
+<ul>
+ <li>It's more complex than just using the Database Record</li>
+ <li>It's more secure than sending out raw database records into the UI</li>
+ <li>You have to be disciplined in it's use and following the architectural pattern</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
