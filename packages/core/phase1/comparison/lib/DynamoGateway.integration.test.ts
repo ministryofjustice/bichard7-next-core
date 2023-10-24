@@ -160,7 +160,7 @@ describe("DynamoGateway()", () => {
 
       const firstBatch = await result.next()
       if (isError(firstBatch.value)) {
-        throw new Error("Error returned from Dynamo")
+        console.error(firstBatch.value)
       }
 
       expect(isError(firstBatch.value)).toBe(false)
