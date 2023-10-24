@@ -13,5 +13,5 @@ docs/architecture/.structurizr
 docs/schema
 
 # Ignore top level core and common directories
-common/
-core/
+/common/
+/core/
