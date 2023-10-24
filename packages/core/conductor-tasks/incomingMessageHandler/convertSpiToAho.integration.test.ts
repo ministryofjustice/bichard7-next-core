@@ -1,9 +1,10 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
+import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
-import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import fs from "fs"
 import { v4 as uuid } from "uuid"
 import transformIncomingMessageToAho, {
@@ -14,12 +15,24 @@ import convertSpiToAho from "./convertSpiToAho"
 const { INCOMING_BUCKET_NAME, TASK_DATA_BUCKET_NAME } = process.env
 const s3Config = createS3Config()
 
+const mockPutFileToS3 = putFileToS3 as { default: any }
+const originalPutFileToS3 = mockPutFileToS3.default
+
+const putFileToS3ReturnsException = () => new Error("Unexpected S3 Exception")
+
+const putFileToS3Default = (body: string, fileName: string, bucket: string, config: S3ClientConfig) =>
+  originalPutFileToS3(body, fileName, bucket, config)
+
 describe("convertSpiToAho", () => {
+  beforeEach(() => {
+    mockPutFileToS3.default = putFileToS3Default
+  })
+
   it("should convert incoming messages to AHO, store in s3 and output an audit log", async () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
-    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+    await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -56,7 +69,7 @@ describe("convertSpiToAho", () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-001.xml"))
-    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+    await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -82,7 +95,7 @@ describe("convertSpiToAho", () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-002.xml"))
-    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+    await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -107,7 +120,7 @@ describe("convertSpiToAho", () => {
   it("should stillp something even if the file has no valid data in it", async () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
-    await putFileToS3("invalid", s3Path, INCOMING_BUCKET_NAME!, s3Config)
+    await putFileToS3Default("invalid", s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     const result = await convertSpiToAho.execute({ inputData: { s3Path } })
 
@@ -134,5 +147,19 @@ describe("convertSpiToAho", () => {
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
     expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3Path")
+  })
+
+  it("should fail if it can't write to S3", async () => {
+    mockPutFileToS3.default = putFileToS3ReturnsException
+    const externalId = uuid()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
+    await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+
+    const result = await convertSpiToAho.execute({ inputData: { s3Path } })
+
+    expect(result).toHaveProperty("status", "FAILED")
+    expect(result.logs?.map((l) => l.log)).toContain("Could not put file to S3")
+    expect(result.logs?.map((l) => l.log)).toContain("Unexpected S3 Exception")
   })
 })

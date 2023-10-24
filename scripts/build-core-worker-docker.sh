@@ -56,8 +56,7 @@ function pull_and_build_from_aws() {
       -e AUDIT_LOG_API_URL="http://localhost:3011" \
       -e COMPARISON_BUCKET="comparisons" \
       -e MQ_URL="mq" \
-      -e MQ_USER="bichard" \
-      -e MQ_PASSWORD="password" \
+      -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
       -e DYNAMO_REGION="eu-west-2" \
       -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \

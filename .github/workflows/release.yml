@@ -42,10 +42,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16.13.1"
+          node-version-file: '.nvmrc'
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --ws
 
       - name: Build output package
         run: npm run build:package
@@ -54,6 +54,11 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
       - name: Publish output package
-        run: npm publish
+        run: |
+          cat ./package.json \
+            | jq -r ".name = \"@moj-bichard7-developers/bichard7-next-core\" | \
+              .scripts.postinstall = \"./scripts/post-install.sh\"" \
+            | tee ./package.json
+          npm publish --access=public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
