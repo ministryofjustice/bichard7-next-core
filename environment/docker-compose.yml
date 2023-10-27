@@ -187,7 +187,7 @@ services:
       CONDUCTOR_API_URL: ${CONDUCTOR_API_URL:-http://conductor:4000}
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
-      LEGACY_PHASE1: ${LEGACY_PHASE1:-true} # set in boot.sh for npm run all-legacy
+      ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
     healthcheck:
       test: curl --insecure --fail https://localhost:9443/bichard-ui/Health
       interval: 2s
@@ -281,7 +281,7 @@ services:
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       CONDUCTOR_API_URL: http://conductor:4000
-      LEGACY_PHASE1: ${LEGACY_PHASE1:-true} # set in boot.sh for npm run all-legacy
+      ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
     ports:
       - 4080:443
     healthcheck:
