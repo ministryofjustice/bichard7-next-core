@@ -68,7 +68,7 @@ services:
 
   db-migrate:
     image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
-    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    volumes: ["${PWD}/environment/postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.migrations.properties"
       EXIT_AFTER_SCRIPT: "${EXIT_AFTER_SCRIPT:-false}"
