@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 # Remove existing core and common directories
 rm -rf ./core
 rm -rf ./common
