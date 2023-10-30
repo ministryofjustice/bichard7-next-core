@@ -5,6 +5,7 @@ LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
 SKIP_DOWNLOADS=${SKIP_DOWNLOADS:-"false"}
+ENABLE_CORE_PHASE1=${ENABLE_CORE_PHASE1:-"false"}
 
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
@@ -41,12 +42,12 @@ done
 
 DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
 if [ "$LEGACY" == "true" ]; then
-    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
+    DOCKER_COMPOSE="ENABLE_CORE_PHASE1=false ${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
 fi
 
 # should run by default
 if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
-    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
+    DOCKER_COMPOSE="ENABLE_CORE_PHASE1=$ENABLE_CORE_PHASE1 ${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
     eval "$DOCKER_COMPOSE build worker"
 fi
 
