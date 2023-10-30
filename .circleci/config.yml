@@ -251,7 +251,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: npm run all-no-worker
+          command: ENABLE_CORE_PHASE1="true" npm run all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -301,7 +301,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: npm run all-no-worker
+          command: ENABLE_CORE_PHASE1="true" npm run all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -368,6 +368,9 @@ workflows:
           requires:
             - build
       - e2e_test:
+          requires:
+            - build
+      - e2e_test_new_ui:
           requires:
             - build
       - test_api:
