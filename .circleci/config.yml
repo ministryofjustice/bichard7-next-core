@@ -268,6 +268,56 @@ jobs:
             bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
       - save_artifacts
 
+  e2e_test_new_ui:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: xlarge
+    working_directory: ~
+    parallelism: 10
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - fetch_docker_image:
+          image: nodejs
+      - fetch_docker_image:
+          image: nodejs-20-2023
+      - run:
+          name: Build message forwarder image
+          command: docker-compose -f environment/docker-compose.yml build message-forwarder
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+      - run:
+          name: NPM install tests dependencies
+          working_directory: ~/bichard7-next-tests
+          command: npm i
+      - run:
+          name: Run the infrastructure
+          command: npm run all-no-worker
+      - run:
+          # currently quicker to run the worker separately due to data install
+          name: Run the worker
+          command: npm run -w packages/conductor worker
+          background: true
+      - run:
+          name: Run e2e tests against core code
+          working_directory: ~/bichard7-next-tests
+          environment:
+            AWS_URL: http://localhost:4566
+            RECORD: "true"
+          command: |
+            NEXTUI="true" TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+      - save_artifacts
+
   test_api:
     machine:
       image: ubuntu-2204:current
