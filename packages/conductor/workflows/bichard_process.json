@@ -63,14 +63,26 @@
                 "asyncComplete": false
               },
               {
-                "name": "is_manually_resolved",
-                "taskReferenceName": "is_manually_resolved",
+                "name": "check_manually_resolved",
+                "taskReferenceName": "check_manually_resolved",
                 "inputParameters": {
-                  "isManuallyResolved": "${wait_for_resubmission.output.isManuallyResolved}"
+                  "status": "${wait_for_resubmission.output.status}"
                 },
                 "type": "SWITCH",
                 "decisionCases": {
-                  "true": [
+                  "manually_resolved": [
+                    {
+                      "name": "store_audit_log_events",
+                      "taskReferenceName": "record_manual_resolution",
+                      "inputParameters": {
+                        "correlationId": "${workflow.correlationId}",
+                        "auditLogEvents": "${wait_for_resubmission.output.auditLogEvents}"
+                      },
+                      "type": "SIMPLE",
+                      "startDelay": 0,
+                      "optional": false,
+                      "asyncComplete": false
+                    },
                     {
                       "name": "delete_s3_file",
                       "taskReferenceName": "delete_temp_file_manually_resolved",
@@ -100,7 +112,7 @@
                 "optional": false,
                 "asyncComplete": false,
                 "evaluatorType": "value-param",
-                "expression": "isManuallyResolved"
+                "expression": "status"
               },
               {
                 "name": "read_aho_from_db",
