@@ -22,15 +22,32 @@
           "asyncComplete": false
         },
         {
-          "name": "persist_phase1",
-          "taskReferenceName": "persist_phase1",
+          "name": "check_triggers_or_exceptions",
+          "taskReferenceName": "check_triggers_or_exceptions",
           "inputParameters": {
-            "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
+            "hasTriggersOrExceptions": "${process_phase1.output.hasTriggersOrExceptions}"
           },
-          "type": "SIMPLE",
+          "type": "SWITCH",
+          "decisionCases": {
+            "has_triggers_or_exceptions": [
+              {
+                "name": "persist_phase1",
+                "taskReferenceName": "persist_phase1",
+                "inputParameters": {
+                  "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              }
+            ]
+          },
           "startDelay": 0,
           "optional": false,
-          "asyncComplete": false
+          "asyncComplete": false,
+          "evaluatorType": "javascript",
+          "expression": "$.shouldPersist ? 'persist' : 'no_persist'"
         },
         {
           "name": "store_audit_log_events",
@@ -128,18 +145,6 @@
               }
             ],
             "end_processing": [
-              {
-                "name": "store_audit_log_events",
-                "taskReferenceName": "store_audit_log_events_terminated",
-                "inputParameters": {
-                  "correlationId": "${workflow.correlationId}",
-                  "auditLogEvents": "${send_to_phase2.output.auditLogEvents}"
-                },
-                "type": "SIMPLE",
-                "startDelay": 0,
-                "optional": false,
-                "asyncComplete": false
-              },
               {
                 "name": "delete_s3_file",
                 "taskReferenceName": "delete_temp_file_terminated",

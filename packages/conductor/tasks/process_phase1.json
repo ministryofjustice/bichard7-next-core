@@ -7,5 +7,5 @@
   "responseTimeoutSeconds": 55,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["s3TaskDataPath"],
-  "outputKeys": ["result"]
+  "outputKeys": ["resultType", "auditLogEvents", "hasTriggersOrExceptions"]
 }

@@ -40,8 +40,12 @@ const processPhase1: ConductorWorker = {
       }
     }
 
+    const hasTriggersOrExceptions =
+      ("triggers" in result && result.triggers.length > 0) ||
+      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+
     return completed(
-      { resultType: result.resultType, auditLogEvents: result.auditLogEvents },
+      { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
       ...result.auditLogEvents.map((e) => e.eventType)
     )
   })
