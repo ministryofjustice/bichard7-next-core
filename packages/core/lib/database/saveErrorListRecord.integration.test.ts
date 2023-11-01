@@ -1,3 +1,4 @@
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
 import errorPaths from "../../phase1/lib/errorPaths"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
@@ -5,7 +6,6 @@ import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
 import { ExceptionCode } from "../../types/ExceptionCode"
 import { TriggerCode } from "../../types/TriggerCode"
-import createDbConfig from "./createDbConfig"
 import saveErrorListRecord from "./saveErrorListRecord"
 
 const dbConfig = createDbConfig()

@@ -1,0 +1,179 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": {
+          "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
+          "DocumentType": "SPI Case Result",
+          "UniqueID": "CORRELATION_ID"
+        },
+        "CourtHouseCode": 2576
+      },
+      "Case": {
+        "PTIURN": "01ZD0303208",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": { "MagistratesCourtReference": "01ZD0303208" },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000448754K",
+          "DefendantDetail": {
+            "PersonName": { "Title": "Mr", "GivenName": ["TRPRFOUR"], "FamilyName": "SEXOFFENCE" },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "Scenario1 Address Line 1",
+            "AddressLine2": "Scenario1 Address Line 2",
+            "AddressLine3": "Scenario1 Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "001",
+                    "Qualifier": "A",
+                    "FullCode": "SX03001A",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "SX",
+                    "Year": "03"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 1,
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 3078,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Travel Restriction Order",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            },
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "001",
+                    "FullCode": "SX03001",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "SX",
+                    "Year": "03"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Rape of a Female",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 2,
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 3052,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "defendant must never be allowed out",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            },
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "191",
+                    "FullCode": "RT88191",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "RT",
+                    "Year": "88"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-11-28T00:00:00.000Z" },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 3,
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 1015,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "Duration": [],
+                  "AmountSpecifiedInResult": [{ "Amount": 100, "DecimalPlaces": 2, "Type": "Fine" }],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Fined 100.",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Exceptions": []
+}

@@ -1,5 +1,5 @@
+import type { PromiseResult } from "../types/Result"
 import type ConductorConfig from "./ConductorConfig"
-import type { PromiseResult } from "./Result"
 
 type Task = {
   status: string

@@ -12,12 +12,17 @@ const streamToBuffer = (stream: Readable) =>
     stream.once("error", reject)
   })
 
-const getFileFromS3 = async (fileName: string, bucket: string, config: S3ClientConfig): Promise<string | Error> => {
+const getFileFromS3 = async (
+  fileName: string,
+  bucket: string,
+  config: S3ClientConfig,
+  retries = 5
+): Promise<string | Error> => {
   const client = new S3Client(config)
   const command = new GetObjectCommand({ Bucket: bucket, Key: fileName })
   let lastResponse: Error | GetObjectCommandOutput | undefined = undefined
 
-  for (let retries = 0; retries < 5; retries++) {
+  for (let retry = 0; retry < retries; retry++) {
     lastResponse = await client.send(command).catch((err: Error) => err)
 
     if (lastResponse && !isError(lastResponse) && "Body" in lastResponse) {

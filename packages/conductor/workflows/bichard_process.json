@@ -47,7 +47,7 @@
           "optional": false,
           "asyncComplete": false,
           "evaluatorType": "javascript",
-          "expression": "$.shouldPersist ? 'persist' : 'no_persist'"
+          "expression": "$.hasTriggersOrExceptions ? 'has_triggers_or_exceptions' : 'no_triggers_or_exceptions'"
         },
         {
           "name": "store_audit_log_events",

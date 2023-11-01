@@ -1,12 +1,12 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import fs from "fs"
 import postgres from "postgres"
 import { v4 as uuid } from "uuid"
-import createDbConfig from "../../lib/database/createDbConfig"
 import insertErrorListRecord from "../../lib/database/insertErrorListRecord"
 import { Phase1ResultType, type Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 import { type AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"

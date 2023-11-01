@@ -9,54 +9,12 @@ import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
 import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios from "axios"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import promisePoller from "promise-poller"
+import waitForWorkflows from "./helpers/waitForWorkflows"
 
 const INCOMING_BUCKET_NAME = "incoming-messages"
 const s3Config = createS3Config()
-
-const conductorUrl = process.env.CONDUCTOR_URL ?? "http://localhost:5002"
-const headers = {
-  auth: {
-    username: "bichard",
-    password: "password"
-  }
-}
-
-type WorkflowSearchParams = {
-  freeText: string
-  query: {
-    workflowType?: string
-    status?: string
-  }
-}
-
-const searchWorkflows = async (params: WorkflowSearchParams) => {
-  const { freeText } = params
-  const query = Object.entries(params.query)
-    .map(([k, v]) => `${k}=${v}`)
-    .join(" AND ")
-
-  const response = await axios.get(
-    `${conductorUrl}/api/workflow/search?freeText="${freeText}"&query="${query}"`,
-    headers
-  )
-
-  if (response.data.totalHits === 0) {
-    throw new Error("No workflows fetched")
-  }
-  return response.data.results
-}
-const waitForWorkflows = (query: WorkflowSearchParams) =>
-  promisePoller({
-    taskFn: () => searchWorkflows(query),
-    retries: 900,
-    interval: 100 // milliseconds
-  }).catch(() => {
-    throw new Error("Could not find workflow")
-  })
 
 describe("Incoming message handler", () => {
   let mailServer: MockMailServer
@@ -168,4 +126,6 @@ describe("Incoming message handler", () => {
     expect(event.attributes).toHaveProperty("externalId", duplicateExternalId)
     expect(event.attributes).toHaveProperty("externalCorrelationId", duplicateCorrelationId)
   })
+
+  it.todo("should start the bichard_process workflow if the message is good")
 })
