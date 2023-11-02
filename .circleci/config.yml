@@ -227,11 +227,11 @@ jobs:
           command: SKIP_DOWNLOADS=true npm run conductor-no-worker
       - run:
           name: Run the worker
-          command: npm run -w packages/conductor worker
+          command: nvm use && npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
-          command: npm run -w packages/conductor test
+          command: nvm use && npm run -w packages/conductor test
 
   e2e_test:
     machine:
