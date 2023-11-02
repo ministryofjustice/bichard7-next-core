@@ -10,6 +10,20 @@ commands:
           name: Fetch the <<parameters.image>> image
           command: bash scripts/fetch-docker-image.sh <<parameters.image>>
 
+  node_install:
+    steps:
+      - restore_cache:
+          name: Restore nvm cache
+          keys:
+            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
+            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+      - run: nvm install
+      - save_cache:
+          name: Save nvm cache
+          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+          paths:
+            - /opt/circleci/.nvm/.cache
+  
   install_core:
     description: Install the node dependencies for core
     steps:
@@ -194,6 +208,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - node_install
       - fetch_docker_image:
           image: conductor
       - fetch_docker_image:
