@@ -175,8 +175,8 @@ describe("bichard_process workflow", () => {
   it("should wait for and process a resubmission if there are exceptions", async () => {
     await putMessageInS3("e2e-test/fixtures/success-exceptions-aho.json", s3TaskDataPath, correlationId)
     await mockPncRequest("e2e-test/fixtures/success-exceptions-aho.pnc.json")
-    await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-    const { workflow, task } = await waitForHumanTask(correlationId, conductorConfig)
+    const workflowId = await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
+    const task = await waitForHumanTask(correlationId, conductorConfig)
 
     // Make sure it has been persisted
     const dbResult = await db`SELECT count(*) from br7own.error_list
@@ -192,7 +192,7 @@ describe("bichard_process workflow", () => {
     await db`UPDATE br7own.error_list SET updated_msg = ${updatedAho} WHERE message_id = ${correlationId}`
 
     // Mark the human task as complete
-    await completeWaitingTask(workflow.workflowId!, task.taskId, conductorConfig)
+    await completeWaitingTask(workflowId, task.taskId, conductorConfig)
     await waitForWorkflow(s3TaskDataPath)
 
     // Check the message was sent to the message queue
@@ -213,8 +213,8 @@ describe("bichard_process workflow", () => {
   it("should store audit logs if the record is manually resolved", async () => {
     await putMessageInS3("e2e-test/fixtures/success-exceptions-aho.json", s3TaskDataPath, correlationId)
     await mockPncRequest("e2e-test/fixtures/success-exceptions-aho.pnc.json")
-    await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-    const { workflow, task } = await waitForHumanTask(correlationId, conductorConfig)
+    const workflowId = await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
+    const task = await waitForHumanTask(correlationId, conductorConfig)
 
     // Make sure it has been persisted
     const dbResult = await db`SELECT count(*) from br7own.error_list
@@ -230,7 +230,7 @@ describe("bichard_process workflow", () => {
       eventSource: "test",
       timestamp: new Date()
     }
-    await completeWaitingTask(workflow.workflowId!, task.taskId, conductorConfig, {
+    await completeWaitingTask(workflowId, task.taskId, conductorConfig, {
       status: "manually_resolved",
       auditLogEvents: [auditLog]
     })

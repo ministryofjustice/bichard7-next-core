@@ -57,9 +57,9 @@ export const startWorkflow = (
   input: Record<string, unknown>,
   correlationId: string,
   conductorConfig: ConductorConfig
-): Promise<void> =>
+): Promise<string> =>
   fetch(`${conductorConfig.url}/api/workflow`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
     body: JSON.stringify({ name, input, correlationId })
-  }).then((_) => {})
+  }).then((res) => res.text()) // returns workflow ID

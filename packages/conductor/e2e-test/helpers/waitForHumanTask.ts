@@ -16,7 +16,7 @@ export const waitForHumanTask = (correlationId: string, config: ConductorConfig)
         throw new Error("No waiting task found")
       }
 
-      return { workflow, task }
+      return task
     },
     retries: 900,
     interval: 100 // milliseconds
