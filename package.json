@@ -13,7 +13,7 @@
     "build:package": "./scripts/build-package.sh",
     "clean": "npm run clean --ws",
     "conductor": "./environment/boot.sh conductor audit-log-api",
-    "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor audit-log-api",
+    "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor audit-log-api pnc",
     "destroy": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml down -v",
     "generate-schema-doc": "./scripts/generate-schema-doc.sh",
     "lint": "npm run lint --ws",

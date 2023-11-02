@@ -215,6 +215,8 @@ jobs:
           image: nodejs
       - fetch_docker_image:
           image: nodejs-20-2023
+      - fetch_docker_image:
+          image: pncemulator
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
