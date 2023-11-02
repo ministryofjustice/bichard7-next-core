@@ -23,7 +23,7 @@ commands:
           key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
           paths:
             - /opt/circleci/.nvm/.cache
-  
+
   install_core:
     description: Install the node dependencies for core
     steps:
