@@ -43,12 +43,13 @@ export const getWaitingTaskForWorkflow = (
 export const completeWaitingTask = (
   workflowId: string,
   taskId: string,
-  conductorConfig: ConductorConfig
+  conductorConfig: ConductorConfig,
+  outputData: Record<string, unknown> = {}
 ): Promise<void> =>
   fetch(`${conductorConfig.url}/api/tasks`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
-    body: JSON.stringify({ taskId, workflowInstanceId: workflowId, status: "COMPLETED" })
+    body: JSON.stringify({ taskId, workflowInstanceId: workflowId, status: "COMPLETED", outputData })
   }).then((_) => {})
 
 export const startWorkflow = (

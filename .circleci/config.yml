@@ -255,7 +255,7 @@ jobs:
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
-          command: npm run -w packages/conductor worker
+          command: PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE npm run -w packages/conductor worker
           background: true
       - run:
           name: Run e2e tests against core code
