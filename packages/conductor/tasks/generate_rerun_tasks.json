@@ -1,11 +1,11 @@
 {
-  "name": "generate_day_tasks",
+  "name": "generate_rerun_tasks",
   "retryCount": 3,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 10,
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "TIME_OUT_WF",
-  "inputKeys": ["start", "end", "onlyFailures", "taskName"],
+  "inputKeys": ["start", "end", "onlyFailures", "taskName", "durationSeconds"],
   "outputKeys": ["dynamicTasks", "dynamicTasksInput"]
 }
