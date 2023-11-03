@@ -229,7 +229,7 @@ jobs:
           command: SKIP_DOWNLOADS=true npm run conductor-no-worker
       - run:
           name: Run the worker
-          command: nvm use && npm run -w packages/conductor worker
+          command: PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE nvm use && npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
