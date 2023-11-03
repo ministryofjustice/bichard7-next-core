@@ -5,12 +5,12 @@
   "version": 1,
   "tasks": [
     {
-      "name": "generate_day_tasks",
-      "taskReferenceName": "generate_day_tasks",
+      "name": "generate_rerun_tasks",
+      "taskReferenceName": "generate_rerun_tasks",
       "inputParameters": {
         "startDate": "${workflow.input.startDate}",
         "endDate": "${workflow.input.endDate}",
-        "taskName": "rerun_day",
+        "taskName": "rerun_period",
         "onlyFailures": true
       },
       "type": "SIMPLE",
@@ -19,11 +19,11 @@
       "asyncComplete": false
     },
     {
-      "name": "rerun_day",
-      "taskReferenceName": "rerun_day",
+      "name": "rerun_period",
+      "taskReferenceName": "rerun_period",
       "inputParameters": {
-        "dynamicTasks": "${generate_day_tasks.output.dynamicTasks}",
-        "dynamicTasksInput": "${generate_day_tasks.output.dynamicTasksInput}"
+        "dynamicTasks": "${generate_rerun_tasks.output.dynamicTasks}",
+        "dynamicTasksInput": "${generate_rerun_tasks.output.dynamicTasksInput}"
       },
       "type": "FORK_JOIN_DYNAMIC",
       "dynamicForkTasksParam": "dynamicTasks",
@@ -33,8 +33,8 @@
       "asyncComplete": false
     },
     {
-      "name": "rerun_failures_join",
-      "taskReferenceName": "rerun_failures_join",
+      "name": "rerun_join",
+      "taskReferenceName": "rerun_join",
       "inputParameters": {},
       "type": "JOIN",
       "startDelay": 0,
@@ -45,7 +45,7 @@
       "name": "aggregate_results",
       "taskReferenceName": "aggregate_results",
       "inputParameters": {
-        "results": "${rerun_failures_join.output}",
+        "results": "${rerun_join.output}",
         "queryExpression": ".results | map(to_entries) | add | group_by(.key) | map({ key: .[0].key, value: map(.value) | add }) | from_entries"
       },
       "type": "JSON_JQ_TRANSFORM"
@@ -64,5 +64,5 @@
   "timeoutPolicy": "ALERT_ONLY",
   "timeoutSeconds": 0,
   "variables": {},
-  "inputTemplate": {}
+  "inputTemplate": { "durationSeconds": "86400" }
 }
