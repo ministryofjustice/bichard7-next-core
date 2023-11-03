@@ -69,6 +69,7 @@ function pull_and_build_from_aws() {
     TRIVY_CACHE_DIR=trivy trivy image \
       --exit-code 1 \
       --severity "CRITICAL" \
+      --timeout 30m \
       --skip-update "${DOCKER_OUTPUT_TAG}:latest" # we have the most recent db pulled locally
 
     docker tag \
