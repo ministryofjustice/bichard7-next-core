@@ -2,7 +2,7 @@ import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
 import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
-const taskDefName = "generate_day_tasks"
+const taskDefName = "generate_rerun_tasks"
 
 export type GenerateDayTasksOutput = {
   start: string
@@ -12,12 +12,13 @@ export type GenerateDayTasksOutput = {
   newMatcher: boolean
 }
 
-const generateDayTasks: ConductorWorker = {
+const generateRerunTasks: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName),
   execute: (task: Task) => {
     const startDate = new Date(task.inputData?.startDate ?? "2022-07-01")
     const endDate = new Date(task.inputData?.endDate ?? new Date().toISOString())
+    const durationSeconds = task.inputData?.durationSeconds ?? 3600
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
     const persistResults = task.inputData?.persistResults ?? true
@@ -29,14 +30,13 @@ const generateDayTasks: ConductorWorker = {
 
     const ranges: GenerateDayTasksOutput[] = []
 
-    for (const d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const start = d.toISOString()
-      let end = new Date(d)
-      end.setDate(d.getDate() + 1)
-      if (end > endDate) {
-        end = endDate
-      }
-      ranges.push({ start, end: end.toISOString(), onlyFailures, persistResults, newMatcher })
+    const endMs = endDate.getTime()
+    const durationMs = durationSeconds * 1000
+
+    for (let d = startDate.getTime(); d < endMs; d += durationMs) {
+      const start = new Date(d).toISOString()
+      const end = new Date(d + durationMs > endMs ? endMs : d + durationMs).toISOString()
+      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher })
     }
 
     const outputData = {
@@ -51,4 +51,4 @@ const generateDayTasks: ConductorWorker = {
   }
 }
 
-export default generateDayTasks
+export default generateRerunTasks
