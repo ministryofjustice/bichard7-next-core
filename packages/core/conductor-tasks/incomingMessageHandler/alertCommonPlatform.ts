@@ -34,9 +34,8 @@ const alertCommonPlatform: ConductorWorker = {
     const { errorReportData } = task.inputData
 
     const email: Email = {
-      // TODO: get email addresses from SSM
       from: "no-reply@mail.bichard7.service.justice.gov.uk",
-      to: "moj-bichard7@madetech.cjsm.net",
+      to: process.env.ERROR_REPORT_ADDRESSES ?? "moj-bichard7@madetech.cjsm.net",
       subject: "Failed to ingest SPI message, schema mismatch",
       text: generateEmailContent(errorReportData)
     }
