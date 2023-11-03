@@ -72,7 +72,7 @@ const rerunDay: ConductorWorker = {
       if (persistResults) {
         const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
         if (isError(recordResultsInDynamoResult)) {
-          return failed("Failed to write results to Dynamo")
+          return failed("Failed to write results to Dynamo", recordResultsInDynamoResult.message)
         }
       }
 
