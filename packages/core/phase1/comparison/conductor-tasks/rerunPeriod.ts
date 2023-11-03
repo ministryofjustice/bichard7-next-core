@@ -15,10 +15,10 @@ import type ComparisonResult from "../types/ComparisonResult"
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
-const taskDefName = "rerun_day"
+const taskDefName = "rerun_period"
 const s3Concurrency = process.env.S3_CONCURRENCY ? Number(process.env.S3_CONCURRENCY) : 20
 
-const rerunDay: ConductorWorker = {
+const rerunPeriod: ConductorWorker = {
   taskDefName,
   concurrency: getTaskConcurrency(taskDefName, 1),
   execute: async (task: Task) => {
@@ -85,4 +85,4 @@ const rerunDay: ConductorWorker = {
   }
 }
 
-export default rerunDay
+export default rerunPeriod

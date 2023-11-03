@@ -1,5 +1,5 @@
 {
-  "name": "rerun_day",
+  "name": "rerun_period",
   "retryCount": 3,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 10,
