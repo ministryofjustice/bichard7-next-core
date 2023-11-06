@@ -1,5 +1,5 @@
+import type { PromiseResult } from "../types/Result"
 import type ConductorConfig from "./ConductorConfig"
-import type { PromiseResult } from "./Result"
 
 type Task = {
   status: string
@@ -43,12 +43,13 @@ export const getWaitingTaskForWorkflow = (
 export const completeWaitingTask = (
   workflowId: string,
   taskId: string,
-  conductorConfig: ConductorConfig
+  conductorConfig: ConductorConfig,
+  outputData: Record<string, unknown> = {}
 ): Promise<void> =>
   fetch(`${conductorConfig.url}/api/tasks`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
-    body: JSON.stringify({ taskId, workflowInstanceId: workflowId, status: "COMPLETED" })
+    body: JSON.stringify({ taskId, workflowInstanceId: workflowId, status: "COMPLETED", outputData })
   }).then((_) => {})
 
 export const startWorkflow = (
@@ -56,9 +57,9 @@ export const startWorkflow = (
   input: Record<string, unknown>,
   correlationId: string,
   conductorConfig: ConductorConfig
-): Promise<void> =>
+): Promise<string> =>
   fetch(`${conductorConfig.url}/api/workflow`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...basicAuthHeaders(conductorConfig) },
     body: JSON.stringify({ name, input, correlationId })
-  }).then((_) => {})
+  }).then((res) => res.text()) // returns workflow ID

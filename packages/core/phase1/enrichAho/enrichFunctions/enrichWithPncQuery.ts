@@ -70,7 +70,7 @@ export default async (
 
   if (isError(pncResult)) {
     auditLogger.warn(EventCode.PncResponseNotReceived, auditLogAttributes)
-    annotatedHearingOutcome.PncErrorMessage = pncResult.message
+    annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
   } else {
     auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
     annotatedHearingOutcome.PncQuery = pncResult

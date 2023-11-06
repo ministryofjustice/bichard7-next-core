@@ -1,7 +1,7 @@
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListNoteRecord from "../../phase1/types/ErrorListNoteRecord"
-import createDbConfig from "./createDbConfig"
 import insertErrorListNotes from "./insertErrorListNotes"
 import insertErrorListRecord from "./insertErrorListRecord"
 

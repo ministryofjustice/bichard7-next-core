@@ -30,7 +30,7 @@ services:
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(stomp://activemq:61613)
       AUDIT_LOG_API_URL: http://audit-log-api:7010
-      AUDIT_LOG_API_KEY: toBeSet
+      AUDIT_LOG_API_KEY: super_secret_key
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}

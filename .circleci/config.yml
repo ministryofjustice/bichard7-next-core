@@ -10,6 +10,20 @@ commands:
           name: Fetch the <<parameters.image>> image
           command: bash scripts/fetch-docker-image.sh <<parameters.image>>
 
+  node_install:
+    steps:
+      - restore_cache:
+          name: Restore nvm cache
+          keys:
+            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
+            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+      - run: nvm install
+      - save_cache:
+          name: Save nvm cache
+          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+          paths:
+            - /opt/circleci/.nvm/.cache
+
   install_core:
     description: Install the node dependencies for core
     steps:
@@ -126,9 +140,7 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - run:
-          name: Install Nodejs version in .nvmrc
-          command: nvm install
+      - node_install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -194,8 +206,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - fetch_docker_image:
-          image: conductor
+      - node_install
       - fetch_docker_image:
           image: nodejs
       - fetch_docker_image:
@@ -209,14 +220,16 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: SKIP_DOWNLOADS=true npm run conductor-no-worker
+          command: npm run all-no-worker
       - run:
           name: Run the worker
-          command: npm run -w packages/conductor worker
+          environment:
+            PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
+          command: nvm use && npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
-          command: npm run -w packages/conductor test
+          command: nvm use && npm run -w packages/conductor test
 
   e2e_test:
     machine:
@@ -326,9 +339,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run:
-          name: Install Nodejs version in .nvmrc
-          command: nvm install
+      - node_install
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres

@@ -1,7 +1,7 @@
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { randomUUID } from "crypto"
 import postgres from "postgres"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
-import createDbConfig from "./createDbConfig"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
 
 const dbConfig = createDbConfig()

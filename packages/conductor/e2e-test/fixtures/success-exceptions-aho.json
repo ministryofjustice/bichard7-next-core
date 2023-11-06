@@ -1,0 +1,176 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-10-01T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": {
+          "DocumentName": "SPI Barry Bass",
+          "DocumentType": "SPI Case Result",
+          "UniqueID": "CORRELATION_ID"
+        },
+        "CourtHouseCode": 2576
+      },
+      "Case": {
+        "PTIURN": "01ZD0300208",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": { "MagistratesCourtReference": "01ZD0300208" },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000410801G",
+          "DefendantDetail": {
+            "PersonName": { "Title": "Mr", "GivenName": ["Barry"], "FamilyName": "Bass" },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "ScenarioAE Address Line 1",
+            "AddressLine2": "ScenarioAE Address Line 2",
+            "AddressLine3": "ScenarioAE Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "010",
+                    "FullCode": "TH68010",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-09-25T00:00:00.000Z",
+              "ChargeDate": "2010-09-25T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-09-25T00:00:00.000Z" },
+              "LocationOfOffence": "1 Kingston High Street",
+              "ActualOffenceWording": "Theft from shop - shoplifting.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 1,
+              "ConvictionDate": "2011-10-01T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 1002,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-10-01T00:00:00.000Z",
+                  "Duration": [{ "DurationType": "Duration", "DurationUnit": "M", "DurationLength": 12 }],
+                  "DateSpecifiedInResult": [],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Imprisonment for 12 Months",
+                  "ResultQualifierVariable": []
+                },
+                {
+                  "CJSresultCode": 3025,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-10-01T00:00:00.000Z",
+                  "Duration": [{ "DurationType": "Duration", "DurationUnit": "L", "DurationLength": 1 }],
+                  "DateSpecifiedInResult": [],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Disqualified from keeping Sea Monkey for life. Tried to eat the Sea MonkeyEND",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            },
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "010",
+                    "FullCode": "TH68010",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ArrestDate": "2010-09-25T00:00:00.000Z",
+              "ChargeDate": "2010-09-25T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": { "StartDate": "2010-09-25T00:00:00.000Z" },
+              "LocationOfOffence": "1 Kingston High Street",
+              "ActualOffenceWording": "Theft from shop - shoplifting.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 2,
+              "ConvictionDate": "2011-10-01T00:00:00.000Z",
+              "Result": [
+                {
+                  "CJSresultCode": 1002,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-10-01T00:00:00.000Z",
+                  "Duration": [{ "DurationType": "Duration", "DurationUnit": "M", "DurationLength": 14 }],
+                  "DateSpecifiedInResult": [],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "Imprisonment for 14 MonthsImprisonment for 14 MonthsImprisoTRUNCated text lots of text",
+                  "ResultQualifierVariable": []
+                },
+                {
+                  "CJSresultCode": 3107,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-10-01T00:00:00.000Z",
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ModeOfTrialReason": "SUM",
+                  "ResultVariableText": "DEFENDANT MUST LIVE AT OUR HOUSE IN THE MIDDLE OF OUR STREET",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Exceptions": []
+}
