@@ -55,7 +55,7 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
   })
 
 const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
-  if (!hearingOutcome.PncErrorMessage) {
+  if (typeof hearingOutcome.PncErrorMessage !== "string") {
     return []
   }
 

@@ -107,6 +107,11 @@ export default class PncGateway implements PncGatewayInterface {
         const parsed = pncApiResultSchema.parse(result.data)
         return transform(parsed)
       })
-      .catch((e) => e)
+      .catch((e) => {
+        if ("errors" in e && e.errors.length > 0) {
+          return e.errors[0] as Error
+        }
+        return e as Error
+      })
   }
 }
