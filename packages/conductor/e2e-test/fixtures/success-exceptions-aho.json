@@ -19,9 +19,7 @@
           "DocumentType": "SPI Case Result",
           "UniqueID": "CORRELATION_ID"
         },
-        "CourtHouseCode": 2576,
-        "CourtType": "MCA",
-        "CourtHouseName": "Magistrates' Courts London Croydon"
+        "CourtHouseCode": 2576
       },
       "Case": {
         "PTIURN": "01ZD0300208",
@@ -32,8 +30,7 @@
           "DefendantDetail": {
             "PersonName": { "Title": "Mr", "GivenName": ["Barry"], "FamilyName": "Bass" },
             "BirthDate": "1948-11-11T00:00:00.000Z",
-            "Gender": 1,
-            "GeneratedPNCFilename": "BASS/BARRY"
+            "Gender": 1
           },
           "Address": {
             "AddressLine1": "ScenarioAE Address Line 1",
@@ -46,27 +43,15 @@
             {
               "CriminalProsecutionReference": {
                 "OffenceReason": {
-                  "__type": "NationalOffenceReason",
                   "OffenceCode": {
+                    "Reason": "010",
+                    "FullCode": "TH68010",
                     "__type": "NonMatchingOffenceCode",
                     "ActOrSource": "TH",
-                    "Year": "68",
-                    "Reason": "010",
-                    "FullCode": "TH68010"
-                  }
-                },
-                "DefendantOrOffender": {
-                  "Year": "11",
-                  "OrganisationUnitIdentifierCode": {
-                    "SecondLevelCode": "01",
-                    "ThirdLevelCode": "ZD",
-                    "BottomLevelCode": "01",
-                    "OrganisationUnitCode": "01ZD01"
+                    "Year": "68"
                   },
-                  "DefendantOrOffenderSequenceNumber": "00000410801",
-                  "CheckDigit": "G"
-                },
-                "OffenceReasonSequence": null
+                  "__type": "NationalOffenceReason"
+                }
               },
               "ArrestDate": "2010-09-25T00:00:00.000Z",
               "ChargeDate": "2010-09-25T00:00:00.000Z",
@@ -96,13 +81,7 @@
                   "Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "Imprisonment for 12 Months",
-                  "ResultQualifierVariable": [],
-                  "ResultHalfLifeHours": 72,
-                  "BailCondition": [],
-                  "ResultApplicableQualifierCode": [],
-                  "ResultClass": "Judgement with final result",
-                  "PNCDisposalType": 1002,
-                  "CourtType": "MCA"
+                  "ResultQualifierVariable": []
                 },
                 {
                   "CJSresultCode": 3025,
@@ -122,45 +101,22 @@
                   "Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "Disqualified from keeping Sea Monkey for life. Tried to eat the Sea MonkeyEND",
-                  "ResultQualifierVariable": [],
-                  "ResultHalfLifeHours": 72,
-                  "BailCondition": [],
-                  "ResultApplicableQualifierCode": [],
-                  "ResultClass": "Judgement with final result",
-                  "PNCDisposalType": 3025,
-                  "CourtType": "MCA"
+                  "ResultQualifierVariable": []
                 }
-              ],
-              "OffenceCategory": "CE",
-              "RecordableOnPNCindicator": true,
-              "NotifiableToHOindicator": true,
-              "HomeOfficeClassification": "046/00",
-              "OffenceTitle": "Theft from a shop"
+              ]
             },
             {
               "CriminalProsecutionReference": {
                 "OffenceReason": {
-                  "__type": "NationalOffenceReason",
                   "OffenceCode": {
+                    "Reason": "010",
+                    "FullCode": "TH68010",
                     "__type": "NonMatchingOffenceCode",
                     "ActOrSource": "TH",
-                    "Year": "68",
-                    "Reason": "010",
-                    "FullCode": "TH68010"
-                  }
-                },
-                "DefendantOrOffender": {
-                  "Year": "11",
-                  "OrganisationUnitIdentifierCode": {
-                    "SecondLevelCode": "01",
-                    "ThirdLevelCode": "ZD",
-                    "BottomLevelCode": "01",
-                    "OrganisationUnitCode": "01ZD01"
+                    "Year": "68"
                   },
-                  "DefendantOrOffenderSequenceNumber": "00000410801",
-                  "CheckDigit": "G"
-                },
-                "OffenceReasonSequence": null
+                  "__type": "NationalOffenceReason"
+                }
               },
               "ArrestDate": "2010-09-25T00:00:00.000Z",
               "ChargeDate": "2010-09-25T00:00:00.000Z",
@@ -190,13 +146,7 @@
                   "Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "Imprisonment for 14 MonthsImprisonment for 14 MonthsImprisoTRUNCated text lots of text",
-                  "ResultQualifierVariable": [],
-                  "ResultHalfLifeHours": 72,
-                  "BailCondition": [],
-                  "ResultApplicableQualifierCode": [],
-                  "ResultClass": "Judgement with final result",
-                  "PNCDisposalType": 1002,
-                  "CourtType": "MCA"
+                  "ResultQualifierVariable": []
                 },
                 {
                   "CJSresultCode": 3107,
@@ -213,59 +163,14 @@
                   "Verdict": "G",
                   "ModeOfTrialReason": "SUM",
                   "ResultVariableText": "DEFENDANT MUST LIVE AT OUR HOUSE IN THE MIDDLE OF OUR STREET",
-                  "ResultQualifierVariable": [],
-                  "ResultHalfLifeHours": 72,
-                  "BailCondition": [],
-                  "ResultApplicableQualifierCode": [],
-                  "ResultClass": "Judgement with final result",
-                  "PNCDisposalType": 3107,
-                  "CourtType": "MCA"
+                  "ResultQualifierVariable": []
                 }
-              ],
-              "OffenceCategory": "CE",
-              "RecordableOnPNCindicator": true,
-              "NotifiableToHOindicator": true,
-              "HomeOfficeClassification": "046/00",
-              "OffenceTitle": "Theft from a shop"
+              ]
             }
           ]
-        },
-        "RecordableOnPNCindicator": true,
-        "ForceOwner": {
-          "SecondLevelCode": "01",
-          "ThirdLevelCode": "ZD",
-          "BottomLevelCode": "00",
-          "OrganisationUnitCode": "01ZD00"
         }
       }
     }
   },
-  "Exceptions": [
-    {
-      "code": "HO100310",
-      "path": [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        0,
-        "CriminalProsecutionReference",
-        "OffenceReasonSequence"
-      ]
-    },
-    {
-      "code": "HO100310",
-      "path": [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        1,
-        "CriminalProsecutionReference",
-        "OffenceReasonSequence"
-      ]
-    }
-  ]
+  "Exceptions": []
 }
