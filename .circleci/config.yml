@@ -226,10 +226,12 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: SKIP_DOWNLOADS=true npm run conductor-no-worker
+          command: SKIP_DOWNLOADS=true npm run all-no-worker
       - run:
           name: Run the worker
-          command: PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE nvm use && npm run -w packages/conductor worker
+          environment:
+            PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
+          command: nvm use && npm run -w packages/conductor worker
           background: true
       - run:
           name: Test the workflows
@@ -272,7 +274,7 @@ jobs:
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
-          command: PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE npm run -w packages/conductor worker
+          command: npm run -w packages/conductor worker
           background: true
       - run:
           name: Run e2e tests against core code
