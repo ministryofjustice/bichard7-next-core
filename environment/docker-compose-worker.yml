@@ -33,7 +33,7 @@ services:
       AUDIT_LOG_API_KEY: super_secret_key
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
-      PNC_API_KEY: ${PNC_API_KEY:-super_secret_key}
+      PNC_API_KEY: ${PNC_API_KEY}
       NODE_ENV: ${NODE_ENV:-test}
       SMTP_HOST: mailserver
       SMTP_USER: ${DEFAULT_USER}
