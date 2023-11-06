@@ -140,9 +140,7 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - run:
-          name: Install Nodejs version in .nvmrc
-          command: nvm install
+      - node_install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -341,9 +339,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run:
-          name: Install Nodejs version in .nvmrc
-          command: nvm install
+      - node_install
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
