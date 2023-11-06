@@ -21,58 +21,56 @@ INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('NoGroupsAssigned','','B40ME00','Endorser Not found','048C600','Bichard User','01','nogroupsassigned@example.com','$argon2id$v=19$m=15360,t=2,p=1$CK/shCsqcAng1U81FDzAxA$UEPw1XKYaTjPwKtoiNUZGW64skCaXZgHrtNraZxwJPw','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B40ME00','001,002,004,014,045',''); 
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('ben.pirt','','B01,B41ME00','Endorser Not found','048C600','Ben','Pirt','ben.pirt@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('emad.karamad','','B01,B41ME00','Endorser Not found','048C600','Emad','Karamad','emad.karamad@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
-INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('jamie.davies','','B01,B41ME00','Endorser Not found','048C600','Jamie','Davies','jamie.davies@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
-INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('simon.oldham','','B01,B41ME00','Endorser Not found','048C600','Simon','Oldham','simon.oldham@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('alice.lee','','B01,B41ME00','Endorser Not found','048C600','Alice','Lee','alice.lee@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('csaba.gyorfi','','B01,B41ME00','Endorser Not found','048C600','Csaba','Gyorfi','csaba.gyorfi@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
-INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('jazz.sarkaria','','B01,B41ME00','Endorser Not found','048C600','Jazz','Sarkaria','jazz.sarkaria@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
-INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('tom.vaughan','','B01,B41ME00','Endorser Not found','048C600','Tom','Vaughan','tom.vaughan@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
 INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('marc.de-la-rue','','','Endorser Not found','048C600','Marc','De La Rue','marc.delarue@justice.gov.uk','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'01,02,03,04,05,06,07,10,11,12,13,14,15,16,17,20,21,22,23,24,30,31,32,33,34,35,36,37,40,41,42,43,44,45,46,47,50,52,53,54,55,60,61,62,63,73,88,89,91,93','001,002,004,014,045',''); 
+INSERT INTO br7own.users (username,exclusion_list,inclusion_list,endorsed_by,org_serves,forenames,surname,email,password,last_login_attempt,email_verification_code,email_verification_generated,deleted_at,password_reset_code,migrated_password,jwt_id,jwt_generated_at,visible_courts,visible_forces,excluded_triggers) VALUES ('ian.king','','B01,B41ME00','Endorser Not found','048C600','Ian','King','ian.king@madetech.com','','2020-01-01 00:00:00','','2020-01-01 00:00:00',NULL,'','{SSHA}H3TRHIARntPnV8z9uVxq+ykTRTu32Gux','',NULL,'B01,B41ME00','001,002,004,014,045',''); 
+
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7Allocator_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'Bichard01', 'Allocator1', 'Allocator2', 'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'Bichard01', 'Allocator1', 'Allocator2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7Audit_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'Bichard01', 'Audit1', 'Audit2', 'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'Bichard01', 'Audit1', 'Audit2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7ExceptionHandler_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'Bichard01', 'GeneralHandler1', 'GeneralHandler2', 'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'Bichard01', 'GeneralHandler1', 'GeneralHandler2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7Supervisor_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'Bichard01', 'Supervisor1', 'Supervisor2', 'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan', 'marc.de-la-rue'
+  'Bichard01', 'Supervisor1', 'Supervisor2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'marc.de-la-rue', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7TriggerHandler_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'Bichard01', 'TriggerHandler1', 'TriggerHandler2', 'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'Bichard01', 'TriggerHandler1', 'TriggerHandler2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7UserManager_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7AuditLoggingManager_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
 
 INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
   'B7SuperUserManager_grp'
 ) as group_id FROM br7own.users WHERE username IN (
-  'ben.pirt', 'emad.karamad', 'jamie.davies', 'simon.oldham', 'alice.lee', 'csaba.gyorfi', 'jazz.sarkaria', 'tom.vaughan'
+  'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 ));
