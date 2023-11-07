@@ -17,4 +17,4 @@ code $AUDIT_LOG_FILE
 jq -r '.events[].attributes."PNC Request Message" | select(. != null)' $AUDIT_LOG_FILE > $PNC_LOG_FILE
 code $PNC_LOG_FILE
 
-USE_NEW_MATCHER=true npm run compare -- -c -x -f $S3_PATH
+npm run compare -- -c -x -f $S3_PATH
