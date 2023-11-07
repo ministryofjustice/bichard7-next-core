@@ -5,6 +5,7 @@ import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import convictionDateMatching from "./convictionDateMatching"
 import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import coreUsesManualMatchData from "./coreUsesManualMatchData"
+import doubleSpacesInNames from "./doubleSpacesInNames"
 import fixedForce91 from "./fixedForce91"
 import fixedNumberOfOffencesTic from "./fixedNumberOfOffencesTic"
 import ho100304WithExistingFinalOffence from "./ho100304WithExistingFinalOffence"
@@ -40,7 +41,7 @@ const filters = [
   prioritiseNonFinal
 ]
 
-const isIntentionalMatchingDifference = (
+const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
   incoming: AnnotatedHearingOutcome
@@ -48,7 +49,9 @@ const isIntentionalMatchingDifference = (
   const expectedMatch = summariseMatching(expected, true)
   const actualMatch = summariseMatching(actual, true)
 
+  // Check for differences in the AHO first
   if (
+    doubleSpacesInNames(expectedMatch, actualMatch, expected, actual, incoming) ||
     fixedForce91(expectedMatch, actualMatch, expected, actual, incoming) ||
     fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
     missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
@@ -57,6 +60,7 @@ const isIntentionalMatchingDifference = (
     return true
   }
 
+  // Then check for matching differences
   if (!expectedMatch || !actualMatch) {
     return false
   }
@@ -66,4 +70,4 @@ const isIntentionalMatchingDifference = (
   return filterResults.some((result) => result)
 }
 
-export default isIntentionalMatchingDifference
+export default isIntentionalDifference
