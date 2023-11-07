@@ -18,7 +18,7 @@ import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetai
 import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
-import isIntentionalMatchingDifference from "./isIntentionalMatchingDifference"
+import isIntentionalDifference from "./isIntentionalDifference"
 import { matchingExceptions } from "./summariseMatching"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
@@ -94,9 +94,7 @@ const comparePhase1 = async (
     }
 
     const [originalInputAho] = parseIncomingMessage(incomingMessage)
-    if (
-      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)
-    ) {
+    if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)) {
       return {
         triggersMatch: true,
         exceptionsMatch: true,
