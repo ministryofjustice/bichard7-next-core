@@ -93,9 +93,9 @@ const comparePhase1 = async (
       throw parsedAho
     }
 
+    const [originalInputAho] = parseIncomingMessage(incomingMessage)
     if (
-      process.env.USE_NEW_MATCHER !== "false" &&
-      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, inputAho)
+      isIntentionalMatchingDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)
     ) {
       return {
         triggersMatch: true,
@@ -123,14 +123,12 @@ const comparePhase1 = async (
     }
 
     const ignoreNewMatcherXmlDifferences =
-      process.env.USE_NEW_MATCHER !== "false" &&
       sortedCoreExceptions.some((e) => matchingExceptions.includes(e.code)) &&
       sortedCoreExceptions.every(
         (e) => !matchingExceptions.includes(e.code) || exceptions.map((ex) => ex.code).includes(e.code)
       )
 
     const ignoreNewMatcherTrigger18Differences =
-      process.env.USE_NEW_MATCHER !== "false" &&
       triggers.some((t) => t.code === TriggerCode.TRPR0018) &&
       exceptions.some((e) => matchingExceptions.includes(e.code))
 
