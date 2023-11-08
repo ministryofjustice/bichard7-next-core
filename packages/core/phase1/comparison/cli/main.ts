@@ -8,6 +8,7 @@ import printResult from "./printResult"
 import processDirectory from "./processDirectory"
 import processFailures from "./processFailures"
 import processFile from "./processFile"
+import processFilelist from "./processFilelist"
 import processRange from "./processRange"
 
 const main = async () => {
@@ -26,6 +27,9 @@ const main = async () => {
     }
   } else if ("directory" in args && args.directory) {
     const results = await processDirectory(args.directory)
+    success = printResult(results, !args.noTruncate, !!args.list)
+  } else if ("filelist" in args && args.filelist) {
+    const results = await processFilelist(args.filelist, !!args.cache)
     success = printResult(results, !args.noTruncate, !!args.list)
   } else if ("runMissing" in args && args.runMissing) {
     await runMissingComparisons(args.runMissing)
