@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { parse } from "ts-command-line-args"
 
-interface IArguments {
+export interface IArguments {
   cache?: boolean
   directory?: string
   end?: string
@@ -13,6 +13,7 @@ interface IArguments {
   noTruncate?: boolean
   runMissing?: string
   start?: string
+  filelist?: string
 }
 
 export const getArgs = () =>
@@ -29,6 +30,12 @@ export const getArgs = () =>
         alias: "d",
         optional: true,
         description: "Specify a local directory to run the tests from"
+      },
+      filelist: {
+        type: String,
+        alias: "z",
+        optional: true,
+        description: "Specify a file containing a list of tests to run"
       },
       list: {
         type: Boolean,

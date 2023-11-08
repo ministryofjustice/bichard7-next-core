@@ -51,11 +51,7 @@ const identicalOffenceSwitchedSequenceNumbers = (
   expectedOffenceGroups.forEach((group) => group.sort())
   actualOffenceGroups.forEach((group) => group.sort())
 
-  const result = differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
-  if (result) {
-    debugger
-  }
-  return result
+  return differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
 }
 
 export default identicalOffenceSwitchedSequenceNumbers
