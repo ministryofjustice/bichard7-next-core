@@ -16,6 +16,7 @@ import ho100332WithConvictionDate from "./ho100332WithConvictionDate"
 import ho100332WithSameResults from "./ho100332WithSameResults"
 import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
+import invalidASN from "./invalidASN"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
 import missingEmptyCcr from "./missingEmptyCcr"
 import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
@@ -56,6 +57,7 @@ const isIntentionalDifference = (
     doubleSpacesInNames(expectedMatch, actualMatch, expected, actual, incoming) ||
     fixedForce91(expectedMatch, actualMatch, expected, actual, incoming) ||
     fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
+    invalidASN(expectedMatch, actualMatch, expected, actual, incoming) ||
     missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
     trailingSpace(expectedMatch, actualMatch, expected, actual, incoming)
   ) {

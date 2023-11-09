@@ -2,8 +2,8 @@ import type { AnnotatedHearingOutcome, Offence } from "../../../../types/Annotat
 import { ExceptionCode } from "../../../../types/ExceptionCode"
 import OffenceMatcher from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import {
-  type PncOffenceWithCaseRef,
-  flattenCases
+  flattenCases,
+  type PncOffenceWithCaseRef
 } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceHasFinalResult from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
@@ -23,7 +23,7 @@ const bichardMatchesRandomFinalOffence = (
   expected: CourtResultMatchingSummary,
   actual: CourtResultMatchingSummary,
   expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
+  _: AnnotatedHearingOutcome,
   incomingAho: AnnotatedHearingOutcome
 ): boolean => {
   const coreRaisesHo100304 =
