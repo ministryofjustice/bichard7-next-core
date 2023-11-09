@@ -89,7 +89,7 @@ const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
 const getCaseType = (pncCase: PncCourtCase | PncPenaltyCase): CaseType =>
   "courtCaseReference" in pncCase ? CaseType.court : CaseType.penalty
 
-const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
+export const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
   courtCases
     ?.map((cc) =>
       cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc), caseType: getCaseType(cc) }))

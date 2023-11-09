@@ -2,6 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
+import bichardMatchesRandomFinalOffence from "./bichardMatchesRandomFinalOffence"
 import convictionDateMatching from "./convictionDateMatching"
 import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import coreUsesManualMatchData from "./coreUsesManualMatchData"
@@ -25,6 +26,7 @@ import trailingSpace from "./trailingSpace"
 const filters = [
   badlyAnnotatedSingleCaseMatch,
   badManualMatch,
+  bichardMatchesRandomFinalOffence,
   convictionDateMatching,
   coreMatchesBichardAddsInCourt,
   coreUsesManualMatchData,
