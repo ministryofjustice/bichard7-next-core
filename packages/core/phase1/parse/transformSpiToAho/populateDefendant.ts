@@ -32,7 +32,7 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
     PersonName: {
       Title: spiPersonTitle?.trim() || undefined,
       GivenName: spiGivenNames,
-      FamilyName: spiPersonFamilyName.trim()
+      FamilyName: spiPersonFamilyName.replace(/\s+/g, " ").trim()
     },
     BirthDate: spiBirthDate ? new Date(spiBirthDate) : undefined,
     Gender: Number(spiGender)
