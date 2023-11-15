@@ -33,6 +33,7 @@ describe("addExceptionsToAhoXml", () => {
       "HO100100"
     )
   })
+
   it("should add multiple exception to the nested element", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
@@ -150,34 +151,5 @@ describe("addExceptionsToAhoXml", () => {
         "br7:BailConditions"
       ]?.[1]["@_Error"]
     ).toBe("HO100200")
-  })
-
-  it("should return an error if it can't find the element", () => {
-    const rawAho: AhoXml = {
-      "br7:AnnotatedHearingOutcome": {
-        "br7:HearingOutcome": {
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
-          "br7:Case": {
-            "ds:PTIURN": { "#text": "12345" },
-            "br7:HearingDefendant": {
-              "br7:ArrestSummonsNumber": { "#text": "foo" },
-              "br7:Offence": [
-                {
-                  "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as AhoXml
-    const exceptions = [
-      {
-        code: ExceptionCode.HO100100,
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "Foo"]
-      }
-    ]
-    const result = addExceptionsToAhoXml(rawAho, exceptions)
-    expect(result).toBeInstanceOf(Error)
   })
 })

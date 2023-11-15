@@ -529,16 +529,15 @@ const convertAhoToXml = (
     attributeValueProcessor: encodeAttributeEntitiesProcessor
   }
 
-  const builder = new XMLBuilder(options)
   const xmlAho = mapAhoToXml(hearingOutcome, validate)
   if (validate) {
     addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
   } else if (generateFalseHasErrorAttributes) {
     addFalseHasErrorAttributesToAhoXml(xmlAho)
   }
-  const xml = builder.build(xmlAho)
 
-  return xml
+  const builder = new XMLBuilder(options)
+  return builder.build(xmlAho)
 }
 
 export default convertAhoToXml

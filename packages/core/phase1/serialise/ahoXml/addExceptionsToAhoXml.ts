@@ -65,6 +65,7 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 
 const isPncAsnException = (exception: Exception): boolean =>
   isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
+
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
@@ -75,10 +76,7 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
       !isPncAsnException(e) ||
       (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
     ) {
-      const result = addException(aho, e)
-      if (result instanceof Error) {
-        return result
-      }
+      addException(aho, e)
     }
   }
 
