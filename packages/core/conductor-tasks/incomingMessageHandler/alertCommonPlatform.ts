@@ -25,6 +25,7 @@ Received date: ${inputData.receivedDate}
 Bichard internal message ID: ${inputData.messageId}
 Common Platform ID: ${inputData.externalId}
 PTIURN: ${inputData.ptiUrn}
+${inputData.errorMessage}
   `
 
 const alertCommonPlatform: ConductorWorker = {

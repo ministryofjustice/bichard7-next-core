@@ -25,7 +25,8 @@ const errorReportData: ErrorReportData = {
   receivedDate: "2023-08-31T14:48:00.000Z",
   messageId: randomUUID(),
   externalId: randomUUID(),
-  ptiUrn: "01ZD0303208"
+  ptiUrn: "01ZD0303208",
+  errorMessage: "Error parsing input message"
 }
 
 describe("alertCommonPlatform", () => {
@@ -82,6 +83,7 @@ describe("alertCommonPlatform", () => {
     expect(mail.body).toMatch(`Bichard internal message ID: ${errorReportData.messageId}`)
     expect(mail.body).toMatch(`Common Platform ID: ${errorReportData.externalId}`)
     expect(mail.body).toMatch(`PTIURN: ${errorReportData.ptiUrn}`)
+    expect(mail.body).toMatch(`${errorReportData.errorMessage}`)
 
     mailServer.stop()
   })

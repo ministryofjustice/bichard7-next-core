@@ -115,9 +115,17 @@ describe("convertSpiToAho", () => {
     }
 
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
+    expect(result.outputData).toHaveProperty("errorReportData", {
+      errorMessage:
+        'Validation error: Required at "ResultedCaseMessage.Session.Case.Defendant.Offence[2].BaseOffenceDetails.OffenceCode"',
+      externalId,
+      messageId: expect.any(String),
+      ptiUrn: "UNKNOWN",
+      receivedDate: "2023-08-31T14:48:00.000Z"
+    })
   })
 
-  it("should stillp something even if the file has no valid data in it", async () => {
+  it("should still create audit log record even if the file has no valid data in it", async () => {
     const externalId = uuid()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
     await putFileToS3Default("invalid", s3Path, INCOMING_BUCKET_NAME!, s3Config)

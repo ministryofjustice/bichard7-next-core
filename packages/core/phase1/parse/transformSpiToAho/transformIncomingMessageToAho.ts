@@ -1,6 +1,7 @@
 import { isError, type Result } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import crypto from "crypto"
+import { fromZodError } from "zod-validation-error"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { fullResultedCaseMessageParsedXmlSchema } from "../../schemas/spiResult"
 import {
@@ -23,8 +24,7 @@ const generateHash = (text: string) => crypto.createHash("sha256").update(text, 
 const transformIncomingMessageToAho = (incomingMessage: string): Result<TransformedOutput> => {
   const message = extractIncomingMessage(incomingMessage)
   if (isError(message)) {
-    logger.error(message)
-    return new Error("Could not extract incoming message")
+    return message
   }
 
   const systemId = getSystemId(message)
@@ -35,8 +35,9 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
   const resultedCaseMessage = fullResultedCaseMessageParsedXmlSchema.safeParse(parsedResultedCaseMessage)
 
   if (!resultedCaseMessage.success) {
-    logger.error(resultedCaseMessage)
-    return new Error("Error parsing incoming message datastream element")
+    const validationError = fromZodError(resultedCaseMessage.error)
+    logger.info(validationError.details)
+    return validationError
   }
 
   const aho = {
