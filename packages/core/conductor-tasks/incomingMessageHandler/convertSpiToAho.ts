@@ -78,7 +78,12 @@ const fallbackAuditLogRecord = (
   }
 }
 
-const buildParsingFailedOutput = (message: string, messageMetadata: MessageMetadata, s3Path: string) => {
+const buildParsingFailedOutput = (
+  message: string,
+  messageMetadata: MessageMetadata,
+  s3Path: string,
+  errorMessage: string
+) => {
   const { messageId, externalId, receivedDate } = messageMetadata
 
   const auditLogRecord = fallbackAuditLogRecord(message, messageMetadata, s3Path)
@@ -103,7 +108,8 @@ const buildParsingFailedOutput = (message: string, messageMetadata: MessageMetad
       receivedDate,
       messageId,
       externalId,
-      ptiUrn: auditLogRecord.caseId
+      ptiUrn: auditLogRecord.caseId,
+      errorMessage
     }
   }
 }
@@ -134,7 +140,7 @@ const convertSpiToAho: ConductorWorker = {
     if (isError(transformResult)) {
       // completed so we can move to alerting task
       return completed(
-        buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path),
+        buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path, transformResult.message),
         "Could not convert incoming message to AHO",
         transformResult.message
       )
