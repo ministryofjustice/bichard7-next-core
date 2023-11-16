@@ -105,7 +105,7 @@ const buildParsingFailedOutput = (
       }
     ],
     errorReportData: {
-      receivedDate,
+      receivedDate: receivedDate.toISOString(),
       messageId,
       externalId,
       ptiUrn: auditLogRecord.caseId,
