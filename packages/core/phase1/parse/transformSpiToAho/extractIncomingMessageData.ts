@@ -1,5 +1,7 @@
 import { type Result } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import { XMLParser } from "fast-xml-parser"
+import { fromZodError } from "zod-validation-error"
 import { incomingMessageSchema } from "../../schemas/incomingMessage"
 import type IncomingMessage from "../../types/IncomingMessage"
 
@@ -17,7 +19,10 @@ export const extractIncomingMessage = (incomingMessage: string): Result<Incoming
     const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
 
     if (!parsedMessage.success) {
-      return new Error("Error parsing incoming message")
+      const validationError = fromZodError(parsedMessage.error)
+
+      logger.info(validationError.details)
+      return validationError
     }
 
     return parsedMessage.data
