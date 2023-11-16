@@ -135,7 +135,8 @@ const convertSpiToAho: ConductorWorker = {
       // completed so we can move to alerting task
       return completed(
         buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path),
-        "Could not convert incoming message to AHO"
+        "Could not convert incoming message to AHO",
+        transformResult.message
       )
     }
 
