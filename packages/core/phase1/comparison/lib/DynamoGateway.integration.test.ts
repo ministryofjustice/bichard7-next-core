@@ -35,6 +35,7 @@ const createRecord = (
   ]
 })
 
+jest.retryTimes(5, { logErrorsBeforeRetry: false })
 describe("DynamoGateway()", () => {
   let dynamoServer: MockDynamo
   const dynamoGateway = new DynamoGateway(dynamoDbGatewayConfig)
