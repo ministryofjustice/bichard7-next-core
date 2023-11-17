@@ -57,7 +57,7 @@ export const extractXMLEntityContent = (content: string, tag: string) => {
     return "UNKNOWN"
   }
 
-  const parts = content.match(new RegExp(`<${tag}>([^<]*)<\/${tag}>`))
+  const parts = content.match(new RegExp(`<[^:]*?:?${tag}>([^<]*)<\/[^:]*?:?${tag}>`))
   if (!parts || !parts.length) {
     return "UNKNOWN"
   }
