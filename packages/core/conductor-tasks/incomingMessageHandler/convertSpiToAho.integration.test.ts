@@ -102,7 +102,7 @@ describe("convertSpiToAho", () => {
     expect(result.status).toBe("COMPLETED")
 
     const auditLogRecord = {
-      caseId: "UNKNOWN",
+      caseId: "01ZD0303208",
       createdBy: "Incoming message handler",
       externalCorrelationId: "CID-test-001",
       externalId,
@@ -120,7 +120,7 @@ describe("convertSpiToAho", () => {
         'Validation error: Required at "ResultedCaseMessage.Session.Case.Defendant.Offence[2].BaseOffenceDetails.OffenceCode"',
       externalId,
       messageId: expect.any(String),
-      ptiUrn: "UNKNOWN",
+      ptiUrn: "01ZD0303208",
       receivedDate: "2023-08-31T14:48:00.000Z"
     })
   })

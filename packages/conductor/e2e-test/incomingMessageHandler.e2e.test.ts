@@ -61,6 +61,7 @@ describe("Incoming message handler", () => {
     expect(message.events).toHaveLength(1)
     expect(message.events[0]).toHaveProperty("eventCode", EventCode.MessageRejected)
     expect(message).toHaveProperty("externalId", externalId)
+    expect(message).toHaveProperty("caseId", "01ZD0303208")
 
     const mail = await mailServer.getEmail("moj-bichard7@madetech.cjsm.net")
     if (isError(mail)) {
