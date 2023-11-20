@@ -4,7 +4,9 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
 import { lookupOffenceByCjsCode } from "../../dataLookup"
+import { isNotFoundError } from "../../exceptions/pncExceptions"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
+import isCaseRecordable from "../../lib/isCaseRecordable"
 import isDummyAsn from "../../lib/isDummyAsn"
 import type AuditLogger from "../../types/AuditLogger"
 import { matchOffencesToPnc } from "./matchOffencesToPnc"
@@ -69,8 +71,10 @@ export default async (
   }
 
   if (isError(pncResult)) {
-    auditLogger.warn(EventCode.PncResponseNotReceived, auditLogAttributes)
-    annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
+    if (!isNotFoundError(pncResult.message) || isCaseRecordable(annotatedHearingOutcome)) {
+      auditLogger.warn(EventCode.PncResponseNotReceived, auditLogAttributes)
+      annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
+    }
   } else {
     auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
     annotatedHearingOutcome.PncQuery = pncResult

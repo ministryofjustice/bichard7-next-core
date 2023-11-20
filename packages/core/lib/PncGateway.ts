@@ -85,6 +85,12 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
   }
 }
 
+class PncApiError extends Error {
+  constructor(public errors: string[]) {
+    super(errors[0])
+  }
+}
+
 export default class PncGateway implements PncGatewayInterface {
   constructor(private config: PncApiConfig) {}
 
@@ -108,8 +114,8 @@ export default class PncGateway implements PncGatewayInterface {
         return transform(parsed)
       })
       .catch((e) => {
-        if ("errors" in e && e.errors.length > 0) {
-          return e.errors[0] as Error
+        if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
+          return new PncApiError(e.response?.data?.errors)
         }
         return e as Error
       })

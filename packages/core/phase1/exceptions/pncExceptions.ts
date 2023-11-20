@@ -54,19 +54,18 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
     return code === start
   })
 
+export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
+
 const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
   if (typeof hearingOutcome.PncErrorMessage !== "string") {
     return []
   }
 
-  if (hearingOutcome.PncErrorMessage.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)) {
+  if (isNotFoundError(hearingOutcome.PncErrorMessage)) {
     return [ho100301]
   }
 
   const errorCode = hearingOutcome.PncErrorMessage?.substring(0, 5)
-  if (errorCode && errorCode >= "I0013" && errorCode <= "I0022") {
-    return [ho100301]
-  }
 
   for (const { code, ranges } of errorRanges) {
     if (inErrorRange(errorCode, ranges)) {
