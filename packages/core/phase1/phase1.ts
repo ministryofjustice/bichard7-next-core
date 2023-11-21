@@ -48,13 +48,6 @@ const phase1 = async (
       throw enrichedHearingOutcome
     }
     const triggers = generateTriggers(enrichedHearingOutcome)
-    const exceptions = generateExceptions(enrichedHearingOutcome)
-
-    exceptions.forEach(({ code, path }) => {
-      addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
-    })
-
-    addNullElementsForExceptions(enrichedHearingOutcome)
 
     const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
     let resultType: Phase1ResultType
@@ -62,6 +55,13 @@ const phase1 = async (
       auditLogger.info(EventCode.IgnoredReopened)
       resultType = Phase1ResultType.ignored
     } else {
+      const exceptions = generateExceptions(enrichedHearingOutcome)
+      exceptions.forEach(({ code, path }) => {
+        addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
+      })
+
+      addNullElementsForExceptions(enrichedHearingOutcome)
+
       if (enrichedHearingOutcome.Exceptions.length > 0) {
         auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
       }
