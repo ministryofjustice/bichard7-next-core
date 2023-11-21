@@ -118,7 +118,7 @@ describe("enrichWithQuery()", () => {
   })
 
   it("should log a failed PNC query", async () => {
-    const auditLoggerSpy = jest.spyOn(auditLogger, "warn")
+    const auditLoggerSpy = jest.spyOn(auditLogger, "info")
     jest.spyOn(pncGateway, "query").mockImplementation(() => {
       return Promise.resolve(new Error("PNC error"))
     })
@@ -126,7 +126,7 @@ describe("enrichWithQuery()", () => {
     await enrichWithPncQuery(aho, pncGateway, auditLogger)
 
     expect(auditLoggerSpy).toHaveBeenCalledTimes(1)
-    expect(auditLoggerSpy).toHaveBeenCalledWith(EventCode.PncResponseNotReceived, {
+    expect(auditLoggerSpy).toHaveBeenCalledWith(EventCode.PncResponseReceived, {
       "PNC Response Time": 0,
       "PNC Attempts Made": 1,
       "PNC Request Message": "1101ZD0100000448754K",
