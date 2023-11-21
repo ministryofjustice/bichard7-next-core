@@ -70,13 +70,12 @@ export default async (
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
+  auditLogger.warn(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     if (!isNotFoundError(pncResult.message) || isCaseRecordable(annotatedHearingOutcome)) {
-      auditLogger.warn(EventCode.PncResponseNotReceived, auditLogAttributes)
       annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
     }
   } else {
-    auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
     annotatedHearingOutcome.PncQuery = pncResult
   }
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
