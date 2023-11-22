@@ -6,6 +6,7 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import axios from "axios"
 import { z } from "zod"
 
@@ -35,6 +36,16 @@ const storeAuditLogEvents: ConductorWorker = {
         .post(`${auditLogApiUrl}/messages/${correlationId}/events`, auditLogEvents, {
           headers: { "X-Api-Key": auditLogApiKey },
           transformResponse: (x) => x
+        })
+        .then(() => {
+          auditLogEvents.forEach((event) => {
+            logger.info({
+              message: "Audit Log event created",
+              correlationId,
+              eventCode: event.eventCode,
+              eventType: event.eventType
+            })
+          })
         })
         .catch((e) => e as Error)
 
