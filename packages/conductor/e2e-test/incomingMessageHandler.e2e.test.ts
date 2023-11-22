@@ -128,5 +128,49 @@ describe("Incoming message handler", () => {
     expect(event.attributes).toHaveProperty("externalCorrelationId", duplicateCorrelationId)
   })
 
-  it.todo("should start the bichard_process workflow if the message is good")
+  it("should create audit log events and start the bichard_process workflow if the message is good", async () => {
+    // start the workflow
+    const externalId = randomUUID()
+    const s3Path = `2023/08/31/14/48/${externalId}.xml`
+
+    const externalCorrelationId = randomUUID()
+    const inputMessage = String(fs.readFileSync("e2e-test/fixtures/input-message-001.xml"))
+      .replace("EXTERNAL_CORRELATION_ID", externalCorrelationId)
+      .replace("UNIQUE_HASH", randomUUID())
+
+    await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+
+    // search for the workflow
+    const workflows = await waitForWorkflows({
+      freeText: s3Path,
+      query: {
+        workflowType: "incoming_message_handler",
+        status: "COMPLETED"
+      }
+    })
+    expect(workflows).toHaveLength(1)
+
+    // expect audit log and audit log event
+    const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
+    const messages = await apiClient.getMessages({
+      externalCorrelationId
+    })
+    expect(messages).toHaveLength(1)
+
+    const [message] = messages as AuditLogApiRecordOutput[]
+    expect(message.events).toHaveLength(1)
+    expect(message.events[0]).toHaveProperty("eventCode", EventCode.ReceivedIncomingHearingOutcome)
+    expect(message).toHaveProperty("externalId", externalId)
+    expect(message).toHaveProperty("caseId", "01ZD0303208")
+
+    // wait for bichard_process workflow to exist
+
+    const bichardProcessWorkflows = await waitForWorkflows({
+      query: {
+        workflowType: "bichard_process",
+        correlationId: message.messageId
+      }
+    })
+    expect(bichardProcessWorkflows).toHaveLength(1)
+  })
 })
