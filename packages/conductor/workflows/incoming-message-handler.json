@@ -111,6 +111,25 @@
                 },
                 "defaultCase": [
                   {
+                    "name": "store_audit_log_events",
+                    "taskReferenceName": "record_message_received",
+                    "inputParameters": {
+                      "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                      "auditLogEvents": [
+                        {
+                          "category": "information",
+                          "eventCode": "hearing-outcome.received-incoming",
+                          "eventSource": "IncomingMessageHandler",
+                          "eventType": "Message received"
+                        }
+                      ]
+                    },
+                    "type": "SIMPLE",
+                    "startDelay": 0,
+                    "optional": false,
+                    "asyncComplete": false
+                  },
+                  {
                     "name": "begin_processing",
                     "taskReferenceName": "begin_processing",
                     "inputParameters": {
