@@ -11,6 +11,7 @@ const inputDataValidator = <T>(schema: z.ZodSchema, handler: Handler<T>): Origin
   return (task: ConductorTask) => {
     const parseResult = schema.safeParse(task.inputData)
     if (parseResult.success) {
+      task.inputData = parseResult.data
       return handler(task as Task<T>)
     }
 

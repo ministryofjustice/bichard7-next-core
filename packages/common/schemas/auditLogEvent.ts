@@ -13,6 +13,6 @@ export const auditLogEventSchema = z.object({
   eventSource: z.string(),
   eventSourceQueueName: z.string().optional(),
   eventType: z.string(),
-  timestamp: z.preprocess(toDate, z.date()),
+  timestamp: z.preprocess(toDate, z.date().default(new Date())),
   user: z.string().optional()
 })
