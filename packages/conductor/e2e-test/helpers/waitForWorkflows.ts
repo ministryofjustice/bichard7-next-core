@@ -10,23 +10,32 @@ const headers = {
 }
 
 export type WorkflowSearchParams = {
-  freeText: string
+  freeText?: string
   query: {
     workflowType?: string
+    correlationId?: string
     status?: string
   }
 }
 
 const searchWorkflows = async (params: WorkflowSearchParams) => {
+  const queryChunks = []
+
   const { freeText } = params
-  const query = Object.entries(params.query)
+  if (freeText) {
+    queryChunks.push(`freeText="${freeText}`)
+  }
+
+  const queryString = Object.entries(params.query)
     .map(([k, v]) => `${k}=${v}`)
     .join(" AND ")
+  if (queryString !== "") {
+    queryChunks.push(`query="${queryString}`)
+  }
 
-  const response = await axios.get(
-    `${conductorUrl}/api/workflow/search?freeText="${freeText}"&query="${query}"`,
-    headers
-  )
+  const query = queryChunks.join("&")
+
+  const response = await axios.get(`${conductorUrl}/api/workflow/search?${query}`, headers)
 
   if (response.data.totalHits === 0) {
     throw new Error("No workflows fetched")
