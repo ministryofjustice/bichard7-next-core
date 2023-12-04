@@ -11,7 +11,7 @@
       "taskReferenceName": "extract_paths",
       "inputParameters": {
         "records": "${workflow.input.records}",
-        "queryExpression": ".records[0].s3.object.key"
+        "queryExpression": ".records.object.key"
       },
       "type": "JSON_JQ_TRANSFORM",
       "startDelay": 0,

@@ -141,7 +141,7 @@ services:
     volumes:
       - "${PWD}/environment/localstack/init:/etc/localstack/init"
     environment:
-      SERVICES: "s3,sqs,dynamodb"
+      SERVICES: "s3,sqs,dynamodb,events"
       AWS_DEFAULT_REGION: "eu-west-2"
     healthcheck:
       test: 'curl -s localhost:4566/_localstack/init | grep -q ''"READY": true'''

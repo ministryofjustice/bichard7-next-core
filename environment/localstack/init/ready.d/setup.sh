@@ -35,14 +35,18 @@ awslocal s3api put-bucket-notification-configuration \
 awslocal s3api put-bucket-notification-configuration \
   --bucket $INCOMING_BUCKET_NAME \
   --region $AWS_REGION \
-  --notification-configuration  '{
-                                    "QueueConfigurations": [
-                                      {
-                                        "QueueArn": "arn:aws:sqs:'"$AWS_REGION"':000000000000:'"$INCOMING_QUEUE"'",
-                                        "Events": ["s3:ObjectCreated:*"]
-                                      }
-                                    ]
-                                  }'
+  --notification-configuration  '{ "EventBridgeConfiguration": {} }'
+
+awslocal events put-rule --name "S3ObjectCreated" --event-pattern '{
+                                                                    "source": ["aws.s3"],
+                                                                    "detail-type": ["Object Created"],
+                                                                    "detail": {
+                                                                      "bucket": {
+                                                                        "name": ["'$INCOMING_BUCKET_NAME'"]
+                                                                      }
+                                                                    }
+                                                                  }'
+awslocal events put-targets --rule S3ObjectCreated --targets "Id"="1","Arn"="arn:aws:sqs:eu-west-2:000000000000:$INCOMING_QUEUE"
 
 DYNAMO_TABLES=( "bichard-7-production-comparison-log" "bichard-7-phase2-production-comparison-log" "bichard-7-phase3-production-comparison-log" )
 
