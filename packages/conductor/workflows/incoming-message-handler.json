@@ -7,33 +7,42 @@
   "version": 4,
   "tasks": [
     {
-      "name": "extract_paths",
-      "taskReferenceName": "extract_paths",
+      "name": "convert_spi_to_aho",
+      "taskReferenceName": "convert_spi_to_aho",
       "inputParameters": {
-        "records": "${workflow.input.records}",
-        "queryExpression": ".records.object.key"
+        "s3Path": "${workflow.input.s3Path}"
       },
-      "type": "JSON_JQ_TRANSFORM",
+      "type": "SIMPLE",
       "startDelay": 0,
       "optional": false,
       "asyncComplete": false
     },
     {
-      "name": "check_valid_message",
-      "taskReferenceName": "check_valid_message",
+      "name": "create_audit_log_record",
+      "taskReferenceName": "create_audit_log_record",
       "inputParameters": {
-        "records": "${extract_paths.output.result}"
+        "auditLogRecord": "${convert_spi_to_aho.output.auditLogRecord}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "parsing_failure",
+      "taskReferenceName": "parsing_failure",
+      "inputParameters": {
+        "error": "${convert_spi_to_aho.output.error}"
       },
       "type": "SWITCH",
-      "evaluatorType": "javascript",
-      "expression": "$.records !== null ? 'valid' : 'invalid'",
       "decisionCases": {
-        "valid": [
+        "parsing_failed": [
           {
-            "name": "convert_spi_to_aho",
-            "taskReferenceName": "convert_spi_to_aho",
+            "name": "store_audit_log_events",
+            "taskReferenceName": "record_parsing_failure",
             "inputParameters": {
-              "s3Path": "${extract_paths.output.result}"
+              "correlationId": "${convert_spi_to_aho.output.correlationId}",
+              "auditLogEvents": "${convert_spi_to_aho.output.auditLogEvents}"
             },
             "type": "SIMPLE",
             "startDelay": 0,
@@ -41,127 +50,92 @@
             "asyncComplete": false
           },
           {
-            "name": "create_audit_log_record",
-            "taskReferenceName": "create_audit_log_record",
+            "name": "alert_common_platform",
+            "taskReferenceName": "alert_common_platform",
             "inputParameters": {
-              "auditLogRecord": "${convert_spi_to_aho.output.auditLogRecord}"
+              "errorReportData": "${convert_spi_to_aho.output.errorReportData}"
             },
             "type": "SIMPLE",
             "startDelay": 0,
             "optional": false,
             "asyncComplete": false
-          },
-          {
-            "name": "parsing_failure",
-            "taskReferenceName": "parsing_failure",
-            "inputParameters": {
-              "error": "${convert_spi_to_aho.output.error}"
-            },
-            "type": "SWITCH",
-            "decisionCases": {
-              "parsing_failed": [
-                {
-                  "name": "store_audit_log_events",
-                  "taskReferenceName": "record_parsing_failure",
-                  "inputParameters": {
-                    "correlationId": "${convert_spi_to_aho.output.correlationId}",
-                    "auditLogEvents": "${convert_spi_to_aho.output.auditLogEvents}"
-                  },
-                  "type": "SIMPLE",
-                  "startDelay": 0,
-                  "optional": false,
-                  "asyncComplete": false
-                },
-                {
-                  "name": "alert_common_platform",
-                  "taskReferenceName": "alert_common_platform",
-                  "inputParameters": {
-                    "errorReportData": "${convert_spi_to_aho.output.errorReportData}"
-                  },
-                  "type": "SIMPLE",
-                  "startDelay": 0,
-                  "optional": false,
-                  "asyncComplete": false
-                }
-              ]
-            },
-            "defaultCase": [
-              {
-                "name": "duplicate_message",
-                "taskReferenceName": "duplicate_message",
-                "inputParameters": {
-                  "duplicateMessage": "${create_audit_log_record.output.duplicateMessage}"
-                },
-                "type": "SWITCH",
-                "decisionCases": {
-                  "isDuplicate": [
-                    {
-                      "name": "store_audit_log_events",
-                      "taskReferenceName": "record_duplicate_message",
-                      "inputParameters": {
-                        "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
-                        "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
-                      },
-                      "type": "SIMPLE",
-                      "startDelay": 0,
-                      "optional": false,
-                      "asyncComplete": false
-                    }
-                  ]
-                },
-                "defaultCase": [
-                  {
-                    "name": "store_audit_log_events",
-                    "taskReferenceName": "record_message_received",
-                    "inputParameters": {
-                      "correlationId": "${convert_spi_to_aho.output.correlationId}",
-                      "auditLogEvents": [
-                        {
-                          "category": "information",
-                          "eventCode": "hearing-outcome.received-incoming",
-                          "eventSource": "IncomingMessageHandler",
-                          "eventType": "Message received"
-                        }
-                      ]
-                    },
-                    "type": "SIMPLE",
-                    "startDelay": 0,
-                    "optional": false,
-                    "asyncComplete": false
-                  },
-                  {
-                    "name": "begin_processing",
-                    "taskReferenceName": "begin_processing",
-                    "inputParameters": {
-                      "startWorkflow": {
-                        "correlationId": "${convert_spi_to_aho.output.correlationId}",
-                        "input": {
-                          "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
-                        },
-                        "name": "bichard_process"
-                      }
-                    },
-                    "type": "START_WORKFLOW",
-                    "startDelay": 0,
-                    "optional": false,
-                    "asyncComplete": false
-                  }
-                ],
-                "startDelay": 0,
-                "optional": false,
-                "asyncComplete": false,
-                "evaluatorType": "value-param",
-                "expression": "duplicateMessage"
-              }
-            ],
-            "startDelay": 0,
-            "optional": false,
-            "asyncComplete": false,
-            "evaluatorType": "value-param",
-            "expression": "error"
           }
         ]
-      }
+      },
+      "defaultCase": [
+        {
+          "name": "duplicate_message",
+          "taskReferenceName": "duplicate_message",
+          "inputParameters": {
+            "duplicateMessage": "${create_audit_log_record.output.duplicateMessage}"
+          },
+          "type": "SWITCH",
+          "decisionCases": {
+            "isDuplicate": [
+              {
+                "name": "store_audit_log_events",
+                "taskReferenceName": "record_duplicate_message",
+                "inputParameters": {
+                  "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
+                  "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
+                },
+                "type": "SIMPLE",
+                "startDelay": 0,
+                "optional": false,
+                "asyncComplete": false
+              }
+            ]
+          },
+          "defaultCase": [
+            {
+              "name": "store_audit_log_events",
+              "taskReferenceName": "record_message_received",
+              "inputParameters": {
+                "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                "auditLogEvents": [
+                  {
+                    "category": "information",
+                    "eventCode": "hearing-outcome.received-incoming",
+                    "eventSource": "IncomingMessageHandler",
+                    "eventType": "Message received"
+                  }
+                ]
+              },
+              "type": "SIMPLE",
+              "startDelay": 0,
+              "optional": false,
+              "asyncComplete": false
+            },
+            {
+              "name": "begin_processing",
+              "taskReferenceName": "begin_processing",
+              "inputParameters": {
+                "startWorkflow": {
+                  "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                  "input": {
+                    "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
+                  },
+                  "name": "bichard_process"
+                }
+              },
+              "type": "START_WORKFLOW",
+              "startDelay": 0,
+              "optional": false,
+              "asyncComplete": false
+            }
+          ],
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "evaluatorType": "value-param",
+          "expression": "duplicateMessage"
+        }
+      ],
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "evaluatorType": "value-param",
+      "expression": "error"
     }
   ],
   "inputParameters": ["s3Path"],
