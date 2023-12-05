@@ -128,19 +128,28 @@ const convertSpiToAho: ConductorWorker = {
     const { s3Path } = task.inputData
 
     const s3Config = createS3Config()
-    const message = await getFileFromS3(s3Path, incomingBucket, s3Config)
-    if (isError(message)) {
-      logger.error(message)
-      return failed("Could not retrieve file from S3")
+    const s3FileResult = await getFileFromS3(s3Path, incomingBucket, s3Config)
+    if (isError(s3FileResult)) {
+      return failed("Could not retrieve file from S3", s3FileResult.message)
     }
 
     const messageId = uuid()
-    const { externalId, receivedDate } = parseS3Path(s3Path)
-    const transformResult = transformIncomingMessageToAho(message)
+    const s3PathResult = parseS3Path(s3Path)
+    if (isError(s3PathResult)) {
+      return failed("Failed to parse S3 path", s3PathResult.message)
+    }
+
+    const { externalId, receivedDate } = s3PathResult
+    const transformResult = transformIncomingMessageToAho(s3FileResult)
     if (isError(transformResult)) {
       // completed so we can move to alerting task
       return completed(
-        buildParsingFailedOutput(message, { messageId, externalId, receivedDate }, s3Path, transformResult.message),
+        buildParsingFailedOutput(
+          s3FileResult,
+          { messageId, externalId, receivedDate },
+          s3Path,
+          transformResult.message
+        ),
         "Could not convert incoming message to AHO",
         transformResult.message
       )
