@@ -157,6 +157,20 @@ describe("convertSpiToAho", () => {
     expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3Path")
   })
 
+  it("should fail if S3 path is incorrectly formatted", async () => {
+    mockPutFileToS3.default = putFileToS3ReturnsException
+    const externalId = uuid()
+    const s3Path = `test_file_${externalId}.xml`
+    const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
+    await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
+
+    const result = await convertSpiToAho.execute({ inputData: { s3Path } })
+
+    expect(result).toHaveProperty("status", "FAILED")
+    expect(result.logs?.map((l) => l.log)).toContain("Failed to parse S3 path")
+    expect(result.logs?.map((l) => l.log)).toContain(`The object key "${s3Path}" is in an invalid format`)
+  })
+
   it("should fail if it can't write to S3", async () => {
     mockPutFileToS3.default = putFileToS3ReturnsException
     const externalId = uuid()
