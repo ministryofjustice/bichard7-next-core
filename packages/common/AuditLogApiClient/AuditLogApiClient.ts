@@ -131,11 +131,10 @@ export default class AuditLogApiClient {
         timeout: this.timeout
       })
       .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.Created:
-            return undefined
-          default:
-            return Error(`Error ${result.status}: ${result.data}`)
+        if (result.status === HttpStatusCode.Created) {
+          return undefined
+        } else {
+          return Error(`Error ${result.status}: ${result.data}`)
         }
       })
       .catch((error: AxiosError) => {
@@ -168,14 +167,13 @@ export default class AuditLogApiClient {
         }
       })
       .catch((error: AxiosError) => {
-        switch (error.code) {
-          case "ECONNABORTED":
-            return Error(`Timed out creating event for message with Id ${messageId}.`)
-          default:
-            return new ApplicationError(
-              `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
-              error
-            )
+        if (error.code == "ECONNABORTED") {
+          return Error(`Timed out creating event for message with Id ${messageId}.`)
+        } else {
+          return new ApplicationError(
+            `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
+            error
+          )
         }
       })
   }
@@ -200,14 +198,13 @@ export default class AuditLogApiClient {
         }
       })
       .catch((error: AxiosError) => {
-        switch (error.code) {
-          case "ECONNABORTED":
-            return Error(`Timed out creating event for user '${userName}'.`)
-          default:
-            return new ApplicationError(
-              `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
-              error
-            )
+        if (error.code === "ECONNABORTED") {
+          return Error(`Timed out creating event for user '${userName}'.`)
+        } else {
+          return new ApplicationError(
+            `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
+            error
+          )
         }
       })
   }
