@@ -13,9 +13,11 @@ type Workflow = {
 
 const base64 = (input: string): string => Buffer.from(input).toString("base64")
 
-const basicAuthHeaders = (conductorConfig: ConductorConfig) => ({
-  Authorization: `Basic ${base64(`${conductorConfig.username}:${conductorConfig.password}`)}`
-})
+const basicAuthHeaders = (conductorConfig: ConductorConfig) => {
+  const basicAuth = `${conductorConfig.username}:${conductorConfig.password}`
+
+  return { Authorization: `Basic ${base64(basicAuth)}` }
+}
 
 export const getWorkflowByCorrelationId = (
   correlationId: string,
