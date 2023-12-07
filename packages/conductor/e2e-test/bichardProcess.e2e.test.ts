@@ -50,6 +50,13 @@ const putMessageInS3 = async (fixture: string, path: string, correlationId: stri
   await putFileToS3(inputMessage, path, TASK_DATA_BUCKET_NAME, s3Config)
 }
 
+const checkTheTempFileHasBeenCleanedUp = async (s3TaskDataPath: string) => {
+  // Check the temp file has been cleaned up
+  const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
+  expect(isError(s3File)).toBeTruthy()
+  expect((s3File as Error).message).toBe("The specified key does not exist.")
+}
+
 const waitForWorkflow = async (s3TaskDataPath: string, status: string = "COMPLETED") => {
   const workflows = await waitForWorkflows({
     freeText: s3TaskDataPath,
@@ -120,10 +127,7 @@ describe("bichard_process workflow", () => {
     expect(mqListener.messages).toHaveLength(1)
     expect(mqListener.messages[0]).toMatch(correlationId)
 
-    // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
-    expect(isError(s3File)).toBeTruthy()
-    expect((s3File as Error).message).toBe("The specified key does not exist.")
+    checkTheTempFileHasBeenCleanedUp(s3TaskDataPath)
   })
 
   it("should persist the record and send to phase 2 if there are triggers but no exceptions", async () => {
@@ -147,10 +151,7 @@ describe("bichard_process workflow", () => {
     expect(mqListener.messages).toHaveLength(1)
     expect(mqListener.messages[0]).toMatch(correlationId)
 
-    // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
-    expect(isError(s3File)).toBeTruthy()
-    expect((s3File as Error).message).toBe("The specified key does not exist.")
+    checkTheTempFileHasBeenCleanedUp(s3TaskDataPath)
   })
 
   it("should store audit logs and stop processing if the message is ignored", async () => {
@@ -166,10 +167,7 @@ describe("bichard_process workflow", () => {
     const auditLogEventCodes = await getAuditLogs(correlationId)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
-    // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
-    expect(isError(s3File)).toBeTruthy()
-    expect((s3File as Error).message).toBe("The specified key does not exist.")
+    checkTheTempFileHasBeenCleanedUp(s3TaskDataPath)
   })
 
   it("should wait for and process a resubmission if there are exceptions", async () => {
@@ -204,10 +202,7 @@ describe("bichard_process workflow", () => {
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
-    // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
-    expect(isError(s3File)).toBeTruthy()
-    expect((s3File as Error).message).toBe("The specified key does not exist.")
+    checkTheTempFileHasBeenCleanedUp(s3TaskDataPath)
   })
 
   it("should store audit logs if the record is manually resolved", async () => {
@@ -244,9 +239,6 @@ describe("bichard_process workflow", () => {
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain(EventCode.ExceptionsResolved)
 
-    // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
-    expect(isError(s3File)).toBeTruthy()
-    expect((s3File as Error).message).toBe("The specified key does not exist.")
+    checkTheTempFileHasBeenCleanedUp(s3TaskDataPath)
   })
 })
