@@ -5,11 +5,9 @@ const API_KEY = process.env.API_KEY || "password"
 export default (req: Request, res: Response, next: NextFunction) => {
   const authAttempt = req.headers?.authorization || null
 
-  switch (authAttempt) {
-    case API_KEY:
-      next()
-      break
-    default:
-      res.sendStatus(401)
+  if (authAttempt === API_KEY) {
+    next()
+  } else {
+    res.sendStatus(401)
   }
 }
