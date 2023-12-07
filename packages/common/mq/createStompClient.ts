@@ -5,7 +5,14 @@ import type MqConfig from "./MqConfig"
 const createStompClient = (mqConfig: MqConfig): Client => {
   const brokerURL = mqConfig.url.replace(/\s/g, "")
   const match = /failover:\((.+)\)/i.exec(brokerURL)
-  const brokerUrls = match && match[1] ? match[1].split(",") : [brokerURL]
+
+  let brokerUrls: string[]
+
+  if (match) {
+    brokerUrls = match[1].split(",")
+  } else {
+    brokerUrls = [brokerURL]
+  }
 
   let activeBrokerIndex = 0
 
