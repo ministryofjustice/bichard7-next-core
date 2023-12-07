@@ -47,7 +47,7 @@ const createAuditLog = (correlationId: string) =>
 
 const putMessageInS3 = async (fixture: string, path: string, correlationId: string) => {
   const inputMessage = String(fs.readFileSync(fixture)).replace("CORRELATION_ID", correlationId)
-  await putFileToS3(inputMessage, path, TASK_DATA_BUCKET_NAME!, s3Config)
+  await putFileToS3(inputMessage, path, TASK_DATA_BUCKET_NAME, s3Config)
 }
 
 const waitForWorkflow = async (s3TaskDataPath: string, status: string = "COMPLETED") => {
@@ -148,7 +148,7 @@ describe("bichard_process workflow", () => {
     expect(mqListener.messages[0]).toMatch(correlationId)
 
     // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
+    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
     expect(isError(s3File)).toBeTruthy()
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
@@ -167,7 +167,7 @@ describe("bichard_process workflow", () => {
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
     // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
+    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
     expect(isError(s3File)).toBeTruthy()
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
@@ -205,7 +205,7 @@ describe("bichard_process workflow", () => {
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
     // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
+    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
     expect(isError(s3File)).toBeTruthy()
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
@@ -245,7 +245,7 @@ describe("bichard_process workflow", () => {
     expect(auditLogEventCodes).toContain(EventCode.ExceptionsResolved)
 
     // Check the temp file has been cleaned up
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
+    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
     expect(isError(s3File)).toBeTruthy()
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
