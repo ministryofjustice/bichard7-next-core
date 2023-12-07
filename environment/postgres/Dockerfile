@@ -1,7 +1,8 @@
 FROM postgres:14
 
-RUN apt-get update && apt-get -y install git build-essential postgresql-server-dev-14 && \
-    git clone https://github.com/citusdata/pg_cron.git
+RUN apt-get update && apt-get -y install git build-essential postgresql-server-dev-14 \
+    && apt-get clean \
+    && git clone https://github.com/citusdata/pg_cron.git
 
 WORKDIR /pg_cron
 
@@ -10,7 +11,7 @@ RUN make && make install && \
     apt-get remove -y git build-essential postgresql-server-dev-14 && \
     apt-get autoremove --purge -y && \
     apt-get clean && \
-    apt-get purge
+    apt-get -y purge
 
 # fixes missing locale issue
 # initdb: error: invalid locale settings; check LANG and LC_* environment variables
