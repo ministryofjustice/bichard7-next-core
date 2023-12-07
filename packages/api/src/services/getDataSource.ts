@@ -42,7 +42,7 @@ const getDataSource = async (): Promise<DataSource> => {
     throw Error("Synchronize must be false.")
   }
 
-  if (!appDataSource || !appDataSource.isInitialized) {
+  if (!appDataSource?.isInitialized) {
     appDataSource = await new DataSource(config).initialize()
   }
 
