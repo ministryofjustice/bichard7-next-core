@@ -11,13 +11,20 @@ const client = createStompClient()
 
 client.onConnect = () => {
   logger.info("Connected to MQ")
-  client.subscribe(sourceQueue, async (message: Message) => {
-    try {
-      await forwardMessage(message.body, client)
-    } catch (e) {
-      logger.error(e)
-    }
-  })
+  client.subscribe(
+    sourceQueue,
+    async (message: Message) => {
+      try {
+        await forwardMessage(message.body, client)
+        message.ack()
+      } catch (e) {
+        logger.error(e)
+        logger.info({ event: "message-forwarder:error-forwarding-message" })
+        message.nack()
+      }
+    },
+    { ack: "client" }
+  )
 }
 
 client.activate()
