@@ -7,7 +7,7 @@ const parseBoolean = z.preprocess((value) => Boolean(value), z.boolean())
 export const caseListQuerySchema: z.Schema = z
   .object({
     forces: z.array(z.string()),
-    maxPageItems: z.string().regex(new RegExp(/^((100)|([1-9][0-9]{1}))$/gm)), // numeric strings between 10 and 100
+    maxPageItems: z.string().regex(new RegExp(/^((100)|([1-9]\d))$/gm)), // numeric strings between 10 and 100
     allocatedToUserName: z.string().optional(),
     caseState: z.enum(["Resolved", "Unresolved and resolved"]).optional(),
     courtDateRange: z.array(z.object({ from: z.string().datetime(), to: z.string().datetime() }).optional()).optional(),
@@ -16,10 +16,7 @@ export const caseListQuerySchema: z.Schema = z
     locked: parseBoolean.optional(),
     order: z.string().optional(),
     orderBy: z.string().optional(),
-    pageNum: z
-      .string()
-      .regex(new RegExp(/^[0-9]*$/gm))
-      .optional(), // only numeric characters
+    pageNum: z.string().regex(new RegExp(/^\d*$/gm)).optional(), // only numeric characters
     ptiurn: z.string().optional(),
     reasonCode: z.string().optional(),
     reasons: z.array(z.string()).optional(),
