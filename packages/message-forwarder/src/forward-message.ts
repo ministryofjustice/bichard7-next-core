@@ -37,7 +37,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
 
   if (destinationType === "mq" || (destinationType === "auto" && !workflowExists)) {
     client.publish({ destination: destination, body: message, skipContentLengthHeader: true })
-    logger.info(`Sent message to MQ (${correlationId})`)
+    logger.info({ event: "message-forwarder:forwarded-to-mq", correlationId })
   } else {
     // Check to see if there's already a workflow with that ID
     if (workflowExists) {
@@ -49,7 +49,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
       }
 
       await completeWaitingTask(workflowId, task.taskId, conductorConfig)
-      logger.info(`Completed task in Conductor (${correlationId})`)
+      logger.info({ event: "message-forwarder:completed-task-in-conductor", correlationId })
     } else {
       // Start a new workflow
       const s3TaskDataPath = `${randomUUID()}.json`
@@ -59,7 +59,7 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
       }
 
       await startWorkflow(Workflow.BICHARD_PROCESS, { s3TaskDataPath }, correlationId, conductorConfig)
-      logger.info(`Started new workflow in Conductor (${correlationId})`)
+      logger.info({ event: "message-forwarder:started-workflow-in-conductor", correlationId })
     }
   }
 }
