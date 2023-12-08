@@ -1,14 +1,17 @@
 import type { PromiseResult } from "../types/Result"
 import type ConductorConfig from "./ConductorConfig"
 
-type Task = {
+export type Task = {
   status: string
   taskType: string
   taskId: string
+  correlationId: string
+  iteration: number
 }
 
-type Workflow = {
+export type Workflow = {
   tasks: Task[]
+  workflowId: string
 }
 
 const base64 = (input: string): string => Buffer.from(input).toString("base64")
@@ -20,7 +23,7 @@ const basicAuthHeaders = (conductorConfig: ConductorConfig) => ({
 export const getWorkflowByCorrelationId = (
   correlationId: string,
   conductorConfig: ConductorConfig
-): PromiseResult<object | undefined> =>
+): PromiseResult<Workflow | undefined> =>
   fetch(`${conductorConfig.url}/api/workflow/bichard_process/correlated/${correlationId}`, {
     headers: basicAuthHeaders(conductorConfig)
   })

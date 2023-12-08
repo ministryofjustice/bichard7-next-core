@@ -10,7 +10,8 @@
     "lint:fix": "eslint --fix .",
     "start": "ts-node src/server.ts",
     "esbuild": "node build.js",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u && npm install",
+    "test": "jest --detectOpenHandles"
   },
   "license": "MIT",
   "exports": {
