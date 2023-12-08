@@ -65,7 +65,7 @@
           "name": "check_phase1_result",
           "taskReferenceName": "check_phase1_result",
           "inputParameters": {
-            "switchCaseValue": "${process_phase1.output.resultType}"
+            "phase1Result": "${process_phase1.output.resultType}"
           },
           "type": "SWITCH",
           "decisionCases": {
@@ -144,7 +144,7 @@
                 "asyncComplete": false
               }
             ],
-            "end_processing": [
+            "ignored": [
               {
                 "name": "delete_s3_file",
                 "taskReferenceName": "delete_temp_file_terminated",
@@ -173,8 +173,8 @@
           "startDelay": 0,
           "optional": false,
           "asyncComplete": false,
-          "evaluatorType": "javascript",
-          "expression": "$.switchCaseValue === 'ignored' || $.switchCaseValue === 'failure' ? 'end_processing' : $.switchCaseValue"
+          "evaluatorType": "value-param",
+          "expression": "phase1Result"
         }
       ]
     },

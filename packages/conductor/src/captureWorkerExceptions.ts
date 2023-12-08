@@ -8,9 +8,10 @@ export const captureWorkerExceptions = (worker: ConductorWorker): ConductorWorke
     try {
       return worker.execute(task)
     } catch (e) {
-      const message = `Exception caught in ${worker.taskDefName}: ${(e as Error).message}`
+      const error = e as Error
+      const message = `Exception caught in ${worker.taskDefName}: ${error.message}`
       logger.error(message)
-      return failed(message)
+      return failed(message, error.stack ?? "No stack trace found")
     }
   }
 })
