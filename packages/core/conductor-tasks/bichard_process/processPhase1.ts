@@ -30,7 +30,7 @@ const processPhase1: ConductorWorker = {
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)
 
     const result = await phase1(s3TaskData, pncGateway, auditLogger)
-    if (result.resultType === Phase1ResultType.success || result.resultType === Phase1ResultType.exceptions) {
+    if (result.resultType !== Phase1ResultType.ignored) {
       const maybeError = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config)
       if (isError(maybeError)) {
         return failed(`Could not put file to S3: ${s3TaskDataPath}`, maybeError.message)

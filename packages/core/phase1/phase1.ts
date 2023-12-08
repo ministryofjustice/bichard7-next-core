@@ -20,80 +20,64 @@ const phase1 = async (
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<Phase1Result> => {
-  try {
-    const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-
-    if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
-      auditLogger.info(EventCode.IgnoredNoOffences, {
-        ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-      })
-
-      return {
-        correlationId,
-        hearingOutcome,
-        triggers: [],
-        auditLogEvents: auditLogger.getEvents(),
-        resultType: Phase1ResultType.ignored
-      }
-    }
-
-    const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
-
-    auditLogger.info(
-      EventCode.HearingOutcomeDetails,
-      getIncomingMessageLogAttributes(enrichedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome)
-    )
-
-    if (isError(enrichedHearingOutcome)) {
-      throw enrichedHearingOutcome
-    }
-    const triggers = generateTriggers(enrichedHearingOutcome)
-
-    const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
-    let resultType: Phase1ResultType
-    if (isIgnored) {
-      auditLogger.info(EventCode.IgnoredReopened)
-      resultType = Phase1ResultType.ignored
-    } else {
-      const exceptions = generateExceptions(enrichedHearingOutcome)
-      exceptions.forEach(({ code, path }) => {
-        addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
-      })
-
-      addNullElementsForExceptions(enrichedHearingOutcome)
-
-      if (enrichedHearingOutcome.Exceptions.length > 0) {
-        auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
-      }
-      if (triggers.length > 0) {
-        auditLogger.info(
-          EventCode.TriggersGenerated,
-          generateTriggersLogAttributes(triggers, enrichedHearingOutcome.Exceptions.length > 0)
-        )
-      }
-      resultType = enrichedHearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
-    }
-
-    return {
-      correlationId,
-      triggers,
-      hearingOutcome: enrichedHearingOutcome,
-      auditLogEvents: auditLogger.getEvents(),
-      resultType
-    }
-  } catch (e) {
-    const { message: failureMessage, stack } = e as Error
-
-    auditLogger.error(EventCode.MessageRejected, {
-      "Exception Message": failureMessage,
-      "Exception Stack Trace": stack
+  const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length === 0) {
+    auditLogger.info(EventCode.IgnoredNoOffences, {
+      ASN: hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
     })
 
     return {
+      correlationId,
+      hearingOutcome,
+      triggers: [],
       auditLogEvents: auditLogger.getEvents(),
-      resultType: Phase1ResultType.failure,
-      failureMessage
+      resultType: Phase1ResultType.ignored
     }
+  }
+
+  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
+
+  auditLogger.info(
+    EventCode.HearingOutcomeDetails,
+    getIncomingMessageLogAttributes(enrichedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome)
+  )
+
+  if (isError(enrichedHearingOutcome)) {
+    throw enrichedHearingOutcome
+  }
+  const triggers = generateTriggers(enrichedHearingOutcome)
+
+  const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
+  let resultType: Phase1ResultType
+  if (isIgnored) {
+    auditLogger.info(EventCode.IgnoredReopened)
+    resultType = Phase1ResultType.ignored
+  } else {
+    const exceptions = generateExceptions(enrichedHearingOutcome)
+    exceptions.forEach(({ code, path }) => {
+      addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
+    })
+
+    addNullElementsForExceptions(enrichedHearingOutcome)
+
+    if (enrichedHearingOutcome.Exceptions.length > 0) {
+      auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
+    }
+    if (triggers.length > 0) {
+      auditLogger.info(
+        EventCode.TriggersGenerated,
+        generateTriggersLogAttributes(triggers, enrichedHearingOutcome.Exceptions.length > 0)
+      )
+    }
+    resultType = enrichedHearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
+  }
+
+  return {
+    correlationId,
+    triggers,
+    hearingOutcome: enrichedHearingOutcome,
+    auditLogEvents: auditLogger.getEvents(),
+    resultType
   }
 }
 
