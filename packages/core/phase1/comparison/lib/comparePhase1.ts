@@ -10,7 +10,6 @@ import parseIncomingMessage from "../../parse/parseIncomingMessage"
 import phase1Handler from "../../phase1"
 import convertAhoToXml from "../../serialise/ahoXml/generate"
 import type Exception from "../../types/Exception"
-import { Phase1ResultType } from "../../types/Phase1Result"
 import type { Trigger } from "../../types/Trigger"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
@@ -80,9 +79,6 @@ const comparePhase1 = async (
 
     const [inputAho] = parseIncomingMessage(incomingMessage)
     const coreResult = await phase1Handler(inputAho, pncGateway, auditLogger)
-    if (coreResult.resultType === Phase1ResultType.failure) {
-      throw Error("Failed to process")
-    }
 
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
