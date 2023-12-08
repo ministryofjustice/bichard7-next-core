@@ -15,6 +15,7 @@
     "conductor": "./environment/boot.sh conductor audit-log-api",
     "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor audit-log-api pnc",
     "destroy": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml down -v",
+    "dev-sgs": "./scripts/dev-sgs.sh",
     "generate-schema-doc": "./scripts/generate-schema-doc.sh",
     "lint": "npm run lint --ws",
     "lint:fix": "npm run lint:fix --ws",
