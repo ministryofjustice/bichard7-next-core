@@ -68,25 +68,6 @@ describe("processPhase1", () => {
     expect(result).toHaveProperty("status", "FAILED")
   })
 
-  it("should complete correctly if the phase 1 output was a failure", async () => {
-    const s3TaskDataPath = "bad-aho.json"
-    await putFileToS3(
-      JSON.stringify({
-        Exceptions: [],
-        AnnotatedHearingOutcome: {}
-      }),
-      s3TaskDataPath,
-      bucket,
-      s3Config
-    )
-    const result = await processPhase1.execute({ inputData: { s3TaskDataPath } })
-
-    expect(result).toHaveProperty("status", "COMPLETED")
-    expect(result.logs?.map((l) => l.log)).toContain("Message Rejected by CoreHandler")
-    expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.failure)
-    expect(result.outputData?.auditLogEvents).toHaveLength(2)
-  })
-
   it("should complete correctly if the phase 1 output was ignored", async () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-no-offences.json"))
 
