@@ -1,5 +1,4 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
@@ -15,12 +14,12 @@ import type ComparisonResult from "../types/ComparisonResult"
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
-const taskDefName = "rerun_period"
 const s3Concurrency = process.env.S3_CONCURRENCY ? Number(process.env.S3_CONCURRENCY) : 20
 
 const rerunPeriod: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName, 1),
+  taskDefName: "rerun_period",
+  concurrency: 1,
+  pollInterval: 10000,
   execute: async (task: Task) => {
     const start = task.inputData?.start
     const end = task.inputData?.end

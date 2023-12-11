@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
@@ -9,8 +8,6 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import axios from "axios"
 import { z } from "zod"
-
-const taskDefName = "store_audit_log_events"
 
 const auditLogApiUrl = process.env.AUDIT_LOG_API_URL
 const auditLogApiKey = process.env.AUDIT_LOG_API_KEY
@@ -26,8 +23,7 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const storeAuditLogEvents: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "store_audit_log_events",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { correlationId, auditLogEvents } = task.inputData
 

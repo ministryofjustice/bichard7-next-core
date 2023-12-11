@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
@@ -14,7 +13,6 @@ import { z } from "zod"
 import { parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 
-const taskDefName = "read_aho_from_db"
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 
@@ -31,8 +29,7 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const readAhoFromDb: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "read_aho_from_db",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { correlationId, s3TaskDataPath } = task.inputData
 

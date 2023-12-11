@@ -1,8 +1,6 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
-const taskDefName = "generate_rerun_tasks"
 
 export type GenerateDayTasksOutput = {
   start: string
@@ -13,8 +11,8 @@ export type GenerateDayTasksOutput = {
 }
 
 const generateRerunTasks: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "generate_rerun_tasks",
+  pollInterval: 10000,
   execute: (task: Task) => {
     const startDate = new Date(task.inputData?.startDate ?? "2022-07-01")
     const endDate = new Date(task.inputData?.endDate ?? new Date().toISOString())

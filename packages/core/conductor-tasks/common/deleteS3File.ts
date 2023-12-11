@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
@@ -10,7 +9,6 @@ import deleteFileFromS3 from "@moj-bichard7/common/s3/deleteFileFromS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
 
-const taskDefName = "delete_s3_file"
 const s3Config = createS3Config()
 
 const inputDataSchema = z.object({
@@ -29,8 +27,7 @@ const buckets: Record<string, string> = {
 }
 
 const deleteS3File: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "delete_s3_file",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { fileName, bucketId } = task.inputData
 

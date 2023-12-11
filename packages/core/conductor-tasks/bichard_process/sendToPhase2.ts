@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -17,11 +16,8 @@ const mqConfig = createMqConfig()
 const mqGateway = new MqGateway(mqConfig)
 const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
-const taskDefName = "send_to_phase2"
-
 const sendToPhase2: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1SuccessResult>(phase1SuccessResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
 

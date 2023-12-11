@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -16,15 +15,13 @@ import { unvalidatedAHOSchema } from "../../phase1/schemas/annotatedHearingOutco
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
-const taskDefName = "process_phase1"
 const pncApiConfig = createPncApiConfig()
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
 const processPhase1: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedAHOSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath } = task.inputData
     const pncGateway = new PncGateway(pncApiConfig)
