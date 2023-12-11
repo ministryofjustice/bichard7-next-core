@@ -1,5 +1,4 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
@@ -14,11 +13,11 @@ import type ComparisonResult from "../types/ComparisonResult"
 const dynamoConfig = createDynamoDbConfig()
 const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
-const taskDefName = "compare_files"
 
 const compareFiles: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName, 10),
+  taskDefName: "compare_files",
+  concurrency: 10,
+  pollInterval: 1000,
   execute: async (task: Task) => {
     const records = task.inputData?.records as string[]
 

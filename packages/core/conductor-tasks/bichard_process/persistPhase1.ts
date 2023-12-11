@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
@@ -11,13 +10,10 @@ import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
 import { validPhase1ResultSchema } from "../../phase1/schemas/phase1Result"
 import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
 
-const taskDefName = "persist_phase1"
-
 const dbConfig = createDbConfig()
 
 const persistPhase1: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "persist_phase1",
   execute: s3TaskDataFetcher<PersistablePhase1Result>(validPhase1ResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
     const db = postgres(dbConfig)

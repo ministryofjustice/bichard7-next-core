@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
@@ -9,8 +8,6 @@ import getEmailer from "@moj-bichard7/common/email/getEmailer"
 import getSmtpConfig from "@moj-bichard7/common/email/getSmtpConfig"
 import { z } from "zod"
 import { errorReportDataSchema, type ErrorReportData } from "../types/errorReportData"
-
-const taskDefName = "alert_common_platform"
 
 const inputDataSchema = z.object({
   errorReportData: errorReportDataSchema
@@ -29,8 +26,8 @@ ${inputData.errorMessage}
   `
 
 const alertCommonPlatform: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "alert_common_platform",
+  pollInterval: 10000,
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { errorReportData } = task.inputData
 

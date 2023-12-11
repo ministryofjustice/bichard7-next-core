@@ -1,5 +1,4 @@
 import { ConductorClient, TaskManager } from "@io-orkes/conductor-javascript"
-import { defaultConcurrency } from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import logger from "@moj-bichard7/common/utils/logger"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/persistPhase1"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_process/processPhase1"
@@ -13,8 +12,8 @@ import createAuditLogRecord from "@moj-bichard7/core/conductor-tasks/incomingMes
 import compareFiles from "@moj-bichard7/core/phase1/comparison/conductor-tasks/compareFiles"
 import generateRerunTasks from "@moj-bichard7/core/phase1/comparison/conductor-tasks/generateRerunTasks"
 import rerunPeriod from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunPeriod"
-
-import { captureWorkerExceptions } from "./utils"
+import { captureWorkerExceptions } from "./captureWorkerExceptions"
+import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
 
 const client = new ConductorClient({
   serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
@@ -35,9 +34,14 @@ const tasks = [
   rerunPeriod,
   sendToPhase2,
   storeAuditLogEvents
-].map(captureWorkerExceptions)
+]
+  .map(captureWorkerExceptions)
+  .map(configureWorker)
 
-const taskManager = new TaskManager(client, tasks, { options: { concurrency: defaultConcurrency }, logger })
+const taskManager = new TaskManager(client, tasks, {
+  options: { concurrency: defaultConcurrency(), pollInterval: defaultPollInterval() },
+  logger
+})
 
 logger.info("Starting polling...")
 

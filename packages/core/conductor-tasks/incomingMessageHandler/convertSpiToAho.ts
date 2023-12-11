@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
@@ -119,11 +118,8 @@ const inputDataSchema = z.object({
 })
 type InputData = z.infer<typeof inputDataSchema>
 
-const taskDefName = "convert_spi_to_aho"
-
 const convertSpiToAho: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "convert_spi_to_aho",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { s3Path } = task.inputData
 

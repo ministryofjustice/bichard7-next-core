@@ -1,7 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
-import getTaskConcurrency from "@moj-bichard7/common/conductor/getTaskConcurrency"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
@@ -10,8 +9,6 @@ import { auditLogApiRecordInputSchema } from "@moj-bichard7/common/schemas/audit
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
-
-const taskDefName = "create_audit_log_record"
 
 const { apiKey, apiUrl } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000)
@@ -22,8 +19,7 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const createAuditLogRecord: ConductorWorker = {
-  taskDefName,
-  concurrency: getTaskConcurrency(taskDefName),
+  taskDefName: "create_audit_log_record",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { auditLogRecord } = task.inputData
 
