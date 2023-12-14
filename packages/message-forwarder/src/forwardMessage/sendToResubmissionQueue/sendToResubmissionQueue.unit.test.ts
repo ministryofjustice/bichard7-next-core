@@ -8,8 +8,7 @@ import logger from "@moj-bichard7/common/utils/logger"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue"
 
 describe("sendToResubmissionQueue", () => {
-  const stomp: { publish: jest.Func } = jest.createMockFromModule("../../createStompClient")
-  stomp.publish = jest.fn()
+  const stomp: { publish: jest.Func } = { publish: jest.fn() }
 
   afterEach(() => {
     jest.resetAllMocks()
