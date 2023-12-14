@@ -119,7 +119,8 @@ export default class AuditLogApiClient {
       })
   }
 
-  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<void> {
+  async createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<void> {
+    await Promise.resolve(process.nextTick(Boolean))
     return axios
       .post(`${this.apiUrl}/messages`, this.stringify(auditLog), {
         headers: {

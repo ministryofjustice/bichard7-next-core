@@ -10,6 +10,7 @@ import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
+import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -18,7 +19,6 @@ import axios from "axios"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import postgres from "postgres"
-import MqListener from "./helpers/mqListener"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
@@ -81,9 +81,9 @@ describe("bichard_process workflow", () => {
   let correlationId: string
   let s3TaskDataPath: string
 
-  beforeAll(async () => {
+  beforeAll(() => {
     mqListener = new MqListener(mqConfig)
-    await mqListener.listen("TEST_PHASE2_QUEUE")
+    mqListener.listen("TEST_PHASE2_QUEUE")
   })
 
   afterAll(() => {

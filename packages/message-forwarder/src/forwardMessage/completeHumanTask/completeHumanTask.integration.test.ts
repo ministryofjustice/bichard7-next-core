@@ -1,4 +1,4 @@
-import "../test/setup/setEnvironmentVariables"
+import "../../test/setup/setEnvironmentVariables"
 
 import { startWorkflow, type Workflow } from "@moj-bichard7/common/conductor/conductorApi"
 import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
@@ -11,10 +11,9 @@ import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
 import { completeHumanTask } from "./completeHumanTask"
 
-import successExceptionsAHO from "../test/fixtures/success-exceptions-aho.json"
-import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
-import successNoTriggersAHO from "../test/fixtures/success-no-triggers-aho.json"
-import successNoTriggersPNCMock from "../test/fixtures/success-no-triggers-aho.pnc.json"
+import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
+import successExceptionsAHOFixture from "../../test/fixtures/success-exceptions-aho.json"
+import successExceptionsPNCMock from "../../test/fixtures/success-exceptions-aho.pnc.json"
 
 const conductorConfig: ConductorConfig = {
   url: "http://localhost:5002",
@@ -26,16 +25,21 @@ describe("completeHumanTask", () => {
   let correlationId: string
   let s3TaskDataPath: string
 
+  let ignoredAHO: string
+  let successExceptionsAHO: string
+
   beforeEach(async () => {
     correlationId = randomUUID()
     s3TaskDataPath = `${randomUUID()}.json`
+
+    ignoredAHO = JSON.stringify(ignoredAHOFixture).replace("CORRELATION_ID", correlationId)
+    successExceptionsAHO = JSON.stringify(successExceptionsAHOFixture).replace("CORRELATION_ID", correlationId)
 
     await createAuditLogRecord(correlationId)
   })
 
   it("throws if no waiting task is found for the workflow", async () => {
-    await putIncomingMessageToS3(JSON.stringify(successNoTriggersAHO), s3TaskDataPath, correlationId)
-    await uploadPncMock(successNoTriggersPNCMock)
+    await putIncomingMessageToS3(ignoredAHO, s3TaskDataPath, correlationId)
 
     const workflowId = await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     await waitForCompletedWorkflow(s3TaskDataPath)

@@ -3,20 +3,29 @@ import createConductorConfig from "@moj-bichard7/common/conductor/createConducto
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { isError, type PromiseResult } from "../Result"
-import { completeHumanTask } from "./completeHumanTask"
-import { sendToResubmissionQueue } from "./sendToResubmissionQueue"
-import { startBichardProcess } from "./startBichardProcess"
+import { completeHumanTask } from "./completeHumanTask/completeHumanTask"
+import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
+import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
 
 const conductorConfig = createConductorConfig()
 
-const destinationType = process.env.DESTINATION_TYPE ?? "auto"
+enum DestinationType {
+  MQ = "mq",
+  AUTO = "auto",
+  CONDUCTOR = "conductor"
+}
 
 const forwardMessage = async (message: string, client: Client): PromiseResult<void> => {
+  const destinationType: DestinationType = (process.env.DESTINATION_TYPE ?? "auto") as DestinationType
+  if (!Object.values(DestinationType).includes(destinationType)) {
+    throw new Error(`Unsupported destination type: "${destinationType}"`)
+  }
+
   const aho = parseAhoXml(message)
   if (isError(aho)) {
     throw aho
   }
-  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID //?
 
   const maybeWorkflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
   if (isError(maybeWorkflow)) {
@@ -24,14 +33,17 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
   }
   const workflowExists = maybeWorkflow && "workflowId" in maybeWorkflow
 
-  if (destinationType === "mq" || (destinationType === "auto" && !workflowExists)) {
+  if (destinationType === DestinationType.MQ || (destinationType === DestinationType.AUTO && !workflowExists)) {
     return sendToResubmissionQueue(client, message, correlationId)
   }
 
   if (workflowExists) {
+    // only conductor beyond this point (auto with existing workflow, or explicitly routing to conductor)
     return completeHumanTask(maybeWorkflow, correlationId, conductorConfig)
   }
 
+  // this happens if a case was ingested originally by legacy phase 1
+  // and is now being forced to resubmit to conductor.
   return startBichardProcess(aho, correlationId, conductorConfig)
 }
 
