@@ -13,7 +13,7 @@ describe("captureWorkerExceptions", () => {
     const result = await wrappedWorker.execute({})
     expect(result).toHaveProperty("status", "FAILED")
     const logMessages = result.logs?.map((l) => l.log)
-    expect(logMessages).toHaveLength(1)
+    expect(logMessages).toHaveLength(2)
     expect(logMessages).toContain("Exception caught in test_task: Unhandled exception")
   })
 })
