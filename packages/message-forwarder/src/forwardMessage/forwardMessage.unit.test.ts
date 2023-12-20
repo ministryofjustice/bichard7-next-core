@@ -6,12 +6,10 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 
 import * as conductor from "@moj-bichard7/common/conductor/conductorApi"
-import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
 
-const mq = createMqConfig()
 const stomp = createStompClient()
 
 describe("forwardMessage", () => {

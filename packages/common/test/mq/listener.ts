@@ -8,11 +8,10 @@ Object.assign(global, { WebSocket: require("ws") })
 export default class MqListener {
   messages: string[] = []
 
-  client: Client
-
-  constructor(mqConfig: MqConfig) {
-    this.client = createStompClient(mqConfig)
-  }
+  constructor(
+    mqConfig: MqConfig,
+    public client: Client = createStompClient(mqConfig)
+  ) {}
 
   listen(queue: string) {
     this.client.onConnect = () => {
