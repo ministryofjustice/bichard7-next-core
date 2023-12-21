@@ -13,7 +13,7 @@ export const completeHumanTask = async (
 ) => {
   const task = await getWaitingTaskForWorkflow(workflowId, conductorConfig)
   if (!task) {
-    throw new Error("Task not found")
+    throw new Error(`Task not found for workflow id: ${workflowId}`)
   }
 
   await completeWaitingTask(workflowId, task.taskId, conductorConfig)
