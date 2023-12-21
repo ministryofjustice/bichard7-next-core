@@ -8,10 +8,10 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "start": "ts-node src/run.ts",
+    "start": "ts-node src/server.ts",
     "esbuild": "node build.js",
     "update-deps": "ncu -u && npm install",
-    "test": "jest --detectOpenHandles --forceExit --runInBand"
+    "test": "jest --detectOpenHandles --runInBand"
   },
   "license": "MIT",
   "exports": {

@@ -16,7 +16,7 @@ import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncoming
 import { randomUUID } from "crypto"
 import fs from "fs"
 import createStompClient from "./createStompClient"
-import { server } from "./server"
+import { messageForwarder } from "./messageForwarder"
 import successExceptionsAHOFixture from "./test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
 
@@ -26,17 +26,12 @@ const mqConfig = createMqConfig()
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 const conductorConfig = createConductorConfig()
 
-server()
-
 describe("Server in auto mode", () => {
   let messageData: string
   let correlationId: string
 
   beforeAll(async () => {
-    await new Promise((resolve) => {
-      client.onConnect = resolve
-      client.activate()
-    })
+    await messageForwarder(client)
   })
 
   afterAll(async () => {

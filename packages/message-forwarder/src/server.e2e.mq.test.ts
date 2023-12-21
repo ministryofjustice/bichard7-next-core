@@ -9,21 +9,16 @@ import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import fs from "fs"
 import createStompClient from "./createStompClient"
-import { server } from "./server"
+import { messageForwarder } from "./messageForwarder"
 
 const client = createStompClient()
 const mqConfig = createMqConfig()
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
-server()
-
 describe("Server in MQ mode", () => {
   beforeAll(async () => {
-    await new Promise((resolve) => {
-      client.onConnect = resolve
-      client.activate()
-    })
+    await messageForwarder(client)
   })
 
   afterAll(async () => {
