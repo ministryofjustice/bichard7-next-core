@@ -1,33 +1,25 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 
-import { Client } from "@stomp/stompjs"
-import { randomUUID } from "crypto"
-import fs from "fs"
-
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
 import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
-
-import forwardMessage from "./forwardMessage"
-
+import { Client } from "@stomp/stompjs"
+import { randomUUID } from "crypto"
+import fs from "fs"
 import createStompClient from "../createStompClient"
 import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
+import forwardMessage from "./forwardMessage"
 
 const mq = createMqConfig()
 const stomp = createStompClient()
-
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 describe("forwardMessage", () => {
   let mqListener: MqListener

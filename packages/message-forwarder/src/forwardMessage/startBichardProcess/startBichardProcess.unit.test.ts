@@ -1,18 +1,14 @@
 import "../../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "mq"
 
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 describe("forwardMessage", () => {
   afterEach(() => {

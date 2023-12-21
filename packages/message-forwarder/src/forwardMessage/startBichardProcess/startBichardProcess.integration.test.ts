@@ -1,20 +1,15 @@
 import "../../test/setup/setEnvironmentVariables"
 
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
+import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
-
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 describe("startBichardProcess", () => {
   let correlationId: string

@@ -1,7 +1,7 @@
 import "../../test/setup/setEnvironmentVariables"
 
 import { startWorkflow, type Workflow } from "@moj-bichard7/common/conductor/conductorApi"
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
@@ -9,17 +9,12 @@ import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
-import { completeHumanTask } from "./completeHumanTask"
-
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import successExceptionsAHOFixture from "../../test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "../../test/fixtures/success-exceptions-aho.pnc.json"
+import { completeHumanTask } from "./completeHumanTask"
 
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 describe("completeHumanTask", () => {
   let correlationId: string

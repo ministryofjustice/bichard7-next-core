@@ -6,8 +6,8 @@ process.env.SOURCE_QUEUE = sourceQueue
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 // import fs from "fs"
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
 import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
@@ -23,12 +23,7 @@ const client = createStompClient()
 const mqConfig = createMqConfig()
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
-
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 server()
 

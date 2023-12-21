@@ -1,23 +1,15 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
 
+import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
+import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
+import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
 import fs from "fs"
-
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
-import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
-
 import forwardMessage from "./forwardMessage"
 
-import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-// import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho.json"
-
-const conductorConfig: ConductorConfig = {
-  url: "http://localhost:5002",
-  username: "bichard",
-  password: "password"
-}
+const conductorConfig = createConductorConfig()
 
 describe("forwardMessage", () => {
   let correlationId: string
