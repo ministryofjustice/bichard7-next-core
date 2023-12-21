@@ -3,7 +3,7 @@ import promisePoller from "promise-poller"
 import type ConductorConfig from "../../conductor/ConductorConfig"
 import { getWaitingTaskForWorkflow, getWorkflowByCorrelationId } from "../../conductor/conductorApi"
 
-export const waitForHumanTask = (correlationId: string, config: ConductorConfig, iteration: number = 1) =>
+export const waitForHumanTask = (correlationId: string, config: ConductorConfig, iteration?: number) =>
   promisePoller({
     taskFn: async () => {
       const workflow = (await getWorkflowByCorrelationId(correlationId, config)) as Workflow
