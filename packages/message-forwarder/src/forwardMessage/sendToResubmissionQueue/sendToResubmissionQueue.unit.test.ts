@@ -26,6 +26,6 @@ describe("sendToResubmissionQueue", () => {
     const correlationId = randomUUID()
     sendToResubmissionQueue(stomp as Client, "", correlationId)
 
-    expect(logger.info).toHaveBeenCalledWith(`Sent message to MQ (${correlationId})`)
+    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq", correlationId })
   })
 })

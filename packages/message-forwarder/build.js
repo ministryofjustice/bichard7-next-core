@@ -1,5 +1,5 @@
 const buildOptions = {
-  entryPoints: ["src/server.ts"],
+  entryPoints: ["src/run.ts"],
   bundle: true,
   logLevel: "info",
   outdir: "build",

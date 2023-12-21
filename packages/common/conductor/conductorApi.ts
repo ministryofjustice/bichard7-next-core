@@ -33,14 +33,17 @@ export const getWorkflowByCorrelationId = (
 
 export const getWaitingTaskForWorkflow = (
   workflowId: string,
-  conductorConfig: ConductorConfig
+  conductorConfig: ConductorConfig,
+  iteration: number = 1
 ): Promise<Task | undefined> =>
   fetch(`${conductorConfig.url}/api/workflow/${workflowId}`, {
     headers: basicAuthHeaders(conductorConfig)
   })
     .then((result) => result.json())
     .then((json) =>
-      (json as Workflow).tasks.find((task: Task) => task.status === "IN_PROGRESS" && task.taskType === "HUMAN")
+      (json as Workflow).tasks.find(
+        (task: Task) => task.status === "IN_PROGRESS" && task.taskType === "HUMAN" && task.iteration === iteration
+      )
     )
 
 export const completeWaitingTask = (

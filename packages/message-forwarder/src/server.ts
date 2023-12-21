@@ -6,15 +6,15 @@ import forwardMessage from "./forwardMessage/forwardMessage"
 Object.assign(global, { WebSocket })
 
 const sourceQueue = process.env.SOURCE_QUEUE ?? "PHASE_1_RESUBMIT_QUEUE"
-const stomp = createStompClient()
+const client = createStompClient()
 
-export function activate(queue = sourceQueue, client = stomp) {
-  // make this transactional
+export function server() {
   client.onConnect = () => {
     logger.info("Connected to MQ")
     client.subscribe(
-      queue,
+      sourceQueue,
       async (message: Message) => {
+        const tx = client.begin()
         try {
           await forwardMessage(message.body, client)
           message.ack()
@@ -23,6 +23,7 @@ export function activate(queue = sourceQueue, client = stomp) {
           logger.info({ event: "message-forwarder:error-forwarding-message" })
           message.nack()
         }
+        tx.commit()
       },
       { ack: "client" }
     )
@@ -30,5 +31,3 @@ export function activate(queue = sourceQueue, client = stomp) {
 
   client.activate()
 }
-
-activate()

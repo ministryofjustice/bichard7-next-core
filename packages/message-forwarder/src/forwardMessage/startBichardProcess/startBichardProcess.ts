@@ -25,5 +25,5 @@ export const startBichardProcess = async (
   }
 
   await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-  logger.info(`Started new workflow in Conductor (${correlationId})`)
+  logger.info({ event: "message-forwarder:started-workflow", correlationId })
 }

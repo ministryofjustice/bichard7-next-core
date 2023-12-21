@@ -3,7 +3,7 @@ import promisePoller from "promise-poller"
 import type ConductorConfig from "../../conductor/ConductorConfig"
 import { getWaitingTaskForWorkflow, getWorkflowByCorrelationId } from "../../conductor/conductorApi"
 
-export const waitForHumanTask = (correlationId: string, config: ConductorConfig) =>
+export const waitForHumanTask = (correlationId: string, config: ConductorConfig, iteration: number = 1) =>
   promisePoller({
     taskFn: async () => {
       const workflow = (await getWorkflowByCorrelationId(correlationId, config)) as Workflow
@@ -11,7 +11,7 @@ export const waitForHumanTask = (correlationId: string, config: ConductorConfig)
         throw new Error("No workflow found for correlationId: " + correlationId)
       }
 
-      const task = await getWaitingTaskForWorkflow(workflow.workflowId, config)
+      const task = await getWaitingTaskForWorkflow(workflow.workflowId, config, iteration)
       if (!task) {
         throw new Error("No waiting task found")
       }
