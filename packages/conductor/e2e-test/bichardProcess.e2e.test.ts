@@ -68,7 +68,11 @@ describe("bichard_process workflow", () => {
   })
 
   it("should store audit logs and send to phase 2 if there are no triggers or exceptions", async () => {
-    await putIncomingMessageToS3("e2e-test/fixtures/success-no-triggers-aho.json", s3TaskDataPath, correlationId)
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/success-no-triggers-aho.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successNoTriggersPncMock)
     await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     await waitForCompletedWorkflow(s3TaskDataPath)
@@ -93,7 +97,11 @@ describe("bichard_process workflow", () => {
   })
 
   it("should persist the record and send to phase 2 if there are triggers but no exceptions", async () => {
-    await putIncomingMessageToS3("e2e-test/fixtures/only-triggers-aho.json", s3TaskDataPath, correlationId)
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/only-triggers-aho.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(onlyTriggersPncMock)
     await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     await waitForCompletedWorkflow(s3TaskDataPath)
@@ -120,7 +128,11 @@ describe("bichard_process workflow", () => {
   })
 
   it("should store audit logs and stop processing if the message is ignored", async () => {
-    await putIncomingMessageToS3("e2e-test/fixtures/ignored-aho.json", s3TaskDataPath, correlationId)
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/ignored-aho.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     await waitForCompletedWorkflow(s3TaskDataPath)
 
@@ -139,7 +151,11 @@ describe("bichard_process workflow", () => {
   })
 
   it("should wait for and process a resubmission if there are exceptions", async () => {
-    await putIncomingMessageToS3("e2e-test/fixtures/success-exceptions-aho.json", s3TaskDataPath, correlationId)
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/success-exceptions-aho.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPncMock)
     const workflowId = await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     const task = await waitForHumanTask(correlationId, conductorConfig)
@@ -177,7 +193,11 @@ describe("bichard_process workflow", () => {
   })
 
   it("should store audit logs if the record is manually resolved", async () => {
-    await putIncomingMessageToS3("e2e-test/fixtures/success-exceptions-aho.json", s3TaskDataPath, correlationId)
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/success-exceptions-aho.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPncMock)
     const workflowId = await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
     const task = await waitForHumanTask(correlationId, conductorConfig)
