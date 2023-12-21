@@ -17,6 +17,6 @@ RUN npm run esbuild -w packages/message-forwarder
 FROM ${BUILD_IMAGE}
 
 WORKDIR /message-forwarder
-COPY --from=builder /message-forwarder/packages/message-forwarder/build/server.js ./server.js
+COPY --from=builder /message-forwarder/packages/message-forwarder/build/run.js ./run.js
 
-CMD [ "node", "server.js" ]
+CMD [ "node", "run.js" ]
