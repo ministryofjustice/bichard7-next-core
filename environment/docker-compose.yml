@@ -9,6 +9,8 @@ services:
       ACTIVEMQ_PASSWORD: ${DEFAULT_PASSWORD}
       ACTIVEMQ_WEBADMIN_USERNAME: ${DEFAULT_USER}
       ACTIVEMQ_WEBADMIN_PASSWORD: ${DEFAULT_PASSWORD}
+    volumes:
+      - ./activemq/activemq.xml:/opt/activemq/conf/activemq.xml
     ports:
       - 61616:61616
       - 61614:61614
