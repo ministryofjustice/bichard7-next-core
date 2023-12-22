@@ -1,17 +1,17 @@
 import { type Workflow } from "@io-orkes/conductor-javascript"
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
-import { getWaitingTaskForWorkflow, getWorkflowByCorrelationId } from "@moj-bichard7/common/conductor/conductorApi"
 import promisePoller from "promise-poller"
+import type ConductorConfig from "../../conductor/ConductorConfig"
+import { getWaitingTaskForWorkflow, getWorkflowByCorrelationId } from "../../conductor/conductorApi"
 
-export const waitForHumanTask = (correlationId: string, config: ConductorConfig) =>
+export const waitForHumanTask = (correlationId: string, config: ConductorConfig, iteration?: number) =>
   promisePoller({
     taskFn: async () => {
       const workflow = (await getWorkflowByCorrelationId(correlationId, config)) as Workflow
-      if (!workflow || !workflow.workflowId) {
+      if (!workflow?.workflowId) {
         throw new Error("No workflow found for correlationId: " + correlationId)
       }
 
-      const task = await getWaitingTaskForWorkflow(workflow.workflowId, config)
+      const task = await getWaitingTaskForWorkflow(workflow.workflowId, config, iteration)
       if (!task) {
         throw new Error("No waiting task found")
       }

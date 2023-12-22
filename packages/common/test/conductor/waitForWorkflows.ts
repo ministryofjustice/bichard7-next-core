@@ -1,13 +1,10 @@
 import axios from "axios"
 import promisePoller from "promise-poller"
+import createConductorConfig from "../../conductor/createConductorConfig"
 
 const conductorUrl = process.env.CONDUCTOR_URL ?? "http://localhost:5002"
-const headers = {
-  auth: {
-    username: "bichard",
-    password: "password"
-  }
-}
+const { username, password } = createConductorConfig()
+const headers = { auth: { username, password } }
 
 export type WorkflowSearchParams = {
   freeText?: string

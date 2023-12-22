@@ -46,6 +46,7 @@
     "nodemailer": "^6.9.7",
     "pino": "^8.16.2",
     "postgres": "^3.4.3",
+    "promise-poller": "^1.9.1",
     "smtp-tester": "^2.1.0",
     "ws": "^8.15.0",
     "zod": "^3.22.4"

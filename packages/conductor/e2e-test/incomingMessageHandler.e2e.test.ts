@@ -6,12 +6,12 @@ import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogAp
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
+import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import waitForWorkflows from "./helpers/waitForWorkflows"
 
 const INCOMING_BUCKET_NAME = "incoming-messages"
 const s3Config = createS3Config()

@@ -1,14 +1,17 @@
 import type { PromiseResult } from "../types/Result"
 import type ConductorConfig from "./ConductorConfig"
 
-type Task = {
+export type Task = {
   status: string
   taskType: string
   taskId: string
+  correlationId: string
+  iteration: number
 }
 
-type Workflow = {
+export type Workflow = {
   tasks: Task[]
+  workflowId: string
 }
 
 const base64 = (input: string): string => Buffer.from(input).toString("base64")
@@ -20,7 +23,7 @@ const basicAuthHeaders = (conductorConfig: ConductorConfig) => ({
 export const getWorkflowByCorrelationId = (
   correlationId: string,
   conductorConfig: ConductorConfig
-): PromiseResult<object | undefined> =>
+): PromiseResult<Workflow | undefined> =>
   fetch(`${conductorConfig.url}/api/workflow/bichard_process/correlated/${correlationId}`, {
     headers: basicAuthHeaders(conductorConfig)
   })
@@ -30,14 +33,18 @@ export const getWorkflowByCorrelationId = (
 
 export const getWaitingTaskForWorkflow = (
   workflowId: string,
-  conductorConfig: ConductorConfig
+  conductorConfig: ConductorConfig,
+  iteration?: number
 ): Promise<Task | undefined> =>
   fetch(`${conductorConfig.url}/api/workflow/${workflowId}`, {
     headers: basicAuthHeaders(conductorConfig)
   })
     .then((result) => result.json())
     .then((json) =>
-      (json as Workflow).tasks.find((task: Task) => task.status === "IN_PROGRESS" && task.taskType === "HUMAN")
+      (json as Workflow).tasks.find(
+        (task: Task) =>
+          task.status === "IN_PROGRESS" && task.taskType === "HUMAN" && (!iteration || task.iteration === iteration)
+      )
     )
 
 export const completeWaitingTask = (
