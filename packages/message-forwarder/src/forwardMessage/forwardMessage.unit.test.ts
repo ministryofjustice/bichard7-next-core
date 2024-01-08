@@ -1,5 +1,5 @@
 import "../test/setup/setEnvironmentVariables"
-process.env.DESTINATION_TYPE = "mq"
+process.env.DESTINATION_TYPE = "auto"
 
 import { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
