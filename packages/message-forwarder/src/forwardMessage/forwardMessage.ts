@@ -21,30 +21,33 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
     throw new Error(`Unsupported destination type: "${destinationType}"`)
   }
 
-  const aho = parseAhoXml(message)
-  if (isError(aho)) {
-    throw aho
+  const maybeAHO = parseAhoXml(message)
+  if (isError(maybeAHO)) {
+    throw maybeAHO
   }
-  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID //?
+  const correlationId = maybeAHO.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+
+  if (destinationType === DestinationType.MQ) {
+    return sendToResubmissionQueue(client, message, correlationId)
+  }
 
   const maybeWorkflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
   if (isError(maybeWorkflow)) {
     throw maybeWorkflow
   }
-  const workflowExists = maybeWorkflow && "workflowId" in maybeWorkflow
 
-  if (destinationType === DestinationType.MQ || (destinationType === DestinationType.AUTO && !workflowExists)) {
+  const workflowExists = maybeWorkflow && "workflowId" in maybeWorkflow
+  if (destinationType === DestinationType.AUTO && !workflowExists) {
     return sendToResubmissionQueue(client, message, correlationId)
   }
 
   if (workflowExists) {
-    // only conductor beyond this point (auto with existing workflow, or explicitly routing to conductor)
     return completeHumanTask(maybeWorkflow, correlationId, conductorConfig)
   }
 
   // this happens if a case was ingested originally by legacy phase 1
   // and is now being forced to resubmit to conductor.
-  return startBichardProcess(aho, correlationId, conductorConfig)
+  return startBichardProcess(maybeAHO, correlationId, conductorConfig)
 }
 
 export default forwardMessage
