@@ -17,9 +17,9 @@ Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler S
   Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.EventLambda, Bichard.EventHandlerStepFunction.EventS3bucket, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventLambda, Bichard.EventHandlerStepFunction.EventS3bucket, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

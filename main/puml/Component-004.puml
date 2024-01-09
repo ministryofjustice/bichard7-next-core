@@ -18,10 +18,10 @@ Container_Boundary("Bichard.AuditLog_boundary", "Audit Log", $tags="") {
   Component(Bichard.AuditLog.DynamoDB, "DynamoDB", $techn="DynamoDB", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.AuditLog.AuditLogAPILambda, Bichard.AuditLog.DynamoDB, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.AuditLog.AuditLogAPILambda, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.AuditLog.AuditLogAPILambda, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.AuditLog.AuditLogAPIGateway, Bichard.AuditLog.AuditLogAPILambda, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog.AuditLogAPILambda, Bichard.AuditLog.DynamoDB, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog.AuditLogAPILambda, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog.AuditLogAPILambda, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog.AuditLogAPIGateway, Bichard.AuditLog.AuditLogAPILambda, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

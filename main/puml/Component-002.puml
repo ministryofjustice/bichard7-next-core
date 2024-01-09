@@ -20,14 +20,14 @@ Container_Boundary("Bichard.IncomingMessageHandlerStepFunction_boundary", "Incom
   Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $techn="", $tags="", $link="")
+Rel(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

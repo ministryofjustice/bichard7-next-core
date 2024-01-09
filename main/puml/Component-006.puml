@@ -21,14 +21,14 @@ Container_Boundary("Bichard.Reporting_boundary", "Reporting", $tags="") {
   Component(Bichard.Reporting.TopExceptionsReport, "Top Exceptions Report", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel_D(Bichard.AuditLog, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.AutomationReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.CommonPlatformReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.AutomationReport, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.TopExceptionsReport, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.CommonPlatformReport, Bichard.EmailSystem, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.MPSReport, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel_D(Bichard.Reporting.TopExceptionsReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.AutomationReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.CommonPlatformReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.AutomationReport, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.TopExceptionsReport, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.CommonPlatformReport, Bichard.EmailSystem, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.MPSReport, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Reporting.TopExceptionsReport, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml
