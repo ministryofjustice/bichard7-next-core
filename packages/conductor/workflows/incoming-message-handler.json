@@ -97,7 +97,8 @@
                     "category": "information",
                     "eventCode": "hearing-outcome.received-incoming",
                     "eventSource": "IncomingMessageHandler",
-                    "eventType": "Message received"
+                    "eventType": "Message received",
+                    "timestamp": "${convert_spi_to_aho.output.auditLogRecord.receivedDate}"
                   }
                 ]
               },
