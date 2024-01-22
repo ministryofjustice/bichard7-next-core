@@ -61,7 +61,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^20.11.1",
+    "@types/node": "^20.11.5",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -96,13 +96,13 @@
     "uuid": "^9.0.1"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.490.0",
-    "@aws-sdk/client-s3": "^3.490.0",
-    "@io-orkes/conductor-javascript": "^1.2.3",
+    "@aws-sdk/client-dynamodb": "^3.496.0",
+    "@aws-sdk/client-s3": "^3.496.0",
+    "@io-orkes/conductor-javascript": "^2.0.0",
     "@types/lodash.ismatch": "^4.4.9",
-    "aws-sdk": "^2.1536.0",
+    "aws-sdk": "^2.1540.0",
     "axios": "^1.6.5",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.136",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.137",
     "diff": "^5.1.0",
     "dynalite": "^3.2.2",
     "fast-xml-parser": "^4.3.3",
@@ -114,6 +114,6 @@
     "pretty-data": "^0.40.0",
     "stompit": "^1.0.0",
     "zod": "^3.22.4",
-    "zod-validation-error": "^2.1.0"
+    "zod-validation-error": "^3.0.0"
   }
 }
