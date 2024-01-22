@@ -281,7 +281,7 @@ services:
       MQ_URL: tcp://activemq:61613
       MQ_USER: ${DEFAULT_USER}
       MQ_PASSWORD: ${DEFAULT_PASSWORD}
-      PHASE_1_RESUBMIT_QUEUE_NAME: PHASE1_RESUBMIT_QUEUE
+      PHASE_1_RESUBMIT_QUEUE_NAME: PHASE_1_RESUBMIT_QUEUE
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       CONDUCTOR_API_URL: http://conductor:4000
       ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
