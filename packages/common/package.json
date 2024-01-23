@@ -38,8 +38,8 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.490.0",
-    "@io-orkes/conductor-javascript": "^1.2.3",
+    "@aws-sdk/client-s3": "^3.496.0",
+    "@io-orkes/conductor-javascript": "^2.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@types/nodemailer": "^6.4.14",
     "axios": "^1.6.5",
