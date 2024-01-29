@@ -8,7 +8,6 @@ services:
     command: "server debug defaultServer"
     environment:
       ENABLE_PHASE_1: "true"
-      PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/HearingOutcomeInputQueue"
       WLP_DEBUG_SUSPEND: "n"
       WLP_DEBUG_ADDRESS: "7777"
       WLP_DEBUG_REMOTE: "y"
