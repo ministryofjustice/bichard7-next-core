@@ -31,9 +31,9 @@ RETRIES=1
 until docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} -q
 do
     if [[ $RETRIES -gt 3 ]]; then break; fi
+    sleep 10
     echo "Retrying, attempt $RETRIES ..."
     ((RETRIES++))
-    sleep 10
 done
 
 docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} ${TAG} 1>/dev/null
