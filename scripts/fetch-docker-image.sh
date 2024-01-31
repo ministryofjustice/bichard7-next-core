@@ -33,7 +33,7 @@ do
     if [[ $RETRIES -gt 3 ]]; then break; fi
     echo "Retrying, attempt $RETRIES ..."
     ((RETRIES++))
-    sleep 1
+    sleep 10
 done
 
 docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} ${TAG} 1>/dev/null
