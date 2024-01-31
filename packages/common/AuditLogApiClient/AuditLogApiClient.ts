@@ -119,7 +119,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<void> {
+  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
     return axios
       .post(`${this.apiUrl}/messages`, this.stringify(auditLog), {
         headers: {
@@ -133,7 +133,7 @@ export default class AuditLogApiClient {
       .then((result) => {
         switch (result.status) {
           case HttpStatusCode.Created:
-            return undefined
+            return JSON.parse(result.data) as AuditLogApiRecordOutput
           default:
             return Error(`Error ${result.status}: ${result.data}`)
         }
