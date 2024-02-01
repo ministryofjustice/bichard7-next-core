@@ -88,7 +88,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessageByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
+  getMessagesByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
     const queryParams: string[] = [`messageHash=${messageHash}`]
 
     if (options?.includeColumns) {
@@ -106,7 +106,6 @@ export default class AuditLogApiClient {
         timeout: this.timeout
       })
       .then((response) => response.data)
-      .then((result) => result[0])
       .catch((error: AxiosError) => {
         if (error.response?.status === HttpStatusCode.NotFound) {
           return undefined
