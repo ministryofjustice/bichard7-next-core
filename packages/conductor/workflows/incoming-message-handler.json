@@ -3,7 +3,7 @@
   "updatedBy": "Workflow file: f5a9274c30e4b87e, Commit hash: 8d4e38f3",
   "accessPolicy": {},
   "name": "incoming_message_handler",
-  "description": "Converts the incoming message and starts the main bichard_process workflow",
+  "description": "Converts the incoming message and starts the main bichard_phase_1 workflow",
   "version": 4,
   "tasks": [
     {
@@ -103,7 +103,7 @@
                   "input": {
                     "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
                   },
-                  "name": "bichard_process"
+                  "name": "bichard_phase_1"
                 }
               },
               "type": "START_WORKFLOW",

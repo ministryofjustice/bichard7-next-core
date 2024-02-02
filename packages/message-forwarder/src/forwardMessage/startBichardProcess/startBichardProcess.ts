@@ -14,6 +14,7 @@ if (!taskDataBucket) {
 const s3Config = createS3Config()
 
 export const startBichardProcess = async (
+  workflowName: string,
   aho: AnnotatedHearingOutcome,
   correlationId: string,
   conductorConfig: ConductorConfig
@@ -24,6 +25,6 @@ export const startBichardProcess = async (
     throw putResult
   }
 
-  await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-  logger.info({ event: "message-forwarder:started-workflow", correlationId })
+  await startWorkflow(workflowName, { s3TaskDataPath }, correlationId, conductorConfig)
+  logger.info({ event: "message-forwarder:started-workflow", workflowName, s3TaskDataPath, correlationId })
 }

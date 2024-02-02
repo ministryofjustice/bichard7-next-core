@@ -1,15 +1,12 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
 
-import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
+import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import forwardMessage from "./forwardMessage"
-
-const conductorConfig = createConductorConfig()
 
 describe("forwardMessage", () => {
   let correlationId: string
@@ -26,7 +23,10 @@ describe("forwardMessage", () => {
     )
 
     await forwardMessage(resubmittedMessage, expect.any(Client))
-    const task1 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task1.iteration).toBe(1)
+    const workflows = await waitForWorkflows({
+      count: 1,
+      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
+    })
+    expect(workflows).toHaveLength(1)
   })
 })

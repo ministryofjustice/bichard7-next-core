@@ -25,7 +25,12 @@ describe("startBichardProcess", () => {
   })
 
   it("starts a new workflow with correlation ID from the aho", async () => {
-    await startBichardProcess(JSON.parse(ignoredAHO) as AnnotatedHearingOutcome, correlationId, conductorConfig)
+    await startBichardProcess(
+      "bichard_phase_1",
+      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      correlationId,
+      conductorConfig
+    )
 
     const workflow = await waitForCompletedWorkflow(correlationId)
     expect(workflow).toHaveProperty("correlationId", correlationId)
@@ -34,7 +39,19 @@ describe("startBichardProcess", () => {
   it("logs a completion metric", async () => {
     jest.spyOn(logger, "info")
 
-    await startBichardProcess(JSON.parse(ignoredAHO) as AnnotatedHearingOutcome, correlationId, conductorConfig)
-    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:started-workflow", correlationId })
+    await startBichardProcess(
+      "bichard_phase_1",
+      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      correlationId,
+      conductorConfig
+    )
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "message-forwarder:started-workflow",
+        correlationId,
+        workflowName: "bichard_phase_1",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
+      })
+    )
   })
 })

@@ -9,7 +9,7 @@ import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
 import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
+import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
@@ -43,7 +43,7 @@ describe("Server in auto mode", () => {
     messageData = resubmittedAho.replace("CORRELATION_ID", correlationId)
   })
 
-  it("completes a human task if the workflow exists", async () => {
+  it("starts a new workflow if the correlation ID exists in Conductor", async () => {
     const s3TaskDataPath = `${randomUUID()}.json`
     const successExceptionsAHO = JSON.stringify(successExceptionsAHOFixture).replace("CORRELATION_ID", correlationId)
 
@@ -51,15 +51,21 @@ describe("Server in auto mode", () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-    const task1 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task1.iteration).toBe(1)
+    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+
+    let workflows = await waitForWorkflows({
+      count: 1,
+      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
+    })
+    expect(workflows).toHaveLength(1)
 
     await client.publish({ destination: sourceQueue, body: messageData })
 
-    // if we complete the human task without fixing the AHO, it'll go round again
-    const task2 = await waitForHumanTask(correlationId, conductorConfig, 2)
-    expect(task2.iteration).toBe(2)
+    workflows = await waitForWorkflows({
+      count: 2,
+      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
+    })
+    expect(workflows).toHaveLength(2)
   })
 
   it("sends the message to the destination queue if no workflow exists", async () => {

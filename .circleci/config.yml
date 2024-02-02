@@ -298,7 +298,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: ENABLE_CORE_PHASE1="true" npm run all-no-worker
+          command: npm run all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -348,7 +348,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: ENABLE_CORE_PHASE1="true" npm run all-no-worker
+          command: npm run all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
