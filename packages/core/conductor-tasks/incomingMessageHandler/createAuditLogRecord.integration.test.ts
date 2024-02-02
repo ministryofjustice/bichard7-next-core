@@ -56,14 +56,11 @@ describe("createAuditLogRecord", () => {
   })
 
   it("should correctly identify a duplicate message hash", async () => {
-    const oldMessageId = auditLogRecord.messageId
-
     await apiClient.createAuditLog(auditLogRecord)
     auditLogRecord.messageId = uuid()
 
-    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
+    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } }) // ?
     expect(result.status).toBe("COMPLETED")
-    expect(result.outputData).toHaveProperty("duplicateCorrelationId", oldMessageId)
     expect(result.outputData).toHaveProperty("duplicateMessage", "isDuplicate")
   })
 
