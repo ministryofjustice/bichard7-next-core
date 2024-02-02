@@ -71,20 +71,7 @@
           },
           "type": "SWITCH",
           "decisionCases": {
-            "isDuplicate": [
-              {
-                "name": "store_audit_log_events",
-                "taskReferenceName": "record_duplicate_message",
-                "inputParameters": {
-                  "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
-                  "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
-                },
-                "type": "SIMPLE",
-                "startDelay": 0,
-                "optional": false,
-                "asyncComplete": false
-              }
-            ]
+            "isDuplicate": []
           },
           "defaultCase": [
             {
