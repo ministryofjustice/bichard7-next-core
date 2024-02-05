@@ -20,15 +20,15 @@ const basicAuthHeaders = (conductorConfig: ConductorConfig) => ({
   Authorization: `Basic ${base64(`${conductorConfig.username}:${conductorConfig.password}`)}`
 })
 
-export const getWorkflowByCorrelationId = (
+export const getWorkflowsByCorrelationId = (
+  workflowName: string,
   correlationId: string,
   conductorConfig: ConductorConfig
-): PromiseResult<Workflow | undefined> =>
-  fetch(`${conductorConfig.url}/api/workflow/bichard_process/correlated/${correlationId}`, {
+): PromiseResult<Workflow[]> =>
+  fetch(`${conductorConfig.url}/api/workflow/${workflowName}/correlated/${correlationId}?includeClosed=true`, {
     headers: basicAuthHeaders(conductorConfig)
   })
     .then((result) => result.json())
-    .then((json) => ((json as Workflow[]).length > 0 ? (json as Workflow[])[0] : undefined))
     .catch((e) => e as Error)
 
 export const getWaitingTaskForWorkflow = (

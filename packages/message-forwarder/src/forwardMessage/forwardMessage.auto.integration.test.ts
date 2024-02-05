@@ -1,11 +1,10 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 
-import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
+import { getWorkflowsByCorrelationId, startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
 import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
@@ -68,13 +67,13 @@ describe("forwardMessage", () => {
     expect(message).toMatch(correlationId)
   })
 
-  it("completes the human task if the workflow already exists", async () => {
+  it("starts another workflow if the correlation ID already exists", async () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-    const task1 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task1.iteration).toBe(1)
+    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+    let workflows = await getWorkflowsByCorrelationId("bichard_phase_1", correlationId, conductorConfig)
+    expect(workflows).toHaveLength(1)
 
     const resubmittedMessage = String(
       fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")
@@ -82,8 +81,7 @@ describe("forwardMessage", () => {
 
     await forwardMessage(resubmittedMessage, expect.any(Client))
 
-    // if we complete the human task without fixing the AHO, it'll go round again
-    const task2 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task2.iteration).toBe(2)
+    workflows = await getWorkflowsByCorrelationId("bichard_phase_1", correlationId, conductorConfig)
+    expect(workflows).toHaveLength(2)
   })
 })

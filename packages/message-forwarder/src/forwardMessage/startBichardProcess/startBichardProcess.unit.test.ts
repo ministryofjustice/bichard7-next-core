@@ -19,7 +19,12 @@ describe("forwardMessage", () => {
     jest.spyOn(putFileToS3, "default").mockReturnValue(Promise.resolve(new Error("Mock error")))
 
     await expect(() =>
-      startBichardProcess(ignoredAHOFixture as unknown as AnnotatedHearingOutcome, randomUUID(), conductorConfig)
+      startBichardProcess(
+        "bichard_phase_1",
+        ignoredAHOFixture as unknown as AnnotatedHearingOutcome,
+        randomUUID(),
+        conductorConfig
+      )
     ).rejects.toThrow("Mock error")
   })
 })

@@ -21,8 +21,8 @@ describe("forwardMessage", () => {
     await expect(forwardMessage("<>", expect.any(Client))).rejects.toThrow("Could not parse AHO XML")
   })
 
-  it("throws an exception if getWorkflowByCorrelationId returns an error", async () => {
-    jest.spyOn(conductor, "getWorkflowByCorrelationId").mockReturnValue(Promise.resolve(new Error("Mock error")))
+  it("throws an exception if getWorkflowsByCorrelationId returns an error", async () => {
+    jest.spyOn(conductor, "getWorkflowsByCorrelationId").mockReturnValue(Promise.resolve(new Error("Mock error")))
 
     const incomingMessage = String(fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")).replace(
       "CORRELATION_ID",

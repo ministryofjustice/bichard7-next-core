@@ -1,9 +1,8 @@
-import { getWorkflowByCorrelationId } from "@moj-bichard7/common/conductor/conductorApi"
+import { getWorkflowsByCorrelationId } from "@moj-bichard7/common/conductor/conductorApi"
 import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
-import { completeHumanTask } from "./completeHumanTask/completeHumanTask"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
 
@@ -31,23 +30,18 @@ const forwardMessage = async (message: string, client: Client): PromiseResult<vo
     return sendToResubmissionQueue(client, message, correlationId)
   }
 
-  const maybeWorkflow = await getWorkflowByCorrelationId(correlationId, conductorConfig)
-  if (isError(maybeWorkflow)) {
-    throw maybeWorkflow
+  const maybeWorkflows = await getWorkflowsByCorrelationId("bichard_phase_1", correlationId, conductorConfig)
+  if (isError(maybeWorkflows)) {
+    throw maybeWorkflows
   }
 
-  const workflowExists = maybeWorkflow && "workflowId" in maybeWorkflow
+  const workflowExists = maybeWorkflows && maybeWorkflows.length > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
     return sendToResubmissionQueue(client, message, correlationId)
   }
 
-  if (workflowExists) {
-    return completeHumanTask(maybeWorkflow, correlationId, conductorConfig)
-  }
-
-  // this happens if a case was ingested originally by legacy phase 1
-  // and is now being forced to resubmit to conductor.
-  return startBichardProcess(maybeAHO, correlationId, conductorConfig)
+  // start a new phase 1 workflow
+  return startBichardProcess("bichard_phase_1", maybeAHO, correlationId, conductorConfig)
 }
 
 export default forwardMessage

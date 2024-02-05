@@ -128,7 +128,7 @@ describe("Incoming message handler", () => {
     expect(duplicateMessage.status).toBe(AuditLogStatus.duplicate)
   })
 
-  it("creates audit log events and starts the bichard_process workflow if the message is valid", async () => {
+  it("creates audit log events and starts the bichard_phase_1 workflow if the message is valid", async () => {
     // start the workflow
     const externalId = randomUUID()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
@@ -163,11 +163,11 @@ describe("Incoming message handler", () => {
     expect(message).toHaveProperty("externalId", externalId)
     expect(message).toHaveProperty("caseId", "01ZD0303208")
 
-    // wait for bichard_process workflow to exist
+    // wait for bichard_phase_1 workflow to exist
 
     const bichardProcessWorkflows = await waitForWorkflows({
       query: {
-        workflowType: "bichard_process",
+        workflowType: "bichard_phase_1",
         correlationId: message.messageId
       }
     })

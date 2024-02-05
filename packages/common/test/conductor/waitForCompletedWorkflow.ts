@@ -4,7 +4,7 @@ export const waitForCompletedWorkflow = async (freeText: string, status: string 
   const [workflow] = await waitForWorkflows({
     freeText,
     query: {
-      workflowType: "bichard_process",
+      workflowType: "bichard_phase_1",
       status
     }
   })

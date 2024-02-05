@@ -8,6 +8,7 @@ const headers = { auth: { username, password } }
 
 export type WorkflowSearchParams = {
   freeText?: string
+  count?: number
   query: {
     workflowType?: string
     correlationId?: string
@@ -17,6 +18,7 @@ export type WorkflowSearchParams = {
 
 const searchWorkflows = async (params: WorkflowSearchParams) => {
   const queryChunks = []
+  const expectedHits = params.count ?? 1
 
   const { freeText } = params
   if (freeText) {
@@ -34,9 +36,10 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
 
   const response = await axios.get(`${conductorUrl}/api/workflow/search?${query}`, headers)
 
-  if (response.data.totalHits === 0) {
-    throw new Error("No workflows fetched")
+  if (response.data.totalHits < expectedHits) {
+    throw new Error("Not enough workflows fetched")
   }
+
   return response.data.results
 }
 
