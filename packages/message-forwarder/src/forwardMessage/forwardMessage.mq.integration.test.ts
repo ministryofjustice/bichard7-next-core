@@ -10,9 +10,11 @@ import MqListener from "@moj-bichard7/common/test/mq/listener"
 
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const mq = createMqConfig()
-const stomp = createStompClient()
+const stompClient = createStompClient()
+const conductorClient = createConductorClient()
 
 describe("forwardMessage", () => {
   let mqListener: MqListener
@@ -22,7 +24,7 @@ describe("forwardMessage", () => {
     mqListener = new MqListener(mq)
     mqListener.listen("TEST_HEARING_OUTCOME_INPUT_QUEUE")
 
-    stomp.activate()
+    stompClient.activate()
   })
 
   beforeEach(async () => {
@@ -38,7 +40,7 @@ describe("forwardMessage", () => {
 
   afterAll(async () => {
     mqListener.stop()
-    await stomp.deactivate()
+    await stompClient.deactivate()
   })
 
   it("sends the message to the resubmission queue if the destination type is MQ", async () => {
@@ -46,7 +48,7 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stomp)
+    await forwardMessage(incomingMessage, stompClient, conductorClient)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)

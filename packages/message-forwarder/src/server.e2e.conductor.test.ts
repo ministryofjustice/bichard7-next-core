@@ -5,7 +5,6 @@ process.env.SOURCE_QUEUE = sourceQueue
 
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
-// import fs from "fs"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
@@ -14,9 +13,11 @@ import fs from "fs"
 import createStompClient from "./createStompClient"
 import { messageForwarder } from "./messageForwarder"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const client = createStompClient()
+const stompClient = createStompClient()
 const mqConfig = createMqConfig()
+const conductorClient = createConductorClient()
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
@@ -25,11 +26,11 @@ describe("Server in conductor mode", () => {
   let correlationId: string
 
   beforeAll(async () => {
-    await messageForwarder(client)
+    await messageForwarder(stompClient, conductorClient)
   })
 
   afterAll(async () => {
-    await client.deactivate()
+    await stompClient.deactivate()
   })
 
   beforeEach(() => {
@@ -41,15 +42,16 @@ describe("Server in conductor mode", () => {
     await createAuditLogRecord(correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await client.publish({ destination: sourceQueue, body: messageData })
+    stompClient.publish({ destination: sourceQueue, body: messageData })
 
-    await waitForCompletedWorkflow(correlationId)
+    const workflow = await waitForCompletedWorkflow(correlationId)
+    expect(workflow).toBeDefined()
   })
 
   it("puts the message on a failure queue if there is an exception", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(`${sourceQueue}.FAILURE`)
-    await client.publish({ destination: sourceQueue, body: "BAD DATA" })
+    stompClient.publish({ destination: sourceQueue, body: "BAD DATA" })
     const message = await mqListener.waitForMessage()
     expect(message).toBe("BAD DATA")
     mqListener.stop()

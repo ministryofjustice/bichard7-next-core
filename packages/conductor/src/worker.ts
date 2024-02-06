@@ -1,4 +1,4 @@
-import { ConductorClient, TaskManager } from "@io-orkes/conductor-javascript"
+import { TaskManager } from "@io-orkes/conductor-javascript"
 import logger from "@moj-bichard7/common/utils/logger"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/persistPhase1"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/processPhase1"
@@ -13,13 +13,9 @@ import generateRerunTasks from "@moj-bichard7/core/phase1/comparison/conductor-t
 import rerunPeriod from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunPeriod"
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const client = new ConductorClient({
-  serverUrl: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
-  USERNAME: process.env.CONDUCTOR_USERNAME,
-  PASSWORD: process.env.CONDUCTOR_PASSWORD
-})
-
+const client = createConductorClient()
 const tasks = [
   alertCommonPlatform,
   compareFiles,

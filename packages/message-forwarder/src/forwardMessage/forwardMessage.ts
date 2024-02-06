@@ -1,12 +1,9 @@
-import { getWorkflowsByCorrelationId } from "@moj-bichard7/common/conductor/conductorApi"
-import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
-
-const conductorConfig = createConductorConfig()
+import type { ConductorClient } from "@io-orkes/conductor-javascript"
 
 enum DestinationType {
   MQ = "mq",
@@ -14,34 +11,40 @@ enum DestinationType {
   CONDUCTOR = "conductor"
 }
 
-const forwardMessage = async (message: string, client: Client): PromiseResult<void> => {
+const forwardMessage = async (
+  message: string,
+  stompClient: Client,
+  conductorClient: ConductorClient
+): PromiseResult<void> => {
   const destinationType: DestinationType = (process.env.DESTINATION_TYPE ?? "auto") as DestinationType
   if (!Object.values(DestinationType).includes(destinationType)) {
-    throw new Error(`Unsupported destination type: "${destinationType}"`)
+    return new Error(`Unsupported destination type: "${destinationType}"`)
   }
 
-  const maybeAHO = parseAhoXml(message)
-  if (isError(maybeAHO)) {
-    throw maybeAHO
+  const aho = parseAhoXml(message)
+  if (isError(aho)) {
+    return aho
   }
-  const correlationId = maybeAHO.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   if (destinationType === DestinationType.MQ) {
-    return sendToResubmissionQueue(client, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId)
   }
 
-  const maybeWorkflows = await getWorkflowsByCorrelationId("bichard_phase_1", correlationId, conductorConfig)
-  if (isError(maybeWorkflows)) {
-    throw maybeWorkflows
+  const workflows = await conductorClient.workflowResource
+    .getWorkflows1("bichard_phase_1", correlationId, true)
+    .catch((e) => e as Error)
+  if (isError(workflows)) {
+    return workflows
   }
 
-  const workflowExists = maybeWorkflows && maybeWorkflows.length > 0
+  const workflowExists = workflows && workflows.length > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
-    return sendToResubmissionQueue(client, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId)
   }
 
   // start a new phase 1 workflow
-  return startBichardProcess("bichard_phase_1", maybeAHO, correlationId, conductorConfig)
+  return startBichardProcess("bichard_phase_1", aho, correlationId, conductorClient)
 }
 
 export default forwardMessage

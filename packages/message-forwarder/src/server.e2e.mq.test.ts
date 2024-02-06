@@ -10,25 +10,27 @@ import MqListener from "@moj-bichard7/common/test/mq/listener"
 import fs from "fs"
 import createStompClient from "./createStompClient"
 import { messageForwarder } from "./messageForwarder"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const client = createStompClient()
+const stompClient = createStompClient()
 const mqConfig = createMqConfig()
+const conductorClient = createConductorClient()
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
 describe("Server in MQ mode", () => {
   beforeAll(async () => {
-    await messageForwarder(client)
+    await messageForwarder(stompClient, conductorClient)
   })
 
   afterAll(async () => {
-    await client.deactivate()
+    await stompClient.deactivate()
   })
 
   it("sends the message to the destination queue", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(destinationQueue)
-    await client.publish({ destination: sourceQueue, body: resubmittedAho })
+    await stompClient.publish({ destination: sourceQueue, body: resubmittedAho })
     const message = await mqListener.waitForMessage()
     expect(message).toEqual(resubmittedAho)
     mqListener.stop()
@@ -37,7 +39,7 @@ describe("Server in MQ mode", () => {
   it("puts the message on a failure queue if there is an exception", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(`${sourceQueue}.FAILURE`)
-    await client.publish({ destination: sourceQueue, body: "BAD DATA" })
+    await stompClient.publish({ destination: sourceQueue, body: "BAD DATA" })
     const message = await mqListener.waitForMessage()
     expect(message).toBe("BAD DATA")
     mqListener.stop()
