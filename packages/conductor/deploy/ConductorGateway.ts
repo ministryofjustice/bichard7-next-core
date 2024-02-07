@@ -13,7 +13,7 @@ class ConductorGateway {
 
   getWorkflow(name: string): Promise<WorkflowDef | undefined> {
     return axios
-      .get<WorkflowDef>(`${this.conductorOptions.url}/api/metadata/workflow/${name}`, {
+      .get<WorkflowDef>(`${this.conductorOptions.url}/metadata/workflow/${name}`, {
         auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
         validateStatus: (status: number) => status >= 200 && status < 500
       })
@@ -28,7 +28,7 @@ class ConductorGateway {
 
   getTask(name: string): Promise<TaskDef | undefined> {
     return axios
-      .get<TaskDef>(`${this.conductorOptions.url}/api/metadata/taskdefs/${name}`, {
+      .get<TaskDef>(`${this.conductorOptions.url}/metadata/taskdefs/${name}`, {
         auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
         validateStatus: (status: number) => status >= 200 && status < 500
       })
@@ -43,7 +43,7 @@ class ConductorGateway {
 
   getEventHandler(event: string, name: string): Promise<EventHandlerDef | undefined> {
     return axios
-      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/api/event/${event}`, {
+      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/event/${event}`, {
         auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
         validateStatus: (status: number) => status >= 200 && status < 500
       })
@@ -58,7 +58,7 @@ class ConductorGateway {
 
   putWorkflow(definition: WorkflowDef): Promise<void> {
     return axios
-      .put(`${this.conductorOptions.url}/api/metadata/workflow`, [definition], {
+      .put(`${this.conductorOptions.url}/metadata/workflow`, [definition], {
         auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
         headers: { "Content-Type": "application/json" }
       })
@@ -70,7 +70,7 @@ class ConductorGateway {
 
   postTask(definition: TaskDef): Promise<void | AxiosResponse> {
     return axios
-      .post(`${this.conductorOptions.url}/api/metadata/taskdefs`, [definition], {
+      .post(`${this.conductorOptions.url}/metadata/taskdefs`, [definition], {
         auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
         headers: { "Content-Type": "application/json" }
       })
@@ -80,14 +80,14 @@ class ConductorGateway {
   }
 
   postEventHandler(definition: EventHandlerDef): Promise<void> {
-    return axios.post(`${this.conductorOptions.url}/api/event`, definition, {
+    return axios.post(`${this.conductorOptions.url}/event`, definition, {
       auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
       headers: { "Content-Type": "application/json" }
     })
   }
 
   putEventHandler(definition: EventHandlerDef): Promise<void> {
-    return axios.put(`${this.conductorOptions.url}/api/event`, definition, {
+    return axios.put(`${this.conductorOptions.url}/event`, definition, {
       auth: { username: this.conductorOptions.username, password: this.conductorOptions.password },
       headers: { "Content-Type": "application/json" }
     })

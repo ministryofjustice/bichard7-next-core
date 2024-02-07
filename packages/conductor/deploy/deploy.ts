@@ -9,7 +9,7 @@ const taskDir = "./tasks"
 const eventHandlerDir = "./event-handlers"
 
 const conductor = new ConductorGateway({
-  url: process.env.CONDUCTOR_URL ?? "http://localhost:5002",
+  url: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
   username: process.env.CONDUCTOR_USERNAME ?? "bichard",
   password: process.env.CONDUCTOR_PASSWORD ?? "password"
 })

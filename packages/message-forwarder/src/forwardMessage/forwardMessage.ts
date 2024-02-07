@@ -1,9 +1,9 @@
+import type { ConductorClient } from "@io-orkes/conductor-javascript"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/phase1/parse/parseAhoXml/parseAhoXml"
 import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
 
 enum DestinationType {
   MQ = "mq",
@@ -32,7 +32,7 @@ const forwardMessage = async (
   }
 
   const workflows = await conductorClient.workflowResource
-    .getWorkflows1("bichard_phase_1", correlationId, true)
+    .getWorkflows1("bichard_phase_1", correlationId, true, false)
     .catch((e) => e as Error)
   if (isError(workflows)) {
     return workflows

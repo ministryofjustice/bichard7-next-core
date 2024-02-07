@@ -30,7 +30,7 @@ services:
       context: ..
     environment:
       DESTINATION_TYPE: auto
-      CONDUCTOR_URL: http://conductor:4000
+      CONDUCTOR_URL: http://conductor:4000/api
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
