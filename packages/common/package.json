@@ -43,7 +43,7 @@
     "@stomp/stompjs": "^7.0.0",
     "@types/nodemailer": "^6.4.14",
     "axios": "^1.6.5",
-    "nodemailer": "^6.9.8",
+    "nodemailer": "^6.9.9",
     "pino": "^8.17.2",
     "postgres": "^3.4.3",
     "promise-poller": "^1.9.1",
