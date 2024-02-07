@@ -1,10 +1,7 @@
-import axios from "axios"
 import promisePoller from "promise-poller"
-import createConductorConfig from "../../conductor/createConductorConfig"
+import createConductorClient from "../../conductor/createConductorClient"
 
-const conductorUrl = process.env.CONDUCTOR_URL ?? "http://localhost:5002"
-const { username, password } = createConductorConfig()
-const headers = { auth: { username, password } }
+const conductorClient = createConductorClient()
 
 export type WorkflowSearchParams = {
   freeText?: string
@@ -17,30 +14,29 @@ export type WorkflowSearchParams = {
 }
 
 const searchWorkflows = async (params: WorkflowSearchParams) => {
-  const queryChunks = []
   const expectedHits = params.count ?? 1
 
   const { freeText } = params
-  if (freeText) {
-    queryChunks.push(`freeText="${freeText}`)
-  }
 
   const queryString = Object.entries(params.query)
     .map(([k, v]) => `${k}=${v}`)
     .join(" AND ")
-  if (queryString !== "") {
-    queryChunks.push(`query="${queryString}`)
-  }
+  const query = queryString !== "" ? queryString : undefined
 
-  const query = queryChunks.join("&")
+  const response = await conductorClient.workflowResource.search1(
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    freeText,
+    query
+  )
 
-  const response = await axios.get(`${conductorUrl}/api/workflow/search?${query}`, headers)
-
-  if (response.data.totalHits < expectedHits) {
+  if (!response.results || response.results.length < expectedHits) {
     throw new Error("Not enough workflows fetched")
   }
 
-  return response.data.results
+  return response.results
 }
 
 const waitForWorkflows = (query: WorkflowSearchParams) =>
