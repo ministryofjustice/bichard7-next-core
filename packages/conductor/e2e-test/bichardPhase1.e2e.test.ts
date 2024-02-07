@@ -1,8 +1,7 @@
 import "./helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
-import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
-import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -23,7 +22,7 @@ import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.jso
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
-const conductorConfig = createConductorConfig()
+const conductorClient = createConductorClient()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
 
 const dbConfig = createDbConfig()
@@ -37,6 +36,9 @@ const getAuditLogs = async (correlationId: string) => {
   }
   return auditLog.events.map((e) => e.eventCode)
 }
+
+const startWorkflow = (s3TaskDataPath: string, correlationId: string) =>
+  conductorClient.workflowResource.startWorkflow1("bichard_phase_1", { s3TaskDataPath }, undefined, correlationId)
 
 describe("bichard_phase_1 workflow", () => {
   let mqListener: MqListener
@@ -70,7 +72,7 @@ describe("bichard_phase_1 workflow", () => {
     )
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successNoTriggersPncMock)
-    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+    await startWorkflow(s3TaskDataPath, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath)
 
     // Make sure it hasn't been persisted
@@ -99,7 +101,7 @@ describe("bichard_phase_1 workflow", () => {
     )
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(onlyTriggersPncMock)
-    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+    await startWorkflow(s3TaskDataPath, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath)
 
     // Make sure it has been persisted
@@ -129,7 +131,7 @@ describe("bichard_phase_1 workflow", () => {
       correlationId
     )
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
-    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+    await startWorkflow(s3TaskDataPath, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath)
 
     // Make sure it hasn't been persisted
@@ -153,7 +155,7 @@ describe("bichard_phase_1 workflow", () => {
     )
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPncMock)
-    await startWorkflow("bichard_phase_1", { s3TaskDataPath }, correlationId, conductorConfig)
+    await startWorkflow(s3TaskDataPath, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath)
 
     // Make sure it has been persisted
