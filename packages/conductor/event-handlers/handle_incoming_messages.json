@@ -8,7 +8,8 @@
       "action": "start_workflow",
       "start_workflow": {
         "name": "incoming_message_handler",
-        "input": { "s3Path": "${detail.object.key}" }
+        "input": { "s3Path": "${detail.object.key}" },
+        "correlationId": "${id}"
       }
     }
   ]

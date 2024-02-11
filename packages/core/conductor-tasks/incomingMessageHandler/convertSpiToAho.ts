@@ -34,7 +34,7 @@ if (!outgoingBucket) {
 }
 
 type MessageMetadata = {
-  messageId: string
+  correlationId: string
   externalId: string
   receivedDate: Date
 }
@@ -61,7 +61,7 @@ const fallbackAuditLogRecord = (
     ptiUrn = extractXMLEntityContent(stream, "PTIURN")
   }
 
-  const { externalId, messageId, receivedDate } = messageMetadata
+  const { externalId, correlationId, receivedDate } = messageMetadata
 
   return {
     caseId: ptiUrn,
@@ -70,7 +70,7 @@ const fallbackAuditLogRecord = (
     externalId: externalId,
     isSanitised: 0,
     messageHash: uuid(),
-    messageId,
+    messageId: correlationId,
     receivedDate: receivedDate.toISOString(),
     s3Path,
     systemId
@@ -83,7 +83,7 @@ const buildParsingFailedOutput = (
   s3Path: string,
   errorMessage: string
 ) => {
-  const { messageId, externalId, receivedDate } = messageMetadata
+  const { correlationId, externalId, receivedDate } = messageMetadata
 
   const auditLogRecord = fallbackAuditLogRecord(message, messageMetadata, s3Path)
   if (isError(auditLogRecord)) {
@@ -91,7 +91,7 @@ const buildParsingFailedOutput = (
   }
 
   return {
-    correlationId: messageId,
+    correlationId,
     error: "parsing_failed",
     auditLogRecord,
     auditLogEvents: [
@@ -105,7 +105,7 @@ const buildParsingFailedOutput = (
     ],
     errorReportData: {
       receivedDate: receivedDate.toISOString(),
-      messageId,
+      messageId: correlationId,
       externalId,
       ptiUrn: auditLogRecord.caseId,
       errorMessage
@@ -114,6 +114,7 @@ const buildParsingFailedOutput = (
 }
 
 const inputDataSchema = z.object({
+  correlationId: z.string(),
   s3Path: z.string()
 })
 type InputData = z.infer<typeof inputDataSchema>
@@ -121,7 +122,7 @@ type InputData = z.infer<typeof inputDataSchema>
 const convertSpiToAho: ConductorWorker = {
   taskDefName: "convert_spi_to_aho",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { s3Path } = task.inputData
+    const { s3Path, correlationId } = task.inputData
 
     const s3Config = createS3Config()
     const s3FileResult = await getFileFromS3(s3Path, incomingBucket, s3Config)
@@ -129,7 +130,6 @@ const convertSpiToAho: ConductorWorker = {
       return failed("Could not retrieve file from S3", s3FileResult.message)
     }
 
-    const messageId = uuid()
     const s3PathResult = parseS3Path(s3Path)
     if (isError(s3PathResult)) {
       return failed("Failed to parse S3 path", s3PathResult.message)
@@ -142,7 +142,7 @@ const convertSpiToAho: ConductorWorker = {
       return completed(
         buildParsingFailedOutput(
           s3FileResult,
-          { messageId, externalId, receivedDate },
+          { correlationId, externalId, receivedDate },
           s3Path,
           transformResult.message
         ),
@@ -157,9 +157,9 @@ const convertSpiToAho: ConductorWorker = {
     // We replace the correlation ID to ensure it
     // doesn't clash with any other records in the database
     const externalCorrelationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = messageId
+    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID = correlationId
 
-    const putPath = `${messageId}.json`
+    const putPath = `${correlationId}.json`
     const maybeError = await putFileToS3(JSON.stringify(aho), putPath, outgoingBucket, s3Config)
     if (isError(maybeError)) {
       logger.error(maybeError)
@@ -167,7 +167,6 @@ const convertSpiToAho: ConductorWorker = {
     }
 
     const outputData = {
-      correlationId: messageId,
       s3TaskDataPath: putPath,
       auditLogRecord: {
         caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
@@ -176,7 +175,7 @@ const convertSpiToAho: ConductorWorker = {
         externalId,
         isSanitised: 0,
         messageHash,
-        messageId,
+        messageId: correlationId,
         receivedDate,
         s3Path,
         systemId
