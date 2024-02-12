@@ -10,6 +10,7 @@
       "name": "convert_spi_to_aho",
       "taskReferenceName": "convert_spi_to_aho",
       "inputParameters": {
+        "correlationId": "${workflow.correlationId}",
         "s3Path": "${workflow.input.s3Path}"
       },
       "type": "SIMPLE",
@@ -41,7 +42,7 @@
             "name": "store_audit_log_events",
             "taskReferenceName": "record_parsing_failure",
             "inputParameters": {
-              "correlationId": "${convert_spi_to_aho.output.correlationId}",
+              "correlationId": "${workflow.correlationId}",
               "auditLogEvents": "${convert_spi_to_aho.output.auditLogEvents}"
             },
             "type": "SIMPLE",
@@ -78,7 +79,7 @@
               "name": "store_audit_log_events",
               "taskReferenceName": "record_message_received",
               "inputParameters": {
-                "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                "correlationId": "${workflow.correlationId}",
                 "auditLogEvents": [
                   {
                     "category": "information",
@@ -99,7 +100,7 @@
               "taskReferenceName": "begin_processing",
               "inputParameters": {
                 "startWorkflow": {
-                  "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                  "correlationId": "${workflow.correlationId}",
                   "input": {
                     "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
                   },
