@@ -6,6 +6,7 @@ import { AuditLogEventSource, auditLogEventLookup, type AuditLogEvent } from "@m
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import MqGateway from "../../lib/mq/MqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import { phase1SuccessResultSchema } from "../../phase1/schemas/phase1Result"
@@ -23,7 +24,8 @@ const sendToPhase2: ConductorWorker = {
 
     const result = await mqGateway.sendMessage(convertAhoToXml(s3TaskData.hearingOutcome), mqQueue)
     if (isError(result)) {
-      return failed("Failed to write to MQ")
+      logger.error({ message: result.message })
+      return failed("Failed to write to MQ", result.message)
     }
 
     const auditLog: AuditLogEvent = {
