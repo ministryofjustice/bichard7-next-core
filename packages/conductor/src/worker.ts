@@ -1,4 +1,5 @@
 import { TaskManager } from "@io-orkes/conductor-javascript"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import logger from "@moj-bichard7/common/utils/logger"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/persistPhase1"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/processPhase1"
@@ -13,7 +14,6 @@ import generateRerunTasks from "@moj-bichard7/core/phase1/comparison/conductor-t
 import rerunPeriod from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunPeriod"
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const client = createConductorClient()
 const tasks = [

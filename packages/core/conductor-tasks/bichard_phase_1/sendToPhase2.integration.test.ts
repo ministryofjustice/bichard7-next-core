@@ -14,7 +14,7 @@ import sendToPhase2 from "./sendToPhase2"
 const queueName = process.env.PHASE_2_QUEUE_NAME
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
 
-const testMqGateway = new TestMqGateway(createMqConfig())
+const testMqGateway = new TestMqGateway({ ...createMqConfig(), url: "failover:(ws://localhost:61613)" })
 
 describe("sendToPhase2", () => {
   beforeEach(async () => {
