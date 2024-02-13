@@ -6,14 +6,12 @@ import { AuditLogEventSource, auditLogEventLookup, type AuditLogEvent } from "@m
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import MqGateway from "../../lib/mq/MqGateway"
-import createMqConfig from "../../lib/mq/createMqConfig"
+import logger from "@moj-bichard7/common/utils/logger"
+import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import { phase1SuccessResultSchema } from "../../phase1/schemas/phase1Result"
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
 import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 
-const mqConfig = createMqConfig()
-const mqGateway = new MqGateway(mqConfig)
 const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
 const sendToPhase2: ConductorWorker = {
@@ -21,9 +19,12 @@ const sendToPhase2: ConductorWorker = {
   execute: s3TaskDataFetcher<Phase1SuccessResult>(phase1SuccessResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
 
-    const result = await mqGateway.sendMessage(convertAhoToXml(s3TaskData.hearingOutcome), mqQueue)
+    const result = await connectAndSendMessage(mqQueue, convertAhoToXml(s3TaskData.hearingOutcome)).catch(
+      (e) => e as Error
+    )
     if (isError(result)) {
-      return failed("Failed to write to MQ")
+      logger.error({ message: result.message, stack: result.stack })
+      return failed("Failed to write to MQ", result.message)
     }
 
     const auditLog: AuditLogEvent = {
