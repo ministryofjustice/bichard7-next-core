@@ -6,6 +6,6 @@
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
-  "inputKeys": ["s3Path"],
-  "outputKeys": ["s3TaskDataPath", "auditLogRecord", "auditLogEvents", "error", "correlationId"]
+  "inputKeys": ["correlationId", "s3Path"],
+  "outputKeys": ["s3TaskDataPath", "auditLogRecord", "auditLogEvents", "error"]
 }

@@ -2,20 +2,26 @@ import logger from "@moj-bichard7/common/utils/logger"
 import type { Client, Message } from "@stomp/stompjs"
 import { WebSocket } from "ws"
 import forwardMessage from "./forwardMessage/forwardMessage"
+import { isError } from "@moj-bichard7/common/types/Result"
+import type { ConductorClient } from "@io-orkes/conductor-javascript"
 Object.assign(global, { WebSocket })
 
 const sourceQueue = process.env.SOURCE_QUEUE ?? "PHASE_1_RESUBMIT_QUEUE"
 
-export function messageForwarder(client: Client): Promise<void> {
+export function messageForwarder(stompClient: Client, conductorClient: ConductorClient): Promise<void> {
   return new Promise((resolve) => {
-    client.onConnect = () => {
+    stompClient.onConnect = () => {
       logger.info("Connected to MQ")
-      client.subscribe(
+      stompClient.subscribe(
         sourceQueue,
         async (message: Message) => {
-          const tx = client.begin()
+          const tx = stompClient.begin()
           try {
-            await forwardMessage(message.body, client)
+            const forwardMessageResult = await forwardMessage(message.body, stompClient, conductorClient)
+            if (isError(forwardMessageResult)) {
+              throw forwardMessageResult
+            }
+
             message.ack()
           } catch (e) {
             logger.error(e)
@@ -29,6 +35,6 @@ export function messageForwarder(client: Client): Promise<void> {
       resolve()
     }
 
-    client.activate()
+    stompClient.activate()
   })
 }

@@ -1,4 +1,5 @@
 enum AuditLogStatus {
+  duplicate = "Duplicate",
   processing = "Processing",
   retrying = "Retrying",
   completed = "Completed",

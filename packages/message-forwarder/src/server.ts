@@ -1,6 +1,8 @@
 import createStompClient from "./createStompClient"
 import { messageForwarder } from "./messageForwarder"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const client = createStompClient()
+const stompClient = createStompClient()
+const conductorClient = createConductorClient()
 
-messageForwarder(client)
+messageForwarder(stompClient, conductorClient)

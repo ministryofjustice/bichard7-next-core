@@ -16,8 +16,8 @@ if [[ -z "${TAG}" ]]; then
     TAG=$IMAGE
 fi
 
-echo "Fetching ${IMAGE} Docker image on `date`"
-
+echo `date`
+echo "Fetching latest ${IMAGE} image from ECR ..."
 REGION=eu-west-2
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 
@@ -27,5 +27,13 @@ fi
 
 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
-docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH}
-docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} ${TAG}
+RETRIES=1
+until docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} -q
+do
+    if [[ $RETRIES -gt 3 ]]; then break; fi
+    sleep 10
+    echo "Retrying, attempt $RETRIES ..."
+    ((RETRIES++))
+done
+
+docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} ${TAG} 1>/dev/null

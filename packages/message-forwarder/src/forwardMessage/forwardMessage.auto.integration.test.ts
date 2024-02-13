@@ -1,25 +1,23 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 
-import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
-import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-import { waitForHumanTask } from "@moj-bichard7/common/test/conductor/waitForHumanTask"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
-import { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import createStompClient from "../createStompClient"
 import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
 import forwardMessage from "./forwardMessage"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const mq = createMqConfig()
-const stomp = createStompClient()
-const conductorConfig = createConductorConfig()
+const stompClient = createStompClient()
+const conductorClient = createConductorClient()
 
 describe("forwardMessage", () => {
   let mqListener: MqListener
@@ -32,7 +30,7 @@ describe("forwardMessage", () => {
     mqListener = new MqListener(mq)
     mqListener.listen("TEST_HEARING_OUTCOME_INPUT_QUEUE")
 
-    stomp.activate()
+    stompClient.activate()
   })
 
   beforeEach(async () => {
@@ -53,7 +51,7 @@ describe("forwardMessage", () => {
 
   afterAll(async () => {
     mqListener.stop()
-    await stomp.deactivate()
+    await stompClient.deactivate()
   })
 
   it("sends the message to the resubmission queue if the destination type is auto and no conductor workflow exists", async () => {
@@ -61,29 +59,32 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stomp)
+    await forwardMessage(incomingMessage, stompClient, conductorClient)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)
     expect(message).toMatch(correlationId)
   })
 
-  it("completes the human task if the workflow already exists", async () => {
+  it("starts another workflow if the correlation ID already exists", async () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-    const task1 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task1.iteration).toBe(1)
+    const startWorkflowResult = await conductorClient.workflowResource
+      .startWorkflow1("bichard_phase_1", { s3TaskDataPath }, undefined, correlationId)
+      .catch((e) => e as Error)
+    expect(isError(startWorkflowResult)).toBeFalsy()
+
+    let workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
+    expect(workflows).toHaveLength(1)
 
     const resubmittedMessage = String(
       fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")
     ).replace("CORRELATION_ID", correlationId)
 
-    await forwardMessage(resubmittedMessage, expect.any(Client))
+    await forwardMessage(resubmittedMessage, stompClient, conductorClient)
 
-    // if we complete the human task without fixing the AHO, it'll go round again
-    const task2 = await waitForHumanTask(correlationId, conductorConfig)
-    expect(task2.iteration).toBe(2)
+    workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
+    expect(workflows).toHaveLength(2)
   })
 })

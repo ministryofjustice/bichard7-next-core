@@ -3,13 +3,14 @@
   "updatedBy": "Workflow file: f5a9274c30e4b87e, Commit hash: 8d4e38f3",
   "accessPolicy": {},
   "name": "incoming_message_handler",
-  "description": "Converts the incoming message and starts the main bichard_process workflow",
+  "description": "Converts the incoming message and starts the main bichard_phase_1 workflow",
   "version": 4,
   "tasks": [
     {
       "name": "convert_spi_to_aho",
       "taskReferenceName": "convert_spi_to_aho",
       "inputParameters": {
+        "correlationId": "${workflow.correlationId}",
         "s3Path": "${workflow.input.s3Path}"
       },
       "type": "SIMPLE",
@@ -41,7 +42,7 @@
             "name": "store_audit_log_events",
             "taskReferenceName": "record_parsing_failure",
             "inputParameters": {
-              "correlationId": "${convert_spi_to_aho.output.correlationId}",
+              "correlationId": "${workflow.correlationId}",
               "auditLogEvents": "${convert_spi_to_aho.output.auditLogEvents}"
             },
             "type": "SIMPLE",
@@ -71,27 +72,14 @@
           },
           "type": "SWITCH",
           "decisionCases": {
-            "isDuplicate": [
-              {
-                "name": "store_audit_log_events",
-                "taskReferenceName": "record_duplicate_message",
-                "inputParameters": {
-                  "correlationId": "${create_audit_log_record.output.duplicateCorrelationId}",
-                  "auditLogEvents": "${create_audit_log_record.output.auditLogEvents}"
-                },
-                "type": "SIMPLE",
-                "startDelay": 0,
-                "optional": false,
-                "asyncComplete": false
-              }
-            ]
+            "isDuplicate": []
           },
           "defaultCase": [
             {
               "name": "store_audit_log_events",
               "taskReferenceName": "record_message_received",
               "inputParameters": {
-                "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                "correlationId": "${workflow.correlationId}",
                 "auditLogEvents": [
                   {
                     "category": "information",
@@ -112,11 +100,11 @@
               "taskReferenceName": "begin_processing",
               "inputParameters": {
                 "startWorkflow": {
-                  "correlationId": "${convert_spi_to_aho.output.correlationId}",
+                  "correlationId": "${workflow.correlationId}",
                   "input": {
                     "s3TaskDataPath": "${convert_spi_to_aho.output.s3TaskDataPath}"
                   },
-                  "name": "bichard_process"
+                  "name": "bichard_phase_1"
                 }
               },
               "type": "START_WORKFLOW",

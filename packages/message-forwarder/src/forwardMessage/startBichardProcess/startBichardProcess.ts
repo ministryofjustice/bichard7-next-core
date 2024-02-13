@@ -1,5 +1,4 @@
-import type ConductorConfig from "@moj-bichard7/common/conductor/ConductorConfig"
-import { startWorkflow } from "@moj-bichard7/common/conductor/conductorApi"
+import type { ConductorClient } from "@io-orkes/conductor-javascript"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -14,16 +13,23 @@ if (!taskDataBucket) {
 const s3Config = createS3Config()
 
 export const startBichardProcess = async (
+  workflowName: string,
   aho: AnnotatedHearingOutcome,
   correlationId: string,
-  conductorConfig: ConductorConfig
+  conductorClient: ConductorClient
 ) => {
   const s3TaskDataPath = `${randomUUID()}.json`
   const putResult = await putFileToS3(JSON.stringify(aho), s3TaskDataPath, taskDataBucket, s3Config)
   if (isError(putResult)) {
-    throw putResult
+    return putResult
   }
 
-  await startWorkflow("bichard_process", { s3TaskDataPath }, correlationId, conductorConfig)
-  logger.info({ event: "message-forwarder:started-workflow", correlationId })
+  const workflowId = await conductorClient.workflowResource
+    .startWorkflow1(workflowName, { s3TaskDataPath }, undefined, correlationId)
+    .catch((e) => e as Error)
+  if (isError(workflowId)) {
+    return workflowId
+  }
+
+  logger.info({ event: "message-forwarder:started-workflow", workflowName, s3TaskDataPath, correlationId, workflowId })
 }

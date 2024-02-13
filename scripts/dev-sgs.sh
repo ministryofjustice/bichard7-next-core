@@ -19,11 +19,12 @@ apply_dev_sgs () {
 
 
 while true; do
-    read -p "Choose an environment (1 = e2e, 2 = preprod, 3 = prod): " env
+    read -p "Choose an environment (1 = e2e, 2 = preprod, 3 = prod, 4 = uat): " env
     case $env in
         [1]* ) apply_dev_sgs "e2e-test"; break;;
         [2]* ) apply_dev_sgs "preprod"; break;;
         [3]* ) apply_dev_sgs "prod"; break;;
-        * ) echo "Please choose 1, 2 or 3";;
+        [4]* ) apply_dev_sgs "uat"; break;;
+        * ) echo "Please choose 1, 2, 3 or 4";;
     esac
-done
+done  

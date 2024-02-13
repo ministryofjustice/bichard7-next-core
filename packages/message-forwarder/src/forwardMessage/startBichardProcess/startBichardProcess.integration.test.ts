@@ -1,6 +1,5 @@
 import "../../test/setup/setEnvironmentVariables"
 
-import createConductorConfig from "@moj-bichard7/common/conductor/createConductorConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
@@ -8,8 +7,9 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/Annotated
 import { randomUUID } from "crypto"
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const conductorConfig = createConductorConfig()
+const conductorClient = createConductorClient()
 
 describe("startBichardProcess", () => {
   let correlationId: string
@@ -25,7 +25,12 @@ describe("startBichardProcess", () => {
   })
 
   it("starts a new workflow with correlation ID from the aho", async () => {
-    await startBichardProcess(JSON.parse(ignoredAHO) as AnnotatedHearingOutcome, correlationId, conductorConfig)
+    await startBichardProcess(
+      "bichard_phase_1",
+      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      correlationId,
+      conductorClient
+    )
 
     const workflow = await waitForCompletedWorkflow(correlationId)
     expect(workflow).toHaveProperty("correlationId", correlationId)
@@ -34,7 +39,19 @@ describe("startBichardProcess", () => {
   it("logs a completion metric", async () => {
     jest.spyOn(logger, "info")
 
-    await startBichardProcess(JSON.parse(ignoredAHO) as AnnotatedHearingOutcome, correlationId, conductorConfig)
-    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:started-workflow", correlationId })
+    await startBichardProcess(
+      "bichard_phase_1",
+      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      correlationId,
+      conductorClient
+    )
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "message-forwarder:started-workflow",
+        correlationId,
+        workflowName: "bichard_phase_1",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
+      })
+    )
   })
 })

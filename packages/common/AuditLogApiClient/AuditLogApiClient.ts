@@ -88,7 +88,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessageByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
+  getMessagesByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
     const queryParams: string[] = [`messageHash=${messageHash}`]
 
     if (options?.includeColumns) {
@@ -106,7 +106,6 @@ export default class AuditLogApiClient {
         timeout: this.timeout
       })
       .then((response) => response.data)
-      .then((result) => result[0])
       .catch((error: AxiosError) => {
         if (error.response?.status === HttpStatusCode.NotFound) {
           return undefined
@@ -119,7 +118,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<void> {
+  createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
     return axios
       .post(`${this.apiUrl}/messages`, this.stringify(auditLog), {
         headers: {
@@ -133,7 +132,7 @@ export default class AuditLogApiClient {
       .then((result) => {
         switch (result.status) {
           case HttpStatusCode.Created:
-            return undefined
+            return JSON.parse(result.data) as AuditLogApiRecordOutput
           default:
             return Error(`Error ${result.status}: ${result.data}`)
         }

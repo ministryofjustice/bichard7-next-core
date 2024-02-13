@@ -8,6 +8,7 @@ import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
@@ -74,7 +75,7 @@ describe("Incoming message handler", () => {
     expect(mail.body).toMatch(`PTIURN: ${message.caseId}`)
   })
 
-  it("records duplicate message failures as audit log events", async () => {
+  it("terminates the incoming message handler when a duplicate message is received", async () => {
     const externalId = randomUUID()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
 
@@ -112,23 +113,22 @@ describe("Incoming message handler", () => {
 
     // expect audit log and audit log event
     const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const messages = await apiClient.getMessages({
+    const originalMessages = await apiClient.getMessages({
       externalCorrelationId
     })
-    expect(messages).toHaveLength(1)
+    const duplicateMessages = await apiClient.getMessages({
+      externalCorrelationId: duplicateCorrelationId
+    })
+    expect(originalMessages).toHaveLength(1)
+    expect(duplicateMessages).toHaveLength(1)
 
-    const [message] = messages as AuditLogApiRecordOutput[]
-    const duplicateEvents = message.events.filter((e) => e.eventCode === EventCode.DuplicateMessage)
-    expect(duplicateEvents).toHaveLength(1)
-
-    const [event] = duplicateEvents
-    expect(event.attributes).toHaveProperty("s3Path", duplicateMessageS3Path)
-    expect(event.attributes).toHaveProperty("receivedDate", "2023-08-31T14:49:00.000Z")
-    expect(event.attributes).toHaveProperty("externalId", duplicateExternalId)
-    expect(event.attributes).toHaveProperty("externalCorrelationId", duplicateCorrelationId)
+    const [originalMessage] = originalMessages as AuditLogApiRecordOutput[]
+    const [duplicateMessage] = duplicateMessages as AuditLogApiRecordOutput[]
+    expect(originalMessage.messageHash).toBe(duplicateMessage.messageHash)
+    expect(duplicateMessage.status).toBe(AuditLogStatus.duplicate)
   })
 
-  it("should create audit log events and start the bichard_process workflow if the message is good", async () => {
+  it("creates audit log events and starts the bichard_phase_1 workflow if the message is valid", async () => {
     // start the workflow
     const externalId = randomUUID()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
@@ -163,11 +163,11 @@ describe("Incoming message handler", () => {
     expect(message).toHaveProperty("externalId", externalId)
     expect(message).toHaveProperty("caseId", "01ZD0303208")
 
-    // wait for bichard_process workflow to exist
+    // wait for bichard_phase_1 workflow to exist
 
     const bichardProcessWorkflows = await waitForWorkflows({
       query: {
-        workflowType: "bichard_process",
+        workflowType: "bichard_phase_1",
         correlationId: message.messageId
       }
     })
