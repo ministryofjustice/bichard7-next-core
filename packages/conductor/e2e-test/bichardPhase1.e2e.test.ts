@@ -16,6 +16,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import postgres from "postgres"
+import ignoredTriggersPncMock from "./fixtures/ignored-aho-triggers.pnc.json"
 import onlyTriggersPncMock from "./fixtures/only-triggers-aho.pnc.json"
 import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json"
 import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.json"
@@ -141,6 +142,33 @@ describe("bichard_phase_1 workflow", () => {
     // Check the correct audit logs are in place
     const auditLogEventCodes = await getAuditLogs(correlationId)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
+
+    // Check the temp file has been cleaned up
+    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)
+    expect(isError(s3File)).toBeTruthy()
+    expect((s3File as Error).message).toBe("The specified key does not exist.")
+  })
+
+  it("should store triggers if the message is ignored but still has triggers", async () => {
+    const fixture = String(fs.readFileSync("e2e-test/fixtures/ignored-aho-triggers.json")).replace(
+      "CORRELATION_ID",
+      correlationId
+    )
+    await uploadPncMock(ignoredTriggersPncMock)
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
+    await startWorkflow(s3TaskDataPath, correlationId)
+    await waitForCompletedWorkflow(s3TaskDataPath)
+
+    // Make sure it has been persisted
+    const dbResult = await db`SELECT count(*) from br7own.error_list
+                                    WHERE message_id = ${correlationId}
+                                    AND trigger_count = 1 AND error_count = 0`
+    expect(dbResult[0]).toHaveProperty("count", "1")
+
+    // Check the correct audit logs are in place
+    const auditLogEventCodes = await getAuditLogs(correlationId)
+    expect(auditLogEventCodes).toContain("hearing-outcome.ignored.reopened")
+    expect(auditLogEventCodes).toContain("triggers.generated")
 
     // Check the temp file has been cleaned up
     const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME!, s3Config, 1)

@@ -47,6 +47,13 @@ const phase1 = async (
   }
   const triggers = generateTriggers(enrichedHearingOutcome)
 
+  if (triggers.length > 0) {
+    auditLogger.info(
+      EventCode.TriggersGenerated,
+      generateTriggersLogAttributes(triggers, enrichedHearingOutcome.Exceptions.length > 0)
+    )
+  }
+
   const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
   let resultType: Phase1ResultType
   if (isIgnored) {
@@ -59,15 +66,8 @@ const phase1 = async (
     })
 
     addNullElementsForExceptions(enrichedHearingOutcome)
-
     if (enrichedHearingOutcome.Exceptions.length > 0) {
       auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
-    }
-    if (triggers.length > 0) {
-      auditLogger.info(
-        EventCode.TriggersGenerated,
-        generateTriggersLogAttributes(triggers, enrichedHearingOutcome.Exceptions.length > 0)
-      )
     }
     resultType = enrichedHearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
   }

@@ -12,7 +12,6 @@ import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
 import phase1 from "../../phase1/phase1"
 import { unvalidatedAHOSchema } from "../../phase1/schemas/annotatedHearingOutcome"
-import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const pncApiConfig = createPncApiConfig()
@@ -30,11 +29,10 @@ const processPhase1: ConductorWorker = {
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)
 
     const result = await phase1(s3TaskData, pncGateway, auditLogger)
-    if (result.resultType !== Phase1ResultType.ignored) {
-      const maybeError = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config)
-      if (isError(maybeError)) {
-        return failed(`Could not put file to S3: ${s3TaskDataPath}`, maybeError.message)
-      }
+
+    const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config)
+    if (isError(s3PutResult)) {
+      return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
 
     const hasTriggersOrExceptions =

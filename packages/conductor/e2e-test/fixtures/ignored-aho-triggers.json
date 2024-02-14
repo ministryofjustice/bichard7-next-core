@@ -1,0 +1,88 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": {
+          "DocumentName": "SPI LOG NXONE",
+          "DocumentType": "SPI Case Result",
+          "UniqueID": "CORRELATION_ID"
+        },
+        "CourtHouseCode": 2576
+      },
+      "Case": {
+        "PTIURN": "01ZD0306008",
+        "PreChargeDecisionIndicator": false,
+        "CourtReference": { "MagistratesCourtReference": "01ZD0306008" },
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000410779H",
+          "DefendantDetail": {
+            "PersonName": { "Title": "Mr", "GivenName": ["LOG"], "FamilyName": "IGNORED" },
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "ScenarioD Address Line 1",
+            "AddressLine2": "ScenarioD Address Line 2",
+            "AddressLine3": "ScenarioD Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "OffenceReason": {
+                  "OffenceCode": {
+                    "Reason": "524",
+                    "FullCode": "MC80524",
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "MC",
+                    "Year": "80"
+                  },
+                  "__type": "NationalOffenceReason"
+                }
+              },
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2024-02-12T00:00:00.000Z"
+              },
+              "LocationOfOffence": "not applicable",
+              "ActualOffenceWording": "Application to reopen a case following conviction for the offences of FAIL TO GIVE &amp; SPEEDING. Original case number: 123456789 .;In accordance with section 142 of the Magistrates' Courts Act 1980.",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 4,
+              "Result": [
+                {
+                  "CJSresultCode": 4584,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "60",
+                    "ThirdLevelCode": "JE",
+                    "BottomLevelCode": "70",
+                    "OrganisationUnitCode": "B60JE70"
+                  },
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2024-02-12T00:00:00.000Z",
+                  "PleaStatus": "NONE",
+                  "ResultVariableText": "Case reopened. Conviction and sentence imposed on 20/11/2023 set aside. Licence endorsement to be removed: Court: 3063 Conviction date: 12/11/2021 Offence code: XX01 Offence Date: 13/05/2022.",
+                  "ResultQualifierVariable": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Exceptions": []
+}
