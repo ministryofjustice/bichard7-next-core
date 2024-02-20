@@ -137,7 +137,7 @@ services:
       - 5002:4000
 
   localstack:
-    image: localstack/localstack:2.3.2
+    image: localstack/localstack:3.1.0
     ports:
       - 4566:4566
     volumes:
@@ -145,6 +145,7 @@ services:
     environment:
       SERVICES: "s3,sqs,dynamodb,events"
       AWS_DEFAULT_REGION: "eu-west-2"
+      LOCALSTACK_HOST: 127.0.0.1
     healthcheck:
       test: 'curl -s localhost:4566/_localstack/init | grep -q ''"READY": true'''
       interval: 2s
