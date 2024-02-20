@@ -220,7 +220,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: npm run all-no-worker
+          command: bash scripts/run-infrastructure.sh
       - run:
           name: Run the worker
           environment:
@@ -254,7 +254,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: npm run all-no-worker
+          command: bash scripts/run-infrastructure.sh
       - run:
           name: Run the worker
           environment:
@@ -298,7 +298,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: npm run all-no-worker
+          command: bash scripts/run-infrastructure.sh
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -348,7 +348,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: npm run all-no-worker
+          command: bash scripts/run-infrastructure.sh
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
