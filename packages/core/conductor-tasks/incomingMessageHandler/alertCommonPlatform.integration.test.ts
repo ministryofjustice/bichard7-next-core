@@ -66,6 +66,7 @@ describe("alertCommonPlatform", () => {
   it("sends an email", async () => {
     mockGetEmailer.default = getEmailerDefault
     const mailServer = new MockMailServer(20002)
+    await mailServer.wait()
 
     const result = await alertCommonPlatform.execute({
       inputData: {
