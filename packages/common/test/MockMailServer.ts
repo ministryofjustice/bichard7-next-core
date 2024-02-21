@@ -1,5 +1,5 @@
-import mailServer from "smtp-tester"
-import type { PromiseResult } from "../types/Result"
+import type { ParsedMail } from "mailparser"
+import { testSmtpServer } from "test-smtp-server"
 
 export type Attachment = {
   content: Buffer
@@ -17,24 +17,26 @@ export type Email = {
 }
 
 export default class MockMailServer {
-  messages: Email[]
+  server: testSmtpServer // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  server: any // eslint-disable-line @typescript-eslint/no-explicit-any
-
-  constructor(port: number) {
-    this.server = mailServer.init(port)
+  constructor(smtpPort: number) {
+    this.server = new testSmtpServer({ smtpPort })
   }
 
-  stop() {
-    this.server.stop()
+  start(): void {
+    this.server.startServer()
   }
 
-  async getEmail(emailAddress: string): PromiseResult<Email> {
-    try {
-      const { email } = await this.server.captureOne(emailAddress, { wait: 1000 })
-      return email
-    } catch (error) {
-      return error as Error
-    }
+  stop(): void {
+    this.server.stopServer()
+  }
+
+  clear() {
+    this.server.clearEmails()
+  }
+
+  getEmail(): Promise<ParsedMail> {
+    const [email] = this.server.getEmails()
+    return email.getParsed()
   }
 }

@@ -10,7 +10,6 @@ import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflo
 import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
 import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
 
@@ -22,10 +21,15 @@ describe("Incoming message handler", () => {
 
   beforeAll(() => {
     mailServer = new MockMailServer(20002)
+    mailServer.start()
   })
 
   afterAll(() => {
     mailServer.stop()
+  })
+
+  beforeEach(() => {
+    mailServer.clear()
   })
 
   it("records parsing failures as audit log events and messages common platform", async () => {
@@ -64,15 +68,14 @@ describe("Incoming message handler", () => {
     expect(message).toHaveProperty("externalId", externalId)
     expect(message).toHaveProperty("caseId", "01ZD0303208")
 
-    const mail = await mailServer.getEmail("moj-bichard7@madetech.cjsm.net")
-    if (isError(mail)) {
-      throw mail
-    }
-
-    expect(mail.body).toMatch("Received date: 2023-08-31T14:48:00.000Z")
-    expect(mail.body).toMatch(`Bichard internal message ID: ${message.messageId}`)
-    expect(mail.body).toMatch(`Common Platform ID: ${externalId}`)
-    expect(mail.body).toMatch(`PTIURN: ${message.caseId}`)
+    const mail = await mailServer.getEmail()
+    expect(mail).toBeDefined()
+    expect(mail.from).toHaveProperty("text", "no-reply@mail.bichard7.service.justice.gov.uk")
+    expect(mail.subject).toMatch("Failed to ingest SPI message, schema mismatch")
+    expect(mail.text).toMatch("Received date: 2023-08-31T14:48:00.000Z")
+    expect(mail.text).toMatch(`Bichard internal message ID: ${message.messageId}`)
+    expect(mail.text).toMatch(`Common Platform ID: ${externalId}`)
+    expect(mail.text).toMatch(`PTIURN: ${message.caseId}`)
   })
 
   it("terminates the incoming message handler when a duplicate message is received", async () => {
