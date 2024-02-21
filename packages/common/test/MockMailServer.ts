@@ -1,4 +1,5 @@
 import mailServer from "smtp-tester"
+import waitPort from "wait-port"
 import type { PromiseResult } from "../types/Result"
 
 export type Attachment = {
@@ -21,8 +22,12 @@ export default class MockMailServer {
 
   server: any // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  constructor(port: number) {
+  constructor(private port: number) {
     this.server = mailServer.init(port)
+  }
+
+  async wait() {
+    await waitPort({ host: "localhost", port: this.port, timeout: 5000 })
   }
 
   stop() {

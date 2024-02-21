@@ -20,8 +20,9 @@ const s3Config = createS3Config()
 describe("Incoming message handler", () => {
   let mailServer: MockMailServer
 
-  beforeAll(() => {
+  beforeAll(async () => {
     mailServer = new MockMailServer(20002)
+    await mailServer.wait()
   })
 
   afterAll(() => {
