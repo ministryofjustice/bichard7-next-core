@@ -259,6 +259,12 @@ services:
       TOKEN_EXPIRES_IN: 1 week
       TOKEN_ISSUER: Bichard
       TOKEN_SECRET: ${AUTH_JWT_SECRET}
+      SMTP_HOST: mail
+      SMTP_USER: ${DEFAULT_USER}
+      SMTP_PASSWORD: ${DEFAULT_PASSWORD}
+      SMTP_PORT: 1025
+      SMTP_TLS: "false"
+      SMTP_DEBUG: "true"
     healthcheck:
       test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/443)
       interval: 2s
@@ -269,6 +275,8 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
+        condition: service_started
+      mail:
         condition: service_started
 
   ui:
@@ -374,3 +382,9 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+
+  mail:
+    image: jcalonso/mailhog:v1.0.1
+    ports:
+      - 21025:1025
+      - 8025:8025

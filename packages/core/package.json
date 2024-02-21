@@ -83,6 +83,7 @@
     "jest-xml-matcher": "^1.2.0",
     "lodash.ismatch": "^4.4.0",
     "lodash.merge": "^4.6.2",
+    "mailhog": "^4.16.0",
     "mockdate": "^3.0.5",
     "nunjucks": "^3.2.4",
     "pg-promise": "^11.5.4",

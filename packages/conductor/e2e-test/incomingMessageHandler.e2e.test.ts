@@ -5,27 +5,22 @@ process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
-import MockMailServer from "@moj-bichard7/common/test/MockMailServer"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { type AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
 import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
+import mailhogClient from "mailhog"
+
+const mailhog = mailhogClient()
 
 const INCOMING_BUCKET_NAME = "incoming-messages"
 const s3Config = createS3Config()
 
 describe("Incoming message handler", () => {
-  let mailServer: MockMailServer
-
-  beforeAll(() => {
-    mailServer = new MockMailServer(20002)
-  })
-
-  afterAll(() => {
-    mailServer.stop()
+  beforeEach(() => {
+    mailhog.deleteAll()
   })
 
   it("records parsing failures as audit log events and messages common platform", async () => {
@@ -64,15 +59,17 @@ describe("Incoming message handler", () => {
     expect(message).toHaveProperty("externalId", externalId)
     expect(message).toHaveProperty("caseId", "01ZD0303208")
 
-    const mail = await mailServer.getEmail("moj-bichard7@madetech.cjsm.net")
-    if (isError(mail)) {
-      throw mail
-    }
+    const allMail = await mailhog.messages()
+    expect(allMail).not.toBeNull()
+    expect(allMail).toHaveProperty("count", 1)
 
-    expect(mail.body).toMatch("Received date: 2023-08-31T14:48:00.000Z")
-    expect(mail.body).toMatch(`Bichard internal message ID: ${message.messageId}`)
-    expect(mail.body).toMatch(`Common Platform ID: ${externalId}`)
-    expect(mail.body).toMatch(`PTIURN: ${message.caseId}`)
+    const mail = allMail?.items[0]
+    expect(mail).toHaveProperty("from", "no-reply@mail.bichard7.service.justice.gov.uk")
+    expect(mail?.subject).toMatch("Failed to ingest SPI message, schema mismatch")
+    expect(mail?.text).toMatch("Received date: 2023-08-31T14:48:00.000Z")
+    expect(mail?.text).toMatch(`Bichard internal message ID: ${message.messageId}`)
+    expect(mail?.text).toMatch(`Common Platform ID: ${externalId}`)
+    expect(mail?.text).toMatch(`PTIURN: ${message.caseId}`)
   })
 
   it("terminates the incoming message handler when a duplicate message is received", async () => {
