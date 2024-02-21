@@ -15,6 +15,7 @@
     "clean": "npm run clean --ws",
     "conductor": "./environment/boot.sh conductor audit-log-api",
     "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor audit-log-api pnc",
+    "conductor-only": "NOWORKER=true ./environment/boot.sh conductor",
     "destroy": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml down -v",
     "dev-sgs": "./scripts/dev-sgs.sh",
     "generate-schema-doc": "./scripts/generate-schema-doc.sh",

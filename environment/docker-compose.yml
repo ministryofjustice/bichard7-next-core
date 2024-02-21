@@ -122,8 +122,6 @@ services:
         condition: service_healthy
       localstack:
         condition: service_healthy
-      message-forwarder:
-        condition: service_started
       db-seed:
         condition: service_started
     healthcheck:
