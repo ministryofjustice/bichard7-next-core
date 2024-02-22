@@ -1,14 +1,15 @@
 version: 2.1
 
 commands:
-  fetch_docker_image:
+  fetch_images:
     parameters:
-      image:
+      IMAGES:
+        default: ""
         type: string
     steps:
       - run:
-          name: Fetch the <<parameters.image>> image
-          command: bash scripts/fetch-docker-image.sh <<parameters.image>>
+          name: "Fetch images: <<parameters.IMAGES>>"
+          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
 
   node_install:
     steps:
@@ -117,10 +118,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - fetch_docker_image:
-          image: nodejs
-      - fetch_docker_image:
-          image: nodejs-20-2023
+      - fetch_images:
+          IMAGES: nodejs nodejs-20-2023
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -207,10 +206,8 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - node_install
-      - fetch_docker_image:
-          image: nodejs
-      - fetch_docker_image:
-          image: nodejs-20-2023
+      - fetch_images:
+          IMAGES: nodejs nodejs-20-2023
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -220,7 +217,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           name: Run the worker
           environment:
@@ -241,10 +238,8 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - node_install
-      - fetch_docker_image:
-          image: nodejs
-      - fetch_docker_image:
-          image: nodejs-20-2023
+      - fetch_images:
+          IMAGES: nodejs nodejs-20-2023
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -254,7 +249,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           name: Run the worker
           environment:
@@ -275,13 +270,11 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - fetch_docker_image:
-          image: nodejs
-      - fetch_docker_image:
-          image: nodejs-20-2023
+      - fetch_images:
+          IMAGES: nodejs nodejs-20-2023
       - run:
           name: Build message forwarder image
-          command: docker-compose -f environment/docker-compose.yml build message-forwarder
+          command: .circleci/scripts/build-message-forwarder.sh
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -298,7 +291,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -325,13 +318,11 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - fetch_docker_image:
-          image: nodejs
-      - fetch_docker_image:
-          image: nodejs-20-2023
+      - fetch_images:
+          IMAGES: nodejs nodejs-20-2023
       - run:
           name: Build message forwarder image
-          command: docker-compose -f environment/docker-compose.yml build message-forwarder
+          command: .circleci/scripts/build-message-forwarder.sh
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -348,7 +339,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
