@@ -220,7 +220,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           name: Run the worker
           environment:
@@ -254,7 +254,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Boot Conductor infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           name: Run the worker
           environment:
@@ -281,7 +281,7 @@ jobs:
           image: nodejs-20-2023
       - run:
           name: Build message forwarder image
-          command: docker-compose -f environment/docker-compose.yml build message-forwarder
+          command: .circleci/scripts/build-message-forwarder.sh
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -298,7 +298,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker
@@ -331,7 +331,7 @@ jobs:
           image: nodejs-20-2023
       - run:
           name: Build message forwarder image
-          command: docker-compose -f environment/docker-compose.yml build message-forwarder
+          command: .circleci/scripts/build-message-forwarder.sh
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -348,7 +348,7 @@ jobs:
           command: npm i
       - run:
           name: Run the infrastructure
-          command: bash scripts/run-infrastructure.sh
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
       - run:
           # currently quicker to run the worker separately due to data install
           name: Run the worker

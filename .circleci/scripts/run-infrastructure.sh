@@ -4,8 +4,12 @@ set -e
 
 echo `date`
 
+echo "Skipping images: $1"
+echo "Running: $2"
+echo ""
+
 RETRIES=1
-until npm run all-no-worker
+until SKIP_IMAGES=$1 npm run $2
 do
     if [[ $RETRIES -gt 3 ]]; then break; fi
     sleep 10
