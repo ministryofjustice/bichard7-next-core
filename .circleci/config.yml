@@ -43,34 +43,6 @@ commands:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
 
-  install_api:
-    description: Install the node dependencies for API
-    steps:
-      - run:
-          name: Hash package-lock.json
-          command: bash .circleci/scripts/hash-package-lock.sh
-      - restore_cache:
-          name: Load node_modules from the cache if they haven't changed
-          keys:
-            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
-            - v1-npm-deps-
-      - run:
-          name: Install npm dependencies
-          command: cd api && npm i
-      - save_cache:
-          key: v1-npm-deps-{{ checksum "api/package-lock.json.md5" }}
-          paths: node_modules
-
-  clone_bichard_repo:
-    description: Check out the bichard7-next repo
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - fa:99:cf:93:ab:74:30:81:b5:b8:d3:c6:08:4e:0e:1c
-      - run:
-          name: Clone Bichard7 Next
-          command: git clone --depth 1 git@github.com:ministryofjustice/bichard7-next.git ~/bichard7-next
-
   save_artifacts:
     steps:
       - run:
@@ -95,7 +67,6 @@ jobs:
     machine:
       image: ubuntu-2204:current
     resource_class: xlarge
-    working_directory: ~
     steps:
       - checkout
       - install_core
@@ -114,7 +85,6 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -151,7 +121,6 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -163,7 +132,6 @@ jobs:
     docker:
       - image: cimg/node:16.13.1
     resource_class: xlarge
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -201,7 +169,6 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: false
     resource_class: xlarge
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -233,7 +200,6 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: false
     resource_class: xlarge
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -265,7 +231,6 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: false
     resource_class: xlarge
-    working_directory: ~
     parallelism: 10
     steps:
       - attach_workspace:
@@ -313,7 +278,6 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: false
     resource_class: xlarge
-    working_directory: ~
     parallelism: 10
     steps:
       - attach_workspace:
@@ -360,7 +324,6 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
-    working_directory: ~
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -386,7 +349,6 @@ jobs:
           name: run Postgres function tests
 
 workflows:
-  version: 2
   build-and-test:
     jobs:
       - build
