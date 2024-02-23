@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
 
-set -e
-
 echo `date`
 echo $PWD
 echo ""
 
-RETRIES=1
-until docker compose -f environment/docker-compose.yml build message-forwarder
-do
-    if [[ $RETRIES -gt 3 ]]; then break; fi
-    sleep 10
-    echo "Retrying, attempt $RETRIES ..."
-    ((RETRIES++))
+success=false
+max_attempts=3
+attempt_num=1
+
+while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
+
+    docker compose -f environment/docker-compose.yml build message-forwarder
+
+    if [ $? -eq 0 ]; then
+        success=true
+    else
+        echo ""
+        echo "Failed, retrying..."
+        sleep 10
+        ((attempt_num++))
+        echo "Retrying, attempt $attempt_num ..."
+    fi
 done

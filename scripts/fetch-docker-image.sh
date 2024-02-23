@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 IMAGE=$1
 TAG=$2
 IMAGE_HASH=$3
@@ -27,13 +25,23 @@ fi
 
 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
-RETRIES=1
-until docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} -q
-do
-    if [[ $RETRIES -gt 3 ]]; then break; fi
-    sleep 10
-    echo "Retrying, attempt $RETRIES ..."
-    ((RETRIES++))
+success=false
+max_attempts=3
+attempt_num=1
+
+while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
+
+    docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} -q
+
+    if [ $? -eq 0 ]; then
+        success=true
+    else
+        echo ""
+        echo "Failed, retrying..."
+        sleep 10
+        ((attempt_num++))
+        echo "Retrying, attempt $attempt_num ..."
+    fi
 done
 
 docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${IMAGE}@${IMAGE_HASH} ${TAG} 1>/dev/null
