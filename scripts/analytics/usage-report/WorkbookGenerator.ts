@@ -1,3 +1,4 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ReportData, ReportDataResult, reportEventTitles } from "./common"
 
 const excel = require("excel4node")
@@ -5,7 +6,10 @@ const excel = require("excel4node")
 export default class WorkbookGenerator {
   private workbook
   private mainCellStyle
-  constructor(private reportDataResult: ReportDataResult) {
+  constructor(
+    private reportDataResult: ReportDataResult,
+    private usersWithAccessToNewUi: string[]
+  ) {
     this.workbook = new excel.Workbook()
     this.mainCellStyle = this.workbook.createStyle({
       font: {
@@ -24,6 +28,8 @@ export default class WorkbookGenerator {
   }
 
   public generate = () => {
+    this.generateMonthlyStats(this.reportDataResult)
+
     this.generateDailyReport(this.reportDataResult.allEvents, "All")
     this.generateMonthlyReport(this.reportDataResult.allEvents, "All")
     this.generateUserReport(this.reportDataResult.allEvents, "All")
@@ -35,7 +41,6 @@ export default class WorkbookGenerator {
     this.generateUserReport(this.reportDataResult.withNewUiEvents, "New UI")
     this.generateDailyUserReport(this.reportDataResult.withNewUiEvents, "New UI")
     this.generateMonthlyUserReport(this.reportDataResult.withNewUiEvents, "New UI")
-
     return this
   }
 
@@ -98,16 +103,15 @@ export default class WorkbookGenerator {
 
     let rowIndex = 2
     Object.entries(reportData.dailyUsers).forEach(([date, userData]) => {
-      Object.entries(userData)
-        .forEach(([username, data]) => {
-          sheet.cell(rowIndex, 1).string(date).style(this.mainCellStyle)
-          sheet.cell(rowIndex, 2).string(username).style(this.mainCellStyle)
-          reportData.eventCodes.forEach((eventCode, columnIndex) => {
-            sheet.cell(rowIndex, columnIndex + 3).number(data[eventCode] || 0)
-          })
-
-          rowIndex += 1
+      Object.entries(userData).forEach(([username, data]) => {
+        sheet.cell(rowIndex, 1).string(date).style(this.mainCellStyle)
+        sheet.cell(rowIndex, 2).string(username).style(this.mainCellStyle)
+        reportData.eventCodes.forEach((eventCode, columnIndex) => {
+          sheet.cell(rowIndex, columnIndex + 3).number(data[eventCode] || 0)
         })
+
+        rowIndex += 1
+      })
     })
 
     this.addFooterRow(sheet, reportData, rowIndex - 2, true)
@@ -119,16 +123,15 @@ export default class WorkbookGenerator {
 
     let rowIndex = 2
     Object.entries(reportData.monthlyUsers).forEach(([date, userData]) => {
-      Object.entries(userData)
-        .forEach(([username, data]) => {
-          sheet.cell(rowIndex, 1).string(date).style(this.mainCellStyle)
-          sheet.cell(rowIndex, 2).string(username).style(this.mainCellStyle)
-          reportData.eventCodes.forEach((eventCode, columnIndex) => {
-            sheet.cell(rowIndex, columnIndex + 3).number(data[eventCode] || 0)
-          })
-
-          rowIndex += 1
+      Object.entries(userData).forEach(([username, data]) => {
+        sheet.cell(rowIndex, 1).string(date).style(this.mainCellStyle)
+        sheet.cell(rowIndex, 2).string(username).style(this.mainCellStyle)
+        reportData.eventCodes.forEach((eventCode, columnIndex) => {
+          sheet.cell(rowIndex, columnIndex + 3).number(data[eventCode] || 0)
         })
+
+        rowIndex += 1
+      })
     })
 
     this.addFooterRow(sheet, reportData, rowIndex - 2, true)
@@ -161,6 +164,59 @@ export default class WorkbookGenerator {
       sheet
         .cell(footerRowIndex, startColumnIndex + index)
         .formula(`SUM(${columnName}1:${columnName}${footerRowIndex - 1})`)
+    })
+  }
+
+  private generateMonthlyStats(reportDataResult: ReportDataResult) {
+    const sheet = this.workbook.addWorksheet(`Monthly stats`)
+    let rowIndex = 1
+
+    // XX People have the new UI turned on
+    sheet.cell(rowIndex++, 1).string(`${this.usersWithAccessToNewUi.length} People have the new UI turned on`)
+
+    Object.entries(reportDataResult.withNewUiEvents.monthly).forEach(([date, newUiMonthlyData]) => {
+      sheet.cell(rowIndex++, 1).string(date).style(this.mainCellStyle)
+      const newUiMonthlyUsersData = reportDataResult.withNewUiEvents.monthlyUsers[date]
+
+      // XX People resolved a trigger on the new UI
+      const totalUsersResolvedTriggersInNewUi = Object.entries(newUiMonthlyUsersData).filter(
+        ([_, monthlyUserData]) => (monthlyUserData["new-ui.triggers.resolved"] || 0) > 0
+      ).length
+      sheet.cell(rowIndex++, 1).string(`${totalUsersResolvedTriggersInNewUi} People resolved a trigger on the new UI`)
+
+      // XX People resolved an exception on the new UI
+      const totalUsersResolvedExceptionsInNewUi = Object.entries(newUiMonthlyUsersData).filter(
+        ([_, monthlyUserData]) => (monthlyUserData["new-ui.exceptions.resolved"] || 0) > 0
+      ).length
+      sheet
+        .cell(rowIndex++, 1)
+        .string(`${totalUsersResolvedExceptionsInNewUi} People resolved an exception on the new UI`)
+
+      // Of XX people who have the UI turned on, XX.XX% of their triggers were resolved in the new UI
+      const oldUiTriggersResolved = newUiMonthlyData["old-ui.triggers.resolved"] || 0
+      const newUiTriggersResolved = newUiMonthlyData["new-ui.triggers.resolved"] || 0
+      const totalTriggersResolved = oldUiTriggersResolved + newUiTriggersResolved
+      // prettier-ignore
+      const triggersResolvedInNewUiPercentage = (totalTriggersResolved ? newUiTriggersResolved / totalTriggersResolved * 100 : 0 ).toFixed(2)
+      sheet
+        .cell(rowIndex++, 1)
+        .string(
+          `Of ${this.usersWithAccessToNewUi.length} people who have the UI turned on, ${triggersResolvedInNewUiPercentage}% of their triggers were resolved in the new UI`
+        )
+
+      // Of XX people who have the UI turned on, XX.XX% of their exceptions were resolved in the new UI
+      const oldUiExceptionResolved = newUiMonthlyData["old-ui.exceptions.resolved"] || 0
+      const newUiExceptionResolved = newUiMonthlyData["new-ui.exceptions.resolved"] || 0
+      const totalExceptionsResolved = oldUiExceptionResolved + newUiExceptionResolved
+      // prettier-ignore
+      const exceptionsResolvedInNewUiPercentage = (totalExceptionsResolved ? newUiExceptionResolved / totalExceptionsResolved * 100 : 0).toFixed(2)
+      sheet
+        .cell(rowIndex++, 1)
+        .string(
+          `Of ${this.usersWithAccessToNewUi.length} people who have the UI turned on, ${exceptionsResolvedInNewUiPercentage}% of their exceptions were resolved in the new UI`
+        )
+
+      rowIndex++
     })
   }
 }
