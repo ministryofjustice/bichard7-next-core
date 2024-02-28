@@ -21,7 +21,7 @@ describe("Incoming message handler", () => {
   let mailServer: MockMailServer
 
   beforeAll(async () => {
-    mailServer = new MockMailServer(20002)
+    mailServer = new MockMailServer(23576)
     await mailServer.wait()
   })
 
