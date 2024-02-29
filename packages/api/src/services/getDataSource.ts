@@ -6,7 +6,7 @@ import Note from "../services/entities/Note"
 import Trigger from "../services/entities/Trigger"
 import User from "../services/entities/User"
 
-const databaseConfig: DatabaseConfig = {
+const defaultDatabaseConfig: DatabaseConfig = {
   host: process.env.DB_HOST ?? process.env.DB_AUTH_HOST ?? "localhost",
   user: process.env.DB_USER ?? process.env.DB_AUTH_USER ?? "bichard",
   password: process.env.DB_PASSWORD ?? process.env.DB_AUTH_PASSWORD ?? "password",
@@ -17,7 +17,9 @@ const databaseConfig: DatabaseConfig = {
 }
 
 let appDataSource: DataSource
-const getDataSource = async (): Promise<DataSource> => {
+const getDataSource = async (dbConfig?: DatabaseConfig): Promise<DataSource> => {
+  const databaseConfig = dbConfig || defaultDatabaseConfig
+
   const config: DataSourceOptions = {
     type: "postgres",
     applicationName: "ui-connection",
@@ -49,4 +51,5 @@ const getDataSource = async (): Promise<DataSource> => {
   return appDataSource
 }
 
+export { defaultDatabaseConfig }
 export default getDataSource
