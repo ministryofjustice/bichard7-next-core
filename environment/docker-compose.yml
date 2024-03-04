@@ -79,7 +79,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: "cat ~/completed"
+      test: "cat /liquibase/completed"
       interval: 2s
       timeout: 2s
       retries: 10
@@ -96,7 +96,7 @@ services:
       db-migrate:
         condition: service_healthy
     healthcheck:
-      test: "cat ~/completed"
+      test: "cat /liquibase/completed"
       interval: 2s
       timeout: 2s
       retries: 10
