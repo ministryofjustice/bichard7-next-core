@@ -40,7 +40,7 @@
     "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.9.0",
@@ -57,7 +57,7 @@
     "cors": "^2.8.5",
     "esbuild": "^0.17.12",
     "esbuild-plugin-ignore": "^1.1.1",
-    "express": "^4.18.2",
+    "express": "^4.18.3",
     "qs": "^6.11.2",
     "typeorm": "^0.3.20",
     "zod": "^3.22.4"
