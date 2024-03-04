@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should transform the incoming message to an AHO 1`] = `
+exports[`transformIncomingMessageToAho should transform the incoming message to an AHO 1`] = `
 {
   "aho": {
     "AnnotatedHearingOutcome": {

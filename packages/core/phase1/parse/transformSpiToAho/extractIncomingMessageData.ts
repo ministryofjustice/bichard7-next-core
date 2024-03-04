@@ -10,7 +10,7 @@ const parser = new XMLParser({
   removeNSPrefix: true,
   parseTagValue: false,
   trimValues: true,
-  processEntities: false
+  processEntities: true
 })
 
 export const extractIncomingMessage = (incomingMessage: string): Result<IncomingMessage> => {
