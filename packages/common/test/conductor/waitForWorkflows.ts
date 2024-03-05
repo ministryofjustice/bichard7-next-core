@@ -11,6 +11,8 @@ export type WorkflowSearchParams = {
     correlationId?: string
     status?: string
   }
+  timeout?: number
+  debug?: boolean
 }
 
 const searchWorkflows = async (params: WorkflowSearchParams) => {
@@ -33,16 +35,29 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
   )
 
   if (!response.results || response.results.length < expectedHits) {
+    if (params.debug) {
+      console.log("Not enough workflows fetched")
+      console.log(new Date())
+      console.log(freeText)
+      console.log(queryString)
+      console.log(await conductorClient.workflowResource.search1())
+    }
+
     throw new Error("Not enough workflows fetched")
+  }
+
+  if (params.debug) {
+    console.log(response)
+    console.log("Complete")
   }
 
   return response.results
 }
 
-const waitForWorkflows = (query: WorkflowSearchParams) =>
+const waitForWorkflows = (query: WorkflowSearchParams, timeout = 30000) =>
   promisePoller({
     taskFn: () => searchWorkflows(query),
-    retries: 300,
+    retries: timeout / 100,
     interval: 100 // milliseconds
   }).catch(() => {
     throw new Error("Could not find workflow")

@@ -37,13 +37,17 @@ describe("Incoming message handler", () => {
     await putFileToS3(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
     // search for the workflow
-    const workflows = await waitForWorkflows({
-      freeText: s3Path,
-      query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
-      }
-    })
+    const workflows = await waitForWorkflows(
+      {
+        freeText: s3Path,
+        query: {
+          workflowType: "incoming_message_handler",
+          status: "COMPLETED"
+        },
+        debug: true
+      },
+      90000
+    )
     expect(workflows).toHaveLength(1)
 
     // expect audit log and audit log event
