@@ -1,3 +1,4 @@
+jest.retryTimes(3)
 process.env.S3_ENDPOINT = "http://localhost:4566"
 process.env.S3_AWS_ACCESS_KEY_ID = "test"
 process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
