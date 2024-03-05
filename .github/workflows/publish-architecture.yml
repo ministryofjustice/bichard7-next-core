@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.13.0
+          node-version: 20.6.1
 
       - name: Give permission to docs folder
         run: chmod -R +666 docs
