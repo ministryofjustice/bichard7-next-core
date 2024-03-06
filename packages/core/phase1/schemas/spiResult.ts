@@ -5,7 +5,7 @@ import { SpiPlea } from "../types/Plea"
 export const spiPleaSchema = z.nativeEnum(SpiPlea)
 
 export const nextHearingDetailsSchema = z.object({
-  CourtHearingLocation: z.string(),
+  CourtHearingLocation: z.string().optional(),
   DateOfHearing: z.string(),
   TimeOfHearing: z.string()
 })
