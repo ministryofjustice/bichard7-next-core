@@ -1,3 +1,4 @@
+import { remandStatus } from "bichard7-next-data-latest"
 import { z } from "zod"
 import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../types/ExceptionCode"
@@ -20,8 +21,6 @@ import {
   lookupYesNoByCjsCode
 } from "../dataLookup"
 import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../lib/isAsnValid"
-import requireStandingData from "../lib/requireStandingData"
-const { remandStatus } = requireStandingData()
 
 const invalid = () => false
 

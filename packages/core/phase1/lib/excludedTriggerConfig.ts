@@ -1,8 +1,7 @@
+import { excludedTriggerConfig as excludedTriggers } from "bichard7-next-data-latest"
 import { TriggerCode } from "../../types/TriggerCode"
-import requireStandingData from "../lib/requireStandingData"
 
 const excludedTriggerConfig = () => {
-  const { excludedTriggerConfig: excludedTriggers } = requireStandingData()
   if (process.env.NODE_ENV === "test" && "01" in excludedTriggers) {
     delete excludedTriggers["01"]
     excludedTriggers["42"] = [TriggerCode.TRPR0001]

@@ -1,5 +1,5 @@
+import { organisationUnit } from "bichard7-next-data-latest"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import requireStandingData from "../lib/requireStandingData"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"
@@ -8,7 +8,7 @@ const crownCourtTopLevelCode = "C"
 
 const lookupCrownCourtByNameAndFirstPsaCode = (courtName: string): OrganisationUnitCodes | undefined => {
   const trimmedCourtName = courtName.split("Crown Court")[0].trim()
-  const found = requireStandingData().organisationUnit.find(
+  const found = organisationUnit.find(
     (unit) =>
       unit.topLevelCode.toLowerCase() === crownCourtTopLevelCode.toLowerCase() &&
       unit.thirdLevelName &&
