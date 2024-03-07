@@ -5,16 +5,17 @@ import { fromZodError } from "zod-validation-error"
 import { incomingMessageSchema } from "../../schemas/incomingMessage"
 import type IncomingMessage from "../../types/IncomingMessage"
 
-const parser = new XMLParser({
+const parserDefaults = {
   ignoreAttributes: true,
   removeNSPrefix: true,
   parseTagValue: false,
   trimValues: true,
   processEntities: false
-})
+}
 
 export const extractIncomingMessage = (incomingMessage: string): Result<IncomingMessage> => {
   try {
+    const parser = new XMLParser(parserDefaults)
     const rawParsedObj = parser.parse(incomingMessage, true) as unknown
     const parsedMessage = incomingMessageSchema.safeParse(rawParsedObj)
 
@@ -48,6 +49,7 @@ export const getDataStreamContent = (message: IncomingMessage) =>
   unescape(message.RouteData.DataStream.DataStreamContent)
 
 export const getResultedCaseMessage = (message: IncomingMessage) => {
+  const parser = new XMLParser({ ...parserDefaults, processEntities: true })
   const convertedXml = getDataStreamContent(message)
   return parser.parse(convertedXml) as unknown
 }
