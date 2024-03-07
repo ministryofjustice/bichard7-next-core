@@ -12,11 +12,11 @@ jobs:
 
       - name: Capture local package version
         id: local_version
-        run: echo "::set-output name=version::$(jq .version package.json | tr -d '\"')"
+        run: echo "version=$(jq -r .version package.json | tr -d '\')" >> $GITHUB_ENV
 
       - name: Capture published package version
         id: published_version
-        run: echo "::set-output name=version::$(npm view @moj-bichard7-developers/bichard7-next-core version || echo 'unpublished')"
+        run: echo "version=$(npm view @moj-bichard7-developers/bichard7-next-core version || echo 'unpublished')" >> $GITHUB_ENV
 
       - name: Check package versions
         run: |
