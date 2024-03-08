@@ -3,7 +3,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import { ExceptionCode } from "../../types/ExceptionCode"
 import * as exceptions from "../exceptions/exceptions"
 import pncExceptions from "../exceptions/pncExceptions"
-import { annotatedHearingOutcomeSchema } from "../schemas/annotatedHearingOutcome"
+import { validatedHearingOutcomeSchema } from "../schemas/validatedHearingOutcome"
 import type Exception from "../types/Exception"
 
 const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
@@ -17,7 +17,7 @@ const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
 export default (aho: AnnotatedHearingOutcome): Exception[] => {
   let generatedExceptions: Exception[] = []
 
-  const parseResults = annotatedHearingOutcomeSchema.safeParse(aho)
+  const parseResults = validatedHearingOutcomeSchema.safeParse(aho)
 
   if (!parseResults.success) {
     generatedExceptions = parseResults.error.issues.map((issue) => ({

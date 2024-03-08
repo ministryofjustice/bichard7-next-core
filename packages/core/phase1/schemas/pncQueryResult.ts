@@ -13,7 +13,7 @@ export const pncDisposalSchema = z.object({
 
 export const pncAdjudicationSchema = z.object({
   verdict: z.string(),
-  sentenceDate: z.date(),
+  sentenceDate: z.coerce.date(),
   offenceTICNumber: z.number(),
   plea: z.string(),
   weedFlag: z.string().optional()
@@ -23,9 +23,9 @@ export const pncOffenceSchema = z.object({
   offence: z.object({
     acpoOffenceCode: z.string().optional(),
     cjsOffenceCode: z.string(),
-    startDate: z.date(),
+    startDate: z.coerce.date(),
     startTime: z.string().optional(),
-    endDate: z.date().optional(),
+    endDate: z.coerce.date().optional(),
     endTime: z.string().optional(),
     qualifier1: z.string().optional(),
     qualifier2: z.string().optional(),

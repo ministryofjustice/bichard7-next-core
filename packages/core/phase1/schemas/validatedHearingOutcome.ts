@@ -493,7 +493,7 @@ export const hearingOutcomeSchema = z.object({
   Case: caseSchema.describe(caseDescription.$description)
 })
 
-export const annotatedHearingOutcomeSchema = z.object({
+export const validatedHearingOutcomeSchema = z.object({
   Exceptions: z.array(exceptionSchema),
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
@@ -502,8 +502,4 @@ export const annotatedHearingOutcomeSchema = z.object({
   PncQueryDate: z.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
   PncErrorMessage: z.string().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncErrorMessage.$description),
   Ignored: z.boolean().optional()
-})
-
-export const unvalidatedAHOSchema = annotatedHearingOutcomeSchema.extend({
-  AnnotatedHearingOutcome: z.unknown()
 })
