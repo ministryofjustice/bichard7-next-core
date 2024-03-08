@@ -28,8 +28,7 @@
     "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/repeatTestBichard.ts",
     "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
     "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
-    "update-deps": "ncu -u && npm install",
-    "install-standing-data": "scripts/install-standing-data.sh"
+    "update-deps": "ncu -u && npm install"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint"

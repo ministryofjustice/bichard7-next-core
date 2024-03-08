@@ -1,8 +1,7 @@
+import { excludedTriggerConfig } from "bichard7-next-data-latest"
 import { TriggerCode } from "../../types/TriggerCode"
-import requireStandingData from "../lib/requireStandingData"
 import type { Trigger } from "../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
-const { excludedTriggerConfig } = requireStandingData()
 
 const forceReceivesTrigger27 = (code: string): boolean =>
   !excludedTriggerConfig[code] || !excludedTriggerConfig[code].includes(TriggerCode.TRPR0027)
