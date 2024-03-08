@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Capture local package version
         id: local_version
-        run: echo "::set-output name=version::$(jq .version package.json | tr -d '\"')"
+        run: echo "version=$(jq -r .version package.json | tr -d '\')" >> $GITHUB_ENV
 
       - name: Capture published package version
         id: published_version
-        run: echo "::set-output name=version::$(npm view @moj-bichard7-developers/bichard7-next-core version || echo 'unpublished')"
+        run: echo "version=$(npm view @moj-bichard7-developers/bichard7-next-core version || echo 'unpublished')" >> $GITHUB_ENV
 
       - name: Check package versions
         run: |
@@ -37,13 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-
+          node-version: 20.6.1
       - name: Install npm dependencies
         run: npm ci --ws
 
