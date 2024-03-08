@@ -13,10 +13,7 @@ const formatOuCode = (
   return ""
 }
 
-export default (
-  parsedAsn: ParsedAsn,
-  parsedOffenceReason: OffenceReason | undefined
-): CriminalProsecutionReference => ({
+export default (parsedAsn: ParsedAsn, parsedOffenceReason?: OffenceReason): CriminalProsecutionReference => ({
   DefendantOrOffender: {
     Year: parsedAsn.year,
     OrganisationUnitIdentifierCode: {

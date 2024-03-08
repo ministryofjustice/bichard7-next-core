@@ -4,6 +4,7 @@ import crypto from "crypto"
 import { fromZodError } from "zod-validation-error"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { fullResultedCaseMessageParsedXmlSchema } from "../../schemas/spiResult"
+import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import {
   extractIncomingMessage,
   getDataStreamContent,
@@ -40,7 +41,7 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
     return validationError
   }
 
-  const aho = {
+  const aho: AnnotatedHearingOutcome = {
     AnnotatedHearingOutcome: {
       HearingOutcome: {
         Hearing: populateHearing(
@@ -53,7 +54,15 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
     Exceptions: []
   }
 
-  return { aho, messageHash, systemId: systemId }
+  const checkedAho = unvalidatedHearingOutcomeSchema.safeParse(aho)
+
+  if (!checkedAho.success) {
+    const validationError = fromZodError(checkedAho.error)
+    logger.info(validationError.details)
+    return validationError
+  }
+
+  return { aho: checkedAho.data, messageHash, systemId: systemId }
 }
 
 export default transformIncomingMessageToAho

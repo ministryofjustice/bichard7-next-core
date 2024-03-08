@@ -1,6 +1,5 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
 import { ZodIssueCode, type z } from "zod"
-import { dateReviver } from "../../axiosDateTransformer"
 import createS3Config from "../../s3/createS3Config"
 import getFileFromS3 from "../../s3/getFileFromS3"
 import { isError } from "../../types/Result"
@@ -32,7 +31,7 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
       return failed(`Could not retrieve file from S3: ${s3TaskDataPath}`, taskDataContent.message)
     }
 
-    const s3TaskData = JSON.parse(taskDataContent, dateReviver)
+    const s3TaskData = JSON.parse(taskDataContent)
     if (!task.inputData) {
       task.inputData = {}
     }

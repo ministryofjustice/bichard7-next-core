@@ -121,7 +121,9 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
   }
 
-  const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute()
+  const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute(
+    hearingDefendant.ArrestSummonsNumber
+  )
 
   hearingDefendant.Offence = offences
   hearingDefendant.BailConditions = bailConditions

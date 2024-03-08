@@ -11,7 +11,7 @@ import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
 import phase1 from "../../phase1/phase1"
-import { unvalidatedAHOSchema } from "../../phase1/schemas/annotatedHearingOutcome"
+import { unvalidatedHearingOutcomeSchema } from "../../phase1/schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const pncApiConfig = createPncApiConfig()
@@ -21,7 +21,7 @@ const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data
 
 const processPhase1: ConductorWorker = {
   taskDefName: "process_phase1",
-  execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedAHOSchema, async (task) => {
+  execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath } = task.inputData
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
