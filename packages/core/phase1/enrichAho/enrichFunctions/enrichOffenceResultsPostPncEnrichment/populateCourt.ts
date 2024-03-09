@@ -20,7 +20,7 @@ const populateCourt = (result: Result, hearingOutcome: AnnotatedHearingOutcome) 
     : undefined
 
   result.NextCourtType = undefined
-  if (result.NextResultSourceOrganisation) {
+  if (result.NextResultSourceOrganisation && result.NextResultSourceOrganisation.OrganisationUnitCode !== null) {
     populateOrganisationUnitFields(result.NextResultSourceOrganisation)
 
     if (!result.NextResultSourceOrganisation.OrganisationUnitCode && !NextHearingDate) {

@@ -27,6 +27,7 @@ import {
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
 } from "../../dataLookup"
+import addNullElementsForExceptions from "../../lib/addNullElementsForExceptions"
 import { toISODate, toPNCDate } from "../../lib/dates"
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
 import addExceptionsToAhoXml from "../../serialise/ahoXml/addExceptionsToAhoXml"
@@ -531,6 +532,7 @@ const convertAhoToXml = (
     attributeValueProcessor: encodeAttributeEntitiesProcessor
   }
 
+  addNullElementsForExceptions(hearingOutcome)
   const xmlAho = mapAhoToXml(hearingOutcome, validate)
   if (validate) {
     addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)

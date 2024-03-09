@@ -5,7 +5,6 @@ import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import { parseAhoXml } from "../../parse/parseAhoXml"
 import parseIncomingMessage from "../../parse/parseIncomingMessage"
 import CorePhase1 from "../../phase1"
-import type { Phase1SuccessResult } from "../../types/Phase1Result"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 import MockPncGateway from "./MockPncGateway"
@@ -31,7 +30,7 @@ const comparePncMatching = async (
   const pncGateway = new MockPncGateway(response, pncQueryTime)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   const [incomingAho] = parseIncomingMessage(incomingMessage)
-  const coreResult = (await CorePhase1(incomingAho, pncGateway, auditLogger)) as Phase1SuccessResult
+  const coreResult = await CorePhase1(incomingAho, pncGateway, auditLogger)
   const expectedAho = parseAhoXml(annotatedHearingOutcome)
   if (isError(expectedAho)) {
     throw expectedAho as Error

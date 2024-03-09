@@ -71,7 +71,7 @@ export const organisationUnitSchema = z.object({
   SecondLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.SecondLevelCode.$description),
   ThirdLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.ThirdLevelCode.$description),
   BottomLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.BottomLevelCode.$description),
-  OrganisationUnitCode: z.string().describe(organisationUnitDescription.OrganisationUnitCode.$description)
+  OrganisationUnitCode: z.string().or(z.null()).describe(organisationUnitDescription.OrganisationUnitCode.$description)
 })
 
 export const defendantOrOffenderSchema = z.object({
@@ -223,7 +223,7 @@ export const resultSchema = z.object({
     .optional()
     .describe(resultDescription.NextResultSourceOrganisation.$description),
   NextHearingType: z.string().optional(), // Never set
-  NextHearingDate: z
+  NextHearingDate: z.coerce
     .date()
     .or(z.string())
     .or(z.null())
@@ -231,7 +231,7 @@ export const resultSchema = z.object({
     .describe(resultDescription.NextHearingDate.$description),
   NextHearingTime: timeSchema.optional().describe(resultDescription.NextHearingTime.$description),
   NextCourtType: z.string().optional().describe(resultDescription.NextCourtType.$description), // Always set to a valid value
-  PleaStatus: cjsPleaSchema.optional().describe(resultDescription.PleaStatus.$description),
+  PleaStatus: cjsPleaSchema.or(z.string()).optional().describe(resultDescription.PleaStatus.$description),
   Verdict: z.string().optional().describe(resultDescription.Verdict.$description),
   ResultVariableText: z.string().optional().describe(resultDescription.ResultVariableText.$description), // Can't test because it is masked by XML parser
   TargetCourtType: z.string().optional(), // Never set

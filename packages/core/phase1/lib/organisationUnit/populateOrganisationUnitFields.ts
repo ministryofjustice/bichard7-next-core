@@ -25,7 +25,7 @@ const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes)
   organisationUnit.SecondLevelCode = organisationUnit.SecondLevelCode?.toUpperCase() ?? null
   organisationUnit.ThirdLevelCode = organisationUnit.ThirdLevelCode?.toUpperCase() ?? null
   organisationUnit.BottomLevelCode = organisationUnit.BottomLevelCode?.toUpperCase() ?? null
-  organisationUnit.OrganisationUnitCode = organisationUnit.OrganisationUnitCode?.toUpperCase()
+  organisationUnit.OrganisationUnitCode = organisationUnit.OrganisationUnitCode?.toUpperCase() ?? null
 
   return organisationUnit
 }
