@@ -10,8 +10,7 @@ import {
   getResultedCaseMessage,
   getSystemId
 } from "./extractIncomingMessageData"
-import populateCase from "./populateCase"
-import populateHearing from "./populateHearing"
+import transformResultedCaseMessageToAho from "./transformResultedCaseMessageToAho"
 
 export type TransformedOutput = {
   aho: AnnotatedHearingOutcome
@@ -40,18 +39,10 @@ const transformIncomingMessageToAho = (incomingMessage: string): Result<Transfor
     return validationError
   }
 
-  const aho = {
-    AnnotatedHearingOutcome: {
-      HearingOutcome: {
-        Hearing: populateHearing(
-          message.RouteData.RequestFromSystem.CorrelationID,
-          resultedCaseMessage.data.ResultedCaseMessage
-        ),
-        Case: populateCase(resultedCaseMessage.data.ResultedCaseMessage)
-      }
-    },
-    Exceptions: []
-  }
+  const aho = transformResultedCaseMessageToAho(
+    resultedCaseMessage.data.ResultedCaseMessage,
+    message.RouteData.RequestFromSystem.CorrelationID
+  )
 
   return { aho, messageHash, systemId: systemId }
 }
