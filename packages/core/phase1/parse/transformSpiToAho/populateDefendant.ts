@@ -1,6 +1,11 @@
 import type { Address, DefendantDetail, HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
 import { lookupRemandStatusBySpiCode } from "../../dataLookup"
-import type { ResultedCaseMessageParsedXml, SpiAddress, SpiCourtIndividualDefendant } from "../../types/SpiResult"
+import type {
+  ResultedCaseMessageParsedXml,
+  SpiAddress,
+  SpiCourtIndividualDefendant,
+  SpiDefendant
+} from "../../types/SpiResult"
 import PopulateOffences from "./PopulateOffences"
 
 const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>
@@ -75,16 +80,29 @@ const populateAddress = (spiAddress: SpiAddress): Address => {
   }
 }
 
-export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => {
-  const hearingDefendant = {} as HearingDefendant
-  const {
-    Session: {
-      Case: { Defendant: spiDefendant }
-    }
-  } = courtResult
+const parseBailConditions = (spiBailConditions?: string): string[] => {
+  if (spiBailConditions && spiBailConditions !== "") {
+    return spiBailConditions
+      .split(";")
+      .map((cond) => cond.trim())
+      .filter((cond) => !!cond)
+  }
+  return []
+}
 
-  hearingDefendant.ArrestSummonsNumber = spiDefendant.ProsecutorReference
+type PartialDefendantDetails =
+  | Pick<
+      HearingDefendant,
+      | "CourtPNCIdentifier"
+      | "DefendantDetail"
+      | "Address"
+      | "RemandStatus"
+      | "BailConditions"
+      | "ReasonForBailConditions"
+    >
+  | Pick<HearingDefendant, "PNCIdentifier" | "OrganisationName" | "Address" | "RemandStatus" | "BailConditions">
 
+const processDefendant = (spiDefendant: SpiDefendant): PartialDefendantDetails => {
   if (spiDefendant.CourtIndividualDefendant) {
     const {
       CourtIndividualDefendant: {
@@ -94,19 +112,18 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
         ReasonForBailConditionsOrCustody: spiReasonForBailConditionsOrCustody
       }
     } = spiDefendant
-    hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
-    hearingDefendant.DefendantDetail = populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant)
-    hearingDefendant.Address = populateAddress(spiAddress)
-    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
-    hearingDefendant.BailConditions = []
-    if (spiBailConditions && spiBailConditions !== "") {
-      hearingDefendant.BailConditions = spiBailConditions
-        .split(";")
-        .map((cond) => cond.trim())
-        .filter((cond) => !!cond)
+
+    return {
+      CourtPNCIdentifier: formatPncIdentifier(spiPNCidentifier),
+      DefendantDetail: populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant),
+      Address: populateAddress(spiAddress),
+      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus,
+      BailConditions: parseBailConditions(spiBailConditions),
+      ReasonForBailConditions: spiReasonForBailConditionsOrCustody
     }
-    hearingDefendant.ReasonForBailConditions = spiReasonForBailConditionsOrCustody
-  } else if (spiDefendant.CourtCorporateDefendant) {
+  }
+
+  if (spiDefendant.CourtCorporateDefendant) {
     // Corporate Defendant
     const {
       PNCidentifier: spiPNCidentifier,
@@ -115,16 +132,38 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
       BailStatus: spiBailStatus
     } = spiDefendant.CourtCorporateDefendant
 
-    hearingDefendant.CourtPNCIdentifier = formatPncIdentifier(spiPNCidentifier)
-    hearingDefendant.OrganisationName = spiOrganisationName
-    hearingDefendant.Address = populateAddress(spiAddress)
-    hearingDefendant.RemandStatus = lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
+    return {
+      CourtPNCIdentifier: formatPncIdentifier(spiPNCidentifier),
+      OrganisationName: spiOrganisationName,
+      Address: populateAddress(spiAddress),
+      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus,
+      BailConditions: []
+    }
   }
 
-  const { offences, bailConditions } = new PopulateOffences(courtResult, hearingDefendant.BailConditions).execute()
+  throw new Error("CourtIndividualDefendant and CourtCorporateDefendant are missing from incoming record")
+}
 
-  hearingDefendant.Offence = offences
-  hearingDefendant.BailConditions = bailConditions
+export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => {
+  const {
+    Session: {
+      Case: { Defendant: spiDefendant }
+    }
+  } = courtResult
+
+  const { offences, bailConditions } = new PopulateOffences(courtResult).execute()
+
+  const partialDefendant = processDefendant(spiDefendant)
+
+  if (partialDefendant.BailConditions.length > 0) {
+    partialDefendant.BailConditions = partialDefendant.BailConditions.concat(bailConditions)
+  }
+
+  const hearingDefendant: HearingDefendant = {
+    ...partialDefendant,
+    ArrestSummonsNumber: spiDefendant.ProsecutorReference,
+    Offence: offences
+  }
 
   return hearingDefendant
 }

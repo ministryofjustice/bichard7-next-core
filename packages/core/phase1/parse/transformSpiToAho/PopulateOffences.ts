@@ -43,11 +43,9 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
 export default class {
   private bailConditions: string[] = []
 
-  constructor(
-    private courtResult: ResultedCaseMessageParsedXml,
-    private hearingDefendantBailConditions: string[] = [],
-    private isAdjournmentSineDieConditionMet = false
-  ) {}
+  private isAdjournmentSineDieConditionMet = false
+
+  constructor(private courtResult: ResultedCaseMessageParsedXml) {}
 
   private getOffenceReason = (spiOffenceCode: string): OffenceCode => {
     const spiOffenceCodeLength = spiOffenceCode.length
@@ -163,7 +161,7 @@ export default class {
     const { results, bailQualifiers } = new PopulateOffenceResults(this.courtResult, spiOffence).execute()
     offence.Result = results
 
-    if (this.hearingDefendantBailConditions.length > 0 && bailQualifiers.length > 0) {
+    if (bailQualifiers.length > 0) {
       bailQualifiers.forEach((bailQualifier) => {
         const description = lookupResultQualifierCodeByCjsCode(bailQualifier)?.description
         if (description) {
@@ -178,7 +176,6 @@ export default class {
   execute(): OffencesResult {
     const spiOffences = this.courtResult.Session.Case.Defendant.Offence
     const offences = spiOffences.map(this.populateOffence).filter((offence) => !!offence) as Offence[]
-    this.bailConditions = this.hearingDefendantBailConditions.concat(this.bailConditions)
 
     return { offences, bailConditions: this.bailConditions }
   }
