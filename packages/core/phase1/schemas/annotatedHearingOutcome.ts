@@ -306,7 +306,7 @@ export const resultSchema = z.object({
     .refine(validateCourtType, ExceptionCode.HO100108)
     .optional()
     .describe(resultDescription.NextCourtType.$description), // Always set to a valid value
-  PleaStatus: cjsPleaSchema.optional().describe(resultDescription.PleaStatus.$description),
+  PleaStatus: cjsPleaSchema.or(z.string()).optional().describe(resultDescription.PleaStatus.$description),
   Verdict: z
     .string()
     .refine(validateVerdict, ExceptionCode.HO100108)
