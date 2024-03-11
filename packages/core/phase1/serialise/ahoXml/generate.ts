@@ -4,6 +4,7 @@ import type {
   AnnotatedHearingOutcome,
   Case,
   DateSpecifiedInResult,
+  DefendantOrOffender,
   Duration,
   Hearing,
   NumberSpecifiedInResult,
@@ -47,7 +48,8 @@ import type {
   Br7TypeTextString,
   Br7Urgent,
   Cxe01,
-  DISList
+  DISList,
+  DsDefendantOrOffender
 } from "../../types/AhoXml"
 
 enum LiteralType {
@@ -272,22 +274,22 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
   }
 }
 
+const mapDefendantOrOffender = (defendantOrOffender?: DefendantOrOffender): DsDefendantOrOffender | undefined => {
+  if (defendantOrOffender === undefined) {
+    return undefined
+  }
+  return {
+    "ds:Year": defendantOrOffender.Year !== null ? text(defendantOrOffender.Year) : { "#text": "" },
+    "ds:OrganisationUnitIdentifierCode": mapAhoOrgUnitToXml(defendantOrOffender.OrganisationUnitIdentifierCode),
+    "ds:DefendantOrOffenderSequenceNumber": text(defendantOrOffender.DefendantOrOffenderSequenceNumber),
+    "ds:CheckDigit": text(defendantOrOffender.CheckDigit)
+  }
+}
+
 const mapAhoOffencesToXml = (offences: Offence[]): Br7Offence[] =>
   offences.map((offence) => ({
     "ds:CriminalProsecutionReference": {
-      "ds:DefendantOrOffender": {
-        "ds:Year":
-          offence.CriminalProsecutionReference.DefendantOrOffender.Year !== null
-            ? text(offence.CriminalProsecutionReference.DefendantOrOffender.Year)
-            : { "#text": "" },
-        "ds:OrganisationUnitIdentifierCode": mapAhoOrgUnitToXml(
-          offence.CriminalProsecutionReference.DefendantOrOffender.OrganisationUnitIdentifierCode
-        ),
-        "ds:DefendantOrOffenderSequenceNumber": text(
-          offence.CriminalProsecutionReference.DefendantOrOffender.DefendantOrOffenderSequenceNumber
-        ),
-        "ds:CheckDigit": text(offence.CriminalProsecutionReference.DefendantOrOffender.CheckDigit)
-      },
+      "ds:DefendantOrOffender": mapDefendantOrOffender(offence.CriminalProsecutionReference.DefendantOrOffender),
       "ds:OffenceReason": offence.CriminalProsecutionReference.OffenceReason
         ? mapAhoOffenceReasonToXml(offence.CriminalProsecutionReference.OffenceReason)
         : undefined,

@@ -123,7 +123,7 @@ export const defendantOrOffenderSchema = z.object({
 })
 
 export const criminalProsecutionReferenceSchema = z.object({
-  DefendantOrOffender: defendantOrOffenderSchema,
+  DefendantOrOffender: defendantOrOffenderSchema.optional(),
   OffenceReason: offenceReasonSchema.optional(),
   OffenceReasonSequence: z
     .string()
