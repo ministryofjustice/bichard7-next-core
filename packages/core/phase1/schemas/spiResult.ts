@@ -134,6 +134,7 @@ export const spiCourtCorporateDefendantSchema = z.object({
   Address: spiAddressSchema
 })
 
+// TODO: See if it's possible to make CourtIndividualDefendant and CourtCorporateDefendant mutually exclusive
 export const defendantSchema = z
   .object({
     CourtIndividualDefendant: spiCourtIndividualDefendantSchema.optional(),

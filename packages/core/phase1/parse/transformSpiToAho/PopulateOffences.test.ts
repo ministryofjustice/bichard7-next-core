@@ -7,7 +7,7 @@ describe("PopulateOffences", () => {
   const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
 
   it("should transform SPI Offences to Hearing Outcome Offences", () => {
-    const result = new PopulateOffences(courtResult, []).execute()
+    const result = new PopulateOffences(courtResult).execute()
 
     expect(result).toBeDefined()
     expect(result).toMatchSnapshot()
