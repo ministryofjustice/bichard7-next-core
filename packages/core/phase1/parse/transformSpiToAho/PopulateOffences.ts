@@ -67,6 +67,7 @@ export default class {
         ...offenceCode
       }
     }
+    // Note: We do not receive indictment offences in magistrate courts but this is left for completeness
     if (spiOffenceCode.startsWith(INDICTMENT)) {
       return {
         __type: "IndictmentOffenceCode",

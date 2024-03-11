@@ -4,7 +4,7 @@ import PopulateOffences from "./PopulateOffences"
 
 describe("PopulateOffences", () => {
   it("should transform SPI Offences to Hearing Outcome Offences", () => {
-    const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
+    const message = readFileSync("phase1/tests/fixtures/input-message-001-variations.xml", "utf-8")
     const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
     const result = new PopulateOffences(courtResult).execute()
 
@@ -21,5 +21,14 @@ describe("PopulateOffences", () => {
     expect(result.offences[0].ConvictionDate).toBeUndefined()
     expect(result.offences[1].ConvictionDate).toStrictEqual(new Date("2011-09-26"))
     expect(result.offences[2].ConvictionDate).toStrictEqual(new Date("2011-09-26"))
+  })
+
+  it("should add bail conditions for bail qualifiers in results", () => {
+    const message = readFileSync("phase1/tests/fixtures/input-message-001-bail-qualifiers.xml", "utf-8")
+    const courtResult = parseSpiResult(message).DeliverRequest.Message.ResultedCaseMessage
+    const result = new PopulateOffences(courtResult).execute()
+
+    expect(result).toBeDefined()
+    expect(result.bailConditions).toStrictEqual(["With Electronic Tagging"])
   })
 })
