@@ -1,5 +1,6 @@
-import { isPhase1 } from "../lib/checkPhase"
+import { isPhase1, isPhase2 } from "../lib/checkPhase"
 import comparePhase1 from "../lib/comparePhase1"
+import comparePhase2 from "../lib/comparePhase2"
 import { parseComparisonFile } from "../lib/processTestFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import getStandingDataVersionByDate from "./getStandingDataVersionByDate"
@@ -15,6 +16,11 @@ const processFile = async (
       defaultStandingDataVersion: getStandingDataVersionByDate(date)
     })
     result.file = fileName
+    return result
+  }
+  if (isPhase2(comparison)) {
+    const result = comparePhase2(comparison, true)
+    // result.file = fileName
     return result
   }
 }
