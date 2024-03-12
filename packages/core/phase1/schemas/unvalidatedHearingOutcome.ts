@@ -277,7 +277,7 @@ export const offenceSchema = z.object({
   ActualWelshStatementOfFacts: z.string().optional(),
   AlcoholLevel: alcoholLevelSchema.optional().describe(offenceDescription.AlcoholLevel.$description),
   VehicleCode: z.string().optional(),
-  VehicleRegistrationMark: z.string().min(11).max(11).optional(),
+  VehicleRegistrationMark: z.string().optional(),
   StartTime: timeSchema.optional().describe(offenceDescription.StartTime.$description),
   OffenceEndTime: timeSchema.optional().describe(offenceDescription.OffenceEndDate.$description),
   OffenceTime: timeSchema.optional().describe(offenceDescription.OffenceTime.$description),
@@ -291,7 +291,7 @@ export const offenceSchema = z.object({
   RecordableOnPNCindicator: z.boolean().optional().describe(offenceDescription.RecordableOnPNCindicator.$description),
   NotifiableToHOindicator: z.boolean().optional().describe(offenceDescription.NotifiableToHOindicator.$description),
   HomeOfficeClassification: z.string().optional().describe(offenceDescription.HomeOfficeClassification.$description),
-  ResultHalfLifeHours: z.number().min(1).max(999).optional(),
+  ResultHalfLifeHours: z.number().optional(),
   AddedByTheCourt: z.boolean().optional()
 })
 
