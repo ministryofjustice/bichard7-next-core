@@ -26,7 +26,6 @@ module.exports = {
       },
       plugins: ["@typescript-eslint", "jest", "import"],
       extends: [
-        "airbnb-typescript/base",
         "plugin:@typescript-eslint/recommended",
         "plugin:jest/recommended",
         "plugin:jest/style",
