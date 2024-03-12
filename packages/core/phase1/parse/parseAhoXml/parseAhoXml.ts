@@ -42,6 +42,7 @@ import type {
 } from "../../types/AhoXml"
 import type { CjsPlea } from "../../types/Plea"
 import type ResultClass from "../../types/ResultClass"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],
@@ -458,10 +459,10 @@ export const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]?.["#text"]
 })
 
-const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | undefined => {
+export const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | Error => {
   const rootElement = aho["br7:AnnotatedHearingOutcome"] ? aho["br7:AnnotatedHearingOutcome"] : aho
   if (!rootElement["br7:HearingOutcome"]) {
-    return
+    return Error("Could not parse AHO XML")
   }
 
   return {
@@ -495,9 +496,10 @@ export default (xml: string): AnnotatedHearingOutcome | Error => {
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
   const legacyAho = mapXmlToAho(rawParsedObj)
-  if (legacyAho) {
-    legacyAho.Exceptions = extractExceptionsFromAho(xml)
+  if (isError(legacyAho)) {
     return legacyAho
   }
-  return new Error("Could not parse AHO XML")
+
+  legacyAho.Exceptions = extractExceptionsFromAho(xml)
+  return legacyAho
 }
