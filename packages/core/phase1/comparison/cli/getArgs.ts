@@ -14,6 +14,7 @@ export interface IArguments {
   runMissing?: string
   start?: string
   filelist?: string
+  phase?: number
 }
 
 export const getArgs = () =>
@@ -79,6 +80,12 @@ export const getArgs = () =>
         defaultValue: false,
         alias: "x",
         description: "Runs using the PNC offence matching algorithm"
+      },
+      phase: {
+        type: Number,
+        optional: true,
+        defaultValue: 1,
+        description: "Select which project phase to use"
       }
     },
     {
