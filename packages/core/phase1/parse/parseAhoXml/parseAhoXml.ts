@@ -348,7 +348,7 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
           }
         : undefined,
     LocationOfOffence: xmlOffence["ds:LocationOfOffence"]?.["#text"],
-    ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"],
+    ActualOffenceWording: xmlOffence["ds:ActualOffenceWording"]["#text"] ?? "",
     AlcoholLevel: xmlOffence["ds:AlcoholLevel"]
       ? {
           Amount: Number(xmlOffence["ds:AlcoholLevel"]["ds:Amount"]["#text"]),
@@ -387,7 +387,7 @@ const getGivenNames = (
 }
 
 export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
-  PTIURN: xmlCase["ds:PTIURN"]["#text"],
+  PTIURN: xmlCase["ds:PTIURN"]["#text"] ?? "",
   RecordableOnPNCindicator: caseRecordableOnPnc(xmlCase),
   Urgent: xmlCase["br7:Urgent"]
     ? {
@@ -403,7 +403,7 @@ export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
   },
   PenaltyNoticeCaseReferenceNumber: xmlCase["br7:PenaltyNoticeCaseReference"]?.["#text"],
   HearingDefendant: {
-    ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"],
+    ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"] ?? "",
     PNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:PNCIdentifier"]?.["#text"],
     PNCCheckname: xmlCase["br7:HearingDefendant"]["br7:PNCCheckname"]?.["#text"],
     OrganisationName: xmlCase["br7:HearingDefendant"]["br7:OrganisationName"]?.["#text"],

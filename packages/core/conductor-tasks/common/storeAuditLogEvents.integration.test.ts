@@ -4,7 +4,7 @@ process.env.AUDIT_LOG_API_KEY = "dummy"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { MockServer } from "jest-mock-server"
-import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import storeAuditLogEvents from "./storeAuditLogEvents"
@@ -33,7 +33,7 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should store multiple events in a single call to the API", async () => {
-    const phase1Result: Phase1SuccessResult = {
+    const phase1Result: Phase1Result = {
       correlationId: "dummy-id",
       auditLogEvents: [
         {
@@ -73,7 +73,7 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should return FAILED if it fails to write to the audit log", async () => {
-    const phase1Result: Phase1SuccessResult = {
+    const phase1Result: Phase1Result = {
       correlationId: "dummy-id",
       auditLogEvents: [dummyAuditLogEvent],
       triggers: [],

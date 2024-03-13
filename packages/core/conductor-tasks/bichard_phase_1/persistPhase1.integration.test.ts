@@ -116,6 +116,6 @@ describe("persistPhase1", () => {
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
 
     const [generalError] = result.logs!
-    expect(generalError.log).toBe("S3TaskData error. Schema mismatch")
+    expect(generalError.log).toBe("S3TaskData error: Expected 'success' | 'exceptions' | 'ignored' for resultType")
   })
 })

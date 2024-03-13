@@ -7,14 +7,14 @@ import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
-import { validPhase1ResultSchema } from "../../phase1/schemas/phase1Result"
-import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
+import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 
 const dbConfig = createDbConfig()
 
 const persistPhase1: ConductorWorker = {
   taskDefName: "persist_phase1",
-  execute: s3TaskDataFetcher<PersistablePhase1Result>(validPhase1ResultSchema, async (task) => {
+  execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
     const db = postgres(dbConfig)
 

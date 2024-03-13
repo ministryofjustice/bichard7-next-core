@@ -100,7 +100,12 @@
                     "BailCondition": [],
                     "PNCAdjudicationExists": false,
                     "ResultApplicableQualifierCode": [],
-                    "NextResultSourceOrganisation": { "OrganisationUnitCode": null },
+                    "NextResultSourceOrganisation": {
+                      "OrganisationUnitCode": null,
+                      "SecondLevelCode": null,
+                      "ThirdLevelCode": null,
+                      "BottomLevelCode": null
+                    },
                     "ResultClass": "Adjournment pre Judgement",
                     "PNCDisposalType": 4014,
                     "CourtType": "MCA"
@@ -166,7 +171,12 @@
                     "BailCondition": [],
                     "PNCAdjudicationExists": false,
                     "ResultApplicableQualifierCode": [],
-                    "NextResultSourceOrganisation": { "OrganisationUnitCode": null },
+                    "NextResultSourceOrganisation": {
+                      "OrganisationUnitCode": null,
+                      "SecondLevelCode": null,
+                      "ThirdLevelCode": null,
+                      "BottomLevelCode": null
+                    },
                     "ResultClass": "Adjournment pre Judgement",
                     "PNCDisposalType": 4014,
                     "CourtType": "MCA"
