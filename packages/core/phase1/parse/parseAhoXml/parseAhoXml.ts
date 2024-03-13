@@ -44,7 +44,7 @@ import type { CjsPlea } from "../../types/Plea"
 import type ResultClass from "../../types/ResultClass"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
+export const mapXmlOrganisationalUnitToAho = (xmlOrgUnit: Br7OrganisationUnit): OrganisationUnitCodes => ({
   TopLevelCode: xmlOrgUnit["ds:TopLevelCode"]?.["#text"],
   SecondLevelCode: xmlOrgUnit["ds:SecondLevelCode"]["#text"] ?? "",
   ThirdLevelCode: xmlOrgUnit["ds:ThirdLevelCode"]["#text"] ?? "",
