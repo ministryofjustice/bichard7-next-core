@@ -22,7 +22,11 @@ const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString =
 }
 
 const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
-  return operationsXml.map((operationXml) => {
+  if (!Array.isArray(operationsXml))  {
+    return []
+  }
+  
+  return  operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
     if ("NEWREM" in operationXml.operationCode) {
