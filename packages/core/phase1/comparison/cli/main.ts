@@ -15,6 +15,10 @@ const main = async () => {
   let success = false
   const args = getArgs()
   const filter = args.filter ?? "failure"
+  const phase = args.phase ?? 2
+
+  console.log(`Phase ${phase} comparison testing...`)
+
   if ("file" in args && args.file) {
     const contents = await getFile(args.file, !!args.cache)
     const date = getDateFromComparisonFilePath(args.file)

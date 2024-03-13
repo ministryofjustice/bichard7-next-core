@@ -84,7 +84,7 @@ export const getArgs = () =>
       phase: {
         type: Number,
         optional: true,
-        defaultValue: 1,
+        defaultValue: 2,
         description: "Select which project phase to use"
       }
     },
