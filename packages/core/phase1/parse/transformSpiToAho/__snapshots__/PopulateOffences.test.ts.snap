@@ -6,7 +6,9 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
   "offences": [
     {
       "ActualOffenceDateCode": "1",
-      "ActualOffenceEndDate": undefined,
+      "ActualOffenceEndDate": {
+        "EndDate": 2010-11-28T00:00:00.000Z,
+      },
       "ActualOffenceStartDate": {
         "StartDate": 2010-11-28T00:00:00.000Z,
       },
@@ -30,6 +32,8 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
         },
       },
       "LocationOfOffence": "Kingston High Street",
+      "OffenceEndTime": "13:00",
+      "OffenceTime": "11:00",
       "Result": [
         {
           "CJSresultCode": 3078,
@@ -66,11 +70,10 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
       "CriminalProsecutionReference": {
         "OffenceReason": {
           "OffenceCode": {
-            "ActOrSource": "SX",
-            "FullCode": "SX03001",
-            "Reason": "001",
-            "Year": "03",
-            "__type": "NonMatchingOffenceCode",
+            "FullCode": "XX001",
+            "Indictment": "XX00",
+            "Reason": "1",
+            "__type": "IndictmentOffenceCode",
           },
           "__type": "NationalOffenceReason",
         },
@@ -98,12 +101,18 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
       ],
     },
     {
-      "ActualOffenceDateCode": "1",
-      "ActualOffenceEndDate": undefined,
+      "ActualOffenceDateCode": "4",
+      "ActualOffenceEndDate": {
+        "EndDate": 2010-12-08T00:00:00.000Z,
+      },
       "ActualOffenceStartDate": {
         "StartDate": 2010-11-28T00:00:00.000Z,
       },
       "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+      "AlcoholLevel": {
+        "Amount": 998,
+        "Method": "V",
+      },
       "ArrestDate": 2010-12-01T00:00:00.000Z,
       "ChargeDate": 2010-12-02T00:00:00.000Z,
       "CommittedOnBail": "D",
@@ -112,16 +121,16 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
       "CriminalProsecutionReference": {
         "OffenceReason": {
           "OffenceCode": {
-            "ActOrSource": "RT",
-            "FullCode": "RT88191",
-            "Reason": "191",
-            "Year": "88",
-            "__type": "NonMatchingOffenceCode",
+            "CommonLawOffence": "COML",
+            "FullCode": "COML001",
+            "Reason": "001",
+            "__type": "CommonLawOffenceCode",
           },
           "__type": "NationalOffenceReason",
         },
       },
       "LocationOfOffence": "Kingston High Street",
+      "OffenceEndTime": "11:00",
       "Result": [
         {
           "AmountSpecifiedInResult": [
@@ -151,6 +160,7 @@ exports[`PopulateOffences should transform SPI Offences to Hearing Outcome Offen
           "Verdict": "G",
         },
       ],
+      "StartTime": "11:00",
     },
   ],
 }

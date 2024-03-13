@@ -1,4 +1,4 @@
-import type { Duration, OrganisationUnitCodes, Result } from "../../../types/AnnotatedHearingOutcome"
+import type { Duration, Result } from "../../../types/AnnotatedHearingOutcome"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
@@ -9,9 +9,7 @@ import {
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
 import countDecimalPlaces from "../../lib/countDecimalPlaces"
 import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
-import type { CjsPlea } from "../../types/Plea"
 import type { ResultedCaseMessageParsedXml, SpiNextHearingDetails, SpiOffence, SpiResult } from "../../types/SpiResult"
-import type { CjsVerdict } from "../../types/Verdict"
 import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
@@ -93,20 +91,21 @@ export default class {
       ResultCodeQualifier: spiResultCodeQualifier,
       Outcome: spiOutcome
     } = spiResult
-    const result = {} as Result
     const spiResultCodeNumber = spiResultCode ? Number(spiResultCode) : freeTextResultCode
-    result.CJSresultCode = spiResultCodeNumber
+
+    const result: Result = {
+      CJSresultCode: spiResultCodeNumber,
+      ConvictingCourt: spiConvictingCourt,
+      ResultHearingType: otherValue,
+      ResultHearingDate: new Date(spiConvictionDate ?? spiDateOfHearing),
+      SourceOrganisation: getOrganisationUnit(this.courtResult.Session.CourtHearing.Hearing.CourtHearingLocation),
+      ResultQualifierVariable: []
+    }
 
     if (spiNextHearing?.BailStatusOffence) {
       result.OffenceRemandStatus =
         lookupRemandStatusBySpiCode(spiNextHearing.BailStatusOffence)?.cjsCode ?? spiNextHearing.BailStatusOffence
     }
-
-    result.SourceOrganisation = getOrganisationUnit(this.courtResult.Session.CourtHearing.Hearing.CourtHearingLocation)
-
-    result.ConvictingCourt = spiConvictingCourt
-    result.ResultHearingType = otherValue
-    result.ResultHearingDate = new Date(spiConvictionDate ?? spiDateOfHearing)
 
     if (typeof spiCourtIndividualDefendant?.ReasonForBailConditionsOrCustody === "string") {
       result.ReasonForOffenceBailConditions = spiCourtIndividualDefendant.ReasonForBailConditionsOrCustody
@@ -186,8 +185,11 @@ export default class {
         result.NextResultSourceOrganisation = {
           OrganisationUnitCode:
             lookupOrganisationUnitByThirdLevelPsaCode(spiNextCourtHearingLocation)?.thirdLevelCode ??
-            spiNextCourtHearingLocation
-        } as OrganisationUnitCodes
+            spiNextCourtHearingLocation,
+          SecondLevelCode: null,
+          ThirdLevelCode: null,
+          BottomLevelCode: null
+        }
 
         result.NextHearingDate = new Date(spiNextDateOfHearing)
         result.NextHearingTime = spiNextTimeOfHearing
@@ -195,13 +197,11 @@ export default class {
     }
 
     if (this.spiOffence.Plea) {
-      result.PleaStatus =
-        (lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.cjsCode as CjsPlea) ?? this.spiOffence.Plea.toString()
+      result.PleaStatus = lookupPleaStatusBySpiCode(this.spiOffence.Plea)?.cjsCode ?? this.spiOffence.Plea
     }
 
     if (this.spiOffence.Finding) {
-      result.Verdict =
-        (lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode as CjsVerdict) ?? this.spiOffence.Finding
+      result.Verdict = lookupVerdictBySpiCode(this.spiOffence.Finding)?.cjsCode ?? this.spiOffence.Finding
     }
 
     if (this.spiOffence.ModeOfTrial !== undefined) {
@@ -234,7 +234,6 @@ export default class {
       }
     }
 
-    result.ResultQualifierVariable = []
     spiResultCodeQualifier.forEach((resultCodeQualifier) => {
       if (/BA/i.test(resultCodeQualifier) && taggingFixRemove.includes(spiResultCodeNumber)) {
         this.baResultCodeQualifierHasBeenExcluded = true

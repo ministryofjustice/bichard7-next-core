@@ -5,6 +5,7 @@ import type {
   Case,
   CriminalProsecutionReference,
   DateSpecifiedInResult,
+  DefendantOrOffender,
   Duration,
   Hearing,
   NumberSpecifiedInResult,
@@ -35,6 +36,7 @@ import type {
   Br7TextString,
   Br7TypeTextString,
   CommonLawOffenceCode,
+  DsDefendantOrOffender,
   IndictmentOffenceCode,
   NonMatchingOffenceCode
 } from "../../types/AhoXml"
@@ -265,16 +267,22 @@ const mapErrorString = (node: Br7ErrorString | undefined): string | null | undef
   return undefined
 }
 
-const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
-  DefendantOrOffender: {
-    Year: xmlCPR["ds:DefendantOrOffender"]["ds:Year"]?.["#text"] ?? "",
+const mapXmlDefendantOrOffender = (defendantOrOffender?: DsDefendantOrOffender): DefendantOrOffender | undefined => {
+  if (defendantOrOffender === undefined) {
+    return undefined
+  }
+  return {
+    Year: defendantOrOffender["ds:Year"]?.["#text"] ?? "",
     OrganisationUnitIdentifierCode: mapXmlOrganisationalUnitToAho(
-      xmlCPR["ds:DefendantOrOffender"]["ds:OrganisationUnitIdentifierCode"]
+      defendantOrOffender["ds:OrganisationUnitIdentifierCode"]
     ),
-    DefendantOrOffenderSequenceNumber:
-      xmlCPR["ds:DefendantOrOffender"]["ds:DefendantOrOffenderSequenceNumber"]?.["#text"] ?? "",
-    CheckDigit: xmlCPR["ds:DefendantOrOffender"]["ds:CheckDigit"]?.["#text"] ?? ""
-  },
+    DefendantOrOffenderSequenceNumber: defendantOrOffender["ds:DefendantOrOffenderSequenceNumber"]?.["#text"] ?? "",
+    CheckDigit: defendantOrOffender["ds:CheckDigit"]?.["#text"] ?? ""
+  }
+}
+
+const mapXmlCPRToAho = (xmlCPR: Br7CriminalProsecutionReference): CriminalProsecutionReference => ({
+  DefendantOrOffender: mapXmlDefendantOrOffender(xmlCPR["ds:DefendantOrOffender"]),
   OffenceReason: xmlCPR["ds:OffenceReason"] ? mapOffenceReasonToAho(xmlCPR["ds:OffenceReason"]) : undefined,
   OffenceReasonSequence: mapErrorString(xmlCPR["ds:OffenceReasonSequence"])
 })

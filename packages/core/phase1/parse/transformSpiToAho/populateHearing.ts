@@ -1,9 +1,45 @@
 import type { Hearing } from "../../../types/AnnotatedHearingOutcome"
 import getOrganisationUnit from "../../lib/organisationUnit/getOrganisationUnit"
-import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
+import type { ResultedCaseMessageParsedXml, SpiDefendant } from "../../types/SpiResult"
 import removeSeconds from "./removeSeconds"
 
-export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
+type DefendantDetailsData = {
+  presentAtHearing: string
+  name: string
+}
+
+const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData => {
+  if (spiDefendant.CourtIndividualDefendant) {
+    const {
+      CourtIndividualDefendant: {
+        PresentAtHearing: presentAtHearing,
+        PersonDefendant: {
+          BasePersonDetails: {
+            PersonName: { PersonGivenName1: givenName, PersonFamilyName: familyName }
+          }
+        }
+      }
+    } = spiDefendant
+
+    const name = [givenName, familyName]
+      .filter((namePart) => namePart)
+      .join(" ")
+      .trim()
+    return { presentAtHearing, name }
+  } else if (spiDefendant.CourtCorporateDefendant) {
+    const {
+      CourtCorporateDefendant: {
+        OrganisationName: { OrganisationName: spiOrganisationName },
+        PresentAtHearing: presentAtHearing
+      }
+    } = spiDefendant
+    const name = spiOrganisationName.trim()
+    return { presentAtHearing, name }
+  }
+  throw new Error("Defendant details contained neither CourtIndividualDefendant or CourtCorporateDefendant")
+}
+
+const populateHearing = (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {
     Session: {
       CourtHearing: {
@@ -18,50 +54,24 @@ export default (messageId: string, courtResult: ResultedCaseMessageParsedXml): H
     }
   } = courtResult
 
-  const hearingOutcomeHearing = {} as Hearing
+  const { presentAtHearing, name } = getDefendantDetails(spiDefendant)
 
-  hearingOutcomeHearing.CourtHearingLocation = getOrganisationUnit(spiCourtHearingLocation)
-
-  hearingOutcomeHearing.DateOfHearing = new Date(spiDateOfHearing)
-  hearingOutcomeHearing.TimeOfHearing = removeSeconds(spiTimeOfHearing)
-  hearingOutcomeHearing.HearingLanguage = "D"
-  hearingOutcomeHearing.HearingDocumentationLanguage = "D"
-
-  let name = ""
-  if (spiDefendant.CourtIndividualDefendant) {
-    const {
-      CourtIndividualDefendant: {
-        PresentAtHearing: spiPresentAtHearing,
-        PersonDefendant: {
-          BasePersonDetails: {
-            PersonName: { PersonGivenName1: givenName, PersonFamilyName: familyName }
-          }
-        }
-      }
-    } = spiDefendant
-
-    hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
-    name = [givenName, familyName]
-      .filter((namePart) => namePart)
-      .join(" ")
-      .trim()
-  } else if (spiDefendant.CourtCorporateDefendant) {
-    const {
-      CourtCorporateDefendant: {
-        OrganisationName: { OrganisationName: spiOrganisationName },
-        PresentAtHearing: spiPresentAtHearing
-      }
-    } = spiDefendant
-    name = spiOrganisationName.trim()
-    hearingOutcomeHearing.DefendantPresentAtHearing = spiPresentAtHearing
+  const hearingOutcomeHearing: Hearing = {
+    CourtHearingLocation: getOrganisationUnit(spiCourtHearingLocation),
+    DateOfHearing: new Date(spiDateOfHearing),
+    TimeOfHearing: removeSeconds(spiTimeOfHearing),
+    HearingLanguage: "D",
+    HearingDocumentationLanguage: "D",
+    CourtHouseCode: Number(spiPsaCode),
+    SourceReference: {
+      DocumentName: `SPI ${name}`,
+      DocumentType: "SPI Case Result",
+      UniqueID: messageId
+    },
+    DefendantPresentAtHearing: presentAtHearing
   }
-  hearingOutcomeHearing.SourceReference = {
-    DocumentName: `SPI ${name}`,
-    DocumentType: "SPI Case Result",
-    UniqueID: messageId
-  }
-
-  hearingOutcomeHearing.CourtHouseCode = Number(spiPsaCode)
 
   return hearingOutcomeHearing
 }
+
+export default populateHearing
