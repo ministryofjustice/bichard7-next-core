@@ -1,7 +1,7 @@
 import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
-import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import ResolutionStatus from "../../types/ResolutionStatus"
 
@@ -34,7 +34,7 @@ const generateOrgForPoliceFilter = (forceOwner?: OrganisationUnitCodes): string 
   return `${forceOwner.SecondLevelCode}${forceOwner.ThirdLevelCode}`
 }
 
-const convertResultToErrorListRecord = (result: PersistablePhase1Result): ErrorListRecord => {
+const convertResultToErrorListRecord = (result: Phase1Result): ErrorListRecord => {
   const hearingOutcome = result.hearingOutcome as AnnotatedHearingOutcome
 
   const generateFalseHasErrorAttributes = result.triggers.length > 0 && hearingOutcome.Exceptions.length === 0
@@ -53,7 +53,7 @@ const convertResultToErrorListRecord = (result: PersistablePhase1Result): ErrorL
     trigger_count: result.triggers.length,
     is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
     asn: caseElem.HearingDefendant.ArrestSummonsNumber.slice(0, 21),
-    court_code: hearing.CourtHearingLocation.OrganisationUnitCode.slice(0, 7),
+    court_code: hearing.CourtHearingLocation.OrganisationUnitCode?.slice(0, 7),
     annotated_msg: convertAhoToXml(hearingOutcome),
     updated_msg: convertAhoToXml(hearingOutcome, false, generateFalseHasErrorAttributes),
     error_report: errorReport.slice(0, 1000),

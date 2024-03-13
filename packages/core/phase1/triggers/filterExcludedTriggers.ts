@@ -12,7 +12,7 @@ const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome
     throw Error("Force not found")
   }
 
-  const matchingCourtKeys = Object.keys(excludedTriggers).filter((key) => court.startsWith(key))
+  const matchingCourtKeys = Object.keys(excludedTriggers).filter((key) => court?.startsWith(key))
   const courtHasRules = matchingCourtKeys.length > 0
   const forceHasRules = !!excludedTriggers[force]
 
