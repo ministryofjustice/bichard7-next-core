@@ -67,6 +67,7 @@
 								</DC:SimpleAddress>
 							</DC:Address>
 							<DC:PresentAtHearing>A</DC:PresentAtHearing>
+							<ReasonForBailConditionsOrCustody>For the defendant's own welfare</ReasonForBailConditionsOrCustody>
 						</DC:CourtIndividualDefendant>
 						<DC:Offence>
 							<DC:BaseOffenceDetails>
@@ -97,6 +98,170 @@
 							<DC:Result>
 								<DC:ResultCode>3078</DC:ResultCode>
 								<DC:ResultText>Travel Restriction Order</DC:ResultText>
+								<NextHearing>
+									<NextHearingDetails>
+										<CourtHearingLocation>B01EF01</CourtHearingLocation>
+										<DateOfHearing>2008-09-24</DateOfHearing>
+										<TimeOfHearing>10:00:00</TimeOfHearing>
+									</NextHearingDetails>
+									<NextHearingReason>for advance disclosure (Either way case);</NextHearingReason>
+									<DC:BailStatusOffence>U</DC:BailStatusOffence>
+								</NextHearing>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>2</DC:DurationValue>
+										<DC:DurationUnit>Y</DC:DurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>1015</DC:ResultCode>
+								<DC:ResultText>Fined 100.</DC:ResultText>
+								<DC:Outcome>
+									<DC:ResultAmountSterling>100.00</DC:ResultAmountSterling>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3008</DC:ResultCode>
+								<DC:ResultText>Licence or counterpart endorsed with 7 points</DC:ResultText>
+								<DC:Outcome>
+									<DC:PenaltyPoints>7</DC:PenaltyPoints>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3105</DC:ResultCode>
+								<DC:ResultText>Curfew Requirement: Be under a curfew for 52 weeks. Start date	26/09/2011. End date 26/09/2012. Offender to remain at Somewhere between 8 pm and 7 am daily.</DC:ResultText>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>12</DC:DurationValue>
+										<DC:DurationUnit>W</DC:DurationUnit>
+										<DC:SecondaryDurationValue>15</DC:SecondaryDurationValue>
+										<DC:SecondaryDurationUnit>H</DC:SecondaryDurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>1116</DC:ResultCode>
+								<DC:ResultText>Community Order</DC:ResultText>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationStartDate>2011-09-26</DC:DurationStartDate>
+										<DC:DurationEndDate>2012-05-21</DC:DurationEndDate>
+									</DC:Duration>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3068</DC:ResultCode>
+								<DC:ResultText>Football Banning Order</DC:ResultText>
+								<DC:ResultCodeQualifier>BA</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>AW</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>RA</DC:ResultCodeQualifier>
+								<DC:NextHearing>
+									<DC:NextHearingDetails>
+										<DC:CourtHearingLocation>B41ME01</DC:CourtHearingLocation>
+										<DC:DateOfHearing>2011-05-08</DC:DateOfHearing>
+										<DC:TimeOfHearing>13:30:00</DC:TimeOfHearing>
+									</DC:NextHearingDetails>
+									<DC:NextHearingReason>to continue the hearing;</DC:NextHearingReason>
+									<DC:BailStatusOffence>B</DC:BailStatusOffence>
+								</DC:NextHearing>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3068</DC:ResultCode>
+								<DC:ResultText>Football Banning Order</DC:ResultText>
+								<DC:ResultCodeQualifier>BA</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>AW</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>RA</DC:ResultCodeQualifier>
+								<DC:NextHearing>
+									<DC:NextHearingDetails>
+										<DC:CourtHearingLocation>B41ME01</DC:CourtHearingLocation>
+										<DC:DateOfHearing>2011-05-08</DC:DateOfHearing>
+										<DC:TimeOfHearing>13:30:00</DC:TimeOfHearing>
+									</DC:NextHearingDetails>
+									<DC:NextHearingReason>to continue the hearing;</DC:NextHearingReason>
+									<DC:BailStatusOffence>B</DC:BailStatusOffence>
+								</DC:NextHearing>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>1115</DC:ResultCode>
+								<DC:ResultText>Committed to prison for 3 months suspended for 12 months. Then to be electronically monitored from 15/05/2012 to 14/07/2012</DC:ResultText>
+								<DC:ResultCodeQualifier>RB</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>WC</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>JD</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>C</DC:ResultCodeQualifier>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>3</DC:DurationValue>
+										<DC:DurationUnit>M</DC:DurationUnit>
+										<DC:SecondaryDurationValue>12</DC:SecondaryDurationValue>
+										<DC:SecondaryDurationUnit>M</DC:SecondaryDurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>1115</DC:ResultCode>
+								<DC:ResultText>Committed to prison for 3 months suspended for 12 months. Then to be electronically monitored from 15/05/2012 to 14/07/2012</DC:ResultText>
+								<DC:ResultCodeQualifier>BA</DC:ResultCodeQualifier>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>9999</DC:ResultCode>
+								<DC:ResultText>Committed to prison for 3 months suspended for 12 months. Then to be electronically monitored from 15/05/2012 to 14/07/2012</DC:ResultText>
+								<DC:ResultCodeQualifier>RB</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>WC</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>JD</DC:ResultCodeQualifier>
+								<DC:ResultCodeQualifier>C</DC:ResultCodeQualifier>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>3</DC:DurationValue>
+										<DC:DurationUnit>M</DC:DurationUnit>
+										<DC:SecondaryDurationValue>12</DC:SecondaryDurationValue>
+										<DC:SecondaryDurationUnit>M</DC:SecondaryDurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3068</DC:ResultCode>
+								<DC:ResultText>Football Banning Order</DC:ResultText>
+								<DC:NextHearing>
+									<DC:NextHearingDetails>
+										<DC:CourtHearingLocation>0413</DC:CourtHearingLocation>
+										<DC:DateOfHearing>2011-05-08</DC:DateOfHearing>
+										<DC:TimeOfHearing>13:30:00</DC:TimeOfHearing>
+									</DC:NextHearingDetails>
+								</DC:NextHearing>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>4575</DC:ResultCode>
+								<DC:ResultText>Warrant of arrest issued for hearing on 26/09/2011 at 10:00 in Courtroom 01, Kingston Magistrates' Court. Basis: no appearance in answer to bail.</DC:ResultText>
+								<DC:ResultCodeQualifier>CG</DC:ResultCodeQualifier>
+								<DC:NextHearing>
+									<DC:NextHearingDetails>
+										<DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
+										<DC:DateOfHearing>2011-10-01</DC:DateOfHearing>
+										<DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
+									</DC:NextHearingDetails>
+									<DC:NextHearingReason>To continue hearing</DC:NextHearingReason>
+									<DC:BailStatusOffence>B</DC:BailStatusOffence>
+								</DC:NextHearing>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3118</DC:ResultCode>
+								<DC:ResultText>5 Other Offences admitted and taken into consideration</DC:ResultText>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>4014</DC:ResultCode>
+								<DC:ResultText>Committed to Snaresbrook Crown Court for sentence (Section 3 Powers of Criminal Courts (Sentencing) Act 2000) on 08/10/2011 at 09:45 or such other date, time or place as the Crown Court directs on unconditional bail</DC:ResultText>
+							</DC:Result>
+							<DC:Result>
+								<DC:ResultCode>3105</DC:ResultCode>
+								<DC:ResultText>Curfew Requirement: Be under a curfew for 52 weeks. Start date 26/09/2011. End date 26/09/2012. Offender to remain at Somewhere between 8 pm and 7 am daily.</DC:ResultText>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>12</DC:DurationValue>
+										<DC:DurationUnit>W</DC:DurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
+								<DC:ResultCodeQualifier>BA</DC:ResultCodeQualifier>
 							</DC:Result>
 						</DC:Offence>
 						<DC:Offence>
