@@ -1,8 +1,8 @@
 import { readFileSync } from "fs"
 import parseSpiResult from "../parseSpiResult"
-import type { OffencesResult } from "./PopulateOffences"
-import PopulateOffences from "./PopulateOffences"
 import populateDefendant from "./populateDefendant"
+import type { OffencesResult } from "./populateOffences"
+import * as populateOffences from "./populateOffences"
 
 describe("populateDefendant", () => {
   const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")
@@ -11,7 +11,7 @@ describe("populateDefendant", () => {
   it("should transform SPI Defendant to Hearing Outcome Defendant for individual defendant", () => {
     const result = populateDefendant(courtResult)
 
-    jest.spyOn(PopulateOffences.prototype, "execute").mockReturnValue({} as OffencesResult)
+    jest.spyOn(populateOffences, "default").mockReturnValue({} as OffencesResult)
     expect(result).toBeDefined()
     expect(result).toMatchSnapshot()
   })
@@ -21,7 +21,7 @@ describe("populateDefendant", () => {
       "John  Smith"
     const result = populateDefendant(courtResult)
 
-    jest.spyOn(PopulateOffences.prototype, "execute").mockReturnValue({} as OffencesResult)
+    jest.spyOn(populateOffences, "default").mockReturnValue({} as OffencesResult)
     expect(result.DefendantDetail?.PersonName.GivenName).toStrictEqual(["John Smith"])
   })
 })
