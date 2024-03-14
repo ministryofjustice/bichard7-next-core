@@ -1,27 +1,31 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import getMessageType from "../lib/getMessageType"
 import { parseAhoXml } from "./parseAhoXml"
 import parseSpiResult from "./parseSpiResult"
 import transformSpiToAho from "./transformSpiToAho"
+import { parsePncUpdateDataSetXml } from "./parsePncUpdateDataSetXml"
 
-const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome, string] => {
-  let hearingOutcome: AnnotatedHearingOutcome | Error
+const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome | PncUpdateDataset, string] => {
+  let result: AnnotatedHearingOutcome | PncUpdateDataset | Error
   const messageType = getMessageType(message)
 
   if (messageType === "SPIResults") {
     const spiResult = parseSpiResult(message)
-    hearingOutcome = transformSpiToAho(spiResult)
+    result = transformSpiToAho(spiResult)
   } else if (messageType === "HearingOutcome") {
-    hearingOutcome = parseAhoXml(message)
+    result = parseAhoXml(message)
+  } else if (messageType === "PncUpdateDataset") {
+    result = parsePncUpdateDataSetXml(message)
   } else {
     throw new Error("Invalid incoming message format")
   }
 
-  if (hearingOutcome instanceof Error) {
-    throw hearingOutcome
+  if (result instanceof Error) {
+    throw result
   }
 
-  return [hearingOutcome, messageType]
+  return [result, messageType]
 }
 
 export default parseIncomingMessage
