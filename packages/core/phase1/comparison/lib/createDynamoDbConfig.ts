@@ -34,7 +34,7 @@ export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig 
       tableName = PHASE1_COMPARISON_TABLE_NAME;
       break
     case 3:
-      tableName = PHASE2_COMPARISON_TABLE_NAME;
+      tableName = PHASE3_COMPARISON_TABLE_NAME;
     default:
       break
   }
