@@ -23,4 +23,11 @@ describe("parsePncUpdateDataSetXml", () => {
 
     expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
   })
+
+  it("converts XML to PncUpdateDataSet ignoring unexpected element", () => {
+    const inputXml = fs.readFileSync("phase1/tests/fixtures/PncUpdateDataSet-unexpected-element.xml").toString()
+    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
+
+    expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
+  })
 })
