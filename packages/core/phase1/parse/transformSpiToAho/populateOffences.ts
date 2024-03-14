@@ -3,7 +3,7 @@ import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode }
 import { COMMON_LAWS, INDICTMENT } from "../../lib/offenceTypes"
 import resultCodeIsOnStopList from "../../lib/result/resultCodeIsOnStopList"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../types/SpiResult"
-import PopulateOffenceResults from "./PopulateOffenceResults"
+import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
 
 const enteredInErrorResultCode = 4583 // Hearing Removed
@@ -101,7 +101,7 @@ const populateOffence = (
     Result: spiResults
   } = spiOffence
 
-  const { results, bailQualifiers } = new PopulateOffenceResults(courtResult, spiOffence).execute()
+  const { results, bailQualifiers } = populateOffenceResults(spiOffence, courtResult)
 
   if (bailQualifiers.length > 0) {
     bailQualifiers.forEach((bailQualifier) => {
