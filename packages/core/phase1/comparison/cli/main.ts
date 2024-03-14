@@ -39,20 +39,20 @@ const main = async () => {
     await runMissingComparisons(args.runMissing)
   } else if ("matching" in args && args.matching) {
     if ("start" in args && "end" in args && args.start && args.end) {
-      const results = await processRange(args.start, args.end, "all", !!args.cache, !!args.list, checkPncMatching)
+      const results = await processRange(phase, args.start, args.end, "all", !!args.cache, !!args.list, checkPncMatching)
       success = printPncMatchingResult(results, !args.noTruncate)
     } else {
       console.error("You must specify both a start and end time")
     }
   } else if ("start" in args || "end" in args) {
     if ("start" in args && "end" in args && args.start && args.end) {
-      const results = await processRange(args.start, args.end, filter, !!args.cache, !!args.list, processFile)
+      const results = await processRange(phase, args.start, args.end, filter, !!args.cache, !!args.list, processFile)
       success = printResult(results, !args.noTruncate, !!args.list)
     } else {
       console.error("You must specify both a start and end time")
     }
   } else if (filter === "failure") {
-    const results = await processFailures(!!args.cache)
+    const results = await processFailures(phase, !!args.cache)
     success = printResult(results, !args.noTruncate)
   }
   process.exit(Number(!success))
