@@ -1,6 +1,6 @@
 import type { DynamoDbConfig } from "../types"
 
-export default function createDynamoDbConfig(): DynamoDbConfig {
+export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig {
   const {
     DYNAMO_URL,
     DYNAMO_REGION,
@@ -27,12 +27,22 @@ export default function createDynamoDbConfig(): DynamoDbConfig {
     throw new Error("PHASE3_COMPARISON_TABLE_NAME environment variable must have value.")
   }
 
+  let tableName: string = PHASE2_COMPARISON_TABLE_NAME
+  
+  switch(phase) {
+    case 1:
+      tableName = PHASE1_COMPARISON_TABLE_NAME;
+      break
+    case 3:
+      tableName = PHASE2_COMPARISON_TABLE_NAME;
+    default:
+      break
+  }
+
   const config: DynamoDbConfig = {
     DYNAMO_URL,
     DYNAMO_REGION: DYNAMO_REGION ?? "eu-west-2",
-    PHASE1_TABLE_NAME: PHASE1_COMPARISON_TABLE_NAME,
-    PHASE2_TABLE_NAME: PHASE2_COMPARISON_TABLE_NAME,
-    PHASE3_TABLE_NAME: PHASE3_COMPARISON_TABLE_NAME
+    TABLE_NAME: tableName,
   }
 
   if (DYNAMO_AWS_ACCESS_KEY_ID) {

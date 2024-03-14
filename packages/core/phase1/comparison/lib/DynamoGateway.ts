@@ -25,7 +25,7 @@ export default class DynamoGateway {
   public readonly tableName: string
 
   constructor(config: DynamoDbConfig) {
-    this.tableName = config.PHASE2_TABLE_NAME
+    this.tableName = config.TABLE_NAME
     const conf: DynamoDB.ClientConfiguration = {
       endpoint: config.DYNAMO_URL,
       region: config.DYNAMO_REGION,

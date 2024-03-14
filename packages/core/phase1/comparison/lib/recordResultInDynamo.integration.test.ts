@@ -27,9 +27,9 @@ describe("recordResultInDynamo", () => {
   })
 
   beforeEach(async () => {
-    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE1_TABLE_NAME))
-    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE2_TABLE_NAME))
-    await dynamoServer.setupTable(dynamoDbTableConfig(config.PHASE3_TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
     MockDate.set(mockedDate)
   })
 

@@ -50,7 +50,7 @@ describe("DynamoGateway()", () => {
   })
 
   beforeEach(async () => {
-    await dynamoServer.setupTable(dynamoDbTableConfig(dynamoDbGatewayConfig.PHASE1_TABLE_NAME))
+    await dynamoServer.setupTable(dynamoDbTableConfig(dynamoDbGatewayConfig.TABLE_NAME))
   })
 
   describe("getFailures()", () => {
