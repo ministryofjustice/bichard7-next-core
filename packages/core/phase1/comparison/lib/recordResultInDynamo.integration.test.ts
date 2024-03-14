@@ -9,7 +9,7 @@ import type { ComparisonLog } from "../../comparison/types"
 import MockDynamo from "../../tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
 
-const config = createDynamoDbConfig()
+const config = createDynamoDbConfig(1)
 const dynamoGateway = new DynamoGateway(config)
 const comparisonResult = {
   triggersMatch: true,
@@ -27,8 +27,6 @@ describe("recordResultInDynamo", () => {
   })
 
   beforeEach(async () => {
-    await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
-    await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
     await dynamoServer.setupTable(dynamoDbTableConfig(config.TABLE_NAME))
     MockDate.set(mockedDate)
   })

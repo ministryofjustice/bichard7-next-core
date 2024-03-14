@@ -8,7 +8,10 @@ import type ComparisonResult from "../types/ComparisonResult"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import isPass from "./isPass"
 
-const { PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME } = createDynamoDbConfig()
+const PHASE1_TABLE_NAME = createDynamoDbConfig(1).TABLE_NAME
+const PHASE2_TABLE_NAME = createDynamoDbConfig(2).TABLE_NAME
+const PHASE3_TABLE_NAME = createDynamoDbConfig(3).TABLE_NAME
+
 const dynamoTables = [undefined, PHASE1_TABLE_NAME, PHASE2_TABLE_NAME, PHASE3_TABLE_NAME]
 
 const recordResultsInDynamoBatch = async (

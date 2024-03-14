@@ -6,7 +6,7 @@ import dynamoDbTableConfig from "../../tests/helpers/testDynamoDbTableConfig"
 import DynamoGateway from "./DynamoGateway"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 
-const dynamoDbGatewayConfig = createDynamoDbConfig()
+const dynamoDbGatewayConfig = createDynamoDbConfig(1)
 
 const createRecord = (
   result: number,
