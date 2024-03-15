@@ -3,7 +3,7 @@ import MockDate from "mockdate"
 import generateMessage from "../../tests/helpers/generateMessage"
 import processMessage from "../../tests/helpers/processMessage"
 import type { Phase1SuccessResult } from "../../types/Phase1Result"
-import convertAhoToXml from "./generate"
+import serialiseToXml from "./serialiseToXml"
 
 describe("generateLegacyAhoXml", () => {
   it.ifNewBichard("should generate legacy xml with validations from an aho", async () => {
@@ -13,7 +13,7 @@ describe("generateLegacyAhoXml", () => {
       offences: [{ results: [{}] }, { results: [{}] }]
     })
     const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
-    const ahoXml = convertAhoToXml(hearingOutcome)
+    const ahoXml = serialiseToXml(hearingOutcome)
 
     expect(ahoXml).toMatchSnapshot()
 
@@ -27,7 +27,7 @@ describe("generateLegacyAhoXml", () => {
       offences: [{ results: [{}] }, { results: [{}] }]
     })
     const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
-    const hoXml = convertAhoToXml(hearingOutcome, false)
+    const hoXml = serialiseToXml(hearingOutcome, false)
 
     expect(hoXml).toMatchSnapshot()
 

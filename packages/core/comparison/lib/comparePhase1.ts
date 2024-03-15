@@ -8,7 +8,7 @@ import { TriggerCode } from "../../types/TriggerCode"
 import { extractExceptionsFromAho, parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import parseIncomingMessage from "./parseIncomingMessage"
 import phase1Handler from "../../phase1/phase1"
-import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type Exception from "../../phase1/types/Exception"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
@@ -86,7 +86,7 @@ const comparePhase1 = async (
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
 
-    const ahoXml = convertAhoToXml(coreResult.hearingOutcome as AnnotatedHearingOutcome)
+    const ahoXml = serialiseToXml(coreResult.hearingOutcome as AnnotatedHearingOutcome)
     const parsedAho = parseAhoXml(normalisedAho)
     if (parsedAho instanceof Error) {
       throw parsedAho
@@ -107,7 +107,7 @@ const comparePhase1 = async (
     }
 
     const isIgnored = !hasOffences(parsedAho)
-    const generatedXml = convertAhoToXml(parsedAho)
+    const generatedXml = serialiseToXml(parsedAho)
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {

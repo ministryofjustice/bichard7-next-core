@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import convertAhoToXml from "../../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core will remove a trailing space in the bail conditions
@@ -15,8 +15,8 @@ const trailingSpace = (
     return false
   }
 
-  const expectedXml = convertAhoToXml(expectedAho)
-  const actualXml = convertAhoToXml(actualAho)
+  const expectedXml = serialiseToXml(expectedAho)
+  const actualXml = serialiseToXml(actualAho)
 
   const expectedBailConditions = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.BailConditions
 

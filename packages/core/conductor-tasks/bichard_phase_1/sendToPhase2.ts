@@ -9,7 +9,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import { phase1SuccessResultSchema } from "../../phase1/schemas/phase1Result"
-import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 
 const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
@@ -19,7 +19,7 @@ const sendToPhase2: ConductorWorker = {
   execute: s3TaskDataFetcher<Phase1SuccessResult>(phase1SuccessResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
 
-    const result = await connectAndSendMessage(mqQueue, convertAhoToXml(s3TaskData.hearingOutcome)).catch(
+    const result = await connectAndSendMessage(mqQueue, serialiseToXml(s3TaskData.hearingOutcome)).catch(
       (e) => e as Error
     )
     if (isError(result)) {

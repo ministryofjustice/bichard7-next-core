@@ -29,8 +29,8 @@ import {
 } from "../../dataLookup"
 import { toISODate, toPNCDate } from "../../lib/dates"
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
-import addExceptionsToAhoXml from "../../serialise/ahoXml/addExceptionsToAhoXml"
-import addFalseHasErrorAttributesToAhoXml from "../../serialise/ahoXml/addFalseHasErrorAttributesToAhoXml"
+import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import type {
   Adj,
   AhoXml,
@@ -517,7 +517,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-const convertAhoToXml = (
+const serialiseToXml = (
   hearingOutcome: AnnotatedHearingOutcome,
   validate = true,
   generateFalseHasErrorAttributes = false
@@ -542,4 +542,4 @@ const convertAhoToXml = (
   return builder.build(xmlAho)
 }
 
-export default convertAhoToXml
+export default serialiseToXml

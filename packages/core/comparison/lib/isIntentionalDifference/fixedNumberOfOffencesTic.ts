@@ -1,6 +1,6 @@
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import convertAhoToXml from "../../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core parses the offences TIC string more accurately so will now add it to the AHO
@@ -29,7 +29,7 @@ const fixedNumberOfOffencesTic = (
     return false
   }
 
-  if (convertAhoToXml(normaliseOffencesTic(expectedAho)) !== convertAhoToXml(normaliseOffencesTic(actualAho))) {
+  if (serialiseToXml(normaliseOffencesTic(expectedAho)) !== serialiseToXml(normaliseOffencesTic(actualAho))) {
     return false
   }
 
