@@ -36,7 +36,7 @@ const main = async () => {
     const results = await processFilelist(args.filelist, !!args.cache)
     success = printResult(results, !args.noTruncate, !!args.list)
   } else if ("runMissing" in args && args.runMissing) {
-    await runMissingComparisons(args.runMissing)
+    await runMissingComparisons(phase, args.runMissing)
   } else if ("matching" in args && args.matching) {
     if ("start" in args && "end" in args && args.start && args.end) {
       const results = await processRange(phase, args.start, args.end, "all", !!args.cache, !!args.list, checkPncMatching)

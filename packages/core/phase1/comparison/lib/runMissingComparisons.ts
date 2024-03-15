@@ -2,18 +2,13 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { S3 } from "aws-sdk"
 import DynamoGateway from "./DynamoGateway"
 import InvokeCompareLambda from "./InvokeCompareLambda"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const workspace = process.env.WORKSPACE || "production"
 const region = "eu-west-2"
 const comparisonLambdaName = `bichard-7-${workspace}-comparison`
 const comparisonBucketName = `bichard-7-${workspace}-processing-validation`
-const dynamoConfig = {
-  DYNAMO_URL: "https://dynamodb.eu-west-2.amazonaws.com",
-  DYNAMO_REGION: region,
-  PHASE1_TABLE_NAME: `bichard-7-${workspace}-comparison-log`,
-  PHASE2_TABLE_NAME: `bichard-7-${workspace}-phase2-comparison-log`,
-  PHASE3_TABLE_NAME: `bichard-7-${workspace}-phase3-comparison-log`
-}
+
 
 enum ProcessResult {
   Errored,
@@ -67,7 +62,8 @@ const getAllKeys = async (s3PathPrefix: string): Promise<string[]> => {
   return keys
 }
 
-const runMissingComparisons = async (s3PathPrefix: string) => {
+const runMissingComparisons = async (phase: number = 2, s3PathPrefix: string) => {
+  const dynamoConfig = createDynamoDbConfig(phase)
   const dynamoGateway = new DynamoGateway(dynamoConfig)
   const invokeCompareLambda = new InvokeCompareLambda(comparisonLambdaName, comparisonBucketName)
 
