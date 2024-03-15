@@ -3,7 +3,7 @@ import {
   annotatedHearingOutcomeSchema,
   courtCaseReferenceNumberSchema,
   organisationUnitSchema
-} from "../schemas/annotatedHearingOutcome"
+} from "../../phase1/schemas/annotatedHearingOutcome"
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 

@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
 import type { AnnotatedPNCUpdateDataset } from "../../../types/AnnotatedPNCUpdateDataset"
-import type { AnnotatedPNCUpdateDatasetXml } from "../../../phase2/types/AnnotatedPNCUpdateDatasetXml"
-import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"
+import type { AnnotatedPNCUpdateDatasetXml } from "../../types/AnnotatedPNCUpdateDatasetXml"
+import { mapXmlCaseToAho, mapXmlHearingToAho } from "../../../phase1/parse/parseAhoXml/parseAhoXml"
 
 //TODO: Validate this against a real file
 const mapXmlToAnnotatedPNCUpdateDataset = (
