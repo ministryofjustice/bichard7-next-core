@@ -4,6 +4,7 @@ import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDa
 import type { AnnotatedPNCUpdateDatasetXml } from "../../types/AnnotatedPNCUpdateDatasetXml"
 import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"
 
+//TODO: Validate this against a real file
 const mapXmlToAnnotatedPNCUpdateDataset = (
   annotatedPNCUpdateDataset: AnnotatedPNCUpdateDatasetXml
 ): AnnotatedPNCUpdateDataset | undefined => {
@@ -18,7 +19,8 @@ const mapXmlToAnnotatedPNCUpdateDataset = (
               Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
             }
           },
-          Exceptions: []
+          Exceptions: [],
+          PncOperations: []
         }
       }
     }

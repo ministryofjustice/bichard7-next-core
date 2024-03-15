@@ -40,7 +40,12 @@ export const operationSchema = z.discriminatedUnion("code", [
 
 const pncUpdateDatasetSchema = z.object({
   AnnotatedHearingOutcome: annotatedHearingOutcomeSchema,
-  Operations: operationSchema.array().min(0)
+  PncOperations: operationSchema.array().min(0)
 })
+
+
+// annotatedHearingOutcomeSchema.extend({
+//   PncOperations: operationSchema.array().min(0)
+// })
 
 export default pncUpdateDatasetSchema

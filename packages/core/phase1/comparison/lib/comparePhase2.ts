@@ -2,8 +2,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import isEqual from "lodash.isequal"
 import orderBy from "lodash.orderby"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
-import phase2 from "../../../phase2/phase2"
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+// import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import parseIncomingMessage from "../../parse/parseIncomingMessage"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
@@ -15,12 +14,12 @@ import { xmlOutputDiff } from "./xmlOutputComparison"
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
 
-type CompareOptions = {
-  defaultStandingDataVersion?: string
-}
+// type CompareOptions = {
+//   defaultStandingDataVersion?: string
+// }
 
-const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
-  !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
+// const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
+//   !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -41,28 +40,34 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
   const { incomingMessage, outgoingMessage, triggers } = comparison
   console.log(triggers.length)
+  console.log(outgoingMessage.length)
   const correlationId = getCorrelationId(comparison)
-
+  
   const sortedTriggers = sortTriggers(triggers)
   const exceptions: Exception[] = []
   // const exceptions = extractExceptionsFromAho(normalisedAho)
   const sortedExceptions = sortExceptions(exceptions)
-
+  
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+  console.log(auditLogger? "has audit logger": "doesnt have audit logger")
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
-
-    const [inputAho] = parseIncomingMessage(incomingMessage)
-    const coreResult = phase2(inputAho, auditLogger)
+    const {message, type} = parseIncomingMessage(incomingMessage)
+    console.log(message)
+    if(type !== "PncUpdateDataset"){
+      throw new Error("Received invalid incoming message")
+    }
+    // const coreResult = phase2(inputAho, auditLogger)
 
     const sortedCoreExceptions: Exception[] = []
     // const sortedCoreExceptions = sortExceptions(
     //   coreResult.outputMessage.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions ?? []
     // )
-    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
+    const sortedCoreTriggers = sortTriggers([])
+    // coreResult.triggers
 
     // const generatedXml = convertAhoToXml(parsedAho)
 

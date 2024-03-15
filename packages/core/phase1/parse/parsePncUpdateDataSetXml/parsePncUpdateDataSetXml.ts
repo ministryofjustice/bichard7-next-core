@@ -91,10 +91,12 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
     return aho
   }
 
-  return {
+  let pncUpdateDataset = {
     AnnotatedHearingOutcome: aho,
-    Operations: mapXmlToOperation(rootElement["Operation"] || [])
+    PncOperations: mapXmlToOperation(rootElement["Operation"] || [])
   }
+
+  return pncUpdateDataset
 }
 
 export default (xml: string): PncUpdateDataset | Error => {
@@ -111,5 +113,6 @@ export default (xml: string): PncUpdateDataset | Error => {
 
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
+
   return mapXmlToPNCUpdateDataSet(rawParsedObj)
 }

@@ -267,6 +267,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
         },
       },
       "Exceptions": [],
+      "PncOperations": [],
     },
   },
 }

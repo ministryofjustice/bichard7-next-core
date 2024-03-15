@@ -6,26 +6,50 @@ import parseSpiResult from "./parseSpiResult"
 import transformSpiToAho from "./transformSpiToAho"
 import { parsePncUpdateDataSetXml } from "./parsePncUpdateDataSetXml"
 
-const parseIncomingMessage = (message: string): [AnnotatedHearingOutcome | PncUpdateDataset, string] => {
-  let result: AnnotatedHearingOutcome | PncUpdateDataset | Error
+type HearingOutcomeResult = {
+  type: "HearingOutcome"
+  message: AnnotatedHearingOutcome
+}
+
+type SPIResultsResult = {
+  type: "SPIResults"
+  message: AnnotatedHearingOutcome
+}
+
+type PncUpdateDatasetResult = {
+  type: "PncUpdateDataset"
+  message: PncUpdateDataset
+}
+
+type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
+
+
+const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
+  let parsedMessage: AnnotatedHearingOutcome | PncUpdateDataset | Error
   const messageType = getMessageType(message)
 
   if (messageType === "SPIResults") {
     const spiResult = parseSpiResult(message)
-    result = transformSpiToAho(spiResult)
+    parsedMessage = transformSpiToAho(spiResult)
+    return {type: messageType, message: parsedMessage}
   } else if (messageType === "HearingOutcome") {
-    result = parseAhoXml(message)
+    parsedMessage = parseAhoXml(message)
+    if (parsedMessage instanceof Error) {
+      throw parsedMessage
+    }
+    return {type: messageType, message: parsedMessage}
   } else if (messageType === "PncUpdateDataset") {
-    result = parsePncUpdateDataSetXml(message)
+    parsedMessage = parsePncUpdateDataSetXml(message)
+    if (parsedMessage instanceof Error) {
+      throw parsedMessage
+    }
+    // let operations: PncOperation[] = parsedMessage.P
+    // let copy: PncUpdateDataset = parsedMessage
+    
+    return {type: messageType, message: parsedMessage}
   } else {
     throw new Error("Invalid incoming message format")
-  }
-
-  if (result instanceof Error) {
-    throw result
-  }
-
-  return [result, messageType]
+  }  
 }
 
 export default parseIncomingMessage
