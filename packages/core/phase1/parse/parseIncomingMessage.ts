@@ -25,26 +25,24 @@ type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult 
 
 
 const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
-  let parsedMessage: AnnotatedHearingOutcome | PncUpdateDataset | Error
   const messageType = getMessageType(message)
 
   if (messageType === "SPIResults") {
     const spiResult = parseSpiResult(message)
-    parsedMessage = transformSpiToAho(spiResult)
+    const parsedMessage = transformSpiToAho(spiResult)
     return {type: messageType, message: parsedMessage}
   } else if (messageType === "HearingOutcome") {
-    parsedMessage = parseAhoXml(message)
+    const parsedMessage = parseAhoXml(message)
     if (parsedMessage instanceof Error) {
       throw parsedMessage
     }
+
     return {type: messageType, message: parsedMessage}
   } else if (messageType === "PncUpdateDataset") {
-    parsedMessage = parsePncUpdateDataSetXml(message)
+    const parsedMessage = parsePncUpdateDataSetXml(message)
     if (parsedMessage instanceof Error) {
       throw parsedMessage
     }
-    // let operations: PncOperation[] = parsedMessage.P
-    // let copy: PncUpdateDataset = parsedMessage
     
     return {type: messageType, message: parsedMessage}
   } else {

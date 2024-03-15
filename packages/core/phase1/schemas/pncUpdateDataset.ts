@@ -38,14 +38,8 @@ export const operationSchema = z.discriminatedUnion("code", [
   sendefOperationSchema
 ])
 
-const pncUpdateDatasetSchema = z.object({
-  AnnotatedHearingOutcome: annotatedHearingOutcomeSchema,
+const pncUpdateDatasetSchema = annotatedHearingOutcomeSchema.extend({
   PncOperations: operationSchema.array().min(0)
 })
-
-
-// annotatedHearingOutcomeSchema.extend({
-//   PncOperations: operationSchema.array().min(0)
-// })
 
 export default pncUpdateDatasetSchema

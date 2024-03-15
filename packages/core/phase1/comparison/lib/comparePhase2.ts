@@ -55,6 +55,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
+
     const {message, type} = parseIncomingMessage(incomingMessage)
     console.log(message)
     if(type !== "PncUpdateDataset"){

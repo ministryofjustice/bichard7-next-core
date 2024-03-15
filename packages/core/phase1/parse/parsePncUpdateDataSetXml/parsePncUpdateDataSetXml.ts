@@ -92,7 +92,7 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
   }
 
   let pncUpdateDataset = {
-    AnnotatedHearingOutcome: aho,
+    ...aho,
     PncOperations: mapXmlToOperation(rootElement["Operation"] || [])
   }
 

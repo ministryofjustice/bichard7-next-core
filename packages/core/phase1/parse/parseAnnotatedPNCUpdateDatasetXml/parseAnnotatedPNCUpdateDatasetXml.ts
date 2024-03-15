@@ -17,11 +17,9 @@ const mapXmlToAnnotatedPNCUpdateDataset = (
     return {
       AnnotatedPNCUpdateDataset: {
         PNCUpdateDataset: {
+          Exceptions: [],
           AnnotatedHearingOutcome: {
-            Exceptions: [],
-            AnnotatedHearingOutcome: {
-              HearingOutcome: ho
-            },
+            HearingOutcome: ho
           },
           PncOperations: []
         }
