@@ -517,11 +517,29 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
+const convertAhoToXml = (
+  hearingOutcome: AnnotatedHearingOutcome,
+  validate = true,
+  generateFalseHasErrorAttributes = false
+): AhoXml => {
+  
+  const xmlAho = mapAhoToXml(hearingOutcome, validate)
+  if (validate) {
+    addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
+  } else if (generateFalseHasErrorAttributes) {
+    addFalseHasErrorAttributesToAhoXml(xmlAho)
+  }
+
+  return xmlAho
+}
+
+
 const serialiseToXml = (
   hearingOutcome: AnnotatedHearingOutcome,
   validate = true,
   generateFalseHasErrorAttributes = false
 ): string => {
+
   const options: Partial<XmlBuilderOptions> = {
     ignoreAttributes: false,
     suppressEmptyNode: true,
@@ -530,16 +548,11 @@ const serialiseToXml = (
     tagValueProcessor: encodeTagEntitiesProcessor,
     attributeValueProcessor: encodeAttributeEntitiesProcessor
   }
-
-  const xmlAho = mapAhoToXml(hearingOutcome, validate)
-  if (validate) {
-    addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
-  } else if (generateFalseHasErrorAttributes) {
-    addFalseHasErrorAttributesToAhoXml(xmlAho)
-  }
-
+  const xmlAho = convertAhoToXml(hearingOutcome, validate, generateFalseHasErrorAttributes)
   const builder = new XMLBuilder(options)
+
   return builder.build(xmlAho)
 }
 
 export default serialiseToXml
+export { convertAhoToXml }
