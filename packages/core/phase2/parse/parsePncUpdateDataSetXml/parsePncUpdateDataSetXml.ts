@@ -1,11 +1,11 @@
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import { mapXmlToAho } from "../parseAhoXml"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
+import { mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
-import { mapXmlOrganisationalUnitToAho } from "../parseAhoXml/parseAhoXml"
-import { Br7TextString } from "../../types/AhoXml"
+import { mapXmlOrganisationalUnitToAho } from "../../../phase1/parse/parseAhoXml/parseAhoXml"
+import { Br7TextString } from "../../../phase1/types/AhoXml"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {

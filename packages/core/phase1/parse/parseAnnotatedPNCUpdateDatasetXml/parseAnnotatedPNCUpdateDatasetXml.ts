@@ -1,7 +1,7 @@
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
-import type { AnnotatedPNCUpdateDatasetXml } from "../../types/AnnotatedPNCUpdateDatasetXml"
+import type { AnnotatedPNCUpdateDataset } from "../../../types/AnnotatedPNCUpdateDataset"
+import type { AnnotatedPNCUpdateDatasetXml } from "../../../phase2/types/AnnotatedPNCUpdateDatasetXml"
 import { mapXmlCaseToAho, mapXmlHearingToAho } from "../parseAhoXml/parseAhoXml"
 
 //TODO: Validate this against a real file

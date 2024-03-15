@@ -1,5 +1,5 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
-import type { Br7AnnotatedHearingOutcome, Br7OrganisationUnit, Br7TextString } from "./AhoXml"
+import type { Br7AnnotatedHearingOutcome, Br7OrganisationUnit, Br7TextString } from "../../phase1/types/AhoXml"
 
 export interface Br7Operation {
     operationCode: {
