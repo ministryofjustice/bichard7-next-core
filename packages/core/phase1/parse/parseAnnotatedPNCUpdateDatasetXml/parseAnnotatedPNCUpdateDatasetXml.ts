@@ -10,16 +10,19 @@ const mapXmlToAnnotatedPNCUpdateDataset = (
 ): AnnotatedPNCUpdateDataset | undefined => {
   if (annotatedPNCUpdateDataset.AnnotatedPNCUpdateDataset?.PNCUpdateDataset["br7:AnnotatedHearingOutcome"]) {
     const aho = annotatedPNCUpdateDataset.AnnotatedPNCUpdateDataset?.PNCUpdateDataset["br7:AnnotatedHearingOutcome"]
+    const ho = {
+      Hearing: mapXmlHearingToAho(aho["br7:HearingOutcome"]["br7:Hearing"]),
+      Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
+    }
     return {
       AnnotatedPNCUpdateDataset: {
         PNCUpdateDataset: {
           AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Hearing: mapXmlHearingToAho(aho["br7:HearingOutcome"]["br7:Hearing"]),
-              Case: mapXmlCaseToAho(aho["br7:HearingOutcome"]["br7:Case"])
-            }
+            Exceptions: [],
+            AnnotatedHearingOutcome: {
+              HearingOutcome: ho
+            },
           },
-          Exceptions: [],
           PncOperations: []
         }
       }
