@@ -10,10 +10,10 @@ describe("generateLegacyPncUpdateDatasetXml", () => {
     const inputMessage = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-with-operations.xml").toString()
     const parsedPncUpdateDataset = parsePncUpdateDataSetXml(inputMessage) as PncUpdateDataset
     const serialisedPncUpdateDataset = serialiseToXml(parsedPncUpdateDataset)
-        
+    
     expect(serialisedPncUpdateDataset.match(/<br7:AnnotatedHearingOutcome/))
   })
 })
 
-//@TODO
 // expect(serialisedPncUpdateDataset).toEqual(inputMessage)
+//@TODO

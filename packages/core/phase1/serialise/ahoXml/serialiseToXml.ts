@@ -1,5 +1,3 @@
-import type { XmlBuilderOptions } from "fast-xml-parser"
-import { XMLBuilder } from "fast-xml-parser"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -29,7 +27,6 @@ import {
 } from "../../dataLookup"
 import addNullElementsForExceptions from "../../lib/addNullElementsForExceptions"
 import { toISODate, toPNCDate } from "../../lib/dates"
-import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import type {
@@ -52,6 +49,7 @@ import type {
   DISList,
   DsDefendantOrOffender
 } from "../../types/AhoXml"
+import generateXml from "../../../lib/xml/generateXml"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -135,7 +133,7 @@ const optionalFormatText = (t: Date | string | undefined): Br7TextString | undef
   return text(toISODate(t))
 }
 
-const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
+export const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
   "ds:TopLevelCode": optionalText(orgUnit.TopLevelCode),
   "ds:SecondLevelCode": nullText(orgUnit.SecondLevelCode),
   "ds:ThirdLevelCode": nullText(orgUnit.ThirdLevelCode),
@@ -486,12 +484,13 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
       : undefined
 })
 
+export const xmlnsTags = {
+  "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
+  "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
+  "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+}
+
 const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
-  const xmlnsTags = {
-    "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
-    "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
-    "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
-  }
   const hearingOutcome = {
     "br7:HearingOutcome": {
       "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing),
@@ -538,26 +537,14 @@ const convertAhoToXml = (
   return xmlAho
 }
 
-
 const serialiseToXml = (
   hearingOutcome: AnnotatedHearingOutcome,
   validate = true,
   generateFalseHasErrorAttributes = false
 ): string => {
-
-  const options: Partial<XmlBuilderOptions> = {
-    ignoreAttributes: false,
-    suppressEmptyNode: true,
-    processEntities: false,
-    suppressBooleanAttributes: false,
-    tagValueProcessor: encodeTagEntitiesProcessor,
-    attributeValueProcessor: encodeAttributeEntitiesProcessor
-  }
   const xmlAho = convertAhoToXml(hearingOutcome, validate, generateFalseHasErrorAttributes)
 
-  const builder = new XMLBuilder(options)
-
-  return builder.build(xmlAho)
+  return generateXml(xmlAho)
 }
 
 export default serialiseToXml
