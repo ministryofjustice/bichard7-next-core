@@ -38,12 +38,12 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.521.0",
+    "@aws-sdk/client-s3": "^3.535.0",
     "@io-orkes/conductor-javascript": "^2.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@types/nodemailer": "^6.4.14",
-    "axios": "^1.6.7",
-    "nodemailer": "^6.9.10",
+    "axios": "^1.6.8",
+    "nodemailer": "^6.9.12",
     "pino": "^8.19.0",
     "postgres": "^3.4.3",
     "promise-poller": "^1.9.1",
@@ -53,7 +53,7 @@
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.9.0",
@@ -61,6 +61,6 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   }
 }

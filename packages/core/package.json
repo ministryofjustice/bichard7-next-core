@@ -60,7 +60,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^20.11.20",
+    "@types/node": "^20.11.28",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -72,7 +72,7 @@
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.9.0",
@@ -92,20 +92,20 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.2",
     "uuid": "^9.0.1"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.521.0",
-    "@aws-sdk/client-s3": "^3.521.0",
+    "@aws-sdk/client-dynamodb": "^3.535.0",
+    "@aws-sdk/client-s3": "^3.535.0",
     "@io-orkes/conductor-javascript": "^2.0.0",
     "@types/lodash.ismatch": "^4.4.9",
-    "aws-sdk": "^2.1565.0",
-    "axios": "^1.6.7",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.145",
+    "aws-sdk": "^2.1579.0",
+    "axios": "^1.6.8",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.152",
     "diff": "^5.2.0",
     "dynalite": "^3.2.2",
-    "fast-xml-parser": "^4.3.5",
+    "fast-xml-parser": "^4.3.6",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
@@ -114,6 +114,6 @@
     "pretty-data": "^0.40.0",
     "stompit": "^1.0.0",
     "zod": "^3.22.4",
-    "zod-validation-error": "^3.0.2"
+    "zod-validation-error": "^3.0.3"
   }
 }
