@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../../types/ExceptionCode"
-import { normaliseCCR } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+import { normaliseCCR } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 const ho100333AndCCRHasLeadingZero = (

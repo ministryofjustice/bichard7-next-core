@@ -1,98 +1,11 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOffence } from "../../../../types/PncQueryResult"
 import type { Candidate } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import type { PncOffenceWithCaseRef } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceIsBreach from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
 import getOffenceCode from "../../../lib/offence/getOffenceCode"
-
-export const normaliseCCR = (ccr: string): string => {
-  const splitCCR = ccr.split("/")
-  if (splitCCR.length !== 3) {
-    return ccr
-  }
-  splitCCR[2] = splitCCR[2].replace(/^0+/, "")
-  return splitCCR.map((el) => el.toUpperCase()).join("/")
-}
-
-const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {
-  const manualSequence = !!hoOffence.ManualSequenceNumber
-  const manualCourtCase = !!hoOffence.ManualCourtCaseReference
-  const offenceReasonSequence = hoOffence.CriminalProsecutionReference.OffenceReasonSequence
-  const sequence = Number(offenceReasonSequence)
-  const courtCase = hoOffence.CourtCaseReferenceNumber
-  if (manualSequence && isNaN(sequence)) {
-    return false
-  }
-  const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
-  const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
-
-  if (manualSequence && manualCourtCase) {
-    return sequenceMatches && ccrMatches
-  } else if (manualSequence) {
-    return sequenceMatches
-  } else if (manualCourtCase) {
-    return ccrMatches
-  }
-
-  return false
-}
-
-const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  if (hoOffence.ActualOffenceStartDate.StartDate.toISOString() !== pncOffence.offence.startDate.toISOString()) {
-    return false
-  }
-
-  if (hoOffence.ActualOffenceEndDate?.EndDate === undefined && pncOffence.offence.endDate === undefined) {
-    return true
-  }
-
-  if (hoOffence.ActualOffenceEndDate?.EndDate && pncOffence.offence.endDate) {
-    return hoOffence.ActualOffenceEndDate.EndDate.toISOString() === pncOffence.offence.endDate.toISOString()
-  }
-
-  return false
-}
-
-const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
-  const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
-  const pncStartDate = pncOffence.offence.startDate
-  const startDatesAreEqual = hoStartDate.getTime() === pncStartDate.getTime()
-
-  const hoEndDate = hoOffence.ActualOffenceEndDate?.EndDate
-  const pncEndDate = pncOffence.offence.endDate
-  const endDatesAreEqual = hoEndDate?.getTime() === pncEndDate?.getTime()
-
-  if (startDatesAreEqual && endDatesAreEqual) {
-    return true
-  }
-
-  //TODO: Check if we need this as we have similar code later
-  if (
-    hoEndDate &&
-    hoStartDate.toISOString() === hoEndDate.toISOString() &&
-    hoStartDate.toISOString() === pncStartDate.toISOString()
-  ) {
-    return true
-  }
-
-  if (!hoEndDate && !pncEndDate) {
-    return hoStartDate.getTime() === pncStartDate.getTime()
-  }
-
-  if (!pncEndDate) {
-    const hoStartAndEndDatesAreEqual = hoStartDate.getTime() === hoEndDate?.getTime()
-    return startDatesAreEqual && hoStartAndEndDatesAreEqual
-  }
-
-  if (!hoEndDate) {
-    const hoDateCode = hoOffence.ActualOffenceDateCode
-    if (["1", "5"].includes(hoDateCode)) {
-      return hoStartDate >= pncStartDate && hoStartDate <= pncEndDate
-    }
-  }
-
-  return hoStartDate >= pncStartDate && !!hoEndDate && hoEndDate <= pncEndDate
-}
+import { datesMatchApproximately } from "./datesMatchApproximately"
+import { datesMatchExactly } from "./datesMatchExactly"
+import { offenceManuallyMatches } from "./offenceManuallyMatches"
 
 const hasManualSequenceMatch = (hoOffence: Offence): boolean =>
   !!hoOffence.ManualSequenceNumber && !!hoOffence.CriminalProsecutionReference.OffenceReasonSequence
