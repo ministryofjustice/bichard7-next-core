@@ -165,6 +165,11 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
+
+    it("should not match if there are no offences", () => {
+      const matchingSummary = matchOffences([], [])
+      expect(matchingSummary).toBeNull()
+    })
   })
 
   describe("fuzzy matching dates", () => {

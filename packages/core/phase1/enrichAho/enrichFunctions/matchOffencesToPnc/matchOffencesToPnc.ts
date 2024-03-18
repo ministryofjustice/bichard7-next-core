@@ -23,7 +23,7 @@ const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCa
     pncOffences.some((pncOffence) => pncOffence.caseReference === courtCase.courtCaseReference)
   )
 
-const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCourtCase | PncPenaltyCase => {
+const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCourtCase | PncPenaltyCase | undefined => {
   if (pncQuery.courtCases) {
     for (const courtCase of pncQuery.courtCases) {
       if (courtCase.courtCaseReference === reference) {
@@ -38,7 +38,6 @@ const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCou
       }
     }
   }
-  throw new Error("Could not find case by reference")
 }
 
 const getFirstMatchingCourtCaseWith2060Result = (
@@ -116,9 +115,13 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     return aho
   }
 
-  // If there are still any unmatched PNC offences that don't already have final results in the court cases we have matched, raise an exception
+  // If there are still any unmatched PNC offences that don't already have final results in
+  // the court cases we have matched, raise an exception
   const matchedCases = offenceMatcher.matchedPncOffences.reduce((acc, pncOffence) => {
-    acc.add(getCaseByReference(aho.PncQuery!, pncOffence.caseReference))
+    const c = getCaseByReference(aho.PncQuery!, pncOffence.caseReference)
+    if (c) {
+      acc.add(c)
+    }
     return acc
   }, new Set<PncCourtCase | PncPenaltyCase>())
 
