@@ -9,7 +9,7 @@ import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
 import offenceHasFinalResult from "./offenceHasFinalResult"
-import { offencesHaveEqualResults } from "./resultsAreEqual"
+import offencesHaveEqualResults from "./offencesHaveEqualResults"
 
 export type Candidate = {
   adjudicationMatch: boolean
