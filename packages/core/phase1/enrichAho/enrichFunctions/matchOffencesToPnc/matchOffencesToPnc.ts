@@ -129,11 +129,6 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     (matchedCase) => "penaltyCaseReference" in matchedCase
   )
 
-  if (matchedCourtCases.length > 0 && matchedPenaltyCases.length > 0) {
-    aho.Exceptions.push({ code: ExceptionCode.HO100328, path: errorPaths.case.asn })
-    return aho
-  }
-
   if (matchedPenaltyCases.length > 0 && offenceMatcher.matches.size > 1) {
     aho.Exceptions.push({ code: ExceptionCode.HO100329, path: errorPaths.case.asn })
     return aho

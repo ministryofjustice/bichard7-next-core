@@ -128,7 +128,7 @@ const generateCandidate = (
   if (hasManualMatch(hoOffence)) {
     if (offenceManuallyMatches(hoOffence, pncOffence)) {
       candidate.manualSequenceMatch = hasManualSequenceMatch(hoOffence)
-      candidate.manualCcrMatch = hasManualSequenceMatch(hoOffence)
+      candidate.manualCcrMatch = hasManualCcrMatch(hoOffence)
     } else {
       return
     }
