@@ -55,6 +55,6 @@
     "zod-to-json-schema": "^3.21.4"
   },
   "dependencies": {
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.151"
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.154"
   }
 }
