@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
-import { type Phase1SuccessResult } from "../../phase1/types/Phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 import sendToPhase2 from "./sendToPhase2"
 
 const queueName = process.env.PHASE_2_QUEUE_NAME
@@ -29,7 +29,7 @@ describe("sendToPhase2", () => {
     const s3TaskDataPath = `${uuid()}.json`
     const s3Config = createS3Config()
     const phase1Result = String(fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result.json"))
-    const parsedResult = JSON.parse(phase1Result, dateReviver) as Phase1SuccessResult
+    const parsedResult = JSON.parse(phase1Result, dateReviver) as Phase1Result
     await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
     const result = await sendToPhase2.execute({ inputData: { s3TaskDataPath } })
 

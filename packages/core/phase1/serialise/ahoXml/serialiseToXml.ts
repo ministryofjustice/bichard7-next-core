@@ -27,6 +27,7 @@ import {
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
 } from "../../dataLookup"
+import addNullElementsForExceptions from "../../lib/addNullElementsForExceptions"
 import { toISODate, toPNCDate } from "../../lib/dates"
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../../lib/encoding"
 import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
@@ -127,9 +128,11 @@ const optionalFormatText = (t: Date | string | undefined): Br7TextString | undef
   if (!t) {
     return undefined
   }
+  if (typeof t === "string") {
+    return text(t)
+  }
 
-  const value = t instanceof Date ? toISODate(t) : t
-  return { "#text": value }
+  return text(toISODate(t))
 }
 
 const mapAhoOrgUnitToXml = (orgUnit: OrganisationUnitCodes): Br7OrganisationUnit => ({
@@ -522,7 +525,9 @@ const convertAhoToXml = (
   validate = true,
   generateFalseHasErrorAttributes = false
 ): AhoXml => {
-  
+  const hearingOutcomeClone: AnnotatedHearingOutcome = structuredClone(hearingOutcome)
+  addNullElementsForExceptions(hearingOutcomeClone)
+
   const xmlAho = mapAhoToXml(hearingOutcome, validate)
   if (validate) {
     addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
@@ -549,6 +554,7 @@ const serialiseToXml = (
     attributeValueProcessor: encodeAttributeEntitiesProcessor
   }
   const xmlAho = convertAhoToXml(hearingOutcome, validate, generateFalseHasErrorAttributes)
+
   const builder = new XMLBuilder(options)
 
   return builder.build(xmlAho)

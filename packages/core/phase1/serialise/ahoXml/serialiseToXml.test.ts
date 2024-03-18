@@ -2,8 +2,8 @@ import "jest-xml-matcher"
 import MockDate from "mockdate"
 import generateMessage from "../../tests/helpers/generateMessage"
 import processMessage from "../../tests/helpers/processMessage"
-import type { Phase1SuccessResult } from "../../types/Phase1Result"
 import serialiseToXml from "./serialiseToXml"
+import type Phase1Result from "../../types/Phase1Result"
 
 describe("generateLegacyAhoXml", () => {
   it.ifNewBichard("should generate legacy xml with validations from an aho", async () => {
@@ -12,7 +12,7 @@ describe("generateLegacyAhoXml", () => {
     const inputMessage = generateMessage({
       offences: [{ results: [{}] }, { results: [{}] }]
     })
-    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
+    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1Result
     const ahoXml = serialiseToXml(hearingOutcome)
 
     expect(ahoXml).toMatchSnapshot()
@@ -26,7 +26,7 @@ describe("generateLegacyAhoXml", () => {
     const inputMessage = generateMessage({
       offences: [{ results: [{}] }, { results: [{}] }]
     })
-    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1SuccessResult
+    const { hearingOutcome } = (await processMessage(inputMessage)) as Phase1Result
     const hoXml = serialiseToXml(hearingOutcome, false)
 
     expect(hoXml).toMatchSnapshot()

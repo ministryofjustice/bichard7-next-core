@@ -1,29 +1,6 @@
 import { z } from "zod"
-import { ExceptionCode } from "../../types/ExceptionCode"
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
-import {
-  invalid,
-  validateActualOffenceDateCode,
-  validateAmountSpecifiedInResult,
-  validateAsn,
-  validateCourtType,
-  validateDurationType,
-  validateDurationUnit,
-  validateModeOfTrialReason,
-  validateNumberSpecifiedInResult,
-  validateOffenceCategory,
-  validateOffenceInitiationCode,
-  validateRemandStatus,
-  validateResultCode,
-  validateResultQualifierCode,
-  validateSummonsCode,
-  validateTargetCourtType,
-  validateTypeOfHearing,
-  validateVehicleCode,
-  validateVerdict,
-  validateYesNo
-} from "./ahoValidations"
 import { exceptionSchema } from "./exception"
 import { pncQueryResultSchema } from "./pncQueryResult"
 import { ahoDescription, offenceDescription, organisationUnitDescription, resultDescription } from "./schemaDescription"
@@ -33,23 +10,19 @@ const hearingDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome
 const caseDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Case
 const offenceCodeDescription = offenceDescription.CriminalProsecutionReference.OffenceReason.OffenceCode
 
-export const timeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
+export const timeSchema = z.string()
 
 export const alcoholLevelSchema = z.object({
-  Amount: z
-    .number()
-    .min(0, ExceptionCode.HO100237)
-    .max(999, ExceptionCode.HO100237)
-    .describe(offenceDescription.AlcoholLevel.Amount.$description),
+  Amount: z.number().describe(offenceDescription.AlcoholLevel.Amount.$description),
   Method: z.string().describe(offenceDescription.AlcoholLevel.Method.$description)
 })
 
 export const actualOffenceEndDateSchema = z.object({
-  EndDate: z.date().describe(offenceDescription.ActualOffenceEndDate.EndDate.$description)
+  EndDate: z.coerce.date().describe(offenceDescription.ActualOffenceEndDate.EndDate.$description)
 })
 
 export const actualOffenceStartDateSchema = z.object({
-  StartDate: z.date().describe(offenceDescription.ActualOffenceStartDate.StartDate.$description)
+  StartDate: z.coerce.date().describe(offenceDescription.ActualOffenceStartDate.StartDate.$description)
 })
 
 export const localOffenceCodeSchema = z.object({
@@ -98,10 +71,7 @@ export const organisationUnitSchema = z.object({
   SecondLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.SecondLevelCode.$description),
   ThirdLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.ThirdLevelCode.$description),
   BottomLevelCode: z.string().or(z.null()).describe(organisationUnitDescription.BottomLevelCode.$description),
-  OrganisationUnitCode: z
-    .string()
-    .regex(/^[A-JZ0-9]{0,1}[A-Z0-9]{6}$/, ExceptionCode.HO100200)
-    .describe(organisationUnitDescription.OrganisationUnitCode.$description)
+  OrganisationUnitCode: z.string().or(z.null()).describe(organisationUnitDescription.OrganisationUnitCode.$description)
 })
 
 export const defendantOrOffenderSchema = z.object({
@@ -125,21 +95,17 @@ export const defendantOrOffenderSchema = z.object({
 export const criminalProsecutionReferenceSchema = z.object({
   DefendantOrOffender: defendantOrOffenderSchema.optional(),
   OffenceReason: offenceReasonSchema.optional(),
-  OffenceReasonSequence: z
-    .string()
-    .regex(/^\d{1,3}$/, ExceptionCode.HO100228)
-    .or(z.null())
-    .optional()
+  OffenceReasonSequence: z.string().or(z.null()).optional()
 })
 
 export const durationSchema = z.object({
-  DurationType: z.string().refine(validateDurationType, ExceptionCode.HO100108),
-  DurationUnit: z.string().refine(validateDurationUnit, ExceptionCode.HO100108),
-  DurationLength: z.number().min(1, ExceptionCode.HO100242).max(999, ExceptionCode.HO100242)
+  DurationType: z.string(),
+  DurationUnit: z.string(),
+  DurationLength: z.number()
 })
 
 export const dateSpecifiedInResultSchema = z.object({
-  Date: z.date().describe(resultDescription.DateSpecifiedInResult.Date.$description),
+  Date: z.coerce.date().describe(resultDescription.DateSpecifiedInResult.Date.$description),
   Sequence: z.number().describe(resultDescription.DateSpecifiedInResult.Sequence.$description)
 })
 
@@ -155,16 +121,13 @@ export const amountSpecifiedInResultSchema = z.object({
 })
 
 export const resultQualifierVariableSchema = z.object({
-  Code: z
-    .string()
-    .superRefine(validateResultQualifierCode)
-    .describe(resultDescription.ResultQualifierVariable.Code.$description),
+  Code: z.string().describe(resultDescription.ResultQualifierVariable.Code.$description),
   Duration: durationSchema.optional(),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   Text: z.string().optional()
 })
 
-export const addressLine = z.string().min(1, ExceptionCode.HO100217).max(35, ExceptionCode.HO100217)
+export const addressLine = z.string()
 
 export const addressSchema = z.object({
   AddressLine1: addressLine.describe(caseDescription.HearingDefendant.Address.AddressLine1.$description),
@@ -175,20 +138,12 @@ export const addressSchema = z.object({
 })
 
 export const personNameSchema = z.object({
-  Title: z
-    .string()
-    .max(35, ExceptionCode.HO100212)
-    .optional()
-    .describe(caseDescription.HearingDefendant.DefendantDetail.PersonName.Title.$description),
+  Title: z.string().optional().describe(caseDescription.HearingDefendant.DefendantDetail.PersonName.Title.$description),
   GivenName: z
-    .array(z.string().max(35, ExceptionCode.HO100213))
+    .array(z.string())
     .optional()
     .describe(caseDescription.HearingDefendant.DefendantDetail.PersonName.GivenName.$description),
-  FamilyName: z
-    .string()
-    .min(1, ExceptionCode.HO100215)
-    .max(35, ExceptionCode.HO100215)
-    .describe(caseDescription.HearingDefendant.DefendantDetail.PersonName.FamilyName.$description),
+  FamilyName: z.string().describe(caseDescription.HearingDefendant.DefendantDetail.PersonName.FamilyName.$description),
   Suffix: z.string().optional()
 })
 
@@ -198,7 +153,10 @@ export const defendantDetailSchema = z.object({
     .string()
     .optional()
     .describe(caseDescription.HearingDefendant.DefendantDetail.GeneratedPNCFilename.$description),
-  BirthDate: z.date().optional().describe(caseDescription.HearingDefendant.DefendantDetail.BirthDate.$description),
+  BirthDate: z.coerce
+    .date()
+    .optional()
+    .describe(caseDescription.HearingDefendant.DefendantDetail.BirthDate.$description),
   Gender: z.number().describe(caseDescription.HearingDefendant.DefendantDetail.Gender.$description)
 })
 
@@ -207,9 +165,7 @@ export const courtReferenceSchema = z.object({
   MagistratesCourtReference: z.string().describe(caseDescription.CourtReference.MagistratesCourtReference.$description)
 })
 
-export const courtCaseReferenceNumberSchema = z
-  .string()
-  .regex(/^[0-9]{2}\/[0-9]{4}\/[0-9]{1,6}[A-HJ-NP-RT-Z]{1}$/i, ExceptionCode.HO100203)
+export const courtCaseReferenceNumberSchema = z.string()
 
 export const sourceReferenceSchema = z.object({
   DocumentName: z.string(),
@@ -218,263 +174,157 @@ export const sourceReferenceSchema = z.object({
   TimeStamp: z.string().optional(),
   Version: z.string().optional(),
   SecurityClassification: z.string().optional(),
-  SellByDate: z.date().optional(),
+  SellByDate: z.coerce.date().optional(),
   XSLstylesheetURL: z.string().optional()
 })
 
 export const hearingSchema = z.object({
   CourtHearingLocation: organisationUnitSchema.describe(hearingDescription.CourtHearingLocation.$description),
-  DateOfHearing: z.date().describe(hearingDescription.DateOfHearing.$description),
+  DateOfHearing: z.coerce.date().describe(hearingDescription.DateOfHearing.$description),
   TimeOfHearing: timeSchema.describe(hearingDescription.TimeOfHearing.$description),
   HearingLanguage: z.string().describe(hearingDescription.HearingLanguage.$description),
   HearingDocumentationLanguage: z.string().describe(hearingDescription.HearingDocumentationLanguage.$description),
   DefendantPresentAtHearing: z.string().describe(hearingDescription.DefendantPresentAtHearing.$description),
-  ReportRequestedDate: z.date().optional(),
-  ReportCompletedDate: z.date().optional(),
+  ReportRequestedDate: z.coerce.date().optional(),
+  ReportCompletedDate: z.coerce.date().optional(),
   SourceReference: sourceReferenceSchema.describe(hearingDescription.SourceReference.$description),
-  CourtType: z
-    .string()
-    .or(z.null())
-    .refine(validateCourtType, ExceptionCode.HO100108)
-    .optional()
-    .describe(hearingDescription.CourtType.$description), // Can't test this in Bichard because it is always set to a valid value
-  CourtHouseCode: z
-    .number()
-    .min(100, ExceptionCode.HO100249)
-    .max(9999, ExceptionCode.HO100249)
-    .describe(hearingDescription.CourtHouseCode.$description),
+  CourtType: z.string().or(z.null()).optional().describe(hearingDescription.CourtType.$description), // Can't test this in Bichard because it is always set to a valid value
+  CourtHouseCode: z.number().describe(hearingDescription.CourtHouseCode.$description),
   CourtHouseName: z.string().optional().describe(hearingDescription.CourtHouseName.$description)
 })
 
 export const urgentSchema = z.object({
   urgent: z.boolean(),
-  urgency: z.number().min(0, ExceptionCode.HO100109).max(999, ExceptionCode.HO100110)
+  urgency: z.number()
 })
 
 export const cjsPleaSchema = z.nativeEnum(CjsPlea)
 
 export const resultSchema = z.object({
-  CJSresultCode: z.number().superRefine(validateResultCode).describe(resultDescription.CJSresultCode.$description),
-  OffenceRemandStatus: z
-    .string()
-    .refine(validateRemandStatus, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.OffenceRemandStatus.$description), // Tested in HO100108
+  CJSresultCode: z.number().describe(resultDescription.CJSresultCode.$description),
+  OffenceRemandStatus: z.string().optional().describe(resultDescription.OffenceRemandStatus.$description),
   SourceOrganisation: organisationUnitSchema.describe(resultDescription.SourceOrganisation.$description),
-  CourtType: z
-    .string()
-    .refine(validateCourtType, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.CourtType.$description), // Always set to a valid court so unable to test
+  CourtType: z.string().optional().describe(resultDescription.CourtType.$description), // Always set to a valid court so unable to test
   ConvictingCourt: z.string().optional().describe(resultDescription.ConvictingCourt.$description),
-  ResultHearingType: z
-    .string()
-    .refine(validateTypeOfHearing, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.ResultHearingType.$description), // Always set to OTHER so can't test exception
-  ResultHearingDate: z.date().optional().describe(resultDescription.ResultHearingDate.$description),
+  ResultHearingType: z.string().optional().describe(resultDescription.ResultHearingType.$description), // Always set to OTHER so can't test exception
+  ResultHearingDate: z.coerce.date().optional().describe(resultDescription.ResultHearingDate.$description),
   Duration: durationSchema.array().optional().describe(resultDescription.Duration.$description),
   DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
   TimeSpecifiedInResult: timeSchema.optional(),
   AmountSpecifiedInResult: z
     .preprocess(
       toArray,
-      amountSpecifiedInResultSchema
-        .refine(validateAmountSpecifiedInResult, ExceptionCode.HO100243)
-        .array()
-        .min(0)
-        .describe(resultDescription.AmountSpecifiedInResult.$description)
+      amountSpecifiedInResultSchema.array().min(0).describe(resultDescription.AmountSpecifiedInResult.$description)
     )
     .optional(),
-  NumberSpecifiedInResult: z
-    .array(numberSpecifiedInResultSchema.refine(validateNumberSpecifiedInResult, ExceptionCode.HO100244))
-    .optional(),
+  NumberSpecifiedInResult: z.array(numberSpecifiedInResultSchema).optional(),
   NextResultSourceOrganisation: organisationUnitSchema
     .or(z.null())
     .optional()
     .describe(resultDescription.NextResultSourceOrganisation.$description),
-  NextHearingType: z.string().refine(validateTypeOfHearing, ExceptionCode.HO100108).optional(), // Never set
-  NextHearingDate: z
+  NextHearingType: z.string().optional(), // Never set
+  NextHearingDate: z.coerce
     .date()
-    .or(z.string().refine(invalid, ExceptionCode.HO100102))
+    .or(z.string())
     .or(z.null())
     .optional()
     .describe(resultDescription.NextHearingDate.$description),
   NextHearingTime: timeSchema.optional().describe(resultDescription.NextHearingTime.$description),
-  NextCourtType: z
-    .string()
-    .refine(validateCourtType, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.NextCourtType.$description), // Always set to a valid value
+  NextCourtType: z.string().optional().describe(resultDescription.NextCourtType.$description), // Always set to a valid value
   PleaStatus: cjsPleaSchema.or(z.string()).optional().describe(resultDescription.PleaStatus.$description),
-  Verdict: z
-    .string()
-    .refine(validateVerdict, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.Verdict.$description), // Tested in HO100108
-  ResultVariableText: z
-    .string()
-    .min(1, ExceptionCode.HO100245)
-    .max(2500, ExceptionCode.HO100245)
-    .optional()
-    .describe(resultDescription.ResultVariableText.$description), // Can't test because it is masked by XML parser
-  TargetCourtType: z.string().refine(validateTargetCourtType, ExceptionCode.HO100108).optional(), // Never set
-  WarrantIssueDate: z.date().optional().describe(resultDescription.WarrantIssueDate.$description),
+  Verdict: z.string().optional().describe(resultDescription.Verdict.$description),
+  ResultVariableText: z.string().optional().describe(resultDescription.ResultVariableText.$description), // Can't test because it is masked by XML parser
+  TargetCourtType: z.string().optional(), // Never set
+  WarrantIssueDate: z.coerce.date().optional().describe(resultDescription.WarrantIssueDate.$description),
   CRESTDisposalCode: z.string().optional(),
-  ModeOfTrialReason: z
-    .string()
-    .refine(validateModeOfTrialReason, ExceptionCode.HO100108)
-    .optional()
-    .describe(resultDescription.ModeOfTrialReason.$description), // Tested in HO100108
-  PNCDisposalType: z.number().min(1000, ExceptionCode.HO100246).max(9999, ExceptionCode.HO100246).optional(),
+  ModeOfTrialReason: z.string().optional().describe(resultDescription.ModeOfTrialReason.$description),
+  PNCDisposalType: z.number().optional(),
   PNCAdjudicationExists: z.boolean().optional(),
   ResultClass: z.nativeEnum(ResultClass).optional().describe(resultDescription.ResultClass.$description), // Always set to a valid value
   NumberOfOffencesTIC: z.number().optional().describe(resultDescription.NumberOfOffencesTIC.$description),
   ReasonForOffenceBailConditions: z
     .string()
-    .min(1, ExceptionCode.HO100106)
-    .max(2500, ExceptionCode.HO100107)
     .optional()
     .describe(resultDescription.ReasonForOffenceBailConditions.$description), // Can't test because it is masked by XML parser
   ResultQualifierVariable: resultQualifierVariableSchema.array().min(0),
-  ResultHalfLifeHours: z
-    .number()
-    .min(1, ExceptionCode.HO100109)
-    .max(999, ExceptionCode.HO100110)
-    .optional()
-    .describe(offenceDescription.ResultHalfLifeHours.$description), // Can't test because all values come from standing data
+  ResultHalfLifeHours: z.number().optional().describe(offenceDescription.ResultHalfLifeHours.$description), // Can't test because all values come from standing data
   Urgent: urgentSchema.optional().describe(resultDescription.Urgent.$description),
-  ResultApplicableQualifierCode: z
-    .string()
-    .min(1, ExceptionCode.HO100241)
-    .min(2, ExceptionCode.HO100241)
-    .array()
-    .min(0)
-    .optional(), // Can't test as this is always set to an empty arrays
-  BailCondition: z
-    .string()
-    .min(1, ExceptionCode.HO100219)
-    .max(2500, ExceptionCode.HO100219)
-    .array()
-    .min(0)
-    .optional()
-    .describe(resultDescription.BailCondition.$description)
+  ResultApplicableQualifierCode: z.string().array().min(0).optional(), // Can't test as this is always set to an empty arrays
+  BailCondition: z.string().array().min(0).optional().describe(resultDescription.BailCondition.$description)
 })
 
 export const offenceSchema = z.object({
   CriminalProsecutionReference: criminalProsecutionReferenceSchema,
-  OffenceCategory: z
-    .string()
-    .refine(validateOffenceCategory)
-    .optional()
-    .describe(offenceDescription.OffenceCategory.$description),
-  OffenceInitiationCode: z.string().refine(validateOffenceInitiationCode).optional(),
-  OffenceTitle: z
-    .string()
-    .min(1, ExceptionCode.HO100233)
-    .max(120, ExceptionCode.HO100233)
-    .optional()
-    .describe(offenceDescription.OffenceTitle.$description),
-  SummonsCode: z.string().refine(validateSummonsCode).optional(),
+  OffenceCategory: z.string().optional().describe(offenceDescription.OffenceCategory.$description),
+  OffenceInitiationCode: z.string().optional(),
+  OffenceTitle: z.string().optional().describe(offenceDescription.OffenceTitle.$description),
+  SummonsCode: z.string().optional(),
   Informant: z.string().optional(),
-  ArrestDate: z.date().optional().describe(offenceDescription.ArrestDate.$description),
-  ChargeDate: z.date().optional().describe(offenceDescription.ChargeDate.$description),
-  ActualOffenceDateCode: z
-    .string()
-    .refine(validateActualOffenceDateCode)
-    .describe(offenceDescription.ActualOffenceDateCode.$description),
+  ArrestDate: z.coerce.date().optional().describe(offenceDescription.ArrestDate.$description),
+  ChargeDate: z.coerce.date().optional().describe(offenceDescription.ChargeDate.$description),
+  ActualOffenceDateCode: z.string().describe(offenceDescription.ActualOffenceDateCode.$description),
   ActualOffenceStartDate: actualOffenceStartDateSchema,
   ActualOffenceEndDate: actualOffenceEndDateSchema
     .optional()
     .describe(offenceDescription.ActualOffenceEndDate.$description),
-  LocationOfOffence: z
-    .string()
-    .min(1, ExceptionCode.HO100232)
-    .max(80, ExceptionCode.HO100232)
-    .optional()
-    .describe(offenceDescription.LocationOfOffence.$description),
+  LocationOfOffence: z.string().optional().describe(offenceDescription.LocationOfOffence.$description),
   OffenceWelshTitle: z.string().optional(),
-  ActualOffenceWording: z
-    .string()
-    .min(1, ExceptionCode.HO100234)
-    .max(2500, ExceptionCode.HO100234)
-    .describe(offenceDescription.ActualOffenceWording.$description),
+  ActualOffenceWording: z.string().describe(offenceDescription.ActualOffenceWording.$description),
   ActualWelshOffenceWording: z.string().optional(),
   ActualIndictmentWording: z.string().optional(),
   ActualWelshIndictmentWording: z.string().optional(),
   ActualStatementOfFacts: z.string().optional(),
   ActualWelshStatementOfFacts: z.string().optional(),
   AlcoholLevel: alcoholLevelSchema.optional().describe(offenceDescription.AlcoholLevel.$description),
-  VehicleCode: z.string().refine(validateVehicleCode).optional(),
-  VehicleRegistrationMark: z.string().min(11).max(11).optional(),
+  VehicleCode: z.string().optional(),
+  VehicleRegistrationMark: z.string().optional(),
   StartTime: timeSchema.optional().describe(offenceDescription.StartTime.$description),
   OffenceEndTime: timeSchema.optional().describe(offenceDescription.OffenceEndDate.$description),
   OffenceTime: timeSchema.optional().describe(offenceDescription.OffenceTime.$description),
-  ConvictionDate: z.date().optional().describe(offenceDescription.ConvictionDate.$description),
-  CommittedOnBail: z.string().refine(validateYesNo).describe(offenceDescription.CommittedOnBail.$description),
+  ConvictionDate: z.coerce.date().optional().describe(offenceDescription.ConvictionDate.$description),
+  CommittedOnBail: z.string().describe(offenceDescription.CommittedOnBail.$description),
   CourtCaseReferenceNumber: courtCaseReferenceNumberSchema.or(z.null()).optional(),
   ManualCourtCaseReference: z.boolean().optional(),
-  CourtOffenceSequenceNumber: z
-    .number()
-    .min(0, ExceptionCode.HO100239)
-    .max(999, ExceptionCode.HO100239)
-    .describe(offenceDescription.CourtOffenceSequenceNumber.$description),
+  CourtOffenceSequenceNumber: z.number().describe(offenceDescription.CourtOffenceSequenceNumber.$description),
   ManualSequenceNumber: z.boolean().optional(),
   Result: resultSchema.array().min(0),
   RecordableOnPNCindicator: z.boolean().optional().describe(offenceDescription.RecordableOnPNCindicator.$description),
   NotifiableToHOindicator: z.boolean().optional().describe(offenceDescription.NotifiableToHOindicator.$description),
-  HomeOfficeClassification: z
-    .string()
-    .regex(/^([0-9]{3})\/([0-9]{2})$/, ExceptionCode.HO100236)
-    .optional()
-    .describe(offenceDescription.HomeOfficeClassification.$description),
-  ResultHalfLifeHours: z.number().min(1).max(999).optional(),
+  HomeOfficeClassification: z.string().optional().describe(offenceDescription.HomeOfficeClassification.$description),
+  ResultHalfLifeHours: z.number().optional(),
   AddedByTheCourt: z.boolean().optional()
 })
 
-export const asnSchema = z.string().superRefine(validateAsn)
-export const croNumberSchema = z.string().regex(/[0-9]{1,6}\/[0-9]{2}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100207)
-export const driverNumberSchema = z.string().regex(/[A-Z0-9]{5}[0-9]{6}[A-Z0-9]{3}[A-Z]{2}/, ExceptionCode.HO100208)
-export const pncIdentifierSchema = z.string().regex(/[0-9]{4}\/[0-9]{7}[A-HJ-NP-RT-Z]{1}/, ExceptionCode.HO100209)
+export const asnSchema = z.string()
+export const croNumberSchema = z.string()
+export const driverNumberSchema = z.string()
+export const pncIdentifierSchema = z.string()
 
 export const hearingDefendantSchema = z.object({
   ArrestSummonsNumber: asnSchema.describe(caseDescription.HearingDefendant.ArrestSummonsNumber.$description),
   DriverNumber: driverNumberSchema.optional(),
   CRONumber: croNumberSchema.optional(),
   PNCIdentifier: pncIdentifierSchema.optional(),
-  PNCCheckname: z.string().max(54, ExceptionCode.HO100210).optional(),
+  PNCCheckname: z.string().optional(),
   DefendantDetail: defendantDetailSchema.optional(),
   Address: addressSchema.describe(caseDescription.HearingDefendant.Address.$description),
-  RemandStatus: z
-    .string()
-    .refine(validateRemandStatus, ExceptionCode.HO100108)
-    .describe(caseDescription.HearingDefendant.RemandStatus.$description),
+  RemandStatus: z.string().describe(caseDescription.HearingDefendant.RemandStatus.$description),
   BailConditions: z.string().array().min(0).describe(caseDescription.HearingDefendant.BailConditions.$description),
   ReasonForBailConditions: z
     .string()
-    .min(1, ExceptionCode.HO100220)
-    .max(2500, ExceptionCode.HO100220)
     .optional()
     .describe(caseDescription.HearingDefendant.ReasonForBailConditions.$description),
   CourtPNCIdentifier: pncIdentifierSchema
     .optional()
     .describe(caseDescription.HearingDefendant.CourtPNCIdentifier.$description),
-  OrganisationName: z
-    .string()
-    .min(1, ExceptionCode.HO100211)
-    .max(255, ExceptionCode.HO100211)
-    .optional()
-    .describe(caseDescription.HearingDefendant.OrganisationName.$description),
+  OrganisationName: z.string().optional().describe(caseDescription.HearingDefendant.OrganisationName.$description),
   Offence: offenceSchema.array().min(0).describe(offenceDescription.$description),
   Result: resultSchema.optional()
 })
 
 export const caseSchema = z.object({
-  PTIURN: z
-    .string()
-    .regex(/^[A-Z0-9]{4}[0-9]{3,7}$/, ExceptionCode.HO100201)
-    .describe(caseDescription.PTIURN.$description),
-  CaseMarker: z.string().min(0, ExceptionCode.HO100202).max(255, ExceptionCode.HO100202).optional(), // Note: This doesn't seem to ever be set in the original code
+  PTIURN: z.string().describe(caseDescription.PTIURN.$description),
+  CaseMarker: z.string().optional(),
   CPSOrganisation: organisationUnitSchema.optional(),
   PreChargeDecisionIndicator: z.boolean().describe(caseDescription.PreChargeDecisionIndicator.$description),
   CourtCaseReferenceNumber: courtCaseReferenceNumberSchema.optional(),
@@ -493,17 +343,13 @@ export const hearingOutcomeSchema = z.object({
   Case: caseSchema.describe(caseDescription.$description)
 })
 
-export const annotatedHearingOutcomeSchema = z.object({
+export const unvalidatedHearingOutcomeSchema = z.object({
   Exceptions: z.array(exceptionSchema),
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),
   PncQuery: pncQueryResultSchema.optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.$description),
-  PncQueryDate: z.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
+  PncQueryDate: z.coerce.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
   PncErrorMessage: z.string().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncErrorMessage.$description),
   Ignored: z.boolean().optional()
-})
-
-export const unvalidatedAHOSchema = annotatedHearingOutcomeSchema.extend({
-  AnnotatedHearingOutcome: z.unknown()
 })

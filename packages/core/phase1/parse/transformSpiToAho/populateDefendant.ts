@@ -6,7 +6,7 @@ import type {
   SpiCourtIndividualDefendant,
   SpiDefendant
 } from "../../types/SpiResult"
-import PopulateOffences from "./PopulateOffences"
+import populateOffences from "./populateOffences"
 
 const formatPncIdentifier = (spiPNCIdentifier?: string): string | undefined =>
   spiPNCIdentifier ? spiPNCIdentifier.substring(0, 4) + "/" + spiPNCIdentifier.substring(4) : undefined
@@ -151,7 +151,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     }
   } = courtResult
 
-  const { offences, bailConditions } = new PopulateOffences(courtResult).execute()
+  const { offences, bailConditions } = populateOffences(courtResult)
 
   const partialDefendant = processDefendant(spiDefendant)
 

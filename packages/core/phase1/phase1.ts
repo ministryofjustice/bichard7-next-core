@@ -5,7 +5,6 @@ import type PncGatewayInterface from "../types/PncGatewayInterface"
 import enrichAho from "./enrichAho"
 import addExceptionsToAho from "./exceptions/addExceptionsToAho"
 import generateExceptions from "./exceptions/generate"
-import addNullElementsForExceptions from "./lib/addNullElementsForExceptions"
 import generateExceptionLogAttributes from "./lib/auditLog/generateExceptionLogAttributes"
 import generateTriggersLogAttributes from "./lib/auditLog/generateTriggersLogAttributes"
 import getIncomingMessageLogAttributes from "./lib/auditLog/getIncomingMessageLog"
@@ -65,7 +64,6 @@ const phase1 = async (
       addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
     })
 
-    addNullElementsForExceptions(enrichedHearingOutcome)
     if (enrichedHearingOutcome.Exceptions.length > 0) {
       auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
     }

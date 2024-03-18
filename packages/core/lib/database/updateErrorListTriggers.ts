@@ -1,6 +1,6 @@
 import type { Sql } from "postgres"
 import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
-import type { PersistablePhase1Result } from "../../phase1/types/Phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 import type { Trigger } from "../../phase1/types/Trigger"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import type { TriggerCode } from "../../types/TriggerCode"
@@ -22,11 +22,7 @@ const triggerMatches = (trigger: Trigger, dbTrigger: ErrorListTriggerRecord): bo
   trigger.code === dbTrigger.trigger_code &&
   trigger.offenceSequenceNumber === sanitiseTriggerItemIdentity(dbTrigger.trigger_item_identity)
 
-const updateErrorListTriggers = async (
-  db: Sql,
-  recordId: number,
-  result: PersistablePhase1Result
-): Promise<TriggerUpdates> => {
+const updateErrorListTriggers = async (db: Sql, recordId: number, result: Phase1Result): Promise<TriggerUpdates> => {
   const existingTriggers = await db<ErrorListTriggerRecord[]>`
     SELECT * FROM br7own.error_list_triggers WHERE error_id = ${recordId}`
 

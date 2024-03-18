@@ -5,7 +5,6 @@ import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import parseIncomingMessage from "./parseIncomingMessage"
 import CorePhase1 from "../../phase1/phase1"
-import type { Phase1SuccessResult } from "../../phase1/types/Phase1Result"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 import MockPncGateway from "./MockPncGateway"
@@ -34,7 +33,7 @@ const comparePncMatching = async (
   if(type === "PncUpdateDataset"){
     throw new Error("Received invalid incoming message")
   }
-  const coreResult = (await CorePhase1(incomingAho, pncGateway, auditLogger)) as Phase1SuccessResult
+  const coreResult = await CorePhase1(incomingAho, pncGateway, auditLogger)
   const expectedAho = parseAhoXml(annotatedHearingOutcome)
   if (isError(expectedAho)) {
     throw expectedAho as Error
