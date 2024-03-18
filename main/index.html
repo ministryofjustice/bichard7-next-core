@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
     <link href="./style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../modal.js"></script>
     <script type="text/javascript" src="../svg-modal.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
   </head>
@@ -250,7 +251,7 @@
     </svg>
    </div>
    <figcaption>
-    <a onclick="openModal('SystemLandscape-modal', 'SystemLandscape-svg')">System Landscape Diagram</a>
+    <a onclick="openSvgModal('SystemLandscape-modal', 'SystemLandscape-svg')">System Landscape Diagram</a>
    </figcaption>
   </figure>
   <div class="modal" id="SystemLandscape-modal">
@@ -462,7 +463,7 @@
       </svg>
      </div>
      <div class="has-text-centered">
-      [<a href="svg/SystemLandscape.svg" target="_blank">svg</a>|<a href="png/SystemLandscape.png" target="_blank">png</a>|<a href="puml/SystemLandscape.puml" target="_blank">puml</a>]
+      System Landscape Diagram [<a href="svg/SystemLandscape.svg" target="_blank">svg</a>|<a href="png/SystemLandscape.png" target="_blank">png</a>|<a href="puml/SystemLandscape.puml" target="_blank">puml</a>]
      </div>
     </div>
    </div><button class="modal-close is-large" aria-label="close" onclick="closeModal('SystemLandscape-modal')"></button>
@@ -472,6 +473,6 @@
       </div>
     </div>
     <script type="text/javascript" src="../reformat-mermaid.js"></script>
-    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs';</script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.esm.min.mjs';</script>
   </body>
 </html>

@@ -1,0 +1,2058 @@
+{
+  "id" : 0,
+  "name" : "Bichard",
+  "description" : "Description",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlICJCaWNoYXJkIiB7CiAgIWRvY3MgZG9jcwogICFhZHJzIGFkcnMKCiAgbW9kZWwgewogICAgcG9saWNlVXNlciA9IHBlcnNvbiAiUG9saWNlIFVzZXIiCgogICAgZ3JvdXAgIkhNQ1RTIiB7CiAgICAgIGNvbW1vblBsYXRmb3JtID0gc29mdHdhcmVTeXN0ZW0gIkNvbW1vbiBQbGF0Zm9ybSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgICBsaWJyYSA9IHNvZnR3YXJlU3lzdGVtICJMaWJyYSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgfQogICAgZ3JvdXAgIkhvbWUgT2ZmaWNlIC0gUG9saWNlIiB7CiAgICAgIHBuYyA9IHNvZnR3YXJlU3lzdGVtICJQb2xpY2UgTmF0aW9uYWwgQ29tcHV0ZXIiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KICAgIH0KICAgIHNsYWNrID0gc29mdHdhcmVTeXN0ZW0gIlNsYWNrIiAiQW4gaW5zdGFudCBtZXNzYWdpbmcgc2VydmljZSB1c2VkIGJ5IE1hZGUgVGVjaCIgewogICAgICB1cmwgImh0dHBzOi8vc2xhY2suY29tLyIKICAgICAgdGFncyAiRXh0ZXJuYWwiCiAgICB9CiAgICAKICAgIHBhZ2VyRHV0eSA9IHNvZnR3YXJlU3lzdGVtICJQYWdlckR1dHkiICJBbiBhbGVydCB0b29sIGZvciBpbnN0YW5jZXMgd2hlbiB0aGUgc3lzdGVtcyB0cmlnZ2VyIGFuIGFsYXJtIiB7CiAgICAgIHVybCAiaHR0cHM6Ly93d3cucGFnZXJkdXR5LmNvbS8iCiAgICAgIHRhZ3MgIkV4dGVybmFsIgogICAgfQoKICAgIGNqc20gPSBzb2Z0d2FyZVN5c3RlbSAiQ0pTTSIgewogICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICB9CgogICAgZ3JvdXAgIkNKU0UiIHsKICAgICAgcXNvbHV0aW9uID0gc29mdHdhcmVTeXN0ZW0gIlBTTiBQcm94eSIgIlEtU29sdXRpb24iICJOZ2lueCIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQoKICAgICAgZXhpc3MgPSBzb2Z0d2FyZVN5c3RlbSAiRXhJU1MiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KCiAgICAgIGJpY2hhcmQgPSBzb2Z0d2FyZVN5c3RlbSAiQmljaGFyZCIgewogICAgICAgIGJlYW5jb25uZWN0ID0gY29udGFpbmVyICJCZWFuY29ubmVjdCIKCiAgICAgICAgbWVzc2FnZVRyYW5zZmVyID0gY29udGFpbmVyICJNZXNzYWdlIFRyYW5zZmVyIExhbWJkYSIgewogICAgICAgICAgaW5jb21pbmdTM0J1Y2tldCA9IGNvbXBvbmVudCAiRXh0ZXJuYWwgSW5jb21pbmcgUzMgYnVja2V0IiB7CiAgICAgICAgICAgIHRhZ3MgIlF1ZXVlIgogICAgICAgICAgfQoKICAgICAgICAgIHRyYW5zZmVyUHJvY2VzcyA9IGNvbXBvbmVudCAiVHJhbnNmZXIgbGFtYmRhIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIGluY29taW5nTWVzc2FnZUhhbmRsZXIgPSBjb250YWluZXIgIkluY29taW5nIE1lc3NhZ2UgSGFuZGxlciBTdGVwIEZ1bmN0aW9uIiB7CiAgICAgICAgICBpbnRlcm5hbEluY29taW5nUzNCdWNrZXQgPSBjb21wb25lbnQgIkludGVybmFsIEluY29taW5nIFMzIGJ1Y2tldCIgIkJsYWggYmxhaCIgewogICAgICAgICAgICB0YWdzICJRdWV1ZSIKICAgICAgICAgIH0KCiAgICAgICAgICBzdG9yZU1lc3NhZ2UgPSBjb21wb25lbnQgIlN0b3JlIE1lc3NhZ2UiIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQoKICAgICAgICAgIHNlbmRUb0JpY2hhcmQgPSBjb21wb25lbnQgIlNlbmQgdG8gQmljaGFyZCIgewogICAgICAgICAgICB0YWdzICJMYW1iZGEiCiAgICAgICAgICB9CgogICAgICAgICAgcmVjb3JkU2VudFRvQmljaGFyZCA9IGNvbXBvbmVudCAiUmVjb3JkIFNlbnQgdG8gQmljaGFyZCIgewogICAgICAgICAgICB0YWdzICJMYW1iZGEiCiAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBldmVudExhbWJkYSA9IGNvbnRhaW5lciAiRXZlbnQgTGFtYmRhIgoKICAgICAgICBldmVudEhhbmRsZXIgPSBjb250YWluZXIgIkV2ZW50IEhhbmRsZXIgU3RlcCBGdW5jdGlvbiIgewogICAgICAgICAgZXZlbnRTM0J1Y2tldCA9IGNvbXBvbmVudCAiRXZlbnQgUzMgYnVja2V0IiB7CiAgICAgICAgICAgIHRhZ3MgIlF1ZXVlIgogICAgICAgICAgfQoKICAgICAgICAgIHdyaXRlVG9BdWRpdExvZyA9IGNvbXBvbmVudCAiV3JpdGUgdG8gQXVkaXQgTG9nIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIGFjdGl2ZU1RID0gY29udGFpbmVyICJBY3RpdmUgTVEiICIiICJBY3RpdmUgTVEiCgogICAgICAgIG5naW54QXV0aFByb3h5ID0gY29udGFpbmVyICJOZ2lueCBBdXRoIFByb3h5IiAiIiAiTmdpbngiIHsKICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL21pbmlzdHJ5b2ZqdXN0aWNlL2JpY2hhcmQ3LW5leHQtaW5mcmFzdHJ1Y3R1cmUtZG9ja2VyLWltYWdlcy90cmVlL21haW4vTmdpbnhfQXV0aF9Qcm94eSIKICAgICAgICB9CgogICAgICAgIGRhdGFiYXNlID0gY29udGFpbmVyICJCaWNoYXJkIERhdGFiYXNlIiAiIiAiUG9zdGdyZVNRTCIgIkRhdGFiYXNlIiB7CiAgICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgICAgfQoKICAgICAgICBlbWFpbFN5c3RlbSA9IGNvbnRhaW5lciAiRW1haWwgU3lzdGVtIiAiIiAiUG9zdGZpeCIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1pbmZyYXN0cnVjdHVyZS1kb2NrZXItaW1hZ2VzL3RyZWUvbWFpbi9Qb3N0Zml4IgogICAgICAgIH0KCiAgICAgICAgYmljaGFyZEphdmFBcHBsaWNhdGlvbiA9IGNvbnRhaW5lciAiQmljaGFyZCBKYXZhIEFwcGxpY2F0aW9uIiAiIiAiSmF2YSBFRSJ7CiAgICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkVXNlclNlcnZpY2UgPSBjb250YWluZXIgIkJpY2hhcmQgVXNlciBTZXJ2aWNlIiAiQW4gYXBwbGljYXRpb24gdG8gcHJvdmlkZSB1c2VyIGF1dGhlbnRpY2F0aW9uIGFuZCB1c2VyIG1hbmFnZW1lbnQiICJOZXh0LmpzLCBUeXBlU2NyaXB0ICYgUmVhY3QiIHsKICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL21pbmlzdHJ5b2ZqdXN0aWNlL2JpY2hhcmQ3LW5leHQtdXNlci1zZXJ2aWNlIgogICAgICAgICAgdGFncyAiQVBJIgogICAgICAgIH0KCiAgICAgICAgYXVkaXRMb2dBcGkgPSBjb250YWluZXIgIkF1ZGl0IExvZyIgewogICAgICAgICAgdGFncyAiQVBJIgoKICAgICAgICAgIGF1ZGl0TG9nQXBpR2F0ZXdheSA9IGNvbXBvbmVudCAiQXVkaXQgTG9nIEFQSSBHYXRld2F5IgogICAgICAgICAgYXVkaXRMb2dBcGlMYW1iZGEgPSBjb21wb25lbnQgIkF1ZGl0IExvZyBBUEkgTGFtYmRhIgogICAgICAgICAgZHluYW1vREIgPSBjb21wb25lbnQgIkR5bmFtb0RCIiAiIiAiRHluYW1vREIiCiAgICAgICAgfQoKICAgICAgICBzdGF0aWNGaWxlU2VydmljZSA9IGNvbnRhaW5lciAiU3RhdGljIEZpbGUgU2VydmljZSIKCiAgICAgICAgcmVwb3J0aW5nU2VydmljZSA9IGNvbnRhaW5lciAiUmVwb3J0aW5nIiB7CiAgICAgICAgICBhdXRvbWF0aW9uUmVwb3J0ID0gY29tcG9uZW50ICJBdXRvbWF0aW9uIFJlcG9ydCIgewogICAgICAgICAgICB0YWdzICJMYW1iZGEiCiAgICAgICAgICB9CiAgICAgICAgICBjb21tb25QbGF0Zm9ybVJlcG9ydCA9IGNvbXBvbmVudCAiQ29tbW9uIFBsYXRmb3JtIFJlcG9ydCJ7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICAgIE1QU1JlcG9ydCA9IGNvbXBvbmVudCAiTVBTIFJlcG9ydCJ7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICAgIHRvcEV4Y2VwdGlvbnNSZXBvcnQgPSBjb21wb25lbnQgIlRvcCBFeGNlcHRpb25zIFJlcG9ydCJ7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIG1vbml0b3JpbmcgPSBjb250YWluZXIgIk1vbml0b3JpbmciIHsKICAgICAgICAgIG9wZW5TZWFyY2ggPSBjb21wb25lbnQgIk9wZW5TZWFyY2giCiAgICAgICAgICBwcm9tZXRoZXVzID0gY29tcG9uZW50ICJQcm9tZXRoZXVzIgogICAgICAgICAgcHJvbWV0aGV1c0Nsb3VkV2F0Y2hFeHBvcnRlciA9IGNvbXBvbmVudCAiUHJvbWV0aGV1cyBDbG91ZFdhdGNoIEV4cG9ydGVyIgogICAgICAgICAgcHJvbWV0aGV1c0JsYWNrQm94RXhwb3J0ZXIgPSBjb21wb25lbnQgIlByb21ldGhldXMgQmxhY2sgQm94IEV4cG9ydGVyIgogICAgICAgICAgZ3JhZmFuYSA9IGNvbXBvbmVudCAiR3JhZmFuYSIKICAgICAgICAgIGxvZ1N0YXNoID0gY29tcG9uZW50ICJMb2dTdGFzaCIKICAgICAgICAgIGNsb3VkV2F0Y2hMb2dzID0gY29tcG9uZW50ICJDbG91ZFdhdGNoIExvZ3MiICJMb2dzIGdhdGhlcmVkIGZyb20gYWxsIEFXUyBzZXJ2aWNlcyIKICAgICAgICAgIGNsb3VkV2F0Y2hNZXRyaWNzID0gY29tcG9uZW50ICJDbG91ZFdhdGNoIE1ldHJpY3MiCiAgICAgICAgICBzbGFja0xhbWJkYSA9IGNvbXBvbmVudCAiU2xhY2sgbWVzc2FnZSBoYW5kbGVyIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICAgIHNucyA9IGNvbXBvbmVudCAiU05TIiB7CiAgICAgICAgICAgIHRhZ3MgIlNOUyIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgICMjIyMjIyMgSHlicmlkCiAgICAgICAgcG5jQXBpID0gY29udGFpbmVyICJQTkMgQVBJIiB7CiAgICAgICAgICB0YWdzICJBUEkiCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkVUkgPSBjb250YWluZXIgIkJpY2hhcmQgVUkiICJBIG5ldyB3YXkgb2YgaW50ZXJhY3Rpbmcgd2l0aCBCaWNoYXJkLCBjb21wbHlpbmcgd2l0aCBHb3YudWsgc3RhbmRhcmRzIiAiVHlwZVNjcmlwdCAmIFJlYWN0IiAiV2ViIEJyb3dzZXIiIHsKICAgICAgICAgIHVybCAiaHR0cHM6Ly9naXRodWIuY29tL21pbmlzdHJ5b2ZqdXN0aWNlL2JpY2hhcmQ3LW5leHQtdWkiCiAgICAgICAgICB0YWdzICJXZWIgQnJvd3NlciIKICAgICAgICB9CgogICAgICAgIGNvbmR1Y3RvciA9IGNvbnRhaW5lciAiQ29uZHVjdG9yIiB7CiAgICAgICAgICBiaWNoYXJkTmV4dENvcmUgPSBjb21wb25lbnQgIkJpY2hhcmQgTmV4dCBDb3JlIiAiVGhlIGNvZGUgdG8gcmVwbGFjZSB0aGUgcHJvY2Vzc2luZyBsb2dpYyBvZiBCaWNoYXJkNyIgIk5leHQuanMsIFR5cGVTY3JpcHQiIHsKICAgICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlIgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfQoKICAgICMgUmVsYXRpb25zaGlwcyBiZXR3ZWVuIHBlb3BsZSBhbmQgc29mdHdhcmUgc3lzdGVtcwogICAgcG9saWNlVXNlciAtPiBxc29sdXRpb24gIlVzZXMiCiAgICBwb2xpY2VVc2VyIC0+IHBuYyAiVXNlcyIKICAgIGNqc20gLT4gcG9saWNlVXNlciAiR2V0cyBlbWFpbCIKCiAgICAjIFJlbGF0aW9uc2hpcHMgYmV0d2VlbiBzb2Z0d2FyZSBzeXN0ZW1zCiAgICBjb21tb25QbGF0Zm9ybSAtPiBleGlzcyAiU2VuZHMgcmVzdWx0IG9mIGEgY291cnQgY2FzZSIKICAgIGxpYnJhIC0+IGV4aXNzICJTZW5kcyByZXN1bHQgb2YgYSBjb3VydCBjYXNlIgogICAgcXNvbHV0aW9uIC0+IHBuYyAiVXNlcyIKCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGJlYW5jb25uZWN0CgogICAgYmVhbmNvbm5lY3QgLT4gcXNvbHV0aW9uCgogICAgcXNvbHV0aW9uIC0+IHBuYwogICAgcXNvbHV0aW9uIC0+IG5naW54QXV0aFByb3h5CgogICAgIyBSZWxhdGlvbnNoaXBzIHRvL2Zyb20gY29tcG9uZW50cwogICAgZW1haWxTeXN0ZW0gLT4gY2pzbSAiU2VuZHMgdmVyaWZpY2F0aW9uIGNvZGUiCiAgICBiaWNoYXJkVXNlclNlcnZpY2UgLT4gZW1haWxTeXN0ZW0gIlNlbmRzIHZlcmlmaWNhdGlvbiBjb2RlIgoKICAgIG5naW54QXV0aFByb3h5IC0+IGJpY2hhcmRKYXZhQXBwbGljYXRpb24KICAgIG5naW54QXV0aFByb3h5IC0+IGJpY2hhcmRVc2VyU2VydmljZSAiVXNlcyIKICAgIG5naW54QXV0aFByb3h5IC0+IHN0YXRpY0ZpbGVTZXJ2aWNlCgogICAgYmljaGFyZFVzZXJTZXJ2aWNlIC0+IGRhdGFiYXNlICJSZWFkcyBmcm9tIC8gV3JpdGVzIHRvIgogICAgYmljaGFyZEphdmFBcHBsaWNhdGlvbiAtPiBkYXRhYmFzZSAiUmVhZHMgZnJvbSAvIFdyaXRlcyB0byIKCiAgICBleGlzcyAtPiBpbmNvbWluZ1MzQnVja2V0CiAgICBpbmNvbWluZ1MzQnVja2V0IC0+IHRyYW5zZmVyUHJvY2VzcwogICAgdHJhbnNmZXJQcm9jZXNzIC0+IGludGVybmFsSW5jb21pbmdTM0J1Y2tldAogICAgaW50ZXJuYWxJbmNvbWluZ1MzQnVja2V0IC0+IHN0b3JlTWVzc2FnZQogICAgc3RvcmVNZXNzYWdlIC0+IGF1ZGl0TG9nQXBpCiAgICBzdG9yZU1lc3NhZ2UgLT4gc2VuZFRvQmljaGFyZAogICAgc2VuZFRvQmljaGFyZCAtPiBhY3RpdmVNUQogICAgc2VuZFRvQmljaGFyZCAtPiByZWNvcmRTZW50VG9CaWNoYXJkCiAgICByZWNvcmRTZW50VG9CaWNoYXJkIC0+IGF1ZGl0TG9nQXBpCgogICAgYWN0aXZlTVEgLT4gZXZlbnRMYW1iZGEKICAgIGV2ZW50TGFtYmRhIC0+IGV2ZW50UzNCdWNrZXQKICAgIGV2ZW50UzNCdWNrZXQgLT4gd3JpdGVUb0F1ZGl0TG9nCiAgICB3cml0ZVRvQXVkaXRMb2cgLT4gYXVkaXRMb2dBcGkKCiAgICBhY3RpdmVNUSAtPiBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGFjdGl2ZU1RCgogICAgIyBBdWRpdCBMb2dnZXIKICAgIGF1ZGl0TG9nQXBpR2F0ZXdheSAtPiBhdWRpdExvZ0FwaUxhbWJkYQogICAgYXVkaXRMb2dBcGlMYW1iZGEgLT4gZHluYW1vREIKICAgIGF1ZGl0TG9nQXBpTGFtYmRhIC0+IGRhdGFiYXNlCiAgICBhdWRpdExvZ0FwaUxhbWJkYSAtPiBhY3RpdmVNUQoKICAgICMgUmVwb3J0aW5nCiAgICBhdXRvbWF0aW9uUmVwb3J0IC0+IGF1ZGl0TG9nQXBpCiAgICBjb21tb25QbGF0Zm9ybVJlcG9ydCAtPiBhdWRpdExvZ0FwaQogICAgYXV0b21hdGlvblJlcG9ydCAtPiBzdGF0aWNGaWxlU2VydmljZQogICAgdG9wRXhjZXB0aW9uc1JlcG9ydCAtPiBzdGF0aWNGaWxlU2VydmljZQogICAgY29tbW9uUGxhdGZvcm1SZXBvcnQgLT4gZW1haWxTeXN0ZW0KICAgIE1QU1JlcG9ydCAtPiBkYXRhYmFzZQogICAgdG9wRXhjZXB0aW9uc1JlcG9ydCAtPiBhdWRpdExvZ0FwaQoKICAgICMgTW9uaXRvcmluZwogICAgcHJvbWV0aGV1c0JsYWNrQm94RXhwb3J0ZXIgLT4gcHJvbWV0aGV1cwogICAgcHJvbWV0aGV1c0JsYWNrQm94RXhwb3J0ZXIgLT4gYmljaGFyZEphdmFBcHBsaWNhdGlvbgogICAgcHJvbWV0aGV1c0JsYWNrQm94RXhwb3J0ZXIgLT4gZ3JhZmFuYQogICAgcHJvbWV0aGV1c0JsYWNrQm94RXhwb3J0ZXIgLT4gb3BlblNlYXJjaAogICAgcHJvbWV0aGV1c0Nsb3VkV2F0Y2hFeHBvcnRlciAtPiBwcm9tZXRoZXVzCiAgICBwcm9tZXRoZXVzQ2xvdWRXYXRjaEV4cG9ydGVyIC0+IGNsb3VkV2F0Y2hNZXRyaWNzCgogICAgcHJvbWV0aGV1cyAtPiBzbnMKICAgIGNsb3VkV2F0Y2hNZXRyaWNzIC0+IHNucwogICAgcHJvbWV0aGV1cyAtPiBncmFmYW5hCiAgICBsb2dTdGFzaCAtPiBvcGVuU2VhcmNoCiAgICBjbG91ZFdhdGNoTG9ncyAtPiBsb2dTdGFzaAoKICAgIHNucyAtPiBwYWdlckR1dHkgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbnMgLT4gc2xhY2tMYW1iZGEgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbGFja0xhbWJkYSAtPiBzbGFjayAiU2VuZHMgbWVzc2FnZSIgInZpYSBUTFMgV2ViaG9vayIKCgogICAgIyMjIyMjIyBIeWJyaWQKICAgIG5naW54QXV0aFByb3h5IC0+IGJpY2hhcmRVSQogICAgYmljaGFyZFVJIC0+IGRhdGFiYXNlCgogICAgYmljaGFyZE5leHRDb3JlIC0+IGF1ZGl0TG9nQXBpCiAgICBiaWNoYXJkTmV4dENvcmUgLT4gZGF0YWJhc2UgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgIGJpY2hhcmROZXh0Q29yZSAtPiBwbmNBcGkKICAgIHBuY0FwaSAtPiBiZWFuY29ubmVjdAoKICB9CgogIHZpZXdzIHsKICAgIHN5c3RlbUxhbmRzY2FwZSAiU3lzdGVtTGFuZHNjYXBlIiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eQogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgc3lzdGVtQ29udGV4dCBiaWNoYXJkICJCaWNoYXJkU3lzdGVtQ29udGV4dCIgewogICAgICBpbmNsdWRlICoKICAgICAgZXhjbHVkZSBzbGFjayBwYWdlckR1dHkKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIGNvbnRhaW5lciBiaWNoYXJkICJPbGRCaWNoYXJkIiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eSBiaWNoYXJkVUkgYmljaGFyZE5leHRDb3JlIGNvbmR1Y3RvciBwbmNBcGkKICAgICAgYXV0b0xheW91dAogICAgICB0aXRsZSAiT2xkIEJpY2hhcmQiCiAgICB9CgogICAgY29udGFpbmVyIGJpY2hhcmQgIkh5YnJpZEJpY2hhcmQiIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGV4Y2x1ZGUgc2xhY2sgcGFnZXJEdXR5CiAgICAgIHRpdGxlICJIeWJyaWQgQmljaGFyZCIKICAgIH0KCiAgICBjb21wb25lbnQgY29uZHVjdG9yIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgaW5jb21pbmdNZXNzYWdlSGFuZGxlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1lc3NhZ2VUcmFuc2ZlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0CiAgICB9CgogICAgY29tcG9uZW50IGF1ZGl0TG9nQXBpIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgZXZlbnRIYW5kbGVyIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgcmVwb3J0aW5nU2VydmljZSB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1vbml0b3JpbmcgewogICAgICBpbmNsdWRlICoKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIHRoZW1lIGRlZmF1bHQKCiAgICBzdHlsZXMgewogICAgICBlbGVtZW50ICJXZWIgQnJvd3NlciIgewogICAgICAgIHNoYXBlIFdlYkJyb3dzZXIKICAgICAgfQoKICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICB9CgogICAgICBlbGVtZW50ICJBUEkiIHsKICAgICAgICBzaGFwZSBoZXhhZ29uCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIlF1ZXVlIiB7CiAgICAgICAgc2hhcGUgIlBpcGUiCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkxhbWJkYSIgewogICAgICAgIHNoYXBlICJEaWFtb25kIgogICAgICB9CgogICAgICBlbGVtZW50ICJTTlMiIHsKICAgICAgICBzaGFwZSBQaXBlCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkV4dGVybmFsIiB7CiAgICAgICAgYmFja2dyb3VuZCAjOWI3NmZmCiAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICB9CgogICAgICBlbGVtZW50ICJFeGlzdGluZyBTeXN0ZW0iIHsKICAgICAgICBiYWNrZ3JvdW5kICM5OTk5OTkKICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgIH0KICAgIH0KICB9Cn0K"
+  },
+  "configuration" : { },
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "tags" : "Element,Person",
+      "properties" : {
+        "structurizr.dsl.identifier" : "policeuser"
+      },
+      "name" : "Police User",
+      "relationships" : [ {
+        "id" : "55",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "de675ba1-70f9-4b8a-8c28-8ae04811edca"
+        },
+        "sourceId" : "1",
+        "destinationId" : "8",
+        "description" : "Uses"
+      }, {
+        "id" : "56",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "1f0a1970-6fba-4c6f-957e-75497c7e84cd"
+        },
+        "sourceId" : "1",
+        "destinationId" : "4",
+        "description" : "Uses"
+      } ],
+      "location" : "Unspecified"
+    } ],
+    "softwareSystems" : [ {
+      "id" : "2",
+      "tags" : "Element,Software System,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "commonplatform"
+      },
+      "name" : "Common Platform",
+      "relationships" : [ {
+        "id" : "58",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "7b88ff48-f109-4353-a6f7-8e68b20b7419"
+        },
+        "sourceId" : "2",
+        "destinationId" : "9",
+        "description" : "Sends result of a court case"
+      } ],
+      "group" : "HMCTS",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "3",
+      "tags" : "Element,Software System,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "libra"
+      },
+      "name" : "Libra",
+      "relationships" : [ {
+        "id" : "59",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "28a48b40-84ec-457c-9b88-134ca92d7d31"
+        },
+        "sourceId" : "3",
+        "destinationId" : "9",
+        "description" : "Sends result of a court case"
+      } ],
+      "group" : "HMCTS",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "4",
+      "tags" : "Element,Software System,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "pnc"
+      },
+      "name" : "Police National Computer",
+      "group" : "Home Office - Police",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "5",
+      "tags" : "Element,Software System,External",
+      "properties" : {
+        "structurizr.dsl.identifier" : "slack",
+        "Url" : "https://slack.com/"
+      },
+      "name" : "Slack",
+      "description" : "An instant messaging service used by Made Tech",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "6",
+      "tags" : "Element,Software System,External",
+      "properties" : {
+        "structurizr.dsl.identifier" : "pagerduty",
+        "Url" : "https://www.pagerduty.com/"
+      },
+      "name" : "PagerDuty",
+      "description" : "An alert tool for instances when the systems trigger an alarm",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "7",
+      "tags" : "Element,Software System,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "cjsm"
+      },
+      "name" : "CJSM",
+      "relationships" : [ {
+        "id" : "57",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "7d088bb1-d34e-41a8-835b-6f1c044236f9"
+        },
+        "sourceId" : "7",
+        "destinationId" : "1",
+        "description" : "Gets email"
+      } ],
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "8",
+      "tags" : "Element,Software System,Nginx,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "qsolution"
+      },
+      "name" : "PSN Proxy",
+      "description" : "Q-Solution",
+      "relationships" : [ {
+        "id" : "60",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "e36a0efe-d023-419c-a065-c2b18e74bd93"
+        },
+        "sourceId" : "8",
+        "destinationId" : "4",
+        "description" : "Uses"
+      }, {
+        "id" : "64",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "1e78578a-c4f1-4b89-989a-c2819ddc2821"
+        },
+        "sourceId" : "8",
+        "destinationId" : "4"
+      }, {
+        "id" : "65",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "9e83554d-503e-462f-8c5f-f18e6f683faa"
+        },
+        "sourceId" : "8",
+        "destinationId" : "25"
+      }, {
+        "id" : "66",
+        "sourceId" : "8",
+        "destinationId" : "10",
+        "linkedRelationshipId" : "65"
+      } ],
+      "group" : "CJSE",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "9",
+      "tags" : "Element,Software System,Existing System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "exiss"
+      },
+      "name" : "ExISS",
+      "relationships" : [ {
+        "id" : "75",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "7e9a445b-7131-46d7-9bae-ba148665a60a"
+        },
+        "sourceId" : "9",
+        "destinationId" : "13"
+      }, {
+        "id" : "76",
+        "sourceId" : "9",
+        "destinationId" : "12",
+        "linkedRelationshipId" : "75"
+      }, {
+        "id" : "77",
+        "sourceId" : "9",
+        "destinationId" : "10",
+        "linkedRelationshipId" : "75"
+      } ],
+      "group" : "CJSE",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "10",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "bichard"
+      },
+      "name" : "Bichard",
+      "relationships" : [ {
+        "id" : "63",
+        "sourceId" : "10",
+        "destinationId" : "8",
+        "linkedRelationshipId" : "62"
+      }, {
+        "id" : "68",
+        "sourceId" : "10",
+        "destinationId" : "7",
+        "description" : "Sends verification code",
+        "linkedRelationshipId" : "67"
+      }, {
+        "id" : "130",
+        "sourceId" : "10",
+        "destinationId" : "6",
+        "description" : "Sends message",
+        "linkedRelationshipId" : "128"
+      }, {
+        "id" : "134",
+        "sourceId" : "10",
+        "destinationId" : "5",
+        "description" : "Sends message",
+        "technology" : "via TLS Webhook",
+        "linkedRelationshipId" : "132"
+      } ],
+      "group" : "CJSE",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "26",
+        "tags" : "Element,Container,Database,Existing System",
+        "properties" : {
+          "structurizr.dsl.identifier" : "database"
+        },
+        "name" : "Bichard Database",
+        "technology" : "PostgreSQL",
+        "documentation" : { }
+      }, {
+        "id" : "25",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "nginxauthproxy",
+          "Url" : "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy"
+        },
+        "name" : "Nginx Auth Proxy",
+        "relationships" : [ {
+          "id" : "70",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ef5e92e9-44e4-4ad8-a8c5-8edcc1cd4266"
+          },
+          "sourceId" : "25",
+          "destinationId" : "28"
+        }, {
+          "id" : "71",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "a79f7605-baca-4f18-8268-4439c0d028d9"
+          },
+          "sourceId" : "25",
+          "destinationId" : "29",
+          "description" : "Uses"
+        }, {
+          "id" : "72",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "eed3d58a-d21e-4f7c-8642-458a60cc2f26"
+          },
+          "sourceId" : "25",
+          "destinationId" : "34"
+        }, {
+          "id" : "135",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ebe5983b-27b6-4cb8-8582-c220f9f5b49b"
+          },
+          "sourceId" : "25",
+          "destinationId" : "52"
+        } ],
+        "technology" : "Nginx",
+        "documentation" : { }
+      }, {
+        "id" : "27",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "emailsystem",
+          "Url" : "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Postfix"
+        },
+        "name" : "Email System",
+        "relationships" : [ {
+          "id" : "67",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "56640918-f1c2-48bb-a8c5-b34e8740fa6a"
+          },
+          "sourceId" : "27",
+          "destinationId" : "7",
+          "description" : "Sends verification code"
+        } ],
+        "technology" : "Postfix",
+        "documentation" : { }
+      }, {
+        "id" : "30",
+        "tags" : "Element,Container,API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "auditlogapi"
+        },
+        "name" : "Audit Log",
+        "relationships" : [ {
+          "id" : "102",
+          "sourceId" : "30",
+          "destinationId" : "26",
+          "linkedRelationshipId" : "101"
+        }, {
+          "id" : "104",
+          "sourceId" : "30",
+          "destinationId" : "24",
+          "linkedRelationshipId" : "103"
+        } ],
+        "components" : [ {
+          "id" : "33",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "dynamodb"
+          },
+          "name" : "DynamoDB",
+          "technology" : "DynamoDB",
+          "documentation" : { }
+        }, {
+          "id" : "31",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "auditlogapigateway"
+          },
+          "name" : "Audit Log API Gateway",
+          "relationships" : [ {
+            "id" : "99",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "ec2412ca-1500-4447-84cd-8d54b03996d9"
+            },
+            "sourceId" : "31",
+            "destinationId" : "32"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "32",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "auditlogapilambda"
+          },
+          "name" : "Audit Log API Lambda",
+          "relationships" : [ {
+            "id" : "100",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "e6e09686-60e9-438e-a539-ff36a875b869"
+            },
+            "sourceId" : "32",
+            "destinationId" : "33"
+          }, {
+            "id" : "101",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "0948a0af-f842-42d5-8c91-c46f1b9f7146"
+            },
+            "sourceId" : "32",
+            "destinationId" : "26"
+          }, {
+            "id" : "103",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "b1baf6c0-92fe-4676-bd2c-dad4ba44e7b3"
+            },
+            "sourceId" : "32",
+            "destinationId" : "24"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "35",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "reportingservice"
+        },
+        "name" : "Reporting",
+        "relationships" : [ {
+          "id" : "106",
+          "sourceId" : "35",
+          "destinationId" : "30",
+          "linkedRelationshipId" : "105"
+        }, {
+          "id" : "109",
+          "sourceId" : "35",
+          "destinationId" : "34",
+          "linkedRelationshipId" : "108"
+        }, {
+          "id" : "112",
+          "sourceId" : "35",
+          "destinationId" : "27",
+          "linkedRelationshipId" : "111"
+        }, {
+          "id" : "114",
+          "sourceId" : "35",
+          "destinationId" : "26",
+          "linkedRelationshipId" : "113"
+        } ],
+        "components" : [ {
+          "id" : "39",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "topexceptionsreport"
+          },
+          "name" : "Top Exceptions Report",
+          "relationships" : [ {
+            "id" : "110",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "69826fcb-6e8f-40c1-9747-6db6982d8750"
+            },
+            "sourceId" : "39",
+            "destinationId" : "34"
+          }, {
+            "id" : "115",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "17df8102-5274-4438-b4f0-572868c1e27b"
+            },
+            "sourceId" : "39",
+            "destinationId" : "30"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "36",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "automationreport"
+          },
+          "name" : "Automation Report",
+          "relationships" : [ {
+            "id" : "105",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "a7463ba8-4aad-4eee-8ee0-10b60a947b2a"
+            },
+            "sourceId" : "36",
+            "destinationId" : "30"
+          }, {
+            "id" : "108",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "44291d36-60fd-42ac-a689-fe561b21c4e3"
+            },
+            "sourceId" : "36",
+            "destinationId" : "34"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "38",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "mpsreport"
+          },
+          "name" : "MPS Report",
+          "relationships" : [ {
+            "id" : "113",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "e397730c-127c-49bc-8f04-fb3d084751f8"
+            },
+            "sourceId" : "38",
+            "destinationId" : "26"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "37",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "commonplatformreport"
+          },
+          "name" : "Common Platform Report",
+          "relationships" : [ {
+            "id" : "107",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "39f1b893-15b6-47c2-8109-baeadfb90533"
+            },
+            "sourceId" : "37",
+            "destinationId" : "30"
+          }, {
+            "id" : "111",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "bf509397-b965-41f2-b795-f33d668313cc"
+            },
+            "sourceId" : "37",
+            "destinationId" : "27"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "20",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "eventlambda"
+        },
+        "name" : "Event Lambda",
+        "relationships" : [ {
+          "id" : "92",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "8f6ae980-d2ca-4605-a7b6-7284fe91c1cd"
+          },
+          "sourceId" : "20",
+          "destinationId" : "22"
+        }, {
+          "id" : "93",
+          "sourceId" : "20",
+          "destinationId" : "21",
+          "linkedRelationshipId" : "92"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "12",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "messagetransfer"
+        },
+        "name" : "Message Transfer Lambda",
+        "relationships" : [ {
+          "id" : "81",
+          "sourceId" : "12",
+          "destinationId" : "16",
+          "linkedRelationshipId" : "79"
+        }, {
+          "id" : "82",
+          "sourceId" : "12",
+          "destinationId" : "15",
+          "linkedRelationshipId" : "79"
+        } ],
+        "components" : [ {
+          "id" : "14",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "transferprocess"
+          },
+          "name" : "Transfer lambda",
+          "relationships" : [ {
+            "id" : "79",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "c682f937-0163-4494-ba21-43c2e4aec1e1"
+            },
+            "sourceId" : "14",
+            "destinationId" : "16"
+          }, {
+            "id" : "80",
+            "sourceId" : "14",
+            "destinationId" : "15",
+            "linkedRelationshipId" : "79"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "13",
+          "tags" : "Element,Component,Queue",
+          "properties" : {
+            "structurizr.dsl.identifier" : "incomings3bucket"
+          },
+          "name" : "External Incoming S3 bucket",
+          "relationships" : [ {
+            "id" : "78",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "7e41bcfb-77c7-49e9-add1-982782cfaca3"
+            },
+            "sourceId" : "13",
+            "destinationId" : "14"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "29",
+        "tags" : "Element,Container,API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "bicharduserservice",
+          "Url" : "https://github.com/ministryofjustice/bichard7-next-user-service"
+        },
+        "name" : "Bichard User Service",
+        "description" : "An application to provide user authentication and user management",
+        "relationships" : [ {
+          "id" : "69",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "7eb771e9-51fb-417b-b03e-337050fd90af"
+          },
+          "sourceId" : "29",
+          "destinationId" : "27",
+          "description" : "Sends verification code"
+        }, {
+          "id" : "73",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "2934a4cc-b384-443b-8ae2-25c9a8b28c46"
+          },
+          "sourceId" : "29",
+          "destinationId" : "26",
+          "description" : "Reads from / Writes to"
+        } ],
+        "technology" : "Next.js, TypeScript & React",
+        "documentation" : { }
+      }, {
+        "id" : "52",
+        "tags" : "Element,Container,Web Browser",
+        "properties" : {
+          "structurizr.dsl.identifier" : "bichardui",
+          "Url" : "https://github.com/ministryofjustice/bichard7-next-ui"
+        },
+        "name" : "Bichard UI",
+        "description" : "A new way of interacting with Bichard, complying with Gov.uk standards",
+        "relationships" : [ {
+          "id" : "136",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "82d0ebbb-4077-499a-b6b9-964e54cc2e41"
+          },
+          "sourceId" : "52",
+          "destinationId" : "26"
+        } ],
+        "technology" : "TypeScript & React",
+        "documentation" : { }
+      }, {
+        "id" : "11",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "beanconnect"
+        },
+        "name" : "Beanconnect",
+        "relationships" : [ {
+          "id" : "62",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "c45f2c8a-5d00-4203-b76a-e8a138c8d15f"
+          },
+          "sourceId" : "11",
+          "destinationId" : "8"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "21",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "eventhandler"
+        },
+        "name" : "Event Handler Step Function",
+        "relationships" : [ {
+          "id" : "96",
+          "sourceId" : "21",
+          "destinationId" : "30",
+          "linkedRelationshipId" : "95"
+        } ],
+        "components" : [ {
+          "id" : "22",
+          "tags" : "Element,Component,Queue",
+          "properties" : {
+            "structurizr.dsl.identifier" : "events3bucket"
+          },
+          "name" : "Event S3 bucket",
+          "relationships" : [ {
+            "id" : "94",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "5dc962be-d42e-4362-9805-6d248a442447"
+            },
+            "sourceId" : "22",
+            "destinationId" : "23"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "23",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "writetoauditlog"
+          },
+          "name" : "Write to Audit Log",
+          "relationships" : [ {
+            "id" : "95",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "01f8661c-0d4f-4c1d-b3e1-f05218ec3422"
+            },
+            "sourceId" : "23",
+            "destinationId" : "30"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "28",
+        "tags" : "Element,Container,Existing System",
+        "properties" : {
+          "structurizr.dsl.identifier" : "bichardjavaapplication"
+        },
+        "name" : "Bichard Java Application",
+        "relationships" : [ {
+          "id" : "61",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "423537f3-c3d5-4077-a23f-8fdd64b7fb81"
+          },
+          "sourceId" : "28",
+          "destinationId" : "11"
+        }, {
+          "id" : "74",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "2a73ccb2-edb8-4fc9-a8df-d135621676cc"
+          },
+          "sourceId" : "28",
+          "destinationId" : "26",
+          "description" : "Reads from / Writes to"
+        }, {
+          "id" : "98",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "da58bd1a-637d-4fee-9ee5-02a453f6f066"
+          },
+          "sourceId" : "28",
+          "destinationId" : "24"
+        } ],
+        "technology" : "Java EE",
+        "documentation" : { }
+      }, {
+        "id" : "34",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "staticfileservice"
+        },
+        "name" : "Static File Service",
+        "documentation" : { }
+      }, {
+        "id" : "24",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "activemq"
+        },
+        "name" : "Active MQ",
+        "relationships" : [ {
+          "id" : "91",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "3b7427db-ac54-40e0-aa76-fca29ee1aa93"
+          },
+          "sourceId" : "24",
+          "destinationId" : "20"
+        }, {
+          "id" : "97",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "78241f9c-fbf5-45f7-b63f-158141298f50"
+          },
+          "sourceId" : "24",
+          "destinationId" : "28"
+        } ],
+        "technology" : "Active MQ",
+        "documentation" : { }
+      }, {
+        "id" : "40",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "monitoring"
+        },
+        "name" : "Monitoring",
+        "relationships" : [ {
+          "id" : "118",
+          "sourceId" : "40",
+          "destinationId" : "28",
+          "linkedRelationshipId" : "117"
+        }, {
+          "id" : "129",
+          "sourceId" : "40",
+          "destinationId" : "6",
+          "description" : "Sends message",
+          "linkedRelationshipId" : "128"
+        }, {
+          "id" : "133",
+          "sourceId" : "40",
+          "destinationId" : "5",
+          "description" : "Sends message",
+          "technology" : "via TLS Webhook",
+          "linkedRelationshipId" : "132"
+        } ],
+        "components" : [ {
+          "id" : "43",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "prometheuscloudwatchexporter"
+          },
+          "name" : "Prometheus CloudWatch Exporter",
+          "relationships" : [ {
+            "id" : "121",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "e7d5681e-ae57-43bb-be04-cc0300cf0997"
+            },
+            "sourceId" : "43",
+            "destinationId" : "42"
+          }, {
+            "id" : "122",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "7184e2cc-5d49-4f06-bec5-8a6faf03b33f"
+            },
+            "sourceId" : "43",
+            "destinationId" : "48"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "41",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "opensearch"
+          },
+          "name" : "OpenSearch",
+          "documentation" : { }
+        }, {
+          "id" : "48",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "cloudwatchmetrics"
+          },
+          "name" : "CloudWatch Metrics",
+          "relationships" : [ {
+            "id" : "124",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "1247f5bc-9b27-452b-b4c3-50bc845d3f5b"
+            },
+            "sourceId" : "48",
+            "destinationId" : "50"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "42",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "prometheus"
+          },
+          "name" : "Prometheus",
+          "relationships" : [ {
+            "id" : "123",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "1fc4c5eb-cebf-4f05-8ed0-aeb7b5ce8ce8"
+            },
+            "sourceId" : "42",
+            "destinationId" : "50"
+          }, {
+            "id" : "125",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "83378c14-76d3-4efc-9e03-b8d5ae674c03"
+            },
+            "sourceId" : "42",
+            "destinationId" : "45"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "44",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "prometheusblackboxexporter"
+          },
+          "name" : "Prometheus Black Box Exporter",
+          "relationships" : [ {
+            "id" : "116",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "3225b583-a474-40de-b7ad-c7833d1218fa"
+            },
+            "sourceId" : "44",
+            "destinationId" : "42"
+          }, {
+            "id" : "117",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "4d835642-1706-43fe-bd76-17477e84d826"
+            },
+            "sourceId" : "44",
+            "destinationId" : "28"
+          }, {
+            "id" : "119",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "38f0b542-ba45-4232-9fe6-bc17f1b6d2e1"
+            },
+            "sourceId" : "44",
+            "destinationId" : "45"
+          }, {
+            "id" : "120",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "2ced2748-1440-46c0-8664-cde8f20cdb63"
+            },
+            "sourceId" : "44",
+            "destinationId" : "41"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "50",
+          "tags" : "Element,Component,SNS",
+          "properties" : {
+            "structurizr.dsl.identifier" : "sns"
+          },
+          "name" : "SNS",
+          "relationships" : [ {
+            "id" : "128",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "6f138f31-90ab-4825-9f45-ef58745e3a28"
+            },
+            "sourceId" : "50",
+            "destinationId" : "6",
+            "description" : "Sends message"
+          }, {
+            "id" : "131",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "fbbb2442-d224-4785-a26c-d04530b4da96"
+            },
+            "sourceId" : "50",
+            "destinationId" : "49",
+            "description" : "Sends message"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "47",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "cloudwatchlogs"
+          },
+          "name" : "CloudWatch Logs",
+          "description" : "Logs gathered from all AWS services",
+          "relationships" : [ {
+            "id" : "127",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "c80d27b1-c726-403a-85f0-66a3cfe67923"
+            },
+            "sourceId" : "47",
+            "destinationId" : "46"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "45",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "grafana"
+          },
+          "name" : "Grafana",
+          "documentation" : { }
+        }, {
+          "id" : "46",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "logstash"
+          },
+          "name" : "LogStash",
+          "relationships" : [ {
+            "id" : "126",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "a6f62a38-6a6d-496d-b2a3-28bbc450c293"
+            },
+            "sourceId" : "46",
+            "destinationId" : "41"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "49",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "slacklambda"
+          },
+          "name" : "Slack message handler",
+          "relationships" : [ {
+            "id" : "132",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "c82acf1d-acf2-4331-b2d3-88e6a3e4976f"
+            },
+            "sourceId" : "49",
+            "destinationId" : "5",
+            "description" : "Sends message",
+            "technology" : "via TLS Webhook"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "15",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "incomingmessagehandler"
+        },
+        "name" : "Incoming Message Handler Step Function",
+        "relationships" : [ {
+          "id" : "85",
+          "sourceId" : "15",
+          "destinationId" : "30",
+          "linkedRelationshipId" : "84"
+        }, {
+          "id" : "88",
+          "sourceId" : "15",
+          "destinationId" : "24",
+          "linkedRelationshipId" : "87"
+        } ],
+        "components" : [ {
+          "id" : "17",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "storemessage"
+          },
+          "name" : "Store Message",
+          "relationships" : [ {
+            "id" : "84",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "5751e6a7-8c5b-4beb-ba89-5ca753fd7c54"
+            },
+            "sourceId" : "17",
+            "destinationId" : "30"
+          }, {
+            "id" : "86",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "0b4bf4f3-e8cd-446f-9cbe-9c8a4bed9612"
+            },
+            "sourceId" : "17",
+            "destinationId" : "18"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "19",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "recordsenttobichard"
+          },
+          "name" : "Record Sent to Bichard",
+          "relationships" : [ {
+            "id" : "90",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "ca257095-6e50-4924-b716-ca6ab3ce359c"
+            },
+            "sourceId" : "19",
+            "destinationId" : "30"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "16",
+          "tags" : "Element,Component,Queue",
+          "properties" : {
+            "structurizr.dsl.identifier" : "internalincomings3bucket"
+          },
+          "name" : "Internal Incoming S3 bucket",
+          "description" : "Blah blah",
+          "relationships" : [ {
+            "id" : "83",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "a679bea3-52e1-42b3-b063-6cd3b35f1394"
+            },
+            "sourceId" : "16",
+            "destinationId" : "17"
+          } ],
+          "documentation" : { }
+        }, {
+          "id" : "18",
+          "tags" : "Element,Component,Lambda",
+          "properties" : {
+            "structurizr.dsl.identifier" : "sendtobichard"
+          },
+          "name" : "Send to Bichard",
+          "relationships" : [ {
+            "id" : "87",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "00812e7c-5f63-45e7-87d9-303372fedfc4"
+            },
+            "sourceId" : "18",
+            "destinationId" : "24"
+          }, {
+            "id" : "89",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "278e92d4-8e45-4f48-8b31-9fd44877eea0"
+            },
+            "sourceId" : "18",
+            "destinationId" : "19"
+          } ],
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "51",
+        "tags" : "Element,Container,API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "pncapi"
+        },
+        "name" : "PNC API",
+        "relationships" : [ {
+          "id" : "143",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "8e715d96-8fe5-4667-97ce-af7b1088a7f8"
+          },
+          "sourceId" : "51",
+          "destinationId" : "11"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "53",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "conductor"
+        },
+        "name" : "Conductor",
+        "relationships" : [ {
+          "id" : "138",
+          "sourceId" : "53",
+          "destinationId" : "30",
+          "linkedRelationshipId" : "137"
+        }, {
+          "id" : "140",
+          "sourceId" : "53",
+          "destinationId" : "26",
+          "description" : "Reads from and writes to",
+          "linkedRelationshipId" : "139"
+        }, {
+          "id" : "142",
+          "sourceId" : "53",
+          "destinationId" : "51",
+          "linkedRelationshipId" : "141"
+        } ],
+        "components" : [ {
+          "id" : "54",
+          "tags" : "Element,Component",
+          "properties" : {
+            "structurizr.dsl.identifier" : "bichardnextcore",
+            "Url" : "https://github.com/ministryofjustice/bichard7-next-core"
+          },
+          "name" : "Bichard Next Core",
+          "description" : "The code to replace the processing logic of Bichard7",
+          "relationships" : [ {
+            "id" : "137",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "28599c8d-44c1-461d-aad5-2e0915475ce8"
+            },
+            "sourceId" : "54",
+            "destinationId" : "30"
+          }, {
+            "id" : "139",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "34632543-e401-4041-a0e8-dcc844818735"
+            },
+            "sourceId" : "54",
+            "destinationId" : "26",
+            "description" : "Reads from and writes to"
+          }, {
+            "id" : "141",
+            "tags" : "Relationship",
+            "properties" : {
+              "structurizr.dsl.identifier" : "9e8b5f72-bb12-445f-b787-31922e465af6"
+            },
+            "sourceId" : "54",
+            "destinationId" : "51"
+          } ],
+          "technology" : "Next.js, TypeScript",
+          "documentation" : { }
+        } ],
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    } ]
+  },
+  "documentation" : {
+    "sections" : [ {
+      "content" : "## Bichard\n\nWelcome to the microsite for the Bichard architecture and documentation.\n\nThe following diagram shows how Bichard fits in with high level view of MoJ.\n\n![System Landscape Diagram](embed:SystemLandscape)\n",
+      "format" : "Markdown",
+      "filename" : "001-index.md",
+      "order" : 1,
+      "title" : ""
+    }, {
+      "content" : "## Transitioning Bichard\n\n### \"Old\" Bichard\n\nBichard after the \"lift and shift\" into AWS. [Link to nice version of Old Bichard](/diagrams/OldBichard.png).\n\n![Old Bichard](embed:OldBichard)\n\n### Hybrid Bichard\n\nBichard in its current state. [Link to nice version of Hybrid Bichard](/diagrams/HybridBichard.png).\n![Old Bichard](embed:HybridBichard)\n",
+      "format" : "Markdown",
+      "filename" : "002-transitioning-bichard.md",
+      "order" : 2,
+      "title" : ""
+    }, {
+      "content" : "## Schemas\n\n- [Schema for Annotated Hearing Outcome](https://ministryofjustice.github.io/bichard7-next-core/schema/aho/index.html)\n- [Schema for SPI](https://ministryofjustice.github.io/bichard7-next-core/schema/spi/index.html)\n",
+      "format" : "Markdown",
+      "filename" : "003-schemas.md",
+      "order" : 3,
+      "title" : ""
+    } ],
+    "decisions" : [ {
+      "content" : "# 1. Record architecture decisions\n\nDate: 2023-06-27\n\n## Status\n\nAccepted\n\n## Context\n\nWe need to record the architectural decisions made on this system.\n\n## Decision\n\nWe will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).\n\n## Consequences\n\n- See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).\n- Using [Structurizr](https://structurizr.com/)\n",
+      "format" : "Markdown",
+      "id" : "1",
+      "title" : "Record architecture decisions",
+      "date" : "2023-06-27T00:00:00Z",
+      "status" : "Accepted"
+    }, {
+      "content" : "# 1. Record architecture decisions\n\nDate: 2023-09-22\n\n## Status\n\nAccepted\n\n## Context\n\nUsing a Data Transfer Object (DTO) in the `bichard-next-ui` repo will help separate the User Interface (React) from\nthe Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at\ncompile time.\n\nWe have chosen the naming convention of:\n\n- Types:\n  - `Display` - Prefix for the object to be consumed in the UI\n  - `DisplayPartial` - Prefix for the object which has limited fields\n  - `DisplayFull` - Prefix for the object which has all fields (that aren't a security risk)\n- File structure for DTOs\n  - `src/services/dto` top level\n  - Then for example: `objectDto.ts`\n- Which holds functions like:\n  - `objToDisplayObjDto`\n  - `objToDisplayPartialObjDto`\n\nA DTO object is a new object mirror with some of a Entity's attributes. We are actively using `Pick<T, \"field\">` to\nselect what we want to use out of the Entity and mapping via a function (e.g.\n`const displayObj = objToDisplayObjDto(obj)`).\n\nWe can control the levels of data we want share. E.g. `displayPartialObj` or `displayFullObj`.\n\n## Consequences\n\n- It's more complex than just using the Database Record\n- It's more secure than sending out raw database records into the UI\n- You have to be disciplined in it's use and following the architectural pattern\n",
+      "format" : "Markdown",
+      "id" : "2",
+      "title" : "Record architecture decisions",
+      "date" : "2023-09-22T00:00:00Z",
+      "status" : "Accepted"
+    } ]
+  },
+  "views" : {
+    "systemLandscapeViews" : [ {
+      "key" : "SystemLandscape",
+      "order" : 1,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "enterpriseBoundaryVisible" : true,
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "60"
+      }, {
+        "id" : "63"
+      }, {
+        "id" : "64"
+      }, {
+        "id" : "55"
+      }, {
+        "id" : "77"
+      }, {
+        "id" : "66"
+      }, {
+        "id" : "56"
+      }, {
+        "id" : "57"
+      }, {
+        "id" : "58"
+      }, {
+        "id" : "68"
+      }, {
+        "id" : "59"
+      } ]
+    } ],
+    "systemContextViews" : [ {
+      "key" : "BichardSystemContext",
+      "order" : 2,
+      "softwareSystemId" : "10",
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "enterpriseBoundaryVisible" : true,
+      "elements" : [ {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "63"
+      }, {
+        "id" : "66"
+      }, {
+        "id" : "77"
+      }, {
+        "id" : "68"
+      } ]
+    } ],
+    "containerViews" : [ {
+      "key" : "HybridBichard",
+      "order" : 4,
+      "title" : "Hybrid Bichard",
+      "softwareSystemId" : "10",
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "34",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "35",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "24",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "25",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "27",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "28",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "29",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "40",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "51",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "52",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "20",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "53",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "21",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "93"
+      }, {
+        "id" : "70"
+      }, {
+        "id" : "72"
+      }, {
+        "id" : "91"
+      }, {
+        "id" : "71"
+      }, {
+        "id" : "74"
+      }, {
+        "id" : "97"
+      }, {
+        "id" : "73"
+      }, {
+        "id" : "98"
+      }, {
+        "id" : "76"
+      }, {
+        "id" : "96"
+      }, {
+        "id" : "118"
+      }, {
+        "id" : "67"
+      }, {
+        "id" : "135"
+      }, {
+        "id" : "69"
+      }, {
+        "id" : "88"
+      }, {
+        "id" : "112"
+      }, {
+        "id" : "138"
+      }, {
+        "id" : "114"
+      }, {
+        "id" : "136"
+      }, {
+        "id" : "82"
+      }, {
+        "id" : "61"
+      }, {
+        "id" : "62"
+      }, {
+        "id" : "142"
+      }, {
+        "id" : "65"
+      }, {
+        "id" : "85"
+      }, {
+        "id" : "140"
+      }, {
+        "id" : "109"
+      }, {
+        "id" : "102"
+      }, {
+        "id" : "143"
+      }, {
+        "id" : "104"
+      }, {
+        "id" : "106"
+      } ]
+    }, {
+      "key" : "OldBichard",
+      "order" : 3,
+      "title" : "Old Bichard",
+      "softwareSystemId" : "10",
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "34",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "35",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "24",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "25",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "27",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "28",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "29",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "40",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "20",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "21",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "93"
+      }, {
+        "id" : "70"
+      }, {
+        "id" : "72"
+      }, {
+        "id" : "91"
+      }, {
+        "id" : "71"
+      }, {
+        "id" : "74"
+      }, {
+        "id" : "97"
+      }, {
+        "id" : "73"
+      }, {
+        "id" : "98"
+      }, {
+        "id" : "76"
+      }, {
+        "id" : "96"
+      }, {
+        "id" : "118"
+      }, {
+        "id" : "67"
+      }, {
+        "id" : "69"
+      }, {
+        "id" : "88"
+      }, {
+        "id" : "112"
+      }, {
+        "id" : "114"
+      }, {
+        "id" : "82"
+      }, {
+        "id" : "61"
+      }, {
+        "id" : "62"
+      }, {
+        "id" : "65"
+      }, {
+        "id" : "85"
+      }, {
+        "id" : "109"
+      }, {
+        "id" : "102"
+      }, {
+        "id" : "104"
+      }, {
+        "id" : "106"
+      } ]
+    } ],
+    "componentViews" : [ {
+      "key" : "Component-001",
+      "order" : 5,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "53",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "51",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "54",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "141"
+      }, {
+        "id" : "102"
+      }, {
+        "id" : "139"
+      }, {
+        "id" : "137"
+      } ]
+    }, {
+      "key" : "Component-004",
+      "order" : 8,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "30",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "33",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "24",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "31",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "32",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "100"
+      }, {
+        "id" : "99"
+      }, {
+        "id" : "101"
+      }, {
+        "id" : "103"
+      } ]
+    }, {
+      "key" : "Component-006",
+      "order" : 10,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "35",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "34",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "36",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "37",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "38",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "27",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "39",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "108"
+      }, {
+        "id" : "107"
+      }, {
+        "id" : "111"
+      }, {
+        "id" : "110"
+      }, {
+        "id" : "113"
+      }, {
+        "id" : "102"
+      }, {
+        "id" : "115"
+      }, {
+        "id" : "105"
+      } ]
+    }, {
+      "key" : "Component-002",
+      "order" : 6,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "15",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "24",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "17",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "18",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "19",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "83"
+      }, {
+        "id" : "81"
+      }, {
+        "id" : "86"
+      }, {
+        "id" : "87"
+      }, {
+        "id" : "84"
+      }, {
+        "id" : "89"
+      }, {
+        "id" : "104"
+      }, {
+        "id" : "90"
+      } ]
+    }, {
+      "key" : "Component-007",
+      "order" : 11,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "40",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "44",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "45",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "46",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "47",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "48",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "49",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "28",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "50",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "41",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "42",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "43",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "131"
+      }, {
+        "id" : "120"
+      }, {
+        "id" : "119"
+      }, {
+        "id" : "122"
+      }, {
+        "id" : "121"
+      }, {
+        "id" : "124"
+      }, {
+        "id" : "132"
+      }, {
+        "id" : "123"
+      }, {
+        "id" : "127"
+      }, {
+        "id" : "128"
+      }, {
+        "id" : "117"
+      }, {
+        "id" : "125"
+      }, {
+        "id" : "116"
+      }, {
+        "id" : "126"
+      } ]
+    }, {
+      "key" : "Component-003",
+      "order" : 7,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "12",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "80"
+      }, {
+        "id" : "75"
+      }, {
+        "id" : "78"
+      } ]
+    }, {
+      "key" : "Component-005",
+      "order" : 9,
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false,
+        "applied" : false
+      },
+      "containerId" : "21",
+      "externalContainerBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "23",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "30",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "20",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "relationships" : [ {
+        "id" : "94"
+      }, {
+        "id" : "92"
+      }, {
+        "id" : "95"
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "styles" : {
+        "elements" : [ {
+          "tag" : "Web Browser",
+          "shape" : "WebBrowser"
+        }, {
+          "tag" : "Database",
+          "shape" : "Cylinder"
+        }, {
+          "tag" : "API",
+          "shape" : "Hexagon"
+        }, {
+          "tag" : "Queue",
+          "shape" : "Pipe"
+        }, {
+          "tag" : "Lambda",
+          "shape" : "Diamond"
+        }, {
+          "tag" : "SNS",
+          "shape" : "Pipe"
+        }, {
+          "tag" : "External",
+          "background" : "#9b76ff",
+          "color" : "#ffffff"
+        }, {
+          "tag" : "Existing System",
+          "background" : "#999999",
+          "color" : "#ffffff"
+        } ]
+      },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ],
+      "terminology" : { }
+    }
+  }
+}
