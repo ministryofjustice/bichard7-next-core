@@ -5,11 +5,14 @@ import serialiseToXml from "./serialiseToXml"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 describe("serialiseToXml", () => {
-  it.ifNewBichard("serialises PncUpdateDataset into legacy XML", async () => {
-    const inputMessage = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-with-operations.xml").toString()
-    const parsedPncUpdateDataset = parsePncUpdateDataSetXml(inputMessage) as PncUpdateDataset
-    const serialisedPncUpdateDataset = serialiseToXml(parsedPncUpdateDataset)
+  it.each(["PncUpdateDataSet-with-operations.xml", "PncUpdateDataSet-no-operations.xml"])(
+    "serialises PncUpdateDataset JSON into legacy XML",
+    (xmlFilePath) => {
+      const inputMessage = fs.readFileSync(`phase2/tests/fixtures/${xmlFilePath}`).toString()
+      const parsedPncUpdateDataset = parsePncUpdateDataSetXml(inputMessage) as PncUpdateDataset
+      const serialisedPncUpdateDataset = serialiseToXml(parsedPncUpdateDataset)
 
-    expect(serialisedPncUpdateDataset).toEqualXML(inputMessage)
-  })
+      expect(serialisedPncUpdateDataset).toEqualXML(inputMessage)
+    }
+  )
 })
