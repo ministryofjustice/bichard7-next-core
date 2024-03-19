@@ -1,5 +1,5 @@
 import { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import { convertAhoToXml, mapAhoOrgUnitToXml, xmlnsTags } from "../../../phase1/serialise/ahoXml/serialiseToXml"
+import { convertAhoToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../phase1/types/PncUpdateDatasetXml"
 import { toISODate } from "../../../phase1/lib/dates"
 import generateXml from "../../../lib/xml/generateXml"
@@ -38,7 +38,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
               }
             : {}
         },
-        operationStatus: "F" //operation.status[0]
+        operationStatus: mapOperationStatus(operation.status)
       }
     }
 
@@ -52,7 +52,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
               }
             : {}
         },
-        operationStatus: "F" //operation.status[0]
+        operationStatus: mapOperationStatus(operation.status)
       }
     }
 
@@ -60,15 +60,24 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
   })
 }
 
+const xmlnsTags = {
+  "@_xmlns": "http://www.example.org/NewXMLSchema",
+  "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
+  "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+}
+
 const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
   const xmlAho = convertAhoToXml(pncUpdateDataset)
+  delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:ds"]
+  delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:xsi"]
+
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {
     "?xml": xmlAho["?xml"],
     PNCUpdateDataset: {
       ...{ ...xmlAho, "?xml": undefined },
       Operation: mapOperationToXml(pncUpdateDataset.PncOperations),
       ...xmlnsTags
-    },
+    }
   }
 
   return generateXml(xmlPncUpdateDataset)

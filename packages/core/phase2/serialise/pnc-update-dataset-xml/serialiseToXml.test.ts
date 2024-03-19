@@ -5,15 +5,12 @@ import serialiseToXml from "./serialiseToXml"
 import { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 
-describe("generateLegacyPncUpdateDatasetXml", () => {
-  it.ifNewBichard("serialiseToXml serialises PncUpdateDataset into legacy XML containing an aho element", async () => {
+describe("serialiseToXml", () => {
+  it.ifNewBichard("serialises PncUpdateDataset into legacy XML", async () => {
     const inputMessage = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-with-operations.xml").toString()
     const parsedPncUpdateDataset = parsePncUpdateDataSetXml(inputMessage) as PncUpdateDataset
     const serialisedPncUpdateDataset = serialiseToXml(parsedPncUpdateDataset)
-    
-    expect(serialisedPncUpdateDataset.match(/<br7:AnnotatedHearingOutcome/))
+
+    expect(serialisedPncUpdateDataset).toEqualXML(inputMessage)
   })
 })
-
-// expect(serialisedPncUpdateDataset).toEqual(inputMessage)
-//@TODO

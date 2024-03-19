@@ -15,8 +15,8 @@ export interface Br7AnnotatedHearingOutcome {
     "#text": string
     "@_classification"?: string
   }
-  "@_xmlns:ds": string
-  "@_xmlns:xsi": string
+  "@_xmlns:ds"?: string
+  "@_xmlns:xsi"?: string
   "@_xmlns:br7": string
 }
 

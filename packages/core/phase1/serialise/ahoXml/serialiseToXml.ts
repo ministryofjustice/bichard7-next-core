@@ -484,7 +484,7 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
       : undefined
 })
 
-export const xmlnsTags = {
+const xmlnsTags = {
   "@_xmlns:br7": "http://schemas.cjse.gov.uk/datastandards/BR7/2007-12",
   "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
   "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"

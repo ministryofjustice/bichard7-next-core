@@ -40,6 +40,6 @@ export type PncUpdateDatasetXml = {
     Operation: PncOperationXml[]
     "@_xmlns:ds": string
     "@_xmlns:xsi": string
-    "@_xmlns:br7": string
+    "@_xmlns": string
   }
 }

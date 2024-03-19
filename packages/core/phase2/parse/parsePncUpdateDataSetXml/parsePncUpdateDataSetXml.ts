@@ -86,7 +86,7 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
     return Error("Could not parse PNC update dataset XML")
   }
 
-  const aho = mapXmlToAho(rootElement["br7:AnnotatedHearingOutcome"])
+  const aho = mapXmlToAho(rootElement)
   if (isError(aho)) {
     return aho
   }
