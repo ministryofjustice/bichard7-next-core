@@ -7,5 +7,6 @@ module.exports = {
     "^(phase1|lib|types)/(.*)": "<rootDir>/$1/$2"
   },
   setupFilesAfterEnv: ["<rootDir>/phase1/tests/jest.setup.ts"],
-  modulePathIgnorePatterns: ["dist"]
+  modulePathIgnorePatterns: ["dist"],
+  coveragePathIgnorePatterns: ["node_modules", "phase1/comparison", "phase1/tests"]
 }
