@@ -9,9 +9,9 @@ import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/store
 import alertCommonPlatform from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/alertCommonPlatform"
 import convertSpiToAho from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/convertSpiToAho"
 import createAuditLogRecord from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/createAuditLogRecord"
-import compareFiles from "@moj-bichard7/core/phase1/comparison/conductor-tasks/compareFiles"
-import generateRerunTasks from "@moj-bichard7/core/phase1/comparison/conductor-tasks/generateRerunTasks"
-import rerunPeriod from "@moj-bichard7/core/phase1/comparison/conductor-tasks/rerunPeriod"
+import compareFiles from "@moj-bichard7/core/comparison/conductor-tasks/compareFiles"
+import generateRerunTasks from "@moj-bichard7/core/comparison/conductor-tasks/generateRerunTasks"
+import rerunPeriod from "@moj-bichard7/core/comparison/conductor-tasks/rerunPeriod"
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
 
