@@ -1,128 +1,128 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<PNCUpdateDataset xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.example.org/NewXMLSchema">
+<PNCUpdateDataset xmlns="http://www.example.org/NewXMLSchema" xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <br7:AnnotatedHearingOutcome xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12">
         <foo/><br7:HearingOutcome>
             <br7:Hearing hasError="false" SchemaVersion="4.0">
                 <ds:CourtHearingLocation SchemaVersion="2.0">
                     <ds:TopLevelCode>B</ds:TopLevelCode>
                     <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                    <ds:ThirdLevelCode>AU</ds:ThirdLevelCode>
-                    <ds:BottomLevelCode>01</ds:BottomLevelCode>
-                    <ds:OrganisationUnitCode>B01AU01</ds:OrganisationUnitCode>
+                    <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
                 </ds:CourtHearingLocation>
-                <ds:DateOfHearing>2007-09-28</ds:DateOfHearing>
+                <ds:DateOfHearing>2023-12-19</ds:DateOfHearing>
                 <ds:TimeOfHearing>10:00</ds:TimeOfHearing>
                 <ds:HearingLanguage Literal="Don't Know">D</ds:HearingLanguage>
                 <ds:HearingDocumentationLanguage Literal="Don't Know">D</ds:HearingDocumentationLanguage>
-                <ds:DefendantPresentAtHearing Literal="Yes">Y</ds:DefendantPresentAtHearing>
+                <ds:DefendantPresentAtHearing Literal="No">N</ds:DefendantPresentAtHearing>
                 <br7:SourceReference>
-                    <br7:DocumentName>SPI KEITH RUST</br7:DocumentName>
-                    <br7:UniqueID>01-04-200909:54ID:414d51204252375f514d202020202020d4db334901290920</br7:UniqueID>
+                    <br7:DocumentName>SPI JOSIANE COLE</br7:DocumentName>
+                    <br7:UniqueID>a20e4107-2184-4843-9d3a-3e7dca093126</br7:UniqueID>
                     <br7:DocumentType>SPI Case Result</br7:DocumentType>
                 </br7:SourceReference>
                 <br7:CourtType Literal="MC adult">MCA</br7:CourtType>
-                <br7:CourtHouseCode>2812</br7:CourtHouseCode>
-                <br7:CourtHouseName>Magistrates' Courts London Barnet</br7:CourtHouseName>
+                <br7:CourtHouseCode>1910</br7:CourtHouseCode>
+                <br7:CourtHouseName>Magistrates' Courts London Bromley (County Court, College Road)</br7:CourtHouseName>
             </br7:Hearing>
             <br7:Case hasError="false" SchemaVersion="4.0">
-                <ds:CPSOrganisation SchemaVersion="2.0">
-                    <ds:SecondLevelCode>06</ds:SecondLevelCode>
-                    <ds:ThirdLevelCode>AB</ds:ThirdLevelCode>
-                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
-                    <ds:OrganisationUnitCode>06AB00</ds:OrganisationUnitCode>
-                </ds:CPSOrganisation>
-                <ds:PTIURN>06AB1045501</ds:PTIURN>
+                <ds:PTIURN>01XX8811372</ds:PTIURN>
                 <ds:PreChargeDecisionIndicator Literal="No">N</ds:PreChargeDecisionIndicator>
-                <ds:CourtCaseReferenceNumber>07/1577/020154M</ds:CourtCaseReferenceNumber>
+                <ds:CourtCaseReferenceNumber>23/1234/012345P</ds:CourtCaseReferenceNumber>
                 <br7:CourtReference>
-                    <ds:MagistratesCourtReference>06AB1045501</ds:MagistratesCourtReference>
+                    <ds:MagistratesCourtReference>01XX8811372</ds:MagistratesCourtReference>
                 </br7:CourtReference>
                 <br7:RecordableOnPNCindicator Literal="Yes">Y</br7:RecordableOnPNCindicator>
+                <br7:Urgent>
+                    <br7:urgent Literal="Yes">Y</br7:urgent>
+                    <br7:urgency>24</br7:urgency>
+                </br7:Urgent>
+                <br7:ForceOwner SchemaVersion="2.0">
+                    <ds:SecondLevelCode>01</ds:SecondLevelCode>
+                    <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>010000</ds:OrganisationUnitCode>
+                </br7:ForceOwner>
                 <br7:HearingDefendant hasError="false">
-                    <br7:ArrestSummonsNumber>0700000000000002497F</br7:ArrestSummonsNumber>
-                    <br7:PNCIdentifier>2007/0000678T</br7:PNCIdentifier>
-                    <br7:PNCCheckname>RUST/KEITH</br7:PNCCheckname>
+                    <br7:ArrestSummonsNumber>2100000000000100019T</br7:ArrestSummonsNumber>
+                    <br7:PNCIdentifier>2000/0000000X</br7:PNCIdentifier>
+                    <br7:PNCCheckname>COLE</br7:PNCCheckname>
                     <br7:DefendantDetail>
                         <br7:PersonName>
                             <ds:Title>Mr</ds:Title>
-                            <ds:GivenName NameSequence="1">KEITH</ds:GivenName>
-                            <ds:FamilyName NameSequence="1">RUST</ds:FamilyName>
+                            <ds:GivenName NameSequence="1">JOSIANE</ds:GivenName>
+                            <ds:FamilyName NameSequence="1">COLE</ds:FamilyName>
                         </br7:PersonName>
-                        <br7:GeneratedPNCFilename>RUST/KEITH</br7:GeneratedPNCFilename>
+                        <br7:GeneratedPNCFilename>COLE/JOSIANE</br7:GeneratedPNCFilename>
+                        <br7:BirthDate>1983-03-11</br7:BirthDate>
                         <br7:Gender Literal="male">1</br7:Gender>
                     </br7:DefendantDetail>
                     <br7:Address>
-                        <ds:AddressLine1>TDID10 Address Line 1</ds:AddressLine1>
-                        <ds:AddressLine2>TDID10 Address Line 2</ds:AddressLine2>
-                        <ds:AddressLine3>TDID10 Address Line 3</ds:AddressLine3>
+                        <ds:AddressLine1>2 JACOBS WOOD</ds:AddressLine1>
+                        <ds:AddressLine2>WATSICA LEA</ds:AddressLine2>
+                        <ds:AddressLine3>LITTLE HOPPE</ds:AddressLine3>
+                        <ds:AddressLine5>GS1 6LI</ds:AddressLine5>
                     </br7:Address>
-                    <br7:RemandStatus Literal="Unconditional Bail">UB</br7:RemandStatus>
-                    <br7:CourtPNCIdentifier>2007/0000678T</br7:CourtPNCIdentifier>
+                    <br7:RemandStatus Literal="Not Applicable">NA</br7:RemandStatus>
+                    <br7:CourtPNCIdentifier>2023/0012345P</br7:CourtPNCIdentifier>
                     <br7:Offence hasError="false" SchemaVersion="4.0">
                         <ds:CriminalProsecutionReference SchemaVersion="2.0">
                             <ds:DefendantOrOffender>
-                                <ds:Year>07</ds:Year>
+                                <ds:Year>21</ds:Year>
                                 <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
                                     <ds:SecondLevelCode>00</ds:SecondLevelCode>
                                     <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
                                     <ds:BottomLevelCode>00</ds:BottomLevelCode>
                                     <ds:OrganisationUnitCode>000000</ds:OrganisationUnitCode>
                                 </ds:OrganisationUnitIdentifierCode>
-                                <ds:DefendantOrOffenderSequenceNumber>00000002497</ds:DefendantOrOffenderSequenceNumber>
-                                <ds:CheckDigit>F</ds:CheckDigit>
+                                <ds:DefendantOrOffenderSequenceNumber>00000100019</ds:DefendantOrOffenderSequenceNumber>
+                                <ds:CheckDigit>T</ds:CheckDigit>
                             </ds:DefendantOrOffender>
                             <ds:OffenceReason>
                                 <ds:OffenceCode>
-                                    <ds:ActOrSource>TH</ds:ActOrSource>
-                                    <ds:Year>68</ds:Year>
-                                    <ds:Reason>010</ds:Reason>
+                                    <ds:ActOrSource>FA</ds:ActOrSource>
+                                    <ds:Year>06</ds:Year>
+                                    <ds:Reason>001</ds:Reason>
                                 </ds:OffenceCode>
                             </ds:OffenceReason>
                             <ds:OffenceReasonSequence>001</ds:OffenceReasonSequence>
                         </ds:CriminalProsecutionReference>
                         <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
-                        <ds:ArrestDate>2007-07-11</ds:ArrestDate>
-                        <ds:ChargeDate>2007-07-11</ds:ChargeDate>
+                        <ds:ArrestDate>2023-05-01</ds:ArrestDate>
+                        <ds:ChargeDate>2023-05-01</ds:ChargeDate>
                         <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
                         <ds:ActualOffenceStartDate>
-                            <ds:StartDate>2007-02-25</ds:StartDate>
+                            <ds:StartDate>2023-02-11</ds:StartDate>
                         </ds:ActualOffenceStartDate>
-                        <ds:LocationOfOffence>10 Meudon Avenue Farnborough</ds:LocationOfOffence>
-                        <ds:OffenceTitle>Theft from shop - shoplifting</ds:OffenceTitle>
-                        <ds:ActualOffenceWording>On 25/02/2007 at IBM Farnborough  were in charge of a mechanically propelled vehicle, namely Mazda 323 Reg T130 BBK on a road namely Meudon Avenue Farnborough, whilst unfit to drive through drink. Contrary to section 4(2) of the Road Traffic Act 1988 and Schedule 2 to the Road Traffic Offenders Act 1988</ds:ActualOffenceWording>
+                        <ds:LocationOfOffence>No location provided</ds:LocationOfOffence>
+                        <ds:OffenceTitle>Fraud by false representation - Fraud Act 2006</ds:OffenceTitle>
+                        <ds:ActualOffenceWording>Between 11/02/2023 and 11/02/2023 at Hertford in
+                            the county of Hertfordshire committed fraud in that you dishonestly made
+                            a false representation, namely presented a false bank transfer,
+                            intending to make a gain, namely PlayStation 5value of £600.00, for
+                            yourself.</ds:ActualOffenceWording>
                         <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
                         <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
-                        <ds:HomeOfficeClassification>046/00</ds:HomeOfficeClassification>
-                        <ds:ConvictionDate>2007-09-28</ds:ConvictionDate>
+                        <ds:HomeOfficeClassification>053/40</ds:HomeOfficeClassification>
+                        <ds:ConvictionDate>2023-12-19</ds:ConvictionDate>
                         <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
                         <br7:CourtOffenceSequenceNumber>1</br7:CourtOffenceSequenceNumber>
                         <br7:Result hasError="false" SchemaVersion="2.0">
-                            <ds:CJSresultCode>4530</ds:CJSresultCode>
-                            <ds:OffenceRemandStatus Literal="Unconditional Bail">UB</ds:OffenceRemandStatus>
+                            <ds:CJSresultCode>4576</ds:CJSresultCode>
                             <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
                                 <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>AU</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>01</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01AU01</ds:OrganisationUnitCode>
+                                <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
                             </ds:SourceOrganisation>
                             <ds:CourtType>MCA</ds:CourtType>
                             <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
-                            <ds:ResultHearingDate>2007-09-28</ds:ResultHearingDate>
-                            <ds:NextResultSourceOrganisation SchemaVersion="2.0">
-                                <ds:TopLevelCode>B</ds:TopLevelCode>
-                                <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>01</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01HO01</ds:OrganisationUnitCode>
-                            </ds:NextResultSourceOrganisation>
-                            <ds:NextCourtType>MCA</ds:NextCourtType>
-                            <ds:NextHearingDate>2008-03-06</ds:NextHearingDate>
-                            <ds:NextHearingTime>14:00</ds:NextHearingTime>
-                            <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+                            <ds:ResultHearingDate>2023-12-19</ds:ResultHearingDate>
+                            <ds:PleaStatus Literal="Guilty">G</ds:PleaStatus>
                             <ds:Verdict Literal="Guilty">G</ds:Verdict>
-                            <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
-                            <ds:ResultVariableText>Remanded on conditional bail until 01/04/2009 at 10am in courtroom 01 Kingston Magistrates Court</ds:ResultVariableText>
+                            <ds:ResultVariableText>WOFN - Warrant for arrest without bailWarrant for
+                                arrest without bail. Basis: no appearance in answer to bail.</ds:ResultVariableText>
+                            <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
                             <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
                             <br7:PNCDisposalType>4004</br7:PNCDisposalType>
                             <br7:ResultClass>Adjournment with Judgement</br7:ResultClass>
@@ -132,96 +132,236 @@
                             </br7:Urgent>
                             <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
                             <br7:ResultQualifierVariable SchemaVersion="3.0">
-                                <ds:Code>GT</ds:Code>
+                                <ds:Code>CG</ds:Code>
                             </br7:ResultQualifierVariable>
+                            <br7:ConvictingCourt>1910</br7:ConvictingCourt>
                         </br7:Result>
                     </br7:Offence>
                     <br7:Offence hasError="false" SchemaVersion="4.0">
                         <ds:CriminalProsecutionReference SchemaVersion="2.0">
                             <ds:DefendantOrOffender>
-                                <ds:Year>07</ds:Year>
+                                <ds:Year>21</ds:Year>
                                 <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
                                     <ds:SecondLevelCode>00</ds:SecondLevelCode>
                                     <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
                                     <ds:BottomLevelCode>00</ds:BottomLevelCode>
                                     <ds:OrganisationUnitCode>000000</ds:OrganisationUnitCode>
                                 </ds:OrganisationUnitIdentifierCode>
-                                <ds:DefendantOrOffenderSequenceNumber>00000002497</ds:DefendantOrOffenderSequenceNumber>
-                                <ds:CheckDigit>F</ds:CheckDigit>
+                                <ds:DefendantOrOffenderSequenceNumber>00000100019</ds:DefendantOrOffenderSequenceNumber>
+                                <ds:CheckDigit>T</ds:CheckDigit>
                             </ds:DefendantOrOffender>
                             <ds:OffenceReason>
                                 <ds:OffenceCode>
-                                    <ds:ActOrSource>MC</ds:ActOrSource>
-                                    <ds:Year>80</ds:Year>
-                                    <ds:Reason>932</ds:Reason>
+                                    <ds:ActOrSource>FA</ds:ActOrSource>
+                                    <ds:Year>06</ds:Year>
+                                    <ds:Reason>001</ds:Reason>
                                 </ds:OffenceCode>
                             </ds:OffenceReason>
+                            <ds:OffenceReasonSequence>002</ds:OffenceReasonSequence>
                         </ds:CriminalProsecutionReference>
-                        <ds:OffenceCategory Literal="Non-Offence Breach">B7</ds:OffenceCategory>
-                        <ds:ArrestDate>2007-07-11</ds:ArrestDate>
-                        <ds:ChargeDate>2007-07-11</ds:ChargeDate>
+                        <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
+                        <ds:ArrestDate>2023-05-01</ds:ArrestDate>
+                        <ds:ChargeDate>2023-05-01</ds:ChargeDate>
                         <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
                         <ds:ActualOffenceStartDate>
-                            <ds:StartDate>2007-06-14</ds:StartDate>
+                            <ds:StartDate>2023-02-11</ds:StartDate>
                         </ds:ActualOffenceStartDate>
-                        <ds:LocationOfOffence>10 Meudon Avenue Farnborough</ds:LocationOfOffence>
-                        <ds:OffenceTitle>Application for committal to prison for breach of family order</ds:OffenceTitle>
-                        <ds:ActualOffenceWording>Thieving added in court</ds:ActualOffenceWording>
-                        <ds:RecordableOnPNCindicator Literal="No">N</ds:RecordableOnPNCindicator>
-                        <ds:NotifiableToHOindicator Literal="No">N</ds:NotifiableToHOindicator>
-                        <ds:HomeOfficeClassification>000/00</ds:HomeOfficeClassification>
+                        <ds:LocationOfOffence>No location provided</ds:LocationOfOffence>
+                        <ds:OffenceTitle>Fraud by false representation - Fraud Act 2006</ds:OffenceTitle>
+                        <ds:ActualOffenceWording>On 11/02/2023 at Hertford in the county of
+                            Hertfordshire committed fraud in that you dishonestly made a false
+                            representation, namely presented a false bank transfer, intending to
+                            make a gain, namely iPad to the value of £600.00,for yourself.</ds:ActualOffenceWording>
+                        <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                        <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
+                        <ds:HomeOfficeClassification>053/40</ds:HomeOfficeClassification>
+                        <ds:ConvictionDate>2023-12-19</ds:ConvictionDate>
                         <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
                         <br7:CourtOffenceSequenceNumber>2</br7:CourtOffenceSequenceNumber>
-                        <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
                         <br7:Result hasError="false" SchemaVersion="2.0">
-                            <ds:CJSresultCode>2059</ds:CJSresultCode>
-                            <ds:OffenceRemandStatus Literal="Conditional Bail">CB</ds:OffenceRemandStatus>
+                            <ds:CJSresultCode>4576</ds:CJSresultCode>
                             <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
                                 <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>AU</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>01</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01AU01</ds:OrganisationUnitCode>
+                                <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
                             </ds:SourceOrganisation>
                             <ds:CourtType>MCA</ds:CourtType>
                             <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
-                            <ds:ResultHearingDate>2007-09-28</ds:ResultHearingDate>
-                            <ds:NextResultSourceOrganisation SchemaVersion="2.0">
+                            <ds:ResultHearingDate>2023-12-19</ds:ResultHearingDate>
+                            <ds:PleaStatus Literal="Guilty">G</ds:PleaStatus>
+                            <ds:Verdict Literal="Guilty">G</ds:Verdict>
+                            <ds:ResultVariableText>WOFN - Warrant for arrest without bailWarrant for
+                                arrest without bail. Basis: no appearance in answer to bail.</ds:ResultVariableText>
+                            <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
+                            <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
+                            <br7:PNCDisposalType>4004</br7:PNCDisposalType>
+                            <br7:ResultClass>Adjournment with Judgement</br7:ResultClass>
+                            <br7:Urgent>
+                                <br7:urgent Literal="Yes">Y</br7:urgent>
+                                <br7:urgency>24</br7:urgency>
+                            </br7:Urgent>
+                            <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
+                            <br7:ResultQualifierVariable SchemaVersion="3.0">
+                                <ds:Code>CG</ds:Code>
+                            </br7:ResultQualifierVariable>
+                            <br7:ConvictingCourt>1910</br7:ConvictingCourt>
+                        </br7:Result>
+                    </br7:Offence>
+                    <br7:Offence hasError="false" SchemaVersion="4.0">
+                        <ds:CriminalProsecutionReference SchemaVersion="2.0">
+                            <ds:DefendantOrOffender>
+                                <ds:Year>21</ds:Year>
+                                <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                                    <ds:SecondLevelCode>00</ds:SecondLevelCode>
+                                    <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
+                                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                                    <ds:OrganisationUnitCode>000000</ds:OrganisationUnitCode>
+                                </ds:OrganisationUnitIdentifierCode>
+                                <ds:DefendantOrOffenderSequenceNumber>00000100019</ds:DefendantOrOffenderSequenceNumber>
+                                <ds:CheckDigit>T</ds:CheckDigit>
+                            </ds:DefendantOrOffender>
+                            <ds:OffenceReason>
+                                <ds:OffenceCode>
+                                    <ds:ActOrSource>BA</ds:ActOrSource>
+                                    <ds:Year>76</ds:Year>
+                                    <ds:Reason>001</ds:Reason>
+                                </ds:OffenceCode>
+                            </ds:OffenceReason>
+                        </ds:CriminalProsecutionReference>
+                        <ds:OffenceCategory Literal="Summary Non-motoring">CS</ds:OffenceCategory>
+                        <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
+                        <ds:ActualOffenceStartDate>
+                            <ds:StartDate>2023-07-23</ds:StartDate>
+                        </ds:ActualOffenceStartDate>
+                        <ds:OffenceTitle>Fail to surrender to police / court bail at the appointed
+                            time</ds:OffenceTitle>
+                        <ds:ActualOffenceWording>On or in 23 August 2023 at Hertford failed without
+                            reasonable cause to surrender to custody at Hertford magistrates' Court
+                            having been released on bailin criminal proceedings on or in 31 July
+                            2023 at Hertford</ds:ActualOffenceWording>
+                        <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+                        <ds:NotifiableToHOindicator Literal="No">N</ds:NotifiableToHOindicator>
+                        <ds:HomeOfficeClassification>083/01</ds:HomeOfficeClassification>
+                        <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+                        <br7:CourtOffenceSequenceNumber>3</br7:CourtOffenceSequenceNumber>
+                        <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+                        <br7:Result hasError="false" SchemaVersion="2.0">
+                            <ds:CJSresultCode>4576</ds:CJSresultCode>
+                            <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
                                 <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>03</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01HO03</ds:OrganisationUnitCode>
-                            </ds:NextResultSourceOrganisation>
-                            <ds:NextCourtType>MCA</ds:NextCourtType>
-                            <ds:NextHearingDate>2008-03-06</ds:NextHearingDate>
-                            <ds:NextHearingTime>14:00</ds:NextHearingTime>
-                            <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
-                            <ds:ModeOfTrialReason Literal="No Mode of Trial">NOMOT</ds:ModeOfTrialReason>
-                            <ds:ResultVariableText>Adjourned 4502</ds:ResultVariableText>
+                                <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
+                                <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                                <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
+                            </ds:SourceOrganisation>
+                            <ds:CourtType>MCA</ds:CourtType>
+                            <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+                            <ds:ResultHearingDate>2023-12-19</ds:ResultHearingDate>
+                            <ds:PleaStatus Literal="No Plea">NONE</ds:PleaStatus>
+                            <ds:ResultVariableText>WOFN - Warrant for arrest without bailWarrant for
+                                arrest without bail. Basis: no appearance in answer to bail.</ds:ResultVariableText>
+                            <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
+                            <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
                             <br7:PNCDisposalType>2059</br7:PNCDisposalType>
                             <br7:ResultClass>Adjournment pre Judgement</br7:ResultClass>
+                            <br7:Urgent>
+                                <br7:urgent Literal="Yes">Y</br7:urgent>
+                                <br7:urgency>24</br7:urgency>
+                            </br7:Urgent>
                             <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
+                            <br7:ResultQualifierVariable SchemaVersion="3.0">
+                                <ds:Code>CG</ds:Code>
+                            </br7:ResultQualifierVariable>
+                            <br7:ConvictingCourt>1910</br7:ConvictingCourt>
                         </br7:Result>
                     </br7:Offence>
                 </br7:HearingDefendant>
             </br7:Case>
         </br7:HearingOutcome>
         <br7:HasError>false</br7:HasError>
-        <CXE01 xmlns="">
-            <FSC FSCode="" IntfcUpdateType="K"/>
-            <IDS CRONumber="" Checkname="RUST/KEITH" IntfcUpdateType="K" PNCID="2007/0000678T"/>
+        <CXE01>
+            <FSC FSCode="01XM" IntfcUpdateType="K"/>
+            <IDS CRONumber="" Checkname="COLE" IntfcUpdateType="K" PNCID="2000/0000000X"/>
             <CourtCases>
                 <CourtCase>
-                    <CCR CourtCaseRefNo="07/1577/020154M" CrimeOffenceRefNo="" IntfcUpdateType="K"/>
+                    <CCR CourtCaseRefNo="23/1234/012345P" CrimeOffenceRefNo="" IntfcUpdateType="K"/>
                     <Offences>
                         <Offence>
-                            <COF ACPOOffenceCode="5:5:8:1" CJSOffenceCode="TH68010" IntfcUpdateType="K" OffEndDate="25022007" OffEndTime="1745" OffStartDate="25022007" OffStartTime="1700" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Theft from shop - shoplifting" ReferenceNumber="001"/>
+                            <COF ACPOOffenceCode="4:5:322:1" CJSOffenceCode="FA06001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="11022023" OffStartTime="" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Fraud by false representation - Fraud Act 2006" ReferenceNumber="001"/>
+                        </Offence>
+                        <Offence>
+                            <COF ACPOOffenceCode="4:5:322:1" CJSOffenceCode="FA06001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="11022023" OffStartTime="" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Fraud by false representation - Fraud Act 2006" ReferenceNumber="002"/>
                         </Offence>
                     </Offences>
                 </CourtCase>
             </CourtCases>
         </CXE01>
-        <br7:PNCQueryDate>2009-04-01</br7:PNCQueryDate>
+        <br7:PNCQueryDate>2023-12-19</br7:PNCQueryDate>
     </br7:AnnotatedHearingOutcome>
+    <Operation>
+        <operationCode>
+            <DISARR/>
+        </operationCode>
+        <operationStatus>C</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <DISARR>
+                <courtCaseReference>07/1577/020154M</courtCaseReference>
+            </DISARR>
+        </operationCode>
+        <operationStatus>C</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <SENDEF>
+                <courtCaseReference>07/1577/020154M</courtCaseReference>
+            </SENDEF>
+        </operationCode>
+        <operationStatus>C</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <SENDEF/>
+        </operationCode>
+        <operationStatus>C</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <NEWREM>
+                <nextHearingDate>2008-03-06</nextHearingDate>
+                <nextHearingLocation SchemaVersion="2.0">
+                    <ds:TopLevelCode>B</ds:TopLevelCode>
+                    <ds:SecondLevelCode>01</ds:SecondLevelCode>
+                    <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>01</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>B01HO01</ds:OrganisationUnitCode>
+                </nextHearingLocation>
+            </NEWREM>
+        </operationCode>
+        <operationStatus>C</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <NEWREM>
+                <nextHearingDate>2008-03-06</nextHearingDate>
+                <nextHearingLocation SchemaVersion="2.0">
+                    <ds:TopLevelCode>B</ds:TopLevelCode>
+                    <ds:SecondLevelCode>01</ds:SecondLevelCode>
+                    <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>03</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>B01HO03</ds:OrganisationUnitCode>
+                </nextHearingLocation>
+            </NEWREM>
+        </operationCode>
+        <operationStatus>N</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <NEWREM/>
+        </operationCode>
+        <operationStatus>F</operationStatus>
+    </Operation>
 </PNCUpdateDataset>
