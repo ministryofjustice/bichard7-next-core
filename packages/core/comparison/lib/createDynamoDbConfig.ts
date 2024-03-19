@@ -28,13 +28,13 @@ export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig 
   }
 
   let tableName: string = PHASE2_COMPARISON_TABLE_NAME
-  
-  switch(phase) {
+
+  switch (phase) {
     case 1:
-      tableName = PHASE1_COMPARISON_TABLE_NAME;
+      tableName = PHASE1_COMPARISON_TABLE_NAME
       break
     case 3:
-      tableName = PHASE3_COMPARISON_TABLE_NAME;
+      tableName = PHASE3_COMPARISON_TABLE_NAME
     default:
       break
   }
@@ -42,7 +42,7 @@ export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig 
   const config: DynamoDbConfig = {
     DYNAMO_URL,
     DYNAMO_REGION: DYNAMO_REGION ?? "eu-west-2",
-    TABLE_NAME: tableName,
+    TABLE_NAME: tableName
   }
 
   if (DYNAMO_AWS_ACCESS_KEY_ID) {

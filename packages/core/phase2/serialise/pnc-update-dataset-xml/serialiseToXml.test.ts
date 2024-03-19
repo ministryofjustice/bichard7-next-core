@@ -2,8 +2,7 @@ import fs from "fs"
 import "jest-xml-matcher"
 import { parsePncUpdateDataSetXml } from "../../parse/parsePncUpdateDataSetXml"
 import serialiseToXml from "./serialiseToXml"
-import { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-
+import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 describe("serialiseToXml", () => {
   it.ifNewBichard("serialises PncUpdateDataset into legacy XML", async () => {

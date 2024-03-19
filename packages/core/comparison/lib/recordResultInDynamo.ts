@@ -5,7 +5,12 @@ import type DynamoGateway from "./DynamoGateway"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
-const dynamoTables = [undefined, createDynamoDbConfig(1).TABLE_NAME, createDynamoDbConfig(2).TABLE_NAME, createDynamoDbConfig(3).TABLE_NAME]
+const dynamoTables = [
+  undefined,
+  createDynamoDbConfig(1).TABLE_NAME,
+  createDynamoDbConfig(2).TABLE_NAME,
+  createDynamoDbConfig(3).TABLE_NAME
+]
 
 const recordResultInDynamo = async (
   s3Path: string,

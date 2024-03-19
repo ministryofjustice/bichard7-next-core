@@ -1,6 +1,10 @@
-import { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import { convertAhoToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
-import { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../phase1/types/PncUpdateDatasetXml"
+import type {
+  OperationStatusXml,
+  PncOperationXml,
+  PncUpdateDatasetXml
+} from "../../../phase1/types/PncUpdateDatasetXml"
 import { toISODate } from "../../../phase1/lib/dates"
 import generateXml from "../../../lib/xml/generateXml"
 

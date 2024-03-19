@@ -77,8 +77,8 @@ const comparePhase1 = async (
       debugger
     }
 
-    const {message: inputAho, type} = parseIncomingMessage(incomingMessage)
-    if(type === "PncUpdateDataset"){
+    const { message: inputAho, type } = parseIncomingMessage(incomingMessage)
+    if (type === "PncUpdateDataset") {
       throw new Error("Received invalid incoming message")
     }
     const coreResult = await phase1Handler(inputAho, pncGateway, auditLogger)
@@ -92,8 +92,8 @@ const comparePhase1 = async (
       throw parsedAho
     }
 
-    const {message:originalInputAho, type: originalType} = parseIncomingMessage(incomingMessage)
-    if(originalType === "PncUpdateDataset"){
+    const { message: originalInputAho, type: originalType } = parseIncomingMessage(incomingMessage)
+    if (originalType === "PncUpdateDataset") {
       throw new Error("Received invalid incoming message")
     }
     if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)) {

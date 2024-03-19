@@ -1,5 +1,5 @@
-import { XML } from "@moj-bichard7/common/types/Xml"
-import { AhoXml, Br7OrganisationUnit } from "./AhoXml"
+import type { XML } from "@moj-bichard7/common/types/Xml"
+import type { AhoXml, Br7OrganisationUnit } from "./AhoXml"
 
 type SendefOperationCode = {
   SENDEF:

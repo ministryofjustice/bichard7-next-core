@@ -9,7 +9,6 @@ const region = "eu-west-2"
 const comparisonLambdaName = `bichard-7-${workspace}-comparison`
 const comparisonBucketName = `bichard-7-${workspace}-processing-validation`
 
-
 enum ProcessResult {
   Errored,
   Processed,

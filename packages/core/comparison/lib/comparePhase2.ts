@@ -42,23 +42,23 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
   console.log(triggers.length)
   console.log(outgoingMessage.length)
   const correlationId = getCorrelationId(comparison)
-  
+
   const sortedTriggers = sortTriggers(triggers)
   const exceptions: Exception[] = []
   // const exceptions = extractExceptionsFromAho(normalisedAho)
   const sortedExceptions = sortExceptions(exceptions)
-  
+
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
-  console.log(auditLogger? "has audit logger": "doesnt have audit logger")
+  console.log(auditLogger ? "has audit logger" : "doesnt have audit logger")
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
 
-    const {message, type} = parseIncomingMessage(incomingMessage)
+    const { message, type } = parseIncomingMessage(incomingMessage)
     console.log(message)
-    if(type !== "PncUpdateDataset"){
+    if (type !== "PncUpdateDataset") {
       throw new Error("Received invalid incoming message")
     }
     // const coreResult = phase2(inputAho, auditLogger)

@@ -1,5 +1,9 @@
 import { z } from "zod"
-import { courtCaseReferenceNumberSchema, organisationUnitSchema, unvalidatedHearingOutcomeSchema } from "../../phase1/schemas/unvalidatedHearingOutcome"
+import {
+  courtCaseReferenceNumberSchema,
+  organisationUnitSchema,
+  unvalidatedHearingOutcomeSchema
+} from "../../phase1/schemas/unvalidatedHearingOutcome"
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 

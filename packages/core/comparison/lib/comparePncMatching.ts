@@ -29,8 +29,8 @@ const comparePncMatching = async (
   const pncQueryTime = getPncQueryTimeFromAho(annotatedHearingOutcome)
   const pncGateway = new MockPncGateway(response, pncQueryTime)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
-  const {message: incomingAho, type} = parseIncomingMessage(incomingMessage)
-  if(type === "PncUpdateDataset"){
+  const { message: incomingAho, type } = parseIncomingMessage(incomingMessage)
+  if (type === "PncUpdateDataset") {
     throw new Error("Received invalid incoming message")
   }
   const coreResult = await CorePhase1(incomingAho, pncGateway, auditLogger)

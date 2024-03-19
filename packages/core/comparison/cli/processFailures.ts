@@ -16,7 +16,6 @@ process.env.DYNAMO_URL = process.env.DYNAMO_URL ?? "https://dynamodb.eu-west-2.a
 process.env.DYNAMO_REGION = process.env.DYNAMO_REGION ?? "eu-west-2"
 process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-7-production-processing-validation"
 
-
 const processFailures = async (phase: number = 2, cache: boolean): Promise<ComparisonResultDetail[]> => {
   const dynamoConfig = createDynamoDbConfig(phase)
   const dynamo = new DynamoGateway(dynamoConfig)

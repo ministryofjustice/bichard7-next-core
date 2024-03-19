@@ -39,7 +39,15 @@ const main = async () => {
     await runMissingComparisons(phase, args.runMissing)
   } else if ("matching" in args && args.matching) {
     if ("start" in args && "end" in args && args.start && args.end) {
-      const results = await processRange(phase, args.start, args.end, "all", !!args.cache, !!args.list, checkPncMatching)
+      const results = await processRange(
+        phase,
+        args.start,
+        args.end,
+        "all",
+        !!args.cache,
+        !!args.list,
+        checkPncMatching
+      )
       success = printPncMatchingResult(results, !args.noTruncate)
     } else {
       console.error("You must specify both a start and end time")

@@ -2,10 +2,10 @@ import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
 import { mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
 import { mapXmlOrganisationalUnitToAho } from "../../../phase1/parse/parseAhoXml/parseAhoXml"
-import { Br7TextString } from "../../../phase1/types/AhoXml"
+import type { Br7TextString } from "../../../phase1/types/AhoXml"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -22,11 +22,11 @@ const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString =
 }
 
 const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
-  if (!Array.isArray(operationsXml))  {
+  if (!Array.isArray(operationsXml)) {
     return []
   }
-  
-  return  operationsXml.map((operationXml) => {
+
+  return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
     if ("NEWREM" in operationXml.operationCode) {
@@ -91,7 +91,7 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
     return aho
   }
 
-  let pncUpdateDataset = {
+  const pncUpdateDataset = {
     ...aho,
     PncOperations: mapXmlToOperation(rootElement["Operation"] || [])
   }
