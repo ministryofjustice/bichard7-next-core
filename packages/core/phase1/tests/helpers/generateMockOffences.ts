@@ -13,6 +13,7 @@ export type CreateHoOffenceOptions = {
   sequenceNumber?: number
   courtCaseReferenceNumber?: string
   manualSequenceNumber?: number
+  offenceDateCode?: string
 }
 
 export const createHOOffence = ({
@@ -25,7 +26,8 @@ export const createHOOffence = ({
   offenceCategory,
   sequenceNumber,
   courtCaseReferenceNumber,
-  manualSequenceNumber
+  manualSequenceNumber,
+  offenceDateCode
 }: CreateHoOffenceOptions): Offence => {
   const offence: Partial<Offence> = {
     CriminalProsecutionReference: {
@@ -56,6 +58,7 @@ export const createHOOffence = ({
     ActualOffenceStartDate: {
       StartDate: new Date(startDate)
     },
+    ActualOffenceDateCode: offenceDateCode,
     Result: resultCodes
       ? resultCodes.map(
           (code): Result => ({

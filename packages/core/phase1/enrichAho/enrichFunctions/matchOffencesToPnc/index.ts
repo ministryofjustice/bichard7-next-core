@@ -1,1 +1,1 @@
-export { default as default } from "./matchOffencesToPnc"
+export { default } from "./matchOffencesToPnc"
