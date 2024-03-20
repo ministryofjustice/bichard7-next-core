@@ -37,4 +37,20 @@ describe("offenceIsBreach()", () => {
     const isBreach = offenceIsBreach(offence as Offence)
     expect(isBreach).toBe(false)
   })
+
+  it("should throw an exception of the offence code is missing", () => {
+    const offence = {
+      CriminalProsecutionReference: {
+        OffenceReason: {
+          __type: "NationalOffenceReason",
+          OffenceCode: {
+            __type: "NonMatchingOffenceCode"
+          }
+        }
+      },
+      OffenceCategory: "CE"
+    }
+
+    expect(() => offenceIsBreach(offence as Offence)).toThrow()
+  })
 })

@@ -16,7 +16,7 @@ const resultIsRecordable = (result: Result): boolean => !resultIsNonRecordable(r
 
 type ResultKey = keyof Result
 
-const compareTwoResults = (result1: Result, result2: Result, includeResultText = false): boolean => {
+const compareTwoResults = (result1: Result, result2: Result, includeResultText: boolean): boolean => {
   const ignoredKeys = includeResultText ? ["PNCAdjudicationExists"] : ["PNCAdjudicationExists", "ResultVariableText"]
 
   const result1Keys = Object.keys(result1).filter((key) => !ignoredKeys.includes(key)) as ResultKey[]
@@ -42,12 +42,8 @@ const offencesHaveEqualResults = (offences: Offence[]): boolean => {
 
   let offence1 = offences[0]
   return offences.slice(1).every((offence2) => {
-    const results1 = offence1.Result?.filter(resultIsRecordable)
-    const results2 = offence2.Result?.filter(resultIsRecordable)
-
-    if (!results1 && !results2) {
-      return true
-    }
+    const results1 = offence1.Result.filter(resultIsRecordable)
+    const results2 = offence2.Result.filter(resultIsRecordable)
 
     if (results1.length !== results2.length) {
       return false
@@ -64,7 +60,10 @@ const offencesHaveEqualResults = (offences: Offence[]): boolean => {
         }
 
         if (!result2Matched[j]) {
-          const includeResultText = resultHasDisposalTextResultCode(result1) || resultHasUserAmendedText(result1)
+          const includeResultText =
+            resultHasDisposalTextResultCode(result1) ||
+            resultHasUserAmendedText(result1) ||
+            resultHasUserAmendedText(result2)
           resultMatchFound = compareTwoResults(result1, result2, includeResultText)
         }
 
@@ -80,4 +79,4 @@ const offencesHaveEqualResults = (offences: Offence[]): boolean => {
   })
 }
 
-export { compareTwoResults, offencesHaveEqualResults }
+export default offencesHaveEqualResults

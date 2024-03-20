@@ -9,7 +9,7 @@ import generateCandidate from "./generateCandidate"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 import { pushToArrayInMap } from "./matchOffencesToPnc"
 import offenceHasFinalResult from "./offenceHasFinalResult"
-import { offencesHaveEqualResults } from "./resultsAreEqual"
+import offencesHaveEqualResults from "./offencesHaveEqualResults"
 
 export type Candidate = {
   adjudicationMatch: boolean
@@ -24,8 +24,6 @@ export type Candidate = {
 type CandidateFilterOptions = {
   adjudicationMatch?: boolean
   convictionDateMatch?: boolean
-  courtCaseReference?: string
-  courtCaseReferences?: string[]
   exactDateMatch?: boolean
   includeFinal?: boolean
   manualCcrMatch?: boolean
@@ -64,7 +62,7 @@ class OffenceMatcher {
     return this.pncOffences.some((pncOffence) => pncOffence.caseType === CaseType.penalty)
   }
 
-  unmatchedCandidates(options: CandidateFilterOptions = {}): Map<Offence, Candidate[]> {
+  unmatchedCandidates(options: CandidateFilterOptions): Map<Offence, Candidate[]> {
     options.includeFinal ??= true
 
     const candidates = new Map<Offence, Candidate[]>()
@@ -77,8 +75,6 @@ class OffenceMatcher {
         .filter((candidate) => !this.matchedPncOffences.includes(candidate.pncOffence))
         .filter((c) => !options.exactDateMatch || c.exactDateMatch === options.exactDateMatch)
         .filter((c) => !options.adjudicationMatch || c.adjudicationMatch === options.adjudicationMatch)
-        .filter((c) => !options.courtCaseReference || c.pncOffence.caseReference === options.courtCaseReference)
-        .filter((c) => !options.courtCaseReferences || options.courtCaseReferences.includes(c.pncOffence.caseReference))
         .filter((c) => options.includeFinal || !offenceHasFinalResult(c.pncOffence.pncOffence))
         .filter((c) => !options.manualSequenceMatch || c.manualSequenceMatch)
         .filter((c) => !options.manualCcrMatch || c.manualCcrMatch)
@@ -96,10 +92,6 @@ class OffenceMatcher {
 
   get unmatchedPncOffences(): PncOffenceWithCaseRef[] {
     return this.pncOffences.filter((pncOffence) => !this.matchedPncOffences.includes(pncOffence))
-  }
-
-  get matchedNonFinalPncOffences(): PncOffenceWithCaseRef[] {
-    return Array.from(this.matches.values()).filter((pncOffence) => !offenceHasFinalResult(pncOffence.pncOffence))
   }
 
   unmatchedPncOffencesInCase(caseReferences: string[]): PncOffenceWithCaseRef[] {
@@ -139,29 +131,6 @@ class OffenceMatcher {
         .get(hoOffence)
         ?.map((c) => c.pncOffence) ?? []
     )
-  }
-
-  candidatesForPncOffence(pncOffence: PncOffenceWithCaseRef, options: CandidateFilterOptions = {}): Offence[] {
-    return [...this.unmatchedCandidates(options).keys()].filter(
-      (hoOffence) =>
-        this.unmatchedCandidates(options)
-          .get(hoOffence)
-          ?.some((candidate) => candidate.pncOffence === pncOffence)
-    )
-  }
-
-  hasMatch(candidate: Candidate): boolean {
-    return !!this.matches.get(candidate.hoOffence) || Array.from(this.matches.values()).includes(candidate.pncOffence)
-  }
-
-  hoOffencesSharePncOffenceMatch = (
-    hoOffence1: Offence,
-    hoOffence2: Offence,
-    options: CandidateFilterOptions
-  ): boolean => {
-    const pncOffences1 = this.candidatesForHoOffence(hoOffence1, options)
-    const pncOffences2 = this.candidatesForHoOffence(hoOffence2, options)
-    return !!pncOffences1?.some((pncOffence1) => !!pncOffences2?.some((pncOffence2) => pncOffence1 === pncOffence2))
   }
 
   groupOffences(options: CandidateFilterOptions = {}): Candidate[][] {
@@ -204,10 +173,6 @@ class OffenceMatcher {
     }
 
     return groups
-  }
-
-  pncOffenceWasAlreadyMatched(pncOffence: PncOffenceWithCaseRef): boolean {
-    return this.matchedPncOffences.includes(pncOffence)
   }
 
   hoOffenceWasAlreadyMatched(hoOffence: Offence): boolean {
@@ -262,13 +227,6 @@ class OffenceMatcher {
       exceptions.push(ho100304)
       return exceptions
     }
-  }
-
-  successfulMatch(): boolean {
-    return (
-      this.exceptions.length === 0 &&
-      (this.matches.size === this.hoOffences.length || this.matches.size === this.pncOffences.length)
-    )
   }
 
   matchManualSequenceNumbers() {
