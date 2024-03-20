@@ -9,14 +9,13 @@ describe("parsePncUpdateDataSetXml", () => {
     "PncUpdateDataSet-with-operations.xml",
     "PncUpdateDataSet-no-operations.xml",
     "PncUpdateDataSet-with-empty-operations.xml",
-    "PncUpdateDataSet-unexpected-element.xml",
+    "PncUpdateDataSet-unexpected-element.xml"
   ]
   inputFiles.forEach((file) => {
     const filePath = path.join(inputDirectory, file)
     it("converts XML from file ${filePath} to PncUpdateDataSet", () => {
       const inputXml = fs.readFileSync(filePath).toString()
       const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
-    
       expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
     })
   })
