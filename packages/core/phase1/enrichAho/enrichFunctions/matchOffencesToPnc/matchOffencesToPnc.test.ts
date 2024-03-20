@@ -1,8 +1,8 @@
+import matchOffencesToPnc from "."
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import summariseMatching from "../../../comparison/lib/summariseMatching"
 import type { CourtResultMatchingSummary } from "../../../comparison/types/MatchingComparisonOutput"
 import errorPaths from "../../../lib/errorPaths"
-import matchOffencesToPnc from "./matchOffencesToPnc"
 
 type Adjudication = {
   verdict: string
@@ -17,24 +17,54 @@ type OffenceData = {
   resultCodes?: number[]
   disposals?: number[]
   adjudications?: Adjudication[]
-  manualSequence?: number
+  manualSequence?: number | string
   manualCourtCase?: string
   category?: string
+  convictionDate?: Date
 }
 
 type PncCourtCaseData = {
   courtCaseReference?: string
+  penaltyCaseReference?: string
   offences: OffenceData[]
 }
 
 const finalDisposal = 2063
 const nonFinalDisposal = 2507
 
+const defaultCaseReferences = ["21/1234/001234A", "22/5678/005678B"]
+
+const generateMockPncOffences = (offences: OffenceData[]) =>
+  offences.map((o, index) => ({
+    offence: {
+      cjsOffenceCode: o.code ?? "AB1234",
+      startDate: o.start ?? new Date("2022-01-01"),
+      endDate: o.end,
+      sequenceNumber: o.sequence ?? index + 1
+    },
+    ...(o.disposals && o.disposals?.length > 0 ? { disposals: o.disposals.map((code) => ({ type: code })) } : {}),
+    ...(o.adjudications && o.adjudications?.length > 0 ? { adjudication: o.adjudications } : {})
+  }))
+
+const generateMockPncCourtCases = (cases: PncCourtCaseData[]) =>
+  cases.map((pncCase: PncCourtCaseData, caseIndex: number) => ({
+    courtCaseReference: pncCase.courtCaseReference ?? defaultCaseReferences[caseIndex],
+    offences: generateMockPncOffences(pncCase.offences)
+  }))
+
+const generateMockPncPenaltyCases = (cases: PncCourtCaseData[]) =>
+  cases.map((pncCase: PncCourtCaseData) => ({
+    penaltyCaseReference: pncCase.penaltyCaseReference,
+    offences: generateMockPncOffences(pncCase.offences)
+  }))
+
 const generateMockAhoWithOffences = (
   offences: OffenceData[],
-  pncCases: PncCourtCaseData[]
+  pncCases: PncCourtCaseData[],
+  hearingDate: Date = new Date()
 ): AnnotatedHearingOutcome => {
-  const defaultCaseReferences = ["21/1234/001234A", "22/5678/005678B"]
+  const ccrs = pncCases.filter((c) => c.penaltyCaseReference === undefined)
+  const pcrs = pncCases.filter((c) => c.penaltyCaseReference !== undefined)
 
   return {
     AnnotatedHearingOutcome: {
@@ -67,34 +97,28 @@ const generateMockAhoWithOffences = (
                 ? { ManualCourtCaseReference: true, CourtCaseReferenceNumber: o.manualCourtCase }
                 : {}),
               ...(o.manualSequence !== undefined ? { ManualSequenceNumber: true } : {}),
-              OffenceCategory: o.category ?? "XX"
+              OffenceCategory: o.category ?? "XX",
+              ...(o.convictionDate !== undefined ? { ConvictionDate: o.convictionDate } : {})
             }))
           }
         },
-        Hearing: { DateOfHearing: new Date() }
+        Hearing: { DateOfHearing: hearingDate }
       }
     },
     PncQuery: {
-      courtCases: pncCases.map((pncCase, caseIndex) => ({
-        courtCaseReference: pncCase.courtCaseReference ?? defaultCaseReferences[caseIndex],
-        offences: pncCase.offences.map((o, index) => ({
-          offence: {
-            cjsOffenceCode: o.code ?? "AB1234",
-            startDate: o.start ?? new Date("2022-01-01"),
-            endDate: o.end,
-            sequenceNumber: o.sequence ?? index + 1
-          },
-          ...(o.disposals && o.disposals?.length > 0 ? { disposals: o.disposals.map((code) => ({ type: code })) } : {}),
-          ...(o.adjudications && o.adjudications?.length > 0 ? { adjudication: o.adjudications } : {})
-        }))
-      }))
+      ...(ccrs.length > 0 ? { courtCases: generateMockPncCourtCases(ccrs) } : {}),
+      ...(pcrs.length > 0 ? { penaltyCases: generateMockPncPenaltyCases(pcrs) } : {})
     },
     Exceptions: []
   } as unknown as AnnotatedHearingOutcome
 }
 
-const matchOffences = (offences: OffenceData[], pncCases: PncCourtCaseData[]): CourtResultMatchingSummary | null => {
-  const aho = generateMockAhoWithOffences(offences, pncCases)
+const matchOffences = (
+  offences: OffenceData[],
+  pncCases: PncCourtCaseData[],
+  hearingDate: Date = new Date()
+): CourtResultMatchingSummary | null => {
+  const aho = generateMockAhoWithOffences(offences, pncCases, hearingDate)
   const result = matchOffencesToPnc(aho)
   return summariseMatching(result)
 }
@@ -140,6 +164,11 @@ describe("matchOffencesToPnc", () => {
           { courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
+    })
+
+    it("should not match if there are no offences", () => {
+      const matchingSummary = matchOffences([], [])
+      expect(matchingSummary).toBeNull()
     })
   })
 
@@ -217,6 +246,16 @@ describe("matchOffencesToPnc", () => {
     it("should match offences where the pnc end date is missing but start date same as the ho start and end date", () => {
       const hoOffence = {}
       const pncOffence = {}
+      const matchingSummary = matchOffences([hoOffence], [{ offences: [pncOffence] }])
+      expect(matchingSummary).toStrictEqual({
+        caseReference: "21/1234/001234A",
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
+      })
+    })
+
+    it("should ignore dates if the offence is breach", () => {
+      const hoOffence: OffenceData = { start: new Date("2023-03-18"), category: "CB" }
+      const pncOffence: OffenceData = { start: new Date("2023-03-20"), end: new Date("2023-03-21") }
       const matchingSummary = matchOffences([hoOffence], [{ offences: [pncOffence] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
@@ -384,6 +423,41 @@ describe("matchOffencesToPnc", () => {
               pncSequenceNumber: undefined
             }
           ]
+        })
+      })
+
+      it("should treat a conviction date equal to the hearing date as not having an adjudication", () => {
+        const hoOffence = { convictionDate: new Date("2022-10-01") }
+        const pncOffence1 = {}
+        const pncOffence2 = { adjudications: [{ verdict: "G" }] }
+        const matchingSummary = matchOffences(
+          [hoOffence],
+          [
+            { courtCaseReference: "21/21/1234/1234A", offences: [pncOffence1] },
+            { courtCaseReference: "22/efgh/1234", offences: [pncOffence2] }
+          ],
+          new Date("2022-10-01")
+        )
+        expect(matchingSummary).toStrictEqual({
+          caseReference: "21/21/1234/1234A",
+          offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
+        })
+      })
+
+      it("should prioritise matching cases with adjudications", () => {
+        const hoOffence = { convictionDate: new Date("2022-10-01") }
+        const pncOffence1 = {}
+        const pncOffence2 = { adjudications: [{ verdict: "G" }] }
+        const matchingSummary = matchOffences(
+          [hoOffence],
+          [
+            { courtCaseReference: "21/21/1234/1234A", offences: [pncOffence1] },
+            { courtCaseReference: "22/efgh/1234", offences: [pncOffence2] }
+          ]
+        )
+        expect(matchingSummary).toStrictEqual({
+          caseReference: "22/efgh/1234",
+          offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
         })
       })
 
@@ -606,7 +680,14 @@ describe("matchOffencesToPnc", () => {
   })
 
   describe("penalty cases", () => {
-    it.todo("should match to penalty cases")
+    it("should match to penalty cases", () => {
+      const offence = {}
+      const matchingSummary = matchOffences([offence], [{ offences: [offence], penaltyCaseReference: "PCR1234" }])
+      expect(matchingSummary).toStrictEqual({
+        caseReference: "PCR1234",
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
+      })
+    })
   })
 
   describe("prioritising matching whole cases", () => {
@@ -741,11 +822,49 @@ describe("matchOffencesToPnc", () => {
     })
   })
 
+  describe("HO100203", () => {
+    it("should raise an exception when a manual court case reference is invalid", () => {
+      const offence1: OffenceData = { manualCourtCase: "abc" }
+      const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }])
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100203", path: errorPaths.offence(0).courtCaseReference }]
+      })
+    })
+  })
+
+  describe("HO100228", () => {
+    it("should raise an exception when a manual sequence number is invalid", () => {
+      const offence1: OffenceData = { manualSequence: "abc" }
+      const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }])
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100228", path: errorPaths.offence(0).reasonSequence }]
+      })
+    })
+  })
+
   describe("HO100310", () => {
     it("should raise an exception when there are near-identical offences with non-identical results and there are no exact matches in one court case", () => {
       const offence1 = { resultCodes: [1234] }
       const offence2 = { resultCodes: [5678] }
       const matchingSummary = matchOffences([offence1, offence2], [{ offences: [offence1, offence2] }])
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          { code: "HO100310", path: errorPaths.offence(0).reasonSequence },
+          { code: "HO100310", path: errorPaths.offence(1).reasonSequence }
+        ]
+      })
+    })
+
+    it("should still raise an exception when there is a manual match", () => {
+      const offence1 = { resultCodes: [1234] }
+      const offence2 = { resultCodes: [5678] }
+      const matchingSummary = matchOffences(
+        [
+          { ...offence1, manualCourtCase: defaultCaseReferences[0] },
+          { ...offence2, manualCourtCase: defaultCaseReferences[0] }
+        ],
+        [{ offences: [offence1, offence2] }]
+      )
       expect(matchingSummary).toStrictEqual({
         exceptions: [
           { code: "HO100310", path: errorPaths.offence(0).reasonSequence },
@@ -776,14 +895,58 @@ describe("matchOffencesToPnc", () => {
   })
 
   describe("HO100328", () => {
-    it.todo("should raise exception when penalty and court cases are matched")
-    it.todo(
-      "should raise exception when penalty and court cases are matched even if the penalty case has final disposals"
-    )
+    it("should raise exception when penalty and court cases are matched", () => {
+      const offence = {}
+      const matchingSummary = matchOffences(
+        [offence],
+        [{ offences: [offence] }, { offences: [offence], penaltyCaseReference: "PCR1234" }]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100328", path: errorPaths.case.asn }]
+      })
+    })
+    it("should raise exception when penalty and court cases are matched even if the penalty case has final disposals", () => {
+      const offence = {}
+      const matchingSummary = matchOffences(
+        [offence],
+        [
+          { offences: [offence] },
+          { offences: [{ ...offence, disposals: [finalDisposal] }], penaltyCaseReference: "PCR1234" }
+        ]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100328", path: errorPaths.case.asn }]
+      })
+    })
   })
 
   describe("HO100329", () => {
-    it.todo("should raise exception when there's more than one penalty case match")
+    it("should raise exception when there's more than one penalty case match in multiple penalty cases", () => {
+      const offence1 = {}
+      const offence2 = {}
+      const matchingSummary = matchOffences(
+        [offence1, offence2],
+        [
+          { offences: [offence1], penaltyCaseReference: "PCR1234" },
+          { offences: [offence2], penaltyCaseReference: "PCR5432" }
+        ]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100329", path: errorPaths.case.asn }]
+      })
+    })
+
+    it("should raise exception when there's more than one penalty case match in one penalty case", () => {
+      const offence1 = {}
+      const offence2 = {}
+      const matchingSummary = matchOffences(
+        [offence1, offence2],
+        [{ offences: [offence1, offence2], penaltyCaseReference: "PCR1234" }]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100329", path: errorPaths.case.asn }]
+      })
+    })
   })
 
   describe("HO100332", () => {
@@ -820,13 +983,37 @@ describe("matchOffencesToPnc", () => {
         ]
       })
     })
-  })
 
-  describe("HO100333", () => {
-    it.todo("should raise exception when manual CCR doesn't match any CCRs on PNC")
+    it("should still raise an exception when there is a manual match", () => {
+      const offence1 = { resultCodes: [1234] }
+      const offence2 = { resultCodes: [5678] }
+      const matchingSummary = matchOffences(
+        [
+          { ...offence1, manualSequence: 1 },
+          { ...offence2, manualSequence: 1 }
+        ],
+        [{ offences: [offence1] }, { offences: [offence2] }]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [
+          { code: "HO100332", path: errorPaths.offence(0).reasonSequence },
+          { code: "HO100332", path: errorPaths.offence(1).reasonSequence }
+        ]
+      })
+    })
   })
 
   describe("HO100507", () => {
-    it.todo("should raise exception when there are unmatched HO offences for a penalty case")
+    it("should raise exception when there are unmatched HO offences for a penalty case", () => {
+      const offence1 = {}
+      const offence2 = {}
+      const matchingSummary = matchOffences(
+        [offence1, offence2],
+        [{ offences: [offence1], penaltyCaseReference: "PCR1234" }]
+      )
+      expect(matchingSummary).toStrictEqual({
+        exceptions: [{ code: "HO100507", path: errorPaths.case.asn }]
+      })
+    })
   })
 })

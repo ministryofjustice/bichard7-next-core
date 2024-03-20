@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-import { normaliseCCR } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+import { normaliseCCR } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Core normalises CCRs when checking for matching CCRs on the PNC, so it can handle extra leading 0s

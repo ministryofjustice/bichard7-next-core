@@ -9,7 +9,7 @@ import { isAsnFormatValid } from "../../lib/isAsnValid"
 import isCaseRecordable from "../../lib/isCaseRecordable"
 import isDummyAsn from "../../lib/isDummyAsn"
 import type AuditLogger from "../../types/AuditLogger"
-import { matchOffencesToPnc } from "./matchOffencesToPnc"
+import matchOffencesToPnc from "./matchOffencesToPnc"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
