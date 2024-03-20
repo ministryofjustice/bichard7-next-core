@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet ignoring unexpected element 1`] = `
+exports[`parsePncUpdateDataSetXml converts XML from file \${filePath} to PncUpdateDataSet 1`] = `
 {
   "AnnotatedHearingOutcome": {
     "HearingOutcome": {
@@ -491,7 +491,7 @@ exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet ignoring unex
 }
 `;
 
-exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet when an empty operation element exists 1`] = `
+exports[`parsePncUpdateDataSetXml converts XML from file \${filePath} to PncUpdateDataSet 2`] = `
 {
   "AnnotatedHearingOutcome": {
     "HearingOutcome": {
@@ -927,7 +927,7 @@ exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet when an empty
 }
 `;
 
-exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet when no operations exist 1`] = `
+exports[`parsePncUpdateDataSetXml converts XML from file \${filePath} to PncUpdateDataSet 3`] = `
 {
   "AnnotatedHearingOutcome": {
     "HearingOutcome": {
@@ -1363,7 +1363,7 @@ exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet when no opera
 }
 `;
 
-exports[`parsePncUpdateDataSetXml converts XML to PncUpdateDataSet when operations exist 1`] = `
+exports[`parsePncUpdateDataSetXml converts XML from file \${filePath} to PncUpdateDataSet 4`] = `
 {
   "AnnotatedHearingOutcome": {
     "HearingOutcome": {

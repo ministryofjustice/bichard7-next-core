@@ -1,33 +1,23 @@
 import fs from "fs"
+import path from "path"
 import "jest-xml-matcher"
 import parsePncUpdateDataSetXml from "./parsePncUpdateDataSetXml"
 
 describe("parsePncUpdateDataSetXml", () => {
-  it("converts XML to PncUpdateDataSet when operations exist", () => {
-    const inputXml = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-with-operations.xml").toString()
-    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
-
-    expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
-  })
-
-  it("converts XML to PncUpdateDataSet when no operations exist", () => {
-    const inputXml = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-no-operations.xml").toString()
-    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
-
-    expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
-  })
-
-  it("converts XML to PncUpdateDataSet when an empty operation element exists", () => {
-    const inputXml = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-with-empty-operations.xml").toString()
-    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
-
-    expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
-  })
-
-  it("converts XML to PncUpdateDataSet ignoring unexpected element", () => {
-    const inputXml = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet-unexpected-element.xml").toString()
-    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
-
-    expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
+  const inputDirectory = "phase2/tests/fixtures/"
+  const inputFiles = [
+    "PncUpdateDataSet-with-operations.xml",
+    "PncUpdateDataSet-no-operations.xml",
+    "PncUpdateDataSet-with-empty-operations.xml",
+    "PncUpdateDataSet-unexpected-element.xml",
+  ]
+  inputFiles.forEach((file) => {
+    const filePath = path.join(inputDirectory, file)
+    it("converts XML from file ${filePath} to PncUpdateDataSet", () => {
+      const inputXml = fs.readFileSync(filePath).toString()
+      const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
+    
+      expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
+    })
   })
 })
