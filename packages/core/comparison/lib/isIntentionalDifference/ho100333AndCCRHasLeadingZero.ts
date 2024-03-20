@@ -1,5 +1,5 @@
 import { normaliseCCR } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
-import { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
