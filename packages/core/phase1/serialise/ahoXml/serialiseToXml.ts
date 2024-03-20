@@ -527,9 +527,9 @@ const convertAhoToXml = (
   const hearingOutcomeClone: AnnotatedHearingOutcome = structuredClone(hearingOutcome)
   addNullElementsForExceptions(hearingOutcomeClone)
 
-  const xmlAho = mapAhoToXml(hearingOutcome, validate)
+  const xmlAho = mapAhoToXml(hearingOutcomeClone, validate)
   if (validate) {
-    addExceptionsToAhoXml(xmlAho, hearingOutcome.Exceptions)
+    addExceptionsToAhoXml(xmlAho, hearingOutcomeClone.Exceptions)
   } else if (generateFalseHasErrorAttributes) {
     addFalseHasErrorAttributesToAhoXml(xmlAho)
   }
