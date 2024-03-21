@@ -2,7 +2,7 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import express from "express"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
-import MockPncGateway from "../phase1/comparison/lib/MockPncGateway"
+import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseSpiResult from "../phase1/parse/parseSpiResult"
 import transformSpiToAho from "../phase1/parse/transformSpiToAho"
 import CorePhase1 from "../phase1/phase1"

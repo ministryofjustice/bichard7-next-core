@@ -1,7 +1,7 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
 
-export interface AhoXml {
-  "?xml": XML
+export type AhoXml = {
+  "?xml"?: XML
   "br7:AnnotatedHearingOutcome"?: Br7AnnotatedHearingOutcome
   "br7:HearingOutcome"?: Br7HearingOutcome
 }
@@ -15,8 +15,8 @@ export interface Br7AnnotatedHearingOutcome {
     "#text": string
     "@_classification"?: string
   }
-  "@_xmlns:ds": string
-  "@_xmlns:xsi": string
+  "@_xmlns:ds"?: string
+  "@_xmlns:xsi"?: string
   "@_xmlns:br7": string
 }
 

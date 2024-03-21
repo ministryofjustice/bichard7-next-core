@@ -1,4 +1,4 @@
-import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
 import type Phase1Result from "../../phase1/types/Phase1Result"
@@ -12,7 +12,7 @@ const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
 
 const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
   // Bichard generates this in the order they appear in the XML document so we need to do this too
-  const ahoXml = convertAhoToXml(aho)
+  const ahoXml = serialiseToXml(aho)
   const matches = ahoXml.matchAll(/<([^ |>]*)[^>]* Error="([^"]*)/gm)
   if (!matches) {
     return ""
@@ -54,8 +54,8 @@ const convertResultToErrorListRecord = (result: Phase1Result): ErrorListRecord =
     is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
     asn: caseElem.HearingDefendant.ArrestSummonsNumber.slice(0, 21),
     court_code: hearing.CourtHearingLocation.OrganisationUnitCode?.slice(0, 7),
-    annotated_msg: convertAhoToXml(hearingOutcome),
-    updated_msg: convertAhoToXml(hearingOutcome, false, generateFalseHasErrorAttributes),
+    annotated_msg: serialiseToXml(hearingOutcome),
+    updated_msg: serialiseToXml(hearingOutcome, false, generateFalseHasErrorAttributes),
     error_report: errorReport.slice(0, 1000),
     create_ts: new Date(),
     error_reason: errorReport.length > 0 ? errorReport.split("||")[0].slice(0, 350) : null,

@@ -7,7 +7,7 @@ import fs from "fs"
 import { v4 as uuid } from "uuid"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
-import convertAhoToXml from "../../phase1/serialise/ahoXml/generate"
+import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type Phase1Result from "../../phase1/types/Phase1Result"
 import sendToPhase2 from "./sendToPhase2"
 
@@ -39,7 +39,7 @@ describe("sendToPhase2", () => {
     expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
 
     const message = await testMqGateway.getMessage(queueName!)
-    expect(message).toEqual(convertAhoToXml(parsedResult.hearingOutcome))
+    expect(message).toEqual(serialiseToXml(parsedResult.hearingOutcome))
   })
 
   it("should fail if the aho S3 path hasn't been provided", async () => {
