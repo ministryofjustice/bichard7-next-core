@@ -13,7 +13,7 @@ describe("parsePncUpdateDataSetXml", () => {
   ]
   inputFiles.forEach((file) => {
     const filePath = path.join(inputDirectory, file)
-    it("converts XML from file ${filePath} to PncUpdateDataSet", () => {
+    it(`converts XML from file ${filePath} to PncUpdateDataSet`, () => {
       const inputXml = fs.readFileSync(filePath).toString()
       const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
       expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
