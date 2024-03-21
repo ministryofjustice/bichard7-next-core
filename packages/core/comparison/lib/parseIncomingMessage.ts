@@ -7,7 +7,7 @@ import transformSpiToAho from "../../phase1/parse/transformSpiToAho"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 
 type HearingOutcomeResult = {
-  type: "HearingOutcome"
+  type: "AnnotatedHearingOutcome"
   message: AnnotatedHearingOutcome
 }
 
@@ -30,7 +30,7 @@ const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
     const spiResult = parseSpiResult(message)
     const parsedMessage = transformSpiToAho(spiResult)
     return { type: messageType, message: parsedMessage }
-  } else if (messageType === "HearingOutcome") {
+  } else if (messageType === "AnnotatedHearingOutcome") {
     const parsedMessage = parseAhoXml(message)
     if (parsedMessage instanceof Error) {
       throw parsedMessage
