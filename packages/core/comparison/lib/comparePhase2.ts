@@ -9,7 +9,10 @@ import type { Trigger } from "../../phase1/types/Trigger"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
-import { xmlOutputDiff } from "./xmlOutputComparison"
+import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
+import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
@@ -58,10 +61,14 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
 
     const { message, type } = parseIncomingMessage(incomingMessage)
     console.log(message)
-    if (type !== "PncUpdateDataset") {
-      throw new Error("Received invalid incoming message")
+    if (type !== "AnnotatedHearingOutcome") {
+      throw new Error(`Received invalid incoming message: ${type}`)
     }
     // const coreResult = phase2(inputAho, auditLogger)
+    const pncUpdateDataset = parsePncUpdateDataSetXml(outgoingMessage)
+    if(isError(pncUpdateDataset)) {
+      throw new Error(`Failed to parse PncUpdateDataset XML`)
+    }
 
     const sortedCoreExceptions: Exception[] = []
     // const sortedCoreExceptions = sortExceptions(
@@ -71,6 +78,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     // coreResult.triggers
 
     // const generatedXml = convertAhoToXml(parsedAho)
+    const pncUpdateDatasetXml = serialiseToXml(pncUpdateDataset)
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
@@ -81,17 +89,15 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
         coreResult: sortedCoreExceptions,
         comparisonResult: exceptions
       },
-      xmlOutputDiff: xmlOutputDiff("", ""),
-      xmlParsingDiff: xmlOutputDiff("", "")
-      // xmlOutputDiff: xmlOutputDiff(ahoXml, normalisedAho),
-      // xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
+      xmlParsingDiff: xmlOutputDiff(pncUpdateDatasetXml, outgoingMessage),
+      xmlOutputDiff: xmlOutputDiff(pncUpdateDatasetXml, outgoingMessage),
     }
 
     return {
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: true, //xmlOutputMatches(ahoXml, normalisedAho),
-      xmlParsingMatches: true, //xmlOutputMatches(generatedXml, normalisedAho),
+      xmlParsingMatches: xmlOutputMatches(pncUpdateDatasetXml, outgoingMessage),
       ...(debug && { debugOutput })
     }
   } catch (e) {
