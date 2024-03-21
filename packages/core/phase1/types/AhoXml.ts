@@ -25,6 +25,7 @@ export interface Cxe01 {
   IDS: IDS
   CourtCases?: CourtCases
   PenaltyCases?: PenaltyCases
+  "@_xmlns"?: string
 }
 
 export interface CourtCases {

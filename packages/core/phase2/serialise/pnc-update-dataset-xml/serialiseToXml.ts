@@ -75,8 +75,10 @@ const xmlnsTags = {
 const normaliseNamespaces = (xmlAho: AhoXml) => {
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:ds"]
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:xsi"]
+  if (!!xmlAho["br7:AnnotatedHearingOutcome"]?.CXE01){
+    xmlAho["br7:AnnotatedHearingOutcome"].CXE01["@_xmlns"] = ""
+  }
 }
-
 
 const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
   const xmlAho = convertAhoToXml(pncUpdateDataset)
