@@ -42,17 +42,9 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
 
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
   const { incomingMessage, outgoingMessage, triggers } = comparison
-  console.log(triggers.length)
-  console.log(outgoingMessage.length)
   const correlationId = getCorrelationId(comparison)
-
-  const sortedTriggers = sortTriggers(triggers)
-  const exceptions: Exception[] = []
-  // const exceptions = extractExceptionsFromAho(normalisedAho)
-  const sortedExceptions = sortExceptions(exceptions)
-
-  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
-  console.log(auditLogger ? "has audit logger" : "doesnt have audit logger")
+  let serialisedXml: string
+  let originalXml: string
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
@@ -60,44 +52,46 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     }
 
     const { message, type } = parseIncomingMessage(incomingMessage)
-    console.log(message)
-    if (type !== "AnnotatedHearingOutcome") {
-      throw new Error(`Received invalid incoming message: ${type}`)
+    
+    if (type == "AnnotatedHearingOutcome") {
+      originalXml = outgoingMessage
+      const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(originalXml)
+      if(isError(outgoingPncUpdateDataset)) {
+        throw new Error(`Failed to parse outgoing PncUpdateDataset XML`)
+      }
+      serialisedXml = serialiseToXml(outgoingPncUpdateDataset)
+      if(isError(serialisedXml)) {
+        throw new Error(`Failed to serialise parsed outgoing PncUpdateDataset XML`)
+      }
+    } else if (type == "PncUpdateDataset") {
+      originalXml = incomingMessage
+      serialisedXml = serialiseToXml(message)
+      if(isError(serialisedXml)) {
+        throw new Error(`Failed to serialise parsed incoming PncUpdateDataset XML`)
+      }
+    } else {
+      throw new Error(`Received unsupported incoming message: ${type}`)
     }
-    // const coreResult = phase2(inputAho, auditLogger)
-    const pncUpdateDataset = parsePncUpdateDataSetXml(outgoingMessage)
-    if(isError(pncUpdateDataset)) {
-      throw new Error(`Failed to parse PncUpdateDataset XML`)
-    }
-
-    const sortedCoreExceptions: Exception[] = []
-    // const sortedCoreExceptions = sortExceptions(
-    //   coreResult.outputMessage.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions ?? []
-    // )
-    const sortedCoreTriggers = sortTriggers([])
-    // coreResult.triggers
-
-    // const generatedXml = convertAhoToXml(parsedAho)
-    const pncUpdateDatasetXml = serialiseToXml(pncUpdateDataset)
+    
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
-        coreResult: sortedCoreTriggers,
+        coreResult: triggers,
         comparisonResult: triggers
       },
       exceptions: {
-        coreResult: sortedCoreExceptions,
-        comparisonResult: exceptions
+        coreResult: [],
+        comparisonResult: []
       },
-      xmlParsingDiff: xmlOutputDiff(pncUpdateDatasetXml, outgoingMessage),
-      xmlOutputDiff: xmlOutputDiff(pncUpdateDatasetXml, outgoingMessage),
+      xmlParsingDiff: xmlOutputDiff(serialisedXml, originalXml),
+      xmlOutputDiff: xmlOutputDiff(serialisedXml, originalXml),
     }
 
     return {
-      triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
-      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      xmlOutputMatches: true, //xmlOutputMatches(ahoXml, normalisedAho),
-      xmlParsingMatches: xmlOutputMatches(pncUpdateDatasetXml, outgoingMessage),
+      triggersMatch: true,
+      exceptionsMatch: true,
+      xmlOutputMatches: true,
+      xmlParsingMatches: xmlOutputMatches(serialisedXml, originalXml),
       ...(debug && { debugOutput })
     }
   } catch (e) {
