@@ -7,6 +7,7 @@ import type {
 } from "../../../phase1/types/PncUpdateDatasetXml"
 import { toISODate } from "../../../phase1/lib/dates"
 import generateXml from "../../../lib/xml/generateXml"
+import { AhoXml } from "../../../phase1/types/AhoXml"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {
@@ -70,11 +71,16 @@ const xmlnsTags = {
   "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
-  const xmlAho = convertAhoToXml(pncUpdateDataset)
+
+const normaliseNamespaces = (xmlAho: AhoXml) => {
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:ds"]
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:xsi"]
+}
 
+
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
+  const xmlAho = convertAhoToXml(pncUpdateDataset)
+  normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {
     "?xml": xmlAho["?xml"],
     PNCUpdateDataset: {
