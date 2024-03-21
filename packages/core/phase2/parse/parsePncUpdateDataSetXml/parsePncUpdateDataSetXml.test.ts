@@ -7,6 +7,7 @@ describe("parsePncUpdateDataSetXml", () => {
   const inputDirectory = "phase2/tests/fixtures/"
   const inputFiles = [
     "PncUpdateDataSet-with-operations.xml",
+    "PncUpdateDataSet-with-operations-including-an-empty-one.xml",
     "PncUpdateDataSet-no-operations.xml",
     "PncUpdateDataSet-with-empty-operations.xml",
     "PncUpdateDataSet-unexpected-element.xml"

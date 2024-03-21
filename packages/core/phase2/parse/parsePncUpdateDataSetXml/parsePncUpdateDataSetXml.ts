@@ -21,11 +21,13 @@ const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString =
   return (result as Br7TextString)["#text"] === ""
 }
 
-const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
-  if (!Array.isArray(operationsXml)) {
-    return []
-  }
+const removeEmptyOperations =(operationsXml: Br7Operation[]): Br7Operation[] => {
+  return operationsXml.filter(element => !!element.operationCode)
+}
 
+const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
+  operationsXml = removeEmptyOperations(operationsXml)
+  
   return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
@@ -80,6 +82,16 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
   })
 }
 
+const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Operation[] => {
+  if (operations === undefined) {
+    return []
+  }
+  if (Array.isArray(operations)) {
+    return operations
+  }
+  return [operations]
+}
+
 const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpdateDataset | Error => {
   const rootElement = pncUpdateDataSet["PNCUpdateDataset"]
   if (!rootElement || !rootElement["br7:AnnotatedHearingOutcome"]) {
@@ -91,9 +103,11 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
     return aho
   }
 
+  const operationsArray = getOperationsAsArray(rootElement["Operation"])
+  
   const pncUpdateDataset = {
     ...aho,
-    PncOperations: mapXmlToOperation(rootElement["Operation"] || [])
+    PncOperations: mapXmlToOperation(operationsArray)
   }
 
   return pncUpdateDataset
