@@ -1,11 +1,4 @@
-import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import isEqual from "lodash.isequal"
-import orderBy from "lodash.orderby"
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
-// import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import parseIncomingMessage from "./parseIncomingMessage"
-import type Exception from "../../phase1/types/Exception"
-import type { Trigger } from "../../phase1/types/Trigger"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
@@ -13,16 +6,6 @@ import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import { isError } from "@moj-bichard7/common/types/Result"
-
-const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
-const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
-
-// type CompareOptions = {
-//   defaultStandingDataVersion?: string
-// }
-
-// const hasOffences = (aho: AnnotatedHearingOutcome): boolean =>
-//   !!(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence?.length > 0)
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -52,27 +35,26 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     }
 
     const { message, type } = parseIncomingMessage(incomingMessage)
-    
+
     if (type == "AnnotatedHearingOutcome") {
       originalXml = outgoingMessage
       const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(originalXml)
-      if(isError(outgoingPncUpdateDataset)) {
-        throw new Error(`Failed to parse outgoing PncUpdateDataset XML`)
+      if (isError(outgoingPncUpdateDataset)) {
+        throw new Error("Failed to parse outgoing PncUpdateDataset XML")
       }
       serialisedXml = serialiseToXml(outgoingPncUpdateDataset)
-      if(isError(serialisedXml)) {
-        throw new Error(`Failed to serialise parsed outgoing PncUpdateDataset XML`)
+      if (isError(serialisedXml)) {
+        throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
       }
     } else if (type == "PncUpdateDataset") {
       originalXml = incomingMessage
       serialisedXml = serialiseToXml(message)
-      if(isError(serialisedXml)) {
-        throw new Error(`Failed to serialise parsed incoming PncUpdateDataset XML`)
+      if (isError(serialisedXml)) {
+        throw new Error("Failed to serialise parsed incoming PncUpdateDataset XML")
       }
     } else {
       throw new Error(`Received unsupported incoming message: ${type}`)
     }
-    
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
@@ -84,7 +66,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
         comparisonResult: []
       },
       xmlParsingDiff: xmlOutputDiff(serialisedXml, originalXml),
-      xmlOutputDiff: xmlOutputDiff(serialisedXml, originalXml),
+      xmlOutputDiff: xmlOutputDiff(serialisedXml, originalXml)
     }
 
     return {

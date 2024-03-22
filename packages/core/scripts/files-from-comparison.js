@@ -11,8 +11,8 @@ if (!fileName) {
 }
 
 const localFileName = fileName.startsWith("s3://")
-? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
-: fileName
+  ? fileName.replace("s3://bichard-7-production-processing-validation", "/tmp/comparison")
+  : fileName
 
 const fileText = fs.readFileSync(localFileName).toString()
 const fileJson = JSON.parse(fileText)

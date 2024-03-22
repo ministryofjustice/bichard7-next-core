@@ -21,13 +21,13 @@ const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString =
   return (result as Br7TextString)["#text"] === ""
 }
 
-const removeEmptyOperations =(operationsXml: Br7Operation[]): Br7Operation[] => {
-  return operationsXml.filter(element => !!element.operationCode)
+const removeEmptyOperations = (operationsXml: Br7Operation[]): Br7Operation[] => {
+  return operationsXml.filter((element) => !!element.operationCode)
 }
 
 const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
   operationsXml = removeEmptyOperations(operationsXml)
-  
+
   return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
@@ -104,7 +104,7 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
   }
 
   const operationsArray = getOperationsAsArray(rootElement["Operation"])
-  
+
   const pncUpdateDataset = {
     ...aho,
     PncOperations: mapXmlToOperation(operationsArray)
