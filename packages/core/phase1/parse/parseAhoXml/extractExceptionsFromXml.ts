@@ -36,11 +36,20 @@ export default (xml: string): Exception[] => {
   }
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
-  const offenceElem = rawParsedObj?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant?.Offence
-  if (offenceElem && !Array.isArray(offenceElem)) {
-    rawParsedObj.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [offenceElem]
+
+  let aho: any
+
+  if("PNCUpdateDataset" in rawParsedObj){
+    aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome
+  } else if ("AnnotatedHearingOutcome" in rawParsedObj){
+    aho = rawParsedObj.AnnotatedHearingOutcome
   }
-  const offenceArray = rawParsedObj?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant?.Offence
+
+  const offenceElem = aho?.HearingOutcome?.Case?.HearingDefendant?.Offence
+  if (offenceElem && !Array.isArray(offenceElem)) {
+    aho.HearingOutcome.Case.HearingDefendant.Offence = [offenceElem]
+  }
+  const offenceArray = aho?.HearingOutcome?.Case?.HearingDefendant?.Offence
   if (offenceArray) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     offenceArray.forEach((offence: any) => {
