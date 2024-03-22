@@ -2,6 +2,7 @@ import fs from "fs"
 import path from "path"
 import "jest-xml-matcher"
 import parsePncUpdateDataSetXml from "./parsePncUpdateDataSetXml"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 describe("parsePncUpdateDataSetXml", () => {
   const inputDirectory = "phase2/tests/fixtures/"
@@ -19,5 +20,14 @@ describe("parsePncUpdateDataSetXml", () => {
       const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
       expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
     })
+  })
+
+  it("Adds exceptions to a PNC Update Dataset hearing outcome", () => {
+    const filePath = path.join(inputDirectory, "PncUpdateDataSet-with-result-class-error.xml")
+    const inputXml = fs.readFileSync(filePath).toString()
+    const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
+
+    expect(!isError(parsedPncUpdateDatasetAho) && parsedPncUpdateDatasetAho.Exceptions).toHaveLength(1)
+    expect(!isError(parsedPncUpdateDatasetAho) && parsedPncUpdateDatasetAho.Exceptions[0].code).toBe("HO200104")
   })
 })

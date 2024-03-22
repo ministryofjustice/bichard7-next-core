@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
-import { mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
+import { extractExceptionsFromAho, mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
@@ -127,6 +127,11 @@ export default (xml: string): PncUpdateDataset | Error => {
 
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
+  const pncUpdateDataset = mapXmlToPNCUpdateDataSet(rawParsedObj)
+  if (isError(pncUpdateDataset)) {
+    return pncUpdateDataset
+  }
 
-  return mapXmlToPNCUpdateDataSet(rawParsedObj)
+  pncUpdateDataset.Exceptions = extractExceptionsFromAho(xml)
+  return pncUpdateDataset
 }
