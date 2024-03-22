@@ -17,7 +17,7 @@ import type {
 } from "../../../types/AnnotatedHearingOutcome"
 import countDecimalPlaces from "../../lib/countDecimalPlaces"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromAho"
+import extractExceptionsFromAho from "./extractExceptionsFromXml"
 import mapXmlCxe01ToAho from "../../parse/parseAhoXml/mapXmlCxe01ToAho"
 import type {
   AhoXml,

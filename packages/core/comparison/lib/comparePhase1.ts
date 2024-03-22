@@ -5,7 +5,7 @@ import orderBy from "lodash.orderby"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../../types/TriggerCode"
-import { extractExceptionsFromAho, parseAhoXml } from "../../phase1/parse/parseAhoXml"
+import { extractExceptionsFromXml, parseAhoXml } from "../../phase1/parse/parseAhoXml"
 import parseIncomingMessage from "./parseIncomingMessage"
 import phase1Handler from "../../phase1/phase1"
 import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
@@ -64,7 +64,7 @@ const comparePhase1 = async (
   }
 
   const sortedTriggers = sortTriggers(triggers)
-  const exceptions = extractExceptionsFromAho(normalisedAho)
+  const exceptions = extractExceptionsFromXml(normalisedAho)
   const sortedExceptions = sortExceptions(exceptions)
 
   const pncResponse = generateMockPncQueryResultFromAho(normalisedAho)
