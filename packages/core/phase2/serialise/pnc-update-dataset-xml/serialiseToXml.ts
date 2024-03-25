@@ -80,6 +80,10 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
 }
 
 const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
+  pncUpdateDataset.Exceptions.forEach((exception) => {
+    exception.path.shift()
+  })
+
   const xmlAho = convertAhoToXml(pncUpdateDataset)
   normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {

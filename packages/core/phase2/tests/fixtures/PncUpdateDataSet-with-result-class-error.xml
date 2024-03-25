@@ -140,7 +140,7 @@
                 </br7:HearingDefendant>
             </br7:Case>
         </br7:HearingOutcome>
-        <br7:HasError>false</br7:HasError>
+        <br7:HasError>true</br7:HasError>
         <CXE01 xmlns="">
             <FSC FSCode="01XM" IntfcUpdateType="K"/>
             <IDS CRONumber="" Checkname="COLE" IntfcUpdateType="K" PNCID="2000/0000000X"/>
