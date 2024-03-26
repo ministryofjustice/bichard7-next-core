@@ -1,5 +1,5 @@
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import { convertAhoToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
+import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type {
   OperationStatusXml,
   PncOperationXml,
@@ -84,7 +84,7 @@ const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
     exception.path.shift()
   })
 
-  const xmlAho = convertAhoToXml(pncUpdateDataset)
+  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset)
   normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {
     "?xml": xmlAho["?xml"],

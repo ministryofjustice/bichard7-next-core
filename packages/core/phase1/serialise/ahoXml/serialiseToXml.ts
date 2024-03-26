@@ -27,7 +27,7 @@ import {
 } from "../../dataLookup"
 import addNullElementsForExceptions from "../../lib/addNullElementsForExceptions"
 import { toISODate, toPNCDate } from "../../lib/dates"
-import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
+import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import type {
   Adj,
@@ -519,6 +519,52 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
+
+const mapPncUpdateDatasetToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
+  const hearingOutcome = {
+    "br7:HearingOutcome": {
+      "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing),
+      "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case),
+      ...(!validate && xmlnsTags)
+    }
+  }
+
+  const standalone = !validate ? {} : { "@_standalone": "yes" }
+
+  return {
+    "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
+    ...(validate
+      ? {
+          "br7:AnnotatedHearingOutcome": {
+            ...hearingOutcome,
+            CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
+            "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
+            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
+            ...xmlnsTags
+          }
+        }
+      : {
+          ...hearingOutcome
+        })
+  }
+}
+
+
+
+const convertPncUpdateDatasetToXml = (
+  hearingOutcome: AnnotatedHearingOutcome
+): AhoXml => {
+  const hearingOutcomeClone: AnnotatedHearingOutcome = structuredClone(hearingOutcome)
+  addNullElementsForExceptions(hearingOutcomeClone)
+
+  const xmlAho = mapPncUpdateDatasetToXml(hearingOutcomeClone)
+
+  addExceptionsToPncUpdateDatasetXml(xmlAho, hearingOutcomeClone.Exceptions)
+
+  return xmlAho
+}
+
+
 const convertAhoToXml = (
   hearingOutcome: AnnotatedHearingOutcome,
   validate = true,
@@ -548,4 +594,7 @@ const serialiseToXml = (
 }
 
 export default serialiseToXml
-export { convertAhoToXml }
+export { convertAhoToXml, convertPncUpdateDatasetToXml }
+
+
+
