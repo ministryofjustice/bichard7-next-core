@@ -1,6 +1,6 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { AhoXml } from "../../types/AhoXml"
-import addExceptionsToAhoXml from "./addExceptionsToAhoXml"
+import { addExceptionsToAhoXml } from "./addExceptionsToAhoXml"
 
 describe("addExceptionsToAhoXml", () => {
   it("should add an exception to the nested element", () => {

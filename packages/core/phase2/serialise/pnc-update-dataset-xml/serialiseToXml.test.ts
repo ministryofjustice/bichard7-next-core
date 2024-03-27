@@ -9,7 +9,7 @@ describe("serialiseToXml", () => {
     "PncUpdateDataSet-with-operations.xml",
     "PncUpdateDataSet-no-operations.xml",
     "PncUpdateDataSet-with-single-NEWREM.xml",
-    "PncUpdateDataSet-with-result-class-error.xml",
+    "PncUpdateDataSet-with-result-class-error.xml"
     // "PncUpdateDataSet-without-hasError-attributes.xml"
   ])("Parsing and serialising XML file %s results in the same XML", (xmlFilePath) => {
     const inputMessage = fs.readFileSync(`phase2/tests/fixtures/${xmlFilePath}`).toString()

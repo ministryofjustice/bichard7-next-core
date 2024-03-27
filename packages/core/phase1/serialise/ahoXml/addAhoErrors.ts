@@ -17,9 +17,9 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, omitErro
       "@_xmlns:ds": "http://schemas.cjse.gov.uk/datastandards/2006-10",
       "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
     }
-  return
+    return
   }
-  
+
   if (aho["br7:AnnotatedHearingOutcome"]) {
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = hasError(exceptions, [
       "AnnotatedHearingOutcome",

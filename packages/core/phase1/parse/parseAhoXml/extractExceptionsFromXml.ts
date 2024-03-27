@@ -39,9 +39,9 @@ export default (xml: string): Exception[] => {
 
   let aho: any
 
-  if("PNCUpdateDataset" in rawParsedObj){
+  if ("PNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome
-  } else if ("AnnotatedHearingOutcome" in rawParsedObj){
+  } else if ("AnnotatedHearingOutcome" in rawParsedObj) {
     aho = rawParsedObj.AnnotatedHearingOutcome
   }
 

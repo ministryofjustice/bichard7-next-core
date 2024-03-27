@@ -519,7 +519,6 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-
 const mapPncUpdateDatasetToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
@@ -549,11 +548,7 @@ const mapPncUpdateDatasetToXml = (aho: AnnotatedHearingOutcome, validate = true)
   }
 }
 
-
-
-const convertPncUpdateDatasetToXml = (
-  hearingOutcome: AnnotatedHearingOutcome
-): AhoXml => {
+const convertPncUpdateDatasetToXml = (hearingOutcome: AnnotatedHearingOutcome): AhoXml => {
   const hearingOutcomeClone: AnnotatedHearingOutcome = structuredClone(hearingOutcome)
   addNullElementsForExceptions(hearingOutcomeClone)
 
@@ -563,7 +558,6 @@ const convertPncUpdateDatasetToXml = (
 
   return xmlAho
 }
-
 
 const convertAhoToXml = (
   hearingOutcome: AnnotatedHearingOutcome,
@@ -595,6 +589,3 @@ const serialiseToXml = (
 
 export default serialiseToXml
 export { convertAhoToXml, convertPncUpdateDatasetToXml }
-
-
-

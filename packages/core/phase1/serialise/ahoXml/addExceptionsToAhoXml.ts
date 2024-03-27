@@ -66,8 +66,6 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 const isPncAsnException = (exception: Exception): boolean =>
   isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
 
-
-
 const addExceptionsToPncUpdateDatasetXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
@@ -92,7 +90,6 @@ const addExceptionsToPncUpdateDatasetXml = (aho: AhoXml, exceptions: Exception[]
 
   addAhoErrors(aho, exceptions) // add omitAttributes here
 }
-
 
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
