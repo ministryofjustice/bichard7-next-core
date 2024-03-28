@@ -1,4 +1,4 @@
- <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <PNCUpdateDataset xmlns="http://www.example.org/NewXMLSchema" xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <br7:AnnotatedHearingOutcome xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12">
         <br7:HearingOutcome>
