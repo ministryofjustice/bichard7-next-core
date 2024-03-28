@@ -10,7 +10,7 @@ const mostSpecificErrorElement = (path: (string | number)[]) => {
 
 const shouldIgnoreHasError = (exception: Exception, elementPath: (string | number)[]): boolean => {
   return (
-    [ExceptionCode.HO200104, ExceptionCode.HO200101].includes(exception.code) &&
+    [ExceptionCode.HO200104, ExceptionCode.HO200101, ExceptionCode.HO200108].includes(exception.code) &&
     elementPath[elementPath.length - 2] === "Result"
   )
 }

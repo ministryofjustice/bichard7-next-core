@@ -35,7 +35,9 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       const data = isEmptyElement(operationXml.operationCode.NEWREM)
         ? undefined
         : {
-            nextHearingDate: new Date(operationXml.operationCode.NEWREM.nextHearingDate["#text"]),
+            nextHearingDate: operationXml.operationCode.NEWREM.nextHearingDate
+              ? new Date(operationXml.operationCode.NEWREM.nextHearingDate["#text"])
+              : undefined,
             nextHearingLocation: mapXmlOrganisationalUnitToAho(operationXml.operationCode.NEWREM.nextHearingLocation)
           }
 

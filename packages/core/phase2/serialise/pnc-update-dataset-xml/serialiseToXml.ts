@@ -52,7 +52,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
         operationCode: {
           NEWREM: operation.data
             ? {
-                nextHearingDate: toISODate(operation.data.nextHearingDate),
+                nextHearingDate: operation.data.nextHearingDate ? toISODate(operation.data.nextHearingDate) : undefined,
                 nextHearingLocation: mapAhoOrgUnitToXml(operation.data.nextHearingLocation)
               }
             : {}
