@@ -22,7 +22,9 @@ const extract = (el: any, path: (string | number)[] = []): Exception[] => {
       }
     }
     if (typeof el[key] === "object") {
-      const subExceptions = extract(el[key], path.concat([key.match(/\d+/) ? parseInt(key, 10) : key]))
+      const re = /\d+/
+      const match = re.exec(key)
+      const subExceptions = extract(el[key], path.concat([match ? parseInt(key, 10) : key]))
       subExceptions.forEach((e) => exceptions.push(e))
     }
   }
@@ -36,11 +38,20 @@ export default (xml: string): Exception[] => {
   }
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
-  const offenceElem = rawParsedObj?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant?.Offence
-  if (offenceElem && !Array.isArray(offenceElem)) {
-    rawParsedObj.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [offenceElem]
+
+  let aho
+
+  if ("PNCUpdateDataset" in rawParsedObj) {
+    aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome
+  } else if ("AnnotatedHearingOutcome" in rawParsedObj) {
+    aho = rawParsedObj.AnnotatedHearingOutcome
   }
-  const offenceArray = rawParsedObj?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant?.Offence
+
+  const offenceElem = aho?.HearingOutcome?.Case?.HearingDefendant?.Offence
+  if (offenceElem && !Array.isArray(offenceElem)) {
+    aho.HearingOutcome.Case.HearingDefendant.Offence = [offenceElem]
+  }
+  const offenceArray = aho?.HearingOutcome?.Case?.HearingDefendant?.Offence
   if (offenceArray) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     offenceArray.forEach((offence: any) => {

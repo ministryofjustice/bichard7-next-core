@@ -17,11 +17,21 @@ const localFileName = fileName.startsWith("s3://")
 const fileText = fs.readFileSync(localFileName).toString()
 const fileJson = JSON.parse(fileText)
 
-const inputFileName = localFileName.replace(".json", ".input.xml")
-const ahoFileName = localFileName.replace(".json", ".aho.xml")
+const inputType = {
+  1: "spi-or-aho",
+  2: "aho"
+}[fileJson.phase]
+
+const outputType = {
+  1: "aho",
+  2: "pnc-update-dataset"
+}[fileJson.phase]
+
+const inputFileName = localFileName.replace(".json", `.${inputType}-input.xml`)
+const ahoFileName = localFileName.replace(".json", `.${outputType}-output.xml`)
 
 fs.writeFileSync(inputFileName, fileJson.incomingMessage)
-fs.writeFileSync(ahoFileName, fileJson.annotatedHearingOutcome)
+fs.writeFileSync(ahoFileName, fileJson.annotatedHearingOutcome || fileJson.outgoingMessage)
 
 exec(`code ${inputFileName}`)
 exec(`code ${ahoFileName}`)

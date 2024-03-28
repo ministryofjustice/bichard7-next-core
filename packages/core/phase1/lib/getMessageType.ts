@@ -9,7 +9,7 @@ const getMessageType = (message: string): MessageType | undefined => {
     } else if (message.match(/PNCUpdateDataset/)) {
       return "PncUpdateDataset"
     }
-    return "HearingOutcome"
+    return "AnnotatedHearingOutcome"
   }
 }
 

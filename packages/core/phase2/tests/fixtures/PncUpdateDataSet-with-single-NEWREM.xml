@@ -302,66 +302,17 @@
     </br7:AnnotatedHearingOutcome>
     <Operation>
         <operationCode>
-            <DISARR/>
-        </operationCode>
-        <operationStatus>C</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
-            <DISARR>
-                <courtCaseReference>07/1577/020154M</courtCaseReference>
-            </DISARR>
-        </operationCode>
-        <operationStatus>C</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
-            <SENDEF>
-                <courtCaseReference>07/1577/020154M</courtCaseReference>
-            </SENDEF>
-        </operationCode>
-        <operationStatus>C</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
-            <SENDEF/>
-        </operationCode>
-        <operationStatus>C</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
             <NEWREM>
-                <nextHearingDate>2008-03-06</nextHearingDate>
+                <nextHearingDate>2024-02-12</nextHearingDate>
                 <nextHearingLocation SchemaVersion="2.0">
-                    <ds:TopLevelCode>B</ds:TopLevelCode>
-                    <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                    <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
-                    <ds:BottomLevelCode>01</ds:BottomLevelCode>
-                    <ds:OrganisationUnitCode>B01HO01</ds:OrganisationUnitCode>
-                </nextHearingLocation>
-            </NEWREM>
-        </operationCode>
-        <operationStatus>C</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
-            <NEWREM>
-                <nextHearingDate>2008-03-06</nextHearingDate>
-                <nextHearingLocation SchemaVersion="2.0">
-                    <ds:TopLevelCode>B</ds:TopLevelCode>
-                    <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                    <ds:ThirdLevelCode>HO</ds:ThirdLevelCode>
-                    <ds:BottomLevelCode>03</ds:BottomLevelCode>
-                    <ds:OrganisationUnitCode>B01HO03</ds:OrganisationUnitCode>
+                    <ds:TopLevelCode>C</ds:TopLevelCode>
+                    <ds:SecondLevelCode>52</ds:SecondLevelCode>
+                    <ds:ThirdLevelCode>BT</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>C52BT00</ds:OrganisationUnitCode>
                 </nextHearingLocation>
             </NEWREM>
         </operationCode>
         <operationStatus>N</operationStatus>
-    </Operation>
-    <Operation>
-        <operationCode>
-            <NEWREM/>
-        </operationCode>
-        <operationStatus>F</operationStatus>
     </Operation>
 </PNCUpdateDataset>

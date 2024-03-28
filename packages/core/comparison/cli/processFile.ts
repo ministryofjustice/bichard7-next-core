@@ -20,7 +20,7 @@ const processFile = async (
   }
   if (isPhase2(comparison)) {
     const result = comparePhase2(comparison, true)
-    // result.file = fileName
+    result.file = fileName
     return result
   }
 }

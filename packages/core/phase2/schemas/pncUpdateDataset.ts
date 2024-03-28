@@ -11,7 +11,7 @@ const newremOperationSchema = z.object({
   code: z.literal("NEWREM"),
   data: z
     .object({
-      nextHearingDate: z.date(),
+      nextHearingDate: z.date().optional(),
       nextHearingLocation: organisationUnitSchema
     })
     .optional(),

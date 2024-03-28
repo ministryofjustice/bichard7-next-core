@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <PNCUpdateDataset xmlns="http://www.example.org/NewXMLSchema" xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <br7:AnnotatedHearingOutcome xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12">
         <br7:HearingOutcome>
-            <br7:Hearing SchemaVersion="4.0">
+            <br7:Hearing hasError="false" SchemaVersion="4.0">
                 <ds:CourtHearingLocation SchemaVersion="2.0">
                     <ds:TopLevelCode>B</ds:TopLevelCode>
                     <ds:SecondLevelCode>01</ds:SecondLevelCode>
@@ -24,7 +24,7 @@
                 <br7:CourtHouseCode>1910</br7:CourtHouseCode>
                 <br7:CourtHouseName>Magistrates' Courts London Bromley (County Court, College Road)</br7:CourtHouseName>
             </br7:Hearing>
-            <br7:Case SchemaVersion="4.0">
+            <br7:Case hasError="false" SchemaVersion="4.0">
                 <ds:PTIURN>01XX8811372</ds:PTIURN>
                 <ds:PreChargeDecisionIndicator Literal="No">N</ds:PreChargeDecisionIndicator>
                 <ds:CourtCaseReferenceNumber>23/1234/012345P</ds:CourtCaseReferenceNumber>
@@ -42,7 +42,7 @@
                     <ds:BottomLevelCode>00</ds:BottomLevelCode>
                     <ds:OrganisationUnitCode>010000</ds:OrganisationUnitCode>
                 </br7:ForceOwner>
-                <br7:HearingDefendant>
+                <br7:HearingDefendant hasError="false">
                     <br7:ArrestSummonsNumber>2100000000000100019T</br7:ArrestSummonsNumber>
                     <br7:PNCIdentifier>2000/0000000X</br7:PNCIdentifier>
                     <br7:PNCCheckname>COLE</br7:PNCCheckname>
@@ -64,7 +64,7 @@
                     </br7:Address>
                     <br7:RemandStatus Literal="Not Applicable">NA</br7:RemandStatus>
                     <br7:CourtPNCIdentifier>2023/0012345P</br7:CourtPNCIdentifier>
-                    <br7:Offence SchemaVersion="4.0">
+                    <br7:Offence hasError="false" SchemaVersion="4.0">
                         <ds:CriminalProsecutionReference SchemaVersion="2.0">
                             <ds:DefendantOrOffender>
                                 <ds:Year>21</ds:Year>
@@ -106,7 +106,7 @@
                         <ds:ConvictionDate>2023-12-19</ds:ConvictionDate>
                         <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
                         <br7:CourtOffenceSequenceNumber>1</br7:CourtOffenceSequenceNumber>
-                        <br7:Result SchemaVersion="2.0">
+                        <br7:Result hasError="false" SchemaVersion="2.0">
                             <ds:CJSresultCode>4576</ds:CJSresultCode>
                             <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
@@ -137,7 +137,7 @@
                             <br7:ConvictingCourt>1910</br7:ConvictingCourt>
                         </br7:Result>
                     </br7:Offence>
-                    <br7:Offence SchemaVersion="4.0">
+                    <br7:Offence hasError="false" SchemaVersion="4.0">
                         <ds:CriminalProsecutionReference SchemaVersion="2.0">
                             <ds:DefendantOrOffender>
                                 <ds:Year>21</ds:Year>
@@ -178,7 +178,7 @@
                         <ds:ConvictionDate>2023-12-19</ds:ConvictionDate>
                         <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
                         <br7:CourtOffenceSequenceNumber>2</br7:CourtOffenceSequenceNumber>
-                        <br7:Result SchemaVersion="2.0">
+                        <br7:Result hasError="false" SchemaVersion="2.0">
                             <ds:CJSresultCode>4576</ds:CJSresultCode>
                             <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
@@ -209,7 +209,7 @@
                             <br7:ConvictingCourt>1910</br7:ConvictingCourt>
                         </br7:Result>
                     </br7:Offence>
-                    <br7:Offence SchemaVersion="4.0">
+                    <br7:Offence hasError="false" SchemaVersion="4.0">
                         <ds:CriminalProsecutionReference SchemaVersion="2.0">
                             <ds:DefendantOrOffender>
                                 <ds:Year>21</ds:Year>
@@ -247,7 +247,7 @@
                         <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
                         <br7:CourtOffenceSequenceNumber>3</br7:CourtOffenceSequenceNumber>
                         <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
-                        <br7:Result SchemaVersion="2.0">
+                        <br7:Result hasError="false" SchemaVersion="2.0">
                             <ds:CJSresultCode>4576</ds:CJSresultCode>
                             <ds:SourceOrganisation SchemaVersion="2.0">
                                 <ds:TopLevelCode>B</ds:TopLevelCode>
@@ -322,6 +322,7 @@
         </operationCode>
         <operationStatus>C</operationStatus>
     </Operation>
+    <Operation/>
     <Operation>
         <operationCode>
             <SENDEF/>

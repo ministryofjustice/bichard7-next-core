@@ -8,7 +8,7 @@ export type AhoXml = {
 
 export interface Br7AnnotatedHearingOutcome {
   "br7:HearingOutcome": Br7HearingOutcome
-  "br7:HasError"?: boolean
+  "br7:HasError"?: Br7TextString
   CXE01: Cxe01 | undefined
   "br7:PNCQueryDate"?: Br7TextString
   "br7:PNCErrorMessage"?: {
@@ -25,6 +25,7 @@ export interface Cxe01 {
   IDS: IDS
   CourtCases?: CourtCases
   PenaltyCases?: PenaltyCases
+  "@_xmlns"?: string
 }
 
 export interface CourtCases {

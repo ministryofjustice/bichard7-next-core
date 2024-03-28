@@ -125,147 +125,7 @@
                             <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
                             <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
                             <br7:PNCDisposalType>4004</br7:PNCDisposalType>
-                            <br7:ResultClass>Adjournment with Judgement</br7:ResultClass>
-                            <br7:Urgent>
-                                <br7:urgent Literal="Yes">Y</br7:urgent>
-                                <br7:urgency>24</br7:urgency>
-                            </br7:Urgent>
-                            <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
-                            <br7:ResultQualifierVariable SchemaVersion="3.0">
-                                <ds:Code>CG</ds:Code>
-                            </br7:ResultQualifierVariable>
-                            <br7:ConvictingCourt>1910</br7:ConvictingCourt>
-                        </br7:Result>
-                    </br7:Offence>
-                    <br7:Offence SchemaVersion="4.0">
-                        <ds:CriminalProsecutionReference SchemaVersion="2.0">
-                            <ds:DefendantOrOffender>
-                                <ds:Year>21</ds:Year>
-                                <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
-                                    <ds:SecondLevelCode>00</ds:SecondLevelCode>
-                                    <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
-                                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
-                                    <ds:OrganisationUnitCode>000000</ds:OrganisationUnitCode>
-                                </ds:OrganisationUnitIdentifierCode>
-                                <ds:DefendantOrOffenderSequenceNumber>00000100019</ds:DefendantOrOffenderSequenceNumber>
-                                <ds:CheckDigit>T</ds:CheckDigit>
-                            </ds:DefendantOrOffender>
-                            <ds:OffenceReason>
-                                <ds:OffenceCode>
-                                    <ds:ActOrSource>FA</ds:ActOrSource>
-                                    <ds:Year>06</ds:Year>
-                                    <ds:Reason>001</ds:Reason>
-                                </ds:OffenceCode>
-                            </ds:OffenceReason>
-                            <ds:OffenceReasonSequence>002</ds:OffenceReasonSequence>
-                        </ds:CriminalProsecutionReference>
-                        <ds:OffenceCategory Literal="Either Way">CE</ds:OffenceCategory>
-                        <ds:ArrestDate>2023-05-01</ds:ArrestDate>
-                        <ds:ChargeDate>2023-05-01</ds:ChargeDate>
-                        <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
-                        <ds:ActualOffenceStartDate>
-                            <ds:StartDate>2023-02-11</ds:StartDate>
-                        </ds:ActualOffenceStartDate>
-                        <ds:LocationOfOffence>No location provided</ds:LocationOfOffence>
-                        <ds:OffenceTitle>Fraud by false representation - Fraud Act 2006</ds:OffenceTitle>
-                        <ds:ActualOffenceWording>On 11/02/2023 at Hertford in the county of
-                            Hertfordshire committed fraud in that you dishonestly made a false
-                            representation, namely presented a false bank transfer, intending to
-                            make a gain, namely iPad to the value of £600.00,for yourself.</ds:ActualOffenceWording>
-                        <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
-                        <ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
-                        <ds:HomeOfficeClassification>053/40</ds:HomeOfficeClassification>
-                        <ds:ConvictionDate>2023-12-19</ds:ConvictionDate>
-                        <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
-                        <br7:CourtOffenceSequenceNumber>2</br7:CourtOffenceSequenceNumber>
-                        <br7:Result SchemaVersion="2.0">
-                            <ds:CJSresultCode>4576</ds:CJSresultCode>
-                            <ds:SourceOrganisation SchemaVersion="2.0">
-                                <ds:TopLevelCode>B</ds:TopLevelCode>
-                                <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>00</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
-                            </ds:SourceOrganisation>
-                            <ds:CourtType>MCA</ds:CourtType>
-                            <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
-                            <ds:ResultHearingDate>2023-12-19</ds:ResultHearingDate>
-                            <ds:PleaStatus Literal="Guilty">G</ds:PleaStatus>
-                            <ds:Verdict Literal="Guilty">G</ds:Verdict>
-                            <ds:ResultVariableText>WOFN - Warrant for arrest without bailWarrant for
-                                arrest without bail. Basis: no appearance in answer to bail.</ds:ResultVariableText>
-                            <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
-                            <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
-                            <br7:PNCDisposalType>4004</br7:PNCDisposalType>
-                            <br7:ResultClass>Adjournment with Judgement</br7:ResultClass>
-                            <br7:Urgent>
-                                <br7:urgent Literal="Yes">Y</br7:urgent>
-                                <br7:urgency>24</br7:urgency>
-                            </br7:Urgent>
-                            <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
-                            <br7:ResultQualifierVariable SchemaVersion="3.0">
-                                <ds:Code>CG</ds:Code>
-                            </br7:ResultQualifierVariable>
-                            <br7:ConvictingCourt>1910</br7:ConvictingCourt>
-                        </br7:Result>
-                    </br7:Offence>
-                    <br7:Offence SchemaVersion="4.0">
-                        <ds:CriminalProsecutionReference SchemaVersion="2.0">
-                            <ds:DefendantOrOffender>
-                                <ds:Year>21</ds:Year>
-                                <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
-                                    <ds:SecondLevelCode>00</ds:SecondLevelCode>
-                                    <ds:ThirdLevelCode>00</ds:ThirdLevelCode>
-                                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
-                                    <ds:OrganisationUnitCode>000000</ds:OrganisationUnitCode>
-                                </ds:OrganisationUnitIdentifierCode>
-                                <ds:DefendantOrOffenderSequenceNumber>00000100019</ds:DefendantOrOffenderSequenceNumber>
-                                <ds:CheckDigit>T</ds:CheckDigit>
-                            </ds:DefendantOrOffender>
-                            <ds:OffenceReason>
-                                <ds:OffenceCode>
-                                    <ds:ActOrSource>BA</ds:ActOrSource>
-                                    <ds:Year>76</ds:Year>
-                                    <ds:Reason>001</ds:Reason>
-                                </ds:OffenceCode>
-                            </ds:OffenceReason>
-                        </ds:CriminalProsecutionReference>
-                        <ds:OffenceCategory Literal="Summary Non-motoring">CS</ds:OffenceCategory>
-                        <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
-                        <ds:ActualOffenceStartDate>
-                            <ds:StartDate>2023-07-23</ds:StartDate>
-                        </ds:ActualOffenceStartDate>
-                        <ds:OffenceTitle>Fail to surrender to police / court bail at the appointed
-                            time</ds:OffenceTitle>
-                        <ds:ActualOffenceWording>On or in 23 August 2023 at Hertford failed without
-                            reasonable cause to surrender to custody at Hertford magistrates' Court
-                            having been released on bailin criminal proceedings on or in 31 July
-                            2023 at Hertford</ds:ActualOffenceWording>
-                        <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
-                        <ds:NotifiableToHOindicator Literal="No">N</ds:NotifiableToHOindicator>
-                        <ds:HomeOfficeClassification>083/01</ds:HomeOfficeClassification>
-                        <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
-                        <br7:CourtOffenceSequenceNumber>3</br7:CourtOffenceSequenceNumber>
-                        <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
-                        <br7:Result SchemaVersion="2.0">
-                            <ds:CJSresultCode>4576</ds:CJSresultCode>
-                            <ds:SourceOrganisation SchemaVersion="2.0">
-                                <ds:TopLevelCode>B</ds:TopLevelCode>
-                                <ds:SecondLevelCode>01</ds:SecondLevelCode>
-                                <ds:ThirdLevelCode>RD</ds:ThirdLevelCode>
-                                <ds:BottomLevelCode>00</ds:BottomLevelCode>
-                                <ds:OrganisationUnitCode>B01RD00</ds:OrganisationUnitCode>
-                            </ds:SourceOrganisation>
-                            <ds:CourtType>MCA</ds:CourtType>
-                            <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
-                            <ds:ResultHearingDate>2023-12-19</ds:ResultHearingDate>
-                            <ds:PleaStatus Literal="No Plea">NONE</ds:PleaStatus>
-                            <ds:ResultVariableText>WOFN - Warrant for arrest without bailWarrant for
-                                arrest without bail. Basis: no appearance in answer to bail.</ds:ResultVariableText>
-                            <ds:WarrantIssueDate>2023-12-19</ds:WarrantIssueDate>
-                            <ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
-                            <br7:PNCDisposalType>2059</br7:PNCDisposalType>
-                            <br7:ResultClass>Adjournment pre Judgement</br7:ResultClass>
+                            <br7:ResultClass>Judgement with final result</br7:ResultClass>
                             <br7:Urgent>
                                 <br7:urgent Literal="Yes">Y</br7:urgent>
                                 <br7:urgency>24</br7:urgency>
@@ -300,4 +160,25 @@
         </CXE01>
         <br7:PNCQueryDate>2023-12-19</br7:PNCQueryDate>
     </br7:AnnotatedHearingOutcome>
+    <Operation>
+        <operationCode>
+            <DISARR/>
+        </operationCode>
+        <operationStatus>F</operationStatus>
+    </Operation>
+    <Operation>
+        <operationCode>
+            <NEWREM>
+                <nextHearingDate>2024-02-12</nextHearingDate>
+                <nextHearingLocation SchemaVersion="2.0">
+                    <ds:TopLevelCode>C</ds:TopLevelCode>
+                    <ds:SecondLevelCode>52</ds:SecondLevelCode>
+                    <ds:ThirdLevelCode>BT</ds:ThirdLevelCode>
+                    <ds:BottomLevelCode>00</ds:BottomLevelCode>
+                    <ds:OrganisationUnitCode>C52BT00</ds:OrganisationUnitCode>
+                </nextHearingLocation>
+            </NEWREM>
+        </operationCode>
+        <operationStatus>N</operationStatus>
+    </Operation>
 </PNCUpdateDataset>

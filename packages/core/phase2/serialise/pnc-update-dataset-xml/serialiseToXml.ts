@@ -1,5 +1,5 @@
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import { convertAhoToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
+import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type {
   OperationStatusXml,
   PncOperationXml,
@@ -7,6 +7,7 @@ import type {
 } from "../../../phase1/types/PncUpdateDatasetXml"
 import { toISODate } from "../../../phase1/lib/dates"
 import generateXml from "../../../lib/xml/generateXml"
+import type { AhoXml } from "../../../phase1/types/AhoXml"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {
@@ -51,7 +52,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
         operationCode: {
           NEWREM: operation.data
             ? {
-                nextHearingDate: toISODate(operation.data.nextHearingDate),
+                nextHearingDate: operation.data.nextHearingDate ? toISODate(operation.data.nextHearingDate) : undefined,
                 nextHearingLocation: mapAhoOrgUnitToXml(operation.data.nextHearingLocation)
               }
             : {}
@@ -70,11 +71,21 @@ const xmlnsTags = {
   "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset): string => {
-  const xmlAho = convertAhoToXml(pncUpdateDataset)
+const normaliseNamespaces = (xmlAho: AhoXml) => {
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:ds"]
   delete xmlAho["br7:AnnotatedHearingOutcome"]?.["@_xmlns:xsi"]
+  if (xmlAho["br7:AnnotatedHearingOutcome"]?.CXE01) {
+    xmlAho["br7:AnnotatedHearingOutcome"].CXE01["@_xmlns"] = ""
+  }
+}
 
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes: boolean = false): string => {
+  pncUpdateDataset.Exceptions.forEach((exception) => {
+    exception.path.shift()
+  })
+
+  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addHasErrorAttributes)
+  normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {
     "?xml": xmlAho["?xml"],
     PNCUpdateDataset: {

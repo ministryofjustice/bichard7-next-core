@@ -3,16 +3,22 @@ import type { AhoXml } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
 
 const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
+  // This block is added to allow the <br7:HasError> to be set without any of the attributes being set
+  // Currently breaks several tests so omitErrorAttributes parameter is currently set to false where
+  // this function is called.
+
+  const hasAnyErrors =
+    hasError(exceptions) || aho["br7:AnnotatedHearingOutcome"]?.["br7:HasError"]?.["#text"] === "true"
+
   if (aho["br7:AnnotatedHearingOutcome"]) {
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = hasError(exceptions, [
       "AnnotatedHearingOutcome",
       "HearingOutcome",
       "Hearing"
     ])
-
     aho["br7:AnnotatedHearingOutcome"] = {
       "br7:HearingOutcome": aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"],
-      "br7:HasError": hasError(exceptions),
+      "br7:HasError": { "#text": hasAnyErrors.toString() },
       CXE01: aho["br7:AnnotatedHearingOutcome"].CXE01,
       "br7:PNCQueryDate": aho["br7:AnnotatedHearingOutcome"]["br7:PNCQueryDate"],
       "br7:PNCErrorMessage": aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"],
