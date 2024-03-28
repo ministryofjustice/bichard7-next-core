@@ -22,7 +22,9 @@ const extract = (el: any, path: (string | number)[] = []): Exception[] => {
       }
     }
     if (typeof el[key] === "object") {
-      const subExceptions = extract(el[key], path.concat([key.match(/\d+/) ? parseInt(key, 10) : key]))
+      const re = /\d+/
+      const match = re.exec(key)
+      const subExceptions = extract(el[key], path.concat([match ? parseInt(key, 10) : key]))
       subExceptions.forEach((e) => exceptions.push(e))
     }
   }
