@@ -9,10 +9,10 @@ left to right direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.StaticFileService, "Static File Service", $techn="", $descr="", $tags="", $link="")
 ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
 Container(Bichard.EmailSystem, "Email System", $techn="Postfix", $descr="", $tags="", $link="")
 Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
+Container(Bichard.StaticFileService, "Static File Service", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.Reporting_boundary", "Reporting", $tags="") {
   Component(Bichard.Reporting.AutomationReport, "Automation Report", $techn="", $descr="", $tags="", $link="")

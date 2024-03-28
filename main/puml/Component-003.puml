@@ -9,8 +9,8 @@ top to bottom direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="")
 System(ExISS, "ExISS", $descr="", $tags="", $link="")
+Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.MessageTransferLambda_boundary", "Message Transfer Lambda", $tags="") {
   ComponentQueue(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", $techn="", $descr="", $tags="", $link="")

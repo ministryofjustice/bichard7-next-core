@@ -10,8 +10,8 @@ left to right direction
 !include <C4/C4_Component>
 
 ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
-Container(Bichard.PNCAPI, "PNC API", $techn="", $descr="", $tags="", $link="")
 Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
+Container(Bichard.PNCAPI, "PNC API", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
   Component(Bichard.Conductor.BichardNextCore, "Bichard Next Core", $techn="Next.js, TypeScript", $descr="The code to replace the processing logic of Bichard7", $tags="", $link="")

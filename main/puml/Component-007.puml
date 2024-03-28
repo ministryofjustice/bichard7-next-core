@@ -9,9 +9,9 @@ left to right direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.BichardJavaApplication, "Bichard Java Application", $techn="Java EE", $descr="", $tags="", $link="")
 System(Slack, "Slack", $descr="An instant messaging service used by Made Tech", $tags="", $link="")
 System(PagerDuty, "PagerDuty", $descr="An alert tool for instances when the systems trigger an alarm", $tags="", $link="")
+Container(Bichard.BichardJavaApplication, "Bichard Java Application", $techn="Java EE", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.Monitoring_boundary", "Monitoring", $tags="") {
   Component(Bichard.Monitoring.OpenSearch, "OpenSearch", $techn="", $descr="", $tags="", $link="")
