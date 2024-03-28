@@ -26,7 +26,7 @@ const compareFile = async (s3Path: string, bucket: string): PromiseResult<Compar
     return content
   }
   console.log("Starting comparison....")
-  
+
   const comparison = parseComparisonFile(content)
   const correlationId = "correlationId" in comparison ? comparison.correlationId : undefined
   const phase = "phase" in comparison ? comparison.phase : 1
