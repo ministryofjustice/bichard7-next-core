@@ -33,10 +33,13 @@ const getDynamoRecord = async (s3Path: string): Promise<undefined | Record<strin
 }
 
 describe("Compare files workflow", () => {
-  it("should compare the file and write results to dynamo", async () => {
+  it.each([
+    "../core/phase1/tests/fixtures/e2e-comparison/test-001.json",
+    "../core/phase2/tests/fixtures/e2e-comparison/test-001.json"
+  ])("should compare the file and write results to dynamo", async (fixturePath) => {
     //write file to s3 with unique id
     const s3Path = `${new Date().toISOString().replace(/:/g, "_")}.json`
-    await sendFileToS3("../core/phase1/tests/fixtures/e2e-comparison/test-001.json", s3Path, "comparisons")
+    await sendFileToS3(fixturePath, s3Path, "comparisons")
 
     //wait for dynamo to be updated
     let record: Record<string, any> | undefined
