@@ -42,7 +42,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       if (isError(outgoingPncUpdateDataset)) {
         throw new Error("Failed to parse outgoing PncUpdateDataset XML")
       }
-      serialisedXml = serialiseToXml(outgoingPncUpdateDataset)
+      serialisedXml = serialiseToXml(outgoingPncUpdateDataset, true)
       if (isError(serialisedXml)) {
         throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
       }

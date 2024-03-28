@@ -37,7 +37,7 @@ export default (xml: string): Exception[] => {
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
 
-  let aho: any
+  let aho
 
   if ("PNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome

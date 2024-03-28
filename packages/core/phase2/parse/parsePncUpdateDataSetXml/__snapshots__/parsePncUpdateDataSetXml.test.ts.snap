@@ -387,6 +387,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     },
   },
   "Exceptions": [],
+  "HasError": false,
   "PncErrorMessage": undefined,
   "PncOperations": [],
   "PncQuery": {
@@ -823,6 +824,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     },
   },
   "Exceptions": [],
+  "HasError": false,
   "PncErrorMessage": undefined,
   "PncOperations": [
     {
@@ -1314,6 +1316,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     },
   },
   "Exceptions": [],
+  "HasError": false,
   "PncErrorMessage": undefined,
   "PncOperations": [],
   "PncQuery": {
@@ -1750,6 +1753,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     },
   },
   "Exceptions": [],
+  "HasError": false,
   "PncErrorMessage": undefined,
   "PncOperations": [
     {
@@ -2241,6 +2245,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     },
   },
   "Exceptions": [],
+  "HasError": false,
   "PncErrorMessage": undefined,
   "PncOperations": [
     {

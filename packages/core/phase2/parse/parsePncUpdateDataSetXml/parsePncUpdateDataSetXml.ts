@@ -94,7 +94,7 @@ const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Op
 
 const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpdateDataset | Error => {
   const rootElement = pncUpdateDataSet["PNCUpdateDataset"]
-  if (!rootElement || !rootElement["br7:AnnotatedHearingOutcome"]) {
+  if (!rootElement?.["br7:AnnotatedHearingOutcome"]) {
     return Error("Could not parse PNC update dataset XML")
   }
 
@@ -107,7 +107,8 @@ const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpd
 
   const pncUpdateDataset = {
     ...aho,
-    PncOperations: mapXmlToOperation(operationsArray)
+    PncOperations: mapXmlToOperation(operationsArray),
+    HasError: rootElement["br7:AnnotatedHearingOutcome"]["br7:HasError"]?.["#text"]?.toString() === "true"
   }
 
   return pncUpdateDataset

@@ -50,6 +50,7 @@ import type {
   DsDefendantOrOffender
 } from "../../types/AhoXml"
 import generateXml from "../../../lib/xml/generateXml"
+import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -519,42 +520,38 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-const mapPncUpdateDatasetToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
+const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset, validate = true): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
-      "br7:Hearing": mapAhoHearingToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Hearing),
-      "br7:Case": mapAhoCaseToXml(aho.AnnotatedHearingOutcome.HearingOutcome.Case),
-      ...(!validate && xmlnsTags)
-    }
+      "br7:Hearing": mapAhoHearingToXml(pud.AnnotatedHearingOutcome.HearingOutcome.Hearing),
+      "br7:Case": mapAhoCaseToXml(pud.AnnotatedHearingOutcome.HearingOutcome.Case)
+    },
+    "br7:HasError": { "#text": (!!pud.HasError).toString() }
   }
 
   const standalone = !validate ? {} : { "@_standalone": "yes" }
 
   return {
     "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
-    ...(validate
-      ? {
-          "br7:AnnotatedHearingOutcome": {
-            ...hearingOutcome,
-            CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
-            "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
-            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
-            ...xmlnsTags
-          }
-        }
-      : {
-          ...hearingOutcome
-        })
+    "br7:AnnotatedHearingOutcome": {
+      ...hearingOutcome,
+      CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
+      "br7:PNCQueryDate": pud.PncQueryDate ? optionalFormatText(pud.PncQueryDate) : undefined,
+      "br7:PNCErrorMessage": optionalText(pud.PncErrorMessage),
+      ...xmlnsTags
+    }
   }
 }
 
-const convertPncUpdateDatasetToXml = (hearingOutcome: AnnotatedHearingOutcome): AhoXml => {
-  const hearingOutcomeClone: AnnotatedHearingOutcome = structuredClone(hearingOutcome)
-  addNullElementsForExceptions(hearingOutcomeClone)
+const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addHasErrorAttributes: boolean = false): AhoXml => {
+  const pudClone: PncUpdateDataset = structuredClone(pud)
+  addNullElementsForExceptions(pudClone)
 
-  const xmlAho = mapPncUpdateDatasetToXml(hearingOutcomeClone)
+  const xmlAho = mapPncUpdateDatasetToXml(pudClone, addHasErrorAttributes)
 
-  addExceptionsToPncUpdateDatasetXml(xmlAho, hearingOutcomeClone.Exceptions)
+  if (pudClone.Exceptions.length > 0 || addHasErrorAttributes) {
+    addExceptionsToPncUpdateDatasetXml(xmlAho, pudClone.Exceptions)
+  }
 
   return xmlAho
 }

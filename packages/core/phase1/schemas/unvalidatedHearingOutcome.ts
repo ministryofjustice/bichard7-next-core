@@ -351,5 +351,6 @@ export const unvalidatedHearingOutcomeSchema = z.object({
   PncQuery: pncQueryResultSchema.optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.$description),
   PncQueryDate: z.coerce.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
   PncErrorMessage: z.string().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncErrorMessage.$description),
-  Ignored: z.boolean().optional()
+  Ignored: z.boolean().optional(),
+  HasError: z.boolean().optional()
 })
