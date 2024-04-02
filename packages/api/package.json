@@ -57,7 +57,7 @@
     "cors": "^2.8.5",
     "esbuild": "^0.17.12",
     "esbuild-plugin-ignore": "^1.1.1",
-    "express": "^4.19.1",
+    "express": "^4.19.2",
     "qs": "^6.12.0",
     "typeorm": "^0.3.20",
     "zod": "^3.22.4"
