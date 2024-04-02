@@ -21,6 +21,7 @@ const generateRerunTasks: ConductorWorker = {
     const taskName = task.inputData?.taskName
     const persistResults = task.inputData?.persistResults ?? true
     const newMatcher = task.inputData?.newMatcher ?? true
+    const phase = task.inputData?.phase ?? 2
 
     if (!taskName) {
       return failedTerminal("taskName must be specified")
