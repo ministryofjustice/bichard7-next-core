@@ -48,7 +48,7 @@ awslocal events put-rule --name "S3ObjectCreated" --event-pattern '{
                                                                   }'
 awslocal events put-targets --rule S3ObjectCreated --targets "Id"="1","Arn"="arn:aws:sqs:eu-west-2:000000000000:$INCOMING_QUEUE"
 
-DYNAMO_TABLES=( "bichard-7-production-comparison-log" "bichard-7-phase2-production-comparison-log" "bichard-7-phase3-production-comparison-log" )
+DYNAMO_TABLES=( "bichard-7-production-comparison-log" "bichard-7-production-phase2-comparison-log" "bichard-7-production-phase3-comparison-log" )
 
 for TABLE in "${DYNAMO_TABLES[@]}"
 do
