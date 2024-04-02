@@ -38,7 +38,7 @@ const compareFiles: ConductorWorker = {
           count.pass += 1
         } else {
           count.fail += 1
-          logs.push(`Comparison failed: ${res.s3Path}`)
+          logs.push(`Phase ${res.phase} comparison failed: ${res.s3Path}`)
         }
       }
     })
