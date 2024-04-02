@@ -20,23 +20,36 @@ const sendFileToS3 = async (srcFilename: string, destFilename: string, bucket: s
   return client.send(command)
 }
 
-const getDynamoRecord = async (s3Path: string): Promise<undefined | Record<string, any>> => {
+const getDynamoRecord = async (s3Path: string, tableName: string): Promise<undefined | Record<string, any>> => {
   const db = new DynamoDBClient({
     endpoint,
     region: "eu-west-2",
     credentials: { accessKeyId, secretAccessKey }
   })
-  const getCommand = new GetCommand({ TableName: "bichard-7-production-comparison-log", Key: { s3Path } })
+  const getCommand = new GetCommand({ TableName: tableName, Key: { s3Path } })
   const docClient = DynamoDBDocumentClient.from(db)
   const result = await docClient.send(getCommand)
   return result.Item
 }
 
+const getPhaseTableName = (phase: number) : string => {
+    switch (phase) {
+      case 1:
+        return process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
+      case 2:
+        return process.env.PHASE2_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase2-comparison-log"
+      case 3:
+        return process.env.PHASE3_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase3-comparison-log"
+      default:
+        return `No table exists for phase ${phase}`
+    }
+}
+
 describe("Compare files workflow", () => {
-  it.each([
-    "../core/phase1/tests/fixtures/e2e-comparison/test-001.json",
-    "../core/phase2/tests/fixtures/e2e-comparison/test-001.json"
-  ])("should compare the file and write results to dynamo", async (fixturePath) => {
+  const phases = [1,2]
+  it.each(phases)("should compare the file and write results to dynamo", async (phase) => {
+    const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
+    let tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
     const s3Path = `${new Date().toISOString().replace(/:/g, "_")}.json`
     await sendFileToS3(fixturePath, s3Path, "comparisons")
@@ -44,7 +57,7 @@ describe("Compare files workflow", () => {
     //wait for dynamo to be updated
     let record: Record<string, any> | undefined
     await waitForExpect(async () => {
-      record = await getDynamoRecord(s3Path)
+      record = await getDynamoRecord(s3Path, tableName)
       expect(record).toBeDefined()
     })
 
