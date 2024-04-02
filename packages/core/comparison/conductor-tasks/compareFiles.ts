@@ -10,8 +10,7 @@ import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import type ComparisonResult from "../types/ComparisonResult"
 
-const dynamoConfig = createDynamoDbConfig()
-const gateway = new DynamoGateway(dynamoConfig)
+
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 
 const compareFiles: ConductorWorker = {
@@ -45,11 +44,30 @@ const compareFiles: ConductorWorker = {
       }
     })
 
-    const nonErrorTestResults = allTestResults.filter((res) => !isError(res)) as ComparisonResult[]
+    const nonErrorTestResults = allTestResults.filter((res) => !isError(res)) as ComparisonResult[]    
 
-    const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
-    if (isError(recordResultsInDynamoResult)) {
-      return failed("Failed to write results to Dynamo")
+    const phase1Results = nonErrorTestResults.filter((res) => res.phase === 1) as ComparisonResult[]
+    const phase2Results = nonErrorTestResults.filter((res) => res.phase === 2) as ComparisonResult[]
+    const phase3Results = nonErrorTestResults.filter((res) => res.phase === 3) as ComparisonResult[]
+    
+    const phase1Gateway = new DynamoGateway(createDynamoDbConfig(1))
+    const phase2Gateway = new DynamoGateway(createDynamoDbConfig(2))
+    const phase3Gateway = new DynamoGateway(createDynamoDbConfig(3))
+
+    const recordPhase1ResultsInDynamoResult = await recordResultsInDynamo(phase1Results, phase1Gateway)
+    const recordPhase2ResultsInDynamoResult = await recordResultsInDynamo(phase2Results, phase2Gateway)
+    const recordPhase3ResultsInDynamoResult = await recordResultsInDynamo(phase3Results, phase3Gateway)
+    
+    if (isError(recordPhase1ResultsInDynamoResult)) {
+      return failed("Failed to write phase 1 results to Dynamo")
+    }
+
+    if (isError(recordPhase2ResultsInDynamoResult)) {
+      return failed("Failed to write phase 2 results to Dynamo")
+    }
+
+    if (isError(recordPhase3ResultsInDynamoResult)) {
+      return failed("Failed to write phase 3 results to Dynamo")
     }
 
     logs.push(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
