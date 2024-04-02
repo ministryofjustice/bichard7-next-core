@@ -10,7 +10,6 @@ import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import type ComparisonResult from "../types/ComparisonResult"
 
-
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 
 const compareFiles: ConductorWorker = {
@@ -45,10 +44,10 @@ const compareFiles: ConductorWorker = {
     })
 
     const nonErrorTestResults = allTestResults.filter((res) => !isError(res)) as ComparisonResult[]
-    
-    const phases = [1,2]
-    
-    phases.forEach( async (phase) => {
+
+    const phases = [1, 2]
+
+    phases.forEach(async (phase) => {
       const phaseResults = nonErrorTestResults.filter((res) => res.phase === phase) as ComparisonResult[]
       const gateway = new DynamoGateway(createDynamoDbConfig(phase))
       const recordPhaseResults = await recordResultsInDynamo(phaseResults, gateway)
