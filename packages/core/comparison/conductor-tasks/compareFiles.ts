@@ -12,6 +12,26 @@ import type ComparisonResult from "../types/ComparisonResult"
 
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 
+type ResultRecord = {
+  [phase: number]: { pass: number; fail: number }
+}
+
+const recordPass = (resultRecord: ResultRecord, phase: number) => {
+  if (resultRecord[phase]) {
+    resultRecord[phase].pass++
+  } else {
+    resultRecord[phase] = { pass: 1, fail: 0 }
+  }
+}
+
+const recordFail = (resultRecord: ResultRecord, phase: number) => {
+  if (resultRecord[phase]) {
+    resultRecord[phase].fail++
+  } else {
+    resultRecord[phase] = { pass: 0, fail: 1 }
+  }
+}
+
 const compareFiles: ConductorWorker = {
   taskDefName: "compare_files",
   concurrency: 10,
@@ -24,8 +44,7 @@ const compareFiles: ConductorWorker = {
     }
 
     const logs: string[] = []
-    const count = { pass: 0, fail: 0 }
-
+    const resultRecord: ResultRecord = {}
     const resultPromises = records.map((s3Path) => compareFile(s3Path, bucket))
 
     const allTestResults = await Promise.all(resultPromises)
@@ -35,9 +54,9 @@ const compareFiles: ConductorWorker = {
         logs.push(res.message)
       } else {
         if (isPass(res.comparisonResult)) {
-          count.pass += 1
+          recordPass(resultRecord, res.phase)
         } else {
-          count.fail += 1
+          recordFail(resultRecord, res.phase)
           logs.push(`Phase ${res.phase} comparison failed: ${res.s3Path}`)
         }
       }
@@ -56,9 +75,11 @@ const compareFiles: ConductorWorker = {
       }
     })
 
-    logs.push(`Results of processing: ${count.pass} passed. ${count.fail} failed`)
+    logs.push(
+      `Results: Phase 1: ${resultRecord["1"]?.pass} passed. ${resultRecord["1"]?.fail} failed. Phase 2: ${resultRecord["2"]?.pass} passed. ${resultRecord["2"]?.fail} failed`
+    )
 
-    return completed(count, ...logs)
+    return completed(resultRecord, ...logs)
   }
 }
 
