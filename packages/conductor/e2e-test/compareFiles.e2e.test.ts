@@ -32,24 +32,24 @@ const getDynamoRecord = async (s3Path: string, tableName: string): Promise<undef
   return result.Item
 }
 
-const getPhaseTableName = (phase: number) : string => {
-    switch (phase) {
-      case 1:
-        return process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
-      case 2:
-        return process.env.PHASE2_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase2-comparison-log"
-      case 3:
-        return process.env.PHASE3_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase3-comparison-log"
-      default:
-        return `No table exists for phase ${phase}`
-    }
+const getPhaseTableName = (phase: number): string => {
+  switch (phase) {
+    case 1:
+      return process.env.PHASE1_COMPARISON_TABLE_NAME ?? "bichard-7-production-comparison-log"
+    case 2:
+      return process.env.PHASE2_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase2-comparison-log"
+    case 3:
+      return process.env.PHASE3_COMPARISON_TABLE_NAME ?? "bichard-7-production-phase3-comparison-log"
+    default:
+      return `No table exists for phase ${phase}`
+  }
 }
 
 describe("Compare files workflow", () => {
-  const phases = [1,2]
+  const phases = [1, 2]
   it.each(phases)("should compare the file and write results to dynamo", async (phase) => {
     const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
-    let tableName = getPhaseTableName(phase)
+    const tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
     const s3Path = `${new Date().toISOString().replace(/:/g, "_")}.json`
     await sendFileToS3(fixturePath, s3Path, "comparisons")
