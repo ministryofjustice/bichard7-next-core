@@ -33,13 +33,11 @@ const compareFile = async (s3Path: string, bucket: string): PromiseResult<Compar
   try {
     if (isPhase1(comparison)) {
       phase = 1
-      console.log(`Phase ${phase} comparison....`)
       comparisonResult = await comparePhase1(comparison, false, {
         defaultStandingDataVersion: getStandingDataVersionByDate(date)
       })
     } else if (isPhase2(comparison)) {
       phase = 2
-      console.log(`Phase ${phase} comparison....`)
       comparisonResult = comparePhase2(comparison, false)
     }
   } catch (e) {
