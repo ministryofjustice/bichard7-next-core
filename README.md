@@ -43,8 +43,8 @@ This will pull down the images from ECR so you don't need to build them. On an M
 You can also run subsets of the infrastructure using:
 
 - `npm run bichard-legacy` will run old Bichard, ActiveMQ, Postgres, BeanConnect, PNC Emulator, User Service, Auth Proxy and the new UI
-- `npm run conductor` will run Conductor, ElasticSearch, Postgres, Localstack and the worker
-- `npm run conductor-no-worker` will run Conductor, ElasticSearch, Postgres, Localstack and will not run the worker (for development purposes)
+- `npm run conductor` will run Conductor, Postgres, Localstack and the worker
+- `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
 You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) against core in Conductor with:
 
@@ -189,16 +189,16 @@ This mode pretty-prints the `Pino` logs and makes it a bit clearer as to what's 
 
 ## Conductor
 
-[Netflix Conductor](https://github.com/Netflix/conductor) is used to run Core in production, and can also be run locally.
+[Conductor](https://github.com/conductor-oss/conductor) is used to run Core in production, and can also be run locally.
 
 To start Conductor locally:
 
 ```bash
-# Run conductor without elasticsearch, and using an in-memory database
+# Run conductor using an in-memory database
 npm run conductor
 
 # OR
-# Run the full set of conductor infrastructure, including elasticsearch and postgres
+# Run the full set of conductor infrastructure with postgres
 npm run conductor-full
 ```
 
