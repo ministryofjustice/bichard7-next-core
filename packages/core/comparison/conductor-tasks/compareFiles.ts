@@ -18,7 +18,7 @@ type ResultRecord = {
 
 const logResult = (logs: string[], results: ResultRecord) => {
   let phaseResultString = ""
-  for (const phase in results) {
+  for (let phase in results) {
     phaseResultString += ` Phase ${phase}: ${results[phase]?.pass} passed. ${results[phase]?.fail} failed.`
   }
   logs.push(`Results:${phaseResultString}`)
