@@ -11,8 +11,6 @@ import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
 import type ComparisonResult from "../types/ComparisonResult"
 
-const dynamoConfig = createDynamoDbConfig()
-const gateway = new DynamoGateway(dynamoConfig)
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 const s3Concurrency = process.env.S3_CONCURRENCY ? Number(process.env.S3_CONCURRENCY) : 20
 
@@ -25,6 +23,7 @@ const rerunPeriod: ConductorWorker = {
     const end = task.inputData?.end
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const persistResults = task.inputData?.persistResults ?? true
+    const phase = task.inputData?.phase ?? 2
 
     if (!start || !end) {
       return failedTerminal("start and end must be specified")
@@ -34,13 +33,14 @@ const rerunPeriod: ConductorWorker = {
     const count = { pass: 0, fail: 0, intentionalDifference: 0, skipped: 0 }
 
     const successFilter = onlyFailures ? false : undefined
+    const gateway = new DynamoGateway(createDynamoDbConfig(phase))
 
     for await (const batch of gateway.getRange(start, end, successFilter, 1000)) {
       if (!batch || isError(batch)) {
-        return failed("Failed to get batch from Dynamo")
+        return failed(`Failed to get phase ${phase} batch from Dynamo`)
       }
 
-      logs.push(`Processing ${batch.length} comparison tests...`)
+      logs.push(`Processing ${batch.length} phase ${phase} comparison tests...`)
 
       const limit = pLimit(s3Concurrency)
       const resultPromises = batch.map(({ s3Path }) => limit(() => compareFile(s3Path, bucket)))
@@ -58,7 +58,7 @@ const rerunPeriod: ConductorWorker = {
             count.pass += 1
           } else {
             count.fail += 1
-            logs.push(`Comparison failed: ${res.s3Path}`)
+            logs.push(`Phase ${phase} comparison failed: ${res.s3Path}`)
           }
         }
       })
@@ -68,12 +68,12 @@ const rerunPeriod: ConductorWorker = {
       if (persistResults) {
         const recordResultsInDynamoResult = await recordResultsInDynamo(nonErrorTestResults, gateway)
         if (isError(recordResultsInDynamoResult)) {
-          return failed("Failed to write results to Dynamo", recordResultsInDynamoResult.message)
+          return failed(`Failed to write phase ${phase} results to Dynamo`, recordResultsInDynamoResult.message)
         }
       }
 
       logs.push(
-        `Results of processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
+        `Results of ${phase} processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
       )
     }
 
