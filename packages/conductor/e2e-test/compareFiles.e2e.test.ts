@@ -47,7 +47,7 @@ const getPhaseTableName = (phase: number): string => {
 
 describe("Compare files workflow", () => {
   const phases = [1, 2]
-  it.each(phases)("should compare the file and write results to dynamo", async (phase) => {
+  it.each(phases)("should compare the phase %i file and write results to dynamo", async (phase) => {
     const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
     const tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
