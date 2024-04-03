@@ -8,6 +8,7 @@ export type GenerateDayTasksOutput = {
   onlyFailures: boolean
   persistResults: boolean
   newMatcher: boolean
+  phase: number
 }
 
 const generateRerunTasks: ConductorWorker = {
@@ -35,7 +36,7 @@ const generateRerunTasks: ConductorWorker = {
     for (let d = startDate.getTime(); d < endMs; d += durationMs) {
       const start = new Date(d).toISOString()
       const end = new Date(d + durationMs > endMs ? endMs : d + durationMs).toISOString()
-      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher })
+      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher, phase })
     }
 
     const outputData = {
