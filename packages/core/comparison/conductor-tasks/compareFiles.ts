@@ -16,6 +16,14 @@ type ResultRecord = {
   [phase: number]: { pass: number; fail: number }
 }
 
+const logResult = (logs: string[], results: ResultRecord) => {
+  let phaseResultString = ""
+  for (const phase in results) {
+    phaseResultString += ` Phase ${phase}: ${results[phase]?.pass} passed. ${results[phase]?.fail} failed.`
+  }
+  logs.push(`Results:${phaseResultString}`)
+}
+
 const recordPass = (resultRecord: ResultRecord, phase: number) => {
   if (resultRecord[phase]) {
     resultRecord[phase].pass++
@@ -75,9 +83,7 @@ const compareFiles: ConductorWorker = {
       }
     })
 
-    logs.push(
-      `Results: Phase 1: ${resultRecord["1"]?.pass} passed. ${resultRecord["1"]?.fail} failed. Phase 2: ${resultRecord["2"]?.pass} passed. ${resultRecord["2"]?.fail} failed`
-    )
+    logResult(logs, resultRecord)
 
     return completed(resultRecord, ...logs)
   }
