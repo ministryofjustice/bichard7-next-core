@@ -4,10 +4,11 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import getStandingDataVersionByDate from "../cli/getStandingDataVersionByDate"
 import type ComparisonResult from "../types/ComparisonResult"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import { isPhase1 } from "./checkPhase"
+import { isPhase1, isPhase2 } from "./checkPhase"
 import comparePhase1 from "./comparePhase1"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import { parseComparisonFile } from "./processTestFile"
+import comparePhase2 from "./comparePhase2"
 
 const failResult: ComparisonResultDetail = {
   triggersMatch: false,
@@ -26,14 +27,18 @@ const compareFile = async (s3Path: string, bucket: string): PromiseResult<Compar
 
   const comparison = parseComparisonFile(content)
   const correlationId = "correlationId" in comparison ? comparison.correlationId : undefined
-  const phase = "phase" in comparison ? comparison.phase : 1
+  let phase = 0
   let comparisonResult: ComparisonResultDetail = failResult
   const date = getDateFromComparisonFilePath(s3Path)
   try {
     if (isPhase1(comparison)) {
+      phase = 1
       comparisonResult = await comparePhase1(comparison, false, {
         defaultStandingDataVersion: getStandingDataVersionByDate(date)
       })
+    } else if (isPhase2(comparison)) {
+      phase = 2
+      comparisonResult = comparePhase2(comparison, false)
     }
   } catch (e) {
     return e as Error
