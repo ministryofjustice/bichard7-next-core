@@ -62,16 +62,20 @@ commands:
       - store_test_results:
           path: /home/circleci/bichard7-next-tests/test-results.xml
 
+  set_locale:
+    steps:
+      - run:
+          name: Set GB locale
+          command: bash .circleci/scripts/set-locale.sh
+
 jobs:
   build:
     machine:
       image: ubuntu-2204:current
     resource_class: xlarge
     steps:
+      - set_locale
       - checkout
-      - run:
-          name: Set GB locale
-          command: bash .circleci/scripts/set-locale.sh
       - install_core
       - run:
           name: Build the code
@@ -91,6 +95,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -130,6 +135,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - run:
           name: Run integration tests against core code
           command: npm run -w packages/core test:compare
@@ -141,6 +147,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - run:
           name: Checkout the tests repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
@@ -178,6 +185,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - node_install
       - fetch_images:
           IMAGES: nodejs-20-2023
@@ -209,6 +217,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - node_install
       - fetch_images:
           IMAGES: nodejs-20-2023
@@ -241,6 +250,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -288,6 +298,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -333,6 +344,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - set_locale
       - node_install
       - run:
           name: Spin up the PostgreSQL database
@@ -346,6 +358,7 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: true
     steps:
+      - set_locale
       - checkout
       - run:
           name: Spin up the PostgreSQL database
