@@ -74,8 +74,8 @@ jobs:
       image: ubuntu-2204:current
     resource_class: xlarge
     steps:
-      - set_locale
       - checkout
+      - set_locale
       - install_core
       - run:
           name: Build the code
