@@ -6,8 +6,18 @@ import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types
 import ResolutionStatus from "../../types/ResolutionStatus"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
-  const personName = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail?.PersonName
-  return `${personName?.FamilyName} ${personName?.GivenName}`
+  const { DefendantDetail, OrganisationName } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+
+  const { PersonName } = DefendantDetail ?? {}
+  if (PersonName) {
+    return `${PersonName.FamilyName} ${PersonName.GivenName}`
+  }
+
+  if (OrganisationName) {
+    return OrganisationName
+  }
+
+  return "Unknown"
 }
 
 const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
