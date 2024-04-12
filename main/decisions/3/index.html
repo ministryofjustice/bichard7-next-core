@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Use Data Transfer Objects | Bichard</title>
+    <title>Use Styled Components | Bichard</title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
@@ -40,38 +40,29 @@
       </aside>
       <div class="container is-fluid has-background-white">
         <div class="content p-3">
-          <div><h1>1. Use Data Transfer Objects</h1>
-<p>Date: 2023-09-22</p>
+          <div><h1>1. Use Styled Components</h1>
+<p>Date: 2024-04-12</p>
 <h2>Status</h2>
 <p>Accepted</p>
 <h2>Context</h2>
-<p>Using a Data Transfer Object (DTO) in the <code>bichard-next-ui</code> repo will help separate the User Interface (React) from the Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at compile time.</p>
-<p>We have chosen the naming convention of:</p>
+<p>We are currently using two different styling libraries (3 if you include <code>scss</code> files). We want to reduce the need to know how to use the libraries and simplify the code base.</p>
+<p>We have opted to choose <a href="https://styled-components.com/">Styled Components</a> over <a href="https://cssinjs.org/react-jss/?v=v10.10.0">React-JSS</a></p>
+<p>The negatives for <code>react-jss</code> are it is less flexible with <code>React</code>. E.g. you can pass <code>props</code> to <code>styled-components</code> for separate themes. It can also pollute other <code>components</code> as it based on class names rather than <code>components</code>.</p>
+<h3>File structure</h3>
+<p>We have opted to take the following approach to structuring the files:</p>
 <ul>
- <li>Types: 
-  <ul>
-   <li><code>Display</code> - Prefix for the object to be consumed in the UI</li>
-   <li><code>DisplayPartial</code> - Prefix for the object which has limited fields</li>
-   <li><code>DisplayFull</code> - Prefix for the object which has all fields (that aren't a security risk)</li>
-  </ul></li>
- <li>File structure for DTOs 
-  <ul>
-   <li><code>src/services/dto</code> top level</li>
-   <li>Then for example: <code>objectDto.ts</code></li>
-  </ul></li>
- <li>Which holds functions like: 
-  <ul>
-   <li><code>objToDisplayObjDto</code></li>
-   <li><code>objToDisplayPartialObjDto</code></li>
-  </ul></li>
+ <li><code>src/components/Action.styles.tsx</code></li>
+ <li><code>src/components/Action.tsx</code></li>
 </ul>
-<p>A DTO object is a new object mirror with some of a Entity's attributes. We are actively using <code>Pick&lt;T, "field"&gt;</code> to select what we want to use out of the Entity and mapping via a function (e.g. <code>const displayObj = objToDisplayObjDto(obj)</code>).</p>
-<p>We can control the levels of data we want share. E.g. <code>displayPartialObj</code> or <code>displayFullObj</code>.</p>
+<p>That allows to separate the styles from the <code>component</code> and keep close by. We can import other JS/TS files if needed, e.g. colours.</p>
+<p>We should also export all the Styled Components at bottom of the file, e.g.</p>
+<pre><code class="language-TypeScript">export { ActionLink, ActionButton }
+</code></pre>
 <h2>Consequences</h2>
 <ul>
- <li>It's more complex than just using the Database Record</li>
- <li>It's more secure than sending out raw database records into the UI</li>
- <li>You have to be disciplined in it's use and following the architectural pattern</li>
+ <li>More files</li>
+ <li>Need to know plain CSS</li>
+ <li>Need to learn how this library works</li>
 </ul></div>
         </div>
       </div>
