@@ -21,8 +21,8 @@ for separate themes. It can also pollute other `components` as it based on class
 
 We have opted to take the following approach to structuring the files:
 
-* `src/components/Action.styles.tsx`
-* `src/components/Action.tsx`
+- `src/components/Action.styles.tsx`
+- `src/components/Action.tsx`
 
 That allows to separate the styles from the `component` and keep close by. We can import other JS/TS files if needed,
 e.g. colours.
@@ -35,6 +35,6 @@ export { ActionLink, ActionButton }
 
 ## Consequences
 
-* More files
-* Need to know plain CSS
-* Need to learn how this library works
+- More files
+- Need to know plain CSS
+- Need to learn how this library works
