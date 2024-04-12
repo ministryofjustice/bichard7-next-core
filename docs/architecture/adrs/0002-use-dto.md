@@ -1,4 +1,4 @@
-# 1. Record architecture decisions
+# 1. Use Data Transfer Objects
 
 Date: 2023-09-22
 
