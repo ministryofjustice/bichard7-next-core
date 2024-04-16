@@ -44,4 +44,33 @@ describe("convertResultToErrorListRecord", () => {
     expect(convertedResult.ptiurn?.length).toBe(11)
     expect(convertedResult.court_name?.length).toBe(500)
   })
+
+  it("if defendant is corporate, defendant name should be OrganisationName", () => {
+    const phase1Result = generateMockPhase1Result()
+
+    const defendantElem = phase1Result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+
+    delete defendantElem.DefendantDetail
+    defendantElem.OrganisationName = "Organisation Name"
+
+    const convertedResult = convertResultToErrorListRecord(phase1Result)
+    expect(convertedResult.defendant_name).toBe("Organisation Name")
+  })
+
+  it("if defendant is person, defendant name should be FamilyName GivenName", () => {
+    const phase1Result = generateMockPhase1Result()
+
+    const defendant = phase1Result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+    defendant.DefendantDetail = {
+      Gender: 1,
+      PersonName: {
+        Title: "Mr",
+        GivenName: ["TEST"],
+        FamilyName: "TESTERSON"
+      }
+    }
+
+    const errorListRecord = convertResultToErrorListRecord(phase1Result)
+    expect(errorListRecord.defendant_name).toBe("TESTERSON TEST")
+  })
 })
