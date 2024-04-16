@@ -90,15 +90,6 @@ jobs:
       image: ubuntu-2204:current
     resource_class: xlarge
     steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.env-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.conductor-changes >>
-          steps:
-            - run: circleci-agent step halt
       - checkout
       - set_locale
       - install_and_build_core
