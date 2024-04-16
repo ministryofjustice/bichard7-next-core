@@ -1,14 +1,12 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { GetCommand, DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import fs from "fs"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 
-const sendFileToS3 = async (srcFilename: string, destFilename: string, bucket: string) => {
-    const client = new S3Client(createS3Config())
+const sendFileToS3 = async (s3Client: S3Client, srcFilename: string, destFilename: string, bucket: string) => {
     const Body = await fs.promises.readFile(srcFilename)
     const command = new PutObjectCommand({ Bucket: bucket, Key: destFilename, Body })
-    return client.send(command)
+    return s3Client.send(command)
   }
   
 const getDynamoRecord = async (dynamoDbClient: DynamoDBClient, s3Path: string, tableName: string): Promise<undefined | Record<string, any>> => {
