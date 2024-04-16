@@ -12,7 +12,6 @@ const endpoint = (process.env.S3_ENDPOINT = "http://localhost:4566")
 const accessKeyId = (process.env.S3_AWS_ACCESS_KEY_ID = "FAKE")
 const secretAccessKey = (process.env.S3_AWS_SECRET_ACCESS_KEY = "FAKE")
 
-const s3Config = createS3Config()
 
 const db = new DynamoDBClient({
   endpoint,
@@ -27,7 +26,7 @@ const client = new SQSClient({
 })
 
 const sendFileToS3 = async (srcFilename: string, destFilename: string, bucket: string) => {
-  const client = new S3Client(s3Config)
+  const client = new S3Client(createS3Config())
   const Body = await fs.promises.readFile(srcFilename)
   const command = new PutObjectCommand({ Bucket: bucket, Key: destFilename, Body })
   return client.send(command)
