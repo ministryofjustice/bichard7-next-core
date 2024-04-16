@@ -482,10 +482,9 @@ workflows:
     jobs:
       - test_api
 
-  # test-common:
-  #   when: << pipeline.parameters.common-changes >>
-  #   jobs:
-  #     - test_common
+  test-common:
+    jobs:
+      - test_common
 
   test-conductor:
     jobs:
