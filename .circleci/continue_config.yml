@@ -1,0 +1,489 @@
+version: 2.1
+
+commands:
+  fetch_images:
+    parameters:
+      IMAGES:
+        default: ""
+        type: string
+    steps:
+      - run:
+          name: "Fetch images: <<parameters.IMAGES>>"
+          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
+
+  node_install:
+    steps:
+      - restore_cache:
+          name: Restore nvm cache
+          keys:
+            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
+            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+      - run: nvm install
+      - save_cache:
+          name: Save nvm cache
+          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+          paths:
+            - /opt/circleci/.nvm/.cache
+
+  install_and_build_core:
+    description: Install the node dependencies for core
+    parameters:
+      install_cypress:
+        type: boolean
+        default: false
+    steps:
+      - run:
+          name: Hash package-lock.json
+          command: bash .circleci/scripts/hash-package-lock.sh
+      - restore_cache:
+          name: Load node_modules from the cache if they haven't changed
+          keys:
+            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+            - v1-npm-deps-
+      - when:
+          condition: <<parameters.install_cypress>>
+          steps:
+            - run:
+                name: Install npm dependencies
+                command: npm i --workspaces --include-workspace-root
+      - unless:
+          condition: <<parameters.install_cypress>>
+          steps:
+            - run:
+                name: Install npm dependencies
+                command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root
+      - save_cache:
+          key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
+          paths: node_modules
+      - run:
+          name: Build Core
+          command: npm run build
+
+  save_artifacts:
+    steps:
+      - run:
+          name: Compress the artifacts for easier downloading
+          when: always
+          command: for file in ~/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
+      - run:
+          name: Create the saved_artifacts directory
+          when: always
+          command: mkdir ./saved_artifacts
+      - run:
+          name: Move the gzipped files across
+          when: always
+          command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
+      - store_artifacts:
+          path: /home/circleci/project/saved_artifacts
+      - store_test_results:
+          path: /home/circleci/bichard7-next-tests/test-results.xml
+
+  set_locale:
+    steps:
+      - run:
+          name: Set GB locale
+          command: bash .circleci/scripts/set-locale.sh
+
+jobs:
+  build_and_lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: xlarge
+    steps:
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - run:
+          name: Check the code for linting errors
+          command: npm run lint
+
+  test_core:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - run:
+          name: Run PostgreSQL
+          command: npm run postgres
+      - run:
+          name: Run ActiveMQ
+          command: npm run activemq
+      - run:
+          name: Run Localstack
+          command: npm run localstack
+      - run:
+          name: Run Mailhog
+          command: npm run mailserver
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging API server
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server
+      - run:
+          name: Run Audit Logging API
+          command: npm run audit-log
+      - node_install
+      - run:
+          name: Run unit tests against core code
+          command: nvm use && npm run -w packages/core test:unit
+      - run:
+          name: Run integration tests against core code
+          command: nvm use && npm run -w packages/core test:integration
+
+  comparison_test:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - run:
+          name: Run integration tests against core code
+          command: npm run -w packages/core test:compare
+
+  characterisation_test:
+    docker:
+      - image: cimg/node:16.13.1
+    resource_class: xlarge
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - run:
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+      - run:
+          name: Start the test server in the background
+          command: npm run -w packages/core test:server
+          background: true
+      - run:
+          name: Wait for Core
+          # The version of wait-port is pinned here because version 1.0.0
+          # has a breaking change that makes it die when the port is not open
+          command: npx -y wait-port@0.3.1 6000
+      - run:
+          name: Create a hash of the package lock
+          command: md5sum ~/bichard7-next-tests/package-lock.json > ~/bichard7-next-tests/package-lock.json.md5
+      - restore_cache:
+          name: Load node_modules from the cache if they haven't changed
+          keys:
+            - test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
+      - run:
+          name: NPM install the tests repo
+          command: cd ~/bichard7-next-tests && npm i
+      - save_cache:
+          key: test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
+          paths: ~/bichard7-next-tests/node_modules
+      - run:
+          name: Run tests against core code
+          command: cd ~/bichard7-next-tests && npm run test:characterisation
+
+  test_conductor:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: xlarge
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.conductor-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_and_build_core
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Boot Conductor infrastructure
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
+      - run:
+          name: Run the worker
+          environment:
+            PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
+          command: nvm use && npm run -w packages/conductor worker
+          background: true
+      - run:
+          name: Test the workflows
+          command: nvm use && npm run -w packages/conductor test
+
+  test_message_forwarder:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: xlarge
+    steps:
+      - unless:
+          condition: << pipeline.parameters.message-forwarder-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_and_build_core
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Boot Conductor infrastructure
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
+      - run:
+          name: Run the worker
+          environment:
+            PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
+          command: nvm use && npm run -w packages/conductor worker
+          background: true
+      - run:
+          name: Test the workflows
+          command: nvm use && npm run -w packages/message-forwarder test
+
+  e2e_test:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: xlarge
+    parallelism: 10
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - run:
+          name: Build message forwarder image
+          command: .circleci/scripts/build-message-forwarder.sh
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+      - run:
+          name: NPM install tests dependencies
+          working_directory: ~/bichard7-next-tests
+          command: npm i
+      - run:
+          name: Run the infrastructure
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
+      - run:
+          # currently quicker to run the worker separately due to data install
+          name: Run the worker
+          command: npm run -w packages/conductor worker
+          background: true
+      - run:
+          name: Run e2e tests against core code
+          working_directory: ~/bichard7-next-tests
+          environment:
+            AWS_URL: http://localhost:4566
+            RECORD: "true"
+          command: |
+            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+      - save_artifacts
+
+  e2e_test_new_ui:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: xlarge
+    parallelism: 10
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_and_build_core
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - run:
+          name: Build message forwarder image
+          command: .circleci/scripts/build-message-forwarder.sh
+      - run:
+          name: Checkout the audit logging repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build the audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Checkout the tests repo
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
+      - run:
+          name: NPM install tests dependencies
+          working_directory: ~/bichard7-next-tests
+          command: npm i
+      - run:
+          name: Run the infrastructure
+          command: .circleci/scripts/run-infrastructure.sh '' all-no-worker
+      - run:
+          # currently quicker to run the worker separately due to data install
+          name: Run the worker
+          command: npm run -w packages/conductor worker
+          background: true
+      - run:
+          name: Run e2e tests against core code
+          working_directory: ~/bichard7-next-tests
+          environment:
+            AWS_URL: http://localhost:4566
+            RECORD: "true"
+          command: |
+            NEXTUI="true" TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+      - save_artifacts
+
+  test_api:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - unless:
+          condition: << pipeline.parameters.api-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_and_build_core
+      - run:
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          name: Run unit tests against API code
+          command: nvm use && npm run -w packages/api test
+
+  test_common:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - unless:
+          condition: << pipeline.parameters.common-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_and_build_core
+      - run:
+          name: Unit test common
+          command: npm run test -w packages/common
+
+  test_postgres:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - unless:
+          condition: << pipeline.parameters.env-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - run:
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
+          name: run Postgres function tests
+
+parameters:
+  env-changes:
+    type: boolean
+    default: false
+  api-changes:
+    type: boolean
+    default: false
+  common-changes:
+    type: boolean
+    default: false
+  conductor-changes:
+    type: boolean
+    default: false
+  core-changes:
+    type: boolean
+    default: false
+  message-forwarder-changes:
+    type: boolean
+    default: false
+
+workflows:
+  test-all:
+    jobs:
+      - test_postgres
+      - test_api
+      - test_common
+      - test_conductor
+      - test_core
+      - characterisation_test
+      - comparison_test
+      - e2e_test
+      - e2e_test_new_ui
+      - test_message_forwarder
+      - build_and_lint

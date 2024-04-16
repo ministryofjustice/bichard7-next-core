@@ -123,7 +123,7 @@ describe("getMessage()", () => {
 
 describe("createAuditLog()", () => {
   it("should return Created http status code when message successfully created", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    jest.spyOn(axios, "post").mockResolvedValue({ status: 201, data: '{ "messageId": "fake" }' })
 
     const result = await apiClient.createAuditLog(message)
 
@@ -149,7 +149,7 @@ describe("createAuditLog()", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201, data: '{ "messageId": "fake" }' })
 
     const result = await apiClient.createAuditLog(message)
 
