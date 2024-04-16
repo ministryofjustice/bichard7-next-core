@@ -27,6 +27,10 @@ commands:
 
   install_and_build_core:
     description: Install the node dependencies for core
+    parameters:
+      install_cypress:
+        type: boolean
+        default: false
     steps:
       - run:
           name: Hash package-lock.json
@@ -36,9 +40,18 @@ commands:
           keys:
             - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
             - v1-npm-deps-
-      - run:
-          name: Install npm dependencies
-          command: npm i --workspaces --include-workspace-root
+      - when:
+          condition: <<parameters.install_cypress>>
+          steps:
+            - run:
+                name: Install npm dependencies
+                command: npm i --workspaces --include-workspace-root
+      - unless:
+          condition: <<parameters.install_cypress>>
+          steps:
+            - run:
+                name: Install npm dependencies
+                command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
