@@ -14,7 +14,7 @@ const getDynamoRecord = async (
   dynamoDbClient: DynamoDBClient,
   s3Path: string,
   tableName: string
-): Promise<undefined | Record<string, any>> => {
+): Promise<undefined | Record<string, unknown>> => {
   const getCommand = new GetCommand({ TableName: tableName, Key: { s3Path } })
   const docClient = DynamoDBDocumentClient.from(dynamoDbClient)
   const result = await docClient.send(getCommand)
