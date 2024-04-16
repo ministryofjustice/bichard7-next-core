@@ -2,7 +2,7 @@
   "name": "@moj-bichard7/conductor",
   "version": "2.0.0",
   "devDependencies": {
-    "@aws-sdk/client-sqs": "^3.554.0",
+    "@aws-sdk/client-sqs": "^3.547.0",
     "@stomp/stompjs": "^7.0.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
