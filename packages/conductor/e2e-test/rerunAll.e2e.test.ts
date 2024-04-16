@@ -25,7 +25,6 @@ const sqsClient = new SQSClient({
   credentials: { accessKeyId, secretAccessKey }
 })
 
-
 describe("Rerun all workflow", () => {
   it("should rerun phase 2 comparisons and update dynamo record", async () => {
     const phase = 2

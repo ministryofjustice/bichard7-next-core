@@ -11,7 +11,6 @@ const endpoint = (process.env.S3_ENDPOINT = "http://localhost:4566")
 const accessKeyId = (process.env.S3_AWS_ACCESS_KEY_ID = "FAKE")
 const secretAccessKey = (process.env.S3_AWS_SECRET_ACCESS_KEY = "FAKE")
 
-
 const s3Client = new S3Client(createS3Config())
 
 const dbClient = new DynamoDBClient({
@@ -25,7 +24,6 @@ const sqsClient = new SQSClient({
   region: "eu-west-2",
   credentials: { accessKeyId, secretAccessKey }
 })
-
 
 describe("Rerun failures workflow", () => {
   it("should rerun failed phase 2 comparisons and update dynamo record", async () => {
