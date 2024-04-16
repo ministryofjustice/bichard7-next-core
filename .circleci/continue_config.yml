@@ -470,37 +470,16 @@ parameters:
     default: false
 
 workflows:
-  test-db:
+  test-all:
     jobs:
       - test_postgres
-
-  test-api:
-    jobs:
       - test_api
-
-  test-common:
-    jobs:
       - test_common
-
-  test-conductor:
-    jobs:
       - test_conductor
-
-  test-core:
-    jobs:
       - test_core
       - characterisation_test
       - comparison_test
-
-  test-e2e:
-    jobs:
       - e2e_test
       - e2e_test_new_ui
-
-  test-message-forwarder:
-    jobs:
       - test_message_forwarder
-
-  build-and-lint:
-    jobs:
       - build_and_lint
