@@ -25,7 +25,7 @@ commands:
           paths:
             - /opt/circleci/.nvm/.cache
 
-  install_core:
+  install_and_build_core:
     description: Install the node dependencies for core
     steps:
       - run:
@@ -42,6 +42,9 @@ commands:
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
+      - run:
+          name: Build Core
+          command: npm run build
 
   save_artifacts:
     steps:
@@ -69,7 +72,7 @@ commands:
           command: bash .circleci/scripts/set-locale.sh
 
 jobs:
-  build:
+  build_and_lint:
     machine:
       image: ubuntu-2204:current
     resource_class: xlarge
@@ -85,17 +88,10 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_locale
-      - install_core
-      - run:
-          name: Build the code
-          command: npm run build
+      - install_and_build_core
       - run:
           name: Check the code for linting errors
           command: npm run lint
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - project
 
   test_core:
     machine:
@@ -109,9 +105,9 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
+      - install_and_build_core
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -156,9 +152,9 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
+      - install_and_build_core
       - run:
           name: Run integration tests against core code
           command: npm run -w packages/core test:compare
@@ -175,9 +171,9 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
+      - install_and_build_core
       - run:
           name: Checkout the tests repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
@@ -220,10 +216,10 @@ jobs:
               - << pipeline.parameters.conductor-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
       - node_install
+      - install_and_build_core
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -256,10 +252,10 @@ jobs:
           condition: << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
       - node_install
+      - install_and_build_core
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -299,9 +295,9 @@ jobs:
               - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
+      - install_and_build_core
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -357,9 +353,9 @@ jobs:
               - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
+      - install_and_build_core
       - fetch_images:
           IMAGES: nodejs-20-2023
       - run:
@@ -407,10 +403,10 @@ jobs:
           condition: << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
       - node_install
+      - install_and_build_core
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -427,10 +423,10 @@ jobs:
           condition: << pipeline.parameters.common-changes >>
           steps:
             - run: circleci-agent step halt
-      - attach_workspace:
-          at: /home/circleci
+      - checkout
       - set_locale
       - node_install
+      - install_and_build_core
       - run:
           name: Unit test common
           command: npm run test -w packages/common
@@ -488,37 +484,23 @@ workflows:
 
   test-conductor:
     jobs:
-      - build
-      - test_conductor:
-          requires:
-            - build
+      - test_conductor
 
   test-core:
     jobs:
-      - build
-      - test_core:
-          requires:
-            - build
-      - characterisation_test:
-          requires:
-            - build
-      - comparison_test:
-          requires:
-            - build
+      - test_core
+      - characterisation_test
+      - comparison_test
 
   test-e2e:
     jobs:
-      - build
-      - e2e_test:
-          requires:
-            - build
-      - e2e_test_new_ui:
-          requires:
-            - build
+      - e2e_test
+      - e2e_test_new_ui
 
   test-message-forwarder:
     jobs:
-      - build
-      - test_message_forwarder:
-          requires:
-            - build
+      - test_message_forwarder
+
+  build-and-lint:
+    jobs:
+      - build_and_lint
