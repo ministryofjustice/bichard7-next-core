@@ -10,11 +10,11 @@ describe("compare phase 2", () => {
       expect(result.xmlParsingMatches).toBe(true)
     })
   }),
-  describe("failure", () => {
-    it("should not correctly parse phase1 message", async () => {
-      const comparison = processTestFile("phase1/tests/fixtures/comparison/failing.json") as Phase2Comparison
-      const result = await comparePhase2(comparison)
-      expect(result.xmlParsingMatches).toBe(false)
+    describe("failure", () => {
+      it("should not correctly parse phase1 message", async () => {
+        const comparison = processTestFile("phase1/tests/fixtures/comparison/failing.json") as Phase2Comparison
+        const result = await comparePhase2(comparison)
+        expect(result.xmlParsingMatches).toBe(false)
+      })
     })
-  })
 })
