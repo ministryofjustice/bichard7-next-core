@@ -1,29 +1,9 @@
 jest.setTimeout(30_000)
 jest.retryTimes(10)
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { S3Client } from "@aws-sdk/client-s3"
-import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import { SendMessageCommand } from "@aws-sdk/client-sqs"
 import waitForExpect from "wait-for-expect"
 import { getPhaseTableName, sendFileToS3, getDynamoRecord } from "./helpers/e2eHelpers"
-
-const endpoint = (process.env.S3_ENDPOINT = "http://localhost:4566")
-const accessKeyId = (process.env.S3_AWS_ACCESS_KEY_ID = "FAKE")
-const secretAccessKey = (process.env.S3_AWS_SECRET_ACCESS_KEY = "FAKE")
-
-const s3Client = new S3Client(createS3Config())
-
-const dbClient = new DynamoDBClient({
-  endpoint,
-  region: "eu-west-2",
-  credentials: { accessKeyId, secretAccessKey }
-})
-
-const sqsClient = new SQSClient({
-  endpoint,
-  region: "eu-west-2",
-  credentials: { accessKeyId, secretAccessKey }
-})
+import { dbClient, s3Client, sqsClient } from "./helpers/clients"
 
 describe("Rerun all workflow", () => {
   it("should rerun phase 2 comparisons and update dynamo record", async () => {
