@@ -21,4 +21,4 @@ const sqsClient = new SQSClient({
   credentials: { accessKeyId, secretAccessKey }
 })
 
-export {s3Client, dbClient, sqsClient}
+export { s3Client, dbClient, sqsClient }
