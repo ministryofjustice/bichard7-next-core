@@ -11,6 +11,13 @@ export interface Br7Operation {
           | Br7TextString
       }
     | {
+        SUBVAR:
+          | {
+              courtCaseReference: Br7TextString
+            }
+          | Br7TextString
+      }
+    | {
         DISARR:
           | {
               courtCaseReference: Br7TextString
