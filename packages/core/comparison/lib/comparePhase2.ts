@@ -1,4 +1,3 @@
-import parseIncomingMessage from "./parseIncomingMessage"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
@@ -6,6 +5,7 @@ import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import { isError } from "@moj-bichard7/common/types/Result"
+import getMessageType from "../../phase1/lib/getMessageType"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -34,7 +34,8 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       debugger
     }
 
-    const { message, type } = parseIncomingMessage(incomingMessage)
+
+    const type = getMessageType(incomingMessage)
 
     if (type == "AnnotatedHearingOutcome") {
       originalXml = outgoingMessage
@@ -48,7 +49,11 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       }
     } else if (type == "PncUpdateDataset") {
       originalXml = incomingMessage
-      serialisedXml = serialiseToXml(message)
+      const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(originalXml)
+      if (isError(outgoingPncUpdateDataset)) {
+        throw new Error("Failed to parse outgoing PncUpdateDataset XML")
+      }
+      serialisedXml = serialiseToXml(outgoingPncUpdateDataset)
       if (isError(serialisedXml)) {
         throw new Error("Failed to serialise parsed incoming PncUpdateDataset XML")
       }
