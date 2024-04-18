@@ -79,7 +79,7 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
   }
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes: boolean = false): string => {
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes = false): string => {
   pncUpdateDataset.Exceptions.forEach((exception) => {
     exception.path.shift()
   })
