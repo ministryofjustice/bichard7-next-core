@@ -9,6 +9,14 @@ type SendefOperationCode = {
     | {}
 }
 
+type SubvarOperationCode = {
+  SUBVAR:
+    | {
+        courtCaseReference: string
+      }
+    | {}
+}
+
 type DisarrOperationCode = {
   DISARR:
     | {
@@ -29,7 +37,7 @@ type NewremOperationCode = {
 export type OperationStatusXml = "F" | "N" | "C"
 
 export type PncOperationXml = {
-  operationCode: SendefOperationCode | DisarrOperationCode | NewremOperationCode
+  operationCode: SendefOperationCode | DisarrOperationCode | NewremOperationCode | SubvarOperationCode
   operationStatus: OperationStatusXml
 }
 

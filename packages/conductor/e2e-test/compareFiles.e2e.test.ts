@@ -1,5 +1,4 @@
 jest.setTimeout(30_000)
-jest.retryTimes(10)
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb"
@@ -60,7 +59,7 @@ describe("Compare files workflow", () => {
       record = await getDynamoRecord(s3Path, tableName)
       expect(record).toBeDefined()
     })
-
-    expect(record).toHaveProperty("s3Path", s3Path)
+    expect(record?.s3Path).toEqual(s3Path)
+    expect(record?.latestResult).toBe(1)
   })
 })

@@ -1,13 +1,13 @@
-import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import generateXml from "../../../lib/xml/generateXml"
+import { toISODate } from "../../../phase1/lib/dates"
 import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
+import type { AhoXml } from "../../../phase1/types/AhoXml"
 import type {
   OperationStatusXml,
   PncOperationXml,
   PncUpdateDatasetXml
 } from "../../../phase1/types/PncUpdateDatasetXml"
-import { toISODate } from "../../../phase1/lib/dates"
-import generateXml from "../../../lib/xml/generateXml"
-import type { AhoXml } from "../../../phase1/types/AhoXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {
@@ -38,6 +38,19 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       return {
         operationCode: {
           SENDEF: operation.data
+            ? {
+                courtCaseReference: operation.data.courtCaseReference
+              }
+            : {}
+        },
+        operationStatus: mapOperationStatus(operation.status)
+      }
+    }
+
+    if (operation.code === "SUBVAR") {
+      return {
+        operationCode: {
+          SUBVAR: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -79,7 +92,7 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
   }
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes: boolean = false): string => {
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes = false): string => {
   pncUpdateDataset.Exceptions.forEach((exception) => {
     exception.path.shift()
   })

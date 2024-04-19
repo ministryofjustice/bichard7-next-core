@@ -1,11 +1,11 @@
+import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
 import { extractExceptionsFromXml, mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
-import { isError } from "@moj-bichard7/common/types/Result"
-import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
 import { mapXmlOrganisationalUnitToAho } from "../../../phase1/parse/parseAhoXml/parseAhoXml"
 import type { Br7TextString } from "../../../phase1/types/AhoXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -57,6 +57,20 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
 
       operation = {
         code: "SENDEF",
+        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
+        ...(data ? { data } : {})
+      }
+    }
+
+    if ("SUBVAR" in operationXml.operationCode) {
+      const data = isEmptyElement(operationXml.operationCode.SUBVAR)
+        ? undefined
+        : {
+            courtCaseReference: operationXml.operationCode.SUBVAR.courtCaseReference["#text"]
+          }
+
+      operation = {
+        code: "SUBVAR",
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
