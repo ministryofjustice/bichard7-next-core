@@ -1,4 +1,4 @@
-import { HearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { HearingOutcome } from "../types/AnnotatedHearingOutcome"
 
 const isRecordableOnPnc = (_ho: HearingOutcome) => {
   throw Error("isRecordableOnPnc - PNCUpdateChoreographyHO.java:173")

@@ -1,4 +1,4 @@
-import { HearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { HearingOutcome } from "../types/AnnotatedHearingOutcome"
 
 const checkForOrderVariedRevokedResultCodes = (_ho: HearingOutcome) => {
   return true

@@ -1,6 +1,6 @@
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import { AnnotatedPNCUpdateDataset } from "../types/AnnotatedPNCUpdateDataset"
+import type { AnnotatedPNCUpdateDataset } from "../types/AnnotatedPNCUpdateDataset"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
