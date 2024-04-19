@@ -29,6 +29,7 @@ const phase2 = (
           PNCUpdateDataset: structuredClone(pncUpdateDataset)
         }
       }
+      console.log(!!annotatedPncUpdateDataset)
 
       if (!isAintCase(attributedHearingOutcome)) {
         const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(attributedHearingOutcome)
@@ -71,16 +72,17 @@ const phase2 = (
       }
     }
   } catch (error) {
-    throw error
+    console.log("Phase 2 processing error to be implemented")
   }
 
-  // outputMessage.HasError = false
-  // outputMessage.PncOperations = outputMessage.PncOperations || []
+  const outputMessage = structuredClone(incomingMessage) as PncUpdateDataset
+  outputMessage.PncOperations = []
+  outputMessage.HasError = false
 
   return {
     auditLogEvents: [],
     correlationId: "correlationId",
-    outputMessage: pncUpdateDataset,
+    outputMessage,
     triggers: [],
     resultType: Phase2ResultType.success
   }
