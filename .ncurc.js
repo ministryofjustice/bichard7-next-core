@@ -14,7 +14,7 @@ const semver = new RegExp(
   - esbuild
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
 */
-const pinned = ["chalk"]
+const pinned = ["chalk", "eslint"]
 const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild"]
 
 module.exports = {
