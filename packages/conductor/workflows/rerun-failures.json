@@ -11,7 +11,8 @@
         "startDate": "${workflow.input.startDate}",
         "endDate": "${workflow.input.endDate}",
         "taskName": "rerun_period",
-        "onlyFailures": true
+        "onlyFailures": true,
+        "phase": 2
       },
       "type": "SIMPLE",
       "startDelay": 0,

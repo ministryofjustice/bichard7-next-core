@@ -1,5 +1,4 @@
 jest.setTimeout(30_000)
-jest.retryTimes(10)
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb"
@@ -47,7 +46,7 @@ const getPhaseTableName = (phase: number): string => {
 
 describe("Compare files workflow", () => {
   const phases = [1, 2]
-  it.each(phases)("should compare the file and write results to dynamo", async (phase) => {
+  it.each(phases)("should compare the phase %i file and write results to dynamo", async (phase) => {
     const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
     const tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
@@ -60,7 +59,7 @@ describe("Compare files workflow", () => {
       record = await getDynamoRecord(s3Path, tableName)
       expect(record).toBeDefined()
     })
-
-    expect(record).toHaveProperty("s3Path", s3Path)
+    expect(record?.s3Path).toEqual(s3Path)
+    expect(record?.latestResult).toBe(1)
   })
 })

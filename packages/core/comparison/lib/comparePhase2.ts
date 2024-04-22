@@ -1,11 +1,15 @@
-import parseIncomingMessage from "./parseIncomingMessage"
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { isError } from "@moj-bichard7/common/types/Result"
+import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import getMessageType from "../../phase1/lib/getMessageType"
+import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
+import phase2Handler from "../../phase2/phase2"
+import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+import parseIncomingMessage from "./parseIncomingMessage"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
-import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import { isError } from "@moj-bichard7/common/types/Result"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -26,35 +30,30 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
   const { incomingMessage, outgoingMessage, triggers } = comparison
   const correlationId = getCorrelationId(comparison)
-  let serialisedXml: string
-  let originalXml: string
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+  let serialisedOutgoingMessage: string
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
-
-    const { message, type } = parseIncomingMessage(incomingMessage)
-
-    if (type == "AnnotatedHearingOutcome") {
-      originalXml = outgoingMessage
-      const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(originalXml)
-      if (isError(outgoingPncUpdateDataset)) {
-        throw new Error("Failed to parse outgoing PncUpdateDataset XML")
-      }
-      serialisedXml = serialiseToXml(outgoingPncUpdateDataset, true)
-      if (isError(serialisedXml)) {
-        throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
-      }
-    } else if (type == "PncUpdateDataset") {
-      originalXml = incomingMessage
-      serialisedXml = serialiseToXml(message)
-      if (isError(serialisedXml)) {
-        throw new Error("Failed to serialise parsed incoming PncUpdateDataset XML")
-      }
-    } else {
-      throw new Error(`Received unsupported incoming message: ${type}`)
+    const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(outgoingMessage)
+    if (isError(outgoingPncUpdateDataset)) {
+      throw new Error("Failed to parse outgoing PncUpdateDataset XML")
     }
+
+    const incomingMessageType = getMessageType(incomingMessage)
+    serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, incomingMessageType !== "PncUpdateDataset")
+    if (isError(serialisedOutgoingMessage)) {
+      throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
+    }
+
+    const parsedIncomingMessageResult = parseIncomingMessage(incomingMessage)
+    const coreResult = phase2Handler(parsedIncomingMessageResult.message, auditLogger)
+    const serialisedPhase2OutgoingMessage = serialiseToXml(
+      coreResult.outputMessage,
+      incomingMessageType !== "PncUpdateDataset"
+    )
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
@@ -65,15 +64,15 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
         coreResult: [],
         comparisonResult: []
       },
-      xmlParsingDiff: xmlOutputDiff(serialisedXml, originalXml),
-      xmlOutputDiff: xmlOutputDiff(serialisedXml, originalXml)
+      xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, outgoingMessage),
+      xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, outgoingMessage)
     }
 
     return {
       triggersMatch: true,
       exceptionsMatch: true,
-      xmlOutputMatches: true,
-      xmlParsingMatches: xmlOutputMatches(serialisedXml, originalXml),
+      xmlOutputMatches: true, //xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
+      xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
       ...(debug && { debugOutput })
     }
   } catch (e) {

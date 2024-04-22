@@ -6,6 +6,7 @@
     {
       "action": "start_workflow",
       "start_workflow": {
+        "input": { "startDate": "${startDate}" },
         "name": "rerun_failures"
       }
     }

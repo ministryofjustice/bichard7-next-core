@@ -1,3 +1,4 @@
+import generateXml from "../../../lib/xml/generateXml"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -13,6 +14,7 @@ import type {
   Urgent
 } from "../../../types/AnnotatedHearingOutcome"
 import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
+import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -27,8 +29,6 @@ import {
 } from "../../dataLookup"
 import addNullElementsForExceptions from "../../lib/addNullElementsForExceptions"
 import { toISODate, toPNCDate } from "../../lib/dates"
-import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
-import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import type {
   Adj,
   AhoXml,
@@ -49,8 +49,8 @@ import type {
   DISList,
   DsDefendantOrOffender
 } from "../../types/AhoXml"
-import generateXml from "../../../lib/xml/generateXml"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
+import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -520,7 +520,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset, validate = true): AhoXml => {
+const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
       "br7:Hearing": mapAhoHearingToXml(pud.AnnotatedHearingOutcome.HearingOutcome.Hearing),
@@ -529,10 +529,8 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset, validate = true): AhoXm
     "br7:HasError": { "#text": (!!pud.HasError).toString() }
   }
 
-  const standalone = !validate ? {} : { "@_standalone": "yes" }
-
   return {
-    "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", ...standalone },
+    "?xml": { "@_version": "1.0", "@_encoding": "UTF-8", "@_standalone": "yes" },
     "br7:AnnotatedHearingOutcome": {
       ...hearingOutcome,
       CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
@@ -547,13 +545,13 @@ const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addHasErrorAttribut
   const pudClone: PncUpdateDataset = structuredClone(pud)
   addNullElementsForExceptions(pudClone)
 
-  const xmlAho = mapPncUpdateDatasetToXml(pudClone, addHasErrorAttributes)
+  const xmlPud = mapPncUpdateDatasetToXml(pudClone)
 
   if (pudClone.Exceptions.length > 0 || addHasErrorAttributes) {
-    addExceptionsToPncUpdateDatasetXml(xmlAho, pudClone.Exceptions)
+    addExceptionsToPncUpdateDatasetXml(xmlPud, pudClone.Exceptions)
   }
 
-  return xmlAho
+  return xmlPud
 }
 
 const convertAhoToXml = (

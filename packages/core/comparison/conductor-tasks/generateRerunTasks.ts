@@ -8,6 +8,7 @@ export type GenerateDayTasksOutput = {
   onlyFailures: boolean
   persistResults: boolean
   newMatcher: boolean
+  phase: number
 }
 
 const generateRerunTasks: ConductorWorker = {
@@ -21,6 +22,7 @@ const generateRerunTasks: ConductorWorker = {
     const taskName = task.inputData?.taskName
     const persistResults = task.inputData?.persistResults ?? true
     const newMatcher = task.inputData?.newMatcher ?? true
+    const phase = task.inputData?.phase ?? 2
 
     if (!taskName) {
       return failedTerminal("taskName must be specified")
@@ -34,7 +36,7 @@ const generateRerunTasks: ConductorWorker = {
     for (let d = startDate.getTime(); d < endMs; d += durationMs) {
       const start = new Date(d).toISOString()
       const end = new Date(d + durationMs > endMs ? endMs : d + durationMs).toISOString()
-      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher })
+      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher, phase })
     }
 
     const outputData = {

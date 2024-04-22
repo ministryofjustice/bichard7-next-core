@@ -38,10 +38,21 @@ const sendefOperationSchema = z.object({
   status: operationStatusSchema
 })
 
+const subvarOperationSchema = z.object({
+  code: z.literal("SUBVAR"),
+  data: z
+    .object({
+      courtCaseReference: courtCaseReferenceNumberSchema
+    })
+    .optional(),
+  status: operationStatusSchema
+})
+
 export const operationSchema = z.discriminatedUnion("code", [
   newremOperationSchema,
   disarrOperationSchema,
-  sendefOperationSchema
+  sendefOperationSchema,
+  subvarOperationSchema
 ])
 
 const pncUpdateDatasetSchema = unvalidatedHearingOutcomeSchema.extend({

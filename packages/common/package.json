@@ -9,8 +9,7 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test:unit": "jest --maxWorkers=2 --testPathIgnorePatterns='comparison.test|integration.test|e2e.test' --testNamePattern=",
-    "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test",
+    "test": "jest --testNamePattern=",
     "update-deps": "ncu -u && npm install"
   },
   "repository": {
