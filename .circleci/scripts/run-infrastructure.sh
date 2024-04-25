@@ -27,3 +27,9 @@ while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
         echo "Retrying, attempt $attempt_num ..."
     fi
 done
+
+if [ $attempt_num -eq 4 ]; then
+  echo ""
+  echo "Failed to start infrastructre"
+  exit 1
+fi
