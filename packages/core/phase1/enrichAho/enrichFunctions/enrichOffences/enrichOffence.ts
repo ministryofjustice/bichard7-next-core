@@ -34,9 +34,6 @@ const enrichOffence = (
     }
     offence.NotifiableToHOindicator = offenceCodeLookup.notifiableToHo
     offence.HomeOfficeClassification = offenceCodeLookup.homeOfficeClassification
-    if (offenceCodeLookup.resultHalfLifeHours) {
-      offence.ResultHalfLifeHours = parseInt(offenceCodeLookup.resultHalfLifeHours, 10)
-    }
   }
 
   return offence
