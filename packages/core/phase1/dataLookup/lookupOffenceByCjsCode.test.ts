@@ -14,8 +14,7 @@ describe("lookupNationalOffenceByCjsCode()", () => {
       notifiableToHo: true,
       offenceCategory: "CI",
       offenceTitle: "Act with intent to prejudice / defraud HM Revenue and Customs",
-      recordableOnPnc: true,
-      resultHalfLifeHours: null
+      recordableOnPnc: true
     })
   })
 
@@ -28,8 +27,7 @@ describe("lookupNationalOffenceByCjsCode()", () => {
       notifiableToHo: true,
       offenceCategory: "CI",
       offenceTitle: "Act with intent to prejudice / defraud HM Revenue and Customs",
-      recordableOnPnc: true,
-      resultHalfLifeHours: null
+      recordableOnPnc: true
     })
   })
 
@@ -43,8 +41,7 @@ describe("lookupNationalOffenceByCjsCode()", () => {
       offenceCategory: "B7",
       offenceTitle:
         "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
-      recordableOnPnc: false,
-      resultHalfLifeHours: null
+      recordableOnPnc: false
     })
   })
 
@@ -70,8 +67,7 @@ describe("lookupLocalOffenceByCjsCode()", () => {
       offenceCategory: "B7",
       offenceTitle:
         "Fail to comply with the European provisions on cosmetic products by making available cosmetic products which contained a",
-      recordableOnPnc: false,
-      resultHalfLifeHours: null
+      recordableOnPnc: false
     })
   })
 
