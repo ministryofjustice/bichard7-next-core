@@ -19,4 +19,6 @@ COPY tsconfig*.json ./
 RUN npm ci
 RUN npm run build --workspaces
 
-CMD [ "npm", "run", "worker-noenv", "-w", "packages/conductor" ]
+
+WORKDIR /core/packages/conductor
+CMD ["node", "dist/src/worker.js"]
