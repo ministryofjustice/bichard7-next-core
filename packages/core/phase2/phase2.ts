@@ -1,4 +1,5 @@
 import type AuditLogger from "../phase1/types/AuditLogger"
+import phase2PncUpdateDataset from "../pncUpdateDataset/phase2PncUpdateDataset"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { AnnotatedPNCUpdateDataset } from "../types/AnnotatedPNCUpdateDataset"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
@@ -11,6 +12,14 @@ import isRecordableOnPnc from "./isRecordableOnPnc"
 import putPncUpdateError from "./putPncUpdateError"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
+
+const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
+  if("PncOperations" in message) {
+    return phase2PncUpdateDataset(message, auditLogger)
+  } else {
+     return phase2(message, auditLogger)
+  }
+}
 
 const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(aho) as PncUpdateDataset
@@ -85,3 +94,5 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
 }
 
 export default phase2
+export { phase2Handler }
+
