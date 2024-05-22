@@ -1,4 +1,4 @@
-import { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const checkForOrderVariedRevokedResultCodes = (aho: AnnotatedHearingOutcome): boolean => {
     console.log("To be implemented: UpdateMessageUtilsImpl.java:1929")

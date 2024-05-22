@@ -1,8 +1,8 @@
-import AuditLogger from "../phase1/types/AuditLogger"
-import allPncOffencesContainResults from "../phase2/allPncOffencesContainResults"
-import getOperationSequence from "../phase2/getOperationSequence"
-import Phase2Result, { Phase2ResultType } from "../phase2/types/Phase2Result"
-import { PncUpdateDataset } from "../types/PncUpdateDataset"
+import AuditLogger from "../../phase1/types/AuditLogger"
+import { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import allPncOffencesContainResults from "../allPncOffencesContainResults"
+import getOperationSequence from "../getOperationSequence"
+import Phase2Result, { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
 
