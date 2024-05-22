@@ -1,7 +1,6 @@
 import type { HearingOutcome } from "../types/AnnotatedHearingOutcome"
 
-const isRecordableOnPnc = (_ho: HearingOutcome) => {
-  throw Error("isRecordableOnPnc - PNCUpdateChoreographyHO.java:173")
-}
+// TODO: Refactor: Remove this function and move the logic to the caller function
+const isRecordableOnPnc = (ho: HearingOutcome): boolean => !!ho.Case.RecordableOnPNCindicator
 
 export default isRecordableOnPnc

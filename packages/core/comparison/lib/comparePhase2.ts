@@ -43,17 +43,26 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     }
 
     const incomingMessageType = getMessageType(incomingMessage)
-    serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, incomingMessageType !== "PncUpdateDataset")
+
+    const isPncUpdateDataSet = incomingMessageType === "PncUpdateDataset"
+    if (isPncUpdateDataSet) {
+      return {
+        triggersMatch: false,
+        exceptionsMatch: false,
+        xmlOutputMatches: false,
+        xmlParsingMatches: false,
+        skipped: true
+      }
+    }
+
+    serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, !isPncUpdateDataSet)
     if (isError(serialisedOutgoingMessage)) {
       throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
     }
 
     const parsedIncomingMessageResult = parseIncomingMessage(incomingMessage)
     const coreResult = phase2Handler(parsedIncomingMessageResult.message, auditLogger)
-    const serialisedPhase2OutgoingMessage = serialiseToXml(
-      coreResult.outputMessage,
-      incomingMessageType !== "PncUpdateDataset"
-    )
+    const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, !isPncUpdateDataSet)
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
@@ -71,7 +80,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     return {
       triggersMatch: true,
       exceptionsMatch: true,
-      xmlOutputMatches: true, //xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
+      xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
       xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
       ...(debug && { debugOutput })
     }

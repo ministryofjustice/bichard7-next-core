@@ -90,6 +90,48 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
+    if ("PENHRG" in operationXml.operationCode) {
+      const data = isEmptyElement(operationXml.operationCode.PENHRG)
+        ? undefined
+        : {
+            courtCaseReference: operationXml.operationCode.PENHRG.courtCaseReference["#text"]
+          }
+
+      operation = {
+        code: "PENHRG",
+        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
+        ...(data ? { data } : {})
+      }
+    }
+
+    if ("COMSEN" in operationXml.operationCode) {
+      const data = isEmptyElement(operationXml.operationCode.COMSEN)
+        ? undefined
+        : {
+            courtCaseReference: operationXml.operationCode.COMSEN.courtCaseReference["#text"]
+          }
+
+      operation = {
+        code: "COMSEN",
+        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
+        ...(data ? { data } : {})
+      }
+    }
+
+    if ("APPHRD" in operationXml.operationCode) {
+      const data = isEmptyElement(operationXml.operationCode.APPHRD)
+        ? undefined
+        : {
+            courtCaseReference: operationXml.operationCode.APPHRD.courtCaseReference["#text"]
+          }
+
+      operation = {
+        code: "APPHRD",
+        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
+        ...(data ? { data } : {})
+      }
+    }
+
     if (!operation) {
       throw Error("Operation is not supported")
     }
@@ -149,6 +191,10 @@ export default (xml: string): PncUpdateDataset | Error => {
     return pncUpdateDataset
   }
 
-  pncUpdateDataset.Exceptions = extractExceptionsFromXml(xml)
+  pncUpdateDataset.Exceptions = extractExceptionsFromXml(xml).map((e) => {
+    e.path.shift()
+    return e
+  })
+
   return pncUpdateDataset
 }

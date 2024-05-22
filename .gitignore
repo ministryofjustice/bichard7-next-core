@@ -16,3 +16,5 @@ docs/schema
 /common/
 /core/
 /summary
+
+coverage/

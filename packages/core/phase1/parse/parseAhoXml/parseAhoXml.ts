@@ -384,7 +384,7 @@ const getGivenNames = (
     return undefined
   }
 
-  return Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"]]
+  return Array.isArray(givenName) ? givenName.map((x) => x["#text"]) : [givenName["#text"].replace(/\s+/g, " ").trim()]
 }
 
 export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
@@ -407,7 +407,7 @@ export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     ArrestSummonsNumber: xmlCase["br7:HearingDefendant"]["br7:ArrestSummonsNumber"]["#text"] ?? "",
     PNCIdentifier: xmlCase["br7:HearingDefendant"]["br7:PNCIdentifier"]?.["#text"],
     PNCCheckname: xmlCase["br7:HearingDefendant"]["br7:PNCCheckname"]?.["#text"],
-    OrganisationName: xmlCase["br7:HearingDefendant"]["br7:OrganisationName"]?.["#text"],
+    OrganisationName: xmlCase["br7:HearingDefendant"]["br7:OrganisationName"]?.["#text"].replace(/\s+/g, " ").trim(),
     DefendantDetail: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]
       ? {
           PersonName: {
@@ -415,8 +415,11 @@ export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
             GivenName: getGivenNames(
               xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]
             ),
-            FamilyName:
-              xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"]["#text"]
+            FamilyName: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:FamilyName"][
+              "#text"
+            ]
+              .replace(/\s+/g, " ")
+              .trim()
           },
           GeneratedPNCFilename:
             xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:GeneratedPNCFilename"]?.["#text"],

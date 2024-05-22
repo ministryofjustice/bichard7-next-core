@@ -1,6 +1,14 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
 import type { AhoXml, Br7OrganisationUnit } from "./AhoXml"
 
+type PenhrgOperationCode = {
+  PENHRG:
+    | {
+        courtCaseReference: string
+      }
+    | {}
+}
+
 type SendefOperationCode = {
   SENDEF:
     | {
@@ -25,6 +33,22 @@ type DisarrOperationCode = {
     | {}
 }
 
+type ApphrdOperationCode = {
+  APPHRD:
+    | {
+        courtCaseReference: string
+      }
+    | {}
+}
+
+type ComsenOperationCode = {
+  COMSEN:
+    | {
+        courtCaseReference: string
+      }
+    | {}
+}
+
 type NewremOperationCode = {
   NEWREM:
     | {
@@ -37,7 +61,14 @@ type NewremOperationCode = {
 export type OperationStatusXml = "F" | "N" | "C"
 
 export type PncOperationXml = {
-  operationCode: SendefOperationCode | DisarrOperationCode | NewremOperationCode | SubvarOperationCode
+  operationCode:
+    | SendefOperationCode
+    | DisarrOperationCode
+    | NewremOperationCode
+    | SubvarOperationCode
+    | PenhrgOperationCode
+    | ComsenOperationCode
+    | ApphrdOperationCode
   operationStatus: OperationStatusXml
 }
 

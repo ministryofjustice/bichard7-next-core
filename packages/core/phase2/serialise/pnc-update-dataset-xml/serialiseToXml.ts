@@ -60,6 +60,45 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
+    if (operation.code === "PENHRG") {
+      return {
+        operationCode: {
+          PENHRG: operation.data
+            ? {
+                courtCaseReference: operation.data.courtCaseReference
+              }
+            : {}
+        },
+        operationStatus: mapOperationStatus(operation.status)
+      }
+    }
+
+    if (operation.code === "COMSEN") {
+      return {
+        operationCode: {
+          COMSEN: operation.data
+            ? {
+                courtCaseReference: operation.data.courtCaseReference
+              }
+            : {}
+        },
+        operationStatus: mapOperationStatus(operation.status)
+      }
+    }
+
+    if (operation.code === "APPHRD") {
+      return {
+        operationCode: {
+          APPHRD: operation.data
+            ? {
+                courtCaseReference: operation.data.courtCaseReference
+              }
+            : {}
+        },
+        operationStatus: mapOperationStatus(operation.status)
+      }
+    }
+
     if (operation.code === "NEWREM") {
       return {
         operationCode: {
@@ -93,10 +132,6 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
 }
 
 const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes = false): string => {
-  pncUpdateDataset.Exceptions.forEach((exception) => {
-    exception.path.shift()
-  })
-
   const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addHasErrorAttributes)
   normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {

@@ -3,6 +3,7 @@ import type { ExceptionCode } from "../../types/ExceptionCode"
 import isPncException from "../lib/isPncException"
 import type Exception from "../types/Exception"
 import type { ExceptionPath } from "../types/Exception"
+import { PNC_UPDATE_ERROR_CODES } from "../../phase2/PncUpdateErrorCodes"
 
 const hasExceptionWithPath = (path: ExceptionPath, existingExceptions: Exception[]): boolean =>
   existingExceptions.some((e) => JSON.stringify(e.path) === JSON.stringify(path))
@@ -26,6 +27,9 @@ const addExceptionsToAho = (aho: AnnotatedHearingOutcome, code: ExceptionCode, p
     removeExceptionWithPath(path, aho.Exceptions)
   }
   aho.Exceptions.push({ code, path })
+  if (Object.values(PNC_UPDATE_ERROR_CODES).includes(code)) {
+    aho.HasError = true
+  }
 }
 
 export default addExceptionsToAho
