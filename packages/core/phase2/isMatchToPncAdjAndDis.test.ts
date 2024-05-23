@@ -8,9 +8,20 @@ import generateAhoFromOffenceList from "./tests/fixtures/helpers/generateAhoFrom
 describe("check isMatchToPncAdjAndDis", () => {
   let aho: AnnotatedHearingOutcome
   let emptyResults: NonEmptyArray<Result>
+  let courtCaseNoOffences: PncCourtCaseSummary
 
   beforeEach(() => {
+    courtCaseNoOffences = {
+      courtCaseReference: "FOO",
+      offences: []
+    }
     aho = generateAhoFromOffenceList([])
+    aho.PncQuery = {
+      forceStationCode: "06",
+      checkName: "",
+      pncId: "",
+      courtCases: [courtCaseNoOffences]
+    }
     emptyResults = [{} as Result]
   })
 
@@ -20,39 +31,11 @@ describe("check isMatchToPncAdjAndDis", () => {
   })
 
   it("If there is are no PNC query courtcases that match the input courtCaseReference, then returns false", () => {
-    const courtCaseNoOffences: PncCourtCaseSummary = {
-      courtCaseReference: "FOO",
-      offences: []
-    }
-
-    const pncQuery: PncQueryResult = {
-      forceStationCode: "06",
-      checkName: "",
-      pncId: "",
-      courtCases: [courtCaseNoOffences]
-    }
-
-    aho.PncQuery = pncQuery
-
     const result = isMatchToPncAdjAndDis(emptyResults, aho, "DOES_NOT_MATCH_FOO", 0, undefined)
     expect(result).toBe(false)
   })
 
   it("If there are no offences in the matching courtCase of the PNC Query, then returns false", () => {
-    const courtCaseNoOffences: PncCourtCaseSummary = {
-      courtCaseReference: "FOO",
-      offences: []
-    }
-
-    const pncQuery: PncQueryResult = {
-      forceStationCode: "06",
-      checkName: "",
-      pncId: "",
-      courtCases: [courtCaseNoOffences]
-    }
-
-    aho.PncQuery = pncQuery
-
     const result = isMatchToPncAdjAndDis(emptyResults, aho, "FOO", 0, undefined)
     expect(result).toBe(false)
   })
