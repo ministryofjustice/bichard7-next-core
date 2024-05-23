@@ -21,6 +21,7 @@ const logResult = (logs: string[], results: ResultRecord) => {
   for (const phase in results) {
     phaseResultString += ` Phase ${phase}: ${results[phase]?.pass} passed. ${results[phase]?.fail} failed.`
   }
+
   logs.push(`Results:${phaseResultString}`)
 }
 

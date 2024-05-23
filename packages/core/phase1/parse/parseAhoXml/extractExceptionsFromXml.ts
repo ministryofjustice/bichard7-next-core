@@ -21,6 +21,7 @@ const extract = (el: any, path: (string | number)[] = []): Exception[] => {
         exceptions.push({ code: el[key], path })
       }
     }
+
     if (typeof el[key] === "object") {
       const re = /\d+/
       const match = re.exec(key)
@@ -28,6 +29,7 @@ const extract = (el: any, path: (string | number)[] = []): Exception[] => {
       subExceptions.forEach((e) => exceptions.push(e))
     }
   }
+
   return exceptions
 }
 
@@ -51,6 +53,7 @@ export default (xml: string): Exception[] => {
   if (offenceElem && !Array.isArray(offenceElem)) {
     aho.HearingOutcome.Case.HearingDefendant.Offence = [offenceElem]
   }
+
   const offenceArray = aho?.HearingOutcome?.Case?.HearingDefendant?.Offence
   if (offenceArray) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,19 +62,23 @@ export default (xml: string): Exception[] => {
       if (results && !Array.isArray(results)) {
         offence.Result = [results]
       }
+
       offence.Result.forEach((result: Result) => {
         if (result.ResultQualifierVariable && !Array.isArray(result.ResultQualifierVariable)) {
           result.ResultQualifierVariable = [result.ResultQualifierVariable]
         }
+
         if (result.NumberSpecifiedInResult && !Array.isArray(result.NumberSpecifiedInResult)) {
           result.NumberSpecifiedInResult = [result.NumberSpecifiedInResult]
         }
+
         if (result.AmountSpecifiedInResult && !Array.isArray(result.AmountSpecifiedInResult)) {
           result.AmountSpecifiedInResult = [result.AmountSpecifiedInResult]
         }
       })
     })
   }
+
   const mainExceptions = extract(rawParsedObj)
   const pncExceptions = extractPncExceptions(rawParsedObj)
   return deduplicateExceptions(mainExceptions.concat(pncExceptions))

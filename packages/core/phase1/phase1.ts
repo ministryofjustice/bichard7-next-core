@@ -44,6 +44,7 @@ const phase1 = async (
   if (isError(enrichedHearingOutcome)) {
     throw enrichedHearingOutcome
   }
+
   const triggers = generateTriggers(enrichedHearingOutcome)
 
   if (triggers.length > 0) {
@@ -67,6 +68,7 @@ const phase1 = async (
     if (enrichedHearingOutcome.Exceptions.length > 0) {
       auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))
     }
+
     resultType = enrichedHearingOutcome.Exceptions.length > 0 ? Phase1ResultType.exceptions : Phase1ResultType.success
   }
 

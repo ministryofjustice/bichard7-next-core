@@ -25,6 +25,7 @@ const forwardMessage = async (
   if (isError(aho)) {
     return aho
   }
+
   const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   if (destinationType === DestinationType.MQ) {

@@ -19,8 +19,10 @@ const putFileToS3 = async (
     if (lastResponse && !isError(lastResponse)) {
       return
     }
+
     logger.error(lastResponse)
   }
+
   return lastResponse ?? new Error("Error putting file to S3")
 }
 

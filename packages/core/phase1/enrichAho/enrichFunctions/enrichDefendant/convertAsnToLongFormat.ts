@@ -12,6 +12,7 @@ const convertAsnToLongFormat = (shortAsn: string) => {
     if (!idString.match(/^\d+$/)) {
       return shortAsnNoSlashes
     }
+
     const id = Number(idString).toString()
     if (id !== "NaN") {
       const header = shortAsnNoSlashes.substring(0, ASN_NN_INDEX)
@@ -19,6 +20,7 @@ const convertAsnToLongFormat = (shortAsn: string) => {
       return `${header}${id.padStart(11, "0")}${footer}`
     }
   }
+
   return shortAsnNoSlashes
 }
 

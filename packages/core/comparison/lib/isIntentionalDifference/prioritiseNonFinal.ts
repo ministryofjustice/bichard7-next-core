@@ -18,6 +18,7 @@ const generateMatches = (summary: CourtResultMatchingSummary): Map<number, PncOf
     if (!courtRef || offence.pncSequenceNumber === undefined) {
       return acc
     }
+
     acc.set(offence.hoSequenceNumber, { courtRef, sequence: offence.pncSequenceNumber })
     return acc
   }, new Map<number, PncOffenceRef>())
@@ -86,6 +87,7 @@ const prioritiseNonFinal = (
     if (!expectedPncOffence || !actualPncOffence) {
       return false
     }
+
     const expectedOffenceIsFinal = offenceHasFinalResult(expectedPncOffence)
     const actualOffenceIsFinal = offenceHasFinalResult(actualPncOffence)
     const offencesAreEqual =
@@ -96,6 +98,7 @@ const prioritiseNonFinal = (
     if (expectedOffenceIsFinal && !actualOffenceIsFinal && offencesAreEqual) {
       return true
     }
+
     return false
   })
 }

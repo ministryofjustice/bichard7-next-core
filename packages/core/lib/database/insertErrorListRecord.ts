@@ -13,6 +13,7 @@ const insertErrorListRecord = async (db: Sql, result: Phase1Result): Promise<num
     if (!newRecordResult[0].error_id) {
       throw new Error("Error inserting to error_list table")
     }
+
     newRecordId = newRecordResult[0].error_id
   } catch (e) {
     const error = e as PostgresError
@@ -21,9 +22,11 @@ const insertErrorListRecord = async (db: Sql, result: Phase1Result): Promise<num
       throw error
     }
   }
+
   if (newRecordId === undefined) {
     throw new Error("Error inserting new error_list record")
   }
+
   return newRecordId
 }
 

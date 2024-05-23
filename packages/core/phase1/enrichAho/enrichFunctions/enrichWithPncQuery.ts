@@ -33,10 +33,12 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
     if (offence.CourtCaseReferenceNumber !== undefined && !offence.ManualCourtCaseReference) {
       offence.CourtCaseReferenceNumber = undefined
     }
+
     if (!offence.ManualSequenceNumber || !offence.CriminalProsecutionReference.OffenceReasonSequence) {
       offence.ManualSequenceNumber = undefined
       offence.CriminalProsecutionReference.OffenceReasonSequence = undefined
     }
+
     offence.Result.forEach((result) => (result.PNCAdjudicationExists = undefined))
   })
 }
@@ -78,6 +80,7 @@ export default async (
   } else {
     annotatedHearingOutcome.PncQuery = pncResult
   }
+
   annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)

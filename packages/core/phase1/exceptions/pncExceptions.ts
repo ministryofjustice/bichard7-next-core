@@ -51,6 +51,7 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
     if (end) {
       return code >= start && code <= end
     }
+
     return code === start
   })
 

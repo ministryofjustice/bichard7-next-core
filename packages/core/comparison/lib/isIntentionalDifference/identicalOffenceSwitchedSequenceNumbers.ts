@@ -14,10 +14,12 @@ const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
         break
       }
     }
+
     if (!found) {
       output.push([offence])
     }
   }
+
   return output
 }
 

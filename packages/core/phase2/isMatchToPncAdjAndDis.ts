@@ -43,6 +43,7 @@ const isMatchToPncAdjAndDis = (
   if (!matchingPncAdjudications || matchingPncAdjudications.length == 0) {
     return false
   }
+
   for (const pncAdj of matchingPncAdjudications) {
     const disposals = pncAdj.disposals ? pncAdj.disposals : []
     if (allRecordableResultsMatchAPncDisposal(results, disposals, aho, offenceIndex)) {
@@ -63,6 +64,7 @@ export const allRecordableResultsMatchAPncDisposal = (
     if (isRecordableResult(result)) {
       return isMatchToPncDis(disposals, aho, offenceIndex, resultIndex)
     }
+
     return true
   })
 }

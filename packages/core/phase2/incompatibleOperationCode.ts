@@ -31,6 +31,7 @@ const incompatibleOperationCode = (operations: Operation[], remandCcrs: Set<stri
     } else if (operationCode === "APPHRD") {
       apphrdExists = true
     }
+
     // All others: cannot coexist with PENHRG
     // Also APPHRD, COMSEN and SENDEF cannot coexist with NEWREM.
     if (penhrgExists && (apphrdExists || comsenExists || sendefExists)) {
@@ -56,12 +57,14 @@ const incompatibleOperationCode = (operations: Operation[], remandCcrs: Set<stri
     if (!!courtCaseReference) {
       courtCaseSpecificOperations.push(operations[i])
     }
+
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
     if (["APPHRD", "COMSEN", "SENDEF"].includes(operationCode) && remandCcrsContainCourtCaseReference) {
       return ["NEWREM", operationCode]
     }
   }
+
   return incompatibleCodePairs
 }
 

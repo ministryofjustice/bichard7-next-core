@@ -13,6 +13,7 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
     if (incompatibleOperationCodes.includes("COMSEN")) {
       return ExceptionCode.HO200112
     }
+
     if (incompatibleOperationCodes.includes("SUBVAR") || incompatibleOperationCodes.includes("PENHRG")) {
       return ExceptionCode.HO200115
     }

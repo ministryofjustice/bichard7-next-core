@@ -13,6 +13,7 @@ const HO100331: ExceptionGenerator = (hearingOutcome) => {
       }
     ]
   }
+
   return []
 }
 

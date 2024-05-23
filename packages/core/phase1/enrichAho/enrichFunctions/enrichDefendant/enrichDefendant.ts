@@ -11,6 +11,7 @@ const deduplicate = (input: string[]): string[] =>
       if (!acc.find((x) => x.key === key)) {
         acc.push({ key, val })
       }
+
       return acc
     }, [])
     .map((x) => x.val)
@@ -29,6 +30,7 @@ const createGeneratedPncName = (defendant: HearingDefendant): string => {
   if (pncFilename.length > GENERATED_PNC_FILENAME_MAX_LENGTH) {
     return pncFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 1) + "+"
   }
+
   return pncFilename
 }
 

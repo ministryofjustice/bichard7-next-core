@@ -47,10 +47,12 @@ const groupEqualOffences = (offences: Offence[]): Offence[][] => {
         break
       }
     }
+
     if (!found) {
       output.push([offence])
     }
   }
+
   return output
 }
 
@@ -75,6 +77,7 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     if (offence.ManualCourtCaseReference) {
       manualCCR = `\n    ${offence.CourtCaseReferenceNumber}`
     }
+
     return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${resultCodes}${breach} ${offenceGroupIndex}${manualCCR}`
   })
 }
@@ -92,6 +95,7 @@ const main = async () => {
   } else {
     aho = parseAhoXml(fileJson.incomingMessage)
   }
+
   if (aho instanceof Error) {
     console.error("Error parsing incoming message")
     process.exit(1)

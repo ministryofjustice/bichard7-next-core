@@ -31,6 +31,7 @@ const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCou
       }
     }
   }
+
   if (pncQuery.penaltyCases) {
     for (const penaltyCase of pncQuery.penaltyCases) {
       if (penaltyCase.penaltyCaseReference === reference) {
@@ -75,6 +76,7 @@ export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) 
   if (!map.has(key)) {
     map.set(key, [])
   }
+
   map.get(key)!.push(...items)
 }
 
@@ -82,6 +84,7 @@ const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
   if ("courtCaseReference" in pncCase) {
     return pncCase.courtCaseReference
   }
+
   return pncCase.penaltyCaseReference
 }
 
@@ -122,6 +125,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     if (c) {
       acc.add(c)
     }
+
     return acc
   }, new Set<PncCourtCase | PncPenaltyCase>())
 
@@ -174,6 +178,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
             getFirstMatchingCourtCase(courtCases, offenceMatcher)
         }
       }
+
       hoOffence.CriminalProsecutionReference.OffenceReasonSequence = undefined
       if (!multipleMatches || !offenceCategoryIsNonRecordable(hoOffence)) {
         // TODO: When we're not trying to maintain compatibility with Bichard, all offences added by the court should have this set to false

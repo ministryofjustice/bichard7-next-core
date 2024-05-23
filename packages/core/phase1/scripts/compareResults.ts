@@ -83,9 +83,11 @@ const areTriggerOrExceptionArraysEqual = (
   if (extraExpected.length > 0) {
     logger.warn(`Expected extra codes from Bichard: ${extraExpected}`)
   }
+
   if (extraReceived.length > 0) {
     logger.warn(`Received extra codes from Bichard: ${extraReceived}`)
   }
+
   return extraExpected.length === 0 && extraReceived.length === 0
 }
 

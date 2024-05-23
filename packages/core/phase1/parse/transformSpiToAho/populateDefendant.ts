@@ -87,6 +87,7 @@ const parseBailConditions = (spiBailConditions?: string): string[] => {
       .map((cond) => cond.trim())
       .filter((cond) => !!cond)
   }
+
   return []
 }
 

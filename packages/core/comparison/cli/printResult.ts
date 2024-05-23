@@ -50,6 +50,7 @@ const formatTest = (name: string, success: boolean): string => {
   if (success) {
     return `${chalk.green("✓")} ${name} passed`
   }
+
   return `${chalk.red("✗")} ${name} failed`
 }
 
@@ -68,9 +69,11 @@ const printResult = (
   if (!result) {
     return false
   }
+
   if (list) {
     return printList(result)
   }
+
   if (Array.isArray(result)) {
     const results = result.map((r) => printResult(r, truncate))
     printSummary(result)
@@ -119,6 +122,7 @@ const printResult = (
     printSingleSummary(result)
     return false
   }
+
   return true
 }
 

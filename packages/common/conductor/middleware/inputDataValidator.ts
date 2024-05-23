@@ -19,6 +19,7 @@ const inputDataValidator = <T>(schema: z.ZodSchema, handler: Handler<T>): Origin
       if (e.code === ZodIssueCode.invalid_type) {
         return `InputData error: Expected ${e.expected} for ${e.path.join(".")}`
       }
+
       return "InputData error. Schema mismatch"
     })
 

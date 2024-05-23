@@ -83,6 +83,7 @@ class OffenceMatcher {
         candidates.set(hoOffence, unmatchedCandidatePncOffences)
       }
     }
+
     return candidates
   }
 
@@ -149,6 +150,7 @@ class OffenceMatcher {
           if (group.has(candidate)) {
             continue
           }
+
           for (const groupCandidate of group) {
             if (
               candidate.hoOffence === groupCandidate.hoOffence ||
@@ -212,6 +214,7 @@ class OffenceMatcher {
           })
         }
       }
+
       return exceptions
     } else if (!offencesHaveEqualResults(Array.from(hoOffences))) {
       for (const hoOffence of hoOffences) {
@@ -220,6 +223,7 @@ class OffenceMatcher {
           path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
         })
       }
+
       return exceptions
     }
 
@@ -287,6 +291,7 @@ class OffenceMatcher {
             break
           }
         }
+
         const remainingCandidates = this.candidatesForHoOffence(hoOffence)
 
         if (!this.hoOffenceWasAlreadyMatched(hoOffence) && remainingCandidates.length === 0) {
@@ -340,6 +345,7 @@ class OffenceMatcher {
       this.matchGroups({ includeFinal: false })
       this.matchFullCourtCases({ includeFinal: true })
     }
+
     this.matchGroups({ includeFinal: true })
   }
 
@@ -424,6 +430,7 @@ class OffenceMatcher {
     if (this.exceptions.length > 0) {
       return
     }
+
     this.matchOffences()
     this.checkForExceptions()
     if (this.matches.size === 0 && this.exceptions.length === 0) {

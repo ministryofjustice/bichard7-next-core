@@ -22,6 +22,7 @@ export const getNationalOffenceReason = (offenceCode: string): OffenceReason | u
       }
     }
   }
+
   if (isIndictment(offenceCode)) {
     return {
       __type: "NationalOffenceReason",

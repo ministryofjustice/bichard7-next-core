@@ -35,6 +35,7 @@ const createAuditLogRecord: ConductorWorker = {
 
       return completed(outputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
     }
+
     return completed(`Created audit log for message: ${auditLogRecord.messageId}`)
   })
 }

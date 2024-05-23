@@ -35,12 +35,14 @@ const getCorrelationId = (comparison: OldPhase1Comparison | Phase1Comparison): s
   if ("correlationId" in comparison) {
     return comparison.correlationId
   }
+
   const spiMatch = comparison.incomingMessage.match(
     /<msg:MessageIdentifier>(?<correlationId>[^<]*)<\/msg:MessageIdentifier>/
   )
   if (spiMatch) {
     return spiMatch.groups?.correlationId
   }
+
   const hoMatch = comparison.incomingMessage.match(/<br7:UniqueID>(?<correlationId>[^<]*)<\/br7:UniqueID>/)
   if (hoMatch) {
     return hoMatch.groups?.correlationId
@@ -81,6 +83,7 @@ const comparePhase1 = async (
     if (type === "PncUpdateDataset") {
       throw new Error("Received invalid incoming message")
     }
+
     const coreResult = await phase1Handler(inputAho, pncGateway, auditLogger)
 
     const sortedCoreExceptions = sortExceptions(coreResult.hearingOutcome.Exceptions ?? [])
@@ -96,6 +99,7 @@ const comparePhase1 = async (
     if (originalType === "PncUpdateDataset") {
       throw new Error("Received invalid incoming message")
     }
+
     if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)) {
       return {
         triggersMatch: true,
@@ -136,6 +140,7 @@ const comparePhase1 = async (
     if (isIgnored) {
       xmlOutputMatchesValue = !hasOffences(coreResult.hearingOutcome as AnnotatedHearingOutcome)
     }
+
     if (ignoreNewMatcherXmlDifferences) {
       xmlOutputMatchesValue = true
     }

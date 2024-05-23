@@ -16,6 +16,7 @@ const numberOrUndefined = (input: unknown): number | undefined => {
   if (typeof input === "number") {
     return input
   }
+
   if (typeof input === "string" && /^\d+$/.test(input)) {
     return Number(input)
   }

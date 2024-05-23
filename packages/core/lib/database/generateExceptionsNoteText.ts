@@ -4,10 +4,12 @@ const generateExceptionsNoteText = (exceptions: Exception[]): string | null => {
   if (exceptions.length === 0) {
     return null
   }
+
   const counts = exceptions.reduce((acc: Record<string, number>, e: Exception) => {
     if (!acc[e.code]) {
       acc[e.code] = 0
     }
+
     acc[e.code] += 1
     return acc
   }, {})

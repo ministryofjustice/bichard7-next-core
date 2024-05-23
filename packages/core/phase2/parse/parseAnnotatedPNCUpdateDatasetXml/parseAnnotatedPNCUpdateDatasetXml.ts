@@ -46,5 +46,6 @@ export default (xml: string): AnnotatedPNCUpdateDataset | Error => {
   if (annotatedPNCUpdateDataset) {
     return annotatedPNCUpdateDataset
   }
+
   return new Error("Could not parse AnnotatedPNCUpdateDataset XML")
 }
