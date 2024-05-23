@@ -3,7 +3,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import phase2Handler from "../../phase2/phase2"
+import { phase2Handler } from "../../phase2/phase2"
 import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
@@ -45,16 +45,6 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const incomingMessageType = getMessageType(incomingMessage)
 
     const isPncUpdateDataSet = incomingMessageType === "PncUpdateDataset"
-    if (isPncUpdateDataSet) {
-      return {
-        triggersMatch: false,
-        exceptionsMatch: false,
-        xmlOutputMatches: false,
-        xmlParsingMatches: false,
-        skipped: true
-      }
-    }
-
     serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, !isPncUpdateDataSet)
     if (isError(serialisedOutgoingMessage)) {
       throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
