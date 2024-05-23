@@ -1,3 +1,4 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import type AuditLogger from "../../phase1/types/AuditLogger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import allPncOffencesContainResults from "../allPncOffencesContainResults"
@@ -7,10 +8,10 @@ import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
 
-const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, _auditLogger: AuditLogger): Phase2Result => {
+const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
   try {
-    console.log("To be implemented: PNCUpdateChoreographyDS.java:103")
+    auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
     const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(pncUpdateDataset)
     const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
@@ -49,7 +50,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, _auditLogger
   }
 
   return {
-    auditLogEvents: [],
+    auditLogEvents: auditLogger.getEvents(),
     correlationId: "correlationId",
     outputMessage,
     triggers: [],
