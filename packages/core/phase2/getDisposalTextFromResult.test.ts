@@ -39,10 +39,10 @@ describe("check getDisposalTextFromResult", () => {
     expect(result).toBe("EXCLUDED FROM PLACE")
   })
 
-  it("Given 3041 cjsResultCode, and ResultVariableText contains DEFENDANT EXCLUDED FROM ABC THIS EXCLUSION REQUIREMENT LASTS FOR, disposal text is correct", () => {
+  it("Given 3041 cjsResultCode, and ResultVariableText contains DEFENDANT EXCLUDED FROM ABC FOR A PERIOD OF, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3041,
-      ResultVariableText: "DEFENDANT EXCLUDED FROM ABC THIS EXCLUSION REQUIREMENT LASTS FOR"
+      ResultVariableText: "DEFENDANT EXCLUDED FROM ABC FOR A PERIOD OF"
     } as Result
     const result = getDisposalTextFromResult(ahoResult)
 
