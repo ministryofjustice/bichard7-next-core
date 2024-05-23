@@ -9,8 +9,10 @@ const mostSpecificErrorElement = (path: (string | number)[]) => {
 }
 
 const shouldIgnoreHasError = (exception: Exception, elementPath: (string | number)[]): boolean => {
+  const warningOnlyCodes = [ExceptionCode.HO200200]
+  const omitHasErrorFlagCodes = [ExceptionCode.HO200104, ExceptionCode.HO200101, ExceptionCode.HO200108]
   return (
-    [ExceptionCode.HO200104, ExceptionCode.HO200101, ExceptionCode.HO200108].includes(exception.code) &&
+    warningOnlyCodes.concat(omitHasErrorFlagCodes).includes(exception.code) &&
     elementPath[elementPath.length - 2] === "Result"
   )
 }
