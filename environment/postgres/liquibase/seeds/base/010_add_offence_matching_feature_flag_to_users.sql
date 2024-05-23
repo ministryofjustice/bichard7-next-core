@@ -1,0 +1,1 @@
+UPDATE br7own.users SET feature_flags = jsonb_set(feature_flags::jsonb, '{offenceMatchingEnabled}'::text[], 'true', true) WHERE email ~ '(\@madetech.com|\@example.com|/)$';
