@@ -13,17 +13,18 @@ import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
-  if("PncOperations" in message) {
+  if ("PncOperations" in message) {
     // return phase2PncUpdateDataset(message, auditLogger)
     return {
       triggersMatch: false,
       exceptionsMatch: false,
       xmlOutputMatches: false,
       xmlParsingMatches: false,
-      skipped: true
+      skipped: true,
+      outputMessage: {} as PncUpdateDataset
     }
   } else {
-     return phase2(message, auditLogger)
+    return phase2(message, auditLogger)
   }
 }
 
@@ -101,4 +102,3 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
 
 export default phase2
 export { phase2Handler }
-

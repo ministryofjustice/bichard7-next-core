@@ -1,8 +1,8 @@
-import { PncOperation } from "../../comparison/types/ComparisonFile";
-import { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome";
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { Operation } from "../../types/PncUpdateDataset"
 
-const refreshOperationSequence = (aho: AnnotatedHearingOutcome, operations: PncOperation[]) => {
-    console.log("To be implemented: UpdateMessageSequenceBuilderImpl.java:244")
+const refreshOperationSequence = (_aho: AnnotatedHearingOutcome, _operations: Operation[]) => {
+  console.log("To be implemented: UpdateMessageSequenceBuilderImpl.java:244")
 }
 
 export default refreshOperationSequence

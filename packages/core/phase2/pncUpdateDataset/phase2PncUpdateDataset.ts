@@ -1,8 +1,9 @@
-import AuditLogger from "../../phase1/types/AuditLogger"
-import { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type AuditLogger from "../../phase1/types/AuditLogger"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import allPncOffencesContainResults from "../allPncOffencesContainResults"
 import getOperationSequence from "../getOperationSequence"
-import Phase2Result, { Phase2ResultType } from "../types/Phase2Result"
+import type Phase2Result from "../types/Phase2Result"
+import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
 
@@ -14,16 +15,16 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, _auditLogger
     const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(pncUpdateDataset)
     const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
 
-    if(orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
+    if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
       console.log("To be implemented: PNCUpdateChoreographyDS.java:121")
     } else {
-      if(pncUpdateDataset.PncOperations.length === 0) {
+      if (pncUpdateDataset.PncOperations.length === 0) {
         const operations = getOperationSequence(pncUpdateDataset, true)
 
-        if(pncUpdateDataset.Exceptions.length > 0) {
+        if (pncUpdateDataset.Exceptions.length > 0) {
           console.log("To be implemented: PNCUpdateChoreographyDS.java:135")
         } else {
-          if(operations.length > 0) {
+          if (operations.length > 0) {
             console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
           } else {
             console.log("To be implemented: PNCUpdateChoreographyDS.java:159")
@@ -33,11 +34,10 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, _auditLogger
         refreshOperationSequence(pncUpdateDataset, pncUpdateDataset.PncOperations)
       }
 
-      if(pncUpdateDataset.PncOperations.length > 0) {
+      if (pncUpdateDataset.PncOperations.length > 0) {
         console.log("To be implemented: PNCUpdateChoreographyDS.java:205")
       }
     }
-
   } catch (error) {
     console.log("Phase 2 PncUpdateDataset processing error to be implemented: ", error)
     console.log("To be implemented: PNCUpdateChoreographyDSBean.java:162")
