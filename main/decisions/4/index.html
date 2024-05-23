@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Use Styled Components | Bichard</title>
+    <title>ESLint rule for newline after control flow blocks | Bichard</title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
@@ -40,29 +40,17 @@
       </aside>
       <div class="container is-fluid has-background-white">
         <div class="content p-3">
-          <div><h1>3. Use Styled Components</h1>
-<p>Date: 2024-04-12</p>
+          <div><h1>4. ESLint rule for newline after control flow blocks</h1>
+<p>Date: 2024-05-23</p>
 <h2>Status</h2>
 <p>Accepted</p>
 <h2>Context</h2>
-<p>We are currently using two different styling libraries (3 if you include <code>scss</code> files). We want to reduce the need to know how to use the libraries and simplify the code base.</p>
-<p>We have opted to choose <a href="https://styled-components.com/">Styled Components</a> over <a href="https://cssinjs.org/react-jss/?v=v10.10.0">React-JSS</a></p>
-<p>The negatives for <code>react-jss</code> are it is less flexible with <code>React</code>. E.g. you can pass <code>props</code> to <code>styled-components</code> for separate themes. It can also pollute other <code>components</code> as it based on class names rather than <code>components</code>.</p>
-<h3>File structure</h3>
-<p>We have opted to take the following approach to structuring the files:</p>
-<ul>
- <li><code>src/components/Action.styles.tsx</code></li>
- <li><code>src/components/Action.tsx</code></li>
-</ul>
-<p>That allows to separate the styles from the <code>component</code> and keep close by. We can import other JS/TS files if needed, e.g. colours.</p>
-<p>We should also export all the Styled Components at bottom of the file, e.g.</p>
-<pre><code class="language-TypeScript">export { ActionLink, ActionButton }
-</code></pre>
+<p>This Pull Request introduces a new ESLint rule that enforces the addition of a newline after control flow blocks (e.g., <code>if</code>, <code>for</code>, <code>while</code>, <code>switch</code>). This rule aims to maintain consistent code formatting and enhance code readability across our codebase.</p>
+<p>We have been following the convention of adding newlines after control flow blocks to improve code readability and formatting. However, this practice has been manually enforced, leading to potential inconsistencies. By introducing this ESLint rule, we can ensure that the linter automatically checks for this convention, streamlining the process and promoting a consistent coding style.</p>
 <h2>Consequences</h2>
 <ul>
- <li>More files</li>
- <li>Need to know plain CSS</li>
- <li>Need to learn how this library works</li>
+ <li>ESLint might slow us down when committing changes if we have to fix files</li>
+ <li>ESLint might be too aggressive when it comes to applying the changes</li>
 </ul></div>
         </div>
       </div>
