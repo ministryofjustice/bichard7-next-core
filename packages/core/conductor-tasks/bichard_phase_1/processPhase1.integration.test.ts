@@ -120,6 +120,7 @@ describe("processPhase1", () => {
     if (isError(updatedFile)) {
       throw updatedFile
     }
+
     expect(updatedFile).not.toEqual(inputAhoJson)
 
     const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver) as Phase1Result

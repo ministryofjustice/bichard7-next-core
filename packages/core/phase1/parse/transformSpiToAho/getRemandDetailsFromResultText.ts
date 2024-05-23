@@ -114,6 +114,7 @@ const getRemandDetailsFromResultText = (result: Result): RemandDetails => {
       if (courtName) {
         location = crownCourtNameMappingOverrides[courtName] ?? lookupCrownCourtByNameAndFirstPsaCode(courtName)
       }
+
       if (extractedDate) {
         date = parseDate(extractedDate)
       }

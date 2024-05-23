@@ -22,8 +22,10 @@ const validateOperationSequence = (
     if (!!errorCode) {
       addExceptionsToAho(aho, errorCode, errorPaths.case.asn)
     }
+
     valid = false
   }
+
   return valid
 }
 

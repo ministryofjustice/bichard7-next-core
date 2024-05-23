@@ -21,6 +21,7 @@ const generator: TriggerGenerator = (hearingOutcome) => {
   if (hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(isMatchingOffence)) {
     return [{ code: triggerCode }]
   }
+
   return []
 }
 

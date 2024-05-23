@@ -77,6 +77,7 @@ const recordResultsInDynamoBatch = async (
       if (!recordsToInsert[table]) {
         recordsToInsert[table] = []
       }
+
       recordsToInsert[table].push(record)
     }
   })

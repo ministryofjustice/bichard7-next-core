@@ -35,6 +35,7 @@ const getAuditLogs = async (correlationId: string) => {
   if (isError(auditLog)) {
     throw new Error("Error retrieving audit log")
   }
+
   return auditLog.events.map((e) => e.eventCode)
 }
 

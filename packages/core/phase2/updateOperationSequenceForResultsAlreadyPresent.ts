@@ -7,6 +7,7 @@ const updateOperationSequenceForResultsAlreadyPresent = (
   if (allResultsAlreadyOnPnc) {
     return operations.filter((operation) => operation.code === "NEWREM")
   }
+
   return operations
 }
 

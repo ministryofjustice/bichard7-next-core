@@ -14,6 +14,7 @@ const getExceptionSubPath = (offenceReason: OffenceReason): string[] => {
   if (isNationalOffenceCode(offenceReason)) {
     return ["OffenceCode", "Reason"]
   }
+
   return ["LocalOffenceCode", "OffenceCode"]
 }
 
@@ -28,6 +29,7 @@ const HO100306: ExceptionGenerator = (hearingOutcome) => {
       if (!offenceReason) {
         return
       }
+
       const offenceIgnored = isOffenceIgnored(offence)
       const offenceCode = getOffenceCode(offence)
       const offenceCodeLookup = lookupOffenceCode(offenceCode ?? "", offenceReason, areaCode)

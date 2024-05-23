@@ -18,6 +18,7 @@ const generateCounts = (results: string[]): { [k: string]: number } => {
     if (!acc[hash]) {
       acc[hash] = 0
     }
+
     acc[hash] += 1
     return acc
   }, {})

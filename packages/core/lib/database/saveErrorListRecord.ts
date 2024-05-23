@@ -14,6 +14,7 @@ const handleUpdate = async (db: Sql, recordId: number, result: Phase1Result): Pr
   if (result.hearingOutcome.Exceptions.length > 0) {
     await updateErrorListRecord(db, recordId, result)
   }
+
   const triggerChanges = await updateErrorListTriggers(db, recordId, result)
   const notes = [
     generateTriggersNoteText(triggerChanges.added, TriggerCreationType.ADD),

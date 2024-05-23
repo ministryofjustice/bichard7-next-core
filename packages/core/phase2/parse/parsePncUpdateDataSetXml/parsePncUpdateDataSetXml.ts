@@ -144,9 +144,11 @@ const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Op
   if (operations === undefined) {
     return []
   }
+
   if (Array.isArray(operations)) {
     return operations
   }
+
   return [operations]
 }
 

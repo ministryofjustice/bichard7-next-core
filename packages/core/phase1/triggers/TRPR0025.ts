@@ -31,6 +31,7 @@ const generator: TriggerGenerator = (hearingOutcome) => {
   if (matches(hearingOutcome)) {
     return [{ code: triggerCode }]
   }
+
   return []
 }
 

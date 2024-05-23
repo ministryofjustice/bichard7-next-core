@@ -20,6 +20,7 @@ const generator: TriggerGenerator = (hearingOutcome: AnnotatedHearingOutcome) =>
   ) {
     return [{ code: triggerCode }]
   }
+
   return []
 }
 

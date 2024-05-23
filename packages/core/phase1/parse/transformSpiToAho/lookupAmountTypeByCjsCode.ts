@@ -22,6 +22,7 @@ const lookupAmountTypeByCjsCode = (cjsCode: number): string | undefined => {
       return type
     }
   }
+
   return defaultAmountType
 }
 

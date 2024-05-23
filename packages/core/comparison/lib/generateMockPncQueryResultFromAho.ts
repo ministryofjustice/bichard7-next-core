@@ -48,5 +48,6 @@ export default (ahoXml: string): PncQueryResult | Error | undefined => {
   if (error) {
     return new Error(error)
   }
+
   return undefined
 }

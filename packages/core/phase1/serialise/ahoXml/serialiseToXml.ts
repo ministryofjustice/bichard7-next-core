@@ -116,6 +116,7 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
   if (value === undefined) {
     return undefined
   }
+
   return literal(value, type)
 }
 
@@ -127,6 +128,7 @@ const optionalFormatText = (t: Date | string | undefined): Br7TextString | undef
   if (!t) {
     return undefined
   }
+
   if (typeof t === "string") {
     return text(t)
   }
@@ -246,6 +248,7 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
       }
     }
   }
+
   if (offenceReason.__type === "NationalOffenceReason") {
     switch (offenceReason.OffenceCode.__type) {
       case "NonMatchingOffenceCode":
@@ -280,6 +283,7 @@ const mapDefendantOrOffender = (defendantOrOffender?: DefendantOrOffender): DsDe
   if (defendantOrOffender === undefined) {
     return undefined
   }
+
   return {
     "ds:Year": defendantOrOffender.Year !== null ? text(defendantOrOffender.Year) : { "#text": "" },
     "ds:OrganisationUnitIdentifierCode": mapAhoOrgUnitToXml(defendantOrOffender.OrganisationUnitIdentifierCode),

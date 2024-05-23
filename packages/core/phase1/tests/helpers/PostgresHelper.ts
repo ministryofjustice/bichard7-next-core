@@ -14,6 +14,7 @@ export default class PostgresHelper {
     if (!g.postgresConnection) {
       g.postgresConnection = pgp(options)
     }
+
     // eslint-disable-next-line @typescript-eslint/ban-types
     this.pg = g.postgresConnection as IDatabase<{}, pg.IClient>
   }

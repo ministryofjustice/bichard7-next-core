@@ -26,6 +26,7 @@ const persistPhase1: ConductorWorker = {
     if (isError(dbResult)) {
       return failed("Error saving to the database", dbResult.message)
     }
+
     return completed("Phase 1 result persisted successfully")
   })
 }

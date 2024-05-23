@@ -5,12 +5,15 @@ const operationCourtCaseReference = (operation: Operation): string | undefined =
   if (operationCode === "SENDEF") {
     return operation.data?.courtCaseReference
   }
+
   if (operationCode === "DISARR") {
     return operation.data?.courtCaseReference
   }
+
   if (operationCode === "SUBVAR") {
     return operation.data?.courtCaseReference
   }
+
   // if (operationCode === "COMSEN") {
   //     return operation.data?.courtCaseReference;
   // }

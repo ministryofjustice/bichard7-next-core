@@ -10,6 +10,7 @@ const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!taskDataBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
 }
+
 const s3Config = createS3Config()
 
 export const startBichardProcess = async (

@@ -39,6 +39,7 @@ const getFile = async (file: string, cache: boolean): Promise<string> => {
       process.exit()
     }
   }
+
   return contents
 }
 

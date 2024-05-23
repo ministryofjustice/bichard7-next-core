@@ -51,6 +51,11 @@ module.exports = {
               "{}": false
             }
           }
+        ],
+        "padding-line-between-statements": [
+          "error",
+          { blankLine: "always", prev: "block", next: "*" },
+          { blankLine: "always", prev: "block-like", next: "*" }
         ]
       }
     },

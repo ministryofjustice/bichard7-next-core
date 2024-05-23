@@ -10,6 +10,7 @@ const formatOuCode = (
   if (secondLevelCode && thirdLevelCode && bottomLevelCode) {
     return `${topLevelCode ? topLevelCode : ""}${secondLevelCode}${thirdLevelCode}${bottomLevelCode}`
   }
+
   return ""
 }
 

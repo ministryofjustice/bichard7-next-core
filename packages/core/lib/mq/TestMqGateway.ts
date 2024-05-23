@@ -37,11 +37,13 @@ const getMessage = (client: Client, queueName: string, timeoutMs: number): Promi
             } catch (e) {
               console.error(e)
             }
+
             resolve(body)
           })
           .catch((e) => reject(e))
       }
     }
+
     subscription = client.subscribe({ destination: queueName, ack: "client" }, callback)
     timeout = setTimeout(() => {
       subscription.unsubscribe()
@@ -81,6 +83,7 @@ export default class TestMqGateway extends MqGateway {
         waiting = false
       }
     }
+
     return messages
   }
 }

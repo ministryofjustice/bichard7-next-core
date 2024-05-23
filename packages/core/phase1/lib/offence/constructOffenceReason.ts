@@ -13,12 +13,14 @@ export default (offenceCode: string, areaCode: string, reason?: OffenceReason): 
         if (!foundCode && offenceCode.length === 8) {
           foundCode = lookupOffenceByCjsCode(offenceCode.substring(0, 7))
         }
+
         if (!foundCode && areaCode) {
           foundCode = lookupOffenceByCjsCode(`${areaCode}${offenceCode}`)
           if (foundCode) {
             return getLocalOffenceReason(offenceCode, areaCode)
           }
         }
+
         return nationalOffenceReason
       } else {
         return getLocalOffenceReason(offenceCode, areaCode)

@@ -31,6 +31,7 @@ const isAsnValid = (asn?: string): boolean => {
   if (!asn) {
     return false
   }
+
   return isAsnFormatValid(asn) && isAsnOrganisationUnitValid(asn)
 }
 

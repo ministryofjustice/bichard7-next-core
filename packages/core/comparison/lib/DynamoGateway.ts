@@ -329,12 +329,14 @@ export default class DynamoGateway {
       if (isError(batch)) {
         return batch
       }
+
       buffer = buffer.concat(batch)
       if (buffer.length >= batchSize) {
         yield buffer.slice(0, batchSize)
         buffer = buffer.slice(batchSize)
       }
     }
+
     yield buffer
   }
 

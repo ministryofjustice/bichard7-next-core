@@ -58,6 +58,7 @@ const mapAmountSpecifiedInResult = (
   if (!result) {
     return undefined
   }
+
   const resultArray = Array.isArray(result) ? result : [result]
 
   return resultArray.map((amount) => ({
@@ -73,6 +74,7 @@ const mapNumberSpecifiedInResult = (
   if (!input) {
     return undefined
   }
+
   const inputArray = Array.isArray(input) ? input : [input]
 
   return inputArray.map((amount) => ({ Number: Number(amount["#text"]), Type: amount["@_Type"] }))
@@ -84,6 +86,7 @@ const mapDateSpecifiedInResult = (
   if (!input) {
     return undefined
   }
+
   const inputArray = Array.isArray(input) ? input : [input]
 
   return inputArray.map((el) => ({ Date: new Date(el["#text"]), Sequence: Number(el?.["@_Sequence"]) }))
@@ -93,6 +96,7 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
   if (!duration) {
     return []
   }
+
   const durationArray = Array.isArray(duration) ? duration : [duration]
   return durationArray.map((d) => ({
     DurationType: d["ds:DurationType"]["#text"],
@@ -107,6 +111,7 @@ const mapXmlResultQualifierVariableTOAho = (
   if (!rqv) {
     return []
   }
+
   const rqvArray = Array.isArray(rqv) ? rqv : [rqv]
   return rqvArray.map((r) => ({ Code: r["ds:Code"]["#text"] }))
 }
@@ -115,6 +120,7 @@ const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undef
   if (!bailCondition) {
     return []
   }
+
   const allBailConditions = Array.isArray(bailCondition) ? bailCondition : [bailCondition]
   return allBailConditions.map((bc) => bc["#text"])
 }
@@ -217,6 +223,7 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
       }
     }
   }
+
   if (xmlOffenceReason["ds:OffenceCode"]) {
     const code = xmlOffenceReason["ds:OffenceCode"]
     if ("ds:CommonLawOffence" in code) {
@@ -255,6 +262,7 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
       }
     }
   }
+
   throw new Error("Offence Reason Missing from XML")
 }
 
@@ -262,9 +270,11 @@ const mapErrorString = (node: Br7ErrorString | undefined): string | null | undef
   if (node?.["#text"]) {
     return node["#text"]
   }
+
   if (node?.["@_Error"]) {
     return null
   }
+
   return undefined
 }
 
@@ -272,6 +282,7 @@ const mapXmlDefendantOrOffender = (defendantOrOffender?: DsDefendantOrOffender):
   if (defendantOrOffender === undefined) {
     return undefined
   }
+
   return {
     Year: defendantOrOffender["ds:Year"]?.["#text"] ?? "",
     OrganisationUnitIdentifierCode: mapXmlOrganisationalUnitToAho(
@@ -292,6 +303,7 @@ const offenceRecordableOnPnc = (xmlOffence: Br7Offence): boolean | undefined => 
   if (xmlOffence["ds:RecordableOnPNCindicator"] && xmlOffence["ds:RecordableOnPNCindicator"]["#text"]) {
     return xmlOffence["ds:RecordableOnPNCindicator"]["#text"] === "Y"
   }
+
   return undefined
 }
 
@@ -299,6 +311,7 @@ const caseRecordableOnPnc = (xmlCase: Br7Case): boolean | undefined => {
   if (xmlCase["br7:RecordableOnPNCindicator"] && xmlCase["br7:RecordableOnPNCindicator"]["#text"]) {
     return xmlCase["br7:RecordableOnPNCindicator"]["#text"] === "Y"
   }
+
   return undefined
 }
 
@@ -306,10 +319,12 @@ const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string
   if (element === undefined) {
     return undefined
   }
+
   const value = element["#text"]
   if (value === "") {
     return null
   }
+
   return value
 }
 
@@ -322,12 +337,15 @@ const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] 
     if (!el) {
       return undefined
     }
+
     if (el["#text"] !== undefined) {
       return el["#text"]
     }
+
     if (el["@_Error"]) {
       return ""
     }
+
     return undefined
   }
 

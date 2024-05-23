@@ -9,6 +9,7 @@ const printList = (
   if (!result) {
     return false
   }
+
   if (Array.isArray(result)) {
     const results = result.map((r) => printList(r))
     return results.every((res) => res)

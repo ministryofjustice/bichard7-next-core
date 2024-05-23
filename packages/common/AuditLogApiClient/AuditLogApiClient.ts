@@ -63,12 +63,15 @@ export default class AuditLogApiClient {
     if (options?.includeColumns) {
       queryParams.push(`includeColumns=${options.includeColumns.join(",")}`)
     }
+
     if (options?.excludeColumns) {
       queryParams.push(`includeColumns=${options.excludeColumns.join(",")}`)
     }
+
     if (queryParams.length > 0) {
       queryString = `?${queryParams.join("&")}`
     }
+
     return axios
       .get(`${this.apiUrl}/messages/${messageId}${queryString}`, {
         headers: { "X-API-Key": this.apiKey },
@@ -94,6 +97,7 @@ export default class AuditLogApiClient {
     if (options?.includeColumns) {
       queryParams.push(`includeColumns=${options.includeColumns.join(",")}`)
     }
+
     if (options?.excludeColumns) {
       queryParams.push(`includeColumns=${options.excludeColumns.join(",")}`)
     }

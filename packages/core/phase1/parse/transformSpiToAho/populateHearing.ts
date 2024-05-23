@@ -36,6 +36,7 @@ const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData =
     const name = spiOrganisationName.trim()
     return { presentAtHearing, name }
   }
+
   throw new Error("Defendant details contained neither CourtIndividualDefendant or CourtCorporateDefendant")
 }
 

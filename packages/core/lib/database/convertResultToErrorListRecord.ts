@@ -27,6 +27,7 @@ const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
   if (!matches) {
     return ""
   }
+
   // return ""
   return Array.from(matches)
     .map((m) => `${m[2]}||${m[1]}`)
@@ -37,6 +38,7 @@ const generateOrgForPoliceFilter = (forceOwner?: OrganisationUnitCodes): string 
   if (!forceOwner?.SecondLevelCode) {
     return ""
   }
+
   if (forceOwner.ThirdLevelCode === null || forceOwner.ThirdLevelCode === "00") {
     return forceOwner.SecondLevelCode
   }

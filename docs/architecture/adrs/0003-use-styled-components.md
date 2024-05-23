@@ -1,4 +1,4 @@
-# 1. Use Styled Components
+# 3. Use Styled Components
 
 Date: 2024-04-12
 

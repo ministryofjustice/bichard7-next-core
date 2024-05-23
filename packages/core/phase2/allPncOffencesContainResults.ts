@@ -13,9 +13,11 @@ const allPncOffencesContainResults = (aho: AnnotatedHearingOutcome) => {
     if (offence.AddedByTheCourt) {
       return
     }
+
     if (!isRecordableOffence(offence)) {
       return
     }
+
     if (offence.Result.some(isRecordableResult)) {
       return
     }

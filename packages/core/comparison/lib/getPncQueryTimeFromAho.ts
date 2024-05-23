@@ -11,6 +11,7 @@ const getPncQueryTimeFromAho = (ahoXml: string): Date | undefined => {
   if (!queryTime) {
     return
   }
+
   return new Date(queryTime["#text"])
 }
 

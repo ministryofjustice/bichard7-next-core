@@ -20,6 +20,7 @@ const generator: TriggerGenerator = (annotatedHearingOutcome, options): Trigger[
   if (forceReceivesTrigger27(forceCode) && triggersExcluded && forceCode !== courtCode) {
     return [{ code: TriggerCode.TRPR0027 }]
   }
+
   return []
 }
 

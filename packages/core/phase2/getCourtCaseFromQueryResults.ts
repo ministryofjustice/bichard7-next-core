@@ -8,6 +8,7 @@ function getCourtCaseFromQueryResults(
   if (!cases) {
     return
   }
+
   const matchingCases = cases.find((x) => x.courtCaseReference === courtCaseRef)
 
   return matchingCases

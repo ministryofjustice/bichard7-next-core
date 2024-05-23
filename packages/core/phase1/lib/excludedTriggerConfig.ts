@@ -8,6 +8,7 @@ const excludedTriggerConfig = () => {
     excludedTriggers["36"].push(TriggerCode.TRPR0004)
     excludedTriggers["36"].push(TriggerCode.TRPR0027)
   }
+
   return excludedTriggers
 }
 

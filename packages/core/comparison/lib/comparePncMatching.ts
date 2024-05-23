@@ -33,11 +33,13 @@ const comparePncMatching = async (
   if (type === "PncUpdateDataset") {
     throw new Error("Received invalid incoming message")
   }
+
   const coreResult = await CorePhase1(incomingAho, pncGateway, auditLogger)
   const expectedAho = parseAhoXml(annotatedHearingOutcome)
   if (isError(expectedAho)) {
     throw expectedAho as Error
   }
+
   const expectedMatch = summariseMatching(expectedAho)
   const actualMatch = summariseMatching(coreResult.hearingOutcome)
 
@@ -45,6 +47,7 @@ const comparePncMatching = async (
   if (!pass && expectedMatch && actualMatch) {
     pass = isMatch(expectedMatch, actualMatch)
   }
+
   return {
     pass,
     expected: expectedMatch,

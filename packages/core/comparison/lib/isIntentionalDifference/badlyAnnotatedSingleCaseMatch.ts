@@ -16,6 +16,7 @@ const badlyAnnotatedSingleCaseMatch = (
     if (offence.courtCaseReference) {
       acc.add(offence.courtCaseReference)
     }
+
     return acc
   }, new Set<string>())
 
@@ -28,6 +29,7 @@ const badlyAnnotatedSingleCaseMatch = (
       )
     )
   }
+
   return false
 }
 

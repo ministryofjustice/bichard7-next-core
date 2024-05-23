@@ -62,12 +62,14 @@ const fixBinaryEncoding = async (s3Path: string): Promise<void> => {
   if (isError(contents)) {
     throw contents
   }
+
   console.log("Fetched file from S3")
   const fixed = Buffer.from(contents, "binary").toString("utf8")
   const s3Result = await writeFileToS3(path, bucket, fixed)
   if (isError(s3Result)) {
     throw s3Result
   }
+
   console.log("Wrote file to S3")
   await updateDynamo(path)
   console.log("Updated Dynamo")

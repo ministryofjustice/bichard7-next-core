@@ -31,6 +31,7 @@ export default (
         offenceSequenceNumber: offence.CourtOffenceSequenceNumber
       })
     }
+
     return acc
   }
 
@@ -41,5 +42,6 @@ export default (
   if (caseLevelTrigger) {
     return triggers.length > 0 ? [{ code: triggerCode }] : []
   }
+
   return triggers
 }
