@@ -1,5 +1,5 @@
-// regex matchs "DEFENDANT X THIS EXCLUSION LASTS" and ignores line breaks
-const REGEX = /DEFENDANT\s+EXCLUDED\s+FROM(?<location1>[\s\S]*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/g
+// regex matchs "DEFENDANT EXCLUDED FROM X FOR A PERIOD OF Y" and ignores line breaks
+const REGEX = /DEFENDANT\s+EXCLUDED\s+FROM(?<location1>[\s\S]*?)FOR\s+A\s+PERIOD\s+OF/g
 
 const licencedPremisesExclusionOrderDisposalText = (resultVariableText: string): string => {
   let match: RegExpExecArray | null
@@ -15,9 +15,9 @@ const licencedPremisesExclusionOrderDisposalText = (resultVariableText: string):
   }
 
   if (locations.length) {
-    const longestLoaction = locations.reduce((a, b) => (a.length > b.length ? a : b))
+    const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b))
 
-    return `EXCLUDED FROM ${longestLoaction}`
+    return `EXCLUDED FROM ${longestLocation}`
   }
 
   return ""
