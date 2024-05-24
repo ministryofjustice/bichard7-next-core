@@ -3,7 +3,7 @@
 const REGEX =
   /NOT\s+(TO\s+)?ENTER(?<location1>.*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/gs
 
-const REGEX2 = /NOT\s+(TO\s+)?ENTER\s(?<location3>[\s\S]*)/g
+const nestedREGEX = /NOT\s+(TO\s+)?ENTER\s(?<location3>[\s\S]*)/g
 
 const exclusionRequirementsDisposalText = (resultVariableText: string): string => {
 
@@ -15,7 +15,7 @@ const exclusionRequirementsDisposalText = (resultVariableText: string): string =
   .flatMap((match) => Object.values(match.groups || {}).filter(x=>x).map((value) => value.replace(/\s+/g, " ").trim()))
   
   capturedValues.forEach( (value) => {
-    const nestedMatches = [...value.matchAll(REGEX2)]
+    const nestedMatches = [...value.matchAll(nestedREGEX)]
     if (nestedMatches.length > 0) {
       nestedMatches.forEach((match) => {
         if (match.groups) {
