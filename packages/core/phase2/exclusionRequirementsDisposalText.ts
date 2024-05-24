@@ -1,9 +1,9 @@
 // regex matchs "NOT ENTER X THIS EXCLUSION LASTS FOR" or "NOT TO ENTER X THIS EXCLUSION LASTS FOR" and ignores line breaks
 
 const REGEX =
-  /NOT\s+TO\s+ENTER(?<location1>[\s\S]*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR|NOT\s+ENTER(?<location2>[\s\S]*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/gs
+  /NOT\s+(TO\s+)?ENTER(?<location1>.*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/gs
 
-const REGEX2 = /NOT\s+TO\s+ENTER\s(?<location3>[\s\S]*)/g
+const REGEX2 = /NOT\s+(TO\s+)?ENTER\s(?<location3>[\s\S]*)/g
 
 const exclusionRequirementsDisposalText = (resultVariableText: string): string => {
 
