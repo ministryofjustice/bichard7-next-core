@@ -85,6 +85,17 @@ exports[`errorPath offence and result should match the snapshot when offence ind
   },
   "result": {
     "amountSpecifiedInResult": [Function],
+    "cjsResultCode": [
+      "AnnotatedHearingOutcome",
+      "HearingOutcome",
+      "Case",
+      "HearingDefendant",
+      "Offence",
+      0,
+      "Result",
+      0,
+      "CJSresultCode",
+    ],
     "nextHearingDate": [
       "AnnotatedHearingOutcome",
       "HearingOutcome",
@@ -180,6 +191,15 @@ exports[`errorPath result should match the snapshot when offence index is -1 1`]
   ],
   "result": {
     "amountSpecifiedInResult": [Function],
+    "cjsResultCode": [
+      "AnnotatedHearingOutcome",
+      "HearingOutcome",
+      "Case",
+      "HearingDefendant",
+      "Result",
+      0,
+      "CJSresultCode",
+    ],
     "nextHearingDate": [
       "AnnotatedHearingOutcome",
       "HearingOutcome",
