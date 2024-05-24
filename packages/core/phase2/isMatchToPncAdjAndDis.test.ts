@@ -7,7 +7,9 @@ import generateAhoFromOffenceList from "./tests/fixtures/helpers/generateAhoFrom
 
 describe("check isMatchToPncAdjAndDis", () => {
   let aho: AnnotatedHearingOutcome
+  let ahoWithResults: AnnotatedHearingOutcome
   let emptyResults: NonEmptyArray<Result>
+  let courtCaseResult: Result
   let courtCaseNoOffences: PncCourtCaseSummary
 
   beforeEach(() => {
@@ -23,6 +25,12 @@ describe("check isMatchToPncAdjAndDis", () => {
       courtCases: [courtCaseNoOffences]
     }
     emptyResults = [{} as Result]
+
+    courtCaseResult = {
+      PNCDisposalType: 2063
+    } as Result
+
+    ahoWithResults = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
   })
 
   it("If there is no courtcase ref nr given as input or none exists on the aho, then returns false", () => {
@@ -41,12 +49,6 @@ describe("check isMatchToPncAdjAndDis", () => {
   })
 
   it("If there are no adjudications in the matching courtCase of the PNC Query, then returns false", () => {
-    const courtCaseResult = {
-      PNCDisposalType: 2063
-    } as Result
-
-    aho = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
-
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
       offences: [
@@ -66,29 +68,22 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    const pncQuery: PncQueryResult = {
+    ahoWithResults.PncQuery = {
       forceStationCode: "06",
       checkName: "",
       pncId: "",
       courtCases: [courtCase]
     }
 
-    aho.PncQuery = pncQuery
-    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, aho, "FOO", 0, "1")
+    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
     expect(result).toBe(false)
   })
 
   it("returns false if there are matching adjudications but no disposals on the pnc query", () => {
-    const courtCaseResult = {
-      PNCDisposalType: 2063
-    } as Result
-
-    aho = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
-
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
       offences: [
@@ -108,19 +103,18 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    const pncQuery: PncQueryResult = {
+    ahoWithResults.PncQuery = {
       forceStationCode: "06",
       checkName: "",
       pncId: "",
       courtCases: [courtCase]
     }
 
-    aho.PncQuery = pncQuery
-    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, aho, "FOO", 0, "1")
+    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
     expect(result).toBe(false)
   })
 
@@ -162,7 +156,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    aho = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
+    ahoWithResults = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
 
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
@@ -201,12 +195,12 @@ describe("check isMatchToPncAdjAndDis", () => {
       courtCases: [courtCase]
     }
 
-    aho.PncQuery = pncQuery
-    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+    ahoWithResults.PncQuery = pncQuery
+    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, aho, "FOO", 0, "1")
+    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
     expect(result).toBe(true)
   })
 })
