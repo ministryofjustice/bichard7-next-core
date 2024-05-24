@@ -7,9 +7,7 @@ describe("licencedPremised", () => {
 
   it("returns the location of the licenced premises", () => {
     expect(
-      licencedPremisesExclusionOrderDisposalText(
-        "DEFENDANT EXCLUDED FROM LICENCED LOCATION FOR A PERIOD OF TIME"
-      )
+      licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROM LICENCED LOCATION FOR A PERIOD OF TIME")
     ).toBe("EXCLUDED FROM LICENCED LOCATION")
   })
 
@@ -48,14 +46,12 @@ describe("licencedPremised", () => {
   })
 
   it("returns an empty string no location in result text", () => {
-    expect(
-      licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROMFOR A PERIOD OF TIME")
-    ).toBe("")
+    expect(licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROMFOR A PERIOD OF TIME")).toBe("")
   })
 
   it("returns exclusion text if location is whitespace", () => {
-    expect(
-      licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROM FOR A PERIOD OF TIME")
-    ).toBe("EXCLUDED FROM ")
+    expect(licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROM FOR A PERIOD OF TIME")).toBe(
+      "EXCLUDED FROM "
+    )
   })
 })

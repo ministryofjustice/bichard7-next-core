@@ -1,12 +1,10 @@
 // regex matchs "NOT ENTER X THIS EXCLUSION LASTS FOR" or "NOT TO ENTER X THIS EXCLUSION LASTS FOR" and ignores line breaks
 
-const REGEX =
-  /NOT\s+(TO\s+)?ENTER(?<location>.*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/gs
+const REGEX = /NOT\s+(TO\s+)?ENTER(?<location>.*?)THIS\s+EXCLUSION\s+REQUIREMENT\s+LASTS\s+FOR/gs
 
 const nestedREGEX = /NOT\s+(TO\s+)?ENTER\s(?<nestedLocation>[\s\S]*)/g
 
 const exclusionRequirementsDisposalText = (resultVariableText: string): string => {
-
   const locations: string[] = []
 
   const matches = resultVariableText.matchAll(REGEX)
@@ -21,12 +19,12 @@ const exclusionRequirementsDisposalText = (resultVariableText: string): string =
           nestedMatchFound = true
         }
       }
-      if (!nestedMatchFound){
+      if (!nestedMatchFound) {
         locations.push(match.groups.location.replace(/\s+/g, " ").trim())
       }
-      }
+    }
   }
-  
+
   if (locations.length) {
     const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b))
 
