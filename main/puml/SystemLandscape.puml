@@ -7,20 +7,20 @@ left to right direction
 !include <C4/C4>
 !include <C4/C4_Context>
 
-AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="Dashed", $borderThickness="1")
+AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
 Boundary(group_1, "CJSE", $tags="CJSE") {
   System(Bichard, "Bichard", $descr="", $tags="", $link="")
   System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
   System(ExISS, "ExISS", $descr="", $tags="", $link="")
 }
 
-AddBoundaryTag("HMCTS", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="Dashed", $borderThickness="1")
+AddBoundaryTag("HMCTS", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
 Boundary(group_2, "HMCTS", $tags="HMCTS") {
   System(CommonPlatform, "Common Platform", $descr="", $tags="", $link="")
   System(Libra, "Libra", $descr="", $tags="", $link="")
 }
 
-AddBoundaryTag("Home Office - Police", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="Dashed", $borderThickness="1")
+AddBoundaryTag("Home Office - Police", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
 Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
   System(PoliceNationalComputer, "Police National Computer", $descr="", $tags="", $link="")
 }
