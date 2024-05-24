@@ -7,6 +7,7 @@ const insertErrorListNotes = async (db: Sql, error_id: number, notes: (string | 
       if (!note) {
         continue
       }
+
       const noteRecord: ErrorListNoteRecord = {
         error_id,
         note_text: note,

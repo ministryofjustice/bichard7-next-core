@@ -12,6 +12,7 @@ const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLoo
   if (skip) {
     return { fileName: s3Url }
   }
+
   const contents = await getFile(s3Url, cache)
   return { fileName: s3Url, contents }
 }

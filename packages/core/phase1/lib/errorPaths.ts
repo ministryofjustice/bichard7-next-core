@@ -23,6 +23,7 @@ const resultQualifierVariable = (offenceIndex: number, resultIndex: number) => (
 })
 
 const result = (offenceIndex: number) => (resultIndex: number) => ({
+  cjsResultCode: resultPath(offenceIndex, resultIndex).concat("CJSresultCode"),
   resultClass: resultPath(offenceIndex, resultIndex).concat("ResultClass"),
   nextHearingDate: resultPath(offenceIndex, resultIndex).concat("NextHearingDate"),
   nextResultSourceOrganisation: {

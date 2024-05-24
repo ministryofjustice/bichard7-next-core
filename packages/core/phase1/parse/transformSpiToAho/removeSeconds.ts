@@ -7,5 +7,6 @@ export default (time: string): string => {
   if (match) {
     return `${match[1]}:${match[2]}`
   }
+
   return time
 }

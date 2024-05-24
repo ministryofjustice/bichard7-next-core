@@ -19,6 +19,7 @@ export const parseComparisonFile = (contents: string, file?: string): Comparison
         if ("identifier" in t && t.identifier) {
           t.offenceSequenceNumber = parseInt(t.identifier, 10)
         }
+
         delete t.identifier
         return t
       }),

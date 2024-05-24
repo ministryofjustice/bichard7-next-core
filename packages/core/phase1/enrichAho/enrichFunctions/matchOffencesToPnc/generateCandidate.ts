@@ -28,6 +28,7 @@ const generateCandidate = (
   if (hoOffenceCode !== pncOffenceCode) {
     return
   }
+
   const candidate: Candidate = {
     adjudicationMatch: false,
     exactDateMatch: false,

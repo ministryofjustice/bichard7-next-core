@@ -10,6 +10,7 @@ const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome) => {
   if (aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator && isDummyAsn(asn)) {
     addExceptionsToAho(aho, ExceptionCode.HO200110, errorPaths.case.asn)
   }
+
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   if (offences.length > 100) {
     addExceptionsToAho(aho, ExceptionCode.HO200116, errorPaths.case.asn)

@@ -11,14 +11,17 @@ const findNamespacedKey = (element: GenericAhoXmlValue, key: string | number): G
   if (Array.isArray(element) && typeof key === "number") {
     return element[key]
   }
+
   if (element === undefined || typeof element === "string" || Array.isArray(element) || "#text" in element) {
     return new Error("Could not find key")
   }
+
   const keys = Object.keys(element)
   const foundKey = keys.find((k) => k.endsWith(`:${key}`))
   if (foundKey && foundKey in element) {
     return element[foundKey]
   }
+
   return new Error("Could not find key")
 }
 
@@ -32,12 +35,15 @@ const findElement = (element: GenericAhoXmlValue, path: (number | string)[]): Br
   if (path.length > 1) {
     return findElement(nextElement, path.slice(1))
   }
+
   if (path.length === 1) {
     if (!isBr7TextString(nextElement)) {
       return Error("Could not find element")
     }
+
     return nextElement as Br7TextString
   }
+
   return Error("Could not find element")
 }
 
@@ -54,6 +60,7 @@ const addException = (aho: AhoXml, exception: Exception): void | Error => {
   if (element instanceof Error) {
     return element
   }
+
   if (isBr7TextString(element)) {
     element["@_Error"] = exception.code
     reorderAttributesToPutErrorFirst(element)

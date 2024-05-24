@@ -18,6 +18,7 @@ const generator: TriggerGenerator = (hearingOutcome, options = {}) => {
       if (hasMatchingResultCode(offence) && (recordable || (triggers && triggers?.length > 0))) {
         acc.push({ code: triggerCode })
       }
+
       return acc
     },
     []

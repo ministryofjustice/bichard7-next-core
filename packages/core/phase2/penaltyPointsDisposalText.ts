@@ -7,6 +7,7 @@ const penaltyPointsDisposalText = (result: Result): string => {
       return num.Number + " PENALTY POINTS"
     }
   }
+
   return ""
 }
 

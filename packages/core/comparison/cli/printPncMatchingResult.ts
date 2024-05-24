@@ -29,6 +29,7 @@ const formatTest = (name: string, success: boolean): string => {
   if (success) {
     return `${chalk.green("✓")} ${name} passed`
   }
+
   return `${chalk.red("✗")} ${name} failed`
 }
 
@@ -47,6 +48,7 @@ const printPncMatchingResult = (
   if (!result) {
     return false
   }
+
   if (Array.isArray(result)) {
     const results = result.map((r) => printPncMatchingResult(r, truncate))
     printSummary(result)
@@ -58,6 +60,7 @@ const printPncMatchingResult = (
     printSingleSummary(result)
     return false
   }
+
   return true
 }
 

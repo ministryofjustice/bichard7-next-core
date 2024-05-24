@@ -17,8 +17,10 @@ const deleteFileFromS3 = async (fileName: string, bucket: string, config: S3Clie
     if (lastResponse && !isError(lastResponse)) {
       return
     }
+
     logger.error(lastResponse)
   }
+
   return lastResponse ? lastResponse : new Error("Couldn't delete file from S3")
 }
 

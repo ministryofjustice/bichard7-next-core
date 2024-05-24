@@ -30,11 +30,14 @@ const getFileFromS3 = async (
       const buffer = await streamToBuffer(stream)
       return buffer.toString()
     }
+
     logger.error(lastResponse)
   }
+
   if (!isError(lastResponse)) {
     return new Error("No body in get object output")
   }
+
   return lastResponse ? lastResponse : new Error("Couldn't retrieve file from S3")
 }
 

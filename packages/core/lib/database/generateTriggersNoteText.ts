@@ -16,10 +16,12 @@ const generateTriggersNoteText = (triggers: Trigger[], type = TriggerCreationTyp
   if (triggers.length === 0) {
     return null
   }
+
   const counts = triggers.reduce((acc: Record<string, number>, e: Trigger) => {
     if (!acc[e.code]) {
       acc[e.code] = 0
     }
+
     acc[e.code] += 1
     return acc
   }, {})

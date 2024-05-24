@@ -15,12 +15,14 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
   if ("correlationId" in comparison) {
     return comparison.correlationId
   }
+
   const spiMatch = comparison.incomingMessage.match(
     /<msg:MessageIdentifier>(?<correlationId>[^<]*)<\/msg:MessageIdentifier>/
   )
   if (spiMatch) {
     return spiMatch.groups?.correlationId
   }
+
   const hoMatch = comparison.incomingMessage.match(/<br7:UniqueID>(?<correlationId>[^<]*)<\/br7:UniqueID>/)
   if (hoMatch) {
     return hoMatch.groups?.correlationId
@@ -37,6 +39,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
       debugger
     }
+
     const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(outgoingMessage)
     if (isError(outgoingPncUpdateDataset)) {
       throw new Error("Failed to parse outgoing PncUpdateDataset XML")

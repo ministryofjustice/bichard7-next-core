@@ -26,6 +26,7 @@ const addExceptionsToAho = (aho: AnnotatedHearingOutcome, code: ExceptionCode, p
   if (hasExceptionWithPath(path, aho.Exceptions) && !isPncException(code)) {
     removeExceptionWithPath(path, aho.Exceptions)
   }
+
   aho.Exceptions.push({ code, path })
   if (Object.values(PNC_UPDATE_ERROR_CODES).includes(code)) {
     aho.HasError = true

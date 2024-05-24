@@ -28,6 +28,7 @@ export function messageForwarder(stompClient: Client, conductorClient: Conductor
             logger.info({ event: "message-forwarder:error-forwarding-message" })
             message.nack()
           }
+
           tx.commit()
         },
         { ack: "client" }

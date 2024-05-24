@@ -250,6 +250,7 @@ const populateResult = (
     if (remandDetails.location && !result.NextResultSourceOrganisation) {
       result.NextResultSourceOrganisation = remandDetails.location
     }
+
     if (!result.NextHearingDate && remandDetails.date) {
       result.NextHearingDate = remandDetails.date
     }

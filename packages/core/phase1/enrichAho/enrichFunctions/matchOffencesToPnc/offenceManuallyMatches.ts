@@ -11,6 +11,7 @@ export const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenc
   if (manualSequence && isNaN(sequence)) {
     return false
   }
+
   const sequenceMatches = sequence === pncOffence.pncOffence.offence.sequenceNumber
   const ccrMatches = !!courtCase && normaliseCCR(courtCase) === normaliseCCR(pncOffence.caseReference)
 

@@ -52,6 +52,7 @@ const getValidForceOrForceStation = (code: string | undefined): string | undefin
   if (code === undefined) {
     return
   }
+
   if (code.length >= 2) {
     forceCode = code.substring(0, 2)
     if (isValidForceCode(forceCode)) {
@@ -67,6 +68,7 @@ const getValidForceOrForceStation = (code: string | undefined): string | undefin
           return `${forceCode}${stationCode}`
         }
       }
+
       return forceCode
     }
   }
@@ -118,6 +120,7 @@ const enrichForceOwner: EnrichAhoFunction = (hearingOutcome) => {
   } else {
     logger.error("Unable to populate ForceOwner Organisation Unit")
   }
+
   return hearingOutcome
 }
 

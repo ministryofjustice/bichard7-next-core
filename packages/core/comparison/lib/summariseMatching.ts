@@ -31,6 +31,7 @@ const parseOffenceReasonSequence = (input: string | null | undefined): number | 
   if (!input) {
     return undefined
   }
+
   return Number(input)
 }
 
@@ -42,9 +43,11 @@ const summariseMatching = (
   if (matchingExceptionsGenerated.length > 0) {
     return { exceptions: matchingExceptionsGenerated }
   }
+
   if (!hasMatch(aho)) {
     return null
   }
+
   const caseElem = aho.AnnotatedHearingOutcome.HearingOutcome.Case
   const caseReference = caseElem.CourtCaseReferenceNumber ?? caseElem.PenaltyNoticeCaseReferenceNumber
   return {

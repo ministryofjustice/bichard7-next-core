@@ -21,6 +21,7 @@ const annotatePncMatch = (
     offenceMatch.hoOffence.CriminalProsecutionReference.OffenceReasonSequence =
       offenceMatch.pncOffence.pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
   }
+
   offenceMatch.hoOffence.Result.forEach((result) => {
     result.PNCAdjudicationExists = !!offenceMatch.pncOffence.pncOffence.adjudication
   })

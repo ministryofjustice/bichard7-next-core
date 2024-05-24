@@ -32,10 +32,12 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
       }
     }
   }
+
   const getDisposals = (offence: PncApiOffence): PncDisposal[] | undefined => {
     if (offence.disposals.length === 0) {
       return undefined
     }
+
     return offence.disposals.map(
       (d: PncApiDisposal): PncDisposal => ({
         qtyDate: d.disposalQuantityDate,
@@ -48,6 +50,7 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
       })
     )
   }
+
   const getOffences = (o: PncApiOffence): PncOffence => ({
     offence: {
       acpoOffenceCode: o.acpoOffenceCode,
@@ -117,6 +120,7 @@ export default class PncGateway implements PncGatewayInterface {
         if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
           return new PncApiError(e.response?.data?.errors)
         }
+
         return e as Error
       })
   }

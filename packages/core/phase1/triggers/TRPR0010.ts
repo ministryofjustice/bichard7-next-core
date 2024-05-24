@@ -36,6 +36,7 @@ const generator: TriggerGenerator = (hearingOutcome) => {
   if (!defendantInCustody(remandStatus) && (hasBailConditions(bailConditions) || hasMatchingOffence(offences))) {
     return [{ code: triggerCode }]
   }
+
   return []
 }
 

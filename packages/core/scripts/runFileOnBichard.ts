@@ -50,4 +50,5 @@ const main = async () => {
 if (require.main === module) {
   main()
 }
+
 export default runFileOnBichardPhase1

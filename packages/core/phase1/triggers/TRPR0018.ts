@@ -63,6 +63,7 @@ const generator: TriggerGenerator = ({ AnnotatedHearingOutcome, PncQuery }, _) =
   if (!PncQuery) {
     return []
   }
+
   return AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce((triggers: Trigger[], offence) => {
     const ahoCase = AnnotatedHearingOutcome.HearingOutcome.Case
     if (!offence.CriminalProsecutionReference.OffenceReasonSequence) {

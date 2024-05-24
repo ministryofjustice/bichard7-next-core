@@ -9,6 +9,7 @@ const isOffenceIgnored = (offence: Offence): boolean => {
     const offenceCode = getOffenceCode(offence)
     return !!offenceCode && ignoredOffenceCodes.includes(offenceCode)
   }
+
   return false
 }
 

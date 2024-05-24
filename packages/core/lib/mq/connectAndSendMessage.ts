@@ -28,6 +28,7 @@ const connectAndSendMessage = (destination: string, body: string): Promise<void>
           if (e) {
             logger.error(e)
           }
+
           resolve()
         })
       }

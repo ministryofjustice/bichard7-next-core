@@ -32,6 +32,7 @@ const enrichOffence = (
     if (!offence.OffenceTitle) {
       offence.OffenceTitle = offenceCodeLookup.offenceTitle
     }
+
     offence.NotifiableToHOindicator = offenceCodeLookup.notifiableToHo
     offence.HomeOfficeClassification = offenceCodeLookup.homeOfficeClassification
   }

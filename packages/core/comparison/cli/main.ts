@@ -63,6 +63,7 @@ const main = async () => {
     const results = await processFailures(phase, !!args.cache)
     success = printResult(results, !args.noTruncate)
   }
+
   process.exit(Number(!success))
 }
 

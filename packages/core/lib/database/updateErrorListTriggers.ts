@@ -15,6 +15,7 @@ const sanitiseTriggerItemIdentity = (value: null | string | undefined): number |
   if (!value) {
     return undefined
   }
+
   return Number(value)
 }
 

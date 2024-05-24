@@ -29,6 +29,7 @@ export default class MqListener {
         if (this.messages.length) {
           return Promise.resolve(this.messages[0])
         }
+
         return Promise.reject("No messages yet")
       },
       retries: 300, // 30 seconds

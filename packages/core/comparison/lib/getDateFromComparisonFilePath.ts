@@ -9,5 +9,6 @@ export default function getDateFromComparisonFilePath(key: string): Date {
       Number(match.groups?.minute)
     )
   }
+
   return new Date()
 }

@@ -29,6 +29,7 @@ const coreMatchesBichardAddsInCourt = (
     if (ccr) {
       acc.add(ccr)
     }
+
     return acc
   }, new Set<string>())
 

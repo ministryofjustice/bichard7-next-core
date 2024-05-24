@@ -21,6 +21,7 @@ const disqualificationPeriodDisposalTextBuilder = (resultVariableText: string): 
       }
     }
   }
+
   return ""
 }
 

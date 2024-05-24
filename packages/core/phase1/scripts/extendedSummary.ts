@@ -53,6 +53,7 @@ const summariseAho = (aho: AnnotatedHearingOutcome): string[] => {
     if (offence.ManualCourtCaseReference) {
       manualCCR = `\n    ${offence.CourtCaseReferenceNumber}`
     }
+
     return `${sequenceNumbers}${offenceCode}${startDate}${endDate}${convictionDate}${offenceTitle} ${manualCCR}\n${verdict}\n${resultDescriptions}\n`
   })
 }
@@ -114,6 +115,7 @@ const main = async () => {
   } else {
     aho = parseAhoXml(fileJson.incomingMessage)
   }
+
   if (aho instanceof Error) {
     console.error("Error parsing incoming message")
     process.exit(1)

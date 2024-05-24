@@ -28,6 +28,7 @@ const enrichOffenceResults: EnrichAhoFunction = (hearingOutcome) => {
           }
         }
       }
+
       populateBailConditions(result)
     })
   })

@@ -26,6 +26,7 @@ const extractDates = (offence: OffenceParsedXml) => {
   } else {
     endDate = "            "
   }
+
   return { startDate, endDate }
 }
 
@@ -59,11 +60,13 @@ const mockEnquiry = (
       if (pncAdjudication) {
         output.push("<ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ>")
       }
+
       if (pncCaseType === "penalty" || pncAdjudication) {
         output.push(
           "<DIS>I1109000C 100.00                                                                                         </DIS>"
         )
       }
+
       return output.join("\n")
     })
     .join("\n")
@@ -98,6 +101,7 @@ const addMock = async (matchRegex: string, response: string, count: number | nul
   if (resp.status < 200 || resp.status >= 300) {
     throw new Error("Error setting mock in PNC Emulator")
   }
+
   return resp.headers.location!.replace("/mocks/", "")
 }
 

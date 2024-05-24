@@ -31,11 +31,13 @@ const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Pro
             } catch (e) {
               console.error(e)
             }
+
             resolve(buffer.toString())
           }
         })
       }
     }
+
     subscription = client.subscribe({ destination: queueName, ack: "client" }, callback)
     timeout = setTimeout(() => {
       subscription.unsubscribe()
@@ -75,6 +77,7 @@ export default class ActiveMqHelper {
           resolve(client)
         }
       }
+
       const connectionManager = new ConnectFailover(this.url, this.options as ConnectFailover.ConnectFailoverOptions)
 
       return connectionManager.connect(listener)
@@ -131,6 +134,7 @@ export default class ActiveMqHelper {
         waiting = false
       }
     }
+
     return messages
   }
 

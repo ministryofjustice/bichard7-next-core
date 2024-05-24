@@ -23,6 +23,7 @@ const extractDates = (offence: AhoXmlPncOffence): OffenceDates => {
   if (!startDate) {
     throw new Error(`Start date could not be processed: ${offence.COF["@_OffStartDate"]}`)
   }
+
   const dates: OffenceDates = {
     startDate
   }
@@ -55,6 +56,7 @@ const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PncDisposal[] | und
   if (!dis) {
     return undefined
   }
+
   const allDis = Array.isArray(dis) ? dis : [dis]
   return allDis.map((disElem) => ({
     qtyDate: disElem["@_QtyDate"],
@@ -71,6 +73,7 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   if (!adj) {
     return undefined
   }
+
   return {
     verdict: adj["@_Adjudication1"],
     sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
@@ -109,25 +112,30 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     if (!Array.isArray(cxe.CourtCases.CourtCase)) {
       cxe.CourtCases.CourtCase = [cxe.CourtCases.CourtCase]
     }
+
     for (const courtCase of cxe.CourtCases.CourtCase) {
       if (!Array.isArray(courtCase.Offences.Offence)) {
         courtCase.Offences.Offence = [courtCase.Offences.Offence]
       }
     }
+
     courtCases = cxe.CourtCases?.CourtCase.map((courtCase) => ({
       courtCaseReference: courtCase.CCR["@_CourtCaseRefNo"],
       offences: mapXmlOffencesToAho(courtCase.Offences.Offence as AhoXmlPncOffence[])
     }))
   }
+
   if (cxe.PenaltyCases && cxe.PenaltyCases.PenaltyCase) {
     if (!Array.isArray(cxe.PenaltyCases.PenaltyCase)) {
       cxe.PenaltyCases.PenaltyCase = [cxe.PenaltyCases.PenaltyCase]
     }
+
     for (const penaltyCase of cxe.PenaltyCases.PenaltyCase) {
       if (!Array.isArray(penaltyCase.Offences.Offence)) {
         penaltyCase.Offences.Offence = [penaltyCase.Offences.Offence]
       }
     }
+
     penaltyCases = cxe.PenaltyCases?.PenaltyCase.map((penaltyCase) => ({
       penaltyCaseReference: penaltyCase.PCR["@_PenaltyCaseRefNo"],
       offences: mapXmlOffencesToAho(penaltyCase.Offences.Offence as AhoXmlPncOffence[])

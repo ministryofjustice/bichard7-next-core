@@ -46,6 +46,7 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
       if (e.code === ZodIssueCode.invalid_type) {
         return `S3TaskData error: Expected ${e.expected} for ${e.path.join(".")}`
       }
+
       return "S3TaskData error. Schema mismatch"
     })
     return failedTerminal(...messages)

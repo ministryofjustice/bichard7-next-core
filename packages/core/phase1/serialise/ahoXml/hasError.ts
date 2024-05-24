@@ -37,9 +37,11 @@ const hasError = (exceptions: Exception[] | undefined, path: (string | number)[]
   if (!exceptions || exceptions.length === 0) {
     return false
   }
+
   if (path.length > 0) {
     return exceptions.some((e) => exceptionMatchesElement(e, path))
   }
+
   return exceptions.length > 0
 }
 

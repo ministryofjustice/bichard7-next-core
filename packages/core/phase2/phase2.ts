@@ -65,6 +65,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
                 } else {
                   console.log("To be implemented: withAuditLog - PNCUpdateChoreographyHO.java:228")
                 }
+
                 generateTriggers = true
               }
             }

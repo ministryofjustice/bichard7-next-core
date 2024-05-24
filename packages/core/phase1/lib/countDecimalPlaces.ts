@@ -3,6 +3,7 @@ const countDecimalPlaces = (input: string): number => {
   if (splitInput.length > 1) {
     return splitInput[1].length
   }
+
   return 0
 }
 

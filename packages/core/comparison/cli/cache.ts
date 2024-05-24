@@ -8,6 +8,7 @@ const getCachePath = (file: string): string => {
   if (!match) {
     throw new Error("Could not process file name")
   }
+
   return `${cacheDir}/${match[1]}`
 }
 

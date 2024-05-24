@@ -54,6 +54,7 @@ const preProcessPleaStatus = (disposalType: number | undefined, pleaStatus: stri
   if (!disposalType) {
     return pleaStatus
   }
+
   const BLANK_PLEA_STATUS_CODES = [2060]
   return BLANK_PLEA_STATUS_CODES.includes(disposalType) ? "" : pleaStatus
 }
