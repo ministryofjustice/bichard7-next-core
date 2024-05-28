@@ -27,7 +27,7 @@ const exclusionRequirementsDisposalText = (resultVariableText: string): string =
   }
 
   if (locations.length) {
-    const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b))
+    const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b), "")
 
     return `EXCLUDED FROM ${longestLocation}`
   }
