@@ -15,7 +15,7 @@ const licencedPremisesExclusionOrderDisposalText = (resultVariableText: string):
   }
 
   if (locations.length) {
-    const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b))
+    const longestLocation = locations.reduce((a, b) => (a.length > b.length ? a : b), "NONE")
 
     return `EXCLUDED FROM ${longestLocation}`
   }
