@@ -22,10 +22,6 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
   if (incompatibleOperationCodes.includes("NEWREM")) {
     if (incompatibleOperationCodes.includes("SENDEF") || incompatibleOperationCodes.includes("COMSEN")) {
       return ExceptionCode.HO200113
-    } else if (incompatibleOperationCodes.includes("APPHRD")) {
-      return ExceptionCode.HO200109
-    } else {
-      return
     }
   }
 
@@ -36,8 +32,6 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
       return ExceptionCode.HO200114
     } else if (incompatibleOperationCodes.includes("DISARR")) {
       return ExceptionCode.HO200112
-    } else {
-      return
     }
   }
 
