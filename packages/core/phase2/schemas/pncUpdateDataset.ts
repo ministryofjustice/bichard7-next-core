@@ -7,7 +7,7 @@ import {
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 
-const newremOperationSchema = z.object({
+export const newremOperationSchema = z.object({
   code: z.literal("NEWREM"),
   data: z
     .object({

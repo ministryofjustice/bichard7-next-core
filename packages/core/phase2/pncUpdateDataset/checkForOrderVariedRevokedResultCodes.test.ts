@@ -56,7 +56,6 @@ describe("checkForOrderVariedRevokedResultCodes", () => {
     ])
 
     expect(checkForOrderVariedRevokedResultCodes(pncUpdateDataset)).toBe(true)
-    console.log(pncUpdateDataset.Exceptions)
     expect(pncUpdateDataset.Exceptions).toStrictEqual([
       {
         code: "HO200111",

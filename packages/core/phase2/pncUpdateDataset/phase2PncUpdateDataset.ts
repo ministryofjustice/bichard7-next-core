@@ -32,7 +32,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
           }
         }
       } else {
-        refreshOperationSequence(pncUpdateDataset, pncUpdateDataset.PncOperations)
+        refreshOperationSequence(pncUpdateDataset)
       }
 
       if (pncUpdateDataset.PncOperations.length > 0) {

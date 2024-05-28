@@ -12,7 +12,7 @@ describe("phase2PncUpdateDataset", () => {
   it("should generate hearing-outcome.resubmitted-received event", () => {
     const date = new Date()
     MockDate.set(date)
-    const pncUpdateDataset = generateFakePncUpdateDataset({})
+    const pncUpdateDataset = generateFakePncUpdateDataset()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
 
     const result = phase2PncUpdateDataset(pncUpdateDataset, auditLogger)
