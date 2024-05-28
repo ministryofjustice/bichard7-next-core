@@ -85,8 +85,8 @@ describe("check incompatibleOperationExceptionCode", () => {
 
     expect(result).toEqual(ExceptionCode.HO200109)
   })
-})
 
-// it("SENDEF and PENHRG are incompatible", () => {
-// it("PENHRG and any court case-specific operation are incompatible", () => {
-// it("remandCcrs containing SENDEF court case reference is incompatible", () => {
+  it("does not raise an exception if operations are compatible", () => {
+    expect(incompatibleOperationExceptionCode(["NEWREM", "DISARR"])).toBeFalsy()
+  })
+})
