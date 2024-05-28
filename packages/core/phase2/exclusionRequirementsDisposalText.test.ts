@@ -94,4 +94,12 @@ describe("exclusionRequirementsDisposalText", () => {
       "EXCLUDED FROM "
     )
   })
+
+  it("still extracts location if a closing clause is missing", () => {
+    const resultVariableText =
+      "ERP - NOT TO ENTER FOR A PERIOD\nEXCLUSION REQUIREMENT: NOT TO ENTER LOCATION. THIS EXCLUSION REQUIREMENT LASTS FOR 24 MONTHS. NOT ELECTRONICALLY MONITORED AS NOT PRACTICAL"
+    const result = exclusionRequirementsDisposalText(resultVariableText.toUpperCase())
+
+    expect(result).toBe("EXCLUDED FROM LOCATION.")
+  })
 })
