@@ -24,7 +24,7 @@ describe("check isMatchToPncDis", () => {
       PNCDisposalType: 9999,
       CJSresultCode: 3041,
       ResultQualifierVariable: [{ Code: "Q" }],
-      ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION THIS EXCLUSION REQUIREMENT LASTS FOR TIME",
+      ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION FOR A PERIOD OF TIME",
       AmountSpecifiedInResult: [
         {
           Amount: 25000,
