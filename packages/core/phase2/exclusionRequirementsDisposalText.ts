@@ -19,6 +19,7 @@ const exclusionRequirementsDisposalText = (resultVariableText: string): string =
           nestedMatchFound = true
         }
       }
+
       if (!nestedMatchFound) {
         locations.push(match.groups.location.replace(/\s+/g, " ").trim())
       }
