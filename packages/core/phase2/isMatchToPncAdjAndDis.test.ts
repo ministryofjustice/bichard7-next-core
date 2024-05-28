@@ -132,7 +132,7 @@ describe("check isMatchToPncAdjAndDis", () => {
           Code: "A"
         }
       ],
-      ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION THIS EXCLUSION REQUIREMENT LASTS FOR TIME",
+      ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION FOR A PERIOD OF TIME",
       CJSresultCode: 3041,
       AmountSpecifiedInResult: [
         {
