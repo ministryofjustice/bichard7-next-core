@@ -5,11 +5,11 @@ const isMatchToPncAdj = (
   pncOffence: PncOffence,
   offenceReasonSequence: string | undefined
 ): boolean => {
-  const offenceReasonSequenceNumber = offenceReasonSequence ? parseInt(offenceReasonSequence, 10) : undefined
-
+  const pncOffenceSequence = pncOffence.offence.sequenceNumber.toString().padStart(3,"0")
+  
   return (
     !!offenceReasonSequence &&
-    offenceReasonSequenceNumber === pncOffence.offence.sequenceNumber &&
+    offenceReasonSequence === pncOffenceSequence &&
     !!pncOffence.adjudication &&
     hoAdjucation.verdict === pncOffence.adjudication.verdict &&
     hoAdjucation.plea === pncOffence.adjudication.plea &&

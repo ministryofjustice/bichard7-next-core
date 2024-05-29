@@ -200,7 +200,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
+    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
     expect(result).toBe(true)
   })
 })
