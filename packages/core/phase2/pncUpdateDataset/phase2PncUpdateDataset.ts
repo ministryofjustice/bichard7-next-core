@@ -13,7 +13,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
   try {
     auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
-    const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(pncUpdateDataset)
+    const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
     const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
 
     if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
