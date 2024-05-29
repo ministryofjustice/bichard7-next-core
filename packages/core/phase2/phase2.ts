@@ -9,20 +9,13 @@ import isHoAnAppeal from "./isHoAnAppeal"
 import isPncUpdateEnabled from "./isPncUpdateEnabled"
 import isRecordableOnPnc from "./isRecordableOnPnc"
 import putPncUpdateError from "./putPncUpdateError"
+import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
-    // return phase2PncUpdateDataset(message, auditLogger)
-    return {
-      triggersMatch: false,
-      exceptionsMatch: false,
-      xmlOutputMatches: false,
-      xmlParsingMatches: false,
-      skipped: true,
-      outputMessage: {} as PncUpdateDataset
-    }
+    return phase2PncUpdateDataset(message, auditLogger)
   } else {
     return phase2(message, auditLogger)
   }
