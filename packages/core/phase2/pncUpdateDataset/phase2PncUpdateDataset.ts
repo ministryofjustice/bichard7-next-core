@@ -7,6 +7,8 @@ import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
+import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
+import putPncUpdateError from "../putPncUpdateError"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
@@ -24,6 +26,9 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
         if (pncUpdateDataset.Exceptions.length > 0) {
           console.log("To be implemented: PNCUpdateChoreographyDS.java:135")
+
+          const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+          putPncUpdateError(annotatedPncUpdateDataset)
         } else {
           if (operations.length > 0) {
             console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
