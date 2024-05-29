@@ -5,8 +5,8 @@ const isMatchToPncAdj = (
   pncOffence: PncOffence,
   offenceReasonSequence: string | undefined
 ): boolean => {
-  const pncOffenceSequence = pncOffence.offence.sequenceNumber.toString().padStart(3,"0")
-  
+  const pncOffenceSequence = pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
+
   return (
     !!offenceReasonSequence &&
     offenceReasonSequence === pncOffenceSequence &&
