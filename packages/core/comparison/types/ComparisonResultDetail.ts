@@ -26,6 +26,7 @@ type ComparisonResultDetail = {
   skipped?: boolean
   correlationId?: string
   intentionalDifference?: boolean
+  incomingMessageType?: string
 }
 
 export default ComparisonResultDetail

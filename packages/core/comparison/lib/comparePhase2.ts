@@ -75,6 +75,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       exceptionsMatch: true,
       xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
       xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
+      incomingMessageType: incomingMessageType,
       ...(debug && { debugOutput })
     }
   } catch (e) {

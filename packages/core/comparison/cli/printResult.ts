@@ -85,13 +85,13 @@ const printResult = (
   }
 
   if (result.error) {
-    console.error(`\nFile threw an error!\n${result.file}\n`)
+    console.error(`\n${result.incomingMessageType} file threw an error!\n${result.file}\n`)
     console.error(result.error)
     return false
   }
 
   if (!resultMatches(result)) {
-    console.log(`\nProcessing file:\n${result.file}\n`)
+    console.log(`\nProcessing incoming ${result.incomingMessageType} file:\n${result.file}\n`)
   }
 
   if (result.debugOutput) {
