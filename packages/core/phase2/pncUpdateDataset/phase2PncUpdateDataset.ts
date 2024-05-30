@@ -35,6 +35,9 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
         if (pncUpdateDataset.Exceptions.length > 0) {
           console.log("To be implemented: PNCUpdateChoreographyDS.java:135")
+
+          const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+          putPncUpdateError(annotatedPncUpdateDataset)
         } else {
           if (operations.length > 0) {
             console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
