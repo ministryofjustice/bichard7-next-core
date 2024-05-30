@@ -1,10 +1,8 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import type AuditLogger from "../../phase1/types/AuditLogger"
-import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import allPncOffencesContainResults from "../allPncOffencesContainResults"
 import getOperationSequence from "../getOperationSequence"
-import putPncUpdateError from "../putPncUpdateError"
 import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
@@ -15,36 +13,31 @@ import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 import markErrorAsResolved from "./markErrorAsResolved"
 import putTriggerEvent from "./putTriggerEvent"
 import refreshOperationSequence from "./refreshOperationSequence"
+import type { Trigger } from "../../phase1/types/Trigger"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
-  let annotatedPncUpdateDataset = {} as AnnotatedPNCUpdateDataset
+  let triggers: Trigger[] = []
 
   auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
   const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
-  const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
+  const allOffencesContainResults = allPncOffencesContainResults(outputMessage)
 
-  if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
-    annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
-    putPncUpdateError(annotatedPncUpdateDataset)
-  } else {
+  if (!orderVariedRevokedExceptionRaised && allOffencesContainResults) {
     if (pncUpdateDataset.PncOperations.length === 0) {
       const operations = getOperationSequence(pncUpdateDataset, true)
 
-      if (pncUpdateDataset.Exceptions.length > 0) {
-        const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
-        putPncUpdateError(annotatedPncUpdateDataset)
-      } else {
+      if (pncUpdateDataset.Exceptions.length === 0) {
         if (operations.length > 0) {
           console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
         } else {
           const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
           const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
-          const triggersList = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
+          triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
 
           markErrorAsResolved(pncUpdateDataset)
-          putTriggerEvent(annotatedPncUpdateDataset, triggersList)
+          putTriggerEvent(getAnnotatedDatasetFromDataset(outputMessage), triggers)
           markErrorAsResolved(pncUpdateDataset)
         }
       }
@@ -66,7 +59,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
     auditLogEvents: auditLogger.getEvents(),
     correlationId: "correlationId",
     outputMessage,
-    triggers: [],
+    triggers,
     resultType: Phase2ResultType.success
   }
 }
