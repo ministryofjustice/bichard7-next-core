@@ -21,14 +21,10 @@ const putPncUpdateError = (annotatedDataset: AnnotatedPNCUpdateDataset) => {
     message.concat(" (not found)")
   }
 
-  try {
-    if (errorId === RECORD_NOT_FOUND) {
-      insertPncUpdateError(annotatedDataset)
-    } else {
-      revisePncUpdateError(errorId, annotatedDataset)
-    }
-  } catch (err) {
-    console.log("to be implemented: ErrorListServicesImpl.java:471")
+  if (errorId === RECORD_NOT_FOUND) {
+    insertPncUpdateError(annotatedDataset)
+  } else {
+    revisePncUpdateError(errorId, annotatedDataset)
   }
 }
 
