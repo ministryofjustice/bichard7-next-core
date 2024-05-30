@@ -5,12 +5,12 @@ process.env.SOURCE_QUEUE = sourceQueue
 const destinationQueue = "TEST_DESTINATION_QUEUE"
 process.env.DESTINATION = destinationQueue
 
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import fs from "fs"
+import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
-import { messageForwarder } from "./messageForwarder"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
@@ -19,12 +19,15 @@ const conductorClient = createConductorClient()
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
 describe("Server in MQ mode", () => {
+  let messageForwarder: MessageForwarder
+
   beforeAll(async () => {
-    await messageForwarder(stompClient, conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, conductorClient)
+    await messageForwarder.start()
   })
 
   afterAll(async () => {
-    await stompClient.deactivate()
+    await messageForwarder.stop()
   })
 
   it("sends the message to the destination queue", async () => {

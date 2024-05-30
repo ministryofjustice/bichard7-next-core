@@ -5,6 +5,7 @@ process.env.SOURCE_QUEUE = sourceQueue
 const destinationQueue = "TEST_DESTINATION_QUEUE"
 process.env.DESTINATION = destinationQueue
 
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
@@ -13,11 +14,10 @@ import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import { randomUUID } from "crypto"
 import fs from "fs"
+import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
-import { messageForwarder } from "./messageForwarder"
 import successExceptionsAHOFixture from "./test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
@@ -28,13 +28,15 @@ const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho
 describe("Server in auto mode", () => {
   let messageData: string
   let correlationId: string
+  let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    await messageForwarder(stompClient, conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, conductorClient)
+    await messageForwarder.start()
   })
 
   afterAll(async () => {
-    await stompClient.deactivate()
+    await messageForwarder.stop()
   })
 
   beforeEach(() => {

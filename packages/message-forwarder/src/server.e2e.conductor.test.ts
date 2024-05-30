@@ -3,17 +3,17 @@ process.env.DESTINATION_TYPE = "conductor"
 const sourceQueue = "TEST_SOURCE_QUEUE"
 process.env.SOURCE_QUEUE = sourceQueue
 
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
-import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
+import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { randomUUID } from "crypto"
 import fs from "fs"
+import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
-import { messageForwarder } from "./messageForwarder"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
@@ -24,13 +24,15 @@ const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho
 describe("Server in conductor mode", () => {
   let messageData: string
   let correlationId: string
+  let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    await messageForwarder(stompClient, conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, conductorClient)
+    await messageForwarder.start()
   })
 
   afterAll(async () => {
-    await stompClient.deactivate()
+    await messageForwarder.stop()
   })
 
   beforeEach(() => {
