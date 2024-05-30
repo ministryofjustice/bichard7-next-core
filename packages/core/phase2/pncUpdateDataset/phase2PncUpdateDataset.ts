@@ -7,19 +7,22 @@ import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
+import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
 import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
 import putPncUpdateError from "../putPncUpdateError"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
+  let annotatedPncUpdateDataset = {} as AnnotatedPNCUpdateDataset
   try {
     auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
-    const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(pncUpdateDataset)
+    const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
     const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
 
     if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
-      console.log("To be implemented: PNCUpdateChoreographyDS.java:121")
+      annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+      putPncUpdateError(annotatedPncUpdateDataset)
     } else {
       if (pncUpdateDataset.PncOperations.length === 0) {
         const operations = getOperationSequence(pncUpdateDataset, true)

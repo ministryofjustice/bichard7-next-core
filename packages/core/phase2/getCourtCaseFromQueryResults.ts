@@ -9,9 +9,9 @@ function getCourtCaseFromQueryResults(
     return
   }
 
-  const matchingCases = cases.find((x) => x.courtCaseReference === courtCaseRef)
+  const matchingCase = cases.find((x) => x.courtCaseReference === courtCaseRef)
 
-  return matchingCases
+  return matchingCase
 }
 
 export default getCourtCaseFromQueryResults

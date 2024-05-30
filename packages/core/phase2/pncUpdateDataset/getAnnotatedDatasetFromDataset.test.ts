@@ -1,11 +1,11 @@
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
 
 describe("getAnnotatedDatasetFromDataset", () => {
-  it("returns an annotated dataset containing the pncUpdateDataset", () => {
-    const updateDataset = jest.fn()
-    const annotatedDataset = getAnnotatedDatasetFromDataset(updateDataset as unknown as PncUpdateDataset)
+  it("should return the pncUpdateDataset wrapped in annotated PNC update dataset", () => {
+    const pncUpdateDataset = generatePncUpdateDatasetFromOffenceList([])
+    const result = getAnnotatedDatasetFromDataset(pncUpdateDataset)
 
-    expect(annotatedDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset).toEqual(updateDataset)
+    expect(result.AnnotatedPNCUpdateDataset.PNCUpdateDataset).toEqual(pncUpdateDataset)
   })
 })

@@ -5,10 +5,16 @@ import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../phase1/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import phase2Handler from "./phase2"
+import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
+import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 
 describe("Bichard Core Phase 2 processing logic", () => {
-  const inputMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
-  const inputAho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
+  const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
+  const inputAho = parseAhoXml(inputAhoMessage) as AnnotatedHearingOutcome
+
+  const inputPncUpdateDatasetMessage = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet1.xml").toString()
+  const inputPncUpdateDataset = parsePncUpdateDataSetXml(inputPncUpdateDatasetMessage) as PncUpdateDataset
+
   let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
 
@@ -17,18 +23,30 @@ describe("Bichard Core Phase 2 processing logic", () => {
     MockDate.set(mockedDate)
   })
 
-  it("should return an object with the correct attributes", () => {
-    const result = phase2Handler(inputAho, auditLogger)
+  describe("when an incoming message is an AHO", () => {
+    it("should return an object with the correct attributes", () => {
+      const result = phase2Handler(inputAho, auditLogger)
 
-    expect(result).toHaveProperty("auditLogEvents")
-    expect(result).toHaveProperty("outputMessage")
-    expect(result).toHaveProperty("triggers")
+      expect(result).toHaveProperty("auditLogEvents")
+      expect(result).toHaveProperty("outputMessage")
+      expect(result).toHaveProperty("triggers")
+    })
+
+    it("should return a PncUpdateDataset message with a single DISARR", () => {
+      const result = phase2Handler(inputAho, auditLogger)
+
+      expect(result.outputMessage.PncOperations).toHaveLength(1)
+      expect(result.outputMessage.PncOperations[0].code).toBe("DISARR")
+    })
   })
 
-  it("should return a PncUpdateDataset message with a single DISARR", () => {
-    const result = phase2Handler(inputAho, auditLogger)
+  describe("when an incoming message is a PncUpdateDataset", () => {
+    it("should return an object with the correct attributes", () => {
+      const result = phase2Handler(inputPncUpdateDataset, auditLogger)
 
-    expect(result.outputMessage.PncOperations).toHaveLength(1)
-    expect(result.outputMessage.PncOperations[0].code).toBe("DISARR")
+      expect(result).toHaveProperty("auditLogEvents")
+      expect(result).toHaveProperty("outputMessage")
+      expect(result).toHaveProperty("triggers")
+    })
   })
 })
