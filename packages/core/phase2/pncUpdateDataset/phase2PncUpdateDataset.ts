@@ -9,6 +9,7 @@ import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedR
 import refreshOperationSequence from "./refreshOperationSequence"
 import type { AnnotatedPNCUpdateDataset } from "../../types/AnnotatedPNCUpdateDataset"
 import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
+import putPncUpdateError from "../putPncUpdateError"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
@@ -21,6 +22,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
     if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
       annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+      putPncUpdateError(annotatedPncUpdateDataset)
     } else {
       if (pncUpdateDataset.PncOperations.length === 0) {
         const operations = getOperationSequence(pncUpdateDataset, true)
