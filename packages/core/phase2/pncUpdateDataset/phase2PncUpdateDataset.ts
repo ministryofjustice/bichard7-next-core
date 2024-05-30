@@ -20,48 +20,41 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
   const outputMessage = structuredClone(pncUpdateDataset)
   let annotatedPncUpdateDataset = {} as AnnotatedPNCUpdateDataset
 
-  try {
-    auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
+  auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
-    const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
-    const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
+  const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
+  const allOffencesContainResults = allPncOffencesContainResults(pncUpdateDataset)
 
-    if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
-      annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
-      putPncUpdateError(annotatedPncUpdateDataset)
-    } else {
-      if (pncUpdateDataset.PncOperations.length === 0) {
-        const operations = getOperationSequence(pncUpdateDataset, true)
+  if (orderVariedRevokedExceptionRaised || !allOffencesContainResults) {
+    annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+    putPncUpdateError(annotatedPncUpdateDataset)
+  } else {
+    if (pncUpdateDataset.PncOperations.length === 0) {
+      const operations = getOperationSequence(pncUpdateDataset, true)
 
-        if (pncUpdateDataset.Exceptions.length > 0) {
-          console.log("To be implemented: PNCUpdateChoreographyDS.java:135")
-
-          const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
-          putPncUpdateError(annotatedPncUpdateDataset)
-        } else {
-          if (operations.length > 0) {
-            console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
-          } else {
-            const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
-            const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
-            const triggersList = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
-
-            markErrorAsResolved(pncUpdateDataset)
-            putTriggerEvent(annotatedPncUpdateDataset, triggersList)
-            markErrorAsResolved(pncUpdateDataset)
-          }
-        }
+      if (pncUpdateDataset.Exceptions.length > 0) {
+        const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(pncUpdateDataset)
+        putPncUpdateError(annotatedPncUpdateDataset)
       } else {
-        refreshOperationSequence(pncUpdateDataset)
-      }
+        if (operations.length > 0) {
+          console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
+        } else {
+          const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
+          const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
+          const triggersList = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
 
-      if (pncUpdateDataset.PncOperations.length > 0) {
-        console.log("To be implemented: PNCUpdateChoreographyDS.java:205")
+          markErrorAsResolved(pncUpdateDataset)
+          putTriggerEvent(annotatedPncUpdateDataset, triggersList)
+          markErrorAsResolved(pncUpdateDataset)
+        }
       }
+    } else {
+      refreshOperationSequence(pncUpdateDataset)
     }
-  } catch (error) {
-    console.log("Phase 2 PncUpdateDataset processing error to be implemented: ", error)
-    console.log("To be implemented: PNCUpdateChoreographyDSBean.java:162")
+
+    if (pncUpdateDataset.PncOperations.length > 0) {
+      console.log("To be implemented: PNCUpdateChoreographyDS.java:205")
+    }
   }
 
   outputMessage.HasError = false
