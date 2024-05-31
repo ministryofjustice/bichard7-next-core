@@ -1,3 +1,4 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
@@ -10,6 +11,7 @@ import isRecordableOnPnc from "./isRecordableOnPnc"
 import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
+import markErrorAsResolved from "./markErrorAsResolved"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
@@ -19,12 +21,15 @@ const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, audi
   }
 }
 
-const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2Result => {
+const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(aho) as PncUpdateDataset
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
 
+  auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
+
   if (!isPncUpdateEnabled(attributedHearingOutcome)) {
-    throw Error("To be implemented: isPncUpdateEnabled() === false")
+    auditLogger.info(EventCode.IgnoredDisabled)
+    markErrorAsResolved(attributedHearingOutcome)
   } else {
     let generateTriggers = false
 
@@ -39,12 +44,12 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
               outputMessage.PncOperations = operations
               console.log("To be implemented: Publish to PNC update Queue - PNCUpdateChoreographyHO.java:204")
               console.log("To be implemented: withSentToPhase3 - PNCUpdateChoreographyHO.java:205")
-              console.log("To be implemented: withAuditLog - PNCUpdateChoreographyHO.java:206")
+              auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
             } else {
               if (isHoAnAppeal(attributedHearingOutcome)) {
-                throw Error("To be implemented: PNCUpdateChoreographyHO.java:219")
+                auditLogger.info(EventCode.IgnoredAppeal)
               } else {
-                console.log("To be implemented: withAuditLog - PNCUpdateChoreographyHO.java:228")
+                auditLogger.info(EventCode.IgnoredNonrecordable)
               }
 
               generateTriggers = true
@@ -52,11 +57,10 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
           }
         }
       } else {
-        console.log("To be implemented: PNCUpdateChoreographyHO.java:245")
+        auditLogger.info(EventCode.IgnoredNonrecordable)
       }
     } else {
-      console.log("To be implemented: PNCUpdateChoreographyHO.java:257")
-
+      auditLogger.info(EventCode.IgnoredAncillary)
       generateTriggers = true
     }
 
@@ -71,7 +75,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
   }
 
   return {
-    auditLogEvents: [],
+    auditLogEvents: auditLogger.getEvents(),
     correlationId: "correlationId",
     outputMessage,
     triggers: [],
