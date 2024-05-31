@@ -47,6 +47,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
     if (outputMessage.PncOperations.length > 0) {
       console.log("To be implemented: PNCUpdateChoreographyDS.java:205")
+      auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
     }
   }
 
