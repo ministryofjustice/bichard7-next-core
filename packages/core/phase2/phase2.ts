@@ -22,7 +22,6 @@ const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, audi
 const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(aho) as PncUpdateDataset
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
-  const pncUpdateDataset = structuredClone(aho) as PncUpdateDataset
 
   if (!isPncUpdateEnabled(attributedHearingOutcome)) {
     throw Error("To be implemented: isPncUpdateEnabled() === false")
