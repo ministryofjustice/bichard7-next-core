@@ -12,8 +12,12 @@ const toPercent = (quotient: number, total: number): string => `${((quotient / t
 
 const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void => {
   const total = results.length
-  const passed = results.filter(
+  const passedResults = results.filter(
     (result) => !result.skipped && !result.intentionalDifference && resultMatches(result)
+  ) as ComparisonResultDetail[]
+  const passed = passedResults.length
+  const passedAho = passedResults.filter(
+    (result) => result.incomingMessageType?.toLowerCase() === "annotatedhearingoutcome"
   ).length
   const skipped = results.filter((result) => result.skipped && !result.intentionalDifference).length
   const errored = results.filter((result) => "error" in result && result.error).length
@@ -26,7 +30,11 @@ const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void =
   console.log(`${results.length} comparisons`)
 
   if (passed > 0) {
-    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)})`))
+    console.log(
+      chalk.green(
+        `✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)}) (of which AHOs: ${passedAho})`
+      )
+    )
   }
 
   if (failed > 0) {
