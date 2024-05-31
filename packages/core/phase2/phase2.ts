@@ -24,6 +24,7 @@ const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, audi
 const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(aho) as PncUpdateDataset
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
+  const correlationId = attributedHearingOutcome.Hearing.SourceReference.UniqueID
 
   auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
 
@@ -76,7 +77,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
 
   return {
     auditLogEvents: auditLogger.getEvents(),
-    correlationId: "correlationId",
+    correlationId,
     outputMessage,
     triggers: [],
     resultType: Phase2ResultType.success
