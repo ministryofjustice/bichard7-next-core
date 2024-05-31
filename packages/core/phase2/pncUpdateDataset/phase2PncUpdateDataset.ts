@@ -30,7 +30,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
       if (outputMessage.Exceptions.length === 0) {
         if (operations.length > 0) {
-          console.log("To be implemented: PNCUpdateChoreographyDS.java:150")
+          outputMessage.PncOperations.concat(operations)
         } else {
           const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
           const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
