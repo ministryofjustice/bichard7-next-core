@@ -8,7 +8,6 @@ import isAintCase from "./isAintCase"
 import isHoAnAppeal from "./isHoAnAppeal"
 import isPncUpdateEnabled from "./isPncUpdateEnabled"
 import isRecordableOnPnc from "./isRecordableOnPnc"
-import putPncUpdateError from "./putPncUpdateError"
 import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
@@ -38,13 +37,10 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
 
     if (!isAintCase(attributedHearingOutcome)) {
       if (isRecordableOnPnc(attributedHearingOutcome)) {
-        if (!allPncOffencesContainResults(outputMessage)) {
-          putPncUpdateError(annotatedPncUpdateDataset)
-        } else {
+        if (allPncOffencesContainResults(outputMessage)) {
           const operations = getOperationSequence(outputMessage, false)
           if (outputMessage.HasError) {
             outputMessage.PncOperations = []
-            putPncUpdateError(annotatedPncUpdateDataset)
           } else {
             if (operations.length > 0) {
               outputMessage.PncOperations = operations
