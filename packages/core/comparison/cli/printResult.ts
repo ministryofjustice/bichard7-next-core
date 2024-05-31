@@ -4,6 +4,7 @@ import { formatXmlDiff } from "../lib/xmlOutputComparison"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
+import getComparisonResultStatistics from "./getComparisonStatistics"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
@@ -11,46 +12,36 @@ export const resultMatches = (result: ComparisonResultDetail): boolean =>
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
 const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void => {
-  const total = results.length
-  const passedResults = results.filter(
-    (result) => !result.skipped && !result.intentionalDifference && resultMatches(result)
-  ) as ComparisonResultDetail[]
-  const passed = passedResults.length
-  const passedAho = passedResults.filter(
-    (result) => result.incomingMessageType?.toLowerCase() === "annotatedhearingoutcome"
-  ).length
-  const skipped = results.filter((result) => result.skipped && !result.intentionalDifference).length
-  const errored = results.filter((result) => "error" in result && result.error).length
-  const intentional = results.filter(
-    (result) => "intentionalDifference" in result && result.intentionalDifference
-  ).length
-  const failed = total - passed - skipped - errored - intentional
+  const stats = getComparisonResultStatistics(results)
 
   console.log("\nSummary:")
-  console.log(`${results.length} comparisons`)
+  console.log(`${stats.total} comparisons`)
 
-  if (passed > 0) {
+  if (stats.passed > 0) {
     console.log(
       chalk.green(
-        `✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)}) (of which AHOs: ${passedAho})`
+        `✓ ${stats.passed} passed (${toPercent(stats.passed, stats.expectedPassed)}) (of which AHOs: ${toPercent(
+          stats.passedAho,
+          stats.expectedPassedAho
+        )})`
       )
     )
   }
 
-  if (failed > 0) {
-    console.log(chalk.red(`✗ ${failed} failed (${toPercent(failed, total - skipped - intentional)})`))
+  if (stats.failed > 0) {
+    console.log(chalk.red(`✗ ${stats.failed} failed (${toPercent(stats.failed, stats.expectedPassed)})`))
   }
 
-  if (skipped > 0) {
-    console.log(chalk.yellow(`○ ${skipped} skipped`))
+  if (stats.skipped > 0) {
+    console.log(chalk.yellow(`○ ${stats.skipped} skipped`))
   }
 
-  if (intentional > 0) {
-    console.log(chalk.yellow(`○ ${intentional} intentional differences skipped`))
+  if (stats.intentional > 0) {
+    console.log(chalk.yellow(`○ ${stats.intentional} intentional differences skipped`))
   }
 
-  if (errored > 0) {
-    console.log(chalk.bgRed(`● ${errored} errored (${toPercent(errored, total - skipped - intentional)})`))
+  if (stats.errored > 0) {
+    console.log(chalk.bgRed(`● ${stats.errored} errored (${toPercent(stats.errored, stats.expectedPassed)})`))
   }
 }
 
