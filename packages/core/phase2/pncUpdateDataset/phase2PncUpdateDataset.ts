@@ -17,6 +17,7 @@ import type { Trigger } from "../../phase1/types/Trigger"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
+  const correlationId = outputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   let triggers: Trigger[] = []
 
   auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
@@ -58,7 +59,7 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
 
   return {
     auditLogEvents: auditLogger.getEvents(),
-    correlationId: "correlationId",
+    correlationId,
     outputMessage,
     triggers,
     resultType: Phase2ResultType.success
