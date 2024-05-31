@@ -16,7 +16,9 @@ const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void =
     (result) => !result.skipped && !result.intentionalDifference && resultMatches(result)
   ) as ComparisonResultDetail[]
   const passed = passedResults.length
-  const passedAho = passedResults.filter((result) => result.incomingMessageType?.toLowerCase() === "annotatedhearingoutcome").length
+  const passedAho = passedResults.filter(
+    (result) => result.incomingMessageType?.toLowerCase() === "annotatedhearingoutcome"
+  ).length
   const skipped = results.filter((result) => result.skipped && !result.intentionalDifference).length
   const errored = results.filter((result) => "error" in result && result.error).length
   const intentional = results.filter(
@@ -28,7 +30,11 @@ const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void =
   console.log(`${results.length} comparisons`)
 
   if (passed > 0) {
-    console.log(chalk.green(`✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)}) (Of which AHOs: ${passedAho})`))
+    console.log(
+      chalk.green(
+        `✓ ${passed} passed (${toPercent(passed, total - skipped - intentional)}) (of which AHOs: ${passedAho})`
+      )
+    )
   }
 
   if (failed > 0) {
