@@ -1,6 +1,5 @@
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import type { AnnotatedPNCUpdateDataset } from "../types/AnnotatedPNCUpdateDataset"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
 import getOperationSequence from "./getOperationSequence"
@@ -29,11 +28,6 @@ const phase2 = (aho: AnnotatedHearingOutcome, _auditLogger: AuditLogger): Phase2
     throw Error("To be implemented: isPncUpdateEnabled() === false")
   } else {
     let generateTriggers = false
-    const annotatedPncUpdateDataset: AnnotatedPNCUpdateDataset = {
-      AnnotatedPNCUpdateDataset: {
-        PNCUpdateDataset: pncUpdateDataset
-      }
-    }
 
     if (!isAintCase(attributedHearingOutcome)) {
       if (isRecordableOnPnc(attributedHearingOutcome)) {
