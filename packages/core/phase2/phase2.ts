@@ -31,43 +31,49 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   if (!isPncUpdateEnabled(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredDisabled)
     markErrorAsResolved(outputMessage)
-  } else {
-    let generateTriggers = false
+    outputMessage.HasError = false
+    outputMessage.PncOperations = []
 
-    if (!isAintCase(attributedHearingOutcome)) {
-      if (isRecordableOnPnc(attributedHearingOutcome)) {
-        if (allPncOffencesContainResults(outputMessage)) {
-          const operations = getOperationSequence(outputMessage, false)
-          if (outputMessage.HasError) {
-            outputMessage.PncOperations = []
-          } else {
-            if (operations.length > 0) {
-              outputMessage.PncOperations = operations
-              console.log("To be implemented: Publish to PNC update Queue - PNCUpdateChoreographyHO.java:204")
-              console.log("To be implemented: withSentToPhase3 - PNCUpdateChoreographyHO.java:205")
-              auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-            } else {
-              if (isHoAnAppeal(attributedHearingOutcome)) {
-                auditLogger.info(EventCode.IgnoredAppeal)
-              } else {
-                auditLogger.info(EventCode.IgnoredNonrecordable)
-              }
+    return {
+      auditLogEvents: auditLogger.getEvents(),
+      correlationId,
+      outputMessage,
+      triggers: [],
+      resultType: Phase2ResultType.success
+    }
+  }
 
-              generateTriggers = true
-            }
-          }
-        }
-      } else {
-        auditLogger.info(EventCode.IgnoredNonrecordable)
-      }
+  let generateTriggers = false
+
+  if (isAintCase(attributedHearingOutcome)) {
+    auditLogger.info(EventCode.IgnoredAncillary)
+    generateTriggers = true
+  } else if (!isRecordableOnPnc(attributedHearingOutcome)) {
+    auditLogger.info(EventCode.IgnoredNonrecordable)
+  } else if (allPncOffencesContainResults(outputMessage)) {
+    const operations = getOperationSequence(outputMessage, false)
+    if (outputMessage.HasError) {
+      outputMessage.PncOperations = []
     } else {
-      auditLogger.info(EventCode.IgnoredAncillary)
-      generateTriggers = true
-    }
+      if (operations.length > 0) {
+        outputMessage.PncOperations = operations
+        console.log("To be implemented: Publish to PNC update Queue - PNCUpdateChoreographyHO.java:204")
+        console.log("To be implemented: withSentToPhase3 - PNCUpdateChoreographyHO.java:205")
+        auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
+      } else {
+        if (isHoAnAppeal(attributedHearingOutcome)) {
+          auditLogger.info(EventCode.IgnoredAppeal)
+        } else {
+          auditLogger.info(EventCode.IgnoredNonrecordable)
+        }
 
-    if (generateTriggers) {
-      console.log("To be implemented: PNCUpdateChoreographyHO.java:271")
+        generateTriggers = true
+      }
     }
+  }
+
+  if (generateTriggers) {
+    console.log("To be implemented: PNCUpdateChoreographyHO.java:271")
   }
 
   outputMessage.HasError = false
