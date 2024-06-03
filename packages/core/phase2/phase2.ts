@@ -12,6 +12,12 @@ import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 import markErrorAsResolved from "./pncUpdateDataset/markErrorAsResolved"
+import identifyPostUpdateTriggers from "./pncUpdateDataset/identifyPostUpdateTriggers"
+import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTriggers"
+import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
+import getAnnotatedDatasetFromDataset from "./pncUpdateDataset/getAnnotatedDatasetFromDataset"
+import putTriggerEvent from "./pncUpdateDataset/putTriggerEvent"
+import { Trigger } from "../phase1/types/Trigger"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
@@ -32,6 +38,8 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
 
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
   const correlationId = attributedHearingOutcome.Hearing.SourceReference.UniqueID
+
+  let triggers: Trigger[] = []
 
   auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
 
@@ -76,7 +84,12 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   }
 
   if (generateTriggers) {
-    console.log("To be implemented: PNCUpdateChoreographyHO.java:271")
+    const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
+    const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
+    triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
+
+    markErrorAsResolved(outputMessage)
+    putTriggerEvent(getAnnotatedDatasetFromDataset(outputMessage), triggers)
   }
 
   outputMessage.HasError = false
@@ -85,7 +98,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage,
-    triggers: [],
+    triggers,
     resultType: Phase2ResultType.success
   }
 }
