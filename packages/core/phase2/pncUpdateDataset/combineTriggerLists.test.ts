@@ -123,7 +123,7 @@ describe("combineTriggerLists", () => {
 
     expect(result).toStrictEqual(preUpdateTriggers.concat(postUpdateTriggers))
   })
-  
+
   it("should add TRPR0027 when post update triggers contains TRPR0027", () => {
     const preUpdateTriggers: Trigger[] = [
       {
