@@ -15,8 +15,6 @@ import markErrorAsResolved from "./pncUpdateDataset/markErrorAsResolved"
 import identifyPostUpdateTriggers from "./pncUpdateDataset/identifyPostUpdateTriggers"
 import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTriggers"
 import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
-import getAnnotatedDatasetFromDataset from "./pncUpdateDataset/getAnnotatedDatasetFromDataset"
-import putTriggerEvent from "./pncUpdateDataset/putTriggerEvent"
 import type { Trigger } from "../phase1/types/Trigger"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
