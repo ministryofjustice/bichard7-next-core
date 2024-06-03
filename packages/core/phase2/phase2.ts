@@ -17,7 +17,7 @@ import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTrigg
 import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
 import getAnnotatedDatasetFromDataset from "./pncUpdateDataset/getAnnotatedDatasetFromDataset"
 import putTriggerEvent from "./pncUpdateDataset/putTriggerEvent"
-import { Trigger } from "../phase1/types/Trigger"
+import type { Trigger } from "../phase1/types/Trigger"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
@@ -84,6 +84,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
         } else {
           auditLogger.info(EventCode.IgnoredNonrecordable)
         }
+
         generateTriggers = true
       }
     }

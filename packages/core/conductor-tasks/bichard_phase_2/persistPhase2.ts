@@ -22,7 +22,7 @@ const persistPhase2: ConductorWorker = {
       putPncUpdateError(annotatedPncUpdateDataset)
     }
 
-    if(s3TaskData.triggers.length > 0) {
+    if (s3TaskData.triggers.length > 0) {
       putTriggerEvent(getAnnotatedDatasetFromDataset(s3TaskData.outputMessage), s3TaskData.triggers)
     }
 
