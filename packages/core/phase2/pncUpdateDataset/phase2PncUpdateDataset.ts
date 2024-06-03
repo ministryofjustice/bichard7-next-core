@@ -30,9 +30,8 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
       const operations = getOperationSequence(outputMessage, true)
 
       if (outputMessage.Exceptions.length === 0) {
-        if (operations.length > 0) {
-          outputMessage.PncOperations.concat(operations)
-        } else {
+        if (outputMessage.PncOperations.length === 0) {
+          outputMessage.PncOperations = outputMessage.PncOperations.concat(operations)
           const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
           const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
           triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
