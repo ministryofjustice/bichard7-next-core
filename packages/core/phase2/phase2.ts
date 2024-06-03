@@ -33,6 +33,12 @@ const initialisePncUpdateDatasetFromAho = (aho: AnnotatedHearingOutcome): PncUpd
   return pncUpdateDataset
 }
 
+const generateTriggersList = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
+  const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
+  const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
+  return combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
+}
+
 const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = initialisePncUpdateDatasetFromAho(aho)
 
@@ -84,12 +90,8 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   }
 
   if (generateTriggers) {
-    const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
-    const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
-    triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
-
+    triggers = generateTriggersList(outputMessage)
     markErrorAsResolved(outputMessage)
-    
   }
 
   outputMessage.HasError = false
