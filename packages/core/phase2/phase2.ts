@@ -61,8 +61,8 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     if (!outputMessage.HasError) {
       if (operations.length > 0) {
         outputMessage.PncOperations = operations
-        console.log("To be implemented: Publish to PNC update Queue - PNCUpdateChoreographyHO.java:204")
-        console.log("To be implemented: withSentToPhase3 - PNCUpdateChoreographyHO.java:205")
+        // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
+        // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
         auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
       } else {
         if (isHoAnAppeal(attributedHearingOutcome)) {
