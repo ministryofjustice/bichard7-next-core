@@ -89,7 +89,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
 
     markErrorAsResolved(outputMessage)
-    putTriggerEvent(getAnnotatedDatasetFromDataset(outputMessage), triggers)
+    
   }
 
   outputMessage.HasError = false

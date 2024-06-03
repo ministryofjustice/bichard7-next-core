@@ -6,6 +6,7 @@ import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
 import getAnnotatedDatasetFromDataset from "../../phase2/pncUpdateDataset/getAnnotatedDatasetFromDataset"
 import putPncUpdateError from "../../phase2/putPncUpdateError"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
+import putTriggerEvent from "../../phase2/pncUpdateDataset/putTriggerEvent"
 
 const persistPhase2: ConductorWorker = {
   taskDefName: "persist_phase2",
@@ -19,6 +20,10 @@ const persistPhase2: ConductorWorker = {
     if (s3TaskData.outputMessage.Exceptions.length > 0) {
       const annotatedPncUpdateDataset = getAnnotatedDatasetFromDataset(s3TaskData.outputMessage)
       putPncUpdateError(annotatedPncUpdateDataset)
+    }
+
+    if(s3TaskData.triggers.length > 0) {
+      putTriggerEvent(getAnnotatedDatasetFromDataset(s3TaskData.outputMessage), s3TaskData.triggers)
     }
 
     return completed("Phase 2 result persisted successfully")
