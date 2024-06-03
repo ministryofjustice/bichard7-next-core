@@ -1,8 +1,23 @@
 import type { Trigger } from "../../phase1/types/Trigger"
+import { TriggerCode } from "../../types/TriggerCode"
 
-const combineTriggerLists = (_preUpdateTriggersArray: Trigger[], _postUpdateTriggersArray: Trigger[]): Trigger[] => {
-  console.log("To be implemented: TriggerBuilder.java:459")
-  return []
+const combineTriggerLists = (preUpdateTriggersArray: Trigger[], postUpdateTriggersArray: Trigger[]): Trigger[] => {
+  const combineTriggerList: Trigger[] = []
+  let outOfAreaTriggerAdded = false
+  preUpdateTriggersArray.forEach((preUpdateTrigger) => {
+    combineTriggerList.push(preUpdateTrigger)
+    if (preUpdateTrigger.code === TriggerCode.TRPR0027) {
+      outOfAreaTriggerAdded = true
+    }
+  })
+
+  postUpdateTriggersArray.forEach((postUpdateTrigger) => {
+    if (postUpdateTrigger.code !== TriggerCode.TRPR0027 || !outOfAreaTriggerAdded) {
+      combineTriggerList.push(postUpdateTrigger)
+    }
+  })
+
+  return combineTriggerList
 }
 
 export default combineTriggerLists
