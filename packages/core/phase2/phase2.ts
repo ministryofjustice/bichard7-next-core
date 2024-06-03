@@ -12,6 +12,10 @@ import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 import markErrorAsResolved from "./pncUpdateDataset/markErrorAsResolved"
+import identifyPostUpdateTriggers from "./pncUpdateDataset/identifyPostUpdateTriggers"
+import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTriggers"
+import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
+import type { Trigger } from "../phase1/types/Trigger"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
@@ -21,10 +25,25 @@ const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, audi
   }
 }
 
+const initialisePncUpdateDatasetFromAho = (aho: AnnotatedHearingOutcome): PncUpdateDataset => {
+  const pncUpdateDataset = structuredClone(aho) as PncUpdateDataset
+  pncUpdateDataset.PncOperations = []
+  return pncUpdateDataset
+}
+
+const generateTriggersList = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
+  const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
+  const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
+  return combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
+}
+
 const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
-  const outputMessage = structuredClone(aho) as PncUpdateDataset
+  const outputMessage = initialisePncUpdateDatasetFromAho(aho)
+
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
   const correlationId = attributedHearingOutcome.Hearing.SourceReference.UniqueID
+
+  let triggers: Trigger[] = []
 
   auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
 
@@ -32,7 +51,6 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     auditLogger.info(EventCode.IgnoredDisabled)
     markErrorAsResolved(outputMessage)
     outputMessage.HasError = false
-    outputMessage.PncOperations = []
 
     return {
       auditLogEvents: auditLogger.getEvents(),
@@ -52,13 +70,11 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     auditLogger.info(EventCode.IgnoredNonrecordable)
   } else if (allPncOffencesContainResults(outputMessage)) {
     const operations = getOperationSequence(outputMessage, false)
-    if (outputMessage.HasError) {
-      outputMessage.PncOperations = []
-    } else {
+    if (!outputMessage.HasError) {
       if (operations.length > 0) {
         outputMessage.PncOperations = operations
-        console.log("To be implemented: Publish to PNC update Queue - PNCUpdateChoreographyHO.java:204")
-        console.log("To be implemented: withSentToPhase3 - PNCUpdateChoreographyHO.java:205")
+        // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
+        // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
         auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
       } else {
         if (isHoAnAppeal(attributedHearingOutcome)) {
@@ -73,19 +89,17 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   }
 
   if (generateTriggers) {
-    console.log("To be implemented: PNCUpdateChoreographyHO.java:271")
+    triggers = generateTriggersList(outputMessage)
+    markErrorAsResolved(outputMessage)
   }
 
   outputMessage.HasError = false
-  if (!outputMessage.PncOperations) {
-    outputMessage.PncOperations = []
-  }
 
   return {
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage,
-    triggers: [],
+    triggers,
     resultType: Phase2ResultType.success
   }
 }
