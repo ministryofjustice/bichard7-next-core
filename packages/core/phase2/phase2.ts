@@ -11,7 +11,6 @@ import isRecordableOnPnc from "./isRecordableOnPnc"
 import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
-import markErrorAsResolved from "./pncUpdateDataset/markErrorAsResolved"
 import identifyPostUpdateTriggers from "./pncUpdateDataset/identifyPostUpdateTriggers"
 import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTriggers"
 import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
@@ -49,7 +48,6 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
 
   if (!isPncUpdateEnabled(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredDisabled)
-    markErrorAsResolved(outputMessage)
     outputMessage.HasError = false
 
     return {
@@ -90,7 +88,6 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
 
   if (generateTriggers) {
     triggers = generateTriggersList(outputMessage)
-    markErrorAsResolved(outputMessage)
   }
 
   outputMessage.HasError = false
