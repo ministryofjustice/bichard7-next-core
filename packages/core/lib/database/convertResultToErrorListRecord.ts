@@ -1,8 +1,9 @@
 import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
-import type Phase1Result from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import type PhaseResult from "../../types/PhaseResult"
+import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
@@ -46,8 +47,8 @@ const generateOrgForPoliceFilter = (forceOwner?: OrganisationUnitCodes): string 
   return `${forceOwner.SecondLevelCode}${forceOwner.ThirdLevelCode}`
 }
 
-const convertResultToErrorListRecord = (result: Phase1Result): ErrorListRecord => {
-  const hearingOutcome = result.hearingOutcome as AnnotatedHearingOutcome
+const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord => {
+  const hearingOutcome = getAnnotatedHearingOutcome(result)
 
   const generateFalseHasErrorAttributes = result.triggers.length > 0 && hearingOutcome.Exceptions.length === 0
 
