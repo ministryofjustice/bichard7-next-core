@@ -17,6 +17,7 @@ import type { Trigger } from "../../phase1/types/Trigger"
 
 const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(pncUpdateDataset)
+  outputMessage.HasError = false
   const correlationId = outputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   let triggers: Trigger[] = []
 
@@ -47,7 +48,6 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
     }
 
     if (outputMessage.PncOperations.length > 0) {
-      console.log("To be implemented: PNCUpdateChoreographyDS.java:205")
       auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
     }
   }
