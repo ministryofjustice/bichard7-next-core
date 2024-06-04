@@ -10,7 +10,6 @@ import combineTriggerLists from "./combineTriggerLists"
 import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
 import identifyPostUpdateTriggers from "./identifyPostUpdateTriggers"
 import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
-import putTriggerEvent from "./putTriggerEvent"
 import refreshOperationSequence from "./refreshOperationSequence"
 import type { Trigger } from "../../phase1/types/Trigger"
 
@@ -36,8 +35,6 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
           const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
           const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
           triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
-
-          putTriggerEvent(getAnnotatedDatasetFromDataset(outputMessage), triggers)
         }
       }
     } else {
