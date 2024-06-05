@@ -7,11 +7,8 @@ import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import combineTriggerLists from "./combineTriggerLists"
-import getAnnotatedDatasetFromDataset from "./getAnnotatedDatasetFromDataset"
 import identifyPostUpdateTriggers from "./identifyPostUpdateTriggers"
 import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
-import markErrorAsResolved from "./markErrorAsResolved"
-import putTriggerEvent from "./putTriggerEvent"
 import refreshOperationSequence from "./refreshOperationSequence"
 import type { Trigger } from "../../phase1/types/Trigger"
 
@@ -37,10 +34,6 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
           const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
           const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
           triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
-
-          markErrorAsResolved(outputMessage)
-          putTriggerEvent(getAnnotatedDatasetFromDataset(outputMessage), triggers)
-          markErrorAsResolved(outputMessage)
         }
       }
     } else {
