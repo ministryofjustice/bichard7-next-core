@@ -297,7 +297,7 @@ services:
       CONDUCTOR_API_URL: http://conductor:4000
       ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
     ports:
-      - 4080:443
+      - 4543:443
     healthcheck:
       test: curl --insecure --fail -v https://localhost/elb-status
       interval: 2s
