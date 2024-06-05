@@ -11,9 +11,8 @@ import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetai
 import parseIncomingMessage from "./parseIncomingMessage"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 import extractExceptionsFromXml from "../../phase1/parse/parseAhoXml/extractExceptionsFromXml"
-import Exception from "../../phase1/types/Exception"
-import orderBy from "lodash.orderby"
 import isEqual from "lodash.isequal"
+import { sortExceptions } from "./sortExceptions"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -32,8 +31,6 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
     return hoMatch.groups?.correlationId
   }
 }
-
-const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
 
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
   const { incomingMessage, outgoingMessage, triggers } = comparison
