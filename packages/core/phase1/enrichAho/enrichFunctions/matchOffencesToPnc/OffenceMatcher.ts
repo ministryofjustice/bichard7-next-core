@@ -212,6 +212,7 @@ class OffenceMatcher {
             code: ExceptionCode.HO100332,
             path: errorPaths.offence(this.hoOffences.indexOf(hoOffence)).reasonSequence
           })
+          hoOffence.CourtCaseReferenceNumber = null
         }
       }
 
@@ -288,6 +289,10 @@ class OffenceMatcher {
             }, new Set<string>())
             const code = courtCases.size > 1 ? ExceptionCode.HO100332 : ExceptionCode.HO100310
             exceptions.push({ code, path: errorPaths.offence(i).reasonSequence })
+            if (code === ExceptionCode.HO100332) {
+              hoOffence.CourtCaseReferenceNumber = null
+            }
+
             break
           }
         }
