@@ -1,7 +1,7 @@
 import matchOffencesToPnc from "."
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import summariseMatching from "../../../../comparison/lib/summariseMatching"
 import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import errorPaths from "../../../lib/errorPaths"
 
 type Adjudication = {
@@ -723,9 +723,16 @@ describe("matchOffencesToPnc", () => {
       })
     })
 
-    it("should raise an exception if there are conficts between two whole case matches", () => {
+    it("should raise an exception and add an empty CourtCaseReferenceNumber element if there are conficts between two whole case matches", () => {
       const offence1 = {}
-      const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }, { offences: [offence1] }])
+      const aho = generateMockAhoWithOffences([offence1], [{ offences: [offence1] }, { offences: [offence1] }])
+
+      const [ahoOffence] = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+      expect(ahoOffence.CourtCaseReferenceNumber).toBeUndefined()
+      const result = matchOffencesToPnc(aho)
+      expect(ahoOffence.CourtCaseReferenceNumber).toBeNull()
+
+      const matchingSummary = summariseMatching(result)
       expect(matchingSummary).toStrictEqual({
         exceptions: [{ code: "HO100332", path: errorPaths.offence(0).reasonSequence }]
       })
