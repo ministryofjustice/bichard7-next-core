@@ -10,6 +10,9 @@ import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import extractExceptionsFromXml from "../../phase1/parse/parseAhoXml/extractExceptionsFromXml"
+import isEqual from "lodash.isequal"
+import { sortExceptions } from "./sortExceptions"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -57,14 +60,17 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const coreResult = phase2Handler(parsedIncomingMessageResult.message, auditLogger)
     const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, !isPncUpdateDataSet)
 
+    const sortedExceptions = sortExceptions(extractExceptionsFromXml(outgoingMessage))
+    const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
+
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
         coreResult: triggers,
         comparisonResult: triggers
       },
       exceptions: {
-        coreResult: [],
-        comparisonResult: []
+        coreResult: sortedCoreExceptions,
+        comparisonResult: sortedExceptions
       },
       xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, outgoingMessage),
       xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, outgoingMessage)
@@ -72,7 +78,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
 
     return {
       triggersMatch: true,
-      exceptionsMatch: true,
+      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
       xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
       incomingMessageType: incomingMessageType,

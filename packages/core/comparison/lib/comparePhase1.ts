@@ -1,7 +1,6 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
 import isEqual from "lodash.isequal"
-import orderBy from "lodash.orderby"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import { TriggerCode } from "../../types/TriggerCode"
@@ -9,8 +8,6 @@ import { extractExceptionsFromXml, parseAhoXml } from "../../phase1/parse/parseA
 import parseIncomingMessage from "./parseIncomingMessage"
 import phase1Handler from "../../phase1/phase1"
 import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
-import type Exception from "../../phase1/types/Exception"
-import type { Trigger } from "../../phase1/types/Trigger"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
@@ -20,9 +17,8 @@ import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
 import isIntentionalDifference from "./isIntentionalDifference"
 import { matchingExceptions } from "./summariseMatching"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-
-const sortExceptions = (exceptions: Exception[]): Exception[] => orderBy(exceptions, ["code", "path"])
-const sortTriggers = (triggers: Trigger[]): Trigger[] => orderBy(triggers, ["code", "offenceSequenceNumber"])
+import { sortTriggers } from "./sortTriggers"
+import { sortExceptions } from "./sortExceptions"
 
 type CompareOptions = {
   defaultStandingDataVersion?: string

@@ -12,9 +12,14 @@ import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 import refreshOperationSequence from "./refreshOperationSequence"
 import type { Trigger } from "../../phase1/types/Trigger"
 
-const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
-  const outputMessage = structuredClone(pncUpdateDataset)
+const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDataset => {
+  const outputMessage = structuredClone(inputMessage)
   outputMessage.HasError = false
+  return outputMessage
+}
+
+const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
+  const outputMessage = initialiseOutputMessage(pncUpdateDataset)
   const correlationId = outputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   let triggers: Trigger[] = []
 
