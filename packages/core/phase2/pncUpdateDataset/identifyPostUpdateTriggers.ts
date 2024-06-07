@@ -1,7 +1,7 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import { TriggerCode } from "../../types/TriggerCode"
+import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"

@@ -1,4 +1,4 @@
-import { TriggerCode } from "../../types/TriggerCode"
+import type { TriggerCode } from "../../types/TriggerCode"
 
 const getUpdateTriggersMap = (_preOrPost?: string): Record<string, TriggerCode[]> => {
   console.log("To be implemented: TriggerBuilderUtilsImpl.java:390")

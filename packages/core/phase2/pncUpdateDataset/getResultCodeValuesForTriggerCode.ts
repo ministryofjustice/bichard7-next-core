@@ -1,4 +1,4 @@
-import { TriggerCode } from "../../types/TriggerCode"
+import type { TriggerCode } from "../../types/TriggerCode"
 
 const getResultCodeValuesForTriggerCode = (_triggerCode: TriggerCode): number[] => {
   console.log("To be implemented: TriggerBuilderUtilsImpl.java:337")
