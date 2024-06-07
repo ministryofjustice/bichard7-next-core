@@ -15,11 +15,11 @@ const operationCourtCaseReference = (operation: Operation): string | undefined =
   }
 
   if (operationCode === "COMSEN") {
-      return operation.data?.courtCaseReference;
+    return operation.data?.courtCaseReference
   }
 
   if (operationCode === "APPHRD") {
-      return operation.data?.courtCaseReference;
+    return operation.data?.courtCaseReference
   }
 
   return
