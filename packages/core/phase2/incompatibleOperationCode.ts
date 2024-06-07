@@ -54,7 +54,15 @@ const incompatibleOperationCode = (operations: Operation[], remandCcrs: Set<stri
     }
 
     const courtCaseReference = operationCourtCaseReference(operations[i])
-    if (!!courtCaseReference) {
+
+    if (["APPHRD", "COMSEN", "SENDEF", "SUBVAR"].includes(operationCode)) {
+      const clashingOperation = courtCaseSpecificOperations.find(
+        (op) => operationCourtCaseReference(op) == courtCaseReference
+      )
+      if (!!clashingOperation) {
+        return [clashingOperation.code, operationCode]
+      }
+
       courtCaseSpecificOperations.push(operations[i])
     }
 
