@@ -8,7 +8,7 @@ import getUpdateTriggersMap from "./getUpdateTriggersMap"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
-console.log("TODO: Add TRPS0001 to TriggerCode enum")
+// TODO: Add TRPS0001 to TriggerCode enum
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
@@ -51,6 +51,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
           (result.ResultVariableText &&
+            // TODO: Add TRPS0001 to TriggerCode enum
             isResultVariableTextForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText) &&
             !isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText))
         ) {
