@@ -1,5 +1,7 @@
+import type { Trigger } from "../../phase1/types/Trigger"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import { TriggerCode } from "../../types/TriggerCode"
 import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 
@@ -23,7 +25,36 @@ describe("identifyPreUpdateTriggers", () => {
       BottomLevelCode: "",
       OrganisationUnitCode: ""
     }
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        Result: [
+          {
+            CJSresultCode: 4012,
+            SourceOrganisation: {
+              TopLevelCode: "",
+              SecondLevelCode: "second-level-code",
+              ThirdLevelCode: "",
+              BottomLevelCode: "",
+              OrganisationUnitCode: ""
+            },
+            ResultQualifierVariable: []
+          }
+        ],
+        CriminalProsecutionReference: {},
+        ActualOffenceDateCode: "",
+        ActualOffenceStartDate: {
+          StartDate: new Date()
+        },
+        ActualOffenceWording: "",
+        CommittedOnBail: "",
+        CourtOffenceSequenceNumber: 0
+      }
+    ]
 
-    expect(identifyPreUpdateTriggers(pncUpdateDataset as PncUpdateDataset)).toEqual([])
+    pncUpdateDataset
+
+    expect(identifyPreUpdateTriggers(pncUpdateDataset as PncUpdateDataset)).toEqual<Trigger[]>([
+      { code: TriggerCode.TRPR0005 }
+    ])
   })
 })
