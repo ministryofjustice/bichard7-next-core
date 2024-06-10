@@ -206,4 +206,42 @@ describe("check incompatibleOperationCode", () => {
 
     expect(result).toEqual(["NEWREM", "SENDEF"])
   })
+
+  it("SUBVAR and SENDEF with the same court case reference is incompatible", () => {
+    const sendef: Operation = {
+      code: "SENDEF",
+      status: "Completed",
+      data: {
+        courtCaseReference: "FOO"
+      }
+    }
+    const subvar: Operation = {
+      code: "SUBVAR",
+      status: "Completed",
+      data: {
+        courtCaseReference: "FOO"
+      }
+    }
+
+    const operations = [sendef, subvar]
+    const result = incompatibleOperationCode(operations, new Set())
+
+    expect(result).toEqual(["SENDEF", "SUBVAR"])
+  })
+
+  it("SUBVAR and SENDEF with undefined court case reference is incompatible", () => {
+    const sendef: Operation = {
+      code: "SENDEF",
+      status: "Completed"
+    }
+    const subvar: Operation = {
+      code: "SUBVAR",
+      status: "Completed"
+    }
+
+    const operations = [sendef, subvar]
+    const result = incompatibleOperationCode(operations, new Set())
+
+    expect(result).toEqual(["SENDEF", "SUBVAR"])
+  })
 })
