@@ -54,8 +54,8 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
     const results = offence
       ? offence.Result
       : pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
-      ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
-      : undefined
+        ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
+        : undefined
     results?.forEach((result) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
 
@@ -67,7 +67,13 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
             isResultVariableTextForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText) &&
             !isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText))
         ) {
-          console.log("To be implemented: TriggerBuilder.java:1147")
+          createTriggerIfNecessary(
+            triggers,
+            "TRPS0001" as TriggerCode,
+            offence.CourtOffenceSequenceNumber,
+            pncUpdateDataset,
+            false
+          )
         }
       }
 
