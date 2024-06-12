@@ -1,7 +1,7 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { TriggerCode } from "../../types/TriggerCode"
+import { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"
@@ -51,9 +51,8 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
           (result.ResultVariableText &&
-            // TODO: Add TRPS0001 to TriggerCode enum
-            isResultVariableTextForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText) &&
-            !isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText))
+            isResultVariableTextForTriggerMatch(TriggerCode.TRPS0001, result.ResultVariableText) &&
+            !isResultVariableTextNotForTriggerMatch(TriggerCode.TRPS0001, result.ResultVariableText))
         ) {
           console.log("To be implemented: TriggerBuilder.java:1147")
         }
