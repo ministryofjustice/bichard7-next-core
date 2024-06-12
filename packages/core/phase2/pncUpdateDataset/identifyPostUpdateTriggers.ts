@@ -1,6 +1,5 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
@@ -8,17 +7,13 @@ import createTriggerIfNecessary from "./createTriggerIfNecessary"
 import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"
+import isAppealAllowed from "./isAppealAllowed"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
 // TODO: Add TRPS0001 to TriggerCode enum
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
 const offenceLevelTrigger = "0"
-
-const isAppealAllowed = (offence: Offence): boolean => {
-  console.log("To be implemented: TriggerBuilder.java:1046-1053")
-  return false
-}
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
   const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
