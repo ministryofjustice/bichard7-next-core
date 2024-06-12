@@ -3,6 +3,8 @@ import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
+import createTriggerIfNecessary from "./createTriggerIfNecessary"
+import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
@@ -10,12 +12,12 @@ import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotFor
 
 // TODO: Add TRPS0001 to TriggerCode enum
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
+const offenceLevelTrigger = "0"
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
   const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const triggers: Trigger[] = []
   const postUpdateTriggers = getUpdateTriggersMap("post")
-
-  console.log("To be implemented: TriggerBuilder.java:1003")
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offences[offenceIndex]
@@ -35,8 +37,18 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       }
     }
 
-    offenceTriggerCodes?.forEach((_offenceTriggerCode) => {
-      console.log("To be implemented: TriggerBuilder.java:1094")
+    offenceTriggerCodes?.forEach((offenceTriggerCode) => {
+      if (getGenericTriggerCaseOrOffenceLevelIndicator(offenceTriggerCode) === offenceLevelTrigger) {
+        createTriggerIfNecessary(
+          triggers,
+          offenceTriggerCode,
+          offence.CourtOffenceSequenceNumber,
+          pncUpdateDataset,
+          false
+        )
+      } else {
+        createTriggerIfNecessary(triggers, offenceTriggerCode, undefined, pncUpdateDataset, false)
+      }
     })
 
     const results = offence
