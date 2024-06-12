@@ -1,5 +1,6 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
@@ -14,6 +15,11 @@ import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotFor
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
 const offenceLevelTrigger = "0"
 
+const isAppealAllowed = (offence: Offence): boolean => {
+  console.log("To be implemented: TriggerBuilder.java:1046-1053")
+  return false
+}
+
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
   const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   const triggers: Trigger[] = []
@@ -22,6 +28,8 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offences[offenceIndex]
     const offenceCode = offence ? getOffenceCode(offence) : undefined
+
+    const appealAllowed = isAppealAllowed(offence)
 
     console.log("To be implemented: TriggerBuilder.java:1029")
 
@@ -58,7 +66,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       : undefined
     results?.forEach((result) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
-
+      const acquittedOnAppeal = appealAllowed && result.Verdict === "NG"
       if (restrainingOrderCJSResultCodes.includes(result.CJSresultCode)) {
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
@@ -72,7 +80,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
             "TRPS0001" as TriggerCode,
             offence.CourtOffenceSequenceNumber,
             pncUpdateDataset,
-            false
+            acquittedOnAppeal
           )
         }
       }
