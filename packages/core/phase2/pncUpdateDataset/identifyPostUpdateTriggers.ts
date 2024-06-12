@@ -54,8 +54,8 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
     const results = offence
       ? offence.Result
       : pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
-        ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
-        : undefined
+      ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
+      : undefined
     results?.forEach((result) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
 
