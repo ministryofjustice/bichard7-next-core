@@ -1,6 +1,7 @@
 import hasError from "../../serialise/ahoXml/hasError"
 import type { AhoXml } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
+import type { ExceptionPath } from "../../types/Exception"
 
 const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalseHasErrorAttributes = true) => {
   const hasAnyErrors =
@@ -53,28 +54,25 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalse
         ? offence["br7:Result"].map((result, resultIndex) => {
             delete result["@_SchemaVersion"]
 
-            const resultHasError = hasError(exceptions, [
-              "AnnotatedHearingOutcome",
-              "HearingOutcome",
-              "Case",
-              "HearingDefendant",
-              "Offence",
-              offenceIndex,
-              "Result",
-              resultIndex
-            ])
+            const resultHasErrorAttr = generateHasErrorAttribute(
+              exceptions,
+              [
+                "AnnotatedHearingOutcome",
+                "HearingOutcome",
+                "Case",
+                "HearingDefendant",
+                "Offence",
+                offenceIndex,
+                "Result",
+                resultIndex
+              ],
+              addFalseHasErrorAttributes
+            )
 
-            if (resultHasError || addFalseHasErrorAttributes) {
-              return {
-                ...result,
-                "@_hasError": resultHasError,
-                "@_SchemaVersion": "2.0"
-              }
-            } else {
-              return {
-                ...result,
-                "@_SchemaVersion": "2.0"
-              }
+            return {
+              ...result,
+              ...resultHasErrorAttr,
+              "@_SchemaVersion": "2.0"
             }
           })
         : offence["br7:Result"]
@@ -104,6 +102,19 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalse
         }
       }
     })
+  }
+}
+
+const generateHasErrorAttribute = (
+  exceptions: Exception[] | undefined,
+  path: ExceptionPath,
+  addFalseHasErrorAttributes: boolean
+) => {
+  const elementHasError = hasError(exceptions, path)
+  if (addFalseHasErrorAttributes) {
+    return { "@_hasError": elementHasError }
+  } else {
+    return elementHasError ? { "@_hasError": true } : {}
   }
 }
 
