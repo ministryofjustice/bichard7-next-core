@@ -6,6 +6,7 @@ import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
 import createTriggerIfNecessary from "./createTriggerIfNecessary"
+import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
 import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"
@@ -28,7 +29,10 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
 
     const appealAllowed = isAppealAllowed(offence)
 
-    console.log("To be implemented: TriggerBuilder.java:1029")
+    let sentDISARR = false
+    let addedByCourtTriggerRaised = false
+    let addedAtCourtAddToPNCTriggerRaised = false
+    let addTICSToOffenceTriggerRaised = false
 
     let offenceTriggerCodes = offenceCode ? postUpdateTriggers[offenceCode] : undefined
     if (offenceCode && offenceCode.length == 8) {
@@ -106,9 +110,51 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       }
 
       if (offence.AddedByTheCourt || (ticsInResult && isRecordableOffence(offence))) {
-        console.log("To be implemented: TriggerBuilder.java:1256")
+        pncUpdateDataset.PncOperations.forEach((operation) => {
+          if (operation.code === "DISARR" && operation.status?.toUpperCase() === "C") {
+            const ccr = operation.data?.courtCaseReference
+            if (!ccr || ccr === offence.CourtCaseReferenceNumber) {
+              sentDISARR = true
+            }
+          }
+        })
+        if (sentDISARR && offence.AddedByTheCourt && disarrCompatibleResultClass(offence)) {
+          if (!addedByCourtTriggerRaised) {
+            createTriggerIfNecessary(
+              triggers,
+              "TRPS0010" as TriggerCode,
+              offence.CourtOffenceSequenceNumber,
+              pncUpdateDataset,
+              acquittedOnAppeal
+            )
+            addedByCourtTriggerRaised = true
+          }
+        } else {
+          if (!addedAtCourtAddToPNCTriggerRaised && offence.AddedByTheCourt) {
+            createTriggerIfNecessary(
+              triggers,
+              "TRPS0011" as TriggerCode,
+              offence.CourtOffenceSequenceNumber,
+              pncUpdateDataset,
+              acquittedOnAppeal
+            )
+            addedAtCourtAddToPNCTriggerRaised = true
+          }
+
+          if (!addTICSToOffenceTriggerRaised && ticsInResult && !sentDISARR) {
+            createTriggerIfNecessary(
+              triggers,
+              "TRPS0013" as TriggerCode,
+              offence.CourtOffenceSequenceNumber,
+              pncUpdateDataset,
+              false
+            )
+            addTICSToOffenceTriggerRaised = true
+          }
+        }
       }
     })
+    console.log("To be implemented: TriggerBuilder.java:1327 to 1329")
   }
 
   pncUpdateDataset.PncOperations.forEach((_operation) => {
