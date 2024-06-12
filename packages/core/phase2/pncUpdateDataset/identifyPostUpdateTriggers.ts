@@ -1,5 +1,6 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
+import { CjsVerdict } from "../../phase1/types/Verdict"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
@@ -61,7 +62,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       : undefined
     results?.forEach((result) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
-      const acquittedOnAppeal = appealAllowed && result.Verdict === "NG"
+      const acquittedOnAppeal = appealAllowed && result.Verdict === CjsVerdict.NotGuilty
       if (restrainingOrderCJSResultCodes.includes(result.CJSresultCode)) {
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
