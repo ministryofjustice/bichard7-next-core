@@ -1,3 +1,4 @@
+import errorPaths from "../../phase1/lib/errorPaths"
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import { CjsVerdict } from "../../phase1/types/Verdict"
@@ -60,7 +61,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       : pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
       ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
       : undefined
-    results?.forEach((result) => {
+    results?.forEach((result, resultIndex) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
       const acquittedOnAppeal = appealAllowed && result.Verdict === CjsVerdict.NotGuilty
       if (restrainingOrderCJSResultCodes.includes(result.CJSresultCode)) {
@@ -83,10 +84,26 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
 
       const triggerCodes = postUpdateTriggers[result.CJSresultCode]
       if (triggerCodes) {
-        console.log("To be implemented: TriggerBuilder.java:1165")
+        triggerCodes.forEach((triggerCode) => {
+          const offenceSeqNr =
+            getGenericTriggerCaseOrOffenceLevelIndicator(triggerCode) === offenceLevelTrigger
+              ? offence.CourtOffenceSequenceNumber
+              : undefined
+          createTriggerIfNecessary(triggers, triggerCode, offenceSeqNr, pncUpdateDataset, acquittedOnAppeal)
+        })
       }
 
-      console.log("To be implemented: TriggerBuilder.java:1206 to 1216")
+      const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
+      const disposalTextError = pncUpdateDataset.Exceptions.find((e) => e.code === "HO200200" && e.path === errorPath)
+      if (disposalTextError) {
+        createTriggerIfNecessary(
+          triggers,
+          "TRPS0003" as TriggerCode,
+          offence.CourtOffenceSequenceNumber,
+          pncUpdateDataset,
+          acquittedOnAppeal
+        )
+      }
 
       if (offence.AddedByTheCourt || (ticsInResult && isRecordableOffence(offence))) {
         console.log("To be implemented: TriggerBuilder.java:1256")
