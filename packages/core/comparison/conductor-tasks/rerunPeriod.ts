@@ -73,7 +73,7 @@ const rerunPeriod: ConductorWorker = {
       }
 
       logs.push(
-        `Results of ${phase} processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
+        `Results of phase ${phase} processing: ${count.pass} passed. ${count.fail} failed. ${count.intentionalDifference} intentional differences.`
       )
     }
 

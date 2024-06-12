@@ -545,14 +545,14 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
   }
 }
 
-const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addHasErrorAttributes: boolean = false): AhoXml => {
+const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addFalseHasErrorAttributes: boolean = true): AhoXml => {
   const pudClone: PncUpdateDataset = structuredClone(pud)
   addNullElementsForExceptions(pudClone)
 
   const xmlPud = mapPncUpdateDatasetToXml(pudClone)
 
-  if (pudClone.Exceptions.length > 0 || addHasErrorAttributes) {
-    addExceptionsToPncUpdateDatasetXml(xmlPud, pudClone.Exceptions)
+  if (pudClone.Exceptions.length > 0 || addFalseHasErrorAttributes) {
+    addExceptionsToPncUpdateDatasetXml(xmlPud, pudClone.Exceptions, addFalseHasErrorAttributes)
   }
 
   return xmlPud

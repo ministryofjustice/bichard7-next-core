@@ -1,21 +1,18 @@
 import hasError from "../../serialise/ahoXml/hasError"
 import type { AhoXml } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
+import type { ExceptionPath } from "../../types/Exception"
 
-const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
-  // This block is added to allow the <br7:HasError> to be set without any of the attributes being set
-  // Currently breaks several tests so omitErrorAttributes parameter is currently set to false where
-  // this function is called.
-
+const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalseHasErrorAttributes = true) => {
   const hasAnyErrors =
     hasError(exceptions) || aho["br7:AnnotatedHearingOutcome"]?.["br7:HasError"]?.["#text"] === "true"
 
   if (aho["br7:AnnotatedHearingOutcome"]) {
-    aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = hasError(exceptions, [
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Hearing"
-    ])
+    const hearingHasError = hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Hearing"])
+    if (hearingHasError || addFalseHasErrorAttributes) {
+      aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = hearingHasError
+    }
+
     aho["br7:AnnotatedHearingOutcome"] = {
       "br7:HearingOutcome": aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"],
       "br7:HasError": { "#text": hasAnyErrors.toString() },
@@ -31,17 +28,24 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
     delete aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_SchemaVersion"]
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Hearing"]["@_SchemaVersion"] = "4.0"
 
-    aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_hasError"] = hasError(exceptions, [
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case"
-    ])
+    const caseHasError = hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case"])
+    if (caseHasError || addFalseHasErrorAttributes) {
+      aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_hasError"] = caseHasError
+    }
 
     delete aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_SchemaVersion"]
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["@_SchemaVersion"] = "4.0"
 
-    aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["@_hasError"] =
-      hasError(exceptions, ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant"])
+    const hearingDefendantHasError = hasError(exceptions, [
+      "AnnotatedHearingOutcome",
+      "HearingOutcome",
+      "Case",
+      "HearingDefendant"
+    ])
+    if (hearingDefendantHasError || addFalseHasErrorAttributes) {
+      aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["@_hasError"] =
+        hearingDefendantHasError
+    }
 
     aho["br7:AnnotatedHearingOutcome"]["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"]["br7:Offence"] = aho[
       "br7:AnnotatedHearingOutcome"
@@ -50,9 +54,9 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
         ? offence["br7:Result"].map((result, resultIndex) => {
             delete result["@_SchemaVersion"]
 
-            return {
-              ...result,
-              "@_hasError": hasError(exceptions, [
+            const resultHasErrorAttr = generateHasErrorAttribute(
+              exceptions,
+              [
                 "AnnotatedHearingOutcome",
                 "HearingOutcome",
                 "Case",
@@ -61,7 +65,13 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
                 offenceIndex,
                 "Result",
                 resultIndex
-              ]),
+              ],
+              addFalseHasErrorAttributes
+            )
+
+            return {
+              ...result,
+              ...resultHasErrorAttr,
               "@_SchemaVersion": "2.0"
             }
           })
@@ -69,20 +79,31 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined) => {
 
       delete offence["@_SchemaVersion"]
 
+      const offenceHasErrorAttr = generateHasErrorAttribute(
+        exceptions,
+        ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", offenceIndex],
+        addFalseHasErrorAttributes
+      )
       return {
         ...offence,
         "br7:Result": results,
-        "@_hasError": hasError(exceptions, [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          offenceIndex
-        ]),
+        ...offenceHasErrorAttr,
         "@_SchemaVersion": "4.0"
       }
     })
+  }
+}
+
+const generateHasErrorAttribute = (
+  exceptions: Exception[] | undefined,
+  path: ExceptionPath,
+  addFalseHasErrorAttributes: boolean
+) => {
+  const elementHasError = hasError(exceptions, path)
+  if (addFalseHasErrorAttributes) {
+    return { "@_hasError": elementHasError }
+  } else {
+    return elementHasError ? { "@_hasError": true } : {}
   }
 }
 

@@ -131,8 +131,8 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
   }
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addHasErrorAttributes = false): string => {
-  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addHasErrorAttributes)
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = false): string => {
+  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addFalseHasErrorAttributes)
   normaliseNamespaces(xmlAho)
   const xmlPncUpdateDataset: PncUpdateDatasetXml = {
     "?xml": xmlAho["?xml"],
