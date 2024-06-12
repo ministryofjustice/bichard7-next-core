@@ -49,15 +49,15 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
 
     const incomingMessageType = getMessageType(incomingMessage)
 
-    const isPncUpdateDataSet = incomingMessageType === "PncUpdateDataset"
-    serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, !isPncUpdateDataSet)
+    const addFalseHasErrorAttributes = !(incomingMessageType === "PncUpdateDataset")
+    serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, addFalseHasErrorAttributes)
     if (isError(serialisedOutgoingMessage)) {
       throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
     }
 
     const parsedIncomingMessageResult = parseIncomingMessage(incomingMessage)
     const coreResult = phase2Handler(parsedIncomingMessageResult.message, auditLogger)
-    const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, !isPncUpdateDataSet)
+    const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, addFalseHasErrorAttributes)
 
     const sortedExceptions = sortExceptions(outgoingPncUpdateDataset.Exceptions)
     const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
