@@ -79,27 +79,16 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalse
 
       delete offence["@_SchemaVersion"]
 
-      const offenceHasError = hasError(exceptions, [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        offenceIndex
-      ])
-      if (offenceHasError || addFalseHasErrorAttributes) {
-        return {
-          ...offence,
-          "br7:Result": results,
-          "@_hasError": offenceHasError,
-          "@_SchemaVersion": "4.0"
-        }
-      } else {
-        return {
-          ...offence,
-          "br7:Result": results,
-          "@_SchemaVersion": "4.0"
-        }
+      const offenceHasErrorAttr = generateHasErrorAttribute(
+        exceptions,
+        ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", offenceIndex],
+        addFalseHasErrorAttributes
+      )
+      return {
+        ...offence,
+        "br7:Result": results,
+        ...offenceHasErrorAttr,
+        "@_SchemaVersion": "4.0"
       }
     })
   }
