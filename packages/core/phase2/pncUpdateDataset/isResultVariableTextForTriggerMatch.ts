@@ -3,11 +3,8 @@ import getResultVariableTextForTriggerCode from "./getResultVariableTextForTrigg
 
 const isResultVariableTextForTriggerMatch = (triggerCode: TriggerCode, resultVariableText: string): boolean => {
   const regex = new RegExp(getResultVariableTextForTriggerCode(triggerCode))
-  console.log(regex)
 
   const match = regex.exec(resultVariableText)
-
-  console.table([match])
 
   if (match) {
     return true
