@@ -154,7 +154,6 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         }
       }
     })
-    console.log("To be implemented: TriggerBuilder.java:1327 to 1329")
   }
 
   const newremCount = pncUpdateDataset.PncOperations.filter((op) => op.code === "NEWREM").length
