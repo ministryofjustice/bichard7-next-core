@@ -1,25 +1,31 @@
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
+import { CjsVerdict } from "../../phase1/types/Verdict"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
+import createTriggerIfNecessary from "./createTriggerIfNecessary"
+import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import getUpdateTriggersMap from "./getUpdateTriggersMap"
+import isAppealAllowed from "./isAppealAllowed"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
 // TODO: Add TRPS0001 to TriggerCode enum
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
+const offenceLevelTrigger = "0"
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
   const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const triggers: Trigger[] = []
   const postUpdateTriggers = getUpdateTriggersMap("post")
-
-  console.log("To be implemented: TriggerBuilder.java:1003")
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offences[offenceIndex]
     const offenceCode = offence ? getOffenceCode(offence) : undefined
+
+    const appealAllowed = isAppealAllowed(offence)
 
     console.log("To be implemented: TriggerBuilder.java:1029")
 
@@ -35,8 +41,18 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       }
     }
 
-    offenceTriggerCodes?.forEach((_offenceTriggerCode) => {
-      console.log("To be implemented: TriggerBuilder.java:1094")
+    offenceTriggerCodes?.forEach((offenceTriggerCode) => {
+      if (getGenericTriggerCaseOrOffenceLevelIndicator(offenceTriggerCode) === offenceLevelTrigger) {
+        createTriggerIfNecessary(
+          triggers,
+          offenceTriggerCode,
+          offence.CourtOffenceSequenceNumber,
+          pncUpdateDataset,
+          false
+        )
+      } else {
+        createTriggerIfNecessary(triggers, offenceTriggerCode, undefined, pncUpdateDataset, false)
+      }
     })
 
     const results = offence
@@ -46,7 +62,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       : undefined
     results?.forEach((result) => {
       const ticsInResult = !!result.NumberOfOffencesTIC
-
+      const acquittedOnAppeal = appealAllowed && result.Verdict === CjsVerdict.NotGuilty
       if (restrainingOrderCJSResultCodes.includes(result.CJSresultCode)) {
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
@@ -55,7 +71,13 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
             isResultVariableTextForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText) &&
             !isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText))
         ) {
-          console.log("To be implemented: TriggerBuilder.java:1147")
+          createTriggerIfNecessary(
+            triggers,
+            "TRPS0001" as TriggerCode,
+            offence.CourtOffenceSequenceNumber,
+            pncUpdateDataset,
+            acquittedOnAppeal
+          )
         }
       }
 
