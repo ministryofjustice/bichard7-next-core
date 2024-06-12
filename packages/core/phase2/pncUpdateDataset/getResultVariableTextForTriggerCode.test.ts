@@ -3,7 +3,7 @@ import getResultVariableTextForTriggerCode from "./getResultVariableTextForTrigg
 
 describe("getResultVariableTextForTriggerCode", () => {
   it("returns a result variable regex", () => {
-    const resultVariableTexts = getResultVariableTextForTriggerCode(TriggerCode.TRPS0001)
+    const resultVariableTexts = getResultVariableTextForTriggerCode("TRPS0001" as TriggerCode)
 
     expect(resultVariableTexts).toBe("Restraining order made that the defendant must")
   })
