@@ -2,9 +2,18 @@ import type { TriggerCode } from "../../types/TriggerCode"
 import getResultVariableTextForTriggerCode from "./getResultVariableTextForTriggerCode"
 
 const isResultVariableTextForTriggerMatch = (triggerCode: TriggerCode, resultVariableText: string): boolean => {
-  const triggerVaraibleTexts = getResultVariableTextForTriggerCode(triggerCode)
+  const regex = new RegExp(getResultVariableTextForTriggerCode(triggerCode))
+  console.log(regex)
 
-  return triggerVaraibleTexts.includes(resultVariableText)
+  const match = regex.exec(resultVariableText)
+
+  console.table([match])
+
+  if (match) {
+    return true
+  }
+
+  return false
 }
 
 export default isResultVariableTextForTriggerMatch

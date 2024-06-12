@@ -3,6 +3,11 @@ import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTrigge
 
 describe("isResultVariableTextForTriggerMatch", () => {
   it("returns false if result variable text not a match for trigger code text pattern", () => {
-    expect(isResultVariableTextForTriggerMatch(TriggerCode.TRPR0001, "result-variable-code")).toBeFalsy()
+    expect(isResultVariableTextForTriggerMatch(TriggerCode.TRPS0001, "result-variable-code")).toBeFalsy()
+  })
+
+  it("returns true if result variable text matches trigger code text pattern", () => {
+    const variableText = "sex offender,sex offenses act"
+    expect(isResultVariableTextForTriggerMatch(TriggerCode.TRPR0004, variableText)).toBeTruthy()
   })
 })
