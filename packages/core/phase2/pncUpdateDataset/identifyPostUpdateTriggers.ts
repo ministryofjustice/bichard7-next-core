@@ -83,7 +83,19 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
 
       const triggerCodes = postUpdateTriggers[result.CJSresultCode]
       if (triggerCodes) {
-        console.log("To be implemented: TriggerBuilder.java:1165")
+        triggerCodes.forEach((triggerCode) => {
+          if (getGenericTriggerCaseOrOffenceLevelIndicator(triggerCode) === offenceLevelTrigger) {
+            createTriggerIfNecessary(
+              triggers,
+              triggerCode,
+              offence.CourtOffenceSequenceNumber,
+              pncUpdateDataset,
+              acquittedOnAppeal
+            )
+          } else {
+            createTriggerIfNecessary(triggers, triggerCode, undefined, pncUpdateDataset, acquittedOnAppeal)
+          }
+        })
       }
 
       console.log("To be implemented: TriggerBuilder.java:1206 to 1216")
