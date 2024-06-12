@@ -73,7 +73,6 @@ describe("validateAmountSpecifiedInResult", () => {
       const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 1)
 
       expect(amountResult).toBeUndefined()
-      console.log(aho.Exceptions)
       expect(aho.Exceptions).toStrictEqual([
         {
           code: "HO200205",
