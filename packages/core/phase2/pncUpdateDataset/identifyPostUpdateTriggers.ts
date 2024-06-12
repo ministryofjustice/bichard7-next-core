@@ -84,17 +84,11 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       const triggerCodes = postUpdateTriggers[result.CJSresultCode]
       if (triggerCodes) {
         triggerCodes.forEach((triggerCode) => {
-          if (getGenericTriggerCaseOrOffenceLevelIndicator(triggerCode) === offenceLevelTrigger) {
-            createTriggerIfNecessary(
-              triggers,
-              triggerCode,
-              offence.CourtOffenceSequenceNumber,
-              pncUpdateDataset,
-              acquittedOnAppeal
-            )
-          } else {
-            createTriggerIfNecessary(triggers, triggerCode, undefined, pncUpdateDataset, acquittedOnAppeal)
-          }
+          const offenceSeqNr =
+            getGenericTriggerCaseOrOffenceLevelIndicator(triggerCode) === offenceLevelTrigger
+              ? offence.CourtOffenceSequenceNumber
+              : undefined
+          createTriggerIfNecessary(triggers, triggerCode, offenceSeqNr, pncUpdateDataset, acquittedOnAppeal)
         })
       }
 
