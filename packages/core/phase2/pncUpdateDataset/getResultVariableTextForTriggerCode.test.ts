@@ -3,14 +3,14 @@ import getResultVariableTextForTriggerCode from "./getResultVariableTextForTrigg
 
 describe("getResultVariableTextForTriggerCode", () => {
   it("returns a result variable regex", () => {
-    const resultVariableTexts = getResultVariableTextForTriggerCode("TRPS0001" as TriggerCode)
+    const resultVariableText = getResultVariableTextForTriggerCode("TRPS0001" as TriggerCode)
 
-    expect(resultVariableTexts).toBe("Restraining order made that the defendant must")
+    expect(resultVariableText).toBe("Restraining order made that the defendant must")
   })
 
   it("returns null if there is no result variable regex", () => {
-    const resultVariableTexts = getResultVariableTextForTriggerCode(TriggerCode.TRPR0001)
+    const resultVariableText = getResultVariableTextForTriggerCode(TriggerCode.TRPR0001)
 
-    expect(resultVariableTexts).toBe("")
+    expect(resultVariableText).toBe("")
   })
 })

@@ -1,6 +1,6 @@
 import type { TriggerCode } from "../../types/TriggerCode"
 
-const resultVaraibleText: Record<string, string> = {
+const resultVariableText: Record<string, string> = {
   TRPS0001: "Restraining order made that the defendant must",
   TRPS0002: "e",
   TRPR0004: "sex(ual)? off?ender,sex(ual)? off?en[cs]es act",
@@ -8,8 +8,8 @@ const resultVaraibleText: Record<string, string> = {
 }
 
 const getResultVariableTextForTriggerCode = (triggerCode: TriggerCode): string => {
-  if (Object.keys(resultVaraibleText).includes(triggerCode)) {
-    return resultVaraibleText[triggerCode]
+  if (Object.keys(resultVariableText).includes(triggerCode)) {
+    return resultVariableText[triggerCode]
   }
 
   return ""
