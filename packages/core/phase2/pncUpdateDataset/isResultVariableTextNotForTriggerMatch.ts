@@ -1,5 +1,13 @@
-const isResultVariableTextNotForTriggerMatch = (_triggerCode: string, _resultVariableText: string): boolean => {
-  console.log("To be implemented: TriggerBuilderUtilsImpl.java:628")
+import getResultVariableTextNotForTriggerCode from "./getResultVariableTextNotForTriggerCode"
+
+const isResultVariableTextNotForTriggerMatch = (triggerCode: string, resultVariableText: string): boolean => {
+  const regex = new RegExp(getResultVariableTextNotForTriggerCode(triggerCode))
+
+  const match = regex.exec(resultVariableText)
+
+  if (match) {
+    return true
+  }
 
   return false
 }
