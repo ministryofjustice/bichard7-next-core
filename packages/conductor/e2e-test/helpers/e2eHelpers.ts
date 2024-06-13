@@ -3,6 +3,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { GetCommand, DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb"
 import fs from "fs"
 import type { DynamoDBClient } from "@aws-sdk/client-dynamodb"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const sendFileToS3 = async (s3Client: S3Client, srcFilename: string, destFilename: string, bucket: string) => {
   const Body = await fs.promises.readFile(srcFilename)
@@ -49,4 +50,8 @@ const getPhaseTableName = (phase: number): string => {
   }
 }
 
-export { getDynamoRecord, setDynamoRecordToFailedStatus, getPhaseTableName, sendFileToS3 }
+const conductorClient = createConductorClient()
+const startWorkflow = async (workflowName: string, requestBody: Record<string, unknown>, correlationId: string) =>
+  await conductorClient.workflowResource.startWorkflow1(workflowName, requestBody, undefined, correlationId)
+
+export { getDynamoRecord, setDynamoRecordToFailedStatus, getPhaseTableName, sendFileToS3, startWorkflow }
