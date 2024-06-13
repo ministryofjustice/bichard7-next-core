@@ -1,4 +1,4 @@
-import TriggerCode from "bichard7-next-data-latest/types/TriggerCode"
+import { TriggerCode } from "../../types/TriggerCode"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
 describe("isResultVariableTextNotForTriggerMatch", () => {
