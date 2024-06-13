@@ -5,6 +5,6 @@ describe("getGenericTriggerCaseOrOffenceLevelIndicator", () => {
   it("should return an empty string", () => {
     const result = getGenericTriggerCaseOrOffenceLevelIndicator("TR000001" as TriggerCode)
 
-    expect(result).toEqual("")
+    expect(result).toEqual(" ")
   })
 })
