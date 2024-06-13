@@ -154,14 +154,14 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         }
       }
     })
-    console.log("To be implemented: TriggerBuilder.java:1327 to 1329")
   }
 
-  pncUpdateDataset.PncOperations.forEach((_operation) => {
-    console.log("To be implemented: TriggerBuilder.java:1334 to 1355")
-  })
+  const newremCount = pncUpdateDataset.PncOperations.filter((op) => op.code === "NEWREM").length
+  if (newremCount > 1) {
+    createTriggerIfNecessary(triggers, "TRPS0004" as TriggerCode, undefined, pncUpdateDataset, false)
+  }
 
-  return []
+  return triggers
 }
 
 export default identifyPostUpdateTriggers
