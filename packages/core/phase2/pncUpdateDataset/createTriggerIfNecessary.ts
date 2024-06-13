@@ -29,6 +29,7 @@ const createTriggerIfNecessary = (
     if (acquittedOnAppeal) {
       triggerCode = mapTriggerToReverse(triggerCode)
     }
+
     triggers.push({ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber })
   } else {
     const courtHearingLocation = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation
@@ -36,9 +37,9 @@ const createTriggerIfNecessary = (
       const areaCode = courtHearingLocation.SecondLevelCode
       const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
 
-      if (forceCode && forceCode === areaCode) {
+      if (forceCode && forceCode !== areaCode) {
         const forceRuleIncludesOutOfArea = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0027)
-        if (!forceRuleIncludesOutOfArea || forceRuleIncludesOutOfArea) {
+        if (forceRuleIncludesOutOfArea === undefined || forceRuleIncludesOutOfArea) {
           triggers.push({ code: TriggerCode.TRPR0027 })
         }
       }
