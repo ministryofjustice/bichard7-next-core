@@ -8,7 +8,7 @@ describe("getResultVariableTextForTriggerCode", () => {
     expect(resultVariableText).toBe("Restraining order made that the defendant must")
   })
 
-  it("returns null if there is no result variable regex", () => {
+  it("returns empty string if there is no result variable regex", () => {
     const resultVariableText = getResultVariableTextForTriggerCode(TriggerCode.TRPR0001)
 
     expect(resultVariableText).toBe("")
