@@ -1,9 +1,10 @@
 jest.setTimeout(30_000)
 jest.retryTimes(10)
-import { SendMessageCommand } from "@aws-sdk/client-sqs"
+
 import waitForExpect from "wait-for-expect"
-import { getPhaseTableName, sendFileToS3, getDynamoRecord } from "./helpers/e2eHelpers"
-import { dbClient, s3Client, sqsClient } from "./helpers/clients"
+import { getPhaseTableName, sendFileToS3, getDynamoRecord, startWorkflow } from "./helpers/e2eHelpers"
+import { dbClient, s3Client } from "./helpers/clients"
+import { randomUUID } from "crypto"
 
 describe("Rerun all workflow", () => {
   it("should rerun phase 2 comparisons and update dynamo record", async () => {
@@ -27,13 +28,7 @@ describe("Rerun all workflow", () => {
     const startDate = new Date()
     startDate.setHours(startDate.getHours() - 1)
 
-    const command = new SendMessageCommand({
-      QueueUrl: "rerunAll",
-      DelaySeconds: 3,
-      MessageBody: JSON.stringify({ startDate: startDate.toISOString() })
-    })
-
-    await sqsClient.send(command)
+    await startWorkflow("rerun_all", { startDate: startDate.toISOString() }, randomUUID())
 
     await waitForExpect(
       async () => {
