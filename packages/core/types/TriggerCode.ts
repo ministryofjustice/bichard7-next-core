@@ -30,5 +30,5 @@ export enum TriggerCode {
   TRPS0004 = "TRPS0004",
   TRPS0010 = "TRPS0010",
   TRPS0011 = "TRPS0011",
-  TRPS0013 = "TRPS0013",
+  TRPS0013 = "TRPS0013"
 }
