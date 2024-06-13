@@ -2,12 +2,9 @@ jest.setTimeout(30_000)
 jest.retryTimes(10)
 
 import waitForExpect from "wait-for-expect"
-import { getPhaseTableName, sendFileToS3, getDynamoRecord } from "./helpers/e2eHelpers"
+import { getPhaseTableName, sendFileToS3, getDynamoRecord, startWorkflow } from "./helpers/e2eHelpers"
 import { dbClient, s3Client } from "./helpers/clients"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { randomUUID } from "crypto"
-
-const conductorClient = createConductorClient()
 
 describe("Rerun all workflow", () => {
   it("should rerun phase 2 comparisons and update dynamo record", async () => {
@@ -31,12 +28,7 @@ describe("Rerun all workflow", () => {
     const startDate = new Date()
     startDate.setHours(startDate.getHours() - 1)
 
-    await conductorClient.workflowResource.startWorkflow1(
-      "rerun_all",
-      { startDate: startDate.toISOString() },
-      undefined,
-      randomUUID()
-    )
+    await startWorkflow("rerun_all", { startDate: startDate.toISOString() }, randomUUID())
 
     await waitForExpect(
       async () => {
