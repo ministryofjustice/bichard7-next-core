@@ -1,9 +1,9 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import { TriggerCode } from "../../types/TriggerCode"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 
 describe("getResultCodeValuesForTriggerCode", () => {
   it("should return the result code values for TRPR0002", () => {
-    const result = getResultCodeValuesForTriggerCode("TRPR0002" as TriggerCode)
+    const result = getResultCodeValuesForTriggerCode(TriggerCode.TRPR0002)
 
     expect(result).toEqual([4575, 4576, 4577, 4585, 4586])
   })

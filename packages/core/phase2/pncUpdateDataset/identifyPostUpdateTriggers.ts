@@ -3,7 +3,7 @@ import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import { CjsVerdict } from "../../phase1/types/Verdict"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { TriggerCode } from "../../types/TriggerCode"
+import { TriggerCode } from "../../types/TriggerCode"
 import isRecordableOffence from "../isRecordableOffence"
 import createTriggerIfNecessary from "./createTriggerIfNecessary"
 import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
@@ -14,8 +14,7 @@ import isAppealAllowed from "./isAppealAllowed"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
-// TODO: Add TRPS0001 to TriggerCode enum
-const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode("TRPS0001" as TriggerCode)
+const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode(TriggerCode.TRPS0001)
 const offenceLevelTrigger = "0"
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
@@ -72,13 +71,12 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         if (
           pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType === "CC" ||
           (result.ResultVariableText &&
-            // TODO: Add TRPS0001 to TriggerCode enum
-            isResultVariableTextForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText) &&
-            !isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, result.ResultVariableText))
+            isResultVariableTextForTriggerMatch(TriggerCode.TRPS0001, result.ResultVariableText) &&
+            !isResultVariableTextNotForTriggerMatch(TriggerCode.TRPS0001, result.ResultVariableText))
         ) {
           createTriggerIfNecessary(
             triggers,
-            "TRPS0001" as TriggerCode,
+            TriggerCode.TRPS0001,
             offence.CourtOffenceSequenceNumber,
             pncUpdateDataset,
             acquittedOnAppeal
@@ -102,7 +100,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       if (disposalTextError) {
         createTriggerIfNecessary(
           triggers,
-          "TRPS0003" as TriggerCode,
+          TriggerCode.TRPS0003,
           offence.CourtOffenceSequenceNumber,
           pncUpdateDataset,
           acquittedOnAppeal
@@ -122,7 +120,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
           if (!addedByCourtTriggerRaised) {
             createTriggerIfNecessary(
               triggers,
-              "TRPS0010" as TriggerCode,
+              TriggerCode.TRPS0010,
               offence.CourtOffenceSequenceNumber,
               pncUpdateDataset,
               acquittedOnAppeal
@@ -133,7 +131,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
           if (!addedAtCourtAddToPNCTriggerRaised && offence.AddedByTheCourt) {
             createTriggerIfNecessary(
               triggers,
-              "TRPS0011" as TriggerCode,
+              TriggerCode.TRPS0011,
               offence.CourtOffenceSequenceNumber,
               pncUpdateDataset,
               acquittedOnAppeal
@@ -144,7 +142,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
           if (!addTICSToOffenceTriggerRaised && ticsInResult && !sentDISARR) {
             createTriggerIfNecessary(
               triggers,
-              "TRPS0013" as TriggerCode,
+              TriggerCode.TRPS0013,
               offence.CourtOffenceSequenceNumber,
               pncUpdateDataset,
               false
@@ -158,7 +156,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
 
   const newremCount = pncUpdateDataset.PncOperations.filter((op) => op.code === "NEWREM").length
   if (newremCount > 1) {
-    createTriggerIfNecessary(triggers, "TRPS0004" as TriggerCode, undefined, pncUpdateDataset, false)
+    createTriggerIfNecessary(triggers, TriggerCode.TRPS0004, undefined, pncUpdateDataset, false)
   }
 
   return triggers
