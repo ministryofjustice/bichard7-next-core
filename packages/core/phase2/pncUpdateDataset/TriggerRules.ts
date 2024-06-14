@@ -1,15 +1,13 @@
 import populateOrganisationUnitFields from "../../phase1/lib/organisationUnit/populateOrganisationUnitFields"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../../types/TriggerCode"
 import type { TriggerRule } from "../types/TriggerRule"
 import { IncludeExclude } from "../types/TriggerRule"
 
 export const TRIGGER_RULE_LIST: TriggerRule[] = [
   // trigger.rule.B772490.TRPR0014=exclude
   {
-    code: TriggerCode.TRPR0014,
     rule: IncludeExclude.exclude,
-    organisationUnit: populateOrganisationUnitFields({ OrganisationUnitCode: "B772490" } as OrganisationUnitCodes)
+    organisationUnit: populateOrganisationUnitFields({ OrganisationUnitCode: "53" } as OrganisationUnitCodes)
   }
 ]
 
