@@ -226,4 +226,15 @@ S3_REGION="eu-west-2" \
 aws-vault exec bichard7-shared-e2e-test -- npm run conductor-worker
 ```
 
-See the docker compose file for Conductor for an up to date list of environment variables required
+See the docker compose file for Conductor for an up-to-date list of environment variables required
+
+### Viewing Conductor in a deployed environment
+
+We have a script ([open-conductor.sh](./scripts/open-conductor.sh)) that will retrieve the password for Conductor in a deployed environment from AWS, save it to your clipboard, and then automatically open Conductor in your browser.
+
+To view Conductor in one of our deployed environments, run the script with the AWS Vault profile for that environment:
+
+```bash
+aws-vault exec <AWS_VAULT_PROFILE> -- npm run conductor:open
+# E.g. aws-vault exec bichard7-shared-e2e-test -- npm run conductor:open
+```
