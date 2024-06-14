@@ -12,6 +12,7 @@ import parseIncomingMessage from "./parseIncomingMessage"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 import isEqual from "lodash.isequal"
 import { sortExceptions } from "./sortExceptions"
+import { sortTriggers } from "./sortTriggers"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -62,10 +63,13 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const sortedExceptions = sortExceptions(outgoingPncUpdateDataset.Exceptions)
     const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
 
+    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
+    const sortedTriggers = sortTriggers(triggers)
+
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
-        coreResult: triggers,
-        comparisonResult: triggers
+        coreResult: sortedCoreTriggers,
+        comparisonResult: sortedTriggers
       },
       exceptions: {
         coreResult: sortedCoreExceptions,
@@ -76,7 +80,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     }
 
     return {
-      triggersMatch: true,
+      triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
       xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
