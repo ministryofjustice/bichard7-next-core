@@ -1,7 +1,7 @@
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type { TriggerCode } from "../../types/TriggerCode"
 
-enum IncludeExclude {
+export enum IncludeExclude {
   include = "include",
   exclude = "exclude"
 }
@@ -11,4 +11,3 @@ export type TriggerRule = {
   rule: IncludeExclude
   organisationUnit: OrganisationUnitCodes
 }
-// populateOrganisationUnitFields
