@@ -23,10 +23,11 @@ const createTriggerIfNecessary = (
 
     triggers.push({ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber })
   } else if (isForceOwnerOutOfArea(pncUpdateDataset)) {
+    const outOfAreaTriggerCode = TriggerCode.TRPR0027
     const forceRuleIncludesOutOfArea =
-      mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0027) ?? true
+      mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, outOfAreaTriggerCode) ?? true
     if (forceRuleIncludesOutOfArea) {
-      triggers.push({ code: TriggerCode.TRPR0027 })
+      triggers.push({ code: outOfAreaTriggerCode })
     }
   }
 
