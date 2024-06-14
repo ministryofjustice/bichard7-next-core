@@ -1,11 +1,23 @@
 import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import { TRIGGER_RULE_LIST } from "./TriggerRules"
 
 const mostSpecificForceRuleAllowsTrigger = (
-  _pncUpdateDataset: PncUpdateDataset,
-  _triggerCode: TriggerCode
+  pncUpdateDataset: PncUpdateDataset,
+  triggerCode: TriggerCode
 ): boolean | undefined => {
-  console.log("To be implemented: TriggerBuilder.java:300")
+  const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
+  const forceRules = TRIGGER_RULE_LIST.filter(
+    (rule) =>
+      rule.organisationUnit.OrganisationUnitCode === forceCode &&
+      (!rule.code || rule.code === triggerCode) &&
+      rule.rule === "exclude"
+  )
+  if (forceRules.length > 0) {
+    return false
+  }
+
+  console.log(TRIGGER_RULE_LIST)
   return true
 }
 
