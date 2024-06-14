@@ -32,9 +32,8 @@ const createTriggerIfNecessary = (
 
     triggers.push({ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber })
   } else {
-    const courtHearingLocation = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation
-    if (courtHearingLocation && courtHearingLocation.SecondLevelCode) {
-      const areaCode = courtHearingLocation.SecondLevelCode
+    const areaCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation?.SecondLevelCode
+    if (areaCode) {
       const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
 
       if (forceCode && forceCode !== areaCode) {
