@@ -10,7 +10,7 @@ const mostSpecificForceRuleAllowsTrigger = (
 }
 
 // From old Bichard, triggers.properties:
-// trigger.rule.23.TRPR9993=exclude 
+// trigger.rule.23.TRPR9993=exclude
 // trigger.rule.53=exclude
 // trigger.rule.86.TRPS0002=Exclude
 // trigger.rule.53.TRPR9233=include
