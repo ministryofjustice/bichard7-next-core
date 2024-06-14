@@ -31,21 +31,23 @@ const createTriggerIfNecessary = (
     }
 
     triggers.push({ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber })
-  } else {
-    const areaCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation?.SecondLevelCode
-    if (areaCode) {
-      const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
-
-      if (forceCode && forceCode !== areaCode) {
-        const forceRuleIncludesOutOfArea = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0027)
-        if (forceRuleIncludesOutOfArea === undefined || forceRuleIncludesOutOfArea) {
-          triggers.push({ code: TriggerCode.TRPR0027 })
-        }
-      }
+  } else if ( isForceOwnerOutOfArea(pncUpdateDataset) ){
+    const forceRuleIncludesOutOfArea = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0027)
+    if (forceRuleIncludesOutOfArea === undefined || forceRuleIncludesOutOfArea) {
+      triggers.push({ code: TriggerCode.TRPR0027 })
     }
   }
 
   return generateTrigger
+}
+
+const isForceOwnerOutOfArea = (pncUpdateDataset: PncUpdateDataset): boolean => {
+  const areaCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation?.SecondLevelCode
+    if (areaCode) {
+      const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
+      return !!forceCode && forceCode !== areaCode
+    }
+    else return false
 }
 
 export default createTriggerIfNecessary
