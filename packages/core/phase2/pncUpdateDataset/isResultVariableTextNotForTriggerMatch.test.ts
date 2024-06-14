@@ -3,7 +3,7 @@ import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotFor
 
 describe("isResultVariableTextNotForTriggerMatch", () => {
   it("returns false if result variable text not a match for trigger code exception", () => {
-    expect(isResultVariableTextNotForTriggerMatch("TRPS0001" as TriggerCode, "result-variable-code")).toBeFalsy()
+    expect(isResultVariableTextNotForTriggerMatch(TriggerCode.TRPS0001, "result-variable-code")).toBeFalsy()
   })
 
   it("returns true if result variable text matches trigger code exception", () => {
