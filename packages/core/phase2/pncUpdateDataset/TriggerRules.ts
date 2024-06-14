@@ -8,6 +8,10 @@ export const TRIGGER_RULE_LIST: TriggerRule[] = [
   {
     rule: IncludeExclude.exclude,
     organisationUnit: populateOrganisationUnitFields({ OrganisationUnitCode: "53" } as OrganisationUnitCodes)
+  },
+  {
+    rule: IncludeExclude.include,
+    organisationUnit: populateOrganisationUnitFields({ OrganisationUnitCode: "47" } as OrganisationUnitCodes)
   }
 ]
 
