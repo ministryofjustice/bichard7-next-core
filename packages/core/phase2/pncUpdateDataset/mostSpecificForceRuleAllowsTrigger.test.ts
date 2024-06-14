@@ -20,4 +20,12 @@ describe("mostSpecificForceRuleAllowsTrigger", () => {
     const result = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0014)
     expect(result).toBe(true)
   })
+  it("should return undefined when force code does not match a rule", () => {
+    const pncUpdateDataset = generateFakePncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
+      SecondLevelCode: "99"
+    } as OrganisationUnitCodes
+    const result = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, TriggerCode.TRPR0014)
+    expect(result).toBeUndefined()
+  })
 })
