@@ -15,11 +15,11 @@ const createTriggerIfNecessary = (
   const forceRule = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, triggerCode)
   const courtRule = mostSpecificCourtRuleAllowsTrigger(pncUpdateDataset, triggerCode)
   let generateTrigger = true
-  if (forceRule == null && courtRule == null) {
+  if (forceRule == undefined && courtRule == undefined) {
     generateTrigger = true
-  } else if (courtRule == null) {
-    generateTrigger = forceRule
-  } else if (forceRule == null) {
+  } else if (courtRule == undefined) {
+    generateTrigger = forceRule as boolean
+  } else if (forceRule == undefined) {
     generateTrigger = courtRule
   } else {
     generateTrigger = forceRule || courtRule

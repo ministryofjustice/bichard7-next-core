@@ -4,7 +4,7 @@ import type { TriggerCode } from "../../types/TriggerCode"
 const mostSpecificForceRuleAllowsTrigger = (
   _pncUpdateDataset: PncUpdateDataset,
   _triggerCode: TriggerCode
-): boolean => {
+): boolean | undefined => {
   console.log("To be implemented: TriggerBuilder.java:300")
   return true
 }
