@@ -12,9 +12,9 @@ const createTriggerIfNecessary = (
   pncUpdateDataset: PncUpdateDataset,
   acquittedOnAppeal = false
 ): boolean => {
-  const forceRule = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, triggerCode) ?? true
-  const courtRule = mostSpecificCourtRuleAllowsTrigger(pncUpdateDataset, triggerCode) ?? true
-  const generateTrigger = forceRule && courtRule
+  const forceAllowsTrigger = mostSpecificForceRuleAllowsTrigger(pncUpdateDataset, triggerCode) ?? true
+  const courtAllowsTrigger = mostSpecificCourtRuleAllowsTrigger(pncUpdateDataset, triggerCode) ?? true
+  const generateTrigger = forceAllowsTrigger && courtAllowsTrigger
 
   if (generateTrigger) {
     if (acquittedOnAppeal) {
