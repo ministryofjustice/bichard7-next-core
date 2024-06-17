@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { TriggerCode } from "../../types/TriggerCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const modules = Object.keys(TriggerCode)

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../../types/TriggerCode"
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
 import resultCodeIsFinal from "../lib/result/resultCodeIsFinal"
 import type { Trigger } from "../types/Trigger"

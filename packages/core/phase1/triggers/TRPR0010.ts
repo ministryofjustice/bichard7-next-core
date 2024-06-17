@@ -1,5 +1,5 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../../types/TriggerCode"
 import { lookupRemandStatusByCjsCode } from "../dataLookup"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 

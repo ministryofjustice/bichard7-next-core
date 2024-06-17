@@ -1,4 +1,4 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import getResultVariableTextNotForTriggerCode from "./getResultVariableTextNotForTriggerCode"
 
 const isResultVariableTextNotForTriggerMatch = (triggerCode: TriggerCode, resultVariableText: string): boolean => {

@@ -1,5 +1,5 @@
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { TriggerCode } from "../../types/TriggerCode"
 
 const mostSpecificForceRuleAllowsTrigger = (
   _pncUpdateDataset: PncUpdateDataset,
