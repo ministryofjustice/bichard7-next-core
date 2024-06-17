@@ -7,16 +7,18 @@ const mostSpecificForceRuleAllowsTrigger = (
   triggerCode: TriggerCode
 ): boolean | undefined => {
   const forceCode = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.SecondLevelCode
-  const forceRules = TRIGGER_RULE_LIST.filter(
-    (rule) => rule.organisationUnit.OrganisationUnitCode === forceCode && (!rule.code || rule.code === triggerCode)
+  const triggerSpecificForceRules = TRIGGER_RULE_LIST.find(
+    (rule) => rule.organisationUnit.OrganisationUnitCode === forceCode && rule.code === triggerCode
+  )
+  const generalForceRules = TRIGGER_RULE_LIST.find(
+    (rule) => rule.organisationUnit.OrganisationUnitCode === forceCode && !rule.code
   )
 
-  const forceExcludeRules = forceRules.find((rule) => rule.rule == IncludeExclude.exclude)
-  const forceIncludeRules = forceRules.find((rule) => rule.rule == IncludeExclude.include)
+  const mostSpecificRule = triggerSpecificForceRules?.rule ?? generalForceRules?.rule
 
-  if (forceExcludeRules) {
+  if (mostSpecificRule == IncludeExclude.exclude) {
     return false
-  } else if (forceIncludeRules) {
+  } else if (mostSpecificRule == IncludeExclude.include) {
     return true
   }
 }
