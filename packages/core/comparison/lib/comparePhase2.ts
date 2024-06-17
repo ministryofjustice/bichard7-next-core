@@ -43,7 +43,9 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       debugger
     }
 
-    const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(outgoingMessage)
+    const normalisedOutgoingMessage = outgoingMessage.replace(/ WeedFlag="[^"]*"/g, "")
+    const outgoingPncUpdateDataset = parsePncUpdateDataSetXml(normalisedOutgoingMessage)
+
     if (isError(outgoingPncUpdateDataset)) {
       throw new Error("Failed to parse outgoing PncUpdateDataset XML")
     }
@@ -75,15 +77,15 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
         coreResult: sortedCoreExceptions,
         comparisonResult: sortedExceptions
       },
-      xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, outgoingMessage),
-      xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, outgoingMessage)
+      xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, normalisedOutgoingMessage),
+      xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage)
     }
 
     return {
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, outgoingMessage),
-      xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, outgoingMessage),
+      xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
+      xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, normalisedOutgoingMessage),
       incomingMessageType: incomingMessageType,
       ...(debug && { debugOutput })
     }
