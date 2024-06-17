@@ -1,4 +1,4 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 
 const mapTriggerToReverse = (triggerCode: TriggerCode): TriggerCode => {
   console.log("To be implemented: TriggerBuilder.java:394")

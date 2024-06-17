@@ -1,8 +1,8 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import postgres from "postgres"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListNoteRecord from "../../phase1/types/ErrorListNoteRecord"
-import { TriggerCode } from "../../types/TriggerCode"
 import insertErrorListRecord from "./insertErrorListRecord"
 import insertErrorListTriggers from "./insertErrorListTriggers"
 

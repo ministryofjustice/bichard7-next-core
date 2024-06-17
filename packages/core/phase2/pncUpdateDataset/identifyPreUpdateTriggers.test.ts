@@ -1,6 +1,6 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import { TriggerCode } from "../../types/TriggerCode"
 import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 

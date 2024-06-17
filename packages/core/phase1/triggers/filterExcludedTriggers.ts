@@ -1,5 +1,5 @@
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { TriggerCode } from "../../types/TriggerCode"
 import excludedTriggerConfig from "../lib/excludedTriggerConfig"
 import type { Trigger } from "../types/Trigger"
 

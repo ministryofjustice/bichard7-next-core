@@ -1,4 +1,4 @@
-import { TriggerCode } from "../../types/TriggerCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 
 describe("getResultCodeValuesForTriggerCode", () => {

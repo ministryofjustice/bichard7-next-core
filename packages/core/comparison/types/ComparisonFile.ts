@@ -1,4 +1,4 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
 

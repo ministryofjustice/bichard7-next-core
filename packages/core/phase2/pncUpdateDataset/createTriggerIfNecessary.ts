@@ -1,9 +1,9 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import mostSpecificForceRuleAllowsTrigger from "./mostSpecificForceRuleAllowsTrigger"
-import mostSpecificCourtRuleAllowsTrigger from "./mostSpecificCourtRuleAllowsTrigger"
-import { TriggerCode } from "../../types/TriggerCode"
 import mapTriggerToReverse from "./mapTriggerToReverse"
+import mostSpecificCourtRuleAllowsTrigger from "./mostSpecificCourtRuleAllowsTrigger"
+import mostSpecificForceRuleAllowsTrigger from "./mostSpecificForceRuleAllowsTrigger"
 
 const createTriggerIfNecessary = (
   triggers: Trigger[],

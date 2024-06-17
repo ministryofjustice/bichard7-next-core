@@ -1,8 +1,8 @@
 jest.mock("./mostSpecificCourtRuleAllowsTrigger")
 jest.mock("./mostSpecificForceRuleAllowsTrigger")
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Trigger } from "../../phase1/types/Trigger"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../../types/TriggerCode"
 import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import createTriggerIfNecessary from "./createTriggerIfNecessary"
 import mostSpecificCourtRuleAllowsTrigger from "./mostSpecificCourtRuleAllowsTrigger"

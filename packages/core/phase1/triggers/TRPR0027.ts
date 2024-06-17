@@ -1,5 +1,5 @@
 import { excludedTriggerConfig } from "bichard7-next-data-latest"
-import { TriggerCode } from "../../types/TriggerCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Trigger } from "../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 

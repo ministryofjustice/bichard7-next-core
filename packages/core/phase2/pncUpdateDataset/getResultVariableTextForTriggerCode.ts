@@ -1,4 +1,4 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 
 const resultVariableText: Record<string, string> = {
   TRPS0001: "Restraining order made that the defendant must",

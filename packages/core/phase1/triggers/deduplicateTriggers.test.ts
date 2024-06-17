@@ -1,4 +1,4 @@
-import { TriggerCode } from "../../types/TriggerCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import deduplicateTriggers from "../triggers/deduplicateTriggers"
 import type { Trigger } from "../types/Trigger"
 

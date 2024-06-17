@@ -1,5 +1,5 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import { TriggerCode } from "../../types/TriggerCode"
 
 const triggerCode = TriggerCode.TRPR0003A
 

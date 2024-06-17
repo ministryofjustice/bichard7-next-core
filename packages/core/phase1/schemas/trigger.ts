@@ -1,5 +1,5 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import { z } from "zod"
-import { TriggerCode } from "../../types/TriggerCode"
 
 export const triggerCodeSchema = z.nativeEnum(TriggerCode)
 

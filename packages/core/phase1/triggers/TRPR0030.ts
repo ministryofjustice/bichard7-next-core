@@ -1,5 +1,5 @@
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-import { TriggerCode } from "../../types/TriggerCode"
 import isCaseRecordable from "../lib/isCaseRecordable"
 import getOffenceFullCode from "../lib/offence/getOffenceFullCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"

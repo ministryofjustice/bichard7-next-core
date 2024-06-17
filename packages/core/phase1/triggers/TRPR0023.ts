@@ -1,4 +1,4 @@
-import { TriggerCode } from "../../types/TriggerCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import generateTriggersFromResultQualifier from "../triggers/generateTriggersFromResultQualifier"
 import type TriggerConfig from "../types/TriggerConfig"
 import type { TriggerGenerator } from "../types/TriggerGenerator"

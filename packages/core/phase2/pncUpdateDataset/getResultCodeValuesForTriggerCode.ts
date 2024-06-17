@@ -1,4 +1,4 @@
-import type { TriggerCode } from "../../types/TriggerCode"
+import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 
 const resultCodeValues: Record<string, number[]> = {
   TRPR0002: [4575, 4576, 4577, 4585, 4586],
