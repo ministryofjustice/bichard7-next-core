@@ -2,7 +2,7 @@
   "name": "@moj-bichard7/conductor",
   "version": "2.0.0",
   "devDependencies": {
-    "@aws-sdk/client-sqs": "^3.592.0",
+    "@aws-sdk/client-sqs": "^3.598.0",
     "@stomp/stompjs": "^7.0.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -14,11 +14,11 @@
     "jest": "^29.7.0",
     "mailhog": "^4.16.0",
     "postgres": "^3.4.4",
-    "ts-jest": "^29.1.4",
+    "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "wait-for-expect": "^3.0.2",
-    "ws": "^8.17.0"
+    "ws": "^8.17.1"
   },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
@@ -57,9 +57,9 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.592.0",
-    "@aws-sdk/client-s3": "^3.592.0",
-    "@aws-sdk/lib-dynamodb": "^3.592.0",
+    "@aws-sdk/client-dynamodb": "^3.598.0",
+    "@aws-sdk/client-s3": "^3.598.0",
+    "@aws-sdk/lib-dynamodb": "^3.598.0",
     "@io-orkes/conductor-javascript": "^2.1.0",
     "axios": "^1.7.2",
     "lodash.ismatch": "^4.4.0",
