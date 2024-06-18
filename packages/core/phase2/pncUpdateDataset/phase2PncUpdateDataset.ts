@@ -1,17 +1,14 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import generateTriggers from "../../phase1/triggers/generate"
 import type AuditLogger from "../../phase1/types/AuditLogger"
+import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import allPncOffencesContainResults from "../allPncOffencesContainResults"
 import getOperationSequence from "../getOperationSequence"
 import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
-import combineTriggerLists from "./combineTriggerLists"
-import identifyPostUpdateTriggers from "./identifyPostUpdateTriggers"
-import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 import refreshOperationSequence from "./refreshOperationSequence"
-import type { Trigger } from "../../phase1/types/Trigger"
-import generateTriggers from "../../phase1/triggers/generate"
 
 const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDataset => {
   const outputMessage = structuredClone(inputMessage)
@@ -38,9 +35,6 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
           outputMessage.PncOperations.push(...operations)
         } else {
           triggers = generateTriggers(pncUpdateDataset, true)
-          // const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
-          // const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
-          // triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
         }
       }
     } else {
