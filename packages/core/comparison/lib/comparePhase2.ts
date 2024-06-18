@@ -1,5 +1,6 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
+import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
@@ -9,10 +10,9 @@ import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../ty
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import parseIncomingMessage from "./parseIncomingMessage"
-import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-import isEqual from "lodash.isequal"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
+import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
