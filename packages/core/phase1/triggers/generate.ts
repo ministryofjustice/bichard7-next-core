@@ -1,5 +1,7 @@
+import identifyPostUpdateTriggers from "../../phase2/pncUpdateDataset/identifyPostUpdateTriggers"
 import TriggerCode from "bichard7-next-data-latest//dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import triggers from "../triggers"
 import deduplicateTriggers from "../triggers/deduplicateTriggers"
 import filterExcludedTriggers from "../triggers/filterExcludedTriggers"
@@ -15,11 +17,22 @@ const independentTriggerFn = (aho: AnnotatedHearingOutcome) =>
 
 const generateSetOfTriggers = (
   generator: TriggerGenerator,
-  aho: AnnotatedHearingOutcome,
-  existingTriggers: Trigger[] = []
+  aho: AnnotatedHearingOutcome | PncUpdateDataset,
+  existingTriggers: Trigger[] = [],
+  generatePostUpdateTriggers = false
 ): Trigger[] => {
-  const generatedTriggers = generator(aho, { triggers: existingTriggers })
-  const filteredTriggers = filterExcludedTriggers(aho, generatedTriggers)
+  const generatedPreUpdateTriggers = generator(aho, { triggers: existingTriggers })
+  const filteredPreUpdateTriggers = filterExcludedTriggers(aho, generatedPreUpdateTriggers)
+
+  let generatedPostUpdateTriggers: Trigger[] = []
+  let filteredPostUpdateTriggers: Trigger[] = []
+  if (generatePostUpdateTriggers && "PncOperations" in aho) {
+    generatedPostUpdateTriggers = identifyPostUpdateTriggers(aho)
+    filteredPostUpdateTriggers = filterExcludedTriggers(aho, generatedPostUpdateTriggers)
+  }
+
+  const generatedTriggers = [...generatedPreUpdateTriggers, ...generatedPostUpdateTriggers]
+  const filteredTriggers = [...filteredPreUpdateTriggers, ...filteredPostUpdateTriggers]
 
   // Generate TRPR0027 which depends on whether triggers have been excluded or not
   const triggersExcluded = generatedTriggers.length !== filteredTriggers.length
@@ -30,11 +43,16 @@ const generateSetOfTriggers = (
   return existingTriggers.concat(finalTriggers)
 }
 
-export default (annotatedHearingOutcome: AnnotatedHearingOutcome): Trigger[] => {
+export default (annotatedHearingOutcome: AnnotatedHearingOutcome, generatePostUpdateTriggers = false): Trigger[] => {
   // Run triggers which don't depend on any other triggers
   const independentTriggers = generateSetOfTriggers(independentTriggerFn, annotatedHearingOutcome)
 
   // Generate TRPR0015 which depends on whether other triggers have been generated
-  const finalTriggers = generateSetOfTriggers(triggers.TRPR0015, annotatedHearingOutcome, independentTriggers)
+  const finalTriggers = generateSetOfTriggers(
+    triggers.TRPR0015,
+    annotatedHearingOutcome,
+    independentTriggers,
+    generatePostUpdateTriggers
+  )
   return deduplicateTriggers(finalTriggers)
 }
