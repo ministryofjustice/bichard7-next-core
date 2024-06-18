@@ -1,5 +1,7 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
+import type { Trigger } from "../phase1/types/Trigger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
@@ -11,10 +13,6 @@ import isRecordableOnPnc from "./isRecordableOnPnc"
 import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
-import identifyPostUpdateTriggers from "./pncUpdateDataset/identifyPostUpdateTriggers"
-import identifyPreUpdateTriggers from "./pncUpdateDataset/identifyPreUpdateTriggers"
-import combineTriggerLists from "./pncUpdateDataset/combineTriggerLists"
-import type { Trigger } from "../phase1/types/Trigger"
 
 const phase2Handler = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
   if ("PncOperations" in message) {
@@ -28,12 +26,6 @@ const initialisePncUpdateDatasetFromAho = (aho: AnnotatedHearingOutcome): PncUpd
   const pncUpdateDataset = structuredClone(aho) as PncUpdateDataset
   pncUpdateDataset.PncOperations = []
   return pncUpdateDataset
-}
-
-const generateTriggersList = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
-  const postUpdateTriggersArray = identifyPostUpdateTriggers(pncUpdateDataset)
-  const preUpdateTriggersArray = identifyPreUpdateTriggers(pncUpdateDataset)
-  return combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
 }
 
 const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
@@ -59,11 +51,11 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
     }
   }
 
-  let generateTriggers = false
+  let shouldGenerateTriggers = false
 
   if (isAintCase(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
-    generateTriggers = true
+    shouldGenerateTriggers = true
   } else if (!isRecordableOnPnc(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredNonrecordable)
   } else if (allPncOffencesContainResults(outputMessage)) {
@@ -81,13 +73,13 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
           auditLogger.info(EventCode.IgnoredNonrecordable)
         }
 
-        generateTriggers = true
+        shouldGenerateTriggers = true
       }
     }
   }
 
-  if (generateTriggers) {
-    triggers = generateTriggersList(outputMessage)
+  if (shouldGenerateTriggers) {
+    triggers = generateTriggers(outputMessage, true)
   }
 
   outputMessage.HasError = false
