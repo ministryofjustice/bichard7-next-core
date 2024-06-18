@@ -11,6 +11,7 @@ import identifyPostUpdateTriggers from "./identifyPostUpdateTriggers"
 import identifyPreUpdateTriggers from "./identifyPreUpdateTriggers"
 import refreshOperationSequence from "./refreshOperationSequence"
 import type { Trigger } from "../../phase1/types/Trigger"
+import generateTriggers from "../../phase1/triggers/generate"
 
 const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDataset => {
   const outputMessage = structuredClone(inputMessage)
@@ -36,9 +37,10 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
         if (operations.length > 0) {
           outputMessage.PncOperations.push(...operations)
         } else {
-          const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
-          const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
-          triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
+          triggers = generateTriggers(pncUpdateDataset, true)
+          // const postUpdateTriggersArray = identifyPostUpdateTriggers(outputMessage)
+          // const preUpdateTriggersArray = identifyPreUpdateTriggers(outputMessage)
+          // triggers = combineTriggerLists(preUpdateTriggersArray, postUpdateTriggersArray)
         }
       }
     } else {
