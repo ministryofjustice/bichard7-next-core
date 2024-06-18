@@ -39,10 +39,19 @@ const generateRerunTasks: ConductorWorker = {
       ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher, phase })
     }
 
+    const generateTaskReferenceName = (taskNumber: number, startDate: string, endDate: string): string => {
+      const removeMilliseconds = (isoString: string) => isoString.replace(/[.]\d+/, "")
+
+      return `Task ${taskNumber} - ${removeMilliseconds(startDate)} to ${removeMilliseconds(endDate)}`
+    }
+
     const outputData = {
-      dynamicTasks: ranges.map((_, i) => ({ name: taskName, taskReferenceName: `task${i}` })),
+      dynamicTasks: ranges.map((range, i) => ({
+        name: taskName,
+        taskReferenceName: generateTaskReferenceName(i + 1, range.start, range.end)
+      })),
       dynamicTasksInput: ranges.reduce((inputs: { [key: string]: GenerateDayTasksOutput }, taskInput, i) => {
-        inputs[`task${i}`] = taskInput
+        inputs[generateTaskReferenceName(i + 1, taskInput.start, taskInput.end)] = taskInput
         return inputs
       }, {})
     }
