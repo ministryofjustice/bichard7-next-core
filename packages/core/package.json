@@ -103,7 +103,7 @@
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1642.0",
     "axios": "^1.7.2",
-    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.178",
+    "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.179",
     "diff": "^5.2.0",
     "dynalite": "^3.2.2",
     "fast-xml-parser": "^4.4.0",
