@@ -56,7 +56,7 @@ const generateRerunTasks: ConductorWorker = {
       }, {})
     }
 
-    return completed(outputData, `Generated ${ranges.length} day intervals`)
+    return completed(outputData, `Generated ${ranges.length} tasks`)
   }
 }
 
