@@ -5,7 +5,6 @@ import type { Trigger } from "../../phase1/types/Trigger"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import isRecordableOffence from "../isRecordableOffence"
 import disarrCompatibleResultClass from "../lib/deriveOperationSequence/disarrCompatibleResultClass"
-import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
@@ -15,6 +14,10 @@ const offenceLevelTrigger = "0"
 const postUpdateTriggersMap: Record<string, TriggerCode[]> = {
   "3107": [TriggerCode.TRPS0002],
   "3105": [TriggerCode.TRPS0008]
+}
+const genericTriggerCaseOrOffenceLevelIndicator: { [K in TriggerCode]?: string } = {
+  [TriggerCode.TRPS0002]: "C",
+  [TriggerCode.TRPS0008]: "0"
 }
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
@@ -42,7 +45,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
     }
 
     offenceTriggerCodes?.forEach((offenceTriggerCode) => {
-      if (getGenericTriggerCaseOrOffenceLevelIndicator(offenceTriggerCode) === offenceLevelTrigger) {
+      if (genericTriggerCaseOrOffenceLevelIndicator[offenceTriggerCode] === offenceLevelTrigger) {
         triggers.push({ code: offenceTriggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       } else {
         triggers.push({ code: offenceTriggerCode })
@@ -71,7 +74,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       if (triggerCodes) {
         triggerCodes.forEach((triggerCode) => {
           const offenceSeqNr =
-            getGenericTriggerCaseOrOffenceLevelIndicator(triggerCode) === offenceLevelTrigger
+            genericTriggerCaseOrOffenceLevelIndicator[triggerCode] === offenceLevelTrigger
               ? offence.CourtOffenceSequenceNumber
               : undefined
           triggers.push({ code: triggerCode, offenceSequenceNumber: offenceSeqNr })
