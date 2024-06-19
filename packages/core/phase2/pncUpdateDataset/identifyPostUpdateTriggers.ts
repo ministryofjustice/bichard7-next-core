@@ -1,4 +1,5 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import isEqual from "lodash.isequal"
 import errorPaths from "../../phase1/lib/errorPaths"
 import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { Trigger } from "../../phase1/types/Trigger"
@@ -82,7 +83,9 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
       }
 
       const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
-      const disposalTextError = pncUpdateDataset.Exceptions.find((e) => e.code === "HO200200" && e.path === errorPath)
+      const disposalTextError = pncUpdateDataset.Exceptions.find(
+        (e) => e.code === "HO200200" && isEqual(e.path, errorPath)
+      )
       if (disposalTextError) {
         triggers.push({ code: TriggerCode.TRPS0003, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
