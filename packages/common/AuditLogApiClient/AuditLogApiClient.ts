@@ -4,7 +4,7 @@ import * as https from "https"
 import type { AuditLogEvent } from "../types/AuditLogEvent"
 import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 import type { PromiseResult } from "../types/Result"
-import ApplicationError from "./ApplicationError"
+import ApplicationError, { AlreadyExistsError } from "./ApplicationError"
 import addQueryParams from "./addQueryParams"
 
 export type GetMessagesOptions = {
@@ -142,10 +142,12 @@ export default class AuditLogApiClient {
         }
       })
       .catch((error: AxiosError) => {
-        return new ApplicationError(
-          `Error creating audit log: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
+        const apiError = error.response?.data ? this.stringify(error.response?.data) : error.message
+        if (/A message with Id [^ ]* already exists in the database/.test(apiError)) {
+          return new AlreadyExistsError()
+        }
+
+        return new ApplicationError(`Error creating audit log: ${apiError}`, error)
       })
   }
 
