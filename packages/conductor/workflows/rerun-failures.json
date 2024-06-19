@@ -65,5 +65,5 @@
   "timeoutPolicy": "ALERT_ONLY",
   "timeoutSeconds": 0,
   "variables": {},
-  "inputTemplate": { "durationSeconds": "86400" }
+  "inputTemplate": { "durationSeconds": "43200" }
 }

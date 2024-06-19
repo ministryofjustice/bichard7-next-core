@@ -68,5 +68,5 @@
   "timeoutPolicy": "ALERT_ONLY",
   "timeoutSeconds": 0,
   "variables": {},
-  "inputTemplate": { "durationSeconds": "3600", "phase": 2 }
+  "inputTemplate": { "durationSeconds": "43200", "phase": 2, "startDate": "2023-02-08" }
 }

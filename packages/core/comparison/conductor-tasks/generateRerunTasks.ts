@@ -15,9 +15,9 @@ const generateRerunTasks: ConductorWorker = {
   taskDefName: "generate_rerun_tasks",
   pollInterval: 10000,
   execute: (task: Task) => {
-    const startDate = new Date(task.inputData?.startDate ?? "2022-07-01")
+    const startDate = new Date(task.inputData?.startDate ?? "2023-02-08")
     const endDate = new Date(task.inputData?.endDate ?? new Date().toISOString())
-    const durationSeconds = task.inputData?.durationSeconds ?? 3600
+    const durationSeconds = task.inputData?.durationSeconds ?? 43200
     const onlyFailures = task.inputData?.onlyFailures ?? false
     const taskName = task.inputData?.taskName
     const persistResults = task.inputData?.persistResults ?? true
