@@ -8,3 +8,5 @@ export default class ApplicationError extends Error {
 }
 
 export class NotFoundError extends Error {}
+
+export class AlreadyExistsError extends Error {}

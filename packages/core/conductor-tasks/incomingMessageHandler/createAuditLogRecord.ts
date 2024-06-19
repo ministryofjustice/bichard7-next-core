@@ -1,4 +1,5 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import { AlreadyExistsError } from "@moj-bichard7/common/AuditLogApiClient/ApplicationError"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
@@ -18,6 +19,8 @@ const inputDataSchema = z.object({
 })
 type InputData = z.infer<typeof inputDataSchema>
 
+const duplicateOutputData = { duplicateMessage: "isDuplicate" }
+
 const createAuditLogRecord: ConductorWorker = {
   taskDefName: "create_audit_log_record",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
@@ -25,15 +28,15 @@ const createAuditLogRecord: ConductorWorker = {
 
     const apiResult = await apiClient.createAuditLog(auditLogRecord)
     if (isError(apiResult)) {
+      if (apiResult instanceof AlreadyExistsError) {
+        return completed(duplicateOutputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
+      }
+
       return failed("Could not create audit log", apiResult.message)
     }
 
     if (apiResult.status === AuditLogStatus.duplicate) {
-      const outputData = {
-        duplicateMessage: "isDuplicate"
-      }
-
-      return completed(outputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
+      return completed(duplicateOutputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
     }
 
     return completed(`Created audit log for message: ${auditLogRecord.messageId}`)
