@@ -7,17 +7,19 @@ import isRecordableOffence from "../isRecordableOffence"
 import disarrCompatibleResultClass from "../lib/deriveOperationSequence/disarrCompatibleResultClass"
 import getGenericTriggerCaseOrOffenceLevelIndicator from "./getGenericTriggerCaseOrOffenceLevelIndicator"
 import getResultCodeValuesForTriggerCode from "./getResultCodeValuesForTriggerCode"
-import getUpdateTriggersMap from "./getUpdateTriggersMap"
 import isResultVariableTextForTriggerMatch from "./isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "./isResultVariableTextNotForTriggerMatch"
 
 const restrainingOrderCJSResultCodes = getResultCodeValuesForTriggerCode(TriggerCode.TRPS0001)
 const offenceLevelTrigger = "0"
+const postUpdateTriggersMap: Record<string, TriggerCode[]> = {
+  "3107": [TriggerCode.TRPS0002],
+  "3105": [TriggerCode.TRPS0008]
+}
 
 const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger[] => {
   const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   const triggers: Trigger[] = []
-  const postUpdateTriggers = getUpdateTriggersMap("post")
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offences[offenceIndex]
@@ -27,9 +29,9 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
     let addedAtCourtAddToPNCTriggerRaised = false
     let addTICSToOffenceTriggerRaised = false
 
-    let offenceTriggerCodes = offenceCode ? postUpdateTriggers[offenceCode] : undefined
+    let offenceTriggerCodes = offenceCode ? postUpdateTriggersMap[offenceCode] : undefined
     if (offenceCode && offenceCode.length == 8) {
-      const baseOffenceTriggerCodes = postUpdateTriggers[offenceCode.substring(0, 7)]
+      const baseOffenceTriggerCodes = postUpdateTriggersMap[offenceCode.substring(0, 7)]
       if (!offenceTriggerCodes) {
         offenceTriggerCodes = baseOffenceTriggerCodes
       } else {
@@ -65,7 +67,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         }
       }
 
-      const triggerCodes = postUpdateTriggers[result.CJSresultCode]
+      const triggerCodes = postUpdateTriggersMap[result.CJSresultCode]
       if (triggerCodes) {
         triggerCodes.forEach((triggerCode) => {
           const offenceSeqNr =
