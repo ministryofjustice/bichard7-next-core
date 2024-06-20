@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 
 const triggerCode = TriggerCode.TRPS0002

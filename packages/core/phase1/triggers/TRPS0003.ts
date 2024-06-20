@@ -1,9 +1,9 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import errorPaths from "../lib/errorPaths"
-import { Trigger } from "../types/Trigger"
+import type { Trigger } from "../types/Trigger"
 
 const triggerCode = TriggerCode.TRPS0003
 
