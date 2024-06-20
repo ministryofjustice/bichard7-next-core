@@ -1,12 +1,13 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
+import Phase from "../../types/Phase"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 
 const triggerCode = TriggerCode.TRPS0002
 const offenceOrResultCodeForTrigger = "3107"
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== 2) {
+  if (options?.phase !== Phase.PNC_UPDATE) {
     return []
   }
 
