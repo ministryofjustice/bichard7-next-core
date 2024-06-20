@@ -1,7 +1,7 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import errorPaths from "../lib/errorPaths"
 import type { Trigger } from "../types/Trigger"
