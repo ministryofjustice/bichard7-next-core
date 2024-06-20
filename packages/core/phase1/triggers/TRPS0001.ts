@@ -3,6 +3,7 @@ import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 import isResultVariableTextForTriggerMatch from "../../phase2/pncUpdateDataset/isResultVariableTextForTriggerMatch"
 import isResultVariableTextNotForTriggerMatch from "../../phase2/pncUpdateDataset/isResultVariableTextNotForTriggerMatch"
 import Phase from "../../types/Phase"
+import type { Trigger } from "../types/Trigger"
 
 const triggerCode = TriggerCode.TRPS0001
 const restrainingOrderCJSResultCodes: number[] = []
@@ -12,6 +13,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
+  const triggers: Trigger[] = []
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
@@ -20,21 +22,22 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
       ? offence.Result
       : hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
       ? [hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
-      : undefined
-    results?.forEach((result) => {
-      if (restrainingOrderCJSResultCodes.includes(result.CJSresultCode)) {
-        if (
+      : []
+
+    if (
+      results.some(
+        (result) =>
+          restrainingOrderCJSResultCodes.includes(result.CJSresultCode) &&
           result.ResultVariableText &&
           isResultVariableTextForTriggerMatch(triggerCode, result.ResultVariableText) &&
           !isResultVariableTextNotForTriggerMatch(triggerCode, result.ResultVariableText)
-        ) {
-          return [{ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber }]
-        }
-      }
-    })
+      )
+    ) {
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
+    }
   }
 
-  return []
+  return triggers
 }
 
 export default generator
