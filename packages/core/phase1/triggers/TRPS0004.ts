@@ -10,12 +10,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
-  const newremCount = hearingOutcome.PncOperations.filter((op) => op.code === "NEWREM").length
-  if (newremCount > 1) {
-    return [{ code: triggerCode }]
-  }
+  const hasNewremOperation = hearingOutcome.PncOperations.some((op) => op.code === "NEWREM")
 
-  return []
+  return hasNewremOperation ? [{ code: triggerCode }] : []
 }
 
 export default generator
