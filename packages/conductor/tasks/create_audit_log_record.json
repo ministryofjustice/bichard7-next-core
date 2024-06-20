@@ -1,11 +1,11 @@
 {
   "name": "create_audit_log_record",
-  "retryCount": 10,
-  "retryLogic": "EXPONENTIAL_BACKOFF",
-  "retryDelaySeconds": 10,
+  "retryCount": 0,
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 0,
   "timeoutSeconds": 30,
-  "responseTimeoutSeconds": 25,
+  "responseTimeoutSeconds": 30,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["auditLogRecord"],
-  "outputKeys": ["duplicateMessage", "duplicateCorrelationId", "auditLogEvents"]
+  "outputKeys": ["duplicateMessage"]
 }

@@ -59,16 +59,27 @@ describe("createAuditLogRecord", () => {
     await apiClient.createAuditLog(auditLogRecord)
     auditLogRecord.messageId = uuid()
 
-    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } }) // ?
+    const result = await createAuditLogRecord.execute({
+      inputData: { auditLogRecord: { ...auditLogRecord, messageId: uuid() } }
+    })
+    expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toHaveProperty("duplicateMessage", "isDuplicate")
+  })
+
+  it("should correctly identify a message has already been processed", async () => {
+    await apiClient.createAuditLog(auditLogRecord)
+    auditLogRecord.messageHash = uuid()
+
+    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("duplicateMessage", "isDuplicate")
   })
 
   it("should fail task if audit log can't be stored", async () => {
-    await apiClient.createAuditLog(auditLogRecord)
-    auditLogRecord.messageHash = uuid()
-
-    const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
+    const result = await createAuditLogRecord.execute({
+      inputData: { auditLogRecord: { ...auditLogRecord, messageId: "" } }
+    })
     expect(result.status).toBe("FAILED")
+    expect(result.logs?.map((l) => l.log)).toContain("Error creating audit log: Message ID is mandatory")
   })
 })
