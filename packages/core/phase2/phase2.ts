@@ -3,6 +3,7 @@ import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { Trigger } from "../phase1/types/Trigger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import Phase from "../types/Phase"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
 import getOperationSequence from "./getOperationSequence"
@@ -79,7 +80,7 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   }
 
   if (shouldGenerateTriggers) {
-    triggers = generateTriggers(outputMessage, true)
+    triggers = generateTriggers(outputMessage, Phase.PNC_UPDATE)
   }
 
   outputMessage.HasError = false
