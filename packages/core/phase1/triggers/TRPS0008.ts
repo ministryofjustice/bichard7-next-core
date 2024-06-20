@@ -3,6 +3,7 @@ import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 import Phase from "../../types/Phase"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 import type { Trigger } from "../types/Trigger"
+import getResults from "./getResults"
 
 const triggerCode = TriggerCode.TRPS0008
 const offenceOrResultCodeForTrigger = "3105"
@@ -23,12 +24,8 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
     }
 
-    const results = offence
-      ? offence.Result
-      : hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
-      ? [hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
-      : undefined
-    results?.forEach((result) => {
+    const results = getResults(hearingOutcome, offence)
+    results.forEach((result) => {
       if (result.CJSresultCode === Number(offenceOrResultCodeForTrigger)) {
         triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
       }
