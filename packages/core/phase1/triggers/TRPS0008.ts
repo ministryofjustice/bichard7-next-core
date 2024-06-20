@@ -15,11 +15,11 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers: Trigger[] = []
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offences[offenceIndex]
+    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
     const offenceCode = offence ? getOffenceCode(offence) : undefined
 
     if (offenceCode === offenceOrResultCodeForTrigger) {
-      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
     }
 
     const results = offence
@@ -29,7 +29,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
       : undefined
     results?.forEach((result) => {
       if (result.CJSresultCode === Number(offenceOrResultCodeForTrigger)) {
-        triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+        triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
       }
     })
   }

@@ -15,7 +15,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers: Trigger[] = []
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offences[offenceIndex]
+    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
 
     const results = offence
       ? offence.Result
@@ -28,7 +28,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
         (e) => e.code === "HO200200" && isEqual(e.path, errorPath)
       )
       if (disposalTextError) {
-        triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+        triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
       }
     })
   }

@@ -13,7 +13,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offences[offenceIndex]
+    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
     const offenceCode = offence ? getOffenceCode(offence) : undefined
 
     if (offenceCode === offenceOrResultCodeForTrigger) {

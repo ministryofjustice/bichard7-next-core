@@ -13,7 +13,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
 
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offences[offenceIndex]
+    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
 
     const results = offence
       ? offence.Result
@@ -27,7 +27,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
           isResultVariableTextForTriggerMatch(triggerCode, result.ResultVariableText) &&
           !isResultVariableTextNotForTriggerMatch(triggerCode, result.ResultVariableText)
         ) {
-          return [{ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber }]
+          return [{ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber }]
         }
       }
     })
