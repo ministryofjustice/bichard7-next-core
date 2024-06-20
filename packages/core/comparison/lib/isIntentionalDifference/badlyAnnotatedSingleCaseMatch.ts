@@ -1,18 +1,15 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
-const badlyAnnotatedSingleCaseMatch = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  _: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
-): boolean => {
-  if ("exceptions" in actual || "exceptions" in expected) {
+const badlyAnnotatedSingleCaseMatch = ({ expected, actual }: IntentionalDifference): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
     return false
   }
 
-  const expectedCourtCaseReferences = expected.offences.reduce((acc: Set<string>, offence) => {
+  const expectedCourtCaseReferences = expectedMatchingSummary.offences.reduce((acc: Set<string>, offence) => {
     if (offence.courtCaseReference) {
       acc.add(offence.courtCaseReference)
     }
@@ -21,11 +18,11 @@ const badlyAnnotatedSingleCaseMatch = (
   }, new Set<string>())
 
   if (expectedCourtCaseReferences.size === 1) {
-    return expected.offences.every((expectedMatch) =>
-      actual.offences.some(
-        (actualMatch) =>
-          expectedMatch.hoSequenceNumber === actualMatch.hoSequenceNumber &&
-          expectedMatch.pncSequenceNumber === actualMatch.pncSequenceNumber
+    return expectedMatchingSummary.offences.every((offenceInExpected) =>
+      actualMatchingSummary.offences.some(
+        (offenceInActual) =>
+          offenceInExpected.hoSequenceNumber === offenceInActual.hoSequenceNumber &&
+          offenceInExpected.pncSequenceNumber === offenceInActual.pncSequenceNumber
       )
     )
   }

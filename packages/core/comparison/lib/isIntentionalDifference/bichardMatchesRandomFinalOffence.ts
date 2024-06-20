@@ -1,4 +1,6 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import {
@@ -6,7 +8,6 @@ import {
   type PncOffenceWithCaseRef
 } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 // Bichard arbitrarily matches offences if the
 // PNC offences all have a final disposal.
@@ -19,26 +20,24 @@ import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonO
 // Core raises a 304 in Phase 1 to inform users
 // early that the update must be made manually.
 
-const bichardMatchesRandomFinalOffence = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  _: AnnotatedHearingOutcome,
-  incomingAho: AnnotatedHearingOutcome
-): boolean => {
+const bichardMatchesRandomFinalOffence = ({ expected, actual, incomingMessage }: IntentionalDifference): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
   const coreRaisesHo100304 =
-    "exceptions" in actual && actual.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
-  const bichardMatches = !("exceptions" in expected)
+    "exceptions" in actualMatchingSummary &&
+    actualMatchingSummary.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
+  const bichardMatches = !("exceptions" in expectedMatchingSummary)
 
   if (!bichardMatches || !coreRaisesHo100304) {
     return false
   }
 
-  const caseElem = incomingAho.AnnotatedHearingOutcome.HearingOutcome.Case
-  const hearingDate = incomingAho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
+  const caseElem = incomingMessage.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearingDate = incomingMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
   const hoOffences = caseElem.HearingDefendant.Offence
-  const courtCases = expectedAho.PncQuery?.courtCases
-  const penaltyCases = expectedAho.PncQuery?.penaltyCases
+  const courtCases = expected.aho.PncQuery?.courtCases
+  const penaltyCases = expected.aho.PncQuery?.penaltyCases
   const pncOffences = flattenCases(courtCases).concat(flattenCases(penaltyCases))
 
   const offenceMatcher = new OffenceMatcher(hoOffences, pncOffences, hearingDate)

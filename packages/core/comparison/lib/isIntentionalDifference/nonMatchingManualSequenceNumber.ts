@@ -1,16 +1,13 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
-const nonMatchingManualSequenceNumber = (
-  _: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome,
-  ____: AnnotatedHearingOutcome
-): boolean => {
+const nonMatchingManualSequenceNumber = ({ actual }: IntentionalDifference): boolean => {
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
   const coreRaisesHo100320 =
-    "exceptions" in actual && actual.exceptions.some((exception) => exception.code === ExceptionCode.HO100320)
+    "exceptions" in actualMatchingSummary &&
+    actualMatchingSummary.exceptions.some((exception) => exception.code === ExceptionCode.HO100320)
 
   return coreRaisesHo100320
 }

@@ -1,18 +1,15 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
-const coreMatchesBichardAddsInCourt = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  _: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome,
-  incomingAho: AnnotatedHearingOutcome
-): boolean => {
-  if ("exceptions" in actual || "exceptions" in expected) {
+const coreMatchesBichardAddsInCourt = ({ expected, actual, incomingMessage }: IntentionalDifference): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
     return false
   }
 
-  const hasManualCCRs = incomingAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
+  const hasManualCCRs = incomingMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some(
     (hoOffence) => hoOffence.ManualCourtCaseReference && hoOffence.CourtCaseReferenceNumber
   )
 
@@ -20,12 +17,12 @@ const coreMatchesBichardAddsInCourt = (
     return false
   }
 
-  const addedOffences = expected.offences.filter((offence) => offence.addedByCourt)
+  const addedOffences = expectedMatchingSummary.offences.filter((offence) => offence.addedByCourt)
   const bichardAddsInCourt = addedOffences.length > 0
 
-  const matchedOffences = expected.offences.filter((offence) => !offence.addedByCourt)
+  const matchedOffences = expectedMatchingSummary.offences.filter((offence) => !offence.addedByCourt)
   const matchedCCRs = matchedOffences.reduce((acc: Set<string>, o) => {
-    const ccr = o.courtCaseReference ?? expected.caseReference
+    const ccr = o.courtCaseReference ?? expectedMatchingSummary.caseReference
     if (ccr) {
       acc.add(ccr)
     }
@@ -34,11 +31,11 @@ const coreMatchesBichardAddsInCourt = (
   }, new Set<string>())
 
   const identicalMatchedOffences = matchedOffences.every((expectedOffence) => {
-    const matchingOffenceFromActual = actual.offences.find(
+    const matchingOffenceFromActual = actualMatchingSummary.offences.find(
       (actualOffence) => expectedOffence.hoSequenceNumber === actualOffence.hoSequenceNumber
     )
-    const expectedOffenceCcr = expectedOffence.courtCaseReference ?? expected.caseReference
-    const actualOffenceCcr = matchingOffenceFromActual?.courtCaseReference ?? actual.caseReference
+    const expectedOffenceCcr = expectedOffence.courtCaseReference ?? expectedMatchingSummary.caseReference
+    const actualOffenceCcr = matchingOffenceFromActual?.courtCaseReference ?? actualMatchingSummary.caseReference
     return (
       expectedOffenceCcr === actualOffenceCcr &&
       expectedOffence.pncSequenceNumber === matchingOffenceFromActual?.pncSequenceNumber
@@ -46,14 +43,14 @@ const coreMatchesBichardAddsInCourt = (
   })
 
   const bichardAddedInCourtWereMatchedByCore = addedOffences.filter((expectedOffence) => {
-    const matchingOffenceFromActual = actual.offences.find(
+    const matchingOffenceFromActual = actualMatchingSummary.offences.find(
       (actualOffence) => expectedOffence.hoSequenceNumber === actualOffence.hoSequenceNumber
     )
     return matchingOffenceFromActual?.addedByCourt !== true
   })
 
   const coreMatchedToOtherCcrs = bichardAddedInCourtWereMatchedByCore.some((expectedOffence) => {
-    const matchingOffenceFromActual = actual.offences.find(
+    const matchingOffenceFromActual = actualMatchingSummary.offences.find(
       (actualOffence) => expectedOffence.hoSequenceNumber === actualOffence.hoSequenceNumber
     )
     return !matchedCCRs.has(matchingOffenceFromActual!.courtCaseReference!)

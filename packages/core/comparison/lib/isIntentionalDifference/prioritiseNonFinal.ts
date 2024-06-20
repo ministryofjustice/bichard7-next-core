@@ -2,6 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type { PncOffence } from "../../../types/PncQueryResult"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
 type PncOffenceRef = {
   courtRef: string
@@ -29,19 +30,16 @@ const findPncOffence = (aho: AnnotatedHearingOutcome, pncOffenceRef: PncOffenceR
     ?.find((cc) => cc.courtCaseReference === pncOffenceRef.courtRef)
     ?.offences.find((offence) => offence.offence.sequenceNumber === pncOffenceRef.sequence)
 
-const prioritiseNonFinal = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
-): boolean => {
-  if ("exceptions" in actual || "exceptions" in expected) {
+const prioritiseNonFinal = ({ expected, actual }: IntentionalDifference): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
     return false
   }
 
-  const expectedMatches = generateMatches(expected)
-  const actualMatches = generateMatches(actual)
+  const expectedMatches = generateMatches(expectedMatchingSummary)
+  const actualMatches = generateMatches(actualMatchingSummary)
 
   if (!expectedMatches || !actualMatches) {
     return false
@@ -82,8 +80,8 @@ const prioritiseNonFinal = (
       return false
     }
 
-    const expectedPncOffence = findPncOffence(expectedAho, expectedMatch)
-    const actualPncOffence = findPncOffence(expectedAho, actualMatch)
+    const expectedPncOffence = findPncOffence(expected.aho, expectedMatch)
+    const actualPncOffence = findPncOffence(expected.aho, actualMatch)
     if (!expectedPncOffence || !actualPncOffence) {
       return false
     }

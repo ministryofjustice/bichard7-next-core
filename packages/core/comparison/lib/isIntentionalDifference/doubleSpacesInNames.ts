@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
 // Core will remove double spaces in the names
 
@@ -11,15 +11,9 @@ const ahoHasDoubleSpaces = (aho: AnnotatedHearingOutcome): boolean | undefined =
     /\s+\s+/
   )
 
-const doubleSpacesInNames = (
-  _: CourtResultMatchingSummary | null,
-  __: CourtResultMatchingSummary | null,
-  expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
-): boolean => {
-  const expectedAhoHasDoubleSpaces = ahoHasDoubleSpaces(expectedAho)
-  const actualAhoHasDoubleSpaces = ahoHasDoubleSpaces(actualAho)
+const doubleSpacesInNames = ({ expected, actual }: IntentionalDifference): boolean => {
+  const expectedAhoHasDoubleSpaces = ahoHasDoubleSpaces(expected.aho)
+  const actualAhoHasDoubleSpaces = ahoHasDoubleSpaces(actual.aho)
 
   return !!expectedAhoHasDoubleSpaces && !actualAhoHasDoubleSpaces
 }

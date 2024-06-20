@@ -1,4 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
@@ -47,29 +49,35 @@ const filters = [
 const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
-  incoming: AnnotatedHearingOutcome
+  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
 ): boolean => {
-  const expectedMatch = summariseMatching(expected, true)
-  const actualMatch = summariseMatching(actual, true)
+  const intentionalDifference: IntentionalDifference = {
+    expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
+    actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
+    incomingMessage
+  }
 
   // Check for differences in the AHO first
   if (
-    doubleSpacesInNames(expectedMatch, actualMatch, expected, actual, incoming) ||
-    fixedForce91(expectedMatch, actualMatch, expected, actual, incoming) ||
-    fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
-    invalidASN(expectedMatch, actualMatch, expected, actual, incoming) ||
-    missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
-    trailingSpace(expectedMatch, actualMatch, expected, actual, incoming)
+    doubleSpacesInNames(intentionalDifference) ||
+    fixedForce91(intentionalDifference) ||
+    fixedNumberOfOffencesTic(intentionalDifference) ||
+    invalidASN(intentionalDifference) ||
+    missingEmptyCcr(intentionalDifference) ||
+    trailingSpace(intentionalDifference)
   ) {
     return true
   }
 
   // Then check for matching differences
-  if (!expectedMatch || !actualMatch) {
+  if (
+    !intentionalDifference.expected.courtResultMatchingSummary ||
+    !intentionalDifference.actual.courtResultMatchingSummary
+  ) {
     return false
   }
 
-  const filterResults = filters.map((filter) => filter(expectedMatch, actualMatch, expected, actual, incoming))
+  const filterResults = filters.map((filter) => filter(intentionalDifference))
 
   return filterResults.some((result) => result)
 }

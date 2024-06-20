@@ -1,25 +1,23 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { IntentionalDifference } from "../../types/IntentionalDifference"
 
 const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (string | undefined | null)[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map(
     (o) => o.CriminalProsecutionReference.OffenceReasonSequence
   )
 
-const offenceReasonSequenceFormat = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
-  _: AnnotatedHearingOutcome
-): boolean => {
-  if ("exceptions" in actual || "exceptions" in expected) {
+const offenceReasonSequenceFormat = ({ expected, actual }: IntentionalDifference): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
     return false
   }
 
-  const offenceMatchingMatches = JSON.stringify(expected) === JSON.stringify(actual)
-  const expectedSequenceNumbers = extractSequenceNumbers(expectedAho)
-  const actualSequenceNumbers = extractSequenceNumbers(actualAho)
+  const offenceMatchingMatches = JSON.stringify(expectedMatchingSummary) === JSON.stringify(actualMatchingSummary)
+  const expectedSequenceNumbers = extractSequenceNumbers(expected.aho)
+  const actualSequenceNumbers = extractSequenceNumbers(actual.aho)
   const sequenceNumbersMatch = JSON.stringify(expectedSequenceNumbers) === JSON.stringify(actualSequenceNumbers)
   const expectedSequenceNumbersAsNumber = expectedSequenceNumbers.map((n) => Number(n))
   const actualSequenceNumbersAsNumber = actualSequenceNumbers.map((n) => Number(n))
