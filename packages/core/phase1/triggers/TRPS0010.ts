@@ -1,8 +1,9 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 import disarrCompatibleResultClass from "../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass"
-import { Offence } from "../../types/AnnotatedHearingOutcome"
-import { isPncUpdateDataset, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 
 const triggerCode = TriggerCode.TRPS0010
 
