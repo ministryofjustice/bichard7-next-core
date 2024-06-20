@@ -3,7 +3,11 @@ import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPS0004
 
-const generator: TriggerGenerator = (_hearingOutcome) => {
+const generator: TriggerGenerator = (_hearingOutcome, options) => {
+  if (options?.phase !== 2) {
+    return []
+  }
+
   const shouldRaiseTrigger = false
   return shouldRaiseTrigger ? [{ code: triggerCode }] : []
 }
