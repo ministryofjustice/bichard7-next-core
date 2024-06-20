@@ -90,7 +90,7 @@ const identifyPostUpdateTriggers = (pncUpdateDataset: PncUpdateDataset): Trigger
         triggers.push({ code: TriggerCode.TRPS0003, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
 
-      if (offence.AddedByTheCourt || (ticsInResult && isRecordableOffence(offence))) {
+      if ((offence.AddedByTheCourt || ticsInResult) && isRecordableOffence(offence)) {
         pncUpdateDataset.PncOperations.forEach((operation) => {
           if (operation.code === "DISARR" && operation.status?.toUpperCase() === "C") {
             const ccr = operation.data?.courtCaseReference
