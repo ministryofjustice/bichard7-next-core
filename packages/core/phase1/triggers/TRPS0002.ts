@@ -1,6 +1,5 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 
 const triggerCode = TriggerCode.TRPS0002
@@ -11,8 +10,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
-  const pncUpdateDataset = hearingOutcome as PncUpdateDataset
-  const offences = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
     const offence = offences[offenceIndex]
@@ -24,8 +22,8 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
 
     const results = offence
       ? offence.Result
-      : pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
-      ? [pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
+      : hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
+      ? [hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result]
       : undefined
     results?.forEach((result) => {
       if (result.CJSresultCode === Number(offenceOrResultCodeForTrigger)) {
