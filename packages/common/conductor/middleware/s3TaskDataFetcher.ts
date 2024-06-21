@@ -1,7 +1,8 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
-import { ZodIssueCode, type z } from "zod"
+import { ZodIssueCode, z } from "zod"
 import createS3Config from "../../s3/createS3Config"
 import getFileFromS3 from "../../s3/getFileFromS3"
+import readS3FileTags from "../../s3/readS3FileTags"
 import { isError } from "../../types/Result"
 import logger from "../../utils/logger"
 import { failed, failedTerminal } from "../helpers"
@@ -15,15 +16,45 @@ type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "workflowInstanceI
 type TaskDataInputData<T> = {
   s3TaskData: T
   s3TaskDataPath: string
+  lockId?: string
 }
+
+const inputDataSchema = z.object({
+  s3TaskDataPath: z.string(),
+  lockId: z.string().optional()
+})
+
+const lockKey = "lockedByWorkstream"
+
+const formatErrorMessages = (schema: string, error: z.ZodError): string[] =>
+  error.issues.map((e) => {
+    if (e.code === ZodIssueCode.invalid_type) {
+      return `${schema} parse error: Expected ${e.expected} for ${e.path.join(".")}`
+    }
+
+    return `${schema} parse error. Schema mismatch`
+  })
 
 const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInputData<T>>): OriginalHandler => {
   return async (task: ConductorTask) => {
-    if (!task.inputData?.s3TaskDataPath) {
-      return failedTerminal("InputData error: Expected string for s3TaskDataPath")
+    const inputParseResult = inputDataSchema.safeParse(task.inputData)
+    if (!inputParseResult.success) {
+      return failedTerminal(...formatErrorMessages("Input data schema", inputParseResult.error))
     }
 
-    const { s3TaskDataPath } = task.inputData
+    const { s3TaskDataPath, lockId } = inputParseResult.data
+
+    if (lockId) {
+      const objectTags = await readS3FileTags(s3TaskDataPath, taskDataBucket, s3Config)
+      if (isError(objectTags)) {
+        logger.error(objectTags)
+        return failed(`Could not retrieve object tags from S3: ${s3TaskDataPath}`, objectTags.message)
+      }
+
+      if (objectTags[lockKey] && objectTags[lockKey] !== lockId) {
+        return failed("Lock ID does not match")
+      }
+    }
 
     const taskDataContent = await getFileFromS3(s3TaskDataPath, taskDataBucket, s3Config)
     if (isError(taskDataContent)) {
@@ -32,24 +63,19 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
     }
 
     const s3TaskData = JSON.parse(taskDataContent)
-    if (!task.inputData) {
-      task.inputData = {}
-    }
-
     const parseResult = schema.safeParse(s3TaskData)
     if (parseResult.success) {
-      task.inputData.s3TaskData = parseResult.data
-      return handler(task as Task<TaskDataInputData<T>>)
+      const task: Task<TaskDataInputData<T>> = {
+        inputData: {
+          s3TaskDataPath,
+          lockId,
+          s3TaskData: parseResult.data
+        }
+      }
+      return handler(task)
     }
 
-    const messages = parseResult.error.issues.map((e) => {
-      if (e.code === ZodIssueCode.invalid_type) {
-        return `S3TaskData error: Expected ${e.expected} for ${e.path.join(".")}`
-      }
-
-      return "S3TaskData error. Schema mismatch"
-    })
-    return failedTerminal(...messages)
+    return failedTerminal(...formatErrorMessages("S3 data schema", parseResult.error))
   }
 }
 
