@@ -1,4 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { ComparisonData } from "../../types/ComparisonData"
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
@@ -47,29 +49,32 @@ const filters = [
 const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
-  incoming: AnnotatedHearingOutcome
+  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
 ): boolean => {
-  const expectedMatch = summariseMatching(expected, true)
-  const actualMatch = summariseMatching(actual, true)
+  const comparisonData: ComparisonData = {
+    expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
+    actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
+    incomingMessage
+  }
 
   // Check for differences in the AHO first
   if (
-    doubleSpacesInNames(expectedMatch, actualMatch, expected, actual, incoming) ||
-    fixedForce91(expectedMatch, actualMatch, expected, actual, incoming) ||
-    fixedNumberOfOffencesTic(expectedMatch, actualMatch, expected, actual, incoming) ||
-    invalidASN(expectedMatch, actualMatch, expected, actual, incoming) ||
-    missingEmptyCcr(expectedMatch, actualMatch, expected, actual, incoming) ||
-    trailingSpace(expectedMatch, actualMatch, expected, actual, incoming)
+    doubleSpacesInNames(comparisonData) ||
+    fixedForce91(comparisonData) ||
+    fixedNumberOfOffencesTic(comparisonData) ||
+    invalidASN(comparisonData) ||
+    missingEmptyCcr(comparisonData) ||
+    trailingSpace(comparisonData)
   ) {
     return true
   }
 
   // Then check for matching differences
-  if (!expectedMatch || !actualMatch) {
+  if (!comparisonData.expected.courtResultMatchingSummary || !comparisonData.actual.courtResultMatchingSummary) {
     return false
   }
 
-  const filterResults = filters.map((filter) => filter(expectedMatch, actualMatch, expected, actual, incoming))
+  const filterResults = filters.map((filter) => filter(comparisonData))
 
   return filterResults.some((result) => result)
 }

@@ -1,23 +1,22 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const ho100332NotHo100304 = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
-): boolean => {
+const ho100332NotHo100304 = ({ expected, actual }: ComparisonData): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
   const bichardRaisesHo100304 =
-    "exceptions" in expected && expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
+    "exceptions" in expectedMatchingSummary &&
+    expectedMatchingSummary.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
   const coreRaisesHo100332 =
-    "exceptions" in actual && actual.exceptions.some((exception) => exception.code === ExceptionCode.HO100332)
+    "exceptions" in actualMatchingSummary &&
+    actualMatchingSummary.exceptions.some((exception) => exception.code === ExceptionCode.HO100332)
 
   const offenceMatchesMultipleCases =
-    expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some((hoOffence) => {
-      const matches = expectedAho.PncQuery?.courtCases?.filter((courtCase) =>
+    expected.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some((hoOffence) => {
+      const matches = expected.aho.PncQuery?.courtCases?.filter((courtCase) =>
         courtCase.offences.some(
           (pncOffence) =>
             getOffenceCode(hoOffence) === pncOffence.offence.cjsOffenceCode &&

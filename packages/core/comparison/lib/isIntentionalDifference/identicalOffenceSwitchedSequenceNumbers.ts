@@ -1,5 +1,6 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { ComparisonData } from "../../types/ComparisonData"
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 
 const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
@@ -33,21 +34,18 @@ const groupOffences = (offences: Offence[], matches: OffenceMatchingSummary[]): 
   )
 }
 
-const identicalOffenceSwitchedSequenceNumbers = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
-  _: AnnotatedHearingOutcome
-): boolean => {
-  if ("exceptions" in actual || "exceptions" in expected) {
+const identicalOffenceSwitchedSequenceNumbers = ({ expected, actual }: ComparisonData): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
     return false
   }
 
-  const expectedHoOffences = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  const expectedOffenceGroups = groupOffences(expectedHoOffences, expected.offences)
-  const actualHoOffences = actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  const actualOffenceGroups = groupOffences(actualHoOffences, actual.offences)
+  const expectedHoOffences = expected.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const expectedOffenceGroups = groupOffences(expectedHoOffences, expectedMatchingSummary.offences)
+  const actualHoOffences = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+  const actualOffenceGroups = groupOffences(actualHoOffences, actualMatchingSummary.offences)
   const differenceBeforeSort = JSON.stringify(expectedOffenceGroups) !== JSON.stringify(actualOffenceGroups)
 
   expectedOffenceGroups.forEach((group) => group.sort())

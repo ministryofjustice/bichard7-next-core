@@ -1,21 +1,14 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const badManualMatch = (
-  _: CourtResultMatchingSummary,
-  __: CourtResultMatchingSummary,
-  ___: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
-  ____: AnnotatedHearingOutcome
-): boolean => {
-  if (actualAho.Exceptions.length === 0) {
+const badManualMatch = ({ actual }: ComparisonData): boolean => {
+  if (actual.aho.Exceptions.length === 0) {
     return false
   }
 
-  const coreRaisesHo100203 = actualAho.Exceptions.some((exception) => exception.code === ExceptionCode.HO100203)
+  const coreRaisesHo100203 = actual.aho.Exceptions.some((exception) => exception.code === ExceptionCode.HO100203)
 
-  const coreRaisesHo100228 = actualAho.Exceptions.some((exception) => exception.code === ExceptionCode.HO100228)
+  const coreRaisesHo100228 = actual.aho.Exceptions.some((exception) => exception.code === ExceptionCode.HO100228)
 
   return coreRaisesHo100203 || coreRaisesHo100228
 }
