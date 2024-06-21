@@ -19,6 +19,7 @@ import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { matchingExceptions } from "./summariseMatching"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import getMessageType from "../../phase1/lib/getMessageType"
 
 type CompareOptions = {
   defaultStandingDataVersion?: string
@@ -146,6 +147,7 @@ const comparePhase1 = async (
       exceptionsMatch: ignoreNewMatcherXmlDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatchesValue,
       xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, normalisedAho),
+      incomingMessageType: getMessageType(incomingMessage),
       ...(debug && { debugOutput })
     }
   } catch (e) {
