@@ -1,8 +1,8 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const nonMatchingManualSequenceNumber = ({ actual }: IntentionalDifference): boolean => {
+const nonMatchingManualSequenceNumber = ({ actual }: ComparisonData): boolean => {
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 
   const coreRaisesHo100320 =

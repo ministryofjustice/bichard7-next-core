@@ -1,7 +1,7 @@
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const coreMatchesBichardAddsInCourt = ({ expected, actual, incomingMessage }: IntentionalDifference): boolean => {
+const coreMatchesBichardAddsInCourt = ({ expected, actual, incomingMessage }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

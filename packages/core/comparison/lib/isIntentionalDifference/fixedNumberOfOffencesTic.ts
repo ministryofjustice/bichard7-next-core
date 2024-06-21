@@ -1,7 +1,7 @@
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import serialiseToXml from "../../../phase1/serialise/ahoXml/serialiseToXml"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 // Core parses the offences TIC string more accurately so will now add it to the AHO
 
@@ -18,7 +18,7 @@ const normaliseOffencesTic = (aho: AnnotatedHearingOutcome): AnnotatedHearingOut
   return clonedAho
 }
 
-const fixedNumberOfOffencesTic = ({ expected, actual }: IntentionalDifference): boolean => {
+const fixedNumberOfOffencesTic = ({ expected, actual }: ComparisonData): boolean => {
   if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
     return false
   }

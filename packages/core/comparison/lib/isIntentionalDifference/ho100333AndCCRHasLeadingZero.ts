@@ -1,9 +1,9 @@
 import { normaliseCCR } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const ho100333AndCCRHasLeadingZero = ({ expected, actual }: IntentionalDifference): boolean => {
+const ho100333AndCCRHasLeadingZero = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

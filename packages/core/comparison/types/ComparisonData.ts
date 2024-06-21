@@ -10,7 +10,7 @@ export type ComparisonOutput = {
 export type BichardComparisonOutput = ComparisonOutput
 export type CoreComparisonOutput = ComparisonOutput
 
-export type IntentionalDifference = {
+export type ComparisonData = {
   expected: BichardComparisonOutput
   actual: CoreComparisonOutput
   incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset

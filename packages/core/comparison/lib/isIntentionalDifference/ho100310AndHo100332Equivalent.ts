@@ -1,7 +1,7 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const ho100310AndHo100332Equivalent = ({ expected, actual }: IntentionalDifference): boolean => {
+const ho100310AndHo100332Equivalent = ({ expected, actual }: ComparisonData): boolean => {
   if (actual.aho.Exceptions.length === 0) {
     return false
   }

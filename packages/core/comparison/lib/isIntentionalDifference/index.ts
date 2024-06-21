@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
@@ -51,7 +51,7 @@ const isIntentionalDifference = (
   actual: AnnotatedHearingOutcome,
   incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
 ): boolean => {
-  const intentionalDifference: IntentionalDifference = {
+  const comparisonData: ComparisonData = {
     expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
     actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
     incomingMessage
@@ -59,25 +59,22 @@ const isIntentionalDifference = (
 
   // Check for differences in the AHO first
   if (
-    doubleSpacesInNames(intentionalDifference) ||
-    fixedForce91(intentionalDifference) ||
-    fixedNumberOfOffencesTic(intentionalDifference) ||
-    invalidASN(intentionalDifference) ||
-    missingEmptyCcr(intentionalDifference) ||
-    trailingSpace(intentionalDifference)
+    doubleSpacesInNames(comparisonData) ||
+    fixedForce91(comparisonData) ||
+    fixedNumberOfOffencesTic(comparisonData) ||
+    invalidASN(comparisonData) ||
+    missingEmptyCcr(comparisonData) ||
+    trailingSpace(comparisonData)
   ) {
     return true
   }
 
   // Then check for matching differences
-  if (
-    !intentionalDifference.expected.courtResultMatchingSummary ||
-    !intentionalDifference.actual.courtResultMatchingSummary
-  ) {
+  if (!comparisonData.expected.courtResultMatchingSummary || !comparisonData.actual.courtResultMatchingSummary) {
     return false
   }
 
-  const filterResults = filters.map((filter) => filter(intentionalDifference))
+  const filterResults = filters.map((filter) => filter(comparisonData))
 
   return filterResults.some((result) => result)
 }

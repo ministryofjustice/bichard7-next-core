@@ -1,8 +1,8 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const convictionDateMatching = ({ expected, actual }: IntentionalDifference): boolean => {
+const convictionDateMatching = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

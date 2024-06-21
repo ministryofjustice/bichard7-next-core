@@ -1,9 +1,9 @@
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 // We added force 91 to Bichard and core, but there was an overlap where we were handling
 // incoming messages for force 91 when it was not configured
 
-const fixedForce91 = ({ expected, actual }: IntentionalDifference): boolean => {
+const fixedForce91 = ({ expected, actual }: ComparisonData): boolean => {
   if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
     return false
   }

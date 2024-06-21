@@ -2,7 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type { PncOffence } from "../../../types/PncQueryResult"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 type PncOffenceRef = {
   courtRef: string
@@ -30,7 +30,7 @@ const findPncOffence = (aho: AnnotatedHearingOutcome, pncOffenceRef: PncOffenceR
     ?.find((cc) => cc.courtCaseReference === pncOffenceRef.courtRef)
     ?.offences.find((offence) => offence.offence.sequenceNumber === pncOffenceRef.sequence)
 
-const prioritiseNonFinal = ({ expected, actual }: IntentionalDifference): boolean => {
+const prioritiseNonFinal = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

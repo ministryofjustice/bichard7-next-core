@@ -1,12 +1,12 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 
 // Bichard sometimes raises a HO100332 for offences that have identical results. Core detects this and
 // assigns a match anyway (as it doesn't matter!)
 
-const ho100332WithSameResults = ({ expected, actual }: IntentionalDifference): boolean => {
+const ho100332WithSameResults = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

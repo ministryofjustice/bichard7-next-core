@@ -1,11 +1,11 @@
 import { normaliseCCR } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 // Core normalises CCRs when checking for matching CCRs on the PNC, so it can handle extra leading 0s
 // and still match. Bichard does not do this, and so ignores the CCRs and does something different.
 
-const coreUsesManualMatchData = ({ expected, actual, incomingMessage }: IntentionalDifference): boolean => {
+const coreUsesManualMatchData = ({ expected, actual, incomingMessage }: ComparisonData): boolean => {
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 
   if ("exceptions" in actualMatchingSummary) {

@@ -1,6 +1,6 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import {
@@ -20,7 +20,7 @@ import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/mat
 // Core raises a 304 in Phase 1 to inform users
 // early that the update must be made manually.
 
-const bichardMatchesRandomFinalOffence = ({ expected, actual, incomingMessage }: IntentionalDifference): boolean => {
+const bichardMatchesRandomFinalOffence = ({ expected, actual, incomingMessage }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

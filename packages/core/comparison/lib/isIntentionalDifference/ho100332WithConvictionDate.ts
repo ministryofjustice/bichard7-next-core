@@ -1,11 +1,11 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 // Core uses Conviction Date on the incoming offences to disambiguate between offence matches. This means it
 // is able to match in some cases where Bichard can't.
 
-const ho100332WithConvictionDate = ({ expected, actual }: IntentionalDifference): boolean => {
+const ho100332WithConvictionDate = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

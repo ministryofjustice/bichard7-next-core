@@ -1,13 +1,13 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { IntentionalDifference } from "../../types/IntentionalDifference"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (string | undefined | null)[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map(
     (o) => o.CriminalProsecutionReference.OffenceReasonSequence
   )
 
-const offenceReasonSequenceFormat = ({ expected, actual }: IntentionalDifference): boolean => {
+const offenceReasonSequenceFormat = ({ expected, actual }: ComparisonData): boolean => {
   const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
   const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 
