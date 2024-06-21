@@ -61,12 +61,14 @@ export const checkIntentionalDifferenceForPhases = (
 const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
-  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
+  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset,
+  phase: number = 1
 ): boolean => {
   const comparisonData: ComparisonData = {
     expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
     actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
-    incomingMessage
+    incomingMessage,
+    phase
   }
 
   // Check for differences in the AHO first

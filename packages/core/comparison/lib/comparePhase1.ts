@@ -96,7 +96,7 @@ const comparePhase1 = async (
       throw new Error("Received invalid incoming message")
     }
 
-    if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho)) {
+    if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho, 1)) {
       return {
         triggersMatch: true,
         exceptionsMatch: true,

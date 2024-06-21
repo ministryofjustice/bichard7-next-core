@@ -14,4 +14,5 @@ export type ComparisonData = {
   expected: BichardComparisonOutput
   actual: CoreComparisonOutput
   incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
+  phase: number
 }

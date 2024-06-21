@@ -2,6 +2,7 @@ import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import serialiseToXml from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type { ComparisonData } from "../../types/ComparisonData"
+import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core parses the offences TIC string more accurately so will now add it to the AHO
 
@@ -18,19 +19,20 @@ const normaliseOffencesTic = (aho: AnnotatedHearingOutcome): AnnotatedHearingOut
   return clonedAho
 }
 
-const fixedNumberOfOffencesTic = ({ expected, actual }: ComparisonData): boolean => {
-  if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
-    return false
-  }
+const fixedNumberOfOffencesTic = (comparisonData: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+    if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
+      return false
+    }
 
-  if (serialiseToXml(normaliseOffencesTic(expected.aho)) !== serialiseToXml(normaliseOffencesTic(actual.aho))) {
-    return false
-  }
+    if (serialiseToXml(normaliseOffencesTic(expected.aho)) !== serialiseToXml(normaliseOffencesTic(actual.aho))) {
+      return false
+    }
 
-  const expectedOffencesTic = extractOffencesTic(expected.aho)
-  const actualOffencesTic = extractOffencesTic(actual.aho)
+    const expectedOffencesTic = extractOffencesTic(expected.aho)
+    const actualOffencesTic = extractOffencesTic(actual.aho)
 
-  return JSON.stringify(expectedOffencesTic) !== JSON.stringify(actualOffencesTic)
-}
+    return JSON.stringify(expectedOffencesTic) !== JSON.stringify(actualOffencesTic)
+  })
 
 export default fixedNumberOfOffencesTic
