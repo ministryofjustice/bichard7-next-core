@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import disarrCompatibleResultClass from "../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass"
+import isRecordableOffence from "../../phase2/isRecordableOffence"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
@@ -26,7 +26,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers = offences
     .filter(
       (offence) =>
-        offence.AddedByTheCourt && hasCompletedDisarr(hearingOutcome, offence) && disarrCompatibleResultClass(offence)
+        isRecordableOffence(offence) &&
+        !hasCompletedDisarr(hearingOutcome, offence) &&
+        offence.Result.some((result) => result.NumberOfOffencesTIC)
     )
     .map((offence) => ({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber }))
 
