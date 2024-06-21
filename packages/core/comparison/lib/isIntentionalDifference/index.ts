@@ -46,6 +46,18 @@ const filters = [
   prioritiseNonFinal
 ]
 
+export const checkIntentionalDifferenceForPhases = (
+  runOnlyForPhases: number[] = [],
+  comparisonData: ComparisonData,
+  checkIntentionalDifference: (comparisonData: ComparisonData) => boolean
+) => {
+  if (runOnlyForPhases.includes(comparisonData.phase)) {
+    return checkIntentionalDifference(comparisonData)
+  }
+
+  return false
+}
+
 const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
