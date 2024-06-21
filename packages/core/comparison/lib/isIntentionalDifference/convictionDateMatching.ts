@@ -1,26 +1,27 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { ComparisonData } from "../../types/ComparisonData"
 
-const convictionDateMatching = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  expectedAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome,
-  ___: AnnotatedHearingOutcome
-): boolean => {
-  if (!("exceptions" in expected)) {
+const convictionDateMatching = ({ expected, actual }: ComparisonData): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
+  if (!("exceptions" in expectedMatchingSummary)) {
     return false
   }
 
-  const bichardRaisesHo100310 = expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100310)
-  const bichardRaisesHo100332 = expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100332)
+  const bichardRaisesHo100310 = expectedMatchingSummary.exceptions.some(
+    (exception) => exception.code === ExceptionCode.HO100310
+  )
+  const bichardRaisesHo100332 = expectedMatchingSummary.exceptions.some(
+    (exception) => exception.code === ExceptionCode.HO100332
+  )
 
-  const coreMatches = "offences" in actual
+  const coreMatches = "offences" in actualMatchingSummary
 
-  const offenceIndices = expected.exceptions.map((e) => e.path[5])
+  const offenceIndices = expectedMatchingSummary.exceptions.map((e) => e.path[5])
 
-  const exceptionOffences = expectedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+  const exceptionOffences = expected.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
     (_, index) => offenceIndices.includes(index)
   )
 

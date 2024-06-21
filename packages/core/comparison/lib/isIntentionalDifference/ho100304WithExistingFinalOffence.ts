@@ -1,28 +1,26 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import type { ComparisonData } from "../../types/ComparisonData"
 
 // Often we receive results for the remaining non-final offences in the PNC
 // If there are also some final offences, Bichard will raise a HO100304 but Core will match
 
-const ho100304WithExistingFinalOffence = (
-  expected: CourtResultMatchingSummary,
-  actual: CourtResultMatchingSummary,
-  _: AnnotatedHearingOutcome,
-  actualAho: AnnotatedHearingOutcome,
-  __: AnnotatedHearingOutcome
-): boolean => {
+const ho100304WithExistingFinalOffence = ({ expected, actual }: ComparisonData): boolean => {
+  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+
   const bichardRaisesHo100304 =
-    "exceptions" in expected && expected.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
-  const coreMatches = !("exceptions" in actual)
+    "exceptions" in expectedMatchingSummary &&
+    expectedMatchingSummary.exceptions.some((exception) => exception.code === ExceptionCode.HO100304)
+  const coreMatches = !("exceptions" in actualMatchingSummary)
 
   if (coreMatches) {
-    const matchedCases = actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
+    const matchedCases = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
       (acc, offence) => {
         acc.add(
           offence.CourtCaseReferenceNumber ||
-            actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber!
+            actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber!
         )
         return acc
       },
@@ -30,11 +28,11 @@ const ho100304WithExistingFinalOffence = (
     )
 
     const allMatchedCasesHaveFinalOrMatchedOffences = Array.from(matchedCases).every((ccr) => {
-      const pncCase = actualAho.PncQuery?.courtCases?.find((courtCase) => courtCase.courtCaseReference === ccr)
-      const hoOffencesWithCCR = actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+      const pncCase = actual.aho.PncQuery?.courtCases?.find((courtCase) => courtCase.courtCaseReference === ccr)
+      const hoOffencesWithCCR = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
         (hoOffence) =>
           (hoOffence.CourtCaseReferenceNumber ||
-            actualAho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber) === ccr
+            actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber) === ccr
       )
 
       return pncCase?.offences.every((pncOffence) => {
