@@ -27,7 +27,7 @@ describe("lockS3File", () => {
 
   it("should fail with terminal error if the bucket ID was invalid", async () => {
     const result = await lockS3File.execute({
-      inputData: { bucketId: "invalid-bucket-id", fileName: `${randomUUID()}.xml`, workflowId: randomUUID() }
+      inputData: { bucketId: "invalid-bucket-id", fileName: `${randomUUID()}.xml`, lockId: randomUUID() }
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
@@ -36,14 +36,14 @@ describe("lockS3File", () => {
 
   it("should add a lock on to the file as tags and return COMPLETE as success", async () => {
     const fileName = `${randomUUID()}.xml`
-    const workflowId = randomUUID()
+    const lockId = randomUUID()
     await putFileToS3("Hello World", fileName, bucketName, s3Config)
 
     const tags = await readS3FileTags(fileName, bucketName, s3Config)
     expect(tags).toStrictEqual({})
 
     const result = await lockS3File.execute({
-      inputData: { bucketId: "task-data", fileName, workflowId }
+      inputData: { bucketId: "task-data", fileName, lockId }
     })
 
     expect(result.status).toBe("COMPLETED")
@@ -51,14 +51,14 @@ describe("lockS3File", () => {
     expect(result.logs?.map((l) => l.log)).toContain("File successfully locked")
 
     const updatedTags = await readS3FileTags(fileName, bucketName, s3Config)
-    expect(updatedTags).toStrictEqual({ lockedByWorkstream: workflowId })
+    expect(updatedTags).toStrictEqual({ lockedByWorkstream: lockId })
   })
 
   it("should return COMPLETE with failure when the file is missing", async () => {
     const fileName = `${randomUUID()}.xml`
-    const workflowId = randomUUID()
+    const lockId = randomUUID()
     const result = await lockS3File.execute({
-      inputData: { bucketId: "task-data", fileName, workflowId }
+      inputData: { bucketId: "task-data", fileName, lockId }
     })
 
     expect(result.status).toBe("COMPLETED")
@@ -68,14 +68,14 @@ describe("lockS3File", () => {
 
   it("should return COMPLETE when the file is already locked", async () => {
     const fileName = `${randomUUID()}.xml`
-    const workflowId = randomUUID()
-    await putFileToS3("Hello World", fileName, bucketName, s3Config, { lockedByWorkstream: workflowId })
+    const lockId = randomUUID()
+    await putFileToS3("Hello World", fileName, bucketName, s3Config, { lockedByWorkstream: lockId })
 
     const tags = await readS3FileTags(fileName, bucketName, s3Config)
-    expect(tags).toStrictEqual({ lockedByWorkstream: workflowId })
+    expect(tags).toStrictEqual({ lockedByWorkstream: lockId })
 
     const result = await lockS3File.execute({
-      inputData: { bucketId: "task-data", fileName, workflowId }
+      inputData: { bucketId: "task-data", fileName, lockId }
     })
 
     expect(result.status).toBe("COMPLETED")
@@ -87,9 +87,9 @@ describe("lockS3File", () => {
     mockReadS3FileTags.default = readS3FileTagsError
 
     const fileName = `${randomUUID()}.xml`
-    const workflowId = randomUUID()
+    const lockId = randomUUID()
     const result = await lockS3File.execute({
-      inputData: { bucketId: "task-data", fileName, workflowId }
+      inputData: { bucketId: "task-data", fileName, lockId }
     })
 
     expect(result.status).toBe("FAILED")
@@ -100,14 +100,14 @@ describe("lockS3File", () => {
     mockWriteS3FileTags.default = writeS3FileTagsError
 
     const fileName = `${randomUUID()}.xml`
-    const workflowId = randomUUID()
+    const lockId = randomUUID()
     await putFileToS3("Hello World", fileName, bucketName, s3Config)
 
     const tags = await readS3FileTags(fileName, bucketName, s3Config)
     expect(tags).toStrictEqual({})
 
     const result = await lockS3File.execute({
-      inputData: { bucketId: "task-data", fileName, workflowId }
+      inputData: { bucketId: "task-data", fileName, lockId }
     })
 
     expect(result.status).toBe("FAILED")

@@ -15,7 +15,7 @@ const s3Config = createS3Config()
 const inputDataSchema = z.object({
   fileName: z.string(),
   bucketId: z.string(),
-  workflowId: z.string()
+  lockId: z.string()
 })
 type InputData = z.infer<typeof inputDataSchema>
 
@@ -38,7 +38,7 @@ const lockKey = "lockedByWorkstream"
 const lockS3File: ConductorWorker = {
   taskDefName: "lock_s3_file",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { fileName, bucketId, workflowId } = task.inputData
+    const { fileName, bucketId, lockId } = task.inputData
 
     const bucket = buckets[bucketId]
     if (!bucket) {
@@ -61,7 +61,7 @@ const lockS3File: ConductorWorker = {
       return completed({ lockState: "failure" }, "S3 File already locked")
     }
 
-    const result = await writeS3FileTags(fileName, bucket, { [lockKey]: workflowId }, s3Config)
+    const result = await writeS3FileTags(fileName, bucket, { [lockKey]: lockId }, s3Config)
     if (isError(result)) {
       return failed(result.message)
     }
@@ -71,7 +71,7 @@ const lockS3File: ConductorWorker = {
       return failed(newTags.message)
     }
 
-    if (!newTags[lockKey] || newTags[lockKey] !== workflowId) {
+    if (!newTags[lockKey] || newTags[lockKey] !== lockId) {
       // File has already been locked
       return failed("Error locking file")
     }
