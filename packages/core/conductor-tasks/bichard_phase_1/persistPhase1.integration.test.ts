@@ -95,7 +95,9 @@ describe("persistPhase1", () => {
     const result = await persistPhase1.execute({ inputData: {} })
 
     expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for s3TaskDataPath")
+    expect(result.logs?.map((l) => l.log)).toContain(
+      "Input data schema parse error: Expected string for s3TaskDataPath"
+    )
   })
 
   it("should fail if it can't fetch the file from S3", async () => {
@@ -116,6 +118,8 @@ describe("persistPhase1", () => {
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
 
     const [generalError] = result.logs!
-    expect(generalError.log).toBe("S3TaskData error: Expected 'success' | 'exceptions' | 'ignored' for resultType")
+    expect(generalError.log).toBe(
+      "S3 data schema parse error: Expected 'success' | 'exceptions' | 'ignored' for resultType"
+    )
   })
 })
