@@ -5,19 +5,19 @@ import triggers from "../triggers"
 import deduplicateTriggers from "../triggers/deduplicateTriggers"
 import filterExcludedTriggers from "../triggers/filterExcludedTriggers"
 import type { Trigger } from "../types/Trigger"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
+import type { TriggerGenerator, TriggerGeneratorOptions } from "../types/TriggerGenerator"
 
-const independentTriggerFn = (aho: AnnotatedHearingOutcome) =>
+const independentTriggerFn = (aho: AnnotatedHearingOutcome, options?: TriggerGeneratorOptions) =>
   Object.entries(triggers)
     .filter(([triggerCode]) => triggerCode != TriggerCode.TRPR0015 && triggerCode != TriggerCode.TRPR0027)
     .reduce((acc: Trigger[], [_, trigger]) => {
-      return acc.concat(trigger(aho))
+      return acc.concat(trigger(aho, options))
     }, [])
 
 const generateSetOfTriggers = (
   generator: TriggerGenerator,
   aho: AnnotatedHearingOutcome,
-  phase: Phase = Phase.HEARING_OUTCOME,
+  phase = Phase.HEARING_OUTCOME,
   existingTriggers: Trigger[] = []
 ): Trigger[] => {
   const generatedTriggers = generator(aho, { triggers: existingTriggers, phase })
@@ -32,7 +32,7 @@ const generateSetOfTriggers = (
   return existingTriggers.concat(finalTriggers)
 }
 
-export default (annotatedHearingOutcome: AnnotatedHearingOutcome, phase: Phase = Phase.HEARING_OUTCOME): Trigger[] => {
+export default (annotatedHearingOutcome: AnnotatedHearingOutcome, phase = Phase.HEARING_OUTCOME): Trigger[] => {
   // Run triggers which don't depend on any other triggers
   const independentTriggers = generateSetOfTriggers(independentTriggerFn, annotatedHearingOutcome, phase)
 
