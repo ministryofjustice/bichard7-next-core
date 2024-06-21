@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { ExceptionCode } from "../../../types/ExceptionCode"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../lib/errorPaths"
 import type Exception from "../../types/Exception"
@@ -14,11 +15,11 @@ const extractPncExceptions = (aho: any): Exception[] => {
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extract = (el: any, path: (string | number)[] = []): Exception[] => {
-  const exceptions = []
+  const exceptions: Exception[] = []
   for (const key in el) {
     if (key === "@_Error") {
       if (typeof el[key] === "string") {
-        exceptions.push({ code: el[key], path })
+        exceptions.push({ code: el[key] as ExceptionCode, path })
       }
     }
 
