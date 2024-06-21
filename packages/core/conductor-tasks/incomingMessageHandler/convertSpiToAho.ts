@@ -11,7 +11,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 import { z } from "zod"
 import parseS3Path from "../../phase1/lib/parseS3Path"
 import {
@@ -69,7 +69,7 @@ const fallbackAuditLogRecord = (
     externalCorrelationId,
     externalId: externalId,
     isSanitised: 0,
-    messageHash: uuid(),
+    messageHash: randomUUID(),
     messageId: correlationId,
     receivedDate: receivedDate.toISOString(),
     s3Path,

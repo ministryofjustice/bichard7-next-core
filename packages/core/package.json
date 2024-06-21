@@ -67,7 +67,6 @@
     "@types/promise-poller": "^1.7.4",
     "@types/s3rver": "^3.7.4",
     "@types/stompit": "^0.26.6",
-    "@types/uuid": "^10.0.0",
     "chalk": "^4.1.2",
     "esbuild": "^0.19.2",
     "esbuild-plugin-ignore": "^1.1.1",
@@ -93,8 +92,7 @@
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.2",
-    "uuid": "^10.0.0"
+    "typescript": "^5.5.2"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.602.0",
