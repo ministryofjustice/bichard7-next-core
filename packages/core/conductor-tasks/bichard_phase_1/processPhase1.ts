@@ -18,11 +18,12 @@ const pncApiConfig = createPncApiConfig()
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
+const lockKey: string = "lockedByWorkstream"
 
 const processPhase1: ConductorWorker = {
   taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
-    const { s3TaskData, s3TaskDataPath } = task.inputData
+    const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
 
@@ -30,7 +31,8 @@ const processPhase1: ConductorWorker = {
 
     const result = await phase1(s3TaskData, pncGateway, auditLogger)
 
-    const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config)
+    const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
+    const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
     if (isError(s3PutResult)) {
       return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
