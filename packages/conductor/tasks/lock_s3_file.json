@@ -1,0 +1,11 @@
+{
+  "name": "lock_s3_file",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
+  "retryDelaySeconds": 10,
+  "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 30,
+  "timeoutPolicy": "RETRY",
+  "inputKeys": ["fileName", "bucketId", "lockId"],
+  "outputKeys": ["lockState"]
+}
