@@ -1,9 +1,9 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
-import { v4 as uuid } from "uuid"
+import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromXml"
 import parseSpiResult from "../../parse/parseSpiResult"
 import transformSpiToAho from "../../parse/transformSpiToAho"
@@ -70,7 +70,7 @@ const processMessageBichard = async (
     pncAdjudication = false
   }: ProcessMessageOptions
 ): Promise<Phase1Result> => {
-  const correlationId = uuid()
+  const correlationId = randomUUID()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
   if (expectTriggers && !expectRecord) {
     throw new Error("You can't expect triggers without a record.")

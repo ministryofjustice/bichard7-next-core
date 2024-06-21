@@ -1,10 +1,9 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
-
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import { type AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 import createAuditLogRecord from "./createAuditLogRecord"
 
 const { apiKey, apiUrl } = createApiConfig()
@@ -14,8 +13,8 @@ describe("createAuditLogRecord", () => {
   let auditLogRecord: AuditLogApiRecordInput
 
   beforeEach(() => {
-    const externalId = uuid()
-    const messageId = uuid()
+    const externalId = randomUUID()
+    const messageId = randomUUID()
     const s3Path = `2023/08/31/14/48/${externalId}.xml`
 
     auditLogRecord = {
@@ -24,7 +23,7 @@ describe("createAuditLogRecord", () => {
       externalCorrelationId: "CID-test-001",
       externalId,
       isSanitised: 0,
-      messageHash: uuid(),
+      messageHash: randomUUID(),
       messageId,
       receivedDate: "2023-08-31T13:48:00.000Z",
       s3Path,
@@ -57,10 +56,10 @@ describe("createAuditLogRecord", () => {
 
   it("should correctly identify a duplicate message hash", async () => {
     await apiClient.createAuditLog(auditLogRecord)
-    auditLogRecord.messageId = uuid()
+    auditLogRecord.messageId = randomUUID()
 
     const result = await createAuditLogRecord.execute({
-      inputData: { auditLogRecord: { ...auditLogRecord, messageId: uuid() } }
+      inputData: { auditLogRecord: { ...auditLogRecord, messageId: randomUUID() } }
     })
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("duplicateMessage", "isDuplicate")
@@ -68,7 +67,7 @@ describe("createAuditLogRecord", () => {
 
   it("should correctly identify a message has already been processed", async () => {
     await apiClient.createAuditLog(auditLogRecord)
-    auditLogRecord.messageHash = uuid()
+    auditLogRecord.messageHash = randomUUID()
 
     const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
     expect(result.status).toBe("COMPLETED")

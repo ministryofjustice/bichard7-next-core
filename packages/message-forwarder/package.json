@@ -45,7 +45,6 @@
     "@stomp/stompjs": "^7.0.0",
     "@io-orkes/conductor-javascript": "^2.1.0",
     "node-fetch": "^3.3.2",
-    "uuid": "^10.0.0",
     "ws": "^8.17.1"
   }
 }

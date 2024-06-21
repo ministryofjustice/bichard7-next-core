@@ -3,8 +3,8 @@ import "../../phase1/tests/helpers/setEnvironmentVariables"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import { randomUUID } from "crypto"
 import fs from "fs"
-import { v4 as uuid } from "uuid"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
@@ -26,7 +26,7 @@ describe("sendToPhase2", () => {
   })
 
   it("should send a message to the queue", async () => {
-    const s3TaskDataPath = `${uuid()}.json`
+    const s3TaskDataPath = `${randomUUID()}.json`
     const s3Config = createS3Config()
     const phase1Result = String(fs.readFileSync("phase1/tests/fixtures/input-message-001-phase1-result.json"))
     const parsedResult = JSON.parse(phase1Result, dateReviver) as Phase1Result
