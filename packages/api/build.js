@@ -1,5 +1,3 @@
-const ignorePlugin = require("esbuild-plugin-ignore")
-
 require("esbuild")
   .build({
     entryPoints: ["src/index.ts"],
@@ -8,14 +6,6 @@ require("esbuild")
     outdir: "build",
     minify: true,
     target: "node16",
-    platform: "node",
-    plugins: [
-      ignorePlugin([
-        {
-          resourceRegExp: /pg-native$/,
-          contextRegExp: /node_modules\/pg/
-        }
-      ])
-    ]
+    platform: "node"
   })
   .catch(() => process.exit(1))

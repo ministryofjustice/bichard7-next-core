@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "esbuild": "node build.js",
     "clean": "rm -rf ./dist",
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
@@ -56,7 +57,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "esbuild": "^0.21.5",
-    "esbuild-plugin-ignore": "^1.1.1",
     "express": "^4.19.2",
     "qs": "^6.12.1",
     "typeorm": "^0.3.20",
