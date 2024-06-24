@@ -1,19 +1,24 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS builder
 
 RUN echo $NOTIIFCATION
 LABEL maintainer="CJSE"
 
 WORKDIR /api
 
-RUN yum install jq -y
-
-COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
 COPY package.json .
 COPY package-lock.json .
 COPY packages/api ./packages/api
 COPY tsconfig*.json ./
 
+RUN npm ci
+RUN npm run esbuild -w packages/api
+
+FROM ${BUILD_IMAGE}
+
+WORKDIR /api
+
+COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
 RUN mkdir -p /certs && \
   openssl req \
   -x509 \
@@ -29,7 +34,6 @@ RUN mkdir -p /certs && \
 EXPOSE     80
 EXPOSE     443
 
-RUN npm ci
-RUN npm run build -w packages/api
+COPY --from=builder /api/packages/api/build/index.js ./index.js
 
-CMD [ "npm", "run", "start", "-w", "packages/api" ]
+CMD [ "node", "index.js" ]
