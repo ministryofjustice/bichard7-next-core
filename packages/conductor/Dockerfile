@@ -5,11 +5,6 @@ LABEL maintainer="CJSE"
 
 WORKDIR /core
 
-RUN yum update -y && \
-    yum install -y jq && \
-    yum clean all && \
-    rm -rf /var/cache/yum
-
 COPY scripts ./scripts
 
 COPY package.json .
