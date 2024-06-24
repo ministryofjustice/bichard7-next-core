@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type Phase from "../../../types/Phase"
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
@@ -46,15 +47,29 @@ const filters = [
   prioritiseNonFinal
 ]
 
+export const checkIntentionalDifferenceForPhases = (
+  runOnlyForPhases: Phase[] = [],
+  phase: Phase,
+  checkIntentionalDifference: () => boolean
+) => {
+  if (runOnlyForPhases.includes(phase)) {
+    return checkIntentionalDifference()
+  }
+
+  return false
+}
+
 const isIntentionalDifference = (
   expected: AnnotatedHearingOutcome,
   actual: AnnotatedHearingOutcome,
-  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
+  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset,
+  phase: Phase = 1
 ): boolean => {
   const comparisonData: ComparisonData = {
     expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
     actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
-    incomingMessage
+    incomingMessage,
+    phase
   }
 
   // Check for differences in the AHO first
