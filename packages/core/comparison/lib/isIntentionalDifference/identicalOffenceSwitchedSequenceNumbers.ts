@@ -2,6 +2,7 @@ import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
+import { checkIntentionalDifferenceForPhases } from "./index"
 
 const groupIdenticalOffences = (offences: Offence[]): Offence[][] => {
   const output = []
@@ -34,24 +35,25 @@ const groupOffences = (offences: Offence[], matches: OffenceMatchingSummary[]): 
   )
 }
 
-const identicalOffenceSwitchedSequenceNumbers = ({ expected, actual }: ComparisonData): boolean => {
-  const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
-  const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
+const identicalOffenceSwitchedSequenceNumbers = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
+    const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
+    const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 
-  if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
-    return false
-  }
+    if ("exceptions" in actualMatchingSummary || "exceptions" in expectedMatchingSummary) {
+      return false
+    }
 
-  const expectedHoOffences = expected.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  const expectedOffenceGroups = groupOffences(expectedHoOffences, expectedMatchingSummary.offences)
-  const actualHoOffences = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  const actualOffenceGroups = groupOffences(actualHoOffences, actualMatchingSummary.offences)
-  const differenceBeforeSort = JSON.stringify(expectedOffenceGroups) !== JSON.stringify(actualOffenceGroups)
+    const expectedHoOffences = expected.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+    const expectedOffenceGroups = groupOffences(expectedHoOffences, expectedMatchingSummary.offences)
+    const actualHoOffences = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+    const actualOffenceGroups = groupOffences(actualHoOffences, actualMatchingSummary.offences)
+    const differenceBeforeSort = JSON.stringify(expectedOffenceGroups) !== JSON.stringify(actualOffenceGroups)
 
-  expectedOffenceGroups.forEach((group) => group.sort())
-  actualOffenceGroups.forEach((group) => group.sort())
+    expectedOffenceGroups.forEach((group) => group.sort())
+    actualOffenceGroups.forEach((group) => group.sort())
 
-  return differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
-}
+    return differenceBeforeSort && JSON.stringify(expectedOffenceGroups) === JSON.stringify(actualOffenceGroups)
+  })
 
 export default identicalOffenceSwitchedSequenceNumbers
