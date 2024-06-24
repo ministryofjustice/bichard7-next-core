@@ -11,6 +11,7 @@
     "bichard-legacy-debug": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-bichard-debug.yml up -d --wait nginx-auth-proxy",
     "build": "npm run build --ws",
     "build-message-forwarder": "docker compose --project-name bichard -f environment/docker-compose.yml build message-forwarder",
+    "build-worker": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml build worker",
     "build:package": "./scripts/build-package.sh",
     "clean": "npm run clean --ws",
     "conductor": "./environment/boot.sh conductor audit-log-api",

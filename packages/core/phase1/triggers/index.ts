@@ -1,12 +1,39 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import type { TriggerGenerator } from "../types/TriggerGenerator"
-
-const modules = Object.keys(TriggerCode)
-  .filter((code) => code !== TriggerCode.TRPR0028)
-  .reduce((acc: Record<string, TriggerGenerator>, code) => {
-    acc[code] = require(`./${code}`).default
-    return acc
-  }, {})
-
-export default modules
+export { default as TRPR0001 } from "./TRPR0001"
+export { default as TRPR0002 } from "./TRPR0002"
+export { default as TRPR0003 } from "./TRPR0003"
+export { default as TRPR0003A } from "./TRPR0003A"
+export { default as TRPR0003B } from "./TRPR0003B"
+export { default as TRPR0004 } from "./TRPR0004"
+export { default as TRPR0005 } from "./TRPR0005"
+export { default as TRPR0006 } from "./TRPR0006"
+export { default as TRPR0007 } from "./TRPR0007"
+export { default as TRPR0008 } from "./TRPR0008"
+export { default as TRPR0009 } from "./TRPR0009"
+export { default as TRPR0010 } from "./TRPR0010"
+export { default as TRPR0011 } from "./TRPR0011"
+export { default as TRPR0012 } from "./TRPR0012"
+export { default as TRPR0014 } from "./TRPR0014"
+export { default as TRPR0015 } from "./TRPR0015"
+export { default as TRPR0016 } from "./TRPR0016"
+export { default as TRPR0017 } from "./TRPR0017"
+export { default as TRPR0018 } from "./TRPR0018"
+export { default as TRPR0019 } from "./TRPR0019"
+export { default as TRPR0020 } from "./TRPR0020"
+export { default as TRPR0021 } from "./TRPR0021"
+export { default as TRPR0022 } from "./TRPR0022"
+export { default as TRPR0023 } from "./TRPR0023"
+export { default as TRPR0024 } from "./TRPR0024"
+export { default as TRPR0025 } from "./TRPR0025"
+export { default as TRPR0025A } from "./TRPR0025A"
+export { default as TRPR0026 } from "./TRPR0026"
+export { default as TRPR0027 } from "./TRPR0027"
+export { default as TRPR0029 } from "./TRPR0029"
+export { default as TRPR0030 } from "./TRPR0030"
+export { default as TRPS0001 } from "./TRPS0001"
+export { default as TRPS0002 } from "./TRPS0002"
+export { default as TRPS0003 } from "./TRPS0003"
+export { default as TRPS0004 } from "./TRPS0004"
+export { default as TRPS0008 } from "./TRPS0008"
+export { default as TRPS0010 } from "./TRPS0010"
+export { default as TRPS0011 } from "./TRPS0011"
+export { default as TRPS0013 } from "./TRPS0013"
