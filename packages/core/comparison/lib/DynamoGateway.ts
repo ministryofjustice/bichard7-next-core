@@ -135,8 +135,8 @@ export default class DynamoGateway {
   }
 
   async getRangePage(
-    start: string,
-    end: string,
+    start: string | Date,
+    end: string | Date,
     options?: GetRangePageOptions
   ): PromiseResult<ResultPage<ComparisonLog>> {
     const success = options?.success
@@ -160,8 +160,8 @@ export default class DynamoGateway {
         "#partitionKey": "_"
       },
       ExpressionAttributeValues: {
-        ":start": start,
-        ":end": end,
+        ":start": new Date(start).toISOString(),
+        ":end": new Date(end).toISOString(),
         ":partitionKeyValue": "_",
         ...failureValue
       },
@@ -204,8 +204,8 @@ export default class DynamoGateway {
   }
 
   async *getRange(
-    start: string,
-    end: string,
+    start: string | Date,
+    end: string | Date,
     success?: boolean,
     batchSize = 1000,
     includeSkipped = false,
@@ -227,22 +227,13 @@ export default class DynamoGateway {
         break
       }
 
-      if (result.records.length > 0) {
-        if (includeSkipped) {
-          yield result.records as ComparisonLog[]
-        } else {
-          yield result.records.filter((record) => !record.skipped) as ComparisonLog[]
-        }
+      yield includeSkipped ? result.records : result.records.filter((record) => !record.skipped)
 
-        if (result.lastEvaluatedKey) {
-          exclusiveStartKey = result.lastEvaluatedKey
-        } else {
-          break
-        }
-      } else {
-        yield []
+      if (!result.lastEvaluatedKey) {
         break
       }
+
+      exclusiveStartKey = result.lastEvaluatedKey
     }
   }
 
