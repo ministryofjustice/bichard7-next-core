@@ -2,8 +2,8 @@ import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonO
 import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const badlyAnnotatedSingleCaseMatch = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const badlyAnnotatedSingleCaseMatch = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

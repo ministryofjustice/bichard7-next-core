@@ -2,8 +2,8 @@ import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const badManualMatch = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1], comparisonData, ({ actual }: ComparisonData): boolean => {
+const badManualMatch = ({ actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     if (actual.aho.Exceptions.length === 0) {
       return false
     }

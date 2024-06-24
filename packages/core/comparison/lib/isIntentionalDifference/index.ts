@@ -48,11 +48,11 @@ const filters = [
 
 export const checkIntentionalDifferenceForPhases = (
   runOnlyForPhases: number[] = [],
-  comparisonData: ComparisonData,
-  checkIntentionalDifference: (comparisonData: ComparisonData) => boolean
+  phase: number,
+  checkIntentionalDifference: () => boolean
 ) => {
-  if (runOnlyForPhases.includes(comparisonData.phase)) {
-    return checkIntentionalDifference(comparisonData)
+  if (runOnlyForPhases.includes(phase)) {
+    return checkIntentionalDifference()
   }
 
   return false

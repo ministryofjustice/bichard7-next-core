@@ -4,8 +4,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // Core normalises CCRs when checking for matching CCRs on the PNC, so it can handle extra leading 0s
 // and still match. Bichard does not do this, and so ignores the CCRs and does something different.
 
-const missingEmptyCcr = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const missingEmptyCcr = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
       return false
     }

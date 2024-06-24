@@ -12,8 +12,8 @@ const ahoHasDoubleSpaces = (aho: AnnotatedHearingOutcome): boolean | undefined =
     /\s+\s+/
   )
 
-const doubleSpacesInNames = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const doubleSpacesInNames = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     const expectedAhoHasDoubleSpaces = ahoHasDoubleSpaces(expected.aho)
     const actualAhoHasDoubleSpaces = ahoHasDoubleSpaces(actual.aho)
 

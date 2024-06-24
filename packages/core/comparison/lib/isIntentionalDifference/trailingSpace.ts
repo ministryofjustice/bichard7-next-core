@@ -4,8 +4,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core will remove a trailing space in the bail conditions
 
-const trailingSpace = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const trailingSpace = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
       return false
     }

@@ -19,8 +19,8 @@ const normaliseOffencesTic = (aho: AnnotatedHearingOutcome): AnnotatedHearingOut
   return clonedAho
 }
 
-const fixedNumberOfOffencesTic = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const fixedNumberOfOffencesTic = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
       return false
     }

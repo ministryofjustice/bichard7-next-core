@@ -7,8 +7,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // Bichard sometimes raises a HO100332 for offences that have identical results. Core detects this and
 // assigns a match anyway (as it doesn't matter!)
 
-const ho100332WithSameResults = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const ho100332WithSameResults = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

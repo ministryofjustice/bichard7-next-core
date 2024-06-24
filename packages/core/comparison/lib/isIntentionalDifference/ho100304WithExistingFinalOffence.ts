@@ -7,8 +7,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // Often we receive results for the remaining non-final offences in the PNC
 // If there are also some final offences, Bichard will raise a HO100304 but Core will match
 
-const ho100304WithExistingFinalOffence = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const ho100304WithExistingFinalOffence = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 

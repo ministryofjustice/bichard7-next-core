@@ -4,8 +4,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // We added force 91 to Bichard and core, but there was an overlap where we were handling
 // incoming messages for force 91 when it was not configured
 
-const fixedForce91 = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1, 2], comparisonData, ({ expected, actual }: ComparisonData): boolean => {
+const fixedForce91 = ({ expected, actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
       return false
     }

@@ -3,8 +3,8 @@ import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonO
 import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const nonMatchingManualSequenceNumber = (comparisonData: ComparisonData) =>
-  checkIntentionalDifferenceForPhases([1], comparisonData, ({ actual }: ComparisonData): boolean => {
+const nonMatchingManualSequenceNumber = ({ actual, phase }: ComparisonData) =>
+  checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary
 
     const coreRaisesHo100320 =
