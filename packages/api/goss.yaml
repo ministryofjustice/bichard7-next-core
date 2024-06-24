@@ -7,9 +7,6 @@ file:
     group: root
     filetype: file
     contains: []
-package:
-  jq:
-    installed: true
 user:
   node:
     exists: true
