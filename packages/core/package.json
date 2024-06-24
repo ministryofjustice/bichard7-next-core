@@ -110,7 +110,7 @@
     "lodash.orderby": "^4.6.0",
     "p-limit": "^3.1.0",
     "postgres": "^3.4.4",
-    "pretty-data": "git://github.com/vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
+    "pretty-data": "github:vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
     "stompit": "^1.0.0",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.0"

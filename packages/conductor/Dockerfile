@@ -1,5 +1,5 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS builder
 
 LABEL maintainer="CJSE"
 
@@ -18,7 +18,11 @@ COPY packages ./packages
 COPY tsconfig*.json ./
 RUN npm ci
 RUN npm run build --workspaces
+RUN npm run esbuild -w packages/conductor
 
+FROM ${BUILD_IMAGE}
 
-WORKDIR /core/packages/conductor
-CMD ["node", "dist/src/worker.js"]
+WORKDIR /core
+COPY --from=builder /core/packages/conductor/build/worker.js ./worker.js
+
+CMD [ "node", "worker.js" ]
