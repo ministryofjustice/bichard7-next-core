@@ -13,6 +13,7 @@ import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import isIntentionalDifference from "./isIntentionalDifference"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
@@ -61,6 +62,23 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const parsedIncomingMessageResult = parseIncomingMessage(incomingMessage)
     const coreResult = phase2Handler(parsedIncomingMessageResult.message, auditLogger)
     const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, addFalseHasErrorAttributes)
+
+    if (
+      isIntentionalDifference(
+        outgoingPncUpdateDataset,
+        coreResult.outputMessage,
+        parsedIncomingMessageResult.message,
+        2
+      )
+    ) {
+      return {
+        triggersMatch: true,
+        exceptionsMatch: true,
+        xmlOutputMatches: true,
+        xmlParsingMatches: true,
+        intentionalDifference: true
+      }
+    }
 
     const sortedExceptions = sortExceptions(outgoingPncUpdateDataset.Exceptions)
     const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
