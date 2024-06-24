@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 import type { AuditLogEvent } from "../types/AuditLogEvent"
 import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 import AuditLogStatus from "../types/AuditLogStatus"
@@ -26,15 +26,15 @@ export const mockAuditLogApiRecordInput = (
 ): AuditLogApiRecordInput => ({
   caseId: "Case ID",
   createdBy: "Create audit log test",
-  externalCorrelationId: uuid(),
-  externalId: uuid(),
+  externalCorrelationId: randomUUID(),
+  externalId: randomUUID(),
   isSanitised: 0,
-  messageHash: uuid(),
-  messageId: uuid(),
+  messageHash: randomUUID(),
+  messageId: randomUUID(),
   nextSanitiseCheck: new Date().toISOString(),
   receivedDate: new Date().toISOString(),
   s3Path: "2022/01/18/09/01/message.xml",
-  stepExecutionId: uuid(),
+  stepExecutionId: randomUUID(),
   systemId: "System",
   ...overrides
 })
