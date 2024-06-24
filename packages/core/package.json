@@ -61,7 +61,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^20.14.7",
+    "@types/node": "^20.14.8",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
