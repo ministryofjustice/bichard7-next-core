@@ -1,7 +1,7 @@
 import TriggerCode from "bichard7-next-data-latest//dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
-import triggers from "../triggers"
+import * as triggers from "../triggers"
 import deduplicateTriggers from "../triggers/deduplicateTriggers"
 import filterExcludedTriggers from "../triggers/filterExcludedTriggers"
 import type { Trigger } from "../types/Trigger"
