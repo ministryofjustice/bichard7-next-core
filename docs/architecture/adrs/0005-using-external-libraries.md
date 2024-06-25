@@ -14,7 +14,7 @@ To ensure rapid delivery without reinventing the wheel, we will utilize external
 
 - We will only consider well-established libraries that are actively maintained and expected to have long-term support.
 - Libraries should have a proven track record of stability and regular updates, with a robust community or organizational backing to ensure continued maintenance and support.
-- To maintain simplicity and control over our codebase, we will avoid using external libraries for problems that can be solved internally with minimal effort and maintenance.
+- To maintain simplicity and control over our codebase, we will avoid using external libraries for problems that can be solved internally with minimal effort and maintenance. For instance, we decided to create our own [AutoSave component](https://github.com/ministryofjustice/bichard7-next-ui/blob/main/src/components/EditableFields/AutoSave.tsx) for this reason.
 - Libraries with minimal dependencies are preferred (use `npm ls` to view dependency graph e.g `npm ls --all` or `npm ls sass`)
 
 ## Consequences
