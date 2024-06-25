@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="light" class="has-background-light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Using External Libraries | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../modal.js"></script>
+    <script type="text/javascript" src="../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded has-site-branding" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../libra/" class="">Libra</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../police-national-computer/" class="">Police National Computer</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid has-background-white">
+        <div class="content p-3">
+          <div><h1>5. Using External Libraries</h1>
+<p>Date: 2024-06-25</p>
+<h2>Status</h2>
+<p>Accepted</p>
+<h2>Context</h2>
+<p>To ensure rapid delivery without reinventing the wheel, we will utilize external libraries and leverage existing solutions for complex problems. While these libraries provide substantial benefits, it's essential to establish guidelines to ensure a shared understanding of when to use external libraries and when to avoid them. Transitive dependencies can introduce underlying security vulnerabilities, increase the risk of dependency conflicts, and complicate the upgrade and maintenance processes.</p>
+<h2>Decision</h2>
+<ul>
+ <li>We will prioritise using well-established libraries that are actively maintained and expected to have long-term support.</li>
+ <li>Libraries should have a proven track record of stability and regular updates, with a robust community or organizational backing to ensure continued maintenance and support.</li>
+ <li>To maintain simplicity and control over our codebase, we will avoid using external libraries for problems that can be solved internally with minimal effort and maintenance. For instance, we decided to create our own <a href="https://github.com/ministryofjustice/bichard7-next-ui/blob/main/src/components/EditableFields/AutoSave.tsx">AutoSave component</a> for this reason.</li>
+ <li>Libraries with minimal dependencies are preferred (use <code>npm ls</code> to view dependency graph e.g <code>npm ls --all</code> or <code>npm ls sass</code>)</li>
+</ul>
+<h2>Consequences</h2>
+<ul>
+ <li>By adopting well-established and maintained libraries with minimal dependencies, we enhance the security and stability of our projects and reduce the risk of vulnerabilities and maintenance issues.</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
