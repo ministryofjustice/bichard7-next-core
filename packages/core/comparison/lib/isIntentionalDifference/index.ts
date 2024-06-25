@@ -32,6 +32,7 @@ const filters = [
   badlyAnnotatedSingleCaseMatch,
   badManualMatch,
   bichardMatchesRandomFinalOffence,
+  bichardRaisesHo200114ForNonExactSequenceNumbers,
   convictionDateMatching,
   coreMatchesBichardAddsInCourt,
   coreUsesManualMatchData,
@@ -45,8 +46,7 @@ const filters = [
   invalidManualSequenceNumber,
   nonMatchingManualSequenceNumber,
   offenceReasonSequenceFormat,
-  prioritiseNonFinal,
-  bichardRaisesHo200114ForNonExactSequenceNumbers
+  prioritiseNonFinal
 ]
 
 export const checkIntentionalDifferenceForPhases = (
