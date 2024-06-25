@@ -14,6 +14,7 @@ start_timestamp = (today - timedelta(days=daysInterval)
                    ).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 end_timestamp = today.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
+
 def fetchNumberOfCasesForForce(conn, daysInterval, forceCode):
     cur = conn.cursor()
     cur.execute(f"""SELECT org_for_police_filter, COUNT(*)
@@ -40,6 +41,7 @@ def getAllocationRecord(logMessage, caseType):
         "caseType": caseType
     }
 
+
 def fetchAllocations(keyword, caseType, dest):
     data = fetchLogs(start_timestamp, end_timestamp, keyword)
 
@@ -53,6 +55,7 @@ def fetchAllocations(keyword, caseType, dest):
         else:
             dest[force] = [allocationRecord]
     return dest
+
 
 allocations = {}
 allocations = fetchAllocations(

@@ -40,7 +40,8 @@ for searchType in searches:
     usersUsedSearchLabel = f'Users used {searchType} search'
     percentageUsedSearchLabel = f'% used {searchType} search'
     for force in searches[searchType]:
-        firstForceCode = force.split(', ')[0] # In case there are more than one
+        # In case there are more than one
+        firstForceCode = force.split(', ')[0]
         activeUsersOnDay = len(activeUsersPerForce[firstForceCode])
         numberOfUsersUsedSearch = len(set(searches[searchType][force]))
         numberOfTimesUsedSearch = len(searches[searchType][force])

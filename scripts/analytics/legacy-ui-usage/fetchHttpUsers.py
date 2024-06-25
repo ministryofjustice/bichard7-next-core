@@ -12,7 +12,8 @@ start_timestamp = (today - timedelta(hours=hourInterval)
                    ).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 end_timestamp = today.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
-data = fetchAuthProxyLogs(start_timestamp, end_timestamp, "GET /forces.png?forceID", "404", "http://")
+data = fetchAuthProxyLogs(start_timestamp, end_timestamp,
+                          "GET /forces.png?forceID", "404", "http://")
 resultData = data['results']
 
 f = open("rawData.json", "w")
@@ -26,6 +27,8 @@ sed -i '' 's/userID=//g' httpUsers.txt
 '''
 
 subprocess.call(filteringRawData, shell=True)
-data = pd.read_csv('httpUsers.txt', sep="&",  header = None, names= ["forceID","userID"])
-print(f'Number of users using the old URL in the last {hourInterval} hours, see httpUsers.xlsx:', len(data))
+data = pd.read_csv('httpUsers.txt', sep="&",  header=None,
+                   names=["forceID", "userID"])
+print(
+    f'Number of users using the old URL in the last {hourInterval} hours, see httpUsers.xlsx:', len(data))
 data.to_excel('httpUsers.xlsx')

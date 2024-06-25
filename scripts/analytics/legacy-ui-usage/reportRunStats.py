@@ -5,6 +5,7 @@ from openpyxl import Workbook
 import boto3
 import requests
 
+
 def is_cast_to_int(value):
     try:
         int(value)
@@ -16,22 +17,23 @@ def is_cast_to_int(value):
 start_timestamp = '2024-01-01T00:00:00.000Z'
 end_timestamp = '2024-06-21T00:00:00.000Z'
 
+
 def fetchReportRunAuditLogEvents(start_timestamp, end_timestamp):
-  dynamodb = boto3.client('dynamodb')
-  table_name = 'bichard-7-production-audit-log-events'
-  index_name = 'eventCodeIndex'
-  key_condition_expression = 'eventCode = :code and #ts BETWEEN :start_time AND :end_time'
-  expression_attribute_names = {'#ts': 'timestamp'}
-  expression_attribute_values = {
-     ':code': {'S': 'report-run'},
-      ':start_time': {'S': start_timestamp},
-      ':end_time': {'S': end_timestamp}
-  }
+    dynamodb = boto3.client('dynamodb')
+    table_name = 'bichard-7-production-audit-log-events'
+    index_name = 'eventCodeIndex'
+    key_condition_expression = 'eventCode = :code and #ts BETWEEN :start_time AND :end_time'
+    expression_attribute_names = {'#ts': 'timestamp'}
+    expression_attribute_values = {
+        ':code': {'S': 'report-run'},
+        ':start_time': {'S': start_timestamp},
+        ':end_time': {'S': end_timestamp}
+    }
 
-  items = []
-  last_evaluated_key = None
+    items = []
+    last_evaluated_key = None
 
-  while True:
+    while True:
         if last_evaluated_key:
             response = dynamodb.query(
                 TableName=table_name,
@@ -56,7 +58,8 @@ def fetchReportRunAuditLogEvents(start_timestamp, end_timestamp):
         if not last_evaluated_key:
             break
 
-  return items
+    return items
+
 
 # Fetch forces data
 url = 'https://raw.githubusercontent.com/ministryofjustice/bichard7-next-data/main/output-data/data/forces.json'
@@ -67,10 +70,12 @@ forcesDict = {}
 for f in forces:
     forcesDict[f['code']] = f['name']
 
+
 def orderCodes(codes):
     code_list = [code for code in codes.split(',')]
     sorted_codes = sorted(code_list)
     return ','.join([code for code in sorted_codes])
+
 
 def fetchUsers(conn):
     users = {}
@@ -88,6 +93,7 @@ def fetchUsers(conn):
         }
     return users
 
+
 verbose_events = fetchReportRunAuditLogEvents(start_timestamp, end_timestamp)
 events = []
 
@@ -99,21 +105,22 @@ for event in verbose_events:
     if not event['user']['S'] in users:
         print(f"Cannot find user {event['user']}")
     else:
-      list_of_forces = orderCodes(users[event['user']['S']]['forces']).split(',')[0]
-      if(is_cast_to_int(list_of_forces)):
-        forceCode = str(int(list_of_forces)).zfill(2)
-        force = forcesDict[forceCode]
-      else: 
-        force: list_of_forces
+        list_of_forces = orderCodes(
+            users[event['user']['S']]['forces']).split(',')[0]
+        if (is_cast_to_int(list_of_forces)):
+            forceCode = str(int(list_of_forces)).zfill(2)
+            force = forcesDict[forceCode]
+        else:
+            force: list_of_forces
 
-      events.append({
-          "report": event['attributes']['M']['Report ID']['S'],
-          "user": event['user']['S'],
-          "output": event['attributes']['M']['Output Format']['S'],
-          "timeStamp": event['timestamp']['S'],
-          "force": force,
-          "email": users[event['user']['S']]['email']
-      })
+        events.append({
+            "report": event['attributes']['M']['Report ID']['S'],
+            "user": event['user']['S'],
+            "output": event['attributes']['M']['Output Format']['S'],
+            "timeStamp": event['timestamp']['S'],
+            "force": force,
+            "email": users[event['user']['S']]['email']
+        })
 
 forces_counts = defaultdict(int)
 court_counts = defaultdict(int)
@@ -167,11 +174,11 @@ row_num = 2
 for report, report_data in user_reports_counts.items():
     for user, count in report_data.items():
         list_of_forces = orderCodes(users[user]['forces']).split(',')[0]
-        if(is_cast_to_int(list_of_forces)):
-          forceCode = str(int(list_of_forces)).zfill(2)
-          force = forcesDict[forceCode]
-        else: 
-          force = list_of_forces
+        if (is_cast_to_int(list_of_forces)):
+            forceCode = str(int(list_of_forces)).zfill(2)
+            force = forcesDict[forceCode]
+        else:
+            force = list_of_forces
         sheet.cell(row=row_num, column=8, value=report)
         sheet.cell(row=row_num, column=9, value=force)
         sheet.cell(row=row_num, column=10, value=user)
