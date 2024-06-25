@@ -18,4 +18,5 @@ To ensure rapid delivery without reinventing the wheel, we will utilize external
 - Libraries with minimal dependencies are preferred (use `npm ls` to view dependency graph e.g `npm ls --all` or `npm ls sass`)
 
 ## Consequences
+
 - By adopting well-established and maintained libraries with minimal dependencies, we enhance the security and stability of our projects and reduce the risk of vulnerabilities and maintenance issues.
