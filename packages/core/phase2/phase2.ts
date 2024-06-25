@@ -11,6 +11,7 @@ import isAintCase from "./isAintCase"
 import isHoAnAppeal from "./isHoAnAppeal"
 import isPncUpdateEnabled from "./isPncUpdateEnabled"
 import isRecordableOnPnc from "./isRecordableOnPnc"
+import checkForOrderVariedRevokedResultCodes from "./pncUpdateDataset/checkForOrderVariedRevokedResultCodes"
 import phase2PncUpdateDataset from "./pncUpdateDataset/phase2PncUpdateDataset"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
@@ -57,24 +58,26 @@ const phase2 = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2R
   if (isAintCase(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
     shouldGenerateTriggers = true
-  } else if (!isRecordableOnPnc(attributedHearingOutcome)) {
-    auditLogger.info(EventCode.IgnoredNonrecordable)
-  } else if (allPncOffencesContainResults(outputMessage)) {
-    const operations = getOperationSequence(outputMessage, false)
-    if (!outputMessage.HasError) {
-      if (operations.length > 0) {
-        outputMessage.PncOperations = operations
-        // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
-        // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
-        auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-      } else {
-        if (isHoAnAppeal(attributedHearingOutcome)) {
-          auditLogger.info(EventCode.IgnoredAppeal)
+  } else if (!checkForOrderVariedRevokedResultCodes(aho)) {
+    if (!isRecordableOnPnc(attributedHearingOutcome)) {
+      auditLogger.info(EventCode.IgnoredNonrecordable)
+    } else if (allPncOffencesContainResults(outputMessage)) {
+      const operations = getOperationSequence(outputMessage, false)
+      if (!outputMessage.HasError) {
+        if (operations.length > 0) {
+          outputMessage.PncOperations = operations
+          // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
+          // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
+          auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
         } else {
-          auditLogger.info(EventCode.IgnoredNonrecordable)
-        }
+          if (isHoAnAppeal(attributedHearingOutcome)) {
+            auditLogger.info(EventCode.IgnoredAppeal)
+          } else {
+            auditLogger.info(EventCode.IgnoredNonrecordable)
+          }
 
-        shouldGenerateTriggers = true
+          shouldGenerateTriggers = true
+        }
       }
     }
   }
