@@ -26,11 +26,13 @@ import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 import prioritiseNonFinal from "./prioritiseNonFinal"
 import trailingSpace from "./trailingSpace"
+import bichardRaisesHo200114ForNonExactSequenceNumbers from "./bichardRaisesHo200114ForNonExactSequenceNumbers"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
   badManualMatch,
   bichardMatchesRandomFinalOffence,
+  bichardRaisesHo200114ForNonExactSequenceNumbers,
   convictionDateMatching,
   coreMatchesBichardAddsInCourt,
   coreUsesManualMatchData,
