@@ -21,9 +21,7 @@ export const handleAdjournmentPostJudgement: ResultClassHandler = ({
     if (ccrId) {
       remandCcrs.add(ccrId)
     }
-  } else {
-    if (!offence || !offence.AddedByTheCourt) {
-      addExceptionsToAho(aho, ExceptionCode.HO200103, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
-    }
+  } else if (!offence.AddedByTheCourt) {
+    addExceptionsToAho(aho, ExceptionCode.HO200103, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
   }
 }

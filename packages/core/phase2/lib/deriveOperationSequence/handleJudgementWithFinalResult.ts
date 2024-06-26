@@ -45,10 +45,10 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       addExceptionsToAho(aho, ExceptionCode.HO200108, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
     }
 
-    if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && (!offence || !offence.AddedByTheCourt)) {
+    if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
       addExceptionsToAho(aho, ExceptionCode.HO200124, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
     } else {
-      if (!offence || !offence.AddedByTheCourt) {
+      if (!offence.AddedByTheCourt) {
         addNewOperationToOperationSetIfNotPresent(
           "DISARR",
           ccrId ? { courtCaseReference: ccrId } : undefined,
