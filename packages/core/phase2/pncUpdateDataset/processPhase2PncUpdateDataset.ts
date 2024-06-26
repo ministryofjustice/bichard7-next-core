@@ -17,7 +17,7 @@ const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDatas
   return outputMessage
 }
 
-const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
+const processPhase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = initialiseOutputMessage(pncUpdateDataset)
   const correlationId = outputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
   let triggers: Trigger[] = []
@@ -61,4 +61,4 @@ const phase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, auditLogger:
   }
 }
 
-export default phase2PncUpdateDataset
+export default processPhase2PncUpdateDataset

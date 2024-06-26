@@ -2,9 +2,9 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
-import phase2PncUpdateDataset from "./phase2PncUpdateDataset"
+import processPhase2PncUpdateDataset from "./processPhase2PncUpdateDataset"
 
-describe("phase2PncUpdateDataset", () => {
+describe("processPhase2PncUpdateDataset", () => {
   beforeEach(() => {
     MockDate.reset()
   })
@@ -15,7 +15,7 @@ describe("phase2PncUpdateDataset", () => {
     const pncUpdateDataset = generateFakePncUpdateDataset()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
 
-    const result = phase2PncUpdateDataset(pncUpdateDataset, auditLogger)
+    const result = processPhase2PncUpdateDataset(pncUpdateDataset, auditLogger)
 
     expect(result.auditLogEvents).toContainEqual({
       attributes: {},

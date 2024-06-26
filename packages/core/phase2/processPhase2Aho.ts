@@ -21,7 +21,7 @@ const initialisePncUpdateDatasetFromAho = (aho: AnnotatedHearingOutcome): PncUpd
   return pncUpdateDataset
 }
 
-const phase2Aho = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
+const processPhase2Aho = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = initialisePncUpdateDatasetFromAho(aho)
 
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
@@ -88,4 +88,4 @@ const phase2Aho = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger): Phas
   }
 }
 
-export default phase2Aho
+export default processPhase2Aho
