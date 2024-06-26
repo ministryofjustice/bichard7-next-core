@@ -4,16 +4,16 @@ import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import { phase2Handler } from "../../phase2/phase2"
+import phase2Handler from "../../phase2/phase2"
 import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+import isIntentionalDifference from "./isIntentionalDifference"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-import isIntentionalDifference from "./isIntentionalDifference"
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
