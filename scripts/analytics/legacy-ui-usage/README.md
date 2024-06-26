@@ -2,7 +2,7 @@
 
 There are some Python scripts to get an insight into how users use the legacy Bichard UI.
 
-- `allocatedCases.py` can show the number of allocated cases per forces for a given time interval
+- `allocatedCases.py` can show the number of allocated cases per force for a given time interval
   - Pulls logs from CloudWatch that matches the search terms "allocated exception id:" or "allocated trigger id:"
   - Queries the PG database to get the number of cases in that period
   - Outputs the result in a spreadsheet and generates a bar chart using `plotly.express`
