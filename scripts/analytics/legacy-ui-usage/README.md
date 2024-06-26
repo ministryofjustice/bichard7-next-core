@@ -35,7 +35,7 @@ pipenv install
 
 Run `allocatedCases.py` script:
 
-- Before running this script connect to the production VPN and set the `CONNECTION_STRING` env variable for PG database.
+- Before running this script connect to the production VPN and set the `CONNECTION_STRING` env variable for [PG database](https://github.com/ministryofjustice/bichard7-next/wiki/Connecting-to-the-PostgreSQL-database#finding-the-credentials).
 - Then run:
   ```
   aws-vault exec qsolution-production -- pipenv run python3 allocatedCases.py
@@ -67,7 +67,7 @@ HOUR_INTERVAL=36 aws-vault exec qsolution-production -- pipenv run python3 fetch
 
 Run `reportRunStats.py` script:
 
-- Before running this script connect to the production VPN and set the `CONNECTION_STRING` env variable for PG database.
+- Before running this script connect to the production VPN and set the `CONNECTION_STRING` env variable for [PG database](https://github.com/ministryofjustice/bichard7-next/wiki/Connecting-to-the-PostgreSQL-database#finding-the-credentials).
 - Then run:
   ```
   aws-vault exec qsolution-production -- pipenv run python3 reportRunStats.py
