@@ -1,4 +1,4 @@
-# Analytics scripts
+# Analytics scripts for legacy Bichard
 
 There are some Python scripts to get an insight into how users use the legacy Bichard UI.
 
