@@ -21,11 +21,8 @@ const checkResult = (aho: AnnotatedHearingOutcome, offenceIndex: number, resultI
 const checkForOrderVariedRevokedResultCodes = (aho: AnnotatedHearingOutcome): boolean => {
   const hearingDefendant = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
 
-  return (
-    checkResult(aho, -1, 0, hearingDefendant.Result) ||
-    hearingDefendant.Offence.some((offence, offenceIndex) =>
-      offence.Result.some((result, resultIndex) => checkResult(aho, offenceIndex, resultIndex, result))
-    )
+  return hearingDefendant.Offence.some((offence, offenceIndex) =>
+    offence.Result.some((result, resultIndex) => checkResult(aho, offenceIndex, resultIndex, result))
   )
 }
 
