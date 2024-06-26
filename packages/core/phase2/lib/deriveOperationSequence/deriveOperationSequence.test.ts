@@ -8,7 +8,8 @@ jest.mock("./handleSentence")
 jest.mock("./addOaacDisarrOperationsIfNecessary")
 
 import ResultClass from "../../../phase1/types/ResultClass"
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
 import deriveOperationSequence from "./deriveOperationSequence"
 import { handleAdjournment } from "./handleAdjournment"
@@ -58,36 +59,22 @@ describe("deriveOperationSequence", () => {
       const remandCcrs = new Set<string>()
       const allResultAlreadyOnPnc = false
       const resubmitted = false
-      const aho = {
-        Exceptions: [],
-        AnnotatedHearingOutcome: {
-          HearingOutcome: {
-            Case: {
-              HearingDefendant: {
-                Offence: [
-                  {
-                    Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
-                  }
-                ],
-                Result: { ResultClass: resultClass, PNCDisposalType: 1002 }
-              }
-            }
-          }
+      const aho = generateAhoFromOffenceList([
+        {
+          Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
         }
-      } as unknown as AnnotatedHearingOutcome
-      let counter = 1
+      ] as Offence[])
       expectedFn.mockImplementation(({ operations }) => {
-        operations.push({ code: "COMSEN", data: { courtCaseReference: `${counter}` }, status: "NotAttempted" })
-        counter += 1
+        operations.push({ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" })
       })
 
       const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
       expect(updatedOperations).toStrictEqual([
-        { code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" },
-        { code: "COMSEN", data: { courtCaseReference: "2" }, status: "NotAttempted" }
+        { code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }
       ])
-      expect(expectedFn).toHaveBeenCalledTimes(2)
+      expect(expectedFn).toHaveBeenCalledTimes(1)
+
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
         adjPreJudgementRemandCcrs: new Set(),
         adjudicationExists: undefined,
@@ -96,42 +83,7 @@ describe("deriveOperationSequence", () => {
             HearingOutcome: {
               Case: {
                 HearingDefendant: {
-                  Offence: [{ Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] }],
-                  Result: { PNCDisposalType: 1002, ResultClass: resultClass }
-                }
-              }
-            }
-          },
-          Exceptions: []
-        },
-        allResultsAlreadyOnPnc: false,
-        ccrId: undefined,
-        contains2007Result: false,
-        fixedPenalty: false,
-        oAacDisarrOperations: [],
-        offence: undefined,
-        offenceIndex: -1,
-        operations: [
-          { code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" },
-          { code: "COMSEN", data: { courtCaseReference: "2" }, status: "NotAttempted" }
-        ],
-        pncDisposalCode: 1002,
-        remandCcrs: new Set(),
-        resubmitted: false,
-        result: { PNCDisposalType: 1002, ResultClass: resultClass },
-        resultIndex: 0
-      })
-
-      expect(expectedFn.mock.calls[1][0]).toStrictEqual({
-        adjPreJudgementRemandCcrs: new Set(),
-        adjudicationExists: undefined,
-        aho: {
-          AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Case: {
-                HearingDefendant: {
-                  Offence: [{ Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] }],
-                  Result: { PNCDisposalType: 1002, ResultClass: resultClass }
+                  Offence: [{ Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] }]
                 }
               }
             }
@@ -145,10 +97,7 @@ describe("deriveOperationSequence", () => {
         oAacDisarrOperations: [],
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
-        operations: [
-          { code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" },
-          { code: "COMSEN", data: { courtCaseReference: "2" }, status: "NotAttempted" }
-        ],
+        operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }],
         pncDisposalCode: 1001,
         remandCcrs: new Set(),
         resubmitted: false,
@@ -172,8 +121,7 @@ describe("deriveOperationSequence", () => {
                 {
                   Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
                 }
-              ],
-              Result: { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1002 }
+              ]
             }
           }
         }
