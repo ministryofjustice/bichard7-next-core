@@ -26,29 +26,46 @@ export const handleSentence: ResultClassHandler = ({
     return
   }
 
-  if (!adjudicationExists) {
-    return
-  }
-
-  if (docType === DocumentType.CommittalRecordSheet) {
-    //TODO: Remove this once we've confirmed we don't handle committal record sheets
-    addNewOperationToOperationSetIfNotPresent("COMSEN", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
-  } else if (docType === DocumentType.SpiResult) {
-    if (!areAnyPncResults2007(aho, offence)) {
-      addNewOperationToOperationSetIfNotPresent("SENDEF", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
-    } else {
-      addSubsequentVariationOperations(
-        resubmitted,
-        operations,
-        aho,
-        ExceptionCode.HO200104,
-        allResultsAlreadyOnPnc,
-        offenceIndex,
-        resultIndex,
-        ccrId ? { courtCaseReference: ccrId } : undefined
-      )
+  if (adjudicationExists) {
+    if (docType === DocumentType.CommittalRecordSheet) {
+      //TODO: Remove this once we've confirmed we don't handle committal record sheets
+      addNewOperationToOperationSetIfNotPresent("COMSEN", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    } else if (docType === DocumentType.SpiResult) {
+      if (offence) {
+        if (!areAnyPncResults2007(aho, offence)) {
+          addNewOperationToOperationSetIfNotPresent(
+            "SENDEF",
+            ccrId ? { courtCaseReference: ccrId } : undefined,
+            operations
+          )
+        } else {
+          addSubsequentVariationOperations(
+            resubmitted,
+            operations,
+            aho,
+            ExceptionCode.HO200104,
+            allResultsAlreadyOnPnc,
+            offenceIndex,
+            resultIndex,
+            ccrId ? { courtCaseReference: ccrId } : undefined
+          )
+        }
+      } else {
+        addSubsequentVariationOperations(
+          resubmitted,
+          operations,
+          aho,
+          ExceptionCode.HO200210,
+          allResultsAlreadyOnPnc,
+          offenceIndex,
+          resultIndex,
+          ccrId ? { courtCaseReference: ccrId } : undefined
+        )
+      }
     }
-  } else if (!offence.AddedByTheCourt) {
-    addExceptionsToAho(aho, ExceptionCode.HO200106, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
+  } else {
+    if (!offence || !offence.AddedByTheCourt) {
+      addExceptionsToAho(aho, ExceptionCode.HO200106, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
+    }
   }
 }
