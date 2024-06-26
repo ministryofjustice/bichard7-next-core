@@ -13,7 +13,7 @@ start_timestamp = (today - timedelta(hours=hourInterval)
 end_timestamp = today.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
 data = fetchAuthProxyLogs(start_timestamp, end_timestamp,
-                          "GET /forces.png?forceID", "404", "http://")
+                          "GET /forces.png?forceID", "404", "http://") # NOSONAR - "Using http protocol is insecure. Use https instead" - we are not making a request, but fetching CW logs for http requests
 resultData = data['results']
 
 f = open("rawData.json", "w")
