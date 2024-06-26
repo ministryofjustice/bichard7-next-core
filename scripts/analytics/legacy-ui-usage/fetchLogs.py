@@ -36,6 +36,7 @@ def runQuery(query_string, start_timestamp, end_timestamp, log_group_name):
         query_results_cmd, shell=True, universal_newlines=True)
     return json.loads(query_results_output)
 
+
 def fetchLogs(start_timestamp, end_timestamp, keyword):
     print("Fetch logs")
 
@@ -44,5 +45,5 @@ def fetchLogs(start_timestamp, end_timestamp, keyword):
                     | filter message like "{keyword}"
                     | sort @timestamp desc
                     | limit 10000'''
-    
+
     return runQuery(query_string, start_timestamp, end_timestamp, "cjse-bichard7-production-base-infra-bichard7")

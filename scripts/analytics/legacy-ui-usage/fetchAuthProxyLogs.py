@@ -1,5 +1,6 @@
 from fetchLogs import runQuery
 
+
 def fetchAuthProxyLogs(start_timestamp, end_timestamp, keyword1, keyword2, keyword3):
     print("Fetch logs")
 
