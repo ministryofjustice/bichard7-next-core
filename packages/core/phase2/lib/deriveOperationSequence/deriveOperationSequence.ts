@@ -17,7 +17,7 @@ import { handleSentence } from "./handleSentence"
 
 export type ResultClassHandlerParams = {
   aho: AnnotatedHearingOutcome
-  offence: Offence | undefined
+  offence: Offence
   offenceIndex: number
   result: Result
   resultIndex: number
@@ -63,18 +63,11 @@ const deriveOperationSequence = (
   const adjPreJudgementRemandCcrs = new Set<string | undefined>()
   let recordableResultFound = false
 
-  for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offenceIndex < 0 ? undefined : offences[offenceIndex]
-    if (offenceIndex === -1 || (!!offence && isRecordableOffence(offence))) {
+  offences.forEach((offence, offenceIndex) => {
+    if (isRecordableOffence(offence)) {
       const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
 
-      const results = offence
-        ? offence.Result
-        : aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result && [
-            aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
-          ]
-
-      results?.forEach((result, resultIndex) => {
+      offence.Result.forEach((result, resultIndex) => {
         if (!isRecordableResult(result)) {
           return
         }
@@ -103,7 +96,7 @@ const deriveOperationSequence = (
         }
       })
     }
-  }
+  })
 
   if (operations.length === 0 && !recordableResultFound && aho.Exceptions.length === 0) {
     addExceptionsToAho(aho, ExceptionCode.HO200118, errorPaths.case.asn)

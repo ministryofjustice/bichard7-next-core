@@ -194,23 +194,6 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(params.aho.Exceptions).toHaveLength(0)
   })
 
-  it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and result is not associated with an offence", () => {
-    const params = generateParams({ offence: undefined, offenceIndex: -1, allResultsAlreadyOnPnc: true })
-    mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    handleAdjournmentWithJudgement(params)
-
-    expect(params.aho.Exceptions).toHaveLength(0)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
-      { dummy: "Main Operations" }
-    ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
-  })
-
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateParams({ offence: { AddedByTheCourt: false } as Offence, allResultsAlreadyOnPnc: true })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)

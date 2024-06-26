@@ -188,69 +188,6 @@ describe("handleSentence", () => {
     )
   })
 
-  it("should add SUBVAR operation when adjudication exists, document type is SPI, and result is not associated with an offence", () => {
-    const params = generateParams(
-      { fixedPenalty: false, adjudicationExists: true, offence: undefined, offenceIndex: -1, resultIndex: 1 },
-      DocumentType.SpiResult
-    )
-
-    handleSentence(params)
-
-    expect(params.aho.Exceptions).toHaveLength(0)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
-      false,
-      [{ dummy: "Main Operations" }],
-      {
-        Exceptions: [],
-        AnnotatedHearingOutcome: {
-          HearingOutcome: { Hearing: { SourceReference: { DocumentType: DocumentType.SpiResult } } }
-        }
-      },
-      ExceptionCode.HO200210,
-      false,
-      -1,
-      1,
-      { courtCaseReference: "654" }
-    )
-  })
-
-  it("should add SUBVAR operation without ooperation data when adjudication exists, document type is SPI, result is not associated with an offence, and ccrId is not set", () => {
-    const params = generateParams(
-      {
-        fixedPenalty: false,
-        adjudicationExists: true,
-        ccrId: undefined,
-        offence: undefined,
-        offenceIndex: -1,
-        resultIndex: 1
-      },
-      DocumentType.SpiResult
-    )
-
-    handleSentence(params)
-
-    expect(params.aho.Exceptions).toHaveLength(0)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
-      false,
-      [{ dummy: "Main Operations" }],
-      {
-        Exceptions: [],
-        AnnotatedHearingOutcome: {
-          HearingOutcome: { Hearing: { SourceReference: { DocumentType: DocumentType.SpiResult } } }
-        }
-      },
-      ExceptionCode.HO200210,
-      false,
-      -1,
-      1,
-      undefined
-    )
-  })
-
   it("should generate HO200106 when document type is neither Committal Record Sheet or SPI", () => {
     const params = generateParams(
       { fixedPenalty: false, adjudicationExists: true, offence: {} as Offence, offenceIndex: 1, resultIndex: 1 },

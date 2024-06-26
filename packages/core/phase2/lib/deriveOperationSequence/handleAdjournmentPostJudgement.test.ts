@@ -45,21 +45,6 @@ describe("handleAdjournmentPostJudgement", () => {
     expect([...params.remandCcrs]).toHaveLength(0)
   })
 
-  it("should generate exception HO200103 when adjudication does not exists and result is not associated with an offence", () => {
-    const params = generateParams({ adjudicationExists: false, offence: undefined, offenceIndex: -1 })
-
-    handleAdjournmentPostJudgement(params)
-
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200103",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Result", 1, "ResultClass"]
-      }
-    ])
-    expect(addRemandOperation).toHaveBeenCalledTimes(0)
-    expect([...params.remandCcrs]).toHaveLength(0)
-  })
-
   it("should generate exception HO200103 when adjudication does not exists and result is not added by court", () => {
     const params = generateParams({
       adjudicationExists: false,
