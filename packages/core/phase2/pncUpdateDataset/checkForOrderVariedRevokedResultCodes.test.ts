@@ -73,19 +73,4 @@ describe("checkForOrderVariedRevokedResultCodes", () => {
       }
     ])
   })
-
-  it("returns true and generate exception HO200111 if hearing defendant result exists and CJS result code is Order Varied Revoked", () => {
-    const pncUpdateDataset = generatePncUpdateDatasetFromOffenceList([])
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result = {
-      CJSresultCode: 4000
-    } as Result
-
-    expect(checkForOrderVariedRevokedResultCodes(pncUpdateDataset)).toBe(true)
-    expect(pncUpdateDataset.Exceptions).toStrictEqual([
-      {
-        code: "HO200111",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Result", 0, "CJSresultCode"]
-      }
-    ])
-  })
 })

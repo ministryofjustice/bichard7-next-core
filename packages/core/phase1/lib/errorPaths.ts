@@ -5,7 +5,8 @@ const offencePath = (offenceIndex: number): ExceptionPath => [
   "HearingOutcome",
   "Case",
   "HearingDefendant",
-  ...(offenceIndex < 0 ? [] : ["Offence", offenceIndex])
+  "Offence",
+  offenceIndex
 ]
 
 const resultPath = (offenceIndex: number, resultIndex: number): ExceptionPath =>

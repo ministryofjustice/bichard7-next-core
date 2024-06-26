@@ -15,12 +15,4 @@ describe("errorPath", () => {
 
     expect({ offence, result, resultQualifierVariableCode, amountSpecifiedInResult }).toMatchSnapshot()
   })
-
-  test("result should match the snapshot when offence index is -1", () => {
-    const result = errorPaths.offence(-1).result(0)
-    const resultQualifierVariableCode = result.resultQualifierVariable(2)
-    const amountSpecifiedInResult = result.amountSpecifiedInResult(3)
-
-    expect({ result, resultQualifierVariableCode, amountSpecifiedInResult }).toMatchSnapshot()
-  })
 })
