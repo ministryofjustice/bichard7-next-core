@@ -1,6 +1,6 @@
 # Analytics scripts
 
-There are some python scrips to get insight into how users use the legacy Bichard UI.
+There are some Python scripts to get an insight into how users use the legacy Bichard UI.
 
 - `allocatedCases.py` can show the number of allocated cases per forces for a given time interval
   - Pulls logs from CloudWatch that matches the search terms "allocated exception id:" or "allocated trigger id:"
