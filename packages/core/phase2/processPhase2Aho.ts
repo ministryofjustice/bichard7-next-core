@@ -8,10 +8,7 @@ import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
 import getOperationSequence from "./getOperationSequence"
 import isAintCase from "./isAintCase"
-import isHoAnAppeal from "./isHoAnAppeal"
 import isPncUpdateEnabled from "./isPncUpdateEnabled"
-import isRecordableOnPnc from "./isRecordableOnPnc"
-import checkForOrderVariedRevokedResultCodes from "./pncUpdateDataset/checkForOrderVariedRevokedResultCodes"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
@@ -44,31 +41,25 @@ const processPhase2Aho = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger
     }
   }
 
+  const isRecordableOnPnc = !!attributedHearingOutcome.Case.RecordableOnPNCindicator
   let shouldGenerateTriggers = false
 
   if (isAintCase(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
     shouldGenerateTriggers = true
-  } else if (!checkForOrderVariedRevokedResultCodes(aho)) {
-    if (!isRecordableOnPnc(attributedHearingOutcome)) {
-      auditLogger.info(EventCode.IgnoredNonrecordable)
-    } else if (allPncOffencesContainResults(outputMessage)) {
-      const operations = getOperationSequence(outputMessage, false)
-      if (!outputMessage.HasError) {
-        if (operations.length > 0) {
-          outputMessage.PncOperations = operations
-          // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
-          // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
-          auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-        } else {
-          if (isHoAnAppeal(attributedHearingOutcome)) {
-            auditLogger.info(EventCode.IgnoredAppeal)
-          } else {
-            auditLogger.info(EventCode.IgnoredNonrecordable)
-          }
-
-          shouldGenerateTriggers = true
-        }
+  } else if (!isRecordableOnPnc) {
+    auditLogger.info(EventCode.IgnoredNonrecordable)
+  } else if (allPncOffencesContainResults(outputMessage)) {
+    const operations = getOperationSequence(outputMessage, false)
+    if (!outputMessage.HasError) {
+      if (operations.length > 0) {
+        outputMessage.PncOperations = operations
+        // Publish to PNC update Queue happens here in old Bichard - PNCUpdateChoreographyHO.java:204
+        // withSentToPhase3 happens here in old Bichard - PNCUpdateChoreographyHO.java:205
+        auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
+      } else {
+        auditLogger.info(EventCode.IgnoredNonrecordable)
+        shouldGenerateTriggers = true
       }
     }
   }

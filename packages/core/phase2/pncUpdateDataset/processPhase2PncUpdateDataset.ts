@@ -8,7 +8,6 @@ import allPncOffencesContainResults from "../allPncOffencesContainResults"
 import getOperationSequence from "../getOperationSequence"
 import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
-import checkForOrderVariedRevokedResultCodes from "./checkForOrderVariedRevokedResultCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
 
 const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDataset => {
@@ -24,10 +23,9 @@ const processPhase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, audit
 
   auditLogger.info(EventCode.ReceivedResubmittedHearingOutcome)
 
-  const orderVariedRevokedExceptionRaised = checkForOrderVariedRevokedResultCodes(outputMessage)
   const allOffencesContainResults = allPncOffencesContainResults(outputMessage)
 
-  if (!orderVariedRevokedExceptionRaised && allOffencesContainResults) {
+  if (allOffencesContainResults) {
     if (outputMessage.PncOperations.length === 0) {
       const operations = getOperationSequence(outputMessage, true)
 
