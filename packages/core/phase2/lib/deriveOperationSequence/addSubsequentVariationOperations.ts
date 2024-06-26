@@ -28,8 +28,6 @@ const addSubsequentVariationOperations = (
     return
   }
 
-  // TODO: Code simplified. Comment left for debugging.
-  // In the old code, "isResubmissionExemptSubVarConditionPresent" is called instead of "areAllPncResults2007"
   if (areAllPncResults2007(aho, operationData?.courtCaseReference)) {
     addNewOperationToOperationSetIfNotPresent("SUBVAR", operationData, operations)
   } else if (!allResultsAlreadyOnPnc) {

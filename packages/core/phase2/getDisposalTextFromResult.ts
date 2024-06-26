@@ -18,7 +18,7 @@ const getDisposalTextFromResult = (result: Result): string => {
       disposalText = penaltyPointsDisposalText(result)
       break
     case 3025:
-      disposalText = disqualifiedFromKeepingDisposalText(result, resultVariableText)
+      disposalText = disqualifiedFromKeepingDisposalText(resultVariableText)
       break
     case 1100:
       disposalText = exclusionOrderDisposalText(resultVariableText)
