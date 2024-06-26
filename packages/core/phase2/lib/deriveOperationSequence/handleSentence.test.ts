@@ -251,9 +251,9 @@ describe("handleSentence", () => {
     )
   })
 
-  it("should generate HO200106 when document type is neither Committal Record Sheet or SPI", () => {
+  it("should generate HO200106 when adjudication does not exist", () => {
     const params = generateParams(
-      { fixedPenalty: false, adjudicationExists: true, offence: {} as Offence, offenceIndex: 1, resultIndex: 1 },
+      { fixedPenalty: false, adjudicationExists: false, offence: {} as Offence, offenceIndex: 1, resultIndex: 1 },
       "Dummy" as DocumentType
     )
 
@@ -275,16 +275,6 @@ describe("handleSentence", () => {
         ]
       }
     ])
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-  })
-
-  it("should do nothing when fixedPenalty is false and adjudication does not exist", () => {
-    const params = generateParams({ fixedPenalty: false, adjudicationExists: false }, "Dummy" as DocumentType)
-
-    handleSentence(params)
-
-    expect(params.aho.Exceptions).toHaveLength(0)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
