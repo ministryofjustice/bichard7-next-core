@@ -1,9 +1,9 @@
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import recordableResultCount from "./recordableResultCount"
-import errorPaths from "../phase1/lib/errorPaths"
-import { ExceptionCode } from "../types/ExceptionCode"
 import addExceptionsToAho from "../phase1/exceptions/addExceptionsToAho"
+import errorPaths from "../phase1/lib/errorPaths"
 import isDummyAsn from "../phase1/lib/isDummyAsn"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import { ExceptionCode } from "../types/ExceptionCode"
+import isRecordableResult from "./isRecordableResult"
 
 const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome) => {
   const asn = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -16,7 +16,7 @@ const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome) => {
     addExceptionsToAho(aho, ExceptionCode.HO200116, errorPaths.case.asn)
   } else {
     offences.forEach((offence, offenceIndex) => {
-      const count = recordableResultCount(offence.Result)
+      const count = offence.Result.filter(isRecordableResult).length
 
       if (count > 10) {
         const errorPath =
