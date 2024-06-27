@@ -12,8 +12,7 @@ const resultCodeValues: Record<string, number[]> = {
   TRPR0011: [1030, 1031, 1032],
   TRPR0015: [4592],
   TRPR0020: [1029, 1030, 1031, 1032, 3501],
-  TRPR0025: [4584],
-  TRPS0001: []
+  TRPR0025: [4584]
 }
 
 const getResultCodeValuesForTriggerCode = (triggerCode: TriggerCode): number[] => {
