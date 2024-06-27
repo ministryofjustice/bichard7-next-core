@@ -62,7 +62,7 @@ npm run destroy
 
 1. Use Intellij (VS Code doesn't work for debugging) to open the [bichard7-next](https://github.com/ministryofjustice/bichard7-next) project
 1. Build a debug image using `make clean build-debug`
-1. Run the legacy infrastructure using `npm run bichard-legacy-debug`
+1. Run the legacy infrastructure using `npm run bichard-legacy-debug` from the Core repo
 1. In IntelliJ select `Run >> Edit Configurations` from the menu
 1. Click the `+` button in the top left and select `Remote JVM Debug`
 1. Set the port to `7777` and give the configuration a name
