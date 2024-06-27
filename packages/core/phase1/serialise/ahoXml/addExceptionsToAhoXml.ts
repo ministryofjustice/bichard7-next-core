@@ -4,6 +4,7 @@ import isPncException from "../../lib/isPncException"
 import addAhoErrors from "../../serialise/ahoXml/addAhoErrors"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
+import Phase from "../../../types/Phase"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
@@ -99,7 +100,7 @@ const addExceptionsToPncUpdateDatasetXml = (
     }
   }
 
-  addAhoErrors(aho, exceptions, addFalseHasErrorAttributes)
+  addAhoErrors(aho, exceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
 }
 
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
