@@ -38,9 +38,6 @@ const processPhase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, audit
       }
     } else {
       refreshOperationSequence(outputMessage)
-    }
-
-    if (outputMessage.PncOperations.length > 0) {
       auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
     }
   }

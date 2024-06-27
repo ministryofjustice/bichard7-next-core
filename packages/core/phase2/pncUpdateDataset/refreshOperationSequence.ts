@@ -4,29 +4,25 @@ import areNewremTypesEqual from "./areNewremTypesEqual"
 
 const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset) => {
   const latestOperations = getOperationSequence(pncUpdateDataset, true)
-  const latestNewremOperations = latestOperations.filter(
-    (operation) => operation.code === "NEWREM"
-  ) as NewremOperation[]
+  let latestNewremOperations = latestOperations.filter((operation) => operation.code === "NEWREM")
 
   if (pncUpdateDataset.PncOperations.length === 0) {
     pncUpdateDataset.PncOperations = latestOperations
-  } else {
-    pncUpdateDataset.PncOperations.forEach((existingOperation, existingOperationIndex) => {
-      if (existingOperation.code === "NEWREM") {
-        if (["NotAttempted", "Failed"].includes(existingOperation.status)) {
-          delete pncUpdateDataset.PncOperations[existingOperationIndex]
-        } else if (existingOperation.status === "Completed") {
-          latestNewremOperations.forEach((latestNewremOperation, latestNewremOperationsIndex) => {
-            if (areNewremTypesEqual(existingOperation, latestNewremOperation)) {
-              delete latestNewremOperations[latestNewremOperationsIndex]
-            }
-          })
-        }
-      }
-    })
-
-    pncUpdateDataset.PncOperations = [...pncUpdateDataset.PncOperations, ...latestNewremOperations].filter((o) => o)
+    return
   }
+
+  pncUpdateDataset.PncOperations = pncUpdateDataset.PncOperations.filter(
+    ({ code, status }) => code !== "NEWREM" || status === "Completed"
+  )
+
+  latestNewremOperations = latestNewremOperations.filter(
+    (newOperation) =>
+      !pncUpdateDataset.PncOperations.filter(({ code }) => code === "NEWREM").some((existingOperation) =>
+        areNewremTypesEqual(existingOperation as NewremOperation, newOperation)
+      )
+  )
+
+  pncUpdateDataset.PncOperations = [...pncUpdateDataset.PncOperations, ...latestNewremOperations].filter((o) => o)
 }
 
 export default refreshOperationSequence

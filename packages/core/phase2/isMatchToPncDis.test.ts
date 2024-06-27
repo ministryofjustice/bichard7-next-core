@@ -4,14 +4,14 @@ import isMatchToPncDis from "./isMatchToPncDis"
 import generateAhoFromOffenceList from "./tests/fixtures/helpers/generateAhoFromOffenceList"
 
 describe("check isMatchToPncDis", () => {
-  it("isMatchToPncDis returns false when dis list is empty", () => {
+  it("returns false when disposals list is empty", () => {
     const ahoResult: Result = {} as Result
     const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
     const result = isMatchToPncDis([], aho, 0, 0)
     expect(result).toBe(false)
   })
 
-  it("isMatchToPncDis returns true if an aho result matches the pncDisposal on all its matching fields", () => {
+  it("returns true when an AHO result matches the pncDisposal on all its matching fields", () => {
     const pncDisposal: PncDisposal = {
       qtyDuration: "A4",
       qtyDate: "21052024",

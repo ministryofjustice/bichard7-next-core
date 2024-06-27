@@ -8,7 +8,6 @@ import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./allPncOffencesContainResults"
 import getOperationSequence from "./getOperationSequence"
 import isAintCase from "./isAintCase"
-import isPncUpdateEnabled from "./isPncUpdateEnabled"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
@@ -23,26 +22,11 @@ const processPhase2Aho = (aho: AnnotatedHearingOutcome, auditLogger: AuditLogger
 
   const attributedHearingOutcome = aho.AnnotatedHearingOutcome.HearingOutcome
   const correlationId = attributedHearingOutcome.Hearing.SourceReference.UniqueID
-
   let triggers: Trigger[] = []
-
-  auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
-
-  if (!isPncUpdateEnabled(attributedHearingOutcome)) {
-    auditLogger.info(EventCode.IgnoredDisabled)
-    outputMessage.HasError = false
-
-    return {
-      auditLogEvents: auditLogger.getEvents(),
-      correlationId,
-      outputMessage,
-      triggers: [],
-      resultType: Phase2ResultType.success
-    }
-  }
-
   const isRecordableOnPnc = !!attributedHearingOutcome.Case.RecordableOnPNCindicator
   let shouldGenerateTriggers = false
+
+  auditLogger.info(EventCode.HearingOutcomeReceivedPhase2)
 
   if (isAintCase(attributedHearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)

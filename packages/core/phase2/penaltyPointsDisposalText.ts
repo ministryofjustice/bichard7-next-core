@@ -1,14 +1,8 @@
 import type { Result } from "../types/AnnotatedHearingOutcome"
 
 const penaltyPointsDisposalText = (result: Result): string => {
-  const numbersSpecifiedInResult = result.NumberSpecifiedInResult ? result.NumberSpecifiedInResult : []
-  for (const num of numbersSpecifiedInResult) {
-    if (!!num.Number) {
-      return num.Number + " PENALTY POINTS"
-    }
-  }
-
-  return ""
+  const numberSpecifiedInResultValue = result.NumberSpecifiedInResult?.find((num) => num.Number)?.Number
+  return numberSpecifiedInResultValue ? `${numberSpecifiedInResultValue} PENALTY POINTS` : ""
 }
 
 export default penaltyPointsDisposalText
