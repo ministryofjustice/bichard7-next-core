@@ -1,17 +1,8 @@
 import type { PncCourtCase, PncQueryResult } from "../types/PncQueryResult"
 
-function getCourtCaseFromQueryResults(
+const getCourtCaseFromQueryResults = (
   courtCaseRef: string,
   PncQuery: PncQueryResult | undefined
-): PncCourtCase | undefined {
-  const cases = PncQuery?.courtCases
-  if (!cases) {
-    return
-  }
-
-  const matchingCase = cases.find((x) => x.courtCaseReference === courtCaseRef)
-
-  return matchingCase
-}
+): PncCourtCase | undefined => PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseRef)
 
 export default getCourtCaseFromQueryResults

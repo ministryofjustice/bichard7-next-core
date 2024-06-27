@@ -3,12 +3,6 @@ import type { Operation } from "../types/PncUpdateDataset"
 const updateOperationSequenceForResultsAlreadyPresent = (
   operations: Operation[],
   allResultsAlreadyOnPnc: boolean
-): Operation[] => {
-  if (allResultsAlreadyOnPnc) {
-    return operations.filter((operation) => operation.code === "NEWREM")
-  }
-
-  return operations
-}
+): Operation[] => (allResultsAlreadyOnPnc ? operations.filter((operation) => operation.code === "NEWREM") : operations)
 
 export default updateOperationSequenceForResultsAlreadyPresent
