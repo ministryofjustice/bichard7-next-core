@@ -1,6 +1,23 @@
 # Bichard 7 Core
 
-The code to replace the processing logic of Bichard 7
+The code to replace the processing logic of Bichard 7.
+
+## Contents
+
+- [Quickstart](#quickstart)
+  - [Pre-Requisites](#pre-requisites)
+  - [Booting the infrastructure](#booting-the-infrastructure)
+  - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
+  - [Building on an M1 Mac](#building-on-an-m1-mac)
+- [Publishing package updates](#publishing-package-updates)
+- [Testing](#testing)
+- [Excluding Triggers](#excluding-triggers)
+- [Comparing New and Old Bichard](#comparing-new-and-old-bichard)
+  - [Checking a comparison file](#checking-a-comparison-file)
+  - [Checking a comparison file on old Bichard](#checking-a-comparison-file-on-old-bichard)
+  - [Comparing outputs locally](#comparing-outputs-locally)
+  - [Configuration](#configuration)
+- [Conductor](#conductor)
 
 ## Quickstart
 
