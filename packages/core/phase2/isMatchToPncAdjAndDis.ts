@@ -52,10 +52,9 @@ export const allRecordableResultsMatchAPncDisposal = (
   disposals: PncDisposal[],
   aho: AnnotatedHearingOutcome,
   offenceIndex: number
-): boolean => {
-  return results.every((result, resultIndex) =>
-    isRecordableResult(result) ? isMatchToPncDis(disposals, aho, offenceIndex, resultIndex) : true
+): boolean =>
+  results.every(
+    (result, resultIndex) => !isRecordableResult(result) || isMatchToPncDis(disposals, aho, offenceIndex, resultIndex)
   )
-}
 
 export default isMatchToPncAdjAndDis
