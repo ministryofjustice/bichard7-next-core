@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
-import getCourtCaseFromQueryResults from "../../getCourtCaseFromQueryResults"
 
 const areAnyPncResults2007 = (aho: AnnotatedHearingOutcome, offence: Offence): boolean => {
   const offenceReasonSequence = offence.CriminalProsecutionReference.OffenceReasonSequence
@@ -9,7 +8,7 @@ const areAnyPncResults2007 = (aho: AnnotatedHearingOutcome, offence: Offence): b
     return false
   }
 
-  const matchingCase = getCourtCaseFromQueryResults(courtCaseReferenceNumber, aho.PncQuery)
+  const matchingCase = aho.PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseReferenceNumber)
   const hasAny2007PncResults = !!matchingCase?.offences?.some(
     (o) =>
       o.offence.sequenceNumber &&

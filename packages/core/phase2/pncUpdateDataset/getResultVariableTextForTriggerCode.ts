@@ -6,12 +6,6 @@ const resultVariableText: Record<string, string> = {
   TRPR0029: "granted"
 }
 
-const getResultVariableTextForTriggerCode = (triggerCode: TriggerCode): string => {
-  if (Object.keys(resultVariableText).includes(triggerCode)) {
-    return resultVariableText[triggerCode]
-  }
-
-  return ""
-}
+const getResultVariableTextForTriggerCode = (triggerCode: TriggerCode): string => resultVariableText[triggerCode] ?? ""
 
 export default getResultVariableTextForTriggerCode

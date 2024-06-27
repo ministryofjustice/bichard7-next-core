@@ -2,7 +2,6 @@ import type { AnnotatedHearingOutcome, Result } from "../types/AnnotatedHearingO
 import type { NonEmptyArray } from "../types/NonEmptyArray"
 import type { PncDisposal } from "../types/PncQueryResult"
 import getAdjFromAho from "./getAdjFromAho"
-import getCourtCaseFromQueryResults from "./getCourtCaseFromQueryResults"
 import isMatchToPncAdj from "./isMatchToPncAdj"
 import isMatchToPncDis from "./isMatchToPncDis"
 import isRecordableResult from "./isRecordableResult"
@@ -14,15 +13,14 @@ const isMatchToPncAdjAndDis = (
   offenceIndex: number,
   offenceReasonSequence: string | undefined
 ): boolean => {
-  const courtCaseRef = courtCaseReferenceNumber
-    ? courtCaseReferenceNumber
-    : aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+  const courtCaseReference =
+    courtCaseReferenceNumber ?? aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
 
-  if (!courtCaseRef) {
+  if (!courtCaseReference) {
     return false
   }
 
-  const courtCase = getCourtCaseFromQueryResults(courtCaseRef, aho.PncQuery)
+  const courtCase = aho.PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseReference)
 
   if (!courtCase) {
     return false
@@ -44,14 +42,9 @@ const isMatchToPncAdjAndDis = (
     return false
   }
 
-  for (const pncAdj of matchingPncAdjudications) {
-    const disposals = pncAdj.disposals ? pncAdj.disposals : []
-    if (allRecordableResultsMatchAPncDisposal(results, disposals, aho, offenceIndex)) {
-      return true
-    }
-  }
-
-  return false
+  return matchingPncAdjudications.some((pncAdj) =>
+    allRecordableResultsMatchAPncDisposal(results, pncAdj.disposals ?? [], aho, offenceIndex)
+  )
 }
 
 export const allRecordableResultsMatchAPncDisposal = (
@@ -59,14 +52,9 @@ export const allRecordableResultsMatchAPncDisposal = (
   disposals: PncDisposal[],
   aho: AnnotatedHearingOutcome,
   offenceIndex: number
-): boolean => {
-  return results.every((result, resultIndex) => {
-    if (isRecordableResult(result)) {
-      return isMatchToPncDis(disposals, aho, offenceIndex, resultIndex)
-    }
-
-    return true
-  })
-}
+): boolean =>
+  results.every(
+    (result, resultIndex) => !isRecordableResult(result) || isMatchToPncDis(disposals, aho, offenceIndex, resultIndex)
+  )
 
 export default isMatchToPncAdjAndDis

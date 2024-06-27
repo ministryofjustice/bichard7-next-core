@@ -15,18 +15,17 @@ const validateOperationSequence = (
     return allResultsAlreadyOnPnc
   }
 
-  let valid = true
   const incompatibleCodes = incompatibleOperationCode(operations, remandCcrs)
-  if (!!incompatibleCodes) {
+  if (incompatibleCodes) {
     const errorCode = incompatibleOperationExceptionCode(incompatibleCodes)
-    if (!!errorCode) {
+    if (errorCode) {
       addExceptionsToAho(aho, errorCode, errorPaths.case.asn)
     }
 
-    valid = false
+    return false
   }
 
-  return valid
+  return true
 }
 
 export default validateOperationSequence
