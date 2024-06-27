@@ -1,6 +1,7 @@
 import { ExceptionCode } from "../../../types/ExceptionCode"
 import type { AhoXml, Br7Result } from "../../types/AhoXml"
 import addAhoErrors from "./addAhoErrors"
+import Phase from "../../../types/Phase"
 
 describe("addAhoErrors()", () => {
   it("should add an '@_hasError' tag to the Hearing", () => {
@@ -140,7 +141,7 @@ describe("addAhoErrors()", () => {
     ).toBe(true)
   })
 
-  it("should add an '@_hasError' tag to the right Result", () => {
+  describe("Results", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
@@ -171,14 +172,74 @@ describe("addAhoErrors()", () => {
       }
     ]
 
-    addAhoErrors(rawAho, exceptions)
+    it("should add an '@_hasError' tag to the right Result when Phase 1 and addFalseHasErrorAttributes is false", () => {
+      const aho = structuredClone(rawAho)
 
-    expect(
-      (
-        rawAho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
-          "br7:Offence"
-        ][1]["br7:Result"] as Br7Result[]
-      )[0]["@_hasError"]
-    ).toBe(true)
+      addAhoErrors(aho, exceptions, false, Phase.HEARING_OUTCOME)
+
+      expect(
+        (
+          aho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+            "br7:Offence"
+          ][1]["br7:Result"] as Br7Result[]
+        )[0]["@_hasError"]
+      ).toBe(true)
+    })
+
+    it("should add an '@_hasError' tag to the right Result when Phase 1 and addFalseHasErrorAttributes is true", () => {
+      const aho = structuredClone(rawAho)
+
+      addAhoErrors(aho, exceptions, true, Phase.HEARING_OUTCOME)
+
+      expect(
+        (
+          aho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+            "br7:Offence"
+          ][1]["br7:Result"] as Br7Result[]
+        )[0]["@_hasError"]
+      ).toBe(true)
+    })
+
+    it("should add an '@_hasError' tag to the right Result when Phase 2 and addFalseHasErrorAttributes is true", () => {
+      const aho = structuredClone(rawAho)
+
+      addAhoErrors(aho, exceptions, true, Phase.PNC_UPDATE)
+
+      expect(
+        (
+          aho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+            "br7:Offence"
+          ][1]["br7:Result"] as Br7Result[]
+        )[0]["@_hasError"]
+      ).toBe(true)
+    })
+
+    it("should add an '@_hasError' tag to the Result when Phase 2 and addFalseHasErrorAttributes is true", () => {
+      const aho = structuredClone(rawAho)
+
+      addAhoErrors(aho, exceptions, true, Phase.PNC_UPDATE)
+
+      expect(
+        (
+          aho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+            "br7:Offence"
+          ][1]["br7:Result"] as Br7Result[]
+        )[0]["@_hasError"]
+      ).toBe(true)
+    })
+
+    it("shouldn't add an '@_hasError' tag to the Result when Phase 2 and addFalseHasErrorAttributes is false", () => {
+      const aho = structuredClone(rawAho)
+
+      addAhoErrors(aho, exceptions, false, Phase.PNC_UPDATE)
+
+      expect(
+        (
+          aho["br7:AnnotatedHearingOutcome"]?.["br7:HearingOutcome"]["br7:Case"]["br7:HearingDefendant"][
+            "br7:Offence"
+          ][1]["br7:Result"] as Br7Result[]
+        )[0]["@_hasError"]
+      ).toBeUndefined()
+    })
   })
 })

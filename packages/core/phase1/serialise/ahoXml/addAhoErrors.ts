@@ -2,8 +2,14 @@ import hasError from "../../serialise/ahoXml/hasError"
 import type { AhoXml } from "../../types/AhoXml"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
+import Phase from "../../../types/Phase"
 
-const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalseHasErrorAttributes = true) => {
+const addAhoErrors = (
+  aho: AhoXml,
+  exceptions: Exception[] | undefined,
+  addFalseHasErrorAttributes = true,
+  phase = Phase.HEARING_OUTCOME
+) => {
   const hasAnyErrors =
     hasError(exceptions) || aho["br7:AnnotatedHearingOutcome"]?.["br7:HasError"]?.["#text"] === "true"
 
@@ -54,20 +60,24 @@ const addAhoErrors = (aho: AhoXml, exceptions: Exception[] | undefined, addFalse
         ? offence["br7:Result"].map((result, resultIndex) => {
             delete result["@_SchemaVersion"]
 
-            const resultHasErrorAttr = generateHasErrorAttribute(
-              exceptions,
-              [
-                "AnnotatedHearingOutcome",
-                "HearingOutcome",
-                "Case",
-                "HearingDefendant",
-                "Offence",
-                offenceIndex,
-                "Result",
-                resultIndex
-              ],
-              addFalseHasErrorAttributes
-            )
+            let resultHasErrorAttr = {}
+
+            if (phase !== Phase.PNC_UPDATE || addFalseHasErrorAttributes) {
+              resultHasErrorAttr = generateHasErrorAttribute(
+                exceptions,
+                [
+                  "AnnotatedHearingOutcome",
+                  "HearingOutcome",
+                  "Case",
+                  "HearingDefendant",
+                  "Offence",
+                  offenceIndex,
+                  "Result",
+                  resultIndex
+                ],
+                addFalseHasErrorAttributes
+              )
+            }
 
             return {
               ...result,
