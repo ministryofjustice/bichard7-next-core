@@ -11,11 +11,17 @@ type ComparisonResultStatistics = {
   errored: number
   passedAho: number
   expectedPassedAho: number
+  passedPncUpdateDataset: number
+  expectedPassedPncUpdateDataset: number
   failed: number
 }
 
 const isIncomingMessageAho = (result: ComparisonResultDetail): boolean => {
   return result.incomingMessageType?.toLowerCase() === "annotatedhearingoutcome"
+}
+
+const isIncomingMessagePncUpdateDataset = (result: ComparisonResultDetail): boolean => {
+  return result.incomingMessageType?.toLowerCase() === "pncupdatedataset"
 }
 
 const getComparisonResultStatistics = (
@@ -39,6 +45,9 @@ const getComparisonResultStatistics = (
     errored,
     passedAho: passedResults.filter((result) => isIncomingMessageAho(result)).length,
     expectedPassedAho: expectedPassingResults.filter((result) => isIncomingMessageAho(result)).length,
+    passedPncUpdateDataset: passedResults.filter((result) => isIncomingMessagePncUpdateDataset(result)).length,
+    expectedPassedPncUpdateDataset: expectedPassingResults.filter((result) => isIncomingMessagePncUpdateDataset(result))
+      .length,
     failed: expectedPassed - passed - errored
   }
 }

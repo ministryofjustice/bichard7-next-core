@@ -23,7 +23,10 @@ const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void =
         `✓ ${stats.passed} passed (${toPercent(stats.passed, stats.expectedPassed)}) (of which AHOs: ${toPercent(
           stats.passedAho,
           stats.expectedPassedAho
-        )} of ${stats.expectedPassedAho})`
+        )} of ${stats.expectedPassedAho} and PncUpdateDatasets: ${toPercent(
+          stats.passedPncUpdateDataset,
+          stats.expectedPassedPncUpdateDataset
+        )} of ${stats.expectedPassedPncUpdateDataset})`
       )
     )
   }
