@@ -26,7 +26,7 @@ const createPncDisposal = (
   const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
     qtyDuration: qtyDuration,
-    qtyMonetaryValue: amtSpecInResult ? amtSpecInResult : "",
+    qtyMonetaryValue: amtSpecInResult?.toString(),
     qtyDate: dateSpecInResult ? preProcessDate(dateSpecInResult) : "",
     qtyUnitsFined: preProcessDisposalQuantity(
       durationUnit,
@@ -43,7 +43,7 @@ const createPncDisposal = (
     ),
     text: disposalText,
     type: pncDisposalType
-  } as PncDisposal
+  }
 }
 
 export const preProcessDate = (date: Date): string => {
@@ -112,17 +112,15 @@ export const preProcessDisposalQualifiers = (
 
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
     let psQualifierFound = ""
-    if (resultQualifiers) {
-      resultQualifiers.forEach((qualifier) => {
-        if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
-          if (qualifier === "P" || qualifier === "S") {
-            psQualifierFound = qualifier
-          } else {
-            disposalQualifier += `${qualifier} `
-          }
+    resultQualifiers?.forEach((qualifier) => {
+      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
+        if (["P", "S"].includes(qualifier)) {
+          psQualifierFound = qualifier
+        } else {
+          disposalQualifier += `${qualifier} `
         }
-      })
-    }
+      }
+    })
 
     if (psQualifierFound) {
       disposalQualifier += `${psQualifierFound} `
