@@ -138,14 +138,14 @@ const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
     )
 
     if (adjudication) {
-      const dateOfSentence = toPNCDate(adjudication.sentenceDate)
+      const dateOfSentence = adjudication.sentenceDate && toPNCDate(adjudication.sentenceDate)
       const plea = adjudication.plea.padEnd(13, " ")
       const verdict = adjudication.verdict.padEnd(14, " ")
       acc.push(`<ADJ>I${plea}${verdict}${dateOfSentence}0000 </ADJ>`)
     }
 
     disposals?.forEach((disposal) => {
-      const type = disposal.type.toString().padStart(4, "0")
+      const type = disposal.type?.toString().padStart(4, "0")
       const duration = (disposal.qtyDuration ?? "").padEnd(4, " ")
       acc.push(
         `<DIS>I${type}${duration} 100.00                                                                                         </DIS>`

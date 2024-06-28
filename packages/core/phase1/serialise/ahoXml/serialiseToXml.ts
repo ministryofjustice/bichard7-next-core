@@ -400,7 +400,7 @@ const mapAhoCaseToXml = (c: Case): Br7Case => ({
 
 const mapOffenceADJ = (adjudication: PncAdjudication): Adj => ({
   "@_Adjudication1": adjudication.verdict,
-  "@_DateOfSentence": toPNCDate(adjudication.sentenceDate),
+  "@_DateOfSentence": adjudication.sentenceDate ? toPNCDate(adjudication.sentenceDate) : "",
   "@_IntfcUpdateType": "I",
   "@_OffenceTICNumber": adjudication.offenceTICNumber.toString().padStart(4, "0"),
   "@_Plea": adjudication.plea
