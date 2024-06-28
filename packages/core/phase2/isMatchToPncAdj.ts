@@ -14,10 +14,8 @@ const isMatchToPncAdj = (
     hoAdjucation.verdict === pncOffence.adjudication.verdict &&
     hoAdjucation.plea === pncOffence.adjudication.plea &&
     hoAdjucation.offenceTICNumber === pncOffence.adjudication.offenceTICNumber &&
-    datesMatch(hoAdjucation.sentenceDate, pncOffence.adjudication.sentenceDate)
+    hoAdjucation.sentenceDate?.getTime() === pncOffence.adjudication.sentenceDate?.getTime()
   )
 }
-
-const datesMatch = (date1?: Date, date2?: Date) => date1?.getTime() === date2?.getTime()
 
 export default isMatchToPncAdj
