@@ -3,7 +3,7 @@ import getDisposalTextFromResult from "./getDisposalTextFromResult"
 
 describe("check getDisposalTextFromResult", () => {
   it("Given empty cjsResultCode, disposal text is empty", () => {
-    const ahoResult = {} as Result
+    const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("")
@@ -12,8 +12,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 3008 cjsResultCode, and numberSpecifiedInResults 3, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3008,
-      NumberSpecifiedInResult: [{ Number: 3 }]
-    } as Result
+      NumberSpecifiedInResult: [{ Number: 3 }],
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("3 PENALTY POINTS")
@@ -22,8 +23,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 3025 cjsResultCode, and ResultVariableText contains DISQUALIFIED FROM KEEPING FOR LIFE, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3025,
-      ResultVariableText: "BEFORE DISQUALIFIED FROM KEEPING QWE FOR LIFE AFTER"
-    } as Result
+      ResultVariableText: "BEFORE DISQUALIFIED FROM KEEPING QWE FOR LIFE AFTER",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("QWE")
@@ -32,8 +34,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 1100 cjsResultCode, and ResultVariableText contains THE DEFENDANT IS NOT TO ENTER PLACE, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 1100,
-      ResultVariableText: "THE DEFENDANT IS NOT TO ENTER PLACE"
-    } as Result
+      ResultVariableText: "THE DEFENDANT IS NOT TO ENTER PLACE",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("EXCLUDED FROM PLACE")
@@ -42,8 +45,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 3041 cjsResultCode, and ResultVariableText contains DEFENDANT EXCLUDED FROM ABC FOR A PERIOD OF, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3041,
-      ResultVariableText: "DEFENDANT EXCLUDED FROM ABC FOR A PERIOD OF"
-    } as Result
+      ResultVariableText: "DEFENDANT EXCLUDED FROM ABC FOR A PERIOD OF",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("EXCLUDED FROM ABC")
@@ -74,8 +78,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 3106 cjsResultCode, and ResultVariableText contains NOT TO ENTER XYZ THIS EXCLUSION REQUIREMENT LASTS FOR, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3106,
-      ResultVariableText: "NOT TO ENTER XYZ THIS EXCLUSION REQUIREMENT LASTS FOR"
-    } as Result
+      ResultVariableText: "NOT TO ENTER XYZ THIS EXCLUSION REQUIREMENT LASTS FOR",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("EXCLUDED FROM XYZ")
@@ -84,8 +89,9 @@ describe("check getDisposalTextFromResult", () => {
   it("Given 3047 cjsResultCode, and ResultVariableText contains RESULT VARIABLE TEXT CONTAINS UNTIL FURTHER ORDER TEXT, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3047,
-      ResultVariableText: "RESULT VARIABLE TEXT CONTAINS UNTIL FURTHER ORDER TEXT"
-    } as Result
+      ResultVariableText: "RESULT VARIABLE TEXT CONTAINS UNTIL FURTHER ORDER TEXT",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
 
     expect(result).toBe("UNTIL FURTHER ORDER")
@@ -101,8 +107,9 @@ describe("check getDisposalTextFromResult", () => {
           DurationType: "Foo"
         }
       ],
-      ResultVariableText: "THE DEFENDANT IS NOT TO ENTER FOO"
-    } as Result
+      ResultVariableText: "THE DEFENDANT IS NOT TO ENTER FOO",
+      ResultQualifierVariable: []
+    } as unknown as Result
     const result = getDisposalTextFromResult(ahoResult)
     expect(result).toBe("EXCLUDED FROM FOO 10 SESSIONS")
   })
