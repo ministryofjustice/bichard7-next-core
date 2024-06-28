@@ -10,8 +10,8 @@ import type Phase2Result from "../types/Phase2Result"
 import { Phase2ResultType } from "../types/Phase2Result"
 import refreshOperationSequence from "./refreshOperationSequence"
 
-const initialiseOutputMessage = (inputMessage: PncUpdateDataset): PncUpdateDataset => {
-  const outputMessage = structuredClone(inputMessage)
+const initialiseOutputMessage = (pncUpdateDataset: PncUpdateDataset): PncUpdateDataset => {
+  const outputMessage = structuredClone(pncUpdateDataset)
   outputMessage.HasError = false
   return outputMessage
 }
@@ -43,9 +43,6 @@ const processPhase2PncUpdateDataset = (pncUpdateDataset: PncUpdateDataset, audit
   }
 
   outputMessage.HasError = false
-  if (!outputMessage.PncOperations) {
-    outputMessage.PncOperations = []
-  }
 
   return {
     auditLogEvents: auditLogger.getEvents(),

@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import type { Operation, PncUpdateDataset } from "../types/PncUpdateDataset.ts"
+import type { Operation } from "../types/PncUpdateDataset.ts"
 import areAllResultsAlreadyPresentOnPnc from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./lib/deriveOperationSequence"
@@ -7,25 +7,19 @@ import sortOperations from "./sortOperations"
 import updateOperationSequenceForResultsAlreadyPresent from "./updateOperationSequenceForResultsAlreadyPresent"
 import validateOperationSequence from "./validateOperationSequence"
 
-const getOperationSequence = (
-  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset,
-  resubmitted: boolean
-): Operation[] => {
-  checkNoSequenceConditions(incomingMessage)
-
-  let sortedOperations: Operation[] = []
-  if (!incomingMessage.HasError) {
-    const allResultsAlreadyOnPNC = areAllResultsAlreadyPresentOnPnc(incomingMessage)
-    const remandCcrs: Set<string> = new Set<string>()
-    const operations = deriveOperationSequence(incomingMessage, resubmitted, allResultsAlreadyOnPNC, remandCcrs)
-
-    validateOperationSequence(operations, allResultsAlreadyOnPNC, incomingMessage, remandCcrs)
-    const filteredOperations = updateOperationSequenceForResultsAlreadyPresent(operations, allResultsAlreadyOnPNC)
-
-    sortedOperations = sortOperations(filteredOperations)
+const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): Operation[] => {
+  checkNoSequenceConditions(aho)
+  if (aho.HasError) {
+    return []
   }
 
-  return sortedOperations
+  const allResultsAlreadyOnPNC = areAllResultsAlreadyPresentOnPnc(aho)
+  const remandCcrs = new Set<string>()
+  const operations = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPNC, remandCcrs)
+  validateOperationSequence(operations, allResultsAlreadyOnPNC, aho, remandCcrs)
+  const filteredOperations = updateOperationSequenceForResultsAlreadyPresent(operations, allResultsAlreadyOnPNC)
+
+  return sortOperations(filteredOperations)
 }
 
 export default getOperationSequence
