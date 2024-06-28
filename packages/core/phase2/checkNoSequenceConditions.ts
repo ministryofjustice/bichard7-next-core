@@ -1,9 +1,14 @@
 import addExceptionsToAho from "../phase1/exceptions/addExceptionsToAho"
 import errorPaths from "../phase1/lib/errorPaths"
 import isDummyAsn from "../phase1/lib/isDummyAsn"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
 import { ExceptionCode } from "../types/ExceptionCode"
 import isRecordableResult from "./isRecordableResult"
+
+const getErrorPath = (offence: Offence, offenceIndex: number) =>
+  offence.CriminalProsecutionReference?.OffenceReason?.__type === "NationalOffenceReason"
+    ? errorPaths.offence(offenceIndex).offenceReason.offenceCodeReason
+    : errorPaths.offence(offenceIndex).offenceReason.localOffenceCode
 
 const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome) => {
   const asn = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -14,19 +19,14 @@ const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome) => {
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   if (offences.length > 100) {
     addExceptionsToAho(aho, ExceptionCode.HO200116, errorPaths.case.asn)
-  } else {
-    offences.forEach((offence, offenceIndex) => {
-      const count = offence.Result.filter(isRecordableResult).length
-
-      if (count > 10) {
-        const errorPath =
-          offence.CriminalProsecutionReference?.OffenceReason?.__type === "NationalOffenceReason"
-            ? errorPaths.offence(offenceIndex).offenceReason.offenceCodeReason
-            : errorPaths.offence(offenceIndex).offenceReason.localOffenceCode
-        addExceptionsToAho(aho, ExceptionCode.HO200117, errorPath)
-      }
-    })
+    return
   }
+
+  offences.forEach((offence, offenceIndex) => {
+    if (offence.Result.filter(isRecordableResult).length > 10) {
+      addExceptionsToAho(aho, ExceptionCode.HO200117, getErrorPath(offence, offenceIndex))
+    }
+  })
 }
 
 export default checkNoSequenceConditions

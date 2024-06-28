@@ -18,12 +18,6 @@ const isMatchToPncAdj = (
   )
 }
 
-const datesMatch = (date1: Date, date2: Date) => {
-  if (!date1 && !date2) {
-    return true
-  }
-
-  return date1.getTime() === date2.getTime()
-}
+const datesMatch = (date1?: Date, date2?: Date) => date1?.getTime() === date2?.getTime()
 
 export default isMatchToPncAdj

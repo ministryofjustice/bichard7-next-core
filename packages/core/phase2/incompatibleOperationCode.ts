@@ -7,7 +7,7 @@ const incompatibleOperationCode = (operations: Operation[], remandCcrs: Set<stri
   let sendefExists = false
   let newremExists = false
   let penhrgExists = false
-  const courtCaseSpecificOperations: Operation[] = [] as Operation[]
+  const courtCaseSpecificOperations: Operation[] = []
 
   let incompatibleCodePairs: [string, string] | undefined
   let operationCode: string
