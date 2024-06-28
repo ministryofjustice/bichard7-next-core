@@ -208,15 +208,18 @@ describe("check isMatchToPncAdjAndDis", () => {
 describe("check allRecordableResultsMatchAPncDisposal", () => {
   it("Given an unrecordable result, returns true", () => {
     const matchingResult = {
-      PNCDisposalType: 2063
+      PNCDisposalType: 2063,
+      ResultQualifierVariable: []
     }
     const nonMatchingResult = {
-      PNCDisposalType: 2063
+      PNCDisposalType: 2063,
+      ResultQualifierVariable: []
     }
     const unrecordableResult = {
-      PNCDisposalType: 1000
+      PNCDisposalType: 1000,
+      ResultQualifierVariable: []
     }
-    const results = [matchingResult, nonMatchingResult, unrecordableResult] as Result[]
+    const results = [matchingResult, nonMatchingResult, unrecordableResult] as unknown as Result[]
     const aho = generateAhoFromOffenceList([{ Result: results } as Offence])
 
     const disposals = [
@@ -237,10 +240,11 @@ describe("check allRecordableResultsMatchAPncDisposal", () => {
 
   it("Given non-matching results, returns false", () => {
     const nonMatchingResult = {
-      PNCDisposalType: 2064
-    }
+      PNCDisposalType: 2064,
+      ResultQualifierVariable: []
+    } as unknown as Result
 
-    const results = [nonMatchingResult, nonMatchingResult] as Result[]
+    const results = [nonMatchingResult, nonMatchingResult]
     const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
 
     const disposals = [
@@ -261,10 +265,11 @@ describe("check allRecordableResultsMatchAPncDisposal", () => {
 
   it("Given matching results, returns true", () => {
     const matchingResult = {
-      PNCDisposalType: 2063
-    }
+      PNCDisposalType: 2063,
+      ResultQualifierVariable: []
+    } as unknown as Result
 
-    const results = [matchingResult, matchingResult] as Result[]
+    const results = [matchingResult, matchingResult]
     const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
 
     const disposals = [
