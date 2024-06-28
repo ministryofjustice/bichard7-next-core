@@ -8,12 +8,12 @@ export const pncDisposalSchema = z.object({
   qtyUnitsFined: z.string().optional(),
   qualifiers: z.string().optional(),
   text: z.string().optional(),
-  type: z.number()
+  type: z.number().optional()
 })
 
 export const pncAdjudicationSchema = z.object({
   verdict: z.string(),
-  sentenceDate: z.coerce.date(),
+  sentenceDate: z.coerce.date().optional(),
   offenceTICNumber: z.number(),
   plea: z.string(),
   weedFlag: z.string().optional()

@@ -7,17 +7,19 @@ describe("check exclusionOrderDisposalText", () => {
 
     expect(result).toBe("")
   })
+
   it("Given input containing both matching strings, the disposal text is correct", () => {
-    const pattern_1 = "THE DEFENDANT IS NOT TO ENTER"
-    const pattern_2 = "THE DEFENDANT IS TO BE"
-    const resultVariableText = pattern_1 + " foobar baz " + pattern_2
+    const pattern1 = "THE DEFENDANT IS NOT TO ENTER"
+    const pattern2 = "THE DEFENDANT IS TO BE"
+    const resultVariableText = pattern1 + " foobar baz " + pattern2
     const result = exclusionOrderDisposalText(resultVariableText)
 
     expect(result).toBe("EXCLUDED FROM foobar baz")
   })
+
   it("Given input containing only first matching string, the disposal text is correct", () => {
-    const pattern_1 = "THE DEFENDANT IS NOT TO ENTER"
-    const resultVariableText = pattern_1 + " foobar baz"
+    const pattern1 = "THE DEFENDANT IS NOT TO ENTER"
+    const resultVariableText = pattern1 + " foobar baz"
     const result = exclusionOrderDisposalText(resultVariableText)
 
     expect(result).toBe("EXCLUDED FROM foobar baz")

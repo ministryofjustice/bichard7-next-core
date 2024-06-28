@@ -1,17 +1,10 @@
 const exclusionOrderDisposalText = (resultVariableText: string): string => {
-  const regex1 = /THE DEFENDANT IS NOT TO ENTER(.*?)THE DEFENDANT IS TO BE/gs
-  const regex2 = /THE DEFENDANT IS NOT TO ENTER(.*)/
+  const match = new RegExp(
+    /THE DEFENDANT IS NOT TO ENTER(?<firstMatch>.*?)THE DEFENDANT IS TO BE|THE DEFENDANT IS NOT TO ENTER(?<secondMatch>.*)/gs
+  ).exec(resultVariableText)?.groups
 
-  const regexes = [regex1, regex2]
-
-  for (const regex of regexes) {
-    const match = regex.exec(resultVariableText)
-    if (match) {
-      return "EXCLUDED FROM " + match[1].trim()
-    }
-  }
-
-  return ""
+  const matchValue = match?.firstMatch?.trim() || match?.secondMatch?.trim()
+  return matchValue ? `EXCLUDED FROM ${matchValue}` : ""
 }
 
 export default exclusionOrderDisposalText

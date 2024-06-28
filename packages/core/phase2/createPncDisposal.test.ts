@@ -3,7 +3,6 @@ import createPncDisposal, {
   preProcessDisposalQualifiers,
   preProcessDisposalQuantity
 } from "./createPncDisposal"
-import type { PncDisposal } from "../types/PncQueryResult"
 
 describe("preProcessDate", () => {
   it("returns a string in dnnnDDMMYYYYNNNNNNN.NNUU format", () => {
@@ -98,7 +97,7 @@ describe("preProcessDisposalQualifiers", () => {
 
 describe("createPncDisposal", () => {
   it("returns the correct fields", () => {
-    const result: PncDisposal = createPncDisposal(
+    const result = createPncDisposal(
       2060,
       "D",
       123,
@@ -112,7 +111,7 @@ describe("createPncDisposal", () => {
     expect(result).toEqual({
       qtyDate: "10052024",
       qtyDuration: "D123",
-      qtyMonetaryValue: 12000.99,
+      qtyMonetaryValue: "12000.99",
       qtyUnitsFined: "D123100520240012000.9900",
       qualifiers: "C E S   A5",
       text: "disposal-text",

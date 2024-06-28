@@ -8,51 +8,35 @@ import licencedPremisesExclusionOrderDisposalText from "./licencedPremisesExclus
 import penaltyPointsDisposalText from "./penaltyPointsDisposalText"
 import untilFurtherOrderDisposalText from "./untilFurtherOrderDisposalText"
 
+const disposalTextMap: Record<number, (resultVariableText: string) => string> = {
+  3025: disqualifiedFromKeepingDisposalText,
+  1100: exclusionOrderDisposalText,
+  3041: licencedPremisesExclusionOrderDisposalText,
+  3106: exclusionRequirementsDisposalText,
+  3047: untilFurtherOrderDisposalText
+}
+
 const getDisposalTextFromResult = (result: Result): string => {
   const cjsResultCode = result.CJSresultCode
-  const resultVariableText = result.ResultVariableText ? result.ResultVariableText.toUpperCase() : ""
+  const resultVariableText = result.ResultVariableText?.toUpperCase() ?? ""
+  let disposalText = disposalTextMap[cjsResultCode]?.(resultVariableText) ?? ""
 
-  let disposalText: string = ""
-  switch (cjsResultCode) {
-    case 3008:
-      disposalText = penaltyPointsDisposalText(result)
-      break
-    case 3025:
-      disposalText = disqualifiedFromKeepingDisposalText(resultVariableText)
-      break
-    case 1100:
-      disposalText = exclusionOrderDisposalText(resultVariableText)
-      break
-    case 3041:
-      disposalText = licencedPremisesExclusionOrderDisposalText(resultVariableText)
-      break
-    case 3106:
-      disposalText = exclusionRequirementsDisposalText(resultVariableText)
-      break
-    case 3047:
-      disposalText = untilFurtherOrderDisposalText(resultVariableText)
-      break
+  if (cjsResultCode === 3008) {
+    disposalText = penaltyPointsDisposalText(result)
   }
 
-  if (result.ResultQualifierVariable) {
-    const qualifiers = result.ResultQualifierVariable.map((qualifier) => qualifier.Code)
-    if (isFailedToAppearWarrantIssued(cjsResultCode, qualifiers)) {
-      disposalText = "FAILED TO APPEAR WARRANT ISSUED"
-    }
+  const qualifiers = result.ResultQualifierVariable.map((qualifier) => qualifier.Code)
+  if (isFailedToAppearWarrantIssued(cjsResultCode, qualifiers)) {
+    disposalText = "FAILED TO APPEAR WARRANT ISSUED"
   }
 
-  const durations = result.Duration ?? []
-
-  durations.forEach((duration) => {
-    if (duration.DurationUnit === "S") {
-      const durationLength = duration.DurationLength
+  result.Duration?.filter((duration) => duration.DurationUnit === "S" && duration.DurationLength > 0).forEach(
+    (duration) => {
       const durationUnit = lookupDurationUnitByCjsCode(duration.DurationUnit)?.description
-      if (durationLength > 0) {
-        const suffix = `${durationLength} ${durationUnit}`.toUpperCase()
-        disposalText = `${disposalText} ${suffix}`.trim()
-      }
+      const suffix = `${duration.DurationLength} ${durationUnit}`.toUpperCase()
+      disposalText = `${disposalText} ${suffix}`.trim()
     }
-  })
+  )
 
   return disposalText
 }

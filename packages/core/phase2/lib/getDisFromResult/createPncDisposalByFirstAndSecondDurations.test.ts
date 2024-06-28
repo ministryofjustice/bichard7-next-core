@@ -50,7 +50,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     expect(pncDisposal).toStrictEqual({
       qtyDate: "10052024",
       qtyDuration: "D3",
-      qtyMonetaryValue: 11,
+      qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
       qualifiers: "H5",
       text: "Dummy disposal text",
@@ -85,7 +85,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     expect(pncDisposal).toStrictEqual({
       qtyDate: "10052024",
       qtyDuration: "D3",
-      qtyMonetaryValue: 11,
+      qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
       qualifiers: "H5",
       text: "ValidateDisposalText(Dummy disposal text)",
@@ -118,7 +118,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     expect(pncDisposal).toStrictEqual({
       qtyDate: "10052024",
       qtyDuration: "D3",
-      qtyMonetaryValue: 11,
+      qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
       qualifiers: "H5",
       text: "Dummy disposal text",
@@ -151,7 +151,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     expect(pncDisposal).toStrictEqual({
       qtyDate: "",
       qtyDuration: "D3",
-      qtyMonetaryValue: 11,
+      qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
       qualifiers: "H5",
       text: "from 10/05/2024",

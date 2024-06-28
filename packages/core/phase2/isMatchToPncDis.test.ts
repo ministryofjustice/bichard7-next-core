@@ -5,7 +5,7 @@ import generateAhoFromOffenceList from "./tests/fixtures/helpers/generateAhoFrom
 
 describe("check isMatchToPncDis", () => {
   it("returns false when disposals list is empty", () => {
-    const ahoResult: Result = {} as Result
+    const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
     const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
     const result = isMatchToPncDis([], aho, 0, 0)
     expect(result).toBe(false)

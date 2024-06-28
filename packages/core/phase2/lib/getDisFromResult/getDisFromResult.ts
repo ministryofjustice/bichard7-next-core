@@ -24,6 +24,7 @@ const getDisFromResult = (
     resultIndex,
     pncDisposalByFirstAndSecondDurations.text
   )
+
   return [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
 }
 
