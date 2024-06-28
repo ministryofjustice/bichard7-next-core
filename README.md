@@ -1,6 +1,23 @@
 # Bichard 7 Core
 
-The code to replace the processing logic of Bichard 7
+The code to replace the processing logic of Bichard 7.
+
+## Contents
+
+- [Quickstart](#quickstart)
+  - [Pre-Requisites](#pre-requisites)
+  - [Booting the infrastructure](#booting-the-infrastructure)
+  - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
+  - [Building on an M1 Mac](#building-on-an-m1-mac)
+- [Publishing package updates](#publishing-package-updates)
+- [Testing](#testing)
+- [Excluding Triggers](#excluding-triggers)
+- [Comparing New and Old Bichard](#comparing-new-and-old-bichard)
+  - [Checking a comparison file](#checking-a-comparison-file)
+  - [Checking a comparison file on old Bichard](#checking-a-comparison-file-on-old-bichard)
+  - [Comparing outputs locally](#comparing-outputs-locally)
+  - [Configuration](#configuration)
+- [Conductor](#conductor)
 
 ## Quickstart
 
@@ -62,7 +79,7 @@ npm run destroy
 
 1. Use Intellij (VS Code doesn't work for debugging) to open the [bichard7-next](https://github.com/ministryofjustice/bichard7-next) project
 1. Build a debug image using `make clean build-debug`
-1. Run the legacy infrastructure using `npm run bichard-legacy-debug`
+1. Run the legacy infrastructure using `npm run bichard-legacy-debug` from the Core repo
 1. In IntelliJ select `Run >> Edit Configurations` from the menu
 1. Click the `+` button in the top left and select `Remote JVM Debug`
 1. Set the port to `7777` and give the configuration a name
@@ -189,52 +206,4 @@ This mode pretty-prints the `Pino` logs and makes it a bit clearer as to what's 
 
 ## Conductor
 
-[Conductor](https://github.com/conductor-oss/conductor) is used to run Core in production, and can also be run locally.
-
-To start Conductor locally:
-
-```bash
-# Run the full set of conductor infrastructure with Postgres
-npm run conductor
-```
-
-The Conductor UI is available (by default) on [http://localhost:5002](http://localhost:5002), and the API is available at [http://localhost:5002/api](http://localhost:5002/api). There's also API documentation available at [http://localhost:5002/swagger-ui/index.html](http://localhost:5002/swagger-ui/index.html).
-
-You can then import the task and workflow JSON definitions into the Conductor instance:
-
-```bash
-# Import the workflow and task definitions
-npm run setup -w packages/conductor
-```
-
-It should then be possible start workflow executions using either the Conductor UI (via the [Workbench](http://localhost:5002/workbench)) or the Conductor API.
-
-In order to then actually process the scheduled executions, you need to run one or more workers:
-
-```bash
-# Run a worker to process Conductor tasks
-npm run conductor-worker
-```
-
-Depending on the tasks you wish to process, you may need to configure the worker with the appropriate environment variables, and/or run using aws-vault:
-
-```bash
-PHASE1_COMPARISON_TABLE_NAME="bichard-7-e2e-test-comparison-log" \
-DYNAMO_REGION="eu-west-2" \
-DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
-S3_REGION="eu-west-2" \
-aws-vault exec bichard7-shared-e2e-test -- npm run conductor-worker
-```
-
-See the docker compose file for Conductor for an up-to-date list of environment variables required
-
-### Viewing Conductor in a deployed environment
-
-We have a script ([open-conductor.sh](./scripts/open-conductor.sh)) that will retrieve the password for Conductor in a deployed environment from AWS, save it to your clipboard, and then automatically open Conductor in your browser.
-
-To view Conductor in one of our deployed environments, run the script with the AWS Vault profile for that environment:
-
-```bash
-aws-vault exec <AWS_VAULT_PROFILE> -- npm run conductor:open
-# E.g. aws-vault exec bichard7-shared-e2e-test -- npm run conductor:open
-```
+See [README in packages/conductor](./packages/conductor/README.md) for more information.
