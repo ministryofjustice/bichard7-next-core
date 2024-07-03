@@ -94,7 +94,7 @@ describe("TRPS0008", () => {
               __type: "NonMatchingOffenceCode",
               ActOrSource: "Act",
               Reason: "test",
-              FullCode: "3105"
+              FullCode: "3107"
             }
           }
         }
@@ -148,7 +148,7 @@ describe("TRPS0008", () => {
       {
         Result: [
           {
-            CJSresultCode: 9999
+            CJSresultCode: 3105
           }
         ],
         CriminalProsecutionReference: {
@@ -158,7 +158,7 @@ describe("TRPS0008", () => {
               __type: "NonMatchingOffenceCode",
               ActOrSource: "Act",
               Reason: "test",
-              FullCode: "3105"
+              FullCode: "3310"
             }
           }
         },
