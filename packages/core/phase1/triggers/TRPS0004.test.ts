@@ -23,4 +23,24 @@ describe("TRPS0004", () => {
     const result = TRPS0004(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
+  
+  it("should return an empty array if is not a PNC update dataset", () => {
+    const options = { phase: Phase.PNC_UPDATE }
+    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
+      }
+    ] as Offence[])
+    const result = TRPS0004(generatedHearingOutcome, options)
+    expect(result).toEqual([])
+  })
 })
