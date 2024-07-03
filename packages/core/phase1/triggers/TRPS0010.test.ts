@@ -31,4 +31,11 @@ describe("TRPS0010", () => {
     const result = TRPS0010(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
+
+  it("should return an empty array if there are no offences", () => {
+    const options = { phase: Phase.PNC_UPDATE }
+    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([] as Offence[])
+    const result = TRPS0010(generatedHearingOutcome, options)
+    expect(result).toEqual([])
+  })
 })
