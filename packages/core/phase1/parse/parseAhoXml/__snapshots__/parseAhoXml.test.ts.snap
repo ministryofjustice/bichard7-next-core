@@ -30,11 +30,11 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
           "DefendantDetail": {
             "BirthDate": 1948-11-11T00:00:00.000Z,
             "Gender": 1,
-            "GeneratedPNCFilename": "SEXOFFENCE/TRPRFOUR",
+            "GeneratedPNCFilename": "SEXOFFENCE/TRPR  FOUR",
             "PersonName": {
               "FamilyName": "SEXOFFENCE",
               "GivenName": [
-                "TRPRFOUR",
+                "TRPR FOUR",
               ],
               "Title": "Mr",
             },
@@ -352,7 +352,7 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
         "HearingDocumentationLanguage": "D",
         "HearingLanguage": "D",
         "SourceReference": {
-          "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
+          "DocumentName": "SPI TRPR  FOUR SEXOFFENCE",
           "DocumentType": "SPI Case Result",
           "UniqueID": "CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415",
         },
