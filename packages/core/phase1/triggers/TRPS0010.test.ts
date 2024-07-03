@@ -1,3 +1,4 @@
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
@@ -20,6 +21,13 @@ describe("TRPS0010", () => {
         }
       }
     ] as Offence[])
+    const result = TRPS0010(generatedHearingOutcome, options)
+    expect(result).toEqual([])
+  })
+
+  it("should return an empty array if hearingOutcome is not a PncUpdateDataset", () => {
+    const options = { phase: Phase.PNC_UPDATE }
+    const generatedHearingOutcome = generateAhoFromOffenceList([] as Offence[])
     const result = TRPS0010(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
