@@ -1,7 +1,7 @@
-jest.mock("../common/getOperationSequence")
+jest.mock("../lib/getOperationSequence")
 import type { Operation } from "../../types/PncUpdateDataset"
-import { getOperationSequence } from "../common/getOperationSequence"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
+import { getOperationSequence } from "./getOperationSequence"
 import refreshOperationSequence from "./refreshOperationSequence"
 
 const mockedGetOperationSequence = getOperationSequence as jest.Mock

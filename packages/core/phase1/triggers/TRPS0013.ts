@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
-import isRecordableOffence from "../../phase2/common/isRecordableOffence"
+import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import hasCompletedDisarr from "./hasCompletedDisarr"

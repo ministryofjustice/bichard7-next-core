@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import isRecordableResult from "../../../../common/isRecordableResult"
+import isRecordableResult from "../../../isRecordableResult"
 import getAdjFromAho from "./getAdjFromAho"
 import isMatchToPncAdj from "./isMatchToPncAdj"
 import isMatchToPncDis from "./isMatchToPncDis"

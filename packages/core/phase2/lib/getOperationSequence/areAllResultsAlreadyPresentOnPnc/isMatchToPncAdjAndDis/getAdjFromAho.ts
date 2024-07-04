@@ -2,7 +2,7 @@ import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../../../.
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncAdjudication } from "../../../../../types/PncQueryResult"
-import isRecordableResult from "../../../../common/isRecordableResult"
+import isRecordableResult from "../../../isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 
 const getAdjFromAho = (results: NonEmptyArray<Result>, hearingDate: Date): PncAdjudication => {
