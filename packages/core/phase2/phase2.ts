@@ -1,8 +1,9 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
+import type { Trigger } from "../phase1/types/Trigger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import MessageType from "../types/MessageType"
+import type MessageType from "../types/MessageType"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
@@ -11,15 +12,15 @@ import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-type ProcessMessageResult = { generateTriggers: boolean }
+type ProcessMessageResult = { triggers: Trigger[] } | undefined
 
 const processMessage = (
   auditLogger: AuditLogger,
-  message: AnnotatedHearingOutcome | PncUpdateDataset,
+  inputMessage: AnnotatedHearingOutcome | PncUpdateDataset,
   outputMessage: PncUpdateDataset
 ): ProcessMessageResult => {
-  const messageType: MessageType = isPncUpdateDataset(message) ? "PncUpdateDataset" : "AnnotatedHearingOutcome"
-  const hearingOutcome = message.AnnotatedHearingOutcome.HearingOutcome
+  const messageType: MessageType = isPncUpdateDataset(inputMessage) ? "PncUpdateDataset" : "AnnotatedHearingOutcome"
+  const hearingOutcome = inputMessage.AnnotatedHearingOutcome.HearingOutcome
   auditLogger.info(
     messageType === "PncUpdateDataset"
       ? EventCode.ReceivedResubmittedHearingOutcome
@@ -29,24 +30,24 @@ const processMessage = (
   if (messageType === "AnnotatedHearingOutcome") {
     if (isAintCase(hearingOutcome)) {
       auditLogger.info(EventCode.IgnoredAncillary)
-      return { generateTriggers: true }
+      return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
     }
 
     const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
     if (!isRecordableOnPnc) {
       auditLogger.info(EventCode.IgnoredNonrecordable)
-      return { generateTriggers: false }
+      return
     }
   }
 
   if (!allPncOffencesContainResults(outputMessage)) {
-    return { generateTriggers: false }
+    return
   }
 
   if (messageType === "PncUpdateDataset" && outputMessage.PncOperations.length) {
     refreshOperationSequence(outputMessage)
     auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-    return { generateTriggers: false }
+    return
   }
 
   const isResubmitted = messageType === "PncUpdateDataset"
@@ -55,7 +56,7 @@ const processMessage = (
     (messageType === "AnnotatedHearingOutcome" && outputMessage.HasError) ||
     (messageType === "PncUpdateDataset" && outputMessage.Exceptions.length)
   ) {
-    return { generateTriggers: false }
+    return
   }
 
   if (operations.length) {
@@ -63,11 +64,13 @@ const processMessage = (
       messageType === "PncUpdateDataset" ? [...outputMessage.PncOperations, ...operations] : operations
   }
 
-  if (messageType === "AnnotatedHearingOutcome" && !operations.length) {
-    auditLogger.info(EventCode.IgnoredNonrecordable)
-  }
+  if (!operations.length) {
+    if (messageType === "AnnotatedHearingOutcome") {
+      auditLogger.info(EventCode.IgnoredNonrecordable)
+    }
 
-  return { generateTriggers: !operations.length }
+    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+  }
 }
 
 const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
@@ -78,7 +81,7 @@ const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger
 
   const processMessageResult = processMessage(auditLogger, message, outputMessage)
 
-  const triggers = processMessageResult.generateTriggers ? generateTriggers(outputMessage, Phase.PNC_UPDATE) : []
+  const triggers = processMessageResult?.triggers ?? []
   outputMessage.HasError = false
 
   return {
