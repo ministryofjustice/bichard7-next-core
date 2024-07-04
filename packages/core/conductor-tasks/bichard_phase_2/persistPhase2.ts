@@ -1,12 +1,12 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
-import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
-import type Phase2Result from "../../phase2/types/Phase2Result"
-import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
-import getAnnotatedDatasetFromDataset from "../../phase2/pncUpdateDataset/getAnnotatedDatasetFromDataset"
-import putPncUpdateError from "../../phase2/putPncUpdateError"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
-import putTriggerEvent from "../../phase2/pncUpdateDataset/putTriggerEvent"
+import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
+import putPncUpdateError from "../../phase2/persist/putPncUpdateError"
+import putTriggerEvent from "../../phase2/persist/putTriggerEvent"
+import getAnnotatedDatasetFromDataset from "../../phase2/processPncUpdateDataset/getAnnotatedDatasetFromDataset"
+import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
+import type Phase2Result from "../../phase2/types/Phase2Result"
 
 const persistPhase2: ConductorWorker = {
   taskDefName: "persist_phase2",
