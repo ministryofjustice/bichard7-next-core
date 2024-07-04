@@ -1,5 +1,5 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Offence } from "../../../../../../types/AnnotatedHearingOutcome"
+import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"
 
 describe("validateAmountSpecifiedInResult", () => {

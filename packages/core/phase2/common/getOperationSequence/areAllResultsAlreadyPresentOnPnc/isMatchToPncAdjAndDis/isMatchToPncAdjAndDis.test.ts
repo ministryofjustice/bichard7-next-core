@@ -1,8 +1,8 @@
-import type { PncCourtCaseSummary } from "../../../../comparison/types/MatchingComparisonOutput"
-import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { NonEmptyArray } from "../../../../types/NonEmptyArray"
-import type { PncDisposal, PncOffence, PncQueryResult } from "../../../../types/PncQueryResult"
-import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { PncCourtCaseSummary } from "../../../../../comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
+import type { PncDisposal, PncOffence, PncQueryResult } from "../../../../../types/PncQueryResult"
+import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import isMatchToPncAdjAndDis, { allRecordableResultsMatchAPncDisposal } from "./isMatchToPncAdjAndDis"
 
 describe("check isMatchToPncAdjAndDis", () => {

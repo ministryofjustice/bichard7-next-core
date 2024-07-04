@@ -1,4 +1,4 @@
-jest.mock("../phase1/lib/result/isAdjournedNoNextHearing")
+jest.mock("../../phase1/lib/result/isAdjournedNoNextHearing")
 import isAdjournedNoNextHearing from "../../phase1/lib/result/isAdjournedNoNextHearing"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../types/PncUpdateDataset"

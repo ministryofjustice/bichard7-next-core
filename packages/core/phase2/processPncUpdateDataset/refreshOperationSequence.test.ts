@@ -1,6 +1,6 @@
-jest.mock("../getOperationSequence")
+jest.mock("../common/getOperationSequence")
 import type { Operation } from "../../types/PncUpdateDataset"
-import getOperationSequence from "../processAho/getOperationSequence/getOperationSequence"
+import { getOperationSequence } from "../common/getOperationSequence"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
 import refreshOperationSequence from "./refreshOperationSequence"
 

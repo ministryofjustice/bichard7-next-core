@@ -1,4 +1,4 @@
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { Operation } from "../../../../types/PncUpdateDataset"
 import incompatibleOperationCode from "./incompatibleOperationCode"
 
 describe("check incompatibleOperationCode", () => {

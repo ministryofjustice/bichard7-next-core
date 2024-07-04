@@ -1,13 +1,13 @@
 jest.mock("./getFirstDateSpecifiedInResult")
-jest.mock("../../getDisposalTextFromResult")
+jest.mock("./getDisposalTextFromResult")
 jest.mock("./isDriverDisqualificationResult")
 jest.mock("./validateAmountSpecifiedInResult")
 jest.mock("./validateDisposalText")
 
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import getDisposalTextFromResult from "../../processAho/getDisposalTextFromResult"
-import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Offence, Result } from "../../../../../../types/AnnotatedHearingOutcome"
+import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
+import { getDisposalTextFromResult } from "./getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"

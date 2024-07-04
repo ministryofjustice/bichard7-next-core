@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../types/ExceptionCode"
+import { ExceptionCode } from "../../../../types/ExceptionCode"
 import incompatibleOperationExceptionCode from "./incompatibleOperationExceptionCode"
 
 describe("check incompatibleOperationExceptionCode", () => {

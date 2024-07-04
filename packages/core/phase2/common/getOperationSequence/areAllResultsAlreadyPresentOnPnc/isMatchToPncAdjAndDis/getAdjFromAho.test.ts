@@ -1,7 +1,7 @@
 jest.mock("./createPncAdjudication")
 import { verdict } from "bichard7-next-data-latest"
-import type { Result } from "../../../../types/AnnotatedHearingOutcome"
-import createPncAdjudication from "../../createPncAdjudication"
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import createPncAdjudication from "./createPncAdjudication"
 import getAdjFromAho from "./getAdjFromAho"
 
 const mockedCreatePncAdjudication = (createPncAdjudication as jest.Mock).mockReturnValue({ dummy: "dummy" })

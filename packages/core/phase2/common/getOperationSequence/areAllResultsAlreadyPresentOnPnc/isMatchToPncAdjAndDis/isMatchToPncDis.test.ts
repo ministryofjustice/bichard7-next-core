@@ -1,6 +1,6 @@
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../../types/PncQueryResult"
-import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import isMatchToPncDis from "./isMatchToPncDis"
 
 describe("check isMatchToPncDis", () => {

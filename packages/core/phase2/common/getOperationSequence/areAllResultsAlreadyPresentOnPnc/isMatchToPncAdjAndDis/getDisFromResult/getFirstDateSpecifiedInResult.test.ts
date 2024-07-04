@@ -1,5 +1,5 @@
-import ResultClass from "../../../phase1/types/ResultClass"
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../../../phase1/types/ResultClass"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 
 const acceptedResultClasses = [

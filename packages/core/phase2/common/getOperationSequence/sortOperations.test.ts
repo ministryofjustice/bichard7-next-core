@@ -1,4 +1,4 @@
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import sortOperations from "./sortOperations"
 
 describe("check sortOperations", () => {

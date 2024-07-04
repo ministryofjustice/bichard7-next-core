@@ -2,7 +2,7 @@ jest.mock("./isMatchToPncAdjAndDis")
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import areAllResultsAlreadyPresentOnPnc from "./areAllResultsAlreadyPresentOnPnc"
-import isMatchToPncAdjAndDis from "./isMatchToPncAdjAndDis/isMatchToPncAdjAndDis"
+import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"
 
 const mockedIsMatchToPncAdjAndDis = isMatchToPncAdjAndDis as jest.Mock
 

@@ -1,4 +1,4 @@
-import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import validateDisposalText, { maxDisposalTextLength } from "./validateDisposalText"
 
 describe("validateDisposalText", () => {
