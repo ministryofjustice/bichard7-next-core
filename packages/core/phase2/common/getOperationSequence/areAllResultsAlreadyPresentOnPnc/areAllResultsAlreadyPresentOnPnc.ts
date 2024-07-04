@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import { isNonEmptyArray } from "../../../../types/NonEmptyArray"
 import isRecordableResult from "../../isRecordableResult"
-import isMatchToPncAdjAndDis from "./isMatchToPncAdjAndDis/isMatchToPncAdjAndDis"
+import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"
 
 const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): boolean => {
   if (!aho.PncQuery?.pncId) {

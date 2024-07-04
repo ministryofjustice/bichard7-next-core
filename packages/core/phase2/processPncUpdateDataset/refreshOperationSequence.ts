@@ -1,5 +1,5 @@
 import type { NewremOperation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-import getOperationSequence from "../common/getOperationSequence/getOperationSequence"
+import { getOperationSequence } from "../common/getOperationSequence"
 import areNewremTypesEqual from "./areNewremTypesEqual"
 
 const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset) => {
