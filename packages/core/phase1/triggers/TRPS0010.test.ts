@@ -101,4 +101,40 @@ describe("TRPS0010", () => {
       expect(result).toHaveLength(0)
     }
   )
+
+  it("should return an empty array if AddedByTheCourt is true, isRecordableOffence is true, hasCompletedDisarr is true, and disarrCompatibleResultClass is true for offence", () => {
+    const options = { phase: Phase.PNC_UPDATE }
+    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason",
+            OffenceCode: {
+              __type: "NonMatchingOffenceCode",
+              ActOrSource: "Act",
+              Reason: "test",
+              FullCode: "test"
+            }
+          },
+          OffenceReasonSequence: "A1"
+        },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+
+    generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].AddedByTheCourt =
+      true
+
+    mockedIsRecordableOffence.mockReturnValue(true)
+    mockedHasCompletedDisarr.mockReturnValue(true)
+    mockedDisarrCompatibleResultClass.mockReturnValue(true)
+
+    const result = TRPS0010(generatedHearingOutcome, options)
+    expect(result).toEqual([{ code: "TRPS0010", offenceSequenceNumber: 1 }])
+  })
 })
