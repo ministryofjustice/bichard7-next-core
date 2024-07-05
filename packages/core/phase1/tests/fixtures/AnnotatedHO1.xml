@@ -51,7 +51,7 @@
 				<br7:PNCCheckname>SEXOFFENCE</br7:PNCCheckname>
 				<br7:DefendantDetail>
 					<br7:PersonName>
-						<ds:Title>Mr</ds:Title>
+						<ds:Title>Mr  and  Mrs</ds:Title>
 						<ds:GivenName NameSequence="1">TRPR  FOUR</ds:GivenName>
 						<ds:FamilyName NameSequence="1">SEXOFFENCE</ds:FamilyName>
 					</br7:PersonName>
