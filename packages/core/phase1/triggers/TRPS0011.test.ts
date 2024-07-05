@@ -1,5 +1,6 @@
 import isRecordableOffence from "../../phase2/isRecordableOffence"
 import disarrCompatibleResultClass from "../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass"
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
@@ -14,7 +15,7 @@ const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock
 const mockedDisarrCompatibleResultClass = disarrCompatibleResultClass as jest.Mock
 
 describe("TRPS0011", () => {
-  it("should not return TRPS0011 if option phase is not a PNC update.", () => {
+  it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -41,13 +42,13 @@ describe("TRPS0011", () => {
     expect(result).toEqual([])
   })
 
-  it("should not return TRPS0011 if hearing outcome is not a PNC update dataset.", () => {
+  it("should not return a trigger if phase is PNC_UPDATE and hearingOutcome is not a PncUpdateDataset", () => {
     const options = { phase: Phase.PNC_UPDATE }
-    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
+    const generatedHearingOutcome = generateAhoFromOffenceList([
       {
         Result: [
           {
-            CJSresultCode: 9999
+            CJSresultCode: 1234
           }
         ],
         CriminalProsecutionReference: {
@@ -61,7 +62,27 @@ describe("TRPS0011", () => {
     expect(result).toEqual([])
   })
 
-  it("should return an empty array if there are no offences", () => {
+  it("should not return a trigger if not PNC_UPDATE and hearing outcome is not a PncUpdateDataset", () => {
+    const options = { phase: Phase.HEARING_OUTCOME }
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 1234
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
+      }
+    ] as Offence[])
+    const result = TRPS0011(generatedHearingOutcome, options)
+    expect(result).toEqual([])
+  })
+
+  it("should not return a trigger if there are no offences", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([] as Offence[])
     const result = TRPS0011(generatedHearingOutcome, options)
