@@ -36,7 +36,7 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
               "GivenName": [
                 "TRPR FOUR",
               ],
-              "Title": "Mr",
+              "Title": "Mr and Mrs",
             },
           },
           "Offence": [

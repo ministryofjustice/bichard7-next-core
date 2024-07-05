@@ -429,7 +429,9 @@ export const mapXmlCaseToAho = (xmlCase: Br7Case): Case => ({
     DefendantDetail: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]
       ? {
           PersonName: {
-            Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"]?.["#text"],
+            Title: xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:Title"]?.["#text"]
+              .replace(/\s+/g, " ")
+              .trim(),
             GivenName: getGivenNames(
               xmlCase["br7:HearingDefendant"]["br7:DefendantDetail"]["br7:PersonName"]["ds:GivenName"]
             )?.map((name) => name.replace(/\s+/g, " ").trim()),
