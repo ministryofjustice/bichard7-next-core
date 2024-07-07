@@ -4,7 +4,7 @@ import Phase from "../../types/Phase"
 import TRPS0008 from "./TRPS0008"
 
 describe("TRPS0008", () => {
-  it("should return an empty array if options.phase is not equal to Phase.PNC_UPDATE", () => {
+  it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -78,7 +78,7 @@ describe("TRPS0008", () => {
     expect(result).toEqual([{ code: "TRPS0008", offenceSequenceNumber: 1 }])
   })
 
-  it("should return a empty array if neither offence code nor CJSresultCode equals 3105", () => {
+  it("should not return a trigger if neither offence code nor CJSresultCode equals 3105", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -104,7 +104,7 @@ describe("TRPS0008", () => {
     expect(result).toEqual([])
   })
 
-  it("should return multiple triggers for multiple matches", () => {
+  it("should return multiple triggers and offence sequence numbers for multiple matches", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {

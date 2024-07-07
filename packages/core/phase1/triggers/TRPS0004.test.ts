@@ -5,7 +5,7 @@ import Phase from "../../types/Phase"
 import TRPS0004 from "./TRPS0004"
 
 describe("TRPS0004", () => {
-  it("should return  an empty array if options.phase is not equal to Phase.PNC_UPDATE", () => {
+  it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -25,14 +25,27 @@ describe("TRPS0004", () => {
     expect(result).toEqual([])
   })
 
-  it("should return an empty array if is not a PNC update dataset", () => {
+  it("should not return a trigger if phase is PNC_UPDATE and hearingOutcome is not a PncUpdateDataset", () => {
     const options = { phase: Phase.PNC_UPDATE }
-    const generatedHearingOutcome = generateAhoFromOffenceList([] as Offence[])
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 1234
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
+      }
+    ] as Offence[])
     const result = TRPS0004(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
 
-  it("should return an empty array if there are no PncOperations with code NEWREM", () => {
+  it("should return not return a trigger if there are no PncOperations with code NEWREM", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -53,7 +66,7 @@ describe("TRPS0004", () => {
     expect(result).toEqual([])
   })
 
-  it("should return an array with TRPS0004 if NEWREM operation is present", () => {
+  it("should return a trigger if NEWREM operation is present", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {

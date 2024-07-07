@@ -4,7 +4,7 @@ import Phase from "../../types/Phase"
 import TRPS0002 from "./TRPS0002"
 
 describe("TRPS0002", () => {
-  it("should return  an empty array if options.phase is not equal to Phase.PNC_UPDATE", () => {
+  it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -39,7 +39,7 @@ describe("TRPS0002", () => {
     expect(result).toEqual([{ code: "TRPS0002" }])
   })
 
-  it("should return an empty array if CJSresultCode does not equal 3107", () => {
+  it("should not return a trigger if CJSresultCode does not equal 3107", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
