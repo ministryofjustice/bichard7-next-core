@@ -1,11 +1,12 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type Phase from "../../../types/Phase"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ComparisonData } from "../../types/ComparisonData"
-import type Phase from "../../../types/Phase"
 import summariseMatching from "../summariseMatching"
 import badManualMatch from "./badManualMatch"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import bichardMatchesRandomFinalOffence from "./bichardMatchesRandomFinalOffence"
+import bichardRaisesHo200114ForNonExactSequenceNumbers from "./bichardRaisesHo200114ForNonExactSequenceNumbers"
 import convictionDateMatching from "./convictionDateMatching"
 import coreMatchesBichardAddsInCourt from "./coreMatchesBichardAddsInCourt"
 import coreUsesManualMatchData from "./coreUsesManualMatchData"
@@ -18,6 +19,7 @@ import ho100332NotHo100304 from "./ho100332NotHo100304"
 import ho100332WithConvictionDate from "./ho100332WithConvictionDate"
 import ho100332WithSameResults from "./ho100332WithSameResults"
 import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
+import ho200200AndMultilineResultVariableText from "./ho200200AndMultilineResultVariableText"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidASN from "./invalidASN"
 import invalidManualSequenceNumber from "./invalidManualSequenceNumber"
@@ -26,7 +28,6 @@ import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 import prioritiseNonFinal from "./prioritiseNonFinal"
 import trailingSpace from "./trailingSpace"
-import bichardRaisesHo200114ForNonExactSequenceNumbers from "./bichardRaisesHo200114ForNonExactSequenceNumbers"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -42,6 +43,7 @@ const filters = [
   ho100332WithConvictionDate,
   ho100332WithSameResults,
   ho100333AndCCRHasLeadingZero,
+  ho200200AndMultilineResultVariableText,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
   nonMatchingManualSequenceNumber,
