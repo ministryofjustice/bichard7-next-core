@@ -6,9 +6,9 @@ import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import hasCompletedDisarr from "./hasCompletedDisarr"
 import TRPS0011 from "./TRPS0011"
-jest.mock("../../phase2/isRecordableOffence")
+jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisarr")
-jest.mock("../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass")
+jest.mock("../../phase2/lib/getOperationSequence/deriveOperationSequence/disarrCompatibleResultClass")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
 const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock

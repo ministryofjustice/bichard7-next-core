@@ -1,4 +1,3 @@
-
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
@@ -6,7 +5,7 @@ import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import hasCompletedDisarr from "./hasCompletedDisarr"
 import TRPS0013 from "./TRPS0013"
-jest.mock("../../phase2/isRecordableOffence")
+jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisarr")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock

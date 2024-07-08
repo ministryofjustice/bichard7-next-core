@@ -1,6 +1,6 @@
-jest.mock("../../phase2/isRecordableOffence")
+jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisarr")
-jest.mock("../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass")
+jest.mock("../../phase2/lib/getOperationSequence/deriveOperationSequence/disarrCompatibleResultClass")
 
 import disarrCompatibleResultClass from "../../phase2/lib/getOperationSequence/deriveOperationSequence/disarrCompatibleResultClass"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
