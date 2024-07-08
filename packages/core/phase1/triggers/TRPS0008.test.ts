@@ -104,7 +104,7 @@ describe("TRPS0008", () => {
     expect(result).toEqual([])
   })
 
-  it("should return multiple triggers and offence sequence numbers for multiple matches", () => {
+  it("should return trigger and offence sequence number for multiple offences", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -166,10 +166,6 @@ describe("TRPS0008", () => {
       }
     ] as Offence[])
     const result = TRPS0008(generatedHearingOutcome, options)
-    expect(result).toEqual([
-      { code: "TRPS0008", offenceSequenceNumber: 1 },
-      { code: "TRPS0008", offenceSequenceNumber: 2 },
-      { code: "TRPS0008", offenceSequenceNumber: 3 }
-    ])
+    expect(result).toEqual([{ code: "TRPS0008", offenceSequenceNumber: 1 }])
   })
 })

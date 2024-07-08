@@ -1,4 +1,5 @@
-import isRecordableOffence from "../../phase2/isRecordableOffence"
+
+import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"

@@ -1,8 +1,9 @@
 jest.mock("../../phase2/isRecordableOffence")
 jest.mock("./hasCompletedDisarr")
 jest.mock("../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass")
-import isRecordableOffence from "../../phase2/isRecordableOffence"
-import disarrCompatibleResultClass from "../../phase2/lib/deriveOperationSequence/disarrCompatibleResultClass"
+
+import disarrCompatibleResultClass from "../../phase2/lib/getOperationSequence/deriveOperationSequence/disarrCompatibleResultClass"
+import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
