@@ -5,7 +5,7 @@ import type Exception from "../types/Exception"
 import TRPS0003 from "./TRPS0003"
 
 describe("TRPS0003", () => {
-  it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
+  it("should not return a trigger if phase is not PNC_UPDATE", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -49,12 +49,6 @@ describe("TRPS0003", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        Exceptions: [
-          {
-            code: "HO200200",
-            path: ["Offence", "Result", "CJSresultCode"]
-          }
-        ],
         Result: [
           {
             CJSresultCode: 9999
@@ -68,6 +62,22 @@ describe("TRPS0003", () => {
         CourtOffenceSequenceNumber: 1
       }
     ] as Offence[])
+    generatedHearingOutcome.Exceptions = [
+      {
+        code: "HO200200",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultVariableText"
+        ]
+      }
+    ] as Exception[]
     const result = TRPS0003(generatedHearingOutcome, options)
     expect(result).toEqual([
       {
