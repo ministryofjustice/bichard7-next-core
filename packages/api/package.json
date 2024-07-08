@@ -51,14 +51,14 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.2",
+    "typescript": "^5.5.3",
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "esbuild": "^0.21.5",
     "express": "^4.19.2",
-    "qs": "^6.12.1",
+    "qs": "^6.12.2",
     "typeorm": "^0.3.20",
     "zod": "^3.23.8"
   }

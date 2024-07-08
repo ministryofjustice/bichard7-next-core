@@ -4,9 +4,9 @@ import MockDate from "mockdate"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../phase1/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import phase2Handler from "./phase2"
-import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
+import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
+import phase2Handler from "./phase2"
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
