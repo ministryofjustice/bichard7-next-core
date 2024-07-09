@@ -5,7 +5,6 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import Phase from "../../types/Phase"
 import errorPaths from "../lib/errorPaths"
 import type { Trigger } from "../types/Trigger"
-import getResults from "./getResults"
 
 const triggerCode = TriggerCode.TRPS0003
 
@@ -22,16 +21,15 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   const triggers: Trigger[] = []
 
-  for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
-    const results = getResults(hearingOutcome, offence)
+  offences.forEach((offence, offenceIndex) => {
+    const results = offence.Result
     const shouldGenerateTrigger = results.some((_, resultIndex) =>
       hasException200200(hearingOutcome, offenceIndex, resultIndex)
     )
     if (shouldGenerateTrigger) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
     }
-  }
+  })
 
   return triggers
 }
