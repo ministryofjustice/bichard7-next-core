@@ -1,7 +1,7 @@
 import licencedPremisesExclusionOrderDisposalText from "./licencedPremisesExclusionOrderDisposalText"
 
 describe("licencedPremised", () => {
-  it("returns an empty string if no exclusion requirement text fourn", () => {
+  it("returns an empty string if no exclusion requirement text found", () => {
     expect(licencedPremisesExclusionOrderDisposalText("THIS IS NOT AN EXCLUSION REQUIREMENT")).toBe("")
   })
 
@@ -53,5 +53,11 @@ describe("licencedPremised", () => {
     expect(licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROM FOR A PERIOD OF TIME")).toBe(
       "EXCLUDED FROM "
     )
+  })
+
+  it("keeps extra whitespace in location", () => {
+    expect(
+      licencedPremisesExclusionOrderDisposalText("DEFENDANT EXCLUDED FROM LICENCED  LOCATION FOR A PERIOD OF TIME")
+    ).toBe("EXCLUDED FROM LICENCED  LOCATION")
   })
 })
