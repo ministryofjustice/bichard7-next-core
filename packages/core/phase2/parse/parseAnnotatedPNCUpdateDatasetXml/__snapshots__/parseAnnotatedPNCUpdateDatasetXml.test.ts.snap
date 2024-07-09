@@ -267,7 +267,58 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
         },
       },
       "Exceptions": [],
-      "PncOperations": [],
+      "HasError": false,
+      "PncErrorMessage": undefined,
+      "PncOperations": [
+        {
+          "code": "DISARR",
+          "status": "Completed",
+        },
+      ],
+      "PncQuery": {
+        "checkName": "TRTHREE",
+        "courtCases": [
+          {
+            "courtCaseReference": "97/1626/008395Q",
+            "offences": [
+              {
+                "adjudication": undefined,
+                "disposals": undefined,
+                "offence": {
+                  "acpoOffenceCode": "12:15:24:1",
+                  "cjsOffenceCode": "TH68006",
+                  "endTime": undefined,
+                  "qualifier1": "",
+                  "qualifier2": "",
+                  "sequenceNumber": 1,
+                  "startDate": 2010-11-28T00:00:00.000Z,
+                  "startTime": "00:00",
+                  "title": "Theft of pedal cycle",
+                },
+              },
+              {
+                "adjudication": undefined,
+                "disposals": undefined,
+                "offence": {
+                  "acpoOffenceCode": "12:15:24:1",
+                  "cjsOffenceCode": "RT88191",
+                  "endTime": undefined,
+                  "qualifier1": "",
+                  "qualifier2": "",
+                  "sequenceNumber": 2,
+                  "startDate": 2010-11-28T00:00:00.000Z,
+                  "startTime": "00:00",
+                  "title": "Use a motor vehicle on a road / public place without third party insurance",
+                },
+              },
+            ],
+          },
+        ],
+        "forceStationCode": "01ZD",
+        "penaltyCases": undefined,
+        "pncId": "2000/0410770Y",
+      },
+      "PncQueryDate": 2022-10-04T00:00:00.000Z,
     },
   },
 }
