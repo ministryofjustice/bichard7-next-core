@@ -22,9 +22,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   const triggers: Trigger[] = []
 
-  for (let offenceIndex = -1; offenceIndex < offences.length; offenceIndex++) {
-    const offence = offenceIndex > -1 ? offences[offenceIndex] : undefined
+  for (const offence of offences) {
     const results = getResults(hearingOutcome, offence)
+    const offenceIndex = offences.indexOf(offence)
     const shouldGenerateTrigger = results.some((_, resultIndex) =>
       hasException200200(hearingOutcome, offenceIndex, resultIndex)
     )
