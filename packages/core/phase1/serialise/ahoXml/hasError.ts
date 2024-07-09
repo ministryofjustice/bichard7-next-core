@@ -1,7 +1,8 @@
-import type Exception from "../../types/Exception"
 import { ExceptionCode } from "../../../types/ExceptionCode"
+import type Exception from "../../types/Exception"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]
+const warningOnlyCodes = [ExceptionCode.HO200200]
 
 const mostSpecificErrorElement = (path: (string | number)[]) => {
   const matchingElements = errorElementHierarchy.filter((value) => path.includes(value))
@@ -9,11 +10,12 @@ const mostSpecificErrorElement = (path: (string | number)[]) => {
 }
 
 const shouldIgnoreHasError = (exception: Exception, elementPath: (string | number)[]): boolean => {
-  const warningOnlyCodes = [ExceptionCode.HO200200]
   const omitHasErrorFlagCodes = [ExceptionCode.HO200104, ExceptionCode.HO200101, ExceptionCode.HO200108]
+  const element = elementPath[elementPath.length - 2]
+
   return (
-    warningOnlyCodes.concat(omitHasErrorFlagCodes).includes(exception.code) &&
-    elementPath[elementPath.length - 2] === "Result"
+    (element === "Result" && warningOnlyCodes.concat(omitHasErrorFlagCodes).includes(exception.code)) ||
+    (element === "Offence" && warningOnlyCodes.includes(exception.code))
   )
 }
 
@@ -42,7 +44,9 @@ const hasError = (exceptions: Exception[] | undefined, path: (string | number)[]
     return exceptions.some((e) => exceptionMatchesElement(e, path))
   }
 
-  return exceptions.length > 0
+  const filteredExceptions = exceptions.filter(({ code }) => !warningOnlyCodes.includes(code))
+
+  return filteredExceptions.length > 0
 }
 
 export default hasError
