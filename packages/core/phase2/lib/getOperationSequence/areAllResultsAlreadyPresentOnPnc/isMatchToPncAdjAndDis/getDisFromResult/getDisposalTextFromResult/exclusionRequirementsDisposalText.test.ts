@@ -1,7 +1,7 @@
 import exclusionRequirementsDisposalText from "./exclusionRequirementsDisposalText"
 
 describe("exclusionRequirementsDisposalText", () => {
-  it("returns an empty string if no exclusion requirement text fourn", () => {
+  it("returns an empty string if no exclusion requirement text found", () => {
     expect(exclusionRequirementsDisposalText("THIS IS NOT AN EXCLUSION REQUIREMENT")).toBe("")
   })
 
@@ -35,7 +35,7 @@ describe("exclusionRequirementsDisposalText", () => {
     ).toBe("EXCLUDED FROM MORE SPECIFIC LOCATION")
   })
 
-  it("matches accross line breaks", () => {
+  it("matches across line breaks", () => {
     expect(
       exclusionRequirementsDisposalText(
         `NOT
@@ -52,7 +52,7 @@ describe("exclusionRequirementsDisposalText", () => {
     ).toBe("EXCLUDED FROM LOCATION")
   })
 
-  it("matches longest locations accross line breaks", () => {
+  it("matches longest locations across line breaks", () => {
     expect(
       exclusionRequirementsDisposalText(
         `NOT
@@ -78,7 +78,7 @@ describe("exclusionRequirementsDisposalText", () => {
       FOR
       TIME`
       )
-    ).toBe("EXCLUDED FROM MORE SPECIFIC LOCATION")
+    ).toBe("EXCLUDED FROM MORE       SPECIFIC       LOCATION")
   })
 
   it("returns an empty string if no disposal text", () => {
@@ -101,5 +101,14 @@ describe("exclusionRequirementsDisposalText", () => {
     const result = exclusionRequirementsDisposalText(resultVariableText.toUpperCase())
 
     expect(result).toBe("EXCLUDED FROM LOCATION.")
+  })
+
+  it("keeps extra whitespace included in locations", () => {
+    const resultVariableText =
+      "ERP - NOT TO ENTER FOR A PERIOD\nEXCLUSION REQUIREMENT: NOT TO ENTER LOCATION NAME OR LOCATION NAME  CITY. THIS EXCLUSION REQUIREMENT LASTS FOR 24 MONTHS."
+
+    expect(exclusionRequirementsDisposalText(resultVariableText)).toBe(
+      "EXCLUDED FROM LOCATION NAME OR LOCATION NAME  CITY."
+    )
   })
 })
