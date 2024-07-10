@@ -12,12 +12,10 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
-  const triggers: Trigger[] = []
-
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  for (const offence of offences) {
-    const offenceCode = offence ? getOffenceCode(offence) : undefined
 
+  return offences.reduce((triggers: Trigger[], offence) => {
+    const offenceCode = offence ? getOffenceCode(offence) : undefined
     const shouldGenerateTrigger = offence.Result.some(
       (result) => result.CJSresultCode === triggerResultCode || offenceCode === triggerResultCode.toString()
     )
@@ -25,9 +23,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     if (shouldGenerateTrigger) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
     }
-  }
 
-  return triggers
+    return triggers
+  }, [])
 }
 
 export default generator
