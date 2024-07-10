@@ -1,7 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 import Phase from "../../types/Phase"
-import getOffenceCode from "../lib/offence/getOffenceCode"
 import type { Trigger } from "../types/Trigger"
 
 const triggerCode = TriggerCode.TRPS0008
@@ -15,10 +14,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   return offences.reduce((triggers: Trigger[], offence) => {
-    const offenceCode = offence ? getOffenceCode(offence) : undefined
-    const shouldGenerateTrigger = offence.Result.some(
-      (result) => result.CJSresultCode === triggerResultCode || offenceCode === triggerResultCode.toString()
-    )
+    const shouldGenerateTrigger = offence.Result.some((result) => result.CJSresultCode === triggerResultCode)
 
     if (shouldGenerateTrigger) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
