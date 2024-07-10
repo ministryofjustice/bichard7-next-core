@@ -17,11 +17,13 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   for (const offence of offences) {
     const offenceCode = offence ? getOffenceCode(offence) : undefined
-    const results = offence.Result
-    for (const result of results) {
-      if (result.CJSresultCode === triggerResultCode || offenceCode === triggerResultCode.toString()) {
-        triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
-      }
+
+    const shouldGenerateTrigger = offence.Result.some(
+      (result) => result.CJSresultCode === triggerResultCode || offenceCode === triggerResultCode.toString()
+    )
+
+    if (shouldGenerateTrigger) {
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
     }
   }
 
