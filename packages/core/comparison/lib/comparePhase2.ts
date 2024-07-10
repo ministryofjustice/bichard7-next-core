@@ -53,7 +53,10 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
 
     const incomingMessageType = getMessageType(incomingMessage)
 
-    const addFalseHasErrorAttributes = !(incomingMessageType === "PncUpdateDataset")
+    const allOperationsAreCompleted =
+      outgoingPncUpdateDataset.PncOperations.length > 0 &&
+      outgoingPncUpdateDataset.PncOperations.every((op) => op.status === "Completed")
+    const addFalseHasErrorAttributes = incomingMessageType !== "PncUpdateDataset" || allOperationsAreCompleted
     serialisedOutgoingMessage = serialiseToXml(outgoingPncUpdateDataset, addFalseHasErrorAttributes)
     if (isError(serialisedOutgoingMessage)) {
       throw new Error("Failed to serialise parsed outgoing PncUpdateDataset XML")
