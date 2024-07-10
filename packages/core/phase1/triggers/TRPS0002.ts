@@ -12,15 +12,10 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
 
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
-  for (const offence of offences) {
-    for (const result of offence.Result) {
-      if (result.CJSresultCode === resultCodeForTrigger) {
-        return [{ code: triggerCode }]
-      }
-    }
-  }
-
-  return []
+  const shouldGenerateTrigger = offences.some((offence) =>
+    offence.Result.some((result) => result.CJSresultCode === resultCodeForTrigger)
+  )
+  return shouldGenerateTrigger ? [{ code: triggerCode }] : []
 }
 
 export default generator

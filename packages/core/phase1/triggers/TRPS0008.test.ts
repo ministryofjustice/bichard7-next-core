@@ -166,6 +166,10 @@ describe("TRPS0008", () => {
       }
     ] as Offence[])
     const result = TRPS0008(generatedHearingOutcome, options)
-    expect(result).toEqual([{ code: "TRPS0008", offenceSequenceNumber: 1 }])
+    expect(result).toEqual([
+      { code: "TRPS0008", offenceSequenceNumber: 1 },
+      { code: "TRPS0008", offenceSequenceNumber: 2 },
+      { code: "TRPS0008", offenceSequenceNumber: 3 }
+    ])
   })
 })
