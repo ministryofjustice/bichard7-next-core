@@ -5,12 +5,13 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import Phase from "../../types/Phase"
 import errorPaths from "../lib/errorPaths"
 import type { Trigger } from "../types/Trigger"
+import { ExceptionCode } from "../../types/ExceptionCode"
 
 const triggerCode = TriggerCode.TRPS0003
 
 const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceIndex: number, resultIndex: number) => {
   const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
-  return hearingOutcome.Exceptions.some(({ code, path }) => code === "HO200200" && isEqual(path, errorPath))
+  return hearingOutcome.Exceptions.some(({ code, path }) => code === ExceptionCode.HO200200 && isEqual(path, errorPath))
 }
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
@@ -22,8 +23,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers: Trigger[] = []
 
   offences.forEach((offence, offenceIndex) => {
-    const results = offence.Result
-    const shouldGenerateTrigger = results.some((_, resultIndex) =>
+    const shouldGenerateTrigger = offence.Result.some((_, resultIndex) =>
       hasException200200(hearingOutcome, offenceIndex, resultIndex)
     )
     if (shouldGenerateTrigger) {
