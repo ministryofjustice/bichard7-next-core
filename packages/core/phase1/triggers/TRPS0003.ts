@@ -20,18 +20,17 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   }
 
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  const triggers: Trigger[] = []
 
-  offences.forEach((offence, offenceIndex) => {
+  return offences.reduce((triggers: Trigger[], offence, offenceIndex) => {
     const shouldGenerateTrigger = offence.Result.some((_, resultIndex) =>
       hasException200200(hearingOutcome, offenceIndex, resultIndex)
     )
     if (shouldGenerateTrigger) {
       triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
     }
-  })
 
-  return triggers
+    return triggers
+  }, [])
 }
 
 export default generator
