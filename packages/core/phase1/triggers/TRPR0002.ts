@@ -2,7 +2,7 @@ import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0002
-const resultCodes = [4575, 4576, 4577, 4585, 4586]
+export const resultCodes = [4575, 4576, 4577, 4585, 4586]
 const resultQualifier = "EO"
 
 const generator: TriggerGenerator = (hearingOutcome) => {
