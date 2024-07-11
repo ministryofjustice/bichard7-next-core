@@ -48,9 +48,14 @@ const lockS3File: ConductorWorker = {
     const tags = await readS3FileTags(fileName, bucket, s3Config)
     if (isError(tags)) {
       // File has already been removed
-      if (tags.name === "NoSuchKey") {
+      if (
+        tags.name === "NoSuchKey" ||
+        (tags.name === "MethodNotAllowed" && "ResourceType" in tags && tags.ResourceType === "DeleteMarker")
+      ) {
         return completed({ lockState: "failure" }, "S3 File already deleted")
       }
+
+      console.error("Unexpected error locking the S3 file", tags)
 
       // Error reading the tags
       return failed(tags.message)

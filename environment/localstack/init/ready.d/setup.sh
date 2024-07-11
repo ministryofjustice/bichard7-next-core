@@ -17,7 +17,9 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name rerunAll --attribute
 # Create the incoming message bucket
 awslocal s3 mb s3://$COMPARISON_BUCKET
 awslocal s3 mb s3://$CONDUCTOR_TASK_DATA_BUCKET
+awslocal s3api put-bucket-versioning --bucket $CONDUCTOR_TASK_DATA_BUCKET --versioning-configuration Status=Enabled
 awslocal s3 mb s3://$INCOMING_BUCKET_NAME
+awslocal s3api put-bucket-versioning --bucket $INCOMING_BUCKET_NAME --versioning-configuration Status=Enabled
 
 # Configure the incoming messages bucket to push to SQS on create
 awslocal s3api put-bucket-notification-configuration \
