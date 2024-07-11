@@ -52,10 +52,7 @@ const processMessage = (
 
   const isResubmitted = messageType === "PncUpdateDataset"
   const operations = getOperationSequence(outputMessage, isResubmitted)
-  if (
-    (messageType === "AnnotatedHearingOutcome" && outputMessage.HasError) ||
-    (messageType === "PncUpdateDataset" && outputMessage.Exceptions.length)
-  ) {
+  if (outputMessage.HasError) {
     return
   }
 
