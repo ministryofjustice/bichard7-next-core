@@ -3,6 +3,7 @@ import "../../phase1/tests/helpers/setEnvironmentVariables"
 const bucketName = (process.env.TASK_DATA_BUCKET_NAME = "conductor-task-data")
 
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import deleteFileFromS3 from "@moj-bichard7/common/s3/deleteFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import * as readS3FileTagsModule from "@moj-bichard7/common/s3/readS3FileTags"
 import * as writeS3FileTagsModule from "@moj-bichard7/common/s3/writeS3FileTags"
@@ -57,6 +58,21 @@ describe("lockS3File", () => {
   it("should return COMPLETE with failure when the file is missing", async () => {
     const fileName = `${randomUUID()}.xml`
     const lockId = randomUUID()
+    const result = await lockS3File.execute({
+      inputData: { bucketId: "task-data", fileName, lockId }
+    })
+
+    expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toStrictEqual({ lockState: "failure" })
+    expect(result.logs?.map((l) => l.log)).toContain("S3 File already deleted")
+  })
+
+  // Skipped because localstack doesn't behave quite the same as AWS in this edge case
+  it.skip("should return COMPLETE with failure when the file has been deleted", async () => {
+    const fileName = `${randomUUID()}.xml`
+    const lockId = randomUUID()
+    await putFileToS3("Hello World", fileName, bucketName, s3Config, { lockedByWorkstream: lockId })
+    await deleteFileFromS3(fileName, bucketName, s3Config)
     const result = await lockS3File.execute({
       inputData: { bucketId: "task-data", fileName, lockId }
     })
