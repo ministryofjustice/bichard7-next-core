@@ -92,19 +92,9 @@ describe("TRPS0013", () => {
 
   it.each([
     { isRecordable: false, hasCompletedDisarr: false },
-    { isRecordable: false, hasCompletedDisarr: false },
     { isRecordable: true, hasCompletedDisarr: false },
     { isRecordable: false, hasCompletedDisarr: true },
-    { isRecordable: false, hasCompletedDisarr: false },
-    { isRecordable: true, hasCompletedDisarr: false },
-    { isRecordable: true, hasCompletedDisarr: true },
-    { isRecordable: true, hasCompletedDisarr: true },
-    { isRecordable: false, hasCompletedDisarr: true },
-    { isRecordable: false, hasCompletedDisarr: false },
-    { isRecordable: false, hasCompletedDisarr: true },
-    { isRecordable: true, hasCompletedDisarr: false },
-    { isRecordable: true, hasCompletedDisarr: false },
-    { isRecordable: false, hasCompletedDisarr: true }
+    { isRecordable: true, hasCompletedDisarr: true }
   ])(
     "should not return a trigger if isRecordableOffence is $isRecordable, hasCompletedDisarr is $hasCompletedDisarr, does not contain number of TIC for offence",
     ({ isRecordable, hasCompletedDisarr }) => {
@@ -136,7 +126,6 @@ describe("TRPS0013", () => {
 
       const result = TRPS0013(generatedHearingOutcome, options)
       expect(result).toHaveLength(0)
-      expect(result).toEqual([])
     }
   )
 
