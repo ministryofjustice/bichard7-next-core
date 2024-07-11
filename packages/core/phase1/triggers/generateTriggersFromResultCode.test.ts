@@ -51,4 +51,23 @@ describe("generateTriggersFromResultCode", () => {
 
     expect(result).toEqual([])
   })
+
+  it("should return a trigger if an offence with a matching result code when the hearing outcome is recordable and the trigger is recordable", () => {
+    mockedIsCaseRecordable.mockReturnValue(true)
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
+      } as Offence
+    ])
+
+    const result = generateTriggersFromResultCode(generatedHearingOutcome, {
+      triggerCode: TriggerCode.TRPR0004,
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.Yes,
+      caseLevelTrigger: false
+    })
+
+    expect(result).toEqual([{ code: TriggerCode.TRPR0004, offenceSequenceNumber: 1 }])
+  })
 })
