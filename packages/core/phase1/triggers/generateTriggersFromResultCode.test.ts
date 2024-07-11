@@ -70,4 +70,80 @@ describe("generateTriggersFromResultCode", () => {
 
     expect(result).toEqual([{ code: TriggerCode.TRPR0004, offenceSequenceNumber: 1 }])
   })
+
+  it("should return a trigger if an offence with a matching result code when the hearing outcome is not recordable and the trigger is not recordable", () => {
+    mockedIsCaseRecordable.mockReturnValue(false)
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
+      } as Offence
+    ])
+
+    const result = generateTriggersFromResultCode(generatedHearingOutcome, {
+      triggerCode: TriggerCode.TRPR0004,
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.No,
+      caseLevelTrigger: false
+    })
+
+    expect(result).toEqual([{ code: TriggerCode.TRPR0004, offenceSequenceNumber: 1 }])
+  })
+
+  it("should not return a trigger for an offence without a matching result code regardless of recordablity", () => {
+    mockedIsCaseRecordable.mockReturnValue(true)
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
+      } as Offence
+    ])
+
+    const result = generateTriggersFromResultCode(generatedHearingOutcome, {
+      triggerCode: TriggerCode.TRPR0004,
+      resultCodesForTrigger: [9999],
+      triggerRecordable: TriggerRecordable.Both,
+      caseLevelTrigger: false
+    })
+
+    expect(result).toEqual([])
+  })
+
+  it("should return a case level trigger if the caseLevelTrigger flag is set", () => {
+    mockedIsCaseRecordable.mockReturnValue(true)
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
+      } as Offence
+    ])
+
+    const result = generateTriggersFromResultCode(generatedHearingOutcome, {
+      triggerCode: TriggerCode.TRPR0004,
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.Yes,
+      caseLevelTrigger: true
+    })
+
+    expect(result).toEqual([{ code: TriggerCode.TRPR0004 }])
+  })
+
+  it("should not return a case level trigger if the caseLevelTrigger flag is set and there are no triggers", () => {
+    mockedIsCaseRecordable.mockReturnValue(true)
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
+      } as Offence
+    ])
+
+    const result = generateTriggersFromResultCode(generatedHearingOutcome, {
+      triggerCode: TriggerCode.TRPR0004,
+      resultCodesForTrigger: [9999],
+      triggerRecordable: TriggerRecordable.Both,
+      caseLevelTrigger: true
+    })
+
+    expect(result).toEqual([])
+  })
 })
