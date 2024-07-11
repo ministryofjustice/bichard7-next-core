@@ -12,6 +12,10 @@ const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
 const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock
 
 describe("TRPS0013", () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
@@ -87,23 +91,13 @@ describe("TRPS0013", () => {
   })
 
   it.each([
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: true, disarrCompatibleResultClass: true },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: true }
+    { isRecordable: false, hasCompletedDisarr: false },
+    { isRecordable: true, hasCompletedDisarr: false },
+    { isRecordable: false, hasCompletedDisarr: true },
+    { isRecordable: true, hasCompletedDisarr: true }
   ])(
-    "should return an empty array if AddedByTheCourt is $addedByCourt, isRecordableOffence is $isRecordable, hasCompletedDisarr is $hasCompletedDisarr, and disarrCompatibleResultClass is $disarrCompatibleResultClass for offence",
-    ({ addedByCourt, isRecordable, hasCompletedDisarr }) => {
+    "should not return a trigger if isRecordableOffence is $isRecordable, hasCompletedDisarr is $hasCompletedDisarr, does not contain number of TIC for offence",
+    ({ isRecordable, hasCompletedDisarr }) => {
       const options = { phase: Phase.PNC_UPDATE }
       const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
         {
@@ -127,19 +121,15 @@ describe("TRPS0013", () => {
         }
       ] as Offence[])
 
-      generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].AddedByTheCourt =
-        addedByCourt
-
       mockedIsRecordableOffence.mockReturnValue(isRecordable)
       mockedHasCompletedDisarr.mockReturnValue(hasCompletedDisarr)
 
       const result = TRPS0013(generatedHearingOutcome, options)
       expect(result).toHaveLength(0)
-      expect(result).toEqual([])
     }
   )
 
-  it("should return an empty array if AddedByTheCourt is true, isRecordableOffence is true, hasCompletedDisarr is true, and disarrCompatibleResultClass is true for offence", () => {
+  it("should return a trigger if isRecordableOffence is true, hasCompletedDisarr is false, and has a number of TIC for offence", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -150,27 +140,30 @@ describe("TRPS0013", () => {
         ],
         CriminalProsecutionReference: {
           OffenceReason: {
-            __type: "NationalOffenceReason",
-            OffenceCode: {
-              __type: "NonMatchingOffenceCode",
-              ActOrSource: "Act",
-              Reason: "test",
-              FullCode: "test"
-            }
-          },
-          OffenceReasonSequence: "A1"
+            __type: "NationalOffenceReason"
+          }
         },
         CourtOffenceSequenceNumber: 1
+      },
+      {
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        },
+        CourtOffenceSequenceNumber: 2
       }
     ] as Offence[])
-
-    generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].AddedByTheCourt =
-      true
-
     mockedIsRecordableOffence.mockReturnValue(true)
-    mockedHasCompletedDisarr.mockReturnValue(true)
+    mockedHasCompletedDisarr.mockReturnValue(false)
+    generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].NumberOfOffencesTIC = 1
 
     const result = TRPS0013(generatedHearingOutcome, options)
-    expect(result).toEqual([])
+    expect(result).toEqual([{ code: "TRPS0013", offenceSequenceNumber: 1 }])
   })
 })
