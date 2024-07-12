@@ -334,4 +334,162 @@ describe("TRPR0004", () => {
       ])
     }
   )
+
+  it.each(resultCodes)(
+    "should raise a trigger if result code is %i, is not guilty and offence code doesn't match code from the list, and offence result text is a sexual offence",
+    (resultCode) => {
+      const generatedHearingOutcome = generateAhoFromOffenceList([
+        {
+          Result: [
+            {
+              CJSresultCode: resultCode,
+              ResultVariableText: "Sexual offender",
+              Verdict: "NG"
+            }
+          ],
+          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+          CourtOffenceSequenceNumber: 1
+        }
+      ] as Offence[])
+
+      const offenceSequenceNumber =
+        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+          .CourtOffenceSequenceNumber
+      const result = TRPR0004(generatedHearingOutcome)
+
+      expect(result).toEqual([
+        {
+          code: triggerCode,
+          offenceSequenceNumber: offenceSequenceNumber
+        }
+      ])
+    }
+  )
+
+  it.each(resultCodes)(
+    "should raise a trigger if result code is %i, is not guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence",
+    (resultCode) => {
+      const generatedHearingOutcome = generateAhoFromOffenceList([
+        {
+          Result: [
+            {
+              CJSresultCode: resultCode,
+              ResultVariableText: "Robbery",
+              Verdict: "NG"
+            }
+          ],
+          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+          CourtOffenceSequenceNumber: 1
+        }
+      ] as Offence[])
+
+      const offenceSequenceNumber =
+        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+          .CourtOffenceSequenceNumber
+      const result = TRPR0004(generatedHearingOutcome)
+
+      expect(result).toEqual([
+        {
+          code: triggerCode,
+          offenceSequenceNumber: offenceSequenceNumber
+        }
+      ])
+    }
+  )
+
+  it("should raise a trigger if result code doesn't match code from the list, is guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999,
+            ResultVariableText: "Sexual offender",
+            Verdict: "G"
+          }
+        ],
+        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+
+    const offenceSequenceNumber =
+      generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+        .CourtOffenceSequenceNumber
+    const result = TRPR0004(generatedHearingOutcome)
+
+    expect(result).toEqual([
+      {
+        code: triggerCode,
+        offenceSequenceNumber: offenceSequenceNumber
+      }
+    ])
+  })
+
+  it("should raise a trigger if result code doesn't match code from the list, is guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence", () => {
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999,
+            ResultVariableText: "Robbery",
+            Verdict: "G"
+          }
+        ],
+        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+
+    const result = TRPR0004(generatedHearingOutcome)
+
+    expect(result).toHaveLength(0)
+  })
+
+  it("should raise a trigger if result code doesn't match code from the list, is not guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999,
+            ResultVariableText: "Sexual offender",
+            Verdict: "NG"
+          }
+        ],
+        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+
+    const offenceSequenceNumber =
+      generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+        .CourtOffenceSequenceNumber
+    const result = TRPR0004(generatedHearingOutcome)
+
+    expect(result).toEqual([
+      {
+        code: triggerCode,
+        offenceSequenceNumber: offenceSequenceNumber
+      }
+    ])
+  })
+
+  it("should raise a trigger if result code doesn't match code from the list, is not guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence", () => {
+    const generatedHearingOutcome = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999,
+            ResultVariableText: "Robbery",
+            Verdict: "NG"
+          }
+        ],
+        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+
+    const result = TRPR0004(generatedHearingOutcome)
+
+    expect(result).toHaveLength(0)
+  })
 })
