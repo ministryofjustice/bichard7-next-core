@@ -2,10 +2,11 @@ import isAdjournedNoNextHearing from "../../phase1/lib/result/isAdjournedNoNextH
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { Operation, OperationData } from "../../types/PncUpdateDataset"
 import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperationSetIfNotPresent"
-import isDefendantWarrantIssuedResult from "./isDefendantWarrantIssuedResult"
+
+const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
 const generateNewremData = (result: Result): OperationData<"NEWREM"> | undefined => {
-  if (isDefendantWarrantIssuedResult(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
+  if (DEFENDANT_WARRANT_ISSUED_RESULT_CODES.includes(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
     return undefined
   }
 
