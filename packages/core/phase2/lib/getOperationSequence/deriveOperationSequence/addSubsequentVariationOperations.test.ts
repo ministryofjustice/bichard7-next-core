@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 
 const createInput = (hoCcr: string, pncCourtCases: { offences?: { disposalTypes?: number[] }[]; ccr: string }[]) => ({

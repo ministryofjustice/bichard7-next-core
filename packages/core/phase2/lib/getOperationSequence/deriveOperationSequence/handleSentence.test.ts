@@ -3,7 +3,7 @@ jest.mock("../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("./addSubsequentVariationOperations")
 jest.mock("./areAnyPncResults2007")
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import areAnyPncResults2007 from "./areAnyPncResults2007"

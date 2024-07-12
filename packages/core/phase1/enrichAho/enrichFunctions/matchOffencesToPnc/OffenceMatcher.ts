@@ -1,5 +1,5 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../lib/errorPaths"
 import isCcrValid from "../../../lib/isCcrValid"
 import isSequenceValid from "../../../lib/isSequenceValid"

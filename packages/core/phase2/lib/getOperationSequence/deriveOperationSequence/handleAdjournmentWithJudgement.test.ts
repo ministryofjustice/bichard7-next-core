@@ -5,7 +5,7 @@ jest.mock("./checkRccSegmentApplicability")
 jest.mock("./hasUnmatchedPncOffences")
 import ResultClass from "../../../../phase1/types/ResultClass"
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addRemandOperation from "../../addRemandOperation"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"

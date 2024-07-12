@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import isPncException from "../lib/isPncException"
 import type Exception from "../types/Exception"
 import type { ExceptionPath } from "../types/Exception"

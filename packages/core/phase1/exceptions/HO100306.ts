@@ -1,5 +1,5 @@
 import type { OffenceReason } from "../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import getAreaCode from "../lib/offence/getAreaCode"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 import isOffenceIgnored from "../lib/offence/isOffenceIgnored"

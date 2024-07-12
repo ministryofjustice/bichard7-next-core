@@ -1,6 +1,6 @@
 import licencedPremisesExclusionOrderDisposalText from "../../../phase2/lib/getOperationSequence/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjAndDis/getDisFromResult/getDisposalTextFromResult/licencedPremisesExclusionOrderDisposalText"
 import { maxDisposalTextLength } from "../../../phase2/lib/getOperationSequence/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjAndDis/getDisFromResult/validateDisposalText"
-import { ExceptionCode } from "../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { ComparisonData, ComparisonOutput } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 

@@ -1,7 +1,7 @@
 import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
 import errorPaths from "../../../../phase1/lib/errorPaths"
 import ResultClass from "../../../../phase1/types/ResultClass"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
