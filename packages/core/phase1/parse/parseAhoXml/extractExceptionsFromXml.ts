@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { ExceptionCode } from "../../../types/ExceptionCode"
+import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../lib/errorPaths"
 import type Exception from "../../types/Exception"

@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
 const pncErrors = [
   ExceptionCode.HO100301,

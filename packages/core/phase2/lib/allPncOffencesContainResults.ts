@@ -1,7 +1,7 @@
 import addExceptionsToAho from "../../phase1/exceptions/addExceptionsToAho"
 import errorPaths from "../../phase1/lib/errorPaths"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import isRecordableOffence from "./isRecordableOffence"
 import isRecordableResult from "./isRecordableResult"
 

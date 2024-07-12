@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "../../../../types/PncQueryResult"
 import errorPaths from "../../../lib/errorPaths"
 import OffenceMatcher from "./OffenceMatcher"

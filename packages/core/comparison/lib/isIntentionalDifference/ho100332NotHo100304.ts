@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
