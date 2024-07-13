@@ -1,6 +1,6 @@
 import type { ZodIssue } from "zod"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import * as exceptions from "../exceptions/exceptions"
 import pncExceptions from "../exceptions/pncExceptions"
 import { validatedHearingOutcomeSchema } from "../schemas/validatedHearingOutcome"

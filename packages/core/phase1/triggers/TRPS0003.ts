@@ -5,7 +5,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import Phase from "../../types/Phase"
 import errorPaths from "../lib/errorPaths"
 import type { Trigger } from "../types/Trigger"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
 const triggerCode = TriggerCode.TRPS0003
 
