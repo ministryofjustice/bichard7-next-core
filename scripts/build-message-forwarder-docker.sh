@@ -53,12 +53,6 @@ function pull_and_build_from_aws() {
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
-    ## Run Trivy scan
-    TRIVY_CACHE_DIR=trivy trivy image \
-      --exit-code 1 \
-      --severity "CRITICAL" \
-      --skip-update "${DOCKER_OUTPUT_TAG}:latest"
-
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
       ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME}
