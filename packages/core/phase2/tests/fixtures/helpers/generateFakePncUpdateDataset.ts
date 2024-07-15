@@ -8,6 +8,7 @@ const generateFakePncUpdateDataset = (
 ): PncUpdateDataset => {
   const exampleAho = fs.readFileSync("./phase1/tests/fixtures/exampleAho.json").toString()
   const basePncUpdateDataset: PncUpdateDataset = JSON.parse(exampleAho.toString(), dateReviver)
+  basePncUpdateDataset.PncOperations = basePncUpdateDataset.PncOperations ?? []
   return merge(basePncUpdateDataset, overrides)
 }
 
