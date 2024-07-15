@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import TRPR0004 from "./TRPR0004"
 import { CjsVerdict } from "../types/Verdict"
 
@@ -61,20 +61,22 @@ describe("TRPR0004", () => {
     ] as Offence[])
   }
 
+  const offenceSequenceNumber = (generatedHearingOutcome: AnnotatedHearingOutcome) => {
+    return generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+      .CourtOffenceSequenceNumber
+  }
+
   resultCodes.forEach((resultCode) => {
     offenceCodes.forEach((offenceCode) => {
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a sexual offence`, () => {
         const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Sexual offender", CjsVerdict.Guilty)
 
-        const offenceSequenceNumber =
-          generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-            .CourtOffenceSequenceNumber
         const result = TRPR0004(generatedHearingOutcome)
 
         expect(result).toEqual([
           {
             code: triggerCode,
-            offenceSequenceNumber: offenceSequenceNumber
+            offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
           }
         ])
       })
@@ -87,15 +89,12 @@ describe("TRPR0004", () => {
           CjsVerdict.NotGuilty
         )
 
-        const offenceSequenceNumber =
-          generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-            .CourtOffenceSequenceNumber
         const result = TRPR0004(generatedHearingOutcome)
 
         expect(result).toEqual([
           {
             code: triggerCode,
-            offenceSequenceNumber: offenceSequenceNumber
+            offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
           }
         ])
       })
@@ -103,15 +102,12 @@ describe("TRPR0004", () => {
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a not sexual offence`, () => {
         const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Robbery", CjsVerdict.NotGuilty)
 
-        const offenceSequenceNumber =
-          generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-            .CourtOffenceSequenceNumber
         const result = TRPR0004(generatedHearingOutcome)
 
         expect(result).toEqual([
           {
             code: triggerCode,
-            offenceSequenceNumber: offenceSequenceNumber
+            offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
           }
         ])
       })
@@ -119,15 +115,12 @@ describe("TRPR0004", () => {
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a not sexual offence`, () => {
         const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Robbery", CjsVerdict.Guilty)
 
-        const offenceSequenceNumber =
-          generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-            .CourtOffenceSequenceNumber
         const result = TRPR0004(generatedHearingOutcome)
 
         expect(result).toEqual([
           {
             code: triggerCode,
-            offenceSequenceNumber: offenceSequenceNumber
+            offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
           }
         ])
       })
@@ -139,15 +132,12 @@ describe("TRPR0004", () => {
     (offenceCode) => {
       const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Sexual offender", CjsVerdict.Guilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -158,15 +148,12 @@ describe("TRPR0004", () => {
     (offenceCode) => {
       const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Robbery", CjsVerdict.Guilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -177,15 +164,12 @@ describe("TRPR0004", () => {
     (offenceCode) => {
       const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Sexual offender", CjsVerdict.NotGuilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -206,15 +190,12 @@ describe("TRPR0004", () => {
     (resultCode) => {
       const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Sexual offender", CjsVerdict.Guilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -225,15 +206,12 @@ describe("TRPR0004", () => {
     (resultCode) => {
       const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Robbery", CjsVerdict.Guilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -244,15 +222,12 @@ describe("TRPR0004", () => {
     (resultCode) => {
       const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Sexual offender", CjsVerdict.NotGuilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -263,15 +238,12 @@ describe("TRPR0004", () => {
     (resultCode) => {
       const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Robbery", CjsVerdict.NotGuilty)
 
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
       expect(result).toEqual([
         {
           code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
+          offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
         }
       ])
     }
@@ -280,15 +252,12 @@ describe("TRPR0004", () => {
   it("should raise a trigger if result code doesn't match code from the list, is guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
     const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Sexual offender", CjsVerdict.Guilty)
 
-    const offenceSequenceNumber =
-      generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-        .CourtOffenceSequenceNumber
     const result = TRPR0004(generatedHearingOutcome)
 
     expect(result).toEqual([
       {
         code: triggerCode,
-        offenceSequenceNumber: offenceSequenceNumber
+        offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
       }
     ])
   })
@@ -304,15 +273,12 @@ describe("TRPR0004", () => {
   it("should raise a trigger if result code doesn't match code from the list, is not guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
     const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Sexual offender", CjsVerdict.NotGuilty)
 
-    const offenceSequenceNumber =
-      generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-        .CourtOffenceSequenceNumber
     const result = TRPR0004(generatedHearingOutcome)
 
     expect(result).toEqual([
       {
         code: triggerCode,
-        offenceSequenceNumber: offenceSequenceNumber
+        offenceSequenceNumber: offenceSequenceNumber(generatedHearingOutcome)
       }
     ])
   })
