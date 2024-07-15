@@ -56,11 +56,6 @@ const processMessage = (
     return
   }
 
-  if (operations.length) {
-    outputMessage.PncOperations =
-      messageType === "PncUpdateDataset" ? [...outputMessage.PncOperations, ...operations] : operations
-  }
-
   if (!operations.length) {
     if (messageType === "AnnotatedHearingOutcome") {
       auditLogger.info(EventCode.IgnoredNonrecordable)
@@ -68,6 +63,9 @@ const processMessage = (
 
     return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
   }
+
+  outputMessage.PncOperations =
+    messageType === "PncUpdateDataset" ? [...outputMessage.PncOperations, ...operations] : operations
 }
 
 const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
