@@ -191,7 +191,9 @@ describe("bichard_phase_1 workflow", () => {
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
 
-  it("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
+  // TODO: Enable test and update LocalStack image version when LocalStack releases a version that includes this fix:
+  // https://github.com/localstack/localstack/pull/11185
+  it.skip("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
     const fixture = getFixture("e2e-test/fixtures/success-exceptions-aho.json", correlationId)
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPncMock)

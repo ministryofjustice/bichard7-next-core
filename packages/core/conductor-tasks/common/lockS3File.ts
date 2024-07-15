@@ -47,11 +47,12 @@ const lockS3File: ConductorWorker = {
 
     const tags = await readS3FileTags(fileName, bucket, s3Config)
     if (isError(tags)) {
+      const fileDoesNotExist = tags.name === "NoSuchKey"
+      const fileWasDeleted =
+        tags.name === "MethodNotAllowed" && "ResourceType" in tags && tags.ResourceType === "DeleteMarker"
+
       // File has already been removed
-      if (
-        tags.name === "NoSuchKey" ||
-        (tags.name === "MethodNotAllowed" && "ResourceType" in tags && tags.ResourceType === "DeleteMarker")
-      ) {
+      if (fileDoesNotExist || fileWasDeleted) {
         return completed({ lockState: "failure" }, "S3 File already deleted")
       }
 

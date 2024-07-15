@@ -217,6 +217,7 @@ jobs:
           condition:
             or:
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.conductor-changes >>
           steps:
             - run: circleci-agent step halt
