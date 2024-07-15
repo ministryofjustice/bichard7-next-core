@@ -5,7 +5,7 @@ import errorPaths from "../../phase1/lib/errorPaths"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import saveErrorListRecord from "./saveErrorListRecord"
 
 const dbConfig = createDbConfig()

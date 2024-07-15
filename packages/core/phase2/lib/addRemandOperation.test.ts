@@ -3,6 +3,7 @@ import isAdjournedNoNextHearing from "../../phase1/lib/result/isAdjournedNoNextH
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../types/PncUpdateDataset"
 import addRemandOperation from "./addRemandOperation"
+
 const mockedIsAdjournedNoNextHearing = isAdjournedNoNextHearing as jest.Mock
 
 describe("addRemandOperation", () => {
@@ -69,7 +70,7 @@ describe("addRemandOperation", () => {
     expect(operations).toHaveLength(0)
   })
 
-  it("does add a remand operation with data if warrent has not been issued", () => {
+  it("adds a remand operation with data if warrant has not been issued", () => {
     const operations: Operation[] = []
     const result = {
       CJSresultCode: 4574,
@@ -103,7 +104,7 @@ describe("addRemandOperation", () => {
     ])
   })
 
-  it("does add a remand operation without data if warrent has not been issued but NextResultSourceOrganisation is not set", () => {
+  it("adds a remand operation without data if warrant has not been issued but NextResultSourceOrganisation is not set", () => {
     const operations: Operation[] = []
     const result = {
       CJSresultCode: 4574,
@@ -122,22 +123,25 @@ describe("addRemandOperation", () => {
     ])
   })
 
-  it("does add a remand operation without data if warrent has been issued", () => {
-    const operations: Operation[] = []
-    const result = {
-      CJSresultCode: 4576,
-      NextResultSourceOrganisation: {
-        TopLevelCode: "1",
-        SecondLevelCode: "02",
-        ThirdLevelCode: "03",
-        BottomLevelCode: "04",
-        OrganisationUnitCode: "1020304"
-      },
-      NextHearingDate: "2024-05-03"
-    } as Result
+  it.each([4576, 4577])(
+    "adds a remand operation without data if warrant has been issued (%i result code)",
+    (resultCode) => {
+      const operations: Operation[] = []
+      const result = {
+        CJSresultCode: resultCode,
+        NextResultSourceOrganisation: {
+          TopLevelCode: "1",
+          SecondLevelCode: "02",
+          ThirdLevelCode: "03",
+          BottomLevelCode: "04",
+          OrganisationUnitCode: "1020304"
+        },
+        NextHearingDate: "2024-05-03"
+      } as Result
 
-    addRemandOperation(result, operations)
+      addRemandOperation(result, operations)
 
-    expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
-  })
+      expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
+    }
+  )
 })

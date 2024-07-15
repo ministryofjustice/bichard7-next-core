@@ -1,7 +1,7 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import validateOperationSequence from "./validateOperationSequence"
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
 describe("check validateOperationsSequence", () => {
   const aho = generateAhoFromOffenceList([])

@@ -1,7 +1,7 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
-import { ExceptionCode } from "../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import {
   flattenCases,

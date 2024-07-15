@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import incompatibleOperationExceptionCode from "./incompatibleOperationExceptionCode"
 
 describe("check incompatibleOperationExceptionCode", () => {

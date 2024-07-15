@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../lib/errorPaths"
 import findException from "../lib/findException"
 import isCaseRecordable from "../lib/isCaseRecordable"

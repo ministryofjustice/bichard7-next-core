@@ -1,7 +1,7 @@
 import { remandStatus } from "bichard7-next-data-latest"
 import { z } from "zod"
 import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../../types/AnnotatedHearingOutcome"
-import { ExceptionCode } from "../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,

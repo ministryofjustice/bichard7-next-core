@@ -1,4 +1,4 @@
-import { ExceptionCode } from "../../../types/ExceptionCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AhoXml, Br7Result } from "../../types/AhoXml"
 import addAhoErrors from "./addAhoErrors"
 import Phase from "../../../types/Phase"
