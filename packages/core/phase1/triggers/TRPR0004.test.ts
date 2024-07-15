@@ -2,6 +2,7 @@ import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import TRPR0004 from "./TRPR0004"
+import { CjsVerdict } from "../types/Verdict"
 
 describe("TRPR0004", () => {
   const triggerCode = TriggerCode.TRPR0004
@@ -36,27 +37,34 @@ describe("TRPR0004", () => {
   "SX03228", "SX03229", "SX03230", "SX03231", "SX03232", "SX03233", "SX03234", "CE79180", "CE79161",
   "CD98001", "CD98055", "CD98056"
 ]
+
+  const generateMockAho = (
+    resultCode: number,
+    offenceCode: string,
+    resultVariableText: string,
+    verdict: CjsVerdict
+  ) => {
+    return generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: resultCode,
+            ResultVariableText: resultVariableText,
+            Verdict: verdict
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: { OffenceCode: { FullCode: offenceCode } }
+        },
+        CourtOffenceSequenceNumber: 1
+      }
+    ] as Offence[])
+  }
+
   resultCodes.forEach((resultCode) => {
     offenceCodes.forEach((offenceCode) => {
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a sexual offence`, () => {
-        const generatedHearingOutcome = generateAhoFromOffenceList([
-          {
-            Result: [
-              {
-                CJSresultCode: resultCode,
-                ResultVariableText: "Sexual offender",
-                Verdict: "G"
-              },
-              {
-                CJSresultCode: 9999,
-                ResultVariableText: "Sexual offender",
-                Verdict: "NG"
-              }
-            ],
-            CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-            CourtOffenceSequenceNumber: 1
-          }
-        ] as Offence[])
+        const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Sexual offender", CjsVerdict.Guilty)
 
         const offenceSequenceNumber =
           generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -72,19 +80,12 @@ describe("TRPR0004", () => {
       })
 
       it(`should raise a trigger if result code equals ${resultCode}, is not guilty and offence code matches ${offenceCode}, and offence result text is a sexual offence`, () => {
-        const generatedHearingOutcome = generateAhoFromOffenceList([
-          {
-            Result: [
-              {
-                CJSresultCode: 9999,
-                ResultVariableText: "Sexual offender",
-                Verdict: "NG"
-              }
-            ],
-            CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-            CourtOffenceSequenceNumber: 1
-          }
-        ] as Offence[])
+        const generatedHearingOutcome = generateMockAho(
+          resultCode,
+          offenceCode,
+          "Sexual offender",
+          CjsVerdict.NotGuilty
+        )
 
         const offenceSequenceNumber =
           generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -100,19 +101,7 @@ describe("TRPR0004", () => {
       })
 
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a not sexual offence`, () => {
-        const generatedHearingOutcome = generateAhoFromOffenceList([
-          {
-            Result: [
-              {
-                CJSresultCode: resultCode,
-                ResultVariableText: "Robbery",
-                Verdict: "NG"
-              }
-            ],
-            CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-            CourtOffenceSequenceNumber: 1
-          }
-        ] as Offence[])
+        const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Robbery", CjsVerdict.NotGuilty)
 
         const offenceSequenceNumber =
           generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -128,19 +117,7 @@ describe("TRPR0004", () => {
       })
 
       it(`should raise a trigger if result code equals ${resultCode}, is guilty and offence code matches ${offenceCode}, and offence result text is a not sexual offence`, () => {
-        const generatedHearingOutcome = generateAhoFromOffenceList([
-          {
-            Result: [
-              {
-                CJSresultCode: 9999,
-                ResultVariableText: "Robbery",
-                Verdict: "G"
-              }
-            ],
-            CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-            CourtOffenceSequenceNumber: 1
-          }
-        ] as Offence[])
+        const generatedHearingOutcome = generateMockAho(resultCode, offenceCode, "Robbery", CjsVerdict.Guilty)
 
         const offenceSequenceNumber =
           generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -160,81 +137,7 @@ describe("TRPR0004", () => {
   it.each(offenceCodes)(
     "should raise a trigger if result code doesn't match code from the list, is guilty and offence code matches %s, and offence result text is a sexual offence",
     (offenceCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: 9999,
-              ResultVariableText: "Sexual offender",
-              Verdict: "G"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
-
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
-      const result = TRPR0004(generatedHearingOutcome)
-
-      expect(result).toEqual([
-        {
-          code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
-        }
-      ])
-    }
-  )
-
-  it.each(offenceCodes)(
-    "should raise a trigger if result code doesn't match code from the list, is guilty and offence code matches %s, and offence result text is a not sexual offence",
-    (offenceCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: 9999,
-              ResultVariableText: "Robbery",
-              Verdict: "G"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
-
-      const offenceSequenceNumber =
-        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-          .CourtOffenceSequenceNumber
-      const result = TRPR0004(generatedHearingOutcome)
-
-      expect(result).toEqual([
-        {
-          code: triggerCode,
-          offenceSequenceNumber: offenceSequenceNumber
-        }
-      ])
-    }
-  )
-
-  it.each(offenceCodes)(
-    "should raise a trigger if result code doesn't match code from the list, is guilty and offence code matches %s, and offence result text is a sexual offence",
-    (offenceCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: 9999,
-              ResultVariableText: "Sexual offender",
-              Verdict: "NG"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Sexual offender", CjsVerdict.Guilty)
 
       const offenceSequenceNumber =
         generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -253,22 +156,47 @@ describe("TRPR0004", () => {
   it.each(offenceCodes)(
     "should raise a trigger if result code doesn't match code from the list, is guilty and offence code matches %s, and offence result text is not a sexual offence",
     (offenceCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: 9999,
-              ResultVariableText: "Robbery",
-              Verdict: "NG"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: offenceCode } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Robbery", CjsVerdict.Guilty)
 
+      const offenceSequenceNumber =
+        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+          .CourtOffenceSequenceNumber
       const result = TRPR0004(generatedHearingOutcome)
 
+      expect(result).toEqual([
+        {
+          code: triggerCode,
+          offenceSequenceNumber: offenceSequenceNumber
+        }
+      ])
+    }
+  )
+
+  it.each(offenceCodes)(
+    "should raise a trigger if result code doesn't match code from the list, is not guilty and offence code matches %s, and offence result text is a sexual offence",
+    (offenceCode) => {
+      const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Sexual offender", CjsVerdict.NotGuilty)
+
+      const offenceSequenceNumber =
+        generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+          .CourtOffenceSequenceNumber
+      const result = TRPR0004(generatedHearingOutcome)
+
+      expect(result).toEqual([
+        {
+          code: triggerCode,
+          offenceSequenceNumber: offenceSequenceNumber
+        }
+      ])
+    }
+  )
+
+  it.each(offenceCodes)(
+    "should raise a trigger if result code doesn't match code from the list, is not guilty and offence code matches %s, and offence result text is not a sexual offence",
+    (offenceCode) => {
+      const generatedHearingOutcome = generateMockAho(9999, offenceCode, "Robbery", CjsVerdict.NotGuilty)
+
+      const result = TRPR0004(generatedHearingOutcome)
       expect(result).toHaveLength(0)
     }
   )
@@ -276,19 +204,7 @@ describe("TRPR0004", () => {
   it.each(resultCodes)(
     "should raise a trigger if result code is %i, is guilty and offence code doesn't match code from the list, and offence result text is a sexual offence",
     (resultCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: resultCode,
-              ResultVariableText: "Sexual offender",
-              Verdict: "G"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Sexual offender", CjsVerdict.Guilty)
 
       const offenceSequenceNumber =
         generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -307,19 +223,7 @@ describe("TRPR0004", () => {
   it.each(resultCodes)(
     "should raise a trigger if result code is %i, is guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence",
     (resultCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: resultCode,
-              ResultVariableText: "Robbery",
-              Verdict: "G"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Robbery", CjsVerdict.Guilty)
 
       const offenceSequenceNumber =
         generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -338,19 +242,7 @@ describe("TRPR0004", () => {
   it.each(resultCodes)(
     "should raise a trigger if result code is %i, is not guilty and offence code doesn't match code from the list, and offence result text is a sexual offence",
     (resultCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: resultCode,
-              ResultVariableText: "Sexual offender",
-              Verdict: "NG"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Sexual offender", CjsVerdict.NotGuilty)
 
       const offenceSequenceNumber =
         generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -369,19 +261,7 @@ describe("TRPR0004", () => {
   it.each(resultCodes)(
     "should raise a trigger if result code is %i, is not guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence",
     (resultCode) => {
-      const generatedHearingOutcome = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              CJSresultCode: resultCode,
-              ResultVariableText: "Robbery",
-              Verdict: "NG"
-            }
-          ],
-          CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-          CourtOffenceSequenceNumber: 1
-        }
-      ] as Offence[])
+      const generatedHearingOutcome = generateMockAho(resultCode, "XY98056", "Robbery", CjsVerdict.NotGuilty)
 
       const offenceSequenceNumber =
         generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -398,19 +278,7 @@ describe("TRPR0004", () => {
   )
 
   it("should raise a trigger if result code doesn't match code from the list, is guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
-    const generatedHearingOutcome = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999,
-            ResultVariableText: "Sexual offender",
-            Verdict: "G"
-          }
-        ],
-        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-        CourtOffenceSequenceNumber: 1
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Sexual offender", CjsVerdict.Guilty)
 
     const offenceSequenceNumber =
       generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -426,19 +294,7 @@ describe("TRPR0004", () => {
   })
 
   it("should raise a trigger if result code doesn't match code from the list, is guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence", () => {
-    const generatedHearingOutcome = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999,
-            ResultVariableText: "Robbery",
-            Verdict: "G"
-          }
-        ],
-        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-        CourtOffenceSequenceNumber: 1
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Robbery", CjsVerdict.Guilty)
 
     const result = TRPR0004(generatedHearingOutcome)
 
@@ -446,19 +302,7 @@ describe("TRPR0004", () => {
   })
 
   it("should raise a trigger if result code doesn't match code from the list, is not guilty and offence code doesn't match code from the list, and offence result text is a sexual offence", () => {
-    const generatedHearingOutcome = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999,
-            ResultVariableText: "Sexual offender",
-            Verdict: "NG"
-          }
-        ],
-        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-        CourtOffenceSequenceNumber: 1
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Sexual offender", CjsVerdict.NotGuilty)
 
     const offenceSequenceNumber =
       generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
@@ -474,19 +318,7 @@ describe("TRPR0004", () => {
   })
 
   it("should raise a trigger if result code doesn't match code from the list, is not guilty and offence code doesn't match code from the list, and offence result text is not a sexual offence", () => {
-    const generatedHearingOutcome = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999,
-            ResultVariableText: "Robbery",
-            Verdict: "NG"
-          }
-        ],
-        CriminalProsecutionReference: { OffenceReason: { OffenceCode: { FullCode: "XY98056" } } },
-        CourtOffenceSequenceNumber: 1
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateMockAho(9999, "XY98056", "Robbery", CjsVerdict.NotGuilty)
 
     const result = TRPR0004(generatedHearingOutcome)
 
