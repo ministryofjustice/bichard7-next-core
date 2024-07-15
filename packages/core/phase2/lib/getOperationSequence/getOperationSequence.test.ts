@@ -1,7 +1,7 @@
 jest.mock("./areAllResultsAlreadyPresentOnPnc")
 jest.mock("./deriveOperationSequence")
 jest.mock("./validateOperationSequence/validateOperationSequence")
-import { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import { deriveOperationSequence } from "./deriveOperationSequence"
