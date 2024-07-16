@@ -7,10 +7,7 @@ import operationCourtCaseReference from "./operationCourtCaseReference"
 
 const errorPath = errorPaths.case.asn
 
-const generateIncompatibleOperationExceptions = (
-  operations: Operation[],
-  remandCcrs: Set<string>
-): Exception | void => {
+const validateOperationSequence = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
   let apphrdExists = false
   let comsenExists = false
   let sendefExists = false
@@ -102,4 +99,4 @@ const generateIncompatibleOperationExceptions = (
   }
 }
 
-export default generateIncompatibleOperationExceptions
+export default validateOperationSequence
