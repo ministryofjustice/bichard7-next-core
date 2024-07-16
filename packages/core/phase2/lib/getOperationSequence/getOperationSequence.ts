@@ -21,7 +21,11 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
   }
 
   const { operations } = operationsResult
-  validateOperationSequence(operations, remandCcrs)
+  const exception = validateOperationSequence(operations, remandCcrs)
+  if (exception) {
+    return { exceptions: [exception] }
+  }
+
   const filteredOperations = updateOperationSequenceForResultsAlreadyPresent(operations, allResultsAlreadyOnPNC)
 
   return { operations: sortOperations(filteredOperations) }
