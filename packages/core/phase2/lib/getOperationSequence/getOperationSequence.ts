@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import OperationsResult from "../../types/OperationsResult"
+import type OperationsResult from "../../types/OperationsResult"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./deriveOperationSequence"

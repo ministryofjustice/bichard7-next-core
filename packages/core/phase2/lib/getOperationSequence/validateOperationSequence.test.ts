@@ -1,4 +1,4 @@
-import { Operation } from "../../../types/PncUpdateDataset"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import validateOperationSequence from "./validateOperationSequence"
 
 const allOperations = ["NEWREM", "DISARR", "SENDEF", "SUBVAR", "PENHRG", "COMSEN", "APPHRD"]
@@ -17,6 +17,7 @@ describe("validateOperationSequence", () => {
         courtCaseReference: "1"
       }
     }
+
     if (op2.code !== "NEWREM") {
       op2.data = {
         courtCaseReference: "1"

@@ -1,8 +1,8 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import isEqual from "lodash.isequal"
 import errorPaths from "../../../phase1/lib/errorPaths"
-import Exception from "../../../phase1/types/Exception"
-import { Operation } from "../../../types/PncUpdateDataset"
+import type Exception from "../../../phase1/types/Exception"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "./operationCourtCaseReference"
 
 const errorPath = errorPaths.case.asn
@@ -47,6 +47,7 @@ const validateOperationSequence = (operations: Operation[], remandCcrs: Set<stri
       if (["SUBVAR", "PENHRG"].includes(incompatibleCode)) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
+
       if (incompatibleCode === "DISARR") {
         return { code: ExceptionCode.HO200115, path: errorPath }
       }
