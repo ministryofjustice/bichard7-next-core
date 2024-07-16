@@ -1,3 +1,4 @@
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../phase1/lib/errorPaths"
 import Exception from "../../../../phase1/types/Exception"
 import { Operation } from "../../../../types/PncUpdateDataset"
@@ -42,16 +43,24 @@ const generateIncompatibleOperationExceptions = (
 
     // All others: cannot coexist with PENHRG
     // Also APPHRD, COMSEN and SENDEF cannot coexist with NEWREM.
-    if (penhrgExists && (apphrdExists || comsenExists || sendefExists)) {
+    if (penhrgExists && apphrdExists) {
+      return { code: ExceptionCode.HO200109, path: errorPath }
+    }
+
+    if (penhrgExists && (comsenExists || sendefExists)) {
       const code = "PENHRG"
-      const incompatibleCode = apphrdExists ? "APPHRD" : comsenExists ? "COMSEN" : "SENDEF"
+      const incompatibleCode = comsenExists ? "COMSEN" : "SENDEF"
       incompatibleCodePairs = [code, incompatibleCode]
       break
     }
 
-    if (newremExists && remandCcrs.size === 0 && (apphrdExists || comsenExists || sendefExists)) {
+    if (newremExists && remandCcrs.size === 0 && apphrdExists) {
+      return { code: ExceptionCode.HO200109, path: errorPath }
+    }
+
+    if (newremExists && remandCcrs.size === 0 && (comsenExists || sendefExists)) {
       const code = "NEWREM"
-      const incompatibleCode = apphrdExists ? "APPHRD" : comsenExists ? "COMSEN" : "SENDEF"
+      const incompatibleCode = comsenExists ? "COMSEN" : "SENDEF"
       incompatibleCodePairs = [code, incompatibleCode]
       break
     }
@@ -71,6 +80,10 @@ const generateIncompatibleOperationExceptions = (
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
       if (!!clashingOperation) {
+        if (operationCode === "APPHRD" || clashingOperation.code === "APPHRD") {
+          return { code: ExceptionCode.HO200109, path: errorPath }
+        }
+
         incompatibleCodePairs = [clashingOperation.code, operationCode]
         break
       }
@@ -80,7 +93,11 @@ const generateIncompatibleOperationExceptions = (
 
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
-    if (["APPHRD", "COMSEN", "SENDEF"].includes(operationCode) && remandCcrsContainCourtCaseReference) {
+    if (operationCode === "APPHRD" && remandCcrsContainCourtCaseReference) {
+      return { code: ExceptionCode.HO200109, path: errorPath }
+    }
+
+    if (["COMSEN", "SENDEF"].includes(operationCode) && remandCcrsContainCourtCaseReference) {
       incompatibleCodePairs = ["NEWREM", operationCode]
       break
     }

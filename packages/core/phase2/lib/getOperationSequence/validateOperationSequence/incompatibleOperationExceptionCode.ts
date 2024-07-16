@@ -5,9 +5,9 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
     return ExceptionCode.HO200109
   }
 
-  if (incompatibleOperationCodes.includes("APPHRD")) {
-    return ExceptionCode.HO200109
-  }
+  // if (incompatibleOperationCodes.includes("APPHRD")) {
+  //   return ExceptionCode.HO200109
+  // }
 
   if (incompatibleOperationCodes.includes("DISARR")) {
     if (incompatibleOperationCodes.includes("COMSEN")) {
