@@ -4,7 +4,6 @@ import errorPaths from "../../../../phase1/lib/errorPaths"
 import Exception from "../../../../phase1/types/Exception"
 import { Operation } from "../../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "../operationCourtCaseReference"
-import incompatibleOperationExceptionCode from "./incompatibleOperationExceptionCode"
 
 const errorPath = errorPaths.case.asn
 
@@ -19,7 +18,6 @@ const generateIncompatibleOperationExceptions = (
   let penhrgExists = false
   const courtCaseSpecificOperations: Operation[] = []
 
-  let incompatibleCodePairs: [string, string] | undefined
   let operationCode: string
 
   for (let i = 0; i < operations.length; i++) {
@@ -48,10 +46,11 @@ const generateIncompatibleOperationExceptions = (
       return { code: ExceptionCode.HO200109, path: errorPath }
     }
 
-    if (penhrgExists && (comsenExists || sendefExists)) {
-      const code = "PENHRG"
-      const incompatibleCode = comsenExists ? "COMSEN" : "SENDEF"
-      incompatibleCodePairs = [code, incompatibleCode]
+    if (penhrgExists && sendefExists) {
+      return { code: ExceptionCode.HO200114, path: errorPath }
+    }
+
+    if (penhrgExists && comsenExists) {
       break
     }
 
@@ -76,9 +75,6 @@ const generateIncompatibleOperationExceptions = (
       if (incompatibleCode === code) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
-
-      incompatibleCodePairs = [code, incompatibleCode]
-      break
     }
 
     const courtCaseReference = operationCourtCaseReference(operations[i])
@@ -105,7 +101,22 @@ const generateIncompatibleOperationExceptions = (
           return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
-        incompatibleCodePairs = [clashingOperation.code, operationCode]
+        if (isEqual(sortedOperations, ["COMSEN", "SENDEF"])) {
+          return { code: ExceptionCode.HO200109, path: errorPath }
+        }
+
+        if (isEqual(sortedOperations, ["APPHRD", "SENDEF"])) {
+          return { code: ExceptionCode.HO200109, path: errorPath }
+        }
+
+        if (isEqual(sortedOperations, ["SENDEF", "SUBVAR"])) {
+          return { code: ExceptionCode.HO200114, path: errorPath }
+        }
+
+        if (isEqual(sortedOperations, ["DISARR", "SENDEF"])) {
+          return { code: ExceptionCode.HO200112, path: errorPath }
+        }
+
         break
       }
 
@@ -120,13 +131,6 @@ const generateIncompatibleOperationExceptions = (
 
     if (["COMSEN", "SENDEF"].includes(operationCode) && remandCcrsContainCourtCaseReference) {
       return { code: ExceptionCode.HO200113, path: errorPath }
-    }
-  }
-
-  if (incompatibleCodePairs) {
-    const errorCode = incompatibleOperationExceptionCode(incompatibleCodePairs)
-    if (errorCode) {
-      return { code: errorCode, path: errorPath }
     }
   }
 }
