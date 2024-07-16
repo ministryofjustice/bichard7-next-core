@@ -73,9 +73,9 @@ npm run all-no-worker
 2. Build the worker. When making changes, be sure to build before rerunning the worker to see your changes.
 
 ```bash
-npm run build -w packages/conductor  # To just build the worker
-# Or
 npm run build  # To build all the packages
+# Or
+npm run build -w packages/conductor  # To just build the worker
 ```
 
 3. Run the worker. This runs it outside of Docker to avoid having to rebuild the Docker image for the worker whenever a
@@ -87,7 +87,13 @@ npm run worker -w packages/conductor
 
 ### Running the tests
 
-With [everything running](#running-the-worker-for-development), to run the end-to-end tests:
+1. Get [everything running](#running-the-worker-for-development), but for starting the worker use:
+
+```bash
+PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE npm run worker -w packages/conductor
+```
+
+2. Run the end-to-end tests.
 
 ```bash
 npm run test -w packages/conductor
