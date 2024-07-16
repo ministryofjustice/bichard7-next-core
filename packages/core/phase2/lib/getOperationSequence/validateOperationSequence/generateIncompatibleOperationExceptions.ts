@@ -59,10 +59,7 @@ const generateIncompatibleOperationExceptions = (
     }
 
     if (newremExists && remandCcrs.size === 0 && (comsenExists || sendefExists)) {
-      const code = "NEWREM"
-      const incompatibleCode = comsenExists ? "COMSEN" : "SENDEF"
-      incompatibleCodePairs = [code, incompatibleCode]
-      break
+      return { code: ExceptionCode.HO200113, path: errorPath }
     }
 
     // PENHRG: cannot coexist with any court case-specific operation.
@@ -102,8 +99,7 @@ const generateIncompatibleOperationExceptions = (
     }
 
     if (["COMSEN", "SENDEF"].includes(operationCode) && remandCcrsContainCourtCaseReference) {
-      incompatibleCodePairs = ["NEWREM", operationCode]
-      break
+      return { code: ExceptionCode.HO200113, path: errorPath }
     }
   }
 

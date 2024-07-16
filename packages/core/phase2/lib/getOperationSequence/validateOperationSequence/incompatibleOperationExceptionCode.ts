@@ -19,11 +19,11 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
     }
   }
 
-  if (incompatibleOperationCodes.includes("NEWREM")) {
-    if (incompatibleOperationCodes.includes("SENDEF") || incompatibleOperationCodes.includes("COMSEN")) {
-      return ExceptionCode.HO200113
-    }
-  }
+  // if (incompatibleOperationCodes.includes("NEWREM")) {
+  //   if (incompatibleOperationCodes.includes("SENDEF") || incompatibleOperationCodes.includes("COMSEN")) {
+  //     return ExceptionCode.HO200113
+  //   }
+  // }
 
   if (incompatibleOperationCodes.includes("SENDEF")) {
     if (incompatibleOperationCodes.includes("APPHRD") || incompatibleOperationCodes.includes("COMSEN")) {
