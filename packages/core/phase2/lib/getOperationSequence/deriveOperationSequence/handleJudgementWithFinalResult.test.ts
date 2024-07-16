@@ -3,9 +3,9 @@ jest.mock("../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("./addSubsequentVariationOperations")
 jest.mock("./checkRccSegmentApplicability")
 jest.mock("./hasUnmatchedPncOffences")
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import ResultClass from "../../../../phase1/types/ResultClass"
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
@@ -44,9 +44,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("should add PENHRG operation when fixedPenalty is true and ccrId has value", () => {
     const params = generateParams({ fixedPenalty: true })
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -57,9 +57,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
     const params = generateParams({ fixedPenalty: true, ccrId: undefined })
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", undefined, [
       { dummy: "Main Operations" }
@@ -70,9 +70,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("should add SUBVAR operation when adjudication exists and ccrId has value", () => {
     const params = generateParams({ fixedPenalty: false, adjudicationExists: true })
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
@@ -90,9 +90,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("should add SUBVAR operation when adjudication exists and ccrId does not have value", () => {
     const params = generateParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
@@ -114,24 +114,22 @@ describe("handleJudgementWithFinalResult", () => {
     )
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200124",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
+    expect(exception).toStrictEqual({
+      code: "HO200124",
+      path: [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        1,
+        "Result",
+        1,
+        "ResultClass"
+      ]
+    })
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
@@ -141,9 +139,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -156,9 +154,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -171,9 +169,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should not generate exception HO200124 when all PNC offences match", () => {
@@ -181,9 +179,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should not generate exception HO200124 when case is added by the court", () => {
@@ -191,9 +189,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
@@ -201,9 +199,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -220,9 +218,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "OAAC DISARR Operations" }
@@ -240,9 +238,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", undefined, [
       { dummy: "OAAC DISARR Operations" }
@@ -259,9 +257,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleJudgementWithFinalResult(params)
+    const exception = handleJudgementWithFinalResult(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })

@@ -26,9 +26,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return
-  }
-
-  if (adjudicationExists) {
+  } else if (adjudicationExists) {
     return addSubsequentVariationOperations(
       resubmitted,
       operations,
@@ -41,24 +39,30 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     )
   }
 
+  if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
+    return {
+      code: ExceptionCode.HO200124,
+      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
+    }
+  }
+
+  if (!offence.AddedByTheCourt) {
+    addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+  } else if (offence.AddedByTheCourt && !contains2007Result) {
+    addNewOperationToOperationSetIfNotPresent(
+      "DISARR",
+      ccrId ? { courtCaseReference: ccrId } : undefined,
+      oAacDisarrOperations
+    )
+  }
+
   if (
     pncDisposalCode === 2060 &&
     checkRccSegmentApplicability(aho, ccrId) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
   ) {
-    return { code: ExceptionCode.HO200108, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
-  }
-
-  if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-    return { code: ExceptionCode.HO200124, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
-  } else {
-    if (!offence.AddedByTheCourt) {
-      addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
-    } else if (offence.AddedByTheCourt && !contains2007Result) {
-      addNewOperationToOperationSetIfNotPresent(
-        "DISARR",
-        ccrId ? { courtCaseReference: ccrId } : undefined,
-        oAacDisarrOperations
-      )
+    return {
+      code: ExceptionCode.HO200108,
+      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
     }
   }
 }
