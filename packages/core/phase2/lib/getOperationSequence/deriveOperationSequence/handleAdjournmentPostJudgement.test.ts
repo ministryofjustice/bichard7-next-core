@@ -28,9 +28,9 @@ describe("handleAdjournmentPostJudgement", () => {
   it("should call addRemandOperation and add the ccrId to remandCcrs when adjudication exists and ccrId has value", () => {
     const params = generateParams({ adjudicationExists: true, ccrId: "123" })
 
-    handleAdjournmentPostJudgement(params)
+    const exception = handleAdjournmentPostJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
     expect([...params.remandCcrs]).toEqual(["123"])
   })
@@ -38,9 +38,9 @@ describe("handleAdjournmentPostJudgement", () => {
   it("should call addRemandOperation and should not add the ccrId to remandCcrs when adjudication exists and ccrId does not have value", () => {
     const params = generateParams({ adjudicationExists: true, ccrId: undefined })
 
-    handleAdjournmentPostJudgement(params)
+    const exception = handleAdjournmentPostJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
     expect([...params.remandCcrs]).toHaveLength(0)
   })
@@ -52,24 +52,22 @@ describe("handleAdjournmentPostJudgement", () => {
       offenceIndex: 1
     })
 
-    handleAdjournmentPostJudgement(params)
+    const exception = handleAdjournmentPostJudgement(params)
 
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200103",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
+    expect(exception).toStrictEqual({
+      code: "HO200103",
+      path: [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        1,
+        "Result",
+        1,
+        "ResultClass"
+      ]
+    })
     expect(addRemandOperation).toHaveBeenCalledTimes(0)
     expect([...params.remandCcrs]).toHaveLength(0)
   })

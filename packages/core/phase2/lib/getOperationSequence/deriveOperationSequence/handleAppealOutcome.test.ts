@@ -23,8 +23,9 @@ describe("handleAppealOutcome", () => {
   it("should add APPHRD to operations and set ccrId in operation data when adjudication exists and ccrId has value", () => {
     const params = generateParams({ adjudicationExists: true, ccrId: "456" })
 
-    handleAppealOutcome(params)
+    const exception = handleAppealOutcome(params)
 
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", { courtCaseReference: "456" }, [
       { dummy: "Main Operations" }
@@ -46,24 +47,22 @@ describe("handleAppealOutcome", () => {
   it("should generate exception HO200107 when adjudication does not exist", () => {
     const params = generateParams({ adjudicationExists: false })
 
-    handleAppealOutcome(params)
+    const exception = handleAppealOutcome(params)
 
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200107",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
+    expect(exception).toStrictEqual({
+      code: "HO200107",
+      path: [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        1,
+        "Result",
+        1,
+        "ResultClass"
+      ]
+    })
   })
 })

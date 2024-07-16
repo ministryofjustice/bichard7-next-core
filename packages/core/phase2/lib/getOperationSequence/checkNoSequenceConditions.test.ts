@@ -1,7 +1,7 @@
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import fs from "fs"
 import { parseAhoXml } from "../../../phase1/parse/parseAhoXml"
 import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 
 describe("check", () => {
@@ -10,10 +10,10 @@ describe("check", () => {
   it("should add HO200110 exception to asn if asn is dummy", () => {
     const aho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber = "0800NP0100000000001H"
-    checkNoSequenceConditions(aho)
-    expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0].code).toBe(ExceptionCode.HO200110)
-    expect(aho.Exceptions[0].path).toEqual([
+    const exceptions = checkNoSequenceConditions(aho)
+    expect(exceptions).toHaveLength(1)
+    expect(exceptions[0].code).toBe(ExceptionCode.HO200110)
+    expect(exceptions[0].path).toEqual([
       "AnnotatedHearingOutcome",
       "HearingOutcome",
       "Case",
@@ -30,14 +30,14 @@ describe("check", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.push(arbitraryOffence)
     }
 
-    checkNoSequenceConditions(aho)
+    const exceptions = checkNoSequenceConditions(aho)
 
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length).toBeGreaterThan(
       MAX_ALLOWABLE_OFFENCES
     )
-    expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0].code).toBe(ExceptionCode.HO200116)
-    expect(aho.Exceptions[0].path).toEqual([
+    expect(exceptions).toBeDefined()
+    expect(exceptions[0].code).toBe(ExceptionCode.HO200116)
+    expect(exceptions[0].path).toEqual([
       "AnnotatedHearingOutcome",
       "HearingOutcome",
       "Case",
@@ -54,14 +54,14 @@ describe("check", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result.push(dummyResult)
     }
 
-    checkNoSequenceConditions(aho)
+    const exceptions = checkNoSequenceConditions(aho)
 
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result.length).toBeGreaterThan(
       MAX_ALLOWABLE_RESULTS
     )
-    expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0].code).toBe(ExceptionCode.HO200117)
-    expect(aho.Exceptions[0].path).toEqual([
+    expect(exceptions).toHaveLength(1)
+    expect(exceptions[0].code).toBe(ExceptionCode.HO200117)
+    expect(exceptions[0].path).toEqual([
       "AnnotatedHearingOutcome",
       "HearingOutcome",
       "Case",
@@ -93,14 +93,14 @@ describe("check", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result.push(dummyResult)
     }
 
-    checkNoSequenceConditions(aho)
+    const exceptions = checkNoSequenceConditions(aho)
 
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result.length).toBeGreaterThan(
       MAX_ALLOWABLE_RESULTS
     )
-    expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0].code).toBe(ExceptionCode.HO200117)
-    expect(aho.Exceptions[0].path).toEqual([
+    expect(exceptions).toHaveLength(1)
+    expect(exceptions[0].code).toBe(ExceptionCode.HO200117)
+    expect(exceptions[0].path).toEqual([
       "AnnotatedHearingOutcome",
       "HearingOutcome",
       "Case",

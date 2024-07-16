@@ -104,7 +104,7 @@ const deriveOperationSequence = (
     }
   })
 
-  if (operations.length === 0 && !recordableResultFound && aho.Exceptions.length === 0) {
+  if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
   } else if (operations.length > 0 && oAacDisarrOperations.length > 0 && adjPreJudgementRemandCcrs.size > 0) {
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
