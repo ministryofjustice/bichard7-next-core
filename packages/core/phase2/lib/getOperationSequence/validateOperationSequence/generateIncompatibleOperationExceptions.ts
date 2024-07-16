@@ -69,6 +69,10 @@ const generateIncompatibleOperationExceptions = (
     if (penhrgExists && courtCaseSpecificOperations.length > 0) {
       const code = "PENHRG"
       const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
+      if (incompatibleCode === "SUBVAR") {
+        return { code: ExceptionCode.HO200109, path: errorPath }
+      }
+
       incompatibleCodePairs = [code, incompatibleCode]
       break
     }
