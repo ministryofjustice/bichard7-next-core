@@ -1,4 +1,4 @@
-import { Operation } from "../../../../types/PncUpdateDataset"
+import { Operation } from "../../../types/PncUpdateDataset"
 import generateIncompatibleOperationExceptions from "./generateIncompatibleOperationExceptions"
 
 const allOperations = ["NEWREM", "DISARR", "SENDEF", "SUBVAR", "PENHRG", "COMSEN", "APPHRD"]

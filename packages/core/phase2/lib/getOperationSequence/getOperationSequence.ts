@@ -3,9 +3,9 @@ import OperationsResult from "../../types/OperationsResult"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./deriveOperationSequence"
+import generateIncompatibleOperationExceptions from "./generateIncompatibleOperationExceptions"
 import sortOperations from "./sortOperations"
 import updateOperationSequenceForResultsAlreadyPresent from "./updateOperationSequenceForResultsAlreadyPresent"
-import validateOperationSequence from "./validateOperationSequence/validateOperationSequence"
 
 const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsResult => {
   const exceptions = checkNoSequenceConditions(aho)
@@ -21,7 +21,7 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
   }
 
   const { operations } = operationsResult
-  const exception = validateOperationSequence(operations, remandCcrs)
+  const exception = generateIncompatibleOperationExceptions(operations, remandCcrs)
   if (exception) {
     return { exceptions: [exception] }
   }
