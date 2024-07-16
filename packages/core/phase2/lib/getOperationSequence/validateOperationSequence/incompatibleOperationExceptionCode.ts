@@ -38,8 +38,6 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
   if (incompatibleOperationCodes.includes("SUBVAR") && incompatibleOperationCodes.includes("PENHRG")) {
     return ExceptionCode.HO200109
   }
-
-  return
 }
 
 export default incompatibleOperationExceptionCode

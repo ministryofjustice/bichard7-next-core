@@ -1,31 +1,8 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
-import errorPaths from "../../../../phase1/lib/errorPaths"
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import Exception from "../../../../phase1/types/Exception"
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import incompatibleOperationCode from "./incompatibleOperationCode"
-import incompatibleOperationExceptionCode from "./incompatibleOperationExceptionCode"
+import generateIncompatibleOperationExceptions from "./generateIncompatibleOperationExceptions"
 
-const validateOperationSequence = (
-  operations: Operation[],
-  allResultsAlreadyOnPnc: boolean,
-  aho: AnnotatedHearingOutcome,
-  remandCcrs: Set<string>
-): boolean => {
-  if (operations.length === 0) {
-    return allResultsAlreadyOnPnc
-  }
-
-  const incompatibleCodes = incompatibleOperationCode(operations, remandCcrs)
-  if (incompatibleCodes) {
-    const errorCode = incompatibleOperationExceptionCode(incompatibleCodes)
-    if (errorCode) {
-      addExceptionsToAho(aho, errorCode, errorPaths.case.asn)
-    }
-
-    return false
-  }
-
-  return true
-}
+const validateOperationSequence = (operations: Operation[], remandCcrs: Set<string>): Exception | void =>
+  generateIncompatibleOperationExceptions(operations, remandCcrs)
 
 export default validateOperationSequence
