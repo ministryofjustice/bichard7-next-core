@@ -79,9 +79,9 @@ describe("handleAdjournmentPostJudgement", () => {
       offenceIndex: 1
     })
 
-    handleAdjournmentPostJudgement(params)
+    const exception = handleAdjournmentPostJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(0)
     expect([...params.remandCcrs]).toHaveLength(0)
   })

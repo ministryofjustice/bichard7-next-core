@@ -35,9 +35,9 @@ describe("handleAppealOutcome", () => {
   it("should add APPHRD to operations and operation data to undefined when adjudication exists but ccrId does not have value", () => {
     const params = generateParams({ adjudicationExists: true, ccrId: undefined })
 
-    handleAppealOutcome(params)
+    const exception = handleAppealOutcome(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", undefined, [
       { dummy: "Main Operations" }
