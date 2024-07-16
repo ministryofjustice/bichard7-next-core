@@ -9,15 +9,15 @@ const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]
   //   return ExceptionCode.HO200109
   // }
 
-  if (incompatibleOperationCodes.includes("DISARR")) {
-    if (incompatibleOperationCodes.includes("COMSEN")) {
-      return ExceptionCode.HO200112
-    }
+  // if (incompatibleOperationCodes.includes("DISARR")) {
+  //   if (incompatibleOperationCodes.includes("COMSEN")) {
+  //     return ExceptionCode.HO200112
+  //   }
 
-    if (incompatibleOperationCodes.includes("SUBVAR") || incompatibleOperationCodes.includes("PENHRG")) {
-      return ExceptionCode.HO200115
-    }
-  }
+  //   if (incompatibleOperationCodes.includes("SUBVAR") || incompatibleOperationCodes.includes("PENHRG")) {
+  //     return ExceptionCode.HO200115
+  //   }
+  // }
 
   // if (incompatibleOperationCodes.includes("NEWREM")) {
   //   if (incompatibleOperationCodes.includes("SENDEF") || incompatibleOperationCodes.includes("COMSEN")) {

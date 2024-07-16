@@ -1,4 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import isEqual from "lodash.isequal"
 import errorPaths from "../../../../phase1/lib/errorPaths"
 import Exception from "../../../../phase1/types/Exception"
 import { Operation } from "../../../../types/PncUpdateDataset"
@@ -69,6 +70,9 @@ const generateIncompatibleOperationExceptions = (
       if (incompatibleCode === "SUBVAR") {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
+      if (incompatibleCode === "DISARR") {
+        return { code: ExceptionCode.HO200115, path: errorPath }
+      }
       if (incompatibleCode === code) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
@@ -84,11 +88,21 @@ const generateIncompatibleOperationExceptions = (
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
       if (!!clashingOperation) {
+        if (operationCode === clashingOperation.code) {
+          return { code: ExceptionCode.HO200109, path: errorPath }
+        }
+
         if (operationCode === "APPHRD" || clashingOperation.code === "APPHRD") {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
-        if (operationCode === clashingOperation.code) {
-          return { code: ExceptionCode.HO200109, path: errorPath }
+
+        const sortedOperations = [operationCode, clashingOperation.code].sort()
+        if (isEqual(sortedOperations, ["COMSEN", "DISARR"])) {
+          return { code: ExceptionCode.HO200112, path: errorPath }
+        }
+
+        if (isEqual(sortedOperations, ["DISARR", "SUBVAR"])) {
+          return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
         incompatibleCodePairs = [clashingOperation.code, operationCode]
