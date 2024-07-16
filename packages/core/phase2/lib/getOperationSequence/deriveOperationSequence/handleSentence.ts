@@ -1,6 +1,5 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
-import errorPaths from "../../../../phase1/lib/errorPaths"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import errorPaths from "../../../../phase1/lib/errorPaths"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import areAnyPncResults2007 from "./areAnyPncResults2007"
@@ -25,7 +24,7 @@ export const handleSentence: ResultClassHandler = ({
 
   if (!adjudicationExists) {
     if (!offence.AddedByTheCourt) {
-      addExceptionsToAho(aho, ExceptionCode.HO200106, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
+      return { code: ExceptionCode.HO200106, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
     }
 
     return
@@ -33,16 +32,17 @@ export const handleSentence: ResultClassHandler = ({
 
   if (!areAnyPncResults2007(aho, offence)) {
     addNewOperationToOperationSetIfNotPresent("SENDEF", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
-  } else {
-    addSubsequentVariationOperations(
-      resubmitted,
-      operations,
-      aho,
-      ExceptionCode.HO200104,
-      allResultsAlreadyOnPnc,
-      offenceIndex,
-      resultIndex,
-      ccrId ? { courtCaseReference: ccrId } : undefined
-    )
+    return
   }
+
+  return addSubsequentVariationOperations(
+    resubmitted,
+    operations,
+    aho,
+    ExceptionCode.HO200104,
+    allResultsAlreadyOnPnc,
+    offenceIndex,
+    resultIndex,
+    ccrId ? { courtCaseReference: ccrId } : undefined
+  )
 }

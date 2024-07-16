@@ -1,4 +1,5 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import addExceptionsToAho from "../phase1/exceptions/addExceptionsToAho"
 import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { Trigger } from "../phase1/types/Trigger"
@@ -45,10 +46,17 @@ const processMessage = (
   }
 
   const isResubmitted = messageType === "PncUpdateDataset"
-  const operations = getOperationSequence(outputMessage, isResubmitted)
+  const operationsResult = getOperationSequence(outputMessage, isResubmitted)
   if (outputMessage.HasError) {
     return
   }
+
+  if ("exceptions" in operationsResult) {
+    operationsResult.exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+    return
+  }
+
+  const { operations } = operationsResult
 
   if (operations.length === 0) {
     if (!isResubmitted) {

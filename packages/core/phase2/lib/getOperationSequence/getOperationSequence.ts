@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { Operation } from "../../../types/PncUpdateDataset"
+import OperationsResult from "../../types/OperationsResult"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./deriveOperationSequence"
@@ -7,19 +7,24 @@ import sortOperations from "./sortOperations"
 import updateOperationSequenceForResultsAlreadyPresent from "./updateOperationSequenceForResultsAlreadyPresent"
 import validateOperationSequence from "./validateOperationSequence/validateOperationSequence"
 
-const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): Operation[] => {
-  checkNoSequenceConditions(aho)
-  if (aho.HasError) {
-    return []
+const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsResult => {
+  const exceptions = checkNoSequenceConditions(aho)
+  if (exceptions.length > 0) {
+    return { exceptions }
   }
 
   const allResultsAlreadyOnPNC = areAllResultsAlreadyPresentOnPnc(aho)
   const remandCcrs = new Set<string>()
-  const operations = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPNC, remandCcrs)
-  validateOperationSequence(operations, allResultsAlreadyOnPNC, aho, remandCcrs)
+  const operationsResult = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPNC, remandCcrs)
+  if ("exceptions" in operationsResult) {
+    return operationsResult
+  }
+
+  const { operations } = operationsResult
+  validateOperationSequence(operations, allResultsAlreadyOnPNC, remandCcrs)
   const filteredOperations = updateOperationSequenceForResultsAlreadyPresent(operations, allResultsAlreadyOnPNC)
 
-  return sortOperations(filteredOperations)
+  return { operations: sortOperations(filteredOperations) }
 }
 
 export default getOperationSequence

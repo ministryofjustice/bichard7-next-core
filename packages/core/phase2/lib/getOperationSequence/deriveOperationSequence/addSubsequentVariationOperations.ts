@@ -1,7 +1,7 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../phase1/lib/errorPaths"
+import Exception from "../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { Operation, OperationData } from "../../../../types/PncUpdateDataset"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 
@@ -22,7 +22,7 @@ const addSubsequentVariationOperations = (
   offenceIndex: number,
   resultIndex: number,
   operationData: OperationData<"SUBVAR">
-) => {
+): Exception | void => {
   if (resubmitted) {
     addNewOperationToOperationSetIfNotPresent("SUBVAR", operationData, operations)
     return
@@ -31,7 +31,7 @@ const addSubsequentVariationOperations = (
   if (areAllPncResults2007(aho, operationData?.courtCaseReference)) {
     addNewOperationToOperationSetIfNotPresent("SUBVAR", operationData, operations)
   } else if (!allResultsAlreadyOnPnc) {
-    addExceptionsToAho(aho, exceptionCode, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
+    return { code: exceptionCode, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
   }
 }
 
