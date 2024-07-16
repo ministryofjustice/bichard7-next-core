@@ -69,6 +69,9 @@ const generateIncompatibleOperationExceptions = (
       if (incompatibleCode === "SUBVAR") {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
+      if (incompatibleCode === code) {
+        return { code: ExceptionCode.HO200109, path: errorPath }
+      }
 
       incompatibleCodePairs = [code, incompatibleCode]
       break
@@ -82,6 +85,9 @@ const generateIncompatibleOperationExceptions = (
       )
       if (!!clashingOperation) {
         if (operationCode === "APPHRD" || clashingOperation.code === "APPHRD") {
+          return { code: ExceptionCode.HO200109, path: errorPath }
+        }
+        if (operationCode === clashingOperation.code) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
 

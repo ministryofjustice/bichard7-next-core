@@ -1,9 +1,9 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
 const incompatibleOperationExceptionCode = (incompatibleOperationCodes: string[]): ExceptionCode | undefined => {
-  if (incompatibleOperationCodes[0] === incompatibleOperationCodes[1]) {
-    return ExceptionCode.HO200109
-  }
+  // if (incompatibleOperationCodes[0] === incompatibleOperationCodes[1]) {
+  //   return ExceptionCode.HO200109
+  // }
 
   // if (incompatibleOperationCodes.includes("APPHRD")) {
   //   return ExceptionCode.HO200109
