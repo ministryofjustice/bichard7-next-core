@@ -35,7 +35,7 @@ describe("check", () => {
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length).toBeGreaterThan(
       MAX_ALLOWABLE_OFFENCES
     )
-    expect(exceptions).toBeDefined()
+    expect(exceptions).toHaveLength(1)
     expect(exceptions[0].code).toBe(ExceptionCode.HO200116)
     expect(exceptions[0].path).toEqual([
       "AnnotatedHearingOutcome",
