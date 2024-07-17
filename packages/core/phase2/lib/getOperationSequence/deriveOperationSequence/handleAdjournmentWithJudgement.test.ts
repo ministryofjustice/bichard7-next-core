@@ -67,9 +67,9 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should add PENHRG operation when fixedPenalty is true", () => {
     const params = generateParams({ fixedPenalty: true })
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toHaveLength(0)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
