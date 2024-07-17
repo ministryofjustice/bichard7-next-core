@@ -1,7 +1,6 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../phase1/lib/errorPaths"
 import ResultClass from "../../../../phase1/types/ResultClass"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
@@ -26,8 +25,9 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 }) => {
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    return
   } else if (adjudicationExists) {
-    addSubsequentVariationOperations(
+    return addSubsequentVariationOperations(
       resubmitted,
       operations,
       aho,
@@ -37,30 +37,32 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       resultIndex,
       ccrId ? { courtCaseReference: ccrId } : undefined
     )
-  } else {
-    if (
-      pncDisposalCode === 2060 &&
-      checkRccSegmentApplicability(aho, ccrId) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
-    ) {
-      addExceptionsToAho(aho, ExceptionCode.HO200108, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
-    }
+  }
 
-    if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-      addExceptionsToAho(aho, ExceptionCode.HO200124, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
-    } else {
-      if (!offence.AddedByTheCourt) {
-        addNewOperationToOperationSetIfNotPresent(
-          "DISARR",
-          ccrId ? { courtCaseReference: ccrId } : undefined,
-          operations
-        )
-      } else if (offence.AddedByTheCourt && !contains2007Result) {
-        addNewOperationToOperationSetIfNotPresent(
-          "DISARR",
-          ccrId ? { courtCaseReference: ccrId } : undefined,
-          oAacDisarrOperations
-        )
-      }
+  if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
+    return {
+      code: ExceptionCode.HO200124,
+      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
+    }
+  }
+
+  if (!offence.AddedByTheCourt) {
+    addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+  } else if (offence.AddedByTheCourt && !contains2007Result) {
+    addNewOperationToOperationSetIfNotPresent(
+      "DISARR",
+      ccrId ? { courtCaseReference: ccrId } : undefined,
+      oAacDisarrOperations
+    )
+  }
+
+  if (
+    pncDisposalCode === 2060 &&
+    checkRccSegmentApplicability(aho, ccrId) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
+  ) {
+    return {
+      code: ExceptionCode.HO200108,
+      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
     }
   }
 }
