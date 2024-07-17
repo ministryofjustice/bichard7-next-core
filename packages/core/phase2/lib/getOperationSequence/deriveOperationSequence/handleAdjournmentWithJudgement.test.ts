@@ -3,9 +3,9 @@ jest.mock("../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("./addSubsequentVariationOperations")
 jest.mock("./checkRccSegmentApplicability")
 jest.mock("./hasUnmatchedPncOffences")
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import ResultClass from "../../../../phase1/types/ResultClass"
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addRemandOperation from "../../addRemandOperation"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
@@ -47,8 +47,9 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should call addRemandOperation and add ccrId to remandCcrs when ccrId has value", () => {
     const params = generateParams({ ccrId: "234" })
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
+    expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
     expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
@@ -56,8 +57,9 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should call addRemandOperation and should not add ccrId to remandCcrs when ccrId does not have value", () => {
     const params = generateParams({ ccrId: undefined })
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
+    expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
     expect([...params.remandCcrs]).toStrictEqual([])
   })
@@ -80,9 +82,9 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should add SUBVAR operation when adjudication exists", () => {
     const params = generateParams({ fixedPenalty: false, adjudicationExists: true })
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
@@ -106,24 +108,22 @@ describe("handleAdjournmentWithJudgement", () => {
     )
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200124",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
+    expect(exception).toStrictEqual({
+      code: "HO200124",
+      path: [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        1,
+        "Result",
+        1,
+        "ResultClass"
+      ]
+    })
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
@@ -135,9 +135,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -152,9 +152,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -169,9 +169,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should not generate exception HO200124 when all PNC offences match", () => {
@@ -179,9 +179,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should not generate exception HO200124 when case is added by the court", () => {
@@ -189,9 +189,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
   })
 
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
@@ -199,9 +199,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
@@ -220,9 +220,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "OAAC DISARR Operations" }
@@ -241,9 +241,9 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    handleAdjournmentWithJudgement(params)
+    const exception = handleAdjournmentWithJudgement(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
