@@ -1,4 +1,5 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addExceptionsToAho from "../phase1/exceptions/addExceptionsToAho"
 import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
@@ -41,22 +42,18 @@ const processMessage = (
     }
   }
 
-  if (!allPncOffencesContainResults(outputMessage)) {
+  const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
+  if (allOffencesContainResultsExceptions.length > 0) {
+    allOffencesContainResultsExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
     return
   }
 
   const isResubmitted = messageType === "PncUpdateDataset"
-  const operationsResult = getOperationSequence(outputMessage, isResubmitted)
-  if (outputMessage.HasError) {
+  const { value: operations, exceptions } = getOperationSequence(outputMessage, isResubmitted)
+  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
     return
   }
-
-  if ("exceptions" in operationsResult) {
-    operationsResult.exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-    return
-  }
-
-  const { operations } = operationsResult
 
   if (operations.length === 0) {
     if (!isResubmitted) {

@@ -1,3 +1,6 @@
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import errorPaths from "../../../../../../phase1/lib/errorPaths"
+import { ExceptionResult } from "../../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
 import createPncDisposal from "./createPncDisposal"
@@ -5,7 +8,8 @@ import { getDisposalTextFromResult } from "./getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"
-import validateDisposalText from "./validateDisposalText"
+
+export const maxDisposalTextLength = 64
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString("en-GB", {
@@ -18,7 +22,7 @@ const createPncDisposalByFirstAndSecondDurations = (
   aho: AnnotatedHearingOutcome,
   offenceIndex: number,
   resultIndex: number
-): PncDisposal => {
+): ExceptionResult<PncDisposal> => {
   const result =
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
 
@@ -26,7 +30,8 @@ const createPncDisposalByFirstAndSecondDurations = (
   const firstDuration = durationCount > 0 ? result.Duration?.[0] : undefined
   const secondDuration =
     durationCount > 1 ? (result.Duration?.[1].DurationType === "Suspended" ? result.Duration[1] : undefined) : undefined
-  const firstAmountSpecifiedInResult = validateAmountSpecifiedInResult(aho, offenceIndex, resultIndex, 0)
+  const { value: amountInResult, exceptions } = validateAmountSpecifiedInResult(aho, offenceIndex, resultIndex, 0)
+
   let dateSpecifiedInResult = getFirstDateSpecifiedInResult(result)
   let disposalText = getDisposalTextFromResult(result)
   if (
@@ -39,21 +44,32 @@ const createPncDisposalByFirstAndSecondDurations = (
     dateSpecifiedInResult = undefined
   }
 
-  const validatedDisposalText = result.ResultVariableText
-    ? validateDisposalText(disposalText, aho, resultIndex, offenceIndex)
-    : disposalText
+  const ho200200 =
+    result.ResultVariableText && disposalText.length > maxDisposalTextLength
+      ? {
+          code: ExceptionCode.HO200200,
+          path: errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
+        }
+      : undefined
+  if (ho200200) {
+    exceptions.push(ho200200)
+  }
 
-  return createPncDisposal(
+  const validatedDisposalText = ho200200 ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+` : disposalText
+
+  const disposal = createPncDisposal(
     result.PNCDisposalType,
     firstDuration?.DurationUnit,
     firstDuration?.DurationLength,
     secondDuration?.DurationUnit,
     secondDuration?.DurationLength,
     dateSpecifiedInResult,
-    firstAmountSpecifiedInResult,
+    amountInResult,
     result.ResultQualifierVariable?.map((res) => res.Code),
     validatedDisposalText
   )
+
+  return { value: disposal, exceptions }
 }
 
 export default createPncDisposalByFirstAndSecondDurations

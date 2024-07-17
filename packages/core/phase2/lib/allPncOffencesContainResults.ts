@@ -1,7 +1,7 @@
-import addExceptionsToAho from "../../phase1/exceptions/addExceptionsToAho"
-import errorPaths from "../../phase1/lib/errorPaths"
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import errorPaths from "../../phase1/lib/errorPaths"
+import Exception from "../../phase1/types/Exception"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import isRecordableOffence from "./isRecordableOffence"
 import isRecordableResult from "./isRecordableResult"
 
@@ -10,21 +10,20 @@ const getErrorPath = (offence: Offence, offenceIndex: number) =>
     ? errorPaths.offence(offenceIndex).offenceReason.offenceCodeReason
     : errorPaths.offence(offenceIndex).offenceReason.localOffenceCode
 
-const allPncOffencesContainResults = (aho: AnnotatedHearingOutcome) => {
+const allPncOffencesContainResults = (aho: AnnotatedHearingOutcome): Exception[] => {
+  const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
-  let allOffencesContainResults = true
   offences.forEach((offence, offenceIndex) => {
     if (offence.AddedByTheCourt || !isRecordableOffence(offence) || offence.Result.some(isRecordableResult)) {
       return
     }
 
-    addExceptionsToAho(aho, ExceptionCode.HO200212, getErrorPath(offence, offenceIndex))
-    allOffencesContainResults = false
+    exceptions.push({ code: ExceptionCode.HO200212, path: getErrorPath(offence, offenceIndex) })
     aho.HasError = true
   })
 
-  return allOffencesContainResults
+  return exceptions
 }
 
 export default allPncOffencesContainResults
