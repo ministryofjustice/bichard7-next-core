@@ -1,13 +1,12 @@
-import type { NewremOperation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { NewremOperation, Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import areNewremTypesEqual from "./areNewremTypesEqual"
-import { getOperationSequence } from "./getOperationSequence"
 
-const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset) => {
-  const latestOperations = getOperationSequence(pncUpdateDataset, true)
-  let latestNewremOperations = latestOperations.filter((operation) => operation.code === "NEWREM")
+const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, operations: Operation[]) => {
+  // const latestOperations = getOperationSequence(pncUpdateDataset, true)
+  let latestNewremOperations = operations.filter((operation) => operation.code === "NEWREM")
 
   if (pncUpdateDataset.PncOperations.length === 0) {
-    pncUpdateDataset.PncOperations = latestOperations
+    pncUpdateDataset.PncOperations = operations
     return
   }
 

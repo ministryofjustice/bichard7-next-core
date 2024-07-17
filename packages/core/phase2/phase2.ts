@@ -1,4 +1,5 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import addExceptionsToAho from "../phase1/exceptions/addExceptionsToAho"
 import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { Trigger } from "../phase1/types/Trigger"
@@ -44,30 +45,30 @@ const processMessage = (
     return
   }
 
-  if (messageType === "PncUpdateDataset" && outputMessage.PncOperations.length) {
-    refreshOperationSequence(outputMessage)
-    auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-    return
-  }
-
   const isResubmitted = messageType === "PncUpdateDataset"
-  const operations = getOperationSequence(outputMessage, isResubmitted)
+  const operationsResult = getOperationSequence(outputMessage, isResubmitted)
   if (outputMessage.HasError) {
     return
   }
 
-  if (operations.length) {
-    outputMessage.PncOperations =
-      messageType === "PncUpdateDataset" ? [...outputMessage.PncOperations, ...operations] : operations
+  if ("exceptions" in operationsResult) {
+    operationsResult.exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+    return
   }
 
-  if (!operations.length) {
-    if (messageType === "AnnotatedHearingOutcome") {
+  const { operations } = operationsResult
+
+  if (operations.length === 0) {
+    if (!isResubmitted) {
       auditLogger.info(EventCode.IgnoredNonrecordable)
     }
 
     return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
   }
+
+  refreshOperationSequence(outputMessage, operations)
+
+  auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
 }
 
 const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {

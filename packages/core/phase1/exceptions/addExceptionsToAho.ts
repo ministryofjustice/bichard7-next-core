@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import isPncException from "../lib/isPncException"
 import type Exception from "../types/Exception"
 import type { ExceptionPath } from "../types/Exception"
@@ -14,7 +14,7 @@ const pncUpdateErrorCodes = [
   ExceptionCode.HO200122, ExceptionCode.HO100201, ExceptionCode.HO200123, ExceptionCode.HO200124,
   ExceptionCode.HO200201, ExceptionCode.HO200202, ExceptionCode.HO200203, ExceptionCode.HO200205,
   ExceptionCode.HO200210, ExceptionCode.HO200211, ExceptionCode.HO200212
-]
+] // 200200 is the only exception not in this list
 
 const hasExceptionWithPath = (path: ExceptionPath, existingExceptions: Exception[]): boolean =>
   existingExceptions.some((e) => JSON.stringify(e.path) === JSON.stringify(path))

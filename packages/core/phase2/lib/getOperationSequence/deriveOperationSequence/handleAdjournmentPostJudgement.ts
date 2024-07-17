@@ -1,11 +1,9 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
-import errorPaths from "../../../../phase1/lib/errorPaths"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import errorPaths from "../../../../phase1/lib/errorPaths"
 import addRemandOperation from "../../addRemandOperation"
 import type { ResultClassHandler } from "./deriveOperationSequence"
 
 export const handleAdjournmentPostJudgement: ResultClassHandler = ({
-  aho,
   offenceIndex,
   offence,
   resultIndex,
@@ -22,6 +20,6 @@ export const handleAdjournmentPostJudgement: ResultClassHandler = ({
       remandCcrs.add(ccrId)
     }
   } else if (!offence.AddedByTheCourt) {
-    addExceptionsToAho(aho, ExceptionCode.HO200103, errorPaths.offence(offenceIndex).result(resultIndex).resultClass)
+    return { code: ExceptionCode.HO200103, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
   }
 }
