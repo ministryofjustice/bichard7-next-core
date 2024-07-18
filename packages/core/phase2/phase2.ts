@@ -77,7 +77,6 @@ const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger
   const processMessageResult = processMessage(auditLogger, message, outputMessage)
 
   const triggers = processMessageResult?.triggers ?? []
-  outputMessage.HasError = false
 
   return {
     auditLogEvents: auditLogger.getEvents(),
