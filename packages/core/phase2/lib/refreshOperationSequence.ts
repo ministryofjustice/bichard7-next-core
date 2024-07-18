@@ -2,7 +2,6 @@ import type { NewremOperation, Operation, PncUpdateDataset } from "../../types/P
 import areNewremTypesEqual from "./areNewremTypesEqual"
 
 const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, operations: Operation[]) => {
-  // const latestOperations = getOperationSequence(pncUpdateDataset, true)
   let latestNewremOperations = operations.filter((operation) => operation.code === "NEWREM")
 
   if (pncUpdateDataset.PncOperations.length === 0) {

@@ -1,3 +1,4 @@
+import type { ExceptionResult } from "../../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../../types/NonEmptyArray"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
@@ -10,22 +11,33 @@ const getDisFromResult = (
   aho: AnnotatedHearingOutcome,
   offenceIndex: number,
   resultIndex: number
-): NonEmptyArray<PncDisposal> => {
-  validateResultQualifierVariableCode(aho, offenceIndex, resultIndex)
-  validateResultQualifierVariableDurationType(aho, offenceIndex, resultIndex)
-  const pncDisposalByFirstAndSecondDurations = createPncDisposalByFirstAndSecondDurations(
+): ExceptionResult<NonEmptyArray<PncDisposal>> => {
+  const resultQualifierVariableCodeExceptions = validateResultQualifierVariableCode(aho, offenceIndex, resultIndex)
+  const resultQualifierVariableDurationTypeExceptions = validateResultQualifierVariableDurationType(
     aho,
     offenceIndex,
     resultIndex
   )
-  const pncDisposalByThirdDuration = createPncDisposalByThirdDuration(
+  const { value: pncDisposalByFirstAndSecondDurations, exceptions: firstAndSecondDurationsExceptions } =
+    createPncDisposalByFirstAndSecondDurations(aho, offenceIndex, resultIndex)
+  const { value: pncDisposalByThirdDuration, exceptions: thirdDurationExceptions } = createPncDisposalByThirdDuration(
     aho,
     offenceIndex,
     resultIndex,
     pncDisposalByFirstAndSecondDurations.text
   )
 
-  return [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
+  const exceptions = [
+    ...resultQualifierVariableCodeExceptions,
+    ...resultQualifierVariableDurationTypeExceptions,
+    ...firstAndSecondDurationsExceptions,
+    ...thirdDurationExceptions
+  ]
+
+  return {
+    exceptions,
+    value: [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
+  }
 }
 
 export default getDisFromResult

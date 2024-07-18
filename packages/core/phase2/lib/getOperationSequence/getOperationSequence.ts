@@ -1,35 +1,36 @@
+import type { ExceptionResult } from "../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type OperationsResult from "../../types/OperationsResult"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./deriveOperationSequence"
 import sortOperations from "./sortOperations"
 import validateOperationSequence from "./validateOperationSequence"
 
-const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsResult => {
-  const exceptions = checkNoSequenceConditions(aho)
-  if (exceptions.length > 0) {
-    return { exceptions }
+const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionResult<Operation[]> => {
+  const checkNoSequenceConditionsExceptions = checkNoSequenceConditions(aho)
+  if (checkNoSequenceConditionsExceptions.length > 0) {
+    return { value: [], exceptions: checkNoSequenceConditionsExceptions }
   }
 
-  const allResultsAlreadyOnPnc = areAllResultsAlreadyPresentOnPnc(aho)
+  const { value: allResultsAlreadyOnPnc, exceptions } = areAllResultsAlreadyPresentOnPnc(aho)
   const remandCcrs = new Set<string>()
   const operationsResult = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPnc, remandCcrs)
   if ("exceptions" in operationsResult) {
-    return operationsResult
+    return { value: [], exceptions: operationsResult.exceptions.concat(exceptions) }
   }
 
   const { operations } = operationsResult
   const exception = validateOperationSequence(operations, remandCcrs)
   if (exception) {
-    return { exceptions: [exception] }
+    return { value: [], exceptions: exceptions.concat(exception) }
   }
 
   const filteredOperations = allResultsAlreadyOnPnc
     ? operations.filter((operation) => operation.code === "NEWREM")
     : operations
 
-  return { operations: sortOperations(filteredOperations) }
+  return { value: sortOperations(filteredOperations), exceptions }
 }
 
 export default getOperationSequence

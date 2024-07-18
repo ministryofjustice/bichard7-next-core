@@ -1,3 +1,4 @@
+import type { ExceptionResult } from "../../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome, Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
@@ -20,17 +21,22 @@ const createPncDisposalByThirdDuration = (
   offenceIndex: number,
   resultIndex: number,
   validatedDisposalText: string | undefined
-): PncDisposal | undefined => {
+): ExceptionResult<PncDisposal | undefined> => {
   const result =
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
   if (!result.Duration?.[2]) {
-    return undefined
+    return { value: undefined, exceptions: [] }
   }
 
   const thirdDuration = result.Duration[2]
-  const thirdAmountSpecifiedInResult = validateAmountSpecifiedInResult(aho, offenceIndex, resultIndex, 2)
+  const { value: thirdAmountSpecifiedInResult, exceptions } = validateAmountSpecifiedInResult(
+    aho,
+    offenceIndex,
+    resultIndex,
+    2
+  )
 
-  return createPncDisposal(
+  const disposal = createPncDisposal(
     result.PNCDisposalType,
     thirdDuration.DurationUnit,
     thirdDuration.DurationLength,
@@ -41,6 +47,8 @@ const createPncDisposalByThirdDuration = (
     result.ResultQualifierVariable.map((res) => res.Code),
     validatedDisposalText
   )
+
+  return { value: disposal, exceptions }
 }
 
 export default createPncDisposalByThirdDuration
