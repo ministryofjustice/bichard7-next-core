@@ -69,7 +69,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     const exception = handleAdjournmentWithJudgement(params)
 
-    expect(exception).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }

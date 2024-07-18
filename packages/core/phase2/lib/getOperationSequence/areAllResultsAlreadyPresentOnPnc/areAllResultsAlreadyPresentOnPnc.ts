@@ -17,7 +17,7 @@ const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): Excepti
     const courtCaseReferenceNumber = offence.CourtCaseReferenceNumber ?? undefined
     const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence
 
-    if (isNonEmptyArray(results) && !!offenceReasonSequence) {
+    if (isNonEmptyArray(results) && offenceReasonSequence) {
       const { value: matchToPncAdjAndDis, exceptions: matchToPncAdjAndDisExceptions } = isMatchToPncAdjAndDis(
         results,
         aho,

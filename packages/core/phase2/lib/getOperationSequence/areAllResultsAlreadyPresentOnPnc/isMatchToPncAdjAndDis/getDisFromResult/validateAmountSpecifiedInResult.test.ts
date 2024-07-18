@@ -19,10 +19,10 @@ describe("validateAmountSpecifiedInResult", () => {
       } as Offence
     ])
 
-    const amount = validateAmountSpecifiedInResult(aho, 0, 0, 2)
+    const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 2)
 
-    expect(amount).toBe(1234567.89)
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(amountResult.value).toBe(1234567.89)
+    expect(amountResult.exceptions).toHaveLength(0)
   })
 
   it("should return undefined and not generate exception when AmountSpecifiedInResult.Amount is undefined", () => {
@@ -41,10 +41,10 @@ describe("validateAmountSpecifiedInResult", () => {
       } as Offence
     ])
 
-    const amount = validateAmountSpecifiedInResult(aho, 0, 0, 2)
+    const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 2)
 
-    expect(amount).toBeUndefined()
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(amountResult.value).toBeUndefined()
+    expect(amountResult.exceptions).toHaveLength(0)
   })
 
   it.each([
@@ -72,8 +72,8 @@ describe("validateAmountSpecifiedInResult", () => {
 
       const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 1)
 
-      expect(amountResult).toBeUndefined()
-      expect(aho.Exceptions).toStrictEqual([
+      expect(amountResult.value).toBeUndefined()
+      expect(amountResult.exceptions).toStrictEqual([
         {
           code: "HO200205",
           path: [

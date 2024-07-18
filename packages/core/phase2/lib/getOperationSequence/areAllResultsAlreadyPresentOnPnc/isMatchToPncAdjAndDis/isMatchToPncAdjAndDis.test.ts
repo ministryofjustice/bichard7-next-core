@@ -35,17 +35,20 @@ describe("check isMatchToPncAdjAndDis", () => {
 
   it("If there is no courtcase ref nr given as input or none exists on the aho, then returns false", () => {
     const result = isMatchToPncAdjAndDis(emptyResults, aho, undefined, 0, undefined)
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there is are no PNC query courtcases that match the input courtCaseReference, then returns false", () => {
     const result = isMatchToPncAdjAndDis(emptyResults, aho, "DOES_NOT_MATCH_FOO", 0, undefined)
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there are no offences in the matching courtCase of the PNC Query, then returns false", () => {
     const result = isMatchToPncAdjAndDis(emptyResults, aho, "FOO", 0, undefined)
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there are no adjudications in the matching courtCase of the PNC Query, then returns false", () => {
@@ -80,7 +83,8 @@ describe("check isMatchToPncAdjAndDis", () => {
     } as Hearing
 
     const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("returns false if there are matching adjudications but no disposals on the pnc query", () => {
@@ -115,7 +119,8 @@ describe("check isMatchToPncAdjAndDis", () => {
     } as Hearing
 
     const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("returns true if there are matching adjudications and disposals on the pnc query", () => {
@@ -201,7 +206,8 @@ describe("check isMatchToPncAdjAndDis", () => {
     } as Hearing
 
     const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
-    expect(result).toBe(true)
+    expect(result.value).toBe(true)
+    expect(result.exceptions).toStrictEqual([])
   })
 })
 
@@ -234,8 +240,9 @@ describe("check allRecordableResultsMatchAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result1 = allRecordableResultsMatchAPncDisposal(results, disposals, aho, 0)
-    expect(result1).toBe(true)
+    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho, 0)
+    expect(result.value).toBe(true)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("Given non-matching results, returns false", () => {
@@ -260,7 +267,8 @@ describe("check allRecordableResultsMatchAPncDisposal", () => {
     ] as PncDisposal[]
 
     const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("Given matching results, returns true", () => {
@@ -285,6 +293,7 @@ describe("check allRecordableResultsMatchAPncDisposal", () => {
     ] as PncDisposal[]
 
     const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
-    expect(result).toBe(true)
+    expect(result.value).toBe(true)
+    expect(result.exceptions).toStrictEqual([])
   })
 })

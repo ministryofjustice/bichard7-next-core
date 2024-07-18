@@ -14,9 +14,9 @@ describe("validateResultQualifierVariableCode", () => {
       } as Offence
     ])
 
-    validateResultQualifierVariableCode(aho, 0, 0)
+    const result = validateResultQualifierVariableCode(aho, 0, 0)
 
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 
   it("should not generate exception HO200202 when there are 4 qualifier variables", () => {
@@ -30,9 +30,9 @@ describe("validateResultQualifierVariableCode", () => {
       } as Offence
     ])
 
-    validateResultQualifierVariableCode(aho, 0, 0)
+    const result = validateResultQualifierVariableCode(aho, 0, 0)
 
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 
   it("should generate exception HO200202 on all result's ResultQualifierVariable.Code when there are more than 4 qualifier variables", () => {
@@ -46,9 +46,9 @@ describe("validateResultQualifierVariableCode", () => {
       } as Offence
     ])
 
-    validateResultQualifierVariableCode(aho, 0, 0)
+    const result = validateResultQualifierVariableCode(aho, 0, 0)
 
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200202",
         path: [

@@ -8,8 +8,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(true)
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 
   it("should return true when case has no reportable offences", () => {
@@ -21,8 +20,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(true)
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 
   it("should return true when all offences have at least one recordable result", () => {
@@ -51,8 +49,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(true)
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 
   it("should return false when offences have no results", () => {
@@ -67,8 +64,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(false)
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200212",
         path: [
@@ -136,8 +132,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(false)
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200212",
         path: [
@@ -190,8 +185,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(false)
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200212",
         path: [
@@ -240,8 +234,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(false)
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200212",
         path: [
@@ -281,8 +274,7 @@ describe("allPncOffencesContainResults", () => {
 
     const result = allPncOffencesContainResults(aho)
 
-    expect(result).toBe(false)
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200212",
         path: [

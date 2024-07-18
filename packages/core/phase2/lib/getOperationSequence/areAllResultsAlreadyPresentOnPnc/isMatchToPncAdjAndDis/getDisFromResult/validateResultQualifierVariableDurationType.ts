@@ -7,17 +7,17 @@ function validateResultQualifierVariableDurationType(
   aho: AnnotatedHearingOutcome,
   offenceIndex: number,
   resultIndex: number
-): Exception | void {
+): Exception[] {
   const result =
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
 
   if (!result.ResultQualifierVariable) {
-    return
+    return []
   }
 
-  result.ResultQualifierVariable.forEach((qualifierVariable, qualifierVariableIndex) => {
+  return result.ResultQualifierVariable.map((qualifierVariable, qualifierVariableIndex) => {
     if (qualifierVariable.Duration?.DurationType === undefined) {
-      return
+      return undefined
     }
 
     return {
@@ -25,7 +25,7 @@ function validateResultQualifierVariableDurationType(
       path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex)
         .DurationType
     }
-  })
+  }).filter((exception) => !!exception)
 }
 
 export default validateResultQualifierVariableDurationType

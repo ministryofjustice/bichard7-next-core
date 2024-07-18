@@ -9,24 +9,22 @@ const validateResultQualifierVariableCode = (
   aho: AnnotatedHearingOutcome,
   offenceIndex: number,
   resultIndex: number
-): Exception | void => {
+): Exception[] => {
   const result =
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
 
   if (!result.ResultQualifierVariable) {
-    return
+    return []
   }
 
   if (result.ResultQualifierVariable.length <= maxResultQualifierVariable) {
-    return
+    return []
   }
 
-  result.ResultQualifierVariable.forEach((_, qualifierVariableIndex) => {
-    return {
-      code: ExceptionCode.HO200202,
-      path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex).Code
-    }
-  })
+  return result.ResultQualifierVariable.map((_, qualifierVariableIndex) => ({
+    code: ExceptionCode.HO200202,
+    path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex).Code
+  }))
 }
 
 export default validateResultQualifierVariableCode

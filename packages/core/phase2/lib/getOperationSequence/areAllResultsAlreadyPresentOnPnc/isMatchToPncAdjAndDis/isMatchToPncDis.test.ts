@@ -8,7 +8,8 @@ describe("check isMatchToPncDis", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
     const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
     const result = isMatchToPncDis([], aho, 0, 0)
-    expect(result).toBe(false)
+    expect(result.value).toBe(false)
+    expect(result.exceptions).toStrictEqual([])
   })
 
   it("returns true when an AHO result matches the pncDisposal on all its matching fields", () => {
@@ -48,6 +49,7 @@ describe("check isMatchToPncDis", () => {
     const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
 
     const result = isMatchToPncDis([pncDisposal], aho, 0, 0)
-    expect(result).toBe(true)
+    expect(result.value).toBe(true)
+    expect(result.exceptions).toStrictEqual([])
   })
 })

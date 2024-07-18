@@ -40,9 +40,9 @@ describe("validateResultQualifierVariableDurationType", () => {
       } as Offence
     ])
 
-    validateResultQualifierVariableDurationType(aho, 0, 0)
+    const result = validateResultQualifierVariableDurationType(aho, 0, 0)
 
-    expect(aho.Exceptions).toStrictEqual([
+    expect(result).toStrictEqual([
       {
         code: "HO200201",
         path: [
@@ -125,8 +125,8 @@ describe("validateResultQualifierVariableDurationType", () => {
       } as unknown as Offence
     ])
 
-    validateResultQualifierVariableDurationType(aho, 0, 0)
+    const result = validateResultQualifierVariableDurationType(aho, 0, 0)
 
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(result).toHaveLength(0)
   })
 })

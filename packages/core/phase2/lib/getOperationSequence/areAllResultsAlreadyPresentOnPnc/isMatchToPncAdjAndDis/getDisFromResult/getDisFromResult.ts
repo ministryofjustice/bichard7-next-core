@@ -12,8 +12,12 @@ const getDisFromResult = (
   offenceIndex: number,
   resultIndex: number
 ): ExceptionResult<NonEmptyArray<PncDisposal>> => {
-  validateResultQualifierVariableCode(aho, offenceIndex, resultIndex)
-  validateResultQualifierVariableDurationType(aho, offenceIndex, resultIndex)
+  const resultQualifierVariableCodeExceptions = validateResultQualifierVariableCode(aho, offenceIndex, resultIndex)
+  const resultQualifierVariableDurationTypeExceptions = validateResultQualifierVariableDurationType(
+    aho,
+    offenceIndex,
+    resultIndex
+  )
   const { value: pncDisposalByFirstAndSecondDurations, exceptions: firstAndSecondDurationsExceptions } =
     createPncDisposalByFirstAndSecondDurations(aho, offenceIndex, resultIndex)
   const { value: pncDisposalByThirdDuration, exceptions: thirdDurationExceptions } = createPncDisposalByThirdDuration(
@@ -23,8 +27,15 @@ const getDisFromResult = (
     pncDisposalByFirstAndSecondDurations.text
   )
 
+  const exceptions = [
+    ...resultQualifierVariableCodeExceptions,
+    ...resultQualifierVariableDurationTypeExceptions,
+    ...firstAndSecondDurationsExceptions,
+    ...thirdDurationExceptions
+  ]
+
   return {
-    exceptions: firstAndSecondDurationsExceptions.concat(thirdDurationExceptions),
+    exceptions,
     value: [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
   }
 }
