@@ -1,14 +1,14 @@
 import { z } from "zod"
-import { pncQueryResultSchema } from "../schemas/pncQueryResult"
+import { CjsPlea } from "../types/Plea"
+import ResultClass from "../types/ResultClass"
+import { exceptionSchema } from "./exception"
+import { pncQueryResultSchema } from "./pncQueryResult"
 import {
   ahoDescription,
   offenceDescription,
   organisationUnitDescription,
   resultDescription
-} from "../schemas/schemaDescription"
-import { CjsPlea } from "../types/Plea"
-import ResultClass from "../types/ResultClass"
-import { exceptionSchema } from "./exception"
+} from "./schemaDescription"
 import toArray from "./toArray"
 
 const hearingDescription = ahoDescription.AnnotatedHearingOutcome.HearingOutcome.Hearing
