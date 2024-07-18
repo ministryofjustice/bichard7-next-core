@@ -1,13 +1,13 @@
-import generateXml from "../../../lib/xml/generateXml"
-import { toISODate } from "../../../phase1/lib/dates"
-import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../phase1/serialise/ahoXml/serialiseToXml"
-import type { AhoXml } from "../../../phase1/types/AhoXml"
+import { toISODate } from "../../../lib/dates"
+import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../lib/serialise/ahoXml/serialiseToXml"
+import generateXml from "../../../lib/serialise/generateXml"
+import type { AhoXml } from "../../../types/AhoXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type {
   OperationStatusXml,
   PncOperationXml,
   PncUpdateDatasetXml
-} from "../../../phase1/types/PncUpdateDatasetXml"
-import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+} from "../../../types/PncUpdateDatasetXml"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {

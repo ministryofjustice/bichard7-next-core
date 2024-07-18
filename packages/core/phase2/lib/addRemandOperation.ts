@@ -1,4 +1,4 @@
-import isAdjournedNoNextHearing from "../../phase1/lib/result/isAdjournedNoNextHearing"
+import isAdjournedNoNextHearing from "../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { Operation, OperationData } from "../../types/PncUpdateDataset"
 import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperationSetIfNotPresent"

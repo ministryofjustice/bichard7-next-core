@@ -2,7 +2,7 @@ import type { AuditLogEvent, AuditLogEventSource } from "@moj-bichard7/common/ty
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import type EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "../phase1/lib/auditLog/getAuditLogEvent"
-import type AuditLogger from "../phase1/types/AuditLogger"
+import type AuditLogger from "../types/AuditLogger"
 
 export default class CoreAuditLogger implements AuditLogger {
   private events: AuditLogEvent[] = []

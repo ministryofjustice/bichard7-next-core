@@ -1,5 +1,5 @@
-import ResultClass from "../../../../phase1/types/ResultClass"
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../types/ResultClass"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
 
 const createAho = (offences: Partial<Offence>[]) =>

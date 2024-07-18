@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import type { Trigger } from "../../types/Trigger"
 import deduplicateTriggers from "../triggers/deduplicateTriggers"
-import type { Trigger } from "../types/Trigger"
 
 describe("deduplicateTriggers", () => {
   it("should remove duplicates", () => {

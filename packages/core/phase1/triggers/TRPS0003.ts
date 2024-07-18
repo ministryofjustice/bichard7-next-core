@@ -1,11 +1,11 @@
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
+import errorPaths from "../../lib/errorPaths"
 import type { TriggerGenerator } from "../../phase1/types/TriggerGenerator"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
-import errorPaths from "../lib/errorPaths"
-import type { Trigger } from "../types/Trigger"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import type { Trigger } from "../../types/Trigger"
 
 const triggerCode = TriggerCode.TRPS0003
 

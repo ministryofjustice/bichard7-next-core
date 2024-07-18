@@ -1,5 +1,5 @@
-import type Exception from "../types/Exception"
-import type { ExceptionPath } from "../types/Exception"
+import type Exception from "../../types/Exception"
+import type { ExceptionPath } from "../../types/Exception"
 
 const findException = (
   exceptions: Exception[],

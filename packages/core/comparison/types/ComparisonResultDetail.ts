@@ -1,6 +1,6 @@
 import type { Change } from "diff"
-import type Exception from "../../phase1/types/Exception"
-import type { Trigger } from "../../phase1/types/Trigger"
+import type Exception from "../../types/Exception"
+import type { Trigger } from "../../types/Trigger"
 
 export type ComparisonResultDebugOutput = {
   triggers: {

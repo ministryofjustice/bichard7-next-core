@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import express from "express"
-import CoreAuditLogger from "../lib/CoreAuditLogger"
 import MockPncGateway from "../comparison/lib/MockPncGateway"
-import parseSpiResult from "../phase1/parse/parseSpiResult"
-import transformSpiToAho from "../phase1/parse/transformSpiToAho"
+import CoreAuditLogger from "../lib/CoreAuditLogger"
+import parseSpiResult from "../lib/parse/parseSpiResult"
+import transformSpiToAho from "../lib/parse/transformSpiToAho"
 import CorePhase1 from "../phase1/phase1"
 import type { PncQueryResult } from "../types/PncQueryResult"
 

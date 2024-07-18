@@ -1,8 +1,8 @@
 import matchOffencesToPnc from "."
 import summariseMatching from "../../../../comparison/lib/summariseMatching"
 import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
+import errorPaths from "../../../../lib/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-import errorPaths from "../../../lib/errorPaths"
 
 type Adjudication = {
   verdict: string

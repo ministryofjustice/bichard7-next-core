@@ -20,8 +20,8 @@ import type {
   resultQualifierVariableSchema,
   resultSchema,
   urgentSchema
-} from "../phase1/schemas/unvalidatedHearingOutcome"
-import { unvalidatedHearingOutcomeSchema } from "../phase1/schemas/unvalidatedHearingOutcome"
+} from "../schemas/unvalidatedHearingOutcome"
+import { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 
 export type AnnotatedHearingOutcome = z.infer<typeof unvalidatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>

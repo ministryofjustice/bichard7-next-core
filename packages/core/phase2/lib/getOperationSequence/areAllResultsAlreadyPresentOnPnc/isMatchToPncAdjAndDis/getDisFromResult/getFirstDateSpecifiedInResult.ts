@@ -1,6 +1,6 @@
-import ResultClass from "../../../../../../phase1/types/ResultClass"
 import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
+import ResultClass from "../../../../../../types/ResultClass"
 
 const getFirstDateSpecifiedInResult = (result: Result): Date | undefined => {
   if (result.DateSpecifiedInResult?.length) {

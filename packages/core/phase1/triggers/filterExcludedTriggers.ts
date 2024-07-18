@@ -1,7 +1,7 @@
 import type TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { Trigger } from "../../types/Trigger"
 import excludedTriggerConfig from "../lib/excludedTriggerConfig"
-import type { Trigger } from "../types/Trigger"
 
 const filterExcludedTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome, triggers: Trigger[]): Trigger[] => {
   const excludedTriggers = excludedTriggerConfig()

@@ -1,10 +1,10 @@
-import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
 import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"
+import serialiseToXml from "../serialise/ahoXml/serialiseToXml"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
   const { DefendantDetail, OrganisationName } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant

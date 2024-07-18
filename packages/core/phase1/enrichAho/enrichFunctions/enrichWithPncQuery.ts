@@ -1,14 +1,14 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
+import isDummyAsn from "../../../lib/isDummyAsn"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
-import { lookupOffenceByCjsCode } from "../../dataLookup"
 import { isNotFoundError } from "../../exceptions/pncExceptions"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import isCaseRecordable from "../../lib/isCaseRecordable"
-import isDummyAsn from "../../lib/isDummyAsn"
-import type AuditLogger from "../../types/AuditLogger"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
 const addTitle = (offence: PncOffence): void => {

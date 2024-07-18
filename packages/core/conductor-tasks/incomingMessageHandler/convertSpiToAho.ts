@@ -13,15 +13,15 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
 import { z } from "zod"
-import parseS3Path from "../../phase1/lib/parseS3Path"
 import {
   extractIncomingMessage,
   extractXMLEntityContent,
   getCorrelationId,
   getDataStreamContent,
   getSystemId
-} from "../../phase1/parse/transformSpiToAho/extractIncomingMessageData"
-import transformIncomingMessageToAho from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
+} from "../../lib/parse/transformSpiToAho/extractIncomingMessageData"
+import transformIncomingMessageToAho from "../../lib/parse/transformSpiToAho/transformIncomingMessageToAho"
+import parseS3Path from "../../phase1/lib/parseS3Path"
 
 const incomingBucket = process.env.INCOMING_BUCKET_NAME
 if (!incomingBucket) {

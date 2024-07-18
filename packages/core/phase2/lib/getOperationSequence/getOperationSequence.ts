@@ -1,5 +1,5 @@
-import type { ExceptionResult } from "../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { ExceptionResult } from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"

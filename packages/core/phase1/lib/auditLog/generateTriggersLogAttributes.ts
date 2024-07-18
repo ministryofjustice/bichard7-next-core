@@ -1,4 +1,4 @@
-import type { Trigger } from "../../types/Trigger"
+import type { Trigger } from "../../../types/Trigger"
 
 const generateTriggersLogAttributes = (triggers: Trigger[], hasExceptions: boolean): Record<string, unknown> => ({
   "Number of Triggers": triggers.length,

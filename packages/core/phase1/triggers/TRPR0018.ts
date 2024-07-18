@@ -1,7 +1,7 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../types/PncQueryResult"
-import type { Trigger } from "../types/Trigger"
+import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0018

@@ -1,4 +1,4 @@
-import type { Trigger } from "../types/Trigger"
+import type { Trigger } from "../../types/Trigger"
 
 type TriggerObject = {
   [k: string]: Trigger

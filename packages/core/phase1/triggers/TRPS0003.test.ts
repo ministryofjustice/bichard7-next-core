@@ -1,7 +1,7 @@
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type Exception from "../../types/Exception"
 import Phase from "../../types/Phase"
-import type Exception from "../types/Exception"
 import TRPS0003 from "./TRPS0003"
 
 describe("TRPS0003", () => {

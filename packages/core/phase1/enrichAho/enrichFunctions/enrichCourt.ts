@@ -1,5 +1,5 @@
-import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
-import getCourtDetails from "../../dataLookup/getCourtDetails"
+import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../../lib/dataLookup"
+import getCourtDetails from "../../../lib/dataLookup/getCourtDetails"
 import populateOrganisationUnitFields from "../../lib/organisationUnit/populateOrganisationUnitFields"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 

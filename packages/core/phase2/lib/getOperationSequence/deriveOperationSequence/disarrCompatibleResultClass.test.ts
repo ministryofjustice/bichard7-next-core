@@ -1,5 +1,5 @@
-import ResultClass from "../../../../phase1/types/ResultClass"
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../types/ResultClass"
 import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
 
 describe("disarrCompatibleResultClass", () => {

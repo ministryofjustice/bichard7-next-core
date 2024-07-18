@@ -1,9 +1,9 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../phase1/lib/encoding"
-import { extractExceptionsFromXml, mapXmlToAho } from "../../../phase1/parse/parseAhoXml"
-import { mapXmlOrganisationalUnitToAho } from "../../../phase1/parse/parseAhoXml/parseAhoXml"
-import type { Br7TextString } from "../../../phase1/types/AhoXml"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
+import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseAhoXml"
+import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
+import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
 

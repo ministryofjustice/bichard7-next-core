@@ -1,6 +1,6 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import { lookupRemandStatusByCjsCode } from "../../lib/dataLookup"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import { lookupRemandStatusByCjsCode } from "../dataLookup"
 import type { TriggerGenerator } from "../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0010

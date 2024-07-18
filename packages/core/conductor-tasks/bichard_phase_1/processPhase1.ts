@@ -11,7 +11,7 @@ import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
 import phase1 from "../../phase1/phase1"
-import { unvalidatedHearingOutcomeSchema } from "../../phase1/schemas/unvalidatedHearingOutcome"
+import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const pncApiConfig = createPncApiConfig()

@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Phase from "../../types/Phase"
-import type { Trigger } from "../types/Trigger"
+import type { Trigger } from "../../types/Trigger"
 
 export type TriggerGeneratorOptions = {
   triggers?: Trigger[]
