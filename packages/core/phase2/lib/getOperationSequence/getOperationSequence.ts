@@ -5,7 +5,6 @@ import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentO
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { deriveOperationSequence } from "./deriveOperationSequence"
 import sortOperations from "./sortOperations"
-import validateOperationSequence from "./validateOperationSequence"
 
 const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionResult<Operation[]> => {
   const checkNoSequenceConditionsExceptions = checkNoSequenceConditions(aho)
@@ -21,11 +20,6 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
   }
 
   const { operations } = operationsResult
-  const exception = validateOperationSequence(operations, remandCcrs)
-  if (exception) {
-    return { value: [], exceptions: exceptions.concat(exception) }
-  }
-
   const filteredOperations = allResultsAlreadyOnPnc
     ? operations.filter((operation) => operation.code === "NEWREM")
     : operations
