@@ -1,8 +1,8 @@
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent";
-import type { ResultClassHandlerParams } from "../deriveOperationSequence";
-import { handleAppealOutcome } from "./handleAppealOutcome";
-(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
+import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
+import type { ResultClassHandlerParams } from "../deriveOperationSequence"
+import { handleAppealOutcome } from "./handleAppealOutcome"
+;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 
 const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
   structuredClone({

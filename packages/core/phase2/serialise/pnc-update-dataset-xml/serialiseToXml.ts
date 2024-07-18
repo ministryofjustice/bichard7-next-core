@@ -3,11 +3,7 @@ import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../lib/s
 import generateXml from "../../../lib/serialise/generateXml"
 import type { AhoXml } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type {
-  OperationStatusXml,
-  PncOperationXml,
-  PncUpdateDatasetXml
-} from "../../../types/PncUpdateDatasetXml"
+import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {

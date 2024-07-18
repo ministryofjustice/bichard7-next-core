@@ -11,7 +11,7 @@ import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkR
 import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
-(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
+;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 ;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
 const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock

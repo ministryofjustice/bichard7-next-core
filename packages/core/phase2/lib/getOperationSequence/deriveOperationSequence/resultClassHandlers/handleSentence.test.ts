@@ -8,7 +8,7 @@ import addSubsequentVariationOperations from "../addSubsequentVariationOperation
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import { handleSentence } from "./handleSentence"
-(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
+;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 ;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
 const mockedAreAnyPncResults2007 = areAnyPncResults2007 as jest.Mock
 

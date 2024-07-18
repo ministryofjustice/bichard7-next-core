@@ -32,7 +32,10 @@ const generateSetOfTriggers = (
   return existingTriggers.concat(finalTriggers)
 }
 
-const generateTriggers = (annotatedHearingOutcome: AnnotatedHearingOutcome, phase = Phase.HEARING_OUTCOME): Trigger[] => {
+const generateTriggers = (
+  annotatedHearingOutcome: AnnotatedHearingOutcome,
+  phase = Phase.HEARING_OUTCOME
+): Trigger[] => {
   // Run triggers which don't depend on any other triggers
   const independentTriggers = generateSetOfTriggers(independentTriggerFn, annotatedHearingOutcome, phase)
 

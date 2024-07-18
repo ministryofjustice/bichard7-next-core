@@ -1,5 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import addExceptionsToAho from "./addExceptionsToAho"
 
 describe("addExceptionsToAho", () => {

@@ -1,9 +1,9 @@
 jest.mock("../../../addRemandOperation")
-import type { Operation } from "../../../../../types/PncUpdateDataset";
-import addRemandOperation from "../../../addRemandOperation";
-import type { ResultClassHandlerParams } from "../deriveOperationSequence";
-import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement";
-(addRemandOperation as jest.Mock).mockImplementation(() => {})
+import type { Operation } from "../../../../../types/PncUpdateDataset"
+import addRemandOperation from "../../../addRemandOperation"
+import type { ResultClassHandlerParams } from "../deriveOperationSequence"
+import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
+;(addRemandOperation as jest.Mock).mockImplementation(() => {})
 
 const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
   ({
