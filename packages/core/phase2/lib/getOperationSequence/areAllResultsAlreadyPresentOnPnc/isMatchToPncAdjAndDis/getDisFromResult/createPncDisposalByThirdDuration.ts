@@ -1,4 +1,4 @@
-import { ExceptionResult } from "../../../../../../phase1/types/Exception"
+import type { ExceptionResult } from "../../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome, Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"

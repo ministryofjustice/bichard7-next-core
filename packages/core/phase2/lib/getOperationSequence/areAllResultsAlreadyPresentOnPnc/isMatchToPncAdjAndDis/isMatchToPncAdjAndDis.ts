@@ -1,4 +1,5 @@
-import Exception, { ExceptionResult } from "../../../../../phase1/types/Exception"
+import type { ExceptionResult } from "../../../../../phase1/types/Exception"
+import type Exception from "../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"

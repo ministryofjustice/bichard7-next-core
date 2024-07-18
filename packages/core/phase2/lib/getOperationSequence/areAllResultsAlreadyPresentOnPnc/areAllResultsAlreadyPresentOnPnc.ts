@@ -1,4 +1,5 @@
-import Exception, { ExceptionResult } from "../../../../phase1/types/Exception"
+import type { ExceptionResult } from "../../../../phase1/types/Exception"
+import type Exception from "../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import { isNonEmptyArray } from "../../../../types/NonEmptyArray"
 import isRecordableResult from "../../isRecordableResult"
