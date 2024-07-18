@@ -11,19 +11,17 @@ const getErrorPath = (offence: Offence, offenceIndex: number) =>
     : errorPaths.offence(offenceIndex).offenceReason.localOffenceCode
 
 const allPncOffencesContainResults = (aho: AnnotatedHearingOutcome): Exception[] => {
-  const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
-  offences.forEach((offence, offenceIndex) => {
-    if (offence.AddedByTheCourt || !isRecordableOffence(offence) || offence.Result.some(isRecordableResult)) {
-      return
-    }
+  return offences
+    .map((offence, offenceIndex) => {
+      if (offence.AddedByTheCourt || !isRecordableOffence(offence) || offence.Result.some(isRecordableResult)) {
+        return
+      }
 
-    exceptions.push({ code: ExceptionCode.HO200212, path: getErrorPath(offence, offenceIndex) })
-    aho.HasError = true
-  })
-
-  return exceptions
+      return { code: ExceptionCode.HO200212, path: getErrorPath(offence, offenceIndex) }
+    })
+    .filter((exception) => !!exception)
 }
 
 export default allPncOffencesContainResults
