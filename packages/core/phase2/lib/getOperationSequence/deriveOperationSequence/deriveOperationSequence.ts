@@ -7,6 +7,7 @@ import type { Operation } from "../../../../types/PncUpdateDataset"
 import type OperationsResult from "../../../types/OperationsResult"
 import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
+import validateOperationSequence from "../validateOperationSequence"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
 import { handleAdjournment } from "./handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement"
@@ -108,6 +109,11 @@ const deriveOperationSequence = (
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
   } else if (operations.length > 0 && oAacDisarrOperations.length > 0 && adjPreJudgementRemandCcrs.size > 0) {
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+  }
+
+  const exception = validateOperationSequence(operations, remandCcrs)
+  if (exception) {
+    exceptions.push(exception)
   }
 
   return exceptions.length > 0 ? { exceptions } : { operations }
