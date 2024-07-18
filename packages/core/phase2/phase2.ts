@@ -5,7 +5,6 @@ import generateTriggers from "../phase1/triggers/generate"
 import type AuditLogger from "../phase1/types/AuditLogger"
 import type { Trigger } from "../phase1/types/Trigger"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
-import type MessageType from "../types/MessageType"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
@@ -21,25 +20,19 @@ const processMessage = (
   inputMessage: AnnotatedHearingOutcome | PncUpdateDataset,
   outputMessage: PncUpdateDataset
 ): ProcessMessageResult => {
-  const messageType: MessageType = isPncUpdateDataset(inputMessage) ? "PncUpdateDataset" : "AnnotatedHearingOutcome"
+  const isResubmitted = isPncUpdateDataset(inputMessage)
   const hearingOutcome = inputMessage.AnnotatedHearingOutcome.HearingOutcome
-  auditLogger.info(
-    messageType === "PncUpdateDataset"
-      ? EventCode.ReceivedResubmittedHearingOutcome
-      : EventCode.HearingOutcomeReceivedPhase2
-  )
+  auditLogger.info(isResubmitted ? EventCode.ReceivedResubmittedHearingOutcome : EventCode.HearingOutcomeReceivedPhase2)
 
-  if (messageType === "AnnotatedHearingOutcome") {
-    if (isAintCase(hearingOutcome)) {
-      auditLogger.info(EventCode.IgnoredAncillary)
-      return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
-    }
+  if (isAintCase(hearingOutcome)) {
+    auditLogger.info(EventCode.IgnoredAncillary)
+    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+  }
 
-    const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
-    if (!isRecordableOnPnc) {
-      auditLogger.info(EventCode.IgnoredNonrecordable)
-      return
-    }
+  const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
+  if (!isRecordableOnPnc) {
+    auditLogger.info(EventCode.IgnoredNonrecordable)
+    return
   }
 
   const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
@@ -48,7 +41,6 @@ const processMessage = (
     return
   }
 
-  const isResubmitted = messageType === "PncUpdateDataset"
   const { value: operations, exceptions } = getOperationSequence(outputMessage, isResubmitted)
   exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
