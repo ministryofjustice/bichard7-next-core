@@ -1,9 +1,10 @@
-import addExceptionsToAho from "../../../../phase1/exceptions/addExceptionsToAho"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../phase1/lib/errorPaths"
+import type Exception from "../../../../phase1/types/Exception"
 import ResultClass from "../../../../phase1/types/ResultClass"
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { Operation } from "../../../../types/PncUpdateDataset"
+import type OperationsResult from "../../../types/OperationsResult"
 import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
@@ -33,7 +34,7 @@ export type ResultClassHandlerParams = {
   remandCcrs: Set<string>
   adjPreJudgementRemandCcrs: Set<string | undefined>
 }
-export type ResultClassHandler = (params: ResultClassHandlerParams) => void
+export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -51,11 +52,12 @@ const deriveOperationSequence = (
   resubmitted: boolean,
   allResultsAlreadyOnPnc: boolean,
   remandCcrs: Set<string>
-): Operation[] => {
+): OperationsResult => {
+  const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   if (offences.filter(isRecordableOffence).length === 0) {
-    addExceptionsToAho(aho, ExceptionCode.HO200121, errorPaths.case.asn)
+    exceptions.push({ code: ExceptionCode.HO200121, path: errorPaths.case.asn })
   }
 
   const operations: Operation[] = []
@@ -75,7 +77,7 @@ const deriveOperationSequence = (
         recordableResultFound = true
 
         if (result.ResultClass) {
-          resultClassHandlers[result.ResultClass]?.({
+          const exception = resultClassHandlers[result.ResultClass]?.({
             aho,
             offenceIndex,
             offence,
@@ -93,18 +95,22 @@ const deriveOperationSequence = (
             remandCcrs,
             adjPreJudgementRemandCcrs
           })
+
+          if (exception) {
+            exceptions.push(exception)
+          }
         }
       })
     }
   })
 
-  if (operations.length === 0 && !recordableResultFound && aho.Exceptions.length === 0) {
-    addExceptionsToAho(aho, ExceptionCode.HO200118, errorPaths.case.asn)
+  if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
+    exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
   } else if (operations.length > 0 && oAacDisarrOperations.length > 0 && adjPreJudgementRemandCcrs.size > 0) {
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
   }
 
-  return operations
+  return exceptions.length > 0 ? { exceptions } : { operations }
 }
 
 export default deriveOperationSequence

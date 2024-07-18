@@ -2,8 +2,8 @@ jest.mock("../../addRemandOperation")
 jest.mock("../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("./addSubsequentVariationOperations")
 jest.mock("./areAnyPncResults2007")
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
 import areAnyPncResults2007 from "./areAnyPncResults2007"
@@ -38,9 +38,9 @@ describe("handleSentence", () => {
   it("should add PENHRG operation when fixedPenalty is true and ccrId has value", () => {
     const params = generateParams({ fixedPenalty: true })
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "654" }, [
       { dummy: "Main Operations" }
@@ -51,9 +51,9 @@ describe("handleSentence", () => {
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
     const params = generateParams({ fixedPenalty: true, ccrId: undefined })
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", undefined, [
       { dummy: "Main Operations" }
@@ -65,9 +65,9 @@ describe("handleSentence", () => {
     const params = generateParams({ fixedPenalty: false, adjudicationExists: true })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("SENDEF", { courtCaseReference: "654" }, [
       { dummy: "Main Operations" }
@@ -79,9 +79,9 @@ describe("handleSentence", () => {
     const params = generateParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("SENDEF", undefined, [
       { dummy: "Main Operations" }
@@ -99,9 +99,9 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(true)
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
@@ -129,9 +129,9 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(true)
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toHaveLength(0)
+    expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
@@ -157,24 +157,22 @@ describe("handleSentence", () => {
       resultIndex: 1
     })
 
-    handleSentence(params)
+    const exception = handleSentence(params)
 
-    expect(params.aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200106",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
+    expect(exception).toStrictEqual({
+      code: "HO200106",
+      path: [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "Offence",
+        1,
+        "Result",
+        1,
+        "ResultClass"
+      ]
+    })
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })

@@ -68,13 +68,12 @@ describe("deriveOperationSequence", () => {
         operations.push({ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" })
       })
 
-      const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+      const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
-      expect(updatedOperations).toStrictEqual([
-        { code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }
-      ])
+      expect(operationsResult).toStrictEqual({
+        operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }]
+      })
       expect(expectedFn).toHaveBeenCalledTimes(1)
-
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
         adjPreJudgementRemandCcrs: new Set(),
         adjudicationExists: undefined,
@@ -128,11 +127,10 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
-    expect(updatedOperations).toHaveLength(0)
     expect([...remandCcrs]).toHaveLength(0)
-    expect(aho.Exceptions).toHaveLength(0)
+    expect(operationsResult).toStrictEqual({ operations: [] })
   })
 
   it("should generate exception HO200118 when there are no operations, no recordable results, and there are no exceptions", () => {
@@ -156,16 +154,17 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
-    expect(updatedOperations).toHaveLength(0)
-    expect(aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200118",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
+    expect(operationsResult).toStrictEqual({
+      exceptions: [
+        {
+          code: "HO200118",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+    })
   })
 
   it("should call addOaacDisarrOperationsIfNecessary when there are operations and oAAC DISARR operations and Adjournment Pre Judgement Remand CCRs", () => {
@@ -195,15 +194,14 @@ describe("deriveOperationSequence", () => {
       oAacDisarrOperations.push({ code: "DISARR", status: "NotAttempted" })
     })
 
-    const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
-    expect(aho.Exceptions).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledWith(
       [{ code: "COMSEN", status: "NotAttempted" }],
       [{ code: "DISARR", status: "NotAttempted" }],
       new Set(["1"])
     )
-    expect(updatedOperations).toStrictEqual([{ code: "COMSEN", status: "NotAttempted" }])
+    expect(operationsResult).toStrictEqual({ operations: [{ code: "COMSEN", status: "NotAttempted" }] })
   })
 
   it("should generate exception HO200121 when there are no recordable offences", () => {
@@ -228,17 +226,18 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
     expect([...remandCcrs]).toHaveLength(0)
-    expect([...updatedOperations]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
-    expect(aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200121",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
+    expect(operationsResult).toStrictEqual({
+      exceptions: [
+        {
+          code: "HO200121",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+    })
   })
 
   it("should generate exception HO200121 when there are no offences", () => {
@@ -258,16 +257,18 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const updatedOperations = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
+    console.log(operationsResult)
     expect([...remandCcrs]).toHaveLength(0)
-    expect([...updatedOperations]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
-    expect(aho.Exceptions).toStrictEqual([
-      {
-        code: "HO200121",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
+    expect(operationsResult).toStrictEqual({
+      exceptions: [
+        {
+          code: "HO200121",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+    })
   })
 })
