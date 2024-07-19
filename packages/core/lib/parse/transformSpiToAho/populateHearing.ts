@@ -1,6 +1,6 @@
-import getOrganisationUnit from "../../../phase1/lib/organisationUnit/getOrganisationUnit"
-import type { ResultedCaseMessageParsedXml, SpiDefendant } from "../../../phase1/types/SpiResult"
 import type { Hearing } from "../../../types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml, SpiDefendant } from "../../../types/SpiResult"
+import getOrganisationUnit from "../../getOrganisationUnit"
 import removeSeconds from "./removeSeconds"
 
 type DefendantDetailsData = {

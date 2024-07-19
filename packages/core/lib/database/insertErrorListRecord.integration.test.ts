@@ -1,8 +1,8 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
-import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
 import { type AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type ErrorListRecord from "../../types/ErrorListRecord"
 import insertErrorListRecord from "./insertErrorListRecord"
 
 const dbConfig = createDbConfig()

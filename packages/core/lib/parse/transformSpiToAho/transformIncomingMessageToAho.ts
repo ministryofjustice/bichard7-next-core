@@ -2,7 +2,7 @@ import { isError, type Result } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import crypto from "crypto"
 import { fromZodError } from "zod-validation-error"
-import { fullResultedCaseMessageParsedXmlSchema } from "../../../phase1/schemas/spiResult"
+import { fullResultedCaseMessageParsedXmlSchema } from "../../../schemas/spiResult"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import {
   extractIncomingMessage,

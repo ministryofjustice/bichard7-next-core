@@ -1,6 +1,6 @@
-import type ErrorListRecord from "../../phase1/types/ErrorListRecord"
-import { QualityCheckStatus } from "../../phase1/types/ErrorListRecord"
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import type ErrorListRecord from "../../types/ErrorListRecord"
+import { QualityCheckStatus } from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"

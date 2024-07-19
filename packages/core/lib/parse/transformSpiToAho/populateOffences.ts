@@ -1,8 +1,8 @@
-import { COMMON_LAWS, INDICTMENT } from "../../../phase1/lib/offenceTypes"
-import resultCodeIsOnStopList from "../../../phase1/lib/result/resultCodeIsOnStopList"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../../phase1/types/SpiResult"
 import type { Offence, OffenceCode } from "../../../types/AnnotatedHearingOutcome"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../../types/SpiResult"
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
+import { COMMON_LAWS, INDICTMENT } from "../../offenceTypes"
+import resultCodeIsOnStopList from "../../resultCodeIsOnStopList"
 import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
 

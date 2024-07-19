@@ -1,6 +1,6 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../lib/errorPaths"
 import type Exception from "../../types/Exception"
+import errorPaths from "../exceptions/errorPaths"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 
 const mockExceptions: Exception[] = [

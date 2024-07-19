@@ -1,6 +1,5 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
-import countDecimalPlaces from "../../../phase1/lib/countDecimalPlaces"
 import type {
   AhoXml,
   Br7Case,
@@ -40,6 +39,7 @@ import type {
 } from "../../../types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "../../../types/Plea"
 import type ResultClass from "../../../types/ResultClass"
+import countDecimalPlaces from "../../countDecimalPlaces"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../encoding"
 import extractExceptionsFromAho from "./extractExceptionsFromXml"
 import mapXmlCxe01ToAho from "./mapXmlCxe01ToAho"

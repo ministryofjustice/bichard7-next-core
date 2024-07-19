@@ -5,9 +5,9 @@ import { toPNCDate } from "../../../lib/dates"
 import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import type { PncCourtCase, PncQueryResult } from "../../../types/PncQueryResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import defaults from "../../tests/helpers/defaults"
 import reformatDate from "../../tests/helpers/reformatDate"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 
 type PncMock = {
   matchRegex: string

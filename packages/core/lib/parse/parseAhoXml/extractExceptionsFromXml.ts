@@ -1,9 +1,9 @@
 import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import { XMLParser } from "fast-xml-parser"
-import errorPaths from "../../../lib/errorPaths"
-import deduplicateExceptions from "../../../phase1/exceptions/deduplicateExceptions"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
+import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
+import errorPaths from "../../exceptions/errorPaths"
 
 // TODO: Use the existing AHO XML parsing to pull out the errors
 //eslint-disable-next-line @typescript-eslint/no-explicit-any

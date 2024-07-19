@@ -1,4 +1,4 @@
-import isCaseRecordable from "../../../lib/isCaseRecordable"
+import isCaseRecordable from "../../../../lib/isCaseRecordable"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
 import populateCourt from "./populateCourt"
 import populatePncDisposal from "./populatePncDisposal"

@@ -1,5 +1,5 @@
 import type { Sql } from "postgres"
-import type ErrorListTriggerRecord from "../../phase1/types/ErrorListTriggerRecord"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import type { Trigger } from "../../types/Trigger"
 

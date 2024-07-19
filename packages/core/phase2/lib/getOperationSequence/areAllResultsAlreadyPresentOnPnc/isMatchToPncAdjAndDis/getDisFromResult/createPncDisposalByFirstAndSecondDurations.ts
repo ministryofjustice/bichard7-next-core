@@ -1,5 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../../../../lib/errorPaths"
+import errorPaths from "../../../../../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../../../../types/AnnotatedHearingOutcome"
 import type { ExceptionResult } from "../../../../../../types/Exception"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"

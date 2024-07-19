@@ -1,4 +1,4 @@
-import { COMMON_LAWS } from "../../phase1/lib/offenceTypes"
+import { COMMON_LAWS } from "../offenceTypes"
 import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "./lookupOffenceByCjsCode"
 
 const localOffenceCode = "01CP001"

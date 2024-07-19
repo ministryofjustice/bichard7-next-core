@@ -1,11 +1,11 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../lib/errorPaths"
+import errorPaths from "../../lib/exceptions/errorPaths"
+import isCaseRecordable from "../../lib/isCaseRecordable"
+import resultCodeIsOnStopList from "../../lib/resultCodeIsOnStopList"
 import type Exception from "../../types/Exception"
 import ResultClass from "../../types/ResultClass"
 import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
 import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
-import isCaseRecordable from "../lib/isCaseRecordable"
-import resultCodeIsOnStopList from "../lib/result/resultCodeIsOnStopList"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const HO100305: ExceptionGenerator = (hearingOutcome) => {

@@ -1,9 +1,9 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../lib/errorPaths"
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../../types/AhoXml"
 import type Exception from "../../../types/Exception"
 import Phase from "../../../types/Phase"
-import isPncException from "../../isPncException"
+import errorPaths from "../../exceptions/errorPaths"
+import isPncException from "../../exceptions/isPncException"
 import addAhoErrors from "./addAhoErrors"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"

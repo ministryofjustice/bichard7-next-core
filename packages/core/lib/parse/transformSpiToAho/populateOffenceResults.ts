@@ -1,12 +1,11 @@
-import countDecimalPlaces from "../../../phase1/lib/countDecimalPlaces"
-import getOrganisationUnit from "../../../phase1/lib/organisationUnit/getOrganisationUnit"
+import type { Duration, Result } from "../../../types/AnnotatedHearingOutcome"
 import type {
   ResultedCaseMessageParsedXml,
   SpiNextHearingDetails,
   SpiOffence,
   SpiResult
-} from "../../../phase1/types/SpiResult"
-import type { Duration, Result } from "../../../types/AnnotatedHearingOutcome"
+} from "../../../types/SpiResult"
+import countDecimalPlaces from "../../countDecimalPlaces"
 import {
   lookupModeOfTrialReasonBySpiCode,
   lookupOrganisationUnitByThirdLevelPsaCode,
@@ -15,6 +14,7 @@ import {
   lookupVerdictBySpiCode
 } from "../../dataLookup"
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
+import getOrganisationUnit from "../../getOrganisationUnit"
 import getRemandDetailsFromResultText from "./getRemandDetailsFromResultText"
 import lookupAmountTypeByCjsCode from "./lookupAmountTypeByCjsCode"
 
