@@ -1,4 +1,4 @@
-import { z } from "zod"
+import type { z } from "zod"
 import { unvalidatedHearingOutcomeSchema } from "../../../schemas/unvalidatedHearingOutcome"
 
 const partialAho = unvalidatedHearingOutcomeSchema.deepPartial()

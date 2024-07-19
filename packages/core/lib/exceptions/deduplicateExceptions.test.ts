@@ -1,5 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import Exception from "../../types/Exception"
+import type Exception from "../../types/Exception"
 import deduplicateExceptions from "./deduplicateExceptions"
 
 describe("deduplicateExceptions", () => {

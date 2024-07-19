@@ -21,7 +21,7 @@ import type {
   resultSchema,
   urgentSchema
 } from "../schemas/unvalidatedHearingOutcome"
-import { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
+import type { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 
 export type AnnotatedHearingOutcome = z.infer<typeof unvalidatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>

@@ -2,7 +2,7 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../types/Trigger"
-import { TriggerGenerator } from "../../types/TriggerGenerator"
+import type { TriggerGenerator } from "../../types/TriggerGenerator"
 import { CjsVerdict } from "../../types/Verdict"
 import getOffenceFullCode from "../getOffenceFullCode"
 import resultCodeIsFinal from "../resultCodeIsFinal"

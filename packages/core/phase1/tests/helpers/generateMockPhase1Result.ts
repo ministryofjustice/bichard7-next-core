@@ -6,7 +6,7 @@ import type { Trigger } from "../../../types/Trigger"
 import generateFakeAho from "../../tests/helpers/generateFakeAho"
 import type Phase1Result from "../../types/Phase1Result"
 import { Phase1ResultType } from "../../types/Phase1Result"
-import { PartialAho } from "./PartialAho"
+import type { PartialAho } from "./PartialAho"
 
 type PartialPhase1Result = {
   correlationId?: string
