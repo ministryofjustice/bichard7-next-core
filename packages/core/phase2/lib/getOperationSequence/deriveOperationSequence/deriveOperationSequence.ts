@@ -27,7 +27,6 @@ export type ResultClassHandlerParams = {
   operations: Operation[]
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
-  pncDisposalCode: number | undefined
   contains2007Result: boolean
   oAacDisarrOperations: Operation[]
   remandCcrs: Set<string>
@@ -86,7 +85,6 @@ const deriveOperationSequence = (
             operations,
             resubmitted,
             allResultsAlreadyOnPnc,
-            pncDisposalCode: result.PNCDisposalType,
             contains2007Result,
             oAacDisarrOperations,
             remandCcrs,

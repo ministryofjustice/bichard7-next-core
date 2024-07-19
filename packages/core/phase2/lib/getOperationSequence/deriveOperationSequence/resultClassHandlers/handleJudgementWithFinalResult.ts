@@ -15,7 +15,6 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   allResultsAlreadyOnPnc,
   offenceIndex,
   resultIndex,
-  pncDisposalCode,
   offence,
   result,
   contains2007Result,
@@ -57,7 +56,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (
-    pncDisposalCode === 2060 &&
+    result.PNCDisposalType === 2060 &&
     checkRccSegmentApplicability(aho, ccrId) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
   ) {
     return {

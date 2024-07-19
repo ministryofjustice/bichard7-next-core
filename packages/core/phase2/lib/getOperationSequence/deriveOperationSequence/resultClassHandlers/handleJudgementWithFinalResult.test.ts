@@ -97,7 +97,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should only generate exception HO200124 when HO200124 and HO200108 conditions are met", () => {
-    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060 })
+    const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
     mockedCheckRccSegmentApplicability.mockReturnValue(
       RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
     )
@@ -124,7 +124,10 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case requires RCC and has reportable offences", () => {
-    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({
+      result: { PNCDisposalType: 2060 } as Result,
+      allResultsAlreadyOnPnc: true
+    })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -139,7 +142,10 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case does not require RCC", () => {
-    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({
+      result: { PNCDisposalType: 2060 } as Result,
+      allResultsAlreadyOnPnc: true
+    })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 

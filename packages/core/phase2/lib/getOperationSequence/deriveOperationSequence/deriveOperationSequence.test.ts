@@ -96,7 +96,6 @@ describe("deriveOperationSequence", () => {
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
         operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }],
-        pncDisposalCode: 1001,
         remandCcrs: new Set(),
         resubmitted: false,
         result: { PNCDisposalType: 1001, ResultClass: resultClass },
@@ -258,7 +257,6 @@ describe("deriveOperationSequence", () => {
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
-    console.log(operationsResult)
     expect([...remandCcrs]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({

@@ -13,7 +13,6 @@ type Params = {
   result: Result
   offenceIndex: number
   resultIndex: number
-  pncDisposalCode: number
   contains2007Result: boolean
   oAacDisarrOperations: Record<string, string>[]
   remandCcrs: Set<string>
@@ -30,7 +29,6 @@ const defaultParams: Params = {
   result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: false } as Result,
   offenceIndex: 1,
   resultIndex: 1,
-  pncDisposalCode: 4000,
   contains2007Result: true,
   oAacDisarrOperations: [{ dummy: "OAAC DISARR Operations" }],
   remandCcrs: new Set<string>(),
@@ -48,7 +46,6 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
     result,
     offenceIndex,
     resultIndex,
-    pncDisposalCode,
     contains2007Result,
     oAacDisarrOperations,
     remandCcrs,
@@ -71,7 +68,6 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
     result,
     offenceIndex,
     resultIndex,
-    pncDisposalCode,
     contains2007Result,
     oAacDisarrOperations,
     remandCcrs,
