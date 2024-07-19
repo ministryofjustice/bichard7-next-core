@@ -1,9 +1,9 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import postgres from "postgres"
-import errorPaths from "../../phase1/lib/errorPaths"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListRecord from "../../types/ErrorListRecord"
+import errorPaths from "../exceptions/errorPaths"
 import insertErrorListRecord from "./insertErrorListRecord"
 import updateErrorListRecord from "./updateErrorListRecord"
 
