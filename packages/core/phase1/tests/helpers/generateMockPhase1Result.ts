@@ -1,11 +1,12 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { randomUUID } from "crypto"
 import merge from "lodash.merge"
-import type { AnnotatedHearingOutcome, PartialAho } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../../types/Trigger"
 import generateFakeAho from "../../tests/helpers/generateFakeAho"
 import type Phase1Result from "../../types/Phase1Result"
 import { Phase1ResultType } from "../../types/Phase1Result"
+import { PartialAho } from "./PartialAho"
 
 type PartialPhase1Result = {
   correlationId?: string

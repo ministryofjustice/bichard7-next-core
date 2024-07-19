@@ -44,6 +44,3 @@ export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSche
 export type DateSpecifiedInResult = z.infer<typeof dateSpecifiedInResultSchema>
 export type NumberSpecifiedInResult = z.infer<typeof numberSpecifiedInResultSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>
-
-const partialAho = unvalidatedHearingOutcomeSchema.deepPartial()
-export type PartialAho = z.infer<typeof partialAho>
