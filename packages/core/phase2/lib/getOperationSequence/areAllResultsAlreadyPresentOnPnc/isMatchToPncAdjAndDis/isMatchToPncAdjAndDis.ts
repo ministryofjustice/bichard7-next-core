@@ -44,12 +44,8 @@ const isMatchToPncAdjAndDis = (
 
   const exceptions: Exception[] = []
   const isThereMatchingPncAdjudications = matchingPncAdjudications.some((pncAdj) => {
-    const { value: allPncDisposalsMatch, exceptions: allPncDisposalsMatchExceptions } = allRecordableResultsMatchAPncDisposal(
-      results,
-      pncAdj.disposals ?? [],
-      aho,
-      offenceIndex
-    )
+    const { value: allPncDisposalsMatch, exceptions: allPncDisposalsMatchExceptions } =
+      allRecordableResultsMatchAPncDisposal(results, pncAdj.disposals ?? [], aho, offenceIndex)
     exceptions.push(...allPncDisposalsMatchExceptions)
 
     return allPncDisposalsMatch

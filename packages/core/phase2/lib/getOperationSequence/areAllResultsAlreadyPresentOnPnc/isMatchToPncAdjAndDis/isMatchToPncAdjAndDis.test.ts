@@ -286,7 +286,7 @@ describe("check isMatchToPncAdjAndDis", () => {
     } as Hearing
 
     const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
-  
+
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([
       {

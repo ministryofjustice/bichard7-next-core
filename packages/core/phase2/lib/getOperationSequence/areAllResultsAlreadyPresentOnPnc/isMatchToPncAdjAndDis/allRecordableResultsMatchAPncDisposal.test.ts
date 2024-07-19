@@ -1,4 +1,4 @@
-import { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
 import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import allRecordableResultsMatchAPncDisposal from "./allRecordableResultsMatchAPncDisposal"
