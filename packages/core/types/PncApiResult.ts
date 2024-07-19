@@ -5,7 +5,7 @@ import type {
   pncApiOffenceSchema,
   pncApiPenaltyCaseSchema,
   pncApiResultSchema
-} from "../phase1/schemas/pncApiResult"
+} from "../schemas/pncApiResult"
 
 export type PncApiOffence = z.infer<typeof pncApiOffenceSchema>
 export type PncApiDisposal = z.infer<typeof pncApiDisposalSchema>

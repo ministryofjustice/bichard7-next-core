@@ -1,5 +1,5 @@
+import { lookupResultQualifierCodeByCjsCode } from "../../../../lib/dataLookup"
 import type { Result, ResultQualifierVariable } from "../../../../types/AnnotatedHearingOutcome"
-import { lookupResultQualifierCodeByCjsCode } from "../../../dataLookup"
 
 const resultQualifierIsBailCondition = (qualifier: ResultQualifierVariable): boolean =>
   qualifier.Code >= "JD" && qualifier.Code <= "JZ"

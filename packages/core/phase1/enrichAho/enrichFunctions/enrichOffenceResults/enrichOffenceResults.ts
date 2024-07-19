@@ -1,4 +1,4 @@
-import { lookupResultCodeByCjsCode } from "../../../dataLookup"
+import { lookupResultCodeByCjsCode } from "../../../../lib/dataLookup"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
 import populateBailConditions from "./populateBailConditions"
 

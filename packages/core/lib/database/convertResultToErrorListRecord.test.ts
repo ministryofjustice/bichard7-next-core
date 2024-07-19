@@ -1,7 +1,7 @@
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import errorPaths from "../../phase1/lib/errorPaths"
-import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+import errorPaths from "../exceptions/errorPaths"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {

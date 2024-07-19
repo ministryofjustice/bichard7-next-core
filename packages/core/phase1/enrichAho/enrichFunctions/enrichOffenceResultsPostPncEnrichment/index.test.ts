@@ -1,10 +1,10 @@
 jest.mock("./populateCourt")
 jest.mock("./populateResultClass")
 jest.mock("./populatePncDisposal")
-jest.mock("../../../lib/isCaseRecordable")
+jest.mock("../../../../lib/isCaseRecordable")
 
+import isCaseRecordable from "../../../../lib/isCaseRecordable"
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
-import isCaseRecordable from "../../../lib/isCaseRecordable"
 import enrichOffenceResultsPostPncEnrichment from "./index"
 import populateCourt from "./populateCourt"
 import populatePncDisposal from "./populatePncDisposal"

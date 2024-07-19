@@ -20,8 +20,8 @@ import type {
   resultQualifierVariableSchema,
   resultSchema,
   urgentSchema
-} from "../phase1/schemas/unvalidatedHearingOutcome"
-import { unvalidatedHearingOutcomeSchema } from "../phase1/schemas/unvalidatedHearingOutcome"
+} from "../schemas/unvalidatedHearingOutcome"
+import type { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 
 export type AnnotatedHearingOutcome = z.infer<typeof unvalidatedHearingOutcomeSchema>
 export type HearingOutcome = z.infer<typeof hearingOutcomeSchema>
@@ -44,6 +44,3 @@ export type ResultQualifierVariable = z.infer<typeof resultQualifierVariableSche
 export type DateSpecifiedInResult = z.infer<typeof dateSpecifiedInResultSchema>
 export type NumberSpecifiedInResult = z.infer<typeof numberSpecifiedInResultSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>
-
-const partialAho = unvalidatedHearingOutcomeSchema.deepPartial()
-export type PartialAho = z.infer<typeof partialAho>

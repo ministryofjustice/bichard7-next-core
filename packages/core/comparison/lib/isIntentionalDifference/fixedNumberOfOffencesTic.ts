@@ -1,6 +1,6 @@
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
+import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import serialiseToXml from "../../../phase1/serialise/ahoXml/serialiseToXml"
 import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 

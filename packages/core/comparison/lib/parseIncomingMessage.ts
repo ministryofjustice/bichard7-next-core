@@ -1,10 +1,10 @@
+import { parseAhoXml } from "../../lib/parse/parseAhoXml"
+import parseSpiResult from "../../lib/parse/parseSpiResult"
+import transformSpiToAho from "../../lib/parse/transformSpiToAho"
+import getMessageType from "../../phase1/lib/getMessageType"
+import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import getMessageType from "../../phase1/lib/getMessageType"
-import { parseAhoXml } from "../../phase1/parse/parseAhoXml"
-import parseSpiResult from "../../phase1/parse/parseSpiResult"
-import transformSpiToAho from "../../phase1/parse/transformSpiToAho"
-import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 
 type HearingOutcomeResult = {
   type: "AnnotatedHearingOutcome"

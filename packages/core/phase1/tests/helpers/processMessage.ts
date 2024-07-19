@@ -3,10 +3,11 @@ import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
 import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
+import extractExceptionsFromAho from "../../../lib/parse/parseAhoXml/extractExceptionsFromXml"
+import parseSpiResult from "../../../lib/parse/parseSpiResult"
+import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import extractExceptionsFromAho from "../../parse/parseAhoXml/extractExceptionsFromXml"
-import parseSpiResult from "../../parse/parseSpiResult"
-import transformSpiToAho from "../../parse/transformSpiToAho"
+import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
 import PostgresHelper from "../../tests/helpers/PostgresHelper"
@@ -15,7 +16,6 @@ import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQuery
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "../../tests/helpers/mockRecordInPnc"
 import type Phase1Result from "../../types/Phase1Result"
 import { Phase1ResultType } from "../../types/Phase1Result"
-import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 
 const pgHelper = new PostgresHelper({
   host: defaults.postgresHost,

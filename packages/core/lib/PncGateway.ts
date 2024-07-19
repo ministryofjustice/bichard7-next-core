@@ -1,7 +1,7 @@
 import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import axios from "axios"
 import https from "https"
-import { pncApiResultSchema } from "../phase1/schemas/pncApiResult"
+import { pncApiResultSchema } from "../schemas/pncApiResult"
 import type PncApiConfig from "../types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../types/PncApiResult"
 import type PncGatewayInterface from "../types/PncGatewayInterface"

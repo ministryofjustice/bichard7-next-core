@@ -1,4 +1,4 @@
-import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../../../../phase1/dataLookup"
+import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../../../../lib/dataLookup"
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncAdjudication } from "../../../../../types/PncQueryResult"

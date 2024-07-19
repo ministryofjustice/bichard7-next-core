@@ -1,24 +1,24 @@
-jest.mock("./handleAdjournment")
-jest.mock("./handleAdjournmentPostJudgement")
-jest.mock("./handleAdjournmentPreJudgement")
-jest.mock("./handleAdjournmentWithJudgement")
-jest.mock("./handleAppealOutcome")
-jest.mock("./handleJudgementWithFinalResult")
-jest.mock("./handleSentence")
+jest.mock("./resultClassHandlers/handleAdjournment")
+jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
+jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
+jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
+jest.mock("./resultClassHandlers/handleAppealOutcome")
+jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
+jest.mock("./resultClassHandlers/handleSentence")
 jest.mock("./addOaacDisarrOperationsIfNecessary")
 
-import ResultClass from "../../../../phase1/types/ResultClass"
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
 import deriveOperationSequence from "./deriveOperationSequence"
-import { handleAdjournment } from "./handleAdjournment"
-import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement"
-import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
-import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
-import { handleAppealOutcome } from "./handleAppealOutcome"
-import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
-import { handleSentence } from "./handleSentence"
+import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
+import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
+import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
+import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjournmentWithJudgement"
+import { handleAppealOutcome } from "./resultClassHandlers/handleAppealOutcome"
+import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
+import { handleSentence } from "./resultClassHandlers/handleSentence"
 
 const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock

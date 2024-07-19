@@ -1,6 +1,6 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import fs from "fs"
-import { parseAhoXml } from "../../../phase1/parse/parseAhoXml"
+import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 

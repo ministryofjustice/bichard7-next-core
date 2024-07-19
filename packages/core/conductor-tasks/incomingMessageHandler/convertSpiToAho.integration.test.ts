@@ -9,7 +9,7 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 import transformIncomingMessageToAho, {
   type TransformedOutput
-} from "../../phase1/parse/transformSpiToAho/transformIncomingMessageToAho"
+} from "../../lib/parse/transformSpiToAho/transformIncomingMessageToAho"
 import convertSpiToAho from "./convertSpiToAho"
 
 const { INCOMING_BUCKET_NAME, TASK_DATA_BUCKET_NAME } = process.env

@@ -7,7 +7,7 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
-import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
+import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import type Phase1Result from "../../phase1/types/Phase1Result"
 import sendToPhase2 from "./sendToPhase2"
 

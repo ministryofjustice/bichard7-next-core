@@ -1,4 +1,4 @@
-import type { Trigger } from "../../phase1/types/Trigger"
+import type { Trigger } from "../../types/Trigger"
 
 export enum TriggerCreationType {
   CREATE,

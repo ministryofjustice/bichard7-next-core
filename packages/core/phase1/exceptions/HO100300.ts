@@ -1,9 +1,9 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "../dataLookup"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../lib/dataLookup"
+import type Exception from "../../types/Exception"
+import type { ExceptionPath } from "../../types/Exception"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
-import type Exception from "../types/Exception"
-import type { ExceptionPath } from "../types/Exception"
 import type { ExceptionGenerator } from "../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =

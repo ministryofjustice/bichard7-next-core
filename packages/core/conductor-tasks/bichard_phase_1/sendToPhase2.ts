@@ -8,7 +8,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
-import serialiseToXml from "../../phase1/serialise/ahoXml/serialiseToXml"
+import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
 import type Phase1Result from "../../phase1/types/Phase1Result"
 

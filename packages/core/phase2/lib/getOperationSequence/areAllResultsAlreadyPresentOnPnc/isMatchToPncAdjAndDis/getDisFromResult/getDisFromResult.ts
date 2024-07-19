@@ -1,5 +1,5 @@
-import type { ExceptionResult } from "../../../../../../phase1/types/Exception"
 import type { AnnotatedHearingOutcome } from "../../../../../../types/AnnotatedHearingOutcome"
+import type { ExceptionResult } from "../../../../../../types/Exception"
 import type { NonEmptyArray } from "../../../../../../types/NonEmptyArray"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
 import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"

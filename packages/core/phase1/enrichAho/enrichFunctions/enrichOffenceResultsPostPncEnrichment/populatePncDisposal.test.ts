@@ -1,7 +1,7 @@
-jest.mock("phase1/dataLookup")
+jest.mock("../../../../lib/dataLookup")
+import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
 import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
-import { lookupPncDisposalByCjsCode } from "../../../dataLookup"
-import ResultClass from "../../../types/ResultClass"
+import ResultClass from "../../../../types/ResultClass"
 import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {
