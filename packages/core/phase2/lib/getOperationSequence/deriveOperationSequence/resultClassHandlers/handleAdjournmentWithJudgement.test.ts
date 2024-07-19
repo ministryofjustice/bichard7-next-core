@@ -63,8 +63,7 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should add SUBVAR operation when adjudication exists", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: true,
-      result: { ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT } as Result
+      result: { ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, PNCAdjudicationExists: true } as Result
     })
 
     const exception = handleAdjournmentWithJudgement(params)
@@ -180,7 +179,10 @@ describe("handleAdjournmentWithJudgement", () => {
   })
 
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
-    const params = generateResultClassHandlerParams({ offence: { AddedByTheCourt: false } as Offence, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({
+      offence: { AddedByTheCourt: false } as Offence,
+      allResultsAlreadyOnPnc: true
+    })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 

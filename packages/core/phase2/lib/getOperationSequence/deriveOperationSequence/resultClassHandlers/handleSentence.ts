@@ -8,13 +8,13 @@ import type { ResultClassHandler } from "../deriveOperationSequence"
 export const handleSentence: ResultClassHandler = ({
   ccrId,
   operations,
-  adjudicationExists,
   aho,
   offence,
   resubmitted,
   allResultsAlreadyOnPnc,
   offenceIndex,
-  resultIndex
+  resultIndex,
+  result
 }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
 
@@ -23,7 +23,7 @@ export const handleSentence: ResultClassHandler = ({
     return
   }
 
-  if (!adjudicationExists) {
+  if (!result.PNCAdjudicationExists) {
     if (!offence.AddedByTheCourt) {
       return { code: ExceptionCode.HO200106, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
     }

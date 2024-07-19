@@ -5,7 +5,6 @@ import type { ResultClassHandlerParams } from "../../lib/getOperationSequence/de
 
 type Params = {
   fixedPenalty: boolean
-  adjudicationExists: boolean
   operations: Record<string, string>[]
   ccrId: string
   resubmitted: boolean
@@ -18,30 +17,30 @@ type Params = {
   contains2007Result: boolean
   oAacDisarrOperations: Record<string, string>[]
   remandCcrs: Set<string>
+  adjPreJudgementRemandCcrs: Set<string>
 }
 
 const defaultParams: Params = {
   fixedPenalty: false,
-  adjudicationExists: false,
   operations: [{ dummy: "Main Operations" }],
   ccrId: "234",
   resubmitted: false,
   allResultsAlreadyOnPnc: false,
   offence: { AddedByTheCourt: false } as Offence,
-  result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT } as Result,
+  result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: false } as Result,
   offenceIndex: 1,
   resultIndex: 1,
   pncDisposalCode: 4000,
   contains2007Result: true,
   oAacDisarrOperations: [{ dummy: "OAAC DISARR Operations" }],
-  remandCcrs: new Set<string>()
+  remandCcrs: new Set<string>(),
+  adjPreJudgementRemandCcrs: new Set<string>()
 }
 
 const generateResultClassHandlerParams = (params: Partial<Params> = defaultParams) => {
   const {
     fixedPenalty,
     ccrId,
-    adjudicationExists,
     operations,
     resubmitted,
     allResultsAlreadyOnPnc,
@@ -52,7 +51,8 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
     pncDisposalCode,
     contains2007Result,
     oAacDisarrOperations,
-    remandCcrs
+    remandCcrs,
+    adjPreJudgementRemandCcrs
   } = {
     ...defaultParams,
     ...params
@@ -63,7 +63,6 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
         HearingOutcome: { Case: { PenaltyNoticeCaseReferenceNumber: fixedPenalty ? "1" : undefined } }
       }
     }),
-    adjudicationExists,
     operations,
     ccrId: ccrId,
     resubmitted,
@@ -75,7 +74,8 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
     pncDisposalCode,
     contains2007Result,
     oAacDisarrOperations,
-    remandCcrs
+    remandCcrs,
+    adjPreJudgementRemandCcrs
   }) as unknown as ResultClassHandlerParams
 }
 

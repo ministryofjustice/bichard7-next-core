@@ -10,7 +10,6 @@ import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   ccrId,
   operations,
-  adjudicationExists,
   resubmitted,
   aho,
   allResultsAlreadyOnPnc,
@@ -27,7 +26,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return
-  } else if (adjudicationExists) {
+  } else if (result.PNCAdjudicationExists) {
     return addSubsequentVariationOperations(
       resubmitted,
       operations,

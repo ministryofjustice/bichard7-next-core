@@ -25,7 +25,6 @@ export type ResultClassHandlerParams = {
   resultIndex: number
   ccrId: string | undefined
   operations: Operation[]
-  adjudicationExists: boolean | undefined
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   pncDisposalCode: number | undefined
@@ -85,7 +84,6 @@ const deriveOperationSequence = (
             result,
             ccrId: offence?.CourtCaseReferenceNumber || undefined,
             operations,
-            adjudicationExists: result.PNCAdjudicationExists,
             resubmitted,
             allResultsAlreadyOnPnc,
             pncDisposalCode: result.PNCDisposalType,

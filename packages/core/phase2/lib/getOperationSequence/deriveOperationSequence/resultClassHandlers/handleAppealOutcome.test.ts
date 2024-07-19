@@ -1,19 +1,10 @@
-jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import { handleAppealOutcome } from "./handleAppealOutcome"
-;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 
-const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
-  structuredClone({
-    aho: { Exceptions: [] },
-    adjudicationExists: false,
-    operations: [{ dummy: "Main Operations" }],
-    ccrId: "234",
-    offenceIndex: 1,
-    resultIndex: 1,
-    ...overrides
-  }) as unknown as ResultClassHandlerParams
+jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
+;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 
 describe("handleAppealOutcome", () => {
   beforeEach(() => {
@@ -21,7 +12,7 @@ describe("handleAppealOutcome", () => {
   })
 
   it("should add APPHRD to operations and set ccrId in operation data when adjudication exists and ccrId has value", () => {
-    const params = generateParams({ adjudicationExists: true, ccrId: "456" })
+    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result, ccrId: "456" })
 
     const exception = handleAppealOutcome(params)
 
@@ -33,7 +24,10 @@ describe("handleAppealOutcome", () => {
   })
 
   it("should add APPHRD to operations and operation data to undefined when adjudication exists but ccrId does not have value", () => {
-    const params = generateParams({ adjudicationExists: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      result: { PNCAdjudicationExists: true } as Result,
+      ccrId: undefined
+    })
 
     const exception = handleAppealOutcome(params)
 
@@ -45,7 +39,7 @@ describe("handleAppealOutcome", () => {
   })
 
   it("should generate exception HO200107 when adjudication does not exist", () => {
-    const params = generateParams({ adjudicationExists: false })
+    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: false } as Result })
 
     const exception = handleAppealOutcome(params)
 

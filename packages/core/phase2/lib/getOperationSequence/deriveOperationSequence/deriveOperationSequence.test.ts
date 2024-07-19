@@ -77,7 +77,6 @@ describe("deriveOperationSequence", () => {
       expect(expectedFn).toHaveBeenCalledTimes(1)
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
         adjPreJudgementRemandCcrs: new Set(),
-        adjudicationExists: undefined,
         aho: {
           AnnotatedHearingOutcome: {
             HearingOutcome: {

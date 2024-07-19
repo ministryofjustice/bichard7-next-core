@@ -5,7 +5,8 @@ import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkR
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../../types/ResultClass"
 
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("../addSubsequentVariationOperations")
@@ -49,7 +50,10 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add SUBVAR operation when adjudication exists and ccrId has value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result
+    })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -69,7 +73,11 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add SUBVAR operation when adjudication exists and ccrId does not have value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result,
+      ccrId: undefined
+    })
 
     const exception = handleJudgementWithFinalResult(params)
 

@@ -3,7 +3,7 @@ import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationT
 import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import { handleSentence } from "./handleSentence"
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
@@ -45,7 +45,10 @@ describe("handleSentence", () => {
   })
 
   it("should add SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { PNCAdjudicationExists: true } as Result
+    })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
     const exception = handleSentence(params)
@@ -59,7 +62,11 @@ describe("handleSentence", () => {
   })
 
   it("should add SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId does not have value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { PNCAdjudicationExists: true } as Result,
+      ccrId: undefined
+    })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
     const exception = handleSentence(params)
@@ -75,7 +82,7 @@ describe("handleSentence", () => {
   it("should add SUBVAR operation when adjudication exists, and there is a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: true,
+      result: { PNCAdjudicationExists: true } as Result,
       offence: {} as Offence,
       offenceIndex: 1,
       resultIndex: 1
@@ -102,7 +109,7 @@ describe("handleSentence", () => {
   it("should add SUBVAR operation without operation data when adjudication exists, there is a 2007 result code, and ccrId is not set", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: true,
+      result: { PNCAdjudicationExists: true } as Result,
       ccrId: undefined,
       offence: {} as Offence,
       offenceIndex: 1,
@@ -130,7 +137,7 @@ describe("handleSentence", () => {
   it("should generate HO200106 when adjudication does not exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: false,
+      result: { PNCAdjudicationExists: false } as Result,
       offence: {} as Offence,
       offenceIndex: 1,
       resultIndex: 1
