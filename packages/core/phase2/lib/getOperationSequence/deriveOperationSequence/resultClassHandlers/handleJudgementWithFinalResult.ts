@@ -17,7 +17,6 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resultIndex,
   offence,
   result,
-  contains2007Result,
   oAacDisarrOperations
 }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
@@ -44,6 +43,8 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
     }
   }
+
+  const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
 
   if (!offence.AddedByTheCourt) {
     addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)

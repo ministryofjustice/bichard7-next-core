@@ -27,7 +27,6 @@ export type ResultClassHandlerParams = {
   operations: Operation[]
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
-  contains2007Result: boolean
   oAacDisarrOperations: Operation[]
   remandCcrs: Set<string>
   adjPreJudgementRemandCcrs: Set<string | undefined>
@@ -65,8 +64,6 @@ const deriveOperationSequence = (
 
   offences.forEach((offence, offenceIndex) => {
     if (isRecordableOffence(offence)) {
-      const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
-
       offence.Result.forEach((result, resultIndex) => {
         if (!isRecordableResult(result)) {
           return
@@ -85,7 +82,6 @@ const deriveOperationSequence = (
             operations,
             resubmitted,
             allResultsAlreadyOnPnc,
-            contains2007Result,
             oAacDisarrOperations,
             remandCcrs,
             adjPreJudgementRemandCcrs

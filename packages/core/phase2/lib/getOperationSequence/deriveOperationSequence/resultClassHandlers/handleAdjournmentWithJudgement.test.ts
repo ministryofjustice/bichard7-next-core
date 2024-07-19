@@ -175,7 +175,9 @@ describe("handleAdjournmentWithJudgement", () => {
   })
 
   it("should not generate exception HO200124 when case is added by the court", () => {
-    const params = generateResultClassHandlerParams({ offence: { AddedByTheCourt: true } as Offence })
+    const params = generateResultClassHandlerParams({
+      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
+    })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -186,7 +188,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: false } as Offence,
+      offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
@@ -206,8 +208,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court and offence does not have a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true } as Offence,
-      contains2007Result: false,
+      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
@@ -227,8 +228,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should not add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true } as Offence,
-      contains2007Result: true,
+      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
