@@ -1,9 +1,9 @@
 import type { PncCourtCaseSummary } from "../../../../../comparison/types/MatchingComparisonOutput"
 import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
-import type { PncDisposal, PncOffence, PncQueryResult } from "../../../../../types/PncQueryResult"
+import type { PncOffence, PncQueryResult } from "../../../../../types/PncQueryResult"
 import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import isMatchToPncAdjAndDis, { allRecordableResultsMatchAPncDisposal } from "./isMatchToPncAdjAndDis"
+import isMatchToPncAdjAndDis from "./isMatchToPncAdjAndDis"
 
 describe("check isMatchToPncAdjAndDis", () => {
   let aho: AnnotatedHearingOutcome
@@ -209,91 +209,100 @@ describe("check isMatchToPncAdjAndDis", () => {
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })
-})
 
-describe("check allRecordableResultsMatchAPncDisposal", () => {
-  it("Given an unrecordable result, returns true", () => {
-    const matchingResult = {
+  it("should return exceptions", () => {
+    const courtCaseResult = {
       PNCDisposalType: 2063,
-      ResultQualifierVariable: []
+      DateSpecifiedInResult: [
+        {
+          Date: new Date("05/22/2024"),
+          Sequence: 1
+        }
+      ],
+      ResultQualifierVariable: [
+        {
+          Code: "A"
+        }
+      ],
+      ResultVariableText: `NOT ENTER ${"A".repeat(100)} THIS EXCLUSION REQUIREMENT LASTS FOR TIME`,
+      CJSresultCode: 3106,
+      AmountSpecifiedInResult: [
+        {
+          Amount: 25,
+          DecimalPlaces: 2
+        }
+      ],
+      Duration: [
+        {
+          DurationUnit: "Y",
+          DurationLength: 3,
+          DurationType: ""
+        }
+      ]
+    } as Result
+
+    ahoWithResults = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
+
+    const courtCase: PncCourtCaseSummary = {
+      courtCaseReference: "FOO",
+      offences: [
+        {
+          offence: {
+            sequenceNumber: 1,
+            cjsOffenceCode: "offence-code",
+            startDate: new Date("05/22/2024")
+          },
+          adjudication: {
+            sentenceDate: new Date("05/22/2024"),
+            verdict: "NON-CONVICTION",
+            offenceTICNumber: 0,
+            plea: ""
+          },
+          disposals: [
+            {
+              type: 2063,
+              qtyDate: "22052024",
+              qtyDuration: "Y3",
+              qtyMonetaryValue: "25",
+              qtyUnitsFined: "Y3  220520240000000.0000",
+              qualifiers: "A",
+              text: "EXCLUDED FROM LOCATION"
+            }
+          ]
+        } as PncOffence
+      ]
     }
-    const nonMatchingResult = {
-      PNCDisposalType: 2063,
-      ResultQualifierVariable: []
+
+    const pncQuery: PncQueryResult = {
+      forceStationCode: "06",
+      checkName: "",
+      pncId: "",
+      courtCases: [courtCase]
     }
-    const unrecordableResult = {
-      PNCDisposalType: 1000,
-      ResultQualifierVariable: []
-    }
-    const results = [matchingResult, nonMatchingResult, unrecordableResult] as unknown as Result[]
-    const aho = generateAhoFromOffenceList([{ Result: results } as Offence])
 
-    const disposals = [
-      {
-        qtyDate: "",
-        qtyDuration: "",
-        type: 2063,
-        qtyUnitsFined: "",
-        qtyMonetaryValue: "",
-        qualifiers: "",
-        text: ""
-      }
-    ] as PncDisposal[]
+    ahoWithResults.PncQuery = pncQuery
+    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+      DateOfHearing: new Date("05/22/2024")
+    } as Hearing
 
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho, 0)
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
-  })
+    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
 
-  it("Given non-matching results, returns false", () => {
-    const nonMatchingResult = {
-      PNCDisposalType: 2064,
-      ResultQualifierVariable: []
-    } as unknown as Result
-
-    const results = [nonMatchingResult, nonMatchingResult]
-    const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
-
-    const disposals = [
-      {
-        qtyDate: "",
-        qtyDuration: "",
-        type: 2063,
-        qtyUnitsFined: "",
-        qtyMonetaryValue: "",
-        qualifiers: "",
-        text: ""
-      }
-    ] as PncDisposal[]
-
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
     expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
-  })
-
-  it("Given matching results, returns true", () => {
-    const matchingResult = {
-      PNCDisposalType: 2063,
-      ResultQualifierVariable: []
-    } as unknown as Result
-
-    const results = [matchingResult, matchingResult]
-    const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
-
-    const disposals = [
+    expect(result.exceptions).toStrictEqual([
       {
-        qtyDate: "",
-        qtyDuration: "",
-        type: 2063,
-        qtyUnitsFined: "",
-        qtyMonetaryValue: "",
-        qualifiers: "",
-        text: ""
+        code: "HO200200",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultVariableText"
+        ]
       }
-    ] as PncDisposal[]
-
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
+    ])
   })
 })

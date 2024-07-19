@@ -2,28 +2,9 @@ import type { AnnotatedHearingOutcome, Result } from "../../../../../types/Annot
 import type Exception from "../../../../../types/Exception"
 import type { ExceptionResult } from "../../../../../types/Exception"
 import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import isRecordableResult from "../../../isRecordableResult"
+import allRecordableResultsMatchAPncDisposal from "./allRecordableResultsMatchAPncDisposal"
 import getAdjFromAho from "./getAdjFromAho"
 import isMatchToPncAdj from "./isMatchToPncAdj"
-import isMatchToPncDis from "./isMatchToPncDis"
-
-export const allRecordableResultsMatchAPncDisposal = (
-  results: Result[],
-  disposals: PncDisposal[],
-  aho: AnnotatedHearingOutcome,
-  offenceIndex: number
-): ExceptionResult<boolean> => {
-  const exceptions: Exception[] = []
-  const allPncDisposalsMatch = results.every((result, resultIndex) => {
-    const { value: isPncDisposalMatch, exceptions } = isMatchToPncDis(disposals, aho, offenceIndex, resultIndex)
-    exceptions.push(...exceptions)
-
-    return !isRecordableResult(result) || isPncDisposalMatch
-  })
-
-  return { value: allPncDisposalsMatch, exceptions }
-}
 
 const isMatchToPncAdjAndDis = (
   results: NonEmptyArray<Result>,
@@ -63,13 +44,9 @@ const isMatchToPncAdjAndDis = (
 
   const exceptions: Exception[] = []
   const isThereMatchingPncAdjudications = matchingPncAdjudications.some((pncAdj) => {
-    const { value: allPncDisposalsMatch, exceptions } = allRecordableResultsMatchAPncDisposal(
-      results,
-      pncAdj.disposals ?? [],
-      aho,
-      offenceIndex
-    )
-    exceptions.push(...exceptions)
+    const { value: allPncDisposalsMatch, exceptions: allPncDisposalsMatchExceptions } =
+      allRecordableResultsMatchAPncDisposal(results, pncAdj.disposals ?? [], aho, offenceIndex)
+    exceptions.push(...allPncDisposalsMatchExceptions)
 
     return allPncDisposalsMatch
   })
