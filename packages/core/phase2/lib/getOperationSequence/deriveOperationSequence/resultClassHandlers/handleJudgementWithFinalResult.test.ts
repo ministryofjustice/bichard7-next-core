@@ -1,39 +1,21 @@
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
+import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
+import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
+import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
+import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
+
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
 jest.mock("../addSubsequentVariationOperations")
 jest.mock("../checkRccSegmentApplicability")
 jest.mock("../hasUnmatchedPncOffences")
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
-import ResultClass from "../../../../../types/ResultClass"
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
-import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
-import type { ResultClassHandlerParams } from "../deriveOperationSequence"
-import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
-import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 ;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 ;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
+
 const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
-
-const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
-  structuredClone({
-    aho: { Exceptions: [] },
-    adjudicationExists: false,
-    operations: [{ dummy: "Main Operations" }],
-    fixedPenalty: false,
-    ccrId: "234",
-    resubmitted: false,
-    allResultsAlreadyOnPnc: false,
-    offence: { AddedByTheCourt: false },
-    result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT },
-    offenceIndex: 1,
-    resultIndex: 1,
-    pncDisposalCode: 4000,
-    contains2007Result: true,
-    oAacDisarrOperations: [{ dummy: "OAAC DISARR Operations" }],
-    ...overrides
-  }) as unknown as ResultClassHandlerParams
 
 describe("handleJudgementWithFinalResult", () => {
   beforeEach(() => {
@@ -41,7 +23,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId has value", () => {
-    const params = generateParams({ fixedPenalty: true })
+    const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -54,7 +36,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
-    const params = generateParams({ fixedPenalty: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({ fixedPenalty: true, ccrId: undefined })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -67,7 +49,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add SUBVAR operation when adjudication exists and ccrId has value", () => {
-    const params = generateParams({ fixedPenalty: false, adjudicationExists: true })
+    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -77,7 +59,7 @@ describe("handleJudgementWithFinalResult", () => {
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
       false,
       [{ dummy: "Main Operations" }],
-      { Exceptions: [] },
+      params.aho,
       ExceptionCode.HO200104,
       false,
       1,
@@ -87,7 +69,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add SUBVAR operation when adjudication exists and ccrId does not have value", () => {
-    const params = generateParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -97,7 +79,7 @@ describe("handleJudgementWithFinalResult", () => {
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
       false,
       [{ dummy: "Main Operations" }],
-      { Exceptions: [] },
+      params.aho,
       ExceptionCode.HO200104,
       false,
       1,
@@ -107,7 +89,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should only generate exception HO200124 when HO200124 and HO200108 conditions are met", () => {
-    const params = generateParams({ pncDisposalCode: 2060 })
+    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060 })
     mockedCheckRccSegmentApplicability.mockReturnValue(
       RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
     )
@@ -134,7 +116,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case requires RCC and has reportable offences", () => {
-    const params = generateParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -149,7 +131,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case does not require RCC", () => {
-    const params = generateParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({ pncDisposalCode: 2060, allResultsAlreadyOnPnc: true })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -164,7 +146,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should not generate exception HO200124 when all results are already on PNC", () => {
-    const params = generateParams({ allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -174,7 +156,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should not generate exception HO200124 when all PNC offences match", () => {
-    const params = generateParams()
+    const params = generateResultClassHandlerParams()
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
@@ -184,7 +166,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should not generate exception HO200124 when case is added by the court", () => {
-    const params = generateParams({ offence: { AddedByTheCourt: true } as Offence })
+    const params = generateResultClassHandlerParams({ offence: { AddedByTheCourt: true } as Offence })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -194,7 +176,10 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
-    const params = generateParams({ offence: { AddedByTheCourt: false } as Offence, allResultsAlreadyOnPnc: true })
+    const params = generateResultClassHandlerParams({
+      offence: { AddedByTheCourt: false } as Offence,
+      allResultsAlreadyOnPnc: true
+    })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -209,7 +194,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId has value", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true } as Offence,
       contains2007Result: false,
       allResultsAlreadyOnPnc: true
@@ -228,7 +213,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId does not have value", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true } as Offence,
       contains2007Result: false,
       allResultsAlreadyOnPnc: true,
@@ -248,7 +233,7 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should not add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true } as Offence,
       contains2007Result: true,
       allResultsAlreadyOnPnc: true

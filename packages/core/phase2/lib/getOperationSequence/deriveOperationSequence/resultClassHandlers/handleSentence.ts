@@ -6,7 +6,6 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
 export const handleSentence: ResultClassHandler = ({
-  fixedPenalty,
   ccrId,
   operations,
   adjudicationExists,
@@ -17,6 +16,8 @@ export const handleSentence: ResultClassHandler = ({
   offenceIndex,
   resultIndex
 }) => {
+  const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return

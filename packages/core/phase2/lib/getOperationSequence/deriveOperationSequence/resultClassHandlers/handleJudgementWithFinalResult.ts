@@ -8,7 +8,6 @@ import type { ResultClassHandler } from "../deriveOperationSequence"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
-  fixedPenalty,
   ccrId,
   operations,
   adjudicationExists,
@@ -23,6 +22,8 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   contains2007Result,
   oAacDisarrOperations
 }) => {
+  const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return

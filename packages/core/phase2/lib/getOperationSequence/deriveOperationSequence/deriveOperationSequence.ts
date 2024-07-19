@@ -23,7 +23,6 @@ export type ResultClassHandlerParams = {
   offenceIndex: number
   result: Result
   resultIndex: number
-  fixedPenalty: boolean
   ccrId: string | undefined
   operations: Operation[]
   adjudicationExists: boolean | undefined
@@ -84,7 +83,6 @@ const deriveOperationSequence = (
             offence,
             resultIndex,
             result,
-            fixedPenalty: !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber,
             ccrId: offence?.CourtCaseReferenceNumber || undefined,
             operations,
             adjudicationExists: result.PNCAdjudicationExists,
