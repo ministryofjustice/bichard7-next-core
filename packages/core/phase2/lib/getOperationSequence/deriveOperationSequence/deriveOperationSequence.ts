@@ -23,13 +23,12 @@ export type ResultClassHandlerParams = {
   offenceIndex: number
   result: Result
   resultIndex: number
-  ccrId: string | undefined
   operations: Operation[]
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   oAacDisarrOperations: Operation[]
   remandCcrs: Set<string>
-  adjPreJudgementRemandCcrs: Set<string | undefined>
+  adjPreJudgementRemandCcrs: Set<string | undefined | null>
 }
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
 
@@ -78,7 +77,6 @@ const deriveOperationSequence = (
             offence,
             resultIndex,
             result,
-            ccrId: offence?.CourtCaseReferenceNumber || undefined,
             operations,
             resubmitted,
             allResultsAlreadyOnPnc,

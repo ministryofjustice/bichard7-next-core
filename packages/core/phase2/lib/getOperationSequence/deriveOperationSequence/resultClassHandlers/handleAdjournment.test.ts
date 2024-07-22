@@ -1,8 +1,9 @@
-jest.mock("../../../addRemandOperation")
-import type { Operation } from "../../../../../types/PncUpdateDataset"
+import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
 import addRemandOperation from "../../../addRemandOperation"
-import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import { handleAdjournment } from "./handleAdjournment"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+
+jest.mock("../../../addRemandOperation")
 ;(addRemandOperation as jest.Mock).mockImplementation(() => {})
 
 describe("handleAdjournment", () => {
@@ -11,26 +12,20 @@ describe("handleAdjournment", () => {
   })
 
   it("should call addRemandOperation and add the ccrId to remandCcrs", () => {
-    const params = {
-      result: {},
-      operations: new Set<Operation>(),
-      ccrId: "123",
-      remandCcrs: new Set<string>()
-    } as unknown as ResultClassHandlerParams
+    const params = generateResultClassHandlerParams()
 
     handleAdjournment(params)
 
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toEqual(["123"])
+    expect([...params.remandCcrs]).toEqual(["234"])
   })
 
   it("should call addRemandOperation and should not add the ccrId to remandCcrs", () => {
-    const params = {
-      result: {},
-      operations: new Set<Operation>(),
-      ccrId: undefined,
-      remandCcrs: new Set<string>()
-    } as unknown as ResultClassHandlerParams
+    const params = generateResultClassHandlerParams({
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
+    })
 
     handleAdjournment(params)
 

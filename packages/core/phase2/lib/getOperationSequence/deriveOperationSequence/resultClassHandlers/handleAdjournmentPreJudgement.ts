@@ -8,7 +8,7 @@ export const handleAdjournmentPreJudgement: ResultClassHandler = ({
   resultIndex,
   result,
   operations,
-  ccrId,
+  offence,
   remandCcrs,
   adjPreJudgementRemandCcrs
 }) => {
@@ -17,8 +17,9 @@ export const handleAdjournmentPreJudgement: ResultClassHandler = ({
   }
 
   addRemandOperation(result, operations)
-  adjPreJudgementRemandCcrs.add(ccrId)
-  if (ccrId) {
-    remandCcrs.add(ccrId)
+  adjPreJudgementRemandCcrs.add(offence?.CourtCaseReferenceNumber)
+
+  if (offence?.CourtCaseReferenceNumber) {
+    remandCcrs.add(offence.CourtCaseReferenceNumber)
   }
 }

@@ -37,7 +37,12 @@ describe("handleJudgementWithFinalResult", () => {
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: true,
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
+    })
 
     const exception = handleJudgementWithFinalResult(params)
 
@@ -76,7 +81,9 @@ describe("handleJudgementWithFinalResult", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result,
-      ccrId: undefined
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
     })
 
     const exception = handleJudgementWithFinalResult(params)
@@ -229,9 +236,12 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      allResultsAlreadyOnPnc: true,
-      ccrId: undefined
+      offence: {
+        AddedByTheCourt: true,
+        Result: [{ PNCDisposalType: 4000 }],
+        CourtCaseReferenceNumber: undefined
+      } as Offence,
+      allResultsAlreadyOnPnc: true
     })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)

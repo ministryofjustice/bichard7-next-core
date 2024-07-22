@@ -90,7 +90,6 @@ describe("deriveOperationSequence", () => {
           Exceptions: []
         },
         allResultsAlreadyOnPnc: false,
-        ccrId: undefined,
         oAacDisarrOperations: [],
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,

@@ -1,7 +1,7 @@
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
 import { handleAppealOutcome } from "./handleAppealOutcome"
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
 ;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
@@ -12,13 +12,13 @@ describe("handleAppealOutcome", () => {
   })
 
   it("should add APPHRD to operations and set ccrId in operation data when adjudication exists and ccrId has value", () => {
-    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result, ccrId: "456" })
+    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result })
 
     const exception = handleAppealOutcome(params)
 
     expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", { courtCaseReference: "456" }, [
+    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
   })
@@ -26,7 +26,9 @@ describe("handleAppealOutcome", () => {
   it("should add APPHRD to operations and operation data to undefined when adjudication exists but ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCAdjudicationExists: true } as Result,
-      ccrId: undefined
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
     })
 
     const exception = handleAppealOutcome(params)

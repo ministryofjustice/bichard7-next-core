@@ -1,7 +1,7 @@
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addRemandOperation from "../../../addRemandOperation"
 import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 
 jest.mock("../../../addRemandOperation")
 ;(addRemandOperation as jest.Mock).mockImplementation(() => {})
@@ -37,22 +37,23 @@ describe("handleAdjournmentPreJudgement", () => {
 
   it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs and remandCcrs when adjudication does not exist and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
-      result: { PNCAdjudicationExists: false } as Result,
-      ccrId: "123"
+      result: { PNCAdjudicationExists: false } as Result
     })
 
     const exception = handleAdjournmentPreJudgement(params)
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["123"])
-    expect([...params.adjPreJudgementRemandCcrs]).toStrictEqual(["123"])
+    expect([...params.remandCcrs]).toStrictEqual(["234"])
+    expect([...params.adjPreJudgementRemandCcrs]).toStrictEqual(["234"])
   })
 
   it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs when adjudication does not exist and ccrId does not value", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCAdjudicationExists: false } as Result,
-      ccrId: undefined
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
     })
 
     const exception = handleAdjournmentPreJudgement(params)
