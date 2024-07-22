@@ -26,7 +26,7 @@ describe("handleAdjournmentWithJudgement", () => {
   })
 
   it("should call addRemandOperation and add ccrId to remandCcrs when ccrId has value", () => {
-    const params = generateResultClassHandlerParams({ ccrId: "234" })
+    const params = generateResultClassHandlerParams()
 
     const exception = handleAdjournmentWithJudgement(params)
 
@@ -36,7 +36,11 @@ describe("handleAdjournmentWithJudgement", () => {
   })
 
   it("should call addRemandOperation and should not add ccrId to remandCcrs when ccrId does not have value", () => {
-    const params = generateResultClassHandlerParams({ ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
+    })
 
     const exception = handleAdjournmentWithJudgement(params)
 

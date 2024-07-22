@@ -6,7 +6,6 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
 export const handleSentence: ResultClassHandler = ({
-  ccrId,
   operations,
   aho,
   offence,
@@ -17,9 +16,11 @@ export const handleSentence: ResultClassHandler = ({
   result
 }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+  const ccrId = offence?.CourtCaseReferenceNumber || undefined
+  const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    addNewOperationToOperationSetIfNotPresent("PENHRG", operationData, operations)
     return
   }
 
@@ -32,7 +33,7 @@ export const handleSentence: ResultClassHandler = ({
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
-    addNewOperationToOperationSetIfNotPresent("SENDEF", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    addNewOperationToOperationSetIfNotPresent("SENDEF", operationData, operations)
     return
   }
 
@@ -44,6 +45,6 @@ export const handleSentence: ResultClassHandler = ({
     allResultsAlreadyOnPnc,
     offenceIndex,
     resultIndex,
-    ccrId ? { courtCaseReference: ccrId } : undefined
+    operationData
   )
 }

@@ -8,7 +8,6 @@ import type { ResultClassHandler } from "../deriveOperationSequence"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
-  ccrId,
   operations,
   resubmitted,
   aho,
@@ -20,9 +19,11 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   oAacDisarrOperations
 }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+  const ccrId = offence?.CourtCaseReferenceNumber || undefined
+  const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    addNewOperationToOperationSetIfNotPresent("PENHRG", operationData, operations)
     return
   } else if (result.PNCAdjudicationExists) {
     return addSubsequentVariationOperations(
@@ -33,7 +34,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       allResultsAlreadyOnPnc,
       offenceIndex,
       resultIndex,
-      ccrId ? { courtCaseReference: ccrId } : undefined
+      operationData
     )
   }
 
@@ -47,13 +48,9 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
 
   if (!offence.AddedByTheCourt) {
-    addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
+    addNewOperationToOperationSetIfNotPresent("DISARR", operationData, operations)
   } else if (offence.AddedByTheCourt && !contains2007Result) {
-    addNewOperationToOperationSetIfNotPresent(
-      "DISARR",
-      ccrId ? { courtCaseReference: ccrId } : undefined,
-      oAacDisarrOperations
-    )
+    addNewOperationToOperationSetIfNotPresent("DISARR", operationData, oAacDisarrOperations)
   }
 
   if (

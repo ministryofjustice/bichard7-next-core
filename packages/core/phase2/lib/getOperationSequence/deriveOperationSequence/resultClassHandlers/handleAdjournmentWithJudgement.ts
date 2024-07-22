@@ -3,12 +3,13 @@ import type { ResultClassHandler } from "../deriveOperationSequence"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
 export const handleAdjournmentWithJudgement: ResultClassHandler = (params) => {
-  const { result, ccrId, operations, remandCcrs } = params
+  const { result, offence, operations, remandCcrs } = params
   const exception = handleJudgementWithFinalResult(params)
+
   addRemandOperation(result, operations)
 
-  if (ccrId) {
-    remandCcrs.add(ccrId)
+  if (offence?.CourtCaseReferenceNumber) {
+    remandCcrs.add(offence.CourtCaseReferenceNumber)
   }
 
   return exception

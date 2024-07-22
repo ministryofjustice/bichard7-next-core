@@ -32,7 +32,12 @@ describe("handleSentence", () => {
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
-    const params = generateResultClassHandlerParams({ fixedPenalty: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: true,
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
+    })
 
     const exception = handleSentence(params)
 
@@ -65,7 +70,9 @@ describe("handleSentence", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { PNCAdjudicationExists: true } as Result,
-      ccrId: undefined
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
     })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
@@ -110,8 +117,9 @@ describe("handleSentence", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { PNCAdjudicationExists: true } as Result,
-      ccrId: undefined,
-      offence: {} as Offence,
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence,
       offenceIndex: 1,
       resultIndex: 1
     })

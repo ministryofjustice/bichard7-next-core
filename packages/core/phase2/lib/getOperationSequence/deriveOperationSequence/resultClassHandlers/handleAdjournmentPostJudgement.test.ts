@@ -13,21 +13,22 @@ describe("handleAdjournmentPostJudgement", () => {
 
   it("should call addRemandOperation and add the ccrId to remandCcrs when adjudication exists and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
-      result: { PNCAdjudicationExists: true } as Result,
-      ccrId: "123"
+      result: { PNCAdjudicationExists: true } as Result
     })
 
     const exception = handleAdjournmentPostJudgement(params)
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toEqual(["123"])
+    expect([...params.remandCcrs]).toEqual(["234"])
   })
 
   it("should call addRemandOperation and should not add the ccrId to remandCcrs when adjudication exists and ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCAdjudicationExists: true } as Result,
-      ccrId: undefined
+      offence: {
+        CourtCaseReferenceNumber: undefined
+      } as Offence
     })
 
     const exception = handleAdjournmentPostJudgement(params)
