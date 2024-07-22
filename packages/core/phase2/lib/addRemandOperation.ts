@@ -5,23 +5,24 @@ import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperat
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
-const generateNewremData = (result: Result): OperationData<"NEWREM"> | undefined => {
+const generateNewremData = (result: Result, courtCaseReference: string | undefined): OperationData<"NEWREM"> | undefined => {
   if (DEFENDANT_WARRANT_ISSUED_RESULT_CODES.includes(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
     return undefined
   }
 
   return {
     nextHearingLocation: { ...result.NextResultSourceOrganisation },
-    nextHearingDate: result.NextHearingDate ? new Date(result.NextHearingDate) : undefined
+    nextHearingDate: result.NextHearingDate ? new Date(result.NextHearingDate) : undefined,
+    courtCaseReference
   }
 }
 
-const addRemandOperation = (result: Result, operations: Operation[]) => {
+const addRemandOperation = (result: Result, courtCaseReference: string | undefined | null, operations: Operation[]) => {
   if (isAdjournedNoNextHearing(result.CJSresultCode)) {
     return
   }
 
-  addNewOperationToOperationSetIfNotPresent("NEWREM", generateNewremData(result), operations)
+  addNewOperationToOperationSetIfNotPresent("NEWREM", generateNewremData(result, courtCaseReference ?? undefined), operations)
 }
 
 export default addRemandOperation

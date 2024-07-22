@@ -57,7 +57,6 @@ describe("deriveOperationSequence", () => {
   ])(
     "should call $expectedFn function when result class is $resultClass and offence has value",
     ({ resultClass, expectedFn }) => {
-      const remandCcrs = new Set<string>()
       const allResultAlreadyOnPnc = false
       const resubmitted = false
       const aho = generateAhoFromOffenceList([
@@ -69,7 +68,7 @@ describe("deriveOperationSequence", () => {
         operations.push({ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" })
       })
 
-      const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+      const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
       expect(operationsResult).toStrictEqual({
         operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }]
@@ -94,7 +93,6 @@ describe("deriveOperationSequence", () => {
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
         operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }],
-        remandCcrs: new Set(),
         resubmitted: false,
         result: { PNCDisposalType: 1001, ResultClass: resultClass },
         resultIndex: 0
@@ -103,7 +101,6 @@ describe("deriveOperationSequence", () => {
   )
 
   it("should ignore Unresulted result class", () => {
-    const remandCcrs = new Set<string>()
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -123,14 +120,12 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect([...remandCcrs]).toHaveLength(0)
     expect(operationsResult).toStrictEqual({ operations: [] })
   })
 
   it("should generate exception HO200118 when there are no operations, no recordable results, and there are no exceptions", () => {
-    const remandCcrs = new Set<string>()
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -150,7 +145,7 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
@@ -164,7 +159,6 @@ describe("deriveOperationSequence", () => {
   })
 
   it("should call addOaacDisarrOperationsIfNecessary when there are operations and oAAC DISARR operations and Adjournment Pre Judgement Remand CCRs", () => {
-    const remandCcrs = new Set<string>()
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -190,7 +184,7 @@ describe("deriveOperationSequence", () => {
       oAacDisarrOperations.push({ code: "DISARR", status: "NotAttempted" })
     })
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledWith(
       [{ code: "COMSEN", status: "NotAttempted" }],
@@ -201,7 +195,6 @@ describe("deriveOperationSequence", () => {
   })
 
   it("should generate exception HO200121 when there are no recordable offences", () => {
-    const remandCcrs = new Set<string>()
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -222,9 +215,8 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect([...remandCcrs]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
       exceptions: [
@@ -237,7 +229,6 @@ describe("deriveOperationSequence", () => {
   })
 
   it("should generate exception HO200121 when there are no offences", () => {
-    const remandCcrs = new Set<string>()
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -253,9 +244,8 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
+    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect([...remandCcrs]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
       exceptions: [

@@ -13,8 +13,7 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
   }
 
   const { value: allResultsAlreadyOnPnc, exceptions } = areAllResultsAlreadyPresentOnPnc(aho)
-  const remandCcrs = new Set<string>()
-  const operationsResult = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPnc, remandCcrs)
+  const operationsResult = deriveOperationSequence(aho, resubmitted, allResultsAlreadyOnPnc)
   if ("exceptions" in operationsResult) {
     return { value: [], exceptions: operationsResult.exceptions.concat(exceptions) }
   }

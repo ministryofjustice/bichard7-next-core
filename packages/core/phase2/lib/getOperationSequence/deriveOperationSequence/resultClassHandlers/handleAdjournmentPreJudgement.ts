@@ -9,17 +9,12 @@ export const handleAdjournmentPreJudgement: ResultClassHandler = ({
   result,
   operations,
   offence,
-  remandCcrs,
   adjPreJudgementRemandCcrs
 }) => {
   if (result.PNCAdjudicationExists) {
     return { code: ExceptionCode.HO200100, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
   }
 
-  addRemandOperation(result, operations)
+  addRemandOperation(result, offence?.CourtCaseReferenceNumber, operations)
   adjPreJudgementRemandCcrs.add(offence?.CourtCaseReferenceNumber)
-
-  if (offence?.CourtCaseReferenceNumber) {
-    remandCcrs.add(offence.CourtCaseReferenceNumber)
-  }
 }

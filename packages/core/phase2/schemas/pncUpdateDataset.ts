@@ -12,7 +12,8 @@ export const newremOperationSchema = z.object({
   data: z
     .object({
       nextHearingDate: z.date().optional(),
-      nextHearingLocation: organisationUnitSchema
+      nextHearingLocation: organisationUnitSchema,
+      courtCaseReference: courtCaseReferenceNumberSchema.optional()
     })
     .optional(),
   status: operationStatusSchema

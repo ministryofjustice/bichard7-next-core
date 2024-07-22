@@ -9,6 +9,7 @@ import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
 import validateOperationSequence from "../validateOperationSequence"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
+import deduplicateOperations from "./deduplicateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
@@ -27,10 +28,20 @@ export type ResultClassHandlerParams = {
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   oAacDisarrOperations: Operation[]
-  remandCcrs: Set<string>
   adjPreJudgementRemandCcrs: Set<string | undefined | null>
 }
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
+
+const extractNewremCcrs = (operations: Operation[]): Set<string> => {
+  return operations
+    .filter((op) => op.code === "NEWREM")
+    .reduce((acc, op) => {
+      if (op.data?.courtCaseReference) {
+        acc.add(op.data.courtCaseReference)
+      }
+      return acc
+    }, new Set<string>())
+}
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -46,8 +57,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> =
 const deriveOperationSequence = (
   aho: AnnotatedHearingOutcome,
   resubmitted: boolean,
-  allResultsAlreadyOnPnc: boolean,
-  remandCcrs: Set<string>
+  allResultsAlreadyOnPnc: boolean
 ): OperationsResult => {
   const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
@@ -81,7 +91,6 @@ const deriveOperationSequence = (
             resubmitted,
             allResultsAlreadyOnPnc,
             oAacDisarrOperations,
-            remandCcrs,
             adjPreJudgementRemandCcrs
           })
 
@@ -99,12 +108,14 @@ const deriveOperationSequence = (
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
   }
 
-  const exception = validateOperationSequence(operations, remandCcrs)
+  const remandCcrs = extractNewremCcrs(operations)
+  const deduplicatedOperations = deduplicateOperations(operations)
+  const exception = validateOperationSequence(deduplicatedOperations, remandCcrs)
   if (exception) {
     exceptions.push(exception)
   }
 
-  return exceptions.length > 0 ? { exceptions } : { operations }
+  return exceptions.length > 0 ? { exceptions } : { operations: deduplicatedOperations }
 }
 
 export default deriveOperationSequence
