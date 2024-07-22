@@ -94,6 +94,7 @@ describe("addRemandOperation", () => {
         status: "NotAttempted",
         data: {
           courtCaseReference: undefined,
+          isAdjournmentPreJudgement: false,
           nextHearingLocation: {
             TopLevelCode: "1",
             SecondLevelCode: "02",

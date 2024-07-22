@@ -1,7 +1,7 @@
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import addRemandOperation from "../../../addRemandOperation"
-import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome";
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
+import addRemandOperation from "../../../addRemandOperation";
+import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement";
 
 jest.mock("../../../addRemandOperation")
 ;(addRemandOperation as jest.Mock).mockImplementation(() => {})
@@ -20,7 +20,6 @@ describe("handleAdjournmentPostJudgement", () => {
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toEqual(["234"])
   })
 
   it("should call addRemandOperation and should not add the ccrId to remandCcrs when adjudication exists and ccrId does not have value", () => {
@@ -35,7 +34,6 @@ describe("handleAdjournmentPostJudgement", () => {
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toHaveLength(0)
   })
 
   it("should generate exception HO200103 when adjudication does not exists and result is not added by court", () => {
@@ -62,7 +60,6 @@ describe("handleAdjournmentPostJudgement", () => {
       ]
     })
     expect(addRemandOperation).toHaveBeenCalledTimes(0)
-    expect([...params.remandCcrs]).toHaveLength(0)
   })
 
   it("should not generate exception HO200103 when adjudication does not exists and result is added by court", () => {
@@ -76,6 +73,5 @@ describe("handleAdjournmentPostJudgement", () => {
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(0)
-    expect([...params.remandCcrs]).toHaveLength(0)
   })
 })

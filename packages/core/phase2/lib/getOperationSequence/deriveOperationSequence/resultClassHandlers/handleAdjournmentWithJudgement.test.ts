@@ -1,13 +1,13 @@
-import ResultClass from "../../../../../types/ResultClass"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../../types/ResultClass"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
 import addRemandOperation from "../../../addRemandOperation"
 import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 
 jest.mock("../../../addRemandOperation")
 jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
@@ -32,7 +32,6 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should call addRemandOperation and should not add ccrId to remandCcrs when ccrId does not have value", () => {
@@ -46,7 +45,6 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exception).toBeUndefined()
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual([])
   })
 
   it("should add PENHRG operation when fixedPenalty is true", () => {
@@ -61,7 +59,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should add SUBVAR operation when adjudication exists", () => {
@@ -86,7 +83,6 @@ describe("handleAdjournmentWithJudgement", () => {
       { courtCaseReference: "234" }
     )
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should only generate exception HO200124 when HO200124 and HO200108 conditions are met", () => {
@@ -115,7 +111,6 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case requires RCC and has reportable offences", () => {
@@ -135,7 +130,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case does not require RCC", () => {
@@ -155,7 +149,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should not generate exception HO200124 when all results are already on PNC", () => {
@@ -207,7 +200,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court and offence does not have a 2007 result code", () => {
@@ -227,7 +219,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 
   it("should not add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
@@ -244,6 +235,5 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toStrictEqual(["234"])
   })
 })

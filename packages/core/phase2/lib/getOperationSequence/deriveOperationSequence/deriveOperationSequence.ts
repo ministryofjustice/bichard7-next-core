@@ -28,7 +28,6 @@ export type ResultClassHandlerParams = {
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   oAacDisarrOperations: Operation[]
-  adjPreJudgementRemandCcrs: Set<string | undefined | null>
 }
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
 
@@ -41,6 +40,17 @@ const extractNewremCcrs = (operations: Operation[]): Set<string> => {
       }
       return acc
     }, new Set<string>())
+}
+
+const extractAdjPreJudgementNewremCcrs = (operations: Operation[]): Set<string | undefined> => {
+  return operations
+    .filter((op) => op.code === "NEWREM")
+    .reduce((acc, op) => {
+      if (op.data?.isAdjournmentPreJudgement) {
+        acc.add(op.data.courtCaseReference)
+      }
+      return acc
+    }, new Set<string | undefined>())
 }
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
@@ -68,7 +78,6 @@ const deriveOperationSequence = (
 
   const operations: Operation[] = []
   const oAacDisarrOperations: Operation[] = []
-  const adjPreJudgementRemandCcrs = new Set<string | undefined>()
   let recordableResultFound = false
 
   offences.forEach((offence, offenceIndex) => {
@@ -90,8 +99,7 @@ const deriveOperationSequence = (
             operations,
             resubmitted,
             allResultsAlreadyOnPnc,
-            oAacDisarrOperations,
-            adjPreJudgementRemandCcrs
+            oAacDisarrOperations
           })
 
           if (exception) {
@@ -101,6 +109,8 @@ const deriveOperationSequence = (
       })
     }
   })
+
+  const adjPreJudgementRemandCcrs = extractAdjPreJudgementNewremCcrs(operations)
 
   if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })

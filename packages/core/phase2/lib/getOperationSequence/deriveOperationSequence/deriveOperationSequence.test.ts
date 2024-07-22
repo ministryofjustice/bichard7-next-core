@@ -65,17 +65,26 @@ describe("deriveOperationSequence", () => {
         }
       ] as Offence[])
       expectedFn.mockImplementation(({ operations }) => {
-        operations.push({ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" })
+        operations.push({
+          code: "NEWREM",
+          data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+          status: "NotAttempted"
+        })
       })
 
       const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
       expect(operationsResult).toStrictEqual({
-        operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }]
+        operations: [
+          {
+            code: "NEWREM",
+            data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+            status: "NotAttempted"
+          }
+        ]
       })
       expect(expectedFn).toHaveBeenCalledTimes(1)
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
-        adjPreJudgementRemandCcrs: new Set(),
         aho: {
           AnnotatedHearingOutcome: {
             HearingOutcome: {
@@ -92,7 +101,9 @@ describe("deriveOperationSequence", () => {
         oAacDisarrOperations: [],
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
-        operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }],
+        operations: [
+          { code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }
+        ],
         resubmitted: false,
         result: { PNCDisposalType: 1001, ResultClass: resultClass },
         resultIndex: 0
@@ -178,20 +189,27 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleAdjournment.mockImplementation(({ operations, oAacDisarrOperations, adjPreJudgementRemandCcrs }) => {
-      adjPreJudgementRemandCcrs.add("1")
-      operations.push({ code: "COMSEN", status: "NotAttempted" })
+    mockedHandleAdjournment.mockImplementation(({ operations, oAacDisarrOperations }) => {
+      operations.push({
+        code: "NEWREM",
+        data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+        status: "NotAttempted"
+      })
       oAacDisarrOperations.push({ code: "DISARR", status: "NotAttempted" })
     })
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledWith(
-      [{ code: "COMSEN", status: "NotAttempted" }],
+      [{ code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }],
       [{ code: "DISARR", status: "NotAttempted" }],
       new Set(["1"])
     )
-    expect(operationsResult).toStrictEqual({ operations: [{ code: "COMSEN", status: "NotAttempted" }] })
+    expect(operationsResult).toStrictEqual({
+      operations: [
+        { code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }
+      ]
+    })
   })
 
   it("should generate exception HO200121 when there are no recordable offences", () => {
