@@ -1,7 +1,7 @@
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome";
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
-import addRemandOperation from "../../../addRemandOperation";
-import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement";
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import addRemandOperation from "../../../addRemandOperation"
+import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
 
 jest.mock("../../../addRemandOperation")
 ;(addRemandOperation as jest.Mock).mockImplementation(() => {})

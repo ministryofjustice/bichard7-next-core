@@ -33,7 +33,7 @@ describe("addRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate?.toISOString()).toBe(result.NextHearingDate)
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
-    expect(remandOperation.data?.courtCaseReference).toEqual("123")
+    expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
   it("adds a remand operation without a NextHearingDate", () => {
@@ -57,7 +57,7 @@ describe("addRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
-    expect(remandOperation.data?.courtCaseReference).toEqual("123")
+    expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
   it("does not add a remand operation if result is adjournment", () => {

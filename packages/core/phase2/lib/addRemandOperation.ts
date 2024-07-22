@@ -6,7 +6,10 @@ import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperat
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
-const generateNewremData = (result: Result, courtCaseReference: string | undefined): OperationData<"NEWREM"> | undefined => {
+const generateNewremData = (
+  result: Result,
+  courtCaseReference: string | undefined
+): OperationData<"NEWREM"> | undefined => {
   if (DEFENDANT_WARRANT_ISSUED_RESULT_CODES.includes(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
     return undefined
   }
@@ -24,7 +27,11 @@ const addRemandOperation = (result: Result, courtCaseReference: string | undefin
     return
   }
 
-  addNewOperationToOperationSetIfNotPresent("NEWREM", generateNewremData(result, courtCaseReference ?? undefined), operations)
+  addNewOperationToOperationSetIfNotPresent(
+    "NEWREM",
+    generateNewremData(result, courtCaseReference ?? undefined),
+    operations
+  )
 }
 
 export default addRemandOperation

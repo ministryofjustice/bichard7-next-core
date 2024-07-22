@@ -1,4 +1,4 @@
-import { NewremOperation, Operation, OperationStatus } from "../../../../types/PncUpdateDataset"
+import type { NewremOperation, Operation, OperationStatus } from "../../../../types/PncUpdateDataset"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {

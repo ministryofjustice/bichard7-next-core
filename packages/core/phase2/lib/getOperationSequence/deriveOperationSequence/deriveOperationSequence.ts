@@ -41,6 +41,7 @@ const extractNewremCcrs = <T extends boolean, K extends T extends false ? string
       if ((!isAdjPreJudgement && op.data?.courtCaseReference) || op.data?.isAdjournmentPreJudgement) {
         acc.add(op.data?.courtCaseReference as K)
       }
+
       return acc
     }, new Set<K>())
 
