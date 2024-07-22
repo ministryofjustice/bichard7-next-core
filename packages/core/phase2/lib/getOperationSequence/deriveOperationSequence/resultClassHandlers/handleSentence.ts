@@ -6,23 +6,24 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
 export const handleSentence: ResultClassHandler = ({
-  fixedPenalty,
   ccrId,
   operations,
-  adjudicationExists,
   aho,
   offence,
   resubmitted,
   allResultsAlreadyOnPnc,
   offenceIndex,
-  resultIndex
+  resultIndex,
+  result
 }) => {
+  const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return
   }
 
-  if (!adjudicationExists) {
+  if (!result.PNCAdjudicationExists) {
     if (!offence.AddedByTheCourt) {
       return { code: ExceptionCode.HO200106, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
     }

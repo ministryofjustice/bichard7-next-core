@@ -1,24 +1,10 @@
-jest.mock("../../../addRemandOperation")
-import type { Operation } from "../../../../../types/PncUpdateDataset"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addRemandOperation from "../../../addRemandOperation"
-import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
-;(addRemandOperation as jest.Mock).mockImplementation(() => {})
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 
-const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
-  ({
-    aho: { Exceptions: [] },
-    result: {},
-    offence: {},
-    offenceIndex: 1,
-    resultIndex: 1,
-    adjudicationExists: false,
-    operations: new Set<Operation>(),
-    ccrId: "123",
-    remandCcrs: new Set<string>(),
-    adjPreJudgementRemandCcrs: new Set<string | undefined>(),
-    ...overrides
-  }) as unknown as ResultClassHandlerParams
+jest.mock("../../../addRemandOperation")
+;(addRemandOperation as jest.Mock).mockImplementation(() => {})
 
 describe("handleAdjournmentPreJudgement", () => {
   beforeEach(() => {
@@ -26,7 +12,7 @@ describe("handleAdjournmentPreJudgement", () => {
   })
 
   it("should generate exception HO200100 when adjudication exists", () => {
-    const params = generateParams({ adjudicationExists: true })
+    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result })
 
     const exception = handleAdjournmentPreJudgement(params)
 
@@ -50,7 +36,10 @@ describe("handleAdjournmentPreJudgement", () => {
   })
 
   it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs and remandCcrs when adjudication does not exist and ccrId has value", () => {
-    const params = generateParams({ adjudicationExists: false, ccrId: "123" })
+    const params = generateResultClassHandlerParams({
+      result: { PNCAdjudicationExists: false } as Result,
+      ccrId: "123"
+    })
 
     const exception = handleAdjournmentPreJudgement(params)
 
@@ -61,7 +50,10 @@ describe("handleAdjournmentPreJudgement", () => {
   })
 
   it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs when adjudication does not exist and ccrId does not value", () => {
-    const params = generateParams({ adjudicationExists: false, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      result: { PNCAdjudicationExists: false } as Result,
+      ccrId: undefined
+    })
 
     const exception = handleAdjournmentPreJudgement(params)
 

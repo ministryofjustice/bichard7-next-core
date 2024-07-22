@@ -4,7 +4,6 @@ import addRemandOperation from "../../../addRemandOperation"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
 export const handleAdjournmentPreJudgement: ResultClassHandler = ({
-  adjudicationExists,
   offenceIndex,
   resultIndex,
   result,
@@ -13,7 +12,7 @@ export const handleAdjournmentPreJudgement: ResultClassHandler = ({
   remandCcrs,
   adjPreJudgementRemandCcrs
 }) => {
-  if (adjudicationExists) {
+  if (result.PNCAdjudicationExists) {
     return { code: ExceptionCode.HO200100, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
   }
 

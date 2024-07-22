@@ -1,33 +1,17 @@
-jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
-jest.mock("../addSubsequentVariationOperations")
-jest.mock("../areAnyPncResults2007")
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
 import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
 import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
-import type { ResultClassHandlerParams } from "../deriveOperationSequence"
 import { handleSentence } from "./handleSentence"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+
+jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
+jest.mock("../addSubsequentVariationOperations")
+jest.mock("../areAnyPncResults2007")
 ;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
 ;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
 const mockedAreAnyPncResults2007 = areAnyPncResults2007 as jest.Mock
-
-const generateParams = (overrides: Partial<ResultClassHandlerParams> = {}) =>
-  structuredClone({
-    aho: {
-      Exceptions: []
-    },
-    adjudicationExists: false,
-    operations: [{ dummy: "Main Operations" }],
-    fixedPenalty: false,
-    ccrId: "654",
-    resubmitted: false,
-    allResultsAlreadyOnPnc: false,
-    offence: { AddedByTheCourt: false },
-    offenceIndex: 1,
-    resultIndex: 1,
-    ...overrides
-  }) as unknown as ResultClassHandlerParams
 
 describe("handleSentence", () => {
   beforeEach(() => {
@@ -35,20 +19,20 @@ describe("handleSentence", () => {
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId has value", () => {
-    const params = generateParams({ fixedPenalty: true })
+    const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
     const exception = handleSentence(params)
 
     expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "654" }, [
+    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
 
   it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
-    const params = generateParams({ fixedPenalty: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({ fixedPenalty: true, ccrId: undefined })
 
     const exception = handleSentence(params)
 
@@ -61,21 +45,28 @@ describe("handleSentence", () => {
   })
 
   it("should add SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {
-    const params = generateParams({ fixedPenalty: false, adjudicationExists: true })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { PNCAdjudicationExists: true } as Result
+    })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
     const exception = handleSentence(params)
 
     expect(exception).toBeUndefined()
     expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("SENDEF", { courtCaseReference: "654" }, [
+    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("SENDEF", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
     expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
 
   it("should add SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId does not have value", () => {
-    const params = generateParams({ fixedPenalty: false, adjudicationExists: true, ccrId: undefined })
+    const params = generateResultClassHandlerParams({
+      fixedPenalty: false,
+      result: { PNCAdjudicationExists: true } as Result,
+      ccrId: undefined
+    })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
     const exception = handleSentence(params)
@@ -89,9 +80,9 @@ describe("handleSentence", () => {
   })
 
   it("should add SUBVAR operation when adjudication exists, and there is a 2007 result code", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: true,
+      result: { PNCAdjudicationExists: true } as Result,
       offence: {} as Offence,
       offenceIndex: 1,
       resultIndex: 1
@@ -106,21 +97,19 @@ describe("handleSentence", () => {
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
       false,
       [{ dummy: "Main Operations" }],
-      {
-        Exceptions: []
-      },
+      params.aho,
       ExceptionCode.HO200104,
       false,
       1,
       1,
-      { courtCaseReference: "654" }
+      { courtCaseReference: "234" }
     )
   })
 
   it("should add SUBVAR operation without operation data when adjudication exists, there is a 2007 result code, and ccrId is not set", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: true,
+      result: { PNCAdjudicationExists: true } as Result,
       ccrId: undefined,
       offence: {} as Offence,
       offenceIndex: 1,
@@ -136,9 +125,7 @@ describe("handleSentence", () => {
     expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
       false,
       [{ dummy: "Main Operations" }],
-      {
-        Exceptions: []
-      },
+      params.aho,
       ExceptionCode.HO200104,
       false,
       1,
@@ -148,9 +135,9 @@ describe("handleSentence", () => {
   })
 
   it("should generate HO200106 when adjudication does not exist", () => {
-    const params = generateParams({
+    const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      adjudicationExists: false,
+      result: { PNCAdjudicationExists: false } as Result,
       offence: {} as Offence,
       offenceIndex: 1,
       resultIndex: 1

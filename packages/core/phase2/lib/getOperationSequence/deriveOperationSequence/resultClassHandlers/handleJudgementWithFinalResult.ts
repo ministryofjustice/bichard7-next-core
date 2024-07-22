@@ -8,25 +8,23 @@ import type { ResultClassHandler } from "../deriveOperationSequence"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
-  fixedPenalty,
   ccrId,
   operations,
-  adjudicationExists,
   resubmitted,
   aho,
   allResultsAlreadyOnPnc,
   offenceIndex,
   resultIndex,
-  pncDisposalCode,
   offence,
   result,
-  contains2007Result,
   oAacDisarrOperations
 }) => {
+  const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+
   if (fixedPenalty) {
     addNewOperationToOperationSetIfNotPresent("PENHRG", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
     return
-  } else if (adjudicationExists) {
+  } else if (result.PNCAdjudicationExists) {
     return addSubsequentVariationOperations(
       resubmitted,
       operations,
@@ -46,6 +44,8 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     }
   }
 
+  const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
+
   if (!offence.AddedByTheCourt) {
     addNewOperationToOperationSetIfNotPresent("DISARR", ccrId ? { courtCaseReference: ccrId } : undefined, operations)
   } else if (offence.AddedByTheCourt && !contains2007Result) {
@@ -57,7 +57,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (
-    pncDisposalCode === 2060 &&
+    result.PNCDisposalType === 2060 &&
     checkRccSegmentApplicability(aho, ccrId) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
   ) {
     return {

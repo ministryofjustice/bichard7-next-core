@@ -1,12 +1,3 @@
-jest.mock("./resultClassHandlers/handleAdjournment")
-jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
-jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
-jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
-jest.mock("./resultClassHandlers/handleAppealOutcome")
-jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
-jest.mock("./resultClassHandlers/handleSentence")
-jest.mock("./addOaacDisarrOperationsIfNecessary")
-
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
@@ -20,6 +11,15 @@ import { handleAppealOutcome } from "./resultClassHandlers/handleAppealOutcome"
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 
+jest.mock("./resultClassHandlers/handleAdjournment")
+jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
+jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
+jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
+jest.mock("./resultClassHandlers/handleAppealOutcome")
+jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
+jest.mock("./resultClassHandlers/handleSentence")
+jest.mock("./addOaacDisarrOperationsIfNecessary")
+
 const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock
 const mockedHandleAdjournmentPreJudgement = handleAdjournmentPreJudgement as jest.Mock
@@ -30,6 +30,7 @@ const mockedHandleSentence = handleSentence as jest.Mock
 const mockedAddOaacDisarrOperationsIfNecessary = (addOaacDisarrOperationsIfNecessary as jest.Mock).mockImplementation(
   () => {}
 )
+
 describe("deriveOperationSequence", () => {
   beforeEach(() => {
     jest.resetAllMocks()
@@ -76,7 +77,6 @@ describe("deriveOperationSequence", () => {
       expect(expectedFn).toHaveBeenCalledTimes(1)
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
         adjPreJudgementRemandCcrs: new Set(),
-        adjudicationExists: undefined,
         aho: {
           AnnotatedHearingOutcome: {
             HearingOutcome: {
@@ -91,13 +91,10 @@ describe("deriveOperationSequence", () => {
         },
         allResultsAlreadyOnPnc: false,
         ccrId: undefined,
-        contains2007Result: false,
-        fixedPenalty: false,
         oAacDisarrOperations: [],
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
         operations: [{ code: "COMSEN", data: { courtCaseReference: "1" }, status: "NotAttempted" }],
-        pncDisposalCode: 1001,
         remandCcrs: new Set(),
         resubmitted: false,
         result: { PNCDisposalType: 1001, ResultClass: resultClass },
@@ -259,7 +256,6 @@ describe("deriveOperationSequence", () => {
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc, remandCcrs)
 
-    console.log(operationsResult)
     expect([...remandCcrs]).toHaveLength(0)
     expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({

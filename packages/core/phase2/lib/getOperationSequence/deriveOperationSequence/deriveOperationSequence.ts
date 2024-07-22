@@ -23,14 +23,10 @@ export type ResultClassHandlerParams = {
   offenceIndex: number
   result: Result
   resultIndex: number
-  fixedPenalty: boolean
   ccrId: string | undefined
   operations: Operation[]
-  adjudicationExists: boolean | undefined
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
-  pncDisposalCode: number | undefined
-  contains2007Result: boolean
   oAacDisarrOperations: Operation[]
   remandCcrs: Set<string>
   adjPreJudgementRemandCcrs: Set<string | undefined>
@@ -68,8 +64,6 @@ const deriveOperationSequence = (
 
   offences.forEach((offence, offenceIndex) => {
     if (isRecordableOffence(offence)) {
-      const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
-
       offence.Result.forEach((result, resultIndex) => {
         if (!isRecordableResult(result)) {
           return
@@ -84,14 +78,10 @@ const deriveOperationSequence = (
             offence,
             resultIndex,
             result,
-            fixedPenalty: !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber,
             ccrId: offence?.CourtCaseReferenceNumber || undefined,
             operations,
-            adjudicationExists: result.PNCAdjudicationExists,
             resubmitted,
             allResultsAlreadyOnPnc,
-            pncDisposalCode: result.PNCDisposalType,
-            contains2007Result,
             oAacDisarrOperations,
             remandCcrs,
             adjPreJudgementRemandCcrs
