@@ -31,27 +31,18 @@ export type ResultClassHandlerParams = {
 }
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
 
-const extractNewremCcrs = (operations: Operation[]): Set<string> => {
-  return operations
+const extractNewremCcrs = <T extends boolean, K extends T extends false ? string : string | undefined>(
+  operations: Operation[],
+  isAdjPreJudgement: T
+): Set<K> =>
+  operations
     .filter((op) => op.code === "NEWREM")
     .reduce((acc, op) => {
-      if (op.data?.courtCaseReference) {
-        acc.add(op.data.courtCaseReference)
+      if ((!isAdjPreJudgement && op.data?.courtCaseReference) || op.data?.isAdjournmentPreJudgement) {
+        acc.add(op.data?.courtCaseReference as K)
       }
       return acc
-    }, new Set<string>())
-}
-
-const extractAdjPreJudgementNewremCcrs = (operations: Operation[]): Set<string | undefined> => {
-  return operations
-    .filter((op) => op.code === "NEWREM")
-    .reduce((acc, op) => {
-      if (op.data?.isAdjournmentPreJudgement) {
-        acc.add(op.data.courtCaseReference)
-      }
-      return acc
-    }, new Set<string | undefined>())
-}
+    }, new Set<K>())
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -110,7 +101,7 @@ const deriveOperationSequence = (
     }
   })
 
-  const adjPreJudgementRemandCcrs = extractAdjPreJudgementNewremCcrs(operations)
+  const adjPreJudgementRemandCcrs = extractNewremCcrs(operations, true)
 
   if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
@@ -118,7 +109,7 @@ const deriveOperationSequence = (
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
   }
 
-  const remandCcrs = extractNewremCcrs(operations)
+  const remandCcrs = extractNewremCcrs(operations, false)
   const deduplicatedOperations = deduplicateOperations(operations)
   const exception = validateOperationSequence(deduplicatedOperations, remandCcrs)
   if (exception) {
