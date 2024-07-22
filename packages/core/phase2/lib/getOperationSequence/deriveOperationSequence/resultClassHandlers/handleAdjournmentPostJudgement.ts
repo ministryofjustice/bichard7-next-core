@@ -8,12 +8,11 @@ export const handleAdjournmentPostJudgement: ResultClassHandler = ({
   offence,
   resultIndex,
   result,
-  adjudicationExists,
   operations,
   ccrId,
   remandCcrs
 }) => {
-  if (adjudicationExists) {
+  if (result.PNCAdjudicationExists) {
     addRemandOperation(result, operations)
 
     if (ccrId) {
