@@ -1,7 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
 import deriveOperationSequence from "./deriveOperationSequence"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -18,7 +17,6 @@ jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
 jest.mock("./resultClassHandlers/handleAppealOutcome")
 jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
 jest.mock("./resultClassHandlers/handleSentence")
-jest.mock("./addOaacDisarrOperationsIfNecessary")
 
 const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock
@@ -27,9 +25,6 @@ const mockedHandleAdjournmentWithJudgement = handleAdjournmentWithJudgement as j
 const mockedHandleAppealOutcome = handleAppealOutcome as jest.Mock
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock
 const mockedHandleSentence = handleSentence as jest.Mock
-const mockedAddOaacDisarrOperationsIfNecessary = (addOaacDisarrOperationsIfNecessary as jest.Mock).mockImplementation(
-  () => {}
-)
 
 describe("deriveOperationSequence", () => {
   beforeEach(() => {
@@ -64,12 +59,17 @@ describe("deriveOperationSequence", () => {
           Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
         }
       ] as Offence[])
-      expectedFn.mockImplementation(({ operations }) => {
-        operations.push({
-          code: "NEWREM",
-          data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
-          status: "NotAttempted"
-        })
+      expectedFn.mockImplementation(() => {
+        return {
+          operations: [
+            {
+              code: "NEWREM",
+              data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+              status: "NotAttempted"
+            }
+          ],
+          exceptions: []
+        }
       })
 
       const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
@@ -98,12 +98,8 @@ describe("deriveOperationSequence", () => {
           Exceptions: []
         },
         allResultsAlreadyOnPnc: false,
-        oAacDisarrOperations: [],
         offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
         offenceIndex: 0,
-        operations: [
-          { code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }
-        ],
         resubmitted: false,
         result: { PNCDisposalType: 1001, ResultClass: resultClass },
         resultIndex: 0
@@ -122,7 +118,7 @@ describe("deriveOperationSequence", () => {
             HearingDefendant: {
               Offence: [
                 {
-                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                  Result: [{ ResultClass: ResultClass.UNRESULTED, PNCDisposalType: 1001 }]
                 }
               ]
             }
@@ -158,7 +154,6 @@ describe("deriveOperationSequence", () => {
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
       exceptions: [
         {
@@ -169,7 +164,7 @@ describe("deriveOperationSequence", () => {
     })
   })
 
-  it("should call addOaacDisarrOperationsIfNecessary when there are operations and oAAC DISARR operations and Adjournment Pre Judgement Remand CCRs", () => {
+  it("should return OAAC DISARR operation when OAAC DISARR ccrId matches remand ccrId", () => {
     const allResultAlreadyOnPnc = false
     const resubmitted = false
     const aho = {
@@ -189,25 +184,34 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleAdjournment.mockImplementation(({ operations, oAacDisarrOperations }) => {
-      operations.push({
-        code: "NEWREM",
-        data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
-        status: "NotAttempted"
-      })
-      oAacDisarrOperations.push({ code: "DISARR", status: "NotAttempted" })
+    mockedHandleAdjournment.mockImplementation(() => {
+      return {
+        operations: [
+          {
+            code: "NEWREM",
+            data: undefined,
+            courtCaseReference: "1",
+            isAdjournmentPreJudgement: true,
+            status: "NotAttempted"
+          },
+          { code: "DISARR", data: { courtCaseReference: "1" }, addedByTheCourt: true, status: "NotAttempted" }
+        ],
+        exceptions: []
+      }
     })
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledWith(
-      [{ code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }],
-      [{ code: "DISARR", status: "NotAttempted" }],
-      new Set(["1"])
-    )
     expect(operationsResult).toStrictEqual({
       operations: [
-        { code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" }
+        {
+          code: "NEWREM",
+          data: undefined,
+          courtCaseReference: "1",
+          isAdjournmentPreJudgement: true,
+          status: "NotAttempted"
+        },
+        { code: "DISARR", data: { courtCaseReference: "1" }, status: "NotAttempted" }
       ]
     })
   })
@@ -235,7 +239,6 @@ describe("deriveOperationSequence", () => {
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
       exceptions: [
         {
@@ -264,7 +267,6 @@ describe("deriveOperationSequence", () => {
 
     const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
 
-    expect(mockedAddOaacDisarrOperationsIfNecessary).toHaveBeenCalledTimes(0)
     expect(operationsResult).toStrictEqual({
       exceptions: [
         {

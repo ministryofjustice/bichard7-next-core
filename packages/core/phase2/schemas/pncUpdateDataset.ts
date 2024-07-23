@@ -12,11 +12,11 @@ export const newremOperationSchema = z.object({
   data: z
     .object({
       nextHearingDate: z.date().optional(),
-      nextHearingLocation: organisationUnitSchema,
-      courtCaseReference: courtCaseReferenceNumberSchema.optional(),
-      isAdjournmentPreJudgement: z.boolean().optional()
+      nextHearingLocation: organisationUnitSchema
     })
     .optional(),
+  courtCaseReference: courtCaseReferenceNumberSchema.optional(),
+  isAdjournmentPreJudgement: z.boolean().optional(),
   status: operationStatusSchema
 })
 
@@ -27,6 +27,7 @@ const disarrOperationSchema = z.object({
       courtCaseReference: courtCaseReferenceNumberSchema
     })
     .optional(),
+  addedByTheCourt: z.boolean().optional(),
   status: operationStatusSchema
 })
 

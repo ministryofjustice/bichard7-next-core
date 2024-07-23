@@ -17,17 +17,19 @@ const organisationUnitCode2 = {
 
 const generateNewremOperation = (
   status: OperationStatus = "NotAttempted",
-  params: Partial<NewremOperation["data"]> = {}
+  params: Partial<NewremOperation["data"]> = {},
+  courtCaseReference?: string,
+  isAdjournmentPreJudgement?: boolean
 ) =>
   ({
     code: "NEWREM",
     status,
+    courtCaseReference,
+    isAdjournmentPreJudgement,
     data: {
       ...{
-        nextHearingDate: new Date(),
-        nextHearingLocation: { ...organisationUnitCode1 },
-        courtCaseReference: "1",
-        isAdjournmentPreJudgement: true
+        nextHearingDate: new Date("2024-06-12"),
+        nextHearingLocation: { ...organisationUnitCode1 }
       },
       ...params
     }
@@ -56,14 +58,14 @@ describe("deduplicateOperations", () => {
     { ops: [generateNewremOperation(), generateNewremOperation()] },
     {
       ops: [
-        generateNewremOperation("NotAttempted", { courtCaseReference: "1" }),
-        generateNewremOperation("NotAttempted", { courtCaseReference: "2" })
+        generateNewremOperation("NotAttempted", {}, "1", true),
+        generateNewremOperation("NotAttempted", {}, "2", true)
       ]
     },
     {
       ops: [
-        generateNewremOperation("NotAttempted", { isAdjournmentPreJudgement: false }),
-        generateNewremOperation("NotAttempted", { isAdjournmentPreJudgement: true })
+        generateNewremOperation("NotAttempted", {}, "1", false),
+        generateNewremOperation("NotAttempted", {}, "1", true)
       ]
     },
     { ops: [generateOperation("APPHRD"), generateOperation("APPHRD")] },

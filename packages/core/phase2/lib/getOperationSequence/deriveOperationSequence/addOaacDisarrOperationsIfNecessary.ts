@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import addNewOperationToOperationSetIfNotPresent from "../../addNewOperationToOperationSetIfNotPresent"
+import createOperation from "../../createOperation"
 
 const addOaacDisarrOperationsIfNecessary = (
   mainOperations: Operation[],
@@ -12,7 +12,7 @@ const addOaacDisarrOperationsIfNecessary = (
 
     if (adjPreJudgementRemandCcrs.has(courtCaseReference)) {
       const data = courtCaseReference ? { courtCaseReference } : undefined
-      addNewOperationToOperationSetIfNotPresent("DISARR", data, mainOperations)
+      mainOperations.push(createOperation("DISARR", data))
     }
   })
 }

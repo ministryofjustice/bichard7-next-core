@@ -1,33 +1,35 @@
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import addRemandOperation from "../../../addRemandOperation"
 import { handleAdjournment } from "./handleAdjournment"
 
-jest.mock("../../../addRemandOperation")
-;(addRemandOperation as jest.Mock).mockImplementation(() => {})
+const organisationUnit = {
+  TopLevelCode: "A",
+  SecondLevelCode: "BC",
+  ThirdLevelCode: "DE",
+  BottomLevelCode: "FG",
+  OrganisationUnitCode: "ABCDEFG"
+}
 
 describe("handleAdjournment", () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
-  it("should call addRemandOperation and add the ccrId to remandCcrs", () => {
-    const params = generateResultClassHandlerParams()
-
-    handleAdjournment(params)
-
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
-  })
-
-  it("should call addRemandOperation and should not add the ccrId to remandCcrs", () => {
+  it("should return remand operation with ccrId", () => {
     const params = generateResultClassHandlerParams({
-      offence: {
-        CourtCaseReferenceNumber: undefined
-      } as Offence
+      result: { NextResultSourceOrganisation: organisationUnit } as Result
     })
 
-    handleAdjournment(params)
+    const { operations, exceptions } = handleAdjournment(params)
 
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([
+      {
+        code: "NEWREM",
+        courtCaseReference: "234",
+        isAdjournmentPreJudgement: false,
+        data: {
+          nextHearingDate: undefined,
+          nextHearingLocation: organisationUnit
+        },
+        status: "NotAttempted"
+      }
+    ])
   })
 })

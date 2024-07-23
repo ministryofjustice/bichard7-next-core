@@ -1,12 +1,11 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
+import createOperation from "../../../createOperation"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
+import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
 export const handleSentence: ResultClassHandler = ({
-  operations,
   aho,
   offence,
   resubmitted,
@@ -20,26 +19,27 @@ export const handleSentence: ResultClassHandler = ({
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    addNewOperationToOperationSetIfNotPresent("PENHRG", operationData, operations)
-    return
+    return { operations: [createOperation("PENHRG", operationData)], exceptions: [] }
   }
 
   if (!result.PNCAdjudicationExists) {
     if (!offence.AddedByTheCourt) {
-      return { code: ExceptionCode.HO200106, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
+      const exception = {
+        code: ExceptionCode.HO200106,
+        path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
+      }
+      return { operations: [], exceptions: [exception] }
     }
 
-    return
+    return { operations: [], exceptions: [] }
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
-    addNewOperationToOperationSetIfNotPresent("SENDEF", operationData, operations)
-    return
+    return { operations: [createOperation("SENDEF", operationData)], exceptions: [] }
   }
 
-  return addSubsequentVariationOperations(
+  return createSubsequentVariationOperation(
     resubmitted,
-    operations,
     aho,
     ExceptionCode.HO200104,
     allResultsAlreadyOnPnc,

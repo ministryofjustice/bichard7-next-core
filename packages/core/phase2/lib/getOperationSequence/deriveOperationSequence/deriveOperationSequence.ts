@@ -8,7 +8,7 @@ import type OperationsResult from "../../../types/OperationsResult"
 import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
 import validateOperationSequence from "../validateOperationSequence"
-import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
+import addOaacDisarrOperations from "./addOaacDisarrOperationsIfNecessary"
 import deduplicateOperations from "./deduplicateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -24,12 +24,13 @@ export type ResultClassHandlerParams = {
   offenceIndex: number
   result: Result
   resultIndex: number
-  operations: Operation[]
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
-  oAacDisarrOperations: Operation[]
 }
-export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
+
+export type ExceptionsAndOperations = { exceptions: Exception[]; operations: Operation[] }
+
+export type ResultClassHandler = (params: ResultClassHandlerParams) => ExceptionsAndOperations
 
 const extractNewremCcrs = <T extends boolean, K extends T extends false ? string : string | undefined>(
   operations: Operation[],
@@ -38,14 +39,14 @@ const extractNewremCcrs = <T extends boolean, K extends T extends false ? string
   operations
     .filter((op) => op.code === "NEWREM")
     .reduce((acc, op) => {
-      if ((!isAdjPreJudgement && op.data?.courtCaseReference) || op.data?.isAdjournmentPreJudgement) {
-        acc.add(op.data?.courtCaseReference as K)
+      if ((!isAdjPreJudgement && op.courtCaseReference) || (isAdjPreJudgement && op.isAdjournmentPreJudgement)) {
+        acc.add(op.courtCaseReference as K)
       }
 
       return acc
     }, new Set<K>())
 
-const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
+const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
   [ResultClass.ADJOURNMENT_PRE_JUDGEMENT]: handleAdjournmentPreJudgement,
   [ResultClass.ADJOURNMENT_WITH_JUDGEMENT]: handleAdjournmentWithJudgement,
@@ -53,7 +54,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> =
   [ResultClass.JUDGEMENT_WITH_FINAL_RESULT]: handleJudgementWithFinalResult,
   [ResultClass.SENTENCE]: handleSentence,
   [ResultClass.APPEAL_OUTCOME]: handleAppealOutcome,
-  [ResultClass.UNRESULTED]: undefined
+  [ResultClass.UNRESULTED]: () => ({ operations: [], exceptions: [] })
 }
 
 const deriveOperationSequence = (
@@ -68,8 +69,7 @@ const deriveOperationSequence = (
     exceptions.push({ code: ExceptionCode.HO200121, path: errorPaths.case.asn })
   }
 
-  const operations: Operation[] = []
-  const oAacDisarrOperations: Operation[] = []
+  const allOperations: Operation[] = []
   let recordableResultFound = false
 
   offences.forEach((offence, offenceIndex) => {
@@ -82,32 +82,31 @@ const deriveOperationSequence = (
         recordableResultFound = true
 
         if (result.ResultClass) {
-          const exception = resultClassHandlers[result.ResultClass]?.({
+          const handlerResult = resultClassHandlers[result.ResultClass]?.({
             aho,
             offenceIndex,
             offence,
             resultIndex,
             result,
-            operations,
             resubmitted,
-            allResultsAlreadyOnPnc,
-            oAacDisarrOperations
+            allResultsAlreadyOnPnc
           })
 
-          if (exception) {
-            exceptions.push(exception)
-          }
+          exceptions.push(...handlerResult.exceptions)
+          allOperations.push(...handlerResult.operations)
         }
       })
     }
   })
 
+  const operations = allOperations.filter((o) => o.code !== "DISARR" || !o.addedByTheCourt)
+  const oAacDisarrOperations = allOperations.filter((o) => o.code === "DISARR" && o.addedByTheCourt)
   const adjPreJudgementRemandCcrs = extractNewremCcrs(operations, true)
 
   if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
   } else if (operations.length > 0 && oAacDisarrOperations.length > 0 && adjPreJudgementRemandCcrs.size > 0) {
-    addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    addOaacDisarrOperations(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
   }
 
   const remandCcrs = extractNewremCcrs(operations, false)
