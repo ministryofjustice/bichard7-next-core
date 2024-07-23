@@ -24,7 +24,7 @@ describe("addRemandOperation", () => {
       NextHearingDate: new Date().toISOString()
     } as Result
 
-    addRemandOperation(result, operations)
+    addRemandOperation(result, "123", operations)
 
     expect(operations).toHaveLength(1)
 
@@ -33,6 +33,7 @@ describe("addRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate?.toISOString()).toBe(result.NextHearingDate)
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
+    expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
   it("adds a remand operation without a NextHearingDate", () => {
@@ -47,7 +48,7 @@ describe("addRemandOperation", () => {
       }
     } as Result
 
-    addRemandOperation(result, operations)
+    addRemandOperation(result, "123", operations)
 
     expect(operations).toHaveLength(1)
 
@@ -56,6 +57,7 @@ describe("addRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
+    expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
   it("does not add a remand operation if result is adjournment", () => {
@@ -65,7 +67,7 @@ describe("addRemandOperation", () => {
       CJSresultCode: 0
     } as Result
 
-    addRemandOperation(result, operations)
+    addRemandOperation(result, undefined, operations)
 
     expect(operations).toHaveLength(0)
   })
@@ -84,13 +86,15 @@ describe("addRemandOperation", () => {
       NextHearingDate: "2024-05-03"
     } as Result
 
-    addRemandOperation(result, operations)
+    addRemandOperation(result, undefined, operations)
 
     expect(operations).toStrictEqual([
       {
         code: "NEWREM",
         status: "NotAttempted",
         data: {
+          courtCaseReference: undefined,
+          isAdjournmentPreJudgement: false,
           nextHearingLocation: {
             TopLevelCode: "1",
             SecondLevelCode: "02",
@@ -112,7 +116,7 @@ describe("addRemandOperation", () => {
       NextHearingDate: "2024-05-03"
     } as Result
 
-    addRemandOperation(result, operations)
+    addRemandOperation(result, "123", operations)
 
     expect(operations).toStrictEqual([
       {
@@ -139,7 +143,7 @@ describe("addRemandOperation", () => {
         NextHearingDate: "2024-05-03"
       } as Result
 
-      addRemandOperation(result, operations)
+      addRemandOperation(result, "123", operations)
 
       expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
     }

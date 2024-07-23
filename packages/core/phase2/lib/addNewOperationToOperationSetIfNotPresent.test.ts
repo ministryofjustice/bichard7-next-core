@@ -20,14 +20,14 @@ describe("addNewOperationToOperationSetIfNotPresent", () => {
     expect(operation.data?.courtCaseReference).toBe("court-case-reference")
   })
 
-  it("does not add operation to set if identical operation exists", () => {
+  it("adds operation to set if identical operation exists", () => {
     const operations: Operation[] = [
       { code: "DISARR", status: "NotAttempted", data: { courtCaseReference: "court-case-reference" } }
     ]
 
     addNewOperationToOperationSetIfNotPresent("DISARR", { courtCaseReference: "court-case-reference" }, operations)
 
-    expect(operations).toHaveLength(1)
+    expect(operations).toHaveLength(2)
   })
 
   it("will add new operation if no exact match", () => {

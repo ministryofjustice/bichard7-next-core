@@ -1,7 +1,7 @@
 import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import addRemandOperation from "../../../addRemandOperation"
 import { handleAdjournment } from "./handleAdjournment"
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 
 jest.mock("../../../addRemandOperation")
 ;(addRemandOperation as jest.Mock).mockImplementation(() => {})
@@ -17,7 +17,6 @@ describe("handleAdjournment", () => {
     handleAdjournment(params)
 
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toEqual(["234"])
   })
 
   it("should call addRemandOperation and should not add the ccrId to remandCcrs", () => {
@@ -30,6 +29,5 @@ describe("handleAdjournment", () => {
     handleAdjournment(params)
 
     expect(addRemandOperation).toHaveBeenCalledTimes(1)
-    expect([...params.remandCcrs]).toHaveLength(0)
   })
 })

@@ -9,6 +9,7 @@ import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
 import validateOperationSequence from "../validateOperationSequence"
 import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
+import deduplicateOperations from "./deduplicateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
@@ -27,10 +28,22 @@ export type ResultClassHandlerParams = {
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   oAacDisarrOperations: Operation[]
-  remandCcrs: Set<string>
-  adjPreJudgementRemandCcrs: Set<string | undefined | null>
 }
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Exception | void
+
+const extractNewremCcrs = <T extends boolean, K extends T extends false ? string : string | undefined>(
+  operations: Operation[],
+  isAdjPreJudgement: T
+): Set<K> =>
+  operations
+    .filter((op) => op.code === "NEWREM")
+    .reduce((acc, op) => {
+      if ((!isAdjPreJudgement && op.data?.courtCaseReference) || op.data?.isAdjournmentPreJudgement) {
+        acc.add(op.data?.courtCaseReference as K)
+      }
+
+      return acc
+    }, new Set<K>())
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -46,8 +59,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler | undefined> =
 const deriveOperationSequence = (
   aho: AnnotatedHearingOutcome,
   resubmitted: boolean,
-  allResultsAlreadyOnPnc: boolean,
-  remandCcrs: Set<string>
+  allResultsAlreadyOnPnc: boolean
 ): OperationsResult => {
   const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
@@ -58,7 +70,6 @@ const deriveOperationSequence = (
 
   const operations: Operation[] = []
   const oAacDisarrOperations: Operation[] = []
-  const adjPreJudgementRemandCcrs = new Set<string | undefined>()
   let recordableResultFound = false
 
   offences.forEach((offence, offenceIndex) => {
@@ -80,9 +91,7 @@ const deriveOperationSequence = (
             operations,
             resubmitted,
             allResultsAlreadyOnPnc,
-            oAacDisarrOperations,
-            remandCcrs,
-            adjPreJudgementRemandCcrs
+            oAacDisarrOperations
           })
 
           if (exception) {
@@ -93,18 +102,22 @@ const deriveOperationSequence = (
     }
   })
 
+  const adjPreJudgementRemandCcrs = extractNewremCcrs(operations, true)
+
   if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
     exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
   } else if (operations.length > 0 && oAacDisarrOperations.length > 0 && adjPreJudgementRemandCcrs.size > 0) {
     addOaacDisarrOperationsIfNecessary(operations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
   }
 
-  const exception = validateOperationSequence(operations, remandCcrs)
+  const remandCcrs = extractNewremCcrs(operations, false)
+  const deduplicatedOperations = deduplicateOperations(operations)
+  const exception = validateOperationSequence(deduplicatedOperations, remandCcrs)
   if (exception) {
     exceptions.push(exception)
   }
 
-  return exceptions.length > 0 ? { exceptions } : { operations }
+  return exceptions.length > 0 ? { exceptions } : { operations: deduplicatedOperations }
 }
 
 export default deriveOperationSequence
