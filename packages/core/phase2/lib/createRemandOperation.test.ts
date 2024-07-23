@@ -6,13 +6,12 @@ import createRemandOperation from "./createRemandOperation"
 
 const mockedIsAdjournedNoNextHearing = isAdjournedNoNextHearing as jest.Mock
 
-describe("createRemandOperation.test", () => {
+describe("createRemandOperation", () => {
   beforeEach(() => {
     mockedIsAdjournedNoNextHearing.mockRestore()
   })
 
-  it("adds a remand operation to operations array", () => {
-    const operations: Operation[] = []
+  it("should return a remand operation", () => {
     const result = {
       NextResultSourceOrganisation: {
         TopLevelCode: "",
@@ -24,9 +23,10 @@ describe("createRemandOperation.test", () => {
       NextHearingDate: new Date().toISOString()
     } as Result
 
-    createRemandOperation(result, "123", operations)
+    const { operations, exceptions } = createRemandOperation(result, "123")
 
     expect(operations).toHaveLength(1)
+    expect(exceptions).toHaveLength(0)
 
     const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
     expect(remandOperation.code).toBe("NEWREM")
@@ -36,8 +36,7 @@ describe("createRemandOperation.test", () => {
     expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
-  it("adds a remand operation without a NextHearingDate", () => {
-    const operations: Operation[] = []
+  it("should return a remand operation without a NextHearingDate", () => {
     const result = {
       NextResultSourceOrganisation: {
         TopLevelCode: "",
@@ -48,9 +47,10 @@ describe("createRemandOperation.test", () => {
       }
     } as Result
 
-    createRemandOperation(result, "123", operations)
+    const { operations, exceptions } = createRemandOperation(result, "123")
 
     expect(operations).toHaveLength(1)
+    expect(exceptions).toHaveLength(0)
 
     const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
     expect(remandOperation.code).toBe("NEWREM")
@@ -60,20 +60,19 @@ describe("createRemandOperation.test", () => {
     expect(remandOperation.data?.courtCaseReference).toBe("123")
   })
 
-  it("does not add a remand operation if result is adjournment", () => {
+  it("should not return a remand operation if result is adjournment", () => {
     mockedIsAdjournedNoNextHearing.mockReturnValue(true)
-    const operations: Operation[] = []
     const result = {
       CJSresultCode: 0
     } as Result
 
-    createRemandOperation(result, undefined, operations)
+    const { operations, exceptions } = createRemandOperation(result, undefined)
 
     expect(operations).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
   })
 
-  it("adds a remand operation with data if warrant has not been issued", () => {
-    const operations: Operation[] = []
+  it("should return a remand operation with data if warrant has not been issued", () => {
     const result = {
       CJSresultCode: 4574,
       NextResultSourceOrganisation: {
@@ -86,8 +85,9 @@ describe("createRemandOperation.test", () => {
       NextHearingDate: "2024-05-03"
     } as Result
 
-    createRemandOperation(result, undefined)
+    const { operations, exceptions } = createRemandOperation(result, undefined)
 
+    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: "NEWREM",
@@ -108,16 +108,16 @@ describe("createRemandOperation.test", () => {
     ])
   })
 
-  it("adds a remand operation without data if warrant has not been issued but NextResultSourceOrganisation is not set", () => {
-    const operations: Operation[] = []
+  it("should return a remand operation without data if warrant has not been issued but NextResultSourceOrganisation is not set", () => {
     const result = {
       CJSresultCode: 4574,
       NextResultSourceOrganisation: undefined,
       NextHearingDate: "2024-05-03"
     } as Result
 
-    createRemandOperation(result, "123", operations)
+    const { operations, exceptions } = createRemandOperation(result, "123")
 
+    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: "NEWREM",
@@ -128,9 +128,8 @@ describe("createRemandOperation.test", () => {
   })
 
   it.each([4576, 4577])(
-    "adds a remand operation without data if warrant has been issued (%i result code)",
+    "should return a remand operation without data if warrant has been issued (%i result code)",
     (resultCode) => {
-      const operations: Operation[] = []
       const result = {
         CJSresultCode: resultCode,
         NextResultSourceOrganisation: {
@@ -143,8 +142,9 @@ describe("createRemandOperation.test", () => {
         NextHearingDate: "2024-05-03"
       } as Result
 
-      createRemandOperation(result, "123", operations)
+      const { operations, exceptions } = createRemandOperation(result, "123")
 
+      expect(exceptions).toHaveLength(0)
       expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
     }
   )

@@ -1,6 +1,6 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
-import { Operation } from "../../../../../types/PncUpdateDataset"
+import type { Operation } from "../../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../../types/ResultClass"
 import createOperation from "../../../createOperation"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
@@ -17,7 +17,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   offence,
   result
 }) => {
-  const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+  const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const ccrId = offence?.CourtCaseReferenceNumber || undefined
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
@@ -54,6 +54,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     if (operation.code === "DISARR") {
       operation.addedByTheCourt = true
     }
+
     operations.push(operation)
   }
 

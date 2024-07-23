@@ -1,60 +1,64 @@
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome";
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
-import createRemandOperation from "../../../createRemandOperation";
-import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement";
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../../types/ResultClass"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
 
-jest.mock("../../../createRemandOperation.test")
-;(createRemandOperation as jest.Mock).mockImplementation(() => {})
+const organisationUnit = {
+  TopLevelCode: "A",
+  SecondLevelCode: "BC",
+  ThirdLevelCode: "DE",
+  BottomLevelCode: "FG",
+  OrganisationUnitCode: "ABCDEFG"
+}
 
 describe("handleAdjournmentPreJudgement", () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
-  it("should generate exception HO200100 when adjudication exists", () => {
+  it("should return HO200100 when adjudication exists", () => {
     const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result })
 
-    const exception = handleAdjournmentPreJudgement(params)
+    const { operations, exceptions } = handleAdjournmentPreJudgement(params)
 
-    expect(exception).toStrictEqual({
-      code: "HO200100",
-      path: [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        1,
-        "Result",
-        1,
-        "ResultClass"
-      ]
-    })
-    expect(createRemandOperation).toHaveBeenCalledTimes(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200100",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          1,
+          "ResultClass"
+        ]
+      }
+    ])
+    expect(operations).toHaveLength(0)
   })
 
-  it("should call createRemandOperation.test, add ccrId to adjPreJudgementRemandCcrs and remandCcrs when adjudication does not exist and ccrId has value", () => {
+  it("should return remand operations with isAdjournmentPreJudgement in operation data when adjudication does not exist and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
-      result: { PNCAdjudicationExists: false } as Result
+      result: {
+        PNCAdjudicationExists: false,
+        ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
+        NextResultSourceOrganisation: organisationUnit
+      } as Result
     })
 
-    const exception = handleAdjournmentPreJudgement(params)
+    const { operations, exceptions } = handleAdjournmentPreJudgement(params)
 
-    expect(exception).toBeUndefined()
-    expect(createRemandOperation).toHaveBeenCalledTimes(1)
-  })
-
-  it("should call createRemandOperation.test, add ccrId to adjPreJudgementRemandCcrs when adjudication does not exist and ccrId does not value", () => {
-    const params = generateResultClassHandlerParams({
-      result: { PNCAdjudicationExists: false } as Result,
-      offence: {
-        CourtCaseReferenceNumber: undefined
-      } as Offence
-    })
-
-    const exception = handleAdjournmentPreJudgement(params)
-
-    expect(exception).toBeUndefined()
-    expect(createRemandOperation).toHaveBeenCalledTimes(1)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([
+      {
+        code: "NEWREM",
+        data: {
+          isAdjournmentPreJudgement: true,
+          courtCaseReference: "234",
+          nextHearingDate: undefined,
+          nextHearingLocation: organisationUnit
+        },
+        status: "NotAttempted"
+      }
+    ])
   })
 })

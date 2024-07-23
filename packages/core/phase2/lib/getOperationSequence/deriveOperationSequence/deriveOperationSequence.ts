@@ -39,7 +39,10 @@ const extractNewremCcrs = <T extends boolean, K extends T extends false ? string
   operations
     .filter((op) => op.code === "NEWREM")
     .reduce((acc, op) => {
-      if ((!isAdjPreJudgement && op.data?.courtCaseReference) || (isAdjPreJudgement && op.data?.isAdjournmentPreJudgement)) {
+      if (
+        (!isAdjPreJudgement && op.data?.courtCaseReference) ||
+        (isAdjPreJudgement && op.data?.isAdjournmentPreJudgement)
+      ) {
         acc.add(op.data?.courtCaseReference as K)
       }
 
@@ -99,8 +102,8 @@ const deriveOperationSequence = (
     }
   })
 
-  const operations = allOperations.filter(o => o.code !== "DISARR" || !o.addedByTheCourt)
-  const oAacDisarrOperations = allOperations.filter(o => o.code === "DISARR" && o.addedByTheCourt)
+  const operations = allOperations.filter((o) => o.code !== "DISARR" || !o.addedByTheCourt)
+  const oAacDisarrOperations = allOperations.filter((o) => o.code === "DISARR" && o.addedByTheCourt)
   const adjPreJudgementRemandCcrs = extractNewremCcrs(operations, true)
 
   if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
