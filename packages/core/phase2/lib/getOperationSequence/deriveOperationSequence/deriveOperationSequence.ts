@@ -39,11 +39,8 @@ const extractNewremCcrs = <T extends boolean, K extends T extends false ? string
   operations
     .filter((op) => op.code === "NEWREM")
     .reduce((acc, op) => {
-      if (
-        (!isAdjPreJudgement && op.data?.courtCaseReference) ||
-        (isAdjPreJudgement && op.data?.isAdjournmentPreJudgement)
-      ) {
-        acc.add(op.data?.courtCaseReference as K)
+      if ((!isAdjPreJudgement && op.courtCaseReference) || (isAdjPreJudgement && op.isAdjournmentPreJudgement)) {
+        acc.add(op.courtCaseReference as K)
       }
 
       return acc

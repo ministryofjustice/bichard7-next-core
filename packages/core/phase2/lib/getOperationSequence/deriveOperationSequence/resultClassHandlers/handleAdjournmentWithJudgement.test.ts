@@ -43,9 +43,9 @@ describe("handleAdjournmentWithJudgement", () => {
       },
       {
         code: "NEWREM",
+        courtCaseReference: "234",
+        isAdjournmentPreJudgement: false,
         data: {
-          courtCaseReference: "234",
-          isAdjournmentPreJudgement: false,
           nextHearingDate: undefined,
           nextHearingLocation: organisationUnit
         },

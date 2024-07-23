@@ -189,7 +189,9 @@ describe("deriveOperationSequence", () => {
         operations: [
           {
             code: "NEWREM",
-            data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+            data: undefined,
+            courtCaseReference: "1",
+            isAdjournmentPreJudgement: true,
             status: "NotAttempted"
           },
           { code: "DISARR", data: { courtCaseReference: "1" }, addedByTheCourt: true, status: "NotAttempted" }
@@ -202,7 +204,13 @@ describe("deriveOperationSequence", () => {
 
     expect(operationsResult).toStrictEqual({
       operations: [
-        { code: "NEWREM", data: { courtCaseReference: "1", isAdjournmentPreJudgement: true }, status: "NotAttempted" },
+        {
+          code: "NEWREM",
+          data: undefined,
+          courtCaseReference: "1",
+          isAdjournmentPreJudgement: true,
+          status: "NotAttempted"
+        },
         { code: "DISARR", data: { courtCaseReference: "1" }, status: "NotAttempted" }
       ]
     })

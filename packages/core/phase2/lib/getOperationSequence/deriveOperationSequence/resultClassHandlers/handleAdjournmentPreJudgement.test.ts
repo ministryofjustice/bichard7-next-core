@@ -51,9 +51,9 @@ describe("handleAdjournmentPreJudgement", () => {
     expect(operations).toStrictEqual([
       {
         code: "NEWREM",
+        isAdjournmentPreJudgement: true,
+        courtCaseReference: "234",
         data: {
-          isAdjournmentPreJudgement: true,
-          courtCaseReference: "234",
           nextHearingDate: undefined,
           nextHearingLocation: organisationUnit
         },

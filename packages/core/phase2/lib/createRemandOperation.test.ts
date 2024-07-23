@@ -33,7 +33,7 @@ describe("createRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate?.toISOString()).toBe(result.NextHearingDate)
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
-    expect(remandOperation.data?.courtCaseReference).toBe("123")
+    expect(remandOperation.courtCaseReference).toBe("123")
   })
 
   it("should return a remand operation without a NextHearingDate", () => {
@@ -57,7 +57,7 @@ describe("createRemandOperation", () => {
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
-    expect(remandOperation.data?.courtCaseReference).toBe("123")
+    expect(remandOperation.courtCaseReference).toBe("123")
   })
 
   it("should not return a remand operation if result is adjournment", () => {
@@ -92,9 +92,9 @@ describe("createRemandOperation", () => {
       {
         code: "NEWREM",
         status: "NotAttempted",
+        courtCaseReference: undefined,
+        isAdjournmentPreJudgement: false,
         data: {
-          courtCaseReference: undefined,
-          isAdjournmentPreJudgement: false,
           nextHearingLocation: {
             TopLevelCode: "1",
             SecondLevelCode: "02",
