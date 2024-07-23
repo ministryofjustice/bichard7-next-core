@@ -1,6 +1,6 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-import addSubsequentVariationOperations from "./addSubsequentVariationOperations"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode";
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome";
+import createSubsequentVariationOperation from "./createSubsequentVariationOperation";
 
 const createInput = (hoCcr: string, pncCourtCases: { offences?: { disposalTypes?: number[] }[]; ccr: string }[]) => ({
   aho: {
@@ -18,13 +18,13 @@ const createInput = (hoCcr: string, pncCourtCases: { offences?: { disposalTypes?
   operations: []
 })
 
-describe("addSubsequentVariationOperations", () => {
+describe("createSubsequentVariationOperation", () => {
   it("should add SUBVAR operation without operation data when case is resubmitted", () => {
     const { aho, operations } = createInput("123", [
       { ccr: "123", offences: [{ disposalTypes: [2007] }, { disposalTypes: undefined }] }
     ])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       true,
       operations,
       aho,
@@ -48,7 +48,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should add SUBVAR operation with operation data when case is resubmitted", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007] }] }])
 
-    const exception = addSubsequentVariationOperations(true, operations, aho, ExceptionCode.HO200212, false, 1, 1, {
+    const exception = createSubsequentVariationOperation(true, operations, aho, ExceptionCode.HO200212, false, 1, 1, {
       courtCaseReference: "123"
     })
 
@@ -65,7 +65,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should add SUBVAR operation with operation data when all PNC results are 2007", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007] }] }])
 
-    const exception = addSubsequentVariationOperations(false, operations, aho, ExceptionCode.HO200212, false, 1, 1, {
+    const exception = createSubsequentVariationOperation(false, operations, aho, ExceptionCode.HO200212, false, 1, 1, {
       courtCaseReference: "123"
     })
 
@@ -82,7 +82,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should not add SUBVAR operation with operation data when a PNC result is not 2007", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007, 9999] }] }])
 
-    const exception = addSubsequentVariationOperations(false, operations, aho, ExceptionCode.HO200212, true, 1, 1, {
+    const exception = createSubsequentVariationOperation(false, operations, aho, ExceptionCode.HO200212, true, 1, 1, {
       courtCaseReference: "123"
     })
 
@@ -93,7 +93,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should not add SUBVAR operation with operation data when court case reference in operation data does not match any PNC offence", () => {
     const { aho, operations } = createInput("444", [{ ccr: "123", offences: [{ disposalTypes: [2007] }] }])
 
-    const exception = addSubsequentVariationOperations(false, operations, aho, ExceptionCode.HO200212, true, 1, 1, {
+    const exception = createSubsequentVariationOperation(false, operations, aho, ExceptionCode.HO200212, true, 1, 1, {
       courtCaseReference: "333"
     })
 
@@ -104,7 +104,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should add SUBVAR operation with operation data when operation data is not set but case court reference number does match PNC offences", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007, 2007] }] }])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       false,
       operations,
       aho,
@@ -128,7 +128,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should generate an exception using the passed exception code when results are not already on PNC, case is not resubmitted, and there is a non-2007 PNC result", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007, 9999] }] }])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       false,
       operations,
       aho,
@@ -159,7 +159,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should generate an exception using the passed exception code when results are not already on PNC, case is not resubmitted, and there are no PNC offences", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: undefined }])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       false,
       operations,
       aho,
@@ -192,7 +192,7 @@ describe("addSubsequentVariationOperations", () => {
       { ccr: "123", offences: [{ disposalTypes: [] }, { disposalTypes: undefined }] }
     ])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       false,
       operations,
       aho,
@@ -223,7 +223,7 @@ describe("addSubsequentVariationOperations", () => {
   it("should do nothing when results are already on PNC, case is not resubmitted, and there is a non-2007 PNC result", () => {
     const { aho, operations } = createInput("123", [{ ccr: "123", offences: [{ disposalTypes: [2007, 9999] }] }])
 
-    const exception = addSubsequentVariationOperations(
+    const exception = createSubsequentVariationOperation(
       false,
       operations,
       aho,

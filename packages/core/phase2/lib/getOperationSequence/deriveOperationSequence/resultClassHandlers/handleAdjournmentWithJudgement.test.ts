@@ -2,21 +2,21 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import addRemandOperation from "../../../addRemandOperation"
-import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
+import createOperation from "../../../createOperation"
+import createRemandOperation from "../../../createRemandOperation"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
+import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 
-jest.mock("../../../addRemandOperation")
-jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
-jest.mock("../addSubsequentVariationOperations")
+jest.mock("../../../createRemandOperation.test")
+jest.mock("../../../createOperation")
+jest.mock("../createSubsequentVariationOperation")
 jest.mock("../checkRccSegmentApplicability")
 jest.mock("../hasUnmatchedPncOffences")
-;(addRemandOperation as jest.Mock).mockImplementation(() => {})
-;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
-;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
+;(createRemandOperation as jest.Mock).mockImplementation(() => {})
+;(createOperation as jest.Mock).mockImplementation(() => {})
+;(createSubsequentVariationOperation as jest.Mock).mockImplementation(() => {})
 const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 
@@ -25,16 +25,16 @@ describe("handleAdjournmentWithJudgement", () => {
     jest.resetAllMocks()
   })
 
-  it("should call addRemandOperation and add ccrId to remandCcrs when ccrId has value", () => {
+  it("should call createRemandOperation.test and add ccrId to remandCcrs when ccrId has value", () => {
     const params = generateResultClassHandlerParams()
 
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
-  it("should call addRemandOperation and should not add ccrId to remandCcrs when ccrId does not have value", () => {
+  it("should call createRemandOperation.test and should not add ccrId to remandCcrs when ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       offence: {
         CourtCaseReferenceNumber: undefined
@@ -44,7 +44,7 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should add PENHRG operation when fixedPenalty is true", () => {
@@ -53,12 +53,12 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should add SUBVAR operation when adjudication exists", () => {
@@ -70,9 +70,9 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
+    expect(createOperation).toHaveBeenCalledTimes(0)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledWith(
       false,
       [{ dummy: "Main Operations" }],
       params.aho,
@@ -82,7 +82,7 @@ describe("handleAdjournmentWithJudgement", () => {
       1,
       { courtCaseReference: "234" }
     )
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should only generate exception HO200124 when HO200124 and HO200108 conditions are met", () => {
@@ -108,9 +108,9 @@ describe("handleAdjournmentWithJudgement", () => {
         "ResultClass"
       ]
     })
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledTimes(0)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case requires RCC and has reportable offences", () => {
@@ -124,12 +124,12 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should generate exception HO200108 when HO200124 condition is not met and case does not require RCC", () => {
@@ -143,12 +143,12 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should not generate exception HO200124 when all results are already on PNC", () => {
@@ -194,12 +194,12 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court and offence does not have a 2007 result code", () => {
@@ -213,12 +213,12 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
       { dummy: "OAAC DISARR Operations" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
   it("should not add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
@@ -232,8 +232,8 @@ describe("handleAdjournmentWithJudgement", () => {
     const exception = handleAdjournmentWithJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledTimes(0)
+    expect(createSubsequentVariationOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 })

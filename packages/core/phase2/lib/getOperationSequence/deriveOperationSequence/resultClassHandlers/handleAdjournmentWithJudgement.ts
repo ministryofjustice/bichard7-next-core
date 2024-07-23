@@ -1,12 +1,15 @@
-import addRemandOperation from "../../../addRemandOperation"
+import createRemandOperation from "../../../createRemandOperation"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
 export const handleAdjournmentWithJudgement: ResultClassHandler = (params) => {
-  const { result, offence, operations } = params
-  const exception = handleJudgementWithFinalResult(params)
+  const { result, offence } = params
+  const handlerResult = handleJudgementWithFinalResult(params)
 
-  addRemandOperation(result, offence?.CourtCaseReferenceNumber, operations)
+  const remandOperationResult = createRemandOperation(result, offence?.CourtCaseReferenceNumber)
 
-  return exception
+  return {
+    operations: [...handlerResult.operations, ...remandOperationResult.operations],
+    exceptions: [...handlerResult.exceptions, ...remandOperationResult.exceptions]
+  }
 }

@@ -1,10 +1,10 @@
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import addRemandOperation from "../../../addRemandOperation"
-import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome";
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
+import createRemandOperation from "../../../createRemandOperation";
+import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement";
 
-jest.mock("../../../addRemandOperation")
-;(addRemandOperation as jest.Mock).mockImplementation(() => {})
+jest.mock("../../../createRemandOperation.test")
+;(createRemandOperation as jest.Mock).mockImplementation(() => {})
 
 describe("handleAdjournmentPreJudgement", () => {
   beforeEach(() => {
@@ -30,10 +30,10 @@ describe("handleAdjournmentPreJudgement", () => {
         "ResultClass"
       ]
     })
-    expect(addRemandOperation).toHaveBeenCalledTimes(0)
+    expect(createRemandOperation).toHaveBeenCalledTimes(0)
   })
 
-  it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs and remandCcrs when adjudication does not exist and ccrId has value", () => {
+  it("should call createRemandOperation.test, add ccrId to adjPreJudgementRemandCcrs and remandCcrs when adjudication does not exist and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCAdjudicationExists: false } as Result
     })
@@ -41,10 +41,10 @@ describe("handleAdjournmentPreJudgement", () => {
     const exception = handleAdjournmentPreJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
-  it("should call addRemandOperation, add ccrId to adjPreJudgementRemandCcrs when adjudication does not exist and ccrId does not value", () => {
+  it("should call createRemandOperation.test, add ccrId to adjPreJudgementRemandCcrs when adjudication does not exist and ccrId does not value", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCAdjudicationExists: false } as Result,
       offence: {
@@ -55,6 +55,6 @@ describe("handleAdjournmentPreJudgement", () => {
     const exception = handleAdjournmentPreJudgement(params)
 
     expect(exception).toBeUndefined()
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 })

@@ -27,6 +27,7 @@ const disarrOperationSchema = z.object({
       courtCaseReference: courtCaseReferenceNumberSchema
     })
     .optional(),
+  addedByTheCourt: z.boolean().optional(),
   status: operationStatusSchema
 })
 

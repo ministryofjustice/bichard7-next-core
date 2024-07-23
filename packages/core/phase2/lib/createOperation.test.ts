@@ -1,11 +1,11 @@
 import type { Operation } from "../../types/PncUpdateDataset"
-import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperationSetIfNotPresent"
+import createOperation from "./createOperation"
 
 describe("addNewOperationToOperationSetIfNotPresent", () => {
   it("adds a new operation to set if not present", () => {
     const operations: Operation[] = []
 
-    addNewOperationToOperationSetIfNotPresent(
+    createOperation(
       "DISARR",
       {
         courtCaseReference: "court-case-reference"
@@ -25,7 +25,7 @@ describe("addNewOperationToOperationSetIfNotPresent", () => {
       { code: "DISARR", status: "NotAttempted", data: { courtCaseReference: "court-case-reference" } }
     ]
 
-    addNewOperationToOperationSetIfNotPresent("DISARR", { courtCaseReference: "court-case-reference" }, operations)
+    createOperation("DISARR", { courtCaseReference: "court-case-reference" }, operations)
 
     expect(operations).toHaveLength(2)
   })
@@ -35,7 +35,7 @@ describe("addNewOperationToOperationSetIfNotPresent", () => {
       { code: "DISARR", status: "NotAttempted", data: { courtCaseReference: "court-case-reference" } }
     ]
 
-    addNewOperationToOperationSetIfNotPresent("DISARR", { courtCaseReference: "court-case-reference-2" }, operations)
+    createOperation("DISARR", { courtCaseReference: "court-case-reference-2" }, operations)
 
     expect(operations).toHaveLength(2)
   })
