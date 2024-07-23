@@ -1,33 +1,35 @@
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome";
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
-import createRemandOperation from "../../../createRemandOperation";
-import { handleAdjournment } from "./handleAdjournment";
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { handleAdjournment } from "./handleAdjournment"
 
-jest.mock("../../../createRemandOperation.test")
-;(createRemandOperation as jest.Mock).mockImplementation(() => {})
+const organisationUnit = {
+  TopLevelCode: "A",
+  SecondLevelCode: "BC",
+  ThirdLevelCode: "DE",
+  BottomLevelCode: "FG",
+  OrganisationUnitCode: "ABCDEFG"
+}
 
 describe("handleAdjournment", () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
-  it("should call createRemandOperation.test and add the ccrId to remandCcrs", () => {
-    const params = generateResultClassHandlerParams()
-
-    handleAdjournment(params)
-
-    expect(createRemandOperation).toHaveBeenCalledTimes(1)
-  })
-
-  it("should call createRemandOperation.test and should not add the ccrId to remandCcrs", () => {
+  it("should return remand operation with ccrId", () => {
     const params = generateResultClassHandlerParams({
-      offence: {
-        CourtCaseReferenceNumber: undefined
-      } as Offence
+      result: { NextResultSourceOrganisation: organisationUnit } as Result
     })
 
-    handleAdjournment(params)
+    const { operations, exceptions } = handleAdjournment(params)
 
-    expect(createRemandOperation).toHaveBeenCalledTimes(1)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([
+      {
+        code: "NEWREM",
+        data: {
+          courtCaseReference: "234",
+          isAdjournmentPreJudgement: false,
+          nextHearingDate: undefined,
+          nextHearingLocation: organisationUnit
+        },
+        status: "NotAttempted"
+      }
+    ])
   })
 })

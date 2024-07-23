@@ -3,7 +3,7 @@ import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { OperationData } from "../../types/PncUpdateDataset"
 import ResultClass from "../../types/ResultClass"
 import createOperation from "./createOperation"
-import { ExceptionsAndOperations } from "./getOperationSequence/deriveOperationSequence/deriveOperationSequence"
+import type { ExceptionsAndOperations } from "./getOperationSequence/deriveOperationSequence/deriveOperationSequence"
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
