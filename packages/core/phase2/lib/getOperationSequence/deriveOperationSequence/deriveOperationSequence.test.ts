@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
+import filterOaacDisarrOperations from "./addOaacDisarrOperationsIfNecessary"
 import deriveOperationSequence from "./deriveOperationSequence"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -27,7 +27,7 @@ const mockedHandleAdjournmentWithJudgement = handleAdjournmentWithJudgement as j
 const mockedHandleAppealOutcome = handleAppealOutcome as jest.Mock
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock
 const mockedHandleSentence = handleSentence as jest.Mock
-const mockedAddOaacDisarrOperationsIfNecessary = (addOaacDisarrOperationsIfNecessary as jest.Mock).mockImplementation(
+const mockedAddOaacDisarrOperationsIfNecessary = (filterOaacDisarrOperations as jest.Mock).mockImplementation(
   () => {}
 )
 

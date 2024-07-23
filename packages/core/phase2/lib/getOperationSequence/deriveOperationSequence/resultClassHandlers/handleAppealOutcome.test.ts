@@ -1,10 +1,10 @@
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import { handleAppealOutcome } from "./handleAppealOutcome"
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome";
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
+import createOperation from "../../../createOperation";
+import { handleAppealOutcome } from "./handleAppealOutcome";
 
-jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
-;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
+jest.mock("../../../createOperation")
+;(createOperation as jest.Mock).mockImplementation(() => {})
 
 describe("handleAppealOutcome", () => {
   beforeEach(() => {
@@ -17,8 +17,8 @@ describe("handleAppealOutcome", () => {
     const exception = handleAppealOutcome(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", { courtCaseReference: "234" }, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("APPHRD", { courtCaseReference: "234" }, [
       { dummy: "Main Operations" }
     ])
   })
@@ -34,8 +34,8 @@ describe("handleAppealOutcome", () => {
     const exception = handleAppealOutcome(params)
 
     expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("APPHRD", undefined, [
+    expect(createOperation).toHaveBeenCalledTimes(1)
+    expect(createOperation).toHaveBeenCalledWith("APPHRD", undefined, [
       { dummy: "Main Operations" }
     ])
   })
@@ -45,7 +45,7 @@ describe("handleAppealOutcome", () => {
 
     const exception = handleAppealOutcome(params)
 
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
+    expect(createOperation).toHaveBeenCalledTimes(0)
     expect(exception).toStrictEqual({
       code: "HO200107",
       path: [

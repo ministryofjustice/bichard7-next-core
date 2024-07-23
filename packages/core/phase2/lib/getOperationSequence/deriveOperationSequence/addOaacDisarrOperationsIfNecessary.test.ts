@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import addOaacDisarrOperationsIfNecessary from "./addOaacDisarrOperationsIfNecessary"
+import filterOaacDisarrOperations from "./addOaacDisarrOperationsIfNecessary"
 
 describe("addOaacDisarrOperationsIfNecessary", () => {
   it("should add oAAC DISARR operation to main operations when CCR has value and is in adjPreJudgementRemandCcrs", () => {
@@ -9,7 +9,7 @@ describe("addOaacDisarrOperationsIfNecessary", () => {
     ]
     const adjPreJudgementRemandCcrs = new Set(["444"])
 
-    addOaacDisarrOperationsIfNecessary(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    filterOaacDisarrOperations(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
 
     expect(mainOperations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "444" }, status: "NotAttempted" }
@@ -27,7 +27,7 @@ describe("addOaacDisarrOperationsIfNecessary", () => {
     ]
     const adjPreJudgementRemandCcrs = new Set([])
 
-    addOaacDisarrOperationsIfNecessary(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    filterOaacDisarrOperations(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
 
     expect(mainOperations).toStrictEqual([])
     expect(oAacDisarrOperations).toStrictEqual([
@@ -41,7 +41,7 @@ describe("addOaacDisarrOperationsIfNecessary", () => {
     const oAacDisarrOperations: Operation[] = [{ code: "DISARR", data: undefined, status: "NotAttempted" }]
     const adjPreJudgementRemandCcrs = new Set(["444"])
 
-    addOaacDisarrOperationsIfNecessary(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    filterOaacDisarrOperations(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
 
     expect(mainOperations).toStrictEqual([])
     expect(oAacDisarrOperations).toStrictEqual([{ code: "DISARR", data: undefined, status: "NotAttempted" }])
@@ -55,7 +55,7 @@ describe("addOaacDisarrOperationsIfNecessary", () => {
     ]
     const adjPreJudgementRemandCcrs = new Set(["444"])
 
-    addOaacDisarrOperationsIfNecessary(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    filterOaacDisarrOperations(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
 
     expect(mainOperations).toStrictEqual([])
     expect(oAacDisarrOperations).toStrictEqual([
@@ -73,7 +73,7 @@ describe("addOaacDisarrOperationsIfNecessary", () => {
     ]
     const adjPreJudgementRemandCcrs = new Set([])
 
-    addOaacDisarrOperationsIfNecessary(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
+    filterOaacDisarrOperations(mainOperations, oAacDisarrOperations, adjPreJudgementRemandCcrs)
 
     expect(mainOperations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "444" }, status: "NotAttempted" }

@@ -1,18 +1,18 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
-import addRemandOperation from "../../../addRemandOperation"
+import createRemandOperation from "../../../createRemandOperation"
 import type { ResultClassHandler } from "../deriveOperationSequence"
 
-export const handleAdjournmentPostJudgement: ResultClassHandler = ({
-  offenceIndex,
-  offence,
-  resultIndex,
-  result,
-  operations
-}) => {
+export const handleAdjournmentPostJudgement: ResultClassHandler = ({ offenceIndex, offence, resultIndex, result }) => {
   if (result.PNCAdjudicationExists) {
-    addRemandOperation(result, offence?.CourtCaseReferenceNumber, operations)
+    return createRemandOperation(result, offence?.CourtCaseReferenceNumber)
   } else if (!offence.AddedByTheCourt) {
-    return { code: ExceptionCode.HO200103, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
+    const exception = {
+      code: ExceptionCode.HO200103,
+      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
+    }
+    return { operations: [], exceptions: [exception] }
   }
+
+  return { operations: [], exceptions: [] }
 }

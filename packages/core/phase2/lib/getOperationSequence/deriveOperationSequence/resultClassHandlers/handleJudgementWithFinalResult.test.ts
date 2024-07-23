@@ -1,19 +1,12 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import addNewOperationToOperationSetIfNotPresent from "../../../addNewOperationToOperationSetIfNotPresent"
-import addSubsequentVariationOperations from "../addSubsequentVariationOperations"
+import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../../../types/ResultClass"
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import ResultClass from "../../../../../types/ResultClass"
 
-jest.mock("../../../addNewOperationToOperationSetIfNotPresent")
-jest.mock("../addSubsequentVariationOperations")
 jest.mock("../checkRccSegmentApplicability")
 jest.mock("../hasUnmatchedPncOffences")
-;(addNewOperationToOperationSetIfNotPresent as jest.Mock).mockImplementation(() => {})
-;(addSubsequentVariationOperations as jest.Mock).mockImplementation(() => {})
 
 const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
@@ -23,20 +16,16 @@ describe("handleJudgementWithFinalResult", () => {
     jest.resetAllMocks()
   })
 
-  it("should add PENHRG operation when fixedPenalty is true and ccrId has value", () => {
+  it("should return PENHRG operation when fixedPenalty is true and ccrId has value", () => {
     const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", { courtCaseReference: "234" }, [
-      { dummy: "Main Operations" }
-    ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([{ code: "PENHRG", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
   })
 
-  it("should add PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
+  it("should return PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: true,
       offence: {
@@ -44,161 +33,136 @@ describe("handleJudgementWithFinalResult", () => {
       } as Offence
     })
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("PENHRG", undefined, [
-      { dummy: "Main Operations" }
-    ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([{ code: "PENHRG", data: undefined, status: "NotAttempted" }])
   })
 
-  it("should add SUBVAR operation when adjudication exists and ccrId has value", () => {
+  it("should return SUBVAR operation when adjudication exists, and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
+      resubmitted: true,
       result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result
     })
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
-      false,
-      [{ dummy: "Main Operations" }],
-      params.aho,
-      ExceptionCode.HO200104,
-      false,
-      1,
-      1,
-      { courtCaseReference: "234" }
-    )
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([{ code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
   })
 
-  it("should add SUBVAR operation when adjudication exists and ccrId does not have value", () => {
+  it("should return SUBVAR operation when adjudication exists and ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
+      resubmitted: true,
       result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result,
       offence: {
         CourtCaseReferenceNumber: undefined
       } as Offence
     })
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(1)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledWith(
-      false,
-      [{ dummy: "Main Operations" }],
-      params.aho,
-      ExceptionCode.HO200104,
-      false,
-      1,
-      1,
-      undefined
-    )
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([{ code: "SUBVAR", data: undefined, status: "NotAttempted" }])
   })
 
-  it("should only generate exception HO200124 when HO200124 and HO200108 conditions are met", () => {
+  it("should only return exception HO200124 when HO200124 and HO200108 conditions are met", () => {
     const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
     mockedCheckRccSegmentApplicability.mockReturnValue(
       RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
     )
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toStrictEqual({
-      code: "HO200124",
-      path: [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        1,
-        "Result",
-        1,
-        "ResultClass"
-      ]
-    })
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200124",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          1,
+          "ResultClass"
+        ]
+      }
+    ])
+    expect(operations).toHaveLength(0)
   })
 
-  it("should generate exception HO200108 when HO200124 condition is not met and case requires RCC and has reportable offences", () => {
+  it("should return exception HO200108 when HO200124 condition is not met and case requires RCC and has no reportable offences", () => {
     const params = generateResultClassHandlerParams({
       result: { PNCDisposalType: 2060 } as Result,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
+    mockedCheckRccSegmentApplicability.mockReturnValue(
+      RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
+    )
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
-      { dummy: "Main Operations" }
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200108",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          1,
+          "ResultClass"
+        ]
+      }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(operations).toStrictEqual([{ code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
   })
 
-  it("should generate exception HO200108 when HO200124 condition is not met and case does not require RCC", () => {
-    const params = generateResultClassHandlerParams({
-      result: { PNCDisposalType: 2060 } as Result,
-      allResultsAlreadyOnPnc: true
-    })
-    mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const exception = handleJudgementWithFinalResult(params)
-
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
-      { dummy: "Main Operations" }
-    ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
-  })
-
-  it("should not generate exception HO200124 when all results are already on PNC", () => {
+  it("should not return exception HO200124 when all results are already on PNC", () => {
     const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toHaveLength(1)
   })
 
-  it("should not generate exception HO200124 when all PNC offences match", () => {
+  it("should not return exception HO200124 when all PNC offences match", () => {
     const params = generateResultClassHandlerParams()
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toHaveLength(1)
   })
 
-  it("should not generate exception HO200124 when case is added by the court", () => {
+  it("should not return exception HO200124 when case is added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
     })
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toHaveLength(1)
   })
 
-  it("should add DISARR to operations when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
+  it("should return DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
@@ -206,17 +170,13 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
-      { dummy: "Main Operations" }
-    ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([{ code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
   })
 
-  it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId has value", () => {
+  it("should return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
@@ -224,17 +184,15 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", { courtCaseReference: "234" }, [
-      { dummy: "OAAC DISARR Operations" }
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([
+      { code: "DISARR", data: { courtCaseReference: "234" }, addedByTheCourt: true, status: "NotAttempted" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
 
-  it("should add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId does not have value", () => {
+  it("should return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId does not have value", () => {
     const params = generateResultClassHandlerParams({
       offence: {
         AddedByTheCourt: true,
@@ -246,17 +204,15 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(1)
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledWith("DISARR", undefined, [
-      { dummy: "OAAC DISARR Operations" }
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toStrictEqual([
+      { code: "DISARR", data: undefined, addedByTheCourt: true, status: "NotAttempted" }
     ])
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
   })
 
-  it("should not add DISARR to OAAC DISARR operations when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
+  it("should not return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
       allResultsAlreadyOnPnc: true
@@ -264,10 +220,9 @@ describe("handleJudgementWithFinalResult", () => {
     mockedCheckRccSegmentApplicability.mockReturnValue(RccSegmentApplicability.CaseDoesNotRequireRcc)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const exception = handleJudgementWithFinalResult(params)
+    const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
-    expect(exception).toBeUndefined()
-    expect(addNewOperationToOperationSetIfNotPresent).toHaveBeenCalledTimes(0)
-    expect(addSubsequentVariationOperations).toHaveBeenCalledTimes(0)
+    expect(exceptions).toHaveLength(0)
+    expect(operations).toHaveLength(0)
   })
 })

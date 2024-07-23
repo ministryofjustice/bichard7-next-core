@@ -1,25 +1,25 @@
-import type { Offence } from "../../../../../types/AnnotatedHearingOutcome"
-import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import addRemandOperation from "../../../addRemandOperation"
-import { handleAdjournment } from "./handleAdjournment"
+import type { Offence } from "../../../../../types/AnnotatedHearingOutcome";
+import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams";
+import createRemandOperation from "../../../createRemandOperation";
+import { handleAdjournment } from "./handleAdjournment";
 
-jest.mock("../../../addRemandOperation")
-;(addRemandOperation as jest.Mock).mockImplementation(() => {})
+jest.mock("../../../createRemandOperation.test")
+;(createRemandOperation as jest.Mock).mockImplementation(() => {})
 
 describe("handleAdjournment", () => {
   beforeEach(() => {
     jest.resetAllMocks()
   })
 
-  it("should call addRemandOperation and add the ccrId to remandCcrs", () => {
+  it("should call createRemandOperation.test and add the ccrId to remandCcrs", () => {
     const params = generateResultClassHandlerParams()
 
     handleAdjournment(params)
 
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 
-  it("should call addRemandOperation and should not add the ccrId to remandCcrs", () => {
+  it("should call createRemandOperation.test and should not add the ccrId to remandCcrs", () => {
     const params = generateResultClassHandlerParams({
       offence: {
         CourtCaseReferenceNumber: undefined
@@ -28,6 +28,6 @@ describe("handleAdjournment", () => {
 
     handleAdjournment(params)
 
-    expect(addRemandOperation).toHaveBeenCalledTimes(1)
+    expect(createRemandOperation).toHaveBeenCalledTimes(1)
   })
 })

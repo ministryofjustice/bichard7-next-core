@@ -5,46 +5,26 @@ import type { ResultClassHandlerParams } from "../../lib/getOperationSequence/de
 
 type Params = {
   fixedPenalty: boolean
-  operations: Record<string, string>[]
   resubmitted: boolean
   allResultsAlreadyOnPnc: boolean
   offence: Offence
   result: Result
   offenceIndex: number
   resultIndex: number
-  oAacDisarrOperations: Record<string, string>[]
-  remandCcrs: Set<string>
-  adjPreJudgementRemandCcrs: Set<string>
 }
 
 const defaultParams: Params = {
   fixedPenalty: false,
-  operations: [{ dummy: "Main Operations" }],
   resubmitted: false,
   allResultsAlreadyOnPnc: false,
   offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }], CourtCaseReferenceNumber: "234" } as Offence,
   result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: false } as Result,
   offenceIndex: 1,
-  resultIndex: 1,
-  oAacDisarrOperations: [{ dummy: "OAAC DISARR Operations" }],
-  remandCcrs: new Set<string>(),
-  adjPreJudgementRemandCcrs: new Set<string>()
+  resultIndex: 1
 }
 
 const generateResultClassHandlerParams = (params: Partial<Params> = defaultParams) => {
-  const {
-    fixedPenalty,
-    operations,
-    resubmitted,
-    allResultsAlreadyOnPnc,
-    offence,
-    result,
-    offenceIndex,
-    resultIndex,
-    oAacDisarrOperations,
-    remandCcrs,
-    adjPreJudgementRemandCcrs
-  } = {
+  const { fixedPenalty, resubmitted, allResultsAlreadyOnPnc, offence, result, offenceIndex, resultIndex } = {
     ...defaultParams,
     ...params,
     offence: {
@@ -59,16 +39,12 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
         HearingOutcome: { Case: { PenaltyNoticeCaseReferenceNumber: fixedPenalty ? "1" : undefined } }
       }
     }),
-    operations,
     resubmitted,
     allResultsAlreadyOnPnc,
     offence,
     result,
     offenceIndex,
-    resultIndex,
-    oAacDisarrOperations,
-    remandCcrs,
-    adjPreJudgementRemandCcrs
+    resultIndex
   }) as unknown as ResultClassHandlerParams
 }
 

@@ -1,8 +1,9 @@
 import isAdjournedNoNextHearing from "../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
-import type { Operation, OperationData } from "../../types/PncUpdateDataset"
+import type { OperationData } from "../../types/PncUpdateDataset"
 import ResultClass from "../../types/ResultClass"
-import addNewOperationToOperationSetIfNotPresent from "./addNewOperationToOperationSetIfNotPresent"
+import createOperation from "./createOperation"
+import { ExceptionsAndOperations } from "./getOperationSequence/deriveOperationSequence/deriveOperationSequence"
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
@@ -22,16 +23,18 @@ const generateNewremData = (
   }
 }
 
-const addRemandOperation = (result: Result, courtCaseReference: string | undefined | null, operations: Operation[]) => {
+const createRemandOperation = (
+  result: Result,
+  courtCaseReference: string | undefined | null
+): ExceptionsAndOperations => {
   if (isAdjournedNoNextHearing(result.CJSresultCode)) {
-    return
+    return { operations: [], exceptions: [] }
   }
 
-  addNewOperationToOperationSetIfNotPresent(
-    "NEWREM",
-    generateNewremData(result, courtCaseReference ?? undefined),
-    operations
-  )
+  return {
+    operations: [createOperation("NEWREM", generateNewremData(result, courtCaseReference ?? undefined))],
+    exceptions: []
+  }
 }
 
-export default addRemandOperation
+export default createRemandOperation

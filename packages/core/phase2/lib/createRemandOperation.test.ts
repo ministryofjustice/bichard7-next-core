@@ -2,11 +2,11 @@ jest.mock("../../lib/isAdjournedNoNextHearing")
 import isAdjournedNoNextHearing from "../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../types/PncUpdateDataset"
-import addRemandOperation from "./addRemandOperation"
+import createRemandOperation from "./createRemandOperation"
 
 const mockedIsAdjournedNoNextHearing = isAdjournedNoNextHearing as jest.Mock
 
-describe("addRemandOperation", () => {
+describe("createRemandOperation.test", () => {
   beforeEach(() => {
     mockedIsAdjournedNoNextHearing.mockRestore()
   })
@@ -24,7 +24,7 @@ describe("addRemandOperation", () => {
       NextHearingDate: new Date().toISOString()
     } as Result
 
-    addRemandOperation(result, "123", operations)
+    createRemandOperation(result, "123", operations)
 
     expect(operations).toHaveLength(1)
 
@@ -48,7 +48,7 @@ describe("addRemandOperation", () => {
       }
     } as Result
 
-    addRemandOperation(result, "123", operations)
+    createRemandOperation(result, "123", operations)
 
     expect(operations).toHaveLength(1)
 
@@ -67,7 +67,7 @@ describe("addRemandOperation", () => {
       CJSresultCode: 0
     } as Result
 
-    addRemandOperation(result, undefined, operations)
+    createRemandOperation(result, undefined, operations)
 
     expect(operations).toHaveLength(0)
   })
@@ -86,7 +86,7 @@ describe("addRemandOperation", () => {
       NextHearingDate: "2024-05-03"
     } as Result
 
-    addRemandOperation(result, undefined, operations)
+    createRemandOperation(result, undefined)
 
     expect(operations).toStrictEqual([
       {
@@ -116,7 +116,7 @@ describe("addRemandOperation", () => {
       NextHearingDate: "2024-05-03"
     } as Result
 
-    addRemandOperation(result, "123", operations)
+    createRemandOperation(result, "123", operations)
 
     expect(operations).toStrictEqual([
       {
@@ -143,7 +143,7 @@ describe("addRemandOperation", () => {
         NextHearingDate: "2024-05-03"
       } as Result
 
-      addRemandOperation(result, "123", operations)
+      createRemandOperation(result, "123", operations)
 
       expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
     }
