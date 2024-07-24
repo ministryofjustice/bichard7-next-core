@@ -44,9 +44,7 @@
           "DefendantDetail": {
             "PersonName": {
               "Title": "Mr",
-              "GivenName": [
-                "UPDATE"
-              ],
+              "GivenName": ["UPDATE"],
               "FamilyName": "PUFIVE"
             },
             "GeneratedPNCFilename": "PUFIVE/UPDATE",

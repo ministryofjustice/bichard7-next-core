@@ -90,7 +90,7 @@ npm run worker -w packages/conductor
 1. Get [everything running](#running-the-worker-for-development), but for starting the worker use:
 
 ```bash
-PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE npm run worker -w packages/conductor
+PHASE_2_QUEUE_NAME=TEST_PHASE2_QUEUE PHASE_3_QUEUE_NAME=TEST_PHASE3_QUEUE npm run worker -w packages/conductor
 ```
 
 2. Run the end-to-end tests.
