@@ -34,6 +34,7 @@ services:
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
+      PHASE2_CORE_CANARY_RATIO: ${PHASE2_CORE_CANARY_RATIO}
       NODE_ENV: ${NODE_ENV:-test}
       SMTP_HOST: mail
       SMTP_USER: ${DEFAULT_USER}
