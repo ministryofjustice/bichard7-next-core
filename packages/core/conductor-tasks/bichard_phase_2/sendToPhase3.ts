@@ -8,9 +8,9 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
-import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import type Phase2Result from "../../phase2/types/Phase2Result"
 import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
+import serialiseToXml from "../../phase2/serialise/pnc-update-dataset-xml/serialiseToXml"
 
 const mqQueue = process.env.PHASE_3_QUEUE_NAME ?? "PNC_UPDATE_REQUEST_QUEUE"
 
