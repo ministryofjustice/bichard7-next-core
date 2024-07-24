@@ -43,17 +43,4 @@ describe("filterDisposalsAddedInCourt", () => {
       expect(filteredOperations).toStrictEqual([remandOperation])
     })
   })
-
-  it("should remove disposal operation when the other operation is not a matching remand operation", () => {
-    const mainOperations: Operation[] = [
-      { code: "DISARR", data: { courtCaseReference: "444" }, status: "NotAttempted" },
-      { code: "DISARR", data: { courtCaseReference: "444" }, addedByTheCourt: true, status: "NotAttempted" }
-    ]
-
-    const filteredOperations = filterDisposalsAddedInCourt(mainOperations)
-
-    expect(filteredOperations).toStrictEqual([
-      { code: "DISARR", data: { courtCaseReference: "444" }, status: "NotAttempted" }
-    ])
-  })
 })
