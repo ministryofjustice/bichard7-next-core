@@ -1,0 +1,11 @@
+{
+  "name": "send_to_phase3",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
+  "retryDelaySeconds": 10,
+  "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
+  "timeoutPolicy": "RETRY",
+  "inputKeys": ["s3TaskDataPath"],
+  "outputKeys": ["auditLogEvents"]
+}
