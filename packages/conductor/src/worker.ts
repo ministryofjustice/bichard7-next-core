@@ -15,6 +15,9 @@ import convertSpiToAho from "@moj-bichard7/core/conductor-tasks/incomingMessageH
 import createAuditLogRecord from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/createAuditLogRecord"
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
+import persistPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/persistPhase2"
+import processPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/processPhase2"
+import sendToPhase3 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/sendToPhase3"
 
 const client = createConductorClient()
 const tasks = [
@@ -26,9 +29,12 @@ const tasks = [
   generateRerunTasks,
   lockS3File,
   persistPhase1,
+  persistPhase2,
   processPhase1,
+  processPhase2,
   rerunPeriod,
   sendToPhase2,
+  sendToPhase3,
   storeAuditLogEvents
 ]
   .map(captureWorkerExceptions)
