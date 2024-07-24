@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -13,7 +13,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -26,7 +26,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -39,7 +39,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:COMSEN (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -52,7 +52,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:COMSEN (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -65,7 +65,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:COMSEN (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -78,7 +78,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -91,7 +91,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:DISARR (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -104,7 +104,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:DISARR (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -117,7 +117,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:NEWREM (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:NEWREM (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -130,9 +130,9 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour APPHRD:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:NEWREM (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:NEWREM (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -145,7 +145,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:PENHRG (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -158,7 +158,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:PENHRG (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -171,7 +171,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:PENHRG (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -184,7 +184,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -197,7 +197,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -210,7 +210,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -223,7 +223,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SUBVAR (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -236,7 +236,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SUBVAR (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -249,7 +249,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour APPHRD:SUBVAR (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -262,7 +262,7 @@ exports[`validateOperationSequence should match existing behaviour APPHRD:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -275,7 +275,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -288,7 +288,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -301,7 +301,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -314,7 +314,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -327,7 +327,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -340,7 +340,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -353,7 +353,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: 2) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -366,7 +366,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: null) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -379,7 +379,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:NEWREM (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -392,9 +392,9 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:NEWREM (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: null) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -407,7 +407,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:PENHRG (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -420,11 +420,11 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:PENHRG (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:PENHRG (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -437,7 +437,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -450,7 +450,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -463,7 +463,7 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SUBVAR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -476,11 +476,11 @@ exports[`validateOperationSequence should match existing behaviour COMSEN:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SUBVAR (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour COMSEN:SUBVAR (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -493,7 +493,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -506,7 +506,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -519,7 +519,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: 1) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -532,7 +532,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: 2) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -545,7 +545,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: null) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -558,7 +558,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:DISARR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -571,7 +571,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:DISARR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -584,7 +584,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:DISARR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -597,13 +597,13 @@ exports[`validateOperationSequence should match existing behaviour DISARR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:NEWREM (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:NEWREM (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: 1) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -616,7 +616,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: 2) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -629,7 +629,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: null) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -642,7 +642,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -655,7 +655,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -668,7 +668,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -681,7 +681,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: 1) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -694,7 +694,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: 2) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -707,7 +707,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: null) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -720,7 +720,7 @@ exports[`validateOperationSequence should match existing behaviour DISARR:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -733,9 +733,9 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:APPHRD (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:APPHRD (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -748,7 +748,7 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:COMSEN (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -761,9 +761,9 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:COMSEN (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:COMSEN (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: null) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -776,25 +776,25 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:DISARR (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:DISARR (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:DISARR (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:NEWREM (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:NEWREM (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:PENHRG (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:PENHRG (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:PENHRG (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -807,9 +807,9 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SENDEF (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -822,13 +822,13 @@ exports[`validateOperationSequence should match existing behaviour NEWREM:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SUBVAR (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SUBVAR (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour NEWREM:SUBVAR (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -841,7 +841,7 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -854,7 +854,7 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -867,31 +867,31 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:COMSEN (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:COMSEN (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:COMSEN (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:DISARR (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:DISARR (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:DISARR (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:NEWREM (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:NEWREM (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:PENHRG (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:PENHRG (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:PENHRG (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -904,7 +904,7 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -917,7 +917,7 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -930,13 +930,13 @@ exports[`validateOperationSequence should match existing behaviour PENHRG:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SUBVAR (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SUBVAR (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour PENHRG:SUBVAR (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -949,7 +949,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -962,7 +962,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -975,7 +975,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -988,7 +988,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1001,7 +1001,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1014,7 +1014,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:COMSEN
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1027,7 +1027,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 2) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -1040,7 +1040,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: null) 1`] = `
 {
   "code": "HO200112",
   "path": [
@@ -1053,7 +1053,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:NEWREM (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1066,9 +1066,9 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:NEWREM (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: null) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1081,7 +1081,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:NEWREM
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1094,7 +1094,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 2) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1107,7 +1107,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: null) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1120,7 +1120,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1133,7 +1133,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1146,7 +1146,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1159,7 +1159,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 1) 1`] = `
 {
   "code": "HO200113",
   "path": [
@@ -1172,7 +1172,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 2) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1185,7 +1185,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: null) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1198,7 +1198,7 @@ exports[`validateOperationSequence should match existing behaviour SENDEF:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:APPHRD (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1211,7 +1211,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:APPHRD (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1224,7 +1224,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:APPHRD (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1237,13 +1237,13 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:APPHRD
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:COMSEN (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:COMSEN (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:COMSEN (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -1256,7 +1256,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: 2) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -1269,7 +1269,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: null) 1`] = `
 {
   "code": "HO200115",
   "path": [
@@ -1282,13 +1282,13 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:DISARR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:NEWREM (CCR: 1) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: 1) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:NEWREM (CCR: 2) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: 2) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:NEWREM (CCR: null) 1`] = `undefined`;
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: null) 1`] = `undefined`;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1301,7 +1301,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1314,7 +1314,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1327,7 +1327,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:PENHRG
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: 1) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1340,7 +1340,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: 2) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1353,7 +1353,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: null) 1`] = `
 {
   "code": "HO200114",
   "path": [
@@ -1366,7 +1366,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:SENDEF
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SUBVAR (CCR: 1) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: 1) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1379,7 +1379,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SUBVAR (CCR: 2) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: 2) 1`] = `
 {
   "code": "HO200109",
   "path": [
@@ -1392,7 +1392,7 @@ exports[`validateOperationSequence should match existing behaviour SUBVAR:SUBVAR
 }
 `;
 
-exports[`validateOperationSequence should match existing behaviour SUBVAR:SUBVAR (CCR: null) 1`] = `
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: null) 1`] = `
 {
   "code": "HO200109",
   "path": [

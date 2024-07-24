@@ -1,4 +1,4 @@
-import type { Operation, OperationData } from "../../types/PncUpdateDataset"
+import type { Operation, OperationData } from "../../../../types/PncUpdateDataset"
 
 const createOperation = <T extends Operation["code"]>(operationCode: T, operationData: OperationData<T> | undefined) =>
   ({

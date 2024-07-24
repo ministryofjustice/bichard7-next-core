@@ -41,7 +41,7 @@ const processMessage = (
     return
   }
 
-  const { value: operations, exceptions } = getOperationSequence(outputMessage, isResubmitted)
+  const { operations, exceptions } = getOperationSequence(outputMessage, isResubmitted)
   exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
     return

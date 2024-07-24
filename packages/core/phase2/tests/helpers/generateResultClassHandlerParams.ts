@@ -1,7 +1,7 @@
 import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../types/ResultClass"
-import type { ResultClassHandlerParams } from "../../lib/getOperationSequence/deriveOperationSequence/deriveOperationSequence"
+import type { ResultClassHandlerParams } from "../../lib/getOperationSequence/generateOperations/resultClassHandlers/ResultClassHandler"
 
 type Params = {
   fixedPenalty: boolean

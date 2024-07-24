@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import deriveOperationSequence from "./deriveOperationSequence"
+import generateOperations from "./generateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
@@ -26,7 +26,7 @@ const mockedHandleAppealOutcome = handleAppealOutcome as jest.Mock
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock
 const mockedHandleSentence = handleSentence as jest.Mock
 
-describe("deriveOperationSequence", () => {
+describe("generateOperations", () => {
   beforeEach(() => {
     jest.resetAllMocks()
     ;[
@@ -72,7 +72,7 @@ describe("deriveOperationSequence", () => {
         }
       })
 
-      const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+      const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
       expect(operationsResult).toStrictEqual({
         operations: [
@@ -127,7 +127,7 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(operationsResult).toStrictEqual({ operations: [] })
   })
@@ -152,7 +152,7 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(operationsResult).toStrictEqual({
       exceptions: [
@@ -200,7 +200,7 @@ describe("deriveOperationSequence", () => {
       }
     })
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(operationsResult).toStrictEqual({
       operations: [
@@ -211,7 +211,7 @@ describe("deriveOperationSequence", () => {
           isAdjournmentPreJudgement: true,
           status: "NotAttempted"
         },
-        { code: "DISARR", data: { courtCaseReference: "1" }, status: "NotAttempted" }
+        { code: "DISARR", data: { courtCaseReference: "1" }, addedByTheCourt: true, status: "NotAttempted" }
       ]
     })
   })
@@ -237,9 +237,10 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(operationsResult).toStrictEqual({
+      operations: [],
       exceptions: [
         {
           code: "HO200121",
@@ -265,9 +266,10 @@ describe("deriveOperationSequence", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = deriveOperationSequence(aho, resubmitted, allResultAlreadyOnPnc)
+    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
 
     expect(operationsResult).toStrictEqual({
+      operations: [],
       exceptions: [
         {
           code: "HO200121",

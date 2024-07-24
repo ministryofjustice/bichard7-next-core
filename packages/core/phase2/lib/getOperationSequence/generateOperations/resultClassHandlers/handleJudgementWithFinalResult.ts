@@ -2,11 +2,11 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
 import type { Operation } from "../../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../../types/ResultClass"
-import createOperation from "../../../createOperation"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
+import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
-import type { ResultClassHandler } from "../deriveOperationSequence"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
+import type { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
