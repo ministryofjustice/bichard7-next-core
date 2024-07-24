@@ -7,7 +7,7 @@ import operationCourtCaseReference from "./operationCourtCaseReference"
 
 const errorPath = errorPaths.case.asn
 
-const validateOperationSequence = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
+const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
   let apphrdExists = false
   let comsenExists = false
   let sendefExists = false
@@ -100,4 +100,4 @@ const validateOperationSequence = (operations: Operation[], remandCcrs: Set<stri
   }
 }
 
-export default validateOperationSequence
+export default validateOperations

@@ -1,9 +1,9 @@
-import isAdjournedNoNextHearing from "../../lib/isAdjournedNoNextHearing"
-import type { Result } from "../../types/AnnotatedHearingOutcome"
-import type { NewremOperation, OperationData } from "../../types/PncUpdateDataset"
-import ResultClass from "../../types/ResultClass"
+import isAdjournedNoNextHearing from "../../../../lib/isAdjournedNoNextHearing"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { NewremOperation, OperationData } from "../../../../types/PncUpdateDataset"
+import ResultClass from "../../../../types/ResultClass"
 import createOperation from "./createOperation"
-import type { ExceptionsAndOperations } from "./getOperationSequence/deriveOperationSequence/deriveOperationSequence"
+import ExceptionsAndOperations from "./ExceptionsAndOperations"
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 

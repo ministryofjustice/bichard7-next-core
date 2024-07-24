@@ -1,9 +1,9 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
-import createOperation from "../../../createOperation"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
+import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
-import type { ResultClassHandler } from "../deriveOperationSequence"
+import { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleSentence: ResultClassHandler = ({
   aho,

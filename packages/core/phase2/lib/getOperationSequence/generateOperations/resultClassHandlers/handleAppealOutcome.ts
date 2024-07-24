@@ -1,7 +1,7 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
-import createOperation from "../../../createOperation"
-import type { ResultClassHandler } from "../deriveOperationSequence"
+import createOperation from "../createOperation"
+import { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleAppealOutcome: ResultClassHandler = ({ result, offence, offenceIndex, resultIndex }) => {
   if (result.PNCAdjudicationExists) {

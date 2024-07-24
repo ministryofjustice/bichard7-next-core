@@ -1,7 +1,7 @@
-jest.mock("../../lib/isAdjournedNoNextHearing")
-import isAdjournedNoNextHearing from "../../lib/isAdjournedNoNextHearing"
-import type { Result } from "../../types/AnnotatedHearingOutcome"
-import type { Operation } from "../../types/PncUpdateDataset"
+jest.mock("../../../../lib/isAdjournedNoNextHearing")
+import isAdjournedNoNextHearing from "../../../../lib/isAdjournedNoNextHearing"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Operation } from "../../../../types/PncUpdateDataset"
 import createRemandOperation from "./createRemandOperation"
 
 const mockedIsAdjournedNoNextHearing = isAdjournedNoNextHearing as jest.Mock

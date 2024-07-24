@@ -2,8 +2,8 @@ import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCo
 import errorPaths from "../../../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import type { OperationData } from "../../../../types/PncUpdateDataset"
-import createOperation from "../../createOperation"
-import type { ExceptionsAndOperations } from "./deriveOperationSequence"
+import createOperation from "./createOperation"
+import ExceptionsAndOperations from "./ExceptionsAndOperations"
 
 const areAllPncResults2007 = (aho: AnnotatedHearingOutcome, courtCaseReference?: string) => {
   const ccr = courtCaseReference || aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
