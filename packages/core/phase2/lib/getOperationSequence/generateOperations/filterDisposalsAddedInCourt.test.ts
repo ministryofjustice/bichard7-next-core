@@ -18,7 +18,7 @@ const disposalOperation: Operation = {
 
 describe("filterDisposalsAddedInCourt", () => {
   describe("addedByTheCourt is true and isAdjournmentPreJudgement is true", () => {
-    it.only("should leave added in court disposal operation when CCR matches remand operation's CCR", () => {
+    it("should leave added in court disposal operation when CCR matches remand operation's CCR", () => {
       const operations: Operation[] = [remandOperation, disposalOperation]
 
       const filteredOperations = filterDisposalsAddedInCourt(operations)
@@ -26,7 +26,7 @@ describe("filterDisposalsAddedInCourt", () => {
       expect(filteredOperations).toStrictEqual([remandOperation, disposalOperation])
     })
 
-    it.only("should remove added in court disposal operation when CCR does not match remand operation's CCR", () => {
+    it("should remove added in court disposal operation when CCR does not match remand operation's CCR", () => {
       const nonMatchingRemandOperation = { ...remandOperation, courtCaseReference: "555" }
       const operations: Operation[] = [nonMatchingRemandOperation, disposalOperation]
 
@@ -35,7 +35,7 @@ describe("filterDisposalsAddedInCourt", () => {
       expect(filteredOperations).toStrictEqual([nonMatchingRemandOperation])
     })
 
-    it.only("should remove added in court disposal operation when disposal operation does not have data", () => {
+    it("should remove added in court disposal operation when disposal operation does not have data", () => {
       const operations: Operation[] = [remandOperation, { ...disposalOperation, data: undefined }]
 
       const filteredOperations = filterDisposalsAddedInCourt(operations)

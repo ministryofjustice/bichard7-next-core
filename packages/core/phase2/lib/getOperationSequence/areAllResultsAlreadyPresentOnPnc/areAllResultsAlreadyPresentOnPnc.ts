@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../../types/Exception"
-import { ExceptionResult } from "../../../../types/Exception"
+import type { ExceptionResult } from "../../../../types/Exception"
 import { isNonEmptyArray } from "../../../../types/NonEmptyArray"
 import isRecordableResult from "../../isRecordableResult"
 import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"

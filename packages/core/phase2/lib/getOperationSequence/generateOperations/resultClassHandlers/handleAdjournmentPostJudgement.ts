@@ -1,7 +1,7 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
 import createRemandOperation from "../createRemandOperation"
-import { ResultClassHandler } from "./ResultClassHandler"
+import type { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleAdjournmentPostJudgement: ResultClassHandler = ({ offenceIndex, offence, resultIndex, result }) => {
   if (result.PNCAdjudicationExists) {

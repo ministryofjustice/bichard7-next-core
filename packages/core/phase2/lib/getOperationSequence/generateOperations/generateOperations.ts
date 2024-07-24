@@ -18,7 +18,7 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleAppealOutcome } from "./resultClassHandlers/handleAppealOutcome"
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
-import { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
+import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -40,11 +40,11 @@ const generateOperations = (
   const allOperations: Operation[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   let recordableResultFound = false
-  
+
   if (offences.filter(isRecordableOffence).length === 0) {
     return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
   }
-  
+
   offences.forEach((offence, offenceIndex) => {
     if (!isRecordableOffence(offence)) {
       return

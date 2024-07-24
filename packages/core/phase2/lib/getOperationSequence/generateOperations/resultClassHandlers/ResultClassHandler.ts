@@ -1,5 +1,5 @@
-import { AnnotatedHearingOutcome, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import ExceptionsAndOperations from "../ExceptionsAndOperations"
+import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type ExceptionsAndOperations from "../ExceptionsAndOperations"
 
 export type ResultClassHandlerParams = {
   aho: AnnotatedHearingOutcome

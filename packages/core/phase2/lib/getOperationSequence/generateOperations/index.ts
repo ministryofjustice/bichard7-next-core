@@ -1,2 +1,1 @@
-export { default as generateOperations } from "./generateOperations";
-
+export { default as generateOperations } from "./generateOperations"

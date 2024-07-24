@@ -3,7 +3,7 @@ import errorPaths from "../../../../../lib/exceptions/errorPaths"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
-import { ResultClassHandler } from "./ResultClassHandler"
+import type { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleSentence: ResultClassHandler = ({
   aho,

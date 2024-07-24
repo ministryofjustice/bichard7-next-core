@@ -2,7 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { generateOperations } from "./generateOperations"
-import ExceptionsAndOperations from "./generateOperations/ExceptionsAndOperations"
+import type ExceptionsAndOperations from "./generateOperations/ExceptionsAndOperations"
 import sortOperations from "./sortOperations"
 
 const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {

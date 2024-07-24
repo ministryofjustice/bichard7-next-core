@@ -6,7 +6,7 @@ import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkR
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
-import { ResultClassHandler } from "./ResultClassHandler"
+import type { ResultClassHandler } from "./ResultClassHandler"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,

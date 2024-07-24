@@ -3,7 +3,7 @@ import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { NewremOperation, OperationData } from "../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../types/ResultClass"
 import createOperation from "./createOperation"
-import ExceptionsAndOperations from "./ExceptionsAndOperations"
+import type ExceptionsAndOperations from "./ExceptionsAndOperations"
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 

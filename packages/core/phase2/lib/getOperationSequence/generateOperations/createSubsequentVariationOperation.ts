@@ -3,7 +3,7 @@ import errorPaths from "../../../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import type { OperationData } from "../../../../types/PncUpdateDataset"
 import createOperation from "./createOperation"
-import ExceptionsAndOperations from "./ExceptionsAndOperations"
+import type ExceptionsAndOperations from "./ExceptionsAndOperations"
 
 const areAllPncResults2007 = (aho: AnnotatedHearingOutcome, courtCaseReference?: string) => {
   const ccr = courtCaseReference || aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
