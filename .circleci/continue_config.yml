@@ -127,6 +127,9 @@ jobs:
           name: Run Mailhog
           command: npm run mailserver
       - run:
+          name: Run Conductor
+          command: npm run conductor-only
+      - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
       - run:
