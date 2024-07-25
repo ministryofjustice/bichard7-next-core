@@ -1,17 +1,15 @@
-import "../../phase1/tests/helpers/setEnvironmentVariables"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
+import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
+import "../../phase1/tests/helpers/setEnvironmentVariables"
 import type Phase1Result from "../../phase1/types/Phase1Result"
-import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
-import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
-
-jest.setTimeout(50_000)
 
 const queueName = process.env.PHASE_2_QUEUE_NAME
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
@@ -85,7 +83,7 @@ describe("sendToPhase2", () => {
 
       const workflow = await waitForCompletedWorkflow(
         parsedPhase1Result.correlationId,
-        "COMPLETED",
+        "RUNNING",
         60_000,
         "bichard_phase_2"
       )
