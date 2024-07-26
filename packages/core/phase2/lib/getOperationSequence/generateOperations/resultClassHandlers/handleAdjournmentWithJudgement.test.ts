@@ -18,6 +18,14 @@ const organisationUnit = {
   OrganisationUnitCode: "ABCDEFG"
 }
 
+const remandOperation = {
+  code: "NEWREM",
+  courtCaseReference: "234",
+  data: undefined,
+  isAdjournmentPreJudgement: false,
+  status: "NotAttempted"
+}
+
 describe("handleAdjournmentWithJudgement", () => {
   beforeEach(() => {
     jest.resetAllMocks()
@@ -62,11 +70,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "PENHRG", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -82,11 +86,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -115,13 +115,7 @@ describe("handleAdjournmentWithJudgement", () => {
         ]
       }
     ])
-    expect(operations).toStrictEqual([
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
-    ])
+    expect(operations).toStrictEqual([remandOperation])
   })
 
   it("should return HO200108 when HO200124 condition is not met and case requires RCC and has no reportable offences", () => {
@@ -154,11 +148,7 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -172,11 +162,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -190,11 +176,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -210,11 +192,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, addedByTheCourt: true, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -231,11 +209,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -252,11 +226,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: "DISARR", data: { courtCaseReference: "234" }, addedByTheCourt: true, status: "NotAttempted" },
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
+      remandOperation
     ])
   })
 
@@ -271,12 +241,6 @@ describe("handleAdjournmentWithJudgement", () => {
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([
-      {
-        code: "NEWREM",
-        data: undefined,
-        status: "NotAttempted"
-      }
-    ])
+    expect(operations).toStrictEqual([remandOperation])
   })
 })
