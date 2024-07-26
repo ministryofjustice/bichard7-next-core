@@ -1,3 +1,6 @@
+import "../../phase1/tests/helpers/setEnvironmentVariables"
+
+import { WorkflowResourceService } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -6,10 +9,13 @@ import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/wa
 import { randomUUID } from "crypto"
 import fs from "fs"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
+import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
-import "../../phase1/tests/helpers/setEnvironmentVariables"
 import type Phase1Result from "../../phase1/types/Phase1Result"
+
+jest.mock("../../lib/mq/connectAndSendMessage")
+const mockedConnectAndSendMessage = connectAndSendMessage as jest.Mock
 
 const queueName = process.env.PHASE_2_QUEUE_NAME
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
@@ -36,11 +42,12 @@ const sendToPhase2 = async (canaryRatio: string | undefined, inputData: Record<s
 
 describe("sendToPhase2", () => {
   beforeEach(async () => {
-    jest.resetModules()
+    mockedConnectAndSendMessage.mockImplementation(jest.requireActual("../../lib/mq/connectAndSendMessage").default)
     await testMqGateway.getMessages(queueName!)
   })
 
   afterAll(async () => {
+    jest.clearAllMocks()
     await testMqGateway.dispose()
   })
 
@@ -63,6 +70,18 @@ describe("sendToPhase2", () => {
         expect(message).toEqual(serialiseToXml(parsedPhase1Result.hearingOutcome))
       }
     )
+
+    it("should return failed stauts when it fails to send to MQ", async () => {
+      mockedConnectAndSendMessage.mockRejectedValue(Error("Dummy MQ error"))
+      const { phase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(undefined, { s3TaskDataPath })
+
+      expect(result.status).toBe("FAILED")
+      expect(result.logs?.map((log) => log.log)).toEqual(["Failed to write to MQ", "Dummy MQ error"])
+    })
   })
 
   describe("when Phase 2 Core canary ratio is set to use Conductor", () => {
@@ -88,6 +107,22 @@ describe("sendToPhase2", () => {
         "bichard_phase_2"
       )
       expect(workflow).toBeDefined()
+    })
+
+    it("should return failed status when it fails to start the Conductor workflow", async () => {
+      jest.spyOn(WorkflowResourceService.prototype, "startWorkflow1").mockRejectedValue(Error("Dummy Conductor error"))
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await createAuditLogRecord(parsedPhase1Result.correlationId)
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(phase2CoreCanaryRatio, { s3TaskDataPath })
+
+      expect(result.status).toBe("FAILED")
+      expect(result.logs?.map((log) => log.log)).toEqual([
+        "Failed to start bichard_phase_2 workflow",
+        "Dummy Conductor error"
+      ])
     })
   })
 
