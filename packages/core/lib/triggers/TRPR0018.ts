@@ -6,7 +6,7 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPR0018
 
-const findMatchingPncOffence = (
+export const findMatchingPncOffence = (
   pncQuery: PncQueryResult,
   caseReference: string | undefined,
   offence: Offence
@@ -31,7 +31,7 @@ const findMatchingPncOffence = (
   }
 }
 
-const datesAreDifferent = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+export const datesAreDifferent = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
   const pncStartDate = pncOffence.offence.startDate
   const startDatesMatch = hoStartDate.getTime() === pncStartDate.getTime()
