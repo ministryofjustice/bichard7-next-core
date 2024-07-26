@@ -73,7 +73,7 @@ describe("sendToPhase2", () => {
       }
     )
 
-    it("should return failed stauts when it fails to send to MQ", async () => {
+    it("should return failed status when it fails to send to MQ", async () => {
       mockedConnectAndSendMessage.mockRejectedValue(Error("Dummy MQ error"))
       const { phase1Result, s3TaskDataPath } = getPhase1Result()
 
