@@ -121,8 +121,10 @@ describe("createRemandOperation", () => {
     expect(operations).toStrictEqual([
       {
         code: "NEWREM",
-        status: "NotAttempted",
-        data: undefined
+        courtCaseReference: "123",
+        data: undefined,
+        isAdjournmentPreJudgement: false,
+        status: "NotAttempted"
       }
     ])
   })
@@ -145,7 +147,15 @@ describe("createRemandOperation", () => {
       const { operations, exceptions } = createRemandOperation(result, "123")
 
       expect(exceptions).toHaveLength(0)
-      expect(operations).toStrictEqual([{ code: "NEWREM", data: undefined, status: "NotAttempted" }])
+      expect(operations).toStrictEqual([
+        {
+          code: "NEWREM",
+          courtCaseReference: "123",
+          data: undefined,
+          isAdjournmentPreJudgement: false,
+          status: "NotAttempted"
+        }
+      ])
     }
   )
 })

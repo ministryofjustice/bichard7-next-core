@@ -27,10 +27,9 @@ const createRemandOperation = (
   }
 
   const operation = createOperation("NEWREM", generateNewremData(result)) as NewremOperation
-  if (operation.data) {
-    operation.courtCaseReference = courtCaseReference ?? undefined
-    operation.isAdjournmentPreJudgement = result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT
-  }
+
+  operation.courtCaseReference = courtCaseReference ?? undefined
+  operation.isAdjournmentPreJudgement = result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT
 
   return {
     operations: [operation],
