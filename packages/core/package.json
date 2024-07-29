@@ -104,7 +104,7 @@
     "bichard7-next-data-latest": "npm:@moj-bichard7-developers/bichard7-next-data@^2.0.195",
     "diff": "^5.2.0",
     "dynalite": "^3.2.2",
-    "fast-xml-parser": "^4.4.0",
+    "fast-xml-parser": "^4.4.1",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
