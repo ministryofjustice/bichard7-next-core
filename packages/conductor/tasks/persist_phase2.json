@@ -1,0 +1,10 @@
+{
+  "name": "persist_phase2",
+  "retryCount": 10,
+  "retryLogic": "EXPONENTIAL_BACKOFF",
+  "retryDelaySeconds": 10,
+  "timeoutSeconds": 60,
+  "responseTimeoutSeconds": 55,
+  "timeoutPolicy": "RETRY",
+  "inputKeys": ["s3TaskDataPath"]
+}

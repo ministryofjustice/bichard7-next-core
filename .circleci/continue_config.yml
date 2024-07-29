@@ -127,6 +127,9 @@ jobs:
           name: Run Mailhog
           command: npm run mailserver
       - run:
+          name: Run Conductor
+          command: npm run conductor-only
+      - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
       - run:
@@ -241,6 +244,7 @@ jobs:
           name: Run the worker
           environment:
             PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
+            PHASE_3_QUEUE_NAME: TEST_PHASE3_QUEUE
           command: nvm use && npm run -w packages/conductor worker
           background: true
       - run:

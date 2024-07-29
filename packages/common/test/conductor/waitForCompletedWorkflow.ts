@@ -1,11 +1,16 @@
 import waitForWorkflows from "./waitForWorkflows"
 
-export const waitForCompletedWorkflow = async (freeText: string, status: string = "COMPLETED", timeout = 60000) => {
+export const waitForCompletedWorkflow = async (
+  freeText: string,
+  status = "COMPLETED",
+  timeout = 60000,
+  workflowType = "bichard_phase_1"
+) => {
   const [workflow] = await waitForWorkflows(
     {
       freeText,
       query: {
-        workflowType: "bichard_phase_1",
+        workflowType,
         status
       }
     },

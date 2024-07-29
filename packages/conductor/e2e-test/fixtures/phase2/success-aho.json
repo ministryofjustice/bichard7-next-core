@@ -1,0 +1,343 @@
+{
+  "AnnotatedHearingOutcome": {
+    "HearingOutcome": {
+      "Hearing": {
+        "CourtHearingLocation": {
+          "TopLevelCode": "B",
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "EF",
+          "BottomLevelCode": "01",
+          "OrganisationUnitCode": "B01EF01"
+        },
+        "DateOfHearing": "2011-09-26T00:00:00.000Z",
+        "TimeOfHearing": "10:00",
+        "HearingLanguage": "D",
+        "HearingDocumentationLanguage": "D",
+        "DefendantPresentAtHearing": "A",
+        "SourceReference": {
+          "DocumentName": "SPI UPDATE PUFIVE",
+          "UniqueID": "CORRELATION_ID",
+          "DocumentType": "SPI Case Result"
+        },
+        "CourtType": "MCA",
+        "CourtHouseCode": 2576,
+        "CourtHouseName": "Magistrates' Courts London Croydon"
+      },
+      "Case": {
+        "PTIURN": "01ZD0302608",
+        "PreChargeDecisionIndicator": false,
+        "CourtCaseReferenceNumber": "97/1626/008395Q",
+        "CourtReference": {
+          "MagistratesCourtReference": "01ZD0302608"
+        },
+        "ForceOwner": {
+          "SecondLevelCode": "01",
+          "ThirdLevelCode": "ZD",
+          "BottomLevelCode": "00",
+          "OrganisationUnitCode": "01ZD00"
+        },
+        "RecordableOnPNCindicator": true,
+        "HearingDefendant": {
+          "ArrestSummonsNumber": "1101ZD0100000410780J",
+          "PNCIdentifier": "2000/0410780J",
+          "PNCCheckname": "PUFIVE",
+          "DefendantDetail": {
+            "PersonName": {
+              "Title": "Mr",
+              "GivenName": ["UPDATE"],
+              "FamilyName": "PUFIVE"
+            },
+            "GeneratedPNCFilename": "PUFIVE/UPDATE",
+            "BirthDate": "1948-11-11T00:00:00.000Z",
+            "Gender": 1
+          },
+          "Address": {
+            "AddressLine1": "Scenario1 Address Line 1",
+            "AddressLine2": "Scenario1 Address Line 2",
+            "AddressLine3": "Scenario1 Address Line 3"
+          },
+          "RemandStatus": "UB",
+          "BailConditions": [],
+          "Offence": [
+            {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
+                  "Year": "11",
+                  "OrganisationUnitIdentifierCode": {
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "ZD",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "01ZD01"
+                  },
+                  "DefendantOrOffenderSequenceNumber": "00000410780",
+                  "CheckDigit": "J"
+                },
+                "OffenceReason": {
+                  "__type": "NationalOffenceReason",
+                  "OffenceCode": {
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68",
+                    "Reason": "006",
+                    "FullCode": "TH68006"
+                  }
+                },
+                "OffenceReasonSequence": "001"
+              },
+              "OffenceCategory": "CE",
+              "OffenceTitle": "Theft of pedal cycle",
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2010-11-28T00:00:00.000Z"
+              },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft of pedal cycle.",
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 1,
+              "Result": [
+                {
+                  "CJSresultCode": 1015,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "CourtType": "MCA",
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "Duration": [],
+                  "AmountSpecifiedInResult": [
+                    {
+                      "Amount": 100,
+                      "DecimalPlaces": 2,
+                      "Type": "Fine"
+                    }
+                  ],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ResultVariableText": "Fined 100.",
+                  "ModeOfTrialReason": "SUM",
+                  "PNCDisposalType": 1015,
+                  "PNCAdjudicationExists": false,
+                  "ResultClass": "Judgement with final result",
+                  "ResultQualifierVariable": [],
+                  "ResultHalfLifeHours": 72,
+                  "ResultApplicableQualifierCode": [],
+                  "BailCondition": []
+                }
+              ],
+              "RecordableOnPNCindicator": true,
+              "NotifiableToHOindicator": true,
+              "HomeOfficeClassification": "044/00"
+            },
+            {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
+                  "Year": "11",
+                  "OrganisationUnitIdentifierCode": {
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "ZD",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "01ZD01"
+                  },
+                  "DefendantOrOffenderSequenceNumber": "00000410780",
+                  "CheckDigit": "J"
+                },
+                "OffenceReason": {
+                  "__type": "NationalOffenceReason",
+                  "OffenceCode": {
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68",
+                    "Reason": "006",
+                    "FullCode": "TH68006"
+                  }
+                },
+                "OffenceReasonSequence": "002"
+              },
+              "OffenceCategory": "CE",
+              "OffenceTitle": "Theft of pedal cycle",
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2010-11-28T00:00:00.000Z"
+              },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft of pedal cycle.",
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 2,
+              "Result": [
+                {
+                  "CJSresultCode": 1015,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "CourtType": "MCA",
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "Duration": [],
+                  "AmountSpecifiedInResult": [
+                    {
+                      "Amount": 100,
+                      "DecimalPlaces": 2,
+                      "Type": "Fine"
+                    }
+                  ],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ResultVariableText": "Fined 100.",
+                  "ModeOfTrialReason": "SUM",
+                  "PNCDisposalType": 1015,
+                  "PNCAdjudicationExists": false,
+                  "ResultClass": "Judgement with final result",
+                  "ResultQualifierVariable": [],
+                  "ResultHalfLifeHours": 72,
+                  "ResultApplicableQualifierCode": [],
+                  "BailCondition": []
+                }
+              ],
+              "RecordableOnPNCindicator": true,
+              "NotifiableToHOindicator": true,
+              "HomeOfficeClassification": "044/00"
+            },
+            {
+              "CriminalProsecutionReference": {
+                "DefendantOrOffender": {
+                  "Year": "11",
+                  "OrganisationUnitIdentifierCode": {
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "ZD",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "01ZD01"
+                  },
+                  "DefendantOrOffenderSequenceNumber": "00000410780",
+                  "CheckDigit": "J"
+                },
+                "OffenceReason": {
+                  "__type": "NationalOffenceReason",
+                  "OffenceCode": {
+                    "__type": "NonMatchingOffenceCode",
+                    "ActOrSource": "TH",
+                    "Year": "68",
+                    "Reason": "006",
+                    "FullCode": "TH68006"
+                  }
+                },
+                "OffenceReasonSequence": "003"
+              },
+              "OffenceCategory": "CE",
+              "OffenceTitle": "Theft of pedal cycle",
+              "ArrestDate": "2010-12-01T00:00:00.000Z",
+              "ChargeDate": "2010-12-02T00:00:00.000Z",
+              "ActualOffenceDateCode": "1",
+              "ActualOffenceStartDate": {
+                "StartDate": "2010-11-28T00:00:00.000Z"
+              },
+              "LocationOfOffence": "Kingston High Street",
+              "ActualOffenceWording": "Theft of pedal cycle.",
+              "ConvictionDate": "2011-09-26T00:00:00.000Z",
+              "CommittedOnBail": "D",
+              "CourtOffenceSequenceNumber": 3,
+              "Result": [
+                {
+                  "CJSresultCode": 1015,
+                  "SourceOrganisation": {
+                    "TopLevelCode": "B",
+                    "SecondLevelCode": "01",
+                    "ThirdLevelCode": "EF",
+                    "BottomLevelCode": "01",
+                    "OrganisationUnitCode": "B01EF01"
+                  },
+                  "CourtType": "MCA",
+                  "ResultHearingType": "OTHER",
+                  "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                  "Duration": [],
+                  "AmountSpecifiedInResult": [
+                    {
+                      "Amount": 100,
+                      "DecimalPlaces": 2,
+                      "Type": "Fine"
+                    }
+                  ],
+                  "NumberSpecifiedInResult": [],
+                  "PleaStatus": "NG",
+                  "Verdict": "G",
+                  "ResultVariableText": "Fined 100.",
+                  "ModeOfTrialReason": "SUM",
+                  "PNCDisposalType": 1015,
+                  "PNCAdjudicationExists": false,
+                  "ResultClass": "Judgement with final result",
+                  "ResultQualifierVariable": [],
+                  "ResultHalfLifeHours": 72,
+                  "ResultApplicableQualifierCode": [],
+                  "BailCondition": []
+                }
+              ],
+              "RecordableOnPNCindicator": true,
+              "NotifiableToHOindicator": true,
+              "HomeOfficeClassification": "044/00"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "PncQuery": {
+    "forceStationCode": "01ZD",
+    "checkName": "PUFIVE",
+    "pncId": "2000/0410780J",
+    "courtCases": [
+      {
+        "courtCaseReference": "97/1626/008395Q",
+        "offences": [
+          {
+            "offence": {
+              "acpoOffenceCode": "12:15:24:1",
+              "cjsOffenceCode": "TH68006",
+              "startDate": "2010-11-28T00:00:00.000Z",
+              "startTime": "00:00",
+              "title": "Theft of pedal cycle",
+              "sequenceNumber": 1
+            }
+          },
+          {
+            "offence": {
+              "acpoOffenceCode": "12:15:24:1",
+              "cjsOffenceCode": "TH68006",
+              "startDate": "2010-11-28T00:00:00.000Z",
+              "startTime": "00:00",
+              "title": "Theft of pedal cycle",
+              "sequenceNumber": 2
+            }
+          },
+          {
+            "offence": {
+              "acpoOffenceCode": "12:15:24:1",
+              "cjsOffenceCode": "TH68006",
+              "startDate": "2010-11-28T00:00:00.000Z",
+              "startTime": "00:00",
+              "title": "Theft of pedal cycle",
+              "sequenceNumber": 3
+            }
+          }
+        ]
+      }
+    ],
+    "penaltyCases": []
+  },
+  "Exceptions": [],
+  "PncQueryDate": "2024-07-24T14:53:38.725Z"
+}

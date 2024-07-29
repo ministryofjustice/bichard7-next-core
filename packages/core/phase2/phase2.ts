@@ -11,6 +11,7 @@ import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
 import { getOperationSequence } from "./lib/getOperationSequence"
 import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
+import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
 type ProcessMessageResult = { triggers: Trigger[] } | undefined
@@ -60,7 +61,7 @@ const processMessage = (
   auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
 }
 
-const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger) => {
+const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const outputMessage = structuredClone(message) as PncUpdateDataset
   outputMessage.HasError = false
   outputMessage.PncOperations = outputMessage.PncOperations ?? []
