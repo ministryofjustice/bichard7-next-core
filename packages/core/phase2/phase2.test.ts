@@ -130,9 +130,12 @@ describe("Bichard Core Phase 2 processing logic", () => {
       }
     )
 
-    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-      "returns a successful result when there are no operations and no exceptions for $type",
-      ({ inputMessage }) => {
+    it.each([
+      { ...ahoTestCase, resultType: Phase2ResultType.ignored, resultDescription: "an ignored" },
+      { ...pncUpdateDataSetTestCase, resultType: Phase2ResultType.success, resultDescription: "a successful" }
+    ])(
+      "returns $resultDescription result when there are no operations and no exceptions for $type",
+      ({ inputMessage, resultType }) => {
         const inputMessageWithNoOperations = structuredClone(inputMessage)
         inputMessageWithNoOperations.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
           {
@@ -151,7 +154,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
         const result = phase2Handler(inputMessageWithNoOperations, auditLogger)
 
-        expect(result.resultType).toBe(Phase2ResultType.success)
+        expect(result.resultType).toBe(resultType)
       }
     )
   })

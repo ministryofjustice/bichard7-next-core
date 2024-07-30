@@ -53,7 +53,10 @@ const processMessage = (
       auditLogger.info(EventCode.IgnoredNonrecordable)
     }
 
-    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+    return {
+      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      resultType: isResubmitted ? Phase2ResultType.success : Phase2ResultType.ignored
+    }
   }
 
   refreshOperationSequence(outputMessage, operations)
