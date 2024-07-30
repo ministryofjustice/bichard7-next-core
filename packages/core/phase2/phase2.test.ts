@@ -24,15 +24,17 @@ describe("Bichard Core Phase 2 processing logic", () => {
   })
 
   describe("when an incoming message is an AHO", () => {
-    it("should return an object with the correct attributes", () => {
+    it("returns the output message, audit log events, triggers, correlation ID and the result type", () => {
       const result = phase2Handler(inputAho, auditLogger)
 
       expect(result).toHaveProperty("auditLogEvents")
+      expect(result).toHaveProperty("correlationId")
       expect(result).toHaveProperty("outputMessage")
       expect(result).toHaveProperty("triggers")
+      expect(result).toHaveProperty("resultType")
     })
 
-    it("should return a PncUpdateDataset message with a single DISARR", () => {
+    it("returns a PncUpdateDataset message with a single DISARR", () => {
       const result = phase2Handler(inputAho, auditLogger)
 
       expect(result.outputMessage.PncOperations).toHaveLength(1)
@@ -41,12 +43,14 @@ describe("Bichard Core Phase 2 processing logic", () => {
   })
 
   describe("when an incoming message is a PncUpdateDataset", () => {
-    it("should return an object with the correct attributes", () => {
+    it("returns the output message, audit log events, triggers, correlation ID and the result type", () => {
       const result = phase2Handler(inputPncUpdateDataset, auditLogger)
 
       expect(result).toHaveProperty("auditLogEvents")
+      expect(result).toHaveProperty("correlationId")
       expect(result).toHaveProperty("outputMessage")
       expect(result).toHaveProperty("triggers")
+      expect(result).toHaveProperty("resultType")
     })
   })
 })
