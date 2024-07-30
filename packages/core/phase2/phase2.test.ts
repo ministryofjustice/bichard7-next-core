@@ -30,7 +30,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
     const pncUpdateDataSetTestCase = { inputMessage: inputPncUpdateDataset, type: "PncUpdateDataset" }
 
     it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-      "returns successful result when an AINT case for $type",
+      "returns an ignored result when an AINT case for $type",
       ({ inputMessage }) => {
         const aintCaseInputMessage = structuredClone(inputMessage)
         aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
@@ -50,7 +50,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
         const result = phase2Handler(aintCaseInputMessage, auditLogger)
 
-        expect(result.resultType).toBe(Phase2ResultType.success)
+        expect(result.resultType).toBe(Phase2ResultType.ignored)
       }
     )
 

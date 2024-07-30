@@ -27,7 +27,7 @@ const processMessage = (
 
   if (isAintCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
-    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE), resultType: Phase2ResultType.ignored }
   }
 
   const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
