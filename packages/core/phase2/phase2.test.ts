@@ -93,7 +93,21 @@ describe("Bichard Core Phase 2 processing logic", () => {
     )
 
     it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-      "returns an exceptions result type when exceptions are generated for $type",
+      "returns an exceptions result type when an all offences containing results exception is generated for $type",
+      ({ inputMessage }) => {
+        const inputMessageWithException = structuredClone(inputMessage)
+        inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+          { Result: [] as Result[] }
+        ] as Offence[]
+
+        const result = phase2Handler(inputMessageWithException, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.exceptions)
+      }
+    )
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns an exceptions result type when exceptions are generated from getting operations for $type",
       ({ inputMessage }) => {
         const inputMessageWithException = structuredClone(inputMessage)
         inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
