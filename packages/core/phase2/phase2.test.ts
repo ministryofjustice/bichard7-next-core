@@ -20,7 +20,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   const mockedDate = new Date()
 
   beforeEach(() => {
-    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
     MockDate.set(mockedDate)
   })
 
@@ -57,6 +57,18 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
       expect(result.resultType).toBe(Phase2ResultType.exceptions)
     })
+
+    it.each([false, undefined])(
+      "returns an ignored result type when recordable on PNC indicator is %s",
+      (recordableOnPnc) => {
+        const ignorableInputAho = structuredClone(inputAho)
+        ignorableInputAho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = recordableOnPnc
+
+        const result = phase2Handler(ignorableInputAho, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.ignored)
+      }
+    )
   })
 
   describe("when an incoming message is a PncUpdateDataset", () => {
@@ -85,5 +97,18 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
       expect(result.resultType).toBe(Phase2ResultType.exceptions)
     })
+
+    it.each([false, undefined])(
+      "returns an ignored result type when recordable on PNC indicator is %s",
+      (recordableOnPnc) => {
+        const ignorableInputPncUpdateDataset = structuredClone(inputPncUpdateDataset)
+        ignorableInputPncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator =
+          recordableOnPnc
+
+        const result = phase2Handler(ignorableInputPncUpdateDataset, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.ignored)
+      }
+    )
   })
 })

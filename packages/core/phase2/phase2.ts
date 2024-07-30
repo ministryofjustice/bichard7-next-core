@@ -14,7 +14,7 @@ import refreshOperationSequence from "./lib/refreshOperationSequence"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-type ProcessMessageResult = { triggers: Trigger[] } | undefined
+type ProcessMessageResult = { triggers?: Trigger[]; resultType?: Phase2ResultType } | undefined
 
 const processMessage = (
   auditLogger: AuditLogger,
@@ -33,7 +33,7 @@ const processMessage = (
   const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
   if (!isRecordableOnPnc) {
     auditLogger.info(EventCode.IgnoredNonrecordable)
-    return
+    return { resultType: Phase2ResultType.ignored }
   }
 
   const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
@@ -70,7 +70,11 @@ const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger
   const processMessageResult = processMessage(auditLogger, message, outputMessage)
 
   const triggers = processMessageResult?.triggers ?? []
-  const resultType = outputMessage.Exceptions.length > 0 ? Phase2ResultType.exceptions : Phase2ResultType.success
+  const resultType = processMessageResult?.resultType
+    ? processMessageResult.resultType
+    : outputMessage.Exceptions.length > 0
+    ? Phase2ResultType.exceptions
+    : Phase2ResultType.success
 
   return {
     auditLogEvents: auditLogger.getEvents(),
