@@ -24,116 +24,94 @@ describe("Bichard Core Phase 2 processing logic", () => {
     MockDate.set(mockedDate)
   })
 
-  it.each([
-    { inputMessage: inputAho, type: "AHO" },
-    { inputMessage: inputPncUpdateDataset, type: "PncUpdateDataset" }
-  ])("returns successful result when an AINT case for $type", ({ inputMessage }) => {
-    const aintCaseInputMessage = structuredClone(inputMessage)
-    aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
-      {
-        CriminalProsecutionReference: {
-          OffenceReason: { __type: "NationalOffenceReason" }
-        },
-        Result: [
+  describe("when an incoming message is an AHO or a PncUpdateDataset", () => {
+    const ahoTestCase = { inputMessage: inputAho, type: "AHO" }
+    const pncUpdateDataSetTestCase = { inputMessage: inputPncUpdateDataset, type: "PncUpdateDataset" }
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns successful result when an AINT case for $type",
+      ({ inputMessage }) => {
+        const aintCaseInputMessage = structuredClone(inputMessage)
+        aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
           {
-            PNCDisposalType: 1000,
-            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
-            ResultQualifierVariable: []
-          } as unknown as Result
-        ]
+            CriminalProsecutionReference: {
+              OffenceReason: { __type: "NationalOffenceReason" }
+            },
+            Result: [
+              {
+                PNCDisposalType: 1000,
+                ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+                ResultQualifierVariable: []
+              } as unknown as Result
+            ]
+          }
+        ] as Offence[]
+
+        const result = phase2Handler(aintCaseInputMessage, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.success)
       }
-    ] as Offence[]
+    )
 
-    const result = phase2Handler(aintCaseInputMessage, auditLogger)
+    it.each([
+      { ...ahoTestCase, recordableOnPnc: false },
+      { ...ahoTestCase, recordableOnPnc: undefined },
+      { ...pncUpdateDataSetTestCase, recordableOnPnc: false },
+      { ...pncUpdateDataSetTestCase, recordableOnPnc: undefined }
+    ])(
+      "returns an ignored result type when recordable on PNC indicator is $recordableOnPnc for $type",
+      ({ inputMessage, recordableOnPnc }) => {
+        const ignorableInputMessage = structuredClone(inputMessage)
+        ignorableInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = recordableOnPnc
 
-    expect(result.resultType).toBe(Phase2ResultType.success)
+        const result = phase2Handler(ignorableInputMessage, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.ignored)
+      }
+    )
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns the output message, audit log events, triggers, correlation ID and the result type for $type",
+      ({ inputMessage }) => {
+        const result = phase2Handler(inputMessage, auditLogger)
+
+        expect(result).toHaveProperty("auditLogEvents")
+        expect(result).toHaveProperty("correlationId")
+        expect(result).toHaveProperty("outputMessage")
+        expect(result).toHaveProperty("triggers")
+        expect(result).toHaveProperty("resultType")
+      }
+    )
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns a successful result when no exceptions for $type",
+      ({ inputMessage }) => {
+        const result = phase2Handler(inputMessage, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.success)
+      }
+    )
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns an exceptions result type when exceptions are generated for $type",
+      ({ inputMessage }) => {
+        const inputMessageWithException = structuredClone(inputMessage)
+        inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
+          "0800NP0100000000001H"
+
+        const result = phase2Handler(inputMessageWithException, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.exceptions)
+      }
+    )
   })
 
   describe("when an incoming message is an AHO", () => {
-    it("returns the output message, audit log events, triggers, correlation ID and the result type", () => {
-      const result = phase2Handler(inputAho, auditLogger)
-
-      expect(result).toHaveProperty("auditLogEvents")
-      expect(result).toHaveProperty("correlationId")
-      expect(result).toHaveProperty("outputMessage")
-      expect(result).toHaveProperty("triggers")
-      expect(result).toHaveProperty("resultType")
-    })
-
     it("returns a PncUpdateDataset message with a single DISARR", () => {
       const result = phase2Handler(inputAho, auditLogger)
 
       expect(result.outputMessage.PncOperations).toHaveLength(1)
       expect(result.outputMessage.PncOperations[0].code).toBe("DISARR")
     })
-
-    it("returns a successful result when no exceptions", () => {
-      const result = phase2Handler(inputAho, auditLogger)
-
-      expect(result.resultType).toBe(Phase2ResultType.success)
-    })
-
-    it("returns an exceptions result type when exceptions are generated", () => {
-      const inputAhoWithException = structuredClone(inputAho)
-      inputAhoWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
-        "0800NP0100000000001H"
-
-      const result = phase2Handler(inputAhoWithException, auditLogger)
-
-      expect(result.resultType).toBe(Phase2ResultType.exceptions)
-    })
-
-    it.each([false, undefined])(
-      "returns an ignored result type when recordable on PNC indicator is %s",
-      (recordableOnPnc) => {
-        const ignorableInputAho = structuredClone(inputAho)
-        ignorableInputAho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = recordableOnPnc
-
-        const result = phase2Handler(ignorableInputAho, auditLogger)
-
-        expect(result.resultType).toBe(Phase2ResultType.ignored)
-      }
-    )
-  })
-
-  describe("when an incoming message is a PncUpdateDataset", () => {
-    it("returns the output message, audit log events, triggers, correlation ID and the result type", () => {
-      const result = phase2Handler(inputPncUpdateDataset, auditLogger)
-
-      expect(result).toHaveProperty("auditLogEvents")
-      expect(result).toHaveProperty("correlationId")
-      expect(result).toHaveProperty("outputMessage")
-      expect(result).toHaveProperty("triggers")
-      expect(result).toHaveProperty("resultType")
-    })
-
-    it("returns a successful result when no exceptions", () => {
-      const result = phase2Handler(inputPncUpdateDataset, auditLogger)
-
-      expect(result.resultType).toBe(Phase2ResultType.success)
-    })
-
-    it("returns an exceptions result type when exceptions are generated", () => {
-      const inputPncUpdateDatasetWithException = structuredClone(inputPncUpdateDataset)
-      inputPncUpdateDatasetWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
-        "0800NP0100000000001H"
-
-      const result = phase2Handler(inputPncUpdateDatasetWithException, auditLogger)
-
-      expect(result.resultType).toBe(Phase2ResultType.exceptions)
-    })
-
-    it.each([false, undefined])(
-      "returns an ignored result type when recordable on PNC indicator is %s",
-      (recordableOnPnc) => {
-        const ignorableInputPncUpdateDataset = structuredClone(inputPncUpdateDataset)
-        ignorableInputPncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator =
-          recordableOnPnc
-
-        const result = phase2Handler(ignorableInputPncUpdateDataset, auditLogger)
-
-        expect(result.resultType).toBe(Phase2ResultType.ignored)
-      }
-    )
   })
 })
