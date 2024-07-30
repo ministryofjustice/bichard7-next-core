@@ -3,7 +3,7 @@ import fs from "fs"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
@@ -22,6 +22,31 @@ describe("Bichard Core Phase 2 processing logic", () => {
   beforeEach(() => {
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
     MockDate.set(mockedDate)
+  })
+
+  it.each([
+    { inputMessage: inputAho, type: "AHO" },
+    { inputMessage: inputPncUpdateDataset, type: "PncUpdateDataset" }
+  ])("returns successful result when an AINT case for $type", ({ inputMessage }) => {
+    const aintCaseInputMessage = structuredClone(inputMessage)
+    aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        CriminalProsecutionReference: {
+          OffenceReason: { __type: "NationalOffenceReason" }
+        },
+        Result: [
+          {
+            PNCDisposalType: 1000,
+            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+            ResultQualifierVariable: []
+          } as unknown as Result
+        ]
+      }
+    ] as Offence[]
+
+    const result = phase2Handler(aintCaseInputMessage, auditLogger)
+
+    expect(result.resultType).toBe(Phase2ResultType.success)
   })
 
   describe("when an incoming message is an AHO", () => {
