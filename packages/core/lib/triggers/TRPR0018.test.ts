@@ -64,76 +64,93 @@ const generateMockPncQuery = (
 const startDate = new Date(2010, 10, 28)
 const endDate = new Date(2010, 11, 28)
 const triggerCode = TriggerCode.TRPR0018
+const courtOffenceSequenceNumber = 1
+
+const testCases = [
+  {
+    description: "generate trigger when AHO has Offence reason sequence, dates different, PNC has matching court case",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, new Date(2010, 10, 27), endDate),
+    expected: [{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }]
+  },
+  {
+    description: "not generate trigger when AHO has Offence reason sequence, dates same, PNC has matching court case",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, startDate, endDate),
+    expected: []
+  },
+  {
+    description:
+      "generate trigger when AHO has Offence reason sequence, dates different, PNC has matching penalty case",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, true, new Date(2010, 10, 27), endDate),
+    expected: [{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }]
+  },
+  {
+    description: "not generate trigger when AHO has Offence reason sequence, dates same, PNC has matching penalty case",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, true, startDate, endDate),
+    expected: []
+  },
+  {
+    description:
+      "not generate trigger when AHO doesn't have Offence reason sequence, dates different, PNC has matching court case",
+    aho: generateMockAho(false, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, new Date(2010, 10, 27), endDate),
+    expected: []
+  },
+  {
+    description:
+      "not generate trigger when AHO doesn't have Offence reason sequence, dates same, PNC has matching court case",
+    aho: generateMockAho(false, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, startDate, endDate),
+    expected: []
+  },
+  {
+    description:
+      "not generate trigger when AHO doesn't have Offence reason sequence, dates different, PNC has matching penalty case",
+    aho: generateMockAho(false, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, true, new Date(2010, 10, 27), endDate),
+    expected: []
+  },
+  {
+    description:
+      "not generate trigger when AHO doesn't have Offence reason sequence, dates same, PNC has matching penalty case",
+    aho: generateMockAho(false, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, true, startDate, endDate),
+    expected: []
+  },
+  {
+    description: "generate trigger when Offence start dates match but end dates are different",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, startDate, new Date(2010, 11, 27)),
+    expected: [{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }]
+  },
+  {
+    description: "not generate trigger when Both start and end dates match",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(true, false, startDate, endDate),
+    expected: []
+  },
+  {
+    description: "not generate trigger when PNC query has no matching court or penalty cases",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, false, startDate, endDate),
+    expected: []
+  },
+  {
+    description: "generate trigger when there is an offence match in penalty cases",
+    aho: generateMockAho(true, startDate, endDate),
+    pncQuery: generateMockPncQuery(false, true, new Date(2010, 10, 27), endDate),
+    expected: [{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }]
+  }
+]
 
 describe("TRPR0018", () => {
-  const courtOffenceSequenceNumber = 1
-
-  it("Should generate a trigger when the AHO has an OffenceReasonSequence and the dates are different", () => {
-    const pncQuery = generateMockPncQuery(true, false, new Date(2010, 10, 27), endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }])
-  })
-
-  it("Should not generate a trigger when the AHO has an OffenceReasonSequence and the dates are the same", () => {
-    const pncQuery = generateMockPncQuery(true, false, startDate, endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-
-  it("Should not generate a trigger when the AHO doesn't have an OffenceReasonSequence and the dates are different", () => {
-    const pncQuery = generateMockPncQuery(true, false, new Date(2010, 10, 27), endDate)
-    const aho = generateMockAho(false, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-
-  it("Should not generate a trigger when the AHO doesn't have an OffenceReasonSequence and the dates are the same", () => {
-    const pncQuery = generateMockPncQuery(true, false, startDate, endDate)
-    const aho = generateMockAho(false, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-
-  it("Should not generate a trigger when there is no matching PNC offence", () => {
-    const pncQuery = generateMockPncQuery(false, false, startDate, endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-
-  it("Should generate a trigger when AHO and PNC Query offence start dates are different and end dates are different", () => {
-    const pncQuery = generateMockPncQuery(true, false, new Date(2010, 10, 27), new Date(2010, 11, 27))
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }])
-  })
-
-  it("Should generate a trigger when AHO and PNC Query offence start dates match but end dates are different", () => {
-    const pncQuery = generateMockPncQuery(true, false, startDate, new Date(2010, 11, 27))
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }])
-  })
-
-  it("Should not generate a trigger when both start and end dates match", () => {
-    const pncQuery = generateMockPncQuery(true, false, startDate, endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-  it("Should not generate a trigger when PNC query has no matching court or penalty cases", () => {
-    const pncQuery = generateMockPncQuery(false, false, startDate, endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([])
-  })
-
-  it("Should generate a trigger when there is a matching offence in penalty cases", () => {
-    const pncQuery = generateMockPncQuery(false, true, new Date(2010, 10, 27), endDate)
-    const aho = generateMockAho(true, startDate, endDate)
-    const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
-    expect(result).toEqual([{ code: triggerCode, offenceSequenceNumber: courtOffenceSequenceNumber }])
+  testCases.forEach(({ description, aho, pncQuery, expected }) => {
+    it(`Should ${description}`, () => {
+      const result = TRPR0018({ ...aho, PncQuery: { ...pncQuery } })
+      expect(result).toEqual(expected)
+    })
   })
 })
