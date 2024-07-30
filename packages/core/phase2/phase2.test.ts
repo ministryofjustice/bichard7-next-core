@@ -7,6 +7,7 @@ import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
+import { Phase2ResultType } from "./types/Phase2Result"
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
@@ -40,6 +41,12 @@ describe("Bichard Core Phase 2 processing logic", () => {
       expect(result.outputMessage.PncOperations).toHaveLength(1)
       expect(result.outputMessage.PncOperations[0].code).toBe("DISARR")
     })
+
+    it("returns a successful result when no exceptions", () => {
+      const result = phase2Handler(inputAho, auditLogger)
+
+      expect(result.resultType).toBe(Phase2ResultType.success)
+    })
   })
 
   describe("when an incoming message is a PncUpdateDataset", () => {
@@ -51,6 +58,12 @@ describe("Bichard Core Phase 2 processing logic", () => {
       expect(result).toHaveProperty("outputMessage")
       expect(result).toHaveProperty("triggers")
       expect(result).toHaveProperty("resultType")
+    })
+
+    it("returns a successful result when no exceptions", () => {
+      const result = phase2Handler(inputPncUpdateDataset, auditLogger)
+
+      expect(result.resultType).toBe(Phase2ResultType.success)
     })
   })
 })
