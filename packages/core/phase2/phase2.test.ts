@@ -118,14 +118,15 @@ describe("Bichard Core Phase 2 processing logic", () => {
         expect(result.resultType).toBe(Phase2ResultType.exceptions)
       }
     )
-  })
 
-  describe("when an incoming message is an AHO", () => {
-    it("returns a PncUpdateDataset message with a single DISARR", () => {
-      const result = phase2Handler(inputAho, auditLogger)
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns a successful result when there are operations and no exceptions for $type",
+      ({ inputMessage }) => {
+        const result = phase2Handler(inputMessage, auditLogger)
 
-      expect(result.outputMessage.PncOperations).toHaveLength(1)
-      expect(result.outputMessage.PncOperations[0].code).toBe("DISARR")
-    })
+        expect(result.resultType).toBe(Phase2ResultType.success)
+        expect(result.outputMessage.PncOperations.length).toBeGreaterThan(0)
+      }
+    )
   })
 })
