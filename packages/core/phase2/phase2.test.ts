@@ -8,6 +8,7 @@ import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
+import ResultClass from "../types/ResultClass"
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
@@ -126,6 +127,31 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
         expect(result.resultType).toBe(Phase2ResultType.success)
         expect(result.outputMessage.PncOperations.length).toBeGreaterThan(0)
+      }
+    )
+
+    it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+      "returns a successful result when there are no operations and no exceptions for $type",
+      ({ inputMessage }) => {
+        const inputMessageWithNoOperations = structuredClone(inputMessage)
+        inputMessageWithNoOperations.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+          {
+            CriminalProsecutionReference: {
+              OffenceReason: { __type: "NationalOffenceReason" }
+            },
+            Result: [
+              {
+                ResultClass: ResultClass.UNRESULTED,
+                PNCDisposalType: 1001,
+                ResultQualifierVariable: []
+              } as unknown as Result
+            ]
+          }
+        ] as Offence[]
+
+        const result = phase2Handler(inputMessageWithNoOperations, auditLogger)
+
+        expect(result.resultType).toBe(Phase2ResultType.success)
       }
     )
   })
