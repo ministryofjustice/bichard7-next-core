@@ -47,6 +47,16 @@ describe("Bichard Core Phase 2 processing logic", () => {
 
       expect(result.resultType).toBe(Phase2ResultType.success)
     })
+
+    it("returns an exceptions result type when exceptions are generated", () => {
+      const inputAhoWithException = structuredClone(inputAho)
+      inputAhoWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
+        "0800NP0100000000001H"
+
+      const result = phase2Handler(inputAhoWithException, auditLogger)
+
+      expect(result.resultType).toBe(Phase2ResultType.exceptions)
+    })
   })
 
   describe("when an incoming message is a PncUpdateDataset", () => {
@@ -64,6 +74,16 @@ describe("Bichard Core Phase 2 processing logic", () => {
       const result = phase2Handler(inputPncUpdateDataset, auditLogger)
 
       expect(result.resultType).toBe(Phase2ResultType.success)
+    })
+
+    it("returns an exceptions result type when exceptions are generated", () => {
+      const inputPncUpdateDatasetWithException = structuredClone(inputPncUpdateDataset)
+      inputPncUpdateDatasetWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
+        "0800NP0100000000001H"
+
+      const result = phase2Handler(inputPncUpdateDatasetWithException, auditLogger)
+
+      expect(result.resultType).toBe(Phase2ResultType.exceptions)
     })
   })
 })

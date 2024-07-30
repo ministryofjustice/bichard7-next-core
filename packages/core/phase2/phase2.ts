@@ -70,13 +70,14 @@ const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger
   const processMessageResult = processMessage(auditLogger, message, outputMessage)
 
   const triggers = processMessageResult?.triggers ?? []
+  const resultType = outputMessage.Exceptions.length > 0 ? Phase2ResultType.exceptions : Phase2ResultType.success
 
   return {
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage,
     triggers,
-    resultType: Phase2ResultType.success
+    resultType
   }
 }
 
