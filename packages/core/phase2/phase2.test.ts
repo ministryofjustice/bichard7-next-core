@@ -14,11 +14,11 @@ import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
   const inputAho = parseAhoXml(inputAhoMessage) as AnnotatedHearingOutcome
-  const ahoTestCase = { inputMessage: inputAho, type: "AHO" }
+  const ahoTestCase = { inputMessage: inputAho, messageType: "AHO" }
 
   const inputPncUpdateDatasetMessage = fs.readFileSync("phase2/tests/fixtures/PncUpdateDataSet1.xml").toString()
   const inputPncUpdateDataset = parsePncUpdateDataSetXml(inputPncUpdateDatasetMessage) as PncUpdateDataset
-  const pncUpdateDataSetTestCase = { inputMessage: inputPncUpdateDataset, type: "PncUpdateDataset" }
+  const pncUpdateDataSetTestCase = { inputMessage: inputPncUpdateDataset, messageType: "PncUpdateDataset" }
 
   let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
@@ -29,7 +29,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   })
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns an ignored result when an AINT case for $type",
+    "returns an ignored result when an AINT case for $messageType",
     ({ inputMessage }) => {
       const aintCaseInputMessage = structuredClone(inputMessage)
       aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
@@ -59,7 +59,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
     { ...pncUpdateDataSetTestCase, recordableOnPnc: false },
     { ...pncUpdateDataSetTestCase, recordableOnPnc: undefined }
   ])(
-    "returns an ignored result type when recordable on PNC indicator is $recordableOnPnc for $type",
+    "returns an ignored result type when recordable on PNC indicator is $recordableOnPnc for $messageType",
     ({ inputMessage, recordableOnPnc }) => {
       const ignorableInputMessage = structuredClone(inputMessage)
       ignorableInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = recordableOnPnc
@@ -71,7 +71,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns the output message, audit log events, triggers, correlation ID and the result type for $type",
+    "returns the output message, audit log events, triggers, correlation ID and the result type for $messageType",
     ({ inputMessage }) => {
       const result = phase2Handler(inputMessage, auditLogger)
 
@@ -84,7 +84,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns a successful result when no exceptions for $type",
+    "returns a successful result when no exceptions for $messageType",
     ({ inputMessage }) => {
       const result = phase2Handler(inputMessage, auditLogger)
 
@@ -93,7 +93,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns an exceptions result type when an all offences containing results exception is generated for $type",
+    "returns an exceptions result type when an all offences containing results exception is generated for $messageType",
     ({ inputMessage }) => {
       const inputMessageWithException = structuredClone(inputMessage)
       inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
@@ -107,7 +107,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns an exceptions result type when exceptions are generated from getting operations for $type",
+    "returns an exceptions result type when exceptions are generated from getting operations for $messageType",
     ({ inputMessage }) => {
       const inputMessageWithException = structuredClone(inputMessage)
       inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
@@ -123,7 +123,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
     { ...ahoTestCase, resultType: Phase2ResultType.ignored, resultDescription: "an ignored" },
     { ...pncUpdateDataSetTestCase, resultType: Phase2ResultType.success, resultDescription: "a successful" }
   ])(
-    "returns $resultDescription result when no operations and only a HO200200 exception is generated from getting operations for $type",
+    "returns $resultDescription result when no operations and only a HO200200 exception is generated from getting operations for $messageType",
     ({ inputMessage, resultType }) => {
       const inputMessageWithException = structuredClone(inputMessage)
       inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing = new Date("05/22/2024")
@@ -192,7 +192,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns a successful result when there are operations and no exceptions for $type",
+    "returns a successful result when there are operations and no exceptions for $messageType",
     ({ inputMessage }) => {
       const result = phase2Handler(inputMessage, auditLogger)
 
@@ -205,7 +205,7 @@ describe("Bichard Core Phase 2 processing logic", () => {
     { ...ahoTestCase, resultType: Phase2ResultType.ignored, resultDescription: "an ignored" },
     { ...pncUpdateDataSetTestCase, resultType: Phase2ResultType.success, resultDescription: "a successful" }
   ])(
-    "returns $resultDescription result when there are no operations and no exceptions for $type",
+    "returns $resultDescription result when there are no operations and no exceptions for $messageType",
     ({ inputMessage, resultType }) => {
       const inputMessageWithNoOperations = structuredClone(inputMessage)
       inputMessageWithNoOperations.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
