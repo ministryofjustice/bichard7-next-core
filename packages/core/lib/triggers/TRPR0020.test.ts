@@ -74,7 +74,7 @@ describe("TRPR0020", () => {
 
       const result = TRPR0020(generatedHearingOutcome)
 
-      expect(result).toEqual([])
+      expect(result).toHaveLength(0)
     })
 
     it(`should not raise a trigger if result code equals 1085 (result code is not final and not excluded), is not guilty and offence code matches ${offenceCode}`, () => {
@@ -82,7 +82,7 @@ describe("TRPR0020", () => {
 
       const result = TRPR0020(generatedHearingOutcome)
 
-      expect(result).toEqual([])
+      expect(result).toHaveLength(0)
     })
   })
 
@@ -93,7 +93,7 @@ describe("TRPR0020", () => {
 
         const result = TRPR0020(generatedHearingOutcome)
 
-        expect(result).toEqual([])
+        expect(result).toHaveLength(0)
       })
 
       it(`should not raise a trigger if result code equals ${resultCode} (result code is excluded), is not guilty and offence code matches ${offenceCode}`, () => {
@@ -101,8 +101,23 @@ describe("TRPR0020", () => {
 
         const result = TRPR0020(generatedHearingOutcome)
 
-        expect(result).toEqual([])
+        expect(result).toHaveLength(0)
       })
+    })
+    it(`should not raise a trigger if result code equals ${resultCode} (result code is excluded), is guilty and offence code is not from the list`, () => {
+      const generatedHearingOutcome = generateMockAho(resultCode, "XXXXXXX", CjsVerdict.Guilty)
+
+      const result = TRPR0020(generatedHearingOutcome)
+
+      expect(result).toHaveLength(0)
+    })
+
+    it(`should not raise a trigger if result code equals ${resultCode} (result code is excluded), is not guilty and offence code offence code is not from the list`, () => {
+      const generatedHearingOutcome = generateMockAho(resultCode, "XXXXXXX", CjsVerdict.NotGuilty)
+
+      const result = TRPR0020(generatedHearingOutcome)
+
+      expect(result).toHaveLength(0)
     })
   })
 
@@ -128,30 +143,12 @@ describe("TRPR0020", () => {
     })
   })
 
-  excludedResultCodes.forEach((resultCode) => {
-    it(`should not raise a trigger if result code equals ${resultCode} (result code is excluded), is guilty and offence code is not from the list`, () => {
-      const generatedHearingOutcome = generateMockAho(resultCode, "XXXXXXX", CjsVerdict.Guilty)
-
-      const result = TRPR0020(generatedHearingOutcome)
-
-      expect(result).toEqual([])
-    })
-
-    it(`should not raise a trigger if result code equals ${resultCode} (result code is excluded), is not guilty and offence code offence code is not from the list`, () => {
-      const generatedHearingOutcome = generateMockAho(resultCode, "XXXXXXX", CjsVerdict.NotGuilty)
-
-      const result = TRPR0020(generatedHearingOutcome)
-
-      expect(result).toEqual([])
-    })
-  })
-
   it("should not raise a trigger if result code equals 1085 (result code is not final and not excluded), is guilty and offence code is not from the list", () => {
     const generatedHearingOutcome = generateMockAho(1085, "XXXXXXX", CjsVerdict.Guilty)
 
     const result = TRPR0020(generatedHearingOutcome)
 
-    expect(result).toEqual([])
+    expect(result).toHaveLength(0)
   })
 
   it("should not raise a trigger if result code equals 1085 (result code is not final and not excluded), is not guilty and offence code is not from the list", () => {
@@ -159,6 +156,6 @@ describe("TRPR0020", () => {
 
     const result = TRPR0020(generatedHearingOutcome)
 
-    expect(result).toEqual([])
+    expect(result).toHaveLength(0)
   })
 })
