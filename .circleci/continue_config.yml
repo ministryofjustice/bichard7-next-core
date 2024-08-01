@@ -3,13 +3,13 @@ version: 2.1
 commands:
   fetch_images:
     parameters:
-      IMAGES:
+      images:
         default: ""
         type: string
     steps:
       - run:
-          name: "Fetch images: <<parameters.IMAGES>>"
-          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
+          name: "Fetch images: <<parameters.images>>"
+          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.images>>
 
   node_install:
     steps:
@@ -28,7 +28,7 @@ commands:
   install_and_build_core:
     description: Install the node dependencies for core
     parameters:
-      install_cypress:
+      install-cypress:
         type: boolean
         default: false
     steps:
@@ -41,13 +41,13 @@ commands:
             - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
             - v1-npm-deps-
       - when:
-          condition: <<parameters.install_cypress>>
+          condition: <<parameters.install-cypress>>
           steps:
             - run:
                 name: Install npm dependencies
                 command: npm i --workspaces --include-workspace-root
       - unless:
-          condition: <<parameters.install_cypress>>
+          condition: <<parameters.install-cypress>>
           steps:
             - run:
                 name: Install npm dependencies
@@ -114,7 +114,7 @@ jobs:
       - set_locale
       - install_and_build_core
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -231,7 +231,7 @@ jobs:
       - node_install
       - install_and_build_core
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -268,7 +268,7 @@ jobs:
       - node_install
       - install_and_build_core
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -289,6 +289,15 @@ jobs:
       docker_layer_caching: false
     resource_class: large
     parallelism: 10
+    parameters:
+      next-ui:
+        type: boolean
+      phase2-core-canary-ratio:
+        type: enum
+        enum: ["1.0", "0.0"]
+    environment:
+      NEXTUI: << parameters.next-ui >>
+      PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
     steps:
       - unless:
           condition:
@@ -304,7 +313,7 @@ jobs:
       - set_locale
       - install_and_build_core
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
@@ -333,59 +342,6 @@ jobs:
             RECORD: "true"
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
-      - save_artifacts
-
-  e2e_test_new_ui:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    parallelism: 10
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.conductor-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.env-changes >>
-              - << pipeline.parameters.message-forwarder-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - set_locale
-      - install_and_build_core
-      - fetch_images:
-          IMAGES: nodejs-20-2023
-      - run:
-          name: Build message forwarder image
-          command: .circleci/scripts/build-message-forwarder.sh
-      - run:
-          name: Checkout the audit logging repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build the audit logging images
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server build-event-handler-server
-      - run:
-          name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
-      - run:
-          name: NPM install tests dependencies
-          working_directory: ~/bichard7-next-tests
-          command: npm i
-      - run:
-          name: Run the infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all
-      - run:
-          name: Run e2e tests against core code
-          working_directory: ~/bichard7-next-tests
-          environment:
-            AWS_URL: http://localhost:4566
-            RECORD: "true"
-          command: |
-            NEXTUI="true" TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
             bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
       - save_artifacts
 
@@ -477,7 +433,21 @@ workflows:
       - test_core
       - characterisation_test
       - comparison_test
-      - e2e_test
-      - e2e_test_new_ui
+      - e2e_test:
+          name: e2e_test_phase1
+          next-ui: false
+          phase2-core-canary-ratio: "0.0"
+      - e2e_test:
+          name: e2e_test_phase1_new_ui
+          next-ui: true
+          phase2-core-canary-ratio: "0.0"
+      - e2e_test:
+          name: e2e_test_phase2
+          next-ui: false
+          phase2-core-canary-ratio: "1.0"
+      - e2e_test:
+          name: e2e_test_phase2_new_ui
+          next-ui: true
+          phase2-core-canary-ratio: "1.0"
       - test_message_forwarder
       - build_and_lint

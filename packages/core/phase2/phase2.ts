@@ -14,7 +14,10 @@ import refreshOperationSequence from "./lib/refreshOperationSequence"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-type ProcessMessageResult = { triggers: Trigger[] } | undefined
+type ProcessMessageResult = {
+  triggers?: Trigger[]
+  resultType: Phase2ResultType
+}
 
 const processMessage = (
   auditLogger: AuditLogger,
@@ -23,29 +26,34 @@ const processMessage = (
 ): ProcessMessageResult => {
   const isResubmitted = isPncUpdateDataset(inputMessage)
   const hearingOutcome = inputMessage.AnnotatedHearingOutcome.HearingOutcome
+
   auditLogger.info(isResubmitted ? EventCode.ReceivedResubmittedHearingOutcome : EventCode.HearingOutcomeReceivedPhase2)
 
   if (isAintCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
-    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+
+    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE), resultType: Phase2ResultType.ignored }
   }
 
   const isRecordableOnPnc = !!hearingOutcome.Case.RecordableOnPNCindicator
   if (!isRecordableOnPnc) {
     auditLogger.info(EventCode.IgnoredNonrecordable)
-    return
+
+    return { resultType: Phase2ResultType.ignored }
   }
 
   const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
   if (allOffencesContainResultsExceptions.length > 0) {
     allOffencesContainResultsExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-    return
+
+    return { resultType: Phase2ResultType.exceptions }
   }
 
   const { operations, exceptions } = getOperationSequence(outputMessage, isResubmitted)
   exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+
   if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
-    return
+    return { resultType: Phase2ResultType.exceptions }
   }
 
   if (operations.length === 0) {
@@ -53,12 +61,17 @@ const processMessage = (
       auditLogger.info(EventCode.IgnoredNonrecordable)
     }
 
-    return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE) }
+    return {
+      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      resultType: isResubmitted ? Phase2ResultType.success : Phase2ResultType.ignored
+    }
   }
 
   refreshOperationSequence(outputMessage, operations)
 
   auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
+
+  return { resultType: Phase2ResultType.success }
 }
 
 const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
@@ -67,16 +80,14 @@ const phase2 = (message: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger
   outputMessage.PncOperations = outputMessage.PncOperations ?? []
   const correlationId = message.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
-  const processMessageResult = processMessage(auditLogger, message, outputMessage)
-
-  const triggers = processMessageResult?.triggers ?? []
+  const { triggers, resultType } = processMessage(auditLogger, message, outputMessage)
 
   return {
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage,
-    triggers,
-    resultType: Phase2ResultType.success
+    triggers: triggers ?? [],
+    resultType
   }
 }
 
