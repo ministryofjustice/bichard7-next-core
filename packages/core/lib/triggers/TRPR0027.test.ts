@@ -12,46 +12,46 @@ const generateMockAho = (forceCode: string, courtCode: string, hasForceOwner: bo
     }
   }) as unknown as AnnotatedHearingOutcome
 
+const generateTrigger = (
+  forceCode: string,
+  courtCode: string,
+  hasForceOwner: boolean,
+  hasHearing: boolean,
+  triggersExcluded: boolean
+) => {
+  const generatedHearingOutcome = generateMockAho(forceCode, courtCode, hasForceOwner, hasHearing)
+  const options = { triggersExcluded: triggersExcluded }
+  return TRPR0027(generatedHearingOutcome, options)
+}
+
 describe("TRPR0027", () => {
   it("Should generate a trigger when force code is not in excluded trigger config list, triggers are excluded, and force code doesn't equal court code", () => {
-    const generatedHearingOutcome = generateMockAho("00", "01", true, true)
-    const options = { triggersExcluded: true }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("00", "01", true, true, true)
     expect(result).toEqual([{ code: TriggerCode.TRPR0027 }])
   })
 
   it("Should generate a trigger when force code is in excluded trigger config list but doesn't have trigger TRPR0027, triggers are excluded, and force code doesn't equal court code", () => {
-    const generatedHearingOutcome = generateMockAho("01", "02", true, true)
-    const options = { triggersExcluded: true }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("01", "02", true, true, true)
     expect(result).toEqual([{ code: TriggerCode.TRPR0027 }])
   })
 
   it("Should not generate a trigger when aho has no force code, triggers are excluded, and force code doesn't equal court code", () => {
-    const generatedHearingOutcome = generateMockAho("", "02", false, true)
-    const options = { triggersExcluded: true }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("", "02", false, true, true)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when aho has no force code, triggers are not excluded, and force code doesn't equal court code", () => {
-    const generatedHearingOutcome = generateMockAho("", "02", false, true)
-    const options = { triggersExcluded: false }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("", "02", false, true, false)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when aho has no force code, triggers are excluded, and force code equals court code", () => {
-    const generatedHearingOutcome = generateMockAho("", "", false, true)
-    const options = { triggersExcluded: true }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("", "", false, true, true)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when aho has no force code, triggers are not excluded, and force code equals court code", () => {
-    const generatedHearingOutcome = generateMockAho("", "", false, true)
-    const options = { triggersExcluded: false }
-    const result = TRPR0027(generatedHearingOutcome, options)
+    const result = generateTrigger("", "", false, true, false)
     expect(result).toHaveLength(0)
   })
 })
