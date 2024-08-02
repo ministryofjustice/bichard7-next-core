@@ -1,6 +1,7 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import TRPR0027 from "./TRPR0027"
+import { excludedTriggerConfig as excludedTriggers } from "bichard7-next-data-latest"
 
 const generateMockAho = (forceCode: string, courtCode: string, hasForceOwner: boolean, hasHearing: boolean) =>
   ({
@@ -24,6 +25,12 @@ const generateTrigger = (
   return TRPR0027(generatedHearingOutcome, options)
 }
 
+const excludedTriggerConfig = () => {
+  if (process.env.NODE_ENV === "test" && "01" in excludedTriggers) {
+    excludedTriggers["01"] = [TriggerCode.TRPR0027]
+  }
+}
+
 describe("TRPR0027", () => {
   it("Should generate a trigger when force code is not in excluded trigger config list, triggers are excluded, and force code doesn't equal court code", () => {
     const result = generateTrigger("00", "01", true, true, true)
@@ -35,23 +42,26 @@ describe("TRPR0027", () => {
     expect(result).toEqual([{ code: TriggerCode.TRPR0027 }])
   })
 
-  it("Should not generate a trigger when aho has no force code, triggers are excluded, and force code doesn't equal court code", () => {
-    const result = generateTrigger("", "02", false, true, true)
+  it("Should generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are excluded, and force code doesn't equal court code", () => {
+    excludedTriggerConfig
+    const result = generateTrigger("01", "02", false, true, true)
     expect(result).toHaveLength(0)
   })
 
-  it("Should not generate a trigger when aho has no force code, triggers are not excluded, and force code doesn't equal court code", () => {
-    const result = generateTrigger("", "02", false, true, false)
+  it("Should generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code doesn't equal court code", () => {
+    excludedTriggerConfig
+    const result = generateTrigger("01", "02", false, true, false)
     expect(result).toHaveLength(0)
   })
 
-  it("Should not generate a trigger when aho has no force code, triggers are excluded, and force code equals court code", () => {
-    const result = generateTrigger("", "", false, true, true)
+  it("Should generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are excluded, and force code equals court code", () => {
+    excludedTriggerConfig
+    const result = generateTrigger("01", "01", false, true, true)
     expect(result).toHaveLength(0)
   })
 
-  it("Should not generate a trigger when aho has no force code, triggers are not excluded, and force code equals court code", () => {
-    const result = generateTrigger("", "", false, true, false)
+  it("Should generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code equals court code", () => {
+    const result = generateTrigger("01", "01", false, true, false)
     expect(result).toHaveLength(0)
   })
 })
