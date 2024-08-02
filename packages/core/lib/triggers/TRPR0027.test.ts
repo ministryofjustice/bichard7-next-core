@@ -13,21 +13,12 @@ const generateMockAho = (forceCode: string, courtCode: string) =>
     }
   }) as unknown as AnnotatedHearingOutcome
 
-const generateTrigger = (
-  forceCode: string,
-  courtCode: string,
-
-  triggersExcluded: boolean
-) => {
+const generateTrigger = (forceCode: string, courtCode: string, triggersExcluded: boolean, excludedForForce = false) => {
   const generatedHearingOutcome = generateMockAho(forceCode, courtCode)
   const options = { triggersExcluded: triggersExcluded }
-  return TRPR0027(generatedHearingOutcome, options)
-}
+  excludedTriggers["01"] = excludedForForce ? [TriggerCode.TRPR0027] : []
 
-const excludedTriggerConfig = () => {
-  if (process.env.NODE_ENV === "test" && "01" in excludedTriggers) {
-    excludedTriggers["01"] = [TriggerCode.TRPR0027]
-  }
+  return TRPR0027(generatedHearingOutcome, options)
 }
 
 describe("TRPR0027", () => {
@@ -42,26 +33,22 @@ describe("TRPR0027", () => {
   })
 
   it("Should not generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are excluded, and force code doesn't equal court code", () => {
-    excludedTriggerConfig()
-    const result = generateTrigger("01", "02", true)
+    const result = generateTrigger("01", "02", true, true)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code doesn't equal court code", () => {
-    excludedTriggerConfig()
-    const result = generateTrigger("01", "02", false)
+    const result = generateTrigger("01", "02", false, true)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are excluded, and force code equals court code", () => {
-    excludedTriggerConfig()
-    const result = generateTrigger("01", "01", true)
+    const result = generateTrigger("01", "01", true, true)
     expect(result).toHaveLength(0)
   })
 
   it("Should not generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code equals court code", () => {
-    excludedTriggerConfig()
-    const result = generateTrigger("01", "01", false)
+    const result = generateTrigger("01", "01", false, true)
     expect(result).toHaveLength(0)
   })
 })
