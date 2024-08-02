@@ -266,7 +266,23 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
           },
         },
       },
-      "Exceptions": [],
+      "Exceptions": [
+        {
+          "code": "HO200124",
+          "path": [
+            "PNCUpdateDataset",
+            "AnnotatedHearingOutcome",
+            "HearingOutcome",
+            "Case",
+            "HearingDefendant",
+            "Offence",
+            0,
+            "Result",
+            0,
+            "ResultClass",
+          ],
+        },
+      ],
       "HasError": false,
       "PncErrorMessage": undefined,
       "PncOperations": [

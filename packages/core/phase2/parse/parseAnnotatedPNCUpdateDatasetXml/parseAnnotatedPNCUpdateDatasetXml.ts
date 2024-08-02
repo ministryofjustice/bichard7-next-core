@@ -2,6 +2,7 @@ import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
+import { extractExceptionsFromXml } from "../../../lib/parse/parseAhoXml"
 import type { AnnotatedPNCUpdateDataset } from "../../../types/AnnotatedPNCUpdateDataset"
 import type { AnnotatedPNCUpdateDatasetXml } from "../../types/AnnotatedPNCUpdateDatasetXml"
 import { mapXmlToPNCUpdateDataSet } from "../parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
@@ -44,6 +45,13 @@ export default (xml: string): AnnotatedPNCUpdateDataset | Error => {
   if (isError(annotatedPNCUpdateDataset)) {
     return annotatedPNCUpdateDataset
   }
+
+  annotatedPNCUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions = extractExceptionsFromXml(xml).map(
+    (e) => {
+      e.path.shift()
+      return e
+    }
+  )
 
   return annotatedPNCUpdateDataset
 }
