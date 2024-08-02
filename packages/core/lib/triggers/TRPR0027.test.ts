@@ -59,7 +59,7 @@ describe("TRPR0027", () => {
     expect(result).toHaveLength(0)
   })
 
-  it("Should generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code equals court code", () => {
+  it("Should not generate a trigger when force code is in excluded trigger config list and has trigger TRPR0027, triggers are not excluded, and force code equals court code", () => {
     excludedTriggerConfig()
     const result = generateTrigger("01", "01", false)
     expect(result).toHaveLength(0)
