@@ -1,7 +1,7 @@
+import { excludedTriggerConfig as excludedTriggers } from "bichard7-next-data-latest"
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import TRPR0027 from "./TRPR0027"
-import { excludedTriggerConfig as excludedTriggers } from "bichard7-next-data-latest"
 
 const generateMockAho = (forceCode: string, courtCode: string) =>
   ({
@@ -11,7 +11,7 @@ const generateMockAho = (forceCode: string, courtCode: string) =>
         Hearing: { CourtHearingLocation: { SecondLevelCode: courtCode } }
       }
     }
-  }) as unknown as AnnotatedHearingOutcome
+  }) as AnnotatedHearingOutcome
 
 const generateTrigger = (forceCode: string, courtCode: string, triggersExcluded: boolean, excludedForForce = false) => {
   const generatedHearingOutcome = generateMockAho(forceCode, courtCode)
