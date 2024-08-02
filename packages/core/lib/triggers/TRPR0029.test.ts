@@ -6,7 +6,8 @@ const generateMockAho = (
   resultVariableText: string,
   RecordableOnPNCindicator: string | undefined,
   offenceCode: string,
-  hasPncQuery: boolean
+  hasPncQuery: boolean,
+  hasSecondResult = false
 ) =>
   ({
     AnnotatedHearingOutcome: {
@@ -18,7 +19,12 @@ const generateMockAho = (
                 Result: [
                   {
                     ResultVariableText: resultVariableText
-                  }
+                  },
+                  hasSecondResult
+                    ? {
+                        ResultVariableText: "Fined 100."
+                      }
+                    : {}
                 ],
                 RecordableOnPNCindicator: RecordableOnPNCindicator,
                 CriminalProsecutionReference: {
@@ -109,6 +115,19 @@ describe("TRPR0029", () => {
     "Should not generate a trigger when case has a pnc query but has no recordable offence, and offence code is %s and result variable text says granted",
     (offenceCode) => {
       const result = TRPR0029(generateMockAho("granted", undefined, offenceCode, true))
+      expect(result).toHaveLength(0)
+    }
+  )
+
+  it("Should not generate a trigger when case has no pnc query, no recordable offence, and offence code is not from the lists", () => {
+    const result = TRPR0029(generateMockAho("", undefined, "XXXXXXX", false))
+    expect(result).toHaveLength(0)
+  })
+
+  it.each(offenceCodesForGrantedResultText)(
+    "Should not generate a trigger when case has no pnc query, no recordable offence, offence code is %s and one result contains 'granted' while another does not",
+    (offenceCode) => {
+      const result = TRPR0029(generateMockAho("granted", undefined, offenceCode, true, true))
       expect(result).toHaveLength(0)
     }
   )
