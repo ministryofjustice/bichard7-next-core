@@ -4,7 +4,7 @@ import TRPR0029 from "./TRPR0029"
 
 const generateMockAho = (
   resultVariableText: string,
-  RecordableOnPNCindicator: boolean,
+  recordableOnPNCindicator: boolean,
   offenceCode: string,
   hasPncQuery: boolean,
   hasSecondResult = false
@@ -26,7 +26,7 @@ const generateMockAho = (
                       }
                     : {}
                 ],
-                RecordableOnPNCindicator: RecordableOnPNCindicator,
+                RecordableOnPNCindicator: recordableOnPNCindicator,
                 CriminalProsecutionReference: {
                   OffenceReason: { OffenceCode: { FullCode: offenceCode } }
                 }
