@@ -4,7 +4,7 @@ import TRPR0029 from "./TRPR0029"
 
 const generateMockAho = (
   resultVariableText: string,
-  RecordableOnPNCindicator: string | undefined,
+  RecordableOnPNCindicator: boolean,
   offenceCode: string,
   hasPncQuery: boolean,
   hasSecondResult = false
@@ -66,7 +66,7 @@ describe("TRPR0029", () => {
   it.each(offenceCodes)(
     "Should generate a trigger when case has no pnc query, no recordable offence, and offence code is %s",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("", undefined, offenceCode, false))
+      const result = TRPR0029(generateMockAho("", false, offenceCode, false))
       expect(result).toEqual([{ code: triggerCode }])
     }
   )
@@ -74,7 +74,7 @@ describe("TRPR0029", () => {
   it.each(offenceCodes)(
     "Should not generate a trigger when case has no pnc query but has a recordable offence, and offence code is %s",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("", "true", offenceCode, false))
+      const result = TRPR0029(generateMockAho("", true, offenceCode, false))
       expect(result).toHaveLength(0)
     }
   )
@@ -82,23 +82,23 @@ describe("TRPR0029", () => {
   it.each(offenceCodes)(
     "Should not generate a trigger when case has a pnc query but has no recordable offence, and offence code is %s",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("", undefined, offenceCode, true))
+      const result = TRPR0029(generateMockAho("", false, offenceCode, true))
       expect(result).toHaveLength(0)
     }
   )
 
   it.each(offenceCodesForGrantedResultText)(
-    "Should generate a trigger when case has no pnc query, no recordable offence, and offence code is %s and result variable text says granted",
+    "Should not generate a trigger when case has no pnc query, no recordable offence, and offence code is %s and result variable text says granted",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("granted", undefined, offenceCode, false))
-      expect(result).toEqual([{ code: triggerCode }])
+      const result = TRPR0029(generateMockAho("granted", true, offenceCode, false))
+      expect(result).toHaveLength(0)
     }
   )
 
   it.each(offenceCodesForGrantedResultText)(
     "Should not generate a trigger when case has no pnc query, no recordable offence, and offence code is %s and result variable text does not say granted",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("Fined 100.", undefined, offenceCode, false))
+      const result = TRPR0029(generateMockAho("Fined 100.", false, offenceCode, false))
       expect(result).toHaveLength(0)
     }
   )
@@ -106,7 +106,7 @@ describe("TRPR0029", () => {
   it.each(offenceCodesForGrantedResultText)(
     "Should not generate a trigger when case has no pnc query but has a recordable offence, and offence code is %s and result variable text says granted",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("granted", "true", offenceCode, false))
+      const result = TRPR0029(generateMockAho("granted", true, offenceCode, false))
       expect(result).toHaveLength(0)
     }
   )
@@ -114,20 +114,20 @@ describe("TRPR0029", () => {
   it.each(offenceCodesForGrantedResultText)(
     "Should not generate a trigger when case has a pnc query but has no recordable offence, and offence code is %s and result variable text says granted",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("granted", undefined, offenceCode, true))
+      const result = TRPR0029(generateMockAho("granted", false, offenceCode, true))
       expect(result).toHaveLength(0)
     }
   )
 
   it("Should not generate a trigger when case has no pnc query, no recordable offence, and offence code is not from the lists", () => {
-    const result = TRPR0029(generateMockAho("", undefined, "XXXXXXX", false))
+    const result = TRPR0029(generateMockAho("", false, "XXXXXXX", false))
     expect(result).toHaveLength(0)
   })
 
   it.each(offenceCodesForGrantedResultText)(
     "Should not generate a trigger when case has no pnc query, no recordable offence, offence code is %s and one result contains 'granted' while another does not",
     (offenceCode) => {
-      const result = TRPR0029(generateMockAho("granted", undefined, offenceCode, true, true))
+      const result = TRPR0029(generateMockAho("granted", false, offenceCode, true, true))
       expect(result).toHaveLength(0)
     }
   )
