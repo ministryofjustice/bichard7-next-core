@@ -4,7 +4,7 @@ import parseAnnotatedPNCUpdateDatasetXml from "./parseAnnotatedPNCUpdateDatasetX
 
 describe("parseAnnotatedPNCUpdateDatasetXml", () => {
   it("converts XML to AnnotatedPNCUpdateDatasetXml", () => {
-    const inputXml = fs.readFileSync("phase1/tests/fixtures/AnnotatedPNCUpdateDataset.xml").toString()
+    const inputXml = fs.readFileSync("phase2/tests/fixtures/AnnotatedPNCUpdateDataset.xml").toString()
     const parsedAnnotatedPNCUpdateDataset = parseAnnotatedPNCUpdateDatasetXml(inputXml)
 
     expect(parsedAnnotatedPNCUpdateDataset).toMatchSnapshot()
