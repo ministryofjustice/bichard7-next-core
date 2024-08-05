@@ -169,8 +169,8 @@ jobs:
           command: npm run -w packages/core test:compare
 
   characterisation_test:
-    docker:
-      - image: cimg/node:16.13.1
+    machine:
+      image: ubuntu-2204:current
     resource_class: large
     steps:
       - unless:
