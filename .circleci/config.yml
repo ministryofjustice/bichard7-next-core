@@ -6,7 +6,59 @@ setup: true
 # the path-filtering orb is required to continue a pipeline based on
 # the path of an updated fileset
 orbs:
-  path-filtering: circleci/path-filtering@0.1.1
+  path-filtering: circleci/path-filtering@1.1.0
+  continuation: circleci/continuation@1.1.0
+
+parameters:
+  base-revision:
+    type: string
+    default: "main"
+  output-path:
+    type: string
+    default: "/tmp/pipeline-parameters.json"
+
+jobs:
+  set-params:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - path-filtering/set-parameters:
+          name: check-updated-files
+          # 3-column, whitespace-delimited mapping. One mapping per
+          # line:
+          # <regex path-to-test> <parameter-to-set> <value-of-pipeline-parameter>
+          mapping: |
+            .circleci/.* circleci-changes true
+            environment/.* env-changes true
+            packages/api/.* api-changes true
+            packages/common/.* common-changes true
+            packages/conductor/.* conductor-changes true
+            packages/core/.* core-changes true
+            packages/message-forwarder/.* message-forwarder-changes true
+          base-revision: << pipeline.parameters.base-revision >>
+          output-path: << pipeline.parameters.output-path >>
+
+      - run:
+          name: Scan parameters and enable DLC
+          command: |
+            # To reduce DLC costs, DLC parameter is only set when the job requiring it actually needs it. 
+            # This reduces the cost of the no-op jobs
+            if grep -E "api-changes|env-changes|common-changes|circleci-changes" << pipeline.parameters.output-path >>; then
+              echo "A job that uses DLC has been found, adding the DLC parameter to the parameters file"
+              params=$(cat << pipeline.parameters.output-path >> )
+              updated_param_file=$(jq -n --argjson a "$params" --argjson b '{"'"dlc"'":true}' '$a + $b')
+              echo "$updated_param_file" > << pipeline.parameters.output-path >>
+            else
+              echo "no jobs that need DLC were found, continuing"
+            fi
+      - continuation/continue:
+          # this is the path of the configuration we should trigger once
+          # path filtering and pipeline parameter value updates are
+          # complete. In this case, we are using the parent dynamic
+          # configuration itself.
+          configuration_path: .circleci/continue_config.yml
+          parameters: << pipeline.parameters.output-path >>
 
 workflows:
   # the always-run workflow is always triggered, regardless of the pipeline parameters.
