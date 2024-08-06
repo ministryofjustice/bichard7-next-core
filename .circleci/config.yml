@@ -7,7 +7,7 @@ setup: true
 # the path of an updated fileset
 orbs:
   path-filtering: circleci/path-filtering@1.1.0
-  continuation: circleci/continuation@1.1.0
+  continuation: circleci/continuation@1.0.0
 
 parameters:
   base-revision:
