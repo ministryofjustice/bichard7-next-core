@@ -12,7 +12,7 @@ orbs:
 parameters:
   base-revision:
     type: string
-    default: "main"
+    default: "circleci-updates"
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"
