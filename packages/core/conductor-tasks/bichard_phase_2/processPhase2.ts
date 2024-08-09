@@ -8,9 +8,9 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import phase2 from "../../phase2/phase2"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import phase2 from "../../phase2/phase2"
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
@@ -33,8 +33,8 @@ const processPhase2: ConductorWorker = {
     }
 
     const hasTriggersOrExceptions =
-      ("triggers" in result && result.triggers.length > 0) ||
-      ("hearingOutcome" in result && result.outputMessage.Exceptions.length > 0)
+      (result.triggers && result.triggers.length > 0) ||
+      (result.outputMessage && result.outputMessage.Exceptions.length > 0)
 
     return completed(
       { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
