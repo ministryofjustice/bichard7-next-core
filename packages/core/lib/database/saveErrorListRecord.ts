@@ -1,5 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
+import type PhaseResult from "../../types/PhaseResult"
+import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 import generateTriggersNoteText, { TriggerCreationType } from "./generateTriggersNoteText"
@@ -8,13 +10,15 @@ import insertErrorListRecord from "./insertErrorListRecord"
 import insertErrorListTriggers from "./insertErrorListTriggers"
 import updateErrorListRecord from "./updateErrorListRecord"
 import updateErrorListTriggers from "./updateErrorListTriggers"
-import type PhaseResult from "../../types/PhaseResult"
-import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 
 const handleUpdate = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
   const aho = getAnnotatedHearingOutcome(result)
   if (aho.Exceptions.length > 0) {
     await updateErrorListRecord(db, recordId, result)
+  }
+
+  if ("triggersGenerated" in result && !result.triggersGenerated) {
+    return
   }
 
   const triggerChanges = await updateErrorListTriggers(db, recordId, result)
