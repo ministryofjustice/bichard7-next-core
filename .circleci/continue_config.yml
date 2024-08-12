@@ -84,6 +84,20 @@ commands:
           name: Set GB locale
           command: bash .circleci/scripts/set-locale.sh
 
+  install_ms_edge:
+    steps:
+      - restore_cache:
+          keys:
+              - ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
+      - run:
+          name: Install MS Edge (dev)
+          command: bash .circleci/scripts/install-ms-edge-on-linux.sh
+      - save_cache:
+          key: ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
+          paths:
+              - ~/vendor/apt_cache
+              - ~/vendor/apt_lists
+
 jobs:
   build_and_lint:
     machine:
@@ -300,9 +314,12 @@ jobs:
       phase2-core-canary-ratio:
         type: enum
         enum: ["1.0", "0.0"]
+      ms-edge:
+        type: boolean
     environment:
       NEXTUI: << parameters.next-ui >>
       PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
+      MS_EDGE: << parameters.ms-edge >>
     steps:
       - unless:
           condition:
@@ -317,6 +334,11 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_locale
+      - when:
+          condition:
+            equal: [true, << parameters.ms-edge >>]
+          steps:
+            - install_ms_edge
       - install_and_build_core
       - fetch_images:
           images: nodejs-20-2023
@@ -440,6 +462,9 @@ parameters:
   message-forwarder-changes:
     type: boolean
     default: false
+  ms-edge:
+    type: boolean
+    default: false
 
 workflows:
   test-all:
@@ -455,17 +480,43 @@ workflows:
           name: e2e_test_phase1
           next-ui: false
           phase2-core-canary-ratio: "0.0"
+          ms-edge: false
       - e2e_test:
           name: e2e_test_phase1_new_ui
           next-ui: true
           phase2-core-canary-ratio: "0.0"
+          ms-edge: false
       - e2e_test:
           name: e2e_test_phase2
           next-ui: false
           phase2-core-canary-ratio: "1.0"
+          ms-edge: false
       - e2e_test:
           name: e2e_test_phase2_new_ui
           next-ui: true
           phase2-core-canary-ratio: "1.0"
+          ms-edge: false
+      # MS Edge
+      - e2e_test:
+          name: e2e_test_phase1_ms_edge
+          next-ui: false
+          phase2-core-canary-ratio: "0.0"
+          ms-edge: true
+      - e2e_test:
+          name: e2e_test_phase1_new_ui_ms_edge
+          next-ui: true
+          phase2-core-canary-ratio: "0.0"
+          ms-edge: true
+      - e2e_test:
+          name: e2e_test_phase2_ms_edge
+          next-ui: false
+          phase2-core-canary-ratio: "1.0"
+          ms-edge: true
+      - e2e_test:
+          name: e2e_test_phase2_new_ui_ms_edge
+          next-ui: true
+          phase2-core-canary-ratio: "1.0"
+          ms-edge: true
+      # End MS Edge
       - test_message_forwarder
       - build_and_lint
