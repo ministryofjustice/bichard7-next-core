@@ -106,6 +106,7 @@ jobs:
     steps:
       - checkout
       - set_locale
+      - install_ms_edge
       - install_and_build_core
       - run:
           name: Check the code for linting errors
@@ -469,6 +470,8 @@ parameters:
 workflows:
   test-all:
     jobs:
+      - build_and_lint
+      - test_message_forwarder
       - test_postgres
       - test_api
       - test_common
@@ -481,42 +484,56 @@ workflows:
           next-ui: false
           phase2-core-canary-ratio: "0.0"
           ms-edge: false
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase1_new_ui
           next-ui: true
           phase2-core-canary-ratio: "0.0"
           ms-edge: false
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase2
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           ms-edge: false
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase2_new_ui
           next-ui: true
           phase2-core-canary-ratio: "1.0"
           ms-edge: false
+          requires:
+            - build_and_lint
       # MS Edge
       - e2e_test:
           name: e2e_test_phase1_ms_edge
           next-ui: false
           phase2-core-canary-ratio: "0.0"
           ms-edge: true
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase1_new_ui_ms_edge
           next-ui: true
           phase2-core-canary-ratio: "0.0"
           ms-edge: true
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase2_ms_edge
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           ms-edge: true
+          requires:
+            - build_and_lint
       - e2e_test:
           name: e2e_test_phase2_new_ui_ms_edge
           next-ui: true
           phase2-core-canary-ratio: "1.0"
           ms-edge: true
+          requires:
+            - build_and_lint
       # End MS Edge
-      - test_message_forwarder
-      - build_and_lint
