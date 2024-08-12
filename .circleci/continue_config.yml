@@ -88,15 +88,15 @@ commands:
     steps:
       - restore_cache:
           keys:
-              - ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
+            - ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
       - run:
           name: Install MS Edge (dev)
           command: bash .circleci/scripts/install-ms-edge-on-linux.sh
       - save_cache:
           key: ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
           paths:
-              - ~/vendor/apt_cache
-              - ~/vendor/apt_lists
+            - ~/vendor/apt_cache
+            - ~/vendor/apt_lists
 
 jobs:
   build_and_lint:
