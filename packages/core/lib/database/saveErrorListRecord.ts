@@ -1,5 +1,6 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
+import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
@@ -13,10 +14,12 @@ import updateErrorListTriggers from "./updateErrorListTriggers"
 
 const handleUpdate = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
   const aho = getAnnotatedHearingOutcome(result)
-  if (aho.Exceptions.length > 0) {
+  // If case is resubmitted to Phase 1 and case is ignored in Phase 2, we need to update the record to set the correct error_status
+  if (aho.Exceptions.length > 0 || result.resultType === Phase2ResultType.ignored) {
     await updateErrorListRecord(db, recordId, result)
   }
 
+  // If trigger generator is not called in Phase 2, we shouldn't update triggers
   if ("triggersGenerated" in result && !result.triggersGenerated) {
     return
   }
@@ -38,13 +41,18 @@ const handleInsert = async (db: Sql, result: PhaseResult): Promise<void> => {
   await insertErrorListNotes(db, newRecordId, notes)
 }
 
+const shouldInsertRecord = (result: PhaseResult) =>
+  result.triggers.length > 0 ||
+  ("outputMessage" in result && result.outputMessage.Exceptions.length > 0) ||
+  ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+
 const saveErrorListRecord = (db: Sql, result: PhaseResult): PromiseResult<void> => {
   return db
     .begin(async () => {
       const recordId = await fetchErrorListRecordId(db, result.correlationId)
       if (recordId !== undefined) {
         await handleUpdate(db, recordId, result)
-      } else {
+      } else if (shouldInsertRecord(result)) {
         await handleInsert(db, result)
       }
     })
