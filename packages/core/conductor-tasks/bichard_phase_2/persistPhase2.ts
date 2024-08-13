@@ -9,6 +9,7 @@ import postgres from "postgres"
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
 import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
 import type Phase2Result from "../../phase2/types/Phase2Result"
+import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 
 const dbConfig = createDbConfig()
 
@@ -18,8 +19,14 @@ const persistPhase2: ConductorWorker = {
     const { s3TaskData } = task.inputData
     const db = postgres(dbConfig)
 
-    if (s3TaskData.triggers.length === 0 && s3TaskData.outputMessage.Exceptions.length === 0) {
-      return failedTerminal("No triggers or exceptions present but persist_phase2 was called")
+    if (
+      !s3TaskData.triggersGenerated &&
+      s3TaskData.outputMessage.Exceptions.length === 0 &&
+      s3TaskData.resultType !== Phase2ResultType.ignored
+    ) {
+      return failedTerminal(
+        "No exceptions present, triggers not generated, and case is not ignored but persist_phase2 was called"
+      )
     }
 
     const dbResult = await saveErrorListRecord(db, s3TaskData)
