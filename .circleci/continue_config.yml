@@ -1,5 +1,34 @@
 version: 2.1
 
+parameters:
+  circleci-changes:
+    type: boolean
+    default: false
+  env-changes:
+    type: boolean
+    default: false
+  api-changes:
+    type: boolean
+    default: false
+  common-changes:
+    type: boolean
+    default: false
+  conductor-changes:
+    type: boolean
+    default: false
+  core-changes:
+    type: boolean
+    default: false
+  message-forwarder-changes:
+    type: boolean
+    default: false
+  dlc:
+    type: boolean
+    default: false
+  ms-edge:
+    type: boolean
+    default: false
+
 commands:
   fetch_images:
     parameters:
@@ -115,7 +144,6 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: xlarge
     steps:
       - unless:
@@ -167,7 +195,6 @@ jobs:
   comparison_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -231,7 +258,6 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: large
     steps:
       - unless:
@@ -273,7 +299,6 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: large
     steps:
       - unless:
@@ -306,7 +331,6 @@ jobs:
   e2e_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: large
     parallelism: 10
     parameters:
@@ -377,7 +401,7 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.dlc >>
     resource_class: medium
     steps:
       - unless:
@@ -401,7 +425,7 @@ jobs:
   test_common:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.dlc >>
     resource_class: medium
     steps:
       - unless:
@@ -422,7 +446,7 @@ jobs:
   test_postgres:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.dlc >>
     resource_class: medium
     steps:
       - unless:
@@ -440,32 +464,6 @@ jobs:
       - run:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
-
-parameters:
-  circleci-changes:
-    type: boolean
-    default: false
-  env-changes:
-    type: boolean
-    default: false
-  api-changes:
-    type: boolean
-    default: false
-  common-changes:
-    type: boolean
-    default: false
-  conductor-changes:
-    type: boolean
-    default: false
-  core-changes:
-    type: boolean
-    default: false
-  message-forwarder-changes:
-    type: boolean
-    default: false
-  ms-edge:
-    type: boolean
-    default: false
 
 workflows:
   test-all:
