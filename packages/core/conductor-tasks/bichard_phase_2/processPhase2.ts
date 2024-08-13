@@ -9,6 +9,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import phase2 from "../../phase2/phase2"
+import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
@@ -32,12 +33,13 @@ const processPhase2: ConductorWorker = {
       return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
 
-    const hasTriggersOrExceptions =
+    const hasTriggersOrExceptionsOrIgnored =
       (result.triggers && result.triggers.length > 0) ||
-      (result.outputMessage && result.outputMessage.Exceptions.length > 0)
+      (result.outputMessage && result.outputMessage.Exceptions.length > 0) ||
+      result.resultType === Phase2ResultType.ignored
 
     return completed(
-      { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
+      { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptionsOrIgnored },
       ...result.auditLogEvents.map((e) => e.eventType)
     )
   })

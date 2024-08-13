@@ -54,10 +54,10 @@
           "permissive": false
         },
         {
-          "name": "check_triggers_or_exceptions",
-          "taskReferenceName": "check_triggers_or_exceptions",
+          "name": "check_triggers_or_exceptions_or_ignored",
+          "taskReferenceName": "check_triggers_or_exceptions_or_ignored",
           "inputParameters": {
-            "hasTriggersOrExceptions": "${process_phase2.output.hasTriggersOrExceptions}"
+            "hasTriggersOrExceptions": "${process_phase2.output.hasTriggersOrExceptionsOrIgnored}"
           },
           "type": "SWITCH",
           "decisionCases": {
