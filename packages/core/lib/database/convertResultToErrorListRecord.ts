@@ -55,6 +55,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
   const caseElem = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
   const hearing = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const errorReport = generateErrorReport(hearingOutcome)
+
   return {
     message_id: hearing.SourceReference.UniqueID,
     phase: 1,

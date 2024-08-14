@@ -17,7 +17,6 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
     error_quality_checked: record.error_quality_checked,
     annotated_msg: record.annotated_msg,
     updated_msg: record.updated_msg,
-    error_status: ResolutionStatus.UNRESOLVED,
     error_resolved_by: null,
     error_resolved_ts: null,
     user_updated_flag: record.user_updated_flag
@@ -27,7 +26,6 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
 const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
   try {
     const updateFields = generateUpdateFields(result)
-    delete updateFields.error_status
     const exceptionsCount = getAnnotatedHearingOutcome(result).Exceptions.length
 
     const updateResult = await db<ErrorListRecord[]>`
