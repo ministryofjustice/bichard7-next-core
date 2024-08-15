@@ -105,7 +105,7 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
   }))
 }
 
-const mapXmlResultQualifierVariableTOAho = (
+const mapXmlResultQualifierVariableToAho = (
   rqv: Br7ResultQualifierVariable | Br7ResultQualifierVariable[] | undefined
 ): ResultQualifierVariable[] => {
   if (!rqv) {
@@ -203,7 +203,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"]?.["#text"]
     ? Number(xmlResult["br7:NumberOfOffencesTIC"]["#text"])
     : undefined,
-  ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
+  ResultQualifierVariable: mapXmlResultQualifierVariableToAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"]
     ? Number(xmlResult["ds:ResultHalfLifeHours"]["#text"])
     : undefined,
