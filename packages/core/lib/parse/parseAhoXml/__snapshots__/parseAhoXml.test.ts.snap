@@ -115,7 +115,16 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
                   "ResultHalfLifeHours": 72,
                   "ResultHearingDate": 2011-09-26T00:00:00.000Z,
                   "ResultHearingType": "OTHER",
-                  "ResultQualifierVariable": [],
+                  "ResultQualifierVariable": [
+                    {
+                      "Code": "GB",
+                      "Duration": {
+                        "DurationLength": 30,
+                        "DurationType": "Custodial",
+                        "DurationUnit": "D",
+                      },
+                    },
+                  ],
                   "ResultVariableText": "Travel Restriction Order",
                   "SourceOrganisation": {
                     "BottomLevelCode": "01",
