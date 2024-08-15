@@ -1,5 +1,5 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
-FROM ${BUILD_IMAGE} as builder
+FROM ${BUILD_IMAGE} AS builder
 
 WORKDIR /message-forwarder
 
