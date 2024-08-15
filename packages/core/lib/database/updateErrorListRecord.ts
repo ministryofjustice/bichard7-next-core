@@ -32,8 +32,8 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
       UPDATE br7own.error_list SET ${db(updateFields)},
         error_status = CASE
           WHEN ${exceptionsCount}::integer > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
-          WHEN error_status = ${ResolutionStatus.SUBMITTED}::integer THEN ${ResolutionStatus.RESOLVED}::integer
-          ELSE NULL
+          WHEN error_status IS NULL THEN NULL
+          ELSE ${ResolutionStatus.RESOLVED}::integer
         END
       WHERE error_id = ${recordId}`
 
