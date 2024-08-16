@@ -78,7 +78,7 @@ describe("persistPhase2", () => {
       correlationId: phase1Result.correlationId,
       resultType: Phase2ResultType.ignored
     })
-    const s3TaskDataPath = "phase2-exception.xml"
+    const s3TaskDataPath = "phase2-ignored.xml"
     await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
     const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
@@ -104,7 +104,7 @@ describe("persistPhase2", () => {
       triggersGenerated: false
     })
     phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-    const s3TaskDataPath = "phase2-exception.xml"
+    const s3TaskDataPath = "phase2-no-trigger-update.xml"
     await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
     const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
@@ -164,7 +164,7 @@ describe("persistPhase2", () => {
       triggers: []
     })
     phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-    const s3TaskDataPath = "phase2-exception.xml"
+    const s3TaskDataPath = "phase2-delete-triggers.xml"
     await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
     const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
@@ -205,7 +205,7 @@ describe("persistPhase2", () => {
       triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0003 }, { code: TriggerCode.TRPS0002 }]
     })
     phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-    const s3TaskDataPath = "phase2-exception.xml"
+    const s3TaskDataPath = "phase2-new-triggers.xml"
     await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
     const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
@@ -247,5 +247,45 @@ describe("persistPhase2", () => {
         trigger_item_identity: null
       }
     ])
+  })
+
+  it("should fail with terminal error if the result cannot be parsed", async () => {
+    const phase2Result = generateMockPhase2Result() as unknown as Record<string, unknown>
+    delete phase2Result.outputMessage
+    const s3TaskDataPath = "phase2-invalid-format.xml"
+    await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+
+    const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain("S3 data schema parse error: Expected object for outputMessage")
+  })
+
+  it("should fail with terminal error if there no exception, triggers are not generated, and case is not ignored", async () => {
+    const phase2Result = generateMockPhase2Result({ triggersGenerated: false, resultType: Phase2ResultType.success })
+    phase2Result.outputMessage.Exceptions = []
+    const s3TaskDataPath = "phase2-no-triggers-exceptions-ignored.xml"
+    await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+
+    const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
+    expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain(
+      "No exceptions present, triggers not generated, and case is not ignored but persist_phase2 was called"
+    )
+  })
+
+  it("should fail if it can't fetch the file from S3", async () => {
+    const result = await persistPhase2.execute({ inputData: { s3TaskDataPath: "missing.json" } })
+
+    expect(result).toHaveProperty("status", "FAILED")
+    expect(result.logs?.map((l) => l.log)).toContain("Could not retrieve file from S3: missing.json")
+  })
+
+  it("should fail with terminal error if the S3 path is missing", async () => {
+    const result = await persistPhase2.execute({ inputData: {} })
+
+    expect(result).toHaveProperty("status", "FAILED_WITH_TERMINAL_ERROR")
+    expect(result.logs?.map((l) => l.log)).toContain(
+      "Input data schema parse error: Expected string for s3TaskDataPath"
+    )
   })
 })
