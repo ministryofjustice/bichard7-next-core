@@ -28,8 +28,6 @@ const processMessage = (
   const isResubmitted = isPncUpdateDataset(inputMessage)
   const hearingOutcome = inputMessage.AnnotatedHearingOutcome.HearingOutcome
 
-  auditLogger.info(isResubmitted ? EventCode.ReceivedResubmittedHearingOutcome : EventCode.HearingOutcomeReceivedPhase2)
-
   if (!isResubmitted && isAintCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
 
