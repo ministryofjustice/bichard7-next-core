@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto"
 import merge from "lodash.merge"
-import generateFakePncUpdateDataset from "../../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
-import type Phase2Result from "../../../phase2/types/Phase2Result"
-import { Phase2ResultType } from "../../../phase2/types/Phase2Result"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type Phase2Result from "../../types/Phase2Result"
+import { Phase2ResultType } from "../../types/Phase2Result"
+import generateFakePncUpdateDataset from "../fixtures/helpers/generateFakePncUpdateDataset"
 
 const generateMockPhase2Result = (
   input: Partial<Phase2Result> = { triggerGenerationAttempted: false }

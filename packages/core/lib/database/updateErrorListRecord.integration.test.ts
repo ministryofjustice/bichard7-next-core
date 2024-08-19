@@ -1,7 +1,7 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import postgres from "postgres"
-import generateMockPhase2Result from "../../phase1/tests/helpers/generateMockPhase2Result"
+import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import errorPaths from "../exceptions/errorPaths"
