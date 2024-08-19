@@ -66,7 +66,9 @@ describe("processPhase2", () => {
 
     const s3TaskDataPath = "bad-aho.json"
     await putFileToS3(JSON.stringify(inputMessage), s3TaskDataPath, bucket, s3Config)
+
     const result = await processPhase2.execute({ inputData: { s3TaskDataPath } })
+
     expect(result).toHaveProperty("status", "COMPLETED")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing Outcome ignored as no offences are recordable")
     expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.ignored)
