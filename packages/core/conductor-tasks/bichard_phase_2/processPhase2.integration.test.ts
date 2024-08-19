@@ -35,7 +35,7 @@ const sql = postgres({
   }
 })
 
-describe("processPhase1", () => {
+describe("processPhase2", () => {
   beforeAll(() => {
     process.env.TASK_DATA_BUCKET_NAME = bucket
   })
