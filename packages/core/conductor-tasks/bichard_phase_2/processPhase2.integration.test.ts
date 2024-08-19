@@ -15,6 +15,8 @@ import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import generateFakePncUpdateDataset from "../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
 import type Phase2Result from "../../phase2/types/Phase2Result"
+import { Offence } from "../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../types/ResultClass"
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -73,6 +75,74 @@ describe("processPhase2", () => {
     expect(result.logs?.map((l) => l.log)).toContain("Hearing Outcome ignored as no offences are recordable")
     expect(result.outputData).toHaveProperty("resultType", Phase1ResultType.ignored)
     expect(result.outputData?.auditLogEvents).toHaveLength(2)
+  })
+
+  it("should set hasTriggersOrExceptionsOrIgnored to true when case is ignored", async () => {
+    const inputMessage = generateFakeAho({})
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = false
+
+    const s3TaskDataPath = "case-ignored.json"
+    await putFileToS3(JSON.stringify(inputMessage), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processPhase2.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result).toHaveProperty("status", "COMPLETED")
+    expect(result.outputData?.hasTriggersOrExceptionsOrIgnored).toBe(true)
+  })
+
+  it("should set hasTriggersOrExceptionsOrIgnored to true when an exception is generated", async () => {
+    const inputMessage = generateFakeAho({})
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
+      "0800PP0111111111111A"
+
+    const s3TaskDataPath = "exception-generated.json"
+    await putFileToS3(JSON.stringify(inputMessage), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processPhase2.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result).toHaveProperty("status", "COMPLETED")
+    expect(result.outputData?.hasTriggersOrExceptionsOrIgnored).toBe(true)
+  })
+
+  it("should set hasTriggersOrExceptionsOrIgnored to true when a trigger is generated", async () => {
+    const inputMessage = generateFakePncUpdateDataset()
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber = undefined
+    const offence = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        ...offence[0],
+        AddedByTheCourt: true,
+        Result: [
+          {
+            ...offence[0].Result[0],
+            ResultClass: ResultClass.SENTENCE,
+            PNCAdjudicationExists: false
+          }
+        ]
+      }
+    ] as Offence[]
+
+    const s3TaskDataPath = "trigger-generated.json"
+    await putFileToS3(JSON.stringify(inputMessage), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processPhase2.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result).toHaveProperty("status", "COMPLETED")
+    expect(result.outputData?.hasTriggersOrExceptionsOrIgnored).toBe(true)
+  })
+
+  it("should set hasTriggersOrExceptionsOrIgnored to false when no triggers and exceptions are generated and case is not ignored", async () => {
+    const inputMessage = generateFakePncUpdateDataset()
+
+    const s3TaskDataPath = "no-triggers-exception-ignored.json"
+    await putFileToS3(JSON.stringify(inputMessage), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processPhase2.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result).toHaveProperty("status", "COMPLETED")
+    expect(result.outputData?.hasTriggersOrExceptionsOrIgnored).toBe(false)
   })
 
   it("should fail if it can't put the file to S3", async () => {
