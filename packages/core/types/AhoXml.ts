@@ -221,6 +221,7 @@ export interface Br7Offence {
 export interface Br7ResultQualifierVariable {
   "@_SchemaVersion": string
   "ds:Code": Br7TextString
+  "ds:Duration"?: Br7Duration
 }
 export interface Br7Result {
   "ds:CJSresultCode": Br7TextString
