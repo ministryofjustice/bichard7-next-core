@@ -5,7 +5,9 @@ import type Phase2Result from "../../../phase2/types/Phase2Result"
 import { Phase2ResultType } from "../../../phase2/types/Phase2Result"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
-const generateMockPhase2Result = (input: Partial<Phase2Result> = { triggersGenerated: false }): Phase2Result => {
+const generateMockPhase2Result = (
+  input: Partial<Phase2Result> = { triggerGenerationAttempted: false }
+): Phase2Result => {
   const correlationId = input.correlationId ?? randomUUID()
   const ahoCorrelationId = {
     AnnotatedHearingOutcome: { HearingOutcome: { Hearing: { SourceReference: { UniqueID: correlationId } } } }
@@ -18,7 +20,7 @@ const generateMockPhase2Result = (input: Partial<Phase2Result> = { triggersGener
     outputMessage,
     auditLogEvents: input.auditLogEvents ?? [],
     triggers: input.triggers ?? [],
-    triggersGenerated: !!input.triggersGenerated,
+    triggerGenerationAttempted: !!input.triggerGenerationAttempted,
     resultType: input.resultType ?? Phase2ResultType.success
   }
 }

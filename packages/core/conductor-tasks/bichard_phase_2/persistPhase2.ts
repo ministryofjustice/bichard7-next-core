@@ -20,7 +20,7 @@ const persistPhase2: ConductorWorker = {
     const db = postgres(dbConfig)
 
     if (
-      !s3TaskData.triggersGenerated &&
+      !s3TaskData.triggerGenerationAttempted &&
       s3TaskData.outputMessage.Exceptions.length === 0 &&
       s3TaskData.resultType !== Phase2ResultType.ignored
     ) {

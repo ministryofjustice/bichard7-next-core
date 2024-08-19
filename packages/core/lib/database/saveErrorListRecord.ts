@@ -21,7 +21,7 @@ const handleUpdate = async (db: Sql, recordId: number, result: PhaseResult): Pro
   }
 
   // If trigger generator is not called in Phase 2, we shouldn't update triggers
-  if ("triggersGenerated" in result && result.triggersGenerated === false) {
+  if ("triggerGenerationAttempted" in result && result.triggerGenerationAttempted === false) {
     return
   }
 

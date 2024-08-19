@@ -44,7 +44,7 @@ const processPhase2: ConductorWorker = {
     }
 
     const hasTriggersOrExceptionsOrIgnored =
-      result.triggersGenerated ||
+      result.triggerGenerationAttempted ||
       result.outputMessage.Exceptions.length > 0 ||
       result.resultType === Phase2ResultType.ignored
 

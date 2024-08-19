@@ -109,7 +109,7 @@ describe("persistPhase2", () => {
 
       const phase2Result = generateMockPhase2Result({
         correlationId: phase1Result.correlationId,
-        triggersGenerated: false
+        triggerGenerationAttempted: false
       })
       phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
       const s3TaskDataPath = "phase2-no-trigger-update.xml"
@@ -170,7 +170,7 @@ describe("persistPhase2", () => {
 
       const phase2Result = generateMockPhase2Result({
         correlationId: phase1Result.correlationId,
-        triggersGenerated: true,
+        triggerGenerationAttempted: true,
         triggers: []
       })
       phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
@@ -213,7 +213,7 @@ describe("persistPhase2", () => {
 
       const phase2Result = generateMockPhase2Result({
         correlationId: phase1Result.correlationId,
-        triggersGenerated: true,
+        triggerGenerationAttempted: true,
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0003 }, { code: TriggerCode.TRPS0002 }]
       })
       phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
@@ -267,7 +267,7 @@ describe("persistPhase2", () => {
     it("should insert the record and triggers when triggers are generated", async () => {
       const phase2Result = generateMockPhase2Result({
         triggers: [{ code: TriggerCode.TRPS0002 }, { code: TriggerCode.TRPS0003 }],
-        triggersGenerated: true
+        triggerGenerationAttempted: true
       })
       const s3TaskDataPath = "phase2-insert-triggers.xml"
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
@@ -308,7 +308,7 @@ describe("persistPhase2", () => {
     it("should not insert the record and triggers when Phase 2 has attempted generating triggers but no triggers generated", async () => {
       const phase2Result = generateMockPhase2Result({
         triggers: [],
-        triggersGenerated: true
+        triggerGenerationAttempted: true
       })
       const s3TaskDataPath = "phase2-insert-triggers.xml"
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
@@ -323,7 +323,7 @@ describe("persistPhase2", () => {
     it("should not insert the record and triggers when Phase 2 has not attempted generating triggers", async () => {
       const phase2Result = generateMockPhase2Result({
         triggers: [],
-        triggersGenerated: false
+        triggerGenerationAttempted: false
       })
       const s3TaskDataPath = "phase2-insert-triggers.xml"
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
@@ -341,7 +341,7 @@ describe("persistPhase2", () => {
     it("should insert the recordwhen exceptions are generated", async () => {
       const phase2Result = generateMockPhase2Result({
         triggers: [],
-        triggersGenerated: false
+        triggerGenerationAttempted: false
       })
       phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
       const s3TaskDataPath = "phase2-insert-triggers.xml"
@@ -370,7 +370,10 @@ describe("persistPhase2", () => {
   })
 
   it("should fail with terminal error if there no exception, triggers are not generated, and case is not ignored", async () => {
-    const phase2Result = generateMockPhase2Result({ triggersGenerated: false, resultType: Phase2ResultType.success })
+    const phase2Result = generateMockPhase2Result({
+      triggerGenerationAttempted: false,
+      resultType: Phase2ResultType.success
+    })
     phase2Result.outputMessage.Exceptions = []
     const s3TaskDataPath = "phase2-no-triggers-exceptions-ignored.xml"
     await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)

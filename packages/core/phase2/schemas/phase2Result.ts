@@ -10,6 +10,6 @@ export const phase2ResultSchema = z.object({
   correlationId: z.string(),
   outputMessage: pncUpdateDatasetSchema,
   triggers: z.array(triggerSchema),
-  triggersGenerated: z.boolean(),
+  triggerGenerationAttempted: z.boolean(),
   resultType: z.nativeEnum(Phase2ResultType)
 })
