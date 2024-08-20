@@ -183,7 +183,7 @@ describe("persistPhase2", () => {
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
-      expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED) // TODO: Since all triggers are resolved, this should be RESOLVED
+      expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
 
       const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toEqual([
