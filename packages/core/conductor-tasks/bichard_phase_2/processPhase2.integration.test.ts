@@ -15,7 +15,7 @@ import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import generateFakePncUpdateDataset from "../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
 import type Phase2Result from "../../phase2/types/Phase2Result"
-import { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
