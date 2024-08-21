@@ -8,7 +8,7 @@ enum PncOperationCode {
   APPHRD = "APPHRD"
 }
 
-enum OperationDescriptions {
+enum PncOperationDescriptions {
   NEWREM = "New Remand",
   DISARR = "Discharge Arranged",
   SENDEF = "Sentence Deferred",
@@ -18,4 +18,4 @@ enum OperationDescriptions {
   APPHRD = "Appeal Heard"
 }
 
-export default { PncOperationCode, OperationDescriptions }
+export default { PncOperationCode, PncOperationDescriptions }
