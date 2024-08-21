@@ -21,10 +21,6 @@ const createRemandOperation = (
   result: Result,
   courtCaseReference: string | undefined | null
 ): ExceptionsAndOperations => {
-  // if (isAdjournedNoNextHearing(result.CJSresultCode)) {
-  //   return { operations: [], exceptions: [] }
-  // }
-
   const operation = createOperation("NEWREM", generateNewremData(result)) as NewremOperation
 
   operation.courtCaseReference = courtCaseReference ?? undefined
