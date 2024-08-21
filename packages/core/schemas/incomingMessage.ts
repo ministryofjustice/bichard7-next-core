@@ -7,6 +7,7 @@ export const incomingMessageSchema = z.object({
       SourceID: z.string().optional()
     }),
     DataStream: z.object({
+      System: z.string(),
       DataStreamContent: z.string()
     })
   })
