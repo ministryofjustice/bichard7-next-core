@@ -3,7 +3,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
 import { extractExceptionsFromXml } from "../../../lib/parse/parseAhoXml"
-import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPNCUpdateDataset"
+import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
 import type AnnotatedPncUpdateDatasetParsedXml from "../../types/AnnotatedPncUpdateDatasetParsedXml"
 import { mapXmlToPncUpdateDataSet } from "../parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 
