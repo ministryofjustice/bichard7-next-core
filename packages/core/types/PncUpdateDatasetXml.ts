@@ -77,8 +77,8 @@ export type PncUpdateDatasetXml = {
   PNCUpdateDataset: {
     "br7:AnnotatedHearingOutcome"?: AhoXml
     Operation: PncOperationXml[]
-    "@_xmlns:ds": string
-    "@_xmlns:xsi": string
-    "@_xmlns": string
+    "@_xmlns:ds"?: string
+    "@_xmlns:xsi"?: string
+    "@_xmlns"?: string
   }
 }

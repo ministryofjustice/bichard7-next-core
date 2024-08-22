@@ -1,6 +1,6 @@
 import fs from "fs"
 import "jest-xml-matcher"
-import parseAnnotatedPNCUpdateDatasetXml from "./parseAnnotatedPNCUpdateDatasetXml"
+import parseAnnotatedPNCUpdateDatasetXml from "./parseAnnotatedPncUpdateDatasetXml"
 
 describe("parseAnnotatedPNCUpdateDatasetXml", () => {
   it("converts XML to AnnotatedPNCUpdateDatasetXml", () => {
