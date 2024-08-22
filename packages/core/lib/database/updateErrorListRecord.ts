@@ -8,6 +8,7 @@ import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)
   return {
+    phase: record.phase,
     asn: record.asn,
     ptiurn: record.ptiurn,
     org_for_police_filter: record.org_for_police_filter,

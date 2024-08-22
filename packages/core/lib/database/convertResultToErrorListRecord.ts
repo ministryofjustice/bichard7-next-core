@@ -1,8 +1,10 @@
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import { QualityCheckStatus } from "../../types/ErrorListRecord"
+import Phase from "../../types/Phase"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import serialiseToXml from "../serialise/ahoXml/serialiseToXml"
 
@@ -55,10 +57,11 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
   const caseElem = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
   const hearing = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const errorReport = generateErrorReport(hearingOutcome)
+  const phase = isPncUpdateDataset(hearingOutcome) ? Phase.PNC_UPDATE : Phase.HEARING_OUTCOME
 
   return {
     message_id: hearing.SourceReference.UniqueID,
-    phase: 1,
+    phase,
     error_status: hearingOutcome.Exceptions.length > 0 ? ResolutionStatus.UNRESOLVED : null,
     trigger_status: result.triggers.length > 0 ? ResolutionStatus.UNRESOLVED : null,
     error_quality_checked: hearingOutcome.Exceptions.length > 0 ? QualityCheckStatus.UNCHECKED : null,
