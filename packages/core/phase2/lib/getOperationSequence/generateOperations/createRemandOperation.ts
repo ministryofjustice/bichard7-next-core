@@ -1,4 +1,3 @@
-import isAdjournedNoNextHearing from "../../../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { NewremOperation, OperationData } from "../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../types/ResultClass"
@@ -22,10 +21,6 @@ const createRemandOperation = (
   result: Result,
   courtCaseReference: string | undefined | null
 ): ExceptionsAndOperations => {
-  if (isAdjournedNoNextHearing(result.CJSresultCode)) {
-    return { operations: [], exceptions: [] }
-  }
-
   const operation = createOperation("NEWREM", generateNewremData(result)) as NewremOperation
 
   operation.courtCaseReference = courtCaseReference ?? undefined
