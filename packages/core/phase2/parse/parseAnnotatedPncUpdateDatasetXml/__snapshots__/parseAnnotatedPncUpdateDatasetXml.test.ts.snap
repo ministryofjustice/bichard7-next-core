@@ -270,7 +270,6 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
         {
           "code": "HO200124",
           "path": [
-            "PNCUpdateDataset",
             "AnnotatedHearingOutcome",
             "HearingOutcome",
             "Case",

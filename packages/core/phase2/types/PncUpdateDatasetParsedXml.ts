@@ -56,7 +56,7 @@ export interface Br7Operation {
   operationStatus: Br7TextString
 }
 
-export interface PncUpdateDatasetXml {
+export interface PncUpdateDatasetParsedXml {
   "?xml"?: XML
   PNCUpdateDataset?: {
     "br7:AnnotatedHearingOutcome"?: Br7AnnotatedHearingOutcome

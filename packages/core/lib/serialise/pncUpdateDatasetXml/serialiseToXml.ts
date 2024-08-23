@@ -1,9 +1,9 @@
-import { toISODate } from "../../../lib/dates"
-import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../lib/serialise/ahoXml/serialiseToXml"
-import generateXml from "../../../lib/serialise/generateXml"
 import type { AhoXml } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
+import { toISODate } from "../../dates"
+import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../ahoXml/serialiseToXml"
+import generateXml from "../generateXml"
 
 const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {
@@ -127,10 +127,13 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
   }
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = false): string => {
+export const mapToPncUpdateDatasetXml = (
+  pncUpdateDataset: PncUpdateDataset,
+  addFalseHasErrorAttributes = false
+): PncUpdateDatasetXml => {
   const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addFalseHasErrorAttributes)
   normaliseNamespaces(xmlAho)
-  const xmlPncUpdateDataset: PncUpdateDatasetXml = {
+  return {
     "?xml": xmlAho["?xml"],
     PNCUpdateDataset: {
       ...{ ...xmlAho, "?xml": undefined },
@@ -138,6 +141,10 @@ const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttr
       ...xmlnsTags
     }
   }
+}
+
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = false): string => {
+  const xmlPncUpdateDataset = mapToPncUpdateDatasetXml(pncUpdateDataset, addFalseHasErrorAttributes)
 
   return generateXml(xmlPncUpdateDataset)
 }
