@@ -8,7 +8,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
-import serialiseToXml from "../../lib/serialise/pnc-update-dataset-xml/serialiseToXml"
+import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
 import type Phase2Result from "../../phase2/types/Phase2Result"
 

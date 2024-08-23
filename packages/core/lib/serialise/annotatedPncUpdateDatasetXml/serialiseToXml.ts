@@ -2,7 +2,7 @@ import generateXml from "../../../lib/serialise/generateXml"
 import type AnnotatedPncUpdateDatasetXml from "../../../types/AnnotatedPncUpdateDatasetXml"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
-import { mapToPncUpdateDatasetXml } from "../pnc-update-dataset-xml/serialiseToXml"
+import { mapToPncUpdateDatasetXml } from "../pncUpdateDatasetXml/serialiseToXml"
 
 const xmlnsTags = {
   "@_xmlns": "http://www.example.org/NewXMLSchema",
