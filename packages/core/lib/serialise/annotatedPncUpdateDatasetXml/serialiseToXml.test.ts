@@ -5,13 +5,19 @@ import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDat
 import serialiseToXml from "./serialiseToXml"
 
 describe("serialiseToXml", () => {
-  it("Parsing and serialising XML file results in the same XML", () => {
-    const inputMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedPncUpdateDataset.xml").toString()
-    const parsedAnnotatedPncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(inputMessage) as AnnotatedPncUpdateDataset
-    const serialisedAnnotatedPncUpdateDataset = serialiseToXml(
-      parsedAnnotatedPncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
-    )
+  it.each(["AnnotatedPncUpdateDataset-without-exception.xml", "AnnotatedPncUpdateDataset-with-exception.xml"])(
+    "Parsing and serialising XML file %s results in the same XML",
+    (xmlFile) => {
+      const inputMessage = fs.readFileSync(`phase2/tests/fixtures/${xmlFile}`).toString()
+      const parsedAnnotatedPncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(
+        inputMessage
+      ) as AnnotatedPncUpdateDataset
 
-    expect(serialisedAnnotatedPncUpdateDataset).toEqualXML(inputMessage)
-  })
+      const serialisedAnnotatedPncUpdateDataset = serialiseToXml(
+        parsedAnnotatedPncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
+      )
+
+      expect(serialisedAnnotatedPncUpdateDataset).toEqualXML(inputMessage)
+    }
+  )
 })

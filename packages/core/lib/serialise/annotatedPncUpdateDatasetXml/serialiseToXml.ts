@@ -16,7 +16,7 @@ const normaliseNamespaces = (xmlPncUpdateDataset: PncUpdateDatasetXml) => {
   delete xmlPncUpdateDataset.PNCUpdateDataset["@_xmlns:xsi"]
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = false): string => {
+const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = true): string => {
   const xmlPncUpdateDataset = mapToPncUpdateDatasetXml(pncUpdateDataset, addFalseHasErrorAttributes)
   normaliseNamespaces(xmlPncUpdateDataset)
   const xmlAnnotatedPncUpdateDataset: AnnotatedPncUpdateDatasetXml = {
