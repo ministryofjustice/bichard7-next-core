@@ -50,7 +50,7 @@ describe("extractExceptionsFromXml", () => {
     },
     {
       messageType: "AnnotatedPncUpdateDataset",
-      xmlFile: "phase2/tests/fixtures/AnnotatedPNCUpdateDataset.xml",
+      xmlFile: "phase2/tests/fixtures/AnnotatedPncUpdateDataset.xml",
       expected: [
         {
           code: "HO200124",

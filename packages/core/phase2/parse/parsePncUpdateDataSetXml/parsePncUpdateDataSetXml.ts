@@ -5,7 +5,7 @@ import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseA
 import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { Br7Operation, PncUpdateDatasetXml } from "../../types/PncUpdateDatasetXml"
+import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -152,7 +152,7 @@ const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Op
   return [operations]
 }
 
-export const mapXmlToPNCUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetXml): PncUpdateDataset | Error => {
+export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParsedXml): PncUpdateDataset | Error => {
   const rootElement = pncUpdateDataSet["PNCUpdateDataset"]
   if (!rootElement?.["br7:AnnotatedHearingOutcome"]) {
     return Error("Could not parse PNC update dataset XML")
@@ -188,7 +188,7 @@ export default (xml: string): PncUpdateDataset | Error => {
 
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(xml)
-  const pncUpdateDataset = mapXmlToPNCUpdateDataSet(rawParsedObj)
+  const pncUpdateDataset = mapXmlToPncUpdateDataSet(rawParsedObj)
   if (isError(pncUpdateDataset)) {
     return pncUpdateDataset
   }
