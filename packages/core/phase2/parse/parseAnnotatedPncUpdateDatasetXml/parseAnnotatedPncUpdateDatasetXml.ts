@@ -47,10 +47,10 @@ export default (xml: string): AnnotatedPncUpdateDataset | Error => {
   }
 
   annotatedPncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions = extractExceptionsFromXml(xml).map(
-    (e) => {
-      e.path.shift()
-      return e
-    }
+    (e) => ({
+      ...e,
+      path: e.path.slice(2)
+    })
   )
 
   return annotatedPncUpdateDataset
