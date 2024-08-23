@@ -1,6 +1,6 @@
 import fs from "fs"
 import "jest-xml-matcher"
-import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
 import serialiseToXml from "./serialiseToXml"
 

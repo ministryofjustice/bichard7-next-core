@@ -1,18 +1,8 @@
 import { z } from "zod"
-import { exceptionSchema } from "./exception"
-import { pncQueryResultSchema } from "./pncQueryResult"
-import { hearingOutcomeSchema } from "./unvalidatedHearingOutcome"
+import pncUpdateDatasetSchema from "../phase2/schemas/pncUpdateDataset"
 
 export const annotatedPncUpdateDatasetSchema = z.object({
   AnnotatedPNCUpdateDataset: z.object({
-    PNCUpdateDataset: z.object({
-      Exceptions: z.array(exceptionSchema),
-      AnnotatedHearingOutcome: z.object({
-        HearingOutcome: hearingOutcomeSchema
-      }),
-      PncQuery: pncQueryResultSchema.optional(),
-      PncQueryDate: z.date().optional(),
-      PncErrorMessage: z.string().optional()
-    })
+    PNCUpdateDataset: pncUpdateDatasetSchema
   })
 })
