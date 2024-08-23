@@ -1,4 +1,3 @@
-import { PNCMessageType } from "../../../phase2/types/operationCodes"
 import { toISODate } from "../../../lib/dates"
 import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../../../lib/serialise/ahoXml/serialiseToXml"
 import generateXml from "../../../lib/serialise/generateXml"
@@ -18,7 +17,7 @@ const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
 
 const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
   return pncOperations.map<PncOperationXml>((operation) => {
-    if (operation.code === PNCMessageType.NORMAL_DISPOSAL) {
+    if (operation.code === "DISARR") {
       return {
         operationCode: {
           DISARR: operation.data
@@ -31,7 +30,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.SENTENCE_DEFERRED) {
+    if (operation.code === "SENDEF") {
       return {
         operationCode: {
           SENDEF: operation.data
@@ -44,7 +43,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.DISPOSAL_UPDATED) {
+    if (operation.code === "SUBVAR") {
       return {
         operationCode: {
           SUBVAR: operation.data
@@ -57,7 +56,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.PENALTY_HEARING) {
+    if (operation.code === "PENHRG") {
       return {
         operationCode: {
           PENHRG: operation.data
@@ -70,7 +69,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.COMMITTED_SENTENCING) {
+    if (operation.code === "COMSEN") {
       return {
         operationCode: {
           COMSEN: operation.data
@@ -83,7 +82,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.APPEALS_UPDATE) {
+    if (operation.code === "APPHRD") {
       return {
         operationCode: {
           APPHRD: operation.data
@@ -96,7 +95,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PNCMessageType.REMAND) {
+    if (operation.code === "NEWREM") {
       return {
         operationCode: {
           NEWREM: operation.data
