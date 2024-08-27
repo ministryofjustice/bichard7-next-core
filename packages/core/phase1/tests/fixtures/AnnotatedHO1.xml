@@ -124,6 +124,14 @@
 						<br7:PNCDisposalType>3078</br7:PNCDisposalType>
 						<br7:ResultClass>Judgement with final result</br7:ResultClass>
 						<br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
+						<br7:ResultQualifierVariable SchemaVersion="3.0">
+							<ds:Code>GB</ds:Code>
+							<ds:Duration>
+								<ds:DurationType>Custodial</ds:DurationType>
+								<ds:DurationUnit>D</ds:DurationUnit>
+								<ds:DurationLength>30</ds:DurationLength>
+							</ds:Duration>
+						</br7:ResultQualifierVariable>
 					</br7:Result>
 				</br7:Offence>
 				<br7:Offence hasError="false" SchemaVersion="4.0">

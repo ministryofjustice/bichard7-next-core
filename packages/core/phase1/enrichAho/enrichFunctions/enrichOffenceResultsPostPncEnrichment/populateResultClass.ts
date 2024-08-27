@@ -1,4 +1,3 @@
-import isAdjournedNoNextHearing from "../../../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import isAdjourned from "../../../lib/result/isAdjourned"
@@ -12,8 +11,7 @@ const populateResultClass = (result: Result, convictionDate: Date | undefined, d
   const nextHearingPresent = !!result.NextResultSourceOrganisation?.OrganisationUnitCode
   const adjourned = isAdjourned(result.CJSresultCode)
   const warrantIssued = isWarrantIssued(result.CJSresultCode)
-  const adjournedNoNextHearingDetails = isAdjournedNoNextHearing(result.CJSresultCode)
-  const adjournment = nextHearingPresent || adjourned || warrantIssued || adjournedNoNextHearingDetails
+  const adjournment = nextHearingPresent || adjourned || warrantIssued
 
   if (adjourned && !nextHearingPresent) {
     result.NextResultSourceOrganisation = undefined

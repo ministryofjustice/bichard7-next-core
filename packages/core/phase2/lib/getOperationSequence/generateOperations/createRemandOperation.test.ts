@@ -1,16 +1,8 @@
-jest.mock("../../../../lib/isAdjournedNoNextHearing")
-import isAdjournedNoNextHearing from "../../../../lib/isAdjournedNoNextHearing"
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import createRemandOperation from "./createRemandOperation"
 
-const mockedIsAdjournedNoNextHearing = isAdjournedNoNextHearing as jest.Mock
-
 describe("createRemandOperation", () => {
-  beforeEach(() => {
-    mockedIsAdjournedNoNextHearing.mockRestore()
-  })
-
   it("should return a remand operation", () => {
     const result = {
       NextResultSourceOrganisation: {
@@ -58,18 +50,6 @@ describe("createRemandOperation", () => {
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
     expect(remandOperation.courtCaseReference).toBe("123")
-  })
-
-  it("should not return a remand operation if result is adjournment", () => {
-    mockedIsAdjournedNoNextHearing.mockReturnValue(true)
-    const result = {
-      CJSresultCode: 0
-    } as Result
-
-    const { operations, exceptions } = createRemandOperation(result, undefined)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toHaveLength(0)
   })
 
   it("should return a remand operation with data if warrant has not been issued", () => {

@@ -105,7 +105,7 @@ const mapDuration = (duration: Br7Duration | Br7Duration[] | undefined): Duratio
   }))
 }
 
-const mapXmlResultQualifierVariableTOAho = (
+const mapXmlResultQualifierVariableToAho = (
   rqv: Br7ResultQualifierVariable | Br7ResultQualifierVariable[] | undefined
 ): ResultQualifierVariable[] => {
   if (!rqv) {
@@ -113,7 +113,20 @@ const mapXmlResultQualifierVariableTOAho = (
   }
 
   const rqvArray = Array.isArray(rqv) ? rqv : [rqv]
-  return rqvArray.map((r) => ({ Code: r["ds:Code"]["#text"] }))
+  return rqvArray.map((r) => {
+    const duration = r["ds:Duration"]
+
+    return {
+      Code: r["ds:Code"]["#text"],
+      ...(duration && {
+        Duration: {
+          DurationType: duration["ds:DurationType"]["#text"],
+          DurationUnit: duration["ds:DurationUnit"]["#text"],
+          DurationLength: Number(duration["ds:DurationLength"]["#text"])
+        }
+      })
+    }
+  })
 }
 
 const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undefined): string[] => {
@@ -190,7 +203,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   NumberOfOffencesTIC: xmlResult["br7:NumberOfOffencesTIC"]?.["#text"]
     ? Number(xmlResult["br7:NumberOfOffencesTIC"]["#text"])
     : undefined,
-  ResultQualifierVariable: mapXmlResultQualifierVariableTOAho(xmlResult["br7:ResultQualifierVariable"]),
+  ResultQualifierVariable: mapXmlResultQualifierVariableToAho(xmlResult["br7:ResultQualifierVariable"]),
   ResultHalfLifeHours: xmlResult["ds:ResultHalfLifeHours"]
     ? Number(xmlResult["ds:ResultHalfLifeHours"]["#text"])
     : undefined,

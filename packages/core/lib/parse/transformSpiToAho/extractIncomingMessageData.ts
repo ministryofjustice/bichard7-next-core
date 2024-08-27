@@ -32,8 +32,7 @@ export const extractIncomingMessage = (incomingMessage: string): Result<Incoming
   }
 }
 
-export const getSystemId = (message: IncomingMessage): string =>
-  message.RouteData.RequestFromSystem.SourceID ?? "UNKNOWN"
+export const getSystemId = (message: IncomingMessage): string => message.RouteData.DataStream.System ?? "UNKNOWN"
 
 export const getCorrelationId = (message: IncomingMessage) => message.RouteData.RequestFromSystem.CorrelationID
 
