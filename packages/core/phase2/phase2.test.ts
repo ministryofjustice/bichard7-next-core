@@ -28,30 +28,49 @@ describe("Bichard Core Phase 2 processing logic", () => {
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
   })
 
-  it.each([ahoTestCase, pncUpdateDataSetTestCase])(
-    "returns an ignored result when an AINT case for $messageType",
-    ({ inputMessage }) => {
-      const aintCaseInputMessage = structuredClone(inputMessage)
-      aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
-        {
-          CriminalProsecutionReference: {
-            OffenceReason: { __type: "NationalOffenceReason" }
-          },
-          Result: [
-            {
-              PNCDisposalType: 1000,
-              ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
-              ResultQualifierVariable: []
-            } as unknown as Result
-          ]
-        }
-      ] as Offence[]
+  it("returns an ignored result when an AINT case for AHO", () => {
+    const aintCaseInputMessage = structuredClone(inputAho)
+    aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        CriminalProsecutionReference: {
+          OffenceReason: { __type: "NationalOffenceReason" }
+        },
+        Result: [
+          {
+            PNCDisposalType: 1000,
+            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+            ResultQualifierVariable: []
+          } as unknown as Result
+        ]
+      }
+    ] as Offence[]
 
-      const result = phase2Handler(aintCaseInputMessage, auditLogger)
+    const result = phase2Handler(aintCaseInputMessage, auditLogger)
 
-      expect(result.resultType).toBe(Phase2ResultType.ignored)
-    }
-  )
+    expect(result.resultType).toBe(Phase2ResultType.ignored)
+  })
+
+  it("doesn't return an ignored result when an AINT case for PncUpdateDataset", () => {
+    const aintCaseInputMessage = structuredClone(inputPncUpdateDataset)
+    aintCaseInputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        CriminalProsecutionReference: {
+          OffenceReason: { __type: "NationalOffenceReason" }
+        },
+        Result: [
+          {
+            PNCDisposalType: 1000,
+            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+            ResultQualifierVariable: []
+          } as unknown as Result
+        ]
+      }
+    ] as Offence[]
+
+    const result = phase2Handler(aintCaseInputMessage, auditLogger)
+
+    expect(result.resultType).not.toBe(Phase2ResultType.ignored)
+  })
 
   it.each([
     { ...ahoTestCase, recordableOnPnc: false },
