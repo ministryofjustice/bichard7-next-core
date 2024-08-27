@@ -29,7 +29,7 @@ const processMessage = (
 
   auditLogger.info(isResubmitted ? EventCode.ReceivedResubmittedHearingOutcome : EventCode.HearingOutcomeReceivedPhase2)
 
-  if (isAintCase(hearingOutcome)) {
+  if (!isResubmitted && isAintCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
 
     return { triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE), resultType: Phase2ResultType.ignored }
