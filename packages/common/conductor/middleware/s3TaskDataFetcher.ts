@@ -35,10 +35,7 @@ const formatErrorMessages = (schema: string, error: z.ZodError): string[] =>
     return `${schema} parse error. Schema mismatch`
   })
 
-const s3TaskDataFetcher = <T>(
-  schema: z.ZodSchema | ((taskData: unknown) => z.ZodSchema),
-  handler: Handler<TaskDataInputData<T>>
-): OriginalHandler => {
+const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInputData<T>>): OriginalHandler => {
   return async (task: ConductorTask) => {
     const inputParseResult = inputDataSchema.safeParse(task.inputData)
     if (!inputParseResult.success) {
@@ -66,8 +63,7 @@ const s3TaskDataFetcher = <T>(
     }
 
     const s3TaskData = JSON.parse(taskDataContent)
-    const parseResult =
-      typeof schema === "function" ? schema(s3TaskData).safeParse(s3TaskData) : schema.safeParse(s3TaskData)
+    const parseResult = schema.safeParse(s3TaskData)
     if (parseResult.success) {
       const task: Task<TaskDataInputData<T>> = {
         inputData: {
