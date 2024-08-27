@@ -1,6 +1,7 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import postgres from "postgres"
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import ResolutionStatus from "../../types/ResolutionStatus"
@@ -71,7 +72,7 @@ describe("updateErrorListRecord", () => {
     const expectedStatusText = expectedStatus ? ResolutionStatus[expectedStatus] : "NULL"
     const exceptionsText = exceptionsGenerated ? "generated" : "not generated"
 
-    it(`should update the record and update error_status from ${beforeStatusText} to ${expectedStatusText} when exceptions ${exceptionsText}`, async () => {
+    it(`should update the record and update error_status from ${beforeStatusText} to ${expectedStatusText} when message type is Phase 2 and exceptions ${exceptionsText}`, async () => {
       const result = generateMockPhase2Result()
       const recordId = await insertErrorListRecord(db, result)
       await db`UPDATE br7own.error_list SET error_status = ${beforeStatus}::integer WHERE error_id = ${recordId}`
@@ -80,7 +81,30 @@ describe("updateErrorListRecord", () => {
       result.outputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN = "new_ptiurn"
       result.outputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner!.SecondLevelCode = "99"
       if (exceptionsGenerated) {
-        result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
+        result.outputMessage.Exceptions.push({ code: ExceptionCode.HO200100, path: errorPaths.case.asn })
+      }
+
+      await updateErrorListRecord(db, recordId, result)
+
+      const updatedRecord = (
+        await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+      )[0]
+
+      expect(updatedRecord.error_status).toBe(expectedStatus)
+      expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
+    })
+
+    it(`should update the record and update error_status from ${beforeStatusText} to ${expectedStatusText} when message type is Phase 1 and exceptions ${exceptionsText}`, async () => {
+      const result = generateMockPhase1Result()
+      const recordId = await insertErrorListRecord(db, result)
+      await db`UPDATE br7own.error_list SET error_status = ${beforeStatus}::integer WHERE error_id = ${recordId}`
+
+      result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber = "new_asn"
+      result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN = "new_ptiurn"
+      result.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner!.SecondLevelCode = "99"
+      if (exceptionsGenerated) {
+        result.hearingOutcome.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
       }
 
       await updateErrorListRecord(db, recordId, result)
