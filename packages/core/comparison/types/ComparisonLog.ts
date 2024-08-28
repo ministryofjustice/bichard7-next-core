@@ -14,6 +14,7 @@ export default interface ComparisonLog {
       runAt: string
       result: number
       details: {
+        auditLogEventsMatch: number
         triggersMatch: number
         exceptionsMatch: number
         xmlOutputMatches: number

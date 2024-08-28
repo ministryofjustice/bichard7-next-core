@@ -2,12 +2,16 @@
 import chalk from "chalk"
 import { formatXmlDiff } from "../lib/xmlOutputComparison"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
-import getComparisonResultStatistics from "./getComparisonStatistics"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
-  result.exceptionsMatch && result.triggersMatch && result.xmlOutputMatches && result.xmlParsingMatches
+  result.exceptionsMatch &&
+  result.triggersMatch &&
+  result.xmlOutputMatches &&
+  result.xmlParsingMatches &&
+  result.auditLogEventsMatch
 
 const toPercent = (quotient: number, total: number): string => `${((quotient / total) * 100).toFixed(2)}%`
 
@@ -57,6 +61,7 @@ const formatTest = (name: string, success: boolean): string => {
 }
 
 export const printSingleSummary = (result: ComparisonResultDetail): void => {
+  console.log(formatTest("Audit log events", result.auditLogEventsMatch))
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
   console.log(formatTest("XML Output", result.xmlOutputMatches))
@@ -97,6 +102,12 @@ const printResult = (
   }
 
   if (result.debugOutput) {
+    if (!result.auditLogEventsMatch) {
+      console.log("Audit log events do not match")
+      console.log("Core result: ", result.debugOutput.auditLogEvents.coreResult)
+      console.log("Bichard result: ", result.debugOutput.auditLogEvents.comparisonResult)
+    }
+
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
       console.log("Core result: ", result.debugOutput.triggers.coreResult)

@@ -1,4 +1,5 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
@@ -9,6 +10,7 @@ import phase2Handler from "../../phase2/phase2"
 import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
@@ -34,7 +36,7 @@ const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): stri
 }
 
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
-  const { incomingMessage, outgoingMessage, triggers } = comparison
+  const { incomingMessage, outgoingMessage, triggers, auditLogEvents } = comparison
   const correlationId = getCorrelationId(comparison)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   let serialisedOutgoingMessage: string
@@ -75,6 +77,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       )
     ) {
       return {
+        auditLogEventsMatch: true,
         triggersMatch: true,
         exceptionsMatch: true,
         xmlOutputMatches: true,
@@ -89,6 +92,15 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
     const sortedTriggers = sortTriggers(triggers)
 
+    const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode)
+    const actualAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(
+      (code) =>
+        ![EventCode.ReceivedResubmittedHearingOutcome, EventCode.HearingOutcomeReceivedPhase2].includes(
+          code as EventCode
+        )
+    )
+    const auditLogEventsMatch = isEqual(coreAuditLogEvents, actualAuditLogEvents)
+
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
         coreResult: sortedCoreTriggers,
@@ -98,11 +110,16 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
         coreResult: sortedCoreExceptions,
         comparisonResult: sortedExceptions
       },
+      auditLogEvents: {
+        coreResult: coreAuditLogEvents,
+        comparisonResult: actualAuditLogEvents
+      },
       xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, normalisedOutgoingMessage),
       xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage)
     }
 
     return {
+      auditLogEventsMatch,
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
@@ -112,6 +129,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     }
   } catch (e) {
     return {
+      auditLogEventsMatch: false,
       triggersMatch: false,
       exceptionsMatch: false,
       xmlOutputMatches: false,

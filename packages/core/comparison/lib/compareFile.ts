@@ -6,11 +6,12 @@ import type ComparisonResult from "../types/ComparisonResult"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import { isPhase1, isPhase2 } from "./checkPhase"
 import comparePhase1 from "./comparePhase1"
+import comparePhase2 from "./comparePhase2"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import { parseComparisonFile } from "./processTestFile"
-import comparePhase2 from "./comparePhase2"
 
 const failResult: ComparisonResultDetail = {
+  auditLogEventsMatch: false,
   triggersMatch: false,
   exceptionsMatch: false,
   xmlOutputMatches: false,
