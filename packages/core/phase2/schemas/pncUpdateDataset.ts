@@ -11,7 +11,7 @@ export const newremOperationSchema = z.object({
   code: z.literal("NEWREM"),
   data: z
     .object({
-      nextHearingDate: z.date().optional(),
+      nextHearingDate: z.coerce.date().optional(),
       nextHearingLocation: organisationUnitSchema
     })
     .optional(),
