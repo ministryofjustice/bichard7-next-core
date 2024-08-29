@@ -1,10 +1,14 @@
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import { QualityCheckStatus } from "../../types/ErrorListRecord"
+import Phase from "../../types/Phase"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import ResolutionStatus from "../../types/ResolutionStatus"
-import serialiseToXml from "../serialise/ahoXml/serialiseToXml"
+import serialiseToAhoXml from "../serialise/ahoXml/serialiseToXml"
+import serialiseToAnnotatedPncUpdateDatasetXml from "../serialise/annotatedPncUpdateDatasetXml/serialiseToXml"
+import serialiseToPncUpdateDatasetXml from "../serialise/pncUpdateDatasetXml/serialiseToXml"
 
 const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
   const { DefendantDetail, OrganisationName } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
@@ -23,7 +27,7 @@ const generateDefendantName = (aho: AnnotatedHearingOutcome): string => {
 
 const generateErrorReport = (aho: AnnotatedHearingOutcome): string => {
   // Bichard generates this in the order they appear in the XML document so we need to do this too
-  const ahoXml = serialiseToXml(aho)
+  const ahoXml = serialiseToAhoXml(aho)
   const matches = ahoXml.matchAll(/<([^ |>]*)[^>]* Error="([^"]*)/gm)
   if (!matches) {
     return ""
@@ -55,9 +59,17 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
   const caseElem = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case
   const hearing = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const errorReport = generateErrorReport(hearingOutcome)
+  const phase = isPncUpdateDataset(hearingOutcome) ? Phase.PNC_UPDATE : Phase.HEARING_OUTCOME
+  const annotatedMessageXml = isPncUpdateDataset(hearingOutcome)
+    ? serialiseToAnnotatedPncUpdateDatasetXml(hearingOutcome)
+    : serialiseToAhoXml(hearingOutcome)
+  const updatedMessageXml = isPncUpdateDataset(hearingOutcome)
+    ? serialiseToPncUpdateDatasetXml(hearingOutcome, generateFalseHasErrorAttributes)
+    : serialiseToAhoXml(hearingOutcome, false, generateFalseHasErrorAttributes)
+
   return {
     message_id: hearing.SourceReference.UniqueID,
-    phase: 1,
+    phase,
     error_status: hearingOutcome.Exceptions.length > 0 ? ResolutionStatus.UNRESOLVED : null,
     trigger_status: result.triggers.length > 0 ? ResolutionStatus.UNRESOLVED : null,
     error_quality_checked: hearingOutcome.Exceptions.length > 0 ? QualityCheckStatus.UNCHECKED : null,
@@ -67,8 +79,8 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
     asn: caseElem.HearingDefendant.ArrestSummonsNumber.slice(0, 21),
     court_code: hearing.CourtHearingLocation.OrganisationUnitCode?.slice(0, 7),
-    annotated_msg: serialiseToXml(hearingOutcome),
-    updated_msg: serialiseToXml(hearingOutcome, false, generateFalseHasErrorAttributes),
+    annotated_msg: annotatedMessageXml,
+    updated_msg: updatedMessageXml,
     error_report: errorReport.slice(0, 1000),
     create_ts: new Date(),
     error_reason: errorReport.length > 0 ? errorReport.split("||")[0].slice(0, 350) : null,
