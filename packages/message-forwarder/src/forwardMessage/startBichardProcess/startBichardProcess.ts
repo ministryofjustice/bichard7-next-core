@@ -4,6 +4,8 @@ import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { type AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { randomUUID } from "crypto"
 
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
@@ -15,12 +17,13 @@ const s3Config = createS3Config()
 
 export const startBichardProcess = async (
   workflowName: string,
-  aho: AnnotatedHearingOutcome,
+  incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset,
   correlationId: string,
   conductorClient: ConductorClient
 ) => {
-  const s3TaskDataPath = `${randomUUID()}.json`
-  const putResult = await putFileToS3(JSON.stringify(aho), s3TaskDataPath, taskDataBucket, s3Config)
+  const s3TaskDataPath = `${randomUUID()}${isPncUpdateDataset(incomingMessage) ? "-phase2" : ""}.json`
+
+  const putResult = await putFileToS3(JSON.stringify(incomingMessage), s3TaskDataPath, taskDataBucket, s3Config)
   if (isError(putResult)) {
     return putResult
   }
