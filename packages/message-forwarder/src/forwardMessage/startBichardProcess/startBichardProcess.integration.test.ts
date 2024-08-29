@@ -5,7 +5,7 @@ import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/wa
 import logger from "@moj-bichard7/common/utils/logger"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
-import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
+import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
@@ -13,26 +13,25 @@ const conductorClient = createConductorClient()
 
 describe("startBichardProcess", () => {
   let correlationId: string
-
-  let ignoredAHO: string
+  let aho: string
 
   beforeEach(async () => {
     correlationId = randomUUID()
-
-    ignoredAHO = JSON.stringify(ignoredAHOFixture).replace("CORRELATION_ID", correlationId)
+    aho = JSON.stringify(ahoFixture).replace("CORRELATION_ID", correlationId)
 
     await createAuditLogRecord(correlationId)
   })
 
-  it("starts a new workflow with correlation ID from the aho", async () => {
+  it("starts a new workflow with correlation ID from the AHO", async () => {
     await startBichardProcess(
       "bichard_phase_1",
-      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      JSON.parse(aho) as AnnotatedHearingOutcome,
       correlationId,
       conductorClient
     )
 
     const workflow = await waitForCompletedWorkflow(correlationId)
+
     expect(workflow).toHaveProperty("correlationId", correlationId)
   })
 
@@ -41,10 +40,11 @@ describe("startBichardProcess", () => {
 
     await startBichardProcess(
       "bichard_phase_1",
-      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      JSON.parse(aho) as AnnotatedHearingOutcome,
       correlationId,
       conductorClient
     )
+
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({
         event: "message-forwarder:started-workflow",
