@@ -1,6 +1,7 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
+import parsePncUpdateDataSetXml from "@moj-bichard7/core/phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
@@ -31,12 +32,13 @@ const forwardMessage = async (
     return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
-  const aho = parseAhoXml(message)
-  if (isError(aho)) {
-    return aho
+  const ahoOrPncUpdateDataset =
+    conductorWorkflow === ConductorWorkflow.PHASE_1 ? parseAhoXml(message) : parsePncUpdateDataSetXml(message)
+  if (isError(ahoOrPncUpdateDataset)) {
+    return ahoOrPncUpdateDataset
   }
 
-  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const correlationId = ahoOrPncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   if (destinationType === DestinationType.MQ) {
     return sendToResubmissionQueue(stompClient, message, correlationId)
@@ -54,7 +56,7 @@ const forwardMessage = async (
     return sendToResubmissionQueue(stompClient, message, correlationId)
   }
 
-  return startBichardProcess(conductorWorkflow, aho, correlationId, conductorClient)
+  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient)
 }
 
 export default forwardMessage

@@ -13,28 +13,55 @@ import forwardMessage from "./forwardMessage"
 const stompClient = createStompClient()
 const conductorClient = createConductorClient()
 
+const incomingMessage = String(fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")).replace(
+  "CORRELATION_ID",
+  randomUUID()
+)
+
 describe("forwardMessage", () => {
+  beforeEach(() => {
+    jest.resetModules()
+  })
+
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it("throws an exception if aho is invalid", async () => {
+  it("returns an error if AHO is invalid", async () => {
+    process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
+
     const result = await forwardMessage("<>", expect.any(Client), expect.any(ConductorClient))
 
     expect(isError(result)).toBeTruthy()
     expect(result).toHaveProperty("message", "Could not parse AHO XML")
   })
 
-  it("throws an exception if getWorkflows1 returns an error", async () => {
+  it("returns an error if PncUpdateDataset is invalid", async () => {
+    process.env.CONDUCTOR_WORKFLOW = "bichard_phase_2"
+
+    const result = await forwardMessage("<>", expect.any(Client), expect.any(ConductorClient))
+
+    expect(isError(result)).toBeTruthy()
+    expect(result).toHaveProperty("message", "Could not parse PNC update dataset XML")
+  })
+
+  it("returns an error if invalid Conductor workflow provided", async () => {
+    process.env.CONDUCTOR_WORKFLOW = "invalid_conductor_workflow"
+
+    const result = await forwardMessage(incomingMessage, stompClient, conductorClient)
+
+    expect(isError(result)).toBeTruthy()
+    expect(result).toHaveProperty("message", 'Unsupported Conductor workflow: "invalid_conductor_workflow"')
+  })
+
+  it("returns an error if getWorkflows1 returns an error", async () => {
+    process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
+
     jest.spyOn(conductorClient.workflowResource, "getWorkflows1").mockRejectedValue(new Error("Mock error"))
 
-    const incomingMessage = String(fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")).replace(
-      "CORRELATION_ID",
-      randomUUID()
-    )
+    const result = await forwardMessage(incomingMessage, stompClient, conductorClient)
 
-    const forwardMessageResult = await forwardMessage(incomingMessage, stompClient, conductorClient)
-    expect(isError(forwardMessageResult)).toBeTruthy()
-    expect(forwardMessageResult).toHaveProperty("message", "Mock error")
+    expect(isError(result)).toBeTruthy()
+    expect(result).toHaveProperty("message", "Mock error")
   })
 })
