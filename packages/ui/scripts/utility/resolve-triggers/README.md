@@ -1,6 +1,7 @@
 # Resolve specific triggers
 
 ## Summary
+
 This script is for resolving specific triggers for specific court cases in Bichard.
 It marks triggers as resolved, updates the court case if needed, and generates relevant audit log events.
 
@@ -30,11 +31,11 @@ $   WORKSPACE="replace-with-workspace-name" \
 
 ## Environment Variables
 
-| Variable name | Description | Example |
-| ------------- | ----------- | ------- |
-| `WORKSPACE` | Name of the workspace in the AWS account. Used to find the resources. | `production`  |
-| `TRIGGER_CODES` | List of triggers to resolve | `TRPR0002,TRPR0012`  |
-| `TRIGGER_NOTE`  | Used to add a note to court case notes and audit log event  | `Resolved by System as requested by XYZ force`  |
-| `CASES_TO_RESOLVE_FILE` | JSON array file containing court case IDs. ID is the `error_id` in `error_list` table  | `["230043","34588"]`  |
-| `RESOLVER_USERNAME` | Triggers are resolved by this username. Default value is `System` | `john.smith`  |
-| `BATCH_SIZE`  | Number of court case IDs to process. The default value is 10, meaning that only 10 IDs from `CASES_TO_RESOLVE_FILE` will be processed. Set to `0` for processing all IDs. | `100` |
+| Variable name           | Description                                                                                                                                                               | Example                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `WORKSPACE`             | Name of the workspace in the AWS account. Used to find the resources.                                                                                                     | `production`                                   |
+| `TRIGGER_CODES`         | List of triggers to resolve                                                                                                                                               | `TRPR0002,TRPR0012`                            |
+| `TRIGGER_NOTE`          | Used to add a note to court case notes and audit log event                                                                                                                | `Resolved by System as requested by XYZ force` |
+| `CASES_TO_RESOLVE_FILE` | JSON array file containing court case IDs. ID is the `error_id` in `error_list` table                                                                                     | `["230043","34588"]`                           |
+| `RESOLVER_USERNAME`     | Triggers are resolved by this username. Default value is `System`                                                                                                         | `john.smith`                                   |
+| `BATCH_SIZE`            | Number of court case IDs to process. The default value is 10, meaning that only 10 IDs from `CASES_TO_RESOLVE_FILE` will be processed. Set to `0` for processing all IDs. | `100`                                          |
