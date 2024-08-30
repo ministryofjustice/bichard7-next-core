@@ -1,8 +1,8 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import "phase1/tests/helpers/setEnvironmentVariables"
-import type { ComparisonLog } from "../types"
 import MockDynamo from "../../phase1/tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../phase1/tests/helpers/testDynamoDbTableConfig"
+import type { ComparisonLog } from "../types"
 import DynamoGateway from "./DynamoGateway"
 import createDynamoDbConfig from "./createDynamoDbConfig"
 
@@ -26,6 +26,7 @@ const createRecord = (
       result: result,
       runAt,
       details: {
+        auditLogEventsMatch: result,
         exceptionsMatch: result,
         triggersMatch: result,
         xmlOutputMatches: result,
