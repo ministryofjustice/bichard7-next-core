@@ -1,0 +1,404 @@
+{
+  "aho": {
+    "AnnotatedHearingOutcome": {
+      "HearingOutcome": {
+        "Hearing": {
+          "CourtHearingLocation": {
+            "TopLevelCode": "B",
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "EF",
+            "BottomLevelCode": "01",
+            "OrganisationUnitCode": "B01EF01"
+          },
+          "DateOfHearing": "2009-10-01T00:00:00.000Z",
+          "TimeOfHearing": "10:00",
+          "HearingLanguage": "D",
+          "HearingDocumentationLanguage": "D",
+          "DefendantPresentAtHearing": "A",
+          "CourtHouseCode": 2576,
+          "SourceReference": {
+            "DocumentName": "SPI MARTIN AVALON",
+            "UniqueID": "CID-a5ed64e7-74ff-4f6b-afd1-34ea439062aa",
+            "DocumentType": "SPI Case Result"
+          },
+          "CourtType": "MCA",
+          "CourtHouseName": "Magistrates' Courts London Croydon"
+        },
+        "Case": {
+          "PTIURN": "01VK0300208",
+          "RecordableOnPNCindicator": true,
+          "PreChargeDecisionIndicator": false,
+          "ForceOwner": {
+            "SecondLevelCode": "04",
+            "ThirdLevelCode": "CA",
+            "BottomLevelCode": "00",
+            "OrganisationUnitCode": "04CA00"
+          },
+          "CourtReference": {
+            "MagistratesCourtReference": "01VK0300208"
+          },
+          "HearingDefendant": {
+            "ArrestSummonsNumber": "1200000000000000006T",
+            "PNCIdentifier": "2012/0000014X",
+            "PNCCheckname": "AVALON",
+            "DefendantDetail": {
+              "PersonName": {
+                "Title": "Mr",
+                "GivenName": ["MARTIN"],
+                "FamilyName": "AVALON"
+              },
+              "GeneratedPNCFilename": "AVALON/MARTIN",
+              "BirthDate": "1948-11-11T00:00:00.000Z",
+              "Gender": 1
+            },
+            "Address": {
+              "AddressLine1": "ScenarioAE Address Line 1",
+              "AddressLine2": "ScenarioAE Address Line 2",
+              "AddressLine3": "ScenarioAE Address Line 3"
+            },
+            "RemandStatus": "UB",
+            "BailConditions": [],
+            "Offence": [
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "12",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "00",
+                      "ThirdLevelCode": "00",
+                      "BottomLevelCode": "00",
+                      "OrganisationUnitCode": "000000"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000000006",
+                    "CheckDigit": "T"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "OF",
+                      "Year": "61",
+                      "Reason": "016",
+                      "FullCode": "OF61016"
+                    }
+                  },
+                  "OffenceReasonSequence": null
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Section 18 - wounding with intent",
+                "ArrestDate": "2008-09-25T00:00:00.000Z",
+                "ChargeDate": "2008-09-25T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2009-06-01T00:00:00.000Z"
+                },
+                "LocationOfOffence": "1 Kingston High Street",
+                "ActualOffenceWording": "Wounding with intent to do grievous bodily harm offences against\n\t\t\t\t\t\t\t\t\tthe person act 1861 s.18",
+                "ConvictionDate": "2009-10-01T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 1,
+                "CourtCaseReferenceNumber": null,
+                "Result": [
+                  {
+                    "CJSresultCode": 1002,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2009-10-01T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [
+                      {
+                        "DurationType": "Duration",
+                        "DurationUnit": "M",
+                        "DurationLength": 11
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Imprisonment for 11 Months",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1002,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "005/01"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "12",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "00",
+                      "ThirdLevelCode": "00",
+                      "BottomLevelCode": "00",
+                      "OrganisationUnitCode": "000000"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000000006",
+                    "CheckDigit": "T"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "OF",
+                      "Year": "61",
+                      "Reason": "016",
+                      "FullCode": "OF61016"
+                    }
+                  },
+                  "OffenceReasonSequence": null
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Section 18 - wounding with intent",
+                "ArrestDate": "2008-09-25T00:00:00.000Z",
+                "ChargeDate": "2008-09-25T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2009-06-01T00:00:00.000Z"
+                },
+                "LocationOfOffence": "1 Kingston High Street",
+                "ActualOffenceWording": "Wounding with intent to do grievous bodily harm offences against\n\t\t\t\t\t\t\t\t\tthe person act 1861 s.18",
+                "ConvictionDate": "2009-10-01T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 2,
+                "CourtCaseReferenceNumber": null,
+                "Result": [
+                  {
+                    "CJSresultCode": 1002,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2009-10-01T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [
+                      {
+                        "DurationType": "Duration",
+                        "DurationUnit": "M",
+                        "DurationLength": 10
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Imprisonment for 10 Months",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1002,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  },
+                  {
+                    "CJSresultCode": 1002,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2009-10-01T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [
+                      {
+                        "DurationType": "Duration",
+                        "DurationUnit": "M",
+                        "DurationLength": 12
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Imprisonment for 12 Months",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1002,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "005/01"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "12",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "00",
+                      "ThirdLevelCode": "00",
+                      "BottomLevelCode": "00",
+                      "OrganisationUnitCode": "000000"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000000006",
+                    "CheckDigit": "T"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "Qualifier": "A",
+                      "FullCode": "SX03001A"
+                    }
+                  },
+                  "OffenceReasonSequence": "001"
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
+                "ArrestDate": "2008-09-25T00:00:00.000Z",
+                "ChargeDate": "2008-09-25T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2009-06-01T00:00:00.000Z"
+                },
+                "LocationOfOffence": "1 Kingston High Street",
+                "ActualOffenceWording": "Wounding with intent to do grievous bodily harm offences against\n\t\t\t\t\t\t\t\t\tthe person act 1861 s.18",
+                "ConvictionDate": "2009-10-01T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 3,
+                "CourtCaseReferenceNumber": "12/2732/000016T",
+                "Result": [
+                  {
+                    "CJSresultCode": 1002,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2009-10-01T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [
+                      {
+                        "DurationType": "Duration",
+                        "DurationUnit": "M",
+                        "DurationLength": 12
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Imprisonment for 12 Months",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1002,
+                    "PNCAdjudicationExists": false,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/11"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Exceptions": [
+      {
+        "code": "HO100332",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "CriminalProsecutionReference",
+          "OffenceReasonSequence"
+        ]
+      },
+      {
+        "code": "HO100332",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "CriminalProsecutionReference",
+          "OffenceReasonSequence"
+        ]
+      }
+    ],
+    "PncQuery": {
+      "forceStationCode": "04CA",
+      "checkName": "AVALON",
+      "pncId": "2012/0000014X",
+      "courtCases": [
+        {
+          "courtCaseReference": "12/2732/000015R",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "1:9:7:1",
+                "cjsOffenceCode": "OF61016",
+                "title": "Section 18 - wounding with intent",
+                "sequenceNumber": 1,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2009-06-01T00:00:00.000Z"
+              }
+            }
+          ]
+        },
+        {
+          "courtCaseReference": "12/2732/000016T",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "1:9:7:1",
+                "cjsOffenceCode": "SX03001A",
+                "title": "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
+                "sequenceNumber": 1,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2009-06-01T00:00:00.000Z"
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "1:9:7:1",
+                "cjsOffenceCode": "OF61016",
+                "title": "Section 18 - wounding with intent",
+                "sequenceNumber": 2,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2009-06-01T00:00:00.000Z"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "PncQueryDate": "2024-06-17T00:00:00.000Z"
+  }
+}

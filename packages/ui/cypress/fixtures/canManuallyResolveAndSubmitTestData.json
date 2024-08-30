@@ -1,0 +1,58 @@
+[
+  {
+    "canManuallyResolveAndSubmit": true,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "GeneralHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": true,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "Supervisor",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": true,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "ExceptionHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": false,
+    "exceptionLockedByAnotherUser": true,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "ExceptionHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": false,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Submitted",
+    "loggedInAs": "ExceptionHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": false,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Resolved",
+    "loggedInAs": "ExceptionHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": false,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "TriggerHandler",
+    "exceptionsFeatureFlagEnabled": true
+  },
+  {
+    "canManuallyResolveAndSubmit": false,
+    "exceptionLockedByAnotherUser": false,
+    "exceptionStatus": "Unresolved",
+    "loggedInAs": "NoExceptionsFeatureFlag",
+    "exceptionsFeatureFlagEnabled": false
+  }
+]

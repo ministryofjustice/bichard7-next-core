@@ -1,0 +1,451 @@
+{
+  "aho": {
+    "AnnotatedHearingOutcome": {
+      "HearingOutcome": {
+        "Hearing": {
+          "DateOfHearing": "2009-10-01T00:00:00.000Z"
+        },
+        "Case": {
+          "HearingDefendant": {
+            "Offence": [
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410847",
+                    "CheckDigit": "G"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "TH",
+                      "Year": "68",
+                      "Reason": "006",
+                      "FullCode": "TH68006"
+                    }
+                  },
+                  "OffenceReasonSequence": null
+                },
+                "OffenceCategory": "CE",
+                "OffenceTitle": "Theft of pedal cycle",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-30T00:00:00.000Z"
+                },
+                "ActualOffenceEndDate": {
+                  "EndDate": "2010-12-03T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Theft of pedal cycle.",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 1,
+                "Result": [
+                  {
+                    "CJSresultCode": 1016,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Bound Over.",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1016,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "044/00"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410847",
+                    "CheckDigit": "G"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "TH",
+                      "Year": "68",
+                      "Reason": "151",
+                      "FullCode": "TH68151"
+                    }
+                  }
+                },
+                "OffenceCategory": "CE",
+                "OffenceTitle": "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "ActualOffenceEndDate": {
+                  "EndDate": "2010-12-03T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of 5000 or over.",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 2,
+                "Result": [
+                  {
+                    "CJSresultCode": 1015,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [],
+                    "AmountSpecifiedInResult": [
+                      {
+                        "Amount": 100,
+                        "DecimalPlaces": 2,
+                        "Type": "Fine"
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Fined 100.",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1015,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "037/02"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410847",
+                    "CheckDigit": "G"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "RT",
+                      "Year": "88",
+                      "Reason": "191",
+                      "FullCode": "RT88191"
+                    }
+                  }
+                },
+                "OffenceCategory": "CM",
+                "OffenceTitle": "Use a motor vehicle on a road / public place without third party insurance",
+                "ArrestDate": "2010-12-05T00:00:00.000Z",
+                "ChargeDate": "2010-11-30T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-30T00:00:00.000Z"
+                },
+                "ActualOffenceEndDate": {
+                  "EndDate": "2010-12-05T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Use a motor vehicle without third party insurance.",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 3,
+                "Result": [
+                  {
+                    "CJSresultCode": 1015,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [],
+                    "AmountSpecifiedInResult": [
+                      {
+                        "Amount": 200,
+                        "DecimalPlaces": 2,
+                        "Type": "Fine"
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Fined 200.",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1015,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": false,
+                "NotifiableToHOindicator": false,
+                "HomeOfficeClassification": "809/01"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410847",
+                    "CheckDigit": "G"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "TH",
+                      "Year": "68",
+                      "Reason": "006",
+                      "FullCode": "TH68006"
+                    }
+                  },
+                  "OffenceReasonSequence": null
+                },
+                "OffenceCategory": "CE",
+                "OffenceTitle": "Theft of pedal cycle",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-29T00:00:00.000Z"
+                },
+                "ActualOffenceEndDate": {
+                  "EndDate": "2010-12-05T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Theft of pedal cycle.",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 4,
+                "Result": [
+                  {
+                    "CJSresultCode": 1015,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [],
+                    "AmountSpecifiedInResult": [
+                      {
+                        "Amount": 300,
+                        "DecimalPlaces": 2,
+                        "Type": "Fine"
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Fined 300.",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1015,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "044/00"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000410847",
+                    "CheckDigit": "G"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "RT",
+                      "Year": "88",
+                      "Reason": "026",
+                      "FullCode": "RT88026"
+                    }
+                  }
+                },
+                "OffenceCategory": "CE",
+                "OffenceTitle": "Drive a motor vehicle dangerously",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "ActualOffenceEndDate": {
+                  "EndDate": "2010-12-05T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Drive a motor vehicle dangerously.",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 5,
+                "Result": [
+                  {
+                    "CJSresultCode": 1015,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "Duration": [],
+                    "AmountSpecifiedInResult": [
+                      {
+                        "Amount": 300,
+                        "DecimalPlaces": 2,
+                        "Type": "Fine"
+                      }
+                    ],
+                    "PleaStatus": "NG",
+                    "Verdict": "G",
+                    "ResultVariableText": "Fined 300.",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 1015,
+                    "ResultClass": "Judgement with final result",
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 72,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "802/00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PncQuery": {
+      "forceStationCode": "01ZD",
+      "checkName": "MISMATCH",
+      "pncId": "2000/0410847G",
+      "courtCases": [
+        {
+          "courtCaseReference": "97/1626/008395Q",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "TH68006",
+                "title": "Theft of pedal cycle",
+                "sequenceNumber": 1,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "endDate": "2010-12-05T00:00:00.000Z",
+                "startTime": "00:00",
+                "endTime": "00:00"
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "TH68151",
+                "title": "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over",
+                "sequenceNumber": 2,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "endDate": "2010-12-05T00:00:00.000Z",
+                "startTime": "00:00",
+                "endTime": "00:00"
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "RT88191",
+                "title": "Use a motor vehicle on a road / public place without third party insurance",
+                "sequenceNumber": 3,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "endDate": "2010-12-05T00:00:00.000Z",
+                "startTime": "00:00",
+                "endTime": "00:00"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

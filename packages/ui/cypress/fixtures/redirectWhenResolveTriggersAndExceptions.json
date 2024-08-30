@@ -1,0 +1,58 @@
+[
+  {
+    "loggedInAs": "GeneralHandler",
+    "hasExceptions": true,
+    "hasTriggers": true,
+    "resolveTriggers": true,
+    "resolveExceptions": true,
+    "expectedPath": "case list page"
+  },
+  {
+    "loggedInAs": "GeneralHandler",
+    "hasExceptions": true,
+    "hasTriggers": true,
+    "resolveTriggers": true,
+    "resolveExceptions": false,
+    "expectedPath": "case details page"
+  },
+  {
+    "loggedInAs": "GeneralHandler",
+    "hasExceptions": true,
+    "hasTriggers": true,
+    "resolveExceptions": true,
+    "resolveTriggers": false,
+    "expectedPath": "case details page"
+  },
+  {
+    "loggedInAs": "GeneralHandler",
+    "hasExceptions": false,
+    "hasTriggers": true,
+    "resolveTriggers": true,
+    "resolveExceptions": false,
+    "expectedPath": "case list page"
+  },
+  {
+    "loggedInAs": "GeneralHandler",
+    "hasExceptions": true,
+    "hasTriggers": false,
+    "resolveExceptions": true,
+    "resolveTriggers": false,
+    "expectedPath": "case list page"
+  },
+  {
+    "loggedInAs": "ExceptionHandler",
+    "hasExceptions": true,
+    "hasTriggers": true,
+    "resolveExceptions": true,
+    "resolveTriggers": false,
+    "expectedPath": "case list page"
+  },
+  {
+    "loggedInAs": "TriggerHandler",
+    "hasExceptions": true,
+    "hasTriggers": true,
+    "resolveTriggers": true,
+    "resolveExceptions": false,
+    "expectedPath": "case list page"
+  }
+]

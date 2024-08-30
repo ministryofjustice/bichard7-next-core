@@ -1,0 +1,19 @@
+---
+version: 0.2
+
+env:
+  exported-variables:
+    - UI_HASH
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - yum install -y jq
+  build:
+    commands:
+      - set -ev
+      - /bin/bash ./scripts/build-docker.sh
+...
+

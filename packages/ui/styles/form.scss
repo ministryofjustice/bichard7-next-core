@@ -1,0 +1,28 @@
+@import "variables";
+
+form {
+  & > fieldset {
+    @media only screen and (max-width: $b7-landscape-tablet-width) {
+      width: 100%;
+    }
+
+    label {
+      font-weight: 700;
+      padding-bottom: 8px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      min-width: 100%;
+    }
+  }
+}
+
+.b7-switching-feedback-form {
+  width: 66%;
+}
+
+.b7-form-label-lg {
+  padding-bottom: 20px;
+}
