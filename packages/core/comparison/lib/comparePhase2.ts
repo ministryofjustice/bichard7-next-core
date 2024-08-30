@@ -17,6 +17,12 @@ import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
+const excludeEventForBichard = (eventCode: string) =>
+  ![EventCode.ReceivedResubmittedHearingOutcome, EventCode.HearingOutcomeReceivedPhase2].includes(
+    eventCode as EventCode
+  )
+const excludeEventForCore = (eventCode: string) => eventCode !== EventCode.IgnoredAlreadyOnPNC
+
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
     return comparison.correlationId
@@ -92,14 +98,9 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
     const sortedTriggers = sortTriggers(triggers)
 
-    const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode)
-    const actualAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(
-      (code) =>
-        ![EventCode.ReceivedResubmittedHearingOutcome, EventCode.HearingOutcomeReceivedPhase2].includes(
-          code as EventCode
-        )
-    )
-    const auditLogEventsMatch = isEqual(coreAuditLogEvents, actualAuditLogEvents)
+    const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode).filter(excludeEventForCore)
+    const bichardAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(excludeEventForBichard)
+    const auditLogEventsMatch = isEqual(coreAuditLogEvents, bichardAuditLogEvents)
 
     const debugOutput: ComparisonResultDebugOutput = {
       triggers: {
@@ -112,7 +113,7 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
       },
       auditLogEvents: {
         coreResult: coreAuditLogEvents,
-        comparisonResult: actualAuditLogEvents
+        comparisonResult: bichardAuditLogEvents
       },
       xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, normalisedOutgoingMessage),
       xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage)
