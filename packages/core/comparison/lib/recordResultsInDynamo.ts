@@ -1,10 +1,10 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import type DynamoGateway from "./DynamoGateway"
-import createDynamoDbConfig from "./createDynamoDbConfig"
 import type { ComparisonLog } from "../types"
 import type ComparisonResult from "../types/ComparisonResult"
+import type DynamoGateway from "./DynamoGateway"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import isPass from "./isPass"
 
@@ -60,6 +60,7 @@ const recordResultsInDynamoBatch = async (
       runAt: runAt,
       result: passOrFail,
       details: {
+        auditLogEventsMatch: result.comparisonResult.auditLogEventsMatch ? 1 : 0,
         triggersMatch: result.comparisonResult.triggersMatch ? 1 : 0,
         exceptionsMatch: result.comparisonResult.exceptionsMatch ? 1 : 0,
         xmlOutputMatches: result.comparisonResult.xmlOutputMatches ? 1 : 0,

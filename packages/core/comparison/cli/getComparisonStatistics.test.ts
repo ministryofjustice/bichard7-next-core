@@ -2,6 +2,7 @@ import getComparisonStatistics from "./getComparisonStatistics"
 import type { SkippedFile } from "./processRange"
 
 const passingAhoResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: true,
@@ -10,6 +11,7 @@ const passingAhoResult = {
 }
 
 const failedAhoResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: false,
@@ -18,6 +20,7 @@ const failedAhoResult = {
 }
 
 const passingPncUpdateDatasetResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: true,
@@ -26,6 +29,7 @@ const passingPncUpdateDatasetResult = {
 }
 
 const failedPncUpdateDatasetResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: false,
@@ -34,6 +38,7 @@ const failedPncUpdateDatasetResult = {
 }
 
 const failedResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: false,
@@ -41,6 +46,7 @@ const failedResult = {
 }
 
 const intentionalFailedResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: false,
@@ -49,6 +55,7 @@ const intentionalFailedResult = {
 }
 
 const passingResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: true,
@@ -56,6 +63,7 @@ const passingResult = {
 }
 
 const passingOtherResult = {
+  auditLogEventsMatch: true,
   triggersMatch: true,
   exceptionsMatch: true,
   xmlOutputMatches: true,

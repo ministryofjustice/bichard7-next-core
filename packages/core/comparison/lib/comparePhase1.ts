@@ -99,6 +99,7 @@ const comparePhase1 = async (
 
     if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho, 1)) {
       return {
+        auditLogEventsMatch: true,
         triggersMatch: true,
         exceptionsMatch: true,
         xmlOutputMatches: true,
@@ -118,6 +119,10 @@ const comparePhase1 = async (
       exceptions: {
         coreResult: sortedCoreExceptions,
         comparisonResult: exceptions
+      },
+      auditLogEvents: {
+        coreResult: [],
+        comparisonResult: []
       },
       xmlOutputDiff: xmlOutputDiff(ahoXml, normalisedAho),
       xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
@@ -143,6 +148,7 @@ const comparePhase1 = async (
     }
 
     return {
+      auditLogEventsMatch: true,
       triggersMatch: ignoreNewMatcherTrigger18Differences ? true : isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: ignoreNewMatcherXmlDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatchesValue,
@@ -152,6 +158,7 @@ const comparePhase1 = async (
     }
   } catch (e) {
     return {
+      auditLogEventsMatch: false,
       triggersMatch: false,
       exceptionsMatch: false,
       xmlOutputMatches: false,

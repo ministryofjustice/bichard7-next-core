@@ -11,11 +11,16 @@ export type ComparisonResultDebugOutput = {
     coreResult: Exception[]
     comparisonResult: Exception[]
   }
+  auditLogEvents: {
+    coreResult: string[]
+    comparisonResult: string[]
+  }
   xmlOutputDiff: Change[]
   xmlParsingDiff: Change[]
 }
 
 type ComparisonResultDetail = {
+  auditLogEventsMatch: boolean
   triggersMatch: boolean
   exceptionsMatch: boolean
   xmlOutputMatches: boolean
