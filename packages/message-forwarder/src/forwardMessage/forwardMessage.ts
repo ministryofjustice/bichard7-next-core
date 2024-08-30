@@ -11,7 +11,10 @@ enum DestinationType {
   CONDUCTOR = "conductor"
 }
 
-const conductorWorkflows = ["bichard_phase_1", "bichard_phase_2"]
+enum ConductorWorkflow {
+  PHASE_1 = "bichard_phase_1",
+  PHASE_2 = "bichard_phase_2"
+}
 
 const forwardMessage = async (
   message: string,
@@ -23,8 +26,8 @@ const forwardMessage = async (
     return new Error(`Unsupported destination type: "${destinationType}"`)
   }
 
-  const conductorWorkflow = process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1"
-  if (!conductorWorkflows.includes(conductorWorkflow)) {
+  const conductorWorkflow = (process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1") as ConductorWorkflow
+  if (!Object.values(ConductorWorkflow).includes(conductorWorkflow)) {
     return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
