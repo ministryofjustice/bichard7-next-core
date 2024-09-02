@@ -11,6 +11,8 @@ enum DestinationType {
   CONDUCTOR = "conductor"
 }
 
+const conductorWorkflows = ["bichard_phase_1", "bichard_phase_2"]
+
 const forwardMessage = async (
   message: string,
   stompClient: Client,
@@ -19,6 +21,11 @@ const forwardMessage = async (
   const destinationType: DestinationType = (process.env.DESTINATION_TYPE ?? "auto") as DestinationType
   if (!Object.values(DestinationType).includes(destinationType)) {
     return new Error(`Unsupported destination type: "${destinationType}"`)
+  }
+
+  const conductorWorkflow = process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1"
+  if (!conductorWorkflows.includes(conductorWorkflow)) {
+    return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
   const aho = parseAhoXml(message)
@@ -33,7 +40,7 @@ const forwardMessage = async (
   }
 
   const workflows = await conductorClient.workflowResource
-    .getWorkflows1("bichard_phase_1", correlationId, true, false)
+    .getWorkflows1(conductorWorkflow, correlationId, true, false)
     .catch((e) => e as Error)
   if (isError(workflows)) {
     return workflows
@@ -44,8 +51,7 @@ const forwardMessage = async (
     return sendToResubmissionQueue(stompClient, message, correlationId)
   }
 
-  // start a new phase 1 workflow
-  return startBichardProcess("bichard_phase_1", aho, correlationId, conductorClient)
+  return startBichardProcess(conductorWorkflow, aho, correlationId, conductorClient)
 }
 
 export default forwardMessage

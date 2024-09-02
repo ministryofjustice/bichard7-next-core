@@ -1,3 +1,4 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
@@ -22,7 +23,11 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
     ? operations.filter((operation) => operation.code === "NEWREM")
     : operations
 
-  return { operations: sortOperations(filteredOperations), exceptions }
+  return {
+    operations: sortOperations(filteredOperations),
+    exceptions,
+    events: allResultsAlreadyOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
+  }
 }
 
 export default getOperationSequence

@@ -54,14 +54,14 @@
           "permissive": false
         },
         {
-          "name": "check_triggers_or_exceptions",
-          "taskReferenceName": "check_triggers_or_exceptions",
+          "name": "check_triggers_or_exceptions_or_ignored",
+          "taskReferenceName": "check_triggers_or_exceptions_or_ignored",
           "inputParameters": {
-            "hasTriggersOrExceptions": "${process_phase2.output.hasTriggersOrExceptions}"
+            "hasTriggersOrExceptionsOrIgnored": "${process_phase2.output.hasTriggersOrExceptionsOrIgnored}"
           },
           "type": "SWITCH",
           "decisionCases": {
-            "has_triggers_or_exceptions": [
+            "has_triggers_or_exceptions_or_ignored": [
               {
                 "name": "persist_phase2",
                 "taskReferenceName": "persist_phase2",
@@ -80,7 +80,7 @@
           "optional": false,
           "asyncComplete": false,
           "evaluatorType": "javascript",
-          "expression": "$.hasTriggersOrExceptions ? 'has_triggers_or_exceptions' : 'no_triggers_or_exceptions'",
+          "expression": "$.hasTriggersOrExceptionsOrIgnored ? 'has_triggers_or_exceptions_or_ignored' : 'no_triggers_or_exceptions_or_ignored'",
           "permissive": false
         },
         {

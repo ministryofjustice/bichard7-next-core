@@ -20,6 +20,7 @@ const recordResultInDynamo = async (
   dynamoGateway: DynamoGateway
 ): PromiseResult<void> => {
   const latestResult =
+    comparisonResult.auditLogEventsMatch &&
     comparisonResult.triggersMatch &&
     comparisonResult.exceptionsMatch &&
     comparisonResult.xmlOutputMatches &&
