@@ -35,5 +35,11 @@ export const startBichardProcess = async (
     return workflowId
   }
 
-  logger.info({ event: "message-forwarder:started-workflow", workflowName, s3TaskDataPath, correlationId, workflowId })
+  logger.info({
+    event: `message-forwarder:started-workflow:${isPncUpdateDataset(incomingMessage) ? "phase-2" : "phase-1"}`,
+    workflowName,
+    s3TaskDataPath,
+    correlationId,
+    workflowId
+  })
 }

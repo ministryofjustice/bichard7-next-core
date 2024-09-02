@@ -13,12 +13,16 @@ import createConductorClient from "@moj-bichard7/common/conductor/createConducto
 const conductorClient = createConductorClient()
 
 describe("startBichardProcess", () => {
+  const pncUpdateDatasetFixture = { ...ahoFixture, PncOperations: [] }
+
   let correlationId: string
   let aho: string
+  let pncUpdateDataset: string
 
   beforeEach(async () => {
     correlationId = randomUUID()
     aho = JSON.stringify(ahoFixture).replace("CORRELATION_ID", correlationId)
+    pncUpdateDataset = JSON.stringify(pncUpdateDatasetFixture).replace("CORRELATION_ID", correlationId)
 
     await createAuditLogRecord(correlationId)
   })
@@ -39,23 +43,20 @@ describe("startBichardProcess", () => {
   })
 
   it("starts a new workflow with correlation ID and s3TaskDataPath from the PncUpdateDataset", async () => {
-    const pncUpdateDatasetFixture = { ...ahoFixture, PncOperations: [] }
-    const pncUpdateDataset = JSON.stringify(pncUpdateDatasetFixture).replace("CORRELATION_ID", correlationId)
-
     await startBichardProcess(
-      "bichard_phase_1",
+      "bichard_phase_2",
       JSON.parse(pncUpdateDataset) as PncUpdateDataset,
       correlationId,
       conductorClient
     )
 
-    const workflow = await waitForCompletedWorkflow(correlationId)
+    const workflow = await waitForCompletedWorkflow(correlationId, "COMPLETED", 60000, "bichard_phase_2")
 
     expect(workflow).toHaveProperty("correlationId", correlationId)
     expect(workflow.input).toMatch(/.*-phase2\.json/)
   })
 
-  it("logs a completion metric", async () => {
+  it("logs a completion metric for Phase 1", async () => {
     jest.spyOn(logger, "info")
 
     await startBichardProcess(
@@ -67,9 +68,29 @@ describe("startBichardProcess", () => {
 
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: "message-forwarder:started-workflow",
+        event: "message-forwarder:started-workflow:phase-1",
         correlationId,
         workflowName: "bichard_phase_1",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
+      })
+    )
+  })
+
+  it("logs a completion metric for Phase 2", async () => {
+    jest.spyOn(logger, "info")
+
+    await startBichardProcess(
+      "bichard_phase_2",
+      JSON.parse(pncUpdateDataset) as PncUpdateDataset,
+      correlationId,
+      conductorClient
+    )
+
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "message-forwarder:started-workflow:phase-2",
+        correlationId,
+        workflowName: "bichard_phase_2",
         s3TaskDataPath: expect.stringMatching(/.*\.json/)
       })
     )
