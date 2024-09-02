@@ -9,6 +9,7 @@ import { randomUUID } from "crypto"
 import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 const conductorClient = createConductorClient()
 
@@ -47,7 +48,8 @@ describe("startBichardProcess", () => {
       "bichard_phase_2",
       JSON.parse(pncUpdateDataset) as PncUpdateDataset,
       correlationId,
-      conductorClient
+      conductorClient,
+      Phase.PNC_UPDATE
     )
 
     const workflow = await waitForCompletedWorkflow(correlationId, "COMPLETED", 60000, "bichard_phase_2")
@@ -83,7 +85,8 @@ describe("startBichardProcess", () => {
       "bichard_phase_2",
       JSON.parse(pncUpdateDataset) as PncUpdateDataset,
       correlationId,
-      conductorClient
+      conductorClient,
+      Phase.PNC_UPDATE
     )
 
     expect(logger.info).toHaveBeenCalledWith(

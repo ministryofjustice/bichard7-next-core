@@ -59,7 +59,7 @@ const forwardMessage = async (
     return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
-  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient)
+  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient, phase)
 }
 
 export default forwardMessage
