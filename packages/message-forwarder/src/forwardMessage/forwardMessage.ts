@@ -13,9 +13,9 @@ enum DestinationType {
   CONDUCTOR = "conductor"
 }
 
-enum ConductorWorkflow {
-  PHASE_1 = "bichard_phase_1",
-  PHASE_2 = "bichard_phase_2"
+const conductorWorkflows: Record<string, Phase> = {
+  bichard_phase_1: Phase.HEARING_OUTCOME,
+  bichard_phase_2: Phase.PNC_UPDATE
 }
 
 const forwardMessage = async (
@@ -28,12 +28,12 @@ const forwardMessage = async (
     return new Error(`Unsupported destination type: "${destinationType}"`)
   }
 
-  const conductorWorkflow = (process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1") as ConductorWorkflow
-  if (!Object.values(ConductorWorkflow).includes(conductorWorkflow)) {
+  const conductorWorkflow = process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1"
+  if (!Object.keys(conductorWorkflows).includes(conductorWorkflow)) {
     return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
-  const phase = conductorWorkflow === ConductorWorkflow.PHASE_1 ? Phase.HEARING_OUTCOME : Phase.PNC_UPDATE
+  const phase = conductorWorkflows[conductorWorkflow]
 
   const ahoOrPncUpdateDataset =
     phase === Phase.HEARING_OUTCOME ? parseAhoXml(message) : parsePncUpdateDataSetXml(message)
