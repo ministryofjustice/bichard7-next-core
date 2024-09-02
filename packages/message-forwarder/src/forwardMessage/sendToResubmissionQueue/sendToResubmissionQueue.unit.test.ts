@@ -14,13 +14,18 @@ describe("sendToResubmissionQueue", () => {
     jest.resetAllMocks()
   })
 
-  it("calls client.publish", () => {
-    sendToResubmissionQueue(stomp as Client, "", "")
+  it("publishes the message to the destination queue", () => {
+    sendToResubmissionQueue(stomp as Client, "message", "correlationId")
 
-    expect(stomp.publish).toHaveBeenCalled()
+    expect(stomp.publish).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        destination: "TEST_HEARING_OUTCOME_INPUT_QUEUE",
+        body: "message"
+      })
+    )
   })
 
-  it("calls logger.info with the correlationId parameter", () => {
+  it("logs event with correlationId", () => {
     jest.spyOn(logger, "info")
 
     const correlationId = randomUUID()
