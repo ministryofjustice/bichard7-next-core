@@ -395,7 +395,7 @@ jobs:
             RECORD: "true"
           command: |
             TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @OnlyRunsOnPNC'
+            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
       - save_artifacts
 
   test_api:

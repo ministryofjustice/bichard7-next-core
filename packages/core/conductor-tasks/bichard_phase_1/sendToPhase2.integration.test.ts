@@ -1,6 +1,7 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
-import { WorkflowResourceService } from "@io-orkes/conductor-javascript"
+import { WorkflowResourceService } from "../../../common/node_modules/@io-orkes/conductor-javascript"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
