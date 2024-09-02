@@ -5,6 +5,7 @@ import parsePncUpdateDataSetXml from "@moj-bichard7/core/phase2/parse/parsePncUp
 import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 enum DestinationType {
   MQ = "mq",
@@ -32,8 +33,10 @@ const forwardMessage = async (
     return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
+  const phase = conductorWorkflow === ConductorWorkflow.PHASE_1 ? Phase.HEARING_OUTCOME : Phase.PNC_UPDATE
+
   const ahoOrPncUpdateDataset =
-    conductorWorkflow === ConductorWorkflow.PHASE_1 ? parseAhoXml(message) : parsePncUpdateDataSetXml(message)
+    phase === Phase.HEARING_OUTCOME ? parseAhoXml(message) : parsePncUpdateDataSetXml(message)
   if (isError(ahoOrPncUpdateDataset)) {
     return ahoOrPncUpdateDataset
   }
@@ -41,7 +44,7 @@ const forwardMessage = async (
   const correlationId = ahoOrPncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   if (destinationType === DestinationType.MQ) {
-    return sendToResubmissionQueue(stompClient, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
   const workflows = await conductorClient.workflowResource
@@ -53,7 +56,7 @@ const forwardMessage = async (
 
   const workflowExists = workflows && workflows.length > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
-    return sendToResubmissionQueue(stompClient, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
   return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient)
