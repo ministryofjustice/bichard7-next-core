@@ -32,9 +32,6 @@
     "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
     "update-deps": "ncu -u && npm install"
   },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ministryofjustice/bichard7-next-core.git"

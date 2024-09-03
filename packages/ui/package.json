@@ -32,12 +32,11 @@
     "install:hooks": "./scripts/install-git-hooks.sh",
     "update-deps": "ncu -u && npm install",
     "seed-data": "ts-node ./scripts/seed-data.ts",
-    "prepare": "husky",
     "zap": "./scripts/zap/zap-scan.sh"
   },
   "dependencies": {
-    "@govuk-react/table": "^0.10.7",
     "@govuk-react/select": "^0.10.7",
+    "@govuk-react/table": "^0.10.7",
     "@ministryofjustice/frontend": "^2.2.0",
     "@moj-bichard7-developers/bichard7-next-core": "^2.0.9",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.203",
@@ -107,7 +106,6 @@
     "cypress-axe": "^1.5.0",
     "cypress-circleci-reporter": "^0.2.0",
     "http-server": "^14.1.1",
-    "husky": "^9.1.5",
     "jest-axe": "^9.0.0",
     "jsonwebtoken": "^9.0.2",
     "lint-staged": "^15.2.9",
@@ -127,9 +125,5 @@
     "typescript": "5.5.4",
     "uuid": "^10.0.0",
     "wait-on": "^8.0.0"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js",
-    "*.scss": "stylelint './styles/*.scss' --fix"
   }
 }

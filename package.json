@@ -35,6 +35,10 @@
     "ui": "npm run postgres && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api localstack activemq ui",
     "watch": "tsc --build --watch"
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js",
+    "*.scss": "stylelint './styles/*.scss' --fix"
+  },
   "workspaces": [
     "packages/common",
     "packages/core",
@@ -69,7 +73,7 @@
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.1",
     "excel4node": "^1.8.2",
-    "husky": "^8.0.3",
+    "husky": "^9.1.5",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.9",
     "npm-check-updates": "^16.14.6",
