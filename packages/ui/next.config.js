@@ -23,6 +23,9 @@ const nextConfig = {
   },
   compiler: {
     styledComponents: true
+  },
+  typescript: {
+    tsconfigPath: "./tsconfig.build.json"
   }
 }
 
