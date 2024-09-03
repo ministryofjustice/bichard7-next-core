@@ -1,7 +1,13 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { defineConfig } from "cypress"
 import pgPromise from "pg-promise"
+import SurveyFeedback from "services/entities/SurveyFeedback"
+import { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "./src/services/entities/CourtCase"
 import User from "./src/services/entities/User"
+import generateAhoWithPncException, {
+  GenerateAhoWithPncExceptionParams
+} from "./test/helpers/generateAhoWithPncException"
 import deleteFromEntity from "./test/utils/deleteFromEntity"
 import { getCourtCaseById } from "./test/utils/getCourtCaseById"
 import {
@@ -13,14 +19,8 @@ import {
   insertDummyCourtCasesWithTriggers,
   insertMultipleDummyCourtCases
 } from "./test/utils/insertCourtCases"
-import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./test/utils/manageFeedbackSurveys"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import SurveyFeedback from "services/entities/SurveyFeedback"
-import { ResolutionStatus } from "types/ResolutionStatus"
-import generateAhoWithPncException, {
-  GenerateAhoWithPncExceptionParams
-} from "./test/helpers/generateAhoWithPncException"
 import insertException from "./test/utils/manageExceptions"
+import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./test/utils/manageFeedbackSurveys"
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
 import { insertUsersWithOverrides } from "./test/utils/manageUsers"
 

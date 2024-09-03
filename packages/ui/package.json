@@ -1,7 +1,6 @@
 {
   "name": "@moj-bichard7/ui",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "preinstall:assets": "./scripts/symlink-node-modules.sh",
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh && ./scripts/copy-moj-frontend-assets.sh",
