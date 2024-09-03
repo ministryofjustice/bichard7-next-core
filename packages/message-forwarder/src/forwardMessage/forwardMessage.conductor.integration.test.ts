@@ -16,21 +16,27 @@ describe("forwardMessage", () => {
   let correlationId: string
 
   beforeEach(async () => {
+    jest.resetModules()
     correlationId = randomUUID()
     await createAuditLogRecord(correlationId)
   })
 
-  it("starts the bichard process if workflow doesn't already exist", async () => {
-    const resubmittedMessage = String(fs.readFileSync("src/test/fixtures/incoming-message-bad-asn.xml")).replace(
-      "CORRELATION_ID",
-      correlationId
-    )
+  it.each([
+    { conductorWorkflow: "bichard_phase_1", message: "src/test/fixtures/incoming-message-bad-asn.xml" },
+    { conductorWorkflow: "bichard_phase_2", message: "src/test/fixtures/pnc-update-dataset.xml" }
+  ])(
+    "starts $conductorWorkflow Conductor workflow if workflow doesn't already exist",
+    async ({ conductorWorkflow, message }) => {
+      process.env.CONDUCTOR_WORKFLOW = conductorWorkflow
+      const resubmittedMessage = String(fs.readFileSync(message)).replace("CORRELATION_ID", correlationId)
 
-    await forwardMessage(resubmittedMessage, stompClient, conductorClient)
-    const workflows = await waitForWorkflows({
-      count: 1,
-      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
-    })
-    expect(workflows).toHaveLength(1)
-  })
+      await forwardMessage(resubmittedMessage, stompClient, conductorClient)
+
+      const workflows = await waitForWorkflows({
+        count: 1,
+        query: { workflowType: conductorWorkflow, status: "COMPLETED", correlationId }
+      })
+      expect(workflows).toHaveLength(1)
+    }
+  )
 })

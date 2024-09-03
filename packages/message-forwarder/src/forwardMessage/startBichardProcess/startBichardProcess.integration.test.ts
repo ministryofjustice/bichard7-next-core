@@ -4,52 +4,96 @@ import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/cr
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { randomUUID } from "crypto"
-import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
+import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 const conductorClient = createConductorClient()
 
 describe("startBichardProcess", () => {
-  let correlationId: string
+  const pncUpdateDatasetFixture = { ...ahoFixture, PncOperations: [] }
 
-  let ignoredAHO: string
+  let correlationId: string
+  let aho: string
+  let pncUpdateDataset: string
 
   beforeEach(async () => {
     correlationId = randomUUID()
-
-    ignoredAHO = JSON.stringify(ignoredAHOFixture).replace("CORRELATION_ID", correlationId)
+    aho = JSON.stringify(ahoFixture).replace("CORRELATION_ID", correlationId)
+    pncUpdateDataset = JSON.stringify(pncUpdateDatasetFixture).replace("CORRELATION_ID", correlationId)
 
     await createAuditLogRecord(correlationId)
   })
 
-  it("starts a new workflow with correlation ID from the aho", async () => {
+  it("starts a new workflow with correlation ID and s3TaskDataPath from the AHO", async () => {
     await startBichardProcess(
       "bichard_phase_1",
-      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      JSON.parse(aho) as AnnotatedHearingOutcome,
       correlationId,
       conductorClient
     )
 
     const workflow = await waitForCompletedWorkflow(correlationId)
+
     expect(workflow).toHaveProperty("correlationId", correlationId)
+    expect(workflow.input).toMatch(/.*\.json/)
+    expect(workflow.input).not.toContain("-phase2")
   })
 
-  it("logs a completion metric", async () => {
+  it("starts a new workflow with correlation ID and s3TaskDataPath from the PncUpdateDataset", async () => {
+    await startBichardProcess(
+      "bichard_phase_2",
+      JSON.parse(pncUpdateDataset) as PncUpdateDataset,
+      correlationId,
+      conductorClient,
+      Phase.PNC_UPDATE
+    )
+
+    const workflow = await waitForCompletedWorkflow(correlationId, "COMPLETED", 60000, "bichard_phase_2")
+
+    expect(workflow).toHaveProperty("correlationId", correlationId)
+    expect(workflow.input).toMatch(/.*-phase2\.json/)
+  })
+
+  it("logs a completion metric for Phase 1", async () => {
     jest.spyOn(logger, "info")
 
     await startBichardProcess(
       "bichard_phase_1",
-      JSON.parse(ignoredAHO) as AnnotatedHearingOutcome,
+      JSON.parse(aho) as AnnotatedHearingOutcome,
       correlationId,
       conductorClient
     )
+
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: "message-forwarder:started-workflow",
+        event: "message-forwarder:started-workflow:phase-1",
         correlationId,
         workflowName: "bichard_phase_1",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
+      })
+    )
+  })
+
+  it("logs a completion metric for Phase 2", async () => {
+    jest.spyOn(logger, "info")
+
+    await startBichardProcess(
+      "bichard_phase_2",
+      JSON.parse(pncUpdateDataset) as PncUpdateDataset,
+      correlationId,
+      conductorClient,
+      Phase.PNC_UPDATE
+    )
+
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "message-forwarder:started-workflow:phase-2",
+        correlationId,
+        workflowName: "bichard_phase_2",
         s3TaskDataPath: expect.stringMatching(/.*\.json/)
       })
     )

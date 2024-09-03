@@ -6,6 +6,7 @@ import { randomUUID } from "crypto"
 import logger from "@moj-bichard7/common/utils/logger"
 
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 describe("sendToResubmissionQueue", () => {
   const stomp: { publish: jest.Func } = { publish: jest.fn() }
@@ -14,18 +15,32 @@ describe("sendToResubmissionQueue", () => {
     jest.resetAllMocks()
   })
 
-  it("calls client.publish", () => {
-    sendToResubmissionQueue(stomp as Client, "", "")
+  it("publishes the message to the destination queue", () => {
+    sendToResubmissionQueue(stomp as Client, "message", "correlationId")
 
-    expect(stomp.publish).toHaveBeenCalled()
+    expect(stomp.publish).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        destination: "TEST_HEARING_OUTCOME_INPUT_QUEUE",
+        body: "message"
+      })
+    )
   })
 
-  it("calls logger.info with the correlationId parameter", () => {
+  it("logs event with correlationId for Phase 1", () => {
     jest.spyOn(logger, "info")
 
     const correlationId = randomUUID()
-    sendToResubmissionQueue(stomp as Client, "", correlationId)
+    sendToResubmissionQueue(stomp as Client, "", correlationId, Phase.HEARING_OUTCOME)
 
-    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq", correlationId })
+    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq:phase-1", correlationId })
+  })
+
+  it("logs event with correlationId for Phase 2", () => {
+    jest.spyOn(logger, "info")
+
+    const correlationId = randomUUID()
+    sendToResubmissionQueue(stomp as Client, "", correlationId, Phase.PNC_UPDATE)
+
+    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq:phase-2", correlationId })
   })
 })

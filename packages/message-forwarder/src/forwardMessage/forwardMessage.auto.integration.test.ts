@@ -1,5 +1,6 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
+process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
 
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
