@@ -1,9 +1,11 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
+import parsePncUpdateDataSetXml from "@moj-bichard7/core/phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 enum DestinationType {
   MQ = "mq",
@@ -11,7 +13,10 @@ enum DestinationType {
   CONDUCTOR = "conductor"
 }
 
-const conductorWorkflows = ["bichard_phase_1", "bichard_phase_2"]
+const conductorWorkflows: Record<string, Phase> = {
+  bichard_phase_1: Phase.HEARING_OUTCOME,
+  bichard_phase_2: Phase.PNC_UPDATE
+}
 
 const forwardMessage = async (
   message: string,
@@ -24,19 +29,22 @@ const forwardMessage = async (
   }
 
   const conductorWorkflow = process.env.CONDUCTOR_WORKFLOW ?? "bichard_phase_1"
-  if (!conductorWorkflows.includes(conductorWorkflow)) {
+  if (!Object.keys(conductorWorkflows).includes(conductorWorkflow)) {
     return new Error(`Unsupported Conductor workflow: "${conductorWorkflow}"`)
   }
 
-  const aho = parseAhoXml(message)
-  if (isError(aho)) {
-    return aho
+  const phase = conductorWorkflows[conductorWorkflow]
+
+  const ahoOrPncUpdateDataset =
+    phase === Phase.HEARING_OUTCOME ? parseAhoXml(message) : parsePncUpdateDataSetXml(message)
+  if (isError(ahoOrPncUpdateDataset)) {
+    return ahoOrPncUpdateDataset
   }
 
-  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const correlationId = ahoOrPncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   if (destinationType === DestinationType.MQ) {
-    return sendToResubmissionQueue(stompClient, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
   const workflows = await conductorClient.workflowResource
@@ -48,10 +56,10 @@ const forwardMessage = async (
 
   const workflowExists = workflows && workflows.length > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
-    return sendToResubmissionQueue(stompClient, message, correlationId)
+    return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
-  return startBichardProcess(conductorWorkflow, aho, correlationId, conductorClient)
+  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient, phase)
 }
 
 export default forwardMessage
