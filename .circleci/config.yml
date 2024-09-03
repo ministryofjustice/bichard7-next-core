@@ -27,6 +27,7 @@ workflows:
             packages/conductor/.* conductor-changes true
             packages/core/.* core-changes true
             packages/message-forwarder/.* message-forwarder-changes true
+            packages/ui/.* ui-changes true
           base-revision: main
           # this is the path of the configuration we should trigger once
           # path filtering and pipeline parameter value updates are
