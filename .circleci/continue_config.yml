@@ -463,6 +463,9 @@ parameters:
   message-forwarder-changes:
     type: boolean
     default: false
+  ui-changes:
+    type: boolean
+    default: false
   ms-edge:
     type: boolean
     default: false
