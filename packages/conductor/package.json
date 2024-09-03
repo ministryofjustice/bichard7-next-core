@@ -6,7 +6,7 @@
     "@stomp/stompjs": "^7.0.0",
     "esbuild": "^0.21.5",
     "mailhog": "^4.16.0",
-    "postgres": "^3.4.4",
+    "postgres": "^3.4.4g s",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",

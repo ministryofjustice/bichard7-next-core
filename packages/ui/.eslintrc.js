@@ -30,7 +30,7 @@ module.exports = {
         ecmaVersion: 2020,
         project: ["tsconfig.json"]
       },
-      plugins: ["@typescript-eslint", "filenames", "no-only-tests"],
+      plugins: ["@typescript-eslint", "filenames"],
       rules: {
         curly: ["error", "all"],
         "no-console": "off",
@@ -72,13 +72,6 @@ module.exports = {
             argsIgnorePattern: "^_+$",
             varsIgnorePattern: "^_+$"
           }
-        ],
-        "no-only-tests/no-only-tests": [
-          "error",
-          {
-            block: ["test", "it", "assert"],
-            focus: ["only", "focus"]
-          }
         ]
       }
     },
@@ -104,6 +97,7 @@ module.exports = {
     },
     {
       files: ["cypress/**/*"],
+      plugins: ["mocha"],
       extends: ["plugin:cypress/recommended"],
       rules: {
         "no-console": "off",
@@ -112,7 +106,8 @@ module.exports = {
         "no-unused-vars": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "jest/expect-expect": "off",
-        "jest/valid-expect": "off"
+        "jest/valid-expect": "off",
+        "mocha/no-exclusive-tests": "error"
       }
     },
     {
