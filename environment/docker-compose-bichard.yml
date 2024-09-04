@@ -3,6 +3,13 @@ services:
   bichard7-liberty:
     environment:
       ENABLE_PHASE_1: "true"
-  message-forwarder:
+  phase-1-message-forwarder:
     environment:
+      SOURCE_QUEUE: PHASE_1_RESUBMIT_QUEUE
+      DESTINATION: HEARING_OUTCOME_INPUT_QUEUE
+      DESTINATION_TYPE: mq
+  phase-2-message-forwarder:
+    environment:
+      SOURCE_QUEUE: PHASE_2_RESUBMIT_QUEUE
+      DESTINATION: DATA_SET_PNC_UPDATE_QUEUE
       DESTINATION_TYPE: mq
