@@ -28,7 +28,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "update-deps": "ncu -u && npm install",
-    "test": "jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles --workerThreads=true",
     "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -T ./deploy/deploy.ts",
     "worker": ". ../../environment/local-conductor-worker.env && npm run worker-noenv",
     "worker-noenv": "npx ts-node -T src/worker.ts",
