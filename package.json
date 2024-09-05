@@ -52,11 +52,12 @@
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
   },
   "devDependencies": {
+    "@swc/core": "^1.7.23",
+    "@swc/jest": "^0.2.36",
     "excel4node": "^1.8.2",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.9",
     "npm-check-updates": "^16.14.6",
     "zod-to-json-schema": "^3.21.4"
-  },
-  "dependencies": {}
+  }
 }

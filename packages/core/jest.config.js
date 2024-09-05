@@ -8,5 +8,8 @@ module.exports = {
   },
   setupFilesAfterEnv: ["<rootDir>/phase1/tests/jest.setup.ts"],
   modulePathIgnorePatterns: ["dist"],
-  coveragePathIgnorePatterns: ["node_modules", "phase1/comparison", "phase1/tests"]
+  coveragePathIgnorePatterns: ["node_modules", "phase1/comparison", "phase1/tests"],
+  transform: {
+    "^.+\\.(t|j)sx?$": "@swc/jest"
+  }
 }
