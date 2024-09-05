@@ -115,7 +115,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
+      docker_layer_caching: true
     resource_class: xlarge
     steps:
       - unless:
