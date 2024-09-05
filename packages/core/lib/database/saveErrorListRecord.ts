@@ -1,6 +1,5 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
-import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
@@ -14,11 +13,7 @@ import updateErrorListTriggers from "./updateErrorListTriggers"
 
 const handleUpdate = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
   const aho = getAnnotatedHearingOutcome(result)
-  // If case is resubmitted to Phase 1 and case is ignored in Phase 2,
-  // we should update the record to set the correct error_status
-  if (aho.Exceptions.length > 0 || result.resultType === Phase2ResultType.ignored) {
-    await updateErrorListRecord(db, recordId, result)
-  }
+  await updateErrorListRecord(db, recordId, result)
 
   // If trigger generator is not called in Phase 2, we shouldn't update triggers
   if ("triggerGenerationAttempted" in result && result.triggerGenerationAttempted === false) {
