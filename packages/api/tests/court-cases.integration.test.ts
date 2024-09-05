@@ -2,6 +2,7 @@ import { stringify } from "qs"
 import request from "supertest"
 import app from "../src/app"
 import CourtCase from "../src/services/entities/CourtCase"
+import getDataSource from "../src/services/getDataSource"
 import deleteFromEntity from "../tests/utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../tests/utils/insertCourtCases"
 
@@ -12,6 +13,8 @@ describe("/court-cases", () => {
 
   afterAll(async () => {
     await deleteFromEntity(CourtCase)
+    const dataSource = await getDataSource()
+    dataSource.destroy()
   })
 
   describe("GET", () => {
