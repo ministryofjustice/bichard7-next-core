@@ -156,6 +156,101 @@ describe("sendToPhase2", () => {
       ])
 
       spyStartWorkflow.mockReset()
+      jest.restoreAllMocks()
+    })
+  })
+
+  describe("when Phase 2 canary ratio is set in the task input", () => {
+    it("should start Phase 2 Conductor workflow when canary ratio in task input is -1", async () => {
+      const phase2CoreCanaryRatioEnvVar = "1"
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await createAuditLogRecord(parsedPhase1Result.correlationId)
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: -1 }
+      })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.outputData).toHaveProperty("auditLogEvents")
+      expect(result.outputData?.auditLogEvents).toHaveLength(1)
+      expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
+
+      const workflow = await waitForCompletedWorkflow(
+        parsedPhase1Result.correlationId,
+        "RUNNING",
+        60_000,
+        "bichard_phase_2"
+      )
+      expect(workflow).toBeDefined()
+    })
+
+    it("should send a message to MQ when canary ratio in task input is -1", async () => {
+      const phase2CoreCanaryRatioEnvVar = "0"
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: -1 }
+      })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.outputData).toHaveProperty("auditLogEvents")
+      expect(result.outputData?.auditLogEvents).toHaveLength(1)
+      expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
+
+      const message = await testMqGateway.getMessage(queueName!)
+      expect(message).toEqual(serialiseToXml(parsedPhase1Result.hearingOutcome))
+    })
+
+    it("should override canary ratio env var and send a message to MQ", async () => {
+      const phase2CoreCanaryRatioEnvVar = "1"
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: 0 }
+      })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.outputData).toHaveProperty("auditLogEvents")
+      expect(result.outputData?.auditLogEvents).toHaveLength(1)
+      expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
+
+      const message = await testMqGateway.getMessage(queueName!)
+      expect(message).toEqual(serialiseToXml(parsedPhase1Result.hearingOutcome))
+    })
+
+    it("should override canary ratio env var and start Phase 2 Conductor workflow when canary ratio in task input is 1", async () => {
+      const phase2CoreCanaryRatioEnvVar = "0"
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
+
+      await createAuditLogRecord(parsedPhase1Result.correlationId)
+      await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
+
+      const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: 1 }
+      })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.outputData).toHaveProperty("auditLogEvents")
+      expect(result.outputData?.auditLogEvents).toHaveLength(1)
+      expect(result.outputData?.auditLogEvents[0].eventCode).toBe("hearing-outcome.submitted-phase-2")
+
+      const workflow = await waitForCompletedWorkflow(
+        parsedPhase1Result.correlationId,
+        "RUNNING",
+        60_000,
+        "bichard_phase_2"
+      )
+      expect(workflow).toBeDefined()
     })
   })
 
