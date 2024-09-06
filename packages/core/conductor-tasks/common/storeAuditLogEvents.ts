@@ -9,13 +9,6 @@ import logger from "@moj-bichard7/common/utils/logger"
 import axios from "axios"
 import { z } from "zod"
 
-const auditLogApiUrl = process.env.AUDIT_LOG_API_URL
-const auditLogApiKey = process.env.AUDIT_LOG_API_KEY
-
-if (!auditLogApiUrl || !auditLogApiKey) {
-  throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
-}
-
 const inputDataSchema = z.object({
   correlationId: z.string(),
   auditLogEvents: z.array(auditLogEventSchema)
@@ -25,6 +18,13 @@ type InputData = z.infer<typeof inputDataSchema>
 const storeAuditLogEvents: ConductorWorker = {
   taskDefName: "store_audit_log_events",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
+    const auditLogApiUrl = process.env.AUDIT_LOG_API_URL
+    const auditLogApiKey = process.env.AUDIT_LOG_API_KEY
+
+    if (!auditLogApiUrl || !auditLogApiKey) {
+      throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
+    }
+
     const { correlationId, auditLogEvents } = task.inputData
 
     if (auditLogEvents.length > 0) {

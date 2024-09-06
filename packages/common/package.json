@@ -9,7 +9,7 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "jest --testNamePattern=",
+    "test": "jest --maxWorkers=80% --testNamePattern=",
     "update-deps": "ncu -u && npm install"
   },
   "repository": {
