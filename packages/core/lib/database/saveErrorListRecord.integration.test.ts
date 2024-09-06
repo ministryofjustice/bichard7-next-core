@@ -182,7 +182,10 @@ describe("saveErrorListRecord", () => {
     expect(errorListRecordsWithException[0].trigger_count).toBe(0)
     expect(errorListRecordsWithException[0].trigger_status).toBeNull()
 
-    phase1Result.triggers.push({ code: TriggerCode.TRPR0027, offenceSequenceNumber: 2 })
+    phase1Result.triggers.push(
+      { code: TriggerCode.TRPR0027, offenceSequenceNumber: 2 },
+      { code: TriggerCode.TRPR0015, offenceSequenceNumber: 2 }
+    )
     phase1Result.hearingOutcome.Exceptions = []
 
     await saveErrorListRecord(db, phase1Result)
@@ -191,13 +194,13 @@ describe("saveErrorListRecord", () => {
       SELECT * FROM br7own.error_list`
 
     expect(errorListRecordsWithoutException).toHaveLength(1)
-    expect(errorListRecordsWithoutException[0].trigger_count).toBe(1)
+    expect(errorListRecordsWithoutException[0].trigger_count).toBe(2)
     expect(errorListRecordsWithoutException[0].trigger_status).toBe(1)
 
     const insertedTriggers = await db<ErrorListTriggerRecord[]>`
       SELECT * FROM br7own.error_list_triggers`
 
-    expect(insertedTriggers).toHaveLength(1)
+    expect(insertedTriggers).toHaveLength(2)
     expect(insertedTriggers[0].trigger_code).toEqual(phase1Result.triggers[0].code)
   })
 })

@@ -22,12 +22,15 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
     error_resolved_ts: null,
     user_updated_flag: record.user_updated_flag,
     trigger_count: record.trigger_count,
-    trigger_status: record.trigger_status
+    trigger_status: record.trigger_status,
+    trigger_reason: record.trigger_reason
   }
 
-  if (!("triggerGenerationAttempted" in result) || result.triggerGenerationAttempted === true) {
+  const phase2 = "triggerGenerationAttempted" in result
+  if (!phase2 || (phase2 && result.triggerGenerationAttempted === true)) {
     fields.trigger_count = record.trigger_count
     fields.trigger_status = record.trigger_status
+    fields.trigger_reason = record.trigger_reason
   }
 
   return fields
