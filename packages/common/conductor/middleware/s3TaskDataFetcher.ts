@@ -17,11 +17,13 @@ type TaskDataInputData<T> = {
   s3TaskData: T
   s3TaskDataPath: string
   lockId?: string
+  options?: Record<string, unknown>
 }
 
 const inputDataSchema = z.object({
   s3TaskDataPath: z.string(),
-  lockId: z.string().optional()
+  lockId: z.string().optional(),
+  options: z.record(z.unknown()).optional()
 })
 
 const lockKey = "lockedByWorkstream"
@@ -42,7 +44,7 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
       return failedTerminal(...formatErrorMessages("Input data schema", inputParseResult.error))
     }
 
-    const { s3TaskDataPath, lockId } = inputParseResult.data
+    const { s3TaskDataPath, lockId, options } = inputParseResult.data
 
     if (lockId) {
       const objectTags = await readS3FileTags(s3TaskDataPath, taskDataBucket, s3Config)
@@ -69,7 +71,8 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
         inputData: {
           s3TaskDataPath,
           lockId,
-          s3TaskData: parseResult.data
+          s3TaskData: parseResult.data,
+          options
         }
       }
       return handler(task)
