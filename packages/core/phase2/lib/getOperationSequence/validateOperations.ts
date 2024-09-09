@@ -4,6 +4,7 @@ import errorPaths from "../../../lib/exceptions/errorPaths"
 import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "./operationCourtCaseReference"
+import { PNCMessageType } from "../../types/operationCodes"
 
 const errorPath = errorPaths.case.asn
 
@@ -16,11 +17,11 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   const courtCaseSpecificOperations: Operation[] = []
 
   for (const operation of operations) {
-    penhrgExists ||= operation.code === "PENHRG"
-    newremExists ||= operation.code === "NEWREM"
-    sendefExists ||= operation.code === "SENDEF"
-    comsenExists ||= operation.code === "COMSEN"
-    apphrdExists ||= operation.code === "APPHRD"
+    penhrgExists ||= operation.code === PNCMessageType.PENALTY_HEARING
+    newremExists ||= operation.code === PNCMessageType.REMAND
+    sendefExists ||= operation.code === PNCMessageType.SENTENCE_DEFERRED
+    comsenExists ||= operation.code === PNCMessageType.COMMITTED_SENTENCING
+    apphrdExists ||= operation.code === PNCMessageType.APPEALS_UPDATE
 
     if (penhrgExists && apphrdExists) {
       return { code: ExceptionCode.HO200109, path: errorPath }
@@ -44,18 +45,28 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     if (penhrgExists && courtCaseSpecificOperations.length > 0) {
       const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
-      if (["SUBVAR", "PENHRG"].includes(incompatibleCode)) {
+      if (
+        [PNCMessageType.DISPOSAL_UPDATED, PNCMessageType.PENALTY_HEARING].includes(incompatibleCode as PNCMessageType)
+      ) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
 
-      if (incompatibleCode === "DISARR") {
+      if (incompatibleCode === PNCMessageType.NORMAL_DISPOSAL) {
         return { code: ExceptionCode.HO200115, path: errorPath }
       }
     }
 
     const courtCaseReference = operationCourtCaseReference(operation)
 
-    if (["APPHRD", "COMSEN", "SENDEF", "SUBVAR", "DISARR"].includes(operation.code)) {
+    if (
+      [
+        PNCMessageType.APPEALS_UPDATE,
+        PNCMessageType.COMMITTED_SENTENCING,
+        PNCMessageType.SENTENCE_DEFERRED,
+        PNCMessageType.DISPOSAL_UPDATED,
+        PNCMessageType.NORMAL_DISPOSAL
+      ].includes(operation.code as PNCMessageType)
+    ) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
@@ -63,22 +74,25 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         const sortedOperations = [operation.code, clashingOperation.code].sort()
         if (
           operation.code === clashingOperation.code ||
-          sortedOperations.includes("APPHRD") ||
-          isEqual(sortedOperations, ["COMSEN", "SENDEF"]) ||
-          isEqual(sortedOperations, ["APPHRD", "SENDEF"])
+          sortedOperations.includes(PNCMessageType.APPEALS_UPDATE) ||
+          isEqual(sortedOperations, [PNCMessageType.COMMITTED_SENTENCING, PNCMessageType.SENTENCE_DEFERRED]) ||
+          isEqual(sortedOperations, [PNCMessageType.APPEALS_UPDATE, PNCMessageType.SENTENCE_DEFERRED])
         ) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["COMSEN", "DISARR"]) || isEqual(sortedOperations, ["DISARR", "SENDEF"])) {
+        if (
+          isEqual(sortedOperations, [PNCMessageType.COMMITTED_SENTENCING, PNCMessageType.NORMAL_DISPOSAL]) ||
+          isEqual(sortedOperations, [PNCMessageType.NORMAL_DISPOSAL, PNCMessageType.SENTENCE_DEFERRED])
+        ) {
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["DISARR", "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PNCMessageType.NORMAL_DISPOSAL, PNCMessageType.DISPOSAL_UPDATED])) {
           return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["SENDEF", "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PNCMessageType.SENTENCE_DEFERRED, PNCMessageType.DISPOSAL_UPDATED])) {
           return { code: ExceptionCode.HO200114, path: errorPath }
         }
 
@@ -90,11 +104,16 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
-    if (operation.code === "APPHRD" && remandCcrsContainCourtCaseReference) {
+    if (operation.code === PNCMessageType.APPEALS_UPDATE && remandCcrsContainCourtCaseReference) {
       return { code: ExceptionCode.HO200109, path: errorPath }
     }
 
-    if (["COMSEN", "SENDEF"].includes(operation.code) && remandCcrsContainCourtCaseReference) {
+    if (
+      [PNCMessageType.COMMITTED_SENTENCING, PNCMessageType.SENTENCE_DEFERRED].includes(
+        operation.code as PNCMessageType
+      ) &&
+      remandCcrsContainCourtCaseReference
+    ) {
       return { code: ExceptionCode.HO200113, path: errorPath }
     }
   }
