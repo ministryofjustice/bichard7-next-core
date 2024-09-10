@@ -1,5 +1,5 @@
 import type { NewremOperation, Operation, OperationStatus } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {

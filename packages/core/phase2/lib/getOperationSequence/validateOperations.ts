@@ -4,7 +4,7 @@ import errorPaths from "../../../lib/exceptions/errorPaths"
 import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "./operationCourtCaseReference"
-import { PNCMessageType } from "../../types/operationCodes"
+import { PNCMessageType } from "../../../types/operationCodes"
 
 const errorPath = errorPaths.case.asn
 

@@ -6,7 +6,7 @@ import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/pa
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
-import { PNCMessageType } from "../../types/operationCodes"
+import { PNCMessageType } from "../../../types/operationCodes"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {

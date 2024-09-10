@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 
 const extractRemandCcrs = <T extends boolean, K extends T extends false ? string : string | undefined>(
   operations: Operation[],

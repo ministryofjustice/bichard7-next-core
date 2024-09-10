@@ -1,7 +1,7 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PNCMessageType } from "../../../../../types/operationCodes"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"

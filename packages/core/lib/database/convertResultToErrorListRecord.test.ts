@@ -5,7 +5,7 @@ import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPha
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import errorPaths from "../exceptions/errorPaths"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
-import { PNCMessageType } from "../../phase2/types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 
 describe("convertResultToErrorListRecord", () => {
   describe("Phase1", () => {

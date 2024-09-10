@@ -1,5 +1,5 @@
 import type { Operation } from "../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../types/operationCodes"
+import { PNCMessageType } from "../../../types/operationCodes"
 
 const sortOperations = (operations: Operation[]): Operation[] =>
   operations

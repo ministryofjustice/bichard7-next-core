@@ -1,6 +1,6 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import createRemandOperation from "./createRemandOperation"
 
 describe("createRemandOperation", () => {

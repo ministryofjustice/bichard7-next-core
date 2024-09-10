@@ -5,7 +5,7 @@ import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { generateOperations } from "./generateOperations"
 import type ExceptionsAndOperations from "./generateOperations/ExceptionsAndOperations"
 import sortOperations from "./sortOperations"
-import { PNCMessageType } from "../../types/operationCodes"
+import { PNCMessageType } from "../../../types/operationCodes"
 
 const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
   const checkNoSequenceConditionsExceptions = checkNoSequenceConditions(aho)

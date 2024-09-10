@@ -1,6 +1,6 @@
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
-import { PNCMessageType } from "../../phase2/types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import TRPS0004 from "./TRPS0004"

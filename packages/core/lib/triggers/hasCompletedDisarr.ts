@@ -1,4 +1,4 @@
-import { PNCMessageType } from "../../phase2/types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 

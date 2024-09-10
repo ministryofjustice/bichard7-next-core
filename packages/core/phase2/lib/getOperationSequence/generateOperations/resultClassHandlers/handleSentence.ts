@@ -4,7 +4,7 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PNCMessageType } from "../../../../../types/operationCodes"
 
 export const handleSentence: ResultClassHandler = ({
   aho,

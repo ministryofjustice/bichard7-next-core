@@ -1,6 +1,6 @@
 import type { Operation } from "../../types/PncUpdateDataset"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
-import { PNCMessageType } from "../types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 import refreshOperationSequence from "./refreshOperationSequence"
 
 const defaultOperations: Operation[] = [

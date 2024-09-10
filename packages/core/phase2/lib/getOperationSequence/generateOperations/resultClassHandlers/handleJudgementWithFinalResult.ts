@@ -7,7 +7,7 @@ import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PNCMessageType } from "../../../../../types/operationCodes"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,

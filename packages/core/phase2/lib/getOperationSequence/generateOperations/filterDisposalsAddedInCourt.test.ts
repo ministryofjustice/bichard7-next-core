@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 
 const remandOperation: Operation = {

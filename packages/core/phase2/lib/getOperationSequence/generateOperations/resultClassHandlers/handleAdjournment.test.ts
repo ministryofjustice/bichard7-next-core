@@ -1,6 +1,6 @@
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PNCMessageType } from "../../../../../types/operationCodes"
 import { handleAdjournment } from "./handleAdjournment"
 
 const organisationUnit = {

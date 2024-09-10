@@ -4,7 +4,7 @@ import {
   organisationUnitSchema,
   unvalidatedHearingOutcomeSchema
 } from "../../schemas/unvalidatedHearingOutcome"
-import { PNCMessageType } from "../types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 

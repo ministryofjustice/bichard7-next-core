@@ -2,7 +2,7 @@ import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
-import { PNCMessageType } from "../../phase2/types/operationCodes"
+import { PNCMessageType } from "../../types/operationCodes"
 
 const triggerCode = TriggerCode.TRPS0004
 

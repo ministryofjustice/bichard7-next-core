@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import extractRemandCcrs from "./extractRemandCcrs"
 
 const filterDisposalsAddedInCourt = (operations: Operation[]): Operation[] => {

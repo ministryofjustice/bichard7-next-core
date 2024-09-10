@@ -1,7 +1,7 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import createSubsequentVariationOperation from "./createSubsequentVariationOperation"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 
 const createAho = (hoCcr: string, pncCourtCases: { offences?: { disposalTypes?: number[] }[]; ccr: string }[]) =>
   ({

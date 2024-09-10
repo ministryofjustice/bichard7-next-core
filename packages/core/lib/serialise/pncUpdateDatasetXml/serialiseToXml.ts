@@ -1,4 +1,4 @@
-import { PNCMessageType } from "../../../phase2/types/operationCodes"
+import { PNCMessageType } from "../../../types/operationCodes"
 import type { AhoXml } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"

@@ -1,6 +1,6 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PNCMessageType } from "../../../../../types/operationCodes"
 import { handleAppealOutcome } from "./handleAppealOutcome"
 
 describe("handleAppealOutcome", () => {

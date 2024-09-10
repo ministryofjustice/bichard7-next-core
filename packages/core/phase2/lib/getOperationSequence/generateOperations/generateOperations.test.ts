@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import generateOperations from "./generateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"

@@ -1,4 +1,4 @@
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import createOperation from "./createOperation"
 
 describe("createOperation", () => {

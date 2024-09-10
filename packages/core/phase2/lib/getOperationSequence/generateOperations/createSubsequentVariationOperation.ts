@@ -4,7 +4,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import type { OperationData } from "../../../../types/PncUpdateDataset"
 import createOperation from "./createOperation"
 import type ExceptionsAndOperations from "./ExceptionsAndOperations"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 
 const areAllPncResults2007 = (aho: AnnotatedHearingOutcome, courtCaseReference?: string) => {
   const ccr = courtCaseReference || aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber

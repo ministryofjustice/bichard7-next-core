@@ -1,7 +1,7 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { NewremOperation, OperationData } from "../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../types/ResultClass"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import createOperation from "./createOperation"
 import type ExceptionsAndOperations from "./ExceptionsAndOperations"
 
