@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
-import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
+import checkRccSegmentApplicability from "./checkRccSegmentApplicability"
 
 const createAho = (offences: Partial<Offence>[]) =>
   ({
@@ -30,7 +30,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when there are no matching offences", () => {
@@ -47,7 +47,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when offences do not contain PNC disposal type 2060", () => {
@@ -64,7 +64,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when offences are added by court and are not DISARR compatible", () => {
@@ -81,7 +81,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseRequiresRccAndHasReportableOffences when case requires RCC and offence is added by the court and is DISARR compatible", () => {
@@ -98,7 +98,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
+    expect(result).toBe(true)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and offence is added by the court but not DISARR compatible", () => {
@@ -124,7 +124,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences)
+    expect(result).toBe(true)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and there is an offence that is DISARR compatible but not added by the court", () => {
@@ -150,6 +150,6 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences)
+    expect(result).toBe(true)
   })
 })

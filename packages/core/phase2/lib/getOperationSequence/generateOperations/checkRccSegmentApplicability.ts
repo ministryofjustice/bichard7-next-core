@@ -2,16 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import isRecordableOffence from "../../isRecordableOffence"
 import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
 
-export enum RccSegmentApplicability {
-  CaseDoesNotRequireRcc = "false", // UpdateMessageUtilsImpl.java:749
-  CaseRequiresRccAndHasReportableOffences = "true", // UpdateMessageUtilsImpl.java:751
-  CaseRequiresRccButHasNoReportableOffences = "null" // UpdateMessageUtilsImpl.java:753
-}
-
-const checkRccSegmentApplicability = (
-  aho: AnnotatedHearingOutcome,
-  courtCaseReferenceNumber?: string
-): RccSegmentApplicability => {
+const checkRccSegmentApplicability = (aho: AnnotatedHearingOutcome, courtCaseReferenceNumber?: string): boolean => {
   let caseHasReportableOffencesAddedByCourt = false
   let caseRequiresRcc = false
 
@@ -39,13 +30,7 @@ const checkRccSegmentApplicability = (
     }
   }
 
-  if (!caseRequiresRcc) {
-    return RccSegmentApplicability.CaseDoesNotRequireRcc
-  }
-
-  return caseHasReportableOffencesAddedByCourt
-    ? RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences
-    : RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
+  return caseRequiresRcc
 }
 
 export default checkRccSegmentApplicability
