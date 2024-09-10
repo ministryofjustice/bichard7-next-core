@@ -55,7 +55,7 @@ services:
       dockerfile: packages/message-forwarder/Dockerfile
       context: ..
     environment:
-      DESTINATION_TYPE: auto
+      DESTINATION_TYPE: mq
       CONDUCTOR_URL: http://conductor:4000/api
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
