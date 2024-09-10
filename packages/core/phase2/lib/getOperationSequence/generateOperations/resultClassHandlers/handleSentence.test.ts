@@ -1,5 +1,6 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import { handleSentence } from "./handleSentence"
 
@@ -44,7 +45,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SENDEF", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PNCMessageType.SENTENCE_DEFERRED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId does not have value", () => {
@@ -60,7 +63,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SENDEF", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PNCMessageType.SENTENCE_DEFERRED, data: undefined, status: "NotAttempted" }
+    ])
   })
 
   it("should return SUBVAR operation when adjudication exists, and there is a 2007 result code", () => {
