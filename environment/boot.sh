@@ -33,7 +33,7 @@ done
 IMAGES=("${FILTERED_IMAGES[@]}")
 
 for image in "${IMAGES[@]}"; do
-    if [[ $SKIP_DOWNLOADS == "false" && ("$CI" == "true" || "$(docker images -q $image 2> /dev/null)" == "") ]]; then
+    if [[ $SKIP_DOWNLOADS == "false" && (("$CI" == "true" && "$(docker images -q $image 2> /dev/null)" == "") || "$(docker images -q $image 2> /dev/null)" == "") ]]; then
         echo "Fetching $image..."
         scripts/fetch-docker-image.sh $image
     fi
