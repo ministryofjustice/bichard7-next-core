@@ -35,10 +35,6 @@
     "ui": "npm run postgres && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api localstack activemq ui",
     "watch": "tsc --build --watch"
   },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js",
-    "*.scss": "stylelint './styles/*.scss' --fix"
-  },
   "workspaces": [
     "packages/common",
     "packages/core",
@@ -59,6 +55,7 @@
   "devDependencies": {
     "@swc/core": "^1.7.23",
     "@swc/jest": "^0.2.36",
+    "@typescript-eslint/eslint-plugin": "7.2.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
