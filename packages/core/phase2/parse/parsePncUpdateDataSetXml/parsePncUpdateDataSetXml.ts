@@ -6,7 +6,7 @@ import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/pa
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PncOperation } from "../../../types/PncOperation"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -32,7 +32,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
   return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
-    if (PNCMessageType.REMAND in operationXml.operationCode) {
+    if (PncOperation.REMAND in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.NEWREM)
         ? undefined
         : {
@@ -43,13 +43,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.REMAND,
+        code: PncOperation.REMAND,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.SENTENCE_DEFERRED in operationXml.operationCode) {
+    if (PncOperation.SENTENCE_DEFERRED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SENDEF)
         ? undefined
         : {
@@ -57,13 +57,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.SENTENCE_DEFERRED,
+        code: PncOperation.SENTENCE_DEFERRED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.DISPOSAL_UPDATED in operationXml.operationCode) {
+    if (PncOperation.DISPOSAL_UPDATED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SUBVAR)
         ? undefined
         : {
@@ -71,13 +71,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.NORMAL_DISPOSAL in operationXml.operationCode) {
+    if (PncOperation.NORMAL_DISPOSAL in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.DISARR)
         ? undefined
         : {
@@ -85,13 +85,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.NORMAL_DISPOSAL,
+        code: PncOperation.NORMAL_DISPOSAL,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.PENALTY_HEARING in operationXml.operationCode) {
+    if (PncOperation.PENALTY_HEARING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.PENHRG)
         ? undefined
         : {
@@ -99,13 +99,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.PENALTY_HEARING,
+        code: PncOperation.PENALTY_HEARING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.COMMITTED_SENTENCING in operationXml.operationCode) {
+    if (PncOperation.COMMITTED_SENTENCING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.COMSEN)
         ? undefined
         : {
@@ -113,13 +113,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.COMMITTED_SENTENCING,
+        code: PncOperation.COMMITTED_SENTENCING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if (PNCMessageType.APPEALS_UPDATE in operationXml.operationCode) {
+    if (PncOperation.APPEALS_UPDATE in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.APPHRD)
         ? undefined
         : {
@@ -127,7 +127,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: PNCMessageType.APPEALS_UPDATE,
+        code: PncOperation.APPEALS_UPDATE,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

@@ -1,9 +1,9 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PncOperation } from "../../../../types/PncOperation"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 
 const remandOperation: Operation = {
-  code: PNCMessageType.REMAND,
+  code: PncOperation.REMAND,
   data: undefined,
   courtCaseReference: "444",
   isAdjournmentPreJudgement: true,
@@ -11,14 +11,14 @@ const remandOperation: Operation = {
 }
 
 const disposalOperationAddedInCourt: Operation = {
-  code: PNCMessageType.NORMAL_DISPOSAL,
+  code: PncOperation.NORMAL_DISPOSAL,
   data: { courtCaseReference: "444" },
   addedByTheCourt: true,
   status: "NotAttempted"
 }
 
 const disposalOperation: Operation = {
-  code: PNCMessageType.NORMAL_DISPOSAL,
+  code: PncOperation.NORMAL_DISPOSAL,
   data: { courtCaseReference: "444" },
   status: "NotAttempted"
 }

@@ -1,11 +1,11 @@
-import { PNCMessageType } from "../../types/operationCodes"
+import { PncOperation } from "../../types/PncOperation"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
 const hasCompletedDisarr = (pncUpdateDataset: PncUpdateDataset, offence: Offence) =>
   pncUpdateDataset.PncOperations.some(
     ({ code, status, data }) =>
-      code === PNCMessageType.NORMAL_DISPOSAL &&
+      code === PncOperation.NORMAL_DISPOSAL &&
       status === "Completed" &&
       (!data?.courtCaseReference || data.courtCaseReference === offence.CourtCaseReferenceNumber)
   )

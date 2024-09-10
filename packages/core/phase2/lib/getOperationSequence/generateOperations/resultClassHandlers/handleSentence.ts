@@ -4,7 +4,7 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
-import { PNCMessageType } from "../../../../../types/operationCodes"
+import { PncOperation } from "../../../../../types/PncOperation"
 
 export const handleSentence: ResultClassHandler = ({
   aho,
@@ -20,7 +20,7 @@ export const handleSentence: ResultClassHandler = ({
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    return { operations: [createOperation(PNCMessageType.PENALTY_HEARING, operationData)], exceptions: [] }
+    return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
   }
 
   if (!result.PNCAdjudicationExists) {
@@ -36,7 +36,7 @@ export const handleSentence: ResultClassHandler = ({
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
-    return { operations: [createOperation(PNCMessageType.SENTENCE_DEFERRED, operationData)], exceptions: [] }
+    return { operations: [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)], exceptions: [] }
   }
 
   return createSubsequentVariationOperation(

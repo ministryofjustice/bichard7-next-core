@@ -1,5 +1,4 @@
-export enum PNCMessageType {
-  ASN_ENQUIRY = "ENQASI",
+export enum PncOperation {
   APPEALS_UPDATE = "APPHRD",
   COMMITTED_SENTENCING = "COMSEN",
   NORMAL_DISPOSAL = "DISARR",

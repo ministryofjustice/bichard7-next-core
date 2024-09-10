@@ -1,9 +1,9 @@
 import type { NewremOperation, Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../types/operationCodes"
+import { PncOperation } from "../../types/PncOperation"
 import areNewremTypesEqual from "./areNewremTypesEqual"
 
 const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, operations: Operation[]) => {
-  let latestNewremOperations = operations.filter((operation) => operation.code === PNCMessageType.REMAND)
+  let latestNewremOperations = operations.filter((operation) => operation.code === PncOperation.REMAND)
 
   if (pncUpdateDataset.PncOperations.length === 0) {
     pncUpdateDataset.PncOperations = operations
@@ -11,12 +11,12 @@ const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, operations
   }
 
   pncUpdateDataset.PncOperations = pncUpdateDataset.PncOperations.filter(
-    ({ code, status }) => code !== PNCMessageType.REMAND || status === "Completed"
+    ({ code, status }) => code !== PncOperation.REMAND || status === "Completed"
   )
 
   latestNewremOperations = latestNewremOperations.filter(
     (newOperation) =>
-      !pncUpdateDataset.PncOperations.filter(({ code }) => code === PNCMessageType.REMAND).some((existingOperation) =>
+      !pncUpdateDataset.PncOperations.filter(({ code }) => code === PncOperation.REMAND).some((existingOperation) =>
         areNewremTypesEqual(existingOperation as NewremOperation, newOperation)
       )
   )

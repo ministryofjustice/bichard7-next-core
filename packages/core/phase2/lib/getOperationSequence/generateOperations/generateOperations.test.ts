@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PncOperation } from "../../../../types/PncOperation"
 import generateOperations from "./generateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -64,7 +64,7 @@ describe("generateOperations", () => {
         return {
           operations: [
             {
-              code: PNCMessageType.REMAND,
+              code: PncOperation.REMAND,
               data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
               status: "NotAttempted"
             }
@@ -78,7 +78,7 @@ describe("generateOperations", () => {
       expect(operationsResult).toStrictEqual({
         operations: [
           {
-            code: PNCMessageType.REMAND,
+            code: PncOperation.REMAND,
             data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
             status: "NotAttempted"
           }
@@ -189,14 +189,14 @@ describe("generateOperations", () => {
       return {
         operations: [
           {
-            code: PNCMessageType.REMAND,
+            code: PncOperation.REMAND,
             data: undefined,
             courtCaseReference: "1",
             isAdjournmentPreJudgement: true,
             status: "NotAttempted"
           },
           {
-            code: PNCMessageType.NORMAL_DISPOSAL,
+            code: PncOperation.NORMAL_DISPOSAL,
             data: { courtCaseReference: "1" },
             addedByTheCourt: true,
             status: "NotAttempted"
@@ -211,14 +211,14 @@ describe("generateOperations", () => {
     expect(operationsResult).toStrictEqual({
       operations: [
         {
-          code: PNCMessageType.REMAND,
+          code: PncOperation.REMAND,
           data: undefined,
           courtCaseReference: "1",
           isAdjournmentPreJudgement: true,
           status: "NotAttempted"
         },
         {
-          code: PNCMessageType.NORMAL_DISPOSAL,
+          code: PncOperation.NORMAL_DISPOSAL,
           data: { courtCaseReference: "1" },
           addedByTheCourt: true,
           status: "NotAttempted"

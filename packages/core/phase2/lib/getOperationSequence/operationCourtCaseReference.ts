@@ -1,12 +1,12 @@
 import type { Operation } from "../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PncOperation } from "../../../types/PncOperation"
 
 const operationCodes = [
-  PNCMessageType.SENTENCE_DEFERRED,
-  PNCMessageType.NORMAL_DISPOSAL,
-  PNCMessageType.DISPOSAL_UPDATED,
-  PNCMessageType.COMMITTED_SENTENCING,
-  PNCMessageType.APPEALS_UPDATE
+  PncOperation.SENTENCE_DEFERRED,
+  PncOperation.NORMAL_DISPOSAL,
+  PncOperation.DISPOSAL_UPDATED,
+  PncOperation.COMMITTED_SENTENCING,
+  PncOperation.APPEALS_UPDATE
 ]
 
 const operationCourtCaseReference = (operation: Operation): string | undefined =>

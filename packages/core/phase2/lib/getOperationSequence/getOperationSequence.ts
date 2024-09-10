@@ -5,7 +5,7 @@ import checkNoSequenceConditions from "./checkNoSequenceConditions"
 import { generateOperations } from "./generateOperations"
 import type ExceptionsAndOperations from "./generateOperations/ExceptionsAndOperations"
 import sortOperations from "./sortOperations"
-import { PNCMessageType } from "../../../types/operationCodes"
+import { PncOperation } from "../../../types/PncOperation"
 
 const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
   const checkNoSequenceConditionsExceptions = checkNoSequenceConditions(aho)
@@ -21,7 +21,7 @@ const getOperationSequence = (aho: AnnotatedHearingOutcome, resubmitted: boolean
 
   const { operations } = operationsResult
   const filteredOperations = allResultsAlreadyOnPnc
-    ? operations.filter((operation) => operation.code === PNCMessageType.REMAND)
+    ? operations.filter((operation) => operation.code === PncOperation.REMAND)
     : operations
 
   return {

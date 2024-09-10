@@ -1,5 +1,5 @@
 import type { NewremOperation, Operation, OperationStatus } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PncOperation } from "../../../../types/PncOperation"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {
@@ -23,7 +23,7 @@ const generateNewremOperation = (
   isAdjournmentPreJudgement?: boolean
 ) =>
   ({
-    code: PNCMessageType.REMAND,
+    code: PncOperation.REMAND,
     status,
     courtCaseReference,
     isAdjournmentPreJudgement,
@@ -37,7 +37,7 @@ const generateNewremOperation = (
   }) as NewremOperation
 
 const generateOperation = (
-  code: Exclude<Operation["code"], PNCMessageType.REMAND>,
+  code: Exclude<Operation["code"], PncOperation.REMAND>,
   status: OperationStatus = "NotAttempted",
   params: {
     courtCaseReference?: string
@@ -69,17 +69,14 @@ describe("deduplicateOperations", () => {
         generateNewremOperation("NotAttempted", {}, "1", true)
       ]
     },
-    { ops: [generateOperation(PNCMessageType.APPEALS_UPDATE), generateOperation(PNCMessageType.APPEALS_UPDATE)] },
+    { ops: [generateOperation(PncOperation.APPEALS_UPDATE), generateOperation(PncOperation.APPEALS_UPDATE)] },
     {
-      ops: [
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING),
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING)
-      ]
+      ops: [generateOperation(PncOperation.COMMITTED_SENTENCING), generateOperation(PncOperation.COMMITTED_SENTENCING)]
     },
-    { ops: [generateOperation(PNCMessageType.NORMAL_DISPOSAL), generateOperation(PNCMessageType.NORMAL_DISPOSAL)] },
-    { ops: [generateOperation(PNCMessageType.PENALTY_HEARING), generateOperation(PNCMessageType.PENALTY_HEARING)] },
-    { ops: [generateOperation(PNCMessageType.SENTENCE_DEFERRED), generateOperation(PNCMessageType.SENTENCE_DEFERRED)] },
-    { ops: [generateOperation(PNCMessageType.DISPOSAL_UPDATED), generateOperation(PNCMessageType.DISPOSAL_UPDATED)] }
+    { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
+    { ops: [generateOperation(PncOperation.PENALTY_HEARING), generateOperation(PncOperation.PENALTY_HEARING)] },
+    { ops: [generateOperation(PncOperation.SENTENCE_DEFERRED), generateOperation(PncOperation.SENTENCE_DEFERRED)] },
+    { ops: [generateOperation(PncOperation.DISPOSAL_UPDATED), generateOperation(PncOperation.DISPOSAL_UPDATED)] }
   ])("should remove duplicate operations", ({ ops }) => {
     const result = deduplicateOperations(ops)
     expect(result).toStrictEqual([ops[0]])
@@ -89,38 +86,38 @@ describe("deduplicateOperations", () => {
     { ops: [generateNewremOperation("Completed"), generateNewremOperation("NotAttempted")] },
     {
       ops: [
-        generateOperation(PNCMessageType.APPEALS_UPDATE, "Completed"),
-        generateOperation(PNCMessageType.APPEALS_UPDATE, "NotAttempted")
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed"),
+        generateOperation(PncOperation.APPEALS_UPDATE, "NotAttempted")
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING, "Completed"),
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING, "NotAttempted")
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed"),
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "NotAttempted")
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.NORMAL_DISPOSAL, "Completed"),
-        generateOperation(PNCMessageType.NORMAL_DISPOSAL, "NotAttempted")
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed"),
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "NotAttempted")
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.PENALTY_HEARING, "Completed"),
-        generateOperation(PNCMessageType.PENALTY_HEARING, "NotAttempted")
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed"),
+        generateOperation(PncOperation.PENALTY_HEARING, "NotAttempted")
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.SENTENCE_DEFERRED, "Completed"),
-        generateOperation(PNCMessageType.SENTENCE_DEFERRED, "NotAttempted")
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed"),
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "NotAttempted")
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.DISPOSAL_UPDATED, "Completed"),
-        generateOperation(PNCMessageType.DISPOSAL_UPDATED, "NotAttempted")
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed"),
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "NotAttempted")
       ]
     },
 
@@ -138,38 +135,38 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation(PNCMessageType.APPEALS_UPDATE, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.APPEALS_UPDATE, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.PENALTY_HEARING, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.PENALTY_HEARING, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
       ops: [
-        generateOperation(PNCMessageType.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PNCMessageType.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "2" })
       ]
     }
   ])("should not remove non-duplicate operations", ({ ops }) => {

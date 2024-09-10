@@ -1,7 +1,7 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../../types/operationCodes"
+import { PncOperation } from "../../../../../types/PncOperation"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
@@ -20,7 +20,7 @@ const organisationUnit = {
 }
 
 const remandOperation = {
-  code: PNCMessageType.REMAND,
+  code: PncOperation.REMAND,
   courtCaseReference: "234",
   data: undefined,
   isAdjournmentPreJudgement: false,
@@ -44,14 +44,14 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.NORMAL_DISPOSAL,
+        code: PncOperation.NORMAL_DISPOSAL,
         data: {
           courtCaseReference: "234"
         },
         status: "NotAttempted"
       },
       {
-        code: PNCMessageType.REMAND,
+        code: PncOperation.REMAND,
         courtCaseReference: "234",
         isAdjournmentPreJudgement: false,
         data: {
@@ -70,7 +70,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -86,7 +86,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -148,7 +148,7 @@ describe("handleAdjournmentWithJudgement", () => {
       }
     ])
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -162,7 +162,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -176,7 +176,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -193,7 +193,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.NORMAL_DISPOSAL,
+        code: PncOperation.NORMAL_DISPOSAL,
         data: { courtCaseReference: "234" },
         addedByTheCourt: true,
         status: "NotAttempted"
@@ -214,7 +214,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })
@@ -232,7 +232,7 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.NORMAL_DISPOSAL,
+        code: PncOperation.NORMAL_DISPOSAL,
         data: { courtCaseReference: "234" },
         addedByTheCourt: true,
         status: "NotAttempted"

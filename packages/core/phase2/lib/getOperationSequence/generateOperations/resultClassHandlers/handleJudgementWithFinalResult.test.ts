@@ -1,7 +1,7 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../../types/operationCodes"
+import { PncOperation } from "../../../../../types/PncOperation"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
@@ -24,7 +24,7 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -39,9 +39,7 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([
-      { code: PNCMessageType.PENALTY_HEARING, data: undefined, status: "NotAttempted" }
-    ])
+    expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
   it("should return SUBVAR operation when adjudication exists, and ccrId has value", () => {
@@ -55,7 +53,7 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -72,9 +70,7 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([
-      { code: PNCMessageType.DISPOSAL_UPDATED, data: undefined, status: "NotAttempted" }
-    ])
+    expect(operations).toStrictEqual([{ code: PncOperation.DISPOSAL_UPDATED, data: undefined, status: "NotAttempted" }])
   })
 
   it("should only return exception HO200124 when HO200124 and HO200108 conditions are met", () => {
@@ -134,7 +130,7 @@ describe("handleJudgementWithFinalResult", () => {
       }
     ])
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -185,7 +181,7 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -202,7 +198,7 @@ describe("handleJudgementWithFinalResult", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.NORMAL_DISPOSAL,
+        code: PncOperation.NORMAL_DISPOSAL,
         data: { courtCaseReference: "234" },
         addedByTheCourt: true,
         status: "NotAttempted"
@@ -226,7 +222,7 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.NORMAL_DISPOSAL, data: undefined, addedByTheCourt: true, status: "NotAttempted" }
+      { code: PncOperation.NORMAL_DISPOSAL, data: undefined, addedByTheCourt: true, status: "NotAttempted" }
     ])
   })
 

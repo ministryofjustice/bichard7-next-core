@@ -1,5 +1,5 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PncOperation } from "../../../../types/PncOperation"
 import extractRemandCcrs from "./extractRemandCcrs"
 
 const filterDisposalsAddedInCourt = (operations: Operation[]): Operation[] => {
@@ -7,11 +7,11 @@ const filterDisposalsAddedInCourt = (operations: Operation[]): Operation[] => {
 
   const disposalsAddedInCourt = operations.filter(
     (o) =>
-      o.code === PNCMessageType.NORMAL_DISPOSAL &&
+      o.code === PncOperation.NORMAL_DISPOSAL &&
       o.addedByTheCourt &&
       adjPreJudgementRemandCcrs.has(o.data?.courtCaseReference)
   )
-  const otherOperations = operations.filter((o) => o.code !== PNCMessageType.NORMAL_DISPOSAL || !o.addedByTheCourt)
+  const otherOperations = operations.filter((o) => o.code !== PncOperation.NORMAL_DISPOSAL || !o.addedByTheCourt)
 
   return otherOperations.concat(disposalsAddedInCourt)
 }

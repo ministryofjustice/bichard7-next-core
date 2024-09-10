@@ -1,6 +1,6 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import { PNCMessageType } from "../../../../../types/operationCodes"
+import { PncOperation } from "../../../../../types/PncOperation"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import { handleSentence } from "./handleSentence"
 
@@ -19,7 +19,7 @@ describe("handleSentence", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -34,9 +34,7 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([
-      { code: PNCMessageType.PENALTY_HEARING, data: undefined, status: "NotAttempted" }
-    ])
+    expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
   it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {
@@ -50,7 +48,7 @@ describe("handleSentence", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.SENTENCE_DEFERRED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.SENTENCE_DEFERRED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -68,7 +66,7 @@ describe("handleSentence", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.SENTENCE_DEFERRED, data: undefined, status: "NotAttempted" }
+      { code: PncOperation.SENTENCE_DEFERRED, data: undefined, status: "NotAttempted" }
     ])
   })
 
@@ -87,7 +85,7 @@ describe("handleSentence", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: PNCMessageType.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
   })
 
@@ -109,7 +107,7 @@ describe("handleSentence", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         data: undefined,
         status: "NotAttempted"
       }

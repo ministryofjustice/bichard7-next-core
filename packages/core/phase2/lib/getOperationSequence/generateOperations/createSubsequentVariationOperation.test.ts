@@ -1,7 +1,7 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import createSubsequentVariationOperation from "./createSubsequentVariationOperation"
-import { PNCMessageType } from "../../../../types/operationCodes"
+import { PncOperation } from "../../../../types/PncOperation"
 
 const createAho = (hoCcr: string, pncCourtCases: { offences?: { disposalTypes?: number[] }[]; ccr: string }[]) =>
   ({
@@ -34,7 +34,7 @@ describe("createSubsequentVariationOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         data: undefined,
         status: "NotAttempted"
       }
@@ -59,7 +59,7 @@ describe("createSubsequentVariationOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         data: { courtCaseReference: "123" },
         status: "NotAttempted"
       }
@@ -84,7 +84,7 @@ describe("createSubsequentVariationOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         data: { courtCaseReference: "123" },
         status: "NotAttempted"
       }
@@ -145,7 +145,7 @@ describe("createSubsequentVariationOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: PNCMessageType.DISPOSAL_UPDATED,
+        code: PncOperation.DISPOSAL_UPDATED,
         data: undefined,
         status: "NotAttempted"
       }
