@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import { PNCMessageType } from "../../../types/operationCodes"
 import generateOperations from "./generateOperations"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -63,7 +64,7 @@ describe("generateOperations", () => {
         return {
           operations: [
             {
-              code: "NEWREM",
+              code: PNCMessageType.REMAND,
               data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
               status: "NotAttempted"
             }
@@ -77,7 +78,7 @@ describe("generateOperations", () => {
       expect(operationsResult).toStrictEqual({
         operations: [
           {
-            code: "NEWREM",
+            code: PNCMessageType.REMAND,
             data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
             status: "NotAttempted"
           }
@@ -188,7 +189,7 @@ describe("generateOperations", () => {
       return {
         operations: [
           {
-            code: "NEWREM",
+            code: PNCMessageType.REMAND,
             data: undefined,
             courtCaseReference: "1",
             isAdjournmentPreJudgement: true,
@@ -205,7 +206,7 @@ describe("generateOperations", () => {
     expect(operationsResult).toStrictEqual({
       operations: [
         {
-          code: "NEWREM",
+          code: PNCMessageType.REMAND,
           data: undefined,
           courtCaseReference: "1",
           isAdjournmentPreJudgement: true,

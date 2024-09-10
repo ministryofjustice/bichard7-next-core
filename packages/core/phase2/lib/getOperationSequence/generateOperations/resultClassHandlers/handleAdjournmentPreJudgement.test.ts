@@ -1,6 +1,7 @@
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
 
 const organisationUnit = {
@@ -50,7 +51,7 @@ describe("handleAdjournmentPreJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PNCMessageType.REMAND,
         isAdjournmentPreJudgement: true,
         courtCaseReference: "234",
         data: {

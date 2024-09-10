@@ -1,5 +1,6 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import { handleAppealOutcome } from "./handleAppealOutcome"
 
 describe("handleAppealOutcome", () => {
@@ -9,7 +10,9 @@ describe("handleAppealOutcome", () => {
     const { operations, exceptions } = handleAppealOutcome(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "APPHRD", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PNCMessageType.APPEALS_UPDATE, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should add APPHRD to operations and operation data to undefined when adjudication exists but ccrId does not have value", () => {
@@ -23,7 +26,7 @@ describe("handleAppealOutcome", () => {
     const { operations, exceptions } = handleAppealOutcome(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "APPHRD", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([{ code: PNCMessageType.APPEALS_UPDATE, data: undefined, status: "NotAttempted" }])
   })
 
   it("should generate exception HO200107 when adjudication does not exist", () => {

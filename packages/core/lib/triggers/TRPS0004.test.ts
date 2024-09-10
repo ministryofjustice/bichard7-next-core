@@ -1,5 +1,6 @@
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
+import { PNCMessageType } from "../../phase2/types/operationCodes"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import TRPS0004 from "./TRPS0004"
@@ -85,7 +86,7 @@ describe("TRPS0004", () => {
     generatedHearingOutcome.PncOperations = [
       {
         status: "Completed",
-        code: "NEWREM"
+        code: PNCMessageType.REMAND
       }
     ]
     const result = TRPS0004(generatedHearingOutcome, options)

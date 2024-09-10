@@ -1,5 +1,6 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { Operation } from "../../../../types/PncUpdateDataset"
+import { PNCMessageType } from "../../../types/operationCodes"
 import createRemandOperation from "./createRemandOperation"
 
 describe("createRemandOperation", () => {
@@ -20,8 +21,8 @@ describe("createRemandOperation", () => {
     expect(operations).toHaveLength(1)
     expect(exceptions).toHaveLength(0)
 
-    const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
-    expect(remandOperation.code).toBe("NEWREM")
+    const remandOperation = operations[0] as Extract<Operation, { code: PNCMessageType.REMAND }>
+    expect(remandOperation.code).toBe(PNCMessageType.REMAND)
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate?.toISOString()).toBe(result.NextHearingDate)
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
@@ -44,8 +45,8 @@ describe("createRemandOperation", () => {
     expect(operations).toHaveLength(1)
     expect(exceptions).toHaveLength(0)
 
-    const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
-    expect(remandOperation.code).toBe("NEWREM")
+    const remandOperation = operations[0] as Extract<Operation, { code: PNCMessageType.REMAND }>
+    expect(remandOperation.code).toBe(PNCMessageType.REMAND)
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
@@ -70,7 +71,7 @@ describe("createRemandOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PNCMessageType.REMAND,
         status: "NotAttempted",
         courtCaseReference: undefined,
         isAdjournmentPreJudgement: false,
@@ -100,7 +101,7 @@ describe("createRemandOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PNCMessageType.REMAND,
         courtCaseReference: "123",
         data: undefined,
         isAdjournmentPreJudgement: false,
@@ -129,7 +130,7 @@ describe("createRemandOperation", () => {
       expect(exceptions).toHaveLength(0)
       expect(operations).toStrictEqual([
         {
-          code: "NEWREM",
+          code: PNCMessageType.REMAND,
           courtCaseReference: "123",
           data: undefined,
           isAdjournmentPreJudgement: false,

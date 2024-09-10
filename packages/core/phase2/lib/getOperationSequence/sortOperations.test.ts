@@ -1,30 +1,31 @@
 import type { Operation } from "../../../types/PncUpdateDataset"
+import { PNCMessageType } from "../../types/operationCodes"
 import sortOperations from "./sortOperations"
 
 describe("check sortOperations", () => {
   const sendef: Operation = {
-    code: "SENDEF",
+    code: PNCMessageType.SENTENCE_DEFERRED,
     status: "Completed",
     data: {
       courtCaseReference: "FOO1"
     }
   }
   const sendef2: Operation = {
-    code: "SENDEF",
+    code: PNCMessageType.SENTENCE_DEFERRED,
     status: "Completed",
     data: {
       courtCaseReference: "FOO2"
     }
   }
   const disarr: Operation = {
-    code: "DISARR",
+    code: PNCMessageType.NORMAL_DISPOSAL,
     status: "Completed",
     data: {
       courtCaseReference: "FOO"
     }
   }
   const newrem1: Operation = {
-    code: "NEWREM",
+    code: PNCMessageType.REMAND,
     status: "Completed",
     data: {
       nextHearingLocation: {
@@ -36,7 +37,7 @@ describe("check sortOperations", () => {
     }
   }
   const newrem2: Operation = {
-    code: "NEWREM",
+    code: PNCMessageType.REMAND,
     status: "Completed",
     data: {
       nextHearingLocation: {
