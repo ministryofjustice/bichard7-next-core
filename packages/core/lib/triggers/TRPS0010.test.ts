@@ -6,6 +6,7 @@ import disarrCompatibleResultClass from "../../phase2/lib/getOperationSequence/g
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
+import { PNCMessageType } from "../../phase2/types/operationCodes"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import hasCompletedDisarr from "./hasCompletedDisarr"
@@ -34,7 +35,7 @@ describe("TRPS0010", () => {
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
       {
-        code: "DISARR",
+        code: PNCMessageType.NORMAL_DISPOSAL,
         status: "Completed",
         data: undefined
       }

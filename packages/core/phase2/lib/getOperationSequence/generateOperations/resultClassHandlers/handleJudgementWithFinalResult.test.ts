@@ -1,6 +1,7 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
+import { PNCMessageType } from "../../../../types/operationCodes"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
@@ -124,7 +125,9 @@ describe("handleJudgementWithFinalResult", () => {
         ]
       }
     ])
-    expect(operations).toStrictEqual([{ code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should not return exception HO200124 when all results are already on PNC", () => {
@@ -173,7 +176,9 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "DISARR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PNCMessageType.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId has value", () => {
@@ -188,7 +193,12 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: "DISARR", data: { courtCaseReference: "234" }, addedByTheCourt: true, status: "NotAttempted" }
+      {
+        code: PNCMessageType.NORMAL_DISPOSAL,
+        data: { courtCaseReference: "234" },
+        addedByTheCourt: true,
+        status: "NotAttempted"
+      }
     ])
   })
 
@@ -208,7 +218,7 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: "DISARR", data: undefined, addedByTheCourt: true, status: "NotAttempted" }
+      { code: PNCMessageType.NORMAL_DISPOSAL, data: undefined, addedByTheCourt: true, status: "NotAttempted" }
     ])
   })
 

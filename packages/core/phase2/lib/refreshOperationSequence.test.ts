@@ -13,7 +13,9 @@ describe("refreshOperationSequence", () => {
 
     refreshOperationSequence(pncUpdateDataset, defaultOperations)
 
-    expect(pncUpdateDataset.PncOperations).toStrictEqual([{ code: "DISARR", data: undefined, status: "NotAttempted" }])
+    expect(pncUpdateDataset.PncOperations).toStrictEqual([
+      { code: PNCMessageType.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }
+    ])
   })
 
   it("adds no PNC operations if no existing and new operations", () => {
@@ -36,7 +38,7 @@ describe("refreshOperationSequence", () => {
           } as unknown as Operation,
           {
             status: "Completed",
-            code: "DISARR"
+            code: PNCMessageType.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -49,7 +51,7 @@ describe("refreshOperationSequence", () => {
             code: PNCMessageType.REMAND,
             data: { nextHearingDate: new Date("2024-05-28") }
           },
-          { status: "Completed", code: "DISARR" },
+          { status: "Completed", code: PNCMessageType.NORMAL_DISPOSAL },
           { code: PNCMessageType.REMAND, data: undefined, status: "NotAttempted" }
         ])
       })
@@ -63,7 +65,7 @@ describe("refreshOperationSequence", () => {
           } as unknown as Operation,
           {
             status: "Completed",
-            code: "DISARR"
+            code: PNCMessageType.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -82,7 +84,7 @@ describe("refreshOperationSequence", () => {
           } as unknown as Operation,
           {
             status: "Completed",
-            code: "DISARR"
+            code: PNCMessageType.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -95,7 +97,7 @@ describe("refreshOperationSequence", () => {
             code: PNCMessageType.REMAND,
             data: { nextHearingDate: new Date("2024-05-28") }
           },
-          { status: "Completed", code: "DISARR" }
+          { status: "Completed", code: PNCMessageType.NORMAL_DISPOSAL }
         ])
       })
     })
@@ -108,7 +110,7 @@ describe("refreshOperationSequence", () => {
         } as unknown as Operation,
         {
           status: "Completed",
-          code: "DISARR"
+          code: PNCMessageType.NORMAL_DISPOSAL
         } as unknown as Operation
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -122,7 +124,7 @@ describe("refreshOperationSequence", () => {
       const pncOperations = [
         {
           status: "Completed",
-          code: "DISARR"
+          code: PNCMessageType.NORMAL_DISPOSAL
         } as unknown as Operation,
         {
           status: "Failed",

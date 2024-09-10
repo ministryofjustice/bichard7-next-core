@@ -7,6 +7,7 @@ import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
+import { PNCMessageType } from "../../../../types/operationCodes"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -22,7 +23,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    return { operations: [createOperation("PENHRG", operationData)], exceptions: [] }
+    return { operations: [createOperation(PNCMessageType.PENALTY_HEARING, operationData)], exceptions: [] }
   } else if (result.PNCAdjudicationExists) {
     return createSubsequentVariationOperation(
       resubmitted,
@@ -47,11 +48,11 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   const operations: Operation[] = []
   if (!offence.AddedByTheCourt) {
-    operations.push(createOperation("DISARR", operationData))
+    operations.push(createOperation(PNCMessageType.NORMAL_DISPOSAL, operationData))
   } else if (offence.AddedByTheCourt && !contains2007Result) {
-    const operation = createOperation("DISARR", operationData)
+    const operation = createOperation(PNCMessageType.NORMAL_DISPOSAL, operationData)
     // TODO: Refactor this
-    if (operation.code === "DISARR") {
+    if (operation.code === PNCMessageType.NORMAL_DISPOSAL) {
       operation.addedByTheCourt = true
     }
 
