@@ -1,8 +1,9 @@
+import { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 
 const remandOperation: Operation = {
-  code: "NEWREM",
+  code: PncOperation.REMAND,
   data: undefined,
   courtCaseReference: "444",
   isAdjournmentPreJudgement: true,

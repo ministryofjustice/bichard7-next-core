@@ -1,4 +1,5 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import { PncOperation } from "../../../../../types/PncOperation"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../checkRccSegmentApplicability"
@@ -19,7 +20,7 @@ const organisationUnit = {
 }
 
 const remandOperation = {
-  code: "NEWREM",
+  code: PncOperation.REMAND,
   courtCaseReference: "234",
   data: undefined,
   isAdjournmentPreJudgement: false,
@@ -50,7 +51,7 @@ describe("handleAdjournmentWithJudgement", () => {
         status: "NotAttempted"
       },
       {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         courtCaseReference: "234",
         isAdjournmentPreJudgement: false,
         data: {

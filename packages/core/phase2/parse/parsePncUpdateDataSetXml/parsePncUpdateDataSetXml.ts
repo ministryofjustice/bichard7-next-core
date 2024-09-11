@@ -6,6 +6,7 @@ import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/pa
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
+import { PncOperation } from "../../../types/PncOperation"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -31,7 +32,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
   return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
-    if ("NEWREM" in operationXml.operationCode) {
+    if (PncOperation.REMAND in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.NEWREM)
         ? undefined
         : {
@@ -42,7 +43,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

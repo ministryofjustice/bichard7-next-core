@@ -1,4 +1,5 @@
 import type { AhoXml } from "../../../types/AhoXml"
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
 import { toISODate } from "../../dates"
@@ -95,7 +96,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "NEWREM") {
+    if (operation.code === PncOperation.REMAND) {
       return {
         operationCode: {
           NEWREM: operation.data

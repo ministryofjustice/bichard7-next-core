@@ -1,3 +1,4 @@
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import sortOperations from "./sortOperations"
 
@@ -24,7 +25,7 @@ describe("check sortOperations", () => {
     }
   }
   const newrem1: Operation = {
-    code: "NEWREM",
+    code: PncOperation.REMAND,
     status: "Completed",
     data: {
       nextHearingLocation: {
@@ -36,7 +37,7 @@ describe("check sortOperations", () => {
     }
   }
   const newrem2: Operation = {
-    code: "NEWREM",
+    code: PncOperation.REMAND,
     status: "Completed",
     data: {
       nextHearingLocation: {

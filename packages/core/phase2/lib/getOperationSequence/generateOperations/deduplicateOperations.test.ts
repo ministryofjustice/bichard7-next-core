@@ -1,3 +1,4 @@
+import { PncOperation } from "../../../../types/PncOperation"
 import type { NewremOperation, Operation, OperationStatus } from "../../../../types/PncUpdateDataset"
 import deduplicateOperations from "./deduplicateOperations"
 
@@ -22,7 +23,7 @@ const generateNewremOperation = (
   isAdjournmentPreJudgement?: boolean
 ) =>
   ({
-    code: "NEWREM",
+    code: PncOperation.REMAND,
     status,
     courtCaseReference,
     isAdjournmentPreJudgement,
@@ -36,7 +37,7 @@ const generateNewremOperation = (
   }) as NewremOperation
 
 const generateOperation = (
-  code: Exclude<Operation["code"], "NEWREM">,
+  code: Exclude<Operation["code"], PncOperation.REMAND>,
   status: OperationStatus = "NotAttempted",
   params: {
     courtCaseReference?: string

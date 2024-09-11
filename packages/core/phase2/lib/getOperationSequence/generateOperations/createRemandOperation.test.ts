@@ -1,4 +1,5 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import createRemandOperation from "./createRemandOperation"
 
@@ -20,8 +21,8 @@ describe("createRemandOperation", () => {
     expect(operations).toHaveLength(1)
     expect(exceptions).toHaveLength(0)
 
-    const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
-    expect(remandOperation.code).toBe("NEWREM")
+    const remandOperation = operations[0] as Extract<Operation, { code: PncOperation.REMAND }>
+    expect(remandOperation.code).toBe(PncOperation.REMAND)
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate?.toISOString()).toBe(result.NextHearingDate)
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
@@ -44,8 +45,8 @@ describe("createRemandOperation", () => {
     expect(operations).toHaveLength(1)
     expect(exceptions).toHaveLength(0)
 
-    const remandOperation = operations[0] as Extract<Operation, { code: "NEWREM" }>
-    expect(remandOperation.code).toBe("NEWREM")
+    const remandOperation = operations[0] as Extract<Operation, { code: PncOperation.REMAND }>
+    expect(remandOperation.code).toBe(PncOperation.REMAND)
     expect(remandOperation.status).toBe("NotAttempted")
     expect(remandOperation.data?.nextHearingDate).toBeFalsy()
     expect(remandOperation.data?.nextHearingLocation).toEqual(result.NextResultSourceOrganisation)
@@ -70,7 +71,7 @@ describe("createRemandOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         status: "NotAttempted",
         courtCaseReference: undefined,
         isAdjournmentPreJudgement: false,
@@ -100,7 +101,7 @@ describe("createRemandOperation", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         courtCaseReference: "123",
         data: undefined,
         isAdjournmentPreJudgement: false,
@@ -129,7 +130,7 @@ describe("createRemandOperation", () => {
       expect(exceptions).toHaveLength(0)
       expect(operations).toStrictEqual([
         {
-          code: "NEWREM",
+          code: PncOperation.REMAND,
           courtCaseReference: "123",
           data: undefined,
           isAdjournmentPreJudgement: false,

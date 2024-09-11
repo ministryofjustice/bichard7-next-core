@@ -4,6 +4,7 @@ import errorPaths from "../../../lib/exceptions/errorPaths"
 import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "./operationCourtCaseReference"
+import { PncOperation } from "../../../types/PncOperation"
 
 const errorPath = errorPaths.case.asn
 
@@ -17,7 +18,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
   for (const operation of operations) {
     penhrgExists ||= operation.code === "PENHRG"
-    newremExists ||= operation.code === "NEWREM"
+    newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === "SENDEF"
     comsenExists ||= operation.code === "COMSEN"
     apphrdExists ||= operation.code === "APPHRD"

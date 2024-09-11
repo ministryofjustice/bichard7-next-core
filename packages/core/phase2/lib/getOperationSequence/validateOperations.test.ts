@@ -1,7 +1,8 @@
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import validateOperations from "./validateOperations"
 
-const allOperations = ["NEWREM", "DISARR", "SENDEF", "SUBVAR", "PENHRG", "COMSEN", "APPHRD"]
+const allOperations = [PncOperation.REMAND, "DISARR", "SENDEF", "SUBVAR", "PENHRG", "COMSEN", "APPHRD"]
 const ccrs = [1, 2, null]
 
 const allCombinations = allOperations
@@ -12,13 +13,13 @@ describe("validateOperations", () => {
   it.each(allCombinations)("should match existing behaviour %s:%s (CCR: %s)", (opCode1, opCode2, ccr) => {
     const op1 = { code: opCode1 } as unknown as Operation
     const op2 = { code: opCode2 } as unknown as Operation
-    if (op1.code !== "NEWREM") {
+    if (op1.code !== PncOperation.REMAND) {
       op1.data = {
         courtCaseReference: "1"
       }
     }
 
-    if (op2.code !== "NEWREM") {
+    if (op2.code !== PncOperation.REMAND) {
       op2.data = {
         courtCaseReference: "1"
       }

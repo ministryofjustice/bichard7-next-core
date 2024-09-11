@@ -4,11 +4,12 @@ import {
   organisationUnitSchema,
   unvalidatedHearingOutcomeSchema
 } from "../../schemas/unvalidatedHearingOutcome"
+import { PncOperation } from "../../types/PncOperation"
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 
 export const newremOperationSchema = z.object({
-  code: z.literal("NEWREM"),
+  code: z.literal(PncOperation.REMAND),
   data: z
     .object({
       nextHearingDate: z.coerce.date().optional(),
