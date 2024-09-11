@@ -83,7 +83,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "APPHRD") {
+    if (operation.code === PncOperation.APPEALS_UPDATE) {
       return {
         operationCode: {
           APPHRD: operation.data

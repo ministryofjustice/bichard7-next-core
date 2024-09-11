@@ -2,7 +2,15 @@ import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import validateOperations from "./validateOperations"
 
-const allOperations = [PncOperation.REMAND, "DISARR", "SENDEF", "SUBVAR", "PENHRG", "COMSEN", "APPHRD"]
+const allOperations = [
+  PncOperation.REMAND,
+  "DISARR",
+  "SENDEF",
+  "SUBVAR",
+  "PENHRG",
+  "COMSEN",
+  PncOperation.APPEALS_UPDATE
+]
 const ccrs = [1, 2, null]
 
 const allCombinations = allOperations

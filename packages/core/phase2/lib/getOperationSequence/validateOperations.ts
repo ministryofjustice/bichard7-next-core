@@ -21,7 +21,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === "SENDEF"
     comsenExists ||= operation.code === "COMSEN"
-    apphrdExists ||= operation.code === "APPHRD"
+    apphrdExists ||= operation.code === PncOperation.APPEALS_UPDATE
 
     if (penhrgExists && apphrdExists) {
       return { code: ExceptionCode.HO200109, path: errorPath }
@@ -56,7 +56,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     const courtCaseReference = operationCourtCaseReference(operation)
 
-    if (["APPHRD", "COMSEN", "SENDEF", "SUBVAR", "DISARR"].includes(operation.code)) {
+    if ([PncOperation.APPEALS_UPDATE, "COMSEN", "SENDEF", "SUBVAR", "DISARR"].includes(operation.code)) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
@@ -64,9 +64,9 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         const sortedOperations = [operation.code, clashingOperation.code].sort()
         if (
           operation.code === clashingOperation.code ||
-          sortedOperations.includes("APPHRD") ||
+          sortedOperations.includes(PncOperation.APPEALS_UPDATE) ||
           isEqual(sortedOperations, ["COMSEN", "SENDEF"]) ||
-          isEqual(sortedOperations, ["APPHRD", "SENDEF"])
+          isEqual(sortedOperations, [PncOperation.APPEALS_UPDATE, "SENDEF"])
         ) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
@@ -91,7 +91,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
-    if (operation.code === "APPHRD" && remandCcrsContainCourtCaseReference) {
+    if (operation.code === PncOperation.APPEALS_UPDATE && remandCcrsContainCourtCaseReference) {
       return { code: ExceptionCode.HO200109, path: errorPath }
     }
 

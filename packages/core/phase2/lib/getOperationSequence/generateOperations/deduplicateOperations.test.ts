@@ -69,7 +69,7 @@ describe("deduplicateOperations", () => {
         generateNewremOperation("NotAttempted", {}, "1", true)
       ]
     },
-    { ops: [generateOperation("APPHRD"), generateOperation("APPHRD")] },
+    { ops: [generateOperation(PncOperation.APPEALS_UPDATE), generateOperation(PncOperation.APPEALS_UPDATE)] },
     { ops: [generateOperation("COMSEN"), generateOperation("COMSEN")] },
     { ops: [generateOperation("DISARR"), generateOperation("DISARR")] },
     { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
@@ -82,7 +82,12 @@ describe("deduplicateOperations", () => {
 
   it.each([
     { ops: [generateNewremOperation("Completed"), generateNewremOperation("NotAttempted")] },
-    { ops: [generateOperation("APPHRD", "Completed"), generateOperation("APPHRD", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed"),
+        generateOperation(PncOperation.APPEALS_UPDATE, "NotAttempted")
+      ]
+    },
     { ops: [generateOperation("COMSEN", "Completed"), generateOperation("COMSEN", "NotAttempted")] },
     { ops: [generateOperation("DISARR", "Completed"), generateOperation("DISARR", "NotAttempted")] },
     { ops: [generateOperation("PENHRG", "Completed"), generateOperation("PENHRG", "NotAttempted")] },
@@ -103,8 +108,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("APPHRD", "Completed", { courtCaseReference: "1" }),
-        generateOperation("APPHRD", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "2" })
       ]
     },
     {

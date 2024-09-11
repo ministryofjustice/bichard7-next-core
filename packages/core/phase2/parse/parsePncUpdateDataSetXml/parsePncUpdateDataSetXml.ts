@@ -119,7 +119,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("APPHRD" in operationXml.operationCode) {
+    if (PncOperation.APPEALS_UPDATE in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.APPHRD)
         ? undefined
         : {
@@ -127,7 +127,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "APPHRD",
+        code: PncOperation.APPEALS_UPDATE,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

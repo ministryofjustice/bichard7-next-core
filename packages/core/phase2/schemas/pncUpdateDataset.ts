@@ -73,7 +73,7 @@ const comsenOperationSchema = z.object({
 })
 
 const apphrdOperationSchema = z.object({
-  code: z.literal("APPHRD"),
+  code: z.literal(PncOperation.APPEALS_UPDATE),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
