@@ -2,13 +2,13 @@ import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutco
 import { PncOperation } from "../../../../../types/PncOperation"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import checkRccSegmentApplicability from "../checkRccSegmentApplicability"
+import doesCaseRequireRcc from "../doesCaseRequireRcc"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 
 jest.mock("../checkRccSegmentApplicability")
 jest.mock("../hasUnmatchedPncOffences")
-const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
+const mockedCheckRccSegmentApplicability = doesCaseRequireRcc as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 
 const organisationUnit = {
