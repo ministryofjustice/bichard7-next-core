@@ -13,19 +13,18 @@ import updateErrorListTriggers from "./updateErrorListTriggers"
 
 const handleUpdate = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
   const aho = getAnnotatedHearingOutcome(result)
-  await updateErrorListRecord(db, recordId, result)
+  const notes: (null | string)[] = []
 
-  // If trigger generator is not called in Phase 2, we shouldn't update triggers
-  if ("triggerGenerationAttempted" in result && result.triggerGenerationAttempted === false) {
-    return
+  const isPhase2 = "triggerGenerationAttempted" in result
+  if (!isPhase2 || result.triggerGenerationAttempted === true) {
+    const triggerChanges = await updateErrorListTriggers(db, recordId, result)
+    notes.push(generateTriggersNoteText(triggerChanges.added, TriggerCreationType.ADD))
+    notes.push(generateTriggersNoteText(triggerChanges.deleted, TriggerCreationType.DELETE))
   }
 
-  const triggerChanges = await updateErrorListTriggers(db, recordId, result)
-  const notes = [
-    generateTriggersNoteText(triggerChanges.added, TriggerCreationType.ADD),
-    generateTriggersNoteText(triggerChanges.deleted, TriggerCreationType.DELETE),
-    generateExceptionsNoteText(aho.Exceptions)
-  ]
+  await updateErrorListRecord(db, recordId, result)
+
+  notes.push(generateExceptionsNoteText(aho.Exceptions))
   await insertErrorListNotes(db, recordId, notes)
 }
 

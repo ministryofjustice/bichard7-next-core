@@ -20,17 +20,7 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
     updated_msg: record.updated_msg,
     error_resolved_by: null,
     error_resolved_ts: null,
-    user_updated_flag: record.user_updated_flag,
-    trigger_count: record.trigger_count,
-    trigger_status: record.trigger_status,
-    trigger_reason: record.trigger_reason
-  }
-
-  const phase2 = "triggerGenerationAttempted" in result
-  if (!phase2 || (phase2 && result.triggerGenerationAttempted === true)) {
-    fields.trigger_count = record.trigger_count
-    fields.trigger_status = record.trigger_status
-    fields.trigger_reason = record.trigger_reason
+    user_updated_flag: record.user_updated_flag
   }
 
   return fields
@@ -43,12 +33,21 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
 
     const updateResult = await db<ErrorListRecord[]>`
       UPDATE br7own.error_list SET ${db(updateFields)},
+        trigger_status = CASE
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${
+            ResolutionStatus.RESOLVED
+          }::integer) > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
+          WHEN trigger_status IS NULL THEN NULL
+          ELSE ${ResolutionStatus.RESOLVED}::integer
+        END,
+        trigger_count = (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}),
+        trigger_reason = (SELECT trigger_code FROM br7own.error_list_triggers WHERE error_id = ${recordId} LIMIT 1),
         error_status = CASE
           WHEN ${exceptionsCount}::integer > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
           WHEN error_status IS NULL THEN NULL
           ELSE ${ResolutionStatus.RESOLVED}::integer
         END
-      WHERE error_id = ${recordId}`
+      WHERE error_id = ${recordId}`.catch((error) => error)
 
     if (updateResult.count !== 1) {
       throw new Error("Error updating error_list table - no rows updated")
