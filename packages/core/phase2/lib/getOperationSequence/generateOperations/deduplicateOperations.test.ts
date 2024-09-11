@@ -70,7 +70,9 @@ describe("deduplicateOperations", () => {
       ]
     },
     { ops: [generateOperation(PncOperation.APPEALS_UPDATE), generateOperation(PncOperation.APPEALS_UPDATE)] },
-    { ops: [generateOperation("COMSEN"), generateOperation("COMSEN")] },
+    {
+      ops: [generateOperation(PncOperation.COMMITTED_SENTENCING), generateOperation(PncOperation.COMMITTED_SENTENCING)]
+    },
     { ops: [generateOperation("DISARR"), generateOperation("DISARR")] },
     { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
     { ops: [generateOperation("SENDEF"), generateOperation("SENDEF")] },
@@ -88,7 +90,12 @@ describe("deduplicateOperations", () => {
         generateOperation(PncOperation.APPEALS_UPDATE, "NotAttempted")
       ]
     },
-    { ops: [generateOperation("COMSEN", "Completed"), generateOperation("COMSEN", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed"),
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "NotAttempted")
+      ]
+    },
     { ops: [generateOperation("DISARR", "Completed"), generateOperation("DISARR", "NotAttempted")] },
     { ops: [generateOperation("PENHRG", "Completed"), generateOperation("PENHRG", "NotAttempted")] },
     { ops: [generateOperation("SENDEF", "Completed"), generateOperation("SENDEF", "NotAttempted")] },
@@ -114,8 +121,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("COMSEN", "Completed", { courtCaseReference: "1" }),
-        generateOperation("COMSEN", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "2" })
       ]
     },
     {

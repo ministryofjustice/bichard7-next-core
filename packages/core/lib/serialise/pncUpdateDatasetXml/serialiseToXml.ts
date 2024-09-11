@@ -70,7 +70,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "COMSEN") {
+    if (operation.code === PncOperation.COMMITTED_SENTENCING) {
       return {
         operationCode: {
           COMSEN: operation.data

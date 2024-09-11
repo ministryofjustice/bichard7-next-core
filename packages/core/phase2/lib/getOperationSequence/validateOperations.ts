@@ -20,7 +20,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     penhrgExists ||= operation.code === "PENHRG"
     newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === "SENDEF"
-    comsenExists ||= operation.code === "COMSEN"
+    comsenExists ||= operation.code === PncOperation.COMMITTED_SENTENCING
     apphrdExists ||= operation.code === PncOperation.APPEALS_UPDATE
 
     if (penhrgExists && apphrdExists) {
@@ -56,7 +56,11 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     const courtCaseReference = operationCourtCaseReference(operation)
 
-    if ([PncOperation.APPEALS_UPDATE, "COMSEN", "SENDEF", "SUBVAR", "DISARR"].includes(operation.code)) {
+    if (
+      [PncOperation.APPEALS_UPDATE, PncOperation.COMMITTED_SENTENCING, "SENDEF", "SUBVAR", "DISARR"].includes(
+        operation.code
+      )
+    ) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
@@ -65,13 +69,16 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         if (
           operation.code === clashingOperation.code ||
           sortedOperations.includes(PncOperation.APPEALS_UPDATE) ||
-          isEqual(sortedOperations, ["COMSEN", "SENDEF"]) ||
+          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, "SENDEF"]) ||
           isEqual(sortedOperations, [PncOperation.APPEALS_UPDATE, "SENDEF"])
         ) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["COMSEN", "DISARR"]) || isEqual(sortedOperations, ["DISARR", "SENDEF"])) {
+        if (
+          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, "DISARR"]) ||
+          isEqual(sortedOperations, ["DISARR", "SENDEF"])
+        ) {
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
 
@@ -95,7 +102,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       return { code: ExceptionCode.HO200109, path: errorPath }
     }
 
-    if (["COMSEN", "SENDEF"].includes(operation.code) && remandCcrsContainCourtCaseReference) {
+    if ([PncOperation.COMMITTED_SENTENCING, "SENDEF"].includes(operation.code) && remandCcrsContainCourtCaseReference) {
       return { code: ExceptionCode.HO200113, path: errorPath }
     }
   }

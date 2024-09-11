@@ -105,7 +105,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("COMSEN" in operationXml.operationCode) {
+    if (PncOperation.COMMITTED_SENTENCING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.COMSEN)
         ? undefined
         : {
@@ -113,7 +113,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "COMSEN",
+        code: PncOperation.COMMITTED_SENTENCING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

@@ -8,7 +8,7 @@ const allOperations = [
   "SENDEF",
   "SUBVAR",
   "PENHRG",
-  "COMSEN",
+  PncOperation.COMMITTED_SENTENCING,
   PncOperation.APPEALS_UPDATE
 ]
 const ccrs = [1, 2, null]
