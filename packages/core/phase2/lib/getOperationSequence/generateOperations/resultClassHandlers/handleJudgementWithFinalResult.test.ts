@@ -50,7 +50,9 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return SUBVAR operation when adjudication exists and ccrId does not have value", () => {
@@ -66,7 +68,7 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SUBVAR", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([{ code: PncOperation.DISPOSAL_UPDATED, data: undefined, status: "NotAttempted" }])
   })
 
   it("should only return exception HO200124 when HO200124 and HO200108 conditions are met", () => {

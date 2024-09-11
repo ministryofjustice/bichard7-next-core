@@ -63,7 +63,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("SUBVAR" in operationXml.operationCode) {
+    if (PncOperation.DISPOSAL_UPDATED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SUBVAR)
         ? undefined
         : {
@@ -71,7 +71,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "SUBVAR",
+        code: PncOperation.DISPOSAL_UPDATED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

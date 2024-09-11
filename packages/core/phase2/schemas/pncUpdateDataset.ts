@@ -43,7 +43,7 @@ const sendefOperationSchema = z.object({
 })
 
 const subvarOperationSchema = z.object({
-  code: z.literal("SUBVAR"),
+  code: z.literal(PncOperation.DISPOSAL_UPDATED),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema

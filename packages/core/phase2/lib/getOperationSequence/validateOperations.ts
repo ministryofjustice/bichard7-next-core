@@ -45,7 +45,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     if (penhrgExists && courtCaseSpecificOperations.length > 0) {
       const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
-      if (["SUBVAR", "PENHRG"].includes(incompatibleCode)) {
+      if ([PncOperation.DISPOSAL_UPDATED, "PENHRG"].includes(incompatibleCode)) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
 
@@ -61,9 +61,9 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         PncOperation.APPEALS_UPDATE,
         PncOperation.COMMITTED_SENTENCING,
         PncOperation.SENTENCE_DEFERRED,
-        "SUBVAR",
+        PncOperation.DISPOSAL_UPDATED,
         PncOperation.NORMAL_DISPOSAL
-      ].includes(operation.code)
+      ].includes(operation.code as PncOperation)
     ) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
@@ -86,11 +86,11 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
           return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, [PncOperation.SENTENCE_DEFERRED, "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
           return { code: ExceptionCode.HO200114, path: errorPath }
         }
 

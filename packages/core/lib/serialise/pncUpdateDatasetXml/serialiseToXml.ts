@@ -44,7 +44,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "SUBVAR") {
+    if (operation.code === PncOperation.DISPOSAL_UPDATED) {
       return {
         operationCode: {
           SUBVAR: operation.data

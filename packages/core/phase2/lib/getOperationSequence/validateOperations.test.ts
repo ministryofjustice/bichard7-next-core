@@ -6,7 +6,7 @@ const allOperations = [
   PncOperation.REMAND,
   PncOperation.NORMAL_DISPOSAL,
   PncOperation.SENTENCE_DEFERRED,
-  "SUBVAR",
+  PncOperation.DISPOSAL_UPDATED,
   "PENHRG",
   PncOperation.COMMITTED_SENTENCING,
   PncOperation.APPEALS_UPDATE

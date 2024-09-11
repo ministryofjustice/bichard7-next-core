@@ -82,7 +82,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return SUBVAR operation without operation data when adjudication exists, there is a 2007 result code, and ccrId is not set", () => {
@@ -103,7 +105,7 @@ describe("handleSentence", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "SUBVAR",
+        code: PncOperation.DISPOSAL_UPDATED,
         data: undefined,
         status: "NotAttempted"
       }

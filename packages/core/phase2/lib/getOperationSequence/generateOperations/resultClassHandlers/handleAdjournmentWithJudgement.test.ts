@@ -86,7 +86,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })

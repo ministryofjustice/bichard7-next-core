@@ -76,7 +76,7 @@ describe("deduplicateOperations", () => {
     { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
     { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
     { ops: [generateOperation(PncOperation.SENTENCE_DEFERRED), generateOperation(PncOperation.SENTENCE_DEFERRED)] },
-    { ops: [generateOperation("SUBVAR"), generateOperation("SUBVAR")] }
+    { ops: [generateOperation(PncOperation.DISPOSAL_UPDATED), generateOperation(PncOperation.DISPOSAL_UPDATED)] }
   ])("should remove duplicate operations", ({ ops }) => {
     const result = deduplicateOperations(ops)
     expect(result).toStrictEqual([ops[0]])
@@ -109,7 +109,12 @@ describe("deduplicateOperations", () => {
         generateOperation(PncOperation.SENTENCE_DEFERRED, "NotAttempted")
       ]
     },
-    { ops: [generateOperation("SUBVAR", "Completed"), generateOperation("SUBVAR", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed"),
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "NotAttempted")
+      ]
+    },
 
     {
       ops: [
@@ -155,8 +160,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("SUBVAR", "Completed", { courtCaseReference: "1" }),
-        generateOperation("SUBVAR", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.DISPOSAL_UPDATED, "Completed", { courtCaseReference: "2" })
       ]
     }
   ])("should not remove non-duplicate operations", ({ ops }) => {
