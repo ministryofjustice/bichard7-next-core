@@ -49,7 +49,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
 
-      if (incompatibleCode === "DISARR") {
+      if (incompatibleCode === PncOperation.NORMAL_DISPOSAL) {
         return { code: ExceptionCode.HO200115, path: errorPath }
       }
     }
@@ -57,9 +57,13 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     const courtCaseReference = operationCourtCaseReference(operation)
 
     if (
-      [PncOperation.APPEALS_UPDATE, PncOperation.COMMITTED_SENTENCING, "SENDEF", "SUBVAR", "DISARR"].includes(
-        operation.code
-      )
+      [
+        PncOperation.APPEALS_UPDATE,
+        PncOperation.COMMITTED_SENTENCING,
+        "SENDEF",
+        "SUBVAR",
+        PncOperation.NORMAL_DISPOSAL
+      ].includes(operation.code)
     ) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
@@ -76,13 +80,13 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         }
 
         if (
-          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, "DISARR"]) ||
-          isEqual(sortedOperations, ["DISARR", "SENDEF"])
+          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, PncOperation.NORMAL_DISPOSAL]) ||
+          isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, "SENDEF"])
         ) {
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["DISARR", "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, "SUBVAR"])) {
           return { code: ExceptionCode.HO200115, path: errorPath }
         }
 

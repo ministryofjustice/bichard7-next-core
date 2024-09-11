@@ -18,7 +18,7 @@ describe("check sortOperations", () => {
     }
   }
   const disarr: Operation = {
-    code: "DISARR",
+    code: PncOperation.NORMAL_DISPOSAL,
     status: "Completed",
     data: {
       courtCaseReference: "FOO"

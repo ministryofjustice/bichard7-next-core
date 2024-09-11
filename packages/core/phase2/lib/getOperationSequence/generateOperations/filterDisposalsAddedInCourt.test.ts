@@ -11,14 +11,14 @@ const remandOperation: Operation = {
 }
 
 const disposalOperationAddedInCourt: Operation = {
-  code: "DISARR",
+  code: PncOperation.NORMAL_DISPOSAL,
   data: { courtCaseReference: "444" },
   addedByTheCourt: true,
   status: "NotAttempted"
 }
 
 const disposalOperation: Operation = {
-  code: "DISARR",
+  code: PncOperation.NORMAL_DISPOSAL,
   data: { courtCaseReference: "444" },
   status: "NotAttempted"
 }

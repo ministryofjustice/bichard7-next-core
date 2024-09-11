@@ -18,7 +18,7 @@ const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
 
 const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
   return pncOperations.map<PncOperationXml>((operation) => {
-    if (operation.code === "DISARR") {
+    if (operation.code === PncOperation.NORMAL_DISPOSAL) {
       return {
         operationCode: {
           DISARR: operation.data

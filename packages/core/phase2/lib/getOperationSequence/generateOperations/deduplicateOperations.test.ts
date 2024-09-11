@@ -73,7 +73,7 @@ describe("deduplicateOperations", () => {
     {
       ops: [generateOperation(PncOperation.COMMITTED_SENTENCING), generateOperation(PncOperation.COMMITTED_SENTENCING)]
     },
-    { ops: [generateOperation("DISARR"), generateOperation("DISARR")] },
+    { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
     { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
     { ops: [generateOperation("SENDEF"), generateOperation("SENDEF")] },
     { ops: [generateOperation("SUBVAR"), generateOperation("SUBVAR")] }
@@ -96,7 +96,12 @@ describe("deduplicateOperations", () => {
         generateOperation(PncOperation.COMMITTED_SENTENCING, "NotAttempted")
       ]
     },
-    { ops: [generateOperation("DISARR", "Completed"), generateOperation("DISARR", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed"),
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "NotAttempted")
+      ]
+    },
     { ops: [generateOperation("PENHRG", "Completed"), generateOperation("PENHRG", "NotAttempted")] },
     { ops: [generateOperation("SENDEF", "Completed"), generateOperation("SENDEF", "NotAttempted")] },
     { ops: [generateOperation("SUBVAR", "Completed"), generateOperation("SUBVAR", "NotAttempted")] },
@@ -127,8 +132,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("DISARR", "Completed", { courtCaseReference: "1" }),
-        generateOperation("DISARR", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed", { courtCaseReference: "2" })
       ]
     },
     {

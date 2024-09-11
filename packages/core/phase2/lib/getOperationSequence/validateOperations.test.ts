@@ -4,7 +4,7 @@ import validateOperations from "./validateOperations"
 
 const allOperations = [
   PncOperation.REMAND,
-  "DISARR",
+  PncOperation.NORMAL_DISPOSAL,
   "SENDEF",
   "SUBVAR",
   "PENHRG",

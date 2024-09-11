@@ -77,7 +77,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("DISARR" in operationXml.operationCode) {
+    if (PncOperation.NORMAL_DISPOSAL in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.DISARR)
         ? undefined
         : {
@@ -85,7 +85,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "DISARR",
+        code: PncOperation.NORMAL_DISPOSAL,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

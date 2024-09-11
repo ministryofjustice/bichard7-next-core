@@ -195,7 +195,12 @@ describe("generateOperations", () => {
             isAdjournmentPreJudgement: true,
             status: "NotAttempted"
           },
-          { code: "DISARR", data: { courtCaseReference: "1" }, addedByTheCourt: true, status: "NotAttempted" }
+          {
+            code: PncOperation.NORMAL_DISPOSAL,
+            data: { courtCaseReference: "1" },
+            addedByTheCourt: true,
+            status: "NotAttempted"
+          }
         ],
         exceptions: []
       }
@@ -212,7 +217,12 @@ describe("generateOperations", () => {
           isAdjournmentPreJudgement: true,
           status: "NotAttempted"
         },
-        { code: "DISARR", data: { courtCaseReference: "1" }, addedByTheCourt: true, status: "NotAttempted" }
+        {
+          code: PncOperation.NORMAL_DISPOSAL,
+          data: { courtCaseReference: "1" },
+          addedByTheCourt: true,
+          status: "NotAttempted"
+        }
       ]
     })
   })

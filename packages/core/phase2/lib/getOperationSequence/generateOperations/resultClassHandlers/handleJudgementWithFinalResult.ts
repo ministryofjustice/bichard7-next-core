@@ -7,6 +7,7 @@ import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
+import { PncOperation } from "../../../../../types/PncOperation"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -47,11 +48,11 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   const operations: Operation[] = []
   if (!offence.AddedByTheCourt) {
-    operations.push(createOperation("DISARR", operationData))
+    operations.push(createOperation(PncOperation.NORMAL_DISPOSAL, operationData))
   } else if (offence.AddedByTheCourt && !contains2007Result) {
-    const operation = createOperation("DISARR", operationData)
+    const operation = createOperation(PncOperation.NORMAL_DISPOSAL, operationData)
     // TODO: Refactor this
-    if (operation.code === "DISARR") {
+    if (operation.code === PncOperation.NORMAL_DISPOSAL) {
       operation.addedByTheCourt = true
     }
 

@@ -22,7 +22,7 @@ export const newremOperationSchema = z.object({
 })
 
 const disarrOperationSchema = z.object({
-  code: z.literal("DISARR"),
+  code: z.literal(PncOperation.NORMAL_DISPOSAL),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
