@@ -19,7 +19,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   for (const operation of operations) {
     penhrgExists ||= operation.code === "PENHRG"
     newremExists ||= operation.code === PncOperation.REMAND
-    sendefExists ||= operation.code === "SENDEF"
+    sendefExists ||= operation.code === PncOperation.SENTENCE_DEFERRED
     comsenExists ||= operation.code === PncOperation.COMMITTED_SENTENCING
     apphrdExists ||= operation.code === PncOperation.APPEALS_UPDATE
 
@@ -60,7 +60,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       [
         PncOperation.APPEALS_UPDATE,
         PncOperation.COMMITTED_SENTENCING,
-        "SENDEF",
+        PncOperation.SENTENCE_DEFERRED,
         "SUBVAR",
         PncOperation.NORMAL_DISPOSAL
       ].includes(operation.code)
@@ -73,15 +73,15 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         if (
           operation.code === clashingOperation.code ||
           sortedOperations.includes(PncOperation.APPEALS_UPDATE) ||
-          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, "SENDEF"]) ||
-          isEqual(sortedOperations, [PncOperation.APPEALS_UPDATE, "SENDEF"])
+          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, PncOperation.SENTENCE_DEFERRED]) ||
+          isEqual(sortedOperations, [PncOperation.APPEALS_UPDATE, PncOperation.SENTENCE_DEFERRED])
         ) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
 
         if (
           isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, PncOperation.NORMAL_DISPOSAL]) ||
-          isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, "SENDEF"])
+          isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])
         ) {
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
@@ -90,7 +90,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
           return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
-        if (isEqual(sortedOperations, ["SENDEF", "SUBVAR"])) {
+        if (isEqual(sortedOperations, [PncOperation.SENTENCE_DEFERRED, "SUBVAR"])) {
           return { code: ExceptionCode.HO200114, path: errorPath }
         }
 
@@ -106,7 +106,10 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       return { code: ExceptionCode.HO200109, path: errorPath }
     }
 
-    if ([PncOperation.COMMITTED_SENTENCING, "SENDEF"].includes(operation.code) && remandCcrsContainCourtCaseReference) {
+    if (
+      [PncOperation.COMMITTED_SENTENCING, PncOperation.SENTENCE_DEFERRED].includes(operation.code as PncOperation) &&
+      remandCcrsContainCourtCaseReference
+    ) {
       return { code: ExceptionCode.HO200113, path: errorPath }
     }
   }

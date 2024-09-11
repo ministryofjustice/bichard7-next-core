@@ -31,7 +31,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "SENDEF") {
+    if (operation.code === PncOperation.SENTENCE_DEFERRED) {
       return {
         operationCode: {
           SENDEF: operation.data

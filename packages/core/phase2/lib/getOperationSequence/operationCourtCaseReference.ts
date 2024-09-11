@@ -2,7 +2,7 @@ import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 
 const operationCodes = [
-  "SENDEF",
+  PncOperation.SENTENCE_DEFERRED,
   PncOperation.NORMAL_DISPOSAL,
   "SUBVAR",
   PncOperation.COMMITTED_SENTENCING,

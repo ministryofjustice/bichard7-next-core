@@ -75,7 +75,7 @@ describe("deduplicateOperations", () => {
     },
     { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
     { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
-    { ops: [generateOperation("SENDEF"), generateOperation("SENDEF")] },
+    { ops: [generateOperation(PncOperation.SENTENCE_DEFERRED), generateOperation(PncOperation.SENTENCE_DEFERRED)] },
     { ops: [generateOperation("SUBVAR"), generateOperation("SUBVAR")] }
   ])("should remove duplicate operations", ({ ops }) => {
     const result = deduplicateOperations(ops)
@@ -103,7 +103,12 @@ describe("deduplicateOperations", () => {
       ]
     },
     { ops: [generateOperation("PENHRG", "Completed"), generateOperation("PENHRG", "NotAttempted")] },
-    { ops: [generateOperation("SENDEF", "Completed"), generateOperation("SENDEF", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed"),
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "NotAttempted")
+      ]
+    },
     { ops: [generateOperation("SUBVAR", "Completed"), generateOperation("SUBVAR", "NotAttempted")] },
 
     {
@@ -144,8 +149,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("SENDEF", "Completed", { courtCaseReference: "1" }),
-        generateOperation("SENDEF", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed", { courtCaseReference: "2" })
       ]
     },
     {

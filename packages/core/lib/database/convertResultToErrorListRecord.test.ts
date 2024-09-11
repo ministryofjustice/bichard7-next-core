@@ -5,6 +5,7 @@ import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPha
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import errorPaths from "../exceptions/errorPaths"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
+import { PncOperation } from "../../types/PncOperation"
 
 describe("convertResultToErrorListRecord", () => {
   describe("Phase1", () => {
@@ -84,7 +85,7 @@ describe("convertResultToErrorListRecord", () => {
         triggers: [{ code: TriggerCode.TRPS0002 }],
         outputMessage: {
           Exceptions: [{ code: ExceptionCode.HO200100, path: errorPaths.case.asn }],
-          PncOperations: [{ code: "SENDEF", status: "NotAttempted" }]
+          PncOperations: [{ code: PncOperation.SENTENCE_DEFERRED, status: "NotAttempted" }]
         } as PncUpdateDataset
       })
       const convertedResult = convertResultToErrorListRecord(phase2Result)

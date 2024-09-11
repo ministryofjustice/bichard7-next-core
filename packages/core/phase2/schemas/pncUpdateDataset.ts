@@ -33,7 +33,7 @@ const disarrOperationSchema = z.object({
 })
 
 const sendefOperationSchema = z.object({
-  code: z.literal("SENDEF"),
+  code: z.literal(PncOperation.SENTENCE_DEFERRED),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema

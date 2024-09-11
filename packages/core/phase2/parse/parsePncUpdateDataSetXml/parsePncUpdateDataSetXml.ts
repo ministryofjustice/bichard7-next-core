@@ -49,7 +49,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("SENDEF" in operationXml.operationCode) {
+    if (PncOperation.SENTENCE_DEFERRED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SENDEF)
         ? undefined
         : {
@@ -57,7 +57,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "SENDEF",
+        code: PncOperation.SENTENCE_DEFERRED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

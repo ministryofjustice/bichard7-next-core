@@ -4,6 +4,7 @@ import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
+import { PncOperation } from "../../../../../types/PncOperation"
 
 export const handleSentence: ResultClassHandler = ({
   aho,
@@ -35,7 +36,7 @@ export const handleSentence: ResultClassHandler = ({
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
-    return { operations: [createOperation("SENDEF", operationData)], exceptions: [] }
+    return { operations: [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)], exceptions: [] }
   }
 
   return createSubsequentVariationOperation(

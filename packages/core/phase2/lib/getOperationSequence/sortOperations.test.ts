@@ -4,14 +4,14 @@ import sortOperations from "./sortOperations"
 
 describe("check sortOperations", () => {
   const sendef: Operation = {
-    code: "SENDEF",
+    code: PncOperation.SENTENCE_DEFERRED,
     status: "Completed",
     data: {
       courtCaseReference: "FOO1"
     }
   }
   const sendef2: Operation = {
-    code: "SENDEF",
+    code: PncOperation.SENTENCE_DEFERRED,
     status: "Completed",
     data: {
       courtCaseReference: "FOO2"

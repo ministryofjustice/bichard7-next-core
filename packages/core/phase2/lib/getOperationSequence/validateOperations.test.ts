@@ -5,7 +5,7 @@ import validateOperations from "./validateOperations"
 const allOperations = [
   PncOperation.REMAND,
   PncOperation.NORMAL_DISPOSAL,
-  "SENDEF",
+  PncOperation.SENTENCE_DEFERRED,
   "SUBVAR",
   "PENHRG",
   PncOperation.COMMITTED_SENTENCING,
