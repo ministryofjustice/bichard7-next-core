@@ -91,7 +91,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if ("PENHRG" in operationXml.operationCode) {
+    if (PncOperation.PENALTY_HEARING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.PENHRG)
         ? undefined
         : {
@@ -99,7 +99,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "PENHRG",
+        code: PncOperation.PENALTY_HEARING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

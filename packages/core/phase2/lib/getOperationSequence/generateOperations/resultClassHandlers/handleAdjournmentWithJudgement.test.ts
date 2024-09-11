@@ -70,7 +70,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
-      { code: "PENHRG", data: { courtCaseReference: "234" }, status: "NotAttempted" },
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
     ])
   })

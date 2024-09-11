@@ -18,7 +18,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "PENHRG", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
@@ -32,7 +34,7 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "PENHRG", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
   it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {

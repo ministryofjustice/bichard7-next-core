@@ -17,7 +17,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   const courtCaseSpecificOperations: Operation[] = []
 
   for (const operation of operations) {
-    penhrgExists ||= operation.code === "PENHRG"
+    penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
     newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === PncOperation.SENTENCE_DEFERRED
     comsenExists ||= operation.code === PncOperation.COMMITTED_SENTENCING
@@ -45,7 +45,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     if (penhrgExists && courtCaseSpecificOperations.length > 0) {
       const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
-      if ([PncOperation.DISPOSAL_UPDATED, "PENHRG"].includes(incompatibleCode)) {
+      if ([PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(incompatibleCode)) {
         return { code: ExceptionCode.HO200109, path: errorPath }
       }
 

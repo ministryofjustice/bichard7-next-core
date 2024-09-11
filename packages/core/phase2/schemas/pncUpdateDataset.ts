@@ -53,7 +53,7 @@ const subvarOperationSchema = z.object({
 })
 
 const penhrgOperationSchema = z.object({
-  code: z.literal("PENHRG"),
+  code: z.literal(PncOperation.PENALTY_HEARING),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema

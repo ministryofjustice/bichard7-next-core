@@ -20,7 +20,7 @@ export const handleSentence: ResultClassHandler = ({
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    return { operations: [createOperation("PENHRG", operationData)], exceptions: [] }
+    return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
   }
 
   if (!result.PNCAdjudicationExists) {

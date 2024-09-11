@@ -57,7 +57,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "PENHRG") {
+    if (operation.code === PncOperation.PENALTY_HEARING) {
       return {
         operationCode: {
           PENHRG: operation.data

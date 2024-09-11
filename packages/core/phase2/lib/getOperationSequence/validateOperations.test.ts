@@ -7,7 +7,7 @@ const allOperations = [
   PncOperation.NORMAL_DISPOSAL,
   PncOperation.SENTENCE_DEFERRED,
   PncOperation.DISPOSAL_UPDATED,
-  "PENHRG",
+  PncOperation.PENALTY_HEARING,
   PncOperation.COMMITTED_SENTENCING,
   PncOperation.APPEALS_UPDATE
 ]

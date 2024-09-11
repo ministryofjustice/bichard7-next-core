@@ -74,7 +74,7 @@ describe("deduplicateOperations", () => {
       ops: [generateOperation(PncOperation.COMMITTED_SENTENCING), generateOperation(PncOperation.COMMITTED_SENTENCING)]
     },
     { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
-    { ops: [generateOperation("PENHRG"), generateOperation("PENHRG")] },
+    { ops: [generateOperation(PncOperation.PENALTY_HEARING), generateOperation(PncOperation.PENALTY_HEARING)] },
     { ops: [generateOperation(PncOperation.SENTENCE_DEFERRED), generateOperation(PncOperation.SENTENCE_DEFERRED)] },
     { ops: [generateOperation(PncOperation.DISPOSAL_UPDATED), generateOperation(PncOperation.DISPOSAL_UPDATED)] }
   ])("should remove duplicate operations", ({ ops }) => {
@@ -102,7 +102,12 @@ describe("deduplicateOperations", () => {
         generateOperation(PncOperation.NORMAL_DISPOSAL, "NotAttempted")
       ]
     },
-    { ops: [generateOperation("PENHRG", "Completed"), generateOperation("PENHRG", "NotAttempted")] },
+    {
+      ops: [
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed"),
+        generateOperation(PncOperation.PENALTY_HEARING, "NotAttempted")
+      ]
+    },
     {
       ops: [
         generateOperation(PncOperation.SENTENCE_DEFERRED, "Completed"),
@@ -148,8 +153,8 @@ describe("deduplicateOperations", () => {
     },
     {
       ops: [
-        generateOperation("PENHRG", "Completed", { courtCaseReference: "1" }),
-        generateOperation("PENHRG", "Completed", { courtCaseReference: "2" })
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed", { courtCaseReference: "1" }),
+        generateOperation(PncOperation.PENALTY_HEARING, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
