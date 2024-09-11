@@ -237,7 +237,7 @@ describe("persistPhase2", () => {
       triggerRecords.map((tr) => expect(expectedTriggerListTriggers).toContain(tr.trigger_code))
     })
 
-    it("Should update trigger status to resolved when all triggers from phase 1 and 2 are resolved", async () => {
+    it("Should update trigger status to Resolved when all triggers from phase 1 and 2 are resolved", async () => {
       const phase1Result = generateMockPhase1Result({
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0002 }, { code: TriggerCode.TRPR0003 }]
       })
