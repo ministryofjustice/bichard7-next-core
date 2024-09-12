@@ -34,7 +34,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.SENTENCE_DEFERRED) {
       return {
         operationCode: {
-          SENDEF: operation.data
+          [PncOperation.SENTENCE_DEFERRED]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -47,7 +47,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.DISPOSAL_UPDATED) {
       return {
         operationCode: {
-          SUBVAR: operation.data
+          [PncOperation.DISPOSAL_UPDATED]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -60,7 +60,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.PENALTY_HEARING) {
       return {
         operationCode: {
-          PENHRG: operation.data
+          [PncOperation.PENALTY_HEARING]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -73,7 +73,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.COMMITTED_SENTENCING) {
       return {
         operationCode: {
-          COMSEN: operation.data
+          [PncOperation.COMMITTED_SENTENCING]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -86,7 +86,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.APPEALS_UPDATE) {
       return {
         operationCode: {
-          APPHRD: operation.data
+          [PncOperation.APPEALS_UPDATE]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -99,7 +99,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.REMAND) {
       return {
         operationCode: {
-          NEWREM: operation.data
+          [PncOperation.REMAND]: operation.data
             ? {
                 nextHearingDate: operation.data.nextHearingDate ? toISODate(operation.data.nextHearingDate) : undefined,
                 nextHearingLocation: mapAhoOrgUnitToXml(operation.data.nextHearingLocation)
