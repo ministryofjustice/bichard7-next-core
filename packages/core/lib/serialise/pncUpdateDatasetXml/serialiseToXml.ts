@@ -21,7 +21,7 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
     if (operation.code === PncOperation.NORMAL_DISPOSAL) {
       return {
         operationCode: {
-          DISARR: operation.data
+          [PncOperation.NORMAL_DISPOSAL]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
