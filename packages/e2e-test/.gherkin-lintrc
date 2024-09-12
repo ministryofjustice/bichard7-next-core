@@ -1,0 +1,25 @@
+{
+  "new-line-at-eof": [
+    "on",
+    "yes"
+  ],
+  "no-dupe-feature-names": "on",
+  "no-duplicate-tags": "on",
+  "no-empty-background": "on",
+  "no-empty-file": "on",
+  "no-files-without-scenarios": "on",
+  "no-multiple-empty-lines": "on",
+  "no-trailing-spaces": "on",
+  "no-unnamed-features": "on",
+  "no-unnamed-scenarios": "on",
+  "one-space-between-tags": "on",
+  "no-restricted-patterns": [
+    "on",
+    {
+      "Global": [
+        "<add concise test definition here>",
+        "<add human readable test description>"
+      ]
+    }
+  ]
+}

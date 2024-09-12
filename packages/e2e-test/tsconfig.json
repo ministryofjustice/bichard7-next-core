@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["**/*.ts", "**/*.json", "package.json", "./declarations.d.ts"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["ES2021", "dom"],
+    "typeRoots": ["./declarations.d.ts", "./node_modules/@types"],
+    "types": []
+  },
+  "ts-node": {
+    "files": true
+  }
+}
