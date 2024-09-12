@@ -9,19 +9,12 @@ const doesCaseRequireRcc = (aho: AnnotatedHearingOutcome, courtCaseReferenceNumb
       (!courtCaseReferenceNumber || offence.CourtCaseReferenceNumber === courtCaseReferenceNumber)
   )
 
-  for (const offence of offences) {
-    const thisOffenceAddedByTheCourt = offence.AddedByTheCourt
-    const thisOffenceHasReportableResults = !offence.AddedByTheCourt || disarrCompatibleResultClass(offence)
-    const thisOffenceRequiresRcc = offence.Result.some((result) => result.PNCDisposalType === 2060)
+  return offences.some((offence) => {
+    const hasPncDisposalType2060 = offence.Result.some((result) => result.PNCDisposalType === 2060)
+    const isDisarrCompatible = disarrCompatibleResultClass(offence)
 
-    if (thisOffenceRequiresRcc && (!thisOffenceAddedByTheCourt || thisOffenceHasReportableResults)) {
-      return true
-    }
-
-    if (thisOffenceAddedByTheCourt && thisOffenceHasReportableResults) {
-      return true
-    }
-  }
+    return hasPncDisposalType2060 && (!offence.AddedByTheCourt || isDisarrCompatible)
+  })
 }
 
 export default doesCaseRequireRcc

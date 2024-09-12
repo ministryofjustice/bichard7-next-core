@@ -16,7 +16,7 @@ const createAho = (offences: Partial<Offence>[]) =>
   }) as AnnotatedHearingOutcome
 
 describe("doesCaseRequireRcc", () => {
-  it("should return CaseDoesNotRequireRcc when there are no recordable offences", () => {
+  it("should return false when there are no recordable offences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
@@ -33,7 +33,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(false)
   })
 
-  it("should return CaseDoesNotRequireRcc when there are no matching offences", () => {
+  it("should return false when there are no matching offences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
@@ -50,7 +50,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(false)
   })
 
-  it("should return CaseDoesNotRequireRcc when offences do not contain PNC disposal type 2060", () => {
+  it("should return false when offences do not contain PNC disposal type 2060", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
@@ -67,7 +67,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(false)
   })
 
-  it("should return CaseDoesNotRequireRcc when offences are added by court and are not DISARR compatible", () => {
+  it("should return false when offences are added by court and are not DISARR compatible", () => {
     const aho = createAho([
       {
         AddedByTheCourt: true,
@@ -84,7 +84,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(false)
   })
 
-  it("should return CaseRequiresRccAndHasReportableOffences when case requires RCC and offence is added by the court and is DISARR compatible", () => {
+  it("should return true when case contains PNC disposal type 2060 and offence is added by the court and is DISARR compatible", () => {
     const aho = createAho([
       {
         AddedByTheCourt: true,
@@ -101,7 +101,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(true)
   })
 
-  it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and offence is added by the court but not DISARR compatible", () => {
+  it("should return true when case contains PNC disposal type 2060 and offence is added by the court but not DISARR compatible", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
@@ -127,7 +127,7 @@ describe("doesCaseRequireRcc", () => {
     expect(result).toBe(true)
   })
 
-  it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and there is an offence that is DISARR compatible but not added by the court", () => {
+  it("should return true when case contains PNC disposal type 2060 and there is an offence that is DISARR compatible but not added by the court", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
