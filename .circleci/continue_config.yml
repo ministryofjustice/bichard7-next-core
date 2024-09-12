@@ -64,7 +64,7 @@ commands:
       - run:
           name: Compress the artifacts for easier downloading
           when: always
-          command: for file in ~/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
+          command: for file in packages/e2e-test/screenshots/*; do tar -czf ${file}.tar.gz $file; done
       - run:
           name: Create the saved_artifacts directory
           when: always
@@ -72,11 +72,11 @@ commands:
       - run:
           name: Move the gzipped files across
           when: always
-          command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
+          command: mv packages/e2e-test/screenshots/*.tar.gz ./saved_artifacts/
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
-          path: /home/circleci/bichard7-next-tests/test-results.xml
+          path: packages/e2e-test/test-results.xml
 
   set_locale:
     steps:
@@ -328,6 +328,7 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.conductor-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
           steps:
@@ -353,18 +354,15 @@ jobs:
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
       - run:
-          name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
-      - run:
-          name: NPM install tests dependencies
-          working_directory: ~/bichard7-next-tests
-          command: npm i
-      - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all
       - run:
+          name: Install browsers for puppeteer
+          working_directory: packages/e2e-test
+          command: "npm run install-browsers"
+      - run:
           name: Run e2e tests against core code
-          working_directory: ~/bichard7-next-tests
+          working_directory: packages/e2e-test
           environment:
             AWS_URL: http://localhost:4566
             RECORD: "true"
@@ -463,6 +461,9 @@ parameters:
     type: boolean
     default: false
   ms-edge:
+    type: boolean
+    default: false
+  e2e-test-changes:
     type: boolean
     default: false
 

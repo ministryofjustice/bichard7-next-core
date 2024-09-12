@@ -22,3 +22,5 @@ coverage/
 
 # SWC cache
 .swc/
+
+packages/e2e-test/cucumber
