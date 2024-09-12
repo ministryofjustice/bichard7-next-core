@@ -6,6 +6,7 @@ import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/pa
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
+import { PncOperation } from "../../../types/PncOperation"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
@@ -31,7 +32,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
   return operationsXml.map((operationXml) => {
     let operation: Operation | undefined = undefined
 
-    if ("NEWREM" in operationXml.operationCode) {
+    if (PncOperation.REMAND in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.NEWREM)
         ? undefined
         : {
@@ -42,13 +43,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("SENDEF" in operationXml.operationCode) {
+    if (PncOperation.SENTENCE_DEFERRED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SENDEF)
         ? undefined
         : {
@@ -56,13 +57,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "SENDEF",
+        code: PncOperation.SENTENCE_DEFERRED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("SUBVAR" in operationXml.operationCode) {
+    if (PncOperation.DISPOSAL_UPDATED in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.SUBVAR)
         ? undefined
         : {
@@ -70,13 +71,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "SUBVAR",
+        code: PncOperation.DISPOSAL_UPDATED,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("DISARR" in operationXml.operationCode) {
+    if (PncOperation.NORMAL_DISPOSAL in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.DISARR)
         ? undefined
         : {
@@ -84,13 +85,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "DISARR",
+        code: PncOperation.NORMAL_DISPOSAL,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("PENHRG" in operationXml.operationCode) {
+    if (PncOperation.PENALTY_HEARING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.PENHRG)
         ? undefined
         : {
@@ -98,13 +99,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "PENHRG",
+        code: PncOperation.PENALTY_HEARING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("COMSEN" in operationXml.operationCode) {
+    if (PncOperation.COMMITTED_SENTENCING in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.COMSEN)
         ? undefined
         : {
@@ -112,13 +113,13 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "COMSEN",
+        code: PncOperation.COMMITTED_SENTENCING,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }
     }
 
-    if ("APPHRD" in operationXml.operationCode) {
+    if (PncOperation.APPEALS_UPDATE in operationXml.operationCode) {
       const data = isEmptyElement(operationXml.operationCode.APPHRD)
         ? undefined
         : {
@@ -126,7 +127,7 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
           }
 
       operation = {
-        code: "APPHRD",
+        code: PncOperation.APPEALS_UPDATE,
         status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
         ...(data ? { data } : {})
       }

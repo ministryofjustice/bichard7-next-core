@@ -1,4 +1,5 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import { PncOperation } from "../../../../../types/PncOperation"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import { handleSentence } from "./handleSentence"
@@ -17,7 +18,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "PENHRG", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
@@ -31,7 +34,7 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "PENHRG", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
   it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {
@@ -44,7 +47,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SENDEF", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.SENTENCE_DEFERRED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId does not have value", () => {
@@ -60,7 +65,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SENDEF", data: undefined, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.SENTENCE_DEFERRED, data: undefined, status: "NotAttempted" }
+    ])
   })
 
   it("should return SUBVAR operation when adjudication exists, and there is a 2007 result code", () => {
@@ -77,7 +84,9 @@ describe("handleSentence", () => {
     const { exceptions, operations } = handleSentence(params)
 
     expect(exceptions).toHaveLength(0)
-    expect(operations).toStrictEqual([{ code: "SUBVAR", data: { courtCaseReference: "234" }, status: "NotAttempted" }])
+    expect(operations).toStrictEqual([
+      { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
+    ])
   })
 
   it("should return SUBVAR operation without operation data when adjudication exists, there is a 2007 result code, and ccrId is not set", () => {
@@ -98,7 +107,7 @@ describe("handleSentence", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "SUBVAR",
+        code: PncOperation.DISPOSAL_UPDATED,
         data: undefined,
         status: "NotAttempted"
       }

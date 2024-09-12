@@ -4,6 +4,7 @@ import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/gene
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
+import { PncOperation } from "../../types/PncOperation"
 import hasCompletedDisarr from "./hasCompletedDisarr"
 import TRPS0011 from "./TRPS0011"
 jest.mock("../../phase2/lib/isRecordableOffence")
@@ -33,7 +34,7 @@ describe("TRPS0011", () => {
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
       {
-        code: "DISARR",
+        code: PncOperation.NORMAL_DISPOSAL,
         status: "Completed",
         data: undefined
       }
