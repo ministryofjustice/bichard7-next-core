@@ -1,11 +1,12 @@
+import { PncOperation } from "../../../../types/PncOperation"
 import createOperation from "./createOperation"
 
 describe("createOperation", () => {
   it("should return an operation with status NotAttempted", () => {
-    const operation = createOperation("APPHRD", { courtCaseReference: "123" })
+    const operation = createOperation(PncOperation.APPEALS_UPDATE, { courtCaseReference: "123" })
 
     expect(operation).toStrictEqual({
-      code: "APPHRD",
+      code: PncOperation.APPEALS_UPDATE,
       data: {
         courtCaseReference: "123"
       },

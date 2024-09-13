@@ -1,9 +1,16 @@
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 
-const operationCodes = ["SENDEF", "DISARR", "SUBVAR", "COMSEN", "APPHRD"]
+const operationCodes = [
+  PncOperation.SENTENCE_DEFERRED,
+  PncOperation.NORMAL_DISPOSAL,
+  PncOperation.DISPOSAL_UPDATED,
+  PncOperation.COMMITTED_SENTENCING,
+  PncOperation.APPEALS_UPDATE
+]
 
 const operationCourtCaseReference = (operation: Operation): string | undefined =>
-  operationCodes.includes(operation.code) && operation.data && "courtCaseReference" in operation.data
+  operationCodes.includes(operation.code as PncOperation) && operation.data && "courtCaseReference" in operation.data
     ? operation.data.courtCaseReference
     : undefined
 

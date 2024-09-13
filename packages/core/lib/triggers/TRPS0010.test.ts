@@ -8,6 +8,7 @@ import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/gene
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
+import { PncOperation } from "../../types/PncOperation"
 import hasCompletedDisarr from "./hasCompletedDisarr"
 import TRPS0010 from "./TRPS0010"
 
@@ -34,7 +35,7 @@ describe("TRPS0010", () => {
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
       {
-        code: "DISARR",
+        code: PncOperation.NORMAL_DISPOSAL,
         status: "Completed",
         data: undefined
       }

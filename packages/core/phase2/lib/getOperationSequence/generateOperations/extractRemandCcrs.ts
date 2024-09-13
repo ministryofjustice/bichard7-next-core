@@ -1,3 +1,4 @@
+import { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 
 const extractRemandCcrs = <T extends boolean, K extends T extends false ? string : string | undefined>(
@@ -5,7 +6,7 @@ const extractRemandCcrs = <T extends boolean, K extends T extends false ? string
   isAdjPreJudgement: T
 ): Set<K> =>
   operations
-    .filter((op) => op.code === "NEWREM")
+    .filter((op) => op.code === PncOperation.REMAND)
     .reduce((acc, op) => {
       if ((!isAdjPreJudgement && op.courtCaseReference) || (isAdjPreJudgement && op.isAdjournmentPreJudgement)) {
         acc.add(op.courtCaseReference as K)

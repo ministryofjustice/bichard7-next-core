@@ -4,11 +4,12 @@ import {
   organisationUnitSchema,
   unvalidatedHearingOutcomeSchema
 } from "../../schemas/unvalidatedHearingOutcome"
+import { PncOperation } from "../../types/PncOperation"
 
 export const operationStatusSchema = z.union([z.literal("Completed"), z.literal("Failed"), z.literal("NotAttempted")])
 
 export const newremOperationSchema = z.object({
-  code: z.literal("NEWREM"),
+  code: z.literal(PncOperation.REMAND),
   data: z
     .object({
       nextHearingDate: z.coerce.date().optional(),
@@ -21,7 +22,7 @@ export const newremOperationSchema = z.object({
 })
 
 const disarrOperationSchema = z.object({
-  code: z.literal("DISARR"),
+  code: z.literal(PncOperation.NORMAL_DISPOSAL),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
@@ -32,7 +33,7 @@ const disarrOperationSchema = z.object({
 })
 
 const sendefOperationSchema = z.object({
-  code: z.literal("SENDEF"),
+  code: z.literal(PncOperation.SENTENCE_DEFERRED),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
@@ -42,7 +43,7 @@ const sendefOperationSchema = z.object({
 })
 
 const subvarOperationSchema = z.object({
-  code: z.literal("SUBVAR"),
+  code: z.literal(PncOperation.DISPOSAL_UPDATED),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
@@ -52,7 +53,7 @@ const subvarOperationSchema = z.object({
 })
 
 const penhrgOperationSchema = z.object({
-  code: z.literal("PENHRG"),
+  code: z.literal(PncOperation.PENALTY_HEARING),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
@@ -62,7 +63,7 @@ const penhrgOperationSchema = z.object({
 })
 
 const comsenOperationSchema = z.object({
-  code: z.literal("COMSEN"),
+  code: z.literal(PncOperation.COMMITTED_SENTENCING),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
@@ -72,7 +73,7 @@ const comsenOperationSchema = z.object({
 })
 
 const apphrdOperationSchema = z.object({
-  code: z.literal("APPHRD"),
+  code: z.literal(PncOperation.APPEALS_UPDATE),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
