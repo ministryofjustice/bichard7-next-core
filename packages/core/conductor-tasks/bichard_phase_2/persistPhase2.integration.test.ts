@@ -49,6 +49,32 @@ describe("persistPhase2", () => {
   })
 
   describe("When record exists in the database", () => {
+    async function markTriggerAsCompleted(triggerCode: TriggerCode) {
+      await sql`UPDATE br7own.error_list_triggers SET status = ${ResolutionStatus.RESOLVED}::integer, resolved_by = 'dummy_user'
+                  WHERE trigger_id IN (SELECT trigger_id FROM br7own.error_list_triggers WHERE trigger_code = ${triggerCode})`
+    }
+
+    async function addPhase2ResultsToS3WithExceptions(phase2Result: Phase2Result, triggerCode?: TriggerCode) {
+      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
+      const s3TaskDataPath = "phase2-delete-triggers.xml"
+      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+
+      if (triggerCode) {
+        await markTriggerAsCompleted(triggerCode)
+      }
+
+      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
+      expect(result.status).toBe("COMPLETED")
+    }
+
+    async function getErrorList() {
+      return await sql`SELECT * FROM br7own.error_list`
+    }
+
+    async function getErrorListTriggers() {
+      return await sql`SELECT * FROM br7own.error_list_triggers`
+    }
+
     it("should write exceptions and triggers to the database if they are raised", async () => {
       const phase1Result = generateMockPhase1Result({
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0002 }, { code: TriggerCode.TRPR0003 }]
@@ -57,21 +83,16 @@ describe("persistPhase2", () => {
       await insertErrorListTriggers(sql, recordId, phase1Result.triggers)
 
       const phase2Result = generateMockPhase2Result({ correlationId: phase1Result.correlationId })
-      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-      const s3TaskDataPath = "phase2-exception.xml"
-      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
-
-      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
+      await addPhase2ResultsToS3WithExceptions(phase2Result)
 
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
+
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].error_report).toBe("HO100100||br7:ArrestSummonsNumber")
       expect(errorListRecords[0].error_reason).toBe("HO100100")
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toHaveLength(3)
     })
 
@@ -88,16 +109,15 @@ describe("persistPhase2", () => {
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
       const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
+
+      expect(result.status).toBe("COMPLETED")
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.RESOLVED)
       expect(errorListRecords[0].trigger_status).toBeNull()
       expect(errorListRecords[0].error_report).toBe("")
       expect(errorListRecords[0].error_reason).toBeNull()
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toHaveLength(0)
     })
 
@@ -112,19 +132,14 @@ describe("persistPhase2", () => {
         correlationId: phase1Result.correlationId,
         triggerGenerationAttempted: false
       })
-      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-      const s3TaskDataPath = "phase2-no-trigger-update.xml"
-      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+      await addPhase2ResultsToS3WithExceptions(phase2Result)
 
-      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
+      const errorListRecords = await getErrorList()
+      const triggerRecords = await getErrorListTriggers()
 
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toEqual([
         {
           create_ts: expect.anything(),
@@ -172,21 +187,21 @@ describe("persistPhase2", () => {
         triggerGenerationAttempted: true,
         triggers: []
       })
-      await addPhase2ResultsTos3WithExceptions(phase2Result)
+      await addPhase2ResultsToS3WithExceptions(phase2Result)
 
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+      const errorListRecords = await getErrorList()
+      const triggerRecords = await getErrorListTriggers()
+
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.RESOLVED)
       expect(errorListRecords[0].trigger_count).toBe(1)
       expect(errorListRecords[0].trigger_reason).toBe("TRPR0001")
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toEqual([
         {
           create_ts: expect.anything(),
           error_id: expect.anything(),
-          resolved_by: null,
+          resolved_by: "dummy_user",
           resolved_ts: null,
           status: ResolutionStatus.RESOLVED,
           trigger_code: "TRPR0001",
@@ -197,6 +212,7 @@ describe("persistPhase2", () => {
     })
 
     it("Should update trigger status to unresolved when new trigger is generated in phase 2", async () => {
+      const expetcedTriggers = ["TRPR0001", "TRPR0002"]
       const phase1Result = generateMockPhase1Result({
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0002 }, { code: TriggerCode.TRPR0003 }]
       })
@@ -209,22 +225,21 @@ describe("persistPhase2", () => {
         triggerGenerationAttempted: true,
         triggers: [{ code: TriggerCode.TRPR0002 }]
       })
-      await addPhase2ResultsTos3WithExceptions(phase2Result)
+      await addPhase2ResultsToS3WithExceptions(phase2Result)
 
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+      const errorListRecords = await getErrorList()
+      const triggerRecords = await getErrorListTriggers()
+
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_count).toBe(2)
-
-      const expectedTriggerListTriggers = ["TRPR0001", "TRPR0002"]
-      expect(expectedTriggerListTriggers).toContain(errorListRecords[0].trigger_reason)
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
-      triggerRecords.map((tr) => expect(expectedTriggerListTriggers).toContain(tr.trigger_code))
+      expect(expetcedTriggers).toContain(errorListRecords[0].trigger_reason)
+      triggerRecords.map((tr) => expect(expetcedTriggers).toContain(tr.trigger_code))
     })
 
     it("Should update trigger status to Resolved when all triggers from phase 1 and 2 are resolved", async () => {
+      const expetcedTriggers = ["TRPR0001", "TRPR0002"]
       const phase1Result = generateMockPhase1Result({
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0002 }, { code: TriggerCode.TRPR0003 }]
       })
@@ -237,26 +252,17 @@ describe("persistPhase2", () => {
         triggerGenerationAttempted: true,
         triggers: [{ code: TriggerCode.TRPR0002 }]
       })
-      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-      const s3TaskDataPath = "phase2-delete-triggers.xml"
-      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+      await addPhase2ResultsToS3WithExceptions(phase2Result, TriggerCode.TRPR0002)
 
-      await markTriggerAsCompleted(TriggerCode.TRPR0002)
+      const errorListRecords = await getErrorList()
+      const triggerRecords = await getErrorListTriggers()
 
-      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.RESOLVED)
       expect(errorListRecords[0].trigger_count).toBe(2)
-
-      const expectedTriggerListTriggers = ["TRPR0001", "TRPR0002"]
-      expect(expectedTriggerListTriggers).toContain(errorListRecords[0].trigger_reason)
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
-      triggerRecords.map((tr) => expect(expectedTriggerListTriggers).toContain(tr.trigger_code))
+      expect(expetcedTriggers).toContain(errorListRecords[0].trigger_reason)
+      triggerRecords.map((tr) => expect(expetcedTriggers).toContain(tr.trigger_code))
     })
 
     it("should add new triggers and not update completed triggers in the database if trigger generator is called and triggers are generated", async () => {
@@ -265,28 +271,20 @@ describe("persistPhase2", () => {
       })
       const recordId = await insertErrorListRecord(sql, phase1Result)
       await insertErrorListTriggers(sql, recordId, phase1Result.triggers)
-      // Mark TRPR0001 as completed
-      await sql`UPDATE br7own.error_list_triggers SET status = ${ResolutionStatus.RESOLVED}::integer, resolved_by = 'dummy_user'
-            WHERE trigger_id IN
-                  (SELECT trigger_id FROM br7own.error_list_triggers WHERE trigger_code = ${TriggerCode.TRPR0001})`
+      await markTriggerAsCompleted(TriggerCode.TRPR0001)
 
       const phase2Result = generateMockPhase2Result({
         correlationId: phase1Result.correlationId,
         triggerGenerationAttempted: true,
         triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0003 }, { code: TriggerCode.TRPS0002 }]
       })
-      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-      const s3TaskDataPath = "phase2-new-triggers.xml"
-      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
+      await addPhase2ResultsToS3WithExceptions(phase2Result)
 
-      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
+      const errorListRecords = await getErrorList()
+      const triggerRecords = await getErrorListTriggers()
 
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toEqual([
         {
           create_ts: expect.anything(),
@@ -320,19 +318,6 @@ describe("persistPhase2", () => {
         }
       ])
     })
-    async function markTriggerAsCompleted(triggerCode: TriggerCode) {
-      await sql`UPDATE br7own.error_list_triggers SET status = ${ResolutionStatus.RESOLVED}::integer
-                  WHERE trigger_id IN (SELECT trigger_id FROM br7own.error_list_triggers WHERE trigger_code = ${triggerCode})`
-    }
-
-    async function addPhase2ResultsTos3WithExceptions(phase2Result: Phase2Result) {
-      phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
-      const s3TaskDataPath = "phase2-delete-triggers.xml"
-      await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
-
-      const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-    }
   })
 
   describe("When record does not exist in the database", () => {
@@ -345,14 +330,13 @@ describe("persistPhase2", () => {
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
       const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
+
+      expect(result.status).toBe("COMPLETED")
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBeNull()
       expect(errorListRecords[0].trigger_status).toBe(ResolutionStatus.UNRESOLVED)
-
-      const triggerRecords = await sql`SELECT * FROM br7own.error_list_triggers`
       expect(triggerRecords).toEqual([
         {
           create_ts: expect.anything(),
@@ -386,9 +370,9 @@ describe("persistPhase2", () => {
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
       const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+
+      expect(result.status).toBe("COMPLETED")
       expect(errorListRecords).toHaveLength(0)
     })
 
@@ -401,12 +385,12 @@ describe("persistPhase2", () => {
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
       const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
+      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+
       expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
       expect(result.logs?.map((l) => l.log)).toContain(
         "No exceptions present, triggers not generated, and case is not ignored but persist_phase2 was called"
       )
-
-      const errorListRecords = await sql`SELECT * FROM br7own.error_list`
       expect(errorListRecords).toHaveLength(0)
     })
 
@@ -420,9 +404,9 @@ describe("persistPhase2", () => {
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
 
       const result = await persistPhase2.execute({ inputData: { s3TaskDataPath } })
-      expect(result.status).toBe("COMPLETED")
-
       const errorListRecords = await sql`SELECT * FROM br7own.error_list`
+
+      expect(result.status).toBe("COMPLETED")
       expect(errorListRecords).toHaveLength(1)
       expect(errorListRecords[0].error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(errorListRecords[0].error_report).toBe("HO100100||br7:ArrestSummonsNumber")
