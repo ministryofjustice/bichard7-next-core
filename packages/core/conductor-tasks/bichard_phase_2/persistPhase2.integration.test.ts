@@ -49,12 +49,7 @@ describe("persistPhase2", () => {
   })
 
   describe("When record exists in the database", () => {
-    async function markTriggerAsCompleted(triggerCode: TriggerCode) {
-      await sql`UPDATE br7own.error_list_triggers SET status = ${ResolutionStatus.RESOLVED}::integer, resolved_by = 'dummy_user'
-                  WHERE trigger_id IN (SELECT trigger_id FROM br7own.error_list_triggers WHERE trigger_code = ${triggerCode})`
-    }
-
-    async function addPhase2ResultsToS3WithExceptions(phase2Result: Phase2Result, triggerCode?: TriggerCode) {
+    const addPhase2ResultsToS3WithExceptions = async (phase2Result: Phase2Result, triggerCode?: TriggerCode) => {
       phase2Result.outputMessage.Exceptions.push({ code: ExceptionCode.HO100100, path: errorPaths.case.asn })
       const s3TaskDataPath = "phase2-delete-triggers.xml"
       await putFileToS3(JSON.stringify(phase2Result), s3TaskDataPath, bucket, s3Config)
@@ -67,13 +62,12 @@ describe("persistPhase2", () => {
       expect(result.status).toBe("COMPLETED")
     }
 
-    async function getErrorList() {
-      return await sql`SELECT * FROM br7own.error_list`
-    }
-
-    async function getErrorListTriggers() {
-      return await sql`SELECT * FROM br7own.error_list_triggers`
-    }
+    const markTriggerAsCompleted = (
+      triggerCode: TriggerCode
+    ) => sql`UPDATE br7own.error_list_triggers SET status = ${ResolutionStatus.RESOLVED}::integer, resolved_by = 'dummy_user'
+                  WHERE trigger_id IN (SELECT trigger_id FROM br7own.error_list_triggers WHERE trigger_code = ${triggerCode})`
+    const getErrorList = () => sql`SELECT * FROM br7own.error_list`
+    const getErrorListTriggers = () => sql`SELECT * FROM br7own.error_list_triggers`
 
     it("should write exceptions and triggers to the database if they are raised", async () => {
       const phase1Result = generateMockPhase1Result({
