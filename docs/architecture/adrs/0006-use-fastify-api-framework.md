@@ -1,4 +1,4 @@
-# 5. Use Fastify API framework
+# 6. Use Fastify API framework
 
 Date: 2024-09-13
 
