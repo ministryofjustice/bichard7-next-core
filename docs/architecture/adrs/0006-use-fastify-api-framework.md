@@ -14,7 +14,7 @@ As a team who are significantly invested in both TypeScript and Zod for type saf
 - Succinct and easily digestible code
 - Shorter delivery time for features
 
-Our current web framework for the API is Express. Express is a well supported, widely used framework that can be effectively used to build APIs.
+Our current web framework for the API is Express. Express is a well supported, widely used framework that can be effectively used to build APIs. Given that our API is currently under development and isn't actively used in production, there isn't much code to change in order to change the web framework.
 
 We are proposing to remove Express in order to utilise Fastify, primarily on the basis that both frameworks can be effectively used to build APIs, but that Fastify provides first-class support for TypeScript, Zod and OpenAPI document generation out of the box.
 
@@ -32,3 +32,5 @@ Using principles for library adoption established in ADR0005, this is how we jus
 ## Consequences
 
 - Adopting Fastify will improve the developer experience for the API project, it will provide a web framework that is fast and well optimised and it will provide first class support within the API project for strong typing and accurate documentation.
+- Developers will need to learn a new web framework, which will incur an operational cost.
+- Developers will need to be able to work with Zod in order to build new features on the API.
