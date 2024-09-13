@@ -47,7 +47,7 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
           WHEN error_status IS NULL THEN NULL
           ELSE ${ResolutionStatus.RESOLVED}::integer
         END
-      WHERE error_id = ${recordId}`.catch((error) => error)
+      WHERE error_id = ${recordId}`
 
     if (updateResult.count !== 1) {
       throw new Error("Error updating error_list table - no rows updated")
