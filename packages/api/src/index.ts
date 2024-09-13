@@ -1,12 +1,51 @@
+import AutoLoad from "@fastify/autoload"
+import fastifySwagger from "@fastify/swagger"
+import fastifySwaggerUI from "@fastify/swagger-ui"
+import { fastify as Fastify, type FastifyInstance } from "fastify"
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
 import fs from "fs"
-import https from "https"
-import app from "./app"
+import type { IncomingMessage, Server, ServerResponse } from "http"
+import path from "path"
 
-const PORT: string = process.env.PORT || "3333"
+const PORT: number = parseInt(process.env.PORT || "3333", 10)
+let fastify: FastifyInstance<Server, IncomingMessage, ServerResponse>
 
 if (process.env.USE_SSL === "true") {
-  const config = { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") }
-  https.createServer(config, app).listen(PORT, () => console.log(`app is listening on https port ${PORT}`))
+  fastify = Fastify({
+    https: { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") },
+    logger: true
+  })
 } else {
-  app.listen(PORT, () => console.log(`app is listening on http port ${PORT}`))
+  fastify = Fastify({ logger: true })
 }
+
+fastify.setValidatorCompiler(validatorCompiler)
+fastify.setSerializerCompiler(serializerCompiler)
+
+fastify.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: "Bichard API",
+      description: "API documentation about Bichard",
+      version: "0.0.1"
+    },
+    servers: []
+  },
+  transform: jsonSchemaTransform
+})
+
+fastify.register(fastifySwaggerUI, {
+  routePrefix: "/swagger"
+})
+
+fastify.register(AutoLoad, {
+  dir: path.join(__dirname, "routes"),
+  dirNameRoutePrefix: false
+})
+
+fastify.listen({ port: PORT }, (err) => {
+  if (err) {
+    console.error(err)
+    process.exit(1)
+  }
+})

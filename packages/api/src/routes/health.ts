@@ -1,8 +1,15 @@
-import { Router } from "express"
-import { checkStatus } from "../controllers/health"
+import type { FastifyInstance } from "fastify"
+import type { ZodTypeProvider } from "fastify-type-provider-zod"
+import { z } from "zod"
 
-const router: Router = Router()
+const schema = {
+  response: {
+    200: z.string().describe("Health check will return Ok")
+  }
+}
 
-router.get("/", checkStatus)
-
-export default router
+export default async (fastify: FastifyInstance) => {
+  fastify.withTypeProvider<ZodTypeProvider>().get("/health", { schema }, async (_, res) => {
+    res.send("Ok")
+  })
+}
