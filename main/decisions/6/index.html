@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-theme="light" class="has-background-light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Use [Fastify](https://fastify.dev/) API framework | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../modal.js"></script>
+    <script type="text/javascript" src="../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded has-site-branding" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../libra/" class="">Libra</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../police-national-computer/" class="">Police National Computer</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid has-background-white">
+        <div class="content p-3">
+          <div><h1>6. Use <a href="https://fastify.dev/">Fastify</a> API framework</h1>
+<p>Date: 2024-09-13</p>
+<h2>Status</h2>
+<p>Pending</p>
+<h2>Context</h2>
+<p>As a team who are significantly invested in both <a href="https://www.typescriptlang.org/">TypeScript</a> and <a href="https://zod.dev/">Zod</a> for type safety both in development and at runtime, choosing technologies that provide first class support for these tools provides numerous benefits to the team:</p>
+<ul>
+ <li>Simplified developer experience</li>
+ <li>Succinct and easily digestible code</li>
+ <li>Shorter delivery time for features</li>
+</ul>
+<p>Our current web framework for the API is <a href="https://expressjs.com/">Express</a>. <a href="https://expressjs.com/">Express</a> is a well supported, widely used framework that can be effectively used to build APIs. Given that our API is currently under development and isn't actively used in production, there isn't much code to change in order to change the web framework.</p>
+<p>We are proposing to remove <a href="https://expressjs.com/">Express</a> in order to utilise <a href="https://fastify.dev/">Fastify</a>, primarily on the basis that both frameworks can be effectively used to build APIs, but that <a href="https://fastify.dev/">Fastify</a> provides first-class support for <a href="https://www.typescriptlang.org/">TypeScript</a>, <a href="https://zod.dev/">Zod</a> and <a href="https://www.openapis.org/">OpenAPI</a> document generation out of the box.</p>
+<p>The decision to suggest <a href="https://fastify.dev/">Fastify</a> results from having reviewed a number of web frameworks against our team's operational context - namely <a href="https://nextjs.org/">NextJS</a> (as it is used elsewhere in the project), <a href="https://encore.dev/">Encore</a> (because it has a good reputation for developer experience), <a href="https://fastify.dev/">Fastify</a> and <a href="https://expressjs.com/">Express</a> itself.</p>
+<p>Having performed a few basic spikes to test the functionality and usability of each library with <a href="https://zod.dev/">Zod</a>, <a href="https://www.typescriptlang.org/">TypeScript</a> and <a href="https://www.openapis.org/">OpenAPI</a> document generation, both <a href="https://fastify.dev/">Fastify</a> and <a href="https://encore.dev/">Encore</a> performed above <a href="https://nextjs.org/">NextJS</a> and <a href="https://expressjs.com/">Express</a>, but <a href="https://encore.dev/">Encore</a> unfortunately takes too much responsibility for the resulting Docker image (no ability to edit the Dockerfile) for the service, which isn't a measure of control we're willing to give away.</p>
+<h2>Decision</h2>
+<p>Using principles for library adoption established in <strong>ADR0005</strong>, this is how we justify the decision.</p>
+<ul>
+ <li><a href="https://fastify.dev/">Fastify</a> reached v1 in October, 2018. Throughout the package's history, it has releases almost every month and has a consistent group of maintainers contributing to the project on a regular basis. The project is hosted by the OpenJS foundation and provides an LTS schedule on their website.</li>
+ <li><a href="https://fastify.dev/">Fastify</a> has fewer dependencies than <a href="https://expressjs.com/">Express</a>.</li>
+</ul>
+<h2>Consequences</h2>
+<ul>
+ <li>Adopting <a href="https://fastify.dev/">Fastify</a> will improve the developer experience for the API project, it will provide a web framework that is fast and well optimised and it will provide first class support within the API project for strong typing and accurate documentation.</li>
+ <li>Developers will need to learn a new web framework, which will incur an operational cost.</li>
+ <li>Developers will need to be able to work with <a href="https://zod.dev/">Zod</a> in order to build new features on the API.</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
