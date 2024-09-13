@@ -24,7 +24,7 @@ Having performed a few basic spikes to test the functionality and usability of e
 
 ## Decision
 
-Using principles for library adoption established in ADR0005, this is how we justify the decision.
+Using principles for library adoption established in **ADR0005**, this is how we justify the decision.
 
 - Fastify reached v1 in October, 2018. Throughout the package's history, it has releases almost every month and has a consistent group of maintainers contributing to the project on a regular basis. The project is hosted by the OpenJS foundation and provides an LTS schedule on their website.
 - Fastify has fewer dependencies than Express.
