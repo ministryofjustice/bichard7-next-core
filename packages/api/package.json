@@ -37,7 +37,7 @@
     "@jest/globals": "^29.7.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
     "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -51,13 +51,13 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4",
+    "typescript": "^5.6.2",
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "esbuild": "^0.21.5",
-    "express": "^4.20.0",
+    "express": "^4.21.0",
     "qs": "^6.13.0",
     "zod": "^3.23.8"
   }

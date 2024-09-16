@@ -37,7 +37,7 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.645.0",
+    "@aws-sdk/client-s3": "^3.651.1",
     "@io-orkes/conductor-javascript": "^2.1.2",
     "@stomp/stompjs": "^7.0.0",
     "@types/nodemailer": "^6.4.15",
@@ -60,6 +60,6 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }
