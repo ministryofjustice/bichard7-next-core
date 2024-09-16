@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
-import doesCaseRequireRcc from "./doesCaseRequireRcc"
+import checkRccSegmentApplicability from "./checkRccSegmentApplicability"
 
 const createAho = (offences: Partial<Offence>[]) =>
   ({
@@ -15,7 +15,7 @@ const createAho = (offences: Partial<Offence>[]) =>
     }
   }) as AnnotatedHearingOutcome
 
-describe("doesCaseRequireRcc", () => {
+describe("checkRccSegmentApplicability", () => {
   it("should return CaseDoesNotRequireRcc when there are no recordable offences", () => {
     const aho = createAho([
       {
@@ -28,7 +28,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBe(false)
   })
@@ -45,7 +45,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBe(false)
   })
@@ -62,7 +62,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2061 } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBe(false)
   })
@@ -79,7 +79,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBe(false)
   })
@@ -96,7 +96,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBe(true)
   })
@@ -122,7 +122,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBeNull()
   })
@@ -148,7 +148,7 @@ describe("doesCaseRequireRcc", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = doesCaseRequireRcc(aho, "123")
+    const result = checkRccSegmentApplicability(aho, "123")
 
     expect(result).toBeNull()
   })

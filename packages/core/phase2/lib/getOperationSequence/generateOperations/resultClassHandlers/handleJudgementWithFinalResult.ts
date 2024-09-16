@@ -2,12 +2,12 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../lib/exceptions/errorPaths"
 import type { Operation } from "../../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../../types/ResultClass"
-import doesCaseRequireRcc from "../doesCaseRequireRcc"
 import createOperation from "../createOperation"
 import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../../types/PncOperation"
+import checkRccSegmentApplicability from "../checkRccSegmentApplicability"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -59,7 +59,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     operations.push(operation)
   }
 
-  if (result.PNCDisposalType === 2060 && doesCaseRequireRcc(aho, ccrId)) {
+  if (result.PNCDisposalType === 2060 && checkRccSegmentApplicability(aho, ccrId) == null) {
     const exception = {
       code: ExceptionCode.HO200108,
       path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
