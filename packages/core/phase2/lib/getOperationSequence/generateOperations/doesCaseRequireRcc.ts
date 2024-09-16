@@ -3,18 +3,34 @@ import isRecordableOffence from "../../isRecordableOffence"
 import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
 
 const doesCaseRequireRcc = (aho: AnnotatedHearingOutcome, courtCaseReferenceNumber?: string) => {
+  let caseHasReportableOffencesAddedByCourt = false
+  let caseRequiresRcc = false
+
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
     (offence) =>
       isRecordableOffence(offence) &&
       (!courtCaseReferenceNumber || offence.CourtCaseReferenceNumber === courtCaseReferenceNumber)
   )
 
-  return offences.some((offence) => {
-    const hasPncDisposalType2060 = offence.Result.some((result) => result.PNCDisposalType === 2060)
-    const isDisarrCompatible = disarrCompatibleResultClass(offence)
+  for (const offence of offences) {
+    const thisOffenceAddedByTheCourt = offence.AddedByTheCourt
+    const thisOffenceHasReportableResults = !offence.AddedByTheCourt || disarrCompatibleResultClass(offence)
+    const thisOffenceRequiresRcc = offence.Result.some((result) => result.PNCDisposalType === 2060)
 
-    return hasPncDisposalType2060 && (!offence.AddedByTheCourt || isDisarrCompatible)
-  })
+    if (thisOffenceRequiresRcc && (!thisOffenceAddedByTheCourt || thisOffenceHasReportableResults)) {
+      caseRequiresRcc = true
+    }
+
+    if (thisOffenceAddedByTheCourt && thisOffenceHasReportableResults) {
+      caseHasReportableOffencesAddedByCourt = true
+    }
+  }
+
+  if (!caseRequiresRcc) {
+    return false
+  }
+
+  return caseHasReportableOffencesAddedByCourt ? true : null
 }
 
 export default doesCaseRequireRcc
