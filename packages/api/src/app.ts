@@ -16,7 +16,13 @@ export default async function () {
       logger: true
     })
   } else {
-    fastify = Fastify({ logger: true })
+    let options = {}
+
+    if (process.env.NODE_ENV !== "test") {
+      options = { logger: true }
+    }
+
+    fastify = Fastify(options)
   }
 
   fastify.setValidatorCompiler(validatorCompiler)
