@@ -39,8 +39,9 @@ fastify.register(fastifySwaggerUI, {
 })
 
 fastify.register(AutoLoad, {
-  dir: path.join(__dirname, "routes"),
-  dirNameRoutePrefix: false
+  dir: path.join(__dirname, "plugins"),
+  dirNameRoutePrefix: false,
+  matchFilter: (path) => path.includes("plugin")
 })
 
 fastify.listen({ port: PORT }, (err) => {
