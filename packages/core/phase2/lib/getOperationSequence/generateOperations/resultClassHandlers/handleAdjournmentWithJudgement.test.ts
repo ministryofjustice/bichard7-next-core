@@ -122,7 +122,7 @@ describe("handleAdjournmentWithJudgement", () => {
       result: { PNCDisposalType: 2060 } as Result,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckRccSegmentApplicability.mockReturnValue(null)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)

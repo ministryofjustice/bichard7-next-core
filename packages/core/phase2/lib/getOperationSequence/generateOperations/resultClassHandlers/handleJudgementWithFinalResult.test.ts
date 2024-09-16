@@ -104,7 +104,7 @@ describe("handleJudgementWithFinalResult", () => {
       result: { PNCDisposalType: 2060 } as Result,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckRccSegmentApplicability.mockReturnValue(null)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
