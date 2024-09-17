@@ -32,13 +32,6 @@ export interface Br7Operation {
           | Br7TextString
       }
     | {
-        APPHRD:
-          | {
-              courtCaseReference: Br7TextString
-            }
-          | Br7TextString
-      }
-    | {
         DISARR:
           | {
               courtCaseReference: Br7TextString

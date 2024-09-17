@@ -5,8 +5,7 @@ const operationCodes = [
   PncOperation.SENTENCE_DEFERRED,
   PncOperation.NORMAL_DISPOSAL,
   PncOperation.DISPOSAL_UPDATED,
-  PncOperation.COMMITTED_SENTENCING,
-  PncOperation.APPEALS_UPDATE
+  PncOperation.COMMITTED_SENTENCING
 ]
 
 const operationCourtCaseReference = (operation: Operation): string | undefined =>
