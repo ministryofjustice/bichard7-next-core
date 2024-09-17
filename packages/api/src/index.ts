@@ -1,12 +1,12 @@
-import fs from "fs"
-import https from "https"
-import app from "./app"
+import build from "./app"
 
-const PORT: string = process.env.PORT || "3333"
+async function start() {
+  const port: number = parseInt(process.env.PORT || "3333", 10)
+  const app = await build()
 
-if (process.env.USE_SSL === "true") {
-  const config = { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") }
-  https.createServer(config, app).listen(PORT, () => console.log(`app is listening on https port ${PORT}`))
-} else {
-  app.listen(PORT, () => console.log(`app is listening on http port ${PORT}`))
+  await app.ready()
+
+  app.listen({ port })
 }
+
+start()
