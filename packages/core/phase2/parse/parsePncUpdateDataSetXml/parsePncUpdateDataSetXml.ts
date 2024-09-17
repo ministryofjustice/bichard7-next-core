@@ -105,20 +105,6 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if (PncOperation.COMMITTED_SENTENCING in operationXml.operationCode) {
-      const data = isEmptyElement(operationXml.operationCode.COMSEN)
-        ? undefined
-        : {
-            courtCaseReference: operationXml.operationCode.COMSEN.courtCaseReference["#text"]
-          }
-
-      operation = {
-        code: PncOperation.COMMITTED_SENTENCING,
-        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
-        ...(data ? { data } : {})
-      }
-    }
-
     if (!operation) {
       throw Error("Operation is not supported")
     }
