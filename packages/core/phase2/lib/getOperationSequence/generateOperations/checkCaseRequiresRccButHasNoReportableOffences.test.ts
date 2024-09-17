@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
-import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
+import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 
 const createAho = (offences: Partial<Offence>[]) =>
   ({
@@ -15,7 +15,7 @@ const createAho = (offences: Partial<Offence>[]) =>
     }
   }) as AnnotatedHearingOutcome
 
-describe("checkRccSegmentApplicability", () => {
+describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
   it("should return CaseDoesNotRequireRcc when there are no recordable offences", () => {
     const aho = createAho([
       {
@@ -28,9 +28,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when there are no matching offences", () => {
@@ -45,9 +45,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when offences do not contain PNC disposal type 2060", () => {
@@ -62,9 +62,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2061 } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseDoesNotRequireRcc when offences are added by court and are not DISARR compatible", () => {
@@ -79,9 +79,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseDoesNotRequireRcc)
+    expect(result).toBe(false)
   })
 
   it("should return CaseRequiresRccAndHasReportableOffences when case requires RCC and offence is added by the court and is DISARR compatible", () => {
@@ -96,9 +96,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences)
+    expect(result).toBe(false)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and offence is added by the court but not DISARR compatible", () => {
@@ -122,9 +122,9 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences)
+    expect(result).toBe(true)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and there is an offence that is DISARR compatible but not added by the court", () => {
@@ -148,8 +148,8 @@ describe("checkRccSegmentApplicability", () => {
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
-    const result = checkRccSegmentApplicability(aho, "123")
+    const result = checkCaseRequiresRccButHasNoReportableOffences(aho, "123")
 
-    expect(result).toBe(RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences)
+    expect(result).toBe(true)
   })
 })

@@ -7,7 +7,6 @@ import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
 import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjournmentWithJudgement"
-import { handleAppealOutcome } from "./resultClassHandlers/handleAppealOutcome"
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 
@@ -15,7 +14,6 @@ jest.mock("./resultClassHandlers/handleAdjournment")
 jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
 jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
 jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
-jest.mock("./resultClassHandlers/handleAppealOutcome")
 jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
 jest.mock("./resultClassHandlers/handleSentence")
 
@@ -23,7 +21,6 @@ const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock
 const mockedHandleAdjournmentPreJudgement = handleAdjournmentPreJudgement as jest.Mock
 const mockedHandleAdjournmentWithJudgement = handleAdjournmentWithJudgement as jest.Mock
-const mockedHandleAppealOutcome = handleAppealOutcome as jest.Mock
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock
 const mockedHandleSentence = handleSentence as jest.Mock
 
@@ -35,7 +32,6 @@ describe("generateOperations", () => {
       mockedHandleAdjournmentPostJudgement,
       mockedHandleAdjournmentPreJudgement,
       mockedHandleAdjournmentWithJudgement,
-      mockedHandleAppealOutcome,
       mockedHandleJudgementWithFinalResult,
       mockedHandleSentence,
       mockedHandleAdjournmentPreJudgement
@@ -47,7 +43,6 @@ describe("generateOperations", () => {
     { resultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT, expectedFn: mockedHandleAdjournmentPostJudgement },
     { resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, expectedFn: mockedHandleAdjournmentPreJudgement },
     { resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, expectedFn: mockedHandleAdjournmentWithJudgement },
-    { resultClass: ResultClass.APPEAL_OUTCOME, expectedFn: mockedHandleAppealOutcome },
     { resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, expectedFn: mockedHandleJudgementWithFinalResult },
     { resultClass: ResultClass.SENTENCE, expectedFn: mockedHandleSentence }
   ])(
