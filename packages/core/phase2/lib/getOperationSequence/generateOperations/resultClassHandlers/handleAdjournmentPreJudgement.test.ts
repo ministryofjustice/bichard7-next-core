@@ -1,4 +1,5 @@
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import { PncOperation } from "../../../../../types/PncOperation"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
 import { handleAdjournmentPreJudgement } from "./handleAdjournmentPreJudgement"
@@ -50,7 +51,7 @@ describe("handleAdjournmentPreJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
-        code: "NEWREM",
+        code: PncOperation.REMAND,
         isAdjournmentPreJudgement: true,
         courtCaseReference: "234",
         data: {

@@ -1,6 +1,3 @@
-process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
-process.env.AUDIT_LOG_API_KEY = "dummy"
-
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { MockServer } from "jest-mock-server"
@@ -28,6 +25,9 @@ describe("storeAuditLogEvents", () => {
   let auditLogApi: MockServer
 
   beforeAll(async () => {
+    process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
+    process.env.AUDIT_LOG_API_KEY = "dummy"
+
     auditLogApi = new MockServer({ port: 11001 })
     await auditLogApi.start()
   })

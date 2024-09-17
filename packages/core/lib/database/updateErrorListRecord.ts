@@ -18,8 +18,6 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
     error_quality_checked: record.error_quality_checked,
     annotated_msg: record.annotated_msg,
     updated_msg: record.updated_msg,
-    error_resolved_by: null,
-    error_resolved_ts: null,
     user_updated_flag: record.user_updated_flag
   }
 }
@@ -31,6 +29,15 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
 
     const updateResult = await db<ErrorListRecord[]>`
       UPDATE br7own.error_list SET ${db(updateFields)},
+        trigger_status = CASE
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${
+            ResolutionStatus.RESOLVED
+          }::integer) > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
+          WHEN trigger_status IS NULL THEN NULL
+          ELSE ${ResolutionStatus.RESOLVED}::integer
+        END,
+        trigger_count = (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}),
+        trigger_reason = (SELECT trigger_code FROM br7own.error_list_triggers WHERE error_id = ${recordId} LIMIT 1),
         error_status = CASE
           WHEN ${exceptionsCount}::integer > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
           WHEN error_status IS NULL THEN NULL

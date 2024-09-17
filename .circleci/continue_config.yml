@@ -144,6 +144,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: true
     resource_class: xlarge
     steps:
       - unless:
@@ -258,6 +259,7 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: true
     resource_class: large
     steps:
       - unless:
@@ -299,6 +301,7 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: true
     resource_class: large
     steps:
       - unless:
@@ -331,6 +334,7 @@ jobs:
   e2e_test:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: true
     resource_class: large
     parallelism: 10
     parameters:
@@ -426,6 +430,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.dlc >>
+      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:

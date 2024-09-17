@@ -11,7 +11,8 @@
     "bichard-legacy": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-bichard.yml up -d --wait nginx-auth-proxy",
     "bichard-legacy-debug": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-bichard-debug.yml up -d --wait nginx-auth-proxy",
     "build": "npm run build --ws",
-    "build-message-forwarder": "docker compose --project-name bichard -f environment/docker-compose.yml build message-forwarder",
+    "build-message-forwarder:phase-1": "docker compose --project-name bichard -f environment/docker-compose.yml build phase-1-message-forwarder",
+    "build-message-forwarder:phase-2": "docker compose --project-name bichard -f environment/docker-compose.yml build phase-2-message-forwarder",
     "build-worker": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml build worker",
     "build:package": "./scripts/build-package.sh",
     "clean": "npm run clean --ws",
@@ -51,11 +52,12 @@
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
   },
   "devDependencies": {
+    "@swc/core": "^1.7.23",
+    "@swc/jest": "^0.2.36",
     "excel4node": "^1.8.2",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.9",
     "npm-check-updates": "^16.14.6",
     "zod-to-json-schema": "^3.21.4"
-  },
-  "dependencies": {}
+  }
 }

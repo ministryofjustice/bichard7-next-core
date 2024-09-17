@@ -166,4 +166,41 @@ describe("saveErrorListRecord", () => {
     expect(insertedNotes[3]).toMatchSnapshot(snapshotExclusions)
     expect(insertedNotes[4]).toMatchSnapshot(snapshotExclusions)
   })
+
+  it("should update the error record and add new triggers even when no exception is raised after resubmission", async () => {
+    const phase1Result = generateMockPhase1Result({
+      triggers: [],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100206, path: errorPaths.case.asn }] }
+    })
+
+    await saveErrorListRecord(db, phase1Result)
+
+    const errorListRecordsWithException = await db<ErrorListRecord[]>`
+      SELECT * FROM br7own.error_list`
+
+    expect(errorListRecordsWithException).toHaveLength(1)
+    expect(errorListRecordsWithException[0].trigger_count).toBe(0)
+    expect(errorListRecordsWithException[0].trigger_status).toBeNull()
+
+    phase1Result.triggers.push(
+      { code: TriggerCode.TRPR0027, offenceSequenceNumber: 2 },
+      { code: TriggerCode.TRPR0015, offenceSequenceNumber: 2 }
+    )
+    phase1Result.hearingOutcome.Exceptions = []
+
+    await saveErrorListRecord(db, phase1Result)
+
+    const errorListRecordsWithoutException = await db<ErrorListRecord[]>`
+      SELECT * FROM br7own.error_list`
+
+    expect(errorListRecordsWithoutException).toHaveLength(1)
+    expect(errorListRecordsWithoutException[0].trigger_count).toBe(2)
+    expect(errorListRecordsWithoutException[0].trigger_status).toBe(1)
+
+    const insertedTriggers = await db<ErrorListTriggerRecord[]>`
+      SELECT * FROM br7own.error_list_triggers`
+
+    expect(insertedTriggers).toHaveLength(2)
+    expect(insertedTriggers[0].trigger_code).toEqual(phase1Result.triggers[0].code)
+  })
 })

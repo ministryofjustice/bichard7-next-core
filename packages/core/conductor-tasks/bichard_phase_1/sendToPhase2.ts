@@ -22,11 +22,6 @@ const phase2WorkflowName = "bichard_phase_2"
 
 const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
-const getCanaryRatio = () => {
-  const canaryRatio = Number(process.env.PHASE2_CORE_CANARY_RATIO)
-  return isNaN(canaryRatio) ? 0.0 : canaryRatio
-}
-
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {
   throw Error("TASK_DATA_BUCKET_NAME environment variable is required")
@@ -37,10 +32,19 @@ enum Destination {
   MQ = "MQ"
 }
 
-const getDestination = (): Destination => {
+const getCanaryRatio = (phase2CanaryRatio?: number) => {
+  if (phase2CanaryRatio !== undefined && phase2CanaryRatio !== -1) {
+    return phase2CanaryRatio
+  }
+
+  const canaryRatio = Number(process.env.PHASE2_CORE_CANARY_RATIO)
+  return isNaN(canaryRatio) ? 0.0 : canaryRatio
+}
+
+const getDestination = (phase2CanaryRatio?: number): Destination => {
   const random = Math.random()
 
-  if (getCanaryRatio() > random) {
+  if (getCanaryRatio(phase2CanaryRatio) > random) {
     return Destination.CONDUCTOR
   }
 
@@ -50,11 +54,12 @@ const getDestination = (): Destination => {
 const sendToPhase2: ConductorWorker = {
   taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
-    const { s3TaskData, s3TaskDataPath } = task.inputData
+    const { s3TaskData, s3TaskDataPath, options } = task.inputData
     const correlationId =
       s3TaskData.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
-    const destination = getDestination()
+    const phase2CanaryRatio = isNaN(Number(options?.phase2CanaryRatio)) ? undefined : Number(options?.phase2CanaryRatio)
+    const destination = getDestination(phase2CanaryRatio)
 
     if (destination === Destination.MQ) {
       const result = await connectAndSendMessage(mqQueue, serialiseToXml(s3TaskData.hearingOutcome)).catch(

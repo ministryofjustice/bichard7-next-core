@@ -14,3 +14,6 @@ buildspec.yml
 LICENSE
 Makefile
 README.md
+
+# SWC cache
+.swc/

@@ -23,7 +23,7 @@ services:
       retries: 10
       start_period: 20s
 
-  message-forwarder:
+  phase-1-message-forwarder:
     image: message-forwarder
     build:
       dockerfile: packages/message-forwarder/Dockerfile
@@ -33,6 +33,35 @@ services:
       CONDUCTOR_URL: http://conductor:4000/api
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
+      CONDUCTOR_WORKFLOW: bichard_phase_1
+      SOURCE_QUEUE: PHASE_1_RESUBMIT_QUEUE
+      DESTINATION: HEARING_OUTCOME_INPUT_QUEUE
+      MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
+      MQ_URL: failover:(ws://activemq:61614)
+      TASK_DATA_BUCKET_NAME: conductor-task-data
+      S3_AWS_ACCESS_KEY_ID: FAKE
+      S3_AWS_SECRET_ACCESS_KEY: FAKE
+      S3_ENDPOINT: http://localstack:4566
+      S3_REGION: eu-west-2
+    depends_on:
+      activemq:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+
+  phase-2-message-forwarder:
+    image: message-forwarder
+    build:
+      dockerfile: packages/message-forwarder/Dockerfile
+      context: ..
+    environment:
+      DESTINATION_TYPE: mq
+      CONDUCTOR_URL: http://conductor:4000/api
+      CONDUCTOR_USERNAME: ${DEFAULT_USER}
+      CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
+      CONDUCTOR_WORKFLOW: bichard_phase_2
+      SOURCE_QUEUE: PHASE_2_RESUBMIT_QUEUE
+      DESTINATION: DATA_SET_PNC_UPDATE_QUEUE
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(ws://activemq:61614)
       TASK_DATA_BUCKET_NAME: conductor-task-data
@@ -189,6 +218,7 @@ services:
       ENABLE_PHASE_3: "${ENABLE_PHASE_3:-true}"
       PNC_API_KEY: "${PNC_API_KEY}"
       PHASE_1_RESUBMIT_QUEUE_NAME: "JMS/Phase1ResubmitQueue"
+      PHASE_2_RESUBMIT_QUEUE_NAME: "JMS/Phase2ResubmitQueue"
       CONDUCTOR_API_URL: ${CONDUCTOR_API_URL:-http://conductor:4000}
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
@@ -208,7 +238,9 @@ services:
         condition: service_healthy
       db-seed:
         condition: service_started
-      message-forwarder:
+      phase-1-message-forwarder:
+        condition: service_started
+      phase-2-message-forwarder:
         condition: service_started
       audit-log-api:
         condition: service_healthy

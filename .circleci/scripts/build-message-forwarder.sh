@@ -4,23 +4,28 @@ echo `date`
 echo $PWD
 echo ""
 
-success=false
-max_attempts=3
-attempt_num=1
+phases=(1 2)
 
-while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
+for phase in "${phases[@]}"; do
+  success=false
+  max_attempts=3
+  attempt_num=1
 
-    docker compose -f environment/docker-compose.yml build message-forwarder
+  while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
+    message_forwarder="phase-${phase}-message-forwarder"
+
+    docker compose -f environment/docker-compose.yml build "$message_forwarder"
 
     if [ $? -eq 0 ]; then
-        success=true
+      success=true
     else
-        echo ""
-        echo "Failed, retrying..."
-        sleep 10
-        ((attempt_num++))
-        echo "Retrying, attempt $attempt_num ..."
+      echo ""
+      echo "Failed, retrying..."
+      sleep 10
+      ((attempt_num++))
+      echo "Retrying, attempt $attempt_num ..."
     fi
+  done
 done
 
 if [ $attempt_num -eq 4 ]; then
