@@ -8,8 +8,7 @@ const allOperations = [
   PncOperation.SENTENCE_DEFERRED,
   PncOperation.DISPOSAL_UPDATED,
   PncOperation.PENALTY_HEARING,
-  PncOperation.COMMITTED_SENTENCING,
-  PncOperation.APPEALS_UPDATE
+  PncOperation.COMMITTED_SENTENCING
 ]
 const ccrs = [1, 2, null]
 
