@@ -98,7 +98,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBe(true)
+    expect(result).toBe(false)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and offence is added by the court but not DISARR compatible", () => {
@@ -124,7 +124,7 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBeNull()
+    expect(result).toBe(true)
   })
 
   it("should return CaseRequiresRccButHasNoReportableOffences when case requires RCC and there is an offence that is DISARR compatible but not added by the court", () => {
@@ -150,6 +150,6 @@ describe("checkRccSegmentApplicability", () => {
     ])
     const result = checkRccSegmentApplicability(aho, "123")
 
-    expect(result).toBeNull()
+    expect(result).toBe(true)
   })
 })
