@@ -1,7 +1,6 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import allRecordableResultsMatchAPncDisposal from "./allRecordableResultsMatchAPncDisposal"
+import areResultsMatchAPncDisposal from "./areResultsMatchAPncDisposal"
 
 describe("allRecordableResultsMatchAPncDisposal", () => {
   it("Given an unrecordable result, returns true", () => {
@@ -17,8 +16,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       PNCDisposalType: 1000,
       ResultQualifierVariable: []
     }
-    const results = [matchingResult, nonMatchingResult, unrecordableResult] as unknown as Result[]
-    const aho = generateAhoFromOffenceList([{ Result: results } as Offence])
+    const offence = { Result: [matchingResult, nonMatchingResult, unrecordableResult] } as unknown as Offence
 
     const disposals = [
       {
@@ -32,7 +30,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho, 0)
+    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -43,9 +41,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       ResultQualifierVariable: []
     } as unknown as Result
 
-    const results = [nonMatchingResult, nonMatchingResult]
-    const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
-
+    const offence = { Result: [nonMatchingResult, nonMatchingResult] } as unknown as Offence
     const disposals = [
       {
         qtyDate: "",
@@ -58,7 +54,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
+    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -69,9 +65,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       ResultQualifierVariable: []
     } as unknown as Result
 
-    const results = [matchingResult, matchingResult]
-    const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
-
+    const offence = { Result: [matchingResult, matchingResult] } as unknown as Offence
     const disposals = [
       {
         qtyDate: "",
@@ -84,7 +78,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
+    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -97,9 +91,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       ResultVariableText: `NOT ENTER ${"A".repeat(100)} THIS EXCLUSION REQUIREMENT LASTS FOR TIME`
     } as unknown as Result
 
-    const results = [matchingResult, matchingResult]
-    const aho1 = generateAhoFromOffenceList([{ Result: results } as Offence])
-
+    const offence = { Result: [matchingResult, matchingResult] } as unknown as Offence
     const disposals = [
       {
         qtyDate: "",
@@ -112,7 +104,7 @@ describe("allRecordableResultsMatchAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = allRecordableResultsMatchAPncDisposal(results, disposals, aho1, 0)
+    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([
       {

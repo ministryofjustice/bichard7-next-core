@@ -1,7 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../../types/Exception"
 import type { ExceptionResult } from "../../../../types/Exception"
-import { isNonEmptyArray } from "../../../../types/NonEmptyArray"
 import isRecordableResult from "../../isRecordableResult"
 import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"
 
@@ -14,24 +13,14 @@ const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): Excepti
 
   const exceptions: Exception[] = []
   const allResultsOnPnc = offences.every((offence, offenceIndex) => {
-    const results = offence.Result
-    const courtCaseReferenceNumber = offence.CourtCaseReferenceNumber ?? undefined
-    const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence
-
-    if (isNonEmptyArray(results) && offenceReasonSequence) {
-      const { value: matchToPncAdjAndDis, exceptions: matchToPncAdjAndDisExceptions } = isMatchToPncAdjAndDis(
-        results,
-        aho,
-        courtCaseReferenceNumber,
-        offenceIndex,
-        offenceReasonSequence
-      )
-      exceptions.push(...matchToPncAdjAndDisExceptions)
-
-      return matchToPncAdjAndDis
+    if (offence.Result.length === 0 || !offence.CriminalProsecutionReference?.OffenceReasonSequence) {
+      return !offence.Result.some(isRecordableResult)
     }
 
-    return !offence.Result.some(isRecordableResult)
+    const matchResult = isMatchToPncAdjAndDis(aho, offence, offenceIndex)
+    exceptions.push(...matchResult.exceptions)
+
+    return matchResult.value
   })
 
   return { value: allResultsOnPnc, exceptions }

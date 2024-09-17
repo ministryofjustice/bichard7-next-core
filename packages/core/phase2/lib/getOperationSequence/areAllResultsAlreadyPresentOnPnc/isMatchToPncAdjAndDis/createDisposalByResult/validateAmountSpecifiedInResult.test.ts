@@ -1,47 +1,34 @@
-import type { Offence } from "../../../../../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"
 
 describe("validateAmountSpecifiedInResult", () => {
   it("should return AmountSpecifiedInResult.Amount and not generate exception when amount is less than 11 characters and integral part is less than 8 characters", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            AmountSpecifiedInResult: [
-              { Amount: 1234567.8911 },
-              { Amount: 1234567.8911 },
-              { Amount: 1234567.89 },
-              { Amount: 1234567.8911 }
-            ]
-          }
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      AmountSpecifiedInResult: [
+        { Amount: 1234567.8911 },
+        { Amount: 1234567.8911 },
+        { Amount: 1234567.89 },
+        { Amount: 1234567.8911 }
+      ]
+    } as Result
 
-    const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 2)
+    const amountResult = validateAmountSpecifiedInResult(hoResult, 0, 0, 2)
 
     expect(amountResult.value).toBe(1234567.89)
     expect(amountResult.exceptions).toHaveLength(0)
   })
 
   it("should return undefined and not generate exception when AmountSpecifiedInResult.Amount is undefined", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            AmountSpecifiedInResult: [
-              { Amount: 1234567.8911 },
-              { Amount: 1234567.8911 },
-              { Amount: undefined },
-              { Amount: 1234567.8911 }
-            ]
-          }
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      AmountSpecifiedInResult: [
+        { Amount: 1234567.8911 },
+        { Amount: 1234567.8911 },
+        { Amount: undefined },
+        { Amount: 1234567.8911 }
+      ]
+    } as Result
 
-    const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 2)
+    const amountResult = validateAmountSpecifiedInResult(hoResult, 0, 0, 2)
 
     expect(amountResult.value).toBeUndefined()
     expect(amountResult.exceptions).toHaveLength(0)
@@ -60,17 +47,11 @@ describe("validateAmountSpecifiedInResult", () => {
   ])(
     "should return undefined and generate exception HO200205 when AmountSpecifiedInResult.Amount $when",
     ({ amount }) => {
-      const aho = generateAhoFromOffenceList([
-        {
-          Result: [
-            {
-              AmountSpecifiedInResult: [{ Amount: 1234567.12 }, { Amount: amount }]
-            }
-          ]
-        } as Offence
-      ])
+      const hoResult = {
+        AmountSpecifiedInResult: [{ Amount: 1234567.12 }, { Amount: amount }]
+      } as Result
 
-      const amountResult = validateAmountSpecifiedInResult(aho, 0, 0, 1)
+      const amountResult = validateAmountSpecifiedInResult(hoResult, 0, 0, 1)
 
       expect(amountResult.value).toBeUndefined()
       expect(amountResult.exceptions).toStrictEqual([

@@ -1,13 +1,11 @@
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import isMatchToPncDis from "./isMatchToPncDis"
 
 describe("check isMatchToPncDis", () => {
   it("returns false when disposals list is empty", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
-    const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
-    const result = isMatchToPncDis([], aho, 0, 0)
+    const result = isMatchToPncDis([], ahoResult, 0, 0)
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -46,9 +44,8 @@ describe("check isMatchToPncDis", () => {
         }
       ]
     } as Result
-    const aho = generateAhoFromOffenceList([{ Result: [ahoResult] } as Offence])
 
-    const result = isMatchToPncDis([pncDisposal], aho, 0, 0)
+    const result = isMatchToPncDis([pncDisposal], ahoResult, 0, 0)
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })

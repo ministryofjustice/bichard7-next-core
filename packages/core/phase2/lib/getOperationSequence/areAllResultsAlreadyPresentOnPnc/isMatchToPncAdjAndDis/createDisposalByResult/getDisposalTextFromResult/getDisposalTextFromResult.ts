@@ -9,11 +9,11 @@ import penaltyPointsDisposalText from "./penaltyPointsDisposalText"
 import untilFurtherOrderDisposalText from "./untilFurtherOrderDisposalText"
 
 const disposalTextMap: Record<number, (resultVariableText: string) => string> = {
-  3025: disqualifiedFromKeepingDisposalText,
   1100: exclusionOrderDisposalText,
+  3025: disqualifiedFromKeepingDisposalText,
   3041: licencedPremisesExclusionOrderDisposalText,
-  3106: exclusionRequirementsDisposalText,
-  3047: untilFurtherOrderDisposalText
+  3047: untilFurtherOrderDisposalText,
+  3106: exclusionRequirementsDisposalText
 }
 
 const getDisposalTextFromResult = (result: Result): string => {

@@ -2,25 +2,25 @@ jest.mock("./createPncAdjudication")
 import { verdict } from "bichard7-next-data-latest"
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import createPncAdjudication from "./createPncAdjudication"
-import getAdjFromAho from "./getAdjFromAho"
+import createPncAdjudicationByAho from "./createPncAdjudicationByAho"
 
 const mockedCreatePncAdjudication = (createPncAdjudication as jest.Mock).mockReturnValue({ dummy: "dummy" })
 
-describe("getAdjFromAho", () => {
+describe("createPncAdjudicationByAho", () => {
   beforeEach(() => {
     jest.resetAllMocks()
     mockedCreatePncAdjudication.mockReturnValue({ dummy: "dummy" })
   })
 
   it("should return a PNC adjudication when NumberOfOffencesTIC, Verdict, PleaStatus are undefined", () => {
-    const result = getAdjFromAho([{ PNCDisposalType: 1000 } as Result], new Date("2024-05-10"))
+    const result = createPncAdjudicationByAho([{ PNCDisposalType: 1000 } as Result], new Date("2024-05-10"))
 
     expect(result).toStrictEqual({ dummy: "dummy" })
     expect(mockedCreatePncAdjudication).toHaveBeenCalledWith(1000, "", "", new Date("2024-05-10"), 0)
   })
 
   it("should use the first recordable offence to create PNC ajdudication and count number of offences TIC correctly", () => {
-    const result = getAdjFromAho(
+    const result = createPncAdjudicationByAho(
       [
         { PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: "NC", PleaStatus: "DEN" } as Result,
         { PNCDisposalType: 1001, NumberOfOffencesTIC: 3, Verdict: "G", PleaStatus: "CON" } as Result,
@@ -34,7 +34,7 @@ describe("getAdjFromAho", () => {
   })
 
   it("should return a PNC adjudication when NumberOfOffencesTIC, Verdict, PleaStatus have value", () => {
-    const result = getAdjFromAho(
+    const result = createPncAdjudicationByAho(
       [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: "NC", PleaStatus: "DEN" } as Result],
       new Date("2024-05-10")
     )
@@ -52,7 +52,7 @@ describe("getAdjFromAho", () => {
   it.each([undefined, "", "invalid and lookup fails", "NC"])(
     "should set verdict to GUILTY when plea is ADM and verdict is %s",
     (verdict) => {
-      const result = getAdjFromAho(
+      const result = createPncAdjudicationByAho(
         [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: verdict, PleaStatus: "ADM" } as Result],
         new Date("2024-05-10")
       )
@@ -65,7 +65,7 @@ describe("getAdjFromAho", () => {
   it.each(verdict.filter((v) => v.cjsCode && v.cjsCode !== "NC"))(
     "should set verdict to $pncCode when verdict is $cjsCode",
     ({ cjsCode, pncCode }) => {
-      const result = getAdjFromAho(
+      const result = createPncAdjudicationByAho(
         [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: cjsCode, PleaStatus: "ADM" } as Result],
         new Date("2024-05-10")
       )

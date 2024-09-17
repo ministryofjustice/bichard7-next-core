@@ -1,17 +1,19 @@
-import type { AnnotatedHearingOutcome } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { ExceptionResult } from "../../../../../types/Exception"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import { getDisFromResult } from "./getDisFromResult"
-import isPncDisposalMatch from "./isPncDisposalMatch"
+import areDisposalsMatch from "./areDisposalsMatch"
+import { createDisposalByResult } from "./createDisposalByResult"
 
 const isMatchToPncDis = (
   pncDisposals: PncDisposal[],
-  aho: AnnotatedHearingOutcome,
+  result: Result,
   offenceIndex: number,
   resultIndex: number
 ): ExceptionResult<boolean> => {
-  const { value: disposals, exceptions } = getDisFromResult(aho, offenceIndex, resultIndex)
-  const isMatch = disposals.every((ahoDis) => pncDisposals.some((pncDis) => isPncDisposalMatch(ahoDis, pncDis)))
+  const { value: ahoDisposals, exceptions } = createDisposalByResult(result, offenceIndex, resultIndex)
+  const isMatch = ahoDisposals.every((ahoDisposal) =>
+    pncDisposals.some((pncDisposal) => areDisposalsMatch(ahoDisposal, pncDisposal))
+  )
 
   return { value: isMatch, exceptions }
 }

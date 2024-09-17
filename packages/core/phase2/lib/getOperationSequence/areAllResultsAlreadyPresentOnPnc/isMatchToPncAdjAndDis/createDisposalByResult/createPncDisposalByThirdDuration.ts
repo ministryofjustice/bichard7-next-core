@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
 import type { ExceptionResult } from "../../../../../../types/Exception"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
@@ -17,20 +17,18 @@ const getDateSpecifiedInResult = (result: Result) => {
 }
 
 const createPncDisposalByThirdDuration = (
-  aho: AnnotatedHearingOutcome,
+  result: Result,
   offenceIndex: number,
   resultIndex: number,
   validatedDisposalText: string | undefined
 ): ExceptionResult<PncDisposal | undefined> => {
-  const result =
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
   if (!result.Duration?.[2]) {
     return { value: undefined, exceptions: [] }
   }
 
   const thirdDuration = result.Duration[2]
   const { value: thirdAmountSpecifiedInResult, exceptions } = validateAmountSpecifiedInResult(
-    aho,
+    result,
     offenceIndex,
     resultIndex,
     2

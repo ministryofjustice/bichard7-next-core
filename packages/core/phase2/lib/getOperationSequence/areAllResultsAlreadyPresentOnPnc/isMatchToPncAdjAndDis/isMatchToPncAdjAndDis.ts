@@ -1,57 +1,52 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../../../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../../../types/Exception"
 import type { ExceptionResult } from "../../../../../types/Exception"
-import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
-import allRecordableResultsMatchAPncDisposal from "./allRecordableResultsMatchAPncDisposal"
-import getAdjFromAho from "./getAdjFromAho"
-import isMatchToPncAdj from "./isMatchToPncAdj"
+import { isNonEmptyArray } from "../../../../../types/NonEmptyArray"
+import areResultsMatchAPncDisposal from "./areResultsMatchAPncDisposal"
+import createPncAdjudicationByAho from "./createPncAdjudicationByAho"
+import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
+
+const findPncCourtCase = (aho: AnnotatedHearingOutcome, offence: Offence) => {
+  const courtCaseReference =
+    offence.CourtCaseReferenceNumber ?? aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+
+  return courtCaseReference
+    ? aho.PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseReference)
+    : undefined
+}
 
 const isMatchToPncAdjAndDis = (
-  results: NonEmptyArray<Result>,
   aho: AnnotatedHearingOutcome,
-  courtCaseReferenceNumber: string | undefined,
-  offenceIndex: number,
-  offenceReasonSequence: string | undefined
+  offence: Offence,
+  offenceIndex: number
 ): ExceptionResult<boolean> => {
-  const courtCaseReference =
-    courtCaseReferenceNumber ?? aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
-
-  if (!courtCaseReference) {
+  if (!offence.Result || !isNonEmptyArray(offence.Result)) {
     return { value: false, exceptions: [] }
   }
 
-  const courtCase = aho.PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseReference)
-
-  if (!courtCase) {
+  const pncCourtCase = findPncCourtCase(aho, offence)
+  if (!pncCourtCase || pncCourtCase.offences.length === 0) {
     return { value: false, exceptions: [] }
   }
 
-  const pncOffences = courtCase.offences
-
-  if (!pncOffences || pncOffences.length == 0) {
-    return { value: false, exceptions: [] }
-  }
-
-  const adjFromAho = getAdjFromAho(results, aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing)
-
-  const matchingPncAdjudications = pncOffences.filter((pncOffence) =>
-    isMatchToPncAdj(adjFromAho, pncOffence, offenceReasonSequence)
+  const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence ?? undefined
+  const adjFromAho = createPncAdjudicationByAho(
+    offence.Result,
+    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
   )
-
-  if (!matchingPncAdjudications || matchingPncAdjudications.length == 0) {
-    return { value: false, exceptions: [] }
-  }
-
   const exceptions: Exception[] = []
-  const isThereMatchingPncAdjudications = matchingPncAdjudications.some((pncAdj) => {
-    const { value: allPncDisposalsMatch, exceptions: allPncDisposalsMatchExceptions } =
-      allRecordableResultsMatchAPncDisposal(results, pncAdj.disposals ?? [], aho, offenceIndex)
-    exceptions.push(...allPncDisposalsMatchExceptions)
+  const isMatchToPncAdjudicationAndDisposals = pncCourtCase.offences.some((pncOffence) => {
+    if (!isMatchToPncAdjudication(adjFromAho, pncOffence, offenceReasonSequence)) {
+      return false
+    }
 
-    return allPncDisposalsMatch
+    const pncDisposalsMatchResult = areResultsMatchAPncDisposal(offence, offenceIndex, pncOffence.disposals ?? [])
+    exceptions.push(...pncDisposalsMatchResult.exceptions)
+
+    return pncDisposalsMatchResult.value
   })
 
-  return { value: isThereMatchingPncAdjudications, exceptions }
+  return { value: isMatchToPncAdjudicationAndDisposals, exceptions }
 }
 
 export default isMatchToPncAdjAndDis

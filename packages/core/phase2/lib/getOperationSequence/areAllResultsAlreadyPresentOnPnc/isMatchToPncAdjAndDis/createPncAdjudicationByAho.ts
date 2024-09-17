@@ -5,7 +5,7 @@ import type { PncAdjudication } from "../../../../../types/PncQueryResult"
 import isRecordableResult from "../../../isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 
-const getAdjFromAho = (results: NonEmptyArray<Result>, hearingDate: Date): PncAdjudication => {
+const createPncAdjudicationByAho = (results: NonEmptyArray<Result>, hearingDate: Date): PncAdjudication => {
   const recordableResults = results.filter((result) => isRecordableResult(result))
   const resultToExtractValueFrom = recordableResults[0] ?? results[0]
   const numberOfOffencesTIC = results.reduce((acc, result) => (acc += result.NumberOfOffencesTIC ?? 0), 0)
@@ -24,4 +24,4 @@ const getAdjFromAho = (results: NonEmptyArray<Result>, hearingDate: Date): PncAd
   return createPncAdjudication(disposalType, pleaStatusPncCode, verdict, hearingDate, numberOfOffencesTIC)
 }
 
-export default getAdjFromAho
+export default createPncAdjudicationByAho
