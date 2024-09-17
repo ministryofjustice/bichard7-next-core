@@ -47,7 +47,7 @@ export default async function () {
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, "plugins"),
     dirNameRoutePrefix: false,
-    matchFilter: (path) => path.includes("plugin.ts")
+    matchFilter: (path: string) => path.includes("plugin")
   })
 
   return fastify
