@@ -10,7 +10,7 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "jest --runInBand --forceExit --testPathPattern",
+    "test": "jest --runInBand --forceExit --workerThreads=true --testPathPattern",
     "start": "node dist/src/index.js",
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose --maxWorkers=80% ./tests --testRegex '\\.(?:unit)\\.test.ts$'",
