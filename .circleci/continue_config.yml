@@ -429,7 +429,6 @@ jobs:
   test_common:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.dlc >>
       docker_layer_caching: false
     resource_class: medium
     steps:
