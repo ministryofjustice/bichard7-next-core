@@ -30,7 +30,7 @@ const checkRccSegmentApplicability = (aho: AnnotatedHearingOutcome, courtCaseRef
     return false
   }
 
-  return caseHasReportableOffencesAddedByCourt ? true : null
+  return caseHasReportableOffencesAddedByCourt ? false : true
 }
 
 export default checkRccSegmentApplicability
