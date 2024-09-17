@@ -2,14 +2,14 @@ import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutco
 import { PncOperation } from "../../../../../types/PncOperation"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import checkRccSegmentApplicability from "../checkRccSegmentApplicability"
+import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
-jest.mock("../checkRccSegmentApplicability")
+jest.mock("../checkCaseRequiresRccButHasNoReportableOffences")
 jest.mock("../hasUnmatchedPncOffences")
 
-const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
+const mockedCheckCaseRequiresRccButHasNoReportableOffences = checkCaseRequiresRccButHasNoReportableOffences as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 
 describe("handleJudgementWithFinalResult", () => {
@@ -75,7 +75,7 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("should only return exception HO200124 when HO200124 and HO200108 conditions are met", () => {
     const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -104,7 +104,7 @@ describe("handleJudgementWithFinalResult", () => {
       result: { PNCDisposalType: 2060 } as Result,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -132,7 +132,7 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("should not return exception HO200124 when all results are already on PNC", () => {
     const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -143,7 +143,7 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("should not return exception HO200124 when all PNC offences match", () => {
     const params = generateResultClassHandlerParams()
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -156,7 +156,7 @@ describe("handleJudgementWithFinalResult", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -170,7 +170,7 @@ describe("handleJudgementWithFinalResult", () => {
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -186,7 +186,7 @@ describe("handleJudgementWithFinalResult", () => {
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -211,7 +211,7 @@ describe("handleJudgementWithFinalResult", () => {
       } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
@@ -227,7 +227,7 @@ describe("handleJudgementWithFinalResult", () => {
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { exceptions, operations } = handleJudgementWithFinalResult(params)

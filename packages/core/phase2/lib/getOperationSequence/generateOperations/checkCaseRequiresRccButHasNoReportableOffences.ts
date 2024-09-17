@@ -2,7 +2,10 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import isRecordableOffence from "../../isRecordableOffence"
 import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
 
-const checkRccSegmentApplicability = (aho: AnnotatedHearingOutcome, courtCaseReferenceNumber?: string) => {
+const checkCaseRequiresRccButHasNoReportableOffences = (
+  aho: AnnotatedHearingOutcome,
+  courtCaseReferenceNumber?: string
+) => {
   let caseHasReportableOffencesAddedByCourt = false
   let caseRequiresRcc = false
 
@@ -33,4 +36,4 @@ const checkRccSegmentApplicability = (aho: AnnotatedHearingOutcome, courtCaseRef
   return caseHasReportableOffencesAddedByCourt ? false : true
 }
 
-export default checkRccSegmentApplicability
+export default checkCaseRequiresRccButHasNoReportableOffences

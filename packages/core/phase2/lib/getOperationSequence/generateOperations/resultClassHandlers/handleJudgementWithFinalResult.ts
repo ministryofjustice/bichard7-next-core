@@ -7,7 +7,7 @@ import createSubsequentVariationOperation from "../createSubsequentVariationOper
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../../types/PncOperation"
-import checkRccSegmentApplicability from "../checkRccSegmentApplicability"
+import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -59,7 +59,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     operations.push(operation)
   }
 
-  if (result.PNCDisposalType === 2060 && checkRccSegmentApplicability(aho, ccrId)) {
+  if (result.PNCDisposalType === 2060 && checkCaseRequiresRccButHasNoReportableOffences(aho, ccrId)) {
     const exception = {
       code: ExceptionCode.HO200108,
       path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass

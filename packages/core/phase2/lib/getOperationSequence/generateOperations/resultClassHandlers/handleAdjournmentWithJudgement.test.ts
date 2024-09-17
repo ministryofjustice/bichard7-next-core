@@ -2,13 +2,13 @@ import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutco
 import { PncOperation } from "../../../../../types/PncOperation"
 import ResultClass from "../../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../../tests/helpers/generateResultClassHandlerParams"
-import checkRccSegmentApplicability from "../checkRccSegmentApplicability"
+import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 
-jest.mock("../checkRccSegmentApplicability")
+jest.mock("../checkCaseRequiresRccButHasNoReportableOffences")
 jest.mock("../hasUnmatchedPncOffences")
-const mockedCheckRccSegmentApplicability = checkRccSegmentApplicability as jest.Mock
+const mockedCheckCaseRequiresRccButHasNoReportableOffences = checkCaseRequiresRccButHasNoReportableOffences as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 
 const organisationUnit = {
@@ -93,7 +93,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should only return HO200124 when HO200124 and HO200108 conditions are met", () => {
     const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -122,7 +122,7 @@ describe("handleAdjournmentWithJudgement", () => {
       result: { PNCDisposalType: 2060 } as Result,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(true)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -151,7 +151,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should not return HO200124 when all results are already on PNC", () => {
     const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -165,7 +165,7 @@ describe("handleAdjournmentWithJudgement", () => {
 
   it("should not return HO200124 when all PNC offences match", () => {
     const params = generateResultClassHandlerParams()
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -181,7 +181,7 @@ describe("handleAdjournmentWithJudgement", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -203,7 +203,7 @@ describe("handleAdjournmentWithJudgement", () => {
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -220,7 +220,7 @@ describe("handleAdjournmentWithJudgement", () => {
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
@@ -242,7 +242,7 @@ describe("handleAdjournmentWithJudgement", () => {
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
       allResultsAlreadyOnPnc: true
     })
-    mockedCheckRccSegmentApplicability.mockReturnValue(false)
+    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const { operations, exceptions } = handleAdjournmentWithJudgement(params)
