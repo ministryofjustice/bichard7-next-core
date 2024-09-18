@@ -1,223 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: 2) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:COMSEN (CCR: null) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: 2) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:DISARR (CCR: null) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour COMSEN:NEWREM (CCR: null) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour COMSEN:PENHRG (CCR: null) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: 2) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SENDEF (CCR: null) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour COMSEN:SUBVAR (CCR: null) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: 1) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: 2) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour DISARR:COMSEN (CCR: null) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
 exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: 1) 1`] = `
 {
   "code": "HO200109",
@@ -380,34 +162,6 @@ exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: 
 }
 `;
 
-exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour NEWREM:COMSEN (CCR: null) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
 exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 1) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 2) 1`] = `undefined`;
@@ -459,12 +213,6 @@ exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 
 exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 2) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: null) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: 1) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour PENHRG:COMSEN (CCR: null) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: 1) 1`] = `undefined`;
 
@@ -528,45 +276,6 @@ exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 
 exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 2) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: null) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: 1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: 2) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
-
-exports[`validateOperations should match existing behaviour SENDEF:COMSEN (CCR: null) 1`] = `
-{
-  "code": "HO200109",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
 
 exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1) 1`] = `
 {
@@ -751,12 +460,6 @@ exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 
   ],
 }
 `;
-
-exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: 1) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: 2) 1`] = `undefined`;
-
-exports[`validateOperations should match existing behaviour SUBVAR:COMSEN (CCR: null) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: 1) 1`] = `
 {

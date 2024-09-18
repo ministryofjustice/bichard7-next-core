@@ -9,7 +9,6 @@ import { PncOperation } from "../../../types/PncOperation"
 const errorPath = errorPaths.case.asn
 
 const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
-  let comsenExists = false
   let sendefExists = false
   let newremExists = false
   let penhrgExists = false
@@ -19,17 +18,12 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
     newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === PncOperation.SENTENCE_DEFERRED
-    comsenExists ||= operation.code === PncOperation.COMMITTED_SENTENCING
 
     if (penhrgExists && sendefExists) {
       return { code: ExceptionCode.HO200114, path: errorPath }
     }
 
-    if (penhrgExists && comsenExists) {
-      break
-    }
-
-    if (newremExists && remandCcrs.size === 0 && (comsenExists || sendefExists)) {
+    if (newremExists && remandCcrs.size === 0 && sendefExists) {
       return { code: ExceptionCode.HO200113, path: errorPath }
     }
 
@@ -47,29 +41,20 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     const courtCaseReference = operationCourtCaseReference(operation)
 
     if (
-      [
-        PncOperation.COMMITTED_SENTENCING,
-        PncOperation.SENTENCE_DEFERRED,
-        PncOperation.DISPOSAL_UPDATED,
-        PncOperation.NORMAL_DISPOSAL
-      ].includes(operation.code as PncOperation)
+      [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED, PncOperation.NORMAL_DISPOSAL].includes(
+        operation.code as PncOperation
+      )
     ) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
       if (clashingOperation) {
         const sortedOperations = [operation.code, clashingOperation.code].sort()
-        if (
-          operation.code === clashingOperation.code ||
-          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, PncOperation.SENTENCE_DEFERRED])
-        ) {
+        if (operation.code === clashingOperation.code) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
 
-        if (
-          isEqual(sortedOperations, [PncOperation.COMMITTED_SENTENCING, PncOperation.NORMAL_DISPOSAL]) ||
-          isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])
-        ) {
+        if (isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])) {
           return { code: ExceptionCode.HO200112, path: errorPath }
         }
 
@@ -90,7 +75,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
     if (
-      [PncOperation.COMMITTED_SENTENCING, PncOperation.SENTENCE_DEFERRED].includes(operation.code as PncOperation) &&
+      [PncOperation.SENTENCE_DEFERRED].includes(operation.code as PncOperation) &&
       remandCcrsContainCourtCaseReference
     ) {
       return { code: ExceptionCode.HO200113, path: errorPath }
