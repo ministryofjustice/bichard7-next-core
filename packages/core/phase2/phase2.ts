@@ -13,6 +13,7 @@ import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
+import generateExceptions from "./exceptions/generateExceptions"
 
 type ProcessMessageResult = {
   triggers?: Trigger[]
@@ -52,7 +53,12 @@ const processMessage = (
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
-  const { operations, exceptions, events } = getOperationSequence(outputMessage, isResubmitted)
+  const {
+    operations,
+    exceptions: getOperationSequenceExceptions,
+    events
+  } = getOperationSequence(outputMessage, isResubmitted)
+  const exceptions = generateExceptions(inputMessage).concat(getOperationSequenceExceptions)
   exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   events?.forEach((eventCode) => auditLogger.info(eventCode))
 
