@@ -10,7 +10,7 @@ phases:
     commands:
       - ./scripts/install-goss.sh
       - ./scripts/build-core-worker-docker.sh
-      - ./scripts/build-api-docker.sh
+      # - ./scripts/build-api-docker.sh
       - ./scripts/build-message-forwarder-docker.sh
 ---
 
