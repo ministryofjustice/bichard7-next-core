@@ -6,7 +6,7 @@ import type Exception from "../../types/Exception"
 import ResultClass from "../../types/ResultClass"
 import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
 import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 const HO100305: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []
