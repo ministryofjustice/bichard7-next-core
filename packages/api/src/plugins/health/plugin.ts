@@ -11,8 +11,24 @@ const schema = {
   }
 }
 
+const options = (fastify: FastifyInstance) => {
+  console.log(`hasDecorator: ${fastify.hasDecorator("allowAnonymous")}`)
+
+  return {
+    schema,
+    // preHandler: fastify.auth([
+    //   (_req: FastifyRequest, _res: FastifyReply, done: () => void) => {
+    //     console.log("In auth allowAnonymous")
+
+    //     return done()
+    //   }
+    // ]),
+    handler: healthHandler
+  }
+}
+
 const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.get(HealthRoutes.HEALTH, { schema }, healthHandler)
+  fastify.get(HealthRoutes.HEALTH, options(fastify))
 }
 
 export default plugin

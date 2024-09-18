@@ -52,7 +52,9 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
+    "@fastify/auth": "^4.6.1",
     "@fastify/autoload": "^5.10.0",
+    "@fastify/bearer-auth": "^9.4.0",
     "@fastify/swagger": "^8.15.0",
     "@fastify/swagger-ui": "^4.1.0",
     "esbuild": "^0.21.5",

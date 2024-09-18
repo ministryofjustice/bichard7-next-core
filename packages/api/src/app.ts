@@ -1,13 +1,24 @@
+import auth, { type FastifyAuthFunction } from "@fastify/auth"
 import AutoLoad from "@fastify/autoload"
+import bearerAuthPlugin from "@fastify/bearer-auth"
 import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
-import { fastify as Fastify, type FastifyInstance } from "fastify"
+import type { FastifyInstance } from "fastify"
+import { fastify as Fastify } from "fastify"
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
 import fs from "fs"
 import type { IncomingMessage, Server, ServerResponse } from "http"
 import path from "path"
 
+declare module "fastify" {
+  interface FastifyInstance {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    allowAnonymous: FastifyAuthFunction
+  }
+}
+
 export default async function () {
+  const keys = new Set<string>([process.env.API_KEY ?? "password"])
   let fastify: FastifyInstance<Server, IncomingMessage, ServerResponse>
 
   if (process.env.USE_SSL === "true") {
@@ -25,10 +36,17 @@ export default async function () {
     fastify = Fastify(options)
   }
 
+  fastify.register(auth).register(bearerAuthPlugin, { keys, addHook: true })
+  // .decorate("allowAnonymous", async function (_req: FastifyRequest, _res: FastifyReply) {
+  //   console.log("In the decorate allowAnonymous")
+
+  //   return true
+  // })
+
   fastify.setValidatorCompiler(validatorCompiler)
   fastify.setSerializerCompiler(serializerCompiler)
 
-  fastify.register(fastifySwagger, {
+  await fastify.register(fastifySwagger, {
     openapi: {
       info: {
         title: "Bichard API",
@@ -40,11 +58,11 @@ export default async function () {
     transform: jsonSchemaTransform
   })
 
-  fastify.register(fastifySwaggerUI, {
+  await fastify.register(fastifySwaggerUI, {
     routePrefix: "/swagger"
   })
 
-  fastify.register(AutoLoad, {
+  await fastify.register(AutoLoad, {
     dir: path.join(__dirname, "plugins"),
     dirNameRoutePrefix: false,
     matchFilter: (path: string) => path.includes("plugin")
