@@ -3,8 +3,7 @@ jest.mock("./getDisposalTextFromResult")
 jest.mock("./isDriverDisqualificationResult")
 jest.mock("./validateAmountSpecifiedInResult")
 
-import type { Offence, Result } from "../../../../../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
 import { getDisposalTextFromResult } from "./getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
@@ -22,26 +21,20 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
   })
 
   it("should return PNC disposal when disposal text has value and is valid", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultQualifierVariable: [] as unknown,
-            Duration: [
-              { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-              { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-            ]
-          } as Result
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      ResultQualifierVariable: [] as unknown,
+      Duration: [
+        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
+      ]
+    } as Result
 
     mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: 11, exceptions: [] })
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
     mockedIsDriverDisqualificationResult.mockReturnValue(true)
     mockedGetDisposalTextFromResult.mockReturnValue("Dummy disposal text")
 
-    const pncDisposal = createPncDisposalByFirstAndSecondDurations(aho, 0, 0)
+    const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult, 0, 0)
 
     expect(pncDisposal.exceptions).toStrictEqual([])
     expect(pncDisposal.value).toStrictEqual({
@@ -56,27 +49,21 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
   })
 
   it("should return PNC disposal when ResultVariableText has value and is valid", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultVariableText: "Dummy text",
-            ResultQualifierVariable: [] as unknown,
-            Duration: [
-              { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-              { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-            ]
-          } as Result
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      ResultVariableText: "Dummy text",
+      ResultQualifierVariable: [] as unknown,
+      Duration: [
+        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
+      ]
+    } as Result
 
     mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: 11, exceptions: [] })
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
     mockedIsDriverDisqualificationResult.mockReturnValue(true)
     mockedGetDisposalTextFromResult.mockReturnValue("A".repeat(65))
 
-    const pncDisposal = createPncDisposalByFirstAndSecondDurations(aho, 0, 0)
+    const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult, 0, 0)
 
     expect(pncDisposal.exceptions).toStrictEqual([
       {
@@ -106,26 +93,20 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
   })
 
   it("should return PNC disposal and validate disposal text when disposal text has value and is valid", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultQualifierVariable: [] as unknown,
-            Duration: [
-              { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-              { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-            ]
-          } as Result
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      ResultQualifierVariable: [] as unknown,
+      Duration: [
+        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
+      ]
+    } as Result
 
     mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: 11, exceptions: [] })
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
     mockedIsDriverDisqualificationResult.mockReturnValue(true)
     mockedGetDisposalTextFromResult.mockReturnValue("Dummy disposal text")
 
-    const pncDisposal = createPncDisposalByFirstAndSecondDurations(aho, 0, 0)
+    const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult, 0, 0)
 
     expect(pncDisposal.exceptions).toStrictEqual([])
     expect(pncDisposal.value).toStrictEqual({
@@ -140,26 +121,20 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
   })
 
   it("should return PNC disposal and use DateSpecifiedInResult for disposal text when disposal text does not have value", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultQualifierVariable: [] as unknown,
-            Duration: [
-              { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-              { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-            ]
-          } as Result
-        ]
-      } as Offence
-    ])
+    const hoResult = {
+      ResultQualifierVariable: [] as unknown,
+      Duration: [
+        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
+      ]
+    } as Result
 
     mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: 11, exceptions: [] })
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
     mockedIsDriverDisqualificationResult.mockReturnValue(true)
     mockedGetDisposalTextFromResult.mockReturnValue(undefined)
 
-    const pncDisposal = createPncDisposalByFirstAndSecondDurations(aho, 0, 0)
+    const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult, 0, 0)
 
     expect(pncDisposal.exceptions).toStrictEqual([])
     expect(pncDisposal.value).toStrictEqual({

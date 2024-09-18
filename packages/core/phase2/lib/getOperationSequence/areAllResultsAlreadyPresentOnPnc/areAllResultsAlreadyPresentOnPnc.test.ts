@@ -1,11 +1,11 @@
-jest.mock("./isMatchToPncAdjAndDis")
+jest.mock("./isMatchToPncAdjudicationAndDisposals")
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import areAllResultsAlreadyPresentOnPnc from "./areAllResultsAlreadyPresentOnPnc"
-import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"
+import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
 
-const mockedIsMatchToPncAdjAndDis = isMatchToPncAdjAndDis as jest.Mock
+const mockedisMatchToPncAdjudicationAndDisposals = isMatchToPncAdjudicationAndDisposals as jest.Mock
 
 describe("areAllResultsAlreadyPresentOnPnc", () => {
   beforeEach(() => {
@@ -40,13 +40,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
           ccr: "123",
           reasonSequence: "1",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         }
       ]
     },
@@ -59,13 +59,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
           ccr: "123",
           reasonSequence: "1",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: false
+          isMatchToPncAdjudicationAndDisposalsValue: false
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         }
       ]
     },
@@ -77,13 +77,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
         {
           ccr: "123",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         }
       ]
     },
@@ -95,13 +95,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
         {
           ccr: "123",
           results: [{ pncDisposalType: 1001 }, { pncDisposalType: 1002 }],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         }
       ]
     },
@@ -113,13 +113,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
         {
           ccr: "123",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: false
+          isMatchToPncAdjudicationAndDisposalsValue: false
         }
       ]
     },
@@ -131,12 +131,12 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
         {
           ccr: "123",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         },
         {
           reasonSequence: "2",
           results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjAndDisValue: true
+          isMatchToPncAdjudicationAndDisposalsValue: true
         }
       ]
     },
@@ -149,13 +149,13 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
           ccr: "123",
           reasonSequence: "1",
           results: [],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         },
         {
           ccr: "234",
           reasonSequence: "2",
           results: [],
-          isMatchToPncAdjAndDisValue: undefined
+          isMatchToPncAdjudicationAndDisposalsValue: undefined
         }
       ]
     }
@@ -180,14 +180,14 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     } as unknown as AnnotatedHearingOutcome
 
     offences
-      .filter((offence) => offence.isMatchToPncAdjAndDisValue !== undefined)
-      .forEach(({ isMatchToPncAdjAndDisValue }) => {
-        mockedIsMatchToPncAdjAndDis.mockReturnValueOnce({
-          value: isMatchToPncAdjAndDisValue,
+      .filter((offence) => offence.isMatchToPncAdjudicationAndDisposalsValue !== undefined)
+      .forEach(({ isMatchToPncAdjudicationAndDisposalsValue }) => {
+        mockedisMatchToPncAdjudicationAndDisposals.mockReturnValueOnce({
+          value: isMatchToPncAdjudicationAndDisposalsValue,
           exceptions: [{ code: ExceptionCode.HO200101, path: ["dummy"] }]
         })
       })
-    mockedIsMatchToPncAdjAndDis.mockImplementation(() => {
+    mockedisMatchToPncAdjudicationAndDisposals.mockImplementation(() => {
       throw Error("Too many invocations!")
     })
 
