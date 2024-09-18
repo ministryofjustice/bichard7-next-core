@@ -6,29 +6,21 @@ import { healthHandler } from "./handlers"
 import HealthRoutes from "./routes"
 
 const schema = {
+  security: [],
   response: {
     [OK]: z.string().describe("Health check will return Ok")
   }
 }
 
-const options = (fastify: FastifyInstance) => {
-  console.log(`hasDecorator: ${fastify.hasDecorator("allowAnonymous")}`)
-
+const options = () => {
   return {
     schema,
-    // preHandler: fastify.auth([
-    //   (_req: FastifyRequest, _res: FastifyReply, done: () => void) => {
-    //     console.log("In auth allowAnonymous")
-
-    //     return done()
-    //   }
-    // ]),
     handler: healthHandler
   }
 }
 
 const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.get(HealthRoutes.HEALTH, options(fastify))
+  fastify.get(HealthRoutes.HEALTH, options())
 }
 
 export default plugin

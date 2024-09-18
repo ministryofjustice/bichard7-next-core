@@ -12,13 +12,11 @@ import path from "path"
 
 declare module "fastify" {
   interface FastifyInstance {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     allowAnonymous: FastifyAuthFunction
   }
 }
 
 export default async function () {
-  const keys = new Set<string>([process.env.API_KEY ?? "password"])
   let fastify: FastifyInstance<Server, IncomingMessage, ServerResponse>
 
   if (process.env.USE_SSL === "true") {
@@ -27,21 +25,10 @@ export default async function () {
       logger: true
     })
   } else {
-    let options = {}
-
-    if (process.env.NODE_ENV !== "test") {
-      options = { logger: true }
-    }
-
-    fastify = Fastify(options)
+    fastify = Fastify({
+      logger: process.env.NODE_ENV === "test"
+    })
   }
-
-  fastify.register(auth).register(bearerAuthPlugin, { keys, addHook: true })
-  // .decorate("allowAnonymous", async function (_req: FastifyRequest, _res: FastifyReply) {
-  //   console.log("In the decorate allowAnonymous")
-
-  //   return true
-  // })
 
   fastify.setValidatorCompiler(validatorCompiler)
   fastify.setSerializerCompiler(serializerCompiler)
@@ -53,6 +40,15 @@ export default async function () {
         description: "API documentation about Bichard",
         version: "0.0.1"
       },
+      components: {
+        securitySchemes: {
+          apiKey: {
+            type: "apiKey",
+            name: "Authorization",
+            in: "header"
+          }
+        }
+      },
       servers: []
     },
     transform: jsonSchemaTransform
@@ -62,10 +58,27 @@ export default async function () {
     routePrefix: "/swagger"
   })
 
-  await fastify.register(AutoLoad, {
-    dir: path.join(__dirname, "plugins"),
-    dirNameRoutePrefix: false,
-    matchFilter: (path: string) => path.includes("plugin")
+  // Autoloaded plugins (no authentication)
+  fastify.register(async (instance) => {
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "plugins"),
+      dirNameRoutePrefix: false,
+      matchFilter: (path: string) => path.includes("plugin")
+    })
+  })
+
+  // Autoloaded API routes (bearer token required)
+  fastify.register(async (instance) => {
+    const keys = new Set<string>([process.env.API_KEY ?? "password"])
+
+    await instance.register(auth)
+    await instance.register(bearerAuthPlugin, { keys, addHook: true })
+
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "routes"),
+      dirNameRoutePrefix: false,
+      matchFilter: (path: string) => path.includes("route")
+    })
   })
 
   return fastify
