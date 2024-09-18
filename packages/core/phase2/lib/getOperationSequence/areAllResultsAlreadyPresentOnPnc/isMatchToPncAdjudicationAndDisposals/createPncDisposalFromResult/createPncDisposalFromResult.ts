@@ -7,7 +7,7 @@ import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration
 import validateResultQualifierVariableCode from "./validateResultQualifierVariableCode"
 import validateResultQualifierVariableDurationType from "./validateResultQualifierVariableDurationType"
 
-const createDisposalByResult = (
+const createPncDisposalFromResult = (
   result: Result,
   offenceIndex: number,
   resultIndex: number
@@ -36,4 +36,4 @@ const createDisposalByResult = (
   }
 }
 
-export default createDisposalByResult
+export default createPncDisposalFromResult

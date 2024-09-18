@@ -2,8 +2,8 @@ import type { AnnotatedHearingOutcome, Offence } from "../../../../../types/Anno
 import type Exception from "../../../../../types/Exception"
 import type { ExceptionResult } from "../../../../../types/Exception"
 import { isNonEmptyArray } from "../../../../../types/NonEmptyArray"
-import areResultsMatchAPncDisposal from "./areResultsMatchAPncDisposal"
-import createPncAdjudicationByAho from "./createPncAdjudicationByAho"
+import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
+import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
 
 const findPncCourtCase = (aho: AnnotatedHearingOutcome, offence: Offence) => {
@@ -15,7 +15,7 @@ const findPncCourtCase = (aho: AnnotatedHearingOutcome, offence: Offence) => {
     : undefined
 }
 
-const isMatchToPncAdjAndDis = (
+const isMatchToPncAdjudicationAndDisposals = (
   aho: AnnotatedHearingOutcome,
   offence: Offence,
   offenceIndex: number
@@ -30,12 +30,12 @@ const isMatchToPncAdjAndDis = (
   }
 
   const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence ?? undefined
-  const adjFromAho = createPncAdjudicationByAho(
+  const adjFromAho = createPncAdjudicationFromAho(
     offence.Result,
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
   )
   const exceptions: Exception[] = []
-  const isMatchToPncAdjudicationAndDisposals = pncCourtCase.offences.some((pncOffence) => {
+  const isMatchToPncAdjudicationAndDisposalsResult = pncCourtCase.offences.some((pncOffence) => {
     if (!isMatchToPncAdjudication(adjFromAho, pncOffence, offenceReasonSequence)) {
       return false
     }
@@ -46,7 +46,7 @@ const isMatchToPncAdjAndDis = (
     return pncDisposalsMatchResult.value
   })
 
-  return { value: isMatchToPncAdjudicationAndDisposals, exceptions }
+  return { value: isMatchToPncAdjudicationAndDisposalsResult, exceptions }
 }
 
-export default isMatchToPncAdjAndDis
+export default isMatchToPncAdjudicationAndDisposals

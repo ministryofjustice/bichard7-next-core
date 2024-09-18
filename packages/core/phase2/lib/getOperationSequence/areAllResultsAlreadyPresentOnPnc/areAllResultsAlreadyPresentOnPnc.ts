@@ -2,7 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import type Exception from "../../../../types/Exception"
 import type { ExceptionResult } from "../../../../types/Exception"
 import isRecordableResult from "../../isRecordableResult"
-import { isMatchToPncAdjAndDis } from "./isMatchToPncAdjAndDis"
+import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
 
 const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): ExceptionResult<boolean> => {
   if (!aho.PncQuery?.pncId) {
@@ -17,10 +17,12 @@ const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): Excepti
       return !offence.Result.some(isRecordableResult)
     }
 
-    const matchResult = isMatchToPncAdjAndDis(aho, offence, offenceIndex)
-    exceptions.push(...matchResult.exceptions)
-
-    return matchResult.value
+    const {
+      value: isMatchToPncAdjudicationAndDisposalsResult,
+      exceptions: isMatchToPncAdjudicationAndDisposalsExceptions
+    } = isMatchToPncAdjudicationAndDisposals(aho, offence, offenceIndex)
+    exceptions.push(...isMatchToPncAdjudicationAndDisposalsExceptions)
+    return isMatchToPncAdjudicationAndDisposalsResult
   })
 
   return { value: allResultsOnPnc, exceptions }

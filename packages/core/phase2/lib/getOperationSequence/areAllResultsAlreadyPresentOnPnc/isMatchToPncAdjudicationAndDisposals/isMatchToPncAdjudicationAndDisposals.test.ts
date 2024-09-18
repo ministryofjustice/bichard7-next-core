@@ -1,14 +1,12 @@
 import type { PncCourtCaseSummary } from "../../../../../comparison/types/MatchingComparisonOutput"
 import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncOffence, PncQueryResult } from "../../../../../types/PncQueryResult"
 import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import isMatchToPncAdjAndDis from "./isMatchToPncAdjAndDis"
+import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
 
-describe("check isMatchToPncAdjAndDis", () => {
+describe("check isMatchToPncAdjudicationAndDisposals", () => {
   let aho: AnnotatedHearingOutcome
   let ahoWithResults: AnnotatedHearingOutcome
-  let emptyResults: NonEmptyArray<Result>
   let courtCaseResult: Result
   let courtCaseNoOffences: PncCourtCaseSummary
 
@@ -24,7 +22,6 @@ describe("check isMatchToPncAdjAndDis", () => {
       pncId: "",
       courtCases: [courtCaseNoOffences]
     }
-    emptyResults = [{} as Result]
 
     courtCaseResult = {
       PNCDisposalType: 2063
@@ -41,7 +38,7 @@ describe("check isMatchToPncAdjAndDis", () => {
         CourtCaseReferenceNumber: undefined
       } as Offence
     ])
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
       ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -58,7 +55,7 @@ describe("check isMatchToPncAdjAndDis", () => {
         CourtCaseReferenceNumber: "DOES_NOT_MATCH_FOO"
       } as Offence
     ])
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
       ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -75,7 +72,7 @@ describe("check isMatchToPncAdjAndDis", () => {
         CourtCaseReferenceNumber: "FOO"
       } as Offence
     ])
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
       ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -124,7 +121,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
       ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -173,7 +170,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
       ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -271,7 +268,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
       ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0
@@ -361,7 +358,7 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis(
+    const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
       ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
       0

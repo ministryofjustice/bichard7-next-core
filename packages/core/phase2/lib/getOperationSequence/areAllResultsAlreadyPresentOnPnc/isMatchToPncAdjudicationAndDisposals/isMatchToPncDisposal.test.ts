@@ -1,11 +1,11 @@
 import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import isMatchToPncDis from "./isMatchToPncDis"
+import isMatchToPncDisposal from "./isMatchToPncDisposal"
 
-describe("check isMatchToPncDis", () => {
+describe("isMatchToPncDisposal", () => {
   it("returns false when disposals list is empty", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
-    const result = isMatchToPncDis([], ahoResult, 0, 0)
+    const result = isMatchToPncDisposal([], ahoResult, 0, 0)
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -45,7 +45,7 @@ describe("check isMatchToPncDis", () => {
       ]
     } as Result
 
-    const result = isMatchToPncDis([pncDisposal], ahoResult, 0, 0)
+    const result = isMatchToPncDisposal([pncDisposal], ahoResult, 0, 0)
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })

@@ -1,7 +1,7 @@
 import type { PncAdjudication, PncOffence } from "../../../../../types/PncQueryResult"
 
 const isMatchToPncAdjudication = (
-  hoAdjucation: PncAdjudication,
+  hoAdjudication: PncAdjudication,
   pncOffence: PncOffence,
   offenceReasonSequence: string | undefined
 ): boolean => {
@@ -12,10 +12,10 @@ const isMatchToPncAdjudication = (
     !!offenceReasonSequence &&
     !!pncAdjudication &&
     offenceReasonSequence === pncOffenceSequence &&
-    hoAdjucation.verdict === pncAdjudication.verdict &&
-    hoAdjucation.plea === pncAdjudication.plea &&
-    hoAdjucation.offenceTICNumber === pncAdjudication.offenceTICNumber &&
-    hoAdjucation.sentenceDate?.getTime() === pncAdjudication.sentenceDate?.getTime()
+    hoAdjudication.verdict === pncAdjudication.verdict &&
+    hoAdjudication.plea === pncAdjudication.plea &&
+    hoAdjudication.offenceTICNumber === pncAdjudication.offenceTICNumber &&
+    hoAdjudication.sentenceDate?.getTime() === pncAdjudication.sentenceDate?.getTime()
   )
 }
 

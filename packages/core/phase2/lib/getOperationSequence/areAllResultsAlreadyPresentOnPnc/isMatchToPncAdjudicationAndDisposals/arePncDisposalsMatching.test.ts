@@ -1,7 +1,7 @@
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import areDisposalsMatch from "./areDisposalsMatch"
+import arePncDisposalsMatching from "./arePncDisposalsMatching"
 
-describe("isPncDisposalMatch", () => {
+describe("arePncDisposalsMatching", () => {
   const defaultDisposal: PncDisposal = {
     qtyDate: "date",
     qtyDuration: "15",
@@ -14,7 +14,7 @@ describe("isPncDisposalMatch", () => {
 
   it("should return true when disposals have the same values", () => {
     const sameDisposal = structuredClone(defaultDisposal)
-    const result = areDisposalsMatch(defaultDisposal, sameDisposal)
+    const result = arePncDisposalsMatching(defaultDisposal, sameDisposal)
 
     expect(result).toBe(true)
   })
@@ -22,7 +22,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different type", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.type = 9999
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -30,7 +30,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different qualifiers", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.qualifiers = "something different"
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -38,7 +38,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different dates", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.qtyDate = "11-11-2011"
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -48,7 +48,7 @@ describe("isPncDisposalMatch", () => {
       ...defaultDisposal,
       qtyMonetaryValue: "FOOBAR"
     } as unknown as PncDisposal
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -56,7 +56,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different durations", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.qtyDuration = "FOOBAR"
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -64,7 +64,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different text", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.text = "FOOBAR"
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -72,7 +72,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different text because one is undefined", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.text = undefined
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -80,7 +80,7 @@ describe("isPncDisposalMatch", () => {
   it("should return false when disposals have different durations because one is undefined", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.qtyDuration = undefined
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(false)
   })
@@ -88,7 +88,7 @@ describe("isPncDisposalMatch", () => {
   it("should return true when disposals have different qty units (not compared)", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.qtyUnitsFined = "FOOBAR"
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(true)
   })
@@ -96,7 +96,7 @@ describe("isPncDisposalMatch", () => {
   it("should return true when disposals have same text with case difference", () => {
     const disposal = structuredClone(defaultDisposal)
     disposal.text = defaultDisposal.text?.toUpperCase()
-    const result = areDisposalsMatch(defaultDisposal, disposal)
+    const result = arePncDisposalsMatching(defaultDisposal, disposal)
 
     expect(result).toBe(true)
   })

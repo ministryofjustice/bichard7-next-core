@@ -1,8 +1,8 @@
 import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../../../types/PncQueryResult"
-import areResultsMatchAPncDisposal from "./areResultsMatchAPncDisposal"
+import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
 
-describe("allRecordableResultsMatchAPncDisposal", () => {
+describe("areResultsMatchingAPncDisposal", () => {
   it("Given an unrecordable result, returns true", () => {
     const matchingResult = {
       PNCDisposalType: 2063,
