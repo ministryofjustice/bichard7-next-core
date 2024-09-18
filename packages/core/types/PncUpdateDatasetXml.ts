@@ -33,14 +33,6 @@ type DisarrOperationCode = {
     | {}
 }
 
-type ComsenOperationCode = {
-  COMSEN:
-    | {
-        courtCaseReference: string
-      }
-    | {}
-}
-
 type NewremOperationCode = {
   NEWREM:
     | {
@@ -59,7 +51,6 @@ export type PncOperationXml = {
     | NewremOperationCode
     | SubvarOperationCode
     | PenhrgOperationCode
-    | ComsenOperationCode
   operationStatus: OperationStatusXml
 }
 
