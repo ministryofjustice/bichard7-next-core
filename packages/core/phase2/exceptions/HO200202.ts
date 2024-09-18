@@ -1,3 +1,4 @@
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
