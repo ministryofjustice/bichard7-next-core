@@ -1,5 +1,5 @@
 import type { PncAdjudication, PncOffence } from "../../../../../types/PncQueryResult"
-import isMatchToPncAdj from "./isMatchToPncAdj"
+import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
 
 describe("check isMatchToPncAdj", () => {
   it("Given an undefined date on the aho adjudication, adjudications do not match", () => {
@@ -23,7 +23,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, "001")
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, "001")
     expect(result).toBe(false)
   })
 
@@ -47,7 +47,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, "001")
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, "001")
     expect(result).toBe(false)
   })
 
@@ -72,7 +72,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, "001")
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, "001")
     expect(result).toBe(true)
   })
 
@@ -95,7 +95,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, "001")
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, "001")
     expect(result).toBe(true)
   })
 
@@ -120,7 +120,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, undefined)
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, undefined)
     expect(result).toBe(false)
   })
 
@@ -145,7 +145,7 @@ describe("check isMatchToPncAdj", () => {
         weedFlag: undefined
       }
     } as PncOffence
-    const result = isMatchToPncAdj(hoAdjudication, pncOffence, "001")
+    const result = isMatchToPncAdjudication(hoAdjudication, pncOffence, "001")
     expect(result).toBe(false)
   })
 })

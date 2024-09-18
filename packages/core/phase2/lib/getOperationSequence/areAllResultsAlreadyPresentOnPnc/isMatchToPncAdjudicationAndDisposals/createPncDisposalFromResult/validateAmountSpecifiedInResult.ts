@@ -1,17 +1,15 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../../../lib/exceptions/errorPaths"
-import type { AnnotatedHearingOutcome } from "../../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import type { ExceptionResult } from "../../../../../../types/Exception"
 
 const validateAmountSpecifiedInResult = (
-  aho: AnnotatedHearingOutcome,
+  result: Result,
   offenceIndex: number,
   resultIndex: number,
   amountSpecifiedInResultIndex: number
 ): ExceptionResult<number | undefined> => {
-  const amount =
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[resultIndex]
-      .AmountSpecifiedInResult?.[amountSpecifiedInResultIndex].Amount
+  const amount = result.AmountSpecifiedInResult?.[amountSpecifiedInResultIndex].Amount
   if (amount === undefined) {
     return { value: undefined, exceptions: [] }
   }

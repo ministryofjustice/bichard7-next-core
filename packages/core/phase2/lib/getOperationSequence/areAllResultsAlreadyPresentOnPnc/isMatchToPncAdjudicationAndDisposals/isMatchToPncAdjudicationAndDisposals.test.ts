@@ -1,14 +1,12 @@
 import type { PncCourtCaseSummary } from "../../../../../comparison/types/MatchingComparisonOutput"
 import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { NonEmptyArray } from "../../../../../types/NonEmptyArray"
 import type { PncOffence, PncQueryResult } from "../../../../../types/PncQueryResult"
 import generateAhoFromOffenceList from "../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import isMatchToPncAdjAndDis from "./isMatchToPncAdjAndDis"
+import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
 
-describe("check isMatchToPncAdjAndDis", () => {
+describe("check isMatchToPncAdjudicationAndDisposals", () => {
   let aho: AnnotatedHearingOutcome
   let ahoWithResults: AnnotatedHearingOutcome
-  let emptyResults: NonEmptyArray<Result>
   let courtCaseResult: Result
   let courtCaseNoOffences: PncCourtCaseSummary
 
@@ -24,7 +22,6 @@ describe("check isMatchToPncAdjAndDis", () => {
       pncId: "",
       courtCases: [courtCaseNoOffences]
     }
-    emptyResults = [{} as Result]
 
     courtCaseResult = {
       PNCDisposalType: 2063
@@ -34,24 +31,66 @@ describe("check isMatchToPncAdjAndDis", () => {
   })
 
   it("If there is no courtcase ref nr given as input or none exists on the aho, then returns false", () => {
-    const result = isMatchToPncAdjAndDis(emptyResults, aho, undefined, 0, undefined)
+    const ahoInput = generateAhoFromOffenceList([
+      {
+        Result: [{}],
+        CriminalProsecutionReference: { OffenceReasonSequence: undefined },
+        CourtCaseReferenceNumber: undefined
+      } as Offence
+    ])
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoInput,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there is are no PNC query courtcases that match the input courtCaseReference, then returns false", () => {
-    const result = isMatchToPncAdjAndDis(emptyResults, aho, "DOES_NOT_MATCH_FOO", 0, undefined)
+    const ahoInput = generateAhoFromOffenceList([
+      {
+        Result: [{}],
+        CriminalProsecutionReference: { OffenceReasonSequence: undefined },
+        CourtCaseReferenceNumber: "DOES_NOT_MATCH_FOO"
+      } as Offence
+    ])
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoInput,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there are no offences in the matching courtCase of the PNC Query, then returns false", () => {
-    const result = isMatchToPncAdjAndDis(emptyResults, aho, "FOO", 0, undefined)
+    const ahoInput = generateAhoFromOffenceList([
+      {
+        Result: [{}],
+        CriminalProsecutionReference: { OffenceReasonSequence: undefined },
+        CourtCaseReferenceNumber: "FOO"
+      } as Offence
+    ])
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoInput,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
+
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
 
   it("If there are no adjudications in the matching courtCase of the PNC Query, then returns false", () => {
+    const ahoInput = generateAhoFromOffenceList([
+      {
+        Result: [courtCaseResult],
+        CriminalProsecutionReference: { OffenceReasonSequence: "1" },
+        CourtCaseReferenceNumber: "FOO"
+      } as Offence
+    ])
+
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
       offences: [
@@ -71,23 +110,36 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    ahoWithResults.PncQuery = {
+    ahoInput.PncQuery = {
       forceStationCode: "06",
       checkName: "",
       pncId: "",
       courtCases: [courtCase]
     }
 
-    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+    ahoInput.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoWithResults,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
+
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
 
   it("returns false if there are matching adjudications but no disposals on the pnc query", () => {
+    const ahoInput = generateAhoFromOffenceList([
+      {
+        Result: [courtCaseResult],
+        CriminalProsecutionReference: { OffenceReasonSequence: "1" },
+        CourtCaseReferenceNumber: "FOO"
+      } as Offence
+    ])
+
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
       offences: [
@@ -107,18 +159,23 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    ahoWithResults.PncQuery = {
+    ahoInput.PncQuery = {
       forceStationCode: "06",
       checkName: "",
       pncId: "",
       courtCases: [courtCase]
     }
 
-    ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+    ahoInput.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "1")
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoWithResults,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
+
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -161,7 +218,13 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     }
 
-    ahoWithResults = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
+    ahoWithResults = generateAhoFromOffenceList([
+      {
+        Result: [courtCaseResult],
+        CriminalProsecutionReference: { OffenceReasonSequence: "001" },
+        CourtCaseReferenceNumber: "FOO"
+      } as Offence
+    ])
 
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
@@ -205,7 +268,11 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoWithResults,
+      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
     expect(result.value).toBe(true)
     expect(result.exceptions).toStrictEqual([])
   })
@@ -241,7 +308,13 @@ describe("check isMatchToPncAdjAndDis", () => {
       ]
     } as Result
 
-    ahoWithResults = generateAhoFromOffenceList([{ Result: [courtCaseResult] } as Offence])
+    ahoWithResults = generateAhoFromOffenceList([
+      {
+        Result: [courtCaseResult],
+        CriminalProsecutionReference: { OffenceReasonSequence: "001" },
+        CourtCaseReferenceNumber: "FOO"
+      } as Offence
+    ])
 
     const courtCase: PncCourtCaseSummary = {
       courtCaseReference: "FOO",
@@ -285,7 +358,11 @@ describe("check isMatchToPncAdjAndDis", () => {
       DateOfHearing: new Date("05/22/2024")
     } as Hearing
 
-    const result = isMatchToPncAdjAndDis([courtCaseResult] as NonEmptyArray<Result>, ahoWithResults, "FOO", 0, "001")
+    const result = isMatchToPncAdjudicationAndDisposals(
+      ahoWithResults,
+      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      0
+    )
 
     expect(result.value).toBe(false)
     expect(result.exceptions).toStrictEqual([

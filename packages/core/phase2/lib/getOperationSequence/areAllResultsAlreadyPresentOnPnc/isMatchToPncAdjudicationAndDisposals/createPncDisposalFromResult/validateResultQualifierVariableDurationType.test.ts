@@ -1,46 +1,39 @@
-import type { Offence } from "../../../../../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../../../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import validateResultQualifierVariableDurationType from "./validateResultQualifierVariableDurationType"
 
 describe("validateResultQualifierVariableDurationType", () => {
   it("should generate exception when DurationType exists", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultQualifierVariable: [
-              {
-                Code: "1",
-                Duration: {
-                  DurationType: "Duration1"
-                }
-              },
-              { Code: "2", Duration: {} },
-              {
-                Code: "3",
-                Duration: {
-                  DurationType: "Duration2"
-                }
-              },
-              {
-                Code: "4",
-                Duration: {
-                  DurationType: ""
-                }
-              },
-              {
-                Code: "5",
-                Duration: {
-                  DurationType: "Duration3"
-                }
-              }
-            ]
+    const hoResult = {
+      ResultQualifierVariable: [
+        {
+          Code: "1",
+          Duration: {
+            DurationType: "Duration1"
           }
-        ]
-      } as Offence
-    ])
+        },
+        { Code: "2", Duration: {} },
+        {
+          Code: "3",
+          Duration: {
+            DurationType: "Duration2"
+          }
+        },
+        {
+          Code: "4",
+          Duration: {
+            DurationType: ""
+          }
+        },
+        {
+          Code: "5",
+          Duration: {
+            DurationType: "Duration3"
+          }
+        }
+      ]
+    } as Result
 
-    const result = validateResultQualifierVariableDurationType(aho, 0, 0)
+    const result = validateResultQualifierVariableDurationType(hoResult, 0, 0)
 
     expect(result).toStrictEqual([
       {
@@ -115,17 +108,11 @@ describe("validateResultQualifierVariableDurationType", () => {
   })
 
   it("should not generate any exception when ResultQualifierVariable is empty", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        Result: [
-          {
-            ResultQualifierVariable: []
-          }
-        ]
-      } as unknown as Offence
-    ])
+    const hoResult = {
+      ResultQualifierVariable: []
+    } as unknown as Result
 
-    const result = validateResultQualifierVariableDurationType(aho, 0, 0)
+    const result = validateResultQualifierVariableDurationType(hoResult, 0, 0)
 
     expect(result).toHaveLength(0)
   })

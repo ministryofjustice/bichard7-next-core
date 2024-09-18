@@ -69,10 +69,6 @@ describe("deduplicateOperations", () => {
         generateNewremOperation("NotAttempted", {}, "1", true)
       ]
     },
-    { ops: [generateOperation(PncOperation.APPEALS_UPDATE), generateOperation(PncOperation.APPEALS_UPDATE)] },
-    {
-      ops: [generateOperation(PncOperation.COMMITTED_SENTENCING), generateOperation(PncOperation.COMMITTED_SENTENCING)]
-    },
     { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
     { ops: [generateOperation(PncOperation.PENALTY_HEARING), generateOperation(PncOperation.PENALTY_HEARING)] },
     { ops: [generateOperation(PncOperation.SENTENCE_DEFERRED), generateOperation(PncOperation.SENTENCE_DEFERRED)] },
@@ -84,18 +80,6 @@ describe("deduplicateOperations", () => {
 
   it.each([
     { ops: [generateNewremOperation("Completed"), generateNewremOperation("NotAttempted")] },
-    {
-      ops: [
-        generateOperation(PncOperation.APPEALS_UPDATE, "Completed"),
-        generateOperation(PncOperation.APPEALS_UPDATE, "NotAttempted")
-      ]
-    },
-    {
-      ops: [
-        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed"),
-        generateOperation(PncOperation.COMMITTED_SENTENCING, "NotAttempted")
-      ]
-    },
     {
       ops: [
         generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed"),
@@ -131,18 +115,6 @@ describe("deduplicateOperations", () => {
       ops: [
         generateNewremOperation("Completed", { nextHearingLocation: { ...organisationUnitCode1 } }),
         generateNewremOperation("Completed", { nextHearingLocation: { ...organisationUnitCode2 } })
-      ]
-    },
-    {
-      ops: [
-        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PncOperation.APPEALS_UPDATE, "Completed", { courtCaseReference: "2" })
-      ]
-    },
-    {
-      ops: [
-        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "1" }),
-        generateOperation(PncOperation.COMMITTED_SENTENCING, "Completed", { courtCaseReference: "2" })
       ]
     },
     {
