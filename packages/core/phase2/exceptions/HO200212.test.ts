@@ -1,29 +1,29 @@
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import allPncOffencesContainResults from "./allPncOffencesContainResults"
+import HO200212 from "./HO200212"
 
-describe("allPncOffencesContainResults", () => {
-  it("should return true when case has no offences", () => {
+describe("HO200212", () => {
+  it("should not generate exception when case has no offences", () => {
     const aho = generateAhoFromOffenceList([])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toHaveLength(0)
   })
 
-  it("should return true when case has no reportable offences", () => {
+  it("should not generate exception when case has no reportable offences", () => {
     const aho = generateAhoFromOffenceList([
       {
         OffenceCategory: "B7"
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toHaveLength(0)
   })
 
-  it("should return true when all offences have at least one recordable result", () => {
+  it("should not generate exception when all offences have at least one recordable result", () => {
     const aho = generateAhoFromOffenceList([
       {
         Result: [
@@ -47,12 +47,12 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toHaveLength(0)
   })
 
-  it("should return false when offences have no results", () => {
+  it("should generate exception when offences have no results", () => {
     const aho = generateAhoFromOffenceList([
       {
         Result: [] as Result[]
@@ -62,7 +62,7 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toStrictEqual([
       {
@@ -98,7 +98,7 @@ describe("allPncOffencesContainResults", () => {
     ])
   })
 
-  it("should return false and generate exception HO200212 for 'LocalOffenceCode > OffenceCode' when results of an offence are non-recordable", () => {
+  it("should generate exception for 'LocalOffenceCode > OffenceCode' when results of an offence are non-recordable", () => {
     const aho = generateAhoFromOffenceList([
       {
         Result: [
@@ -130,7 +130,7 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toStrictEqual([
       {
@@ -151,7 +151,7 @@ describe("allPncOffencesContainResults", () => {
     ])
   })
 
-  it("should return false and generate exception HO200212 for 'OffenceCode > Reason' when results of an offence are non-recordable", () => {
+  it("should generate exception for 'OffenceCode > Reason' when results of an offence are non-recordable", () => {
     const aho = generateAhoFromOffenceList([
       {
         Result: [
@@ -183,7 +183,7 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toStrictEqual([
       {
@@ -204,7 +204,7 @@ describe("allPncOffencesContainResults", () => {
     ])
   })
 
-  it("should not generate exception HO200212 for an offence that is added by the court", () => {
+  it("should not generate exception for an offence that is added by the court", () => {
     const nonRecordableResult = [
       {
         PNCDisposalType: 1000
@@ -232,7 +232,7 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toStrictEqual([
       {
@@ -253,7 +253,7 @@ describe("allPncOffencesContainResults", () => {
     ])
   })
 
-  it("should generate exception HO200212 on each offence with non recordable results", () => {
+  it("should generate exception on each offence with non recordable results", () => {
     const nonRecordableResult = [
       {
         PNCDisposalType: 1000
@@ -272,7 +272,7 @@ describe("allPncOffencesContainResults", () => {
       }
     ] as Offence[])
 
-    const result = allPncOffencesContainResults(aho)
+    const result = HO200212(aho)
 
     expect(result).toStrictEqual([
       {

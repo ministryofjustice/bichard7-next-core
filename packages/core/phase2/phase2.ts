@@ -7,7 +7,6 @@ import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import type { Trigger } from "../types/Trigger"
-import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
 import { getOperationSequence } from "./lib/getOperationSequence"
 import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
@@ -44,13 +43,6 @@ const processMessage = (
     auditLogger.info(EventCode.IgnoredNonrecordable)
 
     return { resultType: Phase2ResultType.ignored, triggerGenerationAttempted: false }
-  }
-
-  const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
-  if (allOffencesContainResultsExceptions.length > 0) {
-    allOffencesContainResultsExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-
-    return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
   const exceptions = generateExceptions(inputMessage)
