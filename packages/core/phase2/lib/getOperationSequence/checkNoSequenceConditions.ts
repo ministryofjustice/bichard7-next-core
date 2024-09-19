@@ -1,6 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../lib/exceptions/errorPaths"
-import isDummyAsn from "../../../lib/isDummyAsn"
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
 import isRecordableResult from "../isRecordableResult"
@@ -12,11 +11,6 @@ const getErrorPath = (offence: Offence, offenceIndex: number) =>
 
 const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
-  const asn = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  if (aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator && isDummyAsn(asn)) {
-    exceptions.push({ code: ExceptionCode.HO200110, path: errorPaths.case.asn })
-  }
-
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   if (offences.length > 100) {
     exceptions.push({ code: ExceptionCode.HO200116, path: errorPaths.case.asn })

@@ -7,21 +7,6 @@ import checkNoSequenceConditions from "./checkNoSequenceConditions"
 describe("check", () => {
   const inputMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
 
-  it("should add HO200110 exception to asn if asn is dummy", () => {
-    const aho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber = "0800NP0100000000001H"
-    const exceptions = checkNoSequenceConditions(aho)
-    expect(exceptions).toHaveLength(1)
-    expect(exceptions[0].code).toBe(ExceptionCode.HO200110)
-    expect(exceptions[0].path).toEqual([
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case",
-      "HearingDefendant",
-      "ArrestSummonsNumber"
-    ])
-  })
-
   it("should add HO200116 exception to asn if too many offences", () => {
     const aho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
     const MAX_ALLOWABLE_OFFENCES = 100
