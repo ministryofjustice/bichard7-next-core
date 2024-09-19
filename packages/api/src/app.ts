@@ -9,6 +9,7 @@ import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fast
 import fs from "fs"
 import type { IncomingMessage, Server, ServerResponse } from "http"
 import path from "path"
+import logger from "./logger"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -22,11 +23,11 @@ export default async function () {
   if (process.env.USE_SSL === "true") {
     fastify = Fastify({
       https: { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") },
-      logger: true
+      logger: logger(process.env.NODE_ENV)
     })
   } else {
     fastify = Fastify({
-      logger: process.env.NODE_ENV !== "test"
+      logger: logger(process.env.NODE_ENV)
     })
   }
 
