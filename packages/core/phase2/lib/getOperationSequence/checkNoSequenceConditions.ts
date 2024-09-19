@@ -1,6 +1,5 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../lib/exceptions/errorPaths"
-import isDummyAsn from "../../../lib/isDummyAsn"
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
 import isRecordableResult from "../isRecordableResult"
