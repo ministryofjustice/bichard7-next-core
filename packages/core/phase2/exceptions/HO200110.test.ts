@@ -29,24 +29,12 @@ describe("HO200110", () => {
     ])
   })
 
-  it("should not generate exception when ASN is dummy but case is not recordable", () => {
-    const aho = generateAho({ isRecordable: false, isDummyAsn: true })
-
-    const exceptions = generator(aho)
-
-    expect(exceptions).toHaveLength(0)
-  })
-
-  it("should not generate exception when case is recordable but ASN is not dummy", () => {
-    const aho = generateAho({ isRecordable: true, isDummyAsn: false })
-
-    const exceptions = generator(aho)
-
-    expect(exceptions).toHaveLength(0)
-  })
-
-  it("should not generate exception when case is not recordable and ASN is not dummy", () => {
-    const aho = generateAho({ isRecordable: false, isDummyAsn: false })
+  it.each([
+    { when: "ASN is dummy but case is not recordable", isRecordable: false, isDummyAsn: true },
+    { when: "case is recordable but ASN is not dummy", isRecordable: true, isDummyAsn: false },
+    { when: "case is not recordable and ASN is not dummy", isRecordable: false, isDummyAsn: true }
+  ])("should not generate exception when $when", ({ isRecordable, isDummyAsn }) => {
+    const aho = generateAho({ isRecordable, isDummyAsn })
 
     const exceptions = generator(aho)
 
