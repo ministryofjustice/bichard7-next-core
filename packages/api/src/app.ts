@@ -26,7 +26,7 @@ export default async function () {
     })
   } else {
     fastify = Fastify({
-      logger: process.env.NODE_ENV === "test"
+      logger: process.env.NODE_ENV !== "test"
     })
   }
 
