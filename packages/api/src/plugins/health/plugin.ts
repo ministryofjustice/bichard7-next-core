@@ -12,15 +12,13 @@ const schema = {
   }
 }
 
-const options = (): RouteShorthandOptions => {
-  return {
-    schema,
-    logLevel: "silent"
-  }
+const options: RouteShorthandOptions = {
+  schema,
+  logLevel: "silent"
 }
 
 const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.get(HealthRoutes.HEALTH, options(), healthHandler)
+  fastify.get(HealthRoutes.HEALTH, options, healthHandler)
 }
 
 export default plugin
