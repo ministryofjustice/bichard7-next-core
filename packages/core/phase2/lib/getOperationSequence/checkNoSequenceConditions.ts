@@ -12,10 +12,6 @@ const getErrorPath = (offence: Offence, offenceIndex: number) =>
 const checkNoSequenceConditions = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  if (offences.length > 100) {
-    exceptions.push({ code: ExceptionCode.HO200116, path: errorPaths.case.asn })
-    return exceptions
-  }
 
   offences.forEach((offence, offenceIndex) => {
     if (offence.Result.filter(isRecordableResult).length > 10) {
