@@ -25,14 +25,19 @@ import HO200212 from "./HO200212"
 
 // prettier-ignore
 const generators: ExceptionGenerator[] = [
-  HO200100, HO200103, HO200104, HO200106, HO200108, HO200109, HO200110, HO200112, HO200113, HO200114,
-  HO200115, HO200116, HO200117, HO200118, HO200121, HO200124, HO200200, HO200201, HO200202, HO200205
+  HO200100, HO200103, HO200104, HO200106, HO200108, HO200109, HO200112, HO200113, HO200114,
+  HO200115, HO200118, HO200121, HO200124, HO200200, HO200201, HO200202, HO200205
 ]
 
 const generateExceptions = (aho: AnnotatedHearingOutcome): Exception[] => {
   const ho200212 = HO200212(aho)
   if (ho200212.length > 0) {
     return ho200212
+  }
+
+  const exceptions = [...HO200110(aho), ...HO200116(aho), ...HO200117(aho)]
+  if (exceptions.length > 0) {
+    return exceptions
   }
 
   return generators.reduce((exceptions: Exception[], generator) => {
