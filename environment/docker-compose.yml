@@ -131,6 +131,17 @@ services:
       retries: 10
       start_period: 20s
 
+  api:
+    image: api
+    healthcheck:
+      test: curl http://localhost:3321/health
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 120s
+    ports:
+      - 3333:3321
+
   conductor:
     image: conductor
     environment:
