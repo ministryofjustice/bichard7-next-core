@@ -31,9 +31,6 @@ RUN mkdir -p /certs && \
   -extensions 'v3_req' && \
   rm -rf /tmp/openssl.cnf
 
-EXPOSE     80
-EXPOSE     443
-
-COPY --from=builder /api/packages/api/build/index.js ./index.js
+COPY --from=builder /api/packages/api/build .
 
 CMD [ "node", "index.js" ]

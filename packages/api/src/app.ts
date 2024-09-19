@@ -1,8 +1,8 @@
 import auth, { type FastifyAuthFunction } from "@fastify/auth"
 import AutoLoad from "@fastify/autoload"
 import bearerAuthPlugin from "@fastify/bearer-auth"
-import fastifySwagger from "@fastify/swagger"
-import fastifySwaggerUI from "@fastify/swagger-ui"
+import swagger from "@fastify/swagger"
+import swaggerUi from "@fastify/swagger-ui"
 import type { FastifyInstance } from "fastify"
 import { fastify as Fastify } from "fastify"
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
@@ -34,7 +34,7 @@ export default async function () {
   fastify.setValidatorCompiler(validatorCompiler)
   fastify.setSerializerCompiler(serializerCompiler)
 
-  await fastify.register(fastifySwagger, {
+  await fastify.register(swagger, {
     openapi: {
       info: {
         title: "Bichard API",
@@ -55,7 +55,8 @@ export default async function () {
     transform: jsonSchemaTransform
   })
 
-  await fastify.register(fastifySwaggerUI, {
+  await fastify.register(swaggerUi, {
+    baseDir: process.env.NODE_ENV === "development" ? undefined : path.resolve("static"),
     routePrefix: "/swagger"
   })
 

@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify"
+import type { FastifyInstance, RouteShorthandOptions } from "fastify"
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod"
 import { OK } from "http-status"
 import { z } from "zod"
@@ -12,15 +12,15 @@ const schema = {
   }
 }
 
-const options = () => {
+const options = (): RouteShorthandOptions => {
   return {
     schema,
-    handler: healthHandler
+    logLevel: "silent"
   }
 }
 
 const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.get(HealthRoutes.HEALTH, options())
+  fastify.get(HealthRoutes.HEALTH, options(), healthHandler)
 }
 
 export default plugin
