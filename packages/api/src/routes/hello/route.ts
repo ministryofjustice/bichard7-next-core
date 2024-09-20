@@ -5,7 +5,7 @@ import { z } from "zod"
 
 const schema = {
   tags: ["Root"],
-  security: [{ apiKey: [] }],
+  security: [{ apiKey: [], bearerAuth: [] }],
   querystring: z.object({
     name: z.string().min(4).describe("Name to say hello to")
   }),
