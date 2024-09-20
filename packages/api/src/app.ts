@@ -4,6 +4,8 @@ import AutoLoad from "@fastify/autoload"
 import bearerAuthPlugin from "@fastify/bearer-auth"
 import path from "path"
 import createFastify from "./server/createFastify"
+import jwtParser from "./server/jwtParser"
+import jwtVerify from "./server/jwtVerify"
 import setupSwagger from "./server/setupSwagger"
 import setupZod from "./server/setupZod"
 
@@ -34,6 +36,11 @@ export default async function () {
 
     await instance.register(auth)
     await instance.register(bearerAuthPlugin, { keys })
+
+    instance.addHook("onRequest", async (request, reply) => {
+      const jwt = await jwtParser(request, reply)
+      await jwtVerify(jwt, reply)
+    })
 
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "routes"),
