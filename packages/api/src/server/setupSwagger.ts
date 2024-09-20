@@ -19,6 +19,12 @@ export default async function (fastify: FastifyInstance) {
             type: "apiKey",
             name: "Authorization",
             in: "header"
+          },
+          bearerAuth: {
+            description: "JWT from UI",
+            type: "apiKey",
+            name: "X-JWT",
+            in: "header"
           }
         }
       },
