@@ -2,10 +2,10 @@ import type { FastifyAuthFunction } from "@fastify/auth"
 import auth from "@fastify/auth"
 import AutoLoad from "@fastify/autoload"
 import bearerAuthPlugin from "@fastify/bearer-auth"
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
 import path from "path"
 import createFastify from "./server/createFastify"
 import setupSwagger from "./server/setupSwagger"
+import setupZod from "./server/setupZod"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -16,10 +16,7 @@ declare module "fastify" {
 export default async function () {
   const fastify = createFastify()
 
-  // Set up Zod
-  fastify.setValidatorCompiler(validatorCompiler)
-  fastify.setSerializerCompiler(serializerCompiler)
-
+  await setupZod(fastify)
   await setupSwagger(fastify)
 
   // Autoloaded plugins (no authentication)
