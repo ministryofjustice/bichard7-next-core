@@ -15,13 +15,20 @@ export default async function (fastify: FastifyInstance) {
       components: {
         securitySchemes: {
           apiKey: {
+            description: 'Authorization header token, sample: "Bearer #TOKEN#"',
             type: "apiKey",
             name: "Authorization",
             in: "header"
           }
         }
       },
-      servers: []
+      servers: [],
+      tags: [
+        {
+          name: "Root",
+          description: "Root endpoints"
+        }
+      ]
     },
     transform: jsonSchemaTransform
   })

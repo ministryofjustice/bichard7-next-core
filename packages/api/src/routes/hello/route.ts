@@ -4,6 +4,7 @@ import { OK } from "http-status"
 import { z } from "zod"
 
 const schema = {
+  tags: ["Root"],
   security: [{ apiKey: [] }],
   querystring: z.object({
     name: z.string().min(4).describe("Name to say hello to")

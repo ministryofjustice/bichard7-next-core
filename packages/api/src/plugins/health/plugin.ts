@@ -6,6 +6,8 @@ import { healthHandler } from "./handlers"
 import HealthRoutes from "./routes"
 
 const schema = {
+  description: "Health endpoint",
+  tags: ["Root"],
   security: [],
   response: {
     [OK]: z.string().describe("Health check will return Ok")
