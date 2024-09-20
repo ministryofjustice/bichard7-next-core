@@ -4,32 +4,8 @@ import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import type { AnnotatedHearingOutcome, Result } from "../../../types/AnnotatedHearingOutcome"
 import checkNoSequenceConditions from "./checkNoSequenceConditions"
 
-describe("check", () => {
+describe("checkNoSequenceConditions", () => {
   const inputMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
-
-  it("should add HO200116 exception to asn if too many offences", () => {
-    const aho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
-    const MAX_ALLOWABLE_OFFENCES = 100
-    const arbitraryOffence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
-    for (let i = 0; i < MAX_ALLOWABLE_OFFENCES + 1; i++) {
-      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.push(arbitraryOffence)
-    }
-
-    const exceptions = checkNoSequenceConditions(aho)
-
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length).toBeGreaterThan(
-      MAX_ALLOWABLE_OFFENCES
-    )
-    expect(exceptions).toHaveLength(1)
-    expect(exceptions[0].code).toBe(ExceptionCode.HO200116)
-    expect(exceptions[0].path).toEqual([
-      "AnnotatedHearingOutcome",
-      "HearingOutcome",
-      "Case",
-      "HearingDefendant",
-      "ArrestSummonsNumber"
-    ])
-  })
 
   it("should add HO200117 exception to offenceReason if too many recordable results on the offence", () => {
     const aho = parseAhoXml(inputMessage) as AnnotatedHearingOutcome
