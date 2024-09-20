@@ -4,9 +4,12 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import errorPaths from "../../lib/exceptions/errorPaths"
 
-const generator: ExceptionGenerator = (_aho: AnnotatedHearingOutcome, _options): Exception[] => {
-  const offences = _aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  if (offences.length > 100) {
+const MAX_ALLOWABLE_OFFENCES = 100
+
+const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+  const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+
+  if (offences.length > MAX_ALLOWABLE_OFFENCES) {
     return [{ code: ExceptionCode.HO200116, path: errorPaths.case.asn }]
   }
 
