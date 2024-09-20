@@ -5,7 +5,7 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 describe("HO200116", () => {
-  it("returns HO200116 exception when offences exceed 100", () => {
+  it("returns HO200116 exception when there are more than 100 offences", () => {
     const offences = new Array(101).fill({}) as Offence[]
     const aho = generateAhoFromOffenceList(offences)
 
@@ -19,7 +19,7 @@ describe("HO200116", () => {
     ])
   })
 
-  it("doesn't return any exceptions when offences are 100", () => {
+  it("doesn't return any exceptions when there are 100 offences", () => {
     const offences = new Array(100).fill({}) as Offence[]
     const aho = generateAhoFromOffenceList(offences)
 
@@ -28,7 +28,7 @@ describe("HO200116", () => {
     expect(exceptions).toHaveLength(0)
   })
 
-  it("doesn't return any exceptions when offences are less than 100", () => {
+  it("doesn't return any exceptions when there are less than 100 offences", () => {
     const offences = new Array(99).fill({}) as Offence[]
     const aho = generateAhoFromOffenceList(offences)
 
