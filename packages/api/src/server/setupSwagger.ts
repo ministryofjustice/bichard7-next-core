@@ -5,7 +5,6 @@ import { jsonSchemaTransform } from "fastify-type-provider-zod"
 import path from "path"
 
 export default async function (fastify: FastifyInstance) {
-  // TODO: Switch API Key and JWT
   await fastify.register(swagger, {
     openapi: {
       info: {
@@ -16,15 +15,15 @@ export default async function (fastify: FastifyInstance) {
       components: {
         securitySchemes: {
           apiKey: {
-            description: 'Authorization header token, sample: "Bearer #TOKEN#"',
+            description: "API Key provided by UI",
             type: "apiKey",
-            name: "Authorization",
+            name: "X-API-Key",
             in: "header"
           },
           bearerAuth: {
-            description: "JWT from UI",
+            description: 'Authorization header token, sample: "Bearer #JWT#"',
             type: "apiKey",
-            name: "X-JWT",
+            name: "Authorization",
             in: "header"
           }
         }
