@@ -12,7 +12,7 @@ import refreshOperationSequence from "./lib/refreshOperationSequence"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 import generateExceptions from "./exceptions/generateExceptions"
-import { generateOperations } from "./lib/getOperationSequence/generateOperations"
+import { generateOperations } from "./lib/generateOperations"
 
 type ProcessMessageResult = {
   triggers?: Trigger[]
