@@ -7,7 +7,6 @@ import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import type { Trigger } from "../types/Trigger"
-import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
 import { getOperationSequence } from "./lib/getOperationSequence"
 import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
@@ -46,10 +45,13 @@ const processMessage = (
     return { resultType: Phase2ResultType.ignored, triggerGenerationAttempted: false }
   }
 
-  const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
-  if (allOffencesContainResultsExceptions.length > 0) {
-    allOffencesContainResultsExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-
+  const exceptions = generateExceptions(inputMessage)
+  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  if (
+    exceptions.some(({ code }) =>
+      [ExceptionCode.HO200110, ExceptionCode.HO200116, ExceptionCode.HO200117, ExceptionCode.HO200212].includes(code)
+    )
+  ) {
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
@@ -58,8 +60,8 @@ const processMessage = (
     exceptions: getOperationSequenceExceptions,
     events
   } = getOperationSequence(outputMessage, isResubmitted)
-  const exceptions = generateExceptions(inputMessage).concat(getOperationSequenceExceptions)
-  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  exceptions.push(...getOperationSequenceExceptions)
+  getOperationSequenceExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   events?.forEach((eventCode) => auditLogger.info(eventCode))
 
   if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
