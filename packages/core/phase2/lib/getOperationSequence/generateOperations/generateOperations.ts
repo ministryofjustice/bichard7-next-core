@@ -4,7 +4,6 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import type Exception from "../../../../types/Exception"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import ResultClass from "../../../../types/ResultClass"
-import type OperationsResult from "../../../types/OperationsResult"
 import isRecordableOffence from "../../isRecordableOffence"
 import isRecordableResult from "../../isRecordableResult"
 import validateOperations from "../validateOperations"
@@ -18,6 +17,11 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
+import type ExceptionsAndOperations from "./ExceptionsAndOperations"
+import { areAllResultsAlreadyPresentOnPnc } from "../areAllResultsAlreadyPresentOnPnc"
+import sortOperations from "../sortOperations"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import { PncOperation } from "../../../../types/PncOperation"
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -29,15 +33,14 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.UNRESULTED]: () => ({ operations: [], exceptions: [] })
 }
 
-const generateOperations = (
-  aho: AnnotatedHearingOutcome,
-  resubmitted: boolean,
-  allResultsAlreadyOnPnc: boolean
-): OperationsResult => {
+const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
   const exceptions: Exception[] = []
   const allOperations: Operation[] = []
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   let recordableResultFound = false
+
+  const { value: allResultsAlreadyOnPnc, exceptions: areAllResultsAlreadyPresentOnPncExceptions } =
+    areAllResultsAlreadyPresentOnPnc(aho)
 
   if (offences.filter(isRecordableOffence).length === 0) {
     return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
@@ -79,12 +82,25 @@ const generateOperations = (
 
   const remandCcrs = extractRemandCcrs(operations, false)
   const deduplicatedOperations = deduplicateOperations(operations)
-  const exception = validateOperations(deduplicatedOperations, remandCcrs)
-  if (exception) {
-    exceptions.push(exception)
+  const validateOperationException = validateOperations(deduplicatedOperations, remandCcrs)
+
+  if (validateOperationException) {
+    exceptions.push(validateOperationException)
   }
 
-  return exceptions.length > 0 ? { exceptions } : { operations: deduplicatedOperations }
+  if (exceptions.length > 0) {
+    return { operations: [], exceptions: exceptions.concat(areAllResultsAlreadyPresentOnPncExceptions) }
+  }
+
+  const filteredOperations = allResultsAlreadyOnPnc
+    ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
+    : deduplicatedOperations
+
+  return {
+    operations: sortOperations(filteredOperations),
+    exceptions: areAllResultsAlreadyPresentOnPncExceptions,
+    events: allResultsAlreadyOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
+  }
 }
 
 export default generateOperations

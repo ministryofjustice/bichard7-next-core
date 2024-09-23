@@ -3,6 +3,7 @@ import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import generateOperations from "./generateOperations"
+import { areAllResultsAlreadyPresentOnPnc } from "../areAllResultsAlreadyPresentOnPnc"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
@@ -10,6 +11,7 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 
+jest.mock("../areAllResultsAlreadyPresentOnPnc")
 jest.mock("./resultClassHandlers/handleAdjournment")
 jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
 jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
@@ -17,6 +19,7 @@ jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
 jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
 jest.mock("./resultClassHandlers/handleSentence")
 
+const mockedAreAllResultsAlreadyPresentOnPnc = areAllResultsAlreadyPresentOnPnc as jest.Mock
 const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock
 const mockedHandleAdjournmentPreJudgement = handleAdjournmentPreJudgement as jest.Mock
@@ -48,7 +51,7 @@ describe("generateOperations", () => {
   ])(
     "should call $expectedFn function when result class is $resultClass and offence has value",
     ({ resultClass, expectedFn }) => {
-      const allResultAlreadyOnPnc = false
+      mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
       const resubmitted = false
       const aho = generateAhoFromOffenceList([
         {
@@ -68,17 +71,15 @@ describe("generateOperations", () => {
         }
       })
 
-      const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+      const { operations } = generateOperations(aho, resubmitted)
 
-      expect(operationsResult).toStrictEqual({
-        operations: [
-          {
-            code: PncOperation.REMAND,
-            data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
-            status: "NotAttempted"
-          }
-        ]
-      })
+      expect(operations).toStrictEqual([
+        {
+          code: PncOperation.REMAND,
+          data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+          status: "NotAttempted"
+        }
+      ])
       expect(expectedFn).toHaveBeenCalledTimes(1)
       expect(expectedFn.mock.calls[0][0]).toStrictEqual({
         aho: {
@@ -104,7 +105,7 @@ describe("generateOperations", () => {
   )
 
   it("should ignore Unresulted result class", () => {
-    const allResultAlreadyOnPnc = false
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -123,13 +124,13 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+    const { operations } = generateOperations(aho, resubmitted)
 
-    expect(operationsResult).toStrictEqual({ operations: [] })
+    expect(operations).toStrictEqual([])
   })
 
   it("should generate exception HO200118 when there are no operations, no recordable results, and there are no exceptions", () => {
-    const allResultAlreadyOnPnc = false
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -148,20 +149,18 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+    const { exceptions } = generateOperations(aho, resubmitted)
 
-    expect(operationsResult).toStrictEqual({
-      exceptions: [
-        {
-          code: "HO200118",
-          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-        }
-      ]
-    })
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200118",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ])
   })
 
   it("should return OAAC DISARR operation when OAAC DISARR ccrId matches remand ccrId", () => {
-    const allResultAlreadyOnPnc = false
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -201,29 +200,27 @@ describe("generateOperations", () => {
       }
     })
 
-    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+    const { operations } = generateOperations(aho, resubmitted)
 
-    expect(operationsResult).toStrictEqual({
-      operations: [
-        {
-          code: PncOperation.REMAND,
-          data: undefined,
-          courtCaseReference: "1",
-          isAdjournmentPreJudgement: true,
-          status: "NotAttempted"
-        },
-        {
-          code: PncOperation.NORMAL_DISPOSAL,
-          data: { courtCaseReference: "1" },
-          addedByTheCourt: true,
-          status: "NotAttempted"
-        }
-      ]
-    })
+    expect(operations).toStrictEqual([
+      {
+        code: PncOperation.NORMAL_DISPOSAL,
+        data: { courtCaseReference: "1" },
+        addedByTheCourt: true,
+        status: "NotAttempted"
+      },
+      {
+        code: PncOperation.REMAND,
+        data: undefined,
+        courtCaseReference: "1",
+        isAdjournmentPreJudgement: true,
+        status: "NotAttempted"
+      }
+    ])
   })
 
   it("should generate exception HO200121 when there are no recordable offences", () => {
-    const allResultAlreadyOnPnc = false
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -243,21 +240,19 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
 
-    expect(operationsResult).toStrictEqual({
-      operations: [],
-      exceptions: [
-        {
-          code: "HO200121",
-          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-        }
-      ]
-    })
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200121",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ])
   })
 
   it("should generate exception HO200121 when there are no offences", () => {
-    const allResultAlreadyOnPnc = false
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -272,16 +267,14 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operationsResult = generateOperations(aho, resubmitted, allResultAlreadyOnPnc)
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
 
-    expect(operationsResult).toStrictEqual({
-      operations: [],
-      exceptions: [
-        {
-          code: "HO200121",
-          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-        }
-      ]
-    })
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200121",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ])
   })
 })
