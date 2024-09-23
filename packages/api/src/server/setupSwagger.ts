@@ -5,6 +5,7 @@ import { jsonSchemaTransform } from "fastify-type-provider-zod"
 import path from "path"
 
 export default async function (fastify: FastifyInstance) {
+  // TODO: Switch API Key and JWT
   await fastify.register(swagger, {
     openapi: {
       info: {
@@ -33,6 +34,10 @@ export default async function (fastify: FastifyInstance) {
         {
           name: "Root",
           description: "Root endpoints"
+        },
+        {
+          name: "Health",
+          description: "Health endpoint"
         }
       ]
     },

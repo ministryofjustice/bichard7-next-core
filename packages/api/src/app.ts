@@ -40,6 +40,8 @@ export default async function () {
     instance.addHook("onRequest", async (request, reply) => {
       const jwt = await jwtParser(request, reply)
       await jwtVerify(jwt, reply)
+
+      // TODO: persist JWT/user auth context in request context for request chain
     })
 
     await instance.register(AutoLoad, {

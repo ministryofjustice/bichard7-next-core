@@ -7,7 +7,7 @@ import HealthRoutes from "./routes"
 
 const schema = {
   description: "Health endpoint",
-  tags: ["Root"],
+  tags: ["Health"],
   security: [],
   response: {
     [OK]: z.string().describe("Health check will return Ok")
