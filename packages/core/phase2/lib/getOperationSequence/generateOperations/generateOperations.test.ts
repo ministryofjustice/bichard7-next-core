@@ -274,4 +274,53 @@ describe("generateOperations", () => {
       }
     ])
   })
+
+  it("validates generated operations", () => {
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
+    const resubmitted = false
+
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [
+                    { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 },
+                    { ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, PNCDisposalType: 1001 }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    mockedHandleSentence.mockImplementation(() => {
+      return {
+        operations: [{ code: PncOperation.SENTENCE_DEFERRED }],
+        exceptions: []
+      }
+    })
+
+    mockedHandleAdjournmentPreJudgement.mockImplementation(() => {
+      return {
+        operations: [{ code: PncOperation.REMAND }],
+        exceptions: []
+      }
+    })
+
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
+
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200113",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ])
+  })
 })
