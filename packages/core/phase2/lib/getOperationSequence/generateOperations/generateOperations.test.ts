@@ -10,6 +10,8 @@ import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjou
 import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjournmentWithJudgement"
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
+import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 
 jest.mock("../areAllResultsAlreadyPresentOnPnc")
 jest.mock("./resultClassHandlers/handleAdjournment")
@@ -27,6 +29,8 @@ const mockedHandleAdjournmentWithJudgement = handleAdjournmentWithJudgement as j
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock
 const mockedHandleSentence = handleSentence as jest.Mock
 
+const resubmitted = false
+
 describe("generateOperations", () => {
   beforeEach(() => {
     jest.resetAllMocks()
@@ -38,7 +42,7 @@ describe("generateOperations", () => {
       mockedHandleJudgementWithFinalResult,
       mockedHandleSentence,
       mockedHandleAdjournmentPreJudgement
-    ].forEach((fn) => fn.mockImplementation(() => {}))
+    ].forEach((fn) => fn.mockImplementation(() => ({ operations: [], exceptions: [] })))
   })
 
   it.each([
@@ -50,7 +54,6 @@ describe("generateOperations", () => {
     { resultClass: ResultClass.SENTENCE, resultClassHandler: mockedHandleSentence }
   ])("calls $resultClassHandler when offence result class is $resultClass", ({ resultClass, resultClassHandler }) => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = generateAhoFromOffenceList([
       {
         Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
@@ -103,7 +106,6 @@ describe("generateOperations", () => {
 
   it("generates no operations for Unresulted result class", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -128,7 +130,6 @@ describe("generateOperations", () => {
 
   it("generates HO200118 exception when there are no operations, no recordable results, and no operation exceptions", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -158,7 +159,6 @@ describe("generateOperations", () => {
 
   it("generates disposal operation when offence added by the Court disposal ccrId matches remand ccrId", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -218,7 +218,6 @@ describe("generateOperations", () => {
 
   it("generates HO200121 exception when there are no recordable offences", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -250,7 +249,6 @@ describe("generateOperations", () => {
 
   it("generates HO200121 exception when there are no offences", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -277,8 +275,6 @@ describe("generateOperations", () => {
 
   it("validates generated operations", () => {
     mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: false, exceptions: [] })
-    const resubmitted = false
-
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -322,5 +318,213 @@ describe("generateOperations", () => {
         path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
       }
     ])
+  })
+
+  it("returns exceptions from checking all results are already on PNC with validation exceptions", () => {
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({
+      value: false,
+      exceptions: [
+        {
+          code: ExceptionCode.HO200202,
+          path: [
+            "AnnotatedHearingOutcome",
+            "HearingOutcome",
+            "Case",
+            "HearingDefendant",
+            "Offence",
+            0,
+            "Result",
+            0,
+            "ResultQualifierVariable",
+            0,
+            "Code"
+          ]
+        }
+      ]
+    })
+    const resubmitted = false
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    mockedHandleSentence.mockImplementation(() => {
+      return {
+        operations: [],
+        exceptions: [
+          {
+            code: "HO200106",
+            path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
+          }
+        ]
+      }
+    })
+
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
+
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200106",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
+      },
+      {
+        code: "HO200202",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultQualifierVariable",
+          0,
+          "Code"
+        ]
+      }
+    ])
+  })
+
+  it("returns exceptions from checking all results are already on PNC without validation exceptions when there are none", () => {
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({
+      value: false,
+      exceptions: [
+        {
+          code: ExceptionCode.HO200202,
+          path: [
+            "AnnotatedHearingOutcome",
+            "HearingOutcome",
+            "Case",
+            "HearingDefendant",
+            "Offence",
+            0,
+            "Result",
+            0,
+            "ResultQualifierVariable",
+            0,
+            "Code"
+          ]
+        }
+      ]
+    })
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
+
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toStrictEqual([
+      {
+        code: "HO200202",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultQualifierVariable",
+          0,
+          "Code"
+        ]
+      }
+    ])
+  })
+
+  it("returns only remand operations when all results already on PNC", () => {
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: true, exceptions: [] })
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            PenaltyNoticeCaseReferenceNumber: "12345",
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [
+                    { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 },
+                    { ResultClass: ResultClass.ADJOURNMENT, PNCDisposalType: 1001 }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    mockedHandleSentence.mockImplementation(() => {
+      return {
+        operations: [{ code: PncOperation.PENALTY_HEARING }],
+        exceptions: []
+      }
+    })
+
+    mockedHandleAdjournment.mockImplementation(() => {
+      return {
+        operations: [{ code: PncOperation.REMAND }],
+        exceptions: []
+      }
+    })
+
+    const { operations } = generateOperations(aho, resubmitted)
+
+    expect(operations).toStrictEqual([{ code: PncOperation.REMAND }])
+  })
+
+  it("returns ignored event when all results already on PNC", () => {
+    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue({ value: true, exceptions: [] })
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            PenaltyNoticeCaseReferenceNumber: "12345",
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    const { events } = generateOperations(aho, resubmitted)
+
+    expect(events).toStrictEqual([EventCode.IgnoredAlreadyOnPNC])
   })
 })
