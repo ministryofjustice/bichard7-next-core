@@ -71,7 +71,7 @@
     "chalk": "^4.1.2",
     "esbuild": "^0.21.5",
     "esbuild-plugin-ignore": "^1.1.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -97,8 +97,8 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.651.1",
-    "@aws-sdk/client-s3": "^3.651.1",
+    "@aws-sdk/client-dynamodb": "^3.656.0",
+    "@aws-sdk/client-s3": "^3.654.0",
     "@io-orkes/conductor-javascript": "^2.1.2",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1691.0",
