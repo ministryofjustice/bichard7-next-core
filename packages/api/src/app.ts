@@ -2,6 +2,7 @@ import type { FastifyAuthFunction } from "@fastify/auth"
 import auth from "@fastify/auth"
 import AutoLoad from "@fastify/autoload"
 import bearerAuthPlugin from "@fastify/bearer-auth"
+import type { User } from "@moj-bichard7/common/types/User"
 import path from "path"
 import createFastify from "./server/createFastify"
 import jwtParser from "./server/jwtParser"
@@ -12,6 +13,10 @@ import setupZod from "./server/setupZod"
 declare module "fastify" {
   interface FastifyInstance {
     allowAnonymous: FastifyAuthFunction
+  }
+
+  interface FastifyRequest {
+    user: User
   }
 }
 
@@ -39,7 +44,7 @@ export default async function () {
 
     instance.addHook("onRequest", async (request, reply) => {
       const jwt = await jwtParser(request, reply)
-      await jwtVerify(jwt, reply)
+      await jwtVerify(jwt, request, reply)
 
       // TODO: persist JWT/user auth context in request context for request chain
     })

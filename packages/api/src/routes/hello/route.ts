@@ -16,7 +16,7 @@ const schema = {
 
 const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().get("/hello", { schema }, async (req, res) => {
-    res.code(OK).send(`Hello, ${req.query.name}`)
+    res.code(OK).send(`Hello, ${req.user.username}`)
   })
 }
 
