@@ -42,7 +42,7 @@ describe("generateOperations", () => {
       mockedHandleJudgementWithFinalResult,
       mockedHandleSentence,
       mockedHandleAdjournmentPreJudgement
-    ].forEach((fn) => fn.mockImplementation(() => ({ operations: [], exceptions: [] })))
+    ].forEach((fn) => fn.mockReturnValue({ operations: [], exceptions: [] }))
   })
 
   it.each([
@@ -59,17 +59,15 @@ describe("generateOperations", () => {
         Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
       }
     ] as Offence[])
-    resultClassHandler.mockImplementation(() => {
-      return {
-        operations: [
-          {
-            code: PncOperation.REMAND,
-            data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
-            status: "NotAttempted"
-          }
-        ],
-        exceptions: []
-      }
+    resultClassHandler.mockReturnValue({
+      operations: [
+        {
+          code: PncOperation.REMAND,
+          data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+          status: "NotAttempted"
+        }
+      ],
+      exceptions: []
     })
 
     const { operations } = generateOperations(aho, resubmitted)
@@ -176,25 +174,23 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleAdjournment.mockImplementation(() => {
-      return {
-        operations: [
-          {
-            code: PncOperation.REMAND,
-            data: undefined,
-            courtCaseReference: "1",
-            isAdjournmentPreJudgement: true,
-            status: "NotAttempted"
-          },
-          {
-            code: PncOperation.NORMAL_DISPOSAL,
-            data: { courtCaseReference: "1" },
-            addedByTheCourt: true,
-            status: "NotAttempted"
-          }
-        ],
-        exceptions: []
-      }
+    mockedHandleAdjournment.mockReturnValue({
+      operations: [
+        {
+          code: PncOperation.REMAND,
+          data: undefined,
+          courtCaseReference: "1",
+          isAdjournmentPreJudgement: true,
+          status: "NotAttempted"
+        },
+        {
+          code: PncOperation.NORMAL_DISPOSAL,
+          data: { courtCaseReference: "1" },
+          addedByTheCourt: true,
+          status: "NotAttempted"
+        }
+      ],
+      exceptions: []
     })
 
     const { operations } = generateOperations(aho, resubmitted)
@@ -295,19 +291,8 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleSentence.mockImplementation(() => {
-      return {
-        operations: [{ code: PncOperation.SENTENCE_DEFERRED }],
-        exceptions: []
-      }
-    })
-
-    mockedHandleAdjournmentPreJudgement.mockImplementation(() => {
-      return {
-        operations: [{ code: PncOperation.REMAND }],
-        exceptions: []
-      }
-    })
+    mockedHandleSentence.mockReturnValue({ operations: [{ code: PncOperation.SENTENCE_DEFERRED }], exceptions: [] })
+    mockedHandleAdjournmentPreJudgement.mockReturnValue({ operations: [{ code: PncOperation.REMAND }], exceptions: [] })
 
     const { operations, exceptions } = generateOperations(aho, resubmitted)
 
@@ -360,16 +345,14 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleSentence.mockImplementation(() => {
-      return {
-        operations: [],
-        exceptions: [
-          {
-            code: "HO200106",
-            path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
-          }
-        ]
-      }
+    mockedHandleSentence.mockReturnValue({
+      operations: [],
+      exceptions: [
+        {
+          code: "HO200106",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
+        }
+      ]
     })
 
     const { operations, exceptions } = generateOperations(aho, resubmitted)
@@ -484,19 +467,8 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleSentence.mockImplementation(() => {
-      return {
-        operations: [{ code: PncOperation.PENALTY_HEARING }],
-        exceptions: []
-      }
-    })
-
-    mockedHandleAdjournment.mockImplementation(() => {
-      return {
-        operations: [{ code: PncOperation.REMAND }],
-        exceptions: []
-      }
-    })
+    mockedHandleSentence.mockReturnValue({ operations: [{ code: PncOperation.PENALTY_HEARING }], exceptions: [] })
+    mockedHandleAdjournment.mockReturnValue({ operations: [{ code: PncOperation.REMAND }], exceptions: [] })
 
     const { operations } = generateOperations(aho, resubmitted)
 
