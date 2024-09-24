@@ -37,10 +37,10 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.651.1",
+    "@aws-sdk/client-s3": "^3.657.0",
     "@io-orkes/conductor-javascript": "^2.1.2",
     "@stomp/stompjs": "^7.0.0",
-    "@types/nodemailer": "^6.4.15",
+    "@types/nodemailer": "^6.4.16",
     "axios": "^1.7.7",
     "nodemailer": "^6.9.15",
     "pino": "^9.4.0",
@@ -50,7 +50,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",

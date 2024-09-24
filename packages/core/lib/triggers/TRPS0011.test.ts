@@ -1,4 +1,4 @@
-import disarrCompatibleResultClass from "../../phase2/lib/getOperationSequence/generateOperations/disarrCompatibleResultClass"
+import disarrCompatibleResultClass from "../../phase2/lib/generateOperations/disarrCompatibleResultClass"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
@@ -9,7 +9,7 @@ import hasCompletedDisarr from "./hasCompletedDisarr"
 import TRPS0011 from "./TRPS0011"
 jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisarr")
-jest.mock("../../phase2/lib/getOperationSequence/generateOperations/disarrCompatibleResultClass")
+jest.mock("../../phase2/lib/generateOperations/disarrCompatibleResultClass")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
 const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock

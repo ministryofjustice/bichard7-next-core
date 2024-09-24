@@ -1,5 +1,5 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import disarrCompatibleResultClass from "../../phase2/lib/getOperationSequence/generateOperations/disarrCompatibleResultClass"
+import disarrCompatibleResultClass from "../../phase2/lib/generateOperations/disarrCompatibleResultClass"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
