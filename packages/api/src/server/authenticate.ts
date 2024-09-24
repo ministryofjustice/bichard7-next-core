@@ -1,4 +1,4 @@
-import { type User } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import { UNAUTHORIZED } from "http-status"
 import jwtParser from "./jwtParser"
@@ -25,9 +25,7 @@ export default async function (request: FastifyRequest, reply: FastifyReply) {
 
     request.user = verificationResult
   } catch (err) {
-    // this would prevent a 500 response
-    // if anything in the try block throws
-    request.log.debug(err)
+    request.log.error(err)
     reply.code(UNAUTHORIZED).send()
   }
 }
