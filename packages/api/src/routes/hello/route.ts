@@ -23,10 +23,10 @@ const schema: FastifyZodOpenApiSchema = {
   }
 }
 
-const plugin = async (fastify: FastifyInstance) => {
+const route = async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().get("/hello", { schema }, async (req, res) => {
     res.code(OK).send(`Hello, ${req.user.username}`)
   })
 }
 
-export default plugin
+export default route
