@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify"
-import type { FastifyPluginAsyncZod, ZodTypeProvider } from "fastify-type-provider-zod"
+import { type FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import { z } from "zod"
 
@@ -14,8 +14,8 @@ const schema = {
   }
 }
 
-const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.withTypeProvider<ZodTypeProvider>().get("/hello", { schema }, async (req, res) => {
+const plugin = async (fastify: FastifyInstance) => {
+  fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().get("/hello", { schema }, async (req, res) => {
     res.code(OK).send(`Hello, ${req.user.username}`)
   })
 }

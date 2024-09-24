@@ -1,10 +1,14 @@
+import "zod-openapi/extend"
+
 import type { FastifyInstance } from "fastify"
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
+import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "fastify-zod-openapi"
 import { ZodError } from "zod"
 
 export default async function (fastify: FastifyInstance) {
   fastify.setValidatorCompiler(validatorCompiler)
   fastify.setSerializerCompiler(serializerCompiler)
+
+  fastify.register(fastifyZodOpenApiPlugin, { openapi: "3.0.3" })
 
   fastify.setErrorHandler((error, _, reply) => {
     if (error instanceof ZodError) {

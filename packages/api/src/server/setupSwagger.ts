@@ -1,7 +1,7 @@
 import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
 import type { FastifyInstance } from "fastify"
-import { jsonSchemaTransform } from "fastify-type-provider-zod"
+import { fastifyZodOpenApiTransform } from "fastify-zod-openapi"
 import path from "path"
 
 export default async function (fastify: FastifyInstance) {
@@ -40,7 +40,7 @@ export default async function (fastify: FastifyInstance) {
         }
       ]
     },
-    transform: jsonSchemaTransform
+    transform: fastifyZodOpenApiTransform
   })
 
   await fastify.register(swaggerUi, {
