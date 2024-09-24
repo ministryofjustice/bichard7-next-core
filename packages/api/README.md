@@ -34,6 +34,11 @@ See the Swagger Documentation at:
 Fastify allows you to create "plugins" and you can auto load the folder you want. See the `health` plugin for an
 example.
 
+### Tests
+
+Tests are in their own folder because we use esbuild and we cannot ignore the tests files. So we have a created a test
+directory to store them in.
+
 ### Files and Folders
 
 - Index starts the Fastify instance after it has been built
