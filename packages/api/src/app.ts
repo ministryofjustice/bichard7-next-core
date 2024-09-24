@@ -35,8 +35,7 @@ export default async function () {
 
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "routes"),
-      dirNameRoutePrefix: false,
-      matchFilter: (path: string) => path.includes("route")
+      dirNameRoutePrefix: false
     })
   })
 
