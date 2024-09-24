@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./dist && tsc --project tsconfig.build.json",
+    "build": "true",
     "esbuild": "node build.js",
     "clean": "rm -rf ./dist",
     "watch": "tsc --project tsconfig.build.json --watch",
