@@ -1,10 +1,10 @@
 import AutoLoad from "@fastify/autoload"
 import type { User } from "@moj-bichard7/common/types/User"
 import path from "path"
-import authenticate from "./server/authenticate"
+import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
-import setupSwagger from "./server/setupSwagger"
-import setupZod from "./server/setupZod"
+import setupSwagger from "./server/openapi/setupSwagger"
+import setupZod from "./server/openapi/setupZod"
 
 declare module "fastify" {
   interface FastifyRequest {

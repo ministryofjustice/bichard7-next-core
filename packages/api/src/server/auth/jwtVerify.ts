@@ -2,7 +2,7 @@ import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import { type User } from "@moj-bichard7/common/types/User"
 import postgres from "postgres"
-import fetchUserByUsername from "../services/fetchUserByUsername"
+import fetchUserByUsername from "../../services/fetchUserByUsername"
 
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
