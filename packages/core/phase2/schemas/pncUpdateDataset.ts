@@ -62,34 +62,12 @@ const penhrgOperationSchema = z.object({
   status: operationStatusSchema
 })
 
-const comsenOperationSchema = z.object({
-  code: z.literal(PncOperation.COMMITTED_SENTENCING),
-  data: z
-    .object({
-      courtCaseReference: courtCaseReferenceNumberSchema
-    })
-    .optional(),
-  status: operationStatusSchema
-})
-
-const apphrdOperationSchema = z.object({
-  code: z.literal(PncOperation.APPEALS_UPDATE),
-  data: z
-    .object({
-      courtCaseReference: courtCaseReferenceNumberSchema
-    })
-    .optional(),
-  status: operationStatusSchema
-})
-
 export const operationSchema = z.discriminatedUnion("code", [
   newremOperationSchema,
   disarrOperationSchema,
   sendefOperationSchema,
   subvarOperationSchema,
-  penhrgOperationSchema,
-  comsenOperationSchema,
-  apphrdOperationSchema
+  penhrgOperationSchema
 ])
 
 const pncUpdateDatasetSchema = unvalidatedHearingOutcomeSchema.extend({

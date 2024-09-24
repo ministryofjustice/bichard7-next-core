@@ -70,32 +70,6 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === PncOperation.COMMITTED_SENTENCING) {
-      return {
-        operationCode: {
-          [PncOperation.COMMITTED_SENTENCING]: operation.data
-            ? {
-                courtCaseReference: operation.data.courtCaseReference
-              }
-            : {}
-        },
-        operationStatus: mapOperationStatus(operation.status)
-      }
-    }
-
-    if (operation.code === PncOperation.APPEALS_UPDATE) {
-      return {
-        operationCode: {
-          [PncOperation.APPEALS_UPDATE]: operation.data
-            ? {
-                courtCaseReference: operation.data.courtCaseReference
-              }
-            : {}
-        },
-        operationStatus: mapOperationStatus(operation.status)
-      }
-    }
-
     if (operation.code === PncOperation.REMAND) {
       return {
         operationCode: {

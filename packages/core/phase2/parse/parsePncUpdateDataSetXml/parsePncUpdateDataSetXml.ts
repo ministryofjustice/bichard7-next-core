@@ -105,34 +105,6 @@ const mapXmlToOperation = (operationsXml: Br7Operation[]): Operation[] => {
       }
     }
 
-    if (PncOperation.COMMITTED_SENTENCING in operationXml.operationCode) {
-      const data = isEmptyElement(operationXml.operationCode.COMSEN)
-        ? undefined
-        : {
-            courtCaseReference: operationXml.operationCode.COMSEN.courtCaseReference["#text"]
-          }
-
-      operation = {
-        code: PncOperation.COMMITTED_SENTENCING,
-        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
-        ...(data ? { data } : {})
-      }
-    }
-
-    if (PncOperation.APPEALS_UPDATE in operationXml.operationCode) {
-      const data = isEmptyElement(operationXml.operationCode.APPHRD)
-        ? undefined
-        : {
-            courtCaseReference: operationXml.operationCode.APPHRD.courtCaseReference["#text"]
-          }
-
-      operation = {
-        code: PncOperation.APPEALS_UPDATE,
-        status: mapXmlToOperationStatus(operationXml.operationStatus["#text"]),
-        ...(data ? { data } : {})
-      }
-    }
-
     if (!operation) {
       throw Error("Operation is not supported")
     }

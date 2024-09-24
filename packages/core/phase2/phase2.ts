@@ -7,12 +7,12 @@ import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import type { Trigger } from "../types/Trigger"
-import allPncOffencesContainResults from "./lib/allPncOffencesContainResults"
-import { getOperationSequence } from "./lib/getOperationSequence"
 import isAintCase from "./lib/isAintCase"
 import refreshOperationSequence from "./lib/refreshOperationSequence"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
+import generateExceptions from "./exceptions/generateExceptions"
+import { generateOperations } from "./lib/generateOperations"
 
 type ProcessMessageResult = {
   triggers?: Trigger[]
@@ -45,15 +45,20 @@ const processMessage = (
     return { resultType: Phase2ResultType.ignored, triggerGenerationAttempted: false }
   }
 
-  const allOffencesContainResultsExceptions = allPncOffencesContainResults(outputMessage)
-  if (allOffencesContainResultsExceptions.length > 0) {
-    allOffencesContainResultsExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-
+  const exceptions = generateExceptions(inputMessage)
+  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  if (
+    exceptions.some(({ code }) =>
+      [ExceptionCode.HO200110, ExceptionCode.HO200116, ExceptionCode.HO200117, ExceptionCode.HO200212].includes(code)
+    )
+  ) {
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
-  const { operations, exceptions, events } = getOperationSequence(outputMessage, isResubmitted)
-  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  const { operations, exceptions: operationExceptions, events } = generateOperations(outputMessage, isResubmitted)
+
+  exceptions.push(...operationExceptions)
+  operationExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   events?.forEach((eventCode) => auditLogger.info(eventCode))
 
   if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {

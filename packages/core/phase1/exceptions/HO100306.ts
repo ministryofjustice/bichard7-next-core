@@ -5,7 +5,7 @@ import getAreaCode from "../lib/offence/getAreaCode"
 import getOffenceCode from "../lib/offence/getOffenceCode"
 import isOffenceIgnored from "../lib/offence/isOffenceIgnored"
 import lookupOffenceCode from "../lib/offence/lookupOffenceCode"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 const isNationalOffenceCode = (offenceReason: OffenceReason): boolean =>
   offenceReason.__type === "NationalOffenceReason"
