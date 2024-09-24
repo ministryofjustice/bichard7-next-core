@@ -5,19 +5,14 @@ orbs:
 
 commands:
   ################### Helpers
-  checkout_core:
-    steps:
-      - run:
-          name: Clone bichard7-next-core
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-core.git ~/bichard7-next-core
 
   setup:
     steps:
       - checkout
-      - node_install
-      - node/install-packages:
+      - node_install_ui
+        node/install-packages:
+          app-dir: ~/bichard7-next-core/packages/ui
           include-branch-in-cache-key: true
-      - checkout_core
       - run:
           name: Set GB locale
           working_directory: ~/bichard7-next-core
@@ -34,14 +29,12 @@ commands:
     steps:
       - run:
           name: "Fetch images: <<parameters.IMAGES>>"
-          working_directory: ~/bichard7-next-core
           command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
 
   build_message_forwarder:
     steps:
       - run:
           name: Build message forwarder image
-          working_directory: ~/bichard7-next-core
           command: bash .circleci/scripts/build-message-forwarder.sh
 
   build_audit_logging_images:
@@ -65,14 +58,16 @@ commands:
             <<parameters.ARGS>> \
             npm run test:chunk:nextUI
 
-  node_install:
+  node_install_ui:
     steps:
       - restore_cache:
           name: Restore nvm cache
           keys:
             # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
             - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-      - run: nvm install
+      - run:
+        working_directory: ~/bichard7-next-core/packages/ui
+        command: nvm install
       - save_cache:
           name: Save nvm cache
           key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
@@ -125,7 +120,6 @@ commands:
       - build_audit_logging_images
       - run:
           name: Start bichard7 legacy
-          working_directory: ~/bichard7-next-core
           command: bash .circleci/scripts/run-infrastructure.sh ui all-legacy
 
   start_services:
@@ -142,7 +136,6 @@ commands:
     steps:
       - run:
           name: "Run services: <<parameters.SERVICES>>"
-          working_directory: ~/bichard7-next-core
           command: |
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
@@ -157,16 +150,18 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - checkout_core
       - install_ms_edge
-      - run: ./.circleci/scripts/build-ui.sh
+      - run: 
+          working_directory: ~/bichard7-next-core/packages/ui
+          command: ./.circleci/scripts/build-ui.sh
       - run:
+          working_directory: ~/bichard7-next-core/packages/ui
           name: Save Docker image
           command: |
             mkdir -p images
             docker image save -o "images/ui:latest" "ui:latest"
       - persist_to_workspace:
-          root: .
+          root: ~/bichard7-next-core/packages/ui
           paths:
             - .
             - images
@@ -177,10 +172,12 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - node_install
+      - node_install_ui
       - node/install-packages:
+          app-dir: ~/bichard7-next-core/packages/ui
           include-branch-in-cache-key: true
       - run:
+          working_directory: ~/bichard7-next-core/packages/ui
           name: Check the code for linting errors
           command: npm run lint
 
@@ -190,11 +187,13 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - node_install
-      - node/install-packages:
+      - node_install_ui
+      - node/install-packages:  
+          app-dir: ~/bichard7-next-core/packages/ui
           include-branch-in-cache-key: true
       - run:
           name: Run code-based unit tests
+          working_directory: ~/bichard7-next-core/packages/ui
           command: npm run test:unit
 
   integration_test:
@@ -242,10 +241,10 @@ jobs:
           condition:
             equal: [true, << parameters.ms-edge >>]
           steps:
-            - checkout_core
             - install_ms_edge
-      - node_install
+      - node_install_ui
       - node/install-packages:
+          app-dir: ~/bichard7-next-core/packages/ui
           include-branch-in-cache-key: true
       - run:
           name: Install Cypress
@@ -346,7 +345,7 @@ jobs:
       MS_EDGE: << parameters.ms-edge >>
     steps:
       - attach_workspace:
-          at: .
+          at: ~/bichard7-next-core/packages/ui
       - run:
           name: Load image
           command: |
@@ -382,7 +381,7 @@ jobs:
     resource_class: xlarge
     steps:
       - attach_workspace:
-          at: .
+          at: ~/bichard7-next-core/packages/ui
       - run:
           name: Load image
           command: |
