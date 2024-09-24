@@ -1,11 +1,6 @@
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import { type User } from "@moj-bichard7/common/types/User"
-import postgres from "postgres"
-import fetchUserByUsername from "../../services/fetchUserByUsername"
-
-const dbConfig = createDbConfig()
-const db = postgres(dbConfig)
+import fetchUserByUsername from "../../useCases/fetchUserByUsername"
 
 export default async (jwt?: JWT): Promise<false | User> => {
   if (!jwt) {
@@ -17,7 +12,7 @@ export default async (jwt?: JWT): Promise<false | User> => {
     return false
   }
 
-  const user = await fetchUserByUsername(db, jwt["username"])
+  const user = await fetchUserByUsername(jwt["username"])
   if (user.jwt_id !== jwt["id"]) {
     return false
   }

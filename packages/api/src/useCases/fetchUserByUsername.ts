@@ -1,7 +1,9 @@
 import { type User } from "@moj-bichard7/common/types/User"
-import { type Sql } from "postgres"
+import postgresFactory from "../services/db/postgresFactory"
 
-export default async function (sql: Sql, username: string) {
+export default async (username: string): Promise<User> => {
+  const sql = postgresFactory()
+
   const [user]: [User?] = await sql`
       SELECT
         u.id,
