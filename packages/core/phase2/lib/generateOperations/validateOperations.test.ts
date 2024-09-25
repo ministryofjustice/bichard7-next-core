@@ -31,12 +31,21 @@ describe("validateOperations", () => {
       }
     }
 
+    if (op1.code == PncOperation.REMAND && ccr) {
+      op1.courtCaseReference = String(ccr)
+    }
+
+    if (op2.code == PncOperation.REMAND && ccr) {
+      op2.courtCaseReference = String(ccr)
+    }
+
     const remandCcrs = new Set<string>()
-    if (ccr) {
+    if ([op1.code, op2.code].includes(PncOperation.REMAND) && ccr) {
       remandCcrs.add(String(ccr))
     }
 
     const result = validateOperations([op1, op2], remandCcrs)
+
     expect(result).toMatchSnapshot()
   })
 })
