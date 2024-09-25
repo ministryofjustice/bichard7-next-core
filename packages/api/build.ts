@@ -20,7 +20,7 @@ function esbuildPluginFastifySwaggerUi(): Plugin {
 }
 
 ;(async function () {
-  const entryPoints = await glob("src/**/*.ts")
+  const entryPoints = await glob("src/**/!(*.test).ts")
 
   build({
     entryPoints,
