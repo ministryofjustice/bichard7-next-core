@@ -30,9 +30,8 @@ describe("areResultsMatchingAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
+    const result = areResultsMatchAPncDisposal(offence, disposals)
+    expect(result).toBe(true)
   })
 
   it("Given non-matching results, returns false", () => {
@@ -54,9 +53,8 @@ describe("areResultsMatchingAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    const result = areResultsMatchAPncDisposal(offence, disposals)
+    expect(result).toBe(false)
   })
 
   it("Given matching results, returns true", () => {
@@ -78,9 +76,9 @@ describe("areResultsMatchingAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
+    const result = areResultsMatchAPncDisposal(offence, disposals)
+
+    expect(result).toBe(true)
   })
 
   it("should return exceptions", () => {
@@ -104,8 +102,8 @@ describe("areResultsMatchingAPncDisposal", () => {
       }
     ] as PncDisposal[]
 
-    const result = areResultsMatchAPncDisposal(offence, 0, disposals)
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toHaveLength(0)
+    const result = areResultsMatchAPncDisposal(offence, disposals)
+
+    expect(result).toBe(false)
   })
 })
