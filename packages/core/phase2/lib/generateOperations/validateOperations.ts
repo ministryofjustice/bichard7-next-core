@@ -5,14 +5,17 @@ import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import operationCourtCaseReference from "./operationCourtCaseReference"
 import { PncOperation } from "../../../types/PncOperation"
+import extractRemandCcrs from "./extractRemandCcrs"
 
 const errorPath = errorPaths.case.asn
 
-const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
+const validateOperations = (operations: Operation[]): Exception | void => {
+  const remandCcrs = extractRemandCcrs(operations, false)
+  const courtCaseSpecificOperations: Operation[] = []
+
   let sendefExists = false
   let newremExists = false
   let penhrgExists = false
-  const courtCaseSpecificOperations: Operation[] = []
 
   for (const operation of operations) {
     penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
