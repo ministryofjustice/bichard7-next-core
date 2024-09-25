@@ -1,18 +1,8 @@
 import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"
-import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"
-
-jest.mock("./validateAmountSpecifiedInResult")
-
-const mockedValidateAmountSpecifiedInResult = validateAmountSpecifiedInResult as jest.Mock
 
 describe("createPncDisposalByThirdDuration", () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-    mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: undefined, exceptions: [] })
-  })
-
   describe("when the result doesn't have a third duration", () => {
     it("returns undefined", () => {
       const hoResult = {
@@ -24,9 +14,9 @@ describe("createPncDisposalByThirdDuration", () => {
         AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, 0, 0, "Validated disposal text")
+      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal.value).toBeUndefined()
+      expect(pncDisposal).toBeUndefined()
     })
   })
 
@@ -43,17 +33,26 @@ describe("createPncDisposalByThirdDuration", () => {
     } as Result
 
     it("validates the amount for the third duration", () => {
-      createPncDisposalByThirdDuration(resultWithThirdDuration, 0, 0, "Validated disposal text")
+      const hoResult = {
+        ...resultWithThirdDuration,
+        AmountSpecifiedInResult: [{ Amount: 11 }, { Amount: 11 }, { Amount: 12345678.1 }],
+        DateSpecifiedInResult: [
+          { Date: new Date("2024-03-01"), Sequence: DateSpecifiedInResultSequence.FirstStartDate },
+          { Date: new Date("2024-03-11"), Sequence: DateSpecifiedInResultSequence.FirstEndDate },
+          { Date: new Date("2024-03-23"), Sequence: DateSpecifiedInResultSequence.SecondStartDate }
+        ]
+      } as Result
 
-      expect(mockedValidateAmountSpecifiedInResult).toHaveBeenCalledWith(resultWithThirdDuration, 0, 0, 2)
+      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
+
+      expect(pncDisposal).toBeDefined()
+      expect(pncDisposal?.qtyMonetaryValue).toBeUndefined()
     })
 
     it("returns a PNC disposal", () => {
-      mockedValidateAmountSpecifiedInResult.mockReturnValue({ value: amountForThirdDuration, exceptions: [] })
+      const pncDisposal = createPncDisposalByThirdDuration(resultWithThirdDuration, "Validated disposal text")
 
-      const pncDisposal = createPncDisposalByThirdDuration(resultWithThirdDuration, 0, 0, "Validated disposal text")
-
-      expect(pncDisposal.value).toStrictEqual({
+      expect(pncDisposal).toStrictEqual({
         qtyDate: "",
         qtyDuration: "H1",
         qtyMonetaryValue: `${amountForThirdDuration}`,
@@ -74,9 +73,9 @@ describe("createPncDisposalByThirdDuration", () => {
         ]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, 0, 0, "Validated disposal text")
+      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal.value?.qtyDate).toBe("23032024")
+      expect(pncDisposal?.qtyDate).toBe("23032024")
     })
 
     it("returns a PNC disposal with the second end date specified in the result if no second start date", () => {
@@ -89,9 +88,9 @@ describe("createPncDisposalByThirdDuration", () => {
         ]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, 0, 0, "Validated disposal text")
+      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal.value?.qtyDate).toBe("10102024")
+      expect(pncDisposal?.qtyDate).toBe("10102024")
     })
   })
 })
