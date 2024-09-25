@@ -107,10 +107,10 @@ jobs:
       - checkout
       - set_locale
       - install_ms_edge
-      - install_and_build_core
       - run:
           name: Check the code for linting errors
           command: npm run lint
+      - install_and_build_core
 
   test_core:
     machine:
