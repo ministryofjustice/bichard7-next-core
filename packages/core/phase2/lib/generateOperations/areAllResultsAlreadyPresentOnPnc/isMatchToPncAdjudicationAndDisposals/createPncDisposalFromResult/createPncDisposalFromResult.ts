@@ -12,16 +12,10 @@ const createPncDisposalFromResult = (
   resultIndex: number
 ): ExceptionResult<NonEmptyArray<PncDisposal>> => {
   const durationTypeExceptions = validateResultQualifierVariableDurationType(result, offenceIndex, resultIndex)
-  const { value: firstAndSecondDurationsDisposal, exceptions: firstAndSecondDurationsExceptions } =
-    createPncDisposalByFirstAndSecondDurations(result, offenceIndex, resultIndex)
-  const { value: thirdDurationDisposal, exceptions: thirdDurationExceptions } = createPncDisposalByThirdDuration(
-    result,
-    offenceIndex,
-    resultIndex,
-    firstAndSecondDurationsDisposal.text
-  )
+  const firstAndSecondDurationsDisposal = createPncDisposalByFirstAndSecondDurations(result)
+  const thirdDurationDisposal = createPncDisposalByThirdDuration(result, firstAndSecondDurationsDisposal.text)
 
-  const exceptions = [...durationTypeExceptions, ...firstAndSecondDurationsExceptions, ...thirdDurationExceptions]
+  const exceptions = [...durationTypeExceptions]
 
   return {
     exceptions,
