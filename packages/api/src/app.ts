@@ -23,7 +23,8 @@ export default async function () {
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "plugins"),
       dirNameRoutePrefix: false,
-      matchFilter: (path: string) => path.includes("plugin")
+      matchFilter: (path: string) => path.includes("plugin"),
+      ignoreFilter: (path: string) => path.endsWith(".test.ts")
     })
   })
 
@@ -35,7 +36,8 @@ export default async function () {
 
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "routes"),
-      dirNameRoutePrefix: false
+      dirNameRoutePrefix: false,
+      ignoreFilter: (path: string) => path.endsWith(".test.ts")
     })
   })
 
