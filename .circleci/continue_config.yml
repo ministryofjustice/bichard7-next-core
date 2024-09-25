@@ -32,6 +32,7 @@ commands:
         type: boolean
         default: false
     steps:
+      - run:
           name: Hash package-lock.json
           command: bash .circleci/scripts/hash-package-lock.sh
       - restore_cache:
@@ -110,7 +111,7 @@ jobs:
       - set_locale
       - install_ms_edge
       - install_and_build_core
-
+      
   test_core:
     machine:
       image: ubuntu-2204:current
