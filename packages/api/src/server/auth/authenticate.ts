@@ -4,7 +4,7 @@ import { UNAUTHORIZED } from "http-status"
 import jwtParser from "./jwtParser"
 import jwtVerify from "./jwtVerify"
 
-const validApiKey = process.env.API_KEY ?? "password"
+const validApiKey = process.env.WORKSPACE === "production" ? process.env.API_KEY : "password"
 
 export default async function (request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers["authorization"]
