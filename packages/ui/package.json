@@ -9,10 +9,6 @@
     "prebuild": "./scripts/symlink-node-modules.sh",
     "build": "next build",
     "start": "next start -p 4080",
-    "prelint": "./scripts/symlink-node-modules.sh",
-    "lint": "eslint .",
-    "prelint:fix": "./scripts/symlink-node-modules.sh",
-    "lint:fix": "eslint . --fix",
     "cypress:open": "cypress open",
     "cypress:open:docker": "cypress open --config baseUrl='https://localhost:4443'",
     "cypress:run": "cypress run",
@@ -33,10 +29,7 @@
     "update-deps": "ncu -u && npm install",
     "seed-data": "ts-node ./scripts/seed-data.ts",
     "zap": "./scripts/zap/zap-scan.sh"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js",
-    "*.scss": "stylelint './styles/*.scss' --fix"
+  
   },
   "dependencies": {
     "@govuk-react/select": "^0.10.7",
