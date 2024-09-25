@@ -1,5 +1,4 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../../lib/exceptions/errorPaths"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
