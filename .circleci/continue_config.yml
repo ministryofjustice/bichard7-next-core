@@ -32,7 +32,6 @@ commands:
         type: boolean
         default: false
     steps:
-      - run:
           name: Hash package-lock.json
           command: bash .circleci/scripts/hash-package-lock.sh
       - restore_cache:
@@ -55,6 +54,9 @@ commands:
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
+      - run:
+          name: Check the code for linting errors
+          command: npm run lint
       - run:
           name: Build Core
           command: npm run build
@@ -107,9 +109,6 @@ jobs:
       - checkout
       - set_locale
       - install_ms_edge
-      - run:
-          name: Check the code for linting errors
-          command: npm run lint
       - install_and_build_core
 
   test_core:
