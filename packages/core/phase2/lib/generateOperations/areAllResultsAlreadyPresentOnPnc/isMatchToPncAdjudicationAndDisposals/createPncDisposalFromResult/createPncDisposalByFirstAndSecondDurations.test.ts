@@ -65,22 +65,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
 
     const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult, 0, 0)
 
-    expect(pncDisposal.exceptions).toStrictEqual([
-      {
-        code: "HO200200",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          0,
-          "Result",
-          0,
-          "ResultVariableText"
-        ]
-      }
-    ])
+    expect(pncDisposal.exceptions).toHaveLength(0)
     expect(pncDisposal.value).toStrictEqual({
       qtyDate: "10052024",
       qtyDuration: "D3",
