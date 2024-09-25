@@ -56,6 +56,9 @@ commands:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
       - run:
+          name: Check the code for linting errors
+          command: npm run lint
+      - run:
           name: Build Core
           command: npm run build
 
@@ -107,10 +110,8 @@ jobs:
       - checkout
       - set_locale
       - install_and_build_core
-      - run:
-          name: Check the code for linting errors
-          command: npm run lint
-
+      
+  
   test_core:
     machine:
       image: ubuntu-2204:current
