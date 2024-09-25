@@ -19,6 +19,7 @@ describe("validateOperations", () => {
   it.each(allCombinations)("should match existing behaviour %s:%s (CCR: %s)", (opCode1, opCode2, ccr) => {
     const op1 = { code: opCode1 } as unknown as Operation
     const op2 = { code: opCode2 } as unknown as Operation
+
     if (op1.code !== PncOperation.REMAND) {
       op1.data = {
         courtCaseReference: "1"
@@ -31,12 +32,16 @@ describe("validateOperations", () => {
       }
     }
 
-    const remandCcrs = new Set<string>()
-    if (ccr) {
-      remandCcrs.add(String(ccr))
+    if (op1.code == PncOperation.REMAND && ccr) {
+      op1.courtCaseReference = String(ccr)
     }
 
-    const result = validateOperations([op1, op2], remandCcrs)
+    if (op2.code == PncOperation.REMAND && ccr) {
+      op2.courtCaseReference = String(ccr)
+    }
+
+    const result = validateOperations([op1, op2])
+
     expect(result).toMatchSnapshot()
   })
 })
