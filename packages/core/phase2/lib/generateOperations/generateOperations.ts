@@ -38,8 +38,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   let recordableResultFound = false
 
-  const { value: allResultsAlreadyOnPnc, exceptions: areAllResultsAlreadyPresentOnPncExceptions } =
-    areAllResultsAlreadyPresentOnPnc(aho)
+  const allResultsAlreadyOnPnc = areAllResultsAlreadyPresentOnPnc(aho)
 
   if (offences.filter(isRecordableOffence).length === 0) {
     return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
@@ -87,7 +86,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   }
 
   if (exceptions.length > 0) {
-    return { operations: [], exceptions: exceptions.concat(areAllResultsAlreadyPresentOnPncExceptions) }
+    return { operations: [], exceptions }
   }
 
   const filteredOperations = allResultsAlreadyOnPnc
@@ -96,7 +95,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
 
   return {
     operations: sortOperations(filteredOperations),
-    exceptions: areAllResultsAlreadyPresentOnPncExceptions,
+    exceptions: [],
     events: allResultsAlreadyOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
   }
 }

@@ -18,7 +18,7 @@ const areResultsMatchingAPncDisposal = (
   return offence.Result.every((result, resultIndex) => {
     checkExceptionFn(result, offenceIndex, resultIndex)
 
-    return !isRecordableResult(result) || isMatchToPncDisposal(disposals, result, offenceIndex, resultIndex).value
+    return !isRecordableResult(result) || isMatchToPncDisposal(disposals, result)
   })
 }
 
