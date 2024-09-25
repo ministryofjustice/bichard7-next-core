@@ -81,7 +81,7 @@ describe("authenticate", () => {
 
   it("returns 200 if the verification result is a User", async () => {
     mockedJwtParser.mockResolvedValue({} as JWT)
-    mockedJwtVerify.mockResolvedValue({} as User)
+    mockedJwtVerify.mockResolvedValue({ id: 1, username: "User", jwt_id: "100-123", groups: [] } satisfies User)
 
     const { statusCode } = await fastify.inject(defaults)
 
