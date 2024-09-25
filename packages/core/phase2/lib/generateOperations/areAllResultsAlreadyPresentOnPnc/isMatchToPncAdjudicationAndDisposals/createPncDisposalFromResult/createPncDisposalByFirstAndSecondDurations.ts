@@ -1,5 +1,3 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../../../../lib/exceptions/errorPaths"
 import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import type { ExceptionResult } from "../../../../../../types/Exception"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
@@ -41,18 +39,10 @@ const createPncDisposalByFirstAndSecondDurations = (
     dateSpecifiedInResult = undefined
   }
 
-  const ho200200 =
+  const validatedDisposalText =
     result.ResultVariableText && disposalText.length > maxDisposalTextLength
-      ? {
-          code: ExceptionCode.HO200200,
-          path: errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
-        }
-      : undefined
-  if (ho200200) {
-    exceptions.push(ho200200)
-  }
-
-  const validatedDisposalText = ho200200 ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+` : disposalText
+      ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+`
+      : disposalText
 
   const disposal = createPncDisposal(
     result.PNCDisposalType,

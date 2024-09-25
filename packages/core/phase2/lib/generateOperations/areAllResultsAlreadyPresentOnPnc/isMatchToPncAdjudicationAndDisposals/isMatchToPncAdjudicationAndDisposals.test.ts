@@ -365,21 +365,6 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
     )
 
     expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([
-      {
-        code: "HO200200",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          0,
-          "Result",
-          0,
-          "ResultVariableText"
-        ]
-      }
-    ])
+    expect(result.exceptions).toHaveLength(0)
   })
 })
