@@ -1,9 +1,8 @@
 import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
 import DateSpecifiedInResultSequence from "../../../../../../types/DateSpecifiedInResultSequence"
-import type { ExceptionResult } from "../../../../../../types/Exception"
 import type { PncDisposal } from "../../../../../../types/PncQueryResult"
 import createPncDisposal from "./createPncDisposal"
-import validateAmountSpecifiedInResult from "./validateAmountSpecifiedInResult"
+import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 
 const getDateSpecifiedInResult = (result: Result) => {
   const startDateSpecifiedInResult = result.DateSpecifiedInResult?.find(
@@ -18,21 +17,17 @@ const getDateSpecifiedInResult = (result: Result) => {
 
 const createPncDisposalByThirdDuration = (
   result: Result,
-  offenceIndex: number,
-  resultIndex: number,
   validatedDisposalText: string | undefined
-): ExceptionResult<PncDisposal | undefined> => {
-  if (!result.Duration?.[2]) {
-    return { value: undefined, exceptions: [] }
+): PncDisposal | undefined => {
+  const thirdDuration = result.Duration?.[2]
+  if (!thirdDuration) {
+    return undefined
   }
 
-  const thirdDuration = result.Duration[2]
-  const { value: thirdAmountSpecifiedInResult, exceptions } = validateAmountSpecifiedInResult(
-    result,
-    offenceIndex,
-    resultIndex,
-    2
-  )
+  const thirdAmountInResult = result.AmountSpecifiedInResult?.[2]?.Amount
+  const validatedThirdAmountInResult = isAmountSpecifiedInResultValid(thirdAmountInResult)
+    ? thirdAmountInResult
+    : undefined
 
   const disposal = createPncDisposal(
     result.PNCDisposalType,
@@ -41,12 +36,12 @@ const createPncDisposalByThirdDuration = (
     undefined,
     undefined,
     getDateSpecifiedInResult(result),
-    thirdAmountSpecifiedInResult,
+    validatedThirdAmountInResult,
     result.ResultQualifierVariable.map((res) => res.Code),
     validatedDisposalText
   )
 
-  return { value: disposal, exceptions }
+  return disposal
 }
 
 export default createPncDisposalByThirdDuration

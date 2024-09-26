@@ -5,9 +5,10 @@ import isMatchToPncDisposal from "./isMatchToPncDisposal"
 describe("isMatchToPncDisposal", () => {
   it("returns false when disposals list is empty", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
-    const result = isMatchToPncDisposal([], ahoResult, 0, 0)
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+
+    const result = isMatchToPncDisposal([], ahoResult)
+
+    expect(result).toBe(false)
   })
 
   it("returns true when an AHO result matches the pncDisposal on all its matching fields", () => {
@@ -45,8 +46,8 @@ describe("isMatchToPncDisposal", () => {
       ]
     } as Result
 
-    const result = isMatchToPncDisposal([pncDisposal], ahoResult, 0, 0)
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
+    const result = isMatchToPncDisposal([pncDisposal], ahoResult)
+
+    expect(result).toBe(true)
   })
 })

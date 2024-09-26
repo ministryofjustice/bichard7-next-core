@@ -279,7 +279,7 @@ exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 
 
 exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1) 1`] = `
 {
-  "code": "HO200113",
+  "code": "HO200112",
   "path": [
     "AnnotatedHearingOutcome",
     "HearingOutcome",
@@ -346,7 +346,7 @@ exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 
 
 exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 1) 1`] = `
 {
-  "code": "HO200113",
+  "code": "HO200114",
   "path": [
     "AnnotatedHearingOutcome",
     "HearingOutcome",
@@ -385,7 +385,7 @@ exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 
 
 exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 1) 1`] = `
 {
-  "code": "HO200113",
+  "code": "HO200109",
   "path": [
     "AnnotatedHearingOutcome",
     "HearingOutcome",
@@ -424,7 +424,7 @@ exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 
 
 exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 1) 1`] = `
 {
-  "code": "HO200113",
+  "code": "HO200114",
   "path": [
     "AnnotatedHearingOutcome",
     "HearingOutcome",

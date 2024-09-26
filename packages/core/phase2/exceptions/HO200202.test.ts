@@ -1,34 +1,20 @@
-import type { Result } from "../../../../../../types/AnnotatedHearingOutcome"
-import validateResultQualifierVariableCode from "./validateResultQualifierVariableCode"
+import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
+import HO200202 from "./HO200202"
 
-describe("validateResultQualifierVariableCode", () => {
-  it("should not generate exception HO200202 when there are less than 4 qualifier variables", () => {
-    const hoResult = {
-      ResultQualifierVariable: [{ Code: "1" }, { Code: "2" }, { Code: "3" }]
-    } as Result
+describe("HO200202", () => {
+  it("should return exceptions when there are more than 4 result qualifier variables", () => {
+    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = [
+      { Code: "1" },
+      { Code: "2" },
+      { Code: "3" },
+      { Code: "4" },
+      { Code: "5" }
+    ]
 
-    const result = validateResultQualifierVariableCode(hoResult, 0, 0)
+    const exceptions = HO200202(aho)
 
-    expect(result).toHaveLength(0)
-  })
-
-  it("should not generate exception HO200202 when there are 4 qualifier variables", () => {
-    const hoResult = {
-      ResultQualifierVariable: [{ Code: "1" }, { Code: "2" }, { Code: "3" }, { Code: "4" }]
-    } as Result
-
-    const result = validateResultQualifierVariableCode(hoResult, 0, 0)
-
-    expect(result).toHaveLength(0)
-  })
-
-  it("should generate exception HO200202 on all result's ResultQualifierVariable.Code when there are more than 4 qualifier variables", () => {
-    const hoResult = {
-      ResultQualifierVariable: [{ Code: "1" }, { Code: "2" }, { Code: "3" }, { Code: "4" }, { Code: "5" }]
-    } as Result
-    const result = validateResultQualifierVariableCode(hoResult, 0, 0)
-
-    expect(result).toStrictEqual([
+    expect(exceptions).toEqual([
       {
         code: "HO200202",
         path: [
@@ -110,5 +96,28 @@ describe("validateResultQualifierVariableCode", () => {
         ]
       }
     ])
+  })
+
+  it("should not return exceptions when there are 4 result qualifier variables", () => {
+    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = [
+      { Code: "1" },
+      { Code: "2" },
+      { Code: "3" },
+      { Code: "4" }
+    ]
+
+    const exceptions = HO200202(aho)
+
+    expect(exceptions).toHaveLength(0)
+  })
+
+  it("should not return exceptions when there are no result qualifier variables", () => {
+    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = []
+
+    const exceptions = HO200202(aho)
+
+    expect(exceptions).toHaveLength(0)
   })
 })
