@@ -4,7 +4,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-const generator: ExceptionGenerator = (_aho: AnnotatedHearingOutcome): Exception[] => {
+const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   const offences = _aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
