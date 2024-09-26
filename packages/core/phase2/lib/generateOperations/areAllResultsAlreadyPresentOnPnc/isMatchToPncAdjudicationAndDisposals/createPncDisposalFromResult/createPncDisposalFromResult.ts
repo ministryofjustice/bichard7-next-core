@@ -4,10 +4,10 @@ import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFir
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"
 
 const createPncDisposalFromResult = (result: Result): PncDisposal[] => {
-  const firstAndSecondDurationsDisposal = createPncDisposalByFirstAndSecondDurations(result)
-  const thirdDurationDisposal = createPncDisposalByThirdDuration(result, firstAndSecondDurationsDisposal.text)
+  const pncDisposalByFirstAndSecondDurations = createPncDisposalByFirstAndSecondDurations(result)
+  const pncDisposalByThirdDuration = createPncDisposalByThirdDuration(result, pncDisposalByFirstAndSecondDurations.text)
 
-  return [firstAndSecondDurationsDisposal, ...(thirdDurationDisposal ? [thirdDurationDisposal] : [])]
+  return [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
 }
 
 export default createPncDisposalFromResult
