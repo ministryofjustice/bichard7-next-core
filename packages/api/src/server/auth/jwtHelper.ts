@@ -10,7 +10,7 @@ const jwtConfig = {
 }
 
 // Test helper function
-export function generateTestJwtToken(user: User, jwd_id?: string) {
+export function generateTestJwtToken(user: User, jwd_id?: string): string {
   const options: jwt.SignOptions = {
     expiresIn: jwtConfig.tokenExpiresIn,
     issuer: jwtConfig.tokenIssuer
