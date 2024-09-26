@@ -117,5 +117,60 @@ describe("updateErrorListRecord", () => {
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
+
+    it("should not update the record without error details when there are no exceptions raised after resubmission", async () => {
+      const result = generateMockPhase1Result()
+      result.hearingOutcome.Exceptions = [
+        {
+          code: ExceptionCode.HO100206,
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+      const recordId = await insertErrorListRecord(db, result)
+      await db<ErrorListRecord[]>`UPDATE br7own.error_list set error_status = 2 WHERE error_id = ${recordId}`
+      result.hearingOutcome.Exceptions = []
+      await updateErrorListRecord(db, recordId, result)
+
+      const updatedRecord = (
+        await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+      )[0]
+
+      expect(updatedRecord.error_count).toBe(1)
+      expect(updatedRecord.error_reason).toBe("HO100206")
+      expect(updatedRecord.error_report).toBe("HO100206||br7:ArrestSummonsNumber")
+      expect(updatedRecord.error_status).toBe(ResolutionStatus.RESOLVED)
+      expect(updatedRecord.error_quality_checked).toBe(1)
+    })
+
+    it("should update the record with error details when there are exceptions raised after resubmission", async () => {
+      const result = generateMockPhase1Result()
+      result.hearingOutcome.Exceptions = [
+        {
+          code: ExceptionCode.HO100206,
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+      const recordId = await insertErrorListRecord(db, result)
+      await db<ErrorListRecord[]>`UPDATE br7own.error_list set error_status = 2 WHERE error_id = ${recordId}`
+      result.hearingOutcome.Exceptions = [
+        {
+          code: ExceptionCode.HO100304,
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+      await updateErrorListRecord(db, recordId, result)
+
+      const updatedRecord = (
+        await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+      )[0]
+
+      expect(updatedRecord.error_count).toBe(1)
+      expect(updatedRecord.error_reason).toBe("HO100304")
+      expect(updatedRecord.error_report).toBe("HO100304||br7:ArrestSummonsNumber")
+      expect(updatedRecord.error_status).toBe(ResolutionStatus.UNRESOLVED)
+      expect(updatedRecord.error_quality_checked).toBe(1)
+    })
   })
 })

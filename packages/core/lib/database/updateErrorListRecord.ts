@@ -7,19 +7,25 @@ import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)
-  return {
+  const fields: Partial<ErrorListRecord> = {
     phase: record.phase,
     asn: record.asn,
     ptiurn: record.ptiurn,
     org_for_police_filter: record.org_for_police_filter,
-    error_count: record.error_count,
-    error_report: record.error_report,
-    error_reason: record.error_reason,
-    error_quality_checked: record.error_quality_checked,
     annotated_msg: record.annotated_msg,
     updated_msg: record.updated_msg,
     user_updated_flag: record.user_updated_flag
   }
+
+  const hearingOutcome = getAnnotatedHearingOutcome(result)
+  if (hearingOutcome.Exceptions.length > 0) {
+    fields.error_quality_checked = record.error_quality_checked
+    fields.error_report = record.error_report
+    fields.error_reason = record.error_reason
+    fields.error_count = record.error_count
+  }
+
+  return fields
 }
 
 const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseResult): Promise<void> => {
