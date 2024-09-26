@@ -1,9 +1,9 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import isMatchToPncDisposal from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncDisposal"
+import isMatchToPncDisposal from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncDisposal"
 import type { PncDisposal } from "../../types/PncQueryResult"
 import isRecordableResult from "../lib/isRecordableResult"
-import createPncAdjudicationFromAho from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/createPncAdjudicationFromAho"
-import isMatchToPncAdjudication from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncAdjudication"
+import createPncAdjudicationFromAho from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/createPncAdjudicationFromAho"
+import isMatchToPncAdjudication from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncAdjudication"
 import findPncCourtCase from "../lib/findPncCourtCase"
 
 type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void

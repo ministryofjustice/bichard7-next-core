@@ -3,7 +3,7 @@ import { PncOperation } from "../../../types/PncOperation"
 import ResultClass from "../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import generateOperations from "./generateOperations"
-import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
+import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
 import { handleAdjournmentPreJudgement } from "./resultClassHandlers/handleAdjournmentPreJudgement"
@@ -12,7 +12,7 @@ import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudg
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
-jest.mock("./areAllResultsAlreadyPresentOnPnc")
+jest.mock("./areAllResultsOnPnc")
 jest.mock("./resultClassHandlers/handleAdjournment")
 jest.mock("./resultClassHandlers/handleAdjournmentPostJudgement")
 jest.mock("./resultClassHandlers/handleAdjournmentPreJudgement")
@@ -20,7 +20,7 @@ jest.mock("./resultClassHandlers/handleAdjournmentWithJudgement")
 jest.mock("./resultClassHandlers/handleJudgementWithFinalResult")
 jest.mock("./resultClassHandlers/handleSentence")
 
-const mockedAreAllResultsAlreadyPresentOnPnc = areAllResultsAlreadyPresentOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 const mockedHandleAdjournment = handleAdjournment as jest.Mock
 const mockedHandleAdjournmentPostJudgement = handleAdjournmentPostJudgement as jest.Mock
 const mockedHandleAdjournmentPreJudgement = handleAdjournmentPreJudgement as jest.Mock
@@ -52,7 +52,7 @@ describe("generateOperations", () => {
     { resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, resultClassHandler: mockedHandleJudgementWithFinalResult },
     { resultClass: ResultClass.SENTENCE, resultClassHandler: mockedHandleSentence }
   ])("calls $resultClassHandler when offence result class is $resultClass", ({ resultClass, resultClassHandler }) => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = generateAhoFromOffenceList([
       {
         Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
@@ -102,7 +102,7 @@ describe("generateOperations", () => {
   })
 
   it("generates no operations for Unresulted result class", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -126,7 +126,7 @@ describe("generateOperations", () => {
   })
 
   it("generates HO200118 exception when there are no operations, no recordable results, and no operation exceptions", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -155,7 +155,7 @@ describe("generateOperations", () => {
   })
 
   it("generates disposal operation when offence added by the Court disposal ccrId matches remand ccrId", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -212,7 +212,7 @@ describe("generateOperations", () => {
   })
 
   it("generates HO200121 exception when there are no recordable offences", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -243,7 +243,7 @@ describe("generateOperations", () => {
   })
 
   it("generates HO200121 exception when there are no offences", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -269,7 +269,7 @@ describe("generateOperations", () => {
   })
 
   it("validates generated operations", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -305,7 +305,7 @@ describe("generateOperations", () => {
   })
 
   it("returns exceptions from checking all results are already on PNC with validation exceptions", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const resubmitted = false
     const aho = {
       Exceptions: [],
@@ -346,7 +346,7 @@ describe("generateOperations", () => {
   })
 
   it("returns exceptions from checking all results are already on PNC without validation exceptions when there are none", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -371,7 +371,7 @@ describe("generateOperations", () => {
   })
 
   it("returns only remand operations when all results already on PNC", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(true)
+    mockedAreAllResultsOnPnc.mockReturnValue(true)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -402,7 +402,7 @@ describe("generateOperations", () => {
   })
 
   it("returns ignored event when all results already on PNC", () => {
-    mockedAreAllResultsAlreadyPresentOnPnc.mockReturnValue(true)
+    mockedAreAllResultsOnPnc.mockReturnValue(true)
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
