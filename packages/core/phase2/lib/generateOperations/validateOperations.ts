@@ -9,8 +9,6 @@ import { PncOperation } from "../../../types/PncOperation"
 const errorPath = errorPaths.case.asn
 
 const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
-  let sendefExists = false
-  let newremExists = false
   let penhrgExists = false
   const courtCaseSpecificOperations: Operation[] = []
 
@@ -20,14 +18,12 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
+  if (hasOperation(PncOperation.REMAND) && remandCcrs.size === 0 && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
+    return { code: ExceptionCode.HO200113, path: errorPath }
+  }
+
   for (const operation of operations) {
     penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
-    newremExists ||= operation.code === PncOperation.REMAND
-    sendefExists ||= operation.code === PncOperation.SENTENCE_DEFERRED
-
-    if (newremExists && remandCcrs.size === 0 && sendefExists) {
-      return { code: ExceptionCode.HO200113, path: errorPath }
-    }
 
     if (penhrgExists && courtCaseSpecificOperations.length > 0) {
       const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
