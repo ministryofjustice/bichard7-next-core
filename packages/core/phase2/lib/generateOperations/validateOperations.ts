@@ -14,14 +14,16 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   let penhrgExists = false
   const courtCaseSpecificOperations: Operation[] = []
 
+  const hasOperation = (pncOperation: PncOperation) => operations.some((operation) => operation.code === pncOperation)
+
+  if (hasOperation(PncOperation.PENALTY_HEARING) && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
+    return { code: ExceptionCode.HO200114, path: errorPath }
+  }
+
   for (const operation of operations) {
     penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
     newremExists ||= operation.code === PncOperation.REMAND
     sendefExists ||= operation.code === PncOperation.SENTENCE_DEFERRED
-
-    if (penhrgExists && sendefExists) {
-      return { code: ExceptionCode.HO200114, path: errorPath }
-    }
 
     if (newremExists && remandCcrs.size === 0 && sendefExists) {
       return { code: ExceptionCode.HO200113, path: errorPath }
