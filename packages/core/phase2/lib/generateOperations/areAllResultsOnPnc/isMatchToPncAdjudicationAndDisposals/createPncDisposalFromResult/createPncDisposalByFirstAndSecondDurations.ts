@@ -16,10 +16,9 @@ const formatDate = (date: Date) =>
   })
 
 const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal => {
-  const durationCount = result.Duration ? result.Duration.length : 0
-  const firstDuration = durationCount > 0 ? result.Duration?.[0] : undefined
-  const secondDuration =
-    durationCount > 1 ? (result.Duration?.[1].DurationType === "Suspended" ? result.Duration[1] : undefined) : undefined
+  const durations = result.Duration ?? []
+  const firstDuration = durations[0]
+  const secondDuration = durations[1] && durations[1].DurationType === "Suspended" ? durations[1] : undefined
   const amountInResult = result.AmountSpecifiedInResult?.[0]?.Amount
   const validatedAmountInResult = isAmountSpecifiedInResultValid(amountInResult) ? amountInResult : undefined
 

@@ -18,7 +18,7 @@ import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudg
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
 import type ExceptionsAndOperations from "./ExceptionsAndOperations"
-import { areAllResultsAlreadyPresentOnPnc } from "./areAllResultsAlreadyPresentOnPnc"
+import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -39,7 +39,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
   let recordableResultFound = false
 
-  const allResultsAlreadyOnPnc = areAllResultsAlreadyPresentOnPnc(aho)
+  const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
 
   if (offences.filter(isRecordableOffence).length === 0) {
     return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }

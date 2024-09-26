@@ -1,10 +1,9 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import isMatchToPncDisposal from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncDisposal"
+import isMatchToPncDisposal from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncDisposal"
 import type { PncDisposal } from "../../types/PncQueryResult"
 import isRecordableResult from "../lib/isRecordableResult"
-import { isNonEmptyArray } from "../../types/NonEmptyArray"
-import createPncAdjudicationFromAho from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/createPncAdjudicationFromAho"
-import isMatchToPncAdjudication from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncAdjudication"
+import createPncAdjudicationFromAho from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/createPncAdjudicationFromAho"
+import isMatchToPncAdjudication from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/isMatchToPncAdjudication"
 import findPncCourtCase from "../lib/findPncCourtCase"
 
 type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
@@ -28,20 +27,19 @@ const isMatchToPncAdjudicationAndDisposals = (
   offenceIndex: number,
   checkExceptionFn: CheckExceptionFn
 ): boolean => {
-  if (!offence.Result || !isNonEmptyArray(offence.Result)) {
-    return false
-  }
-
   const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence ?? undefined
   const adjFromAho = createPncAdjudicationFromAho(
     offence.Result,
     aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
   )
 
-  return !!findPncCourtCase(aho, offence)?.offences.some(
-    (pncOffence) =>
-      isMatchToPncAdjudication(adjFromAho, pncOffence, offenceReasonSequence) &&
-      areResultsMatchingAPncDisposal(offence, offenceIndex, pncOffence.disposals ?? [], checkExceptionFn)
+  return (
+    !!adjFromAho &&
+    !!findPncCourtCase(aho, offence)?.offences.some(
+      (pncOffence) =>
+        isMatchToPncAdjudication(adjFromAho, pncOffence, offenceReasonSequence) &&
+        areResultsMatchingAPncDisposal(offence, offenceIndex, pncOffence.disposals ?? [], checkExceptionFn)
+    )
   )
 }
 

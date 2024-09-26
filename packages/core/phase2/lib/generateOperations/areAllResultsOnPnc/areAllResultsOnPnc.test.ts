@@ -1,7 +1,7 @@
 jest.mock("./isMatchToPncAdjudicationAndDisposals")
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
-import areAllResultsAlreadyPresentOnPnc from "./areAllResultsAlreadyPresentOnPnc"
+import areAllResultsOnPnc from "./areAllResultsOnPnc"
 import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
 
 const mockedisMatchToPncAdjudicationAndDisposals = isMatchToPncAdjudicationAndDisposals as jest.Mock
@@ -16,7 +16,7 @@ type TestInput = {
   }[]
 }
 
-describe("areAllResultsAlreadyPresentOnPnc", () => {
+describe("areAllResultsOnPnc", () => {
   beforeEach(() => {
     jest.resetAllMocks()
   })
@@ -34,7 +34,7 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
       }
     } as Offence
     const aho = generateAhoFromOffenceList([offence])
-    const result = areAllResultsAlreadyPresentOnPnc(aho)
+    const result = areAllResultsOnPnc(aho)
 
     expect(result).toBe(false)
   })
@@ -190,7 +190,7 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
       throw Error("Too many invocations!")
     })
 
-    const result = areAllResultsAlreadyPresentOnPnc(aho)
+    const result = areAllResultsOnPnc(aho)
 
     expect(result).toBe(output)
   })

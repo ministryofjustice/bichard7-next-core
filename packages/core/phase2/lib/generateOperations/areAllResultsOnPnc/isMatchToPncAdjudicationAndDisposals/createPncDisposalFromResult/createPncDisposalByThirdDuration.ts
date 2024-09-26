@@ -19,11 +19,11 @@ const createPncDisposalByThirdDuration = (
   result: Result,
   validatedDisposalText: string | undefined
 ): PncDisposal | undefined => {
-  if (!result.Duration?.[2]) {
+  const thirdDuration = result.Duration?.[2]
+  if (!thirdDuration) {
     return undefined
   }
 
-  const thirdDuration = result.Duration[2]
   const thirdAmountInResult = result.AmountSpecifiedInResult?.[2]?.Amount
   const validatedThirdAmountInResult = isAmountSpecifiedInResultValid(thirdAmountInResult)
     ? thirdAmountInResult
