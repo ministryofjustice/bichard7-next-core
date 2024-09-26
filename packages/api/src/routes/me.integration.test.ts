@@ -1,4 +1,3 @@
-import type { JWT } from "@moj-bichard7/common/types/JWT"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import { OK, UNAUTHORIZED } from "http-status"
@@ -8,24 +7,7 @@ import fetchUserByUsername from "../useCases/fetchUserByUsername"
 
 jest.mock("../useCases/fetchUserByUsername")
 
-const validExpiryDate = (): number => {
-  const date = new Date()
-  return Number((date.setDate(date.getDate() + 7) / 1000).toFixed())
-}
-
 const validJwtId = "c058a1bf-ce6a-45d9-8e84-9729aeac5246"
-
-const validJwt = {
-  username: "user",
-  exclusionList: [],
-  inclusionList: [],
-  emailAddress: "user@example.com",
-  groups: [],
-  id: validJwtId,
-  iat: 1726045193,
-  exp: validExpiryDate(),
-  iss: ""
-} satisfies JWT
 
 describe("/me", () => {
   const mockedFetchUserByUsername = fetchUserByUsername as jest.Mock
