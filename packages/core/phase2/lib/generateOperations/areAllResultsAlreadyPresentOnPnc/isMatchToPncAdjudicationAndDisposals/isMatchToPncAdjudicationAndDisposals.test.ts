@@ -38,13 +38,15 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
         CourtCaseReferenceNumber: undefined
       } as Offence
     ])
+    ahoInput.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+      DateOfHearing: new Date("05/22/2024")
+    } as Hearing
+
     const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
-      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(false)
   })
 
   it("If there is are no PNC query courtcases that match the input courtCaseReference, then returns false", () => {
@@ -55,13 +57,15 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
         CourtCaseReferenceNumber: "DOES_NOT_MATCH_FOO"
       } as Offence
     ])
+    ahoInput.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+      DateOfHearing: new Date("05/22/2024")
+    } as Hearing
+
     const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
-      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(false)
   })
 
   it("If there are no offences in the matching courtCase of the PNC Query, then returns false", () => {
@@ -72,14 +76,16 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
         CourtCaseReferenceNumber: "FOO"
       } as Offence
     ])
+    ahoInput.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
+      DateOfHearing: new Date("05/22/2024")
+    } as Hearing
+
     const result = isMatchToPncAdjudicationAndDisposals(
       ahoInput,
-      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
 
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(false)
   })
 
   it("If there are no adjudications in the matching courtCase of the PNC Query, then returns false", () => {
@@ -122,13 +128,11 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
     } as Hearing
 
     const result = isMatchToPncAdjudicationAndDisposals(
-      ahoWithResults,
-      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoInput,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
 
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(false)
   })
 
   it("returns false if there are matching adjudications but no disposals on the pnc query", () => {
@@ -171,13 +175,11 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
     } as Hearing
 
     const result = isMatchToPncAdjudicationAndDisposals(
-      ahoWithResults,
-      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoInput,
+      ahoInput.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
 
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(false)
   })
 
   it("returns true if there are matching adjudications and disposals on the pnc query", () => {
@@ -270,11 +272,9 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
 
     const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
-      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
-    expect(result.value).toBe(true)
-    expect(result.exceptions).toStrictEqual([])
+    expect(result).toBe(true)
   })
 
   it("should return exceptions", () => {
@@ -360,26 +360,9 @@ describe("check isMatchToPncAdjudicationAndDisposals", () => {
 
     const result = isMatchToPncAdjudicationAndDisposals(
       ahoWithResults,
-      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
-      0
+      ahoWithResults.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     )
 
-    expect(result.value).toBe(false)
-    expect(result.exceptions).toStrictEqual([
-      {
-        code: "HO200200",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          0,
-          "Result",
-          0,
-          "ResultVariableText"
-        ]
-      }
-    ])
+    expect(result).toBe(false)
   })
 })

@@ -1,11 +1,20 @@
 jest.mock("./isMatchToPncAdjudicationAndDisposals")
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import areAllResultsAlreadyPresentOnPnc from "./areAllResultsAlreadyPresentOnPnc"
 import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
 
 const mockedisMatchToPncAdjudicationAndDisposals = isMatchToPncAdjudicationAndDisposals as jest.Mock
+type TestInput = {
+  output: boolean
+  when: string
+  offences: {
+    ccr?: string
+    reasonSequence?: string
+    results: { pncDisposalType: number }[]
+    isMatchToPncAdjudicationAndDisposalsValue?: boolean
+  }[]
+}
 
 describe("areAllResultsAlreadyPresentOnPnc", () => {
   beforeEach(() => {
@@ -27,13 +36,12 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     const aho = generateAhoFromOffenceList([offence])
     const result = areAllResultsAlreadyPresentOnPnc(aho)
 
-    expect(result).toStrictEqual({ exceptions: [], value: false })
+    expect(result).toBe(false)
   })
 
-  it.each([
+  it.each<TestInput>([
     {
       output: true,
-      exceptions: 2,
       when: "all offences have results, CCR and reason sequence and offences match PNC adjudications and disposals",
       offences: [
         {
@@ -52,7 +60,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: false,
-      exceptions: 1,
       when: "all offences have results, CCR and reason sequence, but one offence does not match PNC adjudications and disposals",
       offences: [
         {
@@ -71,7 +78,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: true,
-      exceptions: 1,
       when: "first offence has non-recordable results and no reason sequence, and second offence has results, CCR and reason sequence, and match PNC adjudications and disposals",
       offences: [
         {
@@ -89,7 +95,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: false,
-      exceptions: 0,
       when: "first offence has recordable results and no reason sequence, and second offence has results, CCR and reason sequence, and match PNC adjudications and disposals",
       offences: [
         {
@@ -107,7 +112,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: false,
-      exceptions: 1,
       when: "first offence has non-recordable results and no reason sequence, and second offence has results, CCR and reason sequence, but does not match PNC adjudications and disposals",
       offences: [
         {
@@ -125,7 +129,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: true,
-      exceptions: 1,
       when: "first offence has non-recordable results and no reason sequence, and second offence has non-recordable results and no court case reference",
       offences: [
         {
@@ -142,7 +145,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     },
     {
       output: true,
-      exceptions: 0,
       when: "both offences have no results",
       offences: [
         {
@@ -159,7 +161,7 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
         }
       ]
     }
-  ])("should return $output when $when", ({ output, offences, exceptions }) => {
+  ])("should return $output when $when", ({ output, offences }) => {
     const aho = {
       PncQuery: {
         pncId: "2016/099999"
@@ -182,10 +184,7 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
     offences
       .filter((offence) => offence.isMatchToPncAdjudicationAndDisposalsValue !== undefined)
       .forEach(({ isMatchToPncAdjudicationAndDisposalsValue }) => {
-        mockedisMatchToPncAdjudicationAndDisposals.mockReturnValueOnce({
-          value: isMatchToPncAdjudicationAndDisposalsValue,
-          exceptions: [{ code: ExceptionCode.HO200101, path: ["dummy"] }]
-        })
+        mockedisMatchToPncAdjudicationAndDisposals.mockReturnValueOnce(isMatchToPncAdjudicationAndDisposalsValue)
       })
     mockedisMatchToPncAdjudicationAndDisposals.mockImplementation(() => {
       throw Error("Too many invocations!")
@@ -193,12 +192,6 @@ describe("areAllResultsAlreadyPresentOnPnc", () => {
 
     const result = areAllResultsAlreadyPresentOnPnc(aho)
 
-    const expectedExceptions = Array(exceptions)
-      .fill(0)
-      .map(() => ({ code: ExceptionCode.HO200101, path: ["dummy"] }))
-    expect(result).toStrictEqual({
-      exceptions: expectedExceptions,
-      value: output
-    })
+    expect(result).toBe(output)
   })
 })
