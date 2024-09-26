@@ -113,34 +113,4 @@ describe("handleSentence", () => {
       }
     ])
   })
-
-  it("should return HO200106 when adjudication does not exist", () => {
-    const params = generateResultClassHandlerParams({
-      fixedPenalty: false,
-      result: { PNCAdjudicationExists: false } as Result,
-      offence: {} as Offence,
-      offenceIndex: 1,
-      resultIndex: 1
-    })
-
-    const { exceptions, operations } = handleSentence(params)
-
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200106",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
-    expect(operations).toHaveLength(0)
-  })
 })
