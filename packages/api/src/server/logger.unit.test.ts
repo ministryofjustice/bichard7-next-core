@@ -56,7 +56,7 @@ describe("logger", () => {
     expect(result).toEqual(loggerOpts)
   })
 
-  it("will return will ignore case sensitively", () => {
+  it("will ignore case sensitively", () => {
     const result = logger("deVeLOpmEnT")
 
     expect(result).toEqual(loggerOpts)
