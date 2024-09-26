@@ -36,8 +36,7 @@ example.
 
 ### Tests
 
-Tests are in their own folder because we use esbuild and we cannot ignore the tests files. So we have a created a test
-directory to store them in.
+Tests next to the files that they test. We have `.unit.test.ts` and/or `.integration.test.ts` files.
 
 ### Files and Folders
 
@@ -45,7 +44,8 @@ directory to store them in.
 - App is the "builder" for the orchestration of Fastify
   - Server folder the creation the Fastify server, logging and Swagger config
   - Contains the auto loader for Plugins and Routes
-- Services
+- Services for things that help operate the API e.g. the database config and connection
+- useCases for a use case, that will be business logic.
 
 ### Plugins
 
