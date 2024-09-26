@@ -25,5 +25,5 @@ export function generateTestJwtToken(user: User, jwd_id?: string) {
     id: jwd_id ?? randomUUID()
   }
 
-  return jwt.sign(payload, jwtConfig.tokenSecret!, options)
+  return jwt.sign(payload, jwtConfig.tokenSecret, options)
 }
