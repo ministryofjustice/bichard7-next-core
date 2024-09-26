@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal"
 import errorPaths from "../../../lib/exceptions/errorPaths"
 import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
-import operationCourtCaseReference from "./operationCourtCaseReference"
+import operationCourtCaseReference, { courtCaseSpecificOperations } from "./operationCourtCaseReference"
 import { PncOperation } from "../../../types/PncOperation"
 
 const errorPath = errorPaths.case.asn
@@ -19,19 +19,13 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
-  const courtCaseOperations = [
-    PncOperation.SENTENCE_DEFERRED,
-    PncOperation.DISPOSAL_UPDATED,
-    PncOperation.NORMAL_DISPOSAL
-  ]
-
-  const courtCaseSpecificOperations2: Operation[] = operations.filter((operation) =>
-    courtCaseOperations.includes(operation.code)
+  const operationsWithCourtCase2: Operation[] = operations.filter((operation) =>
+    courtCaseSpecificOperations.includes(operation.code)
   )
 
-  if (hasOperation(PncOperation.PENALTY_HEARING) && courtCaseSpecificOperations2.length > 0) {
+  if (hasOperation(PncOperation.PENALTY_HEARING) && operationsWithCourtCase2.length > 0) {
     if (
-      courtCaseSpecificOperations2.some((courtCaseSpecificOperation) =>
+      operationsWithCourtCase2.some((courtCaseSpecificOperation) =>
         [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(courtCaseSpecificOperation.code)
       )
     ) {
@@ -39,7 +33,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     }
 
     if (
-      courtCaseSpecificOperations2.some(
+      operationsWithCourtCase2.some(
         (courtCaseSpecificOperation) => courtCaseSpecificOperation.code === PncOperation.NORMAL_DISPOSAL
       )
     ) {
@@ -47,13 +41,13 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     }
   }
 
-  const courtCaseSpecificOperations: Operation[] = []
+  const operationsWithCourtCase: Operation[] = []
 
   for (const operation of operations) {
     const courtCaseReference = operationCourtCaseReference(operation)
 
-    if (courtCaseOperations.includes(operation.code)) {
-      const clashingOperation = courtCaseSpecificOperations.find(
+    if (courtCaseSpecificOperations.includes(operation.code)) {
+      const clashingOperation = operationsWithCourtCase.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
 
@@ -79,7 +73,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         break
       }
 
-      courtCaseSpecificOperations.push(operation)
+      operationsWithCourtCase.push(operation)
     }
 
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
