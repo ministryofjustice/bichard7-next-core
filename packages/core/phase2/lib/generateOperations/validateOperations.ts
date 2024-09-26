@@ -9,9 +9,6 @@ import { PncOperation } from "../../../types/PncOperation"
 const errorPath = errorPaths.case.asn
 
 const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
-  let penhrgExists = false
-  const courtCaseSpecificOperations: Operation[] = []
-
   const hasOperation = (pncOperation: PncOperation) => operations.some((operation) => operation.code === pncOperation)
 
   if (hasOperation(PncOperation.PENALTY_HEARING) && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
@@ -22,32 +19,47 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
-  for (const operation of operations) {
-    penhrgExists ||= operation.code === PncOperation.PENALTY_HEARING
+  const courtCaseOperations = [
+    PncOperation.SENTENCE_DEFERRED,
+    PncOperation.DISPOSAL_UPDATED,
+    PncOperation.NORMAL_DISPOSAL
+  ]
 
-    if (penhrgExists && courtCaseSpecificOperations.length > 0) {
-      const incompatibleCode = courtCaseSpecificOperations[courtCaseSpecificOperations.length - 1].code
-      if ([PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(incompatibleCode)) {
-        return { code: ExceptionCode.HO200109, path: errorPath }
-      }
+  const courtCaseSpecificOperations2: Operation[] = operations.filter((operation) =>
+    courtCaseOperations.includes(operation.code)
+  )
 
-      if (incompatibleCode === PncOperation.NORMAL_DISPOSAL) {
-        return { code: ExceptionCode.HO200115, path: errorPath }
-      }
-    }
-
-    const courtCaseReference = operationCourtCaseReference(operation)
-
+  if (hasOperation(PncOperation.PENALTY_HEARING) && courtCaseSpecificOperations2.length > 0) {
     if (
-      [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED, PncOperation.NORMAL_DISPOSAL].includes(
-        operation.code as PncOperation
+      courtCaseSpecificOperations2.some((courtCaseSpecificOperation) =>
+        [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(courtCaseSpecificOperation.code)
       )
     ) {
+      return { code: ExceptionCode.HO200109, path: errorPath }
+    }
+
+    if (
+      courtCaseSpecificOperations2.some(
+        (courtCaseSpecificOperation) => courtCaseSpecificOperation.code === PncOperation.NORMAL_DISPOSAL
+      )
+    ) {
+      return { code: ExceptionCode.HO200115, path: errorPath }
+    }
+  }
+
+  const courtCaseSpecificOperations: Operation[] = []
+
+  for (const operation of operations) {
+    const courtCaseReference = operationCourtCaseReference(operation)
+
+    if (courtCaseOperations.includes(operation.code)) {
       const clashingOperation = courtCaseSpecificOperations.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
+
       if (clashingOperation) {
         const sortedOperations = [operation.code, clashingOperation.code].sort()
+
         if (operation.code === clashingOperation.code) {
           return { code: ExceptionCode.HO200109, path: errorPath }
         }
@@ -72,10 +84,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
-    if (
-      [PncOperation.SENTENCE_DEFERRED].includes(operation.code as PncOperation) &&
-      remandCcrsContainCourtCaseReference
-    ) {
+    if ([PncOperation.SENTENCE_DEFERRED].includes(operation.code) && remandCcrsContainCourtCaseReference) {
       return { code: ExceptionCode.HO200113, path: errorPath }
     }
   }
