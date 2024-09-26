@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify"
+import { OK } from "http-status"
 import build from "../../app"
 import HealthRoutes from "./routes"
 
@@ -20,7 +21,7 @@ describe("health plugin", () => {
       url: HealthRoutes.HEALTH
     })
 
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(OK)
     expect(response.body).toBe("Ok")
   })
 
@@ -30,7 +31,7 @@ describe("health plugin", () => {
       url: "/health"
     })
 
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(OK)
     expect(response.body).toBe("Ok")
   })
 })
