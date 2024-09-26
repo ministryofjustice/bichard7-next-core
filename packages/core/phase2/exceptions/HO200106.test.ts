@@ -5,13 +5,15 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 describe("HO200106", () => {
-  it("returns a HO200106 exception where there are no PNC adjudications on the result and the offence is not added by the court", () => {
+  it("returns a HO200106 exception where its not a fixed penalty, offence and result are recorable, result class is Sentence, no PNC adjudications on the result and the offence is not added by the court", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
         Result: [
           {
-            PNCAdjudicationExists: false
+            PNCAdjudicationExists: false,
+            ResultClass: "Sentence",
+            PNCDisposalType: 1001
           },
           {
             PNCAdjudicationExists: true
@@ -36,7 +38,9 @@ describe("HO200106", () => {
             PNCAdjudicationExists: true
           },
           {
-            PNCAdjudicationExists: false
+            PNCAdjudicationExists: false,
+            ResultClass: "Sentence",
+            PNCDisposalType: 1001
           }
         ]
       }

@@ -10,7 +10,8 @@ export const handleSentence: ResultClassHandler = ({
   offence,
   resubmitted,
   offenceIndex,
-  resultIndex
+  resultIndex,
+  result
 }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const ccrId = offence?.CourtCaseReferenceNumber || undefined
@@ -18,6 +19,10 @@ export const handleSentence: ResultClassHandler = ({
 
   if (fixedPenalty) {
     return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
+  }
+
+  if (!result.PNCAdjudicationExists) {
+    return { operations: [], exceptions: [] }
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
