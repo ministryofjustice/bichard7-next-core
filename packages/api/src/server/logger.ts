@@ -2,10 +2,10 @@ import type { LoggerOptions } from "pino"
 
 type Options = LoggerOptions | boolean
 
-const logger = (env?: string) => {
+const logger = (env?: string): Options => {
   let loggerOpts: Options
 
-  switch (env) {
+  switch (env?.toLowerCase()) {
     case "test":
       loggerOpts = false
       break
