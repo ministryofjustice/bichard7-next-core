@@ -81,6 +81,30 @@ commands:
       - store_test_results:
           path: /home/circleci/bichard7-next-tests/test-results.xml
 
+
+  save_artifacts_ui:
+    steps:
+      - run:
+          working_directory: ~/bichard7-next-tests
+          name: Compress the artifacts for easier downloading
+          when: always
+          command: for file in ./screenshots/*; do tar -czf ${file}.tar.gz $file; done
+      - run:
+          working_directory: ~/bichard7-next-tests
+          name: Create the saved_artifacts directory
+          when: always
+          command: mkdir ./saved_artifacts;
+      - run:
+          working_directory: ~/bichard7-next-tests
+          name: Move the gzipped files across
+          when: always
+          command: mv ./screenshots/*.tar.gz ./saved_artifacts/
+      - store_artifacts:
+          path: /home/circleci/bichard7-next-tests/saved_artifacts
+      - store_test_results:
+          path: /home/circleci/bichard7-next-tests/test-results.xml
+
+
   set_locale:
     steps:
       - run:
@@ -100,6 +124,88 @@ commands:
           paths:
             - ~/vendor/apt_cache
             - ~/vendor/apt_lists
+
+
+  setup_ui:
+    steps:
+      - checkout
+      - node_install
+      - node/install-packages:
+          include-branch-in-cache-key: true
+      - set_locale
+      - run:
+          name: Clone bichard7-next-audit-logging
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+
+  fetch_images:
+    parameters:
+      IMAGES:
+        default: ""
+        type: string
+    steps:
+      - run:
+          name: "Fetch images: <<parameters.IMAGES>>"
+          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
+
+
+  build_message_forwarder:
+    steps:
+      - run:
+          name: Build message forwarder image
+          working_directory: ~/bichard7-next-core
+          command: bash .circleci/scripts/build-message-forwarder.sh
+
+
+  build_audit_logging_images:
+      steps:
+        - run:
+            name: Build audit logging images
+            working_directory: ~/bichard7-next-audit-logging
+            command: make build-api-server build-event-handler-server
+
+  run_test_chunk:
+      parameters:
+        ARGS:
+          default: ""
+          type: "string"
+      steps:
+        - run:
+            name: Run test chunk
+            working_directory: ~/bichard7-next-tests
+            command: |
+              CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
+              <<parameters.ARGS>> \
+              npm run test:chunk:nextUI
+
+  start_bichard7_legacy:
+    steps:
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - build_message_forwarder
+      - build_audit_logging_images
+      - run:
+          name: Start bichard7 legacy
+          command: bash .circleci/scripts/run-infrastructure.sh ui all-legacy
+
+
+  start_services:
+    parameters:
+      ARGS:
+        default: ""
+        type: string
+      SERVICES:
+        default: ""
+        type: string
+      FLAGS:
+        default: ""
+        type: string
+    steps:
+      - run:
+          name: "Run services: <<parameters.SERVICES>>"
+          command: |
+            <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
+            up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
+
 
 jobs:
   build_and_lint:
@@ -440,6 +546,181 @@ jobs:
       - run:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
+  
+
+  build-ui:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    steps:
+      - checkout
+      - install_ms_edge
+      - run: ./.circleci/scripts/ui-scripts/build-ui.sh
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save -o "images/ui:latest" "ui:latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+            - images
+
+  test_ui:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    steps:
+      - setup_ui
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - build_audit_logging_images
+      - start_services:
+          SERVICES: activemq localstack db-seed audit-log-api
+      - run:
+          name: Run code-based unit tests
+          command: npm run test:unit         
+      - run:
+          name: Run integration tests
+          command: npm run test:integration
+
+  seed_data:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - setup_ui
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - build_audit_logging_images
+      - start_services:
+          SERVICES: db-seed audit-log-api localstack
+      - run:
+          name: Run the seed-data script
+          command: DEPLOY_NAME=e2e-test npm run seed-data
+
+
+  cypress_component_test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: xlarge
+    parameters:
+      ms-edge:
+        type: boolean
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [true, << parameters.ms-edge >>]
+          steps:
+            - install_ms_edge
+      - node_install
+      - node/install-packages:
+          include-branch-in-cache-key: true
+      - run:
+          name: Install Cypress
+          command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
+          background: true
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run install:assets
+      - run:
+          name: Wait for cypress install to finish
+          command: until [ -f cypressInstalled ]; do sleep 1; done
+          no_output_timeout: 10m
+      - run:
+          name: Retrying installing Cypress
+          command: ./.circleci/scripts/ui-scripts/install-cypress.sh
+      - run:
+          name: Run UI component tests
+          command: sh ./.circleci/scripts/ui-scripts/run-component-tests.sh
+          environment:
+            UI_IS_HTTPS: true
+            TZ: "Europe/London"
+            MS_EDGE: << parameters.ms-edge >>
+      - store_artifacts:
+          path: ./cypress/videos # correct path????
+      - store_artifacts:
+          path: ./cypress/screenshots  # correct path????
+
+
+  cucumber_e2e_tests:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    parallelism: 10
+    parameters:
+      ms-edge:
+        type: boolean
+    environment:
+      RECORD: "true"
+      STACK_TYPE: next
+      WORKSPACE: local-next
+      AUTH_TYPE: user-service
+      TZ: "Europe/London"
+      MS_EDGE: << parameters.ms-edge >>
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load image
+          command: |
+            docker image load < "images/ui:latest"
+      - setup_ui
+      - when:
+          condition:
+            equal: [true, << parameters.ms-edge >>]
+          steps:
+            - install_ms_edge
+      - run:
+          name: Clone bichard7-next-tests
+          command: bash .circleci/scripts/clone-tests-repo.sh
+      - node/install-packages:
+          app-dir: ~/bichard7-next-tests
+          cache-path: ~/bichard7-next-tests/node_modules
+          include-branch-in-cache-key: true
+      - start_bichard7_legacy
+      - run_test_chunk:
+          ARGS: >-
+            NEXTUI="true"
+            MESSAGE_ENTRY_POINT="mq"
+            MS_EDGE=<< parameters.ms-edge >>
+      - save_artifacts_ui
+      - store_test_results:
+          working_directory: ~/bichard7-next-tests
+          path: ./cucumber/results
+
+  zap_scanner:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load image
+          command: |
+            docker image load < "images/ui:latest"
+      - setup_ui
+      - fetch_images:
+          IMAGES: nodejs-20-2023
+      - build_audit_logging_images
+      - fetch_images:
+          IMAGES: user-service nginx-auth-proxy
+      - run:
+          command: npm run ui
+      - run:
+          name: Seed database
+          command: DEPLOY_NAME=e2e-test npm run seed-data
+      - run:
+          name: Run ZAP scanner
+          command: npm run zap
 
 parameters:
   circleci-changes:
@@ -480,8 +761,50 @@ workflows:
       - test_common
       - test_conductor
       - test_core
+      - test_ui
       - characterisation_test
       - comparison_test
+      - seed_date
+        requires:
+          - test_ui
+      - build_ui
+        requires:
+          - test_ui
+      
+      - cypress_component_test:
+          name: cypress_component_test
+          ms-edge: false
+          requires:
+            - build-ui
+      - cypress_component_test:
+          name: cypress_component_test_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - cypress_e2e_tests:
+          name: cypress_e2e_tests
+          ms-edge: false
+          requires:
+            - build-ui
+      - cypress_e2e_tests:
+          name: cypress_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests
+          ms-edge: false
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - zap_scanner:
+          requires:
+            - build-ui
+
       - e2e_test:
           name: e2e_test_phase1
           next-ui: false
