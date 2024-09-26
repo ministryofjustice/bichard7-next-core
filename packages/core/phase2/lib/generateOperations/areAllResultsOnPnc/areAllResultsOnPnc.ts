@@ -2,7 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 import isRecordableResult from "../../isRecordableResult"
 import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
 
-const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): boolean =>
+const areAllResultsOnPnc = (aho: AnnotatedHearingOutcome): boolean =>
   !!aho.PncQuery?.pncId &&
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.every((offence) => {
     if (offence.Result.length === 0 || !offence.CriminalProsecutionReference?.OffenceReasonSequence) {
@@ -12,4 +12,4 @@ const areAllResultsAlreadyPresentOnPnc = (aho: AnnotatedHearingOutcome): boolean
     return isMatchToPncAdjudicationAndDisposals(aho, offence)
   })
 
-export default areAllResultsAlreadyPresentOnPnc
+export default areAllResultsOnPnc

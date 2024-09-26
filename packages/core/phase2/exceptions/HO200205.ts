@@ -4,7 +4,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import isAmountSpecifiedInResultValid from "../lib/generateOperations/areAllResultsAlreadyPresentOnPnc/isMatchToPncAdjudicationAndDisposals/createPncDisposalFromResult/isAmountSpecifiedInResultValid"
+import isAmountSpecifiedInResultValid from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/createPncDisposalFromResult/isAmountSpecifiedInResultValid"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2
