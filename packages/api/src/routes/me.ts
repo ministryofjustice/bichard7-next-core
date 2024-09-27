@@ -10,7 +10,7 @@ const schema = {
   ...auth,
   tags: ["Root"],
   response: {
-    [OK]: UserSchema.openapi({
+    [OK]: UserSchema.omit({ id: true }).openapi({
       description: "Returns details of authorised user"
     }),
     ...unauthorizedError
