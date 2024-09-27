@@ -103,7 +103,12 @@ describe("/me", () => {
       }
     })
 
+    const responseUser = {
+      username: user.username,
+      groups: user.groups
+    }
+
     expect(response.statusCode).toBe(OK)
-    expect(response.json()).toEqual(user)
+    expect(response.json()).toEqual(responseUser)
   })
 })
