@@ -1,27 +1,38 @@
-import type { FastifyInstance, RouteHandlerMethod } from "fastify"
+import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import z from "zod"
+import "zod-openapi/extend"
+import createZodProvider from "../../server/createZodProvider"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 
-const schema: FastifyZodOpenApiSchema = {
+const bodySchema = z.object({
+  phase: z.number().gt(0).lte(3)
+})
+
+type Body = z.infer<typeof bodySchema>
+
+const schema = {
   ...auth,
   tags: ["Cases"],
   params: z.object({
-    id: z.number().openapi({
+    id: z.string().openapi({
       description: "Case ID"
     })
   }),
+  body: bodySchema,
   response: {
-    [OK]: z.null().openapi({ description: "Worked" }),
+    [OK]: z
+      .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })
+      .openapi({ description: "Worked" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
   }
-}
+} satisfies FastifyZodOpenApiSchema
 
-const handler: RouteHandlerMethod = async (_request, _reply) => {
+const handler = async (body: Body, reply: FastifyReply) => {
   // validate the request
   // - role check
   // - force check
@@ -35,10 +46,14 @@ const handler: RouteHandlerMethod = async (_request, _reply) => {
   //
   // upload failed = 500
   // - in theory this should either be 502 or 504
+
+  reply.code(OK).send({ phase: body.phase })
 }
 
 const route = async (fastify: FastifyInstance) => {
-  fastify.post("/cases/:id/resubmit", { schema }, handler)
+  createZodProvider(fastify).post("/cases/:id/resubmit", { schema }, async (req, reply) => {
+    await handler(req.body, reply)
+  })
 }
 
 export default route
