@@ -30,14 +30,9 @@ export default async function (fastify: FastifyInstance) {
       },
       servers: [],
       tags: [
-        {
-          name: "Root",
-          description: "Root endpoints"
-        },
-        {
-          name: "Health",
-          description: "Health endpoint"
-        }
+        { name: "Cases", description: "Cases endpoints" },
+        { name: "Health", description: "Health endpoint" },
+        { name: "Root", description: "Root endpoints" }
       ]
     },
     transform: fastifyZodOpenApiTransform

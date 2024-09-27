@@ -3,6 +3,7 @@ import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema, FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import authSchema from "../server/auth/authSchema"
+import { unauthorizedError } from "../server/openapi/errorReasons"
 
 const schema: FastifyZodOpenApiSchema = {
   ...authSchema,
@@ -10,7 +11,8 @@ const schema: FastifyZodOpenApiSchema = {
   response: {
     [OK]: UserSchema.openapi({
       description: "Returns details of authorised user"
-    })
+    }),
+    ...unauthorizedError
   }
 }
 
