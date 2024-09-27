@@ -28,7 +28,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     return createSubsequentVariationOperation(
       resubmitted,
       aho,
-      result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT ? ExceptionCode.HO200104 : ExceptionCode.HO200101,
+      result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT ? undefined : ExceptionCode.HO200101,
       allResultsAlreadyOnPnc,
       offenceIndex,
       resultIndex,

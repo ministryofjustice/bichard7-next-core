@@ -5,19 +5,12 @@ import type { OperationData } from "../../../types/PncUpdateDataset"
 import createOperation from "./createOperation"
 import type ExceptionsAndOperations from "./ExceptionsAndOperations"
 import { PncOperation } from "../../../types/PncOperation"
-
-const areAllPncResults2007 = (aho: AnnotatedHearingOutcome, courtCaseReference?: string) => {
-  const ccr = courtCaseReference || aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
-  const matchingPncCase = aho.PncQuery?.courtCases?.find((courtCase) => courtCase.courtCaseReference === ccr)
-  const allDisposals = matchingPncCase?.offences?.flatMap((offence) => offence.disposals ?? []) ?? []
-
-  return allDisposals.length > 0 && allDisposals.every((disposal) => disposal.type === 2007)
-}
+import areAllPncResults2007 from "../areAllPncResults2007"
 
 const createSubsequentVariationOperation = (
   resubmitted: boolean,
   aho: AnnotatedHearingOutcome,
-  exceptionCode: ExceptionCode,
+  exceptionCode: ExceptionCode | undefined,
   allResultsAlreadyOnPnc: boolean,
   offenceIndex: number,
   resultIndex: number,
@@ -30,8 +23,11 @@ const createSubsequentVariationOperation = (
   if (areAllPncResults2007(aho, operationData?.courtCaseReference)) {
     return { operations: [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)], exceptions: [] }
   } else if (!allResultsAlreadyOnPnc) {
-    const exception = { code: exceptionCode, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
-    return { operations: [], exceptions: [exception] }
+    if (exceptionCode) {
+      // TODO: Remove when exceptionCode parameter is removed from this function
+      const exception = { code: exceptionCode, path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass }
+      return { operations: [], exceptions: [exception] }
+    }
   }
 
   return { operations: [], exceptions: [] }
