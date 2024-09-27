@@ -34,10 +34,16 @@ const schema = {
 
 const handler = async (body: Body, reply: FastifyReply) => {
   // validate the request
-  // - role check
-  // - force check
-  // - exception lock owner check
+  // - user must have one of the following roles:
+  //   - Exception handler
+  //   - General handler
+  //   - Supervisor
+  //   - Allocator
+  // - case is in the same force as the user (not sure if needed)
+  // - exception lock owner is the user requesting resubmission
+  // - case must be unresolved
   //
+  // success - 202
   // invalid = 403
   //
   // start resubmission workflow
