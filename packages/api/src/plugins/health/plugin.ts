@@ -1,7 +1,8 @@
 import type { FastifyInstance, RouteShorthandOptions } from "fastify"
-import type { FastifyZodOpenApiSchema, FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
+import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import { z } from "zod"
+import withTypeProvider from "../../server/withTypeProvider"
 import { healthHandler } from "./handlers"
 import HealthRoutes from "./routes"
 
@@ -22,7 +23,7 @@ const options: RouteShorthandOptions = {
 }
 
 const plugin = async (fastify: FastifyInstance) => {
-  fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().get(HealthRoutes.HEALTH, options, healthHandler)
+  withTypeProvider(fastify).get(HealthRoutes.HEALTH, options, healthHandler)
 }
 
 export default plugin

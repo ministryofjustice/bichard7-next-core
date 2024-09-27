@@ -1,5 +1,8 @@
 import AutoLoad from "@fastify/autoload"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyInstance } from "fastify"
+import fastifyPlugin from "fastify-plugin"
+import type { FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
 import path from "path"
 import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
@@ -7,6 +10,10 @@ import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
 
 declare module "fastify" {
+  interface FastifyInstance {
+    withZodTypeProvider: function
+  }
+
   interface FastifyRequest {
     user: User
   }
@@ -17,6 +24,14 @@ export default async function () {
 
   await setupZod(fastify)
   await setupSwagger(fastify)
+
+  async function withZodTypeProviderDecorator(fastify: FastifyInstance) {
+    fastify.decorate("withZodTypeProvider", () => {
+      return fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>()
+    })
+  }
+
+  fastify.register(fastifyPlugin(withZodTypeProviderDecorator))
 
   // Autoloaded plugins (no authentication)
   fastify.register(async (instance) => {

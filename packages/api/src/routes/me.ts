@@ -1,9 +1,10 @@
 import { UserSchema } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
-import type { FastifyZodOpenApiSchema, FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
+import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import auth from "../server/schemas/auth"
 import { unauthorizedError } from "../server/schemas/errorReasons"
+import withTypeProvider from "../server/withTypeProvider"
 
 const schema: FastifyZodOpenApiSchema = {
   ...auth,
@@ -17,11 +18,9 @@ const schema: FastifyZodOpenApiSchema = {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  fastify
-    .withTypeProvider<FastifyZodOpenApiTypeProvider>()
-    .get("/me", { schema, logLevel: "error" }, async (request, res) => {
-      res.code(OK).send(request.user)
-    })
+  fastify.withZodTypeProvider.get("/me", { schema }, async (request, res) => {
+    res.code(OK).send(request.user)
+  })
 }
 
 export default route
