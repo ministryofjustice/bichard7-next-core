@@ -81,7 +81,7 @@ describe("jwtVerify", () => {
   })
 
   it("will return a false if the username exists in the db and the JWT ID does not exist on the user", async () => {
-    const user = { username: "user", jwt_id: null } as User
+    const user = { username: "user", jwt_id: null } as unknown as User
     mockedFetchUserByUsername.mockResolvedValue(user)
 
     const result = await jwtVerify(validJwt)
