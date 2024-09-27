@@ -786,7 +786,7 @@ parameters:
 workflows:
   test-all:
     jobs:
-      # - lint_and_build
+      - lint_and_build
       # - test_message_forwarder
       # - test_postgres
       # - test_api
