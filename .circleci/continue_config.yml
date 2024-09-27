@@ -142,7 +142,7 @@ commands:
   start_bichard7_legacy:
     steps:
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - build_message_forwarder
       - build_audit_logging_images
       - run:
@@ -548,7 +548,7 @@ jobs:
       - setup_ui
       - install_dependencies
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - build_audit_logging_images
       - start_services:
           SERVICES: activemq localstack db-seed audit-log-api
@@ -570,7 +570,7 @@ jobs:
       - setup_ui
       - install_dependencies
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - build_audit_logging_images
       - start_services:
           SERVICES: db-seed audit-log-api localstack
@@ -651,7 +651,7 @@ jobs:
           background: true
       - run: npm run -w packages/ui install:assets
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -661,7 +661,7 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - fetch_images:
-          IMAGES: user-service nginx-auth-proxy
+          images: user-service nginx-auth-proxy
       - run:
           command: bash .circleci/scripts/run-infrastructure.sh ui ui
       - run:
@@ -741,10 +741,10 @@ jobs:
       - setup_ui
       - install_dependencies
       - fetch_images:
-          IMAGES: nodejs-20-2023
+          images: nodejs-20-2023
       - build_audit_logging_images
       - fetch_images:
-          IMAGES: user-service nginx-auth-proxy
+          images: user-service nginx-auth-proxy
       - run:
           command: npm run ui
       - run:
