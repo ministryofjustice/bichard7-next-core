@@ -111,16 +111,7 @@ commands:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
 
-  fetch_images:
-    parameters:
-      IMAGES:
-        default: ""
-        type: string
-    steps:
-      - run:
-          name: "Fetch images: <<parameters.IMAGES>>"
-          command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.IMAGES>>
-
+  
   build_message_forwarder:
     steps:
       - run:
