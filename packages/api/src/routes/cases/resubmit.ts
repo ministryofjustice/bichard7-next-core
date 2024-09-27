@@ -2,11 +2,11 @@ import type { FastifyInstance, RouteHandlerMethod } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import z from "zod"
-import authSchema from "../../server/auth/authSchema"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../server/openapi/errorReasons"
+import auth from "../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 
 const schema: FastifyZodOpenApiSchema = {
-  ...authSchema,
+  ...auth,
   tags: ["Cases"],
   params: z.object({
     id: z.number().openapi({

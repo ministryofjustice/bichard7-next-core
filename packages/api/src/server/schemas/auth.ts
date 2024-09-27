@@ -1,7 +1,7 @@
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-const authSchema: FastifyZodOpenApiSchema = {
+const auth: FastifyZodOpenApiSchema = {
   security: [{ apiKey: [], bearerAuth: [] }]
 }
 
-export default authSchema
+export default auth

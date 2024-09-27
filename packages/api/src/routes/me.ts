@@ -2,11 +2,11 @@ import { UserSchema } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema, FastifyZodOpenApiTypeProvider } from "fastify-zod-openapi"
 import { OK } from "http-status"
-import authSchema from "../server/auth/authSchema"
-import { unauthorizedError } from "../server/openapi/errorReasons"
+import auth from "../server/schemas/auth"
+import { unauthorizedError } from "../server/schemas/errorReasons"
 
 const schema: FastifyZodOpenApiSchema = {
-  ...authSchema,
+  ...auth,
   tags: ["Root"],
   response: {
     [OK]: UserSchema.openapi({
