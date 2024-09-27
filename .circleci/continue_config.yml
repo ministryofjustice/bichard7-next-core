@@ -806,11 +806,11 @@ workflows:
       - characterisation_test
       - comparison_test
       - seed_data
-        requires:
-          - test_ui
+          requires:
+            - test_ui
       - build-ui
-        requires:
-          - test_ui
+          requires:
+            - test_ui
       - cypress_component_test:
           name: cypress_component_test
           ms-edge: false
