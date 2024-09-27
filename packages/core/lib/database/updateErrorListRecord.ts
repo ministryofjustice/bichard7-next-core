@@ -44,6 +44,8 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
         END,
         trigger_count = (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}),
         trigger_reason = (SELECT trigger_code FROM br7own.error_list_triggers WHERE error_id = ${recordId} LIMIT 1),
+        trigger_quality_checked = CASE
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}) > 0 THEN 1 ELSE NULL END,
         error_status = CASE
           WHEN ${exceptionsCount}::integer > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
           WHEN error_status IS NULL THEN NULL

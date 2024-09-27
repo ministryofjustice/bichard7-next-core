@@ -4,6 +4,7 @@ import postgres from "postgres"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
 import type ErrorListRecord from "../../types/ErrorListRecord"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import errorPaths from "../exceptions/errorPaths"
 import insertErrorListRecord from "./insertErrorListRecord"
@@ -171,6 +172,30 @@ describe("updateErrorListRecord", () => {
       expect(updatedRecord.error_report).toBe("HO100304||br7:ArrestSummonsNumber")
       expect(updatedRecord.error_status).toBe(ResolutionStatus.UNRESOLVED)
       expect(updatedRecord.error_quality_checked).toBe(1)
+    })
+
+    it("should update trigger_quality_checked when trigger is raised after resubmission", async () => {
+      const result = generateMockPhase1Result()
+      result.hearingOutcome.Exceptions = [
+        {
+          code: ExceptionCode.HO100206,
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+      const recordId = await insertErrorListRecord(db, result)
+      await db<ErrorListRecord[]>`UPDATE br7own.error_list set error_status = 2 WHERE error_id = ${recordId}`
+      await db<
+        ErrorListTriggerRecord[]
+      >`INSERT INTO br7own.error_list_triggers (trigger_id, error_id, trigger_code, status, create_ts) VALUES (1, ${recordId}, 'TRPR0001', 1, ${new Date()})`
+      result.hearingOutcome.Exceptions = []
+      await updateErrorListRecord(db, recordId, result)
+
+      const updatedRecord = (
+        await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+      )[0]
+
+      expect(updatedRecord.trigger_quality_checked).toBe(1)
     })
   })
 })
