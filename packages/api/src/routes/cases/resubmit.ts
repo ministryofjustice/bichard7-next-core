@@ -3,7 +3,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
-import createZodProvider from "../../server/createZodProvider"
+import createZodProvider from "../../server/useZod"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 

@@ -10,10 +10,6 @@ import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
 
 declare module "fastify" {
-  interface FastifyInstance {
-    withZodTypeProvider: function
-  }
-
   interface FastifyRequest {
     user: User
   }
