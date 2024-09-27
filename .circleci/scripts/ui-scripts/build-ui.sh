@@ -4,6 +4,6 @@ set -e
 
 echo "Building UI ..."
 
-cd ../../../packages/ui
+source ~/packages/ui
 # Build UI
-
+make build
