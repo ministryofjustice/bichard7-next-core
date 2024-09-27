@@ -15,7 +15,7 @@
     "start:dev": "nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --verbose --maxWorkers=80% --testRegex '\\.(?:unit)\\.test.ts$'",
     "test:integration": "jest --verbose --runInBand --workerThreads=true --detectOpenHandles --testRegex '\\.(?:integration)\\.test.ts$'",
-    "test:watch": "jest --verbose --runInBand --workerThreads=true --detectOpenHandles --watch",
+    "test:watch": "jest --runInBand --workerThreads=true --detectOpenHandles --watch",
     "update-deps": "ncu -u && npm install"
   },
   "keywords": [],
