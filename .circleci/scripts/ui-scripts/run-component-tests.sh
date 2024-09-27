@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ~/packages/ui
+cd ~/project/packages/ui
 
 if [[ $MS_EDGE == "true" ]]; then
   npm run cypress:run:component:docker:ms-edge

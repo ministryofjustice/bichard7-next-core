@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ~/packages/ui
+cd ~/project/packages/ui
 
 TEST_FILES="$(circleci tests glob "cypress/e2e/**/*.cy.ts" | circleci tests split --split-by=timings)"
 
