@@ -805,10 +805,12 @@ workflows:
       - test_ui
       - characterisation_test
       - comparison_test
-      - seed_data
+      - seed_data:
+          name: seed_data
           requires:
             - test_ui
-      - build-ui
+      - build-ui:
+          name: build-ui
           requires:
             - test_ui
       - cypress_component_test:
