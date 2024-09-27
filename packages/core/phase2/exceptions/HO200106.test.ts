@@ -3,6 +3,7 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../types/ResultClass"
 
 describe("HO200106", () => {
   it("returns a HO200106 exception where its not a fixed penalty, offence and result are recorable, result class is Sentence, no PNC adjudications on the result and the offence is not added by the court", () => {
@@ -12,7 +13,7 @@ describe("HO200106", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: "Sentence",
+            ResultClass: ResultClass.SENTENCE,
             PNCDisposalType: 1001
           },
           {
@@ -39,7 +40,7 @@ describe("HO200106", () => {
           },
           {
             PNCAdjudicationExists: false,
-            ResultClass: "Sentence",
+            ResultClass: ResultClass.SENTENCE,
             PNCDisposalType: 1001
           }
         ]
