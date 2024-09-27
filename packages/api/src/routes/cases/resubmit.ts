@@ -3,9 +3,9 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
-import createZodProvider from "../../server/useZod"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
+import useZod from "../../server/useZod"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)
@@ -51,7 +51,7 @@ const handler = async (body: Body, reply: FastifyReply) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  createZodProvider(fastify).post("/cases/:id/resubmit", { schema }, async (req, reply) => {
+  useZod(fastify).post("/cases/:id/resubmit", { schema }, async (req, reply) => {
     await handler(req.body, reply)
   })
 }
