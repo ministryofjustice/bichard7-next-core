@@ -67,7 +67,7 @@ commands:
       - run:
           name: Compress the artifacts for easier downloading
           when: always
-          command: for file in ~/project/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
+          command: for file in ~/bichard7-next-tests/screenshots/*; do tar -czf ${file}.tar.gz $file; done
       - run:
           name: Create the saved_artifacts directory
           when: always
@@ -75,7 +75,7 @@ commands:
       - run:
           name: Move the gzipped files across
           when: always
-          command: mv ~/project/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
+          command: mv ~/bichard7-next-tests/screenshots/*.tar.gz ./saved_artifacts/
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
