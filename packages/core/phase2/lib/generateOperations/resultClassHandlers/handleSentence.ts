@@ -42,7 +42,7 @@ export const handleSentence: ResultClassHandler = ({
   return createSubsequentVariationOperation(
     resubmitted,
     aho,
-    ExceptionCode.HO200104,
+    undefined,
     allResultsAlreadyOnPnc,
     offenceIndex,
     resultIndex,
