@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
 import build from "../app"
-import { generateTestJwtToken } from "../tests/helpers/jwtHelper"
+import { generateTestJwtTokenAndSplit } from "../tests/helpers/jwtHelper"
 import fetchUserByUsername from "../useCases/fetchUserByUsername"
 
 jest.mock("../useCases/fetchUserByUsername")
@@ -26,7 +26,7 @@ describe("/me", () => {
     const user = { username: "user", jwt_id: validJwtId, id: 1, groups: [] } satisfies User
     mockedFetchUserByUsername.mockResolvedValue(user)
 
-    const encodedJwt = generateTestJwtToken({ username: "user" } as User, validJwtId).split(".")[1]
+    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
 
     const response = await app.inject({
       method: "GET",

@@ -7,7 +7,7 @@ import jwtVerify from "./jwtVerify"
 
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import type { User } from "@moj-bichard7/common/types/User"
-import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
+import { generateTestJwtTokenAndSplit } from "../../tests/helpers/jwtHelper"
 
 jest.mock("./jwtParser")
 jest.mock("./jwtVerify")
@@ -116,7 +116,7 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with just Authorization header", async () => {
-    const encodedJwt = generateTestJwtToken({ username: "user" } as User, validJwtId).split(".")[1]
+    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
 
     const response = await app.inject({
       method: "GET",
@@ -151,7 +151,7 @@ describe("authenticate", () => {
     mockedFetchUserByUsername.mockImplementation(() => {
       throw new Error("User user does not exist")
     })
-    const encodedJwt = generateTestJwtToken({ username: "user" } as User, validJwtId).split(".")[1]
+    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
 
     const response = await app.inject({
       method: "GET",

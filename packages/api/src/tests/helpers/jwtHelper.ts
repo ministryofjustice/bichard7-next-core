@@ -9,8 +9,7 @@ const jwtConfig = {
   tokenSecret: "OliverTwist"
 }
 
-// Test helper function
-export function generateTestJwtToken(user: User, jwd_id?: string): string {
+export const generateTestJwtToken = (user: User, jwd_id?: string): string => {
   const options: jwt.SignOptions = {
     expiresIn: jwtConfig.tokenExpiresIn,
     issuer: jwtConfig.tokenIssuer
@@ -26,4 +25,8 @@ export function generateTestJwtToken(user: User, jwd_id?: string): string {
   }
 
   return jwt.sign(payload, jwtConfig.tokenSecret, options)
+}
+
+export const generateTestJwtTokenAndSplit = (user: User, jwd_id?: string): string => {
+  return generateTestJwtToken(user, jwd_id).split(".")[1]
 }
