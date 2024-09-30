@@ -1,11 +1,23 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import type { FastifyInstance } from "fastify"
+import type { FastifyInstance, InjectOptions } from "fastify"
 import { FORBIDDEN } from "http-status"
 import build from "../../app"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 import fetchUserByUsername from "../../useCases/fetchUserByUsername"
 
 jest.mock("../../useCases/fetchUserByUsername")
+
+const defaultInjectParams = (jwt: string): InjectOptions => {
+  return {
+    method: "POST",
+    url: "/cases/0/resubmit",
+    headers: {
+      "X-API-Key": "password",
+      authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
+    },
+    body: { phase: 1 }
+  }
+}
 
 describe("resubmit", () => {
   const mockedFetchUserByUsername = fetchUserByUsername as jest.Mock
@@ -31,17 +43,9 @@ describe("resubmit", () => {
     ])
     mockedFetchUserByUsername.mockResolvedValue(user)
 
-    const response = await app.inject({
-      method: "POST",
-      url: "/cases/0/resubmit",
-      headers: {
-        "X-API-Key": "password",
-        authorization: `Bearer ${encodedJwt}`
-      },
-      body: { phase: 1 }
-    })
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
-    expect(response.statusCode).toBe(FORBIDDEN)
+    expect(statusCode).toBe(FORBIDDEN)
   })
 
   it.skip("returns 403 if case doesn't belong to same force as user", () => {})
