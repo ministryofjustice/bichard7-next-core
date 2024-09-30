@@ -8,4 +8,4 @@ if [[ $MS_EDGE == "true" ]]; then
   npx cypress run --browser edge ${options}
 else
   npx cypress run ${options}
-ficir
+fi
