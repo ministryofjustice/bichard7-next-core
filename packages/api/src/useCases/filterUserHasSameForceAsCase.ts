@@ -18,7 +18,7 @@ export default async (username: string, caseId: number, forceIds: number[]): Pro
   const count = row.count
 
   if (count !== 1) {
-    throw new Error(`User ${username} does not exist`)
+    throw new Error(`Case is either: not present; not in the force or not locked by ${username}`)
   }
 
   return count
