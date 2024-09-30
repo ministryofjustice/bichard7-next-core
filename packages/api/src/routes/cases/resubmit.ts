@@ -43,6 +43,8 @@ const handler = async (body: Body, reply: FastifyReply) => {
   // - exception lock owner is the user requesting resubmission
   // - case must be unresolved
   //
+  // ReceivedResubmittedHearingOutcome audit log event
+  //
   // success - 202
   // invalid = 403
   //

@@ -1,0 +1,11 @@
+describe("resubmit", () => {
+  it("returns 403 if the user is not in a permitted role for resubmission", async () => {})
+  it("returns 403 if case doesn't belong to same force as user", () => {})
+  it("returns 403 if exception lock is owned by a different user", () => {})
+  it("returns 400 if case does not exist", () => {})
+  it("returns 400 if case is resolved", () => {})
+  it("returns 400 if case is already submitted", () => {})
+  it("202 s3 upload successful", () => {})
+  it("502 s3 upload failed", () => {})
+  it("502 db failed to respond", () => {})
+})
