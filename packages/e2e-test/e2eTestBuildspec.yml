@@ -1,0 +1,46 @@
+---
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+      nodejs: 16
+    commands:
+      - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
+      - yum groupinstall -y "Development tools"
+      - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
+      - pip3 install --upgrade pip
+      - pip3 install click botocore requests
+  build:
+    commands:
+      - set -e
+      - export PUPPETEER_SKIP_CHROME_DOWNLOAD=true
+      - export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+      - TRIGGER=$(aws codepipeline list-pipeline-executions --pipeline-name cjse-bichard7-path-to-live-deploy-pipeline --query "pipelineExecutionSummaries[?pipelineExecutionId=='${CODEPIPELINE_EXECUTION_ID}'] .trigger.triggerDetail" --output text)
+      - echo "Trying to acquire a build lock"
+      - LOCK_PREFIX=${DEPLOY_ENV:-sandbox}
+      - npm i
+      - cd packages/e2e-test
+      - python3 ./scripts/build_locks.py acquire ${LOCK_PREFIX}-ci-codebuild-concurrency ${DEPLOY_ENV}-${WORKSPACE} 3600 7200 > /tmp/.lock_token
+      - echo "Build lock acquired"
+      - export OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - export OLD_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - temp_role=$(aws sts assume-role --role-session-name "next" --duration-seconds 10800 --role-arn "${ASSUME_ROLE_ARN}")
+      - export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq -r .Credentials.AccessKeyId)
+      - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
+      - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
+      - aws ec2 describe-client-vpn-endpoints | jq -r ".ClientVpnEndpoints[0].DnsServers[0:2][]" | sed 's/^/nameserver /' | cat - /etc/resolv.conf > tmp && cp tmp /etc/resolv.conf
+      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
+      - bash ./scripts/setup-e2e-tests.sh
+      - source ./workspaces/${WORKSPACE}.env
+      - bash scripts/run-pipeline-tests.sh
+  post_build:
+    commands:
+      - unset AWS_SESSION_TOKEN
+      - export AWS_ACCESS_KEY_ID=${OLD_AWS_ACCESS_KEY_ID}
+      - export AWS_SECRET_ACCESS_KEY=${OLD_AWS_SECRET_ACCESS_KEY}
+      - echo "Releasing build lock"
+      - LOCK_PREFIX=${DEPLOY_ENV:-sandbox}
+      - python3 ${CODEBUILD_SRC_DIR}/scripts/build_locks.py release ${LOCK_PREFIX}-ci-codebuild-concurrency ${DEPLOY_ENV}-${WORKSPACE} $(cat /tmp/.lock_token)
+      - echo "Build lock released"
+      - ./scripts/save_artifacts_in_s3.sh
