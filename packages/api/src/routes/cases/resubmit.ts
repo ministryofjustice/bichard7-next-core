@@ -1,6 +1,8 @@
+import type { User } from "@moj-bichard7/common/types/User"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
-import { OK } from "http-status"
+import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
@@ -32,7 +34,7 @@ const schema = {
   }
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async (body: Body, reply: FastifyReply) => {
+const handler = async (user: User, body: Body, reply: FastifyReply) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -55,12 +57,24 @@ const handler = async (body: Body, reply: FastifyReply) => {
   // upload failed = 500
   // - in theory this should either be 502 or 504
 
+  if (
+    !user.groups.some(
+      (group) =>
+        group === UserGroup.ExceptionHandler ||
+        group === UserGroup.GeneralHandler ||
+        group === UserGroup.Allocator ||
+        group === UserGroup.Supervisor
+    )
+  ) {
+    reply.code(FORBIDDEN).send()
+  }
+
   reply.code(OK).send({ phase: body.phase })
 }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post("/cases/:id/resubmit", { schema }, async (req, reply) => {
-    await handler(req.body, reply)
+    await handler(req.user, req.body, reply)
   })
 }
 
