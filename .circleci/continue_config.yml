@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.2.0
+
 commands:
   fetch_images:
     parameters:
@@ -711,10 +714,10 @@ jobs:
       - run:
           name: Clone bichard7-next-tests
           command: bash .circleci/scripts/ui-scripts/clone-tests-repo.sh
-      # - node/install-packages:
-      #     app-dir: ~/bichard7-next-tests
-      #     cache-path: ~/bichard7-next-tests/node_modules
-      #     include-branch-in-cache-key: true
+      - node/install-packages:
+          app-dir: ~/bichard7-next-tests
+          cache-path: ~/bichard7-next-tests/node_modules
+          include-branch-in-cache-key: true
       - start_bichard7_legacy
       - run_test_chunk:
           ARGS: >-
