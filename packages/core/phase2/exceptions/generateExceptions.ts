@@ -2,6 +2,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import HO200100 from "./HO200100"
+import HO200101 from "./HO200101"
 import HO200103 from "./HO200103"
 import HO200104 from "./HO200104"
 import HO200106 from "./HO200106"
@@ -25,8 +26,8 @@ import HO200212 from "./HO200212"
 
 // prettier-ignore
 const generators: ExceptionGenerator[] = [
-  HO200100, HO200103, HO200104, HO200106, HO200108, HO200109, HO200112, HO200113, HO200114,
-  HO200115, HO200118, HO200121, HO200124, HO200200, HO200201, HO200202, HO200205
+  HO200100, HO200101, HO200103, HO200104, HO200106, HO200108, HO200109, HO200112, HO200113,
+  HO200114, HO200115, HO200118, HO200121, HO200124, HO200200, HO200201, HO200202, HO200205
 ]
 
 const generateExceptions = (aho: AnnotatedHearingOutcome): Exception[] => {
