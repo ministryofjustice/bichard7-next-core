@@ -7,7 +7,7 @@ import jwtVerify from "./jwtVerify"
 
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import type { User } from "@moj-bichard7/common/types/User"
-import { generateTestJwtTokenAndSplit } from "../../tests/helpers/jwtHelper"
+import { staticUserWithGeneratedJwt } from "../../tests/helpers/userHelper"
 
 jest.mock("./jwtParser")
 jest.mock("./jwtVerify")
@@ -20,8 +20,6 @@ const defaults = {
     Authorization: "Bearer "
   }
 }
-
-const validJwtId = "c058a1bf-ce6a-45d9-8e84-9729aeac5246"
 
 describe("authenticate", () => {
   const mockedJwtParser = jwtParser as jest.Mock
@@ -96,8 +94,8 @@ describe("authenticate", () => {
 
   it("will return with no headers 401 - Unauthorized", async () => {
     const response = await app.inject({
-      method: "GET",
-      url: "/me"
+      ...defaults,
+      headers: {}
     })
 
     expect(response.statusCode).toBe(UNAUTHORIZED)
@@ -105,8 +103,7 @@ describe("authenticate", () => {
 
   it("will return 401 - Unauthorized with just X-API-Key header", async () => {
     const response = await app.inject({
-      method: "GET",
-      url: "/me",
+      ...defaults,
       headers: {
         "X-API-Key": "password"
       }
@@ -116,11 +113,10 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with just Authorization header", async () => {
-    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
+    const [_, encodedJwt] = staticUserWithGeneratedJwt()
 
     const response = await app.inject({
-      method: "GET",
-      url: "/me",
+      ...defaults,
       headers: {
         authorization: `Bearer ${encodedJwt}`
       }
@@ -134,11 +130,10 @@ describe("authenticate", () => {
     mockedJwtVerify.mockRestore()
 
     const response = await app.inject({
-      method: "GET",
-      url: "/me",
+      ...defaults,
       headers: {
-        "X-API-Key": "password",
-        authorization: "Bearer abc123"
+        ...defaults.headers,
+        Authorization: "Bearer abc123"
       }
     })
 
@@ -151,13 +146,12 @@ describe("authenticate", () => {
     mockedFetchUserByUsername.mockImplementation(() => {
       throw new Error("User user does not exist")
     })
-    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
+    const [_, encodedJwt] = staticUserWithGeneratedJwt()
 
     const response = await app.inject({
-      method: "GET",
-      url: "/me",
+      ...defaults,
       headers: {
-        "X-API-Key": "password",
+        ...defaults.headers,
         authorization: `Bearer ${encodedJwt}`
       }
     })
