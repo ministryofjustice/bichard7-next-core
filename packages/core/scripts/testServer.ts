@@ -1,13 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { Request, Response } from "express"
 import express from "express"
 import MockPncGateway from "../comparison/lib/MockPncGateway"
+import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import CorePhase1 from "../phase1/phase1"
 import CorePhase2 from "../phase2/phase2"
-import type { PncQueryResult } from "../types/PncQueryResult"
 import Phase from "../types/Phase"
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
+import type { PncQueryResult } from "../types/PncQueryResult"
 
 const app = express()
 app.use(express.raw({ type: "*/*", limit: 10_000_000 }))
@@ -28,7 +29,7 @@ function formatter(_: string, value: unknown) {
   return value
 }
 
-app.post("/", async (req, res) => {
+app.post("/", async (req: Request, res: Response): Promise<void> => {
   const { pncQueryResult, inputMessage, phase } = JSON.parse(req.body.toString(), formatter) as TestInput
 
   const auditLogEventSource =
@@ -43,15 +44,15 @@ app.post("/", async (req, res) => {
 
       const corePhase1Result = await CorePhase1(incomingMessage, pncGateway, auditLogger)
 
-      return res.json(corePhase1Result)
+      res.json(corePhase1Result)
+      return
     }
 
     const corePhase2Result = CorePhase2(incomingMessage, auditLogger)
-
-    return res.json(corePhase2Result)
+    res.json(corePhase2Result)
   } catch (e) {
     console.error(e)
-    return 500
+    res.status(500)
   }
 })
 
