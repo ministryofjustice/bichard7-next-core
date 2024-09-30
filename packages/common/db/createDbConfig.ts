@@ -1,3 +1,5 @@
+import postgres from "postgres"
+
 export type DbConfig = {
   host: string
   port: number
@@ -7,6 +9,7 @@ export type DbConfig = {
   idle_timeout: number
   max_lifetime: number
   ssl: boolean | { rejectUnauthorized: false }
+  types: Record<string, postgres.PostgresType>
 }
 
 const createDbConfig = (): DbConfig => ({
@@ -17,7 +20,10 @@ const createDbConfig = (): DbConfig => ({
   ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
   max: 10,
   idle_timeout: 20,
-  max_lifetime: 60 * 30
+  max_lifetime: 60 * 30,
+  types: {
+    bigint: postgres.BigInt
+  }
 })
 
 export default createDbConfig

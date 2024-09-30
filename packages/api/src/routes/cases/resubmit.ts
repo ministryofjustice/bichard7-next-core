@@ -8,6 +8,7 @@ import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
+import filterUserHasSameForceAsCase from "../../useCases/filterUserHasSameForceAsCase"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)
@@ -19,7 +20,7 @@ const schema = {
   ...auth,
   tags: ["Cases"],
   params: z.object({
-    id: z.string().openapi({
+    caseId: z.string().openapi({
       description: "Case ID"
     })
   }),
@@ -34,7 +35,7 @@ const schema = {
   }
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async (user: User, body: Body, reply: FastifyReply) => {
+const handler = async (caseId: number, user: User, body: Body, reply: FastifyReply) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -67,14 +68,28 @@ const handler = async (user: User, body: Body, reply: FastifyReply) => {
     )
   ) {
     reply.code(FORBIDDEN).send()
+    return
+  }
+
+  const forceNumbers = user.visible_forces
+    .split(",")
+    .filter((f) => /^\d+$/.test(f))
+    .map((f) => Number(f))
+
+  try {
+    await filterUserHasSameForceAsCase(user.username, caseId, forceNumbers)
+  } catch (err) {
+    reply.log.error(err)
+    reply.code(FORBIDDEN).send()
+    return
   }
 
   reply.code(OK).send({ phase: body.phase })
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post("/cases/:id/resubmit", { schema }, async (req, reply) => {
-    await handler(req.user, req.body, reply)
+  useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
+    await handler(Number(req.params.caseId), req.user, req.body, reply)
   })
 }
 

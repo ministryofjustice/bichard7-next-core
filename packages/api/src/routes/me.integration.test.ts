@@ -23,7 +23,7 @@ describe("/me", () => {
   })
 
   it("will return the current user with a correct JWT", async () => {
-    const user = { username: "user", jwt_id: validJwtId, id: 1, groups: [] } satisfies User
+    const user = { username: "user", jwt_id: validJwtId, id: 1, groups: [], visible_forces: "" } satisfies User
     mockedFetchUserByUsername.mockResolvedValue(user)
 
     const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)

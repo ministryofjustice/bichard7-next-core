@@ -10,7 +10,7 @@ const schema = {
   ...auth,
   tags: ["Root"],
   response: {
-    [OK]: UserSchema.omit({ id: true, jwt_id: true }).openapi({
+    [OK]: UserSchema.omit({ id: true, jwt_id: true, visible_forces: true }).openapi({
       description: "Returns details of authorised user"
     }),
     ...unauthorizedError

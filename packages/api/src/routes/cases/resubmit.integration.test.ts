@@ -48,7 +48,15 @@ describe("resubmit", () => {
     expect(statusCode).toBe(FORBIDDEN)
   })
 
-  it.skip("returns 403 if case doesn't belong to same force as user", () => {})
+  it.skip("returns 403 if case doesn't belong to same force as user", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    mockedFetchUserByUsername.mockResolvedValue(user)
+
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(FORBIDDEN)
+  })
+
   it.skip("returns 403 if exception lock is owned by a different user", () => {})
   it.skip("returns 400 if case does not exist", () => {})
   it.skip("returns 400 if case is resolved", () => {})
