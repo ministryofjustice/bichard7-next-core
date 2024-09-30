@@ -3,9 +3,9 @@ import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { generateTestJwtTokenAndSplit } from "./jwtHelper"
 
-export const staticUserWithGeneratedJwt = (userGroups: UserGroup[] = []): [User, string] => {
+export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string, User] => {
   const jwtId = randomUUID()
   const user = { username: "User 1", groups: userGroups, jwt_id: jwtId, id: 1 } satisfies User
 
-  return [user, generateTestJwtTokenAndSplit(user, jwtId)]
+  return [generateTestJwtTokenAndSplit(user, jwtId), user]
 }
