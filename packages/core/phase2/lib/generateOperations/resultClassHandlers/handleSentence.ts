@@ -2,15 +2,14 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../lib/exceptions/errorPaths"
 import areAnyPncResults2007 from "../areAnyPncResults2007"
 import createOperation from "../createOperation"
-import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
+import areAllPncResults2007 from "../../areAllPncResults2007"
 
 export const handleSentence: ResultClassHandler = ({
   aho,
   offence,
   resubmitted,
-  allResultsAlreadyOnPnc,
   offenceIndex,
   resultIndex,
   result
@@ -39,13 +38,9 @@ export const handleSentence: ResultClassHandler = ({
     return { operations: [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)], exceptions: [] }
   }
 
-  return createSubsequentVariationOperation(
-    resubmitted,
-    aho,
-    undefined,
-    allResultsAlreadyOnPnc,
-    offenceIndex,
-    resultIndex,
-    operationData
-  )
+  if (resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)) {
+    return { operations: [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)], exceptions: [] }
+  }
+
+  return { operations: [], exceptions: [] }
 }

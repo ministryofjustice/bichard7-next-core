@@ -1,13 +1,12 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../../../lib/exceptions/errorPaths"
 import type { Operation } from "../../../../types/PncUpdateDataset"
-import ResultClass from "../../../../types/ResultClass"
 import createOperation from "../createOperation"
-import createSubsequentVariationOperation from "../createSubsequentVariationOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
 import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
+import areAllPncResults2007 from "../../areAllPncResults2007"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -24,16 +23,11 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   if (fixedPenalty) {
     return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
-  } else if (result.PNCAdjudicationExists) {
-    return createSubsequentVariationOperation(
-      resubmitted,
-      aho,
-      result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT ? undefined : ExceptionCode.HO200101,
-      allResultsAlreadyOnPnc,
-      offenceIndex,
-      resultIndex,
-      operationData
-    )
+  } else if (
+    result.PNCAdjudicationExists &&
+    (resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference))
+  ) {
+    return { operations: [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)], exceptions: [] }
   }
 
   if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
