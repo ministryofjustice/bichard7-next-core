@@ -137,6 +137,7 @@ export const setupNextSteps = () => {
   Then("I remove the year from {string}", ui.removeYear)
   Then("I should see an error {string}", ui.seeError)
   Then("I apply filter {string} to be {string}", ui.filter)
+  Then("I add a checkmark to {string}", ui.addCheckMark)
   Then("I reset the filters", ui.clearFilters)
   Then("I see record for {string}", ui.canSeeContentInTable)
   Then("I do not see record for {string}", ui.cannotSeeContentInTable)

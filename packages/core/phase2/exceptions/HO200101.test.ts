@@ -1,9 +1,8 @@
 import ResultClass from "../../types/ResultClass"
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
-import HO200104 from "./HO200104"
+import HO200101 from "./HO200101"
 
 type GenerateAhoInput = {
-  resultClass: ResultClass
   resubmitted: boolean
   fixedPenalty: boolean
   pncAdjudicationExists: boolean
@@ -12,7 +11,6 @@ type GenerateAhoInput = {
 }
 
 const generateAho = ({
-  resultClass,
   resubmitted,
   fixedPenalty,
   pncAdjudicationExists,
@@ -29,7 +27,7 @@ const generateAho = ({
       ? 2007
       : offence.Result[0].PNCDisposalType
     : 2067
-  offence.Result[0].ResultClass = resultClass
+  offence.Result[0].ResultClass = ResultClass.ADJOURNMENT_WITH_JUDGEMENT
 
   const pncOffence = aho.PncQuery!.courtCases![0].offences[0]
   pncOffence.disposals = [pncOffence.disposals![0]]
@@ -92,128 +90,78 @@ const noExceptionScenarios: Partial<GenerateAhoInput>[] = [
   { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "None" }
 ]
 
-describe("HO200104", () => {
-  describe("when result class is judgement with final result", () => {
-    it("should return exception when there is no fixed penalty, PNC adjudication exists, results are not 2007 and are not on PNC", () => {
-      const aho = generateAho({
-        resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-        resubmitted: false,
-        fixedPenalty: false,
-        pncAdjudicationExists: true,
-        areAllResultsOnPnc: false,
-        arePncResults2007: "None"
-      })
-
-      const exceptions = HO200104(aho)
-
-      expect(exceptions).toEqual([
-        {
-          code: "HO200104",
-          path: [
-            "AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "Offence",
-            0,
-            "Result",
-            0,
-            "ResultClass"
-          ]
-        }
-      ])
+describe("HO200101", () => {
+  it("should return exception when there is no fixed penalty, PNC adjudication exists, results are not 2007 and are not on PNC", () => {
+    const aho = generateAho({
+      resubmitted: false,
+      fixedPenalty: false,
+      pncAdjudicationExists: true,
+      areAllResultsOnPnc: false,
+      arePncResults2007: "None"
     })
 
-    it("should return exception when there is no fixed penalty, PNC adjudication exists, results are not on PNC, and there is a 2007 PNC result", () => {
-      const aho = generateAho({
-        resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-        resubmitted: false,
-        fixedPenalty: false,
-        pncAdjudicationExists: true,
-        areAllResultsOnPnc: false,
-        arePncResults2007: "None"
-      })
+    const exceptions = HO200101(aho)
 
-      const exceptions = HO200104(aho)
-
-      expect(exceptions).toEqual([
-        {
-          code: "HO200104",
-          path: [
-            "AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "Offence",
-            0,
-            "Result",
-            0,
-            "ResultClass"
-          ]
-        }
-      ])
-    })
-
-    noExceptionScenarios.forEach((testInput) => {
-      const when = Object.entries(testInput)
-        .map(([key, value]) => `${key} is ${value}`)
-        .join(", ")
-
-      it(`should not return exception when ${when}`, () => {
-        testInput.resultClass = ResultClass.JUDGEMENT_WITH_FINAL_RESULT
-        const aho = generateAho(testInput as GenerateAhoInput)
-
-        const exceptions = HO200104(aho)
-
-        expect(exceptions).toHaveLength(0)
-      })
-    })
+    expect(exceptions).toEqual([
+      {
+        code: "HO200101",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultClass"
+        ]
+      }
+    ])
   })
 
-  describe("when result class is sentence", () => {
-    it("should return exception when there is no fixed penalty, PNC adjudication exists, results are not on PNC, and there is a 2007 PNC result", () => {
-      const aho = generateAho({
-        resultClass: ResultClass.SENTENCE,
-        resubmitted: false,
-        fixedPenalty: false,
-        pncAdjudicationExists: true,
-        areAllResultsOnPnc: false,
-        arePncResults2007: "One"
-      })
-
-      const exceptions = HO200104(aho)
-
-      expect(exceptions).toEqual([
-        {
-          code: "HO200104",
-          path: [
-            "AnnotatedHearingOutcome",
-            "HearingOutcome",
-            "Case",
-            "HearingDefendant",
-            "Offence",
-            0,
-            "Result",
-            0,
-            "ResultClass"
-          ]
-        }
-      ])
+  it("should return exception when there is no fixed penalty, PNC adjudication exists, results are not on PNC, and there is a 2007 PNC result", () => {
+    const aho = generateAho({
+      resubmitted: false,
+      fixedPenalty: false,
+      pncAdjudicationExists: true,
+      areAllResultsOnPnc: false,
+      arePncResults2007: "None"
     })
 
-    noExceptionScenarios.forEach((testInput) => {
-      const when = Object.entries(testInput)
-        .map(([key, value]) => `${key} is ${value}`)
-        .join(", ")
+    const exceptions = HO200101(aho)
 
-      it(`should not return exception when ${when}`, () => {
-        testInput.resultClass = ResultClass.SENTENCE
-        const aho = generateAho(testInput as GenerateAhoInput)
+    expect(exceptions).toEqual([
+      {
+        code: "HO200101",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "ResultClass"
+        ]
+      }
+    ])
+  })
 
-        const exceptions = HO200104(aho)
+  noExceptionScenarios.forEach((testInput) => {
+    const when = Object.entries(testInput)
+      .map(([key, value]) => `${key} is ${value}`)
+      .join(", ")
 
-        expect(exceptions).toHaveLength(0)
-      })
+    it(`should not return exception when ${when}`, () => {
+      const aho = generateAho(testInput as GenerateAhoInput)
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultClass =
+        ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+
+      const exceptions = HO200101(aho)
+
+      expect(exceptions).toHaveLength(0)
     })
   })
 })

@@ -714,3 +714,10 @@ export const filter = async function (this: Bichard, fieldName: string, value: s
   await page.focus(fieldNameId)
   await page.keyboard.type(value, { delay: 100 })
 }
+
+export const addCheckMark = async function (this: Bichard, fieldName: string) {
+  const { page } = this.browser
+  const fieldNameId = `#${fieldName}`
+
+  await page.click(fieldNameId)
+}
