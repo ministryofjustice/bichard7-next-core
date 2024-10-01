@@ -14,7 +14,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
     return []
   }
 
-  checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
+  checkResultClassExceptions(aho, (_, result, offenceIndex, resultIndex) => {
     if (result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT && result.PNCAdjudicationExists) {
       const exception = {
         code: ExceptionCode.HO200100,
