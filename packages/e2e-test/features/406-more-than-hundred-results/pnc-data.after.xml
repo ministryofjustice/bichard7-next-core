@@ -1,0 +1,9 @@
+<HTML><head><title>Q-Solution Public Sector - LIBPNCTT</title><script type="text/javascript">
+function reload()
+{
+ document.forms["F1"]["MessageType"][n].checked=true 
+	
+  self.location='MaintainResultData.php';
+}
+
+</script></head><Body><img id="a1" src="Qsol2.jpg"  border="0" alt="QS_PS_Logo"><H3> An Error has been Returned from PNC</H3><H5>I1036 - ERROR ENCOUNTERED PROCESSING ENQUIRY ( 1 ) - PLEASE CONTACT PNC SERVICE DESK REF: Date/Time= 20211111/172642 Job= 40147 Program= GJ8* User= 01LIBPNC Terminal= A0109999                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </H5></Body></HTML>
