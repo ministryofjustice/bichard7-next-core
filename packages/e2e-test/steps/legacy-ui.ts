@@ -74,6 +74,7 @@ export const setupLegacySteps = () => {
   When("I fake the data for the Live Status Detail - Exceptions report", fakeLiveStatusExceptionsReportData)
   When("I switch to the alternate version of bichard", legacy.switchBichard)
   When("I click the alternate {string} tab", ui.loadTab)
+  When("I search by state {string}", legacy.searchByState)
 
   Then("I reload until I see {string}", legacy.reloadUntilStringPresent)
   Then("I reload until I see {string} for this record", legacy.reloadUntilStringPresentForRecord)

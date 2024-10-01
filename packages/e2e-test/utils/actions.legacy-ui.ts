@@ -711,3 +711,17 @@ export const checkCorrectionFieldAndValue = async function (this: Bichard, field
 
   expect(inputField).toEqual(expectedValue)
 }
+
+export const searchByState = async function (this: Bichard, status: string) {
+  const { page } = this.browser
+  const dropdown = await page.$('[name="statusFilter"]')
+
+  let option = ""
+  if (status === "Unresolved") {
+    option = "1"
+  } else if (status === "Resolved") {
+    option = "2"
+  }
+
+  await dropdown?.select(option)
+}
