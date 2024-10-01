@@ -1,21 +1,21 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
 import build from "../app"
-import { generateTestJwtTokenAndSplit } from "../tests/helpers/jwtHelper"
-import fetchUserByUsername from "../useCases/fetchUserByUsername"
-
-jest.mock("../useCases/fetchUserByUsername")
-
-const validJwtId = "c058a1bf-ce6a-45d9-8e84-9729aeac5246"
+import FakeGateway from "../services/gateways/fakeGateway"
+import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
 
 describe("/me", () => {
-  const mockedFetchUserByUsername = fetchUserByUsername as jest.Mock
+  const gateway = new FakeGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build()
+    app = await build(gateway)
     await app.ready()
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   afterAll(async () => {
@@ -23,10 +23,9 @@ describe("/me", () => {
   })
 
   it("will return the current user with a correct JWT", async () => {
-    const user = { username: "user", jwt_id: validJwtId, id: 1, groups: [], visible_forces: "" } satisfies User
-    mockedFetchUserByUsername.mockResolvedValue(user)
-
-    const encodedJwt = generateTestJwtTokenAndSplit({ username: "user" } as User, validJwtId)
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    spy.mockResolvedValue(user)
 
     const response = await app.inject({
       method: "GET",

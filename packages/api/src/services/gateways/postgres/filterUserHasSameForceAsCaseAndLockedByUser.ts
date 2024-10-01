@@ -1,8 +1,6 @@
-import postgresFactory from "../services/db/postgresFactory"
+import type postgres from "postgres"
 
-export default async (username: string, caseId: number, forceIds: number[]): Promise<number> => {
-  const sql = postgresFactory()
-
+export default async (sql: postgres.Sql, username: string, caseId: number, forceIds: number[]): Promise<number> => {
   const [row] = await sql`
       SELECT
         COUNT(*)
@@ -12,7 +10,7 @@ export default async (username: string, caseId: number, forceIds: number[]): Pro
       WHERE
         el.error_id = ${caseId}
         AND el.error_locked_by_id = ${username}
-        AND br7own.force_code(org_for_police_filter) IN (${forceIds.toString()})
+        AND br7own.force_code(el.org_for_police_filter) IN (${forceIds.toString()})
     `
 
   const count = row.count

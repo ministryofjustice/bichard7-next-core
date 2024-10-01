@@ -1,12 +1,13 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import { UNAUTHORIZED } from "http-status"
+import type Gateway from "../../services/gateways/interfaces/gateway"
 import jwtParser from "./jwtParser"
 import jwtVerify from "./jwtVerify"
 
 const validApiKey = process.env.WORKSPACE === "production" ? process.env.API_KEY : "password"
 
-export default async function (request: FastifyRequest, reply: FastifyReply) {
+export default async function (gateway: Gateway, request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers["authorization"]
 
   if (request.headers["x-api-key"] !== validApiKey || !token?.startsWith("Bearer ")) {
@@ -16,7 +17,13 @@ export default async function (request: FastifyRequest, reply: FastifyReply) {
 
   try {
     const jwt = await jwtParser(token.replace("Bearer ", ""))
-    const verificationResult: false | User = await jwtVerify(jwt)
+
+    if (!jwt) {
+      reply.code(UNAUTHORIZED).send()
+      return
+    }
+
+    const verificationResult: User | undefined = await jwtVerify(gateway, jwt)
 
     if (!verificationResult) {
       reply.code(UNAUTHORIZED).send()
@@ -24,6 +31,7 @@ export default async function (request: FastifyRequest, reply: FastifyReply) {
     }
 
     request.user = verificationResult
+    request.gateway = gateway
   } catch (err) {
     request.log.error(err)
     reply.code(UNAUTHORIZED).send()

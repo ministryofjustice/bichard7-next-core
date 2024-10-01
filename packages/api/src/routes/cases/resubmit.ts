@@ -8,13 +8,22 @@ import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
-import filterUserHasSameForceAsCase from "../../useCases/filterUserHasSameForceAsCase"
+import formatForceNumbers from "../../services/formatForceNumbers"
+import type Gateway from "../../services/gateways/interfaces/gateway"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)
 })
 
 type Body = z.infer<typeof bodySchema>
+
+type HandlerProps = {
+  gateway: Gateway
+  user: User
+  caseId: number
+  body: Body
+  reply: FastifyReply
+}
 
 const schema = {
   ...auth,
@@ -35,7 +44,7 @@ const schema = {
   }
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async (caseId: number, user: User, body: Body, reply: FastifyReply) => {
+const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -71,13 +80,10 @@ const handler = async (caseId: number, user: User, body: Body, reply: FastifyRep
     return
   }
 
-  const forceNumbers = user.visible_forces
-    .split(",")
-    .filter((f) => /^\d+$/.test(f))
-    .map((f) => Number(f))
+  const forceNumbers = formatForceNumbers(user.visible_forces)
 
   try {
-    await filterUserHasSameForceAsCase(user.username, caseId, forceNumbers)
+    await gateway.filterUserHasSameForceAsCaseAndLockedByUser(user.username, caseId, forceNumbers)
   } catch (err) {
     reply.log.error(err)
     reply.code(FORBIDDEN).send()
@@ -89,7 +95,13 @@ const handler = async (caseId: number, user: User, body: Body, reply: FastifyRep
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
-    await handler(Number(req.params.caseId), req.user, req.body, reply)
+    await handler({
+      gateway: req.gateway,
+      user: req.user,
+      caseId: Number(req.params.caseId),
+      body: req.body,
+      reply
+    })
   })
 }
 

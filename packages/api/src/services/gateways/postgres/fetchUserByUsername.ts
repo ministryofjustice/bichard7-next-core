@@ -1,9 +1,7 @@
 import { type User } from "@moj-bichard7/common/types/User"
-import postgresFactory from "../services/db/postgresFactory"
+import type postgres from "postgres"
 
-export default async (username: string): Promise<User> => {
-  const sql = postgresFactory()
-
+export default async (sql: postgres.Sql, username: string): Promise<User> => {
   const [user]: [User?] = await sql`
       SELECT
         u.id,
@@ -22,7 +20,7 @@ export default async (username: string): Promise<User> => {
     `
 
   if (!user) {
-    throw new Error(`User ${username} does not exist`)
+    throw new Error(`User "${username}" does not exist`)
   }
 
   return user

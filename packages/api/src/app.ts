@@ -5,14 +5,17 @@ import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
 import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
+import type Gateway from "./services/gateways/interfaces/gateway"
+import PostgresGateway from "./services/gateways/postgresGateway"
 
 declare module "fastify" {
   interface FastifyRequest {
     user: User
+    gateway: Gateway
   }
 }
 
-export default async function () {
+export default async function (gateway: Gateway = new PostgresGateway()) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -31,7 +34,7 @@ export default async function () {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      await authenticate(request, reply)
+      await authenticate(gateway, request, reply)
     })
 
     await instance.register(AutoLoad, {

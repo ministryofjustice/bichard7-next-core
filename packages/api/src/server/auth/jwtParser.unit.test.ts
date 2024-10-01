@@ -12,7 +12,7 @@ describe("jwtParser", () => {
   })
 
   it("returns undefined when given empty string", async () => {
-    const result = await jwtParser()
+    const result = await jwtParser("")
 
     expect(result).toBeUndefined()
   })

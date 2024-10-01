@@ -1,21 +1,8 @@
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import { type User } from "@moj-bichard7/common/types/User"
-import fetchUserByUsername from "../../useCases/fetchUserByUsername"
+import type Gateway from "../../services/gateways/interfaces/gateway"
 
-export default async (jwt?: JWT): Promise<false | User> => {
-  if (!jwt) {
-    return false
-  }
-
-  const [now, expires] = [new Date(), new Date(jwt["exp"] * 1000)]
-  if (expires < now) {
-    return false
-  }
-
-  const user = await fetchUserByUsername(jwt["username"])
-  if (user.jwt_id !== jwt["id"]) {
-    return false
-  }
-
-  return user
+export default async (gateway: Gateway, jwt: JWT): Promise<User | undefined> => {
+  // Nginx auth proxy verifies and validates the JWT
+  return await gateway.fetchUserByUsername(jwt["username"])
 }

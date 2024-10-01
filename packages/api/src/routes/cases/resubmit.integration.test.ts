@@ -2,10 +2,8 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
 import { FORBIDDEN } from "http-status"
 import build from "../../app"
+import FakeGateway from "../../services/gateways/fakeGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
-import fetchUserByUsername from "../../useCases/fetchUserByUsername"
-
-jest.mock("../../useCases/fetchUserByUsername")
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
@@ -20,12 +18,16 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
 }
 
 describe("resubmit", () => {
-  const mockedFetchUserByUsername = fetchUserByUsername as jest.Mock
+  const gateway = new FakeGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build()
+    app = await build(gateway)
     await app.ready()
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   afterAll(async () => {
@@ -41,16 +43,23 @@ describe("resubmit", () => {
       UserGroup.SuperUserManager,
       UserGroup.NewUI
     ])
-    mockedFetchUserByUsername.mockResolvedValue(user)
+    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    spy.mockResolvedValue(user)
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
     expect(statusCode).toBe(FORBIDDEN)
   })
 
-  it.skip("returns 403 if case doesn't belong to same force as user", async () => {
+  it("returns 403 if case doesn't belong to same force as user", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    mockedFetchUserByUsername.mockResolvedValue(user)
+    const spyFetchUser = jest.spyOn(gateway, "fetchUserByUsername")
+    const spyForce = jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser")
+
+    spyFetchUser.mockResolvedValue(user)
+    spyForce.mockRejectedValue(
+      new Error(`Case is either: not present; not in the force or not locked by ${user.username}`)
+    )
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 

@@ -1,17 +1,8 @@
 import type { FastifyInstance } from "fastify"
 import { OK, UNAUTHORIZED } from "http-status"
 import build from "../../app"
-import fetchUserByUsername from "../../useCases/fetchUserByUsername"
-import jwtParser from "./jwtParser"
-import jwtVerify from "./jwtVerify"
-
-import type { JWT } from "@moj-bichard7/common/types/JWT"
-import type { User } from "@moj-bichard7/common/types/User"
+import FakeGateway from "../../services/gateways/fakeGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
-
-jest.mock("./jwtParser")
-jest.mock("./jwtVerify")
-jest.mock("../../useCases/fetchUserByUsername")
 
 const defaults = {
   url: "/me",
@@ -22,80 +13,20 @@ const defaults = {
 }
 
 describe("authenticate", () => {
-  const mockedJwtParser = jwtParser as jest.Mock
-  const mockedJwtVerify = jwtVerify as jest.Mock
-  const mockedFetchUserByUsername = fetchUserByUsername as jest.Mock
-
+  const gateway = new FakeGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build()
+    app = await build(gateway)
     await app.ready()
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   afterAll(async () => {
     await app.close()
-  })
-
-  it("returns 401 if api key is invalid", async () => {
-    const { statusCode } = await app.inject({
-      ...defaults,
-      headers: { "X-API-Key": "invalid api key" }
-    })
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("returns 401 if jwt doesn't start with Bearer", async () => {
-    const { statusCode } = await app.inject({
-      ...defaults,
-      headers: {
-        ...defaults.headers,
-        Authorization: ""
-      }
-    })
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("returns 401 if jwt can't be parsed", async () => {
-    mockedJwtParser.mockRejectedValue(new Error("Parsing error"))
-    const { statusCode } = await app.inject(defaults)
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("returns 401 if jwt can't be verified", async () => {
-    mockedJwtParser.mockResolvedValue({} as JWT)
-
-    mockedJwtVerify.mockRejectedValue(new Error("Verification error"))
-    const { statusCode } = await app.inject(defaults)
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("returns 401 if the verification result is false", async () => {
-    mockedJwtParser.mockResolvedValue({} as JWT)
-
-    mockedJwtVerify.mockResolvedValue(false)
-    const { statusCode } = await app.inject(defaults)
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("returns 200 if the verification result is a User", async () => {
-    mockedJwtParser.mockResolvedValue({} as JWT)
-    mockedJwtVerify.mockResolvedValue({
-      id: 1,
-      username: "User",
-      jwt_id: "100-123",
-      groups: [],
-      visible_forces: ""
-    } satisfies User)
-
-    const { statusCode } = await app.inject(defaults)
-
-    expect(statusCode).toBe(OK)
   })
 
   it("will return with no headers 401 - Unauthorized", async () => {
@@ -107,15 +38,52 @@ describe("authenticate", () => {
     expect(response.statusCode).toBe(UNAUTHORIZED)
   })
 
-  it("will return 401 - Unauthorized with just X-API-Key header", async () => {
-    const response = await app.inject({
+  it("returns 401 if api key is invalid", async () => {
+    const { statusCode } = await app.inject({
+      ...defaults,
+      headers: {
+        "X-API-Key": "invalid api key"
+      }
+    })
+
+    expect(statusCode).toBe(UNAUTHORIZED)
+  })
+
+  it("returns 401 if jwt doesn't start with Bearer", async () => {
+    const { statusCode } = await app.inject({
+      ...defaults,
+      headers: {
+        ...defaults.headers,
+        Authorization: "Not Bearer "
+      }
+    })
+
+    expect(statusCode).toBe(UNAUTHORIZED)
+  })
+
+  it("returns 401 if jwt can't be parsed", async () => {
+    const invalidJwt = "abc123"
+
+    const { statusCode } = await app.inject({
+      ...defaults,
+      headers: {
+        ...defaults.headers,
+        Authorization: `Bearer ${invalidJwt}`
+      }
+    })
+
+    expect(statusCode).toBe(UNAUTHORIZED)
+  })
+
+  it("returns 401 if the verification result is false", async () => {
+    const { statusCode } = await app.inject({
       ...defaults,
       headers: {
         "X-API-Key": "password"
       }
     })
 
-    expect(response.statusCode).toBe(UNAUTHORIZED)
+    expect(statusCode).toBe(UNAUTHORIZED)
   })
 
   it("will return 401 - Unauthorized with just Authorization header", async () => {
@@ -131,27 +99,10 @@ describe("authenticate", () => {
     expect(response.statusCode).toBe(UNAUTHORIZED)
   })
 
-  it("will return 401 - Unauthorized with the Authorization header is not valid", async () => {
-    mockedJwtParser.mockRestore()
-    mockedJwtVerify.mockRestore()
-
-    const response = await app.inject({
-      ...defaults,
-      headers: {
-        ...defaults.headers,
-        Authorization: "Bearer abc123"
-      }
-    })
-
-    expect(response.statusCode).toBe(UNAUTHORIZED)
-  })
-
   it("will return 401 - Unauthorized with a missing user", async () => {
-    mockedJwtParser.mockRestore()
-    mockedJwtVerify.mockRestore()
-    mockedFetchUserByUsername.mockImplementation(() => {
-      throw new Error("User user does not exist")
-    })
+    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    spy.mockRejectedValue(new Error('User "User 1" does not exist'))
+
     const [encodedJwt] = generateJwtForStaticUser()
 
     const response = await app.inject({
@@ -163,5 +114,21 @@ describe("authenticate", () => {
     })
 
     expect(response.statusCode).toBe(UNAUTHORIZED)
+  })
+
+  it("returns 200 if the verification result is a User", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser()
+    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    spy.mockResolvedValue(user)
+
+    const { statusCode } = await app.inject({
+      ...defaults,
+      headers: {
+        ...defaults.headers,
+        authorization: `Bearer ${encodedJwt}`
+      }
+    })
+
+    expect(statusCode).toBe(OK)
   })
 })
