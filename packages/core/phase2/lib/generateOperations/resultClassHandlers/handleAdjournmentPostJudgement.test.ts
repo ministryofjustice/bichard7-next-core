@@ -1,4 +1,4 @@
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement"
