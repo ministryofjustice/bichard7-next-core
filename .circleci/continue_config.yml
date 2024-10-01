@@ -389,9 +389,6 @@ jobs:
       - node_install
       - install_and_build_core
       - run:
-          name: Spin up the PostgreSQL database
-          command: npm run postgres
-      - run:
           name: Run unit tests against API code
           command: nvm use && npm run -w packages/api test
 
