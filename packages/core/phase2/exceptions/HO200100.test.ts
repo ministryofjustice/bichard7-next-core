@@ -14,25 +14,6 @@ describe("HO200106", () => {
             PNCAdjudicationExists: true,
             ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
             PNCDisposalType: 9999
-          },
-          {
-            PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
-            PNCDisposalType: 1000
-          }
-        ]
-      },
-      {
-        Result: [
-          {
-            PNCAdjudicationExists: false,
-            ResultClass: "Adjournment pre Judgement",
-            PNCDisposalType: 1001
-          },
-          {
-            PNCAdjudicationExists: true,
-            ResultClass: "Adjournment pre Judgement",
-            PNCDisposalType: 1001
           }
         ]
       }
@@ -44,11 +25,43 @@ describe("HO200106", () => {
       {
         code: ExceptionCode.HO200100,
         path: errorPaths.offence(0).result(0).resultClass
-      },
-      {
-        code: ExceptionCode.HO200100,
-        path: errorPaths.offence(1).result(1).resultClass
       }
     ])
+  })
+
+  it("returns no exceptions when result class is not adjournment pre judgement", () => {
+    const aho = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            PNCAdjudicationExists: true,
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 9999
+          }
+        ]
+      }
+    ] as Offence[])
+
+    const exceptions = HO200100(aho)
+
+    expect(exceptions).toStrictEqual([])
+  })
+
+  it("returns no exceptions when PNC adjudication does not exist", () => {
+    const aho = generateAhoFromOffenceList([
+      {
+        Result: [
+          {
+            PNCAdjudicationExists: false,
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 9999
+          }
+        ]
+      }
+    ] as Offence[])
+
+    const exceptions = HO200100(aho)
+
+    expect(exceptions).toStrictEqual([])
   })
 })
