@@ -4,14 +4,7 @@ import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
 import areAllPncResults2007 from "../../areAllPncResults2007"
 
-export const handleSentence: ResultClassHandler = ({
-  aho,
-  offence,
-  resubmitted,
-  offenceIndex,
-  resultIndex,
-  result
-}) => {
+export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, result }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const ccrId = offence?.CourtCaseReferenceNumber || undefined
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
