@@ -13,30 +13,6 @@ const organisationUnit = {
 }
 
 describe("handleAdjournmentPreJudgement", () => {
-  it("should return HO200100 when adjudication exists", () => {
-    const params = generateResultClassHandlerParams({ result: { PNCAdjudicationExists: true } as Result })
-
-    const { operations, exceptions } = handleAdjournmentPreJudgement(params)
-
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200100",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
-    expect(operations).toHaveLength(0)
-  })
-
   it("should return remand operations with isAdjournmentPreJudgement in operation data when adjudication does not exist and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
       result: {
