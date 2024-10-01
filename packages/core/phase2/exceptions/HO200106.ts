@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import checkResultClassExceptions from "./checkResultClassExceptions"
+import ResultClass from "../../types/ResultClass"
 
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
@@ -14,7 +15,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   }
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
-    if (!result.PNCAdjudicationExists && !offence.AddedByTheCourt) {
+    if (!result.PNCAdjudicationExists && !offence.AddedByTheCourt && result.ResultClass == ResultClass.SENTENCE) {
       const exception = {
         code: ExceptionCode.HO200106,
         path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
