@@ -79,16 +79,6 @@ describe("HO200106", () => {
                       PNCDisposalType: 1001
                     }
                   ]
-                },
-                {
-                  AddedByTheCourt: true,
-                  Result: [
-                    {
-                      PNCAdjudicationExists: false,
-                      ResultClass: ResultClass.SENTENCE,
-                      PNCDisposalType: 1001
-                    }
-                  ]
                 }
               ]
             }
