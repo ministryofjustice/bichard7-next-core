@@ -1,6 +1,7 @@
-import { mockEnquiryFromNCM, mockUpdate } from "../../utils/pncMocks.ts"
+import { mockEnquiryFromNCM, mockUpdate } from "../../utils/pncMocks"
+import type Bichard from "../../utils/world"
 
-export default (ncm, world = {}) => [
+export default (ncm: string, world: Bichard) => [
   mockEnquiryFromNCM(ncm, world),
   mockUpdate("CXU02", {
     expectedRequest:
