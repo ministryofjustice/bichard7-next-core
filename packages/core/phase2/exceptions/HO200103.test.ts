@@ -13,7 +13,8 @@ describe("HO200103", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT
+            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -36,7 +37,8 @@ describe("HO200103", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT
+            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -54,7 +56,8 @@ describe("HO200103", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -72,7 +75,8 @@ describe("HO200103", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT
+            ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT,
+            PNCDisposalType: 9999
           }
         ]
       }
