@@ -10,7 +10,7 @@ export type GenerateAhoMatchingPncAdjudicationAndDisposalsOptions = {
   hasOffenceReasonSequence?: boolean
   hasResults?: boolean
   hasMatchingPncAdjudication?: boolean
-  firstResultDiposalType?: number
+  firstResultDisposalType?: number
   firstPncDisposalType?: number
 }
 
@@ -62,7 +62,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
             Result:
               options.hasResults === false
                 ? []
-                : [generateResult(options.firstResultDiposalType ?? 2063), generateResult(2064)],
+                : [generateResult(options.firstResultDisposalType ?? 2063), generateResult(2064)],
             CriminalProsecutionReference: {
               OffenceReasonSequence: options.hasOffenceReasonSequence === false ? undefined : "001"
             },

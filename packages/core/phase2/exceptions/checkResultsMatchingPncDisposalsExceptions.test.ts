@@ -33,7 +33,7 @@ describe("checkResultsMatchingPncDisposalsExceptions", () => {
   it("should call the exception check function once when the first result is recordable and does not match a PNC disposal", () => {
     const exceptionCheckFn = jest.fn()
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDiposalType: 2063,
+      firstResultDisposalType: 2063,
       firstPncDisposalType: 2060
     })
 
@@ -42,10 +42,10 @@ describe("checkResultsMatchingPncDisposalsExceptions", () => {
     expect(exceptionCheckFn).toHaveBeenCalledTimes(1)
   })
 
-  it("should call the exception check function twice when the first result is recordable but matches a PNC diposal", () => {
+  it("should call the exception check function twice when the first result is recordable but matches a PNC disposal", () => {
     const exceptionCheckFn = jest.fn()
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDiposalType: 2063,
+      firstResultDisposalType: 2063,
       firstPncDisposalType: 2063
     })
 
@@ -54,10 +54,10 @@ describe("checkResultsMatchingPncDisposalsExceptions", () => {
     expect(exceptionCheckFn).toHaveBeenCalledTimes(2)
   })
 
-  it("should call the exception check function twice when the first result does not match a PNC diposal but is non-recordable", () => {
+  it("should call the exception check function twice when the first result does not match a PNC disposal but is non-recordable", () => {
     const exceptionCheckFn = jest.fn()
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDiposalType: 1000,
+      firstResultDisposalType: 1000,
       firstPncDisposalType: 2063
     })
 
