@@ -388,7 +388,7 @@ jobs:
       - node_install
       - install_and_build_core
       - run:
-          name: Run unit tests against API code
+          name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
 
   test_common:
