@@ -23,11 +23,12 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   if (fixedPenalty) {
     return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
-  } else if (
-    result.PNCAdjudicationExists &&
-    (resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference))
-  ) {
-    return { operations: [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)], exceptions: [] }
+  } else if (result.PNCAdjudicationExists) {
+    const operations =
+      resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)
+        ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
+        : []
+    return { operations, exceptions: [] }
   }
 
   if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
