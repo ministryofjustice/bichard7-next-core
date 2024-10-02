@@ -5,7 +5,7 @@ import fetchUserByUsername from "./postgres/fetchUserByUsername"
 import filterUserHasSameForceAsCaseAndLockedByUser from "./postgres/filterUserHasSameForceAsCaseAndLockedByUser"
 
 class PostgresGateway implements Gateway {
-  private db = postgresFactory()
+  private readonly db = postgresFactory()
 
   async fetchUserByUsername(username: string): Promise<User> {
     return await fetchUserByUsername(this.db, username)
