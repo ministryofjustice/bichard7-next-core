@@ -3,12 +3,13 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import HO200118 from "./HO200118"
 
 describe("HO200118", () => {
-  it("should return exception when there is a recordable offence with non-recordable results", () => {
+  it("should return exception when all recordable offences have non-recordable results", () => {
     const aho = generateAhoFromOffenceList([
       {
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
+        OffenceCategory: "B7",
         Result: [
           {
             PNCDisposalType: 2068
@@ -27,7 +28,7 @@ describe("HO200118", () => {
             PNCDisposalType: 1000
           },
           {
-            PNCDisposalType: 2068
+            PNCDisposalType: 1000
           }
         ]
       },
@@ -75,6 +76,7 @@ describe("HO200118", () => {
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
+        OffenceCategory: "B7",
         Result: [
           {
             PNCDisposalType: 2068
@@ -97,6 +99,7 @@ describe("HO200118", () => {
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
+        OffenceCategory: "B7",
         Result: [
           {
             PNCDisposalType: 2068
