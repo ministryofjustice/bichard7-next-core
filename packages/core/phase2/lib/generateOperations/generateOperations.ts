@@ -41,10 +41,6 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
 
   const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
 
-  if (offences.filter(isRecordableOffence).length === 0) {
-    return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
-  }
-
   offences.forEach((offence, offenceIndex) => {
     if (!isRecordableOffence(offence)) {
       return
