@@ -56,7 +56,7 @@ const checkResultsMatchingPncDisposalsExceptions = (
       return !offence.Result.some(isRecordableResult)
     }
 
-    isMatchToPncAdjudicationAndDisposals(aho, offence, offenceIndex, checkExceptionFn)
+    return isMatchToPncAdjudicationAndDisposals(aho, offence, offenceIndex, checkExceptionFn)
   })
 }
 

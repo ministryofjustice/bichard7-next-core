@@ -30,39 +30,82 @@ describe("checkResultsMatchingPncDisposalsExceptions", () => {
     expect(checkExceptionFn).toHaveBeenCalledTimes(0)
   })
 
-  it("should call the check exception function once when the first result is recordable and does not match a PNC disposal", () => {
-    const checkExceptionFn = jest.fn()
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDisposalType: 2063,
-      firstPncDisposalType: 2060
+  describe("when only one offence", () => {
+    it("should call the check exception function once when the first result is recordable and does not match a PNC disposal", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 2063,
+        firstPncDisposalType: 2060
+      })
+
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+
+      expect(checkExceptionFn).toHaveBeenCalledTimes(1)
     })
 
-    checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+    it("should call the check exception function twice when the first result is recordable but matches a PNC disposal", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 2063,
+        firstPncDisposalType: 2063
+      })
 
-    expect(checkExceptionFn).toHaveBeenCalledTimes(1)
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+
+      expect(checkExceptionFn).toHaveBeenCalledTimes(2)
+    })
+
+    it("should call the check exception function twice when the first result does not match a PNC disposal but is non-recordable", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 1000,
+        firstPncDisposalType: 2063
+      })
+
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+
+      expect(checkExceptionFn).toHaveBeenCalledTimes(2)
+    })
   })
 
-  it("should call the check exception function twice when the first result is recordable but matches a PNC disposal", () => {
-    const checkExceptionFn = jest.fn()
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDisposalType: 2063,
-      firstPncDisposalType: 2063
+  describe("when multiple offences", () => {
+    it("should call the check exception function once when the first result is recordable and does not match a PNC disposal", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 2063,
+        firstPncDisposalType: 2060,
+        hasAdditionalMatchingOffence: true
+      })
+
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+
+      expect(checkExceptionFn).toHaveBeenCalledTimes(1)
     })
 
-    checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+    it("should call the check exception function three times when the first result is recordable but matches a PNC disposal", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 2063,
+        firstPncDisposalType: 2063,
+        hasAdditionalMatchingOffence: true
+      })
 
-    expect(checkExceptionFn).toHaveBeenCalledTimes(2)
-  })
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
 
-  it("should call the check exception function twice when the first result does not match a PNC disposal but is non-recordable", () => {
-    const checkExceptionFn = jest.fn()
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({
-      firstResultDisposalType: 1000,
-      firstPncDisposalType: 2063
+      expect(checkExceptionFn).toHaveBeenCalledTimes(3)
     })
 
-    checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+    it("should call the check exception function three times when the first result does not match a PNC disposal but is non-recordable", () => {
+      const checkExceptionFn = jest.fn()
+      const aho = generateAhoMatchingPncAdjudicationAndDisposals({
+        firstResultDisposalType: 1000,
+        firstPncDisposalType: 2063,
+        hasAdditionalMatchingOffence: true
+      })
 
-    expect(checkExceptionFn).toHaveBeenCalledTimes(2)
+      checkResultsMatchingPncDisposalsExceptions(aho, checkExceptionFn)
+
+      expect(checkExceptionFn).toHaveBeenCalledTimes(3)
+    })
   })
 })
