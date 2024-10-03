@@ -41,6 +41,17 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     }
   }
 
+  const newRemandAndSentencing = operations.some((operation) => {
+    const courtCaseReference = operationCourtCaseReference(operation)
+    const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
+
+    return [PncOperation.SENTENCE_DEFERRED].includes(operation.code) && remandCcrsContainCourtCaseReference
+  })
+
+  if (newRemandAndSentencing) {
+    return { code: ExceptionCode.HO200113, path: errorPath }
+  }
+
   const operationsWithCourtCase: Operation[] = []
 
   for (const operation of operations) {
@@ -75,13 +86,9 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
       operationsWithCourtCase.push(operation)
     }
-
-    const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
-
-    if ([PncOperation.SENTENCE_DEFERRED].includes(operation.code) && remandCcrsContainCourtCaseReference) {
-      return { code: ExceptionCode.HO200113, path: errorPath }
-    }
   }
+
+  return undefined
 }
 
 export default validateOperations
