@@ -33,15 +33,15 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.UNRESULTED]: () => ({ operations: [], exceptions: [] })
 }
 
-const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
+const generateOperationsFromResults = (
+  aho: AnnotatedHearingOutcome,
+  resubmitted: boolean,
+  allResultsOnPnc: boolean
+) => {
   const exceptions: Exception[] = []
-  const allOperations: Operation[] = []
-  const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  let recordableResultFound = false
+  const operations: Operation[] = []
 
-  const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
-
-  offences.forEach((offence, offenceIndex) => {
+  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence, offenceIndex) => {
     if (!isRecordableOffence(offence)) {
       return
     }
@@ -51,8 +51,6 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
         return
       }
 
-      recordableResultFound = true
-
       if (result.ResultClass) {
         const handlerResult = resultClassHandlers[result.ResultClass]?.({
           aho,
@@ -61,19 +59,27 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
           resultIndex,
           result,
           resubmitted,
-          allResultsAlreadyOnPnc
+          allResultsAlreadyOnPnc: allResultsOnPnc
         })
 
         exceptions.push(...handlerResult.exceptions)
-        allOperations.push(...handlerResult.operations)
+        operations.push(...handlerResult.operations)
       }
     })
   })
 
-  const operations = filterDisposalsAddedInCourt(allOperations)
-  if (operations.length === 0 && !recordableResultFound && exceptions.length === 0) {
-    exceptions.push({ code: ExceptionCode.HO200118, path: errorPaths.case.asn })
+  return { operations: filterDisposalsAddedInCourt(operations), exceptions }
+}
+
+const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
+  const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
+
+  if (offences.filter(isRecordableOffence).length === 0) {
+    return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
   }
+
+  const allResultsOnPnc = areAllResultsOnPnc(aho)
+  const { operations, exceptions } = generateOperationsFromResults(aho, resubmitted, allResultsOnPnc)
 
   const remandCcrs = extractRemandCcrs(operations, false)
   const deduplicatedOperations = deduplicateOperations(operations)
@@ -87,14 +93,14 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
     return { operations: [], exceptions }
   }
 
-  const filteredOperations = allResultsAlreadyOnPnc
+  const filteredOperations = allResultsOnPnc
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
     : deduplicatedOperations
 
   return {
     operations: sortOperations(filteredOperations),
     exceptions: [],
-    events: allResultsAlreadyOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
+    events: allResultsOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
   }
 }
 
