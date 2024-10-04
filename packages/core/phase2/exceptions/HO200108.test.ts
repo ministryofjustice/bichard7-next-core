@@ -5,8 +5,23 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
+import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
+import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import areAllPncResults2007 from "../lib/areAllPncResults2007"
+
+jest.mock("../lib/generateOperations/hasUnmatchedPncOffences")
+jest.mock("../lib/generateOperations/areAllResultsOnPnc")
+jest.mock("../lib/areAllPncResults2007")
+
+const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllPncResults2007 = areAllPncResults2007 as jest.Mock
 
 describe("HO200108", () => {
+  mockedHasUnmatchedPncOffences.mockReturnValue(false)
+  mockedAreAllResultsOnPnc.mockReturnValue(true)
+  mockedAreAllPncResults2007.mockReturnValue(false)
+
   it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, PNCDisposalType is 2060, and RCC check fails", () => {
     const aho = generateAhoFromOffenceList([
       {
@@ -135,7 +150,7 @@ describe("HO200108", () => {
           {
             PNCAdjudicationExists: false,
             ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999 // Different PNCDisposalType
+            PNCDisposalType: 9999
           }
         ]
       }
