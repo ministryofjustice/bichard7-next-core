@@ -26,7 +26,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
       return
     }
 
-    if (result.PNCAdjudicationExists || areAllPncResults2007(aho, ccrId)) {
+    if (result.PNCAdjudicationExists) {
       return
     }
 
