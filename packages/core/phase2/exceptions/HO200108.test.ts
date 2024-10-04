@@ -18,15 +18,13 @@ const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 const mockedAreAllPncResults2007 = areAllPncResults2007 as jest.Mock
 
 describe("HO200108", () => {
-  mockedHasUnmatchedPncOffences.mockReturnValue(false)
-  mockedAreAllResultsOnPnc.mockReturnValue(true)
-  mockedAreAllPncResults2007.mockReturnValue(false)
-
   it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, offence and result are recordable, no fixed penalty, no pnc adjudication, doesn't satisfy conditions for exception HO200124, PNCDisposalType is 2060, and RCC check fails", () => {
+    mockedHasUnmatchedPncOffences.mockReturnValue(false)
+    mockedAreAllResultsOnPnc.mockReturnValue(true)
+    mockedAreAllPncResults2007.mockReturnValue(false)
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "12345",
         Result: [
           {
             PNCAdjudicationExists: false,
@@ -37,7 +35,6 @@ describe("HO200108", () => {
       },
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "12345",
         Result: [
           {
             PNCAdjudicationExists: false,
@@ -62,30 +59,10 @@ describe("HO200108", () => {
     ])
   })
 
-  it("returns no exceptions when there's no courtCaseReferenceNumber", () => {
-    const aho = generateAhoFromOffenceList([
-      {
-        AddedByTheCourt: false,
-        Result: [
-          {
-            PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 2060
-          }
-        ]
-      }
-    ] as Offence[])
-
-    const exceptions = HO200108(aho)
-
-    expect(exceptions).toStrictEqual([])
-  })
-
   it("returns no exceptions when PNC adjudication exists", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "12345",
         Result: [
           {
             PNCAdjudicationExists: true,
@@ -105,7 +82,6 @@ describe("HO200108", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "12345",
         Result: [
           {
             PNCAdjudicationExists: false,
@@ -125,7 +101,6 @@ describe("HO200108", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: true,
-        CourtCaseReferenceNumber: "12345",
         Result: [
           {
             PNCAdjudicationExists: false,
@@ -145,7 +120,28 @@ describe("HO200108", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "12345",
+        Result: [
+          {
+            PNCAdjudicationExists: false,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
+          }
+        ]
+      }
+    ] as Offence[])
+
+    const exceptions = HO200108(aho)
+
+    expect(exceptions).toStrictEqual([])
+  })
+
+  it("should not generate a HO200108 exception if HO200124 conditions have been met", () => {
+    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
+
+    const aho = generateAhoFromOffenceList([
+      {
+        AddedByTheCourt: false,
         Result: [
           {
             PNCAdjudicationExists: false,
