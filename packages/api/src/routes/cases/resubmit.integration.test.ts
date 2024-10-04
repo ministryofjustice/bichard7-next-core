@@ -70,16 +70,26 @@ describe("resubmit", () => {
     const spyForce = jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser")
 
     spyFetchUser.mockResolvedValue(user)
-    spyForce.mockRejectedValue(
-      new Error(`Case is either: not present; not in the force or not locked by ${user.username}`)
-    )
+    spyForce.mockRejectedValue(new Error(`Case is not in the same force as ${user.username}`))
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
     expect(statusCode).toBe(FORBIDDEN)
   })
 
-  it.skip("returns 403 if exception lock is owned by a different user", () => {})
+  it("resubmission fails if case is locked to a different user", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    const spyFetchUser = jest.spyOn(gateway, "fetchUserByUsername")
+    const spyForce = jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser")
+
+    spyFetchUser.mockResolvedValue(user)
+    spyForce.mockRejectedValue(new Error(`Case is not locked by ${user.username}`))
+
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(FORBIDDEN)
+  })
+
   it.skip("returns 400 if case does not exist", () => {})
   it.skip("returns 400 if case is resolved", () => {})
   it.skip("returns 400 if case is already submitted", () => {})

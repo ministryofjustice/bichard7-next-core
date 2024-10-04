@@ -15,7 +15,7 @@ class PostgresGateway implements Gateway {
     username: string,
     caseId: number,
     forceIds: number[]
-  ): Promise<number> {
+  ): Promise<boolean> {
     return await filterUserHasSameForceAsCaseAndLockedByUser(this.db, username, caseId, forceIds)
   }
 }

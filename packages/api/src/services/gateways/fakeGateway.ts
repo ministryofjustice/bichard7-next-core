@@ -11,8 +11,8 @@ class FakeGateway implements Gateway {
     _username: string,
     _caseId: number,
     _forceIds: number[]
-  ): Promise<number> {
-    return Promise.resolve(1)
+  ): Promise<boolean> {
+    return Promise.resolve(true)
   }
 }
 
