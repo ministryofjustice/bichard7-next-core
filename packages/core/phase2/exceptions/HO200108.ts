@@ -31,8 +31,8 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
     }
 
     if (
-      (result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT ||
-        result.ResultClass === ResultClass.ADJOURNMENT_WITH_JUDGEMENT) &&
+      result.ResultClass &&
+      [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       result.PNCDisposalType === 2060 &&
       checkCaseRequiresRccButHasNoReportableOffences(aho, ccrId)
     ) {
