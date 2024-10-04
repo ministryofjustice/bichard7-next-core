@@ -10,7 +10,8 @@ export type GenerateAhoMatchingPncAdjudicationAndDisposalsOptions = {
   hasOffenceReasonSequence?: boolean
   hasResults?: boolean
   hasMatchingPncAdjudication?: boolean
-  firstResultDiposalType?: number
+  hasAdditionalMatchingOffence?: boolean
+  firstResultDisposalType?: number
   firstPncDisposalType?: number
 }
 
@@ -62,7 +63,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
             Result:
               options.hasResults === false
                 ? []
-                : [generateResult(options.firstResultDiposalType ?? 2063), generateResult(2064)],
+                : [generateResult(options.firstResultDisposalType ?? 2063), generateResult(2064)],
             CriminalProsecutionReference: {
               OffenceReasonSequence: options.hasOffenceReasonSequence === false ? undefined : "001"
             },
@@ -70,6 +71,16 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
           } as Offence
         ]
   )
+
+  if (options.hasAdditionalMatchingOffence) {
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.push({
+      Result: [generateResult(2063)],
+      CriminalProsecutionReference: {
+        OffenceReasonSequence: "001"
+      },
+      CourtCaseReferenceNumber: "BAR"
+    } as Offence)
+  }
 
   const courtCase: PncCourtCaseSummary = {
     courtCaseReference: "FOO",
@@ -119,6 +130,38 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
     pncId: options.hasPncId === false ? undefined : "123",
     courtCases: [courtCase]
   } as PncQueryResult
+
+  if (options.hasAdditionalMatchingOffence) {
+    pncQuery.courtCases?.push({
+      courtCaseReference: "BAR",
+      offences: [
+        {
+          offence: {
+            sequenceNumber: 1,
+            cjsOffenceCode: "offence-code",
+            startDate: new Date("05/22/2024")
+          },
+          adjudication: {
+            sentenceDate: new Date("05/22/2024"),
+            verdict: "NON-CONVICTION",
+            offenceTICNumber: 0,
+            plea: ""
+          },
+          disposals: [
+            {
+              type: 2063,
+              qtyDate: "22052024",
+              qtyDuration: "Y3",
+              qtyMonetaryValue: "25",
+              qtyUnitsFined: "Y3  220520240000000.0000",
+              qualifiers: "A",
+              text: "EXCLUDED FROM LOCATION"
+            }
+          ]
+        } as PncOffence
+      ]
+    })
+  }
 
   aho.PncQuery = pncQuery
   aho.AnnotatedHearingOutcome.HearingOutcome.Hearing = {

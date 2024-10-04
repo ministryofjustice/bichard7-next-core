@@ -125,35 +125,6 @@ describe("generateOperations", () => {
     expect(operations).toStrictEqual([])
   })
 
-  it("generates HO200118 exception when there are no operations, no recordable results, and no operation exceptions", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: [
-                {
-                  Result: [{ ResultClass: ResultClass.ADJOURNMENT, PNCDisposalType: 1000 }]
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    const { exceptions } = generateOperations(aho, resubmitted)
-
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200118",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
-  })
-
   it("generates disposal operation when offence added by the Court disposal ccrId matches remand ccrId", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {

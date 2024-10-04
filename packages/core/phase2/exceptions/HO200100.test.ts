@@ -5,7 +5,7 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 
-describe("HO200106", () => {
+describe("HO200100", () => {
   it("returns a HO200100 exception when PNC adjudication exists, offence and result are recordable, and ResultClass is ADJOURNMENT_PRE_JUDGEMENT", () => {
     const aho = generateAhoFromOffenceList([
       {
