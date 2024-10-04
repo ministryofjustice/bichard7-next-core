@@ -78,21 +78,10 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
-  const changedDisposalAndSentencing = operationsWithCourtCase2.some((operation) => {
-    const courtCaseReference = operationCourtCaseReference(operation)
-    const clashingOperation = operationsWithCourtCase2.find(
-      (op) => operationCourtCaseReference(op) == courtCaseReference
-    )
-
-    if (clashingOperation) {
-      const sortedOperations = [operation.code, clashingOperation.code].sort()
-
-      return isEqual(sortedOperations, [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])
-    }
-
-    return false
-  })
-
+  const changedDisposalAndSentencing = checkForClashingCourtCaseOperations([
+    PncOperation.SENTENCE_DEFERRED,
+    PncOperation.DISPOSAL_UPDATED
+  ])
   if (changedDisposalAndSentencing) {
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
