@@ -5,7 +5,6 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
-import areAllPncResults2007 from "../lib/areAllPncResults2007"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
 import checkCaseRequiresRccButHasNoReportableOffences from "../lib/generateOperations/checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
@@ -22,11 +21,10 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
     const ccrId = offence?.CourtCaseReferenceNumber || undefined
 
-    if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-      return
-    }
-
-    if (result.PNCAdjudicationExists) {
+    if (
+      result.PNCAdjudicationExists ||
+      (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt)
+    ) {
       return
     }
 
