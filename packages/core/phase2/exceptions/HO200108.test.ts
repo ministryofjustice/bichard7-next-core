@@ -22,7 +22,7 @@ describe("HO200108", () => {
   mockedAreAllResultsOnPnc.mockReturnValue(true)
   mockedAreAllPncResults2007.mockReturnValue(false)
 
-  it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, PNCDisposalType is 2060, and RCC check fails", () => {
+  it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, offence and result are recordable, no fixed penalty, no pnc adjudication, doesn't satisfy conditions for exception HO200124, PNCDisposalType is 2060, and RCC check fails", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
