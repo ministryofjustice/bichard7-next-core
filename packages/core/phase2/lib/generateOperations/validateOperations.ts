@@ -71,6 +71,25 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200112, path: errorPath }
   }
 
+  const newAndChangedDisposal = operationsWithCourtCase2.some((operation) => {
+    const courtCaseReference = operationCourtCaseReference(operation)
+    const clashingOperation = operationsWithCourtCase2.find(
+      (op) => operationCourtCaseReference(op) == courtCaseReference
+    )
+
+    if (clashingOperation) {
+      const sortedOperations = [operation.code, clashingOperation.code].sort()
+
+      return isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])
+    }
+
+    return false
+  })
+
+  if (newAndChangedDisposal) {
+    return { code: ExceptionCode.HO200115, path: errorPath }
+  }
+
   const operationsWithCourtCase: Operation[] = []
 
   for (const operation of operations) {
@@ -86,10 +105,6 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
         if (operation.code === clashingOperation.code) {
           return { code: ExceptionCode.HO200109, path: errorPath }
-        }
-
-        if (isEqual(sortedOperations, [PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
-          return { code: ExceptionCode.HO200115, path: errorPath }
         }
 
         if (isEqual(sortedOperations, [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
