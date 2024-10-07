@@ -20,7 +20,6 @@ const semver = new RegExp(
 const pinned = [
   "chalk",
   "eslint",
-  "@typescript-eslint/eslint-plugin",
   "fastify",
   "@fastify/autoload",
   "@fastify/swagger",
