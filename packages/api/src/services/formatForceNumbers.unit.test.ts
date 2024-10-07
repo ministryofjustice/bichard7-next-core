@@ -1,6 +1,18 @@
 import formatForceNumbers from "./formatForceNumbers"
 
 describe("formatForceNumbers", () => {
+  it("handles undefined", () => {
+    const result = formatForceNumbers()
+
+    expect(result).toEqual([])
+  })
+
+  it("handles null", () => {
+    const result = formatForceNumbers(null)
+
+    expect(result).toEqual([])
+  })
+
   it("handles empty strings", () => {
     const result = formatForceNumbers("")
 

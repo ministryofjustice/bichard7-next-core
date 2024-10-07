@@ -1,27 +1,26 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
+import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
-import formatForceNumbers from "../../services/formatForceNumbers"
 import type Gateway from "../../services/gateways/interfaces/gateway"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)
 })
 
-type Body = z.infer<typeof bodySchema>
+export type ResubmitBody = z.infer<typeof bodySchema>
 
 type HandlerProps = {
   gateway: Gateway
   user: User
   caseId: number
-  body: Body
+  body: ResubmitBody
   reply: FastifyReply
 }
 
@@ -67,22 +66,9 @@ const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => 
   // upload failed = 500
   // - in theory this should either be 502 or 504
 
-  if (
-    !user.groups.some(
-      (group) =>
-        group === UserGroup.ExceptionHandler ||
-        group === UserGroup.GeneralHandler ||
-        group === UserGroup.Allocator ||
-        group === UserGroup.Supervisor
-    )
-  ) {
-    reply.code(FORBIDDEN).send()
-    return
-  }
-
   try {
-    const forceNumbers = formatForceNumbers(user.visible_forces)
-    const result = await gateway.filterUserHasSameForceAsCaseAndLockedByUser(user.username, caseId, forceNumbers)
+    const result = await canUserResubmitCase({ gateway, user, caseId })
+
     if (!result) {
       reply.code(FORBIDDEN).send()
       return
