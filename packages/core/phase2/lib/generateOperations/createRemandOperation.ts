@@ -1,6 +1,6 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../types/PncOperation"
-import type { RemandOperation, OperationData } from "../../../types/PncUpdateDataset"
+import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
 
@@ -17,12 +17,13 @@ const generateOperationData = (result: Result): OperationData<PncOperation.REMAN
   }
 }
 
-const createRemandOperation = (result: Result, courtCaseReference: string | undefined | null): RemandOperation => {
-  const operation = createOperation(PncOperation.REMAND, generateOperationData(result)) as RemandOperation
-  operation.courtCaseReference = courtCaseReference ?? undefined
-  operation.isAdjournmentPreJudgement = result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT
-
-  return operation
-}
+const createRemandOperation = (
+  result: Result,
+  courtCaseReference: string | undefined | null
+): Operation<PncOperation.REMAND> => ({
+  ...createOperation(PncOperation.REMAND, generateOperationData(result)),
+  courtCaseReference: courtCaseReference ?? undefined,
+  isAdjournmentPreJudgement: result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT
+})
 
 export default createRemandOperation

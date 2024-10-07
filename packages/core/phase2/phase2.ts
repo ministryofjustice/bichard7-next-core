@@ -77,7 +77,7 @@ const processMessage = (
     }
   }
 
-  refreshOperationSequence(outputMessage, operations)
+  outputMessage.PncOperations = refreshOperationSequence(outputMessage, operations)
 
   auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
 

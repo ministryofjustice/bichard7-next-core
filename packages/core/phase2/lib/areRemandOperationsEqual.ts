@@ -1,6 +1,10 @@
-import type { RemandOperation } from "../../types/PncUpdateDataset"
+import type { PncOperation } from "../../types/PncOperation"
+import type { Operation } from "../../types/PncUpdateDataset"
 
-const areRemandOperationsEqual = (firstRemand: RemandOperation, secondRemand: RemandOperation) => {
+const areRemandOperationsEqual = (
+  firstRemand: Operation<PncOperation.REMAND>,
+  secondRemand: Operation<PncOperation.REMAND>
+) => {
   const firstOrganisationUnit = firstRemand.data?.nextHearingLocation
   const secondOrganisationUnit = secondRemand.data?.nextHearingLocation
 

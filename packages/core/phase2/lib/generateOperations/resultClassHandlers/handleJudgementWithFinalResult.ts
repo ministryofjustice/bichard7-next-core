@@ -45,13 +45,10 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   if (!offence.AddedByTheCourt) {
     operations.push(createOperation(PncOperation.NORMAL_DISPOSAL, operationData))
   } else if (offence.AddedByTheCourt && !contains2007Result) {
-    const operation = createOperation(PncOperation.NORMAL_DISPOSAL, operationData)
-    // TODO: Refactor this
-    if (operation.code === PncOperation.NORMAL_DISPOSAL) {
-      operation.addedByTheCourt = true
-    }
-
-    operations.push(operation)
+    operations.push({
+      ...createOperation(PncOperation.NORMAL_DISPOSAL, operationData),
+      addedByTheCourt: true
+    })
   }
 
   if (result.PNCDisposalType === 2060 && checkCaseRequiresRccButHasNoReportableOffences(aho, ccrId)) {
