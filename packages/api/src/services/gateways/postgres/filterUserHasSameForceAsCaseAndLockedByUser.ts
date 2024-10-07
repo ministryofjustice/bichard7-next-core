@@ -19,13 +19,5 @@ export default async (sql: postgres.Sql, username: string, caseId: number, force
     throw new Error("Case not found")
   }
 
-  if (!result.locked_by_user) {
-    throw new Error(`Case not locked to ${username}`)
-  }
-
-  if (!result.case_in_force) {
-    throw new Error(`Case not in same force as ${username}`)
-  }
-
-  return true
+  return result.locked_by_user && result.case_in_force
 }

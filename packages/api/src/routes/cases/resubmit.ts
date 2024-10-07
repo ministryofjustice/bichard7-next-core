@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
-import { FORBIDDEN, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
@@ -80,13 +80,16 @@ const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => 
     return
   }
 
-  const forceNumbers = formatForceNumbers(user.visible_forces)
-
   try {
-    await gateway.filterUserHasSameForceAsCaseAndLockedByUser(user.username, caseId, forceNumbers)
+    const forceNumbers = formatForceNumbers(user.visible_forces)
+    const result = await gateway.filterUserHasSameForceAsCaseAndLockedByUser(user.username, caseId, forceNumbers)
+    if (!result) {
+      reply.code(FORBIDDEN).send()
+      return
+    }
   } catch (err) {
     reply.log.error(err)
-    reply.code(FORBIDDEN).send()
+    reply.code(BAD_REQUEST).send()
     return
   }
 
