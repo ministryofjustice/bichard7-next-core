@@ -732,13 +732,6 @@ jobs:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
-      - run:
-          name: Clone bichard7-next-tests
-          command: bash .circleci/scripts/ui-scripts/clone-tests-repo.sh
-      - node/install-packages:
-          app-dir: ~/bichard7-next-tests
-          cache-path: ~/bichard7-next-tests/node_modules
-          include-branch-in-cache-key: true
       - start_bichard7_legacy
       - run_test_chunk:
           ARGS: >-
@@ -747,7 +740,7 @@ jobs:
             MS_EDGE=<< parameters.ms-edge >>
       - save_artifacts
       - store_test_results:
-          working_directory: ~/bichard7-next-tests
+          working_directory: ~/project/packages/e2e-test
           path: ./cucumber/results
 
   zap_scanner:
