@@ -134,7 +134,7 @@ commands:
     steps:
       - run:
           name: Run test chunk
-          working_directory: ~/project/packages/e2e-tests
+          working_directory: ~/project/packages/e2e-test
           command: |
             CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
             <<parameters.ARGS>> \
