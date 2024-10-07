@@ -65,27 +65,15 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
 
-  const hasNewDisposalAndSentencing = checkForClashingCourtCaseOperations([
-    PncOperation.NORMAL_DISPOSAL,
-    PncOperation.SENTENCE_DEFERRED
-  ])
-  if (hasNewDisposalAndSentencing) {
+  if (checkForClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])) {
     return { code: ExceptionCode.HO200112, path: errorPath }
   }
 
-  const hasNewAndChangedDisposal = checkForClashingCourtCaseOperations([
-    PncOperation.NORMAL_DISPOSAL,
-    PncOperation.DISPOSAL_UPDATED
-  ])
-  if (hasNewAndChangedDisposal) {
+  if (checkForClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
-  const hasChangedDisposalAndSentencing = checkForClashingCourtCaseOperations([
-    PncOperation.SENTENCE_DEFERRED,
-    PncOperation.DISPOSAL_UPDATED
-  ])
-  if (hasChangedDisposalAndSentencing) {
+  if (checkForClashingCourtCaseOperations([PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
