@@ -1,4 +1,4 @@
-import type { NewremOperation } from "../../types/PncUpdateDataset"
+import type { RemandOperation } from "../../types/PncUpdateDataset"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
 
@@ -34,7 +34,7 @@ const anotherNonEmptyOrganisationUnit: OrganisationUnitCodes = {
   OrganisationUnitCode: "01CJ00"
 }
 
-describe("areNewremTypesEqual", () => {
+describe("areRemandTypesEqual", () => {
   const generateTestCases = (organisationUnit: OrganisationUnitCodes, expectedResult: boolean) => [
     { firstData: organisationUnit, secondData: undefined, expectedResult },
     { firstData: organisationUnit, secondData: null, expectedResult },
@@ -63,10 +63,10 @@ describe("areNewremTypesEqual", () => {
   ])(
     "returns $expectedResult when first next hearing location is $firstData and second next hearing location is $secondData",
     ({ firstData, secondData, expectedResult }) => {
-      const firstNewremOperation = { data: { nextHearingLocation: firstData } } as unknown as NewremOperation
-      const secondNewremOperation = { data: { nextHearingLocation: secondData } } as unknown as NewremOperation
+      const firstRemandOperation = { data: { nextHearingLocation: firstData } } as unknown as RemandOperation
+      const secondRemandOperation = { data: { nextHearingLocation: secondData } } as unknown as RemandOperation
 
-      const result = areRemandOperationsEqual(firstNewremOperation, secondNewremOperation)
+      const result = areRemandOperationsEqual(firstRemandOperation, secondRemandOperation)
 
       expect(result).toBe(expectedResult)
     }
@@ -81,10 +81,10 @@ describe("areNewremTypesEqual", () => {
   ])(
     "returns $expectedResult when first next hearing date is $firstDate and second next hearing date is $secondDate",
     ({ firstDate, secondDate, expectedResult }) => {
-      const firstNewremOperation = { data: { nextHearingDate: firstDate } } as unknown as NewremOperation
-      const secondNewremOperation = { data: { nextHearingDate: secondDate } } as unknown as NewremOperation
+      const firstRemandOperation = { data: { nextHearingDate: firstDate } } as unknown as RemandOperation
+      const secondRemandOperation = { data: { nextHearingDate: secondDate } } as unknown as RemandOperation
 
-      const result = areRemandOperationsEqual(firstNewremOperation, secondNewremOperation)
+      const result = areRemandOperationsEqual(firstRemandOperation, secondRemandOperation)
 
       expect(result).toBe(expectedResult)
     }

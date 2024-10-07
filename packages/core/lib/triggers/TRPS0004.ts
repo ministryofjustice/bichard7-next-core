@@ -11,9 +11,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
-  const hasNewremOperation = hearingOutcome.PncOperations.some((op) => op.code === PncOperation.REMAND)
+  const hasRemandOperation = hearingOutcome.PncOperations.some((op) => op.code === PncOperation.REMAND)
 
-  return hasNewremOperation ? [{ code: triggerCode }] : []
+  return hasRemandOperation ? [{ code: triggerCode }] : []
 }
 
 export default generator

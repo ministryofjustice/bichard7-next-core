@@ -1,5 +1,5 @@
 import { PncOperation } from "../../../types/PncOperation"
-import type { NewremOperation, Operation, OperationStatus } from "../../../types/PncUpdateDataset"
+import type { RemandOperation, Operation, OperationStatus } from "../../../types/PncUpdateDataset"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {
@@ -16,9 +16,9 @@ const organisationUnitCode2 = {
   TopLevelCode: "A"
 }
 
-const generateNewremOperation = (
+const generateRemandOperation = (
   status: OperationStatus = "NotAttempted",
-  params: Partial<NewremOperation["data"]> = {},
+  params: Partial<RemandOperation["data"]> = {},
   courtCaseReference?: string,
   isAdjournmentPreJudgement?: boolean
 ) =>
@@ -34,7 +34,7 @@ const generateNewremOperation = (
       },
       ...params
     }
-  }) as NewremOperation
+  }) as RemandOperation
 
 const generateOperation = (
   code: Exclude<Operation["code"], PncOperation.REMAND>,
@@ -56,17 +56,17 @@ const generateOperation = (
 
 describe("deduplicateOperations", () => {
   it.each([
-    { ops: [generateNewremOperation(), generateNewremOperation()] },
+    { ops: [generateRemandOperation(), generateRemandOperation()] },
     {
       ops: [
-        generateNewremOperation("NotAttempted", {}, "1", true),
-        generateNewremOperation("NotAttempted", {}, "2", true)
+        generateRemandOperation("NotAttempted", {}, "1", true),
+        generateRemandOperation("NotAttempted", {}, "2", true)
       ]
     },
     {
       ops: [
-        generateNewremOperation("NotAttempted", {}, "1", false),
-        generateNewremOperation("NotAttempted", {}, "1", true)
+        generateRemandOperation("NotAttempted", {}, "1", false),
+        generateRemandOperation("NotAttempted", {}, "1", true)
       ]
     },
     { ops: [generateOperation(PncOperation.NORMAL_DISPOSAL), generateOperation(PncOperation.NORMAL_DISPOSAL)] },
@@ -79,7 +79,7 @@ describe("deduplicateOperations", () => {
   })
 
   it.each([
-    { ops: [generateNewremOperation("Completed"), generateNewremOperation("NotAttempted")] },
+    { ops: [generateRemandOperation("Completed"), generateRemandOperation("NotAttempted")] },
     {
       ops: [
         generateOperation(PncOperation.NORMAL_DISPOSAL, "Completed"),
@@ -107,14 +107,14 @@ describe("deduplicateOperations", () => {
 
     {
       ops: [
-        generateNewremOperation("Completed", { nextHearingDate: new Date("2024-07-10") }),
-        generateNewremOperation("Completed", { nextHearingDate: new Date("2024-07-11") })
+        generateRemandOperation("Completed", { nextHearingDate: new Date("2024-07-10") }),
+        generateRemandOperation("Completed", { nextHearingDate: new Date("2024-07-11") })
       ]
     },
     {
       ops: [
-        generateNewremOperation("Completed", { nextHearingLocation: { ...organisationUnitCode1 } }),
-        generateNewremOperation("Completed", { nextHearingLocation: { ...organisationUnitCode2 } })
+        generateRemandOperation("Completed", { nextHearingLocation: { ...organisationUnitCode1 } }),
+        generateRemandOperation("Completed", { nextHearingLocation: { ...organisationUnitCode2 } })
       ]
     },
     {
