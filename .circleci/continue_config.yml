@@ -134,7 +134,7 @@ commands:
     steps:
       - run:
           name: Run test chunk
-          working_directory: ~/bichard7-next-tests
+          working_directory: ~/project/packages/e2e-tests
           command: |
             CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
             <<parameters.ARGS>> \
@@ -813,15 +813,15 @@ workflows:
   test-all:
     jobs:
       - lint_and_build
-      # - test_message_forwarder
-      # - test_postgres
-      # - test_api
-      # - test_common
-      # - test_conductor
-      # - test_core
+      - test_message_forwarder
+      - test_postgres
+      - test_api
+      - test_common
+      - test_conductor
+      - test_core
       - test_ui
-      # - characterisation_test
-      # - comparison_test
+      - characterisation_test
+      - comparison_test
       - seed_data:
           name: seed_data
           requires:
@@ -863,17 +863,17 @@ workflows:
       - zap_scanner:
           requires:
             - build-ui
-      # - e2e_test:
-      #     name: e2e_test_phase1
-      #     next-ui: false
-      #     phase2-core-canary-ratio: "0.0"
-      #     ms-edge: false
-      #     requires:
-      #       - lint_and_build
-      # - e2e_test:
-      #     name: e2e_test_phase2
-      #     next-ui: false
-      #     phase2-core-canary-ratio: "1.0"
-      #     ms-edge: false
-      #     requires:
-      #       - lint_and_build
+      - e2e_test:
+          name: e2e_test_phase1
+          next-ui: false
+          phase2-core-canary-ratio: "0.0"
+          ms-edge: false
+          requires:
+            - lint_and_build
+      - e2e_test:
+          name: e2e_test_phase2
+          next-ui: false
+          phase2-core-canary-ratio: "1.0"
+          ms-edge: false
+          requires:
+            - lint_and_build

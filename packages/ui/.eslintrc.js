@@ -17,7 +17,6 @@ module.exports = {
     {
       files: ["**/*.tsx"],
       extends: [
-        "airbnb-typescript",
         "next",
         "plugin:@typescript-eslint/recommended",
         "plugin:jsx-a11y/recommended",
