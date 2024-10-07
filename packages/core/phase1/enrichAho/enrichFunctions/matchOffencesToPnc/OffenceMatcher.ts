@@ -140,7 +140,7 @@ class OffenceMatcher {
     const candidates = new Set<Candidate>(Array.from(this.unmatchedCandidates(options).values()).flat())
 
     const findGroup = (candidateSet: Set<Candidate>): Candidate[] => {
-      const startingPoint = candidates.values().next().value
+      const [startingPoint] = candidates
       const group = new Set<Candidate>([startingPoint])
 
       let addedToGroup = true

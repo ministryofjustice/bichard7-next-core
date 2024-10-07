@@ -1,0 +1,624 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: 1) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: 2) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:DISARR (CCR: null) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour DISARR:NEWREM (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: 1) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: 2) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: null) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 1) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 2) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: null) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: 1) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: 2) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour DISARR:SUBVAR (CCR: null) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:DISARR (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:NEWREM (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1) 1`] = `
+{
+  "code": "HO200113",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: null) 1`] = `
+{
+  "code": "HO200113",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:DISARR (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:NEWREM (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:PENHRG (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: 1) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: 2) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SENDEF (CCR: null) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 2) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: null) 1`] = `
+{
+  "code": "HO200112",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1) 1`] = `
+{
+  "code": "HO200113",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: null) 1`] = `
+{
+  "code": "HO200113",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 1) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 2) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: null) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 1) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: 2) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SENDEF (CCR: null) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 1) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: 2) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SENDEF:SUBVAR (CCR: null) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: 1) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: 2) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:DISARR (CCR: null) 1`] = `
+{
+  "code": "HO200115",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: 1) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: 2) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:NEWREM (CCR: null) 1`] = `undefined`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: 1) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: 2) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:PENHRG (CCR: null) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: 1) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: 2) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SENDEF (CCR: null) 1`] = `
+{
+  "code": "HO200114",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: 1) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: 2) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;
+
+exports[`validateOperations should match existing behaviour SUBVAR:SUBVAR (CCR: null) 1`] = `
+{
+  "code": "HO200109",
+  "path": [
+    "AnnotatedHearingOutcome",
+    "HearingOutcome",
+    "Case",
+    "HearingDefendant",
+    "ArrestSummonsNumber",
+  ],
+}
+`;

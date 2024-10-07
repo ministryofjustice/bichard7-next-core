@@ -6,6 +6,7 @@
     { "path": "./packages/conductor/tsconfig.ref.json" },
     { "path": "./packages/core/tsconfig.ref.json" },
     { "path": "./packages/message-forwarder/tsconfig.ref.json" },
-    { "path": "./packages/ui/tsconfig.ref.json" }
+    { "path": "./packages/ui/tsconfig.ref.json" },
+    { "path": "./packages/e2e-test/tsconfig.ref.json" }
   ]
 }

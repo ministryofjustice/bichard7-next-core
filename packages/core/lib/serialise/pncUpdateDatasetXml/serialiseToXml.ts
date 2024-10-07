@@ -1,4 +1,5 @@
 import type { AhoXml } from "../../../types/AhoXml"
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
 import { toISODate } from "../../dates"
@@ -17,10 +18,10 @@ const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
 
 const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
   return pncOperations.map<PncOperationXml>((operation) => {
-    if (operation.code === "DISARR") {
+    if (operation.code === PncOperation.NORMAL_DISPOSAL) {
       return {
         operationCode: {
-          DISARR: operation.data
+          [PncOperation.NORMAL_DISPOSAL]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -30,10 +31,10 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "SENDEF") {
+    if (operation.code === PncOperation.SENTENCE_DEFERRED) {
       return {
         operationCode: {
-          SENDEF: operation.data
+          [PncOperation.SENTENCE_DEFERRED]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -43,10 +44,10 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "SUBVAR") {
+    if (operation.code === PncOperation.DISPOSAL_UPDATED) {
       return {
         operationCode: {
-          SUBVAR: operation.data
+          [PncOperation.DISPOSAL_UPDATED]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -56,10 +57,10 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "PENHRG") {
+    if (operation.code === PncOperation.PENALTY_HEARING) {
       return {
         operationCode: {
-          PENHRG: operation.data
+          [PncOperation.PENALTY_HEARING]: operation.data
             ? {
                 courtCaseReference: operation.data.courtCaseReference
               }
@@ -69,36 +70,10 @@ const mapOperationToXml = (pncOperations: Operation[]): PncOperationXml[] => {
       }
     }
 
-    if (operation.code === "COMSEN") {
+    if (operation.code === PncOperation.REMAND) {
       return {
         operationCode: {
-          COMSEN: operation.data
-            ? {
-                courtCaseReference: operation.data.courtCaseReference
-              }
-            : {}
-        },
-        operationStatus: mapOperationStatus(operation.status)
-      }
-    }
-
-    if (operation.code === "APPHRD") {
-      return {
-        operationCode: {
-          APPHRD: operation.data
-            ? {
-                courtCaseReference: operation.data.courtCaseReference
-              }
-            : {}
-        },
-        operationStatus: mapOperationStatus(operation.status)
-      }
-    }
-
-    if (operation.code === "NEWREM") {
-      return {
-        operationCode: {
-          NEWREM: operation.data
+          [PncOperation.REMAND]: operation.data
             ? {
                 nextHearingDate: operation.data.nextHearingDate ? toISODate(operation.data.nextHearingDate) : undefined,
                 nextHearingLocation: mapAhoOrgUnitToXml(operation.data.nextHearingLocation)

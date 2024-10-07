@@ -1,6 +1,6 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 type ErrorRange = {
   start: string

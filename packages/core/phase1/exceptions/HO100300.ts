@@ -4,7 +4,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
-import type { ExceptionGenerator } from "../types/ExceptionGenerator"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")
