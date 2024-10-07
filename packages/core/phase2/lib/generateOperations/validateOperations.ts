@@ -52,7 +52,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
-  const checkForClashingCourtCaseOperations = (clashingCourtCaseOperations: PncOperation[]) =>
+  const checkForClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
     operationsWithCourtCase2.some((operation) => {
       const courtCaseReference = operationCourtCaseReference(operation)
       const clashingOperation = operationsWithCourtCase2.find(
