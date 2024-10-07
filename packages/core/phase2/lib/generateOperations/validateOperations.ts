@@ -58,22 +58,22 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
         operationCourtCaseReference(operationWithCourtCase) == operationCourtCaseReference(operation)
     )
 
-  const checkForClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
+  const hasClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
     operationsWithCourtCase.some((operation) => {
       const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
 
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
 
-  if (checkForClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])) {
+  if (hasClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])) {
     return { code: ExceptionCode.HO200112, path: errorPath }
   }
 
-  if (checkForClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
+  if (hasClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
-  if (checkForClashingCourtCaseOperations([PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
+  if (hasClashingCourtCaseOperations([PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
