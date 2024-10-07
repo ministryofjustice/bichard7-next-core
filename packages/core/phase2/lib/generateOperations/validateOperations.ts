@@ -41,14 +41,14 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
-  const newRemandAndSentencing = operations.some((operation) => {
+  const hasNewRemandAndSentencing = operations.some((operation) => {
     const courtCaseReference = operationCourtCaseReference(operation)
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
     return [PncOperation.SENTENCE_DEFERRED].includes(operation.code) && remandCcrsContainCourtCaseReference
   })
 
-  if (newRemandAndSentencing) {
+  if (hasNewRemandAndSentencing) {
     return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
@@ -65,27 +65,27 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
 
-  const newDisposalAndSentencing = checkForClashingCourtCaseOperations([
+  const hasNewDisposalAndSentencing = checkForClashingCourtCaseOperations([
     PncOperation.NORMAL_DISPOSAL,
     PncOperation.SENTENCE_DEFERRED
   ])
-  if (newDisposalAndSentencing) {
+  if (hasNewDisposalAndSentencing) {
     return { code: ExceptionCode.HO200112, path: errorPath }
   }
 
-  const newAndChangedDisposal = checkForClashingCourtCaseOperations([
+  const hasNewAndChangedDisposal = checkForClashingCourtCaseOperations([
     PncOperation.NORMAL_DISPOSAL,
     PncOperation.DISPOSAL_UPDATED
   ])
-  if (newAndChangedDisposal) {
+  if (hasNewAndChangedDisposal) {
     return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
-  const changedDisposalAndSentencing = checkForClashingCourtCaseOperations([
+  const hasChangedDisposalAndSentencing = checkForClashingCourtCaseOperations([
     PncOperation.SENTENCE_DEFERRED,
     PncOperation.DISPOSAL_UPDATED
   ])
-  if (changedDisposalAndSentencing) {
+  if (hasChangedDisposalAndSentencing) {
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
