@@ -19,13 +19,13 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
-  const operationsWithCourtCase2: Operation[] = operations.filter((operation) =>
+  const operationsWithCourtCase: Operation[] = operations.filter((operation) =>
     courtCaseSpecificOperations.includes(operation.code)
   )
 
-  if (hasOperation(PncOperation.PENALTY_HEARING) && operationsWithCourtCase2.length > 0) {
+  if (hasOperation(PncOperation.PENALTY_HEARING) && operationsWithCourtCase.length > 0) {
     if (
-      operationsWithCourtCase2.some((courtCaseSpecificOperation) =>
+      operationsWithCourtCase.some((courtCaseSpecificOperation) =>
         [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(courtCaseSpecificOperation.code)
       )
     ) {
@@ -33,7 +33,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     }
 
     if (
-      operationsWithCourtCase2.some(
+      operationsWithCourtCase.some(
         (courtCaseSpecificOperation) => courtCaseSpecificOperation.code === PncOperation.NORMAL_DISPOSAL
       )
     ) {
@@ -53,9 +53,9 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   }
 
   const checkForClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
-    operationsWithCourtCase2.some((operation) => {
+    operationsWithCourtCase.some((operation) => {
       const courtCaseReference = operationCourtCaseReference(operation)
-      const clashingOperation = operationsWithCourtCase2.find(
+      const clashingOperation = operationsWithCourtCase.find(
         (op) => operationCourtCaseReference(op) == courtCaseReference
       )
 
@@ -86,26 +86,21 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
-  const operationsWithCourtCase: Operation[] = []
-
-  for (const operation of operations) {
+  const hasSameCourtCaseSpecificOperationWithSameCcr = operationsWithCourtCase.some((operation, index) => {
     const courtCaseReference = operationCourtCaseReference(operation)
+    const clashingOperation = operationsWithCourtCase.find(
+      (op) => operationCourtCaseReference(op) == courtCaseReference
+    )
 
-    if (courtCaseSpecificOperations.includes(operation.code)) {
-      const clashingOperation = operationsWithCourtCase.find(
-        (op) => operationCourtCaseReference(op) == courtCaseReference
-      )
+    return (
+      clashingOperation &&
+      index !== operationsWithCourtCase.indexOf(clashingOperation) &&
+      operation.code === clashingOperation.code
+    )
+  })
 
-      if (clashingOperation) {
-        if (operation.code === clashingOperation.code) {
-          return { code: ExceptionCode.HO200109, path: errorPath }
-        }
-
-        break
-      }
-
-      operationsWithCourtCase.push(operation)
-    }
+  if (hasSameCourtCaseSpecificOperationWithSameCcr) {
+    return { code: ExceptionCode.HO200109, path: errorPath }
   }
 
   return undefined
