@@ -18,4 +18,10 @@ describe("formatForceNumbers", () => {
 
     expect(result).toEqual([1, 45, 3])
   })
+
+  it("ignores chars", () => {
+    const result = formatForceNumbers("001,045,happy,3")
+
+    expect(result).toEqual([1, 45, 3])
+  })
 })
