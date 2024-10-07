@@ -1,13 +1,12 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../types/PncOperation"
-import type { NewremOperation, OperationData } from "../../../types/PncUpdateDataset"
+import type { RemandOperation, OperationData } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
-import type ExceptionsAndOperations from "./ExceptionsAndOperations"
 
 const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
 
-const generateNewremData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {
+const generateOperationData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {
   if (DEFENDANT_WARRANT_ISSUED_RESULT_CODES.includes(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
     return undefined
   }
@@ -18,19 +17,12 @@ const generateNewremData = (result: Result): OperationData<PncOperation.REMAND> 
   }
 }
 
-const createRemandOperation = (
-  result: Result,
-  courtCaseReference: string | undefined | null
-): ExceptionsAndOperations => {
-  const operation = createOperation(PncOperation.REMAND, generateNewremData(result)) as NewremOperation
-
+const createRemandOperation = (result: Result, courtCaseReference: string | undefined | null): RemandOperation => {
+  const operation = createOperation(PncOperation.REMAND, generateOperationData(result)) as RemandOperation
   operation.courtCaseReference = courtCaseReference ?? undefined
   operation.isAdjournmentPreJudgement = result.ResultClass === ResultClass.ADJOURNMENT_PRE_JUDGEMENT
 
-  return {
-    operations: [operation],
-    exceptions: []
-  }
+  return operation
 }
 
 export default createRemandOperation

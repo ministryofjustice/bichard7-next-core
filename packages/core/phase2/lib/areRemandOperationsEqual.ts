@@ -1,11 +1,11 @@
-import type { NewremOperation } from "../../types/PncUpdateDataset"
+import type { RemandOperation } from "../../types/PncUpdateDataset"
 
-const areNewremTypesEqual = (firstNewrem: NewremOperation, secondNewrem: NewremOperation) => {
-  const firstOrganisationUnit = firstNewrem.data?.nextHearingLocation
-  const secondOrganisationUnit = secondNewrem.data?.nextHearingLocation
+const areRemandOperationsEqual = (firstRemand: RemandOperation, secondRemand: RemandOperation) => {
+  const firstOrganisationUnit = firstRemand.data?.nextHearingLocation
+  const secondOrganisationUnit = secondRemand.data?.nextHearingLocation
 
   return (
-    firstNewrem.data?.nextHearingDate?.getTime() === secondNewrem.data?.nextHearingDate?.getTime() &&
+    firstRemand.data?.nextHearingDate?.getTime() === secondRemand.data?.nextHearingDate?.getTime() &&
     (firstOrganisationUnit?.TopLevelCode || undefined) === (secondOrganisationUnit?.TopLevelCode || undefined) &&
     (firstOrganisationUnit?.SecondLevelCode || undefined) === (secondOrganisationUnit?.SecondLevelCode || undefined) &&
     (firstOrganisationUnit?.ThirdLevelCode || undefined) === (secondOrganisationUnit?.ThirdLevelCode || undefined) &&
@@ -15,4 +15,4 @@ const areNewremTypesEqual = (firstNewrem: NewremOperation, secondNewrem: NewremO
   )
 }
 
-export default areNewremTypesEqual
+export default areRemandOperationsEqual

@@ -1,6 +1,6 @@
 import type { NewremOperation } from "../../types/PncUpdateDataset"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import areNewremTypesEqual from "./areNewremTypesEqual"
+import areRemandOperationsEqual from "./areRemandOperationsEqual"
 
 const emptyOrganisationUnit: OrganisationUnitCodes = {
   TopLevelCode: "",
@@ -66,7 +66,7 @@ describe("areNewremTypesEqual", () => {
       const firstNewremOperation = { data: { nextHearingLocation: firstData } } as unknown as NewremOperation
       const secondNewremOperation = { data: { nextHearingLocation: secondData } } as unknown as NewremOperation
 
-      const result = areNewremTypesEqual(firstNewremOperation, secondNewremOperation)
+      const result = areRemandOperationsEqual(firstNewremOperation, secondNewremOperation)
 
       expect(result).toBe(expectedResult)
     }
@@ -84,7 +84,7 @@ describe("areNewremTypesEqual", () => {
       const firstNewremOperation = { data: { nextHearingDate: firstDate } } as unknown as NewremOperation
       const secondNewremOperation = { data: { nextHearingDate: secondDate } } as unknown as NewremOperation
 
-      const result = areNewremTypesEqual(firstNewremOperation, secondNewremOperation)
+      const result = areRemandOperationsEqual(firstNewremOperation, secondNewremOperation)
 
       expect(result).toBe(expectedResult)
     }
