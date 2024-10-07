@@ -732,10 +732,10 @@ jobs:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
-      - node/install-packages:
-          app-dir: ~/project/packages/e2e-test
-          cache-path: ~/project/packages/e2e-test/node_modules
-          include-branch-in-cache-key: true
+      - run:
+          name: Install browsers for puppeteer
+          working_directory: packages/e2e-test
+          command: "npm run install-browsers"
       - start_bichard7_legacy
       - run_test_chunk:
           ARGS: >-
