@@ -76,7 +76,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
-  const hasSameCourtCaseSpecificOperationWithSameCcr = operationsWithCourtCase.some((operation, index) => {
+  const hasSameCourtCaseOperationWithSameCcr = operationsWithCourtCase.some((operation, index) => {
     const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
 
     return (
@@ -86,7 +86,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     )
   })
 
-  if (hasSameCourtCaseSpecificOperationWithSameCcr) {
+  if (hasSameCourtCaseOperationWithSameCcr) {
     return { code: ExceptionCode.HO200109, path: errorPath }
   }
 
