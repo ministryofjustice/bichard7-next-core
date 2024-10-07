@@ -84,7 +84,6 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results.xml
 
-
   set_locale:
     steps:
       - run:
@@ -114,7 +113,6 @@ commands:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
 
-
   build_message_forwarder:
     steps:
       - run:
@@ -122,25 +120,25 @@ commands:
           command: bash .circleci/scripts/build-message-forwarder.sh
 
   build_audit_logging_images:
-      steps:
-        - run:
-            name: Build audit logging images
-            working_directory: ~/bichard7-next-audit-logging
-            command: make build-api-server build-event-handler-server
+    steps:
+      - run:
+          name: Build audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
 
   run_test_chunk:
-      parameters:
-        ARGS:
-          default: ""
-          type: "string"
-      steps:
-        - run:
-            name: Run test chunk
-            working_directory: ~/bichard7-next-tests
-            command: |
-              CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
-              <<parameters.ARGS>> \
-              npm run test:chunk:nextUI
+    parameters:
+      ARGS:
+        default: ""
+        type: "string"
+    steps:
+      - run:
+          name: Run test chunk
+          working_directory: ~/bichard7-next-tests
+          command: |
+            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
+            <<parameters.ARGS>> \
+            npm run test:chunk:nextUI
 
   start_bichard7_legacy:
     steps:
@@ -567,8 +565,6 @@ jobs:
           name: Run integration tests
           command: npm run -w packages/ui test:integration
 
-
-
   seed_data:
     machine:
       image: ubuntu-2204:current
@@ -635,7 +631,6 @@ jobs:
           path: ./cypress/videos
       - store_artifacts:
           path: ./cypress/screenshots
-
 
   cypress_e2e_tests:
     machine:
