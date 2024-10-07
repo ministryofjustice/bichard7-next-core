@@ -25,8 +25,8 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
   if (hasOperation(PncOperation.PENALTY_HEARING) && operationsWithCourtCase.length > 0) {
     if (
-      operationsWithCourtCase.some((courtCaseSpecificOperation) =>
-        [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(courtCaseSpecificOperation.code)
+      operationsWithCourtCase.some((operationWithCourtCase) =>
+        [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(operationWithCourtCase.code)
       )
     ) {
       return { code: ExceptionCode.HO200109, path: errorPath }
@@ -34,7 +34,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
     if (
       operationsWithCourtCase.some(
-        (courtCaseSpecificOperation) => courtCaseSpecificOperation.code === PncOperation.NORMAL_DISPOSAL
+        (operationWithCourtCase) => operationWithCourtCase.code === PncOperation.NORMAL_DISPOSAL
       )
     ) {
       return { code: ExceptionCode.HO200115, path: errorPath }
@@ -60,9 +60,9 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
 
   const checkForClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
     operationsWithCourtCase.some((operation) => {
-      const clashingOperation = findClashingCourtCaseOperation(operation)
+      const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
 
-      return isEqual([operation.code, clashingOperation?.code].sort(), clashingCourtCaseOperations)
+      return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
 
   const newDisposalAndSentencing = checkForClashingCourtCaseOperations([
@@ -90,12 +90,12 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
   }
 
   const hasSameCourtCaseSpecificOperationWithSameCcr = operationsWithCourtCase.some((operation, index) => {
-    const clashingOperation = findClashingCourtCaseOperation(operation)
+    const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
 
     return (
-      clashingOperation &&
-      index !== operationsWithCourtCase.indexOf(clashingOperation) &&
-      operation.code === clashingOperation.code
+      clashingCourtCaseOperation &&
+      index !== operationsWithCourtCase.indexOf(clashingCourtCaseOperation) &&
+      operation.code === clashingCourtCaseOperation.code
     )
   })
   if (hasSameCourtCaseSpecificOperationWithSameCcr) {
