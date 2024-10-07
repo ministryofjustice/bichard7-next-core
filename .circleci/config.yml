@@ -27,6 +27,7 @@ workflows:
             packages/conductor/.* conductor-changes true
             packages/core/.* core-changes true
             packages/e2e-test/.* e2e-test-changes true
+            packages/core/characterisation-tests.* characterisation-test-changes true
             packages/message-forwarder/.* message-forwarder-changes true
           base-revision: main
           # this is the path of the configuration we should trigger once
