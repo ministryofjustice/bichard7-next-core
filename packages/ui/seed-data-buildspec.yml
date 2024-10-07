@@ -1,0 +1,23 @@
+---
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - yum -y install openvpn
+      - make generate-codebuild-vpn
+      - npm ci
+  build:
+    commands:
+      - export OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - export OLD_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - temp_role=$(aws sts assume-role --role-session-name "next" --role-arn "${ASSUME_ROLE_ARN}")
+      - export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq -r .Credentials.AccessKeyId)
+      - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
+      - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
+      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon
+      - make setup-e2e-env
+      - source ./workspaces/${WORKSPACE}.env
+      - npm run seed-data

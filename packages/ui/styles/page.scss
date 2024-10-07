@@ -1,0 +1,46 @@
+@import "variables";
+
+html {
+  font-family: $b7-font-family;
+  font-size: $b7-default-font-size;
+}
+
+.hidden-header {
+  position: fixed;
+  left: -100vw;
+  top: -100vh;
+}
+
+tr td {
+  font-size: $b7-default-font-size;
+}
+
+.cases-list {
+  border-spacing: 0;
+  border-collapse: separate;
+  width: 100%;
+
+  tbody {
+    td {
+      border-color: $b7-row-border-color;
+      vertical-align: top;
+    }
+
+    tr:not(:last-child) td {
+      border-bottom: none;
+    }
+  }
+
+  tbody:nth-child(odd) {
+    tr {
+      background-color: $b7-light-grey-color;
+    }
+  }
+
+  // stylelint-disable no-descending-specificity -- error thrown regardless of order
+  .note-preview-row {
+    td {
+      padding-top: 0;
+    }
+  }
+}

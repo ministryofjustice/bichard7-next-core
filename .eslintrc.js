@@ -1,6 +1,9 @@
 module.exports = {
   root: true,
   env: { es6: true },
+  parserOptions: {
+    project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
+  },
   ignorePatterns: ["dist/*", "docs/*", "jest.setup.ts", "node_modules", "packages/*/dist/*"],
   overrides: [
     {
@@ -20,6 +23,7 @@ module.exports = {
       // All TypeScript files
       // These settings will also affect test and script files
       files: ["**/*.ts"],
+      excludedFiles: ["**/*.cy.ts", "packages/ui/scripts/utility/**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         ecmaVersion: 2020
@@ -43,15 +47,8 @@ module.exports = {
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+$", varsIgnorePattern: "^_+$" }],
         "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }],
-        "@typescript-eslint/ban-types": [
-          "error",
-          {
-            extendDefaults: true,
-            types: {
-              "{}": false
-            }
-          }
-        ],
+        "@typescript-eslint/no-empty-object-type": "error",
+        "@typescript-eslint/consistent-type-imports': 'error",
         "padding-line-between-statements": [
           "error",
           { blankLine: "always", prev: "block", next: "*" },

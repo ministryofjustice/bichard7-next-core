@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RouteData xmlns="http://schemas.cjse.gov.uk/common/operations"
+    xmlns:cjseEntity="http://schemas.cjse.gov.uk/common/businessentities"
+    xmlns:cjseType="http://schemas.cjse.gov.uk/common/businesstypes"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VersionNumber="1.0" RequestResponse="Request">
+    <RequestFromSystem VersionNumber="1.0">
+        <CorrelationID>
+                        EXTERNAL_CORRELATION_ID
+        </CorrelationID>
+        <SystemID literalvalue="String">
+                        B00LIBRA
+        </SystemID>
+        <OrganizationalUnitID literalvalue="String">
+                        0000000
+        </OrganizationalUnitID>
+        <DataController literalvalue="String">
+                        lee.flaxington
+        </DataController>
+        <User literalvalue="String">
+                        lee.flaxington
+        </User>
+        <SourceID literalvalue="String">
+                        B00LIBRA
+        </SourceID>
+        <DestinationID literalvalue="String">
+                        Z00CJSE
+        </DestinationID>
+        <TestOperation>
+                        true
+        </TestOperation>
+    </RequestFromSystem>
+    <DataStream VersionNumber="1.0">
+        <System literalvalue="String">
+                        B00LIBRA
+        </System>
+        <DataStreamType literalvalue="String">
+                        SPIResults
+        </DataStreamType>
+        <SystemDataStreamID>
+                        29_09_2021_105710_000000350512
+        </SystemDataStreamID>
+        <Name>
+                        SPI Results DISARR NEWREM
+        </Name>
+        <Reference>
+                        29_09_2021_105710_000000350512
+        </Reference>
+        <ReferenceType>
+                        SPIResults
+        </ReferenceType>
+        <Dated>
+                        2013-12-01
+        </Dated>
+        <Timed>
+                        10:57:17.043Z
+        </Timed>
+        <ContentType>
+                        text/plain
+        </ContentType>
+        <DataStreamContent>
+                        &lt;!-- To avoid duplicate message hash: UNIQUE_HASH
+                        --&gt;&lt;DC:ResultedCaseMessage xmlns:DC="http://www.dca.gov.uk/xmlschemas/libra" Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g"&gt;
+                        &lt;DC:Session&gt;
+                        &lt;DC:CourtHearing&gt;
+                        &lt;DC:Hearing&gt;
+                        &lt;DC:CourtHearingLocation&gt;B01EF01&lt;/DC:CourtHearingLocation&gt;
+                        &lt;DC:DateOfHearing&gt;2011-09-26&lt;/DC:DateOfHearing&gt;
+                        &lt;DC:TimeOfHearing&gt;10:00:00&lt;/DC:TimeOfHearing&gt;
+                        &lt;/DC:Hearing&gt;
+                        &lt;DC:PSAcode&gt;2576&lt;/DC:PSAcode&gt;
+                        &lt;/DC:CourtHearing&gt;
+                        &lt;DC:Case&gt;
+                        &lt;DC:PTIURN&gt;01ZD0303208&lt;/DC:PTIURN&gt;
+                        &lt;DC:Defendant&gt;
+                        &lt;DC:ProsecutorReference&gt;1101ZD0100000448754K&lt;/DC:ProsecutorReference&gt;
+                        &lt;DC:CourtIndividualDefendant&gt;
+                        &lt;DC:PersonDefendant&gt;
+                        &lt;DC:BasePersonDetails&gt;
+                        &lt;DC:PersonName&gt;
+                        &lt;DC:PersonTitle&gt;Mr&lt;/DC:PersonTitle&gt;
+                        &lt;DC:PersonGivenName1&gt;TRPRFOUR&lt;/DC:PersonGivenName1&gt;
+                        &lt;DC:PersonFamilyName&gt;SEXOFFENCE&lt;/DC:PersonFamilyName&gt;
+                        &lt;/DC:PersonName&gt;
+                        &lt;DC:Birthdate&gt;1948-11-11&lt;/DC:Birthdate&gt;
+                        &lt;DC:Gender&gt;1&lt;/DC:Gender&gt;
+                        &lt;/DC:BasePersonDetails&gt;
+                        &lt;/DC:PersonDefendant&gt;
+                        &lt;DC:BailStatus&gt;U&lt;/DC:BailStatus&gt;
+                        &lt;DC:Address&gt;
+                        &lt;DC:SimpleAddress&gt;
+                        &lt;DC:AddressLine1&gt;Scenario1 Address Line 1&lt;/DC:AddressLine1&gt;
+                        &lt;DC:AddressLine2&gt;Scenario1 Address Line 2&lt;/DC:AddressLine2&gt;
+                        &lt;DC:AddressLine3&gt;Scenario1 Address Line 3&lt;/DC:AddressLine3&gt;
+                        &lt;/DC:SimpleAddress&gt;
+                        &lt;/DC:Address&gt;
+                        &lt;DC:PresentAtHearing&gt;A&lt;/DC:PresentAtHearing&gt;
+                        &lt;/DC:CourtIndividualDefendant&gt;
+                        &lt;DC:Offence&gt;
+                        &lt;DC:BaseOffenceDetails&gt;
+                        &lt;DC:OffenceSequenceNumber&gt;001&lt;/DC:OffenceSequenceNumber&gt;
+                        &lt;DC:OffenceCode&gt;SX03001A&lt;/DC:OffenceCode&gt;
+                        &lt;DC:OffenceWording&gt;Attempt to rape a girl aged 13 / 14 / 15 / years of
+                        age - SOA 2003.&lt;/DC:OffenceWording&gt;
+                        &lt;DC:OffenceTiming&gt;
+                        &lt;DC:OffenceDateCode&gt;1&lt;/DC:OffenceDateCode&gt;
+                        &lt;DC:OffenceStart&gt;
+                        &lt;DC:OffenceDateStartDate&gt;2010-11-28&lt;/DC:OffenceDateStartDate&gt;
+                        &lt;/DC:OffenceStart&gt;
+                        &lt;/DC:OffenceTiming&gt;
+                        &lt;DC:ChargeDate&gt;2010-12-02&lt;/DC:ChargeDate&gt;
+                        &lt;DC:ArrestDate&gt;2010-12-01&lt;/DC:ArrestDate&gt;
+                        &lt;DC:LocationOfOffence&gt;Kingston High
+                        Street&lt;/DC:LocationOfOffence&gt;
+                        &lt;/DC:BaseOffenceDetails&gt;
+                        &lt;DC:InitiatedDate&gt;2008-07-11&lt;/DC:InitiatedDate&gt;
+                        &lt;DC:Plea&gt;2&lt;/DC:Plea&gt;
+                        &lt;DC:ModeOfTrial&gt;01&lt;/DC:ModeOfTrial&gt;
+                        &lt;DC:FinalDisposalIndicator&gt;Y&lt;/DC:FinalDisposalIndicator&gt;
+                        &lt;DC:ConvictionDate&gt;2011-09-26&lt;/DC:ConvictionDate&gt;
+                        &lt;DC:Finding&gt;G&lt;/DC:Finding&gt;
+                        &lt;DC:Result&gt;
+                        &lt;DC:ResultCode&gt;3078&lt;/DC:ResultCode&gt;
+                        &lt;DC:ResultText&gt;Travel Restriction Order&lt;/DC:ResultText&gt;
+                        &lt;/DC:Result&gt;
+                        &lt;/DC:Offence&gt;
+                        &lt;DC:Offence&gt;
+                        &lt;DC:BaseOffenceDetails&gt;
+                        &lt;DC:OffenceSequenceNumber&gt;002&lt;/DC:OffenceSequenceNumber&gt;
+                        &lt;DC:OffenceCode&gt;SX03001&lt;/DC:OffenceCode&gt;
+                        &lt;DC:OffenceWording&gt;Rape of a Female&lt;/DC:OffenceWording&gt;
+                        &lt;DC:OffenceTiming&gt;
+                        &lt;DC:OffenceDateCode&gt;1&lt;/DC:OffenceDateCode&gt;
+                        &lt;DC:OffenceStart&gt;
+                        &lt;DC:OffenceDateStartDate&gt;2010-11-28&lt;/DC:OffenceDateStartDate&gt;
+                        &lt;/DC:OffenceStart&gt;
+                        &lt;/DC:OffenceTiming&gt;
+                        &lt;DC:ChargeDate&gt;2010-12-02&lt;/DC:ChargeDate&gt;
+                        &lt;DC:ArrestDate&gt;2010-12-01&lt;/DC:ArrestDate&gt;
+                        &lt;DC:LocationOfOffence&gt;Kingston High
+                        Street&lt;/DC:LocationOfOffence&gt;
+                        &lt;/DC:BaseOffenceDetails&gt;
+                        &lt;DC:InitiatedDate&gt;2008-07-11&lt;/DC:InitiatedDate&gt;
+                        &lt;DC:Plea&gt;2&lt;/DC:Plea&gt;
+                        &lt;DC:ModeOfTrial&gt;01&lt;/DC:ModeOfTrial&gt;
+                        &lt;DC:FinalDisposalIndicator&gt;Y&lt;/DC:FinalDisposalIndicator&gt;
+                        &lt;DC:ConvictionDate&gt;2011-09-26&lt;/DC:ConvictionDate&gt;
+                        &lt;DC:Finding&gt;G&lt;/DC:Finding&gt;
+                        &lt;DC:Result&gt;
+                        &lt;DC:ResultCode&gt;3052&lt;/DC:ResultCode&gt;
+                        &lt;DC:ResultText&gt;defendant must never be allowed
+                        out&lt;/DC:ResultText&gt;
+                        &lt;/DC:Result&gt;
+                        &lt;/DC:Offence&gt;
+                        &lt;DC:Offence&gt;
+                        &lt;DC:BaseOffenceDetails&gt;
+                        &lt;DC:OffenceSequenceNumber&gt;003&lt;/DC:OffenceSequenceNumber&gt;
+                        &lt;DC:OffenceCode&gt;SX03001&lt;/DC:OffenceCode&gt;
+                        &lt;DC:OffenceWording&gt;Use a motor vehicle without third party
+                        insurance.&lt;/DC:OffenceWording&gt;
+                        &lt;DC:OffenceTiming&gt;
+                        &lt;DC:OffenceDateCode&gt;1&lt;/DC:OffenceDateCode&gt;
+                        &lt;DC:OffenceStart&gt;
+                        &lt;DC:OffenceDateStartDate&gt;2010-11-28&lt;/DC:OffenceDateStartDate&gt;
+                        &lt;/DC:OffenceStart&gt;
+                        &lt;/DC:OffenceTiming&gt;
+                        &lt;DC:ChargeDate&gt;2010-12-02&lt;/DC:ChargeDate&gt;
+                        &lt;DC:ArrestDate&gt;2010-12-01&lt;/DC:ArrestDate&gt;
+                        &lt;DC:LocationOfOffence&gt;Kingston High
+                        Street&lt;/DC:LocationOfOffence&gt;
+                        &lt;/DC:BaseOffenceDetails&gt;
+                        &lt;DC:InitiatedDate&gt;2008-07-11&lt;/DC:InitiatedDate&gt;
+                        &lt;DC:Plea&gt;2&lt;/DC:Plea&gt;
+                        &lt;DC:ModeOfTrial&gt;01&lt;/DC:ModeOfTrial&gt;
+                        &lt;DC:FinalDisposalIndicator&gt;Y&lt;/DC:FinalDisposalIndicator&gt;
+                        &lt;DC:ConvictionDate&gt;2011-09-26&lt;/DC:ConvictionDate&gt;
+                        &lt;DC:Finding&gt;G&lt;/DC:Finding&gt;
+                        &lt;DC:Result&gt;
+                        &lt;DC:ResultCode&gt;1015&lt;/DC:ResultCode&gt;
+                        &lt;DC:ResultText&gt;Fined 100.&lt;/DC:ResultText&gt;
+                        &lt;DC:Outcome&gt;
+                        &lt;DC:ResultAmountSterling&gt;100.00&lt;/DC:ResultAmountSterling&gt;
+                        &lt;/DC:Outcome&gt;
+                        &lt;/DC:Result&gt;
+                        &lt;/DC:Offence&gt;
+                        &lt;/DC:Defendant&gt;
+                        &lt;/DC:Case&gt;
+                        &lt;/DC:Session&gt;
+                        &lt;/DC:ResultedCaseMessage&gt;
+        </DataStreamContent>
+    </DataStream>
+    <Routes VersionNumber="1.0">
+        <Route VersionNumber="1.0">
+            <RouteID>
+                                001
+            </RouteID>
+            <RouteSourceSystem literalvalue="String">
+                                B00LIBRA
+            </RouteSourceSystem>
+            <RouteDestinationSystem literalvalue="String">
+                                00101PoliceCaseSystem
+            </RouteDestinationSystem>
+            <Descriptor>
+                                String
+            </Descriptor>
+        </Route>
+    </Routes>
+</RouteData>

@@ -6,7 +6,7 @@ setup: true
 # the path-filtering orb is required to continue a pipeline based on
 # the path of an updated fileset
 orbs:
-  path-filtering: circleci/path-filtering@0.1.1
+  path-filtering: circleci/path-filtering@1.1.0
 
 workflows:
   # the always-run workflow is always triggered, regardless of the pipeline parameters.
@@ -28,6 +28,7 @@ workflows:
             packages/core/.* core-changes true
             packages/e2e-test/.* e2e-test-changes true
             packages/message-forwarder/.* message-forwarder-changes true
+            packages/ui/.* ui-changes true
           base-revision: main
           # this is the path of the configuration we should trigger once
           # path filtering and pipeline parameter value updates are

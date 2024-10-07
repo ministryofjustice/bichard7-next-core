@@ -1,0 +1,496 @@
+{
+  "aho": {
+    "AnnotatedHearingOutcome": {
+      "HearingOutcome": {
+        "Hearing": {
+          "CourtHearingLocation": {
+            "TopLevelCode": "B",
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "EF",
+            "BottomLevelCode": "01",
+            "OrganisationUnitCode": "B01EF01"
+          },
+          "DateOfHearing": "2011-09-26T00:00:00.000Z",
+          "TimeOfHearing": "10:00",
+          "HearingLanguage": "D",
+          "HearingDocumentationLanguage": "D",
+          "DefendantPresentAtHearing": "  A",
+          "CourtHouseCode": 2576,
+          "SourceReference": {
+            "DocumentName": "SPI TRPRFOUR SEXOFFENCE",
+            "UniqueID": "CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415",
+            "DocumentType": "SPI Case Result"
+          },
+          "CourtType": "MCA",
+          "CourtHouseName": "London Croydon"
+        },
+        "Case": {
+          "PTIURN": "01ZD0303208",
+          "RecordableOnPNCindicator": true,
+          "Urgent": {
+            "urgent": true,
+            "urgency": 24
+          },
+          "PreChargeDecisionIndicator": false,
+          "ForceOwner": {
+            "SecondLevelCode": "01",
+            "ThirdLevelCode": "ZD",
+            "BottomLevelCode": "00",
+            "OrganisationUnitCode": "01ZD00"
+          },
+          "CourtCaseReferenceNumber": "97/1626/008395Q",
+          "CourtReference": {
+            "MagistratesCourtReference": "01ZD0303208"
+          },
+          "HearingDefendant": {
+            "ArrestSummonsNumber": "1101ZD0100000448754K",
+            "PNCIdentifier": "2000/0448754K",
+            "PNCCheckname": "SEXOFFENCE",
+            "DefendantDetail": {
+              "PersonName": {
+                "Title": "Mr",
+                "GivenName": ["TRPRFOUR"],
+                "FamilyName": "SEXOFFENCE"
+              },
+              "GeneratedPNCFilename": "SEXOFFENCE/TRPRFOUR",
+              "BirthDate": "1948-11-11T00:00:00.000Z",
+              "Gender": 1
+            },
+            "Address": {
+              "AddressLine1": "Scenario1 Address Line 1",
+              "AddressLine2": "Scenario1 Address Line 2",
+              "AddressLine3": "Scenario1 Address Line 3"
+            },
+            "RemandStatus": "UB",
+            "BailConditions": [],
+            "Offence": [
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "FullCode": "SX03001"
+                    }
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Offence with HO100200 - Unrecognised Force or Station Code",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Rape of a Female",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 1,
+                "Result": [
+                  {
+                    "CJSresultCode": 3052,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ConvictingCourt": "3211",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "NextResultSourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B@1EF$1"
+                    },
+                    "Duration": [],
+                    "NextHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NONE",
+                    "ResultVariableText": "Some result variable text",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 3052,
+                    "PNCAdjudicationExists": false,
+                    "ResultClass": "Adjournment pre Judgement",
+                    "ReasonForOffenceBailConditions": "Condition",
+                    "Urgent": {
+                      "urgent": true,
+                      "urgency": 24
+                    },
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 24,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/07"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "FullCode": "SX03001"
+                    }
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Offence with HO100300 - Organisation not recognised",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Rape of a Female",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 2,
+                "Result": [
+                  {
+                    "CJSresultCode": 3052,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ConvictingCourt": "3211",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "NextResultSourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "46",
+                      "ThirdLevelCode": "AM",
+                      "BottomLevelCode": "03",
+                      "OrganisationUnitCode": "B46AM03"
+                    },
+                    "Duration": [],
+                    "NextHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NONE",
+                    "ResultVariableText": "Some result variable text",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 3052,
+                    "PNCAdjudicationExists": false,
+                    "ResultClass": "Adjournment pre Judgement",
+                    "ReasonForOffenceBailConditions": "Condition",
+                    "Urgent": {
+                      "urgent": true,
+                      "urgency": 24
+                    },
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 24,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/07"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "FullCode": "SX03001"
+                    }
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Offence with HO100322 - Court has provided an adjournment with no location for the next hearing",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Rape of a Female",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 3,
+                "Result": [
+                  {
+                    "CJSresultCode": 3052,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ConvictingCourt": "3211",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "NextResultSourceOrganisation": {
+                      "TopLevelCode": "",
+                      "SecondLevelCode": "",
+                      "ThirdLevelCode": "",
+                      "BottomLevelCode": ""
+                    },
+                    "Duration": [],
+                    "NextHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NONE",
+                    "ResultVariableText": "Some result variable text",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 3052,
+                    "PNCAdjudicationExists": false,
+                    "ResultClass": "Adjournment pre Judgement",
+                    "ReasonForOffenceBailConditions": "Condition",
+                    "Urgent": {
+                      "urgent": true,
+                      "urgency": 24
+                    },
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 24,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/07"
+              },
+              {
+                "CriminalProsecutionReference": {
+                  "DefendantOrOffender": {
+                    "Year": "11",
+                    "OrganisationUnitIdentifierCode": {
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "ZD",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "01ZD01"
+                    },
+                    "DefendantOrOffenderSequenceNumber": "00000448754",
+                    "CheckDigit": "K"
+                  },
+                  "OffenceReason": {
+                    "__type": "NationalOffenceReason",
+                    "OffenceCode": {
+                      "__type": "NonMatchingOffenceCode",
+                      "ActOrSource": "SX",
+                      "Year": "03",
+                      "Reason": "001",
+                      "FullCode": "SX03001"
+                    }
+                  },
+                  "OffenceReasonSequence": "002"
+                },
+                "OffenceCategory": "CI",
+                "OffenceTitle": "Offence with no exceptions",
+                "ArrestDate": "2010-12-01T00:00:00.000Z",
+                "ChargeDate": "2010-12-02T00:00:00.000Z",
+                "ActualOffenceDateCode": "1",
+                "ActualOffenceStartDate": {
+                  "StartDate": "2010-11-28T00:00:00.000Z"
+                },
+                "LocationOfOffence": "Kingston High Street",
+                "ActualOffenceWording": "Rape of a Female",
+                "ConvictionDate": "2011-09-26T00:00:00.000Z",
+                "CommittedOnBail": "D",
+                "CourtOffenceSequenceNumber": 4,
+                "Result": [
+                  {
+                    "CJSresultCode": 3052,
+                    "SourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "01",
+                      "ThirdLevelCode": "EF",
+                      "BottomLevelCode": "01",
+                      "OrganisationUnitCode": "B01EF01"
+                    },
+                    "CourtType": "MCA",
+                    "ConvictingCourt": "3211",
+                    "ResultHearingType": "OTHER",
+                    "ResultHearingDate": "2011-09-26T00:00:00.000Z",
+                    "BailCondition": [],
+                    "NextResultSourceOrganisation": {
+                      "TopLevelCode": "B",
+                      "SecondLevelCode": "46",
+                      "ThirdLevelCode": "AM",
+                      "BottomLevelCode": "03",
+                      "OrganisationUnitCode": "B46AM03"
+                    },
+                    "Duration": [],
+                    "NextHearingDate": "2011-09-26T00:00:00.000Z",
+                    "PleaStatus": "NONE",
+                    "ResultVariableText": "Some result variable text",
+                    "ModeOfTrialReason": "SUM",
+                    "PNCDisposalType": 3052,
+                    "PNCAdjudicationExists": false,
+                    "ResultClass": "Adjournment pre Judgement",
+                    "ReasonForOffenceBailConditions": "Condition",
+                    "Urgent": {
+                      "urgent": true,
+                      "urgency": 24
+                    },
+                    "ResultQualifierVariable": [],
+                    "ResultHalfLifeHours": 24,
+                    "ResultApplicableQualifierCode": []
+                  }
+                ],
+                "RecordableOnPNCindicator": true,
+                "NotifiableToHOindicator": true,
+                "HomeOfficeClassification": "019/07"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Exceptions": [
+      {
+        "code": "HO100200",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          0,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      },
+      {
+        "code": "HO100300",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      },
+      {
+        "code": "HO100322",
+        "path": [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          2,
+          "Result",
+          0,
+          "NextResultSourceOrganisation",
+          "OrganisationUnitCode"
+        ]
+      }
+    ],
+    "PncQuery": {
+      "forceStationCode": "01ZD",
+      "checkName": "SEXOFFENCE",
+      "pncId": "2000/0448754K",
+      "courtCases": [
+        {
+          "courtCaseReference": "97/1626/008395Q",
+          "offences": [
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "SX03001A",
+                "title": "Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION",
+                "sequenceNumber": 1,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00"
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "SX03001",
+                "title": "Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION",
+                "sequenceNumber": 2,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00"
+              }
+            },
+            {
+              "offence": {
+                "acpoOffenceCode": "12:15:24:1",
+                "cjsOffenceCode": "RT88191",
+                "title": "Offence with no exceptions",
+                "sequenceNumber": 3,
+                "qualifier1": "",
+                "qualifier2": "",
+                "startDate": "2010-11-28T00:00:00.000Z",
+                "startTime": "00:00"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "PncQueryDate": "2022-03-22T00:00:00.000Z"
+  }
+}

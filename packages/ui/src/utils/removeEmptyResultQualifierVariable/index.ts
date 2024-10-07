@@ -1,0 +1,2 @@
+import removeEmptyResultQualifierVariable from "./removeEmptyResultQualifierVariable"
+export default removeEmptyResultQualifierVariable

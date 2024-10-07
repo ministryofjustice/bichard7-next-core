@@ -1,0 +1,5 @@
+export const LOCKED_ICON_URL = "/bichard/assets/images/lock.svg"
+export const TICK_ICON_URL = "/bichard/assets/images/tick.svg"
+export const CHECKMARK_ICON_URL = "/bichard/assets/images/checkmark.svg"
+export const SUCCESS_CHECKMARK_ICON_URL = "/bichard/assets/images/successCheckmark.svg"
+export const WARNING_ICON_URL = "/bichard/assets/images/warning.svg"
