@@ -23,22 +23,22 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     courtCaseSpecificOperations.includes(operation.code)
   )
 
-  if (hasOperation(PncOperation.PENALTY_HEARING) && operationsWithCourtCase.length > 0) {
-    if (
-      operationsWithCourtCase.some((operationWithCourtCase) =>
-        [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(operationWithCourtCase.code)
-      )
-    ) {
-      return { code: ExceptionCode.HO200109, path: errorPath }
-    }
+  if (
+    hasOperation(PncOperation.PENALTY_HEARING) &&
+    operationsWithCourtCase.some((operationWithCourtCase) =>
+      [PncOperation.DISPOSAL_UPDATED, PncOperation.PENALTY_HEARING].includes(operationWithCourtCase.code)
+    )
+  ) {
+    return { code: ExceptionCode.HO200109, path: errorPath }
+  }
 
-    if (
-      operationsWithCourtCase.some(
-        (operationWithCourtCase) => operationWithCourtCase.code === PncOperation.NORMAL_DISPOSAL
-      )
-    ) {
-      return { code: ExceptionCode.HO200115, path: errorPath }
-    }
+  if (
+    hasOperation(PncOperation.PENALTY_HEARING) &&
+    operationsWithCourtCase.some(
+      (operationWithCourtCase) => operationWithCourtCase.code === PncOperation.NORMAL_DISPOSAL
+    )
+  ) {
+    return { code: ExceptionCode.HO200115, path: errorPath }
   }
 
   const newRemandAndSentencing = operations.some((operation) => {
