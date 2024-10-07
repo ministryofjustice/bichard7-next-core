@@ -15,10 +15,6 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     return { code: ExceptionCode.HO200114, path: errorPath }
   }
 
-  if (hasOperation(PncOperation.REMAND) && remandCcrs.size === 0 && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
-    return { code: ExceptionCode.HO200113, path: errorPath }
-  }
-
   const operationsWithCourtCase: Operation[] = operations.filter((operation) =>
     courtCaseSpecificOperations.includes(operation.code)
   )
@@ -45,7 +41,10 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     const courtCaseReference = operationCourtCaseReference(operation)
     const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
-    return [PncOperation.SENTENCE_DEFERRED].includes(operation.code) && remandCcrsContainCourtCaseReference
+    return (
+      PncOperation.SENTENCE_DEFERRED === operation.code &&
+      ((hasOperation(PncOperation.REMAND) && remandCcrs.size === 0) || remandCcrsContainCourtCaseReference)
+    )
   })
 
   if (hasNewRemandAndSentencing) {
@@ -86,6 +85,7 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
       operation.code === clashingCourtCaseOperation.code
     )
   })
+
   if (hasSameCourtCaseSpecificOperationWithSameCcr) {
     return { code: ExceptionCode.HO200109, path: errorPath }
   }
