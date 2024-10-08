@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { User } from "@moj-bichard7/common/types/User"
-import type Gateway from "./interfaces/gateway"
+import type Gateway from "services/gateways/interfaces/gateway"
 
 class FakeGateway implements Gateway {
   async fetchUserByUsername(username: string): Promise<User> {

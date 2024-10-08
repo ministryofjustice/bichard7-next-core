@@ -15,7 +15,15 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
-    // "typeRoots": ["./@types", "node_modules/@types", "../../node_modules/@types"]
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*"],
+      "src/*": ["src/*"],
+      "server/*": ["src/server/*"],
+      "services/*": ["src/services/*"],
+      "useCases/*": ["src/useCases/*"],
+      "tests/*": ["src/tests/*"]
+    }
   }
 }

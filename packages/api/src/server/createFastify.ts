@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 import { fastify as Fastify } from "fastify"
 import fs from "fs"
 import type { IncomingMessage, Server, ServerResponse } from "http"
-import logger from "./logger"
+import logger from "server/logger"
 
 export default function (): FastifyInstance<Server, IncomingMessage, ServerResponse> {
   let fastify: FastifyInstance<Server, IncomingMessage, ServerResponse>

@@ -1,7 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import formatForceNumbers from "../services/formatForceNumbers"
-import type Gateway from "../services/gateways/interfaces/gateway"
+import formatForceNumbers from "services/formatForceNumbers"
+import type Gateway from "services/gateways/interfaces/gateway"
 
 type ResubmitProps = {
   gateway: Gateway

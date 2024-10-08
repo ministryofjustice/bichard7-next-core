@@ -1,5 +1,5 @@
 import type postgres from "postgres"
-import filter from "./filterUserHasSameForceAsCaseAndLockedByUser"
+import filter from "services/gateways/postgres/filterUserHasSameForceAsCaseAndLockedByUser"
 
 describe("filterUserHasSameForceAsCaseAndLockedByUser", () => {
   it("throws an error if the case isn't found", async () => {

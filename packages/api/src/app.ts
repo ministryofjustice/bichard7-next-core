@@ -1,12 +1,12 @@
 import AutoLoad from "@fastify/autoload"
 import type { User } from "@moj-bichard7/common/types/User"
 import path from "path"
-import authenticate from "./server/auth/authenticate"
-import createFastify from "./server/createFastify"
-import setupSwagger from "./server/openapi/setupSwagger"
-import setupZod from "./server/openapi/setupZod"
-import type Gateway from "./services/gateways/interfaces/gateway"
-import PostgresGateway from "./services/gateways/postgresGateway"
+import authenticate from "server/auth/authenticate"
+import createFastify from "server/createFastify"
+import setupSwagger from "server/openapi/setupSwagger"
+import setupZod from "server/openapi/setupZod"
+import type Gateway from "services/gateways/interfaces/gateway"
+import PostgresGateway from "services/gateways/postgresGateway"
 
 declare module "fastify" {
   interface FastifyRequest {

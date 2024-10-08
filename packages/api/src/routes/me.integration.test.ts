@@ -1,9 +1,9 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
-import build from "../app"
-import FakeGateway from "../services/gateways/fakeGateway"
-import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
+import FakeGateway from "services/gateways/fakeGateway"
+import build from "src/app"
+import { generateJwtForStaticUser } from "tests/helpers/userHelper"
 
 describe("/me", () => {
   const gateway = new FakeGateway()

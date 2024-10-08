@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
-import build from "../../app"
+import build from "src/app"
 import HealthRoutes from "./routes"
 
 describe("health plugin", () => {
