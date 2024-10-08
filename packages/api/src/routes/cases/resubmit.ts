@@ -4,11 +4,11 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
-import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
 import type Gateway from "../../services/gateways/interfaces/gateway"
+import canUserResubmitCase from "../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)

@@ -1,6 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import FakeGateway from "../src/services/gateways/fakeGateway"
+import FakeGateway from "../services/gateways/fakeGateway"
 import canUseResubmitCaseExecute from "./canUserResubmitCase"
 
 describe("canUseResubmitCase", () => {
