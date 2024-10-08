@@ -8,11 +8,11 @@ interface Result {
 export default async (sql: postgres.Sql, username: string, caseId: number, forceIds: number[]): Promise<boolean> => {
   const [result]: [Result?] = await sql`
       SELECT
-        (error_locked_by_id = ${username})::integer as locked_by_user,
-        (br7own.force_code(org_for_police_filter) IN (${forceIds.toString()}))::integer as case_in_force
-      FROM br7own.error_list
+        (el.error_locked_by_id = ${username})::integer as locked_by_user,
+        (br7own.force_code(el.org_for_police_filter) = ANY((${sql.array(forceIds)}::smallint[])))::integer as case_in_force
+      FROM br7own.error_list el
       WHERE
-        error_id = ${caseId}
+        el.error_id = ${caseId}
     `
 
   if (!result) {
