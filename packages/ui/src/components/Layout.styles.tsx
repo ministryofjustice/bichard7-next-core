@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { gdsMidGrey } from "../utils/colours"
+import { gdsMidGrey } from "utils/colours"
 
 const Banner = styled.div`
   display: flex;

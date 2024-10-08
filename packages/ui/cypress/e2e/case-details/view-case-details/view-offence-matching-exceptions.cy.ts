@@ -7,13 +7,13 @@ describe("View offence matching exceptions", () => {
     { asn: ExceptionCode.HO100304, firstOffenceBadge: "Unmatched" },
     { asn: ExceptionCode.HO100328, firstOffenceBadge: "Unmatched" },
     { asn: ExceptionCode.HO100507, firstOffenceBadge: "Added by Court", secondOffenceBadge: "Added by Court" },
-    { offenceReasonSequence: ExceptionCode.HO100203 },
-    { offenceReasonSequence: ExceptionCode.HO100228 },
-    { offenceReasonSequence: ExceptionCode.HO100311 },
-    { offenceReasonSequence: ExceptionCode.HO100312 },
-    { offenceReasonSequence: ExceptionCode.HO100320 },
-    { offenceReasonSequence: ExceptionCode.HO100329 },
-    { offenceReasonSequence: ExceptionCode.HO100333 }
+    { offenceReasonSequence: ExceptionCode.HO100203, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100228, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100311, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100312, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100320, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100329, firstOffenceBadge: "Unmatched" },
+    { offenceReasonSequence: ExceptionCode.HO100333, firstOffenceBadge: "Unmatched" }
   ].forEach(({ asn, offenceReasonSequence, firstOffenceBadge = "Matched", secondOffenceBadge = "Unmatched" }) => {
     it(`Should display the correct error for ${asn ?? offenceReasonSequence}`, () => {
       cy.task("clearCourtCases")

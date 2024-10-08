@@ -1,5 +1,5 @@
 import { Dispatch } from "react"
-import { SerializedCourtDateRange } from "types/CaseListQueryParams"
+import { SerializedDateRange } from "types/CaseListQueryParams"
 import { FilterAction } from "types/CourtCaseFilter"
 import { SmallButton } from "./DateInput.styles"
 
@@ -7,7 +7,7 @@ interface Props {
   dateType: "from" | "to"
   dispatch: Dispatch<FilterAction>
   value: string
-  dateRange: SerializedCourtDateRange | undefined
+  dateRange: SerializedDateRange | undefined
 }
 
 const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {

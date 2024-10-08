@@ -1,6 +1,7 @@
 import AnnotatedHO from "../../../../../test/test-data/AnnotatedHO1.json"
 import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
 import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
+import AsnExceptionHO100301 from "../../../../../test/test-data/AsnExceptionHo100301.json"
 import ExceptionHO100239 from "../../../../../test/test-data/HO100239_1.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
 
@@ -214,6 +215,42 @@ describe("ASN", () => {
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
       updatedMessageNotHaveContent: ["<br7:ArrestSummonsNumber>AAAAAAAAAAAAAAAAAAAA</br7:ArrestSummonsNumber>"],
+      updatedMessageHaveContent: ["<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>"]
+    })
+  })
+
+  it("Should be able to edit ASN field if HO100301 is raised", () => {
+    cy.task("clearCourtCases")
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: AsnExceptionHO100301.hearingOutcomeXml,
+        updatedHearingOutcome: AsnExceptionHO100301.hearingOutcomeXml,
+        errorCount: 1,
+        errorLockedByUsername: "GeneralHandler"
+      }
+    ])
+
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get(".exception-details").contains("HO100301 - ASN not found on PNC")
+
+    cy.get("#asn").clear()
+    cy.get("#asn").type("1101ZD0100000448754K")
+
+    cy.get("button").contains("Submit exception(s)").click()
+
+    cy.contains(
+      "Are you sure you want to submit the amended details to the PNC and mark the exception(s) as resolved?"
+    ).should("exist")
+    cy.get("button").contains("Submit exception(s)").click()
+
+    cy.contains("GeneralHandler: Portal Action: Update Applied. Element: asn. New Value: 1101ZD0100000448754K")
+    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+
+    verifyUpdatedMessage({
+      expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
+      updatedMessageNotHaveContent: ["<br7:ArrestSummonsNumber>2006MM0600000003131B</br7:ArrestSummonsNumber>"],
       updatedMessageHaveContent: ["<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>"]
     })
   })

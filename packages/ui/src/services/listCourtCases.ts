@@ -3,7 +3,6 @@ import { CaseListQueryParams, LockedState } from "types/CaseListQueryParams"
 import { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import Permission from "types/Permission"
 import PromiseResult from "types/PromiseResult"
-
 import { isError } from "types/Result"
 import CourtCase from "./entities/CourtCase"
 import getLongTriggerCode from "./entities/transformers/getLongTriggerCode"
@@ -11,6 +10,8 @@ import User from "./entities/User"
 import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolutionStatus"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
+import QueryColumns from "./QueryColumns"
+import { formatName } from "../helpers/formatName"
 
 const listCourtCases = async (
   connection: DataSource,
@@ -28,37 +29,19 @@ const listCourtCases = async (
     caseState,
     allocatedToUserName,
     reasonCodes,
-    resolvedByUsername
+    resolvedByUsername,
+    resolvedDateRange,
+    asn
   }: CaseListQueryParams,
-  user: User
+  user: User,
+  selectColumns: string[] = QueryColumns.CaseListQuery
 ): PromiseResult<ListCourtCaseResult> => {
   const pageNumValidated = (page ? page : 1) - 1 // -1 because the db index starts at 0
   const maxPageItemsValidated = maxPageItems ? maxPageItems : 25
   const repository = connection.getRepository(CourtCase)
-  let query = repository
-    .createQueryBuilder("courtCase")
-    .select([
-      "courtCase.errorId",
-      "courtCase.triggerCount",
-      "courtCase.isUrgent",
-      "courtCase.asn",
-      "courtCase.errorReport",
-      "courtCase.errorReason",
-      "courtCase.triggerReason",
-      "courtCase.errorCount",
-      "courtCase.errorStatus",
-      "courtCase.triggerStatus",
-      "courtCase.courtDate",
-      "courtCase.ptiurn",
-      "courtCase.courtName",
-      "courtCase.resolutionTimestamp",
-      "courtCase.errorResolvedBy",
-      "courtCase.triggerResolvedBy",
-      "courtCase.defendantName",
-      "courtCase.errorLockedByUsername",
-      "courtCase.triggerLockedByUsername"
-    ])
+  let query = repository.createQueryBuilder("courtCase").select(selectColumns)
   query = courtCasesByOrganisationUnitQuery(query, user)
+
   leftJoinAndSelectTriggersQuery(query, user.excludedTriggers, caseState ?? "Unresolved")
     .leftJoinAndSelect("courtCase.notes", "note")
     .leftJoin("courtCase.errorLockedByUser", "errorLockedByUser")
@@ -84,23 +67,31 @@ const listCourtCases = async (
 
   // Filters
   if (defendantName) {
-    let splitDefendantName = defendantName.replace(/\*|\s+/g, "%")
+    const splitDefendantName = formatName(defendantName)
 
-    if (!splitDefendantName.endsWith("%")) {
-      splitDefendantName = `${splitDefendantName}%`
-    }
-
-    query.andWhere({ defendantName: ILike(splitDefendantName) })
+    query.andWhere({
+      defendantName: ILike(splitDefendantName)
+    })
   }
 
   if (courtName) {
-    const courtNameLike = { courtName: ILike(`%${courtName}%`) }
+    const courtNameLike = {
+      courtName: ILike(`%${courtName}%`)
+    }
     query.andWhere(courtNameLike)
   }
 
   if (ptiurn) {
-    const ptiurnLike = { ptiurn: ILike(`%${ptiurn}%`) }
+    const ptiurnLike = {
+      ptiurn: ILike(`%${ptiurn}%`)
+    }
     query.andWhere(ptiurnLike)
+  }
+
+  if (asn) {
+    query.andWhere({
+      asn: ILike(`%${asn}%`)
+    })
   }
 
   if (reasonCodes?.length) {
@@ -113,7 +104,7 @@ const listCourtCases = async (
           .orWhere("courtCase.error_report ilike any(array[:...firstExceptions])", {
             firstExceptions: reasonCodes.map((reasonCode) => `${reasonCode}||%`)
           })
-          // match exceptions ins the middle of the error report
+          // match exceptions in the middle of the error report
           .orWhere("courtCase.error_report ilike any(array[:...exceptions])", {
             exceptions: reasonCodes.map((reasonCode) => `% ${reasonCode}||%`)
           })
@@ -129,8 +120,12 @@ const listCourtCases = async (
             qb.orWhere(
               new Brackets((dateRangeQuery) => {
                 dateRangeQuery
-                  .andWhere({ courtDate: MoreThanOrEqual(dateRange.from) })
-                  .andWhere({ courtDate: LessThanOrEqual(dateRange.to) })
+                  .andWhere({
+                    courtDate: MoreThanOrEqual(dateRange.from)
+                  })
+                  .andWhere({
+                    courtDate: LessThanOrEqual(dateRange.to)
+                  })
               })
             )
           })
@@ -138,17 +133,46 @@ const listCourtCases = async (
       )
     } else {
       query
-        .andWhere({ courtDate: MoreThanOrEqual(courtDateRange.from) })
-        .andWhere({ courtDate: LessThanOrEqual(courtDateRange.to) })
+        .andWhere({
+          courtDate: MoreThanOrEqual(courtDateRange.from)
+        })
+        .andWhere({
+          courtDate: LessThanOrEqual(courtDateRange.to)
+        })
     }
   }
 
+  if (resolvedByUsername) {
+    const splitResolvedByUsername = formatName(resolvedByUsername)
+
+    query.andWhere(
+      new Brackets((qb) => {
+        qb.where({
+          errorResolvedBy: ILike(splitResolvedByUsername)
+        }).orWhere({
+          triggerResolvedBy: ILike(splitResolvedByUsername)
+        })
+      })
+    )
+  }
+
+  // Existing filters
   filterByReasonAndResolutionStatus(query, user, reason, reasonCodes, caseState, resolvedByUsername)
+
+  if (caseState === "Resolved" && resolvedDateRange?.from) {
+    query.andWhere({ resolutionTimestamp: MoreThanOrEqual(resolvedDateRange?.from) })
+  }
+
+  if (caseState === "Resolved" && resolvedDateRange?.to) {
+    query.andWhere({ resolutionTimestamp: LessThanOrEqual(resolvedDateRange?.to) })
+  }
 
   if (allocatedToUserName) {
     query.andWhere(
       new Brackets((qb) => {
-        qb.where({ errorLockedByUsername: allocatedToUserName }).orWhere({
+        qb.where({
+          errorLockedByUsername: allocatedToUserName
+        }).orWhere({
           triggerLockedByUsername: allocatedToUserName
         })
       })
@@ -159,13 +183,21 @@ const listCourtCases = async (
     if (lockedState === LockedState.Locked) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.where({ errorLockedByUsername: Not(IsNull()) }).orWhere({ triggerLockedByUsername: Not(IsNull()) })
+          qb.where({
+            errorLockedByUsername: Not(IsNull())
+          }).orWhere({
+            triggerLockedByUsername: Not(IsNull())
+          })
         })
       )
     } else if (lockedState === LockedState.Unlocked) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.where({ errorLockedByUsername: IsNull() }).andWhere({ triggerLockedByUsername: IsNull() })
+          qb.where({
+            errorLockedByUsername: IsNull()
+          }).andWhere({
+            triggerLockedByUsername: IsNull()
+          })
         })
       )
     }
@@ -176,11 +208,15 @@ const listCourtCases = async (
   }
 
   if (!user.hasAccessTo[Permission.Triggers]) {
-    query.andWhere({ errorCount: MoreThan(0) })
+    query.andWhere({
+      errorCount: MoreThan(0)
+    })
   }
 
   if (!user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere({ triggerCount: MoreThan(0) })
+    query.andWhere({
+      triggerCount: MoreThan(0)
+    })
   }
 
   const result = await query.getManyAndCount().catch((error: Error) => error)

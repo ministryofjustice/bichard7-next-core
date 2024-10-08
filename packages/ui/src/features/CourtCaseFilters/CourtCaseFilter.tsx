@@ -9,7 +9,7 @@ import TriggerGroups from "components/SearchFilters/TriggerGroups"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { FormGroup } from "govuk-react"
 import { useReducer } from "react"
-import { CaseListQueryParams, LockedState, SerializedCourtDateRange } from "types/CaseListQueryParams"
+import { CaseListQueryParams, LockedState, SerializedDateRange } from "types/CaseListQueryParams"
 import type { Filter } from "types/CourtCaseFilter"
 import Permission from "types/Permission"
 import { anyFilterChips } from "utils/filterChips"
@@ -26,7 +26,7 @@ const Divider = () => (
 type Props = CaseListQueryParams & {
   caseAge: string[]
   caseAgeCounts: Record<string, number>
-  dateRange: SerializedCourtDateRange | null
+  dateRange: SerializedDateRange | null
 }
 
 const CourtCaseFilter: React.FC<Props> = ({

@@ -482,6 +482,35 @@ describe("listCourtCases", () => {
     })
   })
 
+  describe("search by asn", () => {
+    it("Should list cases when there is a case insensitive match", async () => {
+      const asnToInclude = "1101ZD0100000448754K"
+      const asnToIncludeWithPartialMatch = "1101ZD0100000448754J"
+      const asnToNotInclude = "AAAAAAAAAAAAAAAAAAA"
+
+      await insertCourtCasesWithFields([
+        { asn: asnToInclude },
+        { asn: asnToIncludeWithPartialMatch },
+        { asn: asnToNotInclude }
+      ])
+
+      let result = await listCourtCases(dataSource, { maxPageItems: 100, asn: "1101ZD0100000448754K" }, testUser)
+      expect(isError(result)).toBe(false)
+      let { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(1)
+      expect(cases[0].asn).toStrictEqual(asnToInclude)
+
+      result = await listCourtCases(dataSource, { maxPageItems: 100, asn: "1101ZD0100000448754" }, testUser)
+      expect(isError(result)).toBe(false)
+      cases = (result as ListCourtCaseResult).result
+
+      expect(cases).toHaveLength(2)
+      expect(cases[0].asn).toStrictEqual(asnToInclude)
+      expect(cases[1].asn).toStrictEqual(asnToIncludeWithPartialMatch)
+    })
+  })
+
   describe("search by ptiurn", () => {
     it("Should list cases when there is a case insensitive match", async () => {
       const ptiurnToInclude = "01ZD0303908"

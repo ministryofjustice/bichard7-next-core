@@ -1,16 +1,25 @@
 import Note from "services/entities/Note"
+import User from "services/entities/User"
+import users from "../../cypress/fixtures/users"
 import { getDummyUser, insertUsers } from "./manageUsers"
 import { formatForenames, formatSurname } from "./userName"
 
 export const insertNoteUser = async (lockedCase: Note): Promise<null> => {
-  const username = lockedCase.userId
-  const [forenames, surname] = username.split(".")
-  const user = await getDummyUser({
-    username,
-    forenames: formatForenames(forenames),
-    surname: formatSurname(surname),
-    email: `${username}@example.com`
-  })
+  let user: Partial<User>
 
-  return insertUsers(user)
+  const username = lockedCase.userId
+
+  if (users[username]) {
+    user = users[username]
+  } else {
+    const [forenames, surname] = username.split(".")
+    user = await getDummyUser({
+      username,
+      forenames: formatForenames(forenames),
+      surname: formatSurname(surname),
+      email: `${username}@example.com`
+    })
+  }
+
+  return insertUsers(user as User)
 }

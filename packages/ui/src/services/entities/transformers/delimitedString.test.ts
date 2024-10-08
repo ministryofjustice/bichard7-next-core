@@ -15,6 +15,10 @@ describe("delimitedString value transformer", () => {
     expect(transformer.from("")).toStrictEqual([])
   })
 
+  it("creates an empty array when there is an undefined value", () => {
+    expect(transformer.from(undefined)).toStrictEqual([])
+  })
+
   it("can transform the array back to the original value", () => {
     expect(transformer.to(["11", "12"])).toStrictEqual("11,12")
     expect(transformer.to([])).toStrictEqual("")

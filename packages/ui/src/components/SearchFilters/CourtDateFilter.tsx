@@ -3,7 +3,7 @@ import RadioButton from "components/RadioButton/RadioButton"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import { FormGroup } from "govuk-react"
 import type { Dispatch } from "react"
-import { SerializedCourtDateRange } from "types/CaseListQueryParams"
+import { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -14,7 +14,7 @@ interface Props {
   caseAges?: string[]
   caseAgeCounts: Record<string, number>
   dispatch: Dispatch<FilterAction>
-  dateRange: SerializedCourtDateRange | undefined
+  dateRange: SerializedDateRange | undefined
 }
 
 const getCaseAgeWithFormattedDate = (namedCaseAge: string): string => {

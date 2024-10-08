@@ -1,4 +1,5 @@
 import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
+import AsnExceptionHO100301 from "../../../../../test/test-data/AsnExceptionHo100301.json"
 import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
 import nextHearingDateAndLocationExceptions from "../../../../../test/test-data/NextHearingDateAndLocationExceptions.json"
 import nextHearingDateExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
@@ -25,6 +26,26 @@ describe("Tabs exceptions icons", () => {
           orgForPoliceFilter: "01",
           hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
           updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
+          errorCount: 1,
+          errorLockedByUsername: "GeneralHandler"
+        }
+      ])
+
+      loginAndVisit("/bichard/court-cases/0")
+
+      cy.get("ul.moj-sub-navigation__list>li").eq(0).contains("Defendant").contains("1")
+      cy.get("ul.moj-sub-navigation__list>li").eq(1).contains("Hearing").contains("1").should("not.exist")
+      cy.get("ul.moj-sub-navigation__list>li").eq(2).contains("Case").contains("1").should("not.exist")
+      cy.get("ul.moj-sub-navigation__list>li").eq(3).contains("Offences").contains("1").should("not.exist")
+      cy.get("ul.moj-sub-navigation__list>li").eq(4).contains("Notes").contains("1").should("not.exist")
+    })
+
+    it("Should display 1 next to Defendant tab text when HO100301 is raised", () => {
+      cy.task("insertCourtCasesWithFields", [
+        {
+          orgForPoliceFilter: "01",
+          hearingOutcome: AsnExceptionHO100301.hearingOutcomeXml,
+          updatedHearingOutcome: AsnExceptionHO100301.hearingOutcomeXml,
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler"
         }

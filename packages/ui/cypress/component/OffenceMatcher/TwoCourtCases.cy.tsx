@@ -1,6 +1,6 @@
 import { PncOffence } from "@moj-bichard7-developers/bichard7-next-core/core/types/PncQueryResult"
 import { CourtCaseContext } from "context/CourtCaseContext"
-import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/OffenceMatcher"
+import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/Matcher/OffenceMatcher"
 import { Amendments } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import type { Candidates } from "../../../src/types/OffenceMatching"

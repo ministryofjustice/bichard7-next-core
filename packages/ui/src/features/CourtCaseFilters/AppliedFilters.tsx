@@ -2,7 +2,7 @@ import ConditionalRender from "components/ConditionalRender"
 import FilterTag from "components/FilterTag/FilterTag"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
-import { LockedState, Reason, SerializedCourtDateRange } from "types/CaseListQueryParams"
+import { LockedState, Reason, SerializedDateRange } from "types/CaseListQueryParams"
 import { caseStateLabels } from "utils/caseStateFilters"
 import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { formatStringDateAsDisplayedDate } from "utils/date/formattedDate"
@@ -15,7 +15,7 @@ interface Props {
     reasonCodes?: string[]
     ptiurn?: string | null
     caseAge?: string[]
-    dateRange?: SerializedCourtDateRange | null
+    dateRange?: SerializedDateRange | null
     lockedState?: string | null
     caseState?: string | null
   }

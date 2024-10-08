@@ -1,4 +1,4 @@
-// import { URLSearchParams } from "url"
+import { URLSearchParams } from "url"
 import removeBlankQueryParams from "./removeBlankQueryParams"
 
 describe("removeBlankQueryParams", () => {

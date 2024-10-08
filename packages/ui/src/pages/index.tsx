@@ -11,7 +11,6 @@ import CourtCaseList from "features/CourtCaseList/CourtCaseList"
 import { Main } from "govuk-react"
 import { isEqual } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import withCsrf from "middleware/withCsrf/withCsrf"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -19,7 +18,6 @@ import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
-import CourtCase from "services/entities/CourtCase"
 import User from "services/entities/User"
 import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
 import getDataSource from "services/getDataSource"
@@ -33,9 +31,8 @@ import {
   LockedState,
   QueryOrder,
   Reason,
-  SerializedCourtDateRange
+  SerializedDateRange
 } from "types/CaseListQueryParams"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import Permission from "types/Permission"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
@@ -53,10 +50,12 @@ import { logCaseListRenderTime } from "utils/logging"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import { reasonOptions } from "utils/reasonOptions"
 import redirectTo from "utils/redirectTo"
-import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
 import { validateDateRange } from "utils/validators/validateDateRange"
 import { validateQueryParams } from "utils/validators/validateQueryParams"
+import withCsrf from "../middleware/withCsrf/withCsrf"
+import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
+import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
 
 type Props = {
   build: string | null
@@ -64,14 +63,15 @@ type Props = {
   caseAgeCounts: Record<string, number>
   courtCases: DisplayPartialCourtCase[]
   csrfToken: string
-  dateRange: SerializedCourtDateRange | null
+  dateRange: SerializedDateRange | null
   displaySwitchingSurveyFeedback: boolean
   environment: string | null
   oppositeOrder: QueryOrder
   queryStringCookieName: string
   totalCases: number
   user: DisplayFullUser
-} & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange">
+  caseResolvedDateRange: SerializedDateRange | null
+} & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
 
 const validateOrder = (param: unknown): param is QueryOrder => param === "asc" || param === "desc"
 
@@ -105,12 +105,15 @@ const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser: User):
   const resolvedByUsername =
     caseState === "Resolved" && !currentUser.hasAccessTo[Permission.ListAllCases] ? currentUser.username : null
   const courtDateRange = caseAges || dateRange
+  const resolvedDateRange = validateDateRange({ from: query.resolvedFrom, to: query.resolvedTo })
+  const asn = validateQueryParams(query.asn) ? sanitise(query.asn) : null
 
   return {
     ...(defendantName && { defendantName: defendantName }),
     ...(courtName && { courtName: courtName }),
     ...(reasonCodes && { reasonCodes: reasonCodes }),
     ...(ptiurn && { ptiurn }),
+    ...(asn && { asn }),
     reason,
     maxPageItems: validateQueryParams(query.maxPageItems) ? +Number(query.maxPageItems) : defaults.maxPageItems,
     page: validateQueryParams(query.page) ? +Number(query.page) : 1,
@@ -120,7 +123,8 @@ const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser: User):
     lockedState,
     ...(caseState && { caseState }),
     ...(resolvedByUsername && { resolvedByUsername }),
-    ...(allocatedToUserName && { allocatedToUserName })
+    ...(allocatedToUserName && { allocatedToUserName }),
+    ...(resolvedDateRange && { resolvedDateRange })
   }
 }
 
@@ -204,15 +208,13 @@ export const getServerSideProps = withMultipleServerSideProps(
     logCaseListRenderTime(startTime, currentUser, caseListQueryParams)
 
     // Remove courtDateRange from the props because the dates don't serialise
-    const { courtDateRange: _, ...caseListQueryProps } = caseListQueryParams
+    const { courtDateRange: _, resolvedDateRange: __, ...caseListQueryProps } = caseListQueryParams
     return {
       props: {
         build: process.env.NEXT_PUBLIC_BUILD || null,
         caseAge: caseAges,
         caseAgeCounts: caseAgeCounts,
-        courtCases: courtCases.result.map((courtCase: CourtCase) =>
-          courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)
-        ),
+        courtCases: courtCases.result.map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
         csrfToken,
         dateRange:
           !!caseListQueryParams.courtDateRange && !Array.isArray(caseListQueryParams.courtDateRange)
@@ -227,6 +229,12 @@ export const getServerSideProps = withMultipleServerSideProps(
         queryStringCookieName,
         totalCases: courtCases.totalCases,
         user: userToDisplayFullUserDto(currentUser),
+        caseResolvedDateRange: caseListQueryParams.resolvedDateRange
+          ? {
+              from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
+              to: formatFormInputDateString(caseListQueryParams.resolvedDateRange.to)
+            }
+          : null,
         ...caseListQueryProps
       }
     }

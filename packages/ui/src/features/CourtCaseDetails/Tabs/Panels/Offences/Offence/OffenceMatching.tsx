@@ -12,7 +12,7 @@ import { Exception } from "types/exceptions"
 import getExceptionDefinition from "utils/getExceptionDefinition"
 import findCandidates from "../../../../../../utils/offenceMatcher/findCandidates"
 import { TableRow } from "../../TableRow"
-import { getOffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
+import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import OffenceMatcher from "./OffenceMatcher"
 
 const enabled = (user: DisplayFullUser) => {

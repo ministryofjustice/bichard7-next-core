@@ -1,4 +1,4 @@
-import defaults from "../../defaults"
+import defaults from "defaults"
 import ConditionalRender from "../ConditionalRender"
 import CasesPerPage from "./CasesPerPage"
 import { PaginationBar } from "./Pagination.styles"

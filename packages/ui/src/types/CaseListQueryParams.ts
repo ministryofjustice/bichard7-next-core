@@ -13,12 +13,12 @@ export enum LockedState {
   LockedToMe = "LockedToMe"
 }
 
-export type CourtDateRange = {
+export type DateRange = {
   from: Date
   to: Date
 }
 
-export type SerializedCourtDateRange = {
+export type SerializedDateRange = {
   from?: string
   to?: string
 }
@@ -28,7 +28,7 @@ export type CaseState = "Resolved" | "Unresolved" | undefined
 export type CaseListQueryParams = {
   allocatedToUserName?: string
   caseState?: CaseState
-  courtDateRange?: CourtDateRange | CourtDateRange[]
+  courtDateRange?: DateRange | DateRange[]
   courtName?: string
   defendantName?: string
   lockedState?: string
@@ -40,4 +40,6 @@ export type CaseListQueryParams = {
   reason?: Reason
   reasonCodes?: string[]
   resolvedByUsername?: string
+  resolvedDateRange?: DateRange
+  asn?: string
 }

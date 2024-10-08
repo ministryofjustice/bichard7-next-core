@@ -1,7 +1,7 @@
 import { subDays } from "date-fns"
-import { CourtDateRange } from "types/CaseListQueryParams"
+import { DateRange } from "types/CaseListQueryParams"
 
-export const CaseAgeOptions: Record<string, () => CourtDateRange> = {
+export const CaseAgeOptions: Record<string, () => DateRange> = {
   Today: () => {
     const today = new Date()
     return { from: today, to: today }
