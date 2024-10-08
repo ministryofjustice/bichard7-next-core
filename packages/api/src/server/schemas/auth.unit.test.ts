@@ -1,4 +1,4 @@
-import auth from "server/schemas/auth"
+import auth from "@/server/schemas/auth"
 
 describe("auth", () => {
   it("will require apiKey and bearerAuth in the security schema", () => {

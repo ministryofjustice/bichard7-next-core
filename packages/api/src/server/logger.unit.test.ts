@@ -1,5 +1,5 @@
+import logger from "@/server/logger"
 import type { LoggerOptions } from "pino"
-import logger from "./logger"
 
 const loggerOpts: LoggerOptions = {
   transport: {

@@ -1,9 +1,9 @@
+import jwtParser from "@/server/auth/jwtParser"
+import jwtVerify from "@/server/auth/jwtVerify"
+import type Gateway from "@/services/gateways/interfaces/gateway"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import { UNAUTHORIZED } from "http-status"
-import jwtParser from "server/auth/jwtParser"
-import jwtVerify from "server/auth/jwtVerify"
-import type Gateway from "services/gateways/interfaces/gateway"
 
 const validApiKey = process.env.WORKSPACE === "production" ? process.env.API_KEY : "password"
 

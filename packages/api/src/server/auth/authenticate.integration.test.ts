@@ -1,8 +1,8 @@
+import build from "@/app"
+import FakeGateway from "@/services/gateways/fakeGateway"
+import { generateJwtForStaticUser } from "@/tests/helpers/userHelper"
 import type { FastifyInstance } from "fastify"
 import { OK, UNAUTHORIZED } from "http-status"
-import FakeGateway from "services/gateways/fakeGateway"
-import build from "src/app"
-import { generateJwtForStaticUser } from "tests/helpers/userHelper"
 
 const defaults = {
   url: "/me",

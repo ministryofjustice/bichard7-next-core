@@ -18,12 +18,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["*"],
-      "src/*": ["src/*"],
-      "server/*": ["src/server/*"],
-      "services/*": ["src/services/*"],
-      "useCases/*": ["src/useCases/*"],
-      "tests/*": ["src/tests/*"]
+      "@/*": ["src/*"]
     }
   }
 }

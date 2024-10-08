@@ -1,4 +1,4 @@
-import build from "src/app"
+import build from "@/app"
 
 async function start() {
   const port: number = parseInt(process.env.PORT ?? "3321", 10)

@@ -1,9 +1,9 @@
+import build from "@/app"
+import FakeGateway from "@/services/gateways/fakeGateway"
+import { generateJwtForStaticUser } from "@/tests/helpers/userHelper"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
-import FakeGateway from "services/gateways/fakeGateway"
-import build from "src/app"
-import { generateJwtForStaticUser } from "tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
