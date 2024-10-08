@@ -9,7 +9,7 @@ export default async (sql: postgres.Sql, username: string, caseId: number, force
   const [result]: [Result?] = await sql`
       SELECT
         (el.error_locked_by_id = ${username})::integer as locked_by_user,
-        (br7own.force_code(el.org_for_police_filter) = ANY((${sql.array(forceIds)}::smallint[])))::integer as case_in_force
+        (br7own.force_code(el.org_for_police_filter) = ANY((${forceIds}::smallint[])))::integer as case_in_force
       FROM br7own.error_list el
       WHERE
         el.error_id = ${caseId}
