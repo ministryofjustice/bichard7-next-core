@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.ts", "**/*.json", "package.json", "./declarations.d.ts"],
+  "include": ["**/*.ts", "**/*.json", "package.json", "./declarations.d.ts", "../common/mq/ActiveMqHelper.ts"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "target": "ES2021",

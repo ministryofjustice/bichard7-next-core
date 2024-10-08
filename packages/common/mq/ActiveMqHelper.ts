@@ -2,7 +2,7 @@ import type { Client } from "stompit"
 import { ConnectFailover } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
 
-const getMessage = (client: Client, queueName: string) =>
+const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<string | null> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line prefer-const
     let subscription: Subscription
@@ -36,7 +36,7 @@ const getMessage = (client: Client, queueName: string) =>
     timeout = setTimeout(() => {
       subscription.unsubscribe()
       resolve(null)
-    }, 500)
+    }, timeoutAmount)
   })
 
 type ActiveMqConfig = {
@@ -119,14 +119,14 @@ class ActiveMqHelper {
     })
   }
 
-  async getMessages(queueName: string) {
+  async getMessages(queueName: string, timeout = 500): Promise<string[]> {
     const messages = []
     const client = await this.connectIfRequired()
     let waiting = true
 
     while (waiting) {
       // eslint-disable-next-line no-await-in-loop
-      const message = await getMessage(client, queueName)
+      const message = await getMessage(client, queueName, timeout)
       if (message) {
         messages.push(message)
       } else {
@@ -135,6 +135,10 @@ class ActiveMqHelper {
     }
 
     return messages
+  }
+
+  disconnect(): undefined | void {
+    return this.client?.disconnect()
   }
 }
 

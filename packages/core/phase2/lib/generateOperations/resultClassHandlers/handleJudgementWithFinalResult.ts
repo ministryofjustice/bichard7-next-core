@@ -5,7 +5,6 @@ import createOperation from "../createOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
-import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 import areAllPncResults2007 from "../../areAllPncResults2007"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
@@ -49,15 +48,6 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       ...createOperation(PncOperation.NORMAL_DISPOSAL, operationData),
       addedByTheCourt: true
     })
-  }
-
-  if (result.PNCDisposalType === 2060 && checkCaseRequiresRccButHasNoReportableOffences(aho, ccrId)) {
-    const exception = {
-      code: ExceptionCode.HO200108,
-      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
-    }
-
-    return { operations, exceptions: [exception] }
   }
 
   return { operations, exceptions: [] }
