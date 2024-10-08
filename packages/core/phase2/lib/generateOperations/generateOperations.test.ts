@@ -284,6 +284,31 @@ describe("generateOperations", () => {
     expect(exceptions).toHaveLength(0)
   })
 
+  it("Should return no operations when there are no recordable offences", () => {
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              Offence: [
+                {
+                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
+
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+  })
+
   it("returns only remand operations when all results already on PNC", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(true)
     const aho = {
