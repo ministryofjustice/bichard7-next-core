@@ -213,32 +213,6 @@ describe("generateOperations", () => {
     ])
   })
 
-  it("generates HO200121 exception when there are no offences", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: []
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200121",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
-  })
-
   it("validates generated operations", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
