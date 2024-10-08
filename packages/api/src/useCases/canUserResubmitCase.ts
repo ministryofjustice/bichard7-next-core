@@ -22,7 +22,6 @@ const canUserResubmitCase = async ({ gateway, user, caseId }: ResubmitProps): Pr
     return false
   }
 
-  console.log(`user.visible_forces ${user.visible_forces}`)
   const forceNumbers = formatForceNumbers(user.visible_forces)
 
   return await gateway.filterUserHasSameForceAsCaseAndLockedByUser(user.username, caseId, forceNumbers)
