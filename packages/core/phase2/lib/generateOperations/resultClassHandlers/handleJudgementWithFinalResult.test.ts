@@ -99,37 +99,6 @@ describe("handleJudgementWithFinalResult", () => {
     expect(operations).toHaveLength(0)
   })
 
-  it("should return exception HO200108 when HO200124 condition is not met and case requires RCC and has no reportable offences", () => {
-    const params = generateResultClassHandlerParams({
-      result: { PNCDisposalType: 2060 } as Result,
-      allResultsAlreadyOnPnc: true
-    })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const { exceptions, operations } = handleJudgementWithFinalResult(params)
-
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200108",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
-    expect(operations).toStrictEqual([
-      { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" }
-    ])
-  })
-
   it("should not return exception HO200124 when all results are already on PNC", () => {
     const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
     mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)

@@ -9,9 +9,9 @@ describe("refreshOperationSequence", () => {
   it("adds PNC operations if no existing operations", () => {
     const pncUpdateDataset = generateFakePncUpdateDataset()
 
-    refreshOperationSequence(pncUpdateDataset, defaultOperations)
+    const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
 
-    expect(pncUpdateDataset.PncOperations).toStrictEqual([
+    expect(actualOperations).toStrictEqual([
       { code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }
     ])
   })
@@ -19,9 +19,9 @@ describe("refreshOperationSequence", () => {
   it("adds no PNC operations if no existing and new operations", () => {
     const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: [] })
 
-    refreshOperationSequence(pncUpdateDataset, [])
+    const actualOperations = refreshOperationSequence(pncUpdateDataset, [])
 
-    expect(pncUpdateDataset.PncOperations).toStrictEqual([])
+    expect(actualOperations).toStrictEqual([])
   })
 
   describe("when there are existing PNC operations with NEWREM", () => {
@@ -41,9 +41,9 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        refreshOperationSequence(pncUpdateDataset, operations)
+        const actualOperations = refreshOperationSequence(pncUpdateDataset, operations)
 
-        expect(pncUpdateDataset.PncOperations).toStrictEqual([
+        expect(actualOperations).toStrictEqual([
           {
             status: "Completed",
             code: PncOperation.REMAND,
@@ -68,9 +68,9 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        refreshOperationSequence(pncUpdateDataset, operations)
+        const actualOperations = refreshOperationSequence(pncUpdateDataset, operations)
 
-        expect(pncUpdateDataset.PncOperations).toStrictEqual(pncOperations)
+        expect(actualOperations).toStrictEqual(pncOperations)
       })
 
       it("keeps only the existing operations when no new operations", () => {
@@ -87,9 +87,9 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        refreshOperationSequence(pncUpdateDataset, [])
+        const actualOperations = refreshOperationSequence(pncUpdateDataset, [])
 
-        expect(pncUpdateDataset.PncOperations).toStrictEqual([
+        expect(actualOperations).toStrictEqual([
           {
             status: "Completed",
             code: PncOperation.REMAND,
@@ -113,9 +113,9 @@ describe("refreshOperationSequence", () => {
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-      refreshOperationSequence(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
 
-      expect(pncUpdateDataset.PncOperations).toStrictEqual([pncOperations[1]])
+      expect(actualOperations).toStrictEqual([pncOperations[1]])
     })
 
     it("removes the NEWREM operation if it has failed", () => {
@@ -131,9 +131,9 @@ describe("refreshOperationSequence", () => {
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-      refreshOperationSequence(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
 
-      expect(pncUpdateDataset.PncOperations).toStrictEqual([pncOperations[0]])
+      expect(actualOperations).toStrictEqual([pncOperations[0]])
     })
   })
 })
