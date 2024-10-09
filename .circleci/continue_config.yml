@@ -148,7 +148,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     steps:
       - unless:
@@ -221,6 +221,7 @@ jobs:
   characterisation_test_core:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: false
     resource_class: large
     steps:
       - unless:
@@ -282,7 +283,7 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -324,7 +325,7 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -357,7 +358,7 @@ jobs:
   e2e_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     parallelism: 10
     parameters:
@@ -426,7 +427,7 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -471,7 +472,7 @@ jobs:
   test_postgres:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -491,6 +492,9 @@ jobs:
           name: run Postgres function tests
 
 parameters:
+  docker-layer-caching:
+    type: boolean
+    default: false
   circleci-changes:
     type: boolean
     default: false
@@ -510,9 +514,6 @@ parameters:
     type: boolean
     default: false
   message-forwarder-changes:
-    type: boolean
-    default: false
-  ms-edge:
     type: boolean
     default: false
   e2e-test-changes:
