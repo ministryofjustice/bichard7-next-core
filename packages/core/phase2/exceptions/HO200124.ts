@@ -8,7 +8,7 @@ import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOf
 import checkResultClassExceptions from "./checkResultClassExceptions"
 import errorPaths from "../../lib/exceptions/errorPaths"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome, _options): Exception[] => {
+const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
