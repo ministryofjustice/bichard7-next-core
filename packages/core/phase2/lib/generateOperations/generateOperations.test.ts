@@ -11,7 +11,6 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { offenceCategory } from "bichard7-next-data-latest"
 
 jest.mock("./areAllResultsOnPnc")
 jest.mock("./resultClassHandlers/handleAdjournment")
