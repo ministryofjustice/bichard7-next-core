@@ -2,15 +2,18 @@ import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
+import { areAllResultsOnPnc } from "../areAllResultsOnPnc"
 import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
 jest.mock("../checkCaseRequiresRccButHasNoReportableOffences")
 jest.mock("../hasUnmatchedPncOffences")
+jest.mock("../areAllResultsOnPnc")
 
 const mockedCheckCaseRequiresRccButHasNoReportableOffences = checkCaseRequiresRccButHasNoReportableOffences as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 
 describe("handleJudgementWithFinalResult", () => {
   beforeEach(() => {
@@ -141,6 +144,16 @@ describe("handleJudgementWithFinalResult", () => {
     const { exceptions, operations } = handleJudgementWithFinalResult(params)
 
     expect(exceptions).toHaveLength(0)
+    expect(operations).toHaveLength(0)
+  })
+
+  it("should return no operations when results are not on PNC, there are unmatched PNC offences, and the offence is not added by the court", () => {
+    const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
+    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+
+    const { operations } = handleJudgementWithFinalResult(params)
+
     expect(operations).toHaveLength(0)
   })
 })
