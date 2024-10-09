@@ -6,5 +6,5 @@
     "packages/core",
     "packages/message-forwarder"
   ],
-  "cSpell.words": ["fastify"]
+  "cSpell.words": ["fastify", "openapi"]
 }

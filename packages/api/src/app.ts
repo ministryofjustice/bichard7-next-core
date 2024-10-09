@@ -1,53 +1,47 @@
+import authenticate from "@/server/auth/authenticate"
+import createFastify from "@/server/createFastify"
+import setupSwagger from "@/server/openapi/setupSwagger"
+import setupZod from "@/server/openapi/setupZod"
+import type Gateway from "@/services/gateways/interfaces/gateway"
+import PostgresGateway from "@/services/gateways/postgresGateway"
 import AutoLoad from "@fastify/autoload"
-import fastifySwagger from "@fastify/swagger"
-import fastifySwaggerUI from "@fastify/swagger-ui"
-import { fastify as Fastify, type FastifyInstance } from "fastify"
-import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod"
-import fs from "fs"
-import type { IncomingMessage, Server, ServerResponse } from "http"
+import type { User } from "@moj-bichard7/common/types/User"
 import path from "path"
 
-export default async function () {
-  let fastify: FastifyInstance<Server, IncomingMessage, ServerResponse>
-
-  if (process.env.USE_SSL === "true") {
-    fastify = Fastify({
-      https: { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") },
-      logger: true
-    })
-  } else {
-    let options = {}
-
-    if (process.env.NODE_ENV !== "test") {
-      options = { logger: true }
-    }
-
-    fastify = Fastify(options)
+declare module "fastify" {
+  interface FastifyRequest {
+    user: User
+    gateway: Gateway
   }
+}
 
-  fastify.setValidatorCompiler(validatorCompiler)
-  fastify.setSerializerCompiler(serializerCompiler)
+export default async function (gateway: Gateway = new PostgresGateway()) {
+  const fastify = createFastify()
 
-  fastify.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: "Bichard API",
-        description: "API documentation about Bichard",
-        version: "0.0.1"
-      },
-      servers: []
-    },
-    transform: jsonSchemaTransform
+  await setupZod(fastify)
+  await setupSwagger(fastify)
+
+  // Autoloaded plugins (no authentication)
+  fastify.register(async (instance) => {
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "plugins"),
+      dirNameRoutePrefix: false,
+      matchFilter: (path: string) => path.includes("plugin"),
+      ignoreFilter: (path: string) => path.endsWith(".test.ts")
+    })
   })
 
-  fastify.register(fastifySwaggerUI, {
-    routePrefix: "/swagger"
-  })
+  // Autoloaded API routes (bearer token required)
+  fastify.register(async (instance) => {
+    instance.addHook("onRequest", async (request, reply) => {
+      await authenticate(gateway, request, reply)
+    })
 
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, "plugins"),
-    dirNameRoutePrefix: false,
-    matchFilter: (path: string) => path.includes("plugin")
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "routes"),
+      dirNameRoutePrefix: false,
+      ignoreFilter: (path: string) => path.endsWith(".test.ts")
+    })
   })
 
   return fastify
