@@ -11,5 +11,8 @@ module.exports = {
     "^entities/(.*)$": "<rootDir>/src/entities/$1",
     "^services/(.*)$": "<rootDir>/src/services/$1",
     "^middleware/(.*)$": "<rootDir>/src/middleware/$1"
+  },
+  transform: {
+    "^.+\\.(t|j)sx?$": "@swc/jest"
   }
 }
