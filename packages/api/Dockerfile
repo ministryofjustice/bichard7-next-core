@@ -8,10 +8,11 @@ WORKDIR /api
 
 COPY package.json .
 COPY package-lock.json .
-COPY packages/api ./packages/api
+COPY packages ./packages
 COPY tsconfig*.json ./
 
 RUN npm ci
+RUN npm run build --workspaces
 RUN npm run esbuild -w packages/api
 
 FROM ${BUILD_IMAGE}
