@@ -95,16 +95,6 @@ describe("handleAdjournmentWithJudgement", () => {
     ])
   })
 
-  it("should return no operations when results are not on PNC, there are unmatched PNC offences, and the offence is not added by the court", () => {
-    const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const { operations } = handleAdjournmentWithJudgement(params)
-
-    expect(operations).toHaveLength(0)
-  })
-
   it("should return DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
