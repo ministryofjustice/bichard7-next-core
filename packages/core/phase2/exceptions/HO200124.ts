@@ -21,7 +21,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
     const ccrId = offence?.CourtCaseReferenceNumber || undefined
 
     if (result.PNCAdjudicationExists) {
-      return []
+      return
     }
 
     if (
