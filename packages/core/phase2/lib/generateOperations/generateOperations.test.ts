@@ -11,6 +11,7 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { offenceCategory } from "bichard7-next-data-latest"
 
 jest.mock("./areAllResultsOnPnc")
 jest.mock("./resultClassHandlers/handleAdjournment")
@@ -182,63 +183,6 @@ describe("generateOperations", () => {
     ])
   })
 
-  it("generates HO200121 exception when there are no recordable offences", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: [
-                {
-                  OffenceCategory: "B7",
-                  Result: [{ ResultClass: ResultClass.ADJOURNMENT, PNCDisposalType: 1000 }]
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200121",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
-  })
-
-  it("generates HO200121 exception when there are no offences", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: []
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200121",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
-  })
-
   it("validates generated operations", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(false)
     const aho = {
@@ -327,6 +271,32 @@ describe("generateOperations", () => {
               Offence: [
                 {
                   Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
+                }
+              ]
+            }
+          }
+        }
+      }
+    } as unknown as AnnotatedHearingOutcome
+
+    const { operations, exceptions } = generateOperations(aho, resubmitted)
+
+    expect(operations).toHaveLength(0)
+    expect(exceptions).toHaveLength(0)
+  })
+
+  it("Should return no operations when there are no recordable offences", () => {
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
+    const aho = {
+      Exceptions: [],
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              Offence: [
+                {
+                  offenceCategory: "B7",
+                  Result: [{}]
                 }
               ]
             }
