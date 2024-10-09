@@ -73,67 +73,6 @@ describe("handleJudgementWithFinalResult", () => {
     expect(operations).toStrictEqual([{ code: PncOperation.DISPOSAL_UPDATED, data: undefined, status: "NotAttempted" }])
   })
 
-  it("should only return exception HO200124 when HO200124 and HO200108 conditions are met", () => {
-    const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(true)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const { exceptions, operations } = handleJudgementWithFinalResult(params)
-
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200124",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "Offence",
-          1,
-          "Result",
-          1,
-          "ResultClass"
-        ]
-      }
-    ])
-    expect(operations).toHaveLength(0)
-  })
-
-  it("should not return exception HO200124 when all results are already on PNC", () => {
-    const params = generateResultClassHandlerParams({ allResultsAlreadyOnPnc: true })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const { exceptions, operations } = handleJudgementWithFinalResult(params)
-
-    expect(exceptions).toHaveLength(0)
-    expect(operations).toHaveLength(1)
-  })
-
-  it("should not return exception HO200124 when all PNC offences match", () => {
-    const params = generateResultClassHandlerParams()
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
-    mockedHasUnmatchedPncOffences.mockReturnValue(false)
-
-    const { exceptions, operations } = handleJudgementWithFinalResult(params)
-
-    expect(exceptions).toHaveLength(0)
-    expect(operations).toHaveLength(1)
-  })
-
-  it("should not return exception HO200124 when case is added by the court", () => {
-    const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
-    })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
-
-    const { exceptions, operations } = handleJudgementWithFinalResult(params)
-
-    expect(exceptions).toHaveLength(0)
-    expect(operations).toHaveLength(1)
-  })
-
   it("should return DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,

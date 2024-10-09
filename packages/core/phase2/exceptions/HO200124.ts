@@ -13,7 +13,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome, _options): 
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
 
-  if (fixedPenalty) {
+  if (fixedPenalty || allResultsAlreadyOnPnc) {
     return []
   }
 
@@ -26,8 +26,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome, _options): 
 
     if (
       result.ResultClass &&
-      result.ResultClass == ResultClass.JUDGEMENT_WITH_FINAL_RESULT &&
-      !allResultsAlreadyOnPnc &&
+      [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       hasUnmatchedPncOffences(aho, ccrId) &&
       !offence.AddedByTheCourt
     ) {

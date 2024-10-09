@@ -26,7 +26,19 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
+          }
+        ]
+      },
+      {
+        AddedByTheCourt: false,
+        CourtCaseReferenceNumber: "123456",
+        Result: [
+          {
+            PNCAdjudicationExists: false,
+            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -38,6 +50,10 @@ describe("HO200124", () => {
       {
         code: ExceptionCode.HO200124,
         path: errorPaths.offence(0).result(0).resultClass
+      },
+      {
+        code: ExceptionCode.HO200124,
+        path: errorPaths.offence(1).result(0).resultClass
       }
     ])
   })
@@ -56,7 +72,8 @@ describe("HO200124", () => {
                   Result: [
                     {
                       PNCAdjudicationExists: false,
-                      ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+                      ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+                      PNCDisposalType: 9999
                     }
                   ]
                 }
@@ -80,7 +97,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -91,15 +109,15 @@ describe("HO200124", () => {
     expect(exceptions).toStrictEqual([])
   })
 
-  it("returns no exceptions when ResultClass is not JUDGEMENT_WITH_FINAL_RESULT", () => {
+  it("returns no exceptions when ResultClass is not JUDGEMENT_WITH_FINAL_RESULT or", () => {
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123456",
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 2060
           }
         ]
       }
@@ -121,7 +139,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -143,7 +162,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -165,7 +185,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+            PNCDisposalType: 9999
           }
         ]
       }
