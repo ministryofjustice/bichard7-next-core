@@ -31,11 +31,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-    const exception = {
-      code: ExceptionCode.HO200124,
-      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
-    }
-    return { operations: [], exceptions: [exception] }
+    return { operations: [], exceptions: [] }
   }
 
   const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
