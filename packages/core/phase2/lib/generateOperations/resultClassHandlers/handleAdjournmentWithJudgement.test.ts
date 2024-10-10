@@ -147,4 +147,14 @@ describe("handleAdjournmentWithJudgement", () => {
     expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([remandOperation])
   })
+
+  it("should return only a remand operation when results are not on PNC, there are unmatched PNC offences, and the offence is not added by the court", () => {
+    const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
+    mockedAreAllResultsOnPnc.mockReturnValue(false)
+    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+
+    const { operations } = handleAdjournmentWithJudgement(params)
+
+    expect(operations).toStrictEqual([remandOperation])
+  })
 })
