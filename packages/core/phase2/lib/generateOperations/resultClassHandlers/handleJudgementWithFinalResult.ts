@@ -1,5 +1,3 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../../lib/exceptions/errorPaths"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import createOperation from "../createOperation"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
@@ -11,8 +9,6 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
   aho,
   allResultsAlreadyOnPnc,
-  offenceIndex,
-  resultIndex,
   offence,
   result
 }) => {
@@ -31,11 +27,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-    const exception = {
-      code: ExceptionCode.HO200124,
-      path: errorPaths.offence(offenceIndex).result(resultIndex).resultClass
-    }
-    return { operations: [], exceptions: [exception] }
+    return { operations: [], exceptions: [] }
   }
 
   const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
