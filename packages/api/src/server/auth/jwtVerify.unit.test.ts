@@ -1,7 +1,7 @@
-import jwtVerify from "@/server/auth/jwtVerify"
-import FakeGateway from "@/services/gateways/fakeGateway"
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import type { User } from "@moj-bichard7/common/types/User"
+import FakeGateway from "../../services/gateways/fakeGateway"
+import jwtVerify from "./jwtVerify"
 
 const validJwtId = "c058a1bf-ce6a-45d9-8e84-9729aeac5246"
 

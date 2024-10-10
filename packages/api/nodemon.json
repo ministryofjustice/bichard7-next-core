@@ -1,9 +1,9 @@
 {
   "restartable": "rs",
-  "ignore": [".git", "node_modules/", "dist/", "coverage/"],
+  "ignore": [".git", "node_modules/", "dist/", "coverage/", "*.test.*", "src/tests/"],
   "watch": ["src/"],
   "execMap": {
-    "ts": "node -r ts-node/register -r tsconfig-paths/register"
+    "ts": "node -r ts-node/register"
   },
   "env": {
     "NODE_ENV": "development"
