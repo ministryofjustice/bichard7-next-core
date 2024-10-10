@@ -133,6 +133,10 @@ services:
 
   # api:
   #   image: api
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_USER: ${DEFAULT_USER}
+  #     DB_PASSWORD: ${DEFAULT_PASSWORD}
   #   healthcheck:
   #     test: curl http://localhost:3321/health
   #     interval: 2s
@@ -141,6 +145,11 @@ services:
   #     start_period: 120s
   #   ports:
   #     - 3333:3321
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     db-seed:
+  #       condition: service_started
 
   conductor:
     image: conductor

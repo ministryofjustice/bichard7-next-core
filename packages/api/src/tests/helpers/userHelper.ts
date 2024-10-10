@@ -1,7 +1,7 @@
-import { generateTestJwtTokenAndSplit } from "@/tests/helpers/jwtHelper"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
+import { generateTestJwtTokenAndSplit } from "./jwtHelper"
 
 export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string, User] => {
   const jwtId = randomUUID()

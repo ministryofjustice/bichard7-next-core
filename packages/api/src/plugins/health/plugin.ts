@@ -1,8 +1,8 @@
-import useZod from "@/server/useZod"
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import { z } from "zod"
+import useZod from "../../server/useZod"
 import { healthHandler } from "./handlers"
 import HealthRoutes from "./routes"
 

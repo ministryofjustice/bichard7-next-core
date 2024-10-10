@@ -1,8 +1,8 @@
-import postgresFactory from "@/services/db/postgresFactory"
-import type Gateway from "@/services/gateways/interfaces/gateway"
-import fetchUserByUsername from "@/services/gateways/postgres/fetchUserByUsername"
-import filterUserHasSameForceAsCaseAndLockedByUser from "@/services/gateways/postgres/filterUserHasSameForceAsCaseAndLockedByUser"
 import type { User } from "@moj-bichard7/common/types/User"
+import postgresFactory from "../db/postgresFactory"
+import type Gateway from "./interfaces/gateway"
+import fetchUserByUsername from "./postgres/fetchUserByUsername"
+import filterUserHasSameForceAsCaseAndLockedByUser from "./postgres/filterUserHasSameForceAsCaseAndLockedByUser"
 
 class PostgresGateway implements Gateway {
   private readonly db = postgresFactory()
