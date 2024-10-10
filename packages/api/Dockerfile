@@ -14,7 +14,8 @@ WORKDIR /core
 
 COPY package.json .
 COPY package-lock.json .
-COPY packages ./packages
+COPY packages/api ./packages/api
+COPY packages/common ./packages/common
 COPY tsconfig*.json ./
 
 WORKDIR /core/packages/common
