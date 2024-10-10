@@ -42,7 +42,6 @@
     "@io-orkes/conductor-javascript": "^2.1.2",
     "@stomp/stompjs": "^7.0.0",
     "@types/nodemailer": "^6.4.16",
-    "@types/stompit": "^0.26.6",
     "axios": "^1.7.7",
     "nodemailer": "^6.9.15",
     "pg-promise": "^11.9.1",
@@ -55,6 +54,7 @@
   },
   "devDependencies": {
     "@types/promise-poller": "^1.7.4",
+    "@types/stompit": "^0.26.6",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",

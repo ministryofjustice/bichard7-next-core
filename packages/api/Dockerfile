@@ -20,7 +20,7 @@ COPY tsconfig*.json ./
 
 WORKDIR /core/packages/common
 
-RUN npm i --ignore-scripts --omit=dev && npm run build:api \
+RUN npm i --ignore-scripts && npm run build:api \
   && ls | grep -v package.json | grep -v dist | xargs rm -rf
 
 WORKDIR /core/packages/api
@@ -38,7 +38,7 @@ RUN mkdir -p /certs && \
   -extensions 'v3_req' && \
   rm -rf /tmp/openssl.cnf
 
-RUN npm i --ignore-scripts --omit=dev && npm run build \
+RUN npm i --ignore-scripts && npm run build \
   && npm run esbuild \
   && cp -r build/static . \
   && ls | grep -v package.json | grep -v dist | grep -v static | xargs rm -rf
