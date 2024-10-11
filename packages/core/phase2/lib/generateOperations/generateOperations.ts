@@ -19,7 +19,6 @@ import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import type Exception from "../../../types/Exception"
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -63,13 +62,8 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   const remandCcrs = extractRemandCcrs(operations, false)
   const deduplicatedOperations = deduplicateOperations(operations)
   const validateOperationException = validateOperations(deduplicatedOperations, remandCcrs)
-  const exceptions: Exception[] = []
   if (validateOperationException) {
-    exceptions.push(validateOperationException)
-  }
-
-  if (exceptions.length > 0) {
-    return { operations: [], exceptions }
+    return { operations: [], exceptions: [validateOperationException] }
   }
 
   const filteredOperations = allResultsOnPnc
