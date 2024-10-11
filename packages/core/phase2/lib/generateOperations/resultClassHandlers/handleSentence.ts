@@ -10,20 +10,20 @@ export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, 
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
+    return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
   }
 
   if (!result.PNCAdjudicationExists) {
-    return { operations: [], exceptions: [] }
+    return []
   }
 
   if (!areAnyPncResults2007(aho, offence)) {
-    return { operations: [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)], exceptions: [] }
+    return [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)]
   }
 
   if (resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)) {
-    return { operations: [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)], exceptions: [] }
+    return [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
   }
 
-  return { operations: [], exceptions: [] }
+  return []
 }
