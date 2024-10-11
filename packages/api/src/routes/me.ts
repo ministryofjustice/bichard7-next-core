@@ -1,10 +1,10 @@
-import auth from "@/server/schemas/auth"
-import { unauthorizedError } from "@/server/schemas/errorReasons"
-import useZod from "@/server/useZod"
 import { UserSchema } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
+import auth from "../server/schemas/auth"
+import { unauthorizedError } from "../server/schemas/errorReasons"
+import useZod from "../server/useZod"
 
 const schema = {
   ...auth,

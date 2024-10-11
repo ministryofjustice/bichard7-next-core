@@ -1,7 +1,7 @@
-import FakeGateway from "@/services/gateways/fakeGateway"
-import canUseResubmitCaseExecute from "@/useCases/canUserResubmitCase"
 import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import FakeGateway from "../services/gateways/fakeGateway"
+import canUseResubmitCaseExecute from "./canUserResubmitCase"
 
 describe("canUseResubmitCase", () => {
   const gateway = new FakeGateway()

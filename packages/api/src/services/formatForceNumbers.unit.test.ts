@@ -1,4 +1,4 @@
-import formatForceNumbers from "@/services/formatForceNumbers"
+import formatForceNumbers from "./formatForceNumbers"
 
 describe("formatForceNumbers", () => {
   it("handles undefined", () => {
