@@ -31,7 +31,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.UNRESULTED]: () => ({ operations: [], exceptions: [] })
 }
 
-const generateOperationsFromResults = (
+export const generateOperationsFromResults = (
   aho: AnnotatedHearingOutcome,
   resubmitted: boolean,
   allResultsOnPnc: boolean
