@@ -20,7 +20,7 @@ COPY tsconfig*.json ./
 
 WORKDIR /core/packages/common
 
-RUN npm i --ignore-scripts && npm run build:api \
+RUN npm i --ignore-scripts && npm run build \
   && ls | grep -v package.json | grep -v dist | xargs rm -rf
 
 WORKDIR /core/packages/api
