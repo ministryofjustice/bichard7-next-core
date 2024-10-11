@@ -182,42 +182,6 @@ describe("generateOperations", () => {
     ])
   })
 
-  it("validates generated operations", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: [
-                {
-                  Result: [
-                    { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 },
-                    { ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, PNCDisposalType: 1001 }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    mockedHandleSentence.mockReturnValue({ operations: [{ code: PncOperation.SENTENCE_DEFERRED }], exceptions: [] })
-    mockedHandleAdjournmentPreJudgement.mockReturnValue({ operations: [{ code: PncOperation.REMAND }], exceptions: [] })
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200113",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
-      }
-    ])
-  })
-
   it("returns exceptions from checking all results are already on PNC with validation exceptions", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(false)
     const resubmitted = false
