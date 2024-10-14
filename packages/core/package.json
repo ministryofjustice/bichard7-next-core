@@ -73,7 +73,7 @@
     "@types/s3rver": "^3.7.4",
     "@types/stompit": "^0.26.6",
     "chalk": "^4.1.2",
-    "esbuild": "^0.21.5",
+    "esbuild": "~0.23.0",
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",

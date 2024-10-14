@@ -13,9 +13,11 @@ const semver = new RegExp(
   - p-limit
   - esbuild
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
+  - @cucumber/cucumber
+    - from tests repo migration, version was pinned to v9
 */
 const pinned = ["chalk", "eslint"]
-const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild"]
+const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber"]
 
 module.exports = {
   target: (package) => {
