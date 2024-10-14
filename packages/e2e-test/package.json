@@ -45,7 +45,7 @@
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.0.3",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.215",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.216",
     "@types/jest": "^29.5.13",
     "aws-sdk": "^2.1691.0",
     "axios": "^1.7.7",
