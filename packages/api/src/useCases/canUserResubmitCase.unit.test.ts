@@ -28,7 +28,7 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns false if the username isn't error_locked_by_id and user force is not the same as case force", async () => {
-      jest.spyOn(gateway, "caseCanBeResubmitted").mockResolvedValue(false)
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
 
       const result = await canUseResubmitCaseExecute({
         gateway,
@@ -40,7 +40,7 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns false if the username is error_locked_by_id, user force is the same as case force and the case is resolved", async () => {
-      jest.spyOn(gateway, "caseCanBeResubmitted").mockResolvedValue(false)
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
 
       const result = await canUseResubmitCaseExecute({
         gateway,
@@ -52,7 +52,7 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns true if the username is error_locked_by_id, user force is the same as case force and the case is unresolved", async () => {
-      jest.spyOn(gateway, "caseCanBeResubmitted").mockResolvedValue(true)
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(true)
 
       const result = await canUseResubmitCaseExecute({
         gateway,

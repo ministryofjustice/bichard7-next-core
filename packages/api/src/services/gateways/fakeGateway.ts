@@ -7,7 +7,7 @@ class FakeGateway implements Gateway {
     return Promise.resolve({ id: 1, username, jwt_id: "123", groups: [], visible_forces: "" } satisfies User)
   }
 
-  async caseCanBeResubmitted(_username: string, _caseId: number, _forceIds: number[]): Promise<boolean> {
+  async canCaseBeResubmitted(_username: string, _caseId: number, _forceIds: number[]): Promise<boolean> {
     return Promise.resolve(true)
   }
 }

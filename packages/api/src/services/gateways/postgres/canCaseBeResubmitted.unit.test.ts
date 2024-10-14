@@ -1,8 +1,8 @@
 import type postgres from "postgres"
-import type { CaseCanBeResubmittedResult } from "./caseCanBeResubmitted"
-import filter from "./caseCanBeResubmitted"
+import type { CanCaseBeResubmittedResult } from "./canCaseBeResubmitted"
+import filter from "./canCaseBeResubmitted"
 
-describe("caseCanBeResubmitted", () => {
+describe("canCaseBeResubmitted", () => {
   it("throws an error if the case isn't found", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 
@@ -19,7 +19,7 @@ describe("caseCanBeResubmitted", () => {
 
   it("returns false if case isn't locked by given user", async () => {
     const sql = jest.fn(() => [
-      { locked_by_user: false, case_in_force: true, case_is_unresolved: false } satisfies CaseCanBeResubmittedResult
+      { locked_by_user: false, case_in_force: true, case_is_unresolved: false } satisfies CanCaseBeResubmittedResult
     ]) as unknown as postgres.Sql
 
     const lockedByUser = await filter(sql, "username", 0, [])
@@ -29,7 +29,7 @@ describe("caseCanBeResubmitted", () => {
 
   it("throws an error if the case doesn't belong to the same force as the case", async () => {
     const sql = jest.fn(() => [
-      { locked_by_user: true, case_in_force: false, case_is_unresolved: false } satisfies CaseCanBeResubmittedResult
+      { locked_by_user: true, case_in_force: false, case_is_unresolved: false } satisfies CanCaseBeResubmittedResult
     ]) as unknown as postgres.Sql
 
     const caseInForce = await filter(sql, "username", 0, [])
@@ -39,7 +39,7 @@ describe("caseCanBeResubmitted", () => {
 
   it("returns false if user is locked to the case and case belongs to user's force", async () => {
     const sql = jest.fn(() => [
-      { locked_by_user: true, case_in_force: true, case_is_unresolved: false } satisfies CaseCanBeResubmittedResult
+      { locked_by_user: true, case_in_force: true, case_is_unresolved: false } satisfies CanCaseBeResubmittedResult
     ]) as unknown as postgres.Sql
 
     const result = await filter(sql, "username", 0, [])
@@ -49,7 +49,7 @@ describe("caseCanBeResubmitted", () => {
 
   it("returns true if user is locked to the case, case belongs to user's force and case is unresolved", async () => {
     const sql = jest.fn(() => [
-      { locked_by_user: true, case_in_force: true, case_is_unresolved: true } satisfies CaseCanBeResubmittedResult
+      { locked_by_user: true, case_in_force: true, case_is_unresolved: true } satisfies CanCaseBeResubmittedResult
     ]) as unknown as postgres.Sql
 
     const result = await filter(sql, "username", 0, [])
