@@ -3,15 +3,12 @@ import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { areAllResultsOnPnc } from "../areAllResultsOnPnc"
-import checkCaseRequiresRccButHasNoReportableOffences from "../checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 
-jest.mock("../checkCaseRequiresRccButHasNoReportableOffences")
 jest.mock("../hasUnmatchedPncOffences")
 jest.mock("../areAllResultsOnPnc")
 
-const mockedCheckCaseRequiresRccButHasNoReportableOffences = checkCaseRequiresRccButHasNoReportableOffences as jest.Mock
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 
@@ -43,9 +40,8 @@ describe("handleAdjournmentWithJudgement", () => {
       } as Result
     })
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: PncOperation.NORMAL_DISPOSAL,
@@ -70,9 +66,8 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should return PENHRG operation when fixedPenalty is true", () => {
     const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
@@ -86,9 +81,8 @@ describe("handleAdjournmentWithJudgement", () => {
       result: { ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, PNCAdjudicationExists: true } as Result
     })
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
@@ -98,14 +92,12 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should return DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      allResultsAlreadyOnPnc: true
+      allResultsOnPnc: true
     })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.NORMAL_DISPOSAL, data: { courtCaseReference: "234" }, status: "NotAttempted" },
       remandOperation
@@ -115,14 +107,12 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is added by the court and offence does not have a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      allResultsAlreadyOnPnc: true
+      allResultsOnPnc: true
     })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: PncOperation.NORMAL_DISPOSAL,
@@ -137,14 +127,12 @@ describe("handleAdjournmentWithJudgement", () => {
   it("should not return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
-      allResultsAlreadyOnPnc: true
+      allResultsOnPnc: true
     })
-    mockedCheckCaseRequiresRccButHasNoReportableOffences.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const { operations, exceptions } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([remandOperation])
   })
 
@@ -153,7 +141,7 @@ describe("handleAdjournmentWithJudgement", () => {
     mockedAreAllResultsOnPnc.mockReturnValue(false)
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
-    const { operations } = handleAdjournmentWithJudgement(params)
+    const operations = handleAdjournmentWithJudgement(params)
 
     expect(operations).toStrictEqual([remandOperation])
   })

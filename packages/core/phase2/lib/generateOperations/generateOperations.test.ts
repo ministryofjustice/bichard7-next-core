@@ -41,7 +41,7 @@ describe("generateOperations", () => {
       mockedHandleJudgementWithFinalResult,
       mockedHandleSentence,
       mockedHandleAdjournmentPreJudgement
-    ].forEach((fn) => fn.mockReturnValue({ operations: [], exceptions: [] }))
+    ].forEach((fn) => fn.mockReturnValue([]))
   })
 
   it.each([
@@ -58,16 +58,13 @@ describe("generateOperations", () => {
         Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
       }
     ] as Offence[])
-    resultClassHandler.mockReturnValue({
-      operations: [
-        {
-          code: PncOperation.REMAND,
-          data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
-          status: "NotAttempted"
-        }
-      ],
-      exceptions: []
-    })
+    resultClassHandler.mockReturnValue([
+      {
+        code: PncOperation.REMAND,
+        data: { courtCaseReference: "1", isAdjournmentPreJudgement: true },
+        status: "NotAttempted"
+      }
+    ])
 
     const { operations } = generateOperations(aho, resubmitted)
 
@@ -92,12 +89,10 @@ describe("generateOperations", () => {
         },
         Exceptions: []
       },
-      allResultsAlreadyOnPnc: false,
+      allResultsOnPnc: false,
       offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
-      offenceIndex: 0,
       resubmitted: false,
-      result: { PNCDisposalType: 1001, ResultClass: resultClass },
-      resultIndex: 0
+      result: { PNCDisposalType: 1001, ResultClass: resultClass }
     })
   })
 
@@ -144,24 +139,21 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleAdjournment.mockReturnValue({
-      operations: [
-        {
-          code: PncOperation.REMAND,
-          data: undefined,
-          courtCaseReference: "1",
-          isAdjournmentPreJudgement: true,
-          status: "NotAttempted"
-        },
-        {
-          code: PncOperation.NORMAL_DISPOSAL,
-          data: { courtCaseReference: "1" },
-          addedByTheCourt: true,
-          status: "NotAttempted"
-        }
-      ],
-      exceptions: []
-    })
+    mockedHandleAdjournment.mockReturnValue([
+      {
+        code: PncOperation.REMAND,
+        data: undefined,
+        courtCaseReference: "1",
+        isAdjournmentPreJudgement: true,
+        status: "NotAttempted"
+      },
+      {
+        code: PncOperation.NORMAL_DISPOSAL,
+        data: { courtCaseReference: "1" },
+        addedByTheCourt: true,
+        status: "NotAttempted"
+      }
+    ])
 
     const { operations } = generateOperations(aho, resubmitted)
 
@@ -180,72 +172,6 @@ describe("generateOperations", () => {
         status: "NotAttempted"
       }
     ])
-  })
-
-  it("returns exceptions from checking all results are already on PNC with validation exceptions", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const resubmitted = false
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: [
-                {
-                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    mockedHandleSentence.mockReturnValue({
-      operations: [],
-      exceptions: [
-        {
-          code: "HO200106",
-          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
-        }
-      ]
-    })
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toStrictEqual([
-      {
-        code: "HO200106",
-        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "Result", 0]
-      }
-    ])
-  })
-
-  it("returns exceptions from checking all results are already on PNC without validation exceptions when there are none", () => {
-    mockedAreAllResultsOnPnc.mockReturnValue(false)
-    const aho = {
-      Exceptions: [],
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: [
-                {
-                  Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1001 }]
-                }
-              ]
-            }
-          }
-        }
-      }
-    } as unknown as AnnotatedHearingOutcome
-
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
-
-    expect(operations).toHaveLength(0)
-    expect(exceptions).toHaveLength(0)
   })
 
   it("Should return no operations when there are no recordable offences", () => {
@@ -297,8 +223,8 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    mockedHandleSentence.mockReturnValue({ operations: [{ code: PncOperation.PENALTY_HEARING }], exceptions: [] })
-    mockedHandleAdjournment.mockReturnValue({ operations: [{ code: PncOperation.REMAND }], exceptions: [] })
+    mockedHandleSentence.mockReturnValue([{ code: PncOperation.PENALTY_HEARING }])
+    mockedHandleAdjournment.mockReturnValue([{ code: PncOperation.REMAND }])
 
     const { operations } = generateOperations(aho, resubmitted)
 
