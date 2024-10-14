@@ -114,44 +114,11 @@ exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 
 
 exports[`validateOperations should match existing behaviour NEWREM:PENHRG (CCR: 1:null) 1`] = `undefined`;
 
-exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:1) 1`] = `undefined`;
 
-exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:2) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:2) 1`] = `undefined`;
 
-exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:null) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour NEWREM:SENDEF (CCR: 1:null) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour NEWREM:SUBVAR (CCR: 1:1) 1`] = `undefined`;
 
@@ -305,33 +272,11 @@ exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 
 
 exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1:null) 1`] = `undefined`;
 
-exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1:1) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1:1) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1:2) 1`] = `undefined`;
 
-exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1:null) 1`] = `
-{
-  "code": "HO200113",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour SENDEF:NEWREM (CCR: 1:null) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour SENDEF:PENHRG (CCR: 1:1) 1`] = `
 {
