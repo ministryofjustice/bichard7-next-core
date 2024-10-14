@@ -61,7 +61,10 @@ module.exports = {
           "error",
           { blankLine: "always", prev: "block", next: "*" },
           { blankLine: "always", prev: "block-like", next: "*" }
-        ]
+        ],
+        // TODO: Merge UI into Core
+        "@typescript-eslint/no-empty-object-type": "off",
+        "@typescript-eslint/no-require-imports": "off"
       }
     },
     {
