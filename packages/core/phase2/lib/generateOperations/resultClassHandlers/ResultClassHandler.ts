@@ -1,14 +1,12 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type ExceptionsAndOperations from "../ExceptionsAndOperations"
+import type { Operation } from "../../../../types/PncUpdateDataset"
 
 export type ResultClassHandlerParams = {
   aho: AnnotatedHearingOutcome
   offence: Offence
-  offenceIndex: number
   result: Result
-  resultIndex: number
   resubmitted: boolean
-  allResultsAlreadyOnPnc: boolean
+  allResultsOnPnc: boolean
 }
 
-export type ResultClassHandler = (params: ResultClassHandlerParams) => ExceptionsAndOperations
+export type ResultClassHandler = (params: ResultClassHandlerParams) => Operation[]

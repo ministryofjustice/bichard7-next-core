@@ -1,15 +1,16 @@
 import checkOperationsException from "./checkOperationsException"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import { generateOperationsFromResults } from "../lib/generateOperations/generateOperations"
+import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 import { PncOperation } from "../../types/PncOperation"
 
 jest.mock("../lib/generateOperations/generateOperations")
 
-const mockedGenerateOperationsFromResults = generateOperationsFromResults as jest.Mock
+const mockedGenerateOperationsFromOffenceResults = generateOperationsFromOffenceResults as jest.Mock
 
-mockedGenerateOperationsFromResults.mockReturnValue({
-  operations: [{ code: PncOperation.REMAND }, { code: PncOperation.NORMAL_DISPOSAL }]
-})
+mockedGenerateOperationsFromOffenceResults.mockReturnValue([
+  { code: PncOperation.REMAND },
+  { code: PncOperation.NORMAL_DISPOSAL }
+])
 
 describe("checkOperationsException", () => {
   it("generates operations from results", () => {
@@ -20,7 +21,7 @@ describe("checkOperationsException", () => {
 
     checkOperationsException(aho, checkException)
 
-    expect(mockedGenerateOperationsFromResults).toHaveBeenCalledWith(aho, isResubmitted, allResultsOnPnc)
+    expect(mockedGenerateOperationsFromOffenceResults).toHaveBeenCalledWith(aho, isResubmitted, allResultsOnPnc)
   })
 
   it("checks for exceptions using generated operations", () => {

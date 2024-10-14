@@ -15,9 +15,8 @@ describe("handleSentence", () => {
   it("should return PENHRG operation when fixedPenalty is true and ccrId has value", () => {
     const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.PENALTY_HEARING, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
@@ -31,9 +30,8 @@ describe("handleSentence", () => {
       } as Offence
     })
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
@@ -44,9 +42,8 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.SENTENCE_DEFERRED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
@@ -62,9 +59,8 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(false)
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.SENTENCE_DEFERRED, data: undefined, status: "NotAttempted" }
     ])
@@ -81,9 +77,8 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(true)
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       { code: PncOperation.DISPOSAL_UPDATED, data: { courtCaseReference: "234" }, status: "NotAttempted" }
     ])
@@ -102,9 +97,8 @@ describe("handleSentence", () => {
     })
     mockedAreAnyPncResults2007.mockReturnValue(true)
 
-    const { exceptions, operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: PncOperation.DISPOSAL_UPDATED,
@@ -123,7 +117,7 @@ describe("handleSentence", () => {
       resultIndex: 1
     })
 
-    const { operations } = handleSentence(params)
+    const operations = handleSentence(params)
 
     expect(operations).toHaveLength(0)
   })

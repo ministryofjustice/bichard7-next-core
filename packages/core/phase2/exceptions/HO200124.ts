@@ -11,9 +11,9 @@ import errorPaths from "../../lib/exceptions/errorPaths"
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
+  const allResultsOnPnc = areAllResultsOnPnc(aho)
 
-  if (fixedPenalty || allResultsAlreadyOnPnc) {
+  if (fixedPenalty || allResultsOnPnc) {
     return []
   }
 
