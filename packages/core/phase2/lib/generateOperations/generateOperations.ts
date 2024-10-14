@@ -29,7 +29,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.UNRESULTED]: () => []
 }
 
-export const generateOperationsFromResults = (
+export const generateOperationsFromOffenceResults = (
   aho: AnnotatedHearingOutcome,
   allResultsOnPnc: boolean,
   resubmitted: boolean
@@ -57,7 +57,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   }
 
   const allResultsOnPnc = areAllResultsOnPnc(aho)
-  const operations = generateOperationsFromResults(aho, allResultsOnPnc, resubmitted)
+  const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
   const validateOperationException = validateOperations(deduplicatedOperations)
 
