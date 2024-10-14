@@ -8,7 +8,7 @@ import { PncOperation } from "../../../types/PncOperation"
 
 const errorPath = errorPaths.case.asn
 
-const validateOperations = (operations: Operation[], remandCcrs: Set<string>): Exception | void => {
+const validateOperations = (operations: Operation[]): Exception | void => {
   const hasOperation = (pncOperation: PncOperation) => operations.some((operation) => operation.code === pncOperation)
 
   if (hasOperation(PncOperation.PENALTY_HEARING) && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
@@ -35,20 +35,6 @@ const validateOperations = (operations: Operation[], remandCcrs: Set<string>): E
     )
   ) {
     return { code: ExceptionCode.HO200115, path: errorPath }
-  }
-
-  const hasNewRemandAndSentencing = operations.some((operation) => {
-    const courtCaseReference = operationCourtCaseReference(operation)
-    const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
-
-    return (
-      PncOperation.SENTENCE_DEFERRED === operation.code &&
-      ((hasOperation(PncOperation.REMAND) && remandCcrs.size === 0) || remandCcrsContainCourtCaseReference)
-    )
-  })
-
-  if (hasNewRemandAndSentencing) {
-    return { code: ExceptionCode.HO200113, path: errorPath }
   }
 
   const findClashingCourtCaseOperation = (operation: Operation) =>
