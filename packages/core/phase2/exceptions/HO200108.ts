@@ -12,7 +12,7 @@ import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOf
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  const allResultsAlreadyOnPnc = areAllResultsOnPnc(aho)
+  const allResultsOnPnc = areAllResultsOnPnc(aho)
 
   if (fixedPenalty) {
     return []
@@ -23,7 +23,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
 
     if (
       result.PNCAdjudicationExists ||
-      (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt)
+      (!allResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt)
     ) {
       return
     }

@@ -17,9 +17,8 @@ describe("handleAdjournment", () => {
       result: { NextResultSourceOrganisation: organisationUnit } as Result
     })
 
-    const { operations, exceptions } = handleAdjournment(params)
+    const operations = handleAdjournment(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: PncOperation.REMAND,

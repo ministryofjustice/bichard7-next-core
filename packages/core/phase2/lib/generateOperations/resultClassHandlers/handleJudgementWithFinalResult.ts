@@ -8,7 +8,7 @@ import areAllPncResults2007 from "../../areAllPncResults2007"
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
   aho,
-  allResultsAlreadyOnPnc,
+  allResultsOnPnc,
   offence,
   result
 }) => {
@@ -17,17 +17,15 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
 
   if (fixedPenalty) {
-    return { operations: [createOperation(PncOperation.PENALTY_HEARING, operationData)], exceptions: [] }
+    return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
   } else if (result.PNCAdjudicationExists) {
-    const operations =
-      resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)
-        ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
-        : []
-    return { operations, exceptions: [] }
+    return resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)
+      ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
+      : []
   }
 
-  if (!allResultsAlreadyOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
-    return { operations: [], exceptions: [] }
+  if (!allResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
+    return []
   }
 
   const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
@@ -42,5 +40,5 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     })
   }
 
-  return { operations, exceptions: [] }
+  return operations
 }

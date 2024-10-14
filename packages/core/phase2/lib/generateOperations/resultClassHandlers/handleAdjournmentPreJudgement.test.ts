@@ -22,9 +22,8 @@ describe("handleAdjournmentPreJudgement", () => {
       } as Result
     })
 
-    const { operations, exceptions } = handleAdjournmentPreJudgement(params)
+    const operations = handleAdjournmentPreJudgement(params)
 
-    expect(exceptions).toHaveLength(0)
     expect(operations).toStrictEqual([
       {
         code: PncOperation.REMAND,

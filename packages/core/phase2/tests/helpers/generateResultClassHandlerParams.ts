@@ -6,7 +6,7 @@ import type { ResultClassHandlerParams } from "../../lib/generateOperations/resu
 type Params = {
   fixedPenalty: boolean
   resubmitted: boolean
-  allResultsAlreadyOnPnc: boolean
+  allResultsOnPnc: boolean
   offence: Offence
   result: Result
   offenceIndex: number
@@ -16,7 +16,7 @@ type Params = {
 const defaultParams: Params = {
   fixedPenalty: false,
   resubmitted: false,
-  allResultsAlreadyOnPnc: false,
+  allResultsOnPnc: false,
   offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }], CourtCaseReferenceNumber: "234" } as Offence,
   result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: false } as Result,
   offenceIndex: 1,
@@ -24,7 +24,7 @@ const defaultParams: Params = {
 }
 
 const generateResultClassHandlerParams = (params: Partial<Params> = defaultParams) => {
-  const { fixedPenalty, resubmitted, allResultsAlreadyOnPnc, offence, result, offenceIndex, resultIndex } = {
+  const { fixedPenalty, resubmitted, allResultsOnPnc, offence, result, offenceIndex, resultIndex } = {
     ...defaultParams,
     ...params,
     offence: {
@@ -40,7 +40,7 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
       }
     }),
     resubmitted,
-    allResultsAlreadyOnPnc,
+    allResultsOnPnc,
     offence,
     result,
     offenceIndex,
