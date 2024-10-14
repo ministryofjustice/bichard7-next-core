@@ -27,7 +27,7 @@
     "test:parallel": "curl -X DELETE http://localhost:3000/mocks && ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 0 --no-strict --exit --fail-fast --tags '@Parallel' --parallel $CONCURRENCY features",
     "test:preprod": "SKIP_PNC_VALIDATION=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@PreProdTest and not @Excluded' features",
     "test": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC' features",
-    "update-deps": "ncu -u -x @cucumber/cucumber -x eslint && npm install",
+    "update-deps": "ncu -u && npm install",
     "prepare": "husky"
   },
   "repository": {
@@ -79,7 +79,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
