@@ -1,6 +1,5 @@
 import type { Plugin } from "esbuild"
 import { build } from "esbuild"
-import esbuildPluginPino from "esbuild-plugin-pino"
 import { cp } from "node:fs/promises"
 import path from "node:path"
 import glob from "tiny-glob"
@@ -31,6 +30,6 @@ function esbuildPluginFastifySwaggerUi(): Plugin {
     platform: "node",
     format: "cjs",
     sourcemap: true,
-    plugins: [esbuildPluginPino({ transports: ["pino-pretty"] }), esbuildPluginFastifySwaggerUi()]
+    plugins: [esbuildPluginFastifySwaggerUi()]
   })
 })()
