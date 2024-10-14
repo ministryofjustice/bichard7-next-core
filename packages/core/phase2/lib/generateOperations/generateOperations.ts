@@ -5,7 +5,6 @@ import isRecordableOffence from "../isRecordableOffence"
 import isRecordableResult from "../isRecordableResult"
 import validateOperations from "./validateOperations"
 import deduplicateOperations from "./deduplicateOperations"
-import extractRemandCcrs from "./extractRemandCcrs"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -30,7 +29,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.UNRESULTED]: () => []
 }
 
-const generateOperationsFromOffences = (
+export const generateOperationsFromResults = (
   aho: AnnotatedHearingOutcome,
   allResultsOnPnc: boolean,
   resubmitted: boolean
@@ -58,10 +57,10 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   }
 
   const allResultsOnPnc = areAllResultsOnPnc(aho)
-  const operations = generateOperationsFromOffences(aho, allResultsOnPnc, resubmitted)
-  const remandCcrs = extractRemandCcrs(operations, false)
+  const operations = generateOperationsFromResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
-  const validateOperationException = validateOperations(deduplicatedOperations, remandCcrs)
+  const validateOperationException = validateOperations(deduplicatedOperations)
+
   if (validateOperationException) {
     return { operations: [], exceptions: [validateOperationException] }
   }
