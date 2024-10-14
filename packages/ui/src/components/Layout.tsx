@@ -69,7 +69,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
         copyright={{
           image: {
             height: 102,
-            src: `${basePath}/govuk_assets/images/govuk-crest.png`,
+            src: `${basePath}/govuk_assets/images/govuk-crest.svg`,
             width: 125
           },
           link: "https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/",

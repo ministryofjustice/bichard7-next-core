@@ -13,6 +13,13 @@ module.exports = {
     "^middleware/(.*)$": "<rootDir>/src/middleware/$1"
   },
   transform: {
-    "^.+\\.(t|j)sx?$": "@swc/jest"
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          target: "es6"
+        }
+      }
+    ]
   }
 }

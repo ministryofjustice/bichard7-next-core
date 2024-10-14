@@ -47,15 +47,6 @@ module.exports = {
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+$", varsIgnorePattern: "^_+$" }],
         "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }],
-        "@typescript-eslint/ban-types": [
-          "error",
-          {
-            extendDefaults: true,
-            types: {
-              "{}": false
-            }
-          }
-        ],
         // "@typescript-eslint/no-empty-object-type": "error",
         // "@typescript-eslint/consistent-type-imports": "error",
         "padding-line-between-statements": [

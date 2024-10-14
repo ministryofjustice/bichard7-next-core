@@ -1,8 +1,9 @@
-import { CookieSerializeOptions, serialize } from "cookie"
-import { ServerResponse } from "http"
+import type { SerializeOptions } from "cookie"
+import { serialize } from "cookie"
+import type { ServerResponse } from "http"
 import { COOKIES_SECURE_OPTION } from "../config"
 
-const cookieOptions: CookieSerializeOptions = {
+const cookieOptions: SerializeOptions = {
   httpOnly: true,
   sameSite: "strict",
   secure: COOKIES_SECURE_OPTION
@@ -21,7 +22,7 @@ const getExistingCookies = (response: ServerResponse): string[] => {
   return cookies
 }
 
-export default (response: ServerResponse, name: string, value: string, options?: CookieSerializeOptions) => {
+export default (response: ServerResponse, name: string, value: string, options?: SerializeOptions) => {
   const cookies = getExistingCookies(response)
   const cookieValue = serialize(name, value, { ...cookieOptions, ...options })
   cookies.push(cookieValue)
