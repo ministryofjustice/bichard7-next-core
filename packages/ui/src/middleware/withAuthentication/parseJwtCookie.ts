@@ -1,4 +1,4 @@
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 import type AuthJwt from "types/AuthJwt"
 
 const parseJwt = (jwtPayload: string): AuthJwt => {

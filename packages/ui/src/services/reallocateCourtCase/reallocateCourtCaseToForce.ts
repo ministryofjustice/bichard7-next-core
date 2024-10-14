@@ -1,24 +1,24 @@
-import { DataSource, EntityManager, UpdateResult } from "typeorm"
-import { isError } from "types/Result"
-import amendCourtCase from "../amendCourtCase"
-import User from "../entities/User"
-import insertNotes from "../insertNotes"
-import updateLockStatusToUnlocked from "../updateLockStatusToUnlocked"
-import UnlockReason from "types/UnlockReason"
-import { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
-import { storeMessageAuditLogEvents } from "../storeAuditLogEvents"
+import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCategory"
-import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
-import getCourtCaseByOrganisationUnit from "../getCourtCaseByOrganisationUnit"
+import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
 import generateTriggers from "@moj-bichard7-developers/bichard7-next-core/core/lib/triggers/generateTriggers"
-import type { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
 import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
+import type { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
+import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+import { isError } from "types/Result"
+import UnlockReason from "types/UnlockReason"
+import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
+import parseHearinOutcome from "../../utils/parseHearingOutcome"
+import amendCourtCase from "../amendCourtCase"
+import type User from "../entities/User"
+import getCourtCaseByOrganisationUnit from "../getCourtCaseByOrganisationUnit"
+import insertNotes from "../insertNotes"
+import { storeMessageAuditLogEvents } from "../storeAuditLogEvents"
+import updateLockStatusToUnlocked from "../updateLockStatusToUnlocked"
 import recalculateTriggers from "./recalculateTriggers"
 import updateCourtCase from "./updateCourtCase"
 import updateTriggers from "./updateTriggers"
-import parseHearinOutcome from "../../utils/parseHearingOutcome"
-import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
 
 const reallocateCourtCaseToForce = async (
   dataSource: DataSource | EntityManager,
@@ -27,7 +27,7 @@ const reallocateCourtCaseToForce = async (
   forceCode: string,
   note?: string
 ): Promise<UpdateResult | Error> => {
-  return dataSource
+  return await dataSource
     .transaction("SERIALIZABLE", async (entityManager): Promise<UpdateResult | Error> => {
       const events: AuditLogEvent[] = []
 

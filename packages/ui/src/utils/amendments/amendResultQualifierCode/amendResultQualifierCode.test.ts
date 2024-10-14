@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -6,7 +6,7 @@ import cloneDeep from "lodash.clonedeep"
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendResultQualifierCode from "./amendResultQualifierCode"
-import { Amendments } from "types/Amendments"
+import type { Amendments } from "types/Amendments"
 
 describe("disposal qualifier code", () => {
   let aho: AnnotatedHearingOutcome
@@ -82,7 +82,7 @@ describe("disposal qualifier code", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
         .ResultQualifierVariable[resultQualifierIndex]
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendResultQualifierCode(
       [
@@ -111,7 +111,7 @@ describe("disposal qualifier code", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultQualifierVariable[
         resultQualifierIndex
       ]
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendResultQualifierCode(
       [
@@ -136,7 +136,7 @@ describe("disposal qualifier code", () => {
 
     delete aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result).toBe(undefined)
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result).toBeUndefined()
 
     expect(() =>
       amendResultQualifierCode(
@@ -149,7 +149,7 @@ describe("disposal qualifier code", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the ResultQualifierVariable; Result in undefined")
+    ).toThrow("Cannot update the ResultQualifierVariable; Result in undefined")
   })
 
   it("throw error if there is no ResultIndex key is passing to an offence update", () => {
@@ -168,7 +168,7 @@ describe("disposal qualifier code", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the ResultQualifierVariable; ResultIndex is undefined")
+    ).toThrow("Cannot update the ResultQualifierVariable; ResultIndex is undefined")
   })
 
   it("throw error if the offence index is out of the range of the Offence array", () => {
@@ -186,7 +186,7 @@ describe("disposal qualifier code", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the ResultQualifierVariable; offence index is out of range")
+    ).toThrow("Cannot update the ResultQualifierVariable; offence index is out of range")
   })
 
   it("amends result qualifier variable code to multiple offences", () => {

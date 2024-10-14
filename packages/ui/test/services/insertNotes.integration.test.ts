@@ -1,5 +1,5 @@
 import MockDate from "mockdate"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -80,7 +80,7 @@ describe("insertNote", () => {
     expect(isError(result)).toBe(true)
 
     const error = result as Error
-    expect(error.message).toEqual(
+    expect(error.message).toBe(
       'insert or update on table "error_list_notes" violates foreign key constraint "error_list_notes_error_id_fkey"'
     )
   })

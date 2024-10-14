@@ -1,6 +1,6 @@
 import type User from "services/entities/User"
-import { GetServerSidePropsContext } from "next"
-import { ParsedUrlQuery } from "querystring"
+import type { GetServerSidePropsContext } from "next"
+import type { ParsedUrlQuery } from "querystring"
 
 type AuthenticationServerSidePropsContext = GetServerSidePropsContext<ParsedUrlQuery> & {
   currentUser: User

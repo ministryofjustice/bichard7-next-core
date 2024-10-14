@@ -1,4 +1,4 @@
-import {
+import type {
   Result,
   ResultQualifierVariable
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"

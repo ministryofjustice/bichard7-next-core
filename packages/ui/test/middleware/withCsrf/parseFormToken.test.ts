@@ -1,8 +1,9 @@
-import { IncomingMessage } from "http"
-import QueryString from "qs"
+import type { IncomingMessage } from "http"
+import type QueryString from "qs"
 import { isError } from "types/Result"
 import generateCsrfToken from "../../../src/middleware/withCsrf/generateCsrfToken"
-import parseFormToken, { ParseFormTokenResult } from "../../../src/middleware/withCsrf/parseFormToken"
+import type { ParseFormTokenResult } from "../../../src/middleware/withCsrf/parseFormToken"
+import parseFormToken from "../../../src/middleware/withCsrf/parseFormToken"
 
 const request = <IncomingMessage>{ url: "/login" }
 

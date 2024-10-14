@@ -1,7 +1,7 @@
 import SurveyFeedback from "services/entities/SurveyFeedback"
 import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
 import { SurveyFeedbackType } from "types/SurveyFeedback"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -53,7 +53,7 @@ describe("insertSurveyFeedback", () => {
     expect(isError(result)).toBe(true)
 
     const error = result as Error
-    expect(error.message).toEqual(
+    expect(error.message).toBe(
       'insert or update on table "survey_feedback" violates foreign key constraint "survey_feedback_user_id_fkey"'
     )
   })

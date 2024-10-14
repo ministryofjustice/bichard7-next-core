@@ -72,6 +72,7 @@ const applyAmendmentsToAho = (
       return err as Error
     }
   }
+
   return aho
 }
 

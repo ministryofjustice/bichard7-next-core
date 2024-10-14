@@ -1,6 +1,7 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import amendDefendantOrOffenceResult from "../amendDefendantOrOffenceResult"
-import { Amendments, ValidProperties } from "types/Amendments"
+import type { Amendments } from "types/Amendments"
+import { ValidProperties } from "types/Amendments"
 
 const amendNextResultSourceOrganisation = (
   offences: Amendments["nextSourceOrganisation"],

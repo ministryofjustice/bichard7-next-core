@@ -2,12 +2,13 @@ import { type AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/
 import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCategory"
 import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
-import { EntityManager, FindOperator, IsNull, MoreThan, Repository, UpdateResult } from "typeorm"
+import type { EntityManager, FindOperator, Repository, UpdateResult } from "typeorm"
+import { IsNull, MoreThan } from "typeorm"
 import Permission from "types/Permission"
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import CourtCase from "./entities/CourtCase"
-import User from "./entities/User"
+import type User from "./entities/User"
 
 type LockReason = "Trigger" | "Exception"
 type WhereClause<T> = {

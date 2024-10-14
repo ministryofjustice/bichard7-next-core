@@ -1,4 +1,4 @@
-import { DateRange } from "types/CaseListQueryParams"
+import type { DateRange } from "types/CaseListQueryParams"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 
 export const mapCaseAges = (caseAge: string | string[] | undefined): DateRange[] | undefined => {

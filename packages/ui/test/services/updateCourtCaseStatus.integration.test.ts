@@ -1,9 +1,9 @@
 import MockDate from "mockdate"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import { isError } from "services/mq/types/Result"
 import updateCourtCaseStatus from "services/updateCourtCaseStatus"
-import { DataSource, UpdateResult } from "typeorm"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import type { DataSource, UpdateResult } from "typeorm"
+import type { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -96,7 +96,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.error_status).toEqual(3)
+      expect(courtCaseRow.error_status).toBe(3)
       expect(courtCaseRow.error_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.error_resolved_ts).toBeNull()
 
@@ -117,7 +117,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.error_status).toEqual(3)
+      expect(courtCaseRow.error_status).toBe(3)
       expect(courtCaseRow.error_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.error_resolved_ts).toBeNull()
       expect(courtCaseRow.trigger_status).toBeNull()
@@ -138,7 +138,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.error_status).toEqual(2)
+      expect(courtCaseRow.error_status).toBe(2)
       expect(courtCaseRow.error_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.error_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toBeNull()
@@ -159,7 +159,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.error_status).toEqual(2)
+      expect(courtCaseRow.error_status).toBe(2)
       expect(courtCaseRow.error_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.error_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toEqual(date)
@@ -180,7 +180,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.error_status).toEqual(2)
+      expect(courtCaseRow.error_status).toBe(2)
       expect(courtCaseRow.error_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.error_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toEqual(date)
@@ -210,7 +210,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.trigger_status).toEqual(3)
+      expect(courtCaseRow.trigger_status).toBe(3)
       expect(courtCaseRow.trigger_resolved_ts).toBeNull()
       expect(courtCaseRow.error_resolved_ts).toBeNull()
       expect(courtCaseRow.error_status).toBeNull()
@@ -230,7 +230,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.trigger_status).toEqual(3)
+      expect(courtCaseRow.trigger_status).toBe(3)
       expect(courtCaseRow.trigger_resolved_ts).toBeNull()
       expect(courtCaseRow.error_resolved_ts).toBeNull()
       expect(courtCaseRow.error_status).toBeNull()
@@ -255,7 +255,7 @@ describe("updateCourtCaseStatus", () => {
       expect(courtCaseRow.trigger_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.trigger_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toBeNull()
-      expect(courtCaseRow.error_status).toEqual(1)
+      expect(courtCaseRow.error_status).toBe(1)
       expect(courtCaseRow.error_resolved_ts).toBeNull()
     })
 
@@ -274,7 +274,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.trigger_status).toEqual(2)
+      expect(courtCaseRow.trigger_status).toBe(2)
       expect(courtCaseRow.trigger_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.trigger_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toEqual(date)
@@ -297,7 +297,7 @@ describe("updateCourtCaseStatus", () => {
       expect(updateResult.raw).toHaveLength(1)
 
       const courtCaseRow = updateResult.raw[0]
-      expect(courtCaseRow.trigger_status).toEqual(2)
+      expect(courtCaseRow.trigger_status).toBe(2)
       expect(courtCaseRow.trigger_resolved_by).toEqual(testUser.username)
       expect(courtCaseRow.trigger_resolved_ts).toEqual(date)
       expect(courtCaseRow.resolution_ts).toEqual(date)

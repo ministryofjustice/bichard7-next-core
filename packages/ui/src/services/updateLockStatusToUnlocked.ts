@@ -1,7 +1,7 @@
-import { EntityManager, Repository, UpdateResult } from "typeorm"
+import type { EntityManager, Repository, UpdateResult } from "typeorm"
 import CourtCase from "./entities/CourtCase"
-import User from "./entities/User"
-import { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type User from "./entities/User"
+import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
@@ -51,6 +51,7 @@ const unlock = async (
       )
     )
   }
+
   return result
 }
 

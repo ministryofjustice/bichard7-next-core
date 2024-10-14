@@ -1,6 +1,6 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { DisplayFullCourtCase } from "./display/CourtCases"
-import { Exception } from "./exceptions"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type { DisplayFullCourtCase } from "./display/CourtCases"
+import type { Exception } from "./exceptions"
 
 enum ErrorMessages {
   QualifierCode = "This code could not be recognised, contact the courts to verify the correct information and report to the Bichard 7 team. Resolve exception by manually updating the PNC with correct code.",

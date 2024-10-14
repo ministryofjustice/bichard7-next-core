@@ -1,11 +1,11 @@
 import CourtCase from "services/entities/CourtCase"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import { DataSource } from "typeorm"
-import { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { DataSource } from "typeorm"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import { isError } from "../../../src/types/Result"
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromEntity from "../../utils/deleteFromEntity"
@@ -63,9 +63,9 @@ describe("listCourtCases", () => {
       const { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(3)
-      expect(cases[0].errorResolvedBy).toStrictEqual("User Name01")
-      expect(cases[1].triggerResolvedBy).toStrictEqual("User Name02")
-      expect(cases[2].errorResolvedBy).toStrictEqual("User Name03")
+      expect(cases[0].errorResolvedBy).toBe("User Name01")
+      expect(cases[1].triggerResolvedBy).toBe("User Name02")
+      expect(cases[2].errorResolvedBy).toBe("User Name03")
     })
 
     it("Should list cases that match the full username search", async () => {
@@ -84,7 +84,7 @@ describe("listCourtCases", () => {
       const { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(1)
-      expect(cases[0].errorResolvedBy).toStrictEqual("User Name01")
+      expect(cases[0].errorResolvedBy).toBe("User Name01")
     })
 
     it("Should handle wildcard searches for partial usernames", async () => {
@@ -99,9 +99,9 @@ describe("listCourtCases", () => {
       const { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(3)
-      expect(cases[0].errorResolvedBy).toStrictEqual("User Name01")
-      expect(cases[1].triggerResolvedBy).toStrictEqual("User Name02")
-      expect(cases[2].errorResolvedBy).toStrictEqual("User Name03")
+      expect(cases[0].errorResolvedBy).toBe("User Name01")
+      expect(cases[1].triggerResolvedBy).toBe("User Name02")
+      expect(cases[2].errorResolvedBy).toBe("User Name03")
     })
   })
 })

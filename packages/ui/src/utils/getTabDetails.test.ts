@@ -1,5 +1,5 @@
-import { Amendments } from "types/Amendments"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { Amendments } from "types/Amendments"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100310 } from "../../test/helpers/exceptions"
 import HO100102 from "../../test/helpers/exceptions/HO100102"
@@ -402,7 +402,7 @@ describe("getTabDetails", () => {
     expect(tabDetails[3].exceptionsResolved).toBe(true)
   })
 
-  it("Should return isResolved:false for offences tab when multiple exceptions are raised and only one of them is resolved ", () => {
+  it("Should return isResolved:false for offences tab when multiple exceptions are raised and only one of them is resolved", () => {
     dummyAho.Exceptions.length = 0
     HO100102(dummyAho)
     HO100200(dummyAho)
@@ -428,7 +428,7 @@ describe("getTabDetails", () => {
     expect(tabDetails[3].exceptionsResolved).toBe(false)
   })
 
-  it("Should return isResolved:true for offences tab when multiple exceptions are raised and all of them are resolved ", () => {
+  it("Should return isResolved:true for offences tab when multiple exceptions are raised and all of them are resolved", () => {
     dummyAho.Exceptions.length = 0
     HO100102(dummyAho)
     HO100200(dummyAho)

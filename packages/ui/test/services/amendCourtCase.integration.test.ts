@@ -3,10 +3,10 @@ import fs from "fs"
 import amendCourtCase from "services/amendCourtCase"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import createForceOwner from "utils/createForceOwner"
 import getCourtCase from "../../src/services/getCourtCase"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -143,16 +143,16 @@ describe("amend court case", () => {
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
     expect(retrievedCase?.notes).toHaveLength(3)
-    expect(retrievedCase?.notes[0].userId).toEqual("System")
-    expect(retrievedCase?.notes[0].noteText).toEqual(
+    expect(retrievedCase?.notes[0].userId).toBe("System")
+    expect(retrievedCase?.notes[0].noteText).toBe(
       `${userName}: Portal Action: Update Applied. Element: forceOwner. New Value: 03`
     )
-    expect(retrievedCase?.notes[1].userId).toEqual("System")
-    expect(retrievedCase?.notes[1].noteText).toEqual(
+    expect(retrievedCase?.notes[1].userId).toBe("System")
+    expect(retrievedCase?.notes[1].noteText).toBe(
       `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 3333`
     )
-    expect(retrievedCase?.notes[2].userId).toEqual("System")
-    expect(retrievedCase?.notes[2].noteText).toEqual(
+    expect(retrievedCase?.notes[2].userId).toBe("System")
+    expect(retrievedCase?.notes[2].noteText).toBe(
       `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 1111`
     )
   })
@@ -209,7 +209,7 @@ describe("amend court case", () => {
     expect(firstResult).not.toBeInstanceOf(Error)
 
     const secondResult = await amendCourtCase(dataSource, { forceOwner: "04" }, errorLockedBySomeoneElse, user)
-    expect(secondResult).toEqual(Error(`Exception is locked by another user`))
+    expect(secondResult).toEqual(Error("Exception is locked by another user"))
 
     const caseWithErrorLock = await dataSource
       .getRepository(CourtCase)
@@ -243,7 +243,7 @@ describe("amend court case", () => {
   })
 
   it("Should return an error if the xml is invalid", async () => {
-    ;(parseAhoXml as jest.Mock).mockImplementationOnce(() => new Error(`Failed to parse aho`))
+    ;(parseAhoXml as jest.Mock).mockImplementationOnce(() => new Error("Failed to parse aho"))
 
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: null,
@@ -258,7 +258,7 @@ describe("amend court case", () => {
     await insertCourtCases(inputCourtCase)
 
     const result = await amendCourtCase(dataSource, { noUpdatesResubmit: true }, inputCourtCase, user)
-    expect(result).toEqual(Error(`Failed to parse aho`))
+    expect(result).toEqual(Error("Failed to parse aho"))
   })
 
   it("Should return an error if it cannot update the db", async () => {

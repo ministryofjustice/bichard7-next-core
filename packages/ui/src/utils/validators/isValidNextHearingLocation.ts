@@ -1,4 +1,4 @@
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
+import type OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 
 const isValidNextHearingLocation = (
   amendedNextHearingLocation: string | undefined,

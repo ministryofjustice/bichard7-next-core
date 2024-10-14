@@ -1,5 +1,5 @@
-import { IncomingMessage } from "http"
-import QueryString from "qs"
+import type { IncomingMessage } from "http"
+import type QueryString from "qs"
 import { isError } from "types/Result"
 import parseFormData from "utils/parseFormData"
 import parseFormToken from "./parseFormToken"

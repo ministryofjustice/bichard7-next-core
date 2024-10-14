@@ -1,8 +1,8 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   OrganisationUnitCodes
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import { ValidProperties } from "types/Amendments"
+import type { ValidProperties } from "types/Amendments"
 
 const amendDefendantOrOffenceResult = (
   offenceIndex: number,
@@ -16,6 +16,7 @@ const amendDefendantOrOffenceResult = (
     if (!defendant.Result) {
       throw new Error(`Cannot update the ${propertyToAmend}; Result in undefined`)
     }
+
     defendant.Result = { ...defendant.Result, [propertyToAmend]: valueToAmend }
     return
   }

@@ -2,7 +2,7 @@ import createDummyAho from "../../../test/helpers/createDummyAho"
 import { HO100322 } from "../../../test/helpers/exceptions"
 import HO100102 from "../../../test/helpers/exceptions/HO100102"
 import HO100323 from "../../../test/helpers/exceptions/HO100323"
-import { Amendments } from "../../types/Amendments"
+import type { Amendments } from "../../types/Amendments"
 import isNextHearingDateAmended from "./isNextHearingDateAmended"
 
 describe("isNextHearingDateAmended", () => {

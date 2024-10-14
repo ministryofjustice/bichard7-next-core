@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -20,8 +20,8 @@ describe("asn amendments", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].CriminalProsecutionReference
         .DefendantOrOffender?.DefendantOrOffenderSequenceNumber
-    ).toEqual("00000448754")
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber).toEqual(
+    ).toBe("00000448754")
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber).toBe(
       "1146AA0100000448754E"
     )
   })
@@ -36,16 +36,16 @@ describe("asn amendments", () => {
 
     amendAsn("1146AA0100000448754E", aho) as unknown as AnnotatedHearingOutcome
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber).toEqual(
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber).toBe(
       "1146AA0100000448754E"
     )
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].CriminalProsecutionReference
         .DefendantOrOffender?.DefendantOrOffenderSequenceNumber
-    ).toEqual("00000448754")
+    ).toBe("00000448754")
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[1].CriminalProsecutionReference
         .DefendantOrOffender?.DefendantOrOffenderSequenceNumber
-    ).toEqual("00000448754")
+    ).toBe("00000448754")
   })
 })

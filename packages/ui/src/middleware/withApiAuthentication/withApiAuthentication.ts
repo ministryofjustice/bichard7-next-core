@@ -1,9 +1,10 @@
 import parseJwtCookie from "middleware/withAuthentication/parseJwtCookie"
-import { NextApiRequest, NextApiResponse } from "next"
-import User from "services/entities/User"
+import type { NextApiRequest, NextApiResponse } from "next"
+import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import getUser from "services/getUser"
-import { Result, isError } from "types/Result"
+import type { Result } from "types/Result"
+import { isError } from "types/Result"
 
 export default async function withApiAuthentication(
   req: NextApiRequest,

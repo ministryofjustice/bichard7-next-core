@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next"
+import type { GetServerSideProps } from "next"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WithServerSidePropsItem<Props extends { [key: string]: any }> = (

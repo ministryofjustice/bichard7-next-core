@@ -1,5 +1,5 @@
-import { Amendments } from "types/Amendments"
-import { Exception } from "types/exceptions"
+import type { Amendments } from "types/Amendments"
+import type { Exception } from "types/exceptions"
 import isAsnFormatValid from "./isAsnFormatValid"
 import isAsnException from "./isException/isAsnException"
 

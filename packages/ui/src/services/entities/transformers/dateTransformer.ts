@@ -1,4 +1,4 @@
-import { ValueTransformer } from "typeorm"
+import type { ValueTransformer } from "typeorm"
 
 const dateTransformer: ValueTransformer = {
   to: (value) => value,

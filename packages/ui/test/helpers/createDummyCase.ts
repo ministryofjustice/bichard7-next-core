@@ -1,14 +1,15 @@
 import { faker } from "@faker-js/faker"
 import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
 import serialiseToXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/serialise/ahoXml/serialiseToXml"
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import { subYears } from "date-fns"
 import sample from "lodash.sample"
-import Trigger from "services/entities/Trigger"
-import { DataSource, EntityManager } from "typeorm"
+import type Trigger from "services/entities/Trigger"
+import type { DataSource, EntityManager } from "typeorm"
 import { v4 as uuidv4 } from "uuid"
 import CourtCase from "../../src/services/entities/CourtCase"
-import { Result, isError } from "../../src/types/Result"
+import type { Result } from "../../src/types/Result"
+import { isError } from "../../src/types/Result"
 import createDummyAsn from "./createDummyAsn"
 import createDummyCourtCode from "./createDummyCourtCode"
 import createDummyExceptions from "./createDummyExceptions"
@@ -52,6 +53,7 @@ export default async (
     triggers = createDummyTriggers(dataSource, caseId, caseDate, dateTo || new Date(), isResolved)
     triggersExist = true
   }
+
   const hasUnresolvedTriggers = triggers.filter((trigger) => trigger.status === "Unresolved").length > 0
 
   const randomisedAho = generateAho({ firstName, lastName, courtName, ptiurn, ahoTemplate })

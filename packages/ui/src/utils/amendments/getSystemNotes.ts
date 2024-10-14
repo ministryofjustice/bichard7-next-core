@@ -1,6 +1,6 @@
-import Note from "services/entities/Note"
-import User from "services/entities/User"
-import { Amendments } from "types/Amendments"
+import type Note from "services/entities/Note"
+import type User from "services/entities/User"
+import type { Amendments } from "types/Amendments"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 
 const formatValueOfUpdatedElement = (value: string | number | boolean | Date): string =>
@@ -47,6 +47,7 @@ const getSystemNotes = (amendments: Partial<Amendments>, userDetails: User, cour
       })
     }
   }
+
   return notes
 }
 

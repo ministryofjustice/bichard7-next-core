@@ -59,5 +59,6 @@ export const generatePageLinks = (currentPage: number, totalPages: number): Page
   if (currentPage < totalPages) {
     labels.push({ label: "Next", destinationPage: currentPage + 1 })
   }
+
   return labels
 }

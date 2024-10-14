@@ -1,9 +1,9 @@
 import { createRef } from "react"
+import type { Selection } from "./handleAsnForwardSlashes"
 import handleAsnForwardSlashes, {
   handleBackwardJumpingForwardSlash,
   handleDeletingFirstCharacter,
-  handleForwardJumpingForwardSlash,
-  Selection
+  handleForwardJumpingForwardSlash
 } from "./handleAsnForwardSlashes"
 
 describe("handleAsnForwardSlashes", () => {

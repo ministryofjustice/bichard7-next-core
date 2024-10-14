@@ -1,6 +1,6 @@
 import { sign } from "cookie-signature"
 import Tokens from "csrf"
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import { CSRF } from "../../config"
 
 const tokens = new Tokens()

@@ -1,7 +1,7 @@
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import { Brackets } from "typeorm"
-import { DatabaseQuery } from "types/DatabaseQuery"
-import CourtCase from "../entities/CourtCase"
+import type { DatabaseQuery } from "types/DatabaseQuery"
+import type CourtCase from "../entities/CourtCase"
 import courtCasesByVisibleCourtsQuery from "./courtCasesByVisibleCourtsQuery"
 import courtCasesByVisibleForcesQuery from "./courtCasesByVisibleForcesQuery"
 

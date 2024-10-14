@@ -1,6 +1,6 @@
 import { unsign } from "cookie-signature"
-import QueryString from "qs"
-import { Result } from "types/Result"
+import type QueryString from "qs"
+import type { Result } from "types/Result"
 import { CSRF } from "../../config"
 
 export interface ParseFormTokenResult {
@@ -20,6 +20,7 @@ export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> =>
   if (!formToken) {
     return Error("Token is empty in the form data.")
   }
+
   const unsignedFormToken = unsign(formToken, formSecret)
 
   if (!unsignedFormToken) {

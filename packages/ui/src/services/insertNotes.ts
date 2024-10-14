@@ -1,5 +1,5 @@
-import { DataSource, EntityManager, InsertResult } from "typeorm"
-import PromiseResult from "types/PromiseResult"
+import type { DataSource, EntityManager, InsertResult } from "typeorm"
+import type PromiseResult from "types/PromiseResult"
 import Note from "./entities/Note"
 import { isError } from "types/Result"
 

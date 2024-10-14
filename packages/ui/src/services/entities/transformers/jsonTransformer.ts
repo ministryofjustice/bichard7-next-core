@@ -1,4 +1,4 @@
-import { ValueTransformer } from "typeorm"
+import type { ValueTransformer } from "typeorm"
 
 const jsonTransformer: ValueTransformer = {
   to: (value) => value,

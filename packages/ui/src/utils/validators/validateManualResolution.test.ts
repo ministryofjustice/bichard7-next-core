@@ -1,4 +1,4 @@
-import { ManualResolution } from "types/ManualResolution"
+import type { ManualResolution } from "types/ManualResolution"
 import { validateManualResolution } from "./validateManualResolution"
 
 describe("validateManualResolution", () => {

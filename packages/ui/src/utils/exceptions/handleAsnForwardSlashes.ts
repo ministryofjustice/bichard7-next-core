@@ -1,4 +1,4 @@
-import { RefObject } from "react"
+import type { RefObject } from "react"
 import Asn from "services/Asn"
 
 export type Selection = {

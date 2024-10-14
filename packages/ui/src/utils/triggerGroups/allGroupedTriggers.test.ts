@@ -5,13 +5,13 @@ describe("allGroupedTriggers", () => {
   it("can take an enum value from TriggerCodeGroups to find a group of Triggers", () => {
     const result = allGroupedTriggers(TriggerCodeGroups.Bails)
 
-    expect(result.length).toBe(4)
+    expect(result).toHaveLength(4)
   })
 
   it("can take a string key to find a group of Triggers", () => {
     const result = allGroupedTriggers("Bails")
 
-    expect(result.length).toBe(4)
+    expect(result).toHaveLength(4)
   })
 
   it("needs to be a case sensitive key string or it returns undefined", () => {

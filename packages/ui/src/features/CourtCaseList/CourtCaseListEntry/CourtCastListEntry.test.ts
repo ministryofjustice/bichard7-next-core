@@ -1,4 +1,4 @@
-import { DisplayNote } from "types/display/Notes"
+import type { DisplayNote } from "types/display/Notes"
 import {
   filterUserNotes,
   getMostRecentNote,
@@ -25,7 +25,7 @@ describe("number of notes", () => {
       }
     ]
     const result = filterUserNotes(caseNote).length
-    expect(result).toEqual(2)
+    expect(result).toBe(2)
   })
 })
 

@@ -1,10 +1,10 @@
 import axios from "axios"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import unlockCourtCase from "services/unlockCourtCase"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import UnlockReason from "types/UnlockReason"
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
@@ -158,7 +158,7 @@ describe("unlock court case", () => {
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
       ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error(`Error while calling audit log API`)
+        () => new Error("Error while calling audit log API")
       )
 
       const result = await unlockCourtCase(
@@ -168,7 +168,7 @@ describe("unlock court case", () => {
         UnlockReason.TriggerAndException
       ).catch((error) => error)
 
-      expect(result).toEqual(Error(`Error while calling audit log API`))
+      expect(result).toEqual(Error("Error while calling audit log API"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase
@@ -178,7 +178,7 @@ describe("unlock court case", () => {
     })
 
     it("Should not store audit log events if it fails to update the lock status", async () => {
-      ;(updateLockStatusToUnlocked as jest.Mock).mockImplementationOnce(() => new Error(`Error while updating lock`))
+      ;(updateLockStatusToUnlocked as jest.Mock).mockImplementationOnce(() => new Error("Error while updating lock"))
 
       const result = await unlockCourtCase(
         dataSource,
@@ -187,7 +187,7 @@ describe("unlock court case", () => {
         UnlockReason.TriggerAndException
       ).catch((error) => error)
 
-      expect(result).toEqual(Error(`Error while updating lock`))
+      expect(result).toEqual(Error("Error while updating lock"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase

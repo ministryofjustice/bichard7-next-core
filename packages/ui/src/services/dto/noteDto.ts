@@ -1,5 +1,5 @@
-import Note from "services/entities/Note"
-import { DisplayNote } from "types/display/Notes"
+import type Note from "services/entities/Note"
+import type { DisplayNote } from "types/display/Notes"
 import { userToDisplayPartialUserDto } from "./userDto"
 
 export const noteToDisplayNoteDto = (note: Note): DisplayNote => {

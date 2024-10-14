@@ -44,7 +44,7 @@ describe("mapCaseAges", () => {
     expect(result).toEqual([{ from: dateDay3, to: dateDay3 }])
   })
 
-  it("Should return undefined for an invalid key", () => {
+  it("Should return undefined for an invalid date range key", () => {
     expect(mapCaseAges("Invalid date range key")).toBeUndefined()
   })
 

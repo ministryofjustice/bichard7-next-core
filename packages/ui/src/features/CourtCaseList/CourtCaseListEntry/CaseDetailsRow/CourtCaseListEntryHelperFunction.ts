@@ -1,10 +1,11 @@
-import { DisplayNote } from "types/display/Notes"
+import type { DisplayNote } from "types/display/Notes"
 import { formatDisplayedDate } from "../../../../utils/date/formattedDate"
 
 export const filterUserNotes = (notes: DisplayNote[]) => {
   const userNotes = notes.filter((note) => note.userId !== "System")
   return userNotes
 }
+
 export const getMostRecentNote = (userNotes: DisplayNote[]) =>
   userNotes.sort((noteA, noteB) => (noteA.createdAt > noteB.createdAt ? -1 : 1))[0]
 

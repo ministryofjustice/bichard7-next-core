@@ -1,4 +1,4 @@
-import { Amendments } from "types/Amendments"
+import type { Amendments } from "types/Amendments"
 import createDummyAho from "../../../test/helpers/createDummyAho"
 import { HO100323 } from "../../../test/helpers/exceptions"
 import HO100300 from "../../../test/helpers/exceptions/HO100300"

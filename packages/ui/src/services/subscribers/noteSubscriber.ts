@@ -1,6 +1,6 @@
-import { EventSubscriber, EntitySubscriberInterface } from "typeorm"
-import Note from "../entities/Note"
+import { EntitySubscriberInterface, EventSubscriber } from "typeorm"
 import { formatUserFullName } from "../../utils/formatUserFullName"
+import Note from "../entities/Note"
 
 @EventSubscriber()
 export class NoteSubscriber implements EntitySubscriberInterface<Note> {

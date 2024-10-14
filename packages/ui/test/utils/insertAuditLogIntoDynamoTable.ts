@@ -26,7 +26,7 @@ const insertAuditLogIntoDynamoTable = async <T>(records: T[]) => {
         Put: {
           TableName: tableName,
           Item: { _: "_", ...record },
-          ConditionExpression: `attribute_not_exists(messageId)`
+          ConditionExpression: "attribute_not_exists(messageId)"
         }
       }
     })

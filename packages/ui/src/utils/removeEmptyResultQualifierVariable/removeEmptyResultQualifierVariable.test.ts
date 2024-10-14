@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence,
   ResultQualifierVariable
@@ -39,7 +39,7 @@ describe("remove empty result qualifier", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultQualifierVariable[
         resultQualifierIndex
       ]
-    ).toBe(undefined)
+    ).toBeUndefined()
   })
 
   it("from offence results", () => {
@@ -77,6 +77,6 @@ describe("remove empty result qualifier", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[0]
         ?.ResultQualifierVariable[resultQualifierIndex]
-    ).toBe(undefined)
+    ).toBeUndefined()
   })
 })

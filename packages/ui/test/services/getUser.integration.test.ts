@@ -1,6 +1,6 @@
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { UserGroup } from "types/UserGroup"
-import User from "../../src/services/entities/User"
+import type User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 import getUser from "../../src/services/getUser"
 import { isError } from "../../src/types/Result"
@@ -51,7 +51,7 @@ describe("getUser", () => {
   it("Should parse missing feature flags correctly", async () => {
     await createUser("NoGroups")
 
-    await runQuery(`UPDATE br7own.users SET feature_flags = '{}' WHERE username = 'NoGroups';`)
+    await runQuery("UPDATE br7own.users SET feature_flags = '{}' WHERE username = 'NoGroups';")
 
     const result = await getUser(dataSource, "NoGroups")
     expect(isError(result)).toBe(false)
@@ -62,7 +62,7 @@ describe("getUser", () => {
 
   it("Should fetch feature flags correctly when unescaped values are in the DB", async () => {
     await createUser("NoGroups")
-    await runQuery(`UPDATE br7own.users SET feature_flags = '{"test_flag":true}' WHERE username = 'NoGroups';`)
+    await runQuery("UPDATE br7own.users SET feature_flags = '{\"test_flag\":true}' WHERE username = 'NoGroups';")
 
     const result = await getUser(dataSource, "NoGroups")
     expect(isError(result)).toBe(false)

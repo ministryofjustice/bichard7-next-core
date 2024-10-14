@@ -1,4 +1,4 @@
-import Trigger from "services/entities/Trigger"
+import type Trigger from "services/entities/Trigger"
 
 type displayTriggerPickedFields =
   | "description"

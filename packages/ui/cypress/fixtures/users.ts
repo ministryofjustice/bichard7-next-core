@@ -1,4 +1,4 @@
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import { UserGroup } from "../../src/types/UserGroup"
 import hashedPassword from "./hashedPassword"
 
@@ -17,6 +17,7 @@ const numberedUsers = () => {
     }
     newUsers[user.username] = user
   }
+
   return newUsers
 }
 

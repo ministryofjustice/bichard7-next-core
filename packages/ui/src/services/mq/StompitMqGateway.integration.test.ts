@@ -1,4 +1,4 @@
-import MqConfig from "./types/MqConfig"
+import type MqConfig from "./types/MqConfig"
 import StompitMqGateway from "./StompitMqGateway"
 import TestStompitMqGateway from "./TestStompitMqGateway"
 jest.retryTimes(10)

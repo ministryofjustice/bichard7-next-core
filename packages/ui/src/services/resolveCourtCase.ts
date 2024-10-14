@@ -1,10 +1,10 @@
-import { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
-import { DataSource, EntityManager, UpdateResult } from "typeorm"
-import { ManualResolution } from "types/ManualResolution"
+import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+import type { ManualResolution } from "types/ManualResolution"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
-import CourtCase from "./entities/CourtCase"
-import User from "./entities/User"
+import type CourtCase from "./entities/CourtCase"
+import type User from "./entities/User"
 import insertNotes from "./insertNotes"
 import resolveError from "./resolveError"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
@@ -16,7 +16,7 @@ const resolveCourtCase = async (
   resolution: ManualResolution,
   user: User
 ): Promise<UpdateResult | Error> => {
-  return dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
 
     // resolve case

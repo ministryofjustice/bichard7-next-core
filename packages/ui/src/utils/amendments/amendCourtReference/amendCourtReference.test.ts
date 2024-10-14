@@ -1,4 +1,4 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import amendCourtReference from "./amendCourtReference"
 
@@ -16,7 +16,7 @@ describe("court reference", () => {
 
     amendCourtReference("updated_value", aho)
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.MagistratesCourtReference).toStrictEqual(
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.MagistratesCourtReference).toBe(
       "updated_value"
     )
   })
@@ -24,10 +24,10 @@ describe("court reference", () => {
   it("throws an error if no crown court and magistrates court reference", () => {
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.MagistratesCourtReference = ""
     delete aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference.CrownCourtReference
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference?.CrownCourtReference).toBe(undefined)
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference?.CrownCourtReference).toBeUndefined()
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtReference?.MagistratesCourtReference).toBe("")
 
-    expect(() => amendCourtReference("updated_value", aho)).toThrowError(
+    expect(() => amendCourtReference("updated_value", aho)).toThrow(
       "Cannot set CourtReference since unable to distinguish between Magistrates and Crown Court"
     )
   })

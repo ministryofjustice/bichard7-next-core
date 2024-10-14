@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -21,7 +21,7 @@ describe("amend fresult variable text", () => {
     const value = "random_string"
     const resultIndex = 0
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultVariableText).toBe(undefined)
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultVariableText).toBeUndefined()
 
     amendResultVariableText(
       [
@@ -55,7 +55,7 @@ describe("amend fresult variable text", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
         .ResultVariableText
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendResultVariableText(
       [
@@ -92,7 +92,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the ResultVariableText; Result in undefined")
+    ).toThrow("Cannot update the ResultVariableText; Result in undefined")
   })
 
   it("throws an error if result is out of range", () => {
@@ -111,7 +111,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update ResultVariableText; Result index on Offence is out of range")
+    ).toThrow("Cannot update ResultVariableText; Result index on Offence is out of range")
   })
 
   it("throws an error if offence is out of range", () => {
@@ -130,7 +130,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the ResultVariableText; Offence index is out of range")
+    ).toThrow("Cannot update the ResultVariableText; Offence index is out of range")
   })
 
   it("amend valid result variable text to multiple offenders", () => {
@@ -158,7 +158,7 @@ describe("amend fresult variable text", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
           .ResultVariableText
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendResultVariableText(amendments, aho)
@@ -196,7 +196,7 @@ describe("amend fresult variable text", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
           .ResultVariableText
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendResultVariableText(amendments, aho)

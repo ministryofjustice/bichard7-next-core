@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker"
 import { subSeconds } from "date-fns"
 import { countBy, sample } from "lodash"
-import { DataSource, EntityManager } from "typeorm"
+import type { DataSource, EntityManager } from "typeorm"
 import Note from "../../src/services/entities/Note"
-import Trigger from "../../src/services/entities/Trigger"
+import type Trigger from "../../src/services/entities/Trigger"
 
 export default (
   dataSource: DataSource | EntityManager,

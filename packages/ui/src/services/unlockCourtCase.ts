@@ -1,10 +1,10 @@
-import { DataSource, UpdateResult } from "typeorm"
+import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
-import User from "./entities/User"
+import type User from "./entities/User"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
-import { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
-import UnlockReason from "types/UnlockReason"
+import type UnlockReason from "types/UnlockReason"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 
 const unlockCourtCase = async (

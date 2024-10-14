@@ -1,6 +1,6 @@
-import SurveyFeedback from "services/entities/SurveyFeedback"
-import CaseDetailsTab from "types/CaseDetailsTab"
-import CourtCase from "../../src/services/entities/CourtCase"
+import type SurveyFeedback from "services/entities/SurveyFeedback"
+import type CaseDetailsTab from "types/CaseDetailsTab"
+import type CourtCase from "../../src/services/entities/CourtCase"
 import users from "../fixtures/users"
 
 export function confirmFiltersAppliedContains(filterTag: string) {
@@ -16,6 +16,7 @@ export const confirmMultipleFieldsDisplayed = (fields: string[]) => {
     cy.contains(field)
   })
 }
+
 export const submitAndConfirmExceptions = () => {
   cy.get("button").contains("Submit exception(s)").click()
   cy.url().should("match", /\/bichard\/court-cases\/[0-9]+\/submit$/)
@@ -34,18 +35,18 @@ export const removeFilterChip = () => {
 }
 
 export const filterByCaseAge = (caseAgeId: string) => {
-  cy.get(`label[for="case-age"]`).click()
+  cy.get('label[for="case-age"]').click()
   cy.get(caseAgeId).click()
 }
 
 export const filterByDateRange = (dateFrom: string, dateTo: string) => {
-  cy.get(`label[for="date-range"]`).click()
+  cy.get('label[for="date-range"]').click()
 
-  cy.get(`label[for="date-from"]`).click()
-  cy.get(`label[for="date-from"]`).type(dateFrom)
+  cy.get('label[for="date-from"]').click()
+  cy.get('label[for="date-from"]').type(dateFrom)
 
-  cy.get(`label[for="date-to"]`).click()
-  cy.get(`label[for="date-to"]`).type(dateTo)
+  cy.get('label[for="date-to"]').click()
+  cy.get('label[for="date-to"]').type(dateTo)
 }
 
 export const loginAndVisit = (userArg?: string, urlArg?: string) => {

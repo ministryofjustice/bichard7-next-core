@@ -1,12 +1,12 @@
 import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import CourtCase from "services/entities/CourtCase"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import insertNotes from "services/insertNotes"
 import sendToQueue from "services/mq/sendToQueue"
 import resubmitCourtCase from "services/resubmitCourtCase"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import offenceSequenceException from "../test-data/HO100302_1.json"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -114,7 +114,7 @@ describe("resubmit court case", () => {
     expect(
       (input as AnnotatedHearingOutcome).AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
         .CourtOffenceSequenceNumber
-    ).not.toEqual(1234)
+    ).not.toBe(1234)
 
     const result = await resubmitCourtCase(
       dataSource,
@@ -154,7 +154,7 @@ describe("resubmit court case", () => {
     expect(
       (parsedCase as AnnotatedHearingOutcome).AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
         .CourtOffenceSequenceNumber
-    ).toEqual(1234)
+    ).toBe(1234)
 
     // assert that the xml in the db is as we expect
     expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()

@@ -1,5 +1,5 @@
-import Note from "services/entities/Note"
-import User from "services/entities/User"
+import type Note from "services/entities/Note"
+import type User from "services/entities/User"
 import users from "../../cypress/fixtures/users"
 import { getDummyUser, insertUsers } from "./manageUsers"
 import { formatForenames, formatSurname } from "./userName"

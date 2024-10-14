@@ -1,6 +1,6 @@
-import { SelectQueryBuilder } from "typeorm"
-import { CaseState } from "types/CaseListQueryParams"
-import CourtCase from "../entities/CourtCase"
+import type { SelectQueryBuilder } from "typeorm"
+import type { CaseState } from "types/CaseListQueryParams"
+import type CourtCase from "../entities/CourtCase"
 
 const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
   excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]

@@ -1,4 +1,4 @@
-import { ValueTransformer } from "typeorm"
+import type { ValueTransformer } from "typeorm"
 import delimitedString from "./delimitedString"
 let transformer: ValueTransformer
 
@@ -20,7 +20,7 @@ describe("delimitedString value transformer", () => {
   })
 
   it("can transform the array back to the original value", () => {
-    expect(transformer.to(["11", "12"])).toStrictEqual("11,12")
-    expect(transformer.to([])).toStrictEqual("")
+    expect(transformer.to(["11", "12"])).toBe("11,12")
+    expect(transformer.to([])).toBe("")
   })
 })

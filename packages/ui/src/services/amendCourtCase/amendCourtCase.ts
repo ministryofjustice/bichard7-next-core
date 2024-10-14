@@ -1,6 +1,6 @@
 import updateCourtCaseAho from "services/updateCourtCaseAho"
-import { DataSource, EntityManager } from "typeorm"
-import { Amendments } from "types/Amendments"
+import type { DataSource, EntityManager } from "typeorm"
+import type { Amendments } from "types/Amendments"
 import { isError } from "types/Result"
 import createForceOwner from "utils/createForceOwner"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
@@ -8,7 +8,7 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-
 import type User from "../entities/User"
 import insertNotes from "services/insertNotes"
 import getSystemNotes from "utils/amendments/getSystemNotes"
-import CourtCase from "../entities/CourtCase"
+import type CourtCase from "../entities/CourtCase"
 import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
 import serialiseToXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/serialise/ahoXml/serialiseToXml"
 import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
@@ -37,8 +37,10 @@ const amendCourtCase = async (
     if (isError(organisationUnitCodes)) {
       return organisationUnitCodes
     }
+
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
   }
+
   const updatedAho = applyAmendmentsToAho(amendments, aho)
 
   if (isError(updatedAho)) {

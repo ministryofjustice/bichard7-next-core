@@ -1,13 +1,13 @@
-import type { DataSource, UpdateResult } from "typeorm"
-import type User from "./entities/User"
-import updateLockStatusToLocked from "./updateLockStatusToLocked"
 import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
-import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
+import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
+import updateLockStatusToLocked from "./updateLockStatusToLocked"
 
 const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
-  dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+  await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (!courtCase) {

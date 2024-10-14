@@ -1,4 +1,4 @@
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
 import SurveyFeedback from "./entities/SurveyFeedback"
 

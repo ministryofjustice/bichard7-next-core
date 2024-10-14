@@ -1,5 +1,5 @@
-import CourtCase from "services/entities/CourtCase"
-import User from "services/entities/User"
+import type CourtCase from "services/entities/CourtCase"
+import type User from "services/entities/User"
 import users from "../../cypress/fixtures/users"
 import { UserGroup } from "../../src/types/UserGroup"
 import { getDummyUser, insertUsersWithOverrides } from "./manageUsers"

@@ -1,4 +1,4 @@
-import { DataSource, UpdateResult } from "typeorm"
+import type { DataSource, UpdateResult } from "typeorm"
 import getDataSource from "../../src/services/getDataSource"
 import updateCourtCaseAho from "../../src/services/updateCourtCaseAho"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
@@ -41,7 +41,7 @@ describe("update court case updated hearing outcome", () => {
     expect(isError(result)).toBe(false)
 
     const courtCaseRow = (result as UpdateResult).raw[0]
-    expect(courtCaseRow.updated_msg).toEqual("this_new_string")
+    expect(courtCaseRow.updated_msg).toBe("this_new_string")
     expect(courtCaseRow.user_updated_flag).toBe(1)
   })
 
@@ -63,7 +63,7 @@ describe("update court case updated hearing outcome", () => {
     expect(isError(result)).toBe(false)
 
     const courtCaseRow = (result as UpdateResult).raw[0]
-    expect(courtCaseRow.updated_msg).toEqual("")
+    expect(courtCaseRow.updated_msg).toBe("")
     expect(courtCaseRow.user_updated_flag).toBe(0)
   })
 

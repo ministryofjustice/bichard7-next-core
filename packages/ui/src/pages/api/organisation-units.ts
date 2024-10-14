@@ -4,7 +4,7 @@ import searchCourtOrganisationUnits, {
   getFullOrganisationCode,
   getFullOrganisationName
 } from "../../services/searchCourtOrganisationUnits"
-import OrganisationUnitApiResponse from "../../types/OrganisationUnitApiResponse"
+import type OrganisationUnitApiResponse from "../../types/OrganisationUnitApiResponse"
 
 export default async (request: NextApiRequest, response: NextApiResponse<OrganisationUnitApiResponse>) => {
   const allowedMethods = ["GET"]

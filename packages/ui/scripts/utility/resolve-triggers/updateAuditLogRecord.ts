@@ -1,5 +1,5 @@
-import AuditLog from "../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLog"
-import AuditLogEvent from "../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLogEvent"
+import AuditLog from "../../../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLog"
+import AuditLogEvent from "../../../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLogEvent"
 import { isError } from "../../../src/types/Result"
 
 export default async function updateAuditLogRecord(

@@ -1,5 +1,6 @@
-import { DataSource, DataSourceOptions } from "typeorm"
-import DatabaseConfig from "./DatabaseConfig"
+import type { DataSourceOptions } from "typeorm"
+import { DataSource } from "typeorm"
+import type DatabaseConfig from "./DatabaseConfig"
 import CourtCase from "./entities/CourtCase"
 import Note from "./entities/Note"
 import SurveyFeedback from "./entities/SurveyFeedback"

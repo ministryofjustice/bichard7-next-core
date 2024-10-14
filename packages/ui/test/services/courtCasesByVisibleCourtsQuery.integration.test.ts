@@ -1,7 +1,7 @@
 import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import courtCasesByVisibleCourtsQuery from "services/queries/courtCasesByVisibleCourtsQuery"
-import { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
 import { isError } from "types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
@@ -39,8 +39,8 @@ describe("courtCasesByVisibleCourtsQuery", () => {
     const cases = result as CourtCase[]
 
     expect(cases).toHaveLength(1)
-    expect(cases[0].errorId).toEqual(2)
-    expect(cases[0].courtCode).toEqual("36AAAA")
+    expect(cases[0].errorId).toBe(2)
+    expect(cases[0].courtCode).toBe("36AAAA")
   })
 
   it("Should show cases for all courts visible to a user where the beginning of the code matches", async () => {

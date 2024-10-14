@@ -1,6 +1,6 @@
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
-import { ParsedUrlQuery } from "querystring"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import generateCsrfToken from "./generateCsrfToken"
 import verifyCsrfToken from "./verifyCsrfToken"
 

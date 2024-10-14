@@ -1,7 +1,7 @@
 import Trigger from "../../../src/services/entities/Trigger"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 as uuid } from "uuid"
-import AuditLogEvent from "../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLogEvent"
+import AuditLogEvent from "../../../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLogEvent"
 
 type GeneratedEvents = {
   events: AuditLogEvent[]

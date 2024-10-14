@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -41,7 +41,7 @@ describe("amend offence court case reference", () => {
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].CourtCaseReferenceNumber
-    ).toEqual("TEST/CCR")
+    ).toBe("TEST/CCR")
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].ManualCourtCaseReference
     ).toBe(true)

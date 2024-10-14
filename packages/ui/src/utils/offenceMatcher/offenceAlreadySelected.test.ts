@@ -1,4 +1,4 @@
-import { Amendments } from "types/Amendments"
+import type { Amendments } from "types/Amendments"
 import offenceAlreadySelected from "./offenceAlreadySelected"
 
 describe("offenceAlreadySelected", () => {

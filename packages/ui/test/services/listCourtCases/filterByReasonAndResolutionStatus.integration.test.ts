@@ -2,13 +2,14 @@ import { isError } from "lodash"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
-import { DataSource } from "typeorm"
-import { CaseListQueryParams, Reason } from "types/CaseListQueryParams"
-import { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import type { DataSource } from "typeorm"
+import type { CaseListQueryParams } from "types/CaseListQueryParams"
+import { Reason } from "types/CaseListQueryParams"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { ResolutionStatus } from "types/ResolutionStatus"
 import {
   exceptionHandlerHasAccessTo,
   generalHandlerHasAccessTo,
@@ -19,7 +20,8 @@ import {
 import deleteFromEntity from "../../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 import insertException from "../../utils/manageExceptions"
-import { TestTrigger, insertTriggers } from "../../utils/manageTriggers"
+import type { TestTrigger } from "../../utils/manageTriggers"
+import { insertTriggers } from "../../utils/manageTriggers"
 
 describe("Filter cases by resolution status", () => {
   let dataSource: DataSource
@@ -138,6 +140,7 @@ describe("Filter cases by resolution status", () => {
           args.trigger.triggerResolvedBy
         )
       }
+
       if (args.exception) {
         await insertException(
           args.caseId,

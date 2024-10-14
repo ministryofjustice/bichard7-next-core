@@ -1,4 +1,4 @@
-import { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../config"
 import axios from "axios"
 import { statusOk } from "../utils/http"

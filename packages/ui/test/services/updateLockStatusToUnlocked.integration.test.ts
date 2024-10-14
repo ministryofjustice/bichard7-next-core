@@ -1,6 +1,7 @@
 import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
-import User from "services/entities/User"
-import { DataSource, UpdateQueryBuilder } from "typeorm"
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import { UpdateQueryBuilder } from "typeorm"
 import UnlockReason from "types/UnlockReason"
 import { userAccess } from "utils/userPermissions"
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
@@ -490,7 +491,7 @@ describe("Unlock court case", () => {
 
       const receivedError = result as Error
 
-      expect(receivedError.message).toEqual("Failed to update record with some error")
+      expect(receivedError.message).toBe("Failed to update record with some error")
       expect(events).toHaveLength(0)
     })
   })

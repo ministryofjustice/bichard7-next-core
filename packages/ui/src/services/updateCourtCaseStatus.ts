@@ -1,9 +1,10 @@
 import CourtCase from "services/entities/CourtCase"
-import User from "services/entities/User"
-import { Brackets, DataSource, EntityManager, UpdateResult } from "typeorm"
-import { RecordType } from "types/RecordType"
-import { ResolutionStatus } from "types/ResolutionStatus"
-import { UpdateResolutionStatus } from "types/UpdateResolutionStatus"
+import type User from "services/entities/User"
+import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+import { Brackets } from "typeorm"
+import type { RecordType } from "types/RecordType"
+import type { ResolutionStatus } from "types/ResolutionStatus"
+import type { UpdateResolutionStatus } from "types/UpdateResolutionStatus"
 
 const isErrorUpdate = (recordType: RecordType) => recordType === "Error"
 const isResolved = (resolutionStatus: ResolutionStatus) => resolutionStatus === "Resolved"
@@ -58,7 +59,7 @@ const updateCourtCaseStatus = async (
       })
     )
 
-  return query
+  return await query
     .returning("*")
     .execute()
     .catch((error: Error) => error)

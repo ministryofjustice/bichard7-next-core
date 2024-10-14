@@ -1,4 +1,4 @@
-import { CaseState, Reason } from "./CaseListQueryParams"
+import type { CaseState, Reason } from "./CaseListQueryParams"
 
 export type FilterAction =
   | { method: FilterMethod; type: "defendantName"; value: string }

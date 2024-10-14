@@ -1,5 +1,5 @@
-import { Case } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { Case } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import formatForce from "./formatForce"
 
 const mockForces = jest.fn()

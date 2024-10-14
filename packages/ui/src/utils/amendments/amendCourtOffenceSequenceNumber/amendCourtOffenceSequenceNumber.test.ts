@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -28,7 +28,7 @@ describe("court offence sequence number", () => {
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].CourtOffenceSequenceNumber
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendCourtOffenceSequenceNumber(
       [
@@ -42,7 +42,7 @@ describe("court offence sequence number", () => {
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].CourtOffenceSequenceNumber
-    ).toEqual(1111)
+    ).toBe(1111)
   })
 
   it("throw an error if offence index is out of range", () => {
@@ -82,7 +82,7 @@ describe("court offence sequence number", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]
           .CourtOffenceSequenceNumber
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendCourtOffenceSequenceNumber(amendments, aho)

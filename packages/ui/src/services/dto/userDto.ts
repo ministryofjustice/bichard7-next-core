@@ -1,5 +1,5 @@
-import User from "services/entities/User"
-import { DisplayFullUser, DisplayPartialUser } from "types/display/Users"
+import type User from "services/entities/User"
+import type { DisplayFullUser, DisplayPartialUser } from "types/display/Users"
 
 export const userToDisplayFullUserDto = (user: User): DisplayFullUser => {
   const currentUser: DisplayFullUser = {

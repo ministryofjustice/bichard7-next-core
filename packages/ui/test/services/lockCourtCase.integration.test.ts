@@ -1,12 +1,12 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import axios from "axios"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getCourtCase from "services/getCourtCase"
 import lockCourtCase from "services/lockCourtCase"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -15,7 +15,8 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
-import { TestTrigger, insertTriggers } from "../utils/manageTriggers"
+import type { TestTrigger } from "../utils/manageTriggers"
+import { insertTriggers } from "../utils/manageTriggers"
 
 jest.mock("services/updateLockStatusToLocked")
 jest.mock("services/storeAuditLogEvents")
@@ -164,12 +165,12 @@ describe("lock court case", () => {
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
       ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error(`Error while calling audit log API`)
+        () => new Error("Error while calling audit log API")
       )
 
       const result = await lockCourtCase(dataSource, unlockedCourtCase.errorId, user).catch((error) => error)
 
-      expect(result).toEqual(Error(`Error while calling audit log API`))
+      expect(result).toEqual(Error("Error while calling audit log API"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase
@@ -179,11 +180,11 @@ describe("lock court case", () => {
     })
 
     it("Should not store audit log events if it fails to update the lock status", async () => {
-      ;(updateLockStatusToLocked as jest.Mock).mockImplementationOnce(() => new Error(`Error while updating lock`))
+      ;(updateLockStatusToLocked as jest.Mock).mockImplementationOnce(() => new Error("Error while updating lock"))
 
       const result = await lockCourtCase(dataSource, unlockedCourtCase.errorId, user).catch((error) => error)
 
-      expect(result).toEqual(Error(`Error while updating lock`))
+      expect(result).toEqual(Error("Error while updating lock"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase

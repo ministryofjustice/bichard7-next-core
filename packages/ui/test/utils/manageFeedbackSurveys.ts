@@ -1,11 +1,11 @@
 import SurveyFeedback from "services/entities/SurveyFeedback"
 import User from "services/entities/User"
 import getDataSource from "services/getDataSource"
-import { InsertResult } from "typeorm"
+import type { InsertResult } from "typeorm"
 
 const deleteFeedback = async () => {
   const dataSource = await getDataSource()
-  return dataSource.manager.query(`DELETE FROM br7own.survey_feedback;`)
+  return dataSource.manager.query("DELETE FROM br7own.survey_feedback;")
 }
 
 const insertFeedback = async (feedback: Partial<SurveyFeedback> & { username: string }): Promise<InsertResult> => {
@@ -14,6 +14,7 @@ const insertFeedback = async (feedback: Partial<SurveyFeedback> & { username: st
   if (!user) {
     throw new Error("Nonexistent user in insertFeedback")
   }
+
   return (await getDataSource()).getRepository(SurveyFeedback).insert({
     userId: user.id,
     response: {},

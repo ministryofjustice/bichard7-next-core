@@ -1,8 +1,8 @@
-import { PncOffence } from "@moj-bichard7-developers/bichard7-next-core/core/types/PncQueryResult"
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "@moj-bichard7-developers/bichard7-next-core/core/types/PncQueryResult"
+import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import findCandidates from "./findCandidates"
-import { DisplayFullCourtCase } from "../../types/display/CourtCases"
-import { Candidates } from "../../types/OffenceMatching"
+import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
+import type { Candidates } from "../../types/OffenceMatching"
 import HO100310 from "../../../cypress/fixtures/HO100310.json"
 import HO100332 from "../../../cypress/fixtures/HO100332.json"
 import parseCourtCaseWithDateObjects from "../date/parseCourtCaseWithDateObjects"
@@ -115,7 +115,7 @@ describe("findCandidates", () => {
 
       expect(result).toHaveLength(1)
       expect((result as Candidates[])[0].courtCaseReference).toEqual(caseReference)
-      expect((result as Candidates[])[0].offences[0].offence.cjsOffenceCode).toEqual("offenceCode")
+      expect((result as Candidates[])[0].offences[0].offence.cjsOffenceCode).toBe("offenceCode")
     })
 
     it("should return the matching offence grouped by court case reference", () => {

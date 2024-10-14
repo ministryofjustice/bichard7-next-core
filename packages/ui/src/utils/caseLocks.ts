@@ -1,4 +1,4 @@
-import { DisplayPartialCourtCase } from "types/display/CourtCases"
+import type { DisplayPartialCourtCase } from "types/display/CourtCases"
 
 const triggersAreLockedByCurrentUser = (courtCase: DisplayPartialCourtCase, username: string) =>
   !!courtCase.triggerLockedByUsername && courtCase.triggerLockedByUsername === username

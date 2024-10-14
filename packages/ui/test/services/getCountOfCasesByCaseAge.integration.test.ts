@@ -2,9 +2,10 @@
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 import "reflect-metadata"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
-import { DataSource, SelectQueryBuilder } from "typeorm"
+import type { DataSource } from "typeorm"
+import { SelectQueryBuilder } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import { isError } from "../../src/types/Result"
@@ -69,12 +70,12 @@ describe("listCourtCases", () => {
 
     expect(isError(result)).toBeFalsy()
 
-    expect(result.Today).toEqual("4")
-    expect(result.Yesterday).toEqual("3")
-    expect(result["2 days ago"]).toEqual("2")
-    expect(result["3 days ago"]).toEqual("1")
-    expect(result["14 days ago"]).toEqual("1")
-    expect(result["15 days ago and older"]).toEqual("3")
+    expect(result.Today).toBe("4")
+    expect(result.Yesterday).toBe("3")
+    expect(result["2 days ago"]).toBe("2")
+    expect(result["3 days ago"]).toBe("1")
+    expect(result["14 days ago"]).toBe("1")
+    expect(result["15 days ago and older"]).toBe("3")
   })
 
   it("Should ignore resolved cases", async () => {
@@ -94,7 +95,7 @@ describe("listCourtCases", () => {
 
     expect(isError(result)).toBeFalsy()
 
-    expect(result.Today).toEqual("2")
+    expect(result.Today).toBe("2")
   })
 
   it("Should ignore cases that are outside of the users organisation", async () => {
@@ -114,7 +115,7 @@ describe("listCourtCases", () => {
 
     expect(isError(result)).toBeFalsy()
 
-    expect(result.Today).toEqual("2")
+    expect(result.Today).toBe("2")
   })
 
   describe("When there are no cases", () => {
@@ -126,12 +127,12 @@ describe("listCourtCases", () => {
 
       expect(isError(result)).toBeFalsy()
 
-      expect(result.Today).toEqual("0")
-      expect(result.Yesterday).toEqual("0")
-      expect(result["2 days ago"]).toEqual("0")
-      expect(result["3 days ago"]).toEqual("0")
-      expect(result["14 days ago"]).toEqual("0")
-      expect(result["15 days ago and older"]).toEqual("0")
+      expect(result.Today).toBe("0")
+      expect(result.Yesterday).toBe("0")
+      expect(result["2 days ago"]).toBe("0")
+      expect(result["3 days ago"]).toBe("0")
+      expect(result["14 days ago"]).toBe("0")
+      expect(result["15 days ago and older"]).toBe("0")
     })
   })
 
@@ -147,7 +148,7 @@ describe("listCourtCases", () => {
 
       const receivedError = result as Error
 
-      expect(receivedError.message).toEqual("Some error")
+      expect(receivedError.message).toBe("Some error")
     })
   })
 })

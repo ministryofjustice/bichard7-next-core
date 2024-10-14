@@ -1,6 +1,14 @@
-import { createContext, Dispatch, SetStateAction, useCallback, useContext, useState } from "react"
-import { Amender, AmendmentKeys, Amendments, OffenceField, ResultField, ResultQualifierCode } from "types/Amendments"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { Dispatch, SetStateAction } from "react"
+import { createContext, useCallback, useContext, useState } from "react"
+import type {
+  Amender,
+  AmendmentKeys,
+  Amendments,
+  OffenceField,
+  ResultField,
+  ResultQualifierCode
+} from "types/Amendments"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import getAmendmentsByComparison from "utils/getAmendmentsByComparison"
 import parseCourtCaseWithDateObjects from "../utils/date/parseCourtCaseWithDateObjects"
 

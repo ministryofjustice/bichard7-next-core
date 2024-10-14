@@ -1,8 +1,8 @@
 /* eslint-disable import/first */
 jest.mock("utils/parseFormData")
 
-import { IncomingMessage } from "http"
-import QueryString from "qs"
+import type { IncomingMessage } from "http"
+import type QueryString from "qs"
 import generateCsrfToken from "../../../src/middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "../../../src/middleware/withCsrf/verifyCsrfToken"
 import parseFormData from "../../../src/utils/parseFormData"

@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { differenceInMinutes } from "date-fns"
-import User from "services/entities/User"
-import { DataSource } from "typeorm"
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
@@ -15,7 +15,8 @@ import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import insertException from "../utils/manageExceptions"
-import { insertTriggers, TestTrigger } from "../utils/manageTriggers"
+import type { TestTrigger } from "../utils/manageTriggers"
+import { insertTriggers } from "../utils/manageTriggers"
 
 jest.setTimeout(100000)
 
@@ -130,7 +131,7 @@ describe("resolveTriggers", () => {
 
       expect(updatedTrigger.resolvedBy).not.toBeNull()
       expect(updatedTrigger.resolvedBy).toStrictEqual(resolverUsername)
-      expect(updatedTrigger.status).toStrictEqual("Resolved")
+      expect(updatedTrigger.status).toBe("Resolved")
 
       const afterCourtCaseResult = await getCourtCaseByOrganisationUnit(dataSource, 0, user)
       expect(isError(afterCourtCaseResult)).toBeFalsy()
@@ -391,7 +392,7 @@ describe("resolveTriggers", () => {
       let updatedCourtCase = (await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)) as CourtCase
       expect(updatedCourtCase).not.toBeNull()
       expect(updatedCourtCase.triggerStatus).not.toBeNull()
-      expect(updatedCourtCase.triggerStatus).toStrictEqual("Unresolved")
+      expect(updatedCourtCase.triggerStatus).toBe("Unresolved")
       expect(updatedCourtCase.triggerResolvedBy).toBeNull()
       expect(updatedCourtCase.triggerResolvedTimestamp).toBeNull()
       expect(updatedCourtCase.triggerLockedByUsername).toEqual(resolverUsername)
@@ -405,7 +406,7 @@ describe("resolveTriggers", () => {
       updatedCourtCase = (await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)) as CourtCase
       expect(updatedCourtCase).not.toBeNull()
       expect(updatedCourtCase.triggerStatus).not.toBeNull()
-      expect(updatedCourtCase.triggerStatus).toStrictEqual("Unresolved")
+      expect(updatedCourtCase.triggerStatus).toBe("Unresolved")
       expect(updatedCourtCase.triggerResolvedBy).toBeNull()
       expect(updatedCourtCase.triggerResolvedTimestamp).toBeNull()
       expect(updatedCourtCase.triggerLockedByUsername).toEqual(resolverUsername)
@@ -421,7 +422,7 @@ describe("resolveTriggers", () => {
       updatedCourtCase = (await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)) as CourtCase
       expect(updatedCourtCase).not.toBeNull()
       expect(updatedCourtCase.triggerStatus).not.toBeNull()
-      expect(updatedCourtCase.triggerStatus).toStrictEqual("Resolved")
+      expect(updatedCourtCase.triggerStatus).toBe("Resolved")
       expect(updatedCourtCase.triggerResolvedBy).toStrictEqual(resolverUsername)
       expect(updatedCourtCase.triggerResolvedTimestamp).not.toBeNull()
       expect(updatedCourtCase.triggerLockedByUsername).toBeNull()
@@ -473,12 +474,12 @@ describe("resolveTriggers", () => {
       const retrievedCourtCase = await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)
       const updatedCourtCase = retrievedCourtCase as CourtCase
       expect(updatedCourtCase).not.toBeNull()
-      expect(updatedCourtCase.triggerStatus).toStrictEqual("Resolved")
+      expect(updatedCourtCase.triggerStatus).toBe("Resolved")
       expect(updatedCourtCase.triggerResolvedBy).toStrictEqual(resolverUsername)
       expect(updatedCourtCase.triggerResolvedTimestamp).not.toBeNull()
       expect(updatedCourtCase.triggers).toHaveLength(triggers.length)
-      updatedCourtCase.triggers.map((trigger) => {
-        expect(trigger.status).toStrictEqual("Resolved")
+      updatedCourtCase.triggers.forEach((trigger) => {
+        expect(trigger.status).toBe("Resolved")
         expect(trigger.resolvedBy).toStrictEqual(resolverUsername)
         expect(trigger.resolvedAt).not.toBeNull()
       })
@@ -520,17 +521,17 @@ describe("resolveTriggers", () => {
       const retrievedCourtCase = await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)
       const updatedCourtCase = retrievedCourtCase as CourtCase
       expect(updatedCourtCase).not.toBeNull()
-      expect(updatedCourtCase.triggerStatus).toStrictEqual("Unresolved")
+      expect(updatedCourtCase.triggerStatus).toBe("Unresolved")
       expect(updatedCourtCase.triggerResolvedBy).toBeNull()
       expect(updatedCourtCase.triggerResolvedTimestamp).toBeNull()
       expect(updatedCourtCase.triggers).toHaveLength(triggers.length)
-      updatedCourtCase.triggers.map((trigger) => {
+      updatedCourtCase.triggers.forEach((trigger) => {
         if (triggersToResolve.includes(trigger.triggerId)) {
-          expect(trigger.status).toStrictEqual("Resolved")
+          expect(trigger.status).toBe("Resolved")
           expect(trigger.resolvedBy).toStrictEqual(resolverUsername)
           expect(trigger.resolvedAt).not.toBeNull()
         } else {
-          expect(trigger.status).toStrictEqual("Unresolved")
+          expect(trigger.status).toBe("Unresolved")
           expect(trigger.resolvedBy).toBeNull()
           expect(trigger.resolvedAt).toBeNull()
         }

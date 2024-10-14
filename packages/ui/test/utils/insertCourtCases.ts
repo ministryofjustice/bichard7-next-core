@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import fs from "fs"
-import Note from "services/entities/Note"
-import Trigger from "services/entities/Trigger"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import type Note from "services/entities/Note"
+import type Trigger from "services/entities/Trigger"
+import type { ResolutionStatus } from "types/ResolutionStatus"
 import { v4 as uuid } from "uuid"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"

@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -37,7 +37,7 @@ describe("court case reference", () => {
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].CourtCaseReferenceNumber
-    ).toEqual("newCourtCaseReference")
+    ).toBe("newCourtCaseReference")
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].ManualCourtCaseReference
     ).toBe(true)
@@ -56,7 +56,7 @@ describe("court case reference", () => {
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].CourtCaseReferenceNumber
-    ).toEqual(null)
+    ).toBeNull()
   })
 
   it("Should amend court case reference on multiple offences", () => {

@@ -1,7 +1,7 @@
 import { CaseType } from "@moj-bichard7-developers/bichard7-next-core/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
 import generateCandidate from "@moj-bichard7-developers/bichard7-next-core/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
-import { DisplayFullCourtCase } from "../../types/display/CourtCases"
-import { Candidates } from "../../types/OffenceMatching"
+import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
+import type { Candidates } from "../../types/OffenceMatching"
 
 const findCandidates = (courtCase: DisplayFullCourtCase, offenceIndex: number): Candidates[] => {
   if (!courtCase.aho.PncQuery || !courtCase.aho.PncQuery.courtCases) {

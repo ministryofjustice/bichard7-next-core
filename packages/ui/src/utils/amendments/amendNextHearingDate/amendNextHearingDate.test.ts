@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -21,7 +21,7 @@ describe("amend fresult variable text", () => {
     const value = "2022-08-24"
     const resultIndex = 0
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextHearingDate).toBe(undefined)
+    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextHearingDate).toBeUndefined()
 
     amendNextHearingDate([{ offenceIndex, value, resultIndex }], aho)
 
@@ -46,7 +46,7 @@ describe("amend fresult variable text", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
         .NextHearingDate
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendNextHearingDate([{ offenceIndex, value, resultIndex }], aho)
 
@@ -75,7 +75,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the NextHearingDate; Result in undefined")
+    ).toThrow("Cannot update the NextHearingDate; Result in undefined")
   })
 
   it("throws an error if result is out of range", () => {
@@ -94,7 +94,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update NextHearingDate; Result index on Offence is out of range")
+    ).toThrow("Cannot update NextHearingDate; Result index on Offence is out of range")
   })
 
   it("throws an error if offence is out of range", () => {
@@ -113,7 +113,7 @@ describe("amend fresult variable text", () => {
         ],
         aho
       )
-    ).toThrowError("Cannot update the NextHearingDate; Offence index is out of range")
+    ).toThrow("Cannot update the NextHearingDate; Offence index is out of range")
   })
 
   it("amend valid next hearing date to multiple offences", () => {
@@ -141,7 +141,7 @@ describe("amend fresult variable text", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
           .NextHearingDate
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendNextHearingDate(amendments, aho)
@@ -180,7 +180,7 @@ describe("amend fresult variable text", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
           .NextHearingDate
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendNextHearingDate(amendments, aho)

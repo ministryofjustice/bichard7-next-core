@@ -1,6 +1,6 @@
 import { Brackets, Like } from "typeorm"
-import { DatabaseQuery } from "types/DatabaseQuery"
-import CourtCase from "../entities/CourtCase"
+import type { DatabaseQuery } from "types/DatabaseQuery"
+import type CourtCase from "../entities/CourtCase"
 
 const courtCasesByVisibleCourtsQuery = <T extends DatabaseQuery<CourtCase>>(query: T, courts: string[]): T => {
   query.orWhere(

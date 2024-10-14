@@ -1,4 +1,4 @@
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCase from "../../src/services/getCourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -35,7 +35,7 @@ describe("get court case", () => {
 
     await insertCourtCases(inputCourtCase)
 
-    expect(inputCourtCase.updatedHearingOutcome).toBe(null)
+    expect(inputCourtCase.updatedHearingOutcome).toBeNull()
 
     const result = await getCourtCase(dataSource, inputCourtCase.errorId)
     expect(isError(result)).toBe(false)

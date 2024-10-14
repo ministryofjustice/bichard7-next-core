@@ -1,4 +1,4 @@
-import { ResolutionStatus } from "./ResolutionStatus"
+import type { ResolutionStatus } from "./ResolutionStatus"
 
 export type UpdateResolutionStatus = {
   errorStatus?: ResolutionStatus

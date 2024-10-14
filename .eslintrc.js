@@ -4,7 +4,15 @@ module.exports = {
   parserOptions: {
     project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
   },
-  ignorePatterns: ["dist/*", "docs/*", "jest.setup.ts", "node_modules", "packages/*/dist/*"],
+  ignorePatterns: [
+    "dist/*",
+    "docs/*",
+    "jest.setup.ts",
+    "node_modules",
+    "packages/*/dist/*",
+    "packages/ui/scripts/utility/*",
+    "packages/ui/cypress.config.ts"
+  ],
   overrides: [
     {
       // Plain JavaScript files

@@ -1,5 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { ReasonCode } from "types/CourtCaseFilter"
+import type { ReasonCode } from "types/CourtCaseFilter"
 import selectedTrigger from "./selectedTrigger"
 
 describe("selectedTrigger", () => {

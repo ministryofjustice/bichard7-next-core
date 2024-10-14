@@ -1,9 +1,9 @@
-import { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
+import type { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
 import { OUT_OF_AREA_TRIGGER_CODE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
-import { TriggersOutcome } from "../../types/TriggersOutcome"
-import { default as TriggerEntity } from "../entities/Trigger"
+import type { TriggersOutcome } from "../../types/TriggersOutcome"
+import type { default as TriggerEntity } from "../entities/Trigger"
 import { isEmpty } from "lodash"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 type PartialTriggerEntity = Pick<TriggerEntity, "triggerCode" | "triggerItemIdentity" | "status">
 
@@ -14,6 +14,7 @@ const containsTrigger = (triggers: Trigger[], trigger?: Trigger): boolean => {
   if (!trigger) {
     return false
   }
+
   return triggers.some((t) => t.code === trigger.code && t.offenceSequenceNumber === trigger.offenceSequenceNumber)
 }
 

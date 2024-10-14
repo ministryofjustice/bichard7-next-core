@@ -1,9 +1,9 @@
-import { Amendments } from "types/Amendments"
+import type { Amendments } from "types/Amendments"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import getOffenceAlertsDetails, { exceptionsResolvedFn } from "./getOffenceAlertsDetails"
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100102, HO100200, HO100322 } from "../../test/helpers/exceptions"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 
 const nextHearingDateException = {
   code: ExceptionCode.HO100102,
@@ -228,7 +228,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(1)
+    expect(offenceAlertDetails).toHaveLength(1)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(false)
   })
@@ -239,7 +239,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(2)
+    expect(offenceAlertDetails).toHaveLength(2)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(false)
     expect(offenceAlertDetails[1].offenceIndex).toBe(1)
@@ -260,7 +260,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(2)
+    expect(offenceAlertDetails).toHaveLength(2)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(true)
     expect(offenceAlertDetails[1].offenceIndex).toBe(1)
@@ -284,7 +284,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(1)
+    expect(offenceAlertDetails).toHaveLength(1)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(false)
   })
@@ -313,7 +313,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(1)
+    expect(offenceAlertDetails).toHaveLength(1)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(true)
   })
@@ -336,7 +336,7 @@ describe("getOffenceAlertDetails", () => {
 
       const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-      expect(offenceAlertDetails.length).toBe(1)
+      expect(offenceAlertDetails).toHaveLength(1)
       expect(offenceAlertDetails[0].offenceIndex).toBe(0)
       expect(offenceAlertDetails[0].isResolved).toBe(false)
     })
@@ -358,7 +358,7 @@ describe("getOffenceAlertDetails", () => {
 
       const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-      expect(offenceAlertDetails.length).toBe(1)
+      expect(offenceAlertDetails).toHaveLength(1)
       expect(offenceAlertDetails[0].offenceIndex).toBe(0)
       expect(offenceAlertDetails[0].isResolved).toBe(false)
     })
@@ -395,7 +395,7 @@ describe("getOffenceAlertDetails", () => {
 
       const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-      expect(offenceAlertDetails.length).toBe(1)
+      expect(offenceAlertDetails).toHaveLength(1)
       expect(offenceAlertDetails[0].offenceIndex).toBe(0)
       expect(offenceAlertDetails[0].isResolved).toBe(false)
     })
@@ -438,7 +438,7 @@ describe("getOffenceAlertDetails", () => {
 
     const offenceAlertDetails = getOffenceAlertsDetails(courtCase.aho.Exceptions, updatedFields)
 
-    expect(offenceAlertDetails.length).toBe(1)
+    expect(offenceAlertDetails).toHaveLength(1)
     expect(offenceAlertDetails[0].offenceIndex).toBe(0)
     expect(offenceAlertDetails[0].isResolved).toBe(true)
   })

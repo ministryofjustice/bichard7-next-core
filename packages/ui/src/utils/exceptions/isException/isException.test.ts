@@ -167,7 +167,7 @@ describe("isException", () => {
 
     const result = isException(dummyAho as AnnotatedHearingOutcome, "AnnotatedHearingOutcome.Random.Path")
 
-    expect(result).toBe(null)
+    expect(result).toBeNull()
   })
 
   it("Should return null when there are no exceptions", () => {
@@ -177,6 +177,6 @@ describe("isException", () => {
 
     const result = isException(dummyAho as AnnotatedHearingOutcome, "AnnotatedHearingOutcome.Random.Path")
 
-    expect(result).toBe(null)
+    expect(result).toBeNull()
   })
 })

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react"
-import { DisplayFullUser } from "types/display/Users"
+import type { DisplayFullUser } from "types/display/Users"
 
 interface CurrentUserContextType {
   currentUser: DisplayFullUser

@@ -1,17 +1,17 @@
-import { InsertResult } from "typeorm"
+import type { InsertResult } from "typeorm"
 import users from "../../cypress/fixtures/users"
 import User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 
 const TemplateUser: Partial<User> = {
-  username: `Bichard01`,
-  visibleForces: [`01`],
+  username: "Bichard01",
+  visibleForces: ["01"],
   visibleCourts: [],
   excludedTriggers: [],
   forenames: "Bichard Test User",
   password: "",
-  surname: `01`,
-  email: `bichard01@example.com`,
+  surname: "01",
+  email: "bichard01@example.com",
   featureFlags: { test_flag: true, exceptionsEnabled: true, offenceMatchingEnabled: true, pncDetailsTabEnabled: true }
 }
 

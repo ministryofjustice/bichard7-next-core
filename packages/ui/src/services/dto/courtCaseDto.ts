@@ -1,9 +1,9 @@
 import { sortBy } from "lodash"
-import CourtCase from "services/entities/CourtCase"
-import { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
+import type CourtCase from "services/entities/CourtCase"
+import type { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
 import parseHearingOutcome from "utils/parseHearingOutcome"
 import { hasAccessToExceptions } from "../../utils/userPermissions"
-import User from "../entities/User"
+import type User from "../entities/User"
 import { noteToDisplayNoteDto } from "./noteDto"
 import { triggerToDisplayTriggerDto } from "./triggerDto"
 

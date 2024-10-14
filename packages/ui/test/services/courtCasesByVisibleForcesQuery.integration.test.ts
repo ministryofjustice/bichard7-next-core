@@ -1,6 +1,6 @@
 import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
-import { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
 import { isError } from "types/Result"
 import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
 import deleteFromEntity from "../utils/deleteFromEntity"

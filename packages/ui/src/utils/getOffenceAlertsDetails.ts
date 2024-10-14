@@ -1,5 +1,5 @@
-import { Amendments } from "types/Amendments"
-import { Exception } from "types/exceptions"
+import type { Amendments } from "types/Amendments"
+import type { Exception } from "types/exceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
 import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
 import { EXCEPTION_PATH_PROPERTY_INDEXES } from "config"

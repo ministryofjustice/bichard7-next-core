@@ -1,5 +1,5 @@
 import { subDays } from "date-fns"
-import { DateRange } from "types/CaseListQueryParams"
+import type { DateRange } from "types/CaseListQueryParams"
 
 export const CaseAgeOptions: Record<string, () => DateRange> = {
   Today: () => {

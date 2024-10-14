@@ -1,6 +1,6 @@
 import { Brackets } from "typeorm"
-import { DatabaseQuery } from "types/DatabaseQuery"
-import CourtCase from "../entities/CourtCase"
+import type { DatabaseQuery } from "types/DatabaseQuery"
+import type CourtCase from "../entities/CourtCase"
 
 const courtCasesByVisibleForcesQuery = <T extends DatabaseQuery<CourtCase>>(query: T, forces: string[]): T => {
   const forceNumbers = forces.filter((f) => /^\d+$/.test(f)).map((f) => Number(f))

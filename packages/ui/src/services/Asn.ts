@@ -37,6 +37,7 @@ class Asn {
       const number = `${intOrString(this.force ?? "")}${intOrString(this.system ?? "")}${this.year}${sequence}`
       const modulus = Number(BigInt(number) % BigInt(23))
       return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return undefined
     }

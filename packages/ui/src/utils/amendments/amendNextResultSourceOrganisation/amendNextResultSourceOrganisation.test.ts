@@ -1,4 +1,4 @@
-import {
+import type {
   AnnotatedHearingOutcome,
   Offence
 } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
@@ -21,9 +21,9 @@ describe("amend next result source organisation", () => {
     const resultIndex = 0
     const value = "RANDOM_TEST_STRING"
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextResultSourceOrganisation).toBe(
-      undefined
-    )
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextResultSourceOrganisation
+    ).toBeUndefined()
 
     amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)
 
@@ -42,9 +42,9 @@ describe("amend next result source organisation", () => {
     const resultIndex = 0
     const value = ""
 
-    expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextResultSourceOrganisation).toBe(
-      undefined
-    )
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextResultSourceOrganisation
+    ).toBeUndefined()
 
     amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)
 
@@ -52,10 +52,10 @@ describe("amend next result source organisation", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextResultSourceOrganisation
 
     expect(actualOrganisationUnitCode?.OrganisationUnitCode).toBe(value)
-    expect(actualOrganisationUnitCode?.TopLevelCode).toBe(undefined)
-    expect(actualOrganisationUnitCode?.SecondLevelCode).toBe(null)
-    expect(actualOrganisationUnitCode?.ThirdLevelCode).toBe(null)
-    expect(actualOrganisationUnitCode?.BottomLevelCode).toBe(null)
+    expect(actualOrganisationUnitCode?.TopLevelCode).toBeUndefined()
+    expect(actualOrganisationUnitCode?.SecondLevelCode).toBeNull()
+    expect(actualOrganisationUnitCode?.ThirdLevelCode).toBeNull()
+    expect(actualOrganisationUnitCode?.BottomLevelCode).toBeNull()
   })
 
   it("sets on offence the next result source organisation", () => {
@@ -73,7 +73,7 @@ describe("amend next result source organisation", () => {
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
         .NextResultSourceOrganisation
-    ).toBe(undefined)
+    ).toBeUndefined()
 
     amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)
 
@@ -95,7 +95,7 @@ describe("amend next result source organisation", () => {
 
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result = undefined
 
-    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrowError(
+    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrow(
       "Cannot update the NextResultSourceOrganisation; Result in undefined"
     )
   })
@@ -111,8 +111,8 @@ describe("amend next result source organisation", () => {
       cloneDeep(dummyOffence),
       cloneDeep(dummyOffence)
     ]
-    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrowError(
-      `Cannot update the NextResultSourceOrganisation; Offence index is out of range`
+    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrow(
+      "Cannot update the NextResultSourceOrganisation; Offence index is out of range"
     )
   })
 
@@ -127,8 +127,8 @@ describe("amend next result source organisation", () => {
       cloneDeep(dummyOffence),
       cloneDeep(dummyOffence)
     ]
-    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrowError(
-      `Cannot update NextResultSourceOrganisation; Result index on Offence is out of range`
+    expect(() => amendNextReasonSourceOrganisation([{ offenceIndex, resultIndex, value }], aho)).toThrow(
+      "Cannot update NextResultSourceOrganisation; Result index on Offence is out of range"
     )
   })
 
@@ -157,7 +157,7 @@ describe("amend next result source organisation", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
           .NextResultSourceOrganisation
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendNextReasonSourceOrganisation(amendments, aho)
@@ -200,7 +200,7 @@ describe("amend next result source organisation", () => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
           .NextResultSourceOrganisation
-      ).toBe(undefined)
+      ).toBeUndefined()
     })
 
     amendNextReasonSourceOrganisation(amendments, aho)

@@ -1,5 +1,5 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import { EntityManager } from "typeorm"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { EntityManager } from "typeorm"
 import { isError } from "../../types/Result"
 import { TriggerQualityCheckStatus } from "../../utils/triggerQualityCheckStatus"
 import CourtCase from "../entities/CourtCase"

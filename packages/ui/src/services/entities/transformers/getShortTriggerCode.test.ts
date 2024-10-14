@@ -16,6 +16,6 @@ describe("triggerCodeTransformer", () => {
   it("Should return null when trigger code is null", () => {
     const result = getShortTriggerCode(null)
 
-    expect(result).toBe(null)
+    expect(result).toBeNull()
   })
 })

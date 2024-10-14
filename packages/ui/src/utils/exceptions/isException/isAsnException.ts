@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { Exception } from "types/exceptions"
+import type { Exception } from "types/exceptions"
 
 const asnExceptions = [ExceptionCode.HO100206, ExceptionCode.HO100301, ExceptionCode.HO100321]
 

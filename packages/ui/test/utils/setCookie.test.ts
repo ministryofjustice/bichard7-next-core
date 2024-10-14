@@ -1,5 +1,6 @@
 import { serialize } from "cookie"
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import setCookie from "utils/setCookie"
 
 it("should set the cookie when no cookie is in the response", () => {

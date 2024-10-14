@@ -1,5 +1,5 @@
-import User from "services/entities/User"
-import { CaseListQueryParams } from "types/CaseListQueryParams"
+import type User from "services/entities/User"
+import type { CaseListQueryParams } from "types/CaseListQueryParams"
 import logger from "./logger"
 
 export const logRenderTime = (

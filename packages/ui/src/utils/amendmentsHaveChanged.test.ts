@@ -1,4 +1,4 @@
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100102, HO100206, HO100300 } from "../../test/helpers/exceptions"
 import amendmentsHaveChanged from "./amendmentsHaveChanged"

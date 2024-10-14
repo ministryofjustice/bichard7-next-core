@@ -11,7 +11,7 @@ describe("searchCourtOrganisationUnits", () => {
     const result = searchCourtOrganisationUnits("B01EF00")
     expect(result).toHaveLength(1)
 
-    expect(getOrganisationCodeAndName(result[0])).toEqual("B01EF00 Magistrates' Courts London Croydon")
+    expect(getOrganisationCodeAndName(result[0])).toBe("B01EF00 Magistrates' Courts London Croydon")
   })
 
   it("Should not include police organisations", () => {
@@ -30,8 +30,8 @@ describe("searchCourtOrganisationUnits", () => {
     const result = searchCourtOrganisationUnits("Croydon")
     expect(result).toHaveLength(3)
 
-    expect(getOrganisationCodeAndName(result[0])).toEqual("C01CY00 Crown Courts London Croydon")
-    expect(getOrganisationCodeAndName(result[1])).toEqual("B01EF00 Magistrates' Courts London Croydon")
-    expect(getOrganisationCodeAndName(result[2])).toEqual("C01JI00 Crown Courts London Jury's Inn Croydon")
+    expect(getOrganisationCodeAndName(result[0])).toBe("C01CY00 Crown Courts London Croydon")
+    expect(getOrganisationCodeAndName(result[1])).toBe("B01EF00 Magistrates' Courts London Croydon")
+    expect(getOrganisationCodeAndName(result[2])).toBe("C01JI00 Crown Courts London Jury's Inn Croydon")
   })
 })

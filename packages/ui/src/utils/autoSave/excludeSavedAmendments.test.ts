@@ -1,4 +1,4 @@
-import { AmendmentKeys, Amendments } from "types/Amendments"
+import type { AmendmentKeys, Amendments } from "types/Amendments"
 import excludeSavedAmendments from "./excludeSavedAmendments"
 
 describe("excludeSavedAmendments", () => {
@@ -11,7 +11,7 @@ describe("excludeSavedAmendments", () => {
     expect(result).toStrictEqual({})
   })
 
-  describe(`when given "amendmentFields" value of AmendmentKeys type of string`, () => {
+  describe('when given "amendmentFields" value of AmendmentKeys type of string', () => {
     const amendmentFields: AmendmentKeys[] = ["asn"]
 
     it("returns empty object with empty amendments and savedAmendments", () => {
@@ -47,7 +47,7 @@ describe("excludeSavedAmendments", () => {
     })
   })
 
-  describe(`when given "amendmentFields" value of AmendmentKeys type of array`, () => {
+  describe('when given "amendmentFields" value of AmendmentKeys type of array', () => {
     const amendmentFields: AmendmentKeys[] = ["nextSourceOrganisation"]
 
     it("returns empty object with empty amendments and savedAmendments", () => {
@@ -114,7 +114,7 @@ describe("excludeSavedAmendments", () => {
     })
   })
 
-  describe(`with multiple "amendmentFields" (value of AmendmentKeys type of string and array)`, () => {
+  describe('with multiple "amendmentFields" (value of AmendmentKeys type of string and array)', () => {
     let amendmentFields: AmendmentKeys[]
 
     beforeEach(() => {

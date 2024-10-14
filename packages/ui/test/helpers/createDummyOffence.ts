@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import createDummyResult from "./createDummyResult"
 import cloneDeep from "lodash.clonedeep"
 

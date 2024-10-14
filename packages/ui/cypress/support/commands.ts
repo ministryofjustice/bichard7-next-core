@@ -5,6 +5,7 @@ const runningWithProxy = (): boolean => {
     console.log(`Running with proxy: ${Cypress.config("baseUrl")}`)
     return true
   }
+
   console.log(`Running locally: ${Cypress.config("baseUrl")}`)
   return false
 }

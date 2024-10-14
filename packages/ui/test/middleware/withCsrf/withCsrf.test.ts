@@ -2,14 +2,15 @@
 jest.mock("middleware/withCsrf/verifyCsrfToken")
 jest.mock("middleware/withCsrf/generateCsrfToken")
 
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
 import withCsrf from "middleware/withCsrf/withCsrf"
-import { GetServerSidePropsContext } from "next"
-import QueryString from "qs"
-import { ParsedUrlQuery } from "querystring"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+import type { GetServerSidePropsContext } from "next"
+import type QueryString from "qs"
+import type { ParsedUrlQuery } from "querystring"
+import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 
 it("should include form data and CSRF token in the context", async () => {
   const mockedVerifyCsrfToken = verifyCsrfToken as jest.MockedFunction<typeof verifyCsrfToken>
@@ -33,7 +34,7 @@ it("should include form data and CSRF token in the context", async () => {
     expect(formData["Dummy-Form-Field"]).toBe("DummyValue")
 
     const cookieValues = response.getHeader("Set-Cookie") as string[]
-    expect(cookieValues).not.toBeDefined()
+    expect(cookieValues).toBeUndefined()
 
     return undefined as never
   })

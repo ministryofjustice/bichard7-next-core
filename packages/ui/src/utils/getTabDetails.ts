@@ -1,5 +1,5 @@
-import { Amendments } from "types/Amendments"
-import { Exception } from "types/exceptions"
+import type { Amendments } from "types/Amendments"
+import type { Exception } from "types/exceptions"
 import getNextHearingDateExceptions from "./exceptions/getNextHearingDateExceptions"
 import getNextHearingLocationExceptions from "./exceptions/getNextHearingLocationExceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"

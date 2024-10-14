@@ -1,6 +1,6 @@
 import type { connect } from "stompit"
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
-import MqConfig from "./types/MqConfig"
+import type MqConfig from "./types/MqConfig"
 import parseConnectionOptions from "./parseConnectionOptions"
 
 export default (config: MqConfig): connect.ConnectOptions[] => {

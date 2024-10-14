@@ -1,10 +1,11 @@
-import User from "../../services/entities/User"
+import type User from "../../services/entities/User"
 import getDataSource from "services/getDataSource"
 import parseJwtCookie from "middleware/withAuthentication/parseJwtCookie"
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
-import { ParsedUrlQuery } from "querystring"
-import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { isError, Result } from "types/Result"
+import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import type { Result } from "types/Result"
+import { isError } from "types/Result"
 import getUser from "services/getUser"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

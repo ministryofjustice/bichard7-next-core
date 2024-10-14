@@ -1,4 +1,4 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import { isError } from "types/Result"
 import createForceOwner from "utils/createForceOwner"
 import { DEFAULT_STATION_CODE } from "./defaultStationCode"

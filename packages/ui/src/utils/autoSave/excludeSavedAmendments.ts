@@ -1,5 +1,5 @@
 import { isEqual } from "lodash"
-import { AmendmentKeys, Amendments, OffenceField, ResultQualifierCode } from "types/Amendments"
+import type { AmendmentKeys, Amendments, OffenceField, ResultQualifierCode } from "types/Amendments"
 
 const isNotEmpty = (values: (OffenceField<number> | OffenceField<string> | ResultQualifierCode)[]): boolean => {
   const isEmptyKeys = Object.keys(values).length === 0 && values.constructor === Object

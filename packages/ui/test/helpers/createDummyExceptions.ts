@@ -1,4 +1,4 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import exponential from "@stdlib/random-base-exponential"
 import sampleMany from "@stdlib/random-sample"
 import { sample as sampleOne } from "lodash"

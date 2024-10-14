@@ -15,6 +15,14 @@ module.exports = {
       }
     },
     {
+      files: ["**/*.ts"],
+      rules: {
+        "require-await": "off",
+        // TODO: Merge UI into Core
+        "jest/no-conditional-expect": "off"
+      }
+    },
+    {
       files: ["**/*.tsx"],
       extends: [
         "next",
@@ -71,7 +79,9 @@ module.exports = {
             argsIgnorePattern: "^_+$",
             varsIgnorePattern: "^_+$"
           }
-        ]
+        ],
+        // TODO: Merge UI into Core
+        "@typescript-eslint/no-duplicate-enum-values": "off"
       }
     },
     {

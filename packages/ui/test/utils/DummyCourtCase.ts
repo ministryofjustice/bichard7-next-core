@@ -1,4 +1,4 @@
-import CourtCase from "services/entities/CourtCase"
+import type CourtCase from "services/entities/CourtCase"
 
 const DummyCourtCase: Partial<CourtCase> = {
   courtName: "Magistrates' Courts Essex Basildon",

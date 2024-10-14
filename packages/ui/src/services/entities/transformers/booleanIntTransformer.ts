@@ -1,4 +1,4 @@
-import { ValueTransformer } from "typeorm"
+import type { ValueTransformer } from "typeorm"
 
 const booleanIntTransformer: ValueTransformer = {
   to: (value) => (value ? 1 : 0),

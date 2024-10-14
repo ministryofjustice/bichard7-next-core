@@ -2,13 +2,13 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import "reflect-metadata"
 import Note from "services/entities/Note"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { LockedState } from "types/CaseListQueryParams"
-import { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"
 import getDataSource from "../../../src/services/getDataSource"
@@ -22,7 +22,8 @@ import {
   insertDummyCourtCasesWithTriggers
 } from "../../utils/insertCourtCases"
 import insertException from "../../utils/manageExceptions"
-import { TestTrigger, insertTriggers } from "../../utils/manageTriggers"
+import type { TestTrigger } from "../../utils/manageTriggers"
+import { insertTriggers } from "../../utils/manageTriggers"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -144,7 +145,7 @@ describe("listCourtCases", () => {
 
       expect(cases[0].errorId).toBe(0)
       expect(cases[9].errorId).toBe(9)
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("shouldn't return more cases than the specified maxPageItems", async () => {
@@ -158,7 +159,7 @@ describe("listCourtCases", () => {
 
       expect(cases[0].errorId).toBe(0)
       expect(cases[9].errorId).toBe(9)
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("shouldn't return more cases than the specified maxPageItems when cases have notes", async () => {
@@ -191,7 +192,7 @@ describe("listCourtCases", () => {
 
       expect(cases).toHaveLength(10)
       expect(cases[0].notes[0].noteText).toBe("Test note 2")
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("shouldn't return more cases than the specified maxPageItems when cases have triggers", async () => {
@@ -224,7 +225,7 @@ describe("listCourtCases", () => {
       expect(cases).toHaveLength(10)
       expect(cases[0].triggers[0].triggerCode).toBe("TRPR0001")
       expect(cases[0].triggers[0].status).toBe("Unresolved")
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("Should return the next page of items", async () => {
@@ -242,7 +243,7 @@ describe("listCourtCases", () => {
 
       expect(cases[0].errorId).toBe(10)
       expect(cases[9].errorId).toBe(19)
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("Should return the last page of items correctly", async () => {
@@ -256,7 +257,7 @@ describe("listCourtCases", () => {
 
       expect(cases[0].errorId).toBe(90)
       expect(cases[9].errorId).toBe(99)
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
 
     it("shouldn't return any cases if the page number is greater than the total pages", async () => {
@@ -267,7 +268,7 @@ describe("listCourtCases", () => {
       const { result: cases, totalCases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(0)
-      expect(totalCases).toEqual(100)
+      expect(totalCases).toBe(100)
     })
   })
 
@@ -281,10 +282,10 @@ describe("listCourtCases", () => {
     const { result: casesAsc, totalCases: totalCasesAsc } = resultAsc as ListCourtCaseResult
 
     expect(casesAsc).toHaveLength(3)
-    expect(casesAsc[0].courtName).toStrictEqual("AAAA")
-    expect(casesAsc[1].courtName).toStrictEqual("BBBB")
-    expect(casesAsc[2].courtName).toStrictEqual("CCCC")
-    expect(totalCasesAsc).toEqual(3)
+    expect(casesAsc[0].courtName).toBe("AAAA")
+    expect(casesAsc[1].courtName).toBe("BBBB")
+    expect(casesAsc[2].courtName).toBe("CCCC")
+    expect(totalCasesAsc).toBe(3)
 
     const resultDesc = await listCourtCases(
       dataSource,
@@ -295,10 +296,10 @@ describe("listCourtCases", () => {
     const { result: casesDesc, totalCases: totalCasesDesc } = resultDesc as ListCourtCaseResult
 
     expect(casesDesc).toHaveLength(3)
-    expect(casesDesc[0].courtName).toStrictEqual("CCCC")
-    expect(casesDesc[1].courtName).toStrictEqual("BBBB")
-    expect(casesDesc[2].courtName).toStrictEqual("AAAA")
-    expect(totalCasesDesc).toEqual(3)
+    expect(casesDesc[0].courtName).toBe("CCCC")
+    expect(casesDesc[1].courtName).toBe("BBBB")
+    expect(casesDesc[2].courtName).toBe("AAAA")
+    expect(totalCasesDesc).toBe(3)
   })
 
   it("Should order by court date", async () => {
@@ -320,7 +321,7 @@ describe("listCourtCases", () => {
     expect(cases[0].courtDate).toStrictEqual(new Date(firstDate))
     expect(cases[1].courtDate).toStrictEqual(new Date(secondDate))
     expect(cases[2].courtDate).toStrictEqual(new Date(thirdDate))
-    expect(totalCases).toEqual(3)
+    expect(totalCases).toBe(3)
 
     const resultDesc = await listCourtCases(
       dataSource,
@@ -334,7 +335,7 @@ describe("listCourtCases", () => {
     expect(casesDesc[0].courtDate).toStrictEqual(thirdDate)
     expect(casesDesc[1].courtDate).toStrictEqual(secondDate)
     expect(casesDesc[2].courtDate).toStrictEqual(firstDate)
-    expect(totalCasesDesc).toEqual(3)
+    expect(totalCasesDesc).toBe(3)
   })
 
   describe("filter by cases allocated to me", () => {
@@ -362,13 +363,13 @@ describe("listCourtCases", () => {
       const { result: casesBefore, totalCases: totalCasesBefore } = resultBefore as ListCourtCaseResult
 
       expect(casesBefore).toHaveLength(3)
-      expect(casesBefore[0].errorLockedByUsername).toStrictEqual("BichardForce01")
-      expect(casesBefore[0].triggerLockedByUsername).toStrictEqual("BichardForce01")
-      expect(casesBefore[1].errorLockedByUsername).toStrictEqual("BichardForce02")
-      expect(casesBefore[1].triggerLockedByUsername).toStrictEqual("BichardForce02")
-      expect(casesBefore[2].errorLockedByUsername).toStrictEqual("BichardForce03")
-      expect(casesBefore[2].triggerLockedByUsername).toStrictEqual("BichardForce03")
-      expect(totalCasesBefore).toEqual(3)
+      expect(casesBefore[0].errorLockedByUsername).toBe("BichardForce01")
+      expect(casesBefore[0].triggerLockedByUsername).toBe("BichardForce01")
+      expect(casesBefore[1].errorLockedByUsername).toBe("BichardForce02")
+      expect(casesBefore[1].triggerLockedByUsername).toBe("BichardForce02")
+      expect(casesBefore[2].errorLockedByUsername).toBe("BichardForce03")
+      expect(casesBefore[2].triggerLockedByUsername).toBe("BichardForce03")
+      expect(totalCasesBefore).toBe(3)
 
       const resultAfter = await listCourtCases(
         dataSource,
@@ -379,9 +380,9 @@ describe("listCourtCases", () => {
       const { result: casesAfter, totalCases: totalCasesAfter } = resultAfter as ListCourtCaseResult
 
       expect(casesAfter).toHaveLength(1)
-      expect(casesAfter[0].errorLockedByUsername).toStrictEqual("BichardForce01")
-      expect(casesAfter[0].triggerLockedByUsername).toStrictEqual("BichardForce01")
-      expect(totalCasesAfter).toEqual(1)
+      expect(casesAfter[0].errorLockedByUsername).toBe("BichardForce01")
+      expect(casesAfter[0].triggerLockedByUsername).toBe("BichardForce01")
+      expect(totalCasesAfter).toBe(1)
     })
 
     it("Should list cases that have triggers locked to me", async () => {
@@ -396,10 +397,10 @@ describe("listCourtCases", () => {
       const { result: casesBefore, totalCases: totalCasesBefore } = resultBefore as ListCourtCaseResult
 
       expect(casesBefore).toHaveLength(3)
-      expect(casesBefore[0].triggerLockedByUsername).toStrictEqual("BichardForce01")
-      expect(casesBefore[1].triggerLockedByUsername).toStrictEqual("BichardForce02")
-      expect(casesBefore[2].triggerLockedByUsername).toStrictEqual("BichardForce03")
-      expect(totalCasesBefore).toEqual(3)
+      expect(casesBefore[0].triggerLockedByUsername).toBe("BichardForce01")
+      expect(casesBefore[1].triggerLockedByUsername).toBe("BichardForce02")
+      expect(casesBefore[2].triggerLockedByUsername).toBe("BichardForce03")
+      expect(totalCasesBefore).toBe(3)
 
       const resultAfter = await listCourtCases(
         dataSource,
@@ -410,8 +411,8 @@ describe("listCourtCases", () => {
       const { result: casesAfter, totalCases: totalCasesAfter } = resultAfter as ListCourtCaseResult
 
       expect(casesAfter).toHaveLength(1)
-      expect(casesAfter[0].triggerLockedByUsername).toStrictEqual("BichardForce01")
-      expect(totalCasesAfter).toEqual(1)
+      expect(casesAfter[0].triggerLockedByUsername).toBe("BichardForce01")
+      expect(totalCasesAfter).toBe(1)
     })
 
     it("Should list cases that have errors locked to me", async () => {
@@ -426,10 +427,10 @@ describe("listCourtCases", () => {
       const { result: casesBefore, totalCases: totalCasesBefore } = resultBefore as ListCourtCaseResult
 
       expect(casesBefore).toHaveLength(3)
-      expect(casesBefore[0].errorLockedByUsername).toStrictEqual("BichardForce01")
-      expect(casesBefore[1].errorLockedByUsername).toStrictEqual("BichardForce02")
-      expect(casesBefore[2].errorLockedByUsername).toStrictEqual("BichardForce03")
-      expect(totalCasesBefore).toEqual(3)
+      expect(casesBefore[0].errorLockedByUsername).toBe("BichardForce01")
+      expect(casesBefore[1].errorLockedByUsername).toBe("BichardForce02")
+      expect(casesBefore[2].errorLockedByUsername).toBe("BichardForce03")
+      expect(totalCasesBefore).toBe(3)
 
       const resultAfter = await listCourtCases(
         dataSource,
@@ -440,8 +441,8 @@ describe("listCourtCases", () => {
       const { result: casesAfter, totalCases: totalCasesAfter } = resultAfter as ListCourtCaseResult
 
       expect(casesAfter).toHaveLength(1)
-      expect(casesAfter[0].errorLockedByUsername).toStrictEqual("BichardForce01")
-      expect(totalCasesAfter).toEqual(1)
+      expect(casesAfter[0].errorLockedByUsername).toBe("BichardForce01")
+      expect(totalCasesAfter).toBe(1)
     })
   })
 
@@ -613,7 +614,7 @@ describe("listCourtCases", () => {
       let { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(1)
-      expect(cases[0].errorReport).toStrictEqual(
+      expect(cases[0].errorReport).toBe(
         `HO100102||ds:NextHearingDate, ${errorToInclude}||ds:OrganisationUnitCode, ${anotherErrorToInclude}||ds:NextHearingDate`
       )
 
@@ -623,7 +624,7 @@ describe("listCourtCases", () => {
       cases = (result as ListCourtCaseResult).result
 
       expect(cases).toHaveLength(1)
-      expect(cases[0].errorReport).toStrictEqual(
+      expect(cases[0].errorReport).toBe(
         `HO100102||ds:NextHearingDate, ${errorToInclude}||ds:OrganisationUnitCode, ${anotherErrorToInclude}||ds:NextHearingDate`
       )
     })
@@ -669,7 +670,7 @@ describe("listCourtCases", () => {
   })
 
   describe("Filter cases by court date", () => {
-    it("Should filter cases that within a start and end date ", async () => {
+    it("Should filter cases that within a start and end date", async () => {
       const firstDate = new Date("2001-09-26")
       const secondDate = new Date("2008-01-26")
       const thirdDate = new Date("2008-03-26")
@@ -733,7 +734,7 @@ describe("listCourtCases", () => {
   })
 
   describe("Filter cases by locked status", () => {
-    it("Should filter cases that are locked ", async () => {
+    it("Should filter cases that are locked", async () => {
       await insertCourtCasesWithFields([
         {
           errorLockedByUsername: "BichardForce01",
@@ -752,7 +753,7 @@ describe("listCourtCases", () => {
       expect(cases.map((c) => c.errorId)).toStrictEqual([0])
     })
 
-    it("Should filter cases that are unlocked ", async () => {
+    it("Should filter cases that are unlocked", async () => {
       const lockedCase = {
         errorId: 0,
         errorLockedByUsername: "BichardForce01",
@@ -777,7 +778,7 @@ describe("listCourtCases", () => {
       expect(cases.map((c) => c.errorId)).toStrictEqual([1])
     })
 
-    it("Should treat cases with only one lock as locked.  ", async () => {
+    it("Should treat cases with only one lock as locked.", async () => {
       await insertCourtCasesWithFields([
         {
           errorId: 0,

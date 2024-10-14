@@ -1,4 +1,4 @@
-import { DisplayPartialCourtCase } from "../types/display/CourtCases"
+import type { DisplayPartialCourtCase } from "../types/display/CourtCases"
 import getResolutionStatus from "./getResolutionStatus"
 
 describe("getResolutionStatus", () => {

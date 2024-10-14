@@ -1,6 +1,6 @@
 import MockDate from "mockdate"
 import insertNotes from "services/insertNotes"
-import { DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { v4 as uuid } from "uuid"
 import addNote from "../../src/services/addNote"
 import CourtCase from "../../src/services/entities/CourtCase"

@@ -9,6 +9,7 @@ const isEnabled = (user: DisplayFullUser): boolean => {
   if (!isProduction) {
     return featureFlagsEnabled
   }
+
   return enabledInProduction && featureFlagsEnabled
 }
 

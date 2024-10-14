@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Result } from "axe-core"
+import type { Result } from "axe-core"
 
 const logAccessibilityViolations = (violations: Result[]) => {
   console.log(violations)

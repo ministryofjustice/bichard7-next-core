@@ -1,4 +1,4 @@
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import getSystemNotes from "./getSystemNotes"
 
 describe("getSystemNotes", () => {

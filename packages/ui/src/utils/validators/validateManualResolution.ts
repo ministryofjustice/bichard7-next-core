@@ -1,4 +1,4 @@
-import { ManualResolution } from "types/ManualResolution"
+import type { ManualResolution } from "types/ManualResolution"
 
 export const validateManualResolution = (manualResolution: ManualResolution): { valid: boolean; error?: string } => {
   if (manualResolution.reason === "Reallocated" && !manualResolution.reasonText) {

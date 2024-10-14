@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash"
-import { Amendments } from "types/Amendments"
-import { DisplayFullCourtCase } from "../types/display/CourtCases"
+import type { Amendments } from "types/Amendments"
+import type { DisplayFullCourtCase } from "../types/display/CourtCases"
 
 const amendmentsHaveChanged = (_courtCase: DisplayFullCourtCase, amendments: Amendments): boolean => {
   if (isEmpty(amendments)) {

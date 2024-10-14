@@ -1,6 +1,6 @@
-import { DataSource, EntityManager } from "typeorm"
+import type { DataSource, EntityManager } from "typeorm"
 import { isError } from "types/Result"
-import { ServiceResultPromise } from "types/ServiceResult"
+import type { ServiceResultPromise } from "types/ServiceResult"
 import CourtCase from "./entities/CourtCase"
 import insertNotes from "./insertNotes"
 

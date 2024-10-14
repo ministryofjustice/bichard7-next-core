@@ -1,4 +1,4 @@
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import getRawBody from "raw-body"
 import { parse } from "qs"
 

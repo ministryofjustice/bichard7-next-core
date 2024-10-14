@@ -1,7 +1,7 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import CourtCase from "services/entities/CourtCase"
-import { DisplayNote } from "./Notes"
-import { DisplayTrigger } from "./Triggers"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type CourtCase from "services/entities/CourtCase"
+import type { DisplayNote } from "./Notes"
+import type { DisplayTrigger } from "./Triggers"
 
 type FieldsForDisplayPartialCourtCase =
   | "asn"

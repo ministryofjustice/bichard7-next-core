@@ -3,12 +3,13 @@ import CourtCase from "services/entities/CourtCase"
 import Trigger from "services/entities/Trigger"
 import getDataSource from "services/getDataSource"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import { DataSource, Repository, SelectQueryBuilder } from "typeorm"
-import { ResolutionStatus } from "types/ResolutionStatus"
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+import type { ResolutionStatus } from "types/ResolutionStatus"
 import { isError } from "types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields, insertDummyCourtCasesWithTriggers } from "../utils/insertCourtCases"
-import { TestTrigger, insertTriggers } from "../utils/manageTriggers"
+import type { TestTrigger } from "../utils/manageTriggers"
+import { insertTriggers } from "../utils/manageTriggers"
 
 describe("leftJoinAndSelectTriggersQuery", () => {
   let dataSource: DataSource
@@ -114,7 +115,7 @@ describe("leftJoinAndSelectTriggersQuery", () => {
       const cases = result as CourtCase[]
       expect(cases[0].triggers).toHaveLength(0)
       expect(cases[1].triggers).toHaveLength(1)
-      expect(cases[1].triggers[0].triggerCode).toEqual("TRPR0002")
+      expect(cases[1].triggers[0].triggerCode).toBe("TRPR0002")
     })
   })
 
@@ -198,7 +199,7 @@ describe("leftJoinAndSelectTriggersQuery", () => {
       cases.forEach((caseWithTrigger) => {
         expect(caseWithTrigger.triggers).toHaveLength(1)
         expect(caseWithTrigger.triggers[0].triggerCode).toEqual(resolvedTriggerCode)
-        expect(caseWithTrigger.triggers[0].status).toEqual("Resolved")
+        expect(caseWithTrigger.triggers[0].status).toBe("Resolved")
       })
     })
 

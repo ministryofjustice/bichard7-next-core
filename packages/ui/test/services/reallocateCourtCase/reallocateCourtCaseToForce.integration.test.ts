@@ -1,14 +1,15 @@
 import generateTriggers from "@moj-bichard7-developers/bichard7-next-core/core/lib/triggers/generateTriggers"
 import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import Note from "services/entities/Note"
 import SurveyFeedback from "services/entities/SurveyFeedback"
-import User from "services/entities/User"
+import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
 import reallocateCourtCaseToForce from "services/reallocateCourtCase/reallocateCourtCaseToForce"
-import { DataSource, UpdateQueryBuilder } from "typeorm"
+import type { DataSource } from "typeorm"
+import { UpdateQueryBuilder } from "typeorm"
 import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../../src/config"
 import amendCourtCase from "../../../src/services/amendCourtCase"
 import CourtCase from "../../../src/services/entities/CourtCase"
@@ -142,7 +143,7 @@ describe("reallocate court case to another force", () => {
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
-      expect(actualCourtCase.orgForPoliceFilter).toStrictEqual("04YZ  ")
+      expect(actualCourtCase.orgForPoliceFilter).toBe("04YZ  ")
       expect(actualCourtCase.errorLockedByUsername).toBeNull()
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
 
@@ -153,18 +154,18 @@ describe("reallocate court case to another force", () => {
         .Case
 
       expect(parsedCase.ForceOwner?.OrganisationUnitCode).toEqual(expectedForceOwner)
-      expect(parsedCase.ForceOwner?.BottomLevelCode).toEqual("00")
+      expect(parsedCase.ForceOwner?.BottomLevelCode).toBe("00")
       expect(parsedCase.ForceOwner?.SecondLevelCode).toEqual(newForceCode)
-      expect(parsedCase.ForceOwner?.ThirdLevelCode).toEqual("YZ")
+      expect(parsedCase.ForceOwner?.ThirdLevelCode).toBe("YZ")
       expect(parsedCase.ManualForceOwner).toBe(true)
       expect(actualCourtCase.notes).toHaveLength(2)
 
-      expect(actualCourtCase.notes[0].userId).toEqual("System")
-      expect(actualCourtCase.notes[0].noteText).toEqual(
+      expect(actualCourtCase.notes[0].userId).toBe("System")
+      expect(actualCourtCase.notes[0].noteText).toBe(
         `${userName}: Portal Action: Update Applied. Element: forceOwner. New Value: ${newForceCode}`
       )
-      expect(actualCourtCase.notes[1].userId).toEqual("System")
-      expect(actualCourtCase.notes[1].noteText).toEqual(
+      expect(actualCourtCase.notes[1].userId).toBe("System")
+      expect(actualCourtCase.notes[1].noteText).toBe(
         `${userName}: Case reallocated to new force owner: ${expectedForceOwner}`
       )
 
@@ -213,7 +214,7 @@ describe("reallocate court case to another force", () => {
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
-      expect(actualCourtCase.orgForPoliceFilter).toStrictEqual("04YZ  ")
+      expect(actualCourtCase.orgForPoliceFilter).toBe("04YZ  ")
       expect(actualCourtCase.errorLockedByUsername).toBeNull()
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
 
@@ -224,22 +225,22 @@ describe("reallocate court case to another force", () => {
         .Case
 
       expect(parsedCase.ForceOwner?.OrganisationUnitCode).toEqual(expectedForceOwner)
-      expect(parsedCase.ForceOwner?.BottomLevelCode).toEqual("00")
+      expect(parsedCase.ForceOwner?.BottomLevelCode).toBe("00")
       expect(parsedCase.ForceOwner?.SecondLevelCode).toEqual(newForceCode)
-      expect(parsedCase.ForceOwner?.ThirdLevelCode).toEqual("YZ")
+      expect(parsedCase.ForceOwner?.ThirdLevelCode).toBe("YZ")
       expect(parsedCase.ManualForceOwner).toBe(true)
       expect(actualCourtCase.notes).toHaveLength(3)
       const notes = actualCourtCase.notes.sort((noteA, noteB) => (noteA.noteId > noteB.noteId ? 1 : -1))
 
-      expect(notes[0].userId).toEqual("System")
-      expect(notes[0].noteText).toEqual(
+      expect(notes[0].userId).toBe("System")
+      expect(notes[0].noteText).toBe(
         `${userName}: Portal Action: Update Applied. Element: forceOwner. New Value: ${newForceCode}`
       )
-      expect(notes[1].userId).toEqual("System")
-      expect(notes[1].noteText).toEqual(`${userName}: Case reallocated to new force owner: ${expectedForceOwner}`)
+      expect(notes[1].userId).toBe("System")
+      expect(notes[1].noteText).toBe(`${userName}: Case reallocated to new force owner: ${expectedForceOwner}`)
 
       expect(notes[2].userId).toEqual(userName)
-      expect(notes[2].noteText).toEqual("GeneralHandler note")
+      expect(notes[2].noteText).toBe("GeneralHandler note")
 
       const events = await fetchAuditLogEvents(courtCase.messageId)
       expect(events).toHaveLength(4)
@@ -342,7 +343,7 @@ describe("reallocate court case to another force", () => {
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error(`Failed to reallocate: Case not found`))
+      expect(result).toEqual(Error("Failed to reallocate: Case not found"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
@@ -377,11 +378,11 @@ describe("reallocate court case to another force", () => {
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error(`Exception is locked by another user`))
+      expect(result).toEqual(Error("Exception is locked by another user"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
-      expect(actualCourtCase.orgForPoliceFilter).toStrictEqual(`${oldForceCode}    `)
+      expect(actualCourtCase.orgForPoliceFilter).toBe(`${oldForceCode}    `)
       expect(actualCourtCase.errorLockedByUsername).toStrictEqual(anotherUser)
       expect(actualCourtCase.triggerLockedByUsername).toStrictEqual(anotherUser)
       expect(actualCourtCase.updatedHearingOutcome).toBeNull()
@@ -485,14 +486,14 @@ describe("reallocate court case to another force", () => {
         }
       ])
 
-      ;(insertNotes as jest.Mock).mockImplementationOnce(() => new Error(`Error while creating notes`))
+      ;(insertNotes as jest.Mock).mockImplementationOnce(() => new Error("Error while creating notes"))
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error(`Error while creating notes`))
+      expect(result).toEqual(Error("Error while creating notes"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
-      expect(actualCourtCase.orgForPoliceFilter).toStrictEqual(`${oldForceCode}    `)
+      expect(actualCourtCase.orgForPoliceFilter).toBe(`${oldForceCode}    `)
       expect(actualCourtCase.errorLockedByUsername).toBeNull()
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
       expect(actualCourtCase.updatedHearingOutcome).toBeNull()
@@ -515,11 +516,11 @@ describe("reallocate court case to another force", () => {
         .mockRejectedValue(Error("Failed to update record with some error"))
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error(`Failed to update record with some error`))
+      expect(result).toEqual(Error("Failed to update record with some error"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: courtCaseId } })
       const actualCourtCase = record as CourtCase
-      expect(actualCourtCase.orgForPoliceFilter).toStrictEqual(`${oldForceCode}    `)
+      expect(actualCourtCase.orgForPoliceFilter).toBe(`${oldForceCode}    `)
       expect(actualCourtCase.errorLockedByUsername).toBeNull()
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
       expect(actualCourtCase.updatedHearingOutcome).toBeNull()

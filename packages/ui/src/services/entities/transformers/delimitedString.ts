@@ -1,4 +1,4 @@
-import { ValueTransformer } from "typeorm"
+import type { ValueTransformer } from "typeorm"
 
 const delimitedString = (delimiter: string): ValueTransformer => ({
   to: (value?: string[]) => value?.join(delimiter),

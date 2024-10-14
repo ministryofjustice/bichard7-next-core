@@ -36,7 +36,7 @@
     "zap": "./scripts/zap/zap-scan.sh"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js",
+    "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js --no-warn-ignored",
     "*.scss": "stylelint './styles/*.scss' --fix"
   },
   "dependencies": {

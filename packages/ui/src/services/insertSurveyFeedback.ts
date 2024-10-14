@@ -1,6 +1,6 @@
 import SurveyFeedback from "services/entities/SurveyFeedback"
-import { DataSource, InsertResult } from "typeorm"
-import PromiseResult from "types/PromiseResult"
+import type { DataSource, InsertResult } from "typeorm"
+import type PromiseResult from "types/PromiseResult"
 
 const insertSurveyFeedback = async (
   dataSource: DataSource,

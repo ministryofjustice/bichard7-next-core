@@ -46,12 +46,12 @@ describe("getLongTriggerCode", () => {
   it("returns null when value is null", () => {
     const result = getLongTriggerCode(null)
 
-    expect(result).toBe(null)
+    expect(result).toBeNull()
   })
 
   it("returns null when value is undefined", () => {
     const result = getLongTriggerCode()
 
-    expect(result).toBe(null)
+    expect(result).toBeNull()
   })
 })

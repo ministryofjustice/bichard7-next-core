@@ -1,6 +1,6 @@
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { ReasonCode } from "types/CourtCaseFilter"
+import type { ReasonCode } from "types/CourtCaseFilter"
 import someTriggersSelected from "./someTriggersSelected"
 
 describe("someTriggersSelected", () => {

@@ -1,17 +1,18 @@
-import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
 import { type AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCategory"
-import { DataSource, In, IsNull, UpdateResult } from "typeorm"
+import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
+import type { DataSource, UpdateResult } from "typeorm"
+import { In, IsNull } from "typeorm"
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import UnlockReason from "../types/UnlockReason"
 import CourtCase from "./entities/CourtCase"
 import Trigger from "./entities/Trigger"
-import User from "./entities/User"
+import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
-import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
 
 const generateTriggersAttributes = (triggers: Trigger[]) =>
   triggers.reduce((acc: Record<string, unknown>, trigger, index) => {
@@ -29,7 +30,7 @@ const resolveTriggers = async (
 ): Promise<UpdateResult | Error> => {
   const resolver = user.username
 
-  return dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (isError(courtCase)) {

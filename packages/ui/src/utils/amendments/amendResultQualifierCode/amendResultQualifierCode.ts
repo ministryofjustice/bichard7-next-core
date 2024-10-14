@@ -1,5 +1,5 @@
-import { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import { Amendments } from "types/Amendments"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { Amendments } from "types/Amendments"
 
 const getValidIndex = (resultQualifierIndex: number, arrLen: number): number =>
   resultQualifierIndex > arrLen - 1 ? arrLen + 1 : resultQualifierIndex

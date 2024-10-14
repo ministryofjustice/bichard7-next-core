@@ -1,8 +1,8 @@
 import type { Client, connect } from "stompit"
 import { ConnectFailover } from "stompit"
 import deconstructServers from "./deconstructServers"
-import MqConfig from "./types/MqConfig"
-import MqGateway from "./types/MqGateway"
+import type MqConfig from "./types/MqConfig"
+import type MqGateway from "./types/MqGateway"
 import type { PromiseResult } from "./types/Result"
 import { isError } from "./types/Result"
 

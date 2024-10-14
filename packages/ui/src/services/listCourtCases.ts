@@ -1,12 +1,14 @@
-import { Brackets, DataSource, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm"
-import { CaseListQueryParams, LockedState } from "types/CaseListQueryParams"
-import { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { DataSource } from "typeorm"
+import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm"
+import type { CaseListQueryParams } from "types/CaseListQueryParams"
+import { LockedState } from "types/CaseListQueryParams"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import Permission from "types/Permission"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import CourtCase from "./entities/CourtCase"
 import getLongTriggerCode from "./entities/transformers/getLongTriggerCode"
-import User from "./entities/User"
+import type User from "./entities/User"
 import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolutionStatus"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
@@ -61,6 +63,7 @@ const listCourtCases = async (
   if (orderBy !== "courtDate") {
     query.addOrderBy("courtCase.courtDate", "DESC")
   }
+
   if (orderBy !== "ptiurn") {
     query.addOrderBy("courtCase.ptiurn")
   }

@@ -1,4 +1,4 @@
-import { GetServerSidePropsResult } from "next/types"
+import type { GetServerSidePropsResult } from "next/types"
 
 const notSuccessful = <TProps>(message: string) =>
   ({

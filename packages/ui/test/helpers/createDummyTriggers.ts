@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker"
 import exponential from "@stdlib/random-base-exponential"
 import sample from "@stdlib/random-sample"
-import { DataSource, EntityManager } from "typeorm"
+import type { DataSource, EntityManager } from "typeorm"
 import Trigger from "../../src/services/entities/Trigger"
 import randomDate from "./createRandomDate"
 import createResolutionStatus from "./createResolutionStatus"
