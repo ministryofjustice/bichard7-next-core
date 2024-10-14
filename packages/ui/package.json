@@ -2,6 +2,7 @@
   "name": "@moj-bichard7/ui",
   "version": "0.1.0",
   "scripts": {
+    "postinstall": "./scripts/symlink-node-modules.sh",
     "preinstall:assets": "./scripts/symlink-node-modules.sh",
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh && ./scripts/copy-moj-frontend-assets.sh",
     "predev": "./scripts/symlink-node-modules.sh",
