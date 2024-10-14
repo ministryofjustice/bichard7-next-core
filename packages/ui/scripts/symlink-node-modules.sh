@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [[ ! -d "./node_modules/govuk-frontend" && ! -L "./node_modules/govuk-frontend" ]]; then
   ln -sf ../../../node_modules/govuk-frontend ./node_modules/govuk-frontend
 fi
