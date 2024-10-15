@@ -1,8 +1,0 @@
-paths-ignore:
-  - packages/api
-  - packages/common
-  - packages/conductor
-  - packages/core
-  - packages/e2e-test
-  - packages/message-forwarder
-  - packages/ui/cypress
