@@ -11,8 +11,7 @@ RUN npm ci
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./tsconfig.base.json ./tsconfig.base.json
 
-RUN npm run build
-RUN npm run esbuild -w packages/message-forwarder
+RUN npm run build:core && npm run esbuild -w packages/message-forwarder
 
 FROM ${BUILD_IMAGE}
 
