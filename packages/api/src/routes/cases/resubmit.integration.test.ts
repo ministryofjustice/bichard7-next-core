@@ -65,7 +65,7 @@ describe("resubmit", () => {
   it("fails if case doesn't belong to same force as user", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
     jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser").mockResolvedValue(false)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
@@ -75,7 +75,7 @@ describe("resubmit", () => {
   it("fails if case is locked to a different user", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
     jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser").mockResolvedValue(false)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
@@ -86,7 +86,7 @@ describe("resubmit", () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
     const error = new Error("Case not found")
     jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "filterUserHasSameForceAsCaseAndLockedByUser").mockRejectedValue(error)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(error)
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
