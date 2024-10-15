@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+{% if messageType == "AnnotatedHearingOutcome" %}
+<br7:AnnotatedHearingOutcome
+    xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12"
+    xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+{% else %}
+<PNCUpdateDataset xmlns="http://www.example.org/NewXMLSchema"
+                  xmlns:ds="http://schemas.cjse.gov.uk/datastandards/2006-10"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <br7:AnnotatedHearingOutcome xmlns:br7="http://schemas.cjse.gov.uk/datastandards/BR7/2007-12">
+{% endif %}
+  <br7:HearingOutcome>
+    <br7:Hearing hasError="false" SchemaVersion="4.0">
+      <ds:CourtHearingLocation SchemaVersion="2.0">
+        <ds:TopLevelCode>B</ds:TopLevelCode>
+        <ds:SecondLevelCode>01</ds:SecondLevelCode>
+        <ds:ThirdLevelCode>EF</ds:ThirdLevelCode>
+        <ds:BottomLevelCode>01</ds:BottomLevelCode>
+        <ds:OrganisationUnitCode>B01EF01</ds:OrganisationUnitCode>
+      </ds:CourtHearingLocation>
+      <ds:DateOfHearing>2011-09-26</ds:DateOfHearing>
+      <ds:TimeOfHearing>10:00</ds:TimeOfHearing>
+      <ds:HearingLanguage Literal="Don't Know">D</ds:HearingLanguage>
+      <ds:HearingDocumentationLanguage Literal="Don't Know">D</ds:HearingDocumentationLanguage>
+      <ds:DefendantPresentAtHearing Literal="Defendant was not present, but appeared by the presence of his/her barrister or solicitor">A</ds:DefendantPresentAtHearing>
+      <br7:SourceReference>
+        <br7:DocumentName>SPI JOHN SMITH</br7:DocumentName>
+        <br7:UniqueID>EXTERNAL_CORRELATION_ID</br7:UniqueID>
+        <br7:DocumentType>SPI Case Result</br7:DocumentType>
+      </br7:SourceReference>
+      <br7:CourtType Literal="MC adult">MCA</br7:CourtType>
+      <br7:CourtHouseCode>2576</br7:CourtHouseCode>
+      <br7:CourtHouseName>London Croydon</br7:CourtHouseName>
+    </br7:Hearing>
+    <br7:Case hasError="false" SchemaVersion="4.0">
+      <ds:PTIURN>01ZD0303208</ds:PTIURN>
+      <ds:PreChargeDecisionIndicator Literal="No">N</ds:PreChargeDecisionIndicator>
+      <ds:CourtCaseReferenceNumber>97/1626/008395Q</ds:CourtCaseReferenceNumber>
+      <br7:CourtReference>
+        <ds:MagistratesCourtReference>01ZD0303208</ds:MagistratesCourtReference>
+      </br7:CourtReference>
+      {% if penaltyNoticeCaseReference %}
+      <br7:PenaltyNoticeCaseReference>12345</br7:PenaltyNoticeCaseReference>
+      {% endif %}
+      {% if recordableOnPncIndicator or recordableOnPncIndicator == undefined %}
+      <br7:RecordableOnPNCindicator Literal="Yes">Y</br7:RecordableOnPNCindicator>
+      {% else %}
+      <br7:RecordableOnPNCindicator Literal="No">N</br7:RecordableOnPNCindicator>
+      {% endif %}
+      {% if penaltyNoticeCaseReferenceNumber %}
+      <br7:PenaltyNoticeCaseReferenceNumber>{{ penaltyNoticeCaseReferenceNumber }}</br7:PenaltyNoticeCaseReferenceNumber>
+      {% endif %}
+      <br7:Urgent>
+        <br7:urgent Literal="Yes">Y</br7:urgent>
+        <br7:urgency>24</br7:urgency>
+      </br7:Urgent>
+      <br7:ForceOwner SchemaVersion="2.0">
+        <ds:SecondLevelCode>01</ds:SecondLevelCode>
+        <ds:ThirdLevelCode>ZD</ds:ThirdLevelCode>
+        <ds:BottomLevelCode>00</ds:BottomLevelCode>
+        <ds:OrganisationUnitCode>01ZD00</ds:OrganisationUnitCode>
+      </br7:ForceOwner>
+      <br7:HearingDefendant hasError="false">
+        <br7:ArrestSummonsNumber>{{ arrestSummonsNumber if arrestSummonsNumber else "1101ZD0100000448754K" }}</br7:ArrestSummonsNumber>
+        <br7:PNCIdentifier>2000/0448754K</br7:PNCIdentifier>
+        <br7:PNCCheckname>SMITH</br7:PNCCheckname>
+        <br7:DefendantDetail>
+          <br7:PersonName>
+            <ds:Title>Mr</ds:Title>
+            <ds:GivenName NameSequence="1">JOHN</ds:GivenName>
+            <ds:FamilyName NameSequence="1">SMITH</ds:FamilyName>
+          </br7:PersonName>
+          <br7:GeneratedPNCFilename>SMITH/JOHN</br7:GeneratedPNCFilename>
+          <br7:BirthDate>1948-11-11</br7:BirthDate>
+          <br7:Gender Literal="male">1</br7:Gender>
+        </br7:DefendantDetail>
+        <br7:Address>
+          <ds:AddressLine1>Address Line 1</ds:AddressLine1>
+          <ds:AddressLine2>Address Line 2</ds:AddressLine2>
+          <ds:AddressLine3>Address Line 3</ds:AddressLine3>
+        </br7:Address>
+        <br7:RemandStatus Literal="Unconditional Bail">UB</br7:RemandStatus>
+        {% for offence in offences %}
+        <br7:Offence hasError="false" SchemaVersion="4.0">
+          <ds:CriminalProsecutionReference SchemaVersion="2.0">
+            <ds:DefendantOrOffender>
+              <ds:Year>11</ds:Year>
+              <ds:OrganisationUnitIdentifierCode SchemaVersion="2.0">
+                <ds:SecondLevelCode>01</ds:SecondLevelCode>
+                <ds:ThirdLevelCode>ZD</ds:ThirdLevelCode>
+                <ds:BottomLevelCode>01</ds:BottomLevelCode>
+                <ds:OrganisationUnitCode>01ZD01</ds:OrganisationUnitCode>
+              </ds:OrganisationUnitIdentifierCode>
+              <ds:DefendantOrOffenderSequenceNumber>00000448754</ds:DefendantOrOffenderSequenceNumber>
+              <ds:CheckDigit>K</ds:CheckDigit>
+            </ds:DefendantOrOffender>
+            <ds:OffenceReason>
+              <ds:OffenceCode>
+                <ds:ActOrSource>RT</ds:ActOrSource>
+                <ds:Year>88</ds:Year>
+                <ds:Reason>191</ds:Reason>
+              </ds:OffenceCode>
+            </ds:OffenceReason>
+            {% if offence.offenceReasonSequence or offence.offenceReasonSequence == undefined %}
+            <ds:OffenceReasonSequence>{{ loop.index | string | padStart(3, "0") }}</ds:OffenceReasonSequence>
+            {% endif %}
+          </ds:CriminalProsecutionReference>
+          <ds:OffenceCategory Literal="{{ offence.offenceCategory.description if offence.offenceCategory.description else "Summary Motoring" }}">{{ offence.offenceCategory.code if offence.offenceCategory.code else "CM" }}</ds:OffenceCategory>
+          <ds:ArrestDate>2010-12-01</ds:ArrestDate>
+          <ds:ChargeDate>2010-12-02</ds:ChargeDate>
+          <ds:ActualOffenceDateCode Literal="on or in">1</ds:ActualOffenceDateCode>
+          <ds:ActualOffenceStartDate>
+            <ds:StartDate>2010-11-28</ds:StartDate>
+          </ds:ActualOffenceStartDate>
+          <ds:LocationOfOffence>Kingston High Street</ds:LocationOfOffence>
+          <ds:OffenceTitle>Use a motor vehicle on a road / public place without third party insurance</ds:OffenceTitle>
+          <ds:ActualOffenceWording>Use a motor vehicle without third party insurance.</ds:ActualOffenceWording>
+          {% if offence.recordableOnPncIndicator %}
+          <ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
+          {% else %}
+          <ds:RecordableOnPNCindicator Literal="No">N</ds:RecordableOnPNCindicator>
+          {% endif %}
+          <ds:NotifiableToHOindicator Literal="No">N</ds:NotifiableToHOindicator>
+          <ds:HomeOfficeClassification>809/01</ds:HomeOfficeClassification>
+          <ds:ConvictionDate>2011-09-26</ds:ConvictionDate>
+          <br7:CommittedOnBail Literal="Don't Know">D</br7:CommittedOnBail>
+          <br7:CourtOffenceSequenceNumber>{{ loop.index }}</br7:CourtOffenceSequenceNumber>
+          {% if offence.addedByTheCourt %}
+          <br7:AddedByTheCourt Literal="Yes">Y</br7:AddedByTheCourt>
+          {% else %}
+          <br7:AddedByTheCourt Literal="No">N</br7:AddedByTheCourt>
+          {% endif %}
+          {% if offence.courtCaseReferenceNumber %}
+          <br7:CourtCaseReferenceNumber>97/1626/008395Q</br7:CourtCaseReferenceNumber>
+          {% endif %}
+          {% for result in offence.results %}
+          <br7:Result hasError="false" SchemaVersion="2.0">
+            <ds:CJSresultCode>{{ result.cjsResultCode if result.cjsResultCode else "1015" }}</ds:CJSresultCode>
+            <ds:SourceOrganisation SchemaVersion="2.0">
+              <ds:TopLevelCode>B</ds:TopLevelCode>
+              <ds:SecondLevelCode>01</ds:SecondLevelCode>
+              <ds:ThirdLevelCode>EF</ds:ThirdLevelCode>
+              <ds:BottomLevelCode>01</ds:BottomLevelCode>
+              <ds:OrganisationUnitCode>B01EF01</ds:OrganisationUnitCode>
+            </ds:SourceOrganisation>
+            <ds:CourtType>MCA</ds:CourtType>
+            <ds:ResultHearingType Literal="Other">OTHER</ds:ResultHearingType>
+            <ds:ResultHearingDate>2011-09-26</ds:ResultHearingDate>
+            {% for duration in result.durations %}
+            <ds:Duration>
+              <ds:DurationType>{{ duration.type }}</ds:DurationType>
+              <ds:DurationUnit>{{ duration.unit }}</ds:DurationUnit>
+              <ds:DurationLength>{{ duration.length }}</ds:DurationLength>
+            </ds:Duration>
+            {% endfor %}
+            {% if result.amountSpecifiedInResults | length %}
+                {% for amountSpecifiedInResult in result.amountSpecifiedInResults %}
+                <ds:AmountSpecifiedInResult Type="Fine">{{ amountSpecifiedInResult }}</ds:AmountSpecifiedInResult>
+                {% endfor %}
+            {% else %}
+            <ds:AmountSpecifiedInResult Type="Fine">100.00</ds:AmountSpecifiedInResult>
+            {% endif %}
+            <ds:PleaStatus Literal="Not Guilty">NG</ds:PleaStatus>
+            <ds:Verdict Literal="Guilty">G</ds:Verdict>
+            <ds:ModeOfTrialReason Literal="Summary only">SUM</ds:ModeOfTrialReason>
+            <ds:ResultVariableText>{{ result.resultVariableText if result.resultVariableText else "Fined 100" }}</ds:ResultVariableText>
+            <ds:ResultHalfLifeHours>72</ds:ResultHalfLifeHours>
+            <br7:PNCDisposalType>{{ result.pncDisposalType if result.pncDisposalType else "1015" }}</br7:PNCDisposalType>
+            <br7:ResultClass>{{ result.resultClass if result.resultClass else "Adjournment pre Judgement" }}</br7:ResultClass>
+            {% if result.pncAdjudicationExists %}
+            <br7:PNCAdjudicationExists Literal="Yes">Y</br7:PNCAdjudicationExists>
+            {% else %}
+            <br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
+            {% endif %}
+            {% if result.numberOfOffencesTic %}
+            <br7:NumberOfOffencesTIC>1</br7:NumberOfOffencesTIC>
+            {% endif %}
+            {% for resultQualifierVariable in result.resultQualifierVariables %}
+            <br7:ResultQualifierVariable SchemaVersion="3.0">
+              <ds:Code>{{ resultQualifierVariable.code }}</ds:Code>
+              {% if resultQualifierVariable.duration %}
+              <ds:Duration>
+                <ds:DurationType>{{ resultQualifierVariable.duration.type }}</ds:DurationType>
+                <ds:DurationUnit>{{ resultQualifierVariable.duration.unit }}</ds:DurationUnit>
+                <ds:DurationLength>{{ resultQualifierVariable.duration.length }}</ds:DurationLength>
+              </ds:Duration>
+              {% endif %}
+            </br7:ResultQualifierVariable>
+            {% endfor %}
+          </br7:Result>
+          {% endfor %}
+        </br7:Offence>
+        {% endfor %}
+      </br7:HearingDefendant>
+    </br7:Case>
+  </br7:HearingOutcome>
+  <br7:HasError>false</br7:HasError>
+  <CXE01 xmlns="">
+    <FSC FSCode="01ZD" IntfcUpdateType="K" />
+    <IDS CRONumber="" Checkname="SMITH" IntfcUpdateType="K" PNCID="{{ pncId if pncId else "" }}" />
+    <CourtCases>
+      <CourtCase>
+        <CCR CourtCaseRefNo="97/1626/008395Q" CrimeOffenceRefNo="" IntfcUpdateType="K" />
+        <Offences>
+          <Offence>
+            <COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="RT88191" IntfcUpdateType="K"
+                 OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000"
+                 OffenceQualifier1="" OffenceQualifier2=""
+                 OffenceTitle="Use a motor vehicle on a road / public place without third party insurance"
+                 ReferenceNumber="001" />
+            {% if pncAdjudication %}
+            <ADJ Adjudication1="GUILTY" DateOfSentence="26092011" IntfcUpdateType="I" OffenceTICNumber="0001" Plea="NOT GUILTY" WeedFlag=""/>
+            {% endif %}
+            {% if pncDisposals | length %}
+            <DISList>
+              {% for pncDisposal in pncDisposals %}
+              <DIS IntfcUpdateType="I" QtyDate="" QtyDuration="W2" QtyMonetaryValue="" QtyUnitsFined="" Qualifiers="ABS     W12" Text="" Type="{{ pncDisposal.type }}"/>
+              {% endfor %}
+            </DISList>
+            {% endif %}
+          </Offence>
+        </Offences>
+      </CourtCase>
+    </CourtCases>
+  </CXE01>
+  <br7:PNCQueryDate>2022-03-22</br7:PNCQueryDate>
+</br7:AnnotatedHearingOutcome>
+
+{% if messageType == "PncUpdateDataset" %}
+  {% if hasCompletedDisarrOperation %}
+  <Operation>
+    <operationCode>
+      <DISARR/>
+    </operationCode>
+    <operationStatus>C</operationStatus>
+  </Operation>
+  {% endif %}
+</PNCUpdateDataset>
+{% endif %}

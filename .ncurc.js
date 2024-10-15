@@ -6,9 +6,6 @@ const semver = new RegExp(
   Pinned:
   - chalk
     - v5 is a breaking change
-  - Fastify and Fastify plugins
-    - v5 is not supported by all plugins
-    - We're waiting for Fastify v5.0.1 to be released before upgrading
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -16,16 +13,11 @@ const semver = new RegExp(
   - p-limit
   - esbuild
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
+  - @cucumber/cucumber
+    - from tests repo migration, version was pinned to v9
 */
-const pinned = [
-  "chalk",
-  "eslint",
-  "fastify",
-  "@fastify/autoload",
-  "@fastify/swagger",
-  "@fastify/swagger-ui"
-]
-const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild"]
+const pinned = ["chalk", "eslint"]
+const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber"]
 
 module.exports = {
   target: (package) => {

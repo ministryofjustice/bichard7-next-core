@@ -58,7 +58,7 @@
     "url": "https://github.com/ministryofjustice/bichard7-next-core/issues"
   },
   "devDependencies": {
-    "@swc/core": "^1.7.26",
+    "@swc/core": "^1.7.35",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "8.8.1",

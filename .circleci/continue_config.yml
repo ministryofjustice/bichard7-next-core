@@ -125,14 +125,17 @@ commands:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
 
-  build_message_forwarder:
+  build_core_images:
     steps:
       - run:
           name: Build message forwarder image
-          command: bash .circleci/scripts/build-message-forwarder.sh
+          command: docker-compose -f environment/docker-compose.yml build phase-1-message-forwarder phase-2-message-forwarder
 
   build_audit_logging_images:
     steps:
+      - run:
+          name: Clone bichard7-next-audit-logging
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
       - run:
           name: Build audit logging images
           working_directory: ~/bichard7-next-audit-logging
@@ -152,16 +155,6 @@ commands:
             <<parameters.ARGS>> \
             npm run test:chunk:nextUI
 
-  start_bichard7_legacy:
-    steps:
-      - fetch_images:
-          images: nodejs-20-2023
-      - build_message_forwarder
-      - build_audit_logging_images
-      - run:
-          name: Start bichard7 legacy
-          command: bash .circleci/scripts/run-infrastructure.sh ui all-legacy
-
   start_services:
     parameters:
       ARGS:
@@ -180,6 +173,24 @@ commands:
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
+  start_bichard7_legacy:
+    parameters:
+      ENABLE_PHASE_2:
+        default: "true"
+        type: string
+      ENABLE_PHASE_3:
+        default: "true"
+        type: string
+    steps:
+      - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
+      - build_core_images
+      - build_audit_logging_images
+      - run:
+          name: Start bichard7 legacy
+          command: |
+            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            .circleci/scripts/run-infrastructure.sh '' all-legacy
+
 jobs:
   lint_and_build:
     machine:
@@ -197,7 +208,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     steps:
       - unless:
@@ -269,9 +280,10 @@ jobs:
           name: Run integration tests against core code
           command: npm run -w packages/core test:compare
 
-  characterisation_test:
+  characterisation_test_core:
     machine:
       image: ubuntu-2204:current
+      docker_layer_caching: false
     resource_class: large
     steps:
       - unless:
@@ -280,6 +292,7 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.characterisation-test-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -287,36 +300,55 @@ jobs:
       - install_dependencies
       - build_core
       - run:
-          name: Checkout the tests repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-tests.git ~/bichard7-next-tests
-      - run:
-          name: Start the test server in the background
-          command: npm run -w packages/core test:server
-          background: true
-      - run:
-          name: Wait for Core
-          command: npx -y wait-port 6000
-      - run:
-          name: Create a hash of the package lock
-          command: md5sum ~/bichard7-next-tests/package-lock.json > ~/bichard7-next-tests/package-lock.json.md5
-      - restore_cache:
-          name: Load node_modules from the cache if they haven't changed
-          keys:
-            - test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
-      - run:
-          name: NPM install the tests repo
-          command: cd ~/bichard7-next-tests && npm i
-      - save_cache:
-          key: test-deps-{{ checksum "~/bichard7-next-tests/package-lock.json.md5" }}
-          paths: ~/bichard7-next-tests/node_modules
-      - run:
           name: Run tests against core code
-          command: cd ~/bichard7-next-tests && npm run test:characterisation
+          command: npm run test:characterisation -w packages/core
+
+  characterisation_test_legacy_phase1:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: large
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.characterisation-test-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - install_dependencies
+      - build_core
+      - start_bichard7_legacy:
+          ENABLE_PHASE_2: "false"
+          ENABLE_PHASE_3: "false"
+      - run: npm run test:characterisation:bichard:phase1 -w packages/core
+
+  characterisation_test_legacy_phase2:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: large
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.characterisation-test-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - install_dependencies
+      - build_core
+      - start_bichard7_legacy:
+          ENABLE_PHASE_2: "true"
+          ENABLE_PHASE_3: "false"
+      - run: npm run test:characterisation:bichard:phase2 -w packages/core
 
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -359,7 +391,7 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -393,7 +425,7 @@ jobs:
   e2e_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     parallelism: 10
     parameters:
@@ -463,7 +495,7 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -479,10 +511,7 @@ jobs:
       - install_dependencies
       - build_api
       - run:
-          name: Spin up the PostgreSQL database
-          command: npm run postgres
-      - run:
-          name: Run unit tests against API code
+          name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
 
   test_common:
@@ -510,7 +539,7 @@ jobs:
   test_postgres:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -792,6 +821,9 @@ jobs:
           command: npm run -w packages/ui zap
 
 parameters:
+  docker-layer-caching:
+    type: boolean
+    default: false
   circleci-changes:
     type: boolean
     default: false
@@ -816,10 +848,10 @@ parameters:
   ui-changes:
     type: boolean
     default: false
-  ms-edge:
+  e2e-test-changes:
     type: boolean
     default: false
-  e2e-test-changes:
+  characterisation-test-changes:
     type: boolean
     default: false
 
@@ -834,7 +866,9 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
-      - characterisation_test
+      - characterisation_test_core
+      - characterisation_test_legacy_phase1
+      - characterisation_test_legacy_phase2
       - comparison_test
 
       - seed_data:

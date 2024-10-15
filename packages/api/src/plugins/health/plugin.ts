@@ -1,18 +1,24 @@
 import type { FastifyInstance } from "fastify"
-import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod"
+import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import { z } from "zod"
+import useZod from "../../server/useZod"
 import { healthHandler } from "./handlers"
 import HealthRoutes from "./routes"
 
 const schema = {
+  description: "Health endpoint",
+  tags: ["Health"],
+  security: [],
   response: {
-    [OK]: z.string().describe("Health check will return Ok")
+    [OK]: z.string().openapi({
+      description: "Health check will return Ok"
+    })
   }
-}
+} satisfies FastifyZodOpenApiSchema
 
-const plugin: FastifyPluginAsyncZod = async (fastify: FastifyInstance) => {
-  fastify.get(HealthRoutes.HEALTH, { schema }, healthHandler)
+const plugin = async (fastify: FastifyInstance) => {
+  useZod(fastify).get(HealthRoutes.HEALTH, { schema, logLevel: "silent" }, healthHandler)
 }
 
 export default plugin

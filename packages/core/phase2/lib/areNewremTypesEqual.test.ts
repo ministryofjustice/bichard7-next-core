@@ -1,6 +1,7 @@
-import type { RemandOperation } from "../../types/PncUpdateDataset"
+import type { Operation } from "../../types/PncUpdateDataset"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
+import type { PncOperation } from "../../types/PncOperation"
 
 const emptyOrganisationUnit: OrganisationUnitCodes = {
   TopLevelCode: "",
@@ -63,8 +64,12 @@ describe("areRemandTypesEqual", () => {
   ])(
     "returns $expectedResult when first next hearing location is $firstData and second next hearing location is $secondData",
     ({ firstData, secondData, expectedResult }) => {
-      const firstRemandOperation = { data: { nextHearingLocation: firstData } } as unknown as RemandOperation
-      const secondRemandOperation = { data: { nextHearingLocation: secondData } } as unknown as RemandOperation
+      const firstRemandOperation = {
+        data: { nextHearingLocation: firstData }
+      } as unknown as Operation<PncOperation.REMAND>
+      const secondRemandOperation = {
+        data: { nextHearingLocation: secondData }
+      } as unknown as Operation<PncOperation.REMAND>
 
       const result = areRemandOperationsEqual(firstRemandOperation, secondRemandOperation)
 
@@ -81,8 +86,10 @@ describe("areRemandTypesEqual", () => {
   ])(
     "returns $expectedResult when first next hearing date is $firstDate and second next hearing date is $secondDate",
     ({ firstDate, secondDate, expectedResult }) => {
-      const firstRemandOperation = { data: { nextHearingDate: firstDate } } as unknown as RemandOperation
-      const secondRemandOperation = { data: { nextHearingDate: secondDate } } as unknown as RemandOperation
+      const firstRemandOperation = { data: { nextHearingDate: firstDate } } as unknown as Operation<PncOperation.REMAND>
+      const secondRemandOperation = {
+        data: { nextHearingDate: secondDate }
+      } as unknown as Operation<PncOperation.REMAND>
 
       const result = areRemandOperationsEqual(firstRemandOperation, secondRemandOperation)
 

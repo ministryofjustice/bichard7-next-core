@@ -16,7 +16,7 @@ const allCombinations = allOperations
   .flat(2)
 
 describe("validateOperations", () => {
-  it.each(allCombinations)("should match existing behaviour %s:%s (CCR: %s)", (opCode1, opCode2, ccr) => {
+  it.each(allCombinations)("should match existing behaviour %s:%s (CCR: 1:%s)", (opCode1, opCode2, ccr) => {
     const op1 = { code: opCode1 } as unknown as Operation
     const op2 = { code: opCode2 } as unknown as Operation
     if (op1.code !== PncOperation.REMAND) {
@@ -27,7 +27,7 @@ describe("validateOperations", () => {
 
     if (op2.code !== PncOperation.REMAND) {
       op2.data = {
-        courtCaseReference: "1"
+        courtCaseReference: String(ccr)
       }
     }
 

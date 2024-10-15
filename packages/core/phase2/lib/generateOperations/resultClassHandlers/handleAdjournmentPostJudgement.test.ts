@@ -17,7 +17,7 @@ describe("handleAdjournmentPostJudgement", () => {
       result: { PNCAdjudicationExists: true, NextResultSourceOrganisation: organisationUnit } as Result
     })
 
-    const { operations } = handleAdjournmentPostJudgement(params)
+    const operations = handleAdjournmentPostJudgement(params)
 
     expect(operations).toStrictEqual([
       {
@@ -38,7 +38,7 @@ describe("handleAdjournmentPostJudgement", () => {
       result: { PNCAdjudicationExists: false, NextResultSourceOrganisation: organisationUnit } as Result
     })
 
-    const { operations } = handleAdjournmentPostJudgement(params)
+    const operations = handleAdjournmentPostJudgement(params)
 
     expect(operations).toHaveLength(0)
   })

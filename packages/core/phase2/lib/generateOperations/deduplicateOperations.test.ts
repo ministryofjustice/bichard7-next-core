@@ -1,5 +1,5 @@
 import { PncOperation } from "../../../types/PncOperation"
-import type { RemandOperation, Operation, OperationStatus } from "../../../types/PncUpdateDataset"
+import type { Operation, OperationStatus } from "../../../types/PncUpdateDataset"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {
@@ -18,7 +18,7 @@ const organisationUnitCode2 = {
 
 const generateRemandOperation = (
   status: OperationStatus = "NotAttempted",
-  params: Partial<RemandOperation["data"]> = {},
+  params: Partial<Operation<PncOperation.REMAND>["data"]> = {},
   courtCaseReference?: string,
   isAdjournmentPreJudgement?: boolean
 ) =>
@@ -34,7 +34,7 @@ const generateRemandOperation = (
       },
       ...params
     }
-  }) as RemandOperation
+  }) as Operation<PncOperation.REMAND>
 
 const generateOperation = (
   code: Exclude<Operation["code"], PncOperation.REMAND>,

@@ -1,14 +1,10 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type Exception from "../../../types/Exception"
-import type { Operation } from "../../../types/PncUpdateDataset"
+import { type Operation } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import isRecordableOffence from "../isRecordableOffence"
 import isRecordableResult from "../isRecordableResult"
 import validateOperations from "./validateOperations"
 import deduplicateOperations from "./deduplicateOperations"
-import extractRemandCcrs from "./extractRemandCcrs"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
 import { handleAdjournmentPostJudgement } from "./resultClassHandlers/handleAdjournmentPostJudgement"
@@ -30,67 +26,43 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT_POST_JUDGEMENT]: handleAdjournmentPostJudgement,
   [ResultClass.JUDGEMENT_WITH_FINAL_RESULT]: handleJudgementWithFinalResult,
   [ResultClass.SENTENCE]: handleSentence,
-  [ResultClass.UNRESULTED]: () => ({ operations: [], exceptions: [] })
+  [ResultClass.UNRESULTED]: () => []
 }
 
-const generateOperationsFromResults = (
+export const generateOperationsFromOffenceResults = (
   aho: AnnotatedHearingOutcome,
-  resubmitted: boolean,
-  allResultsOnPnc: boolean
-) => {
-  const exceptions: Exception[] = []
-  const operations: Operation[] = []
+  allResultsOnPnc: boolean,
+  resubmitted: boolean
+): Operation[] => {
+  const operations = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+    isRecordableOffence
+  ).flatMap((offence) =>
+    offence.Result.flatMap(
+      (result) =>
+        (isRecordableResult(result) &&
+          result.ResultClass &&
+          resultClassHandlers[result.ResultClass]?.({ aho, offence, result, resubmitted, allResultsOnPnc })) ||
+        []
+    )
+  )
 
-  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence, offenceIndex) => {
-    if (!isRecordableOffence(offence)) {
-      return
-    }
-
-    offence.Result.forEach((result, resultIndex) => {
-      if (!isRecordableResult(result)) {
-        return
-      }
-
-      if (result.ResultClass) {
-        const handlerResult = resultClassHandlers[result.ResultClass]?.({
-          aho,
-          offenceIndex,
-          offence,
-          resultIndex,
-          result,
-          resubmitted,
-          allResultsAlreadyOnPnc: allResultsOnPnc
-        })
-
-        exceptions.push(...handlerResult.exceptions)
-        operations.push(...handlerResult.operations)
-      }
-    })
-  })
-
-  return { operations: filterDisposalsAddedInCourt(operations), exceptions }
+  return filterDisposalsAddedInCourt(operations)
 }
 
 const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   if (offences.filter(isRecordableOffence).length === 0) {
-    return { exceptions: [{ code: ExceptionCode.HO200121, path: errorPaths.case.asn }], operations: [] }
+    return { exceptions: [], operations: [] }
   }
 
   const allResultsOnPnc = areAllResultsOnPnc(aho)
-  const { operations, exceptions } = generateOperationsFromResults(aho, resubmitted, allResultsOnPnc)
-
-  const remandCcrs = extractRemandCcrs(operations, false)
+  const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
-  const validateOperationException = validateOperations(deduplicatedOperations, remandCcrs)
+  const validateOperationException = validateOperations(deduplicatedOperations)
 
   if (validateOperationException) {
-    exceptions.push(validateOperationException)
-  }
-
-  if (exceptions.length > 0) {
-    return { operations: [], exceptions }
+    return { operations: [], exceptions: [validateOperationException] }
   }
 
   const filteredOperations = allResultsOnPnc

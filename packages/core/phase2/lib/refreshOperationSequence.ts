@@ -1,27 +1,28 @@
 import { PncOperation } from "../../types/PncOperation"
-import type { RemandOperation, Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
 
-const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, operations: Operation[]) => {
-  let latestRemandOperations = operations.filter((operation) => operation.code === PncOperation.REMAND)
+const isDuplicateOperation = (existingOperations: Operation[], newRemandOperation: Operation<PncOperation.REMAND>) =>
+  existingOperations.some(
+    (existingOperation) =>
+      existingOperation.code === PncOperation.REMAND && areRemandOperationsEqual(existingOperation, newRemandOperation)
+  )
 
+const excludeIncompleteRemandOperation = (operation: Operation) =>
+  operation.code !== PncOperation.REMAND || operation.status === "Completed"
+
+const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, newOperations: Operation[]): Operation[] => {
   if (pncUpdateDataset.PncOperations.length === 0) {
-    pncUpdateDataset.PncOperations = operations
-    return
+    return newOperations
   }
 
-  pncUpdateDataset.PncOperations = pncUpdateDataset.PncOperations.filter(
-    ({ code, status }) => code !== PncOperation.REMAND || status === "Completed"
-  )
-
-  latestRemandOperations = latestRemandOperations.filter(
+  const existingOperations = pncUpdateDataset.PncOperations.filter(excludeIncompleteRemandOperation)
+  const newRemandOperations = newOperations.filter(
     (newOperation) =>
-      !pncUpdateDataset.PncOperations.filter(({ code }) => code === PncOperation.REMAND).some((existingOperation) =>
-        areRemandOperationsEqual(existingOperation as RemandOperation, newOperation as RemandOperation)
-      )
+      newOperation.code === PncOperation.REMAND && !isDuplicateOperation(existingOperations, newOperation)
   )
 
-  pncUpdateDataset.PncOperations = [...pncUpdateDataset.PncOperations, ...latestRemandOperations].filter((o) => o)
+  return existingOperations.concat(newRemandOperations)
 }
 
 export default refreshOperationSequence

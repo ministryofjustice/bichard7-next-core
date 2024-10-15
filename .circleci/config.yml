@@ -1,24 +1,27 @@
 version: 2.1
 
-# this allows you to use CircleCI's dynamic configuration feature
+# This allows you to use CircleCI's dynamic configuration feature.
 setup: true
 
-# the path-filtering orb is required to continue a pipeline based on
-# the path of an updated fileset
 orbs:
   path-filtering: circleci/path-filtering@1.1.0
+  continuation: circleci/continuation@1.0.0
 
-workflows:
-  # the always-run workflow is always triggered, regardless of the pipeline parameters.
-  always-run:
-    jobs:
-      # the path-filtering/filter job determines which pipeline
-      # parameters to update.
-      - path-filtering/filter:
-          name: check-updated-files
-          # 3-column, whitespace-delimited mapping. One mapping per
-          # line:
-          # <regex path-to-test> <parameter-to-set> <value-of-pipeline-parameter>
+parameters:
+  base-revision:
+    type: string
+    default: "main"
+  output-path:
+    type: string
+    default: "/tmp/pipeline-parameters.json"
+
+jobs:
+  set_parameters:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - path-filtering/set-parameters:
           mapping: |
             .circleci/.* circleci-changes true
             environment/.* env-changes true
@@ -27,11 +30,27 @@ workflows:
             packages/conductor/.* conductor-changes true
             packages/core/.* core-changes true
             packages/e2e-test/.* e2e-test-changes true
+            packages/core/characterisation-tests.* characterisation-test-changes true
             packages/message-forwarder/.* message-forwarder-changes true
             packages/ui/.* ui-changes true
-          base-revision: main
-          # this is the path of the configuration we should trigger once
-          # path filtering and pipeline parameter value updates are
-          # complete. In this case, we are using the parent dynamic
-          # configuration itself.
-          config-path: .circleci/continue_config.yml
+      - run:
+          name: Scan parameters and enable Docker layer caching (DLC)
+          command: |
+            # To reduce DLC costs, DLC parameter is only set when the job requiring it actually needs it.
+            # This reduces the cost of the no-op jobs
+            if grep -E "circleci-changes|env-changes|api-changes|conductor-changes|core-changes|e2e-test-changes|message-forwarder-changes" << pipeline.parameters.output-path >>; then
+              echo "Changes that use DLC has been found, adding the docker-layer-caching parameter to the parameters file..."
+              params=$(cat << pipeline.parameters.output-path >> )
+              updated_param_file=$(jq -n --argjson a "$params" --argjson b '{"'"docker-layer-caching"'":true}' '$a + $b')
+              echo "$updated_param_file" > << pipeline.parameters.output-path >>
+            else
+              echo "No changes that need DLC were found, continuing..."
+            fi
+      - continuation/continue:
+          configuration_path: .circleci/continue_config.yml
+          parameters: << pipeline.parameters.output-path >>
+
+workflows:
+  always-run:
+    jobs:
+      - set_parameters
