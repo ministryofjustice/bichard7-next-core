@@ -7,7 +7,7 @@ phases:
       nodejs: 16
     commands:
       - yum -y install openvpn
-      - make generate-codebuild-vpn
+      - sh ./scripts/generate-codebuild-vpn.sh
       - npm ci
   build:
     commands:
@@ -18,6 +18,6 @@ phases:
       - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
       - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
       - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon
-      - make setup-e2e-env
+      - sh ./scripts/setup-e2e-env.sh
       - source ./workspaces/${WORKSPACE}.env
-      - npm run seed-data
+      - npm run -w packages/ui seed-data
