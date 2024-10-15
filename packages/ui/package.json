@@ -106,8 +106,6 @@
     "@types/stompit": "^0.26.6",
     "@types/styled-components": "^5.1.34",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@typescript-eslint/parser": "^8.8.1",
     "aws-sdk": "^2.1691.0",
     "axe-core": "^4.10.0",
     "babel-loader": "^9.2.1",
