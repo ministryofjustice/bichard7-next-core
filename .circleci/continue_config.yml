@@ -121,9 +121,6 @@ commands:
       - checkout
       - node_install
       - set_locale
-      - run:
-          name: Clone bichard7-next-audit-logging
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
 
   build_core_images:
     steps:
