@@ -63,7 +63,19 @@ commands:
     steps:
       - run:
           name: Build Core
-          command: npm run build
+          command: npm run build:core
+
+  build_api:
+    steps:
+      - run:
+          name: Build API
+          command: npm run build:api
+
+  build_e2e_tests:
+    steps:
+      - run:
+          name: Build e2e tests
+          command: npm run build:e2e-test
 
   save_artifacts:
     steps:
@@ -176,7 +188,6 @@ jobs:
     steps:
       - checkout
       - set_locale
-      - install_ms_edge
       - install_dependencies
       - run:
           name: Check the code for linting errors
@@ -418,7 +429,7 @@ jobs:
           steps:
             - install_ms_edge
       - install_dependencies
-      - build_core
+      - build_e2e_tests
       - fetch_images:
           images: nodejs-20-2023
       - run:
@@ -466,7 +477,7 @@ jobs:
       - set_locale
       - node_install
       - install_dependencies
-      - build_core
+      - build_api
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -525,7 +536,6 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - install_ms_edge
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
