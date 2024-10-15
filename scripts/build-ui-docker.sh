@@ -44,10 +44,10 @@ function pull_and_build_from_aws() {
 if [ $(arch) = "arm64" ]
 then
     echo "Building for ARM"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" --platform=linux/arm64 -t ui .
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile --platform=linux/arm64 -t ui .
 else
     echo "Building regular image"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ui .
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile -t ui .
 fi
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then

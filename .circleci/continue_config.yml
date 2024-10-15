@@ -526,7 +526,7 @@ jobs:
     steps:
       - checkout
       - install_ms_edge
-      - run: ./.circleci/scripts/ui-scripts/build-ui.sh
+      - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
