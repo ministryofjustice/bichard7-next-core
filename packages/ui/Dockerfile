@@ -4,21 +4,18 @@ FROM ${BUILD_IMAGE} AS builder
 
 LABEL maintainer="CJSE"
 
-WORKDIR /src/ui
+WORKDIR /core
 
 # Currently needed for core postinstall script
 RUN yum install jq -y
 
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package.json .
-COPY ./scripts/copy-govuk-frontend-assets.sh scripts/copy-govuk-frontend-assets.sh
-COPY ./scripts/copy-moj-frontend-assets.sh scripts/copy-moj-frontend-assets.sh
-COPY ./scripts/symlink-node-modules.sh scripts/symlink-node-modules.sh
+COPY package-lock.json .
+COPY packages/ui ./packages/ui
+COPY tsconfig*.json ./
 
-RUN npm i
-RUN npm run install:assets
-
-COPY . ./
+RUN npm i -w packages/ui && npm run install:assets -w packages/ui
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -26,7 +23,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 #
 # next.config.js
 #   output: standalone
-RUN npm run build
+RUN npm run build -w packages/ui
 
 #########################################################
 FROM ${BUILD_IMAGE} AS runner
@@ -42,17 +39,23 @@ ENV TZ="Europe/London"
 
 WORKDIR /app
 
-COPY --from=builder /src/ui/package*.json ./
-COPY --from=builder /src/ui/next.config.js ./
+COPY --from=builder /core/package*.json ./
+COPY --from=builder /core/node_modules ./node_modules
+
+RUN mkdir -p /app/packages/ui
+
+COPY --from=builder /core/packages/ui/package.json ./packages/ui
+COPY --from=builder /core/packages/ui/node_modules ./packages/ui/node_modules
+COPY --from=builder /core/packages/ui/next.config.js ./packages/ui
 
 # Copy assets from builder
-COPY --from=builder /src/ui/public ./public
-COPY --from=builder /src/ui/.next/static ./.next/static
+COPY --from=builder /core/packages/ui/public ./packages/ui/public
+COPY --from=builder /core/packages/ui/.next/static ./packages/ui/.next/static
 
-RUN chmod -R 755 public
+RUN chmod -R 755 packages/ui/public
 
 # Extract standalone build to working directory
-COPY --from=builder /src/ui/.next/standalone .
+COPY --from=builder /core/packages/ui/.next/standalone/packages/ui ./packages/ui
 
 # When next shakes the tree during the build, it doesn't find
 # a direct require/import for the standing data package that
@@ -60,11 +63,11 @@ COPY --from=builder /src/ui/.next/standalone .
 #
 # Copy the standing data package back where it belongs
 COPY --from=builder \
-    /src/ui/.next/standalone/node_modules/@moj-bichard7-developers/bichard7-next-data \
-    ./node_modules/@moj-bichard7-developers/bichard7-next-core/node_modules/bichard7-next-data-latest
+    /core/packages/ui/.next/standalone/node_modules/@moj-bichard7-developers/bichard7-next-data \
+    ./packages/ui/node_modules/@moj-bichard7-developers/bichard7-next-core/node_modules/bichard7-next-data-latest
 
-COPY docker/conf/nginx.conf /etc/nginx/nginx.conf
-COPY docker/conf/supervisord.conf /etc/supervisord.conf
+COPY packages/ui/docker/conf/nginx.conf /etc/nginx/nginx.conf
+COPY packages/ui/docker/conf/supervisord.conf /etc/supervisord.conf
 
 EXPOSE 80
 EXPOSE 443
