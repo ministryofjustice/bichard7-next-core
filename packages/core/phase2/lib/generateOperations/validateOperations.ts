@@ -28,15 +28,6 @@ const validateOperations = (operations: Operation[]): Exception | void => {
     return { code: ExceptionCode.HO200109, path: errorPath }
   }
 
-  if (
-    hasOperation(PncOperation.PENALTY_HEARING) &&
-    operationsWithCourtCase.some(
-      (operationWithCourtCase) => operationWithCourtCase.code === PncOperation.NORMAL_DISPOSAL
-    )
-  ) {
-    return { code: ExceptionCode.HO200115, path: errorPath }
-  }
-
   const findClashingCourtCaseOperation = (operation: Operation) =>
     operationsWithCourtCase.find(
       (operationWithCourtCase) =>
@@ -49,10 +40,6 @@ const validateOperations = (operations: Operation[]): Exception | void => {
 
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
-
-  if (hasClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
-    return { code: ExceptionCode.HO200115, path: errorPath }
-  }
 
   if (hasClashingCourtCaseOperations([PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200114, path: errorPath }
