@@ -1,5 +1,4 @@
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import isEqual from "lodash.isequal"
 import errorPaths from "../../../lib/exceptions/errorPaths"
 import type Exception from "../../../types/Exception"
 import type { Operation } from "../../../types/PncUpdateDataset"
@@ -10,10 +9,6 @@ const errorPath = errorPaths.case.asn
 
 const validateOperations = (operations: Operation[]): Exception | void => {
   const hasOperation = (pncOperation: PncOperation) => operations.some((operation) => operation.code === pncOperation)
-
-  if (hasOperation(PncOperation.PENALTY_HEARING) && hasOperation(PncOperation.SENTENCE_DEFERRED)) {
-    return { code: ExceptionCode.HO200114, path: errorPath }
-  }
 
   const operationsWithCourtCase: Operation[] = operations.filter((operation) =>
     courtCaseSpecificOperations.includes(operation.code)
@@ -33,17 +28,6 @@ const validateOperations = (operations: Operation[]): Exception | void => {
       (operationWithCourtCase) =>
         operationCourtCaseReference(operationWithCourtCase) == operationCourtCaseReference(operation)
     )
-
-  const hasClashingCourtCaseOperations = (clashingCourtCaseOperations: [PncOperation, PncOperation]) =>
-    operationsWithCourtCase.some((operation) => {
-      const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
-
-      return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
-    })
-
-  if (hasClashingCourtCaseOperations([PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED])) {
-    return { code: ExceptionCode.HO200114, path: errorPath }
-  }
 
   const hasSameCourtCaseOperationWithSameCcr = operationsWithCourtCase.some((operation, index) => {
     const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
