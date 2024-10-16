@@ -62,18 +62,7 @@ exports[`validateOperations should match existing behaviour DISARR:PENHRG (CCR: 
 }
 `;
 
-exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 1:1) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 1:1) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour DISARR:SENDEF (CCR: 1:2) 1`] = `undefined`;
 
@@ -255,18 +244,7 @@ exports[`validateOperations should match existing behaviour PENHRG:SUBVAR (CCR: 
 }
 `;
 
-exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1:1) 1`] = `
-{
-  "code": "HO200112",
-  "path": [
-    "AnnotatedHearingOutcome",
-    "HearingOutcome",
-    "Case",
-    "HearingDefendant",
-    "ArrestSummonsNumber",
-  ],
-}
-`;
+exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1:1) 1`] = `undefined`;
 
 exports[`validateOperations should match existing behaviour SENDEF:DISARR (CCR: 1:2) 1`] = `undefined`;
 

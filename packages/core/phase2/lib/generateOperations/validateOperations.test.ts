@@ -39,12 +39,7 @@ describe("validateOperations", () => {
       op2.courtCaseReference = String(ccr)
     }
 
-    const remandCcrs = new Set<string>()
-    if ([op1.code, op2.code].includes(PncOperation.REMAND) && ccr) {
-      remandCcrs.add(String(ccr))
-    }
-
-    const result = validateOperations([op1, op2], remandCcrs)
+    const result = validateOperations([op1, op2])
 
     expect(result).toMatchSnapshot()
   })
