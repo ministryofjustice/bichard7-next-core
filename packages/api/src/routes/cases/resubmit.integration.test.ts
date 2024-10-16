@@ -84,18 +84,35 @@ describe("resubmit", () => {
 
   it("fails if case does not exist", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    const error = new Error("Case not found")
     jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(error)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
 
     const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
 
     expect(statusCode).toBe(BAD_REQUEST)
   })
 
-  it.skip("returns 400 if case is resolved", () => {})
-  it.skip("returns 400 if case is already submitted", () => {})
+  it("fails if case is resolved", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(FORBIDDEN)
+  })
+
+  it("fails if case is already submitted", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(FORBIDDEN)
+  })
+
+  it.skip("502 db failed to respond", () => {})
   it.skip("202 s3 upload successful", () => {})
   it.skip("502 s3 upload failed", () => {})
-  it.skip("502 db failed to respond", () => {})
 })
