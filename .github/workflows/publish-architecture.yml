@@ -27,7 +27,7 @@ jobs:
         run: npm run structurizr-site-generatr-build
 
       - name: Build the data schema site
-        run: npm i && npm run build && npm run generate-schema-doc
+        run: npm i && npm run build:core && npm run generate-schema-doc
 
       - name: Copy data schema site to the main site folder
         run: sudo cp -r docs/schema docs/architecture/build/site

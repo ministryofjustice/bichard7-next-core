@@ -561,6 +561,13 @@ jobs:
       docker_layer_caching: true
     resource_class: xlarge
     steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.ui-changes >>
+          steps:
+            - run: circleci-agent step halt
       - checkout
       - run: ./scripts/build-ui-docker.sh
       - run:
@@ -607,6 +614,13 @@ jobs:
       docker_layer_caching: true
     resource_class: medium
     steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.ui-changes >>
+          steps:
+            - run: circleci-agent step halt
       - setup_ui
       - install_dependencies
       - fetch_images:

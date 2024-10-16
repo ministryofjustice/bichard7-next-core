@@ -16,7 +16,7 @@ echo $JSON_SCHEMA_SCRIPT | npx ts-node -T
 
 if [[ "$(command -v generate-schema-doc 1>/dev/null 2>/dev/null || echo $?)x" == "1x" ]]; then
   echo "Installing json-schema-for-humans..."
-  pip3 install json-schema-for-humans
+  pip3 install json-schema-for-humans --break-system-packages
 fi
 
 AHO_OUTPUT_DIR="docs/schema/aho"
