@@ -1,0 +1,13 @@
+$b7-font-family: 'GDS Transport';
+$b7-default-font-size: 16px;
+$b7-landscape-tablet-width: 768px;
+$b7-light-grey-color: #F3F2F1;
+$b7-dark-grey-color: #b1b4b6;
+$b7-border-input: #0B0B0C;
+$b7-row-border-color: #505A5F;
+
+:root {
+    --border-input: $b7-border-input;
+    --default-font-size: 16px;
+    --default-font-family: 'GDS Transport';
+}

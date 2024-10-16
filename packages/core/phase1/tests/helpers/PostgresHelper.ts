@@ -1,11 +1,10 @@
-import pgPromise from "pg-promise"
 import type { IDatabase } from "pg-promise"
+import pgPromise from "pg-promise"
 import type pg from "pg-promise/typescript/pg-subset"
 
 const pgp = pgPromise()
 
 export default class PostgresHelper {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   public pg: IDatabase<{}, pg.IClient>
 
   constructor(options: pg.IConnectionParameters<pg.IClient>) {
@@ -15,7 +14,6 @@ export default class PostgresHelper {
       g.postgresConnection = pgp(options)
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
     this.pg = g.postgresConnection as IDatabase<{}, pg.IClient>
   }
 

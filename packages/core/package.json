@@ -36,9 +36,6 @@
     "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
     "update-deps": "ncu -u && npm install"
   },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ministryofjustice/bichard7-next-core.git"
@@ -77,7 +74,6 @@
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.8.3",
