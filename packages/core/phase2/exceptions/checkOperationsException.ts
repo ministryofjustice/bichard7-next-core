@@ -7,10 +7,10 @@ import { generateOperationsFromOffenceResults } from "../lib/generateOperations/
 type CheckExceptionFn = (operations: Operation[]) => void
 
 const checkOperationsException = (aho: AnnotatedHearingOutcome, checkExceptionFn: CheckExceptionFn) => {
-  const isResubmitted = isPncUpdateDataset(aho)
   const allResultsOnPnc = areAllResultsOnPnc(aho)
+  const isResubmitted = isPncUpdateDataset(aho)
 
-  const operations = generateOperationsFromOffenceResults(aho, isResubmitted, allResultsOnPnc)
+  const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, isResubmitted)
 
   return checkExceptionFn(operations)
 }

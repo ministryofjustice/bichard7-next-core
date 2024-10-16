@@ -50,10 +50,6 @@ const validateOperations = (operations: Operation[]): Exception | void => {
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
 
-  if (hasClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.SENTENCE_DEFERRED])) {
-    return { code: ExceptionCode.HO200112, path: errorPath }
-  }
-
   if (hasClashingCourtCaseOperations([PncOperation.NORMAL_DISPOSAL, PncOperation.DISPOSAL_UPDATED])) {
     return { code: ExceptionCode.HO200115, path: errorPath }
   }

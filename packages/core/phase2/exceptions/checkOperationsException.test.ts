@@ -16,12 +16,12 @@ describe("checkOperationsException", () => {
   it("generates operations from results", () => {
     const checkException = jest.fn()
     const aho = generateAhoFromOffenceList([])
-    const isResubmitted = false
     const allResultsOnPnc = false
+    const isResubmitted = false
 
     checkOperationsException(aho, checkException)
 
-    expect(mockedGenerateOperationsFromOffenceResults).toHaveBeenCalledWith(aho, isResubmitted, allResultsOnPnc)
+    expect(mockedGenerateOperationsFromOffenceResults).toHaveBeenCalledWith(aho, allResultsOnPnc, isResubmitted)
   })
 
   it("checks for exceptions using generated operations", () => {
