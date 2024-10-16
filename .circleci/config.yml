@@ -32,12 +32,11 @@ jobs:
             packages/e2e-test/.* e2e-test-changes true
             packages/core/characterisation-tests.* characterisation-test-changes true
             packages/message-forwarder/.* message-forwarder-changes true
-          base-revision: << pipeline.parameters.base-revision >>
-          output-path: << pipeline.parameters.output-path >>
+            packages/ui/.* ui-changes true
       - run:
           name: Scan parameters and enable Docker layer caching (DLC)
           command: |
-            # To reduce DLC costs, DLC parameter is only set when the job requiring it actually needs it. 
+            # To reduce DLC costs, DLC parameter is only set when the job requiring it actually needs it.
             # This reduces the cost of the no-op jobs
             if grep -E "circleci-changes|env-changes|api-changes|conductor-changes|core-changes|e2e-test-changes|message-forwarder-changes" << pipeline.parameters.output-path >>; then
               echo "Changes that use DLC has been found, adding the docker-layer-caching parameter to the parameters file..."

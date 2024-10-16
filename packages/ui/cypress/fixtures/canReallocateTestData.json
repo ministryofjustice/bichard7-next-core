@@ -1,0 +1,51 @@
+[
+  {
+    "canReallocate": false,
+    "triggers": "Resolved",
+    "exceptions": "Resolved",
+    "triggersLockedByAnotherUser": false,
+    "exceptionLockedByAnotherUser": false
+  },
+  {
+    "canReallocate": false,
+    "triggers": "Resolved",
+    "exceptions": "Submitted",
+    "triggersLockedByAnotherUser": false,
+    "exceptionLockedByAnotherUser": false
+  },
+  {
+    "canReallocate": false,
+    "triggers": "Resolved",
+    "exceptions": "Unresolved",
+    "triggersLockedByAnotherUser": false,
+    "exceptionLockedByAnotherUser": true
+  },
+  {
+    "canReallocate": false,
+    "triggers": "Unresolved",
+    "exceptions": "Submitted",
+    "triggersLockedByAnotherUser": true,
+    "exceptionLockedByAnotherUser": false
+  },
+  {
+    "canReallocate": true,
+    "triggers": "Unresolved",
+    "exceptions": "Unresolved",
+    "triggersLockedByAnotherUser": false,
+    "exceptionLockedByAnotherUser": false
+  },
+  {
+    "canReallocate": true,
+    "triggers": "Unresolved",
+    "exceptions": "Resolved",
+    "triggersLockedByAnotherUser": false,
+    "exceptionLockedByAnotherUser": true
+  },
+  {
+    "canReallocate": true,
+    "triggers": "Resolved",
+    "exceptions": "Unresolved",
+    "triggersLockedByAnotherUser": true,
+    "exceptionLockedByAnotherUser": false
+  }
+]

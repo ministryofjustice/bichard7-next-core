@@ -4,13 +4,20 @@ version: 0.2
 env:
   variables:
     "NODE_OPTIONS": "--max_old_space_size=4096"
+  exported-variables:
+    - UI_HASH
 
 phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - yum install -y jq
   build:
     commands:
       - ./scripts/install-goss.sh
       - ./scripts/build-core-worker-docker.sh
       # - ./scripts/build-api-docker.sh
       - ./scripts/build-message-forwarder-docker.sh
+      - ./scripts/build-ui-docker.sh
 ---
-
