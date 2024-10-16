@@ -12,10 +12,12 @@ RUN yum install jq -y
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package.json .
 COPY package-lock.json .
-COPY packages/ui ./packages/ui
 COPY tsconfig*.json ./
+COPY packages/ui ./packages/ui
 
-RUN npm i -w packages/ui && npm run install:assets -w packages/ui
+WORKDIR /core/packages/ui
+
+RUN npm i && npm run install:assets
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -23,7 +25,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 #
 # next.config.js
 #   output: standalone
-RUN npm run build -w packages/ui
+RUN npm run build
+
+WORKDIR /core
 
 #########################################################
 FROM ${BUILD_IMAGE} AS runner
@@ -39,32 +43,14 @@ ENV TZ="Europe/London"
 
 WORKDIR /app
 
-COPY --from=builder /core/package*.json ./
-COPY --from=builder /core/node_modules ./node_modules
-
-RUN mkdir -p /app/packages/ui
-
-COPY --from=builder /core/packages/ui/package.json ./packages/ui
-COPY --from=builder /core/packages/ui/node_modules ./packages/ui/node_modules
-COPY --from=builder /core/packages/ui/next.config.js ./packages/ui
+# Extract standalone build to working directory
+COPY --from=builder /core/packages/ui/.next/standalone .
 
 # Copy assets from builder
 COPY --from=builder /core/packages/ui/public ./packages/ui/public
 COPY --from=builder /core/packages/ui/.next/static ./packages/ui/.next/static
 
-RUN chmod -R 755 packages/ui/public
-
-# Extract standalone build to working directory
-COPY --from=builder /core/packages/ui/.next/standalone/packages/ui ./packages/ui
-
-# When next shakes the tree during the build, it doesn't find
-# a direct require/import for the standing data package that
-# core imports dynamically, so it removes the package entirely.
-#
-# Copy the standing data package back where it belongs
-COPY --from=builder \
-    /core/packages/ui/.next/standalone/node_modules/@moj-bichard7-developers/bichard7-next-data \
-    ./packages/ui/node_modules/@moj-bichard7-developers/bichard7-next-core/node_modules/bichard7-next-data-latest
+RUN chmod -R 755 ./packages/ui/public
 
 COPY packages/ui/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY packages/ui/docker/conf/supervisord.conf /etc/supervisord.conf
