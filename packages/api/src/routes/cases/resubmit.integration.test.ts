@@ -1,6 +1,6 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
-import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import build from "../../app"
 import FakeGateway from "../../services/gateways/fakeGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
@@ -112,7 +112,19 @@ describe("resubmit", () => {
     expect(statusCode).toBe(FORBIDDEN)
   })
 
-  it.skip("502 db failed to respond", () => {})
+  it("fails if DB fails", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
+    const error = new Error("AggregateError")
+    error.name = "AggregateError"
+    error.stack = "Something Sql or pOstGreS"
+    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(error)
+
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(BAD_GATEWAY)
+  })
+
   it.skip("202 s3 upload successful", () => {})
   it.skip("502 s3 upload failed", () => {})
 })

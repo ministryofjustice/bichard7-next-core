@@ -1,12 +1,13 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
-import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
+import handleDisconnectedError from "../../services/db/handleDisconnectedError"
 import type Gateway from "../../services/gateways/interfaces/gateway"
 import canUserResubmitCase from "../../useCases/canUserResubmitCase"
 
@@ -75,6 +76,12 @@ const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => 
     }
   } catch (err) {
     reply.log.error(err)
+
+    if (handleDisconnectedError(err)) {
+      reply.code(BAD_GATEWAY).send()
+      return
+    }
+
     reply.code(BAD_REQUEST).send()
     return
   }
