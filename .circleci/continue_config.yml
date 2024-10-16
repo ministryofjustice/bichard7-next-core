@@ -566,6 +566,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -767,6 +768,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
           steps:
             - run: circleci-agent step halt
       - attach_workspace:
