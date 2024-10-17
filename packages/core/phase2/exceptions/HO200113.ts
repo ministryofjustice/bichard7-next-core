@@ -7,23 +7,20 @@ import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import checkOperationsException from "./checkOperationsException"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import extractRemandCcrs from "../lib/generateOperations/extractRemandCcrs"
-import deduplicateOperations from "../lib/generateOperations/deduplicateOperations"
 
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkOperationsException(aho, (operations) => {
     const remandCcrs = extractRemandCcrs(operations, false)
-    const deduplicatedOperations = deduplicateOperations(operations)
 
-    const hasNewRemandAndSentencing = deduplicatedOperations.some((operation) => {
+    const hasNewRemandAndSentencing = operations.some((operation) => {
       const courtCaseReference = operationCourtCaseReference(operation)
       const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
       return (
         PncOperation.SENTENCE_DEFERRED === operation.code &&
-        ((deduplicatedOperations.some((operation) => operation.code === PncOperation.REMAND) &&
-          remandCcrs.size === 0) ||
+        ((operations.some((operation) => operation.code === PncOperation.REMAND) && remandCcrs.size === 0) ||
           remandCcrsContainCourtCaseReference)
       )
     })
