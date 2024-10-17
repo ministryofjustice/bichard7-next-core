@@ -8,7 +8,7 @@ import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import type { Trigger } from "../types/Trigger"
 import isAintCase from "./lib/isAintCase"
-import refreshOperationSequence from "./lib/refreshOperationSequence"
+import refreshOperations from "./lib/refreshOperations"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 import generateExceptions from "./exceptions/generateExceptions"
@@ -67,7 +67,7 @@ const processMessage = (
     }
   }
 
-  outputMessage.PncOperations = refreshOperationSequence(outputMessage, operations)
+  outputMessage.PncOperations = refreshOperations(outputMessage, operations)
 
   auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
 
