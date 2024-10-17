@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect */
+import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
@@ -34,6 +36,12 @@ describe("resubmit", () => {
     await app.close()
   })
 
+  const assertStatusCode = async (encodedJwt: string, code: number) => {
+    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+
+    expect(statusCode).toBe(code)
+  }
+
   it("fails if user not in any permitted role", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([
       UserGroup.TriggerHandler,
@@ -45,9 +53,7 @@ describe("resubmit", () => {
     ])
     jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
-
-    expect(statusCode).toBe(FORBIDDEN)
+    await assertStatusCode(encodedJwt, FORBIDDEN)
   })
 
   it.each([UserGroup.ExceptionHandler, UserGroup.GeneralHandler, UserGroup.Supervisor, UserGroup.Allocator])(
@@ -56,73 +62,61 @@ describe("resubmit", () => {
       const [encodedJwt, user] = generateJwtForStaticUser([role])
       jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
 
-      const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
-
-      expect(statusCode).toBe(OK)
+      await assertStatusCode(encodedJwt, OK)
     }
   )
 
-  it("fails if case doesn't belong to same force as user", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+  describe("fails if", () => {
+    let encodedJwt: string
+    let user: User
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+    beforeEach(() => {
+      ;[encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
+      jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
+    })
 
-    expect(statusCode).toBe(FORBIDDEN)
-  })
+    const canCaseBeResubmittedFalse = () => {
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+    }
 
-  it("fails if case is locked to a different user", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+    it("case doesn't belong to same force as user", async () => {
+      canCaseBeResubmittedFalse()
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+      await assertStatusCode(encodedJwt, FORBIDDEN)
+    })
 
-    expect(statusCode).toBe(FORBIDDEN)
-  })
+    it("case is locked to a different user", async () => {
+      canCaseBeResubmittedFalse()
 
-  it("fails if case does not exist", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
+      await assertStatusCode(encodedJwt, FORBIDDEN)
+    })
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+    it("case does not exist", async () => {
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
 
-    expect(statusCode).toBe(BAD_REQUEST)
-  })
+      await assertStatusCode(encodedJwt, BAD_REQUEST)
+    })
 
-  it("fails if case is resolved", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+    it("case is resolved", async () => {
+      canCaseBeResubmittedFalse()
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+      await assertStatusCode(encodedJwt, FORBIDDEN)
+    })
 
-    expect(statusCode).toBe(FORBIDDEN)
-  })
+    it("case is already submitted", async () => {
+      canCaseBeResubmittedFalse()
 
-  it("fails if case is already submitted", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockResolvedValue(false)
+      await assertStatusCode(encodedJwt, FORBIDDEN)
+    })
 
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
+    it("DB fails", async () => {
+      const error = new Error("AggregateError")
+      error.name = "AggregateError"
+      error.stack = "Something Sql or pOstGreS"
+      jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(error)
 
-    expect(statusCode).toBe(FORBIDDEN)
-  })
-
-  it("fails if DB fails", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    jest.spyOn(gateway, "fetchUserByUsername").mockResolvedValue(user)
-    const error = new Error("AggregateError")
-    error.name = "AggregateError"
-    error.stack = "Something Sql or pOstGreS"
-    jest.spyOn(gateway, "canCaseBeResubmitted").mockRejectedValue(error)
-
-    const { statusCode } = await app.inject(defaultInjectParams(encodedJwt))
-
-    expect(statusCode).toBe(BAD_GATEWAY)
+      await assertStatusCode(encodedJwt, BAD_GATEWAY)
+    })
   })
 
   it.skip("202 s3 upload successful", () => {})
