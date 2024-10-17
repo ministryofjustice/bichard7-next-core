@@ -5,14 +5,14 @@ import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
-import hasCompletedDisarr from "./hasCompletedDisarr"
+import hasCompletedDisposal from "./hasCompletedDisposal"
 import TRPS0011 from "./TRPS0011"
 jest.mock("../../phase2/lib/isRecordableOffence")
-jest.mock("./hasCompletedDisarr")
+jest.mock("./hasCompletedDisposal")
 jest.mock("../../phase2/lib/generateOperations/isResultCompatibleWithDisposal")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
-const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock
+const mockedHasCompletedDisarr = hasCompletedDisposal as jest.Mock
 const mockedDisarrCompatibleResultClass = isResultCompatibleWithDisposal as jest.Mock
 
 describe("TRPS0011", () => {
