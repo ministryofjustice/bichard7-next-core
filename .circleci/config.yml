@@ -38,7 +38,7 @@ jobs:
           command: |
             # To reduce DLC costs, DLC parameter is only set when the job requiring it actually needs it.
             # This reduces the cost of the no-op jobs
-            if grep -E "circleci-changes|env-changes|api-changes|conductor-changes|core-changes|e2e-test-changes|message-forwarder-changes" << pipeline.parameters.output-path >>; then
+            if grep -E "circleci-changes|env-changes|api-changes|conductor-changes|core-changes|e2e-test-changes|message-forwarder-changes|ui-changes" << pipeline.parameters.output-path >>; then
               echo "Changes that use DLC has been found, adding the docker-layer-caching parameter to the parameters file..."
               params=$(cat << pipeline.parameters.output-path >> )
               updated_param_file=$(jq -n --argjson a "$params" --argjson b '{"'"docker-layer-caching"'":true}' '$a + $b')
