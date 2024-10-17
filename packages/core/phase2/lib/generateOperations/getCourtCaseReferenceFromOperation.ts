@@ -7,9 +7,9 @@ export const courtCaseSpecificOperations = [
   PncOperation.DISPOSAL_UPDATED
 ]
 
-const operationCourtCaseReference = (operation: Operation): string | undefined =>
+const getCourtCaseReferenceFromOperation = (operation: Operation): string | undefined =>
   courtCaseSpecificOperations.includes(operation.code) && operation.data && "courtCaseReference" in operation.data
     ? operation.data.courtCaseReference
     : undefined
 
-export default operationCourtCaseReference
+export default getCourtCaseReferenceFromOperation

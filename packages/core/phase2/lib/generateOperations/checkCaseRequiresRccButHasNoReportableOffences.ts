@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import isRecordableOffence from "../isRecordableOffence"
-import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
+import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 
 const checkCaseRequiresRccButHasNoReportableOffences = (
   aho: AnnotatedHearingOutcome,
@@ -14,7 +14,7 @@ const checkCaseRequiresRccButHasNoReportableOffences = (
 
   let caseRequiresRcc = false
   for (const offence of offences) {
-    const isDisarrCompatible = disarrCompatibleResultClass(offence)
+    const isDisarrCompatible = isResultCompatibleWithDisposal(offence)
     if (offence.AddedByTheCourt && isDisarrCompatible) {
       return false
     }

@@ -3,7 +3,7 @@ import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
-import hasCompletedDisarr from "./hasCompletedDisarr"
+import hasCompletedDisposal from "./hasCompletedDisposal"
 
 const triggerCode = TriggerCode.TRPS0013
 
@@ -18,7 +18,7 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     .filter(
       (offence) =>
         isRecordableOffence(offence) &&
-        !hasCompletedDisarr(hearingOutcome, offence) &&
+        !hasCompletedDisposal(hearingOutcome, offence) &&
         offence.Result.some((result) => result.NumberOfOffencesTIC)
     )
     .map((offence) => ({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber }))

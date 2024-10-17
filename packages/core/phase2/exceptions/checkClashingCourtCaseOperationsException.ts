@@ -2,9 +2,9 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type { Operation } from "../../types/PncUpdateDataset"
 import type Exception from "../../types/Exception"
 import checkOperationsException from "./checkOperationsException"
-import operationCourtCaseReference, {
+import getCourtCaseReferenceFromOperation, {
   courtCaseSpecificOperations
-} from "../lib/generateOperations/operationCourtCaseReference"
+} from "../lib/generateOperations/getCourtCaseReferenceFromOperation"
 import type { PncOperation } from "../../types/PncOperation"
 import isEqual from "lodash.isequal"
 import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
@@ -25,7 +25,7 @@ const checkClashingCourtCaseOperationsException = (
     const hasClashingCourtCaseOperations = operationsWithCourtCase.some((operation) => {
       const clashingCourtCaseOperation = operationsWithCourtCase.find(
         (operationWithCourtCase) =>
-          operationCourtCaseReference(operationWithCourtCase) == operationCourtCaseReference(operation)
+          getCourtCaseReferenceFromOperation(operationWithCourtCase) == getCourtCaseReferenceFromOperation(operation)
       )
 
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)

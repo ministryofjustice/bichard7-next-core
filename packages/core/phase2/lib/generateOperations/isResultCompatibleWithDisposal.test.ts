@@ -1,8 +1,8 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../types/ResultClass"
-import disarrCompatibleResultClass from "./disarrCompatibleResultClass"
+import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 
-describe("disarrCompatibleResultClass", () => {
+describe("isResultCompatibleWithDisposal", () => {
   it("should return true when there is a recordable result and result class is not Adjournment post Judgement, Sentence, and Unresulted", () => {
     const offence = {
       Result: [
@@ -17,7 +17,7 @@ describe("disarrCompatibleResultClass", () => {
       ]
     } as Offence
 
-    const result = disarrCompatibleResultClass(offence)
+    const result = isResultCompatibleWithDisposal(offence)
 
     expect(result).toBe(true)
   })
@@ -36,7 +36,7 @@ describe("disarrCompatibleResultClass", () => {
       ]
     } as Offence
 
-    const result = disarrCompatibleResultClass(offence)
+    const result = isResultCompatibleWithDisposal(offence)
 
     expect(result).toBe(false)
   })
@@ -59,7 +59,7 @@ describe("disarrCompatibleResultClass", () => {
       ]
     } as Offence
 
-    const result = disarrCompatibleResultClass(offence)
+    const result = isResultCompatibleWithDisposal(offence)
 
     expect(result).toBe(false)
   })

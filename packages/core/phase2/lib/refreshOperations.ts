@@ -11,7 +11,7 @@ const isDuplicateOperation = (existingOperations: Operation[], newRemandOperatio
 const excludeIncompleteRemandOperation = (operation: Operation) =>
   operation.code !== PncOperation.REMAND || operation.status === "Completed"
 
-const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, newOperations: Operation[]): Operation[] => {
+const refreshOperations = (pncUpdateDataset: PncUpdateDataset, newOperations: Operation[]): Operation[] => {
   if (pncUpdateDataset.PncOperations.length === 0) {
     return newOperations
   }
@@ -25,4 +25,4 @@ const refreshOperationSequence = (pncUpdateDataset: PncUpdateDataset, newOperati
   return existingOperations.concat(newRemandOperations)
 }
 
-export default refreshOperationSequence
+export default refreshOperations

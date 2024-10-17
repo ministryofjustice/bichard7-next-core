@@ -1,15 +1,15 @@
 import { PncOperation } from "../../types/PncOperation"
 import type { Operation } from "../../types/PncUpdateDataset"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
-import refreshOperationSequence from "./refreshOperationSequence"
+import refreshOperations from "./refreshOperations"
 
 const defaultOperations: Operation[] = [{ code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }]
 
-describe("refreshOperationSequence", () => {
+describe("refreshOperations", () => {
   it("adds PNC operations if no existing operations", () => {
     const pncUpdateDataset = generateFakePncUpdateDataset()
 
-    const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
+    const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
 
     expect(actualOperations).toStrictEqual([
       { code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }
@@ -19,7 +19,7 @@ describe("refreshOperationSequence", () => {
   it("adds no PNC operations if no existing and new operations", () => {
     const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: [] })
 
-    const actualOperations = refreshOperationSequence(pncUpdateDataset, [])
+    const actualOperations = refreshOperations(pncUpdateDataset, [])
 
     expect(actualOperations).toStrictEqual([])
   })
@@ -41,7 +41,7 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        const actualOperations = refreshOperationSequence(pncUpdateDataset, operations)
+        const actualOperations = refreshOperations(pncUpdateDataset, operations)
 
         expect(actualOperations).toStrictEqual([
           {
@@ -68,7 +68,7 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        const actualOperations = refreshOperationSequence(pncUpdateDataset, operations)
+        const actualOperations = refreshOperations(pncUpdateDataset, operations)
 
         expect(actualOperations).toStrictEqual(pncOperations)
       })
@@ -87,7 +87,7 @@ describe("refreshOperationSequence", () => {
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-        const actualOperations = refreshOperationSequence(pncUpdateDataset, [])
+        const actualOperations = refreshOperations(pncUpdateDataset, [])
 
         expect(actualOperations).toStrictEqual([
           {
@@ -113,7 +113,7 @@ describe("refreshOperationSequence", () => {
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-      const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
 
       expect(actualOperations).toStrictEqual([pncOperations[1]])
     })
@@ -131,7 +131,7 @@ describe("refreshOperationSequence", () => {
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
 
-      const actualOperations = refreshOperationSequence(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
 
       expect(actualOperations).toStrictEqual([pncOperations[0]])
     })
