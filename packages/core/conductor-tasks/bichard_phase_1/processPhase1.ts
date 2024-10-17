@@ -13,6 +13,7 @@ import createPncApiConfig from "../../lib/createPncApiConfig"
 import phase1 from "../../phase1/phase1"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import getTriggersCount from "../../lib/database/getTriggersCount"
 
 const pncApiConfig = createPncApiConfig()
 
@@ -39,7 +40,8 @@ const processPhase1: ConductorWorker = {
 
     const hasTriggersOrExceptions =
       ("triggers" in result && result.triggers.length > 0) ||
-      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0) ||
+      (await getTriggersCount(result.correlationId)) > 0
 
     return completed(
       { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
