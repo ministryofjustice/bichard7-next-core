@@ -1,8 +1,8 @@
 import type { User } from "@moj-bichard7/common/types/User"
+import type Gateway from "../../services/gateways/interfaces/gateway"
+import PostgresGateway from "../../services/gateways/postgresGateway"
 import clearAllTables from "./e2ePostgresGateway/clearAllTables"
 import insertUser from "./e2ePostgresGateway/insertUser"
-import type Gateway from "./interfaces/gateway"
-import PostgresGateway from "./postgresGateway"
 
 class End2EndPostgresGateway extends PostgresGateway implements Gateway {
   constructor() {
