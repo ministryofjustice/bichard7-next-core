@@ -194,10 +194,9 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const { operations, exceptions } = generateOperations(aho, resubmitted)
+    const { operations } = generateOperations(aho, resubmitted)
 
     expect(operations).toHaveLength(0)
-    expect(exceptions).toHaveLength(0)
   })
 
   it("returns only remand operations when all results already on PNC", () => {
