@@ -3,7 +3,6 @@ import { type Operation } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import isRecordableOffence from "../isRecordableOffence"
 import isRecordableResult from "../isRecordableResult"
-import validateOperations from "./validateOperations"
 import deduplicateOperations from "./deduplicateOperations"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
@@ -59,11 +58,6 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
   const allResultsOnPnc = areAllResultsOnPnc(aho)
   const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
-  const validateOperationException = validateOperations(deduplicatedOperations)
-
-  if (validateOperationException) {
-    return { operations: [], exceptions: [validateOperationException] }
-  }
 
   const filteredOperations = allResultsOnPnc
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
