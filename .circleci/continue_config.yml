@@ -500,6 +500,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.api-changes >>
+              - << pipeline.parameters.common-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -510,6 +511,11 @@ jobs:
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
+      - start_services:
+          SERVICES: db-migrate
+      - run:
+          name: Run e2e tests against API code
+          command: nvm use && npm run -w packages/api test:e2e
 
   test_common:
     machine:
@@ -558,7 +564,7 @@ jobs:
   build-ui:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     steps:
       - unless:
@@ -585,7 +591,7 @@ jobs:
   test_ui:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     steps:
       - unless:
@@ -612,7 +618,7 @@ jobs:
   seed_data:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -749,7 +755,7 @@ jobs:
   cucumber_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -803,7 +809,7 @@ jobs:
   zap_scanner:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     steps:
       - unless:
           condition:
