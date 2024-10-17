@@ -24,14 +24,11 @@ const checkClashingCourtCaseOperationsException = (
       courtCaseSpecificOperations.includes(operation.code)
     )
 
-    const findClashingCourtCaseOperation = (operation: Operation) =>
-      operationsWithCourtCase.find(
+    const hasClashingCourtCaseOperations = operationsWithCourtCase.some((operation) => {
+      const clashingCourtCaseOperation = operationsWithCourtCase.find(
         (operationWithCourtCase) =>
           operationCourtCaseReference(operationWithCourtCase) == operationCourtCaseReference(operation)
       )
-
-    const hasClashingCourtCaseOperations = operationsWithCourtCase.some((operation) => {
-      const clashingCourtCaseOperation = findClashingCourtCaseOperation(operation)
 
       return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
     })
