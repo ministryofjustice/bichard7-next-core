@@ -38,6 +38,7 @@ describe("/me", () => {
 
     const responseUser = {
       username: user.username,
+      email: user.email,
       groups: user.groups
     }
 
