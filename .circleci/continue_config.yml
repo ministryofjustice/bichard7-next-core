@@ -512,7 +512,7 @@ jobs:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
       - start_services:
-          SERVICES: db-migrate
+          SERVICES: db-seed
       - run:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
