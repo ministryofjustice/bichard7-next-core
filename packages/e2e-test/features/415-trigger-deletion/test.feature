@@ -2,7 +2,7 @@ Feature: {415} Remove trigger codes from a case if triggers are deleted after re
 
       """
       When both an exception and a trigger are raised on a case, and the user resolves the exception and resubmits the case without completing the trigger,
-      if the trigger get deleted after resubmission then it should be removed from the case.
+      if the trigger gets deleted after resubmission then it should be removed from the case.
       """
 
   Background:
