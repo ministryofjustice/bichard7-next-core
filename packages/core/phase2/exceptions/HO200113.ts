@@ -6,13 +6,20 @@ import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import checkOperationsException from "./checkOperationsException"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import extractRemandCcrs from "../lib/generateOperations/extractRemandCcrs"
 
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkOperationsException(aho, (operations) => {
-    const remandCcrs = extractRemandCcrs(operations, false)
+    const remandCcrs = operations
+      .filter((operation) => operation.code === PncOperation.REMAND)
+      .reduce((remandCcrs, remandOperation) => {
+        if (remandOperation.courtCaseReference) {
+          remandCcrs.add(remandOperation.courtCaseReference)
+        }
+
+        return remandCcrs
+      }, new Set<string | undefined>())
 
     const hasNewRemandAndSentencing = operations.some((operation) => {
       const courtCaseReference = operationCourtCaseReference(operation)
