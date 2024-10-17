@@ -49,12 +49,6 @@ export const generateOperationsFromOffenceResults = (
 }
 
 const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
-  const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-
-  if (offences.filter(isRecordableOffence).length === 0) {
-    return { exceptions: [], operations: [] }
-  }
-
   const allResultsOnPnc = areAllResultsOnPnc(aho)
   const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
