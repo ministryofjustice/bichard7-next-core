@@ -11,7 +11,7 @@ type ResubmitProps = {
 
 const canUserResubmitCase = async ({ gateway, user, caseId }: ResubmitProps): Promise<boolean> => {
   if (
-    !user.groups.some(
+    !user.groups?.some(
       (group) =>
         group === UserGroup.ExceptionHandler ||
         group === UserGroup.GeneralHandler ||

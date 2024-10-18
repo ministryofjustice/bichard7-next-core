@@ -7,6 +7,16 @@ describe("canUseResubmitCase", () => {
   const gateway = new FakeGateway()
 
   describe("execute", () => {
+    it("returns false if the groups attribute is not defined", async () => {
+      const result = await canUseResubmitCaseExecute({
+        gateway,
+        user: { groups: undefined } as User,
+        caseId: 123
+      })
+
+      expect(result).toBe(false)
+    })
+
     it("returns false if the user isn't any allowed groups", async () => {
       const result = await canUseResubmitCaseExecute({
         gateway,
