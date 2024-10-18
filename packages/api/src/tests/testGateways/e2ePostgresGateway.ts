@@ -9,6 +9,10 @@ class End2EndPostgresGateway extends PostgresGateway implements Gateway {
     super()
   }
 
+  async close() {
+    await this.db.end()
+  }
+
   async createTestUser(user: Partial<User>): Promise<User> {
     return await insertUser(this.db, user)
   }
