@@ -3,7 +3,6 @@ import { type Operation } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import isRecordableOffence from "../isRecordableOffence"
 import isRecordableResult from "../isRecordableResult"
-import validateOperations from "./validateOperations"
 import deduplicateOperations from "./deduplicateOperations"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"
@@ -13,7 +12,7 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
-import type ExceptionsAndOperations from "./ExceptionsAndOperations"
+import type OperationsAndEvents from "../../types/OperationsAndEvents"
 import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
@@ -49,21 +48,10 @@ export const generateOperationsFromOffenceResults = (
   return filterDisposalsAddedInCourt(operations)
 }
 
-const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
-  const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-
-  if (offences.filter(isRecordableOffence).length === 0) {
-    return { exceptions: [], operations: [] }
-  }
-
+const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsAndEvents => {
   const allResultsOnPnc = areAllResultsOnPnc(aho)
   const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
-  const validateOperationException = validateOperations(deduplicatedOperations)
-
-  if (validateOperationException) {
-    return { operations: [], exceptions: [validateOperationException] }
-  }
 
   const filteredOperations = allResultsOnPnc
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
@@ -71,7 +59,6 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
 
   return {
     operations: sortOperations(filteredOperations),
-    exceptions: [],
     events: allResultsOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
   }
 }

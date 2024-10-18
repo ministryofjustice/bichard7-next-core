@@ -1,6 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
-import { UNAUTHORIZED } from "http-status"
+import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
+import handleDisconnectedError from "../../services/db/handleDisconnectedError"
 import type Gateway from "../../services/gateways/interfaces/gateway"
 import jwtParser from "./jwtParser"
 import jwtVerify from "./jwtVerify"
@@ -32,8 +33,14 @@ export default async function (gateway: Gateway, request: FastifyRequest, reply:
 
     request.user = verificationResult
     request.gateway = gateway
-  } catch (err) {
-    request.log.error(err)
+  } catch (error) {
+    request.log.error(error)
+
+    if (handleDisconnectedError(error)) {
+      reply.code(BAD_GATEWAY).send()
+      return
+    }
+
     reply.code(UNAUTHORIZED).send()
   }
 }

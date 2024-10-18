@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify"
-import { OK, UNAUTHORIZED } from "http-status"
+import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 import build from "../../app"
 import FakeGateway from "../../services/gateways/fakeGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
@@ -130,5 +130,23 @@ describe("authenticate", () => {
     })
 
     expect(statusCode).toBe(OK)
+  })
+
+  it("fails if db failed to respond", async () => {
+    const [encodedJwt] = generateJwtForStaticUser()
+    const error = new Error("AggregateError")
+    error.name = "AggregateError"
+    error.stack = "Something Sql or pOstGreS"
+    jest.spyOn(gateway, "fetchUserByUsername").mockRejectedValue(error)
+
+    const { statusCode } = await app.inject({
+      ...defaults,
+      headers: {
+        ...defaults.headers,
+        authorization: `Bearer ${encodedJwt}`
+      }
+    })
+
+    expect(statusCode).toBe(BAD_GATEWAY)
   })
 })

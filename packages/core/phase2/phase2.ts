@@ -47,23 +47,13 @@ const processMessage = (
 
   const exceptions = generateExceptions(inputMessage)
   exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
-  if (
-    exceptions.some(({ code }) =>
-      [ExceptionCode.HO200110, ExceptionCode.HO200116, ExceptionCode.HO200117, ExceptionCode.HO200212].includes(code)
-    )
-  ) {
+  if (exceptions.some(({ code }) => code !== ExceptionCode.HO200200)) {
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
-  const { operations, exceptions: operationExceptions, events } = generateOperations(outputMessage, isResubmitted)
+  const { operations, events } = generateOperations(outputMessage, isResubmitted)
 
-  exceptions.push(...operationExceptions)
-  operationExceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
   events?.forEach((eventCode) => auditLogger.info(eventCode))
-
-  if (exceptions.filter((exception) => exception.code !== ExceptionCode.HO200200).length > 0) {
-    return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
-  }
 
   if (operations.length === 0) {
     if (!isResubmitted) {
