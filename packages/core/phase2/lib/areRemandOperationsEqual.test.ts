@@ -35,7 +35,7 @@ const anotherNonEmptyOrganisationUnit: OrganisationUnitCodes = {
   OrganisationUnitCode: "01CJ00"
 }
 
-describe("areRemandTypesEqual", () => {
+describe("areRemandOperationsEqual", () => {
   const generateTestCases = (organisationUnit: OrganisationUnitCodes, expectedResult: boolean) => [
     { firstData: organisationUnit, secondData: undefined, expectedResult },
     { firstData: organisationUnit, secondData: null, expectedResult },

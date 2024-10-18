@@ -1,20 +1,20 @@
 jest.mock("../../phase2/lib/isRecordableOffence")
-jest.mock("./hasCompletedDisarr")
-jest.mock("../../phase2/lib/generateOperations/disarrCompatibleResultClass")
+jest.mock("./hasCompletedDisposal")
+jest.mock("../../phase2/lib/generateOperations/isResultCompatibleWithDisposal")
 
-import disarrCompatibleResultClass from "../../phase2/lib/generateOperations/disarrCompatibleResultClass"
+import isResultCompatibleWithDisposal from "../../phase2/lib/generateOperations/isResultCompatibleWithDisposal"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
-import hasCompletedDisarr from "./hasCompletedDisarr"
+import hasCompletedDisposal from "./hasCompletedDisposal"
 import TRPS0010 from "./TRPS0010"
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
-const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock
-const mockedDisarrCompatibleResultClass = disarrCompatibleResultClass as jest.Mock
+const mockedHasCompletedDisarr = hasCompletedDisposal as jest.Mock
+const mockedDisarrCompatibleResultClass = isResultCompatibleWithDisposal as jest.Mock
 
 describe("TRPS0010", () => {
   it("should not return a trigger if phase is not PNC_UPDATE and hearing outcome is PNC updated dataset", () => {

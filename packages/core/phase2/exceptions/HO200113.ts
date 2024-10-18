@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import operationCourtCaseReference from "../lib/generateOperations/operationCourtCaseReference"
+import getCourtCaseReferenceFromOperation from "../lib/generateOperations/getCourtCaseReferenceFromOperation"
 import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import checkOperationsException from "./checkOperationsException"
@@ -22,7 +22,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
       }, new Set<string | undefined>())
 
     const hasNewRemandAndSentencing = operations.some((operation) => {
-      const courtCaseReference = operationCourtCaseReference(operation)
+      const courtCaseReference = getCourtCaseReferenceFromOperation(operation)
       const remandCcrsContainCourtCaseReference = !!courtCaseReference && remandCcrs.has(courtCaseReference)
 
       return (
