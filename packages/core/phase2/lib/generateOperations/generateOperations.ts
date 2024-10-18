@@ -12,7 +12,7 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
-import type ExceptionsAndOperations from "./ExceptionsAndOperations"
+import type OperationsAndEvents from "../../types/OperationsAndEvents"
 import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
@@ -48,7 +48,7 @@ export const generateOperationsFromOffenceResults = (
   return filterDisposalsAddedInCourt(operations)
 }
 
-const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): ExceptionsAndOperations => {
+const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsAndEvents => {
   const allResultsOnPnc = areAllResultsOnPnc(aho)
   const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
@@ -59,7 +59,6 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
 
   return {
     operations: sortOperations(filteredOperations),
-    exceptions: [],
     events: allResultsOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
   }
 }

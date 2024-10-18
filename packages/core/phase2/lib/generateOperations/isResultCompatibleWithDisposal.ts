@@ -6,8 +6,8 @@ const isResultClassCompatible = (resultClass?: ResultClass) =>
   !resultClass ||
   ![ResultClass.ADJOURNMENT_POST_JUDGEMENT, ResultClass.SENTENCE, ResultClass.UNRESULTED].includes(resultClass)
 
-const disarrCompatibleResultClass = (offence: Offence): boolean => {
+const isResultCompatibleWithDisposal = (offence: Offence): boolean => {
   return offence.Result.some((result) => isRecordableResult(result) && isResultClassCompatible(result.ResultClass))
 }
 
-export default disarrCompatibleResultClass
+export default isResultCompatibleWithDisposal

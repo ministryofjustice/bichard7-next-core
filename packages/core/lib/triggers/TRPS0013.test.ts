@@ -4,13 +4,13 @@ import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
-import hasCompletedDisarr from "./hasCompletedDisarr"
+import hasCompletedDisposal from "./hasCompletedDisposal"
 import TRPS0013 from "./TRPS0013"
 jest.mock("../../phase2/lib/isRecordableOffence")
-jest.mock("./hasCompletedDisarr")
+jest.mock("./hasCompletedDisposal")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
-const mockedHasCompletedDisarr = hasCompletedDisarr as jest.Mock
+const mockedHasCompletedDisarr = hasCompletedDisposal as jest.Mock
 
 describe("TRPS0013", () => {
   afterEach(() => {
