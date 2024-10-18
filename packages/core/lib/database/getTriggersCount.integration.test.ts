@@ -37,6 +37,19 @@ const generateErrorListRecord = (input: Partial<ErrorListRecord> = {}): ErrorLis
   ...input
 })
 
+const generateErrorListTriggerRecord = (errorId: number): ErrorListTriggerRecord => ({
+  trigger_id: 1,
+  error_id: errorId,
+  trigger_code: "TRPR0018",
+  trigger_item_identity: null,
+  status: 0,
+  create_ts: new Date(),
+  resolved_by: null,
+  resolved_ts: null
+})
+
+const errorListRecord = generateErrorListRecord()
+
 describe("getTriggersCount", () => {
   beforeEach(async () => {
     await db`DELETE FROM br7own.error_list`
@@ -44,19 +57,8 @@ describe("getTriggersCount", () => {
   })
 
   it("returns 1 when a trigger exist for a record", async () => {
-    const errorListRecord = generateErrorListRecord()
     const errors = await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING error_id`
-    const generateErrorListTriggerRecord = (): ErrorListTriggerRecord => ({
-      trigger_id: 1,
-      error_id: errors[0].error_id ?? 1,
-      trigger_code: "TRPR0018",
-      trigger_item_identity: null,
-      status: 0,
-      create_ts: new Date(),
-      resolved_by: null,
-      resolved_ts: null
-    })
-    const errorListTriggersRecord = generateErrorListTriggerRecord()
+    const errorListTriggersRecord = generateErrorListTriggerRecord(errors[0].error_id ?? 1)
     await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers ${db(errorListTriggersRecord)}`
     const correlationId = errorListRecord.message_id
 
@@ -66,19 +68,8 @@ describe("getTriggersCount", () => {
   })
 
   it("returns 2 when 2 triggers exist for a record", async () => {
-    const errorListRecord = generateErrorListRecord()
     const errors = await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING error_id`
-    const generateErrorListTriggerRecord = (): ErrorListTriggerRecord => ({
-      trigger_id: 1,
-      error_id: errors[0].error_id ?? 1,
-      trigger_code: "TRPR0018",
-      trigger_item_identity: null,
-      status: 0,
-      create_ts: new Date(),
-      resolved_by: null,
-      resolved_ts: null
-    })
-    const errorListTriggersRecord = generateErrorListTriggerRecord()
+    const errorListTriggersRecord = generateErrorListTriggerRecord(errors[0].error_id ?? 1)
     await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers ${db(errorListTriggersRecord)}`
     await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers ${db(errorListTriggersRecord)}`
     const correlationId = errorListRecord.message_id
@@ -89,7 +80,6 @@ describe("getTriggersCount", () => {
   })
 
   it("returns 0 when triggers do not exist for a record", async () => {
-    const errorListRecord = generateErrorListRecord()
     await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING error_id`
     const correlationId = errorListRecord.message_id
 
