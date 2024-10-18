@@ -75,25 +75,6 @@
 					<DriverLicenceIssue>1</DriverLicenceIssue>
 				</DriverInformation>
 			</PoliceIndividualDefendant>
-			<!-- <Offence>
-				<BaseOffenceDetails>
-					<OffenceSequenceNumber>001</OffenceSequenceNumber>
-					<OffenceCode>TH68006</OffenceCode>
-					<OffenceWording>Theft of pedal cycle.</OffenceWording>
-					<OffenceTiming>
-						<OffenceDateCode>1</OffenceDateCode>
-						<OffenceStart>
-							<OffenceDateStartDate>2010-12-01</OffenceDateStartDate>
-						</OffenceStart>
-						<OffenceEnd>
-							<OffenceEndDate>2010-12-05</OffenceEndDate>
-						</OffenceEnd>
-					</OffenceTiming>
-					<ChargeDate>2010-12-02</ChargeDate>
-					<ArrestDate>2010-12-01</ArrestDate>
-					<LocationOfOffence>Kingston High Street</LocationOfOffence>
-				</BaseOffenceDetails>
-			</Offence> -->
 			<Offence>
 				<BaseOffenceDetails>
 					<OffenceSequenceNumber>002</OffenceSequenceNumber>
@@ -110,25 +91,6 @@
 					<LocationOfOffence>Kingston High Street</LocationOfOffence>
 				</BaseOffenceDetails>
 			</Offence>
-			<!-- <Offence>
-				<BaseOffenceDetails>
-					<OffenceSequenceNumber>003</OffenceSequenceNumber>
-					<OffenceCode>RT88191</OffenceCode>
-					<OffenceWording>Use a motor vehicle without third party insurance.</OffenceWording>
-					<OffenceTiming>
-						<OffenceDateCode>1</OffenceDateCode>
-						<OffenceStart>
-							<OffenceDateStartDate>2010-11-29</OffenceDateStartDate>
-						</OffenceStart>
-						<OffenceEnd>
-							<OffenceEndDate>2010-12-08</OffenceEndDate>
-						</OffenceEnd>
-					</OffenceTiming>
-					<ChargeDate>2010-12-02</ChargeDate>
-					<ArrestDate>2010-12-01</ArrestDate>
-					<LocationOfOffence>Kingston High Street</LocationOfOffence>
-				</BaseOffenceDetails>
-			</Offence> -->
 		</Defendant>
 	</Case>
 </NewCaseMessage>

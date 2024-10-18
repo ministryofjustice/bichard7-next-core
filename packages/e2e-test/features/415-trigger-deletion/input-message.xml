@@ -68,35 +68,6 @@
 							</DC:Address>
 							<DC:PresentAtHearing>A</DC:PresentAtHearing>
 						</DC:CourtIndividualDefendant>
-						<!-- <DC:Offence>
-							<DC:BaseOffenceDetails>
-								<DC:OffenceSequenceNumber>001</DC:OffenceSequenceNumber>
-								<DC:OffenceCode>TH68006</DC:OffenceCode>
-								<DC:OffenceWording>Theft of pedal cycle.</DC:OffenceWording>
-								<DC:OffenceTiming>
-									<DC:OffenceDateCode>1</DC:OffenceDateCode>
-									<DC:OffenceStart>
-										<DC:OffenceDateStartDate>2010-12-01</DC:OffenceDateStartDate>
-									</DC:OffenceStart>
-									<DC:OffenceEnd>
-										<DC:OffenceEndDate>2010-12-05</DC:OffenceEndDate>
-									</DC:OffenceEnd>
-								</DC:OffenceTiming>
-								<DC:ChargeDate>2010-12-02</DC:ChargeDate>
-								<DC:ArrestDate>2010-12-01</DC:ArrestDate>
-								<DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
-							</DC:BaseOffenceDetails>
-							<DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
-							<DC:Plea>2</DC:Plea>
-							<DC:ModeOfTrial>01</DC:ModeOfTrial>
-							<DC:FinalDisposalIndicator>Y</DC:FinalDisposalIndicator>
-							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
-							<DC:Finding>G</DC:Finding>
-							<DC:Result>
-								<DC:ResultCode>1016</DC:ResultCode>
-								<DC:ResultText>Bound Over.</DC:ResultText>
-							</DC:Result>
-						</DC:Offence> -->
 						<DC:Offence>
 							<DC:BaseOffenceDetails>
 								<DC:OffenceSequenceNumber>002</DC:OffenceSequenceNumber>
@@ -130,38 +101,6 @@
 								</DC:NextHearing>
 							</DC:Result>
 						</DC:Offence>
-						<!-- <DC:Offence>
-							<DC:BaseOffenceDetails>
-								<DC:OffenceSequenceNumber>003</DC:OffenceSequenceNumber>
-								<DC:OffenceCode>RT88191</DC:OffenceCode>
-								<DC:OffenceWording>Use a motor vehicle without third party insurance.</DC:OffenceWording>
-								<DC:OffenceTiming>
-									<DC:OffenceDateCode>1</DC:OffenceDateCode>
-									<DC:OffenceStart>
-										<DC:OffenceDateStartDate>2010-11-29</DC:OffenceDateStartDate>
-									</DC:OffenceStart>
-									<DC:OffenceEnd>
-										<DC:OffenceEndDate>2010-12-08</DC:OffenceEndDate>
-									</DC:OffenceEnd>
-								</DC:OffenceTiming>
-								<DC:ChargeDate>2010-12-02</DC:ChargeDate>
-								<DC:ArrestDate>2010-12-01</DC:ArrestDate>
-								<DC:LocationOfOffence>Kingston High Street</DC:LocationOfOffence>
-							</DC:BaseOffenceDetails>
-							<DC:InitiatedDate>2008-07-11</DC:InitiatedDate>
-							<DC:Plea>2</DC:Plea>
-							<DC:ModeOfTrial>01</DC:ModeOfTrial>
-							<DC:FinalDisposalIndicator>Y</DC:FinalDisposalIndicator>
-							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
-							<DC:Finding>G</DC:Finding>
-							<DC:Result>
-								<DC:ResultCode>1015</DC:ResultCode>
-								<DC:ResultText>Fined 200.</DC:ResultText>
-								<DC:Outcome>
-									<DC:ResultAmountSterling>200.00</DC:ResultAmountSterling>
-								</DC:Outcome>
-							</DC:Result>
-						</DC:Offence> -->
 					</DC:Defendant>
 				</DC:Case>
 			</DC:Session>
