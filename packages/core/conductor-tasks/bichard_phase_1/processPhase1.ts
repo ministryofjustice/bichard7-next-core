@@ -38,10 +38,18 @@ const processPhase1: ConductorWorker = {
       return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
 
-    const hasTriggersOrExceptions =
+    let hasTriggersOrExceptions =
       ("triggers" in result && result.triggers.length > 0) ||
-      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0) ||
-      (await getTriggersCount(result.correlationId)) > 0
+      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+
+    if (!hasTriggersOrExceptions) {
+      const existingTriggersCount = await getTriggersCount(result.correlationId)
+      if (isError(existingTriggersCount)) {
+        return failed("Could not query triggers table", existingTriggersCount.message)
+      }
+
+      hasTriggersOrExceptions = existingTriggersCount > 0
+    }
 
     return completed(
       { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
