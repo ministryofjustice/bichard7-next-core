@@ -6,7 +6,7 @@ export default async (sql: postgres.Sql, partialUser: Partial<User>) => {
     throw new Error("Missing required attributes")
   }
 
-  const user = partialUser as User
+  const user = partialUser as unknown as User
 
   const [result]: [User?] = await sql`
     INSERT INTO br7own.users (username, email, jwt_id)
