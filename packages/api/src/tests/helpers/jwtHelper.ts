@@ -19,8 +19,8 @@ export const generateTestJwtToken = (user: User, jwt_id?: string): string => {
     username: user.username,
     exclusionList: [],
     inclusionList: [],
-    emailAddress: [],
-    groups: [],
+    email: user.email ? user.email : undefined,
+    groups: user.groups ? user.groups : [],
     id: jwt_id ?? randomUUID()
   }
 
