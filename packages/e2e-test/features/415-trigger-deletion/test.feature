@@ -9,9 +9,8 @@ Feature: {415} Remove trigger codes from a case if triggers are deleted after re
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @Must
-  @Parallel
   @NextUI
+	@ExcludeOnLegacyUI
   Scenario: PNC is updated when there are multiple identical results
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
