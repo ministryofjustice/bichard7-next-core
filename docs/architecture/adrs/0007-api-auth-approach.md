@@ -8,22 +8,26 @@ Pending
 
 ## Context
 
-We want the API to be secure so we need to Authentication and Authorisation. We rely on the `nginx auth proxy` and the
-`bichard-next-user-service` to verify a user's interaction with UI server.
+We want the API to be secure, so we need Authentication and Authorisation. To maintain consistency throughout the
+service, we will use the same tokens and secrets as the front end to verify the token and ensure it is correct.
 
-### Authentication
+Although the primary use case is to handle requests coming from the UI made by end users, we also want to be able to
+handle service requests, e.g.
 
-This is handled by the `X-API-Key` header. This is to verify that the UI server can "talk" to the API server.
+- Core creating records for exceptions and triggers
+- The resubmission service resubmitting PNC failures
 
-### Authorisation
+### Authentication and Authorisation
 
-This is handled by the `Authorisation` header with a `Bearer` token. This token is in the format of a
-[JWT payload](https://jwt.io/) (encoded) from the UI and contains the user's information so we can verify what the user
-can and cannot do.
+This is handled by the `Authorisation` header with a `Bearer` token. The bearer token will be validated to demonstrate
+that the request is authenticated. When a service-to-service request is required and not on a user's behalf, we will
+generate a bearer token for that service.
+
+The token is in the format of a [JWT](https://jwt.io/) and contains the user's or service information to verify what the
+token can and cannot do.
 
 ## Consequences
 
 - A developer needs to understand:
   - JWT and how they can be used
-  - how the `nginx auth proxy` works
-  - how the `bichard-next-user-service` works
+  - The Bichard user permission model
