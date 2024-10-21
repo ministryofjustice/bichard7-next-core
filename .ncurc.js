@@ -17,7 +17,7 @@ const semver = new RegExp(
     - from tests repo migration, version was pinned to v9
 */
 const pinned = ["chalk", "eslint"]
-const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber"]
+const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber", "http-status"]
 
 module.exports = {
   target: (package) => {

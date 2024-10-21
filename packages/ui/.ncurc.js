@@ -6,13 +6,15 @@
     - Another package does not yet support the latest version
   - @typescript-eslint/parser
     - Another package does not yet support the latest version
+  - eslint-plugin-cypress
+    - v4 requires eslint v9
 
 
   Skipped:
   - next
     - 13.4.13 causes failures with fetch
 */
-const pinned = ["styled-components", "eslint", "@typescript-eslint/parser"]
+const pinned = ["styled-components", "eslint", "@typescript-eslint/parser", "eslint-plugin-cypress"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
