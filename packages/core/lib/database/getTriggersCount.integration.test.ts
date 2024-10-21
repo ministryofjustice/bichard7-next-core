@@ -1,9 +1,11 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import getTriggersCount from "./getTriggersCount"
+import type { Sql } from "postgres"
 import postgres from "postgres"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import { randomUUID } from "crypto"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const dbConfig = createDbConfig()
 const db = postgres({
@@ -62,7 +64,7 @@ describe("getTriggersCount", () => {
     await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers ${db(errorListTriggersRecord)}`
     const correlationId = errorListRecord.message_id
 
-    const triggersCount = await getTriggersCount(correlationId)
+    const triggersCount = await getTriggersCount(db, correlationId)
 
     expect(triggersCount).toBe(1)
   })
@@ -74,7 +76,7 @@ describe("getTriggersCount", () => {
     await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers ${db(errorListTriggersRecord)}`
     const correlationId = errorListRecord.message_id
 
-    const triggersCount = await getTriggersCount(correlationId)
+    const triggersCount = await getTriggersCount(db, correlationId)
 
     expect(triggersCount).toBe(2)
   })
@@ -83,8 +85,18 @@ describe("getTriggersCount", () => {
     await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING error_id`
     const correlationId = errorListRecord.message_id
 
-    const triggersCount = await getTriggersCount(correlationId)
+    const triggersCount = await getTriggersCount(db, correlationId)
 
     expect(triggersCount).toBe(0)
+  })
+
+  it("handles errors", async () => {
+    const errorMessage = "Database error"
+    const mockedDb = jest.fn().mockRejectedValue(new Error("Database error")) as unknown as Sql
+
+    const triggersCount = await getTriggersCount(mockedDb, "correlationId")
+
+    expect(isError(triggersCount)).toBe(true)
+    expect((triggersCount as Error).message).toBe(errorMessage)
   })
 })
