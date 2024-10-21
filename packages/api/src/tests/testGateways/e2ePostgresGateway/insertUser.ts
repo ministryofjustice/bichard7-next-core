@@ -18,17 +18,5 @@ export default async (sql: postgres.Sql, partialUser: Partial<User>) => {
     throw new Error("Could not insert User into the DB")
   }
 
-  await sql`
-    INSERT INTO br7own.users_groups (
-      SELECT id as user_id, (
-        SELECT id
-        FROM br7own.groups
-        WHERE name = 'B7GeneralHandler_grp'
-      ) as group_id
-      FROM br7own.users
-      WHERE username = ${user.username}
-    );
-  `
-
   return result
 }

@@ -3,6 +3,7 @@ import type Gateway from "../../services/gateways/interfaces/gateway"
 import PostgresGateway from "../../services/gateways/postgresGateway"
 import clearAllTables from "./e2ePostgresGateway/clearAllTables"
 import insertUser from "./e2ePostgresGateway/insertUser"
+import insertUserIntoGroup from "./e2ePostgresGateway/insertUserIntoGroup"
 
 class End2EndPostgresGateway extends PostgresGateway implements Gateway {
   constructor() {
@@ -14,7 +15,16 @@ class End2EndPostgresGateway extends PostgresGateway implements Gateway {
   }
 
   async createTestUser(user: Partial<User>): Promise<User> {
-    return await insertUser(this.db, user)
+    if (!user.groups || user.groups.length === 0) {
+      throw new Error("User has no Groups")
+    }
+
+    const dbUser = await insertUser(this.db, user)
+    await insertUserIntoGroup(this.db, dbUser, user.groups)
+
+    dbUser.groups = user.groups
+
+    return dbUser
   }
 
   async clearDb(): Promise<boolean> {
