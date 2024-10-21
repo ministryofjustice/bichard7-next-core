@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, user: User, groups: UserGroup[]): Promise<void> => {
+export default async (sql: postgres.Sql, user: User, groups: UserGroup[]): Promise<UserGroup[]> => {
   await sql`
     INSERT INTO br7own.users_groups (
       SELECT
@@ -20,4 +20,6 @@ export default async (sql: postgres.Sql, user: User, groups: UserGroup[]): Promi
           friendly_name = ANY(${groups})
     );
   `
+
+  return groups
 }
