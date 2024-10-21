@@ -14,8 +14,11 @@ import phase1 from "../../phase1/phase1"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import getTriggersCount from "../../lib/database/getTriggersCount"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import postgres from "postgres"
 
 const pncApiConfig = createPncApiConfig()
+const dbConfig = createDbConfig()
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
@@ -27,6 +30,7 @@ const processPhase1: ConductorWorker = {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+    const db = postgres(dbConfig)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)
 
@@ -43,7 +47,7 @@ const processPhase1: ConductorWorker = {
       ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
 
     if (!hasTriggersOrExceptions) {
-      const existingTriggersCount = await getTriggersCount(result.correlationId)
+      const existingTriggersCount = await getTriggersCount(db, result.correlationId)
       if (isError(existingTriggersCount)) {
         return failed("Could not query triggers table", existingTriggersCount.message)
       }
