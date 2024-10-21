@@ -63,7 +63,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.7.5",
+    "@types/node": "^22.7.7",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -97,8 +97,8 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.670.0",
-    "@aws-sdk/client-s3": "^3.670.0",
+    "@aws-sdk/client-dynamodb": "^3.675.0",
+    "@aws-sdk/client-s3": "^3.675.0",
     "@io-orkes/conductor-javascript": "^2.1.2",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1691.0",
