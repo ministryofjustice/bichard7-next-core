@@ -46,7 +46,7 @@ describe("/me e2e", () => {
 
   it("will return the current user that has user groups, with a correct JWT", async () => {
     const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
-
+    const expectedGroupsSorted = expectedGroups.sort()
     const [encodedJwt, user] = await createUserAndJwtToken(helper.gateway, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
@@ -57,14 +57,12 @@ describe("/me e2e", () => {
       }
     })
 
-    const responseUser = {
-      username: user.username,
-      email: user.email,
-      groups: expectedGroups
-    }
-
     expect(response.status).toBe(OK)
-    expect(await response.json()).toEqual(responseUser)
+
+    const responseUser = await response.json()
+    expect(responseUser.username).toEqual(user.username)
+    expect(responseUser.email).toEqual(user.email)
+    expect(responseUser.groups.sort()).toEqual(expectedGroupsSorted)
   })
 
   it("will throw an error with a user that has no groups", async () => {
