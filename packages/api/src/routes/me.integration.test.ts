@@ -31,7 +31,6 @@ describe("/me", () => {
       method: "GET",
       url: "/me",
       headers: {
-        "X-API-Key": "password",
         authorization: `Bearer ${encodedJwt}`
       }
     })

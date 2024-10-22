@@ -14,12 +14,6 @@ export default async function (fastify: FastifyInstance) {
       },
       components: {
         securitySchemes: {
-          apiKey: {
-            description: "API Key provided by UI",
-            type: "apiKey",
-            name: "X-API-Key",
-            in: "header"
-          },
           bearerAuth: {
             description: 'Authorization header token, sample: "Bearer #JWT#"',
             type: "apiKey",

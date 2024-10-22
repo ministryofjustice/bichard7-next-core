@@ -12,7 +12,6 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
     method: "POST",
     url: "/cases/0/resubmit",
     headers: {
-      "X-API-Key": "password",
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     body: { phase: 1 }

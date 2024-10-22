@@ -29,7 +29,6 @@ describe("/me e2e", () => {
     const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET",
       headers: {
-        "X-API-Key": "password",
         Authorization: `Bearer ${encodedJwt}`
       }
     })
@@ -51,7 +50,6 @@ describe("/me e2e", () => {
     const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET",
       headers: {
-        "X-API-Key": "password",
         Authorization: `Bearer ${encodedJwt}`
       }
     })

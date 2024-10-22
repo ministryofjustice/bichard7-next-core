@@ -7,7 +7,6 @@ import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 const defaults = {
   url: "/me",
   headers: {
-    "X-API-Key": "password",
     Authorization: "Bearer "
   }
 }
@@ -38,17 +37,6 @@ describe("authenticate", () => {
     expect(response.statusCode).toBe(UNAUTHORIZED)
   })
 
-  it("returns 401 if api key is invalid", async () => {
-    const { statusCode } = await app.inject({
-      ...defaults,
-      headers: {
-        "X-API-Key": "invalid api key"
-      }
-    })
-
-    expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
   it("returns 401 if jwt doesn't start with Bearer", async () => {
     const { statusCode } = await app.inject({
       ...defaults,
@@ -77,26 +65,10 @@ describe("authenticate", () => {
 
   it("returns 401 if the verification result is false", async () => {
     const { statusCode } = await app.inject({
-      ...defaults,
-      headers: {
-        "X-API-Key": "password"
-      }
+      ...defaults
     })
 
     expect(statusCode).toBe(UNAUTHORIZED)
-  })
-
-  it("will return 401 - Unauthorized with just Authorization header", async () => {
-    const [encodedJwt] = generateJwtForStaticUser()
-
-    const response = await app.inject({
-      ...defaults,
-      headers: {
-        authorization: `Bearer ${encodedJwt}`
-      }
-    })
-
-    expect(response.statusCode).toBe(UNAUTHORIZED)
   })
 
   it("will return 401 - Unauthorized with a missing user", async () => {

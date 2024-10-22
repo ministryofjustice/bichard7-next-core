@@ -6,12 +6,10 @@ import type Gateway from "../../services/gateways/interfaces/gateway"
 import jwtParser from "./jwtParser"
 import jwtVerify from "./jwtVerify"
 
-const validApiKey = process.env.WORKSPACE === "production" ? process.env.API_KEY : "password"
-
 export default async function (gateway: Gateway, request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers["authorization"]
 
-  if (request.headers["x-api-key"] !== validApiKey || !token?.startsWith("Bearer ")) {
+  if (!token?.startsWith("Bearer ")) {
     reply.code(UNAUTHORIZED).send()
     return
   }
