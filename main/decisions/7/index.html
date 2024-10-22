@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Record architecture decisions | Bichard</title>
+    <title>API Authentication and Authorisation Approach | Bichard</title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
@@ -40,18 +40,27 @@
       </aside>
       <div class="container is-fluid">
         <div class="content p-3">
-          <div><h1>1. Record architecture decisions</h1>
-<p>Date: 2023-06-27</p>
+          <div><h1>7. API Authentication and Authorisation Approach</h1>
+<p>Date: 2024-10-21</p>
 <h2>Status</h2>
 <p>Accepted</p>
 <h2>Context</h2>
-<p>We need to record the architectural decisions made on this system.</p>
-<h2>Decision</h2>
-<p>We will use Architecture Decision Records, as <a href="http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions">described by Michael Nygard</a>.</p>
+<p>We want the API to be secure, so we need Authentication and Authorisation. To maintain consistency throughout the service, we will use the same tokens and secrets as the front end to verify the token and ensure it is correct.</p>
+<p>Although the primary use case is to handle requests coming from the UI made by end users, we also want to be able to handle service requests, e.g.</p>
+<ul>
+ <li>Core creating records for exceptions and triggers</li>
+ <li>The resubmission service resubmitting PNC failures</li>
+</ul>
+<h3>Authentication and Authorisation</h3>
+<p>This is handled by the <code>Authorisation</code> header with a <code>Bearer</code> token. The bearer token will be validated to demonstrate that the request is authenticated. When a service-to-service request is required and not on a user's behalf, we will generate a bearer token for that service.</p>
+<p>The token is in the format of a <a href="https://jwt.io/">JWT</a> and contains the user's or service information to verify what the token can and cannot do.</p>
 <h2>Consequences</h2>
 <ul>
- <li>See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's <a href="https://github.com/npryce/adr-tools">adr-tools</a>.</li>
- <li>Using <a href="https://structurizr.com/">Structurizr</a></li>
+ <li>A developer needs to understand: 
+  <ul>
+   <li>JWT and how they can be used</li>
+   <li>The Bichard user permission model</li>
+  </ul></li>
 </ul></div>
         </div>
       </div>

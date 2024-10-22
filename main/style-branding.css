@@ -9,10 +9,6 @@
     color: #cccccc!important;
     background-color: #333333!important;
 }
-.input.has-site-branding {
-    color: dimgrey!important;
-    background-color: white!important;
-}
 .input.has-site-branding:focus {
     border-color: #cccccc!important;
     box-shadow: 0 0 0 0.125em #cccccc;

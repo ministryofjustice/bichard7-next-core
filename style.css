@@ -1,6 +1,13 @@
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .site-layout {
     display: grid;
     grid-template-columns: 300px 1fr;
+    flex-grow: 1;
 }
 
 .menu {
@@ -68,4 +75,16 @@ a.navbar-item:hover {
 .tabs li.is-active a {
     color: #485fc7;
     border-bottom-color: #485fc7;
+}
+
+.tabs li {
+    font-weight: bold;
+}
+
+.input {
+    color: dimgrey!important;
+    background-color: white!important;
+}
+.input::placeholder {
+    color: darkgrey!important;
 }

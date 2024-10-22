@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light" class="has-background-light">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
     <link href="./style-branding.css" rel="stylesheet">
     <script type="text/javascript" src="../modal.js"></script>
     <script type="text/javascript" src="../svg-modal.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
   </head>
   <body>
     <script type="text/javascript" src="../header.js"></script>
@@ -17,7 +17,7 @@
       <div class="navbar-brand has-site-branding"><a href="./" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
       <div class="navbar-menu has-site-branding">
         <div class="navbar-end">
-          <div class="navbar-item"><input class="input is-small is-rounded has-site-branding" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, 'search/')"></div>
+          <div class="navbar-item"><input class="input is-small is-rounded" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, 'search/')"></div>
           <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
             <div class="navbar-dropdown is-right"><a href="./../main/" class="navbar-item">main</a>
               <hr class="navbar-divider">
@@ -38,7 +38,7 @@
           <li><a href="bichard/" class="">Bichard</a><a href="cjsm/" class="">CJSM</a><a href="common-platform/" class="">Common Platform</a><a href="exiss/" class="">ExISS</a><a href="libra/" class="">Libra</a><a href="pagerduty/" class="">PagerDuty</a><a href="police-national-computer/" class="">Police National Computer</a><a href="psn-proxy/" class="">PSN Proxy</a><a href="slack/" class="">Slack</a></li>
         </ul>
       </aside>
-      <div class="container is-fluid has-background-white">
+      <div class="container is-fluid">
         <div class="content p-3">
           <div><h2>Bichard</h2>
 <p>Welcome to the microsite for the Bichard architecture and documentation.</p>
@@ -476,6 +476,6 @@
       </div>
     </div>
     <script type="text/javascript" src="../reformat-mermaid.js"></script>
-    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs';</script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.3.0/dist/mermaid.esm.min.mjs';</script>
   </body>
 </html>
