@@ -12,11 +12,8 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
-import type OperationsAndEvents from "../../types/OperationsAndEvents"
-import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -48,8 +45,11 @@ export const generateOperationsFromOffenceResults = (
   return filterDisposalsAddedInCourt(operations)
 }
 
-const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsAndEvents => {
-  const allResultsOnPnc = areAllResultsOnPnc(aho)
+const generateOperations = (
+  aho: AnnotatedHearingOutcome,
+  resubmitted: boolean,
+  allResultsOnPnc: boolean
+): Operation[] => {
   const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
 
@@ -57,10 +57,7 @@ const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean):
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
     : deduplicatedOperations
 
-  return {
-    operations: sortOperations(filteredOperations),
-    events: allResultsOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
-  }
+  return sortOperations(filteredOperations)
 }
 
 export default generateOperations
