@@ -13,6 +13,7 @@ import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 import generateExceptions from "./exceptions/generateExceptions"
 import { generateOperations } from "./lib/generateOperations"
+import { areAllResultsOnPnc } from "./lib/generateOperations/areAllResultsOnPnc"
 
 type ProcessMessageResult = {
   triggers?: Trigger[]
@@ -51,9 +52,12 @@ const processMessage = (
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
 
-  const { operations, events } = generateOperations(outputMessage, isResubmitted)
+  const allResultsOnPnc = areAllResultsOnPnc(outputMessage)
+  if (allResultsOnPnc) {
+    auditLogger.info(EventCode.IgnoredAlreadyOnPNC)
+  }
 
-  events?.forEach((eventCode) => auditLogger.info(eventCode))
+  const operations = generateOperations(outputMessage, isResubmitted, allResultsOnPnc)
 
   if (operations.length === 0) {
     if (!isResubmitted) {
