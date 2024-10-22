@@ -1,0 +1,22 @@
+{
+  "name": "@moj-bichard7/uat-data",
+  "version": "1.0.0",
+  "description": "Sample data to seed to an environment to user acceptance testing",
+  "scripts": {
+    "build": "npx tsc --noEmit --skipLibCheck",
+    "lint": "eslint --fix .",
+    "update-deps": "ncu -u -x eslint && npm install"
+  },
+  "license": "MIT",
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint"
+  },
+  "devDependencies": {
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "@types/node": "^22.7.8"
+  }
+}
