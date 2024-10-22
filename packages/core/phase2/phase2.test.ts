@@ -10,6 +10,11 @@ import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 import ResultClass from "../types/ResultClass"
 import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
+import areAllResultsOnPnc from "./lib/generateOperations/areAllResultsOnPnc/areAllResultsOnPnc"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+
+jest.mock("./lib/generateOperations/areAllResultsOnPnc/areAllResultsOnPnc")
+const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
@@ -207,6 +212,28 @@ describe("Bichard Core Phase 2 processing logic", () => {
       const result = phase2Handler(inputMessageWithException, auditLogger)
 
       expect(result.resultType).toBe(resultType)
+    }
+  )
+
+  it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+    "adds ignored event when all results on the PNC for $messageType",
+    ({ inputMessage }) => {
+      mockedAreAllResultsOnPnc.mockReturnValue(true)
+
+      const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+      expect(auditLogEvents).toContainEqual(expect.objectContaining({ eventCode: EventCode.IgnoredAlreadyOnPNC }))
+    }
+  )
+
+  it.each([ahoTestCase, pncUpdateDataSetTestCase])(
+    "doesn't add ignored event when all results are not on the PNC for $messageType",
+    ({ inputMessage }) => {
+      mockedAreAllResultsOnPnc.mockReturnValue(false)
+
+      const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+      expect(auditLogEvents).not.toContainEqual(expect.objectContaining({ eventCode: EventCode.IgnoredAlreadyOnPNC }))
     }
   )
 
