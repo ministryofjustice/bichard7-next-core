@@ -24,3 +24,5 @@ coverage/
 .swc/
 
 packages/e2e-test/cucumber
+
+**/*.tsbuildinfo

@@ -47,7 +47,8 @@
     "packages/api",
     "packages/message-forwarder",
     "packages/ui",
-    "packages/e2e-test"
+    "packages/e2e-test",
+    "packages/uat-data"
   ],
   "license": "MIT",
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",

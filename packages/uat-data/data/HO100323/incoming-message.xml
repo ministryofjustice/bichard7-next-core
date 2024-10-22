@@ -1,0 +1,23 @@
+<!-- TEST DATA - generated from anonymised UAT template HO100323 -->
+<RouteData xmlns:ns2="http://schemas.cjse.gov.uk/common/businessentities" xmlns:ns3="http://schemas.cjse.gov.uk/common/businesstypes" xmlns="http://schemas.cjse.gov.uk/common/operations" VersionNumber="1.0" RequestResponse="Request">
+  <RequestFromSystem VersionNumber="1.0">
+  <CorrelationID>EXTERNAL_CORRELATION_ID</CorrelationID>
+  <SystemID>Z00CJSE</SystemID>
+  <OrganizationalUnitID>Z000000</OrganizationalUnitID>
+  <DataController>DataController</DataController>
+  </RequestFromSystem>
+  <DataStream VersionNumber="1.0">
+  <ns2:System>C00CommonPlatform</ns2:System>
+  <ns2:DataStreamType>SPIResults</ns2:DataStreamType>
+  <ns2:SystemDataStreamID>767e8c8a-6aee-457a-ab04-86c1a98f82ce</ns2:SystemDataStreamID>
+  <ns2:ContentType>text/xml</ns2:ContentType>
+  <ns2:DataStreamContent>&lt;ResultedCaseMessage Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g" xmlns="http://www.dca.gov.uk/xmlschemas/libra" xmlns:ns2="http://www.govtalk.gov.uk/people/bs7666"&gt;&lt;Session&gt;&lt;CourtHearing&gt;&lt;Hearing&gt;&lt;CourtHearingLocation&gt;COURT_LOCATION&lt;/CourtHearingLocation&gt;&lt;DateOfHearing&gt;DATE_OF_HEARING&lt;/DateOfHearing&gt;&lt;TimeOfHearing&gt;09:00:00&lt;/TimeOfHearing&gt;&lt;/Hearing&gt;&lt;PSAcode&gt;2576&lt;/PSAcode&gt;&lt;/CourtHearing&gt;&lt;Case&gt;&lt;PTIURN&gt;_PTIURN_&lt;/PTIURN&gt;&lt;Defendant&gt;&lt;ProsecutorReference&gt;PROSECUTOR_REFERENCE&lt;/ProsecutorReference&gt;&lt;CourtIndividualDefendant&gt;&lt;PersonDefendant&gt;&lt;BasePersonDetails&gt;&lt;PersonName&gt;&lt;PersonTitle&gt;Ms&lt;/PersonTitle&gt;&lt;PersonGivenName1&gt;GIVEN_NAME&lt;/PersonGivenName1&gt;&lt;PersonFamilyName&gt;FAMILY_NAME&lt;/PersonFamilyName&gt;&lt;/PersonName&gt;&lt;Birthdate&gt;DATE_OF_BIRTH&lt;/Birthdate&gt;&lt;Gender&gt;2&lt;/Gender&gt;&lt;/BasePersonDetails&gt;&lt;PNCidentifier&gt;PNC_IDENTIFIER&lt;/PNCidentifier&gt;&lt;BailConditions&gt;&lt;/BailConditions&gt;&lt;/PersonDefendant&gt;&lt;BailStatus&gt;U&lt;/BailStatus&gt;&lt;Address&gt;&lt;SimpleAddress&gt;&lt;AddressLine1&gt;ADDRESS_LINE_1&lt;/AddressLine1&gt;&lt;AddressLine2&gt;ADDRESS_LINE_2&lt;/AddressLine2&gt;&lt;AddressLine3&gt;ADDRESS_LINE_3&lt;/AddressLine3&gt;&lt;AddressLine4&gt;ADDRESS_LINE_4&lt;/AddressLine4&gt;&lt;AddressLine5&gt;ADDRESS_LINE_5&lt;/AddressLine5&gt;&lt;/SimpleAddress&gt;&lt;/Address&gt;&lt;PresentAtHearing&gt;Y&lt;/PresentAtHearing&gt;&lt;/CourtIndividualDefendant&gt;&lt;Offence&gt;&lt;BaseOffenceDetails&gt;&lt;OffenceSequenceNumber&gt;001&lt;/OffenceSequenceNumber&gt;&lt;OffenceCode&gt;MD71526&lt;/OffenceCode&gt;&lt;OffenceWording&gt;On 27/03/2024 at ADDRESS_LINE_3 had in your possession a quantity of cannabis a controlled drug of class B with intent to supply it to unknown persons in contravention of section 4(1) of the Misuse of Drugs Act 1971&lt;/OffenceWording&gt;&lt;OffenceTiming&gt;&lt;OffenceDateCode&gt;1&lt;/OffenceDateCode&gt;&lt;OffenceStart&gt;&lt;OffenceDateStartDate&gt;2024-03-27&lt;/OffenceDateStartDate&gt;&lt;/OffenceStart&gt;&lt;/OffenceTiming&gt;&lt;ChargeDate&gt;2024-03-28&lt;/ChargeDate&gt;&lt;ArrestDate&gt;2024-03-28&lt;/ArrestDate&gt;&lt;LocationOfOffence&gt;No location provided&lt;/LocationOfOffence&gt;&lt;/BaseOffenceDetails&gt;&lt;InitiatedDate&gt;2024-03-27&lt;/InitiatedDate&gt;&lt;Plea&gt;1&lt;/Plea&gt;&lt;FinalDisposalIndicator&gt;N&lt;/FinalDisposalIndicator&gt;&lt;ConvictionDate&gt;2024-04-05&lt;/ConvictionDate&gt;&lt;ConvictingCourt&gt;2576&lt;/ConvictingCourt&gt;&lt;Finding&gt;G&lt;/Finding&gt;&lt;Result&gt;&lt;ResultCode&gt;4014&lt;/ResultCode&gt;&lt;ResultText&gt;CCSU - Committed to Crown Court for sentence on unconditional bail Committed for sentence (Section 14 of the Sentencing Act 2020) for hearing on a Date and time to be fixed, ADDRESS_LINE_4 Crown Court. Bail remand days to count (tagged days): 0. No indication given re victim personal statement. &lt;/ResultText&gt;&lt;ResultCodeQualifier&gt;WF&lt;/ResultCodeQualifier&gt;&lt;/Result&gt;&lt;/Offence&gt;&lt;/Defendant&gt;&lt;/Case&gt;&lt;/Session&gt;&lt;/ResultedCaseMessage&gt;</ns2:DataStreamContent>
+  </DataStream>
+  <Routes VersionNumber="1.0">
+  <Route VersionNumber="1.0">
+  <RouteID>1</RouteID>
+  <RouteSourceSystem>C00CommonPlatform</RouteSourceSystem>
+  <RouteDestinationSystem>00101PoliceCaseSystem</RouteDestinationSystem>
+  </Route>
+  </Routes>
+  </RouteData>

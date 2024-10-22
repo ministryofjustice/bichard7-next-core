@@ -1,0 +1,22 @@
+<!-- TEST DATA - generated from anonymised UAT template HO100200 -->
+<RouteData xmlns:ns2="http://schemas.cjse.gov.uk/common/businessentities" xmlns:ns3="http://schemas.cjse.gov.uk/common/businesstypes" xmlns="http://schemas.cjse.gov.uk/common/operations" VersionNumber="1.0" RequestResponse="Request">
+  <RequestFromSystem VersionNumber="1.0">
+  <CorrelationID>EXTERNAL_CORRELATION_ID</CorrelationID>
+  <SystemID>Z00CJSE</SystemID>
+  <OrganizationalUnitID>Z000000</OrganizationalUnitID>
+  </RequestFromSystem>
+  <DataStream VersionNumber="1.0">
+  <ns2:System>C00CommonPlatform</ns2:System>
+  <ns2:DataStreamType>SPIResults</ns2:DataStreamType>
+  <ns2:SystemDataStreamID>6c219bed-a59e-4583-9f76-b59a85c38656</ns2:SystemDataStreamID>
+  <ns2:ContentType>text/xml</ns2:ContentType>
+  <ns2:DataStreamContent>&lt;ResultedCaseMessage Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g" xmlns="http://www.dca.gov.uk/xmlschemas/libra" xmlns:ns2="http://www.govtalk.gov.uk/people/bs7666"&gt; &lt;Session&gt; &lt;CourtHearing&gt; &lt;Hearing&gt; &lt;CourtHearingLocation&gt;COURT_LOCATION&lt;/CourtHearingLocation&gt; &lt;DateOfHearing&gt;DATE_OF_HEARING&lt;/DateOfHearing&gt; &lt;TimeOfHearing&gt;13:00:00&lt;/TimeOfHearing&gt; &lt;/Hearing&gt; &lt;PSAcode&gt;3285&lt;/PSAcode&gt; &lt;/CourtHearing&gt; &lt;Case&gt; &lt;PTIURN&gt;_PTIURN_&lt;/PTIURN&gt; &lt;Defendant&gt; &lt;ProsecutorReference&gt;PROSECUTOR_REFERENCE&lt;/ProsecutorReference&gt; &lt;CourtIndividualDefendant&gt; &lt;PersonDefendant&gt; &lt;BasePersonDetails&gt; &lt;PersonName&gt; &lt;PersonTitle&gt;MS&lt;/PersonTitle&gt; &lt;PersonGivenName1&gt;GIVEN_NAME&lt;/PersonGivenName1&gt; &lt;PersonFamilyName&gt;FAMILY_NAME&lt;/PersonFamilyName&gt; &lt;/PersonName&gt; &lt;Birthdate&gt;DATE_OF_BIRTH&lt;/Birthdate&gt; &lt;Gender&gt;9&lt;/Gender&gt; &lt;/BasePersonDetails&gt; &lt;BailConditions&gt;&lt;/BailConditions&gt; &lt;/PersonDefendant&gt; &lt;BailStatus&gt;A&lt;/BailStatus&gt; &lt;Address&gt; &lt;SimpleAddress&gt; &lt;AddressLine1&gt;ADDRESS_LINE_1&lt;/AddressLine1&gt; &lt;AddressLine2&gt;ADDRESS_LINE_2&lt;/AddressLine2&gt; &lt;AddressLine3&gt;ADDRESS_LINE_3&lt;/AddressLine3&gt; &lt;AddressLine5&gt;ADDRESS_LINE_5&lt;/AddressLine5&gt; &lt;/SimpleAddress&gt; &lt;/Address&gt; &lt;PresentAtHearing&gt;Y&lt;/PresentAtHearing&gt; &lt;/CourtIndividualDefendant&gt; &lt;Offence&gt; &lt;BaseOffenceDetails&gt; &lt;OffenceSequenceNumber&gt;001&lt;/OffenceSequenceNumber&gt; &lt;OffenceCode&gt;RT88010&lt;/OffenceCode&gt; &lt;OffenceWording&gt;On or in DATE_OF_HEARING at ADDRESS_LINE_3 in the county of ADDRESS_LINE_4, when suspected of having driven a vehicle and having been required to provide a specimen or specimens of breath for analysis by means of a device of a type approved by the Secretary of State pursuant to section 7 of the Road Traffic Act 1988 in the course of an investigation into whether you had committed an offence under section 3A, 4, 5 or 5A thereof, failed without reasonable excuse to do so.&lt;/OffenceWording&gt; &lt;OffenceTiming&gt; &lt;OffenceDateCode&gt;1&lt;/OffenceDateCode&gt; &lt;OffenceStart&gt; &lt;OffenceDateStartDate&gt;2023-11-12&lt;/OffenceDateStartDate&gt; &lt;/OffenceStart&gt; &lt;/OffenceTiming&gt; &lt;ChargeDate&gt;2023-11-12&lt;/ChargeDate&gt; &lt;ArrestDate&gt;2023-11-12&lt;/ArrestDate&gt; &lt;LocationOfOffence&gt;OFFENCE_LOCATION&lt;/LocationOfOffence&gt; &lt;/BaseOffenceDetails&gt; &lt;InitiatedDate&gt;2023-11-12&lt;/InitiatedDate&gt; &lt;Plea&gt;2&lt;/Plea&gt; &lt;ModeOfTrial&gt;1&lt;/ModeOfTrial&gt; &lt;FinalDisposalIndicator&gt;Y&lt;/FinalDisposalIndicator&gt; &lt;Finding&gt;N&lt;/Finding&gt; &lt;Result&gt; &lt;ResultCode&gt;2050&lt;/ResultCode&gt; &lt;ResultText&gt;DINE - Dismissed (No evidence offered)&lt;/ResultText&gt; &lt;/Result&gt; &lt;/Offence&gt; &lt;/Defendant&gt; &lt;/Case&gt; &lt;/Session&gt;&lt;/ResultedCaseMessage&gt;</ns2:DataStreamContent>
+  </DataStream>
+  <Routes VersionNumber="1.0">
+  <Route VersionNumber="1.0">
+  <RouteID>1</RouteID>
+  <RouteSourceSystem>C00CommonPlatform</RouteSourceSystem>
+  <RouteDestinationSystem>00001NPPforB7</RouteDestinationSystem>
+  </Route>
+  </Routes>
+  </RouteData>

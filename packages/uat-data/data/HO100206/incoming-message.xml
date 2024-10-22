@@ -1,0 +1,43 @@
+<!-- TEST DATA - generated from anonymised UAT template HO100206 -->
+<!-- PROSECUTOR_REFERENCE hard coded to generate asn exception-->
+<RouteData VersionNumber="1.0" RequestResponse="Request" xmlns:ns2="http://schemas.cjse.gov.uk/common/businessentities" xmlns:ns3="http://schemas.cjse.gov.uk/common/businesstypes" xmlns="http://schemas.cjse.gov.uk/common/operations">
+	<RequestFromSystem VersionNumber="1.0">
+		<CorrelationID>
+			EXTERNAL_CORRELATION_ID
+		</CorrelationID>
+		<SystemID>
+			Z00CJSE
+		</SystemID>
+		<OrganizationalUnitID>
+			Z000000
+		</OrganizationalUnitID>
+	</RequestFromSystem>
+	<DataStream VersionNumber="1.0">
+		<System>
+			C00CommonPlatform
+		</System>
+		<DataStreamType>
+			SPIResults
+		</DataStreamType>
+		<SystemDataStreamID>
+			de271681-d5e2-48f6-9942-7ae158f7d7ff
+		</SystemDataStreamID>
+		<ContentType>
+			text/xml
+		</ContentType>
+		<DataStreamContent>&lt;ResultedCaseMessage Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g" xmlns="http://www.dca.gov.uk/xmlschemas/libra" xmlns:ns2="http://www.govtalk.gov.uk/people/bs7666"&gt;&lt;Session&gt;&lt;CourtHearing&gt;&lt;Hearing&gt;&lt;CourtHearingLocation&gt;COURT_LOCATION&lt;/CourtHearingLocation&gt;&lt;DateOfHearing&gt;DATE_OF_HEARING&lt;/DateOfHearing&gt;&lt;TimeOfHearing&gt;12:45:00&lt;/TimeOfHearing&gt;&lt;/Hearing&gt;&lt;PSAcode&gt;1810&lt;/PSAcode&gt;&lt;/CourtHearing&gt;&lt;Case&gt;&lt;PTIURN&gt;_PTIURN_&lt;/PTIURN&gt;&lt;Defendant&gt;&lt;ProsecutorReference&gt;2100000000000100003&lt;/ProsecutorReference&gt;&lt;CourtIndividualDefendant&gt;&lt;PersonDefendant&gt;&lt;BasePersonDetails&gt;&lt;PersonName&gt;&lt;PersonTitle&gt;MR&lt;/PersonTitle&gt;&lt;PersonGivenName1&gt;GIVEN_NAME&lt;/PersonGivenName1&gt;&lt;PersonFamilyName&gt;FAMILY_NAME&lt;/PersonFamilyName&gt;&lt;/PersonName&gt;&lt;Birthdate&gt;DATE_OF_BIRTH&lt;/Birthdate&gt;&lt;Gender&gt;9&lt;/Gender&gt;&lt;/BasePersonDetails&gt;&lt;BailConditions&gt;&lt;/BailConditions&gt;&lt;/PersonDefendant&gt;&lt;BailStatus&gt;C&lt;/BailStatus&gt;&lt;Address&gt;&lt;SimpleAddress&gt;&lt;AddressLine1&gt;ADDRESS_LINE_1&lt;/AddressLine1&gt;&lt;AddressLine2&gt;ADDRESS_LINE_2&lt;/AddressLine2&gt;&lt;AddressLine3&gt;ADDRESS_LINE_3&lt;/AddressLine3&gt;&lt;AddressLine5&gt;ADDRESS_LINE_5&lt;/AddressLine5&gt;&lt;/SimpleAddress&gt;&lt;/Address&gt;&lt;PresentAtHearing&gt;Y&lt;/PresentAtHearing&gt;&lt;ReasonForBailConditionsOrCustody&gt;Nature and seriousness of offence, Strength of case&lt;/ReasonForBailConditionsOrCustody&gt;&lt;/CourtIndividualDefendant&gt;&lt;Offence&gt;&lt;BaseOffenceDetails&gt;&lt;OffenceSequenceNumber&gt;001&lt;/OffenceSequenceNumber&gt;&lt;OffenceCode&gt;PU86002&lt;/OffenceCode&gt;&lt;OffenceWording&gt;On or in DATE_OF_HEARING at ADDRESS_LINE_1 used or threatened unlawful violence&lt;/OffenceWording&gt;&lt;OffenceTiming&gt;&lt;OffenceDateCode&gt;1&lt;/OffenceDateCode&gt;&lt;OffenceStart&gt;&lt;OffenceDateStartDate&gt;2024-07-30&lt;/OffenceDateStartDate&gt;&lt;/OffenceStart&gt;&lt;/OffenceTiming&gt;&lt;ChargeDate&gt;2024-06-10&lt;/ChargeDate&gt;&lt;ArrestDate&gt;2024-06-10&lt;/ArrestDate&gt;&lt;LocationOfOffence&gt;AddressLine1&lt;/LocationOfOffence&gt;&lt;/BaseOffenceDetails&gt;&lt;InitiatedDate&gt;DATE_OF_HEARING&lt;/InitiatedDate&gt;&lt;Plea&gt;3&lt;/Plea&gt;&lt;FinalDisposalIndicator&gt;N&lt;/FinalDisposalIndicator&gt;&lt;Result&gt;&lt;ResultCode&gt;4016&lt;/ResultCode&gt;&lt;ResultText&gt;CCSI - Committed to Crown Court for sentence in custodyCommitted for sentence. Remanded in custody until hearing on DATE_OF_HEARING at 10:30, ADDRESS_LINE_1. Basis: Remand after conviction for the purpose of enabling inquiries to be made or of determining the most suitable method of determining the case.&lt;/ResultText&gt;&lt;ResultCodeQualifier&gt;WF&lt;/ResultCodeQualifier&gt;&lt;NextHearing&gt;&lt;NextHearingDetails&gt;&lt;CourtHearingLocation&gt;COURT_LOCATION&lt;/CourtHearingLocation&gt;&lt;DateOfHearing&gt;DATE_OF_HEARING&lt;/DateOfHearing&gt;&lt;TimeOfHearing&gt;09:30:00&lt;/TimeOfHearing&gt;&lt;/NextHearingDetails&gt;&lt;BailStatusOffence&gt;C&lt;/BailStatusOffence&gt;&lt;/NextHearing&gt;&lt;/Result&gt;&lt;Result&gt;&lt;ResultText&gt;CD24 - Civil Disorder 2024&lt;/ResultText&gt;&lt;/Result&gt;&lt;/Offence&gt;&lt;/Defendant&gt;&lt;/Case&gt;&lt;/Session&gt;&lt;/ResultedCaseMessage&gt;</DataStreamContent>
+	</DataStream>
+	<Routes VersionNumber="1.0">
+		<Route VersionNumber="1.0">
+			<RouteID>
+				1
+			</RouteID>
+			<RouteSourceSystem>
+				C00CommonPlatform
+			</RouteSourceSystem>
+			<RouteDestinationSystem>
+				00001NPPforB7
+			</RouteDestinationSystem>
+		</Route>
+	</Routes>
+</RouteData>
