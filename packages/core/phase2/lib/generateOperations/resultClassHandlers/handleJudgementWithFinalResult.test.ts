@@ -72,7 +72,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("should return DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      allResultsOnPnc: true
+      areAllResultsOnPnc: true
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -86,7 +86,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("should return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions, offence is added by the court, offence does not have a 2007 result code, and ccrId has value", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      allResultsOnPnc: true
+      areAllResultsOnPnc: true
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -109,7 +109,7 @@ describe("handleJudgementWithFinalResult", () => {
         Result: [{ PNCDisposalType: 4000 }],
         CourtCaseReferenceNumber: undefined
       } as Offence,
-      allResultsOnPnc: true
+      areAllResultsOnPnc: true
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -123,7 +123,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("should not return OAAC DISARR operation when result does not meet HO200124 and HO200108 conditions and offence is added by the court but offence has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
-      allResultsOnPnc: true
+      areAllResultsOnPnc: true
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 

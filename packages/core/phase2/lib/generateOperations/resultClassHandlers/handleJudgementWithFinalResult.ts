@@ -8,7 +8,7 @@ import areAllPncResults2007 from "../../areAllPncResults2007"
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
   aho,
-  allResultsOnPnc,
+  areAllResultsOnPnc,
   offence,
   result
 }) => {
@@ -24,7 +24,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       : []
   }
 
-  if (!allResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
+  if (!areAllResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
     return []
   }
 
