@@ -11,6 +11,4 @@ export default async (gateway: Gateway, token: string): Promise<User | undefined
   if (decodedJwt.id === user.jwt_id) {
     return user
   }
-
-  return
 }
