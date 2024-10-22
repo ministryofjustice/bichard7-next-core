@@ -5,7 +5,7 @@ import caseCanBeResubmitted from "./postgres/canCaseBeResubmitted"
 import fetchUserByUsername from "./postgres/fetchUserByUsername"
 
 class PostgresGateway implements Gateway {
-  private readonly db = postgresFactory()
+  protected readonly db = postgresFactory()
 
   async fetchUserByUsername(username: string): Promise<User> {
     return await fetchUserByUsername(this.db, username)

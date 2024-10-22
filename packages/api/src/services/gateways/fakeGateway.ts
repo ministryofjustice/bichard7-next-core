@@ -4,7 +4,14 @@ import type Gateway from "./interfaces/gateway"
 
 class FakeGateway implements Gateway {
   async fetchUserByUsername(username: string): Promise<User> {
-    return Promise.resolve({ id: 1, username, jwt_id: "123", groups: [], visible_forces: "" } satisfies User)
+    return Promise.resolve({
+      id: 1,
+      username,
+      jwt_id: "123",
+      groups: [],
+      visible_forces: "",
+      email: "user1@example.com"
+    } satisfies User)
   }
 
   async canCaseBeResubmitted(_username: string, _caseId: number, _forceIds: number[]): Promise<boolean> {
