@@ -48,7 +48,7 @@ describe("jwtVerify", () => {
     expect(result.jwt_id).toBe(validJwtId)
   })
 
-  it("will return undefined if the JWT is not valid", async () => {
+  it("will throw an error if the JWT is not valid", async () => {
     await expect(jwtVerify(gateway, "NotARealJWT")).rejects.toThrow("jwt malformed")
   })
 
