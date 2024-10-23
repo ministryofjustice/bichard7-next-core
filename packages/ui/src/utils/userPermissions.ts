@@ -40,19 +40,6 @@ const isUserManager = (user: User): boolean => {
   )
 }
 
-const canSumbit = (user: User): boolean => {
-  return (
-    user.groups !== undefined &&
-    user.groups.some(
-      (group) =>
-        group === UserGroup.ExceptionHandler ||
-        group === UserGroup.GeneralHandler ||
-        group === UserGroup.Allocator ||
-        group === UserGroup.Supervisor
-    )
-  )
-}
-
 const userAccess = (user: User): { [key in Permission]: boolean } => {
   return {
     [Permission.Triggers]: hasAccessToTriggers(user),
@@ -61,8 +48,7 @@ const userAccess = (user: User): { [key in Permission]: boolean } => {
     [Permission.UnlockOtherUsersCases]: isSupervisor(user),
     [Permission.ListAllCases]: isSupervisor(user),
     [Permission.ViewReports]: isSupervisor(user),
-    [Permission.ViewUserManagement]: isUserManager(user),
-    [Permission.CanResubmit]: canSumbit(user)
+    [Permission.ViewUserManagement]: isUserManager(user)
   }
 }
 

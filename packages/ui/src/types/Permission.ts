@@ -5,8 +5,7 @@ enum Permission {
   UnlockOtherUsersCases,
   ListAllCases,
   ViewReports,
-  ViewUserManagement,
-  CanResubmit
+  ViewUserManagement
 }
 
 export default Permission
