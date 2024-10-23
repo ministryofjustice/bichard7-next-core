@@ -12,7 +12,7 @@ type ResubmitProps = {
 
 const canUserResubmitCase = async ({ gateway, user, caseId }: ResubmitProps): Promise<boolean> => {
   const normalizedUser = { ...user, groups: user.groups ?? [] }
-  if (!userAccess(normalizedUser)[Permission.CanResubmit]) {
+  if (!userAccess(normalizedUser)[Permission.Exceptions]) {
     return false
   }
 

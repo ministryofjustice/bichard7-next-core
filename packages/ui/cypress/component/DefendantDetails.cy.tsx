@@ -24,8 +24,7 @@ describe("Defendant Details", () => {
       [Permission.UnlockOtherUsersCases]: false,
       [Permission.ListAllCases]: false,
       [Permission.ViewReports]: false,
-      [Permission.ViewUserManagement]: false,
-      [Permission.CanResubmit]: false
+      [Permission.ViewUserManagement]: false
     }
   } as DisplayFullUser
 
