@@ -14,6 +14,8 @@ COPY package.json .
 COPY package-lock.json .
 COPY tsconfig*.json ./
 COPY packages/ui ./packages/ui
+COPY packages/common ./packages/common
+
 
 WORKDIR /core/packages/ui
 
