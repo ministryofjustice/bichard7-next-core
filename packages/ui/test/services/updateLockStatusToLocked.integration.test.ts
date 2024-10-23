@@ -1,4 +1,5 @@
 import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
 import { userAccess } from "utils/userPermissions"
@@ -9,7 +10,6 @@ import getDataSource from "../../src/services/getDataSource"
 import updateLockStatusToLocked from "../../src/services/updateLockStatusToLocked"
 import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
 import { isError } from "../../src/types/Result"
-import { UserGroup } from "../../src/types/UserGroup"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 

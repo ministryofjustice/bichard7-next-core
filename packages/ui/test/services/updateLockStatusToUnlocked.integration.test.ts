@@ -9,10 +9,10 @@ import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import updateLockStatusToUnlocked from "../../src/services/updateLockStatusToUnlocked"
 import { isError } from "../../src/types/Result"
-import { UserGroup } from "../../src/types/UserGroup"
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases, insertCourtCasesWithFields } from "../utils/insertCourtCases"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 const exceptionUnlockedEvent = (username = "GeneralHandler") => ({
   category: "information",

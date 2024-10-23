@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn, Relation } from "typeorm"
 import Permission from "types/Permission"
-import { UserGroup } from "../../types/UserGroup"
+
 import { userAccess } from "../../utils/userPermissions"
 import delimitedString from "./transformers/delimitedString"
 import jsonTransformer from "./transformers/jsonTransformer"
@@ -8,6 +8,7 @@ import jsonTransformer from "./transformers/jsonTransformer"
 import Note from "./Note"
 // eslint-disable-next-line import/no-cycle
 import SurveyFeedback from "./SurveyFeedback"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 @Entity({ name: "users" })
 export default class User {

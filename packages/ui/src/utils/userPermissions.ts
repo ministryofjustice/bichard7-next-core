@@ -1,5 +1,5 @@
 import Permission from "../types/Permission"
-import { UserGroup } from "../types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 // This type is used instead of the User entity to avoid dependency cycles
 type User = { groups: UserGroup[] }
