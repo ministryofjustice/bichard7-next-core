@@ -28,6 +28,7 @@ import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 import prioritiseNonFinal from "./prioritiseNonFinal"
 import trailingSpace from "./trailingSpace"
+import ho200114InsteadOfHo200113 from "./ho200114InsteadOfHo200113"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -43,6 +44,7 @@ const filters = [
   ho100332WithConvictionDate,
   ho100332WithSameResults,
   ho100333AndCCRHasLeadingZero,
+  ho200114InsteadOfHo200113,
   ho200200AndMultilineResultVariableText,
   identicalOffenceSwitchedSequenceNumbers,
   invalidManualSequenceNumber,
