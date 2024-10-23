@@ -137,6 +137,9 @@ services:
   #     DB_HOST: postgres
   #     DB_USER: ${DEFAULT_USER}
   #     DB_PASSWORD: ${DEFAULT_PASSWORD}
+  #     TOKEN_EXPIRES_IN: 1 week
+  #     TOKEN_ISSUER: Bichard
+  #     TOKEN_SECRET: ${AUTH_JWT_SECRET}
   #   healthcheck:
   #     test: curl http://localhost:3321/health
   #     interval: 2s

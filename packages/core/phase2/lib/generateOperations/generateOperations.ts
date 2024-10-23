@@ -12,11 +12,8 @@ import { handleAdjournmentWithJudgement } from "./resultClassHandlers/handleAdjo
 import { handleJudgementWithFinalResult } from "./resultClassHandlers/handleJudgementWithFinalResult"
 import { handleSentence } from "./resultClassHandlers/handleSentence"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
-import type OperationsAndEvents from "../../types/OperationsAndEvents"
-import { areAllResultsOnPnc } from "./areAllResultsOnPnc"
 import sortOperations from "./sortOperations"
 import { PncOperation } from "../../../types/PncOperation"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 
 const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
   [ResultClass.ADJOURNMENT]: handleAdjournment,
@@ -30,7 +27,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
 
 export const generateOperationsFromOffenceResults = (
   aho: AnnotatedHearingOutcome,
-  allResultsOnPnc: boolean,
+  areAllResultsOnPnc: boolean,
   resubmitted: boolean
 ): Operation[] => {
   const operations = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
@@ -40,7 +37,7 @@ export const generateOperationsFromOffenceResults = (
       (result) =>
         (isRecordableResult(result) &&
           result.ResultClass &&
-          resultClassHandlers[result.ResultClass]?.({ aho, offence, result, resubmitted, allResultsOnPnc })) ||
+          resultClassHandlers[result.ResultClass]?.({ aho, offence, result, resubmitted, areAllResultsOnPnc })) ||
         []
     )
   )
@@ -48,19 +45,19 @@ export const generateOperationsFromOffenceResults = (
   return filterDisposalsAddedInCourt(operations)
 }
 
-const generateOperations = (aho: AnnotatedHearingOutcome, resubmitted: boolean): OperationsAndEvents => {
-  const allResultsOnPnc = areAllResultsOnPnc(aho)
-  const operations = generateOperationsFromOffenceResults(aho, allResultsOnPnc, resubmitted)
+const generateOperations = (
+  aho: AnnotatedHearingOutcome,
+  resubmitted: boolean,
+  areAllResultsOnPnc: boolean
+): Operation[] => {
+  const operations = generateOperationsFromOffenceResults(aho, areAllResultsOnPnc, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
 
-  const filteredOperations = allResultsOnPnc
+  const filteredOperations = areAllResultsOnPnc
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
     : deduplicatedOperations
 
-  return {
-    operations: sortOperations(filteredOperations),
-    events: allResultsOnPnc ? [EventCode.IgnoredAlreadyOnPNC] : []
-  }
+  return sortOperations(filteredOperations)
 }
 
 export default generateOperations

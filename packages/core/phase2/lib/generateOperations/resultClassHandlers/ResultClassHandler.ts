@@ -6,7 +6,7 @@ export type ResultClassHandlerParams = {
   offence: Offence
   result: Result
   resubmitted: boolean
-  allResultsOnPnc: boolean
+  areAllResultsOnPnc: boolean
 }
 
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Operation[]
