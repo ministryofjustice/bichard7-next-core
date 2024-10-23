@@ -1,7 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import { OK, UNAUTHORIZED } from "http-status"
-import { generateTestJwtTokenAndSplit } from "../../tests/helpers/jwtHelper"
+import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
 import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
 
@@ -49,7 +49,7 @@ describe("authentication e2e", () => {
 
   it("returns 401 Unauthorized with a missing user", async () => {
     await createUserAndJwtToken(helper.gateway)
-    const [encodedJwt] = generateTestJwtTokenAndSplit({
+    const [encodedJwt] = generateTestJwtToken({
       username: "UnknownUser",
       email: "unknownuser@exmaple.com"
     } as User)

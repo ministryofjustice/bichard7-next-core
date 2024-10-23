@@ -3,7 +3,6 @@ import type { FastifyReply, FastifyRequest } from "fastify"
 import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
 import type Gateway from "../../services/gateways/interfaces/gateway"
-import jwtParser from "./jwtParser"
 import jwtVerify from "./jwtVerify"
 
 export default async function (gateway: Gateway, request: FastifyRequest, reply: FastifyReply) {
@@ -15,14 +14,8 @@ export default async function (gateway: Gateway, request: FastifyRequest, reply:
   }
 
   try {
-    const jwt = await jwtParser(token.replace("Bearer ", ""))
-
-    if (!jwt) {
-      reply.code(UNAUTHORIZED).send()
-      return
-    }
-
-    const verificationResult: User | undefined = await jwtVerify(gateway, jwt)
+    const jwtString = token.replace("Bearer ", "")
+    const verificationResult: User | undefined = await jwtVerify(gateway, jwtString)
 
     if (!verificationResult) {
       reply.code(UNAUTHORIZED).send()
