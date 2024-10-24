@@ -19,7 +19,14 @@ export default async (
   }
 
   if (user && groups && groups.length > 0) {
-    user.groups = groups.map((group) => group.replace("B7", "").replace("_grp", "")).map((group) => group as UserGroup)
+    user.groups = groups
+      .map((group) =>
+        group
+          .replace("B7", "")
+          .replace("_grp", "")
+          .replaceAll(/([a-z])([A-Z])/g, "$1 $2")
+      )
+      .map((group) => group as UserGroup)
   }
 
   return user
