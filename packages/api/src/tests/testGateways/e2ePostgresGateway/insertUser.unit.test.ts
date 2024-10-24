@@ -7,46 +7,22 @@ describe("insertUser", () => {
   it("user needs to have all required attributes: email", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
     const user: Partial<User> = { username: "User1" }
-    let error: Error | undefined
 
-    try {
-      await insertUser(sql, user)
-    } catch (err) {
-      error = err as Error
-    }
-
-    expect(error).toBeDefined()
-    expect(error?.message).toBe("Missing required attributes")
+    await expect(insertUser(sql, user)).rejects.toThrow("Missing required attributes")
   })
 
   it("user needs to have all required attributes: username", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
     const user: Partial<User> = { email: "user1@example.com" }
-    let error: Error | undefined
 
-    try {
-      await insertUser(sql, user)
-    } catch (err) {
-      error = err as Error
-    }
-
-    expect(error).toBeDefined()
-    expect(error?.message).toBe("Missing required attributes")
+    await expect(insertUser(sql, user)).rejects.toThrow("Missing required attributes")
   })
 
   it("user could not be inserted", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
     const user: Partial<User> = { username: "User1", email: "user1@example.com" }
-    let error: Error | undefined
 
-    try {
-      await insertUser(sql, user)
-    } catch (err) {
-      error = err as Error
-    }
-
-    expect(error).toBeDefined()
-    expect(error?.message).toBe("Could not insert User into the DB")
+    await expect(insertUser(sql, user)).rejects.toThrow("Could not insert User into the DB")
   })
 
   it("user could be inserted", async () => {
