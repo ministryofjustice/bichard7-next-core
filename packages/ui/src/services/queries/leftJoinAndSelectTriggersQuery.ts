@@ -23,12 +23,12 @@ const leftJoinAndSelectTriggersQuery = (
 
   query.where(
     `(
-    (courtCase.triggerStatus <> :triggerStatus AND courtCase.errorStatus = :triggerStatus)
+    courtCase.errorStatus = :caseStatus
     OR
-    (SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :triggerStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0
+    (SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0
   )`,
     {
-      triggerStatus: caseState === "Resolved" ? "2" : "1",
+      caseStatus: caseState === "Resolved" ? "2" : "1",
       excludedTriggers: getExcludedTriggers(excludedTriggers)
     }
   )
