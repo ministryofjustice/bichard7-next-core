@@ -25,7 +25,10 @@ describe("insertCase", () => {
       phase: 1,
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
-      user_updated_flag: 1
+      user_updated_flag: 1,
+      error_locked_by_id: null,
+      resolution_ts: null,
+      error_status: null
     } satisfies Case
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
     const caseInserted: Partial<Case> = {
@@ -41,7 +44,10 @@ describe("insertCase", () => {
       phase: 1,
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
-      user_updated_flag: 1
+      user_updated_flag: 1,
+      error_locked_by_id: null,
+      resolution_ts: null,
+      error_status: null
     }
 
     const dbCase = await insertCase(sql, caseInserted)
@@ -64,7 +70,10 @@ describe("insertCase", () => {
       phase: 1,
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
-      user_updated_flag: 1
+      user_updated_flag: 1,
+      error_locked_by_id: null,
+      resolution_ts: null,
+      error_status: null
     }
 
     await expect(insertCase(sql, partialCase)).rejects.toThrow("Could not insert Case into the DB")

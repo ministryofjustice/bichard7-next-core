@@ -14,7 +14,10 @@ export const CaseSchema = z.object({
   msg_received_ts: z.string().datetime(),
   court_reference: z.string().max(11),
   total_pnc_failure_resubmissions: z.number().default(0),
-  org_for_police_filter: z.string()
+  org_for_police_filter: z.string(),
+  error_locked_by_id: z.string().nullable(),
+  resolution_ts: z.string().datetime().nullable(),
+  error_status: z.number().nullable()
 })
 
 export type Case = z.infer<typeof CaseSchema>
