@@ -16,6 +16,7 @@ export const matchingExceptions: ExceptionCode[] = [
   ExceptionCode.HO100332,
   ExceptionCode.HO100333,
   ExceptionCode.HO100507,
+  ExceptionCode.HO200113,
   ExceptionCode.HO200114
 ]
 
