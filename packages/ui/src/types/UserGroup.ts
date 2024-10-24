@@ -1,12 +1,12 @@
 export enum UserGroup {
   Allocator = "Allocator",
   Audit = "Audit",
-  ExceptionHandler = "ExceptionHandler",
-  GeneralHandler = "GeneralHandler",
+  ExceptionHandler = "Exception Handler",
+  GeneralHandler = "General Handler",
   Supervisor = "Supervisor",
-  TriggerHandler = "TriggerHandler",
-  UserManager = "UserManager",
-  AuditLoggingManager = "AuditLoggingManager",
-  SuperUserManager = "SuperUserManager",
-  NewUI = "NewUI"
+  TriggerHandler = "Trigger Handler",
+  UserManager = "User Manager",
+  AuditLoggingManager = "Audit Logging Manager",
+  SuperUserManager = "Super User Manager",
+  NewUI = "New Bichard UI"
 }

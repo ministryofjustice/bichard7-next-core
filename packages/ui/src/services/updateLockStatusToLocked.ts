@@ -4,7 +4,8 @@ import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/
 import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
 import type { EntityManager, FindOperator, Repository, UpdateResult } from "typeorm"
 import { IsNull, MoreThan } from "typeorm"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
+
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import CourtCase from "./entities/CourtCase"
