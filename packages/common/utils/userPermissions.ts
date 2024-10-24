@@ -48,7 +48,8 @@ const userAccess = (user: User): { [key in Permission]: boolean } => {
     [Permission.UnlockOtherUsersCases]: isSupervisor(user),
     [Permission.ListAllCases]: isSupervisor(user),
     [Permission.ViewReports]: isSupervisor(user),
-    [Permission.ViewUserManagement]: isUserManager(user)
+    [Permission.ViewUserManagement]: isUserManager(user),
+    [Permission.CanResubmit]: hasAccessToExceptions(user)
   }
 }
 

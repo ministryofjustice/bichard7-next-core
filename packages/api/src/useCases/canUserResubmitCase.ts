@@ -1,8 +1,8 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import formatForceNumbers from "../services/formatForceNumbers"
 import type Gateway from "../services/gateways/interfaces/gateway"
-import { userAccess } from "@moj-bichard7/ui/src/utils/userPermissions"
-import Permission from "@moj-bichard7/ui/src/types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 type ResubmitProps = {
   gateway: Gateway
@@ -12,7 +12,7 @@ type ResubmitProps = {
 
 const canUserResubmitCase = async ({ gateway, user, caseId }: ResubmitProps): Promise<boolean> => {
   const normalizedUser = { ...user, groups: user.groups ?? [] }
-  if (!userAccess(normalizedUser)[Permission.Exceptions]) {
+  if (!userAccess(normalizedUser)[Permission.CanResubmit]) {
     return false
   }
 

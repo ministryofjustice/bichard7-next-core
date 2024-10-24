@@ -2,7 +2,7 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
 import PncDetails from "../../src/features/CourtCaseDetails/Sidebar/PncDetails/PncDetails"
 
 describe("PNC details", () => {
@@ -21,7 +21,8 @@ describe("PNC details", () => {
       [Permission.UnlockOtherUsersCases]: false,
       [Permission.ListAllCases]: false,
       [Permission.ViewReports]: false,
-      [Permission.ViewUserManagement]: false
+      [Permission.ViewUserManagement]: false,
+      [Permission.CanResubmit]: false
     }
   } as DisplayFullUser
 

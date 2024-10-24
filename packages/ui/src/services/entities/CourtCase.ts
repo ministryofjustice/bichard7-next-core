@@ -8,7 +8,7 @@ import User from "./User"
 import booleanIntTransformer from "./transformers/booleanIntTransformer"
 import dateTransformer from "./transformers/dateTransformer"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
-import Permission from "../../types/Permission"
+import Permission from "../../../../common/types/Permission"
 
 @Entity({ name: "error_list" })
 export default class CourtCase {

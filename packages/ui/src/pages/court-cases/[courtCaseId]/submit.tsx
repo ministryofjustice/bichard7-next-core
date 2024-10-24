@@ -26,7 +26,7 @@ import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "../../../types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
 
 const hasAmendments = (amendments: string | undefined): boolean =>
