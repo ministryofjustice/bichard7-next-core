@@ -8,7 +8,7 @@ import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 const courtCase = {
   aho: {
@@ -46,7 +46,8 @@ const currentUser = {
     [Permission.UnlockOtherUsersCases]: false,
     [Permission.ListAllCases]: false,
     [Permission.ViewReports]: false,
-    [Permission.ViewUserManagement]: false
+    [Permission.ViewUserManagement]: false,
+    [Permission.CanResubmit]: false
   }
 } as DisplayFullUser
 
