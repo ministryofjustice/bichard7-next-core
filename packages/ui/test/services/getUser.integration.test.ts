@@ -1,10 +1,10 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { DataSource } from "typeorm"
 import type User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 import getUser from "../../src/services/getUser"
 import { isError } from "../../src/types/Result"
 import { createUser, runQuery } from "../utils/manageUsers"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 describe("getUser", () => {
   let dataSource: DataSource
@@ -20,8 +20,8 @@ describe("getUser", () => {
   })
 
   it("Should return the user when given a matching username", async () => {
-    const inputUser = await createUser("General Handler")
-    const groups = ["B7Supervisor_grp", "B7GeneralHandler_grp"]
+    const inputUser = await createUser("GeneralHandler")
+    const groups = ["Supervisor", "General Handler"]
     const expectedGroups: UserGroup[] = [UserGroup.Supervisor, UserGroup.GeneralHandler]
 
     const result = await getUser(dataSource, inputUser!.username, groups)

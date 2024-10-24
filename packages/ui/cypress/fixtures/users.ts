@@ -1,6 +1,6 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import hashedPassword from "./hashedPassword"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 const numberedUsers = () => {
   const newUsers: Record<string, Partial<User> & { groups: UserGroup[] }> = {}
