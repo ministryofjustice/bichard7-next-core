@@ -76,7 +76,7 @@ commands:
       - run:
           name: Build e2e tests
           command: npm run build:e2e-test
-  
+
   build_common:
     steps:
       - run:
