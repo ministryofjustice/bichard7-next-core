@@ -19,7 +19,7 @@ describe("getUser", () => {
     }
   })
 
-  it.only("Should return the user when given a matching username", async () => {
+  it("Should return the user when given a matching username", async () => {
     const inputUser = await createUser("GeneralHandler")
     const groups = ["B7Supervisor_grp", "B7GeneralHandler_grp"]
     const expectedGroups: UserGroup[] = [UserGroup.Supervisor, UserGroup.GeneralHandler]
