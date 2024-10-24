@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn, Relation } from "
 import Permission from "@moj-bichard7/common/types/Permission"
 
 import { UserGroup } from "../../types/UserGroup"
-import { userAccess } from "../../../../common/utils/userPermissions"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import delimitedString from "./transformers/delimitedString"
 import jsonTransformer from "./transformers/jsonTransformer"
 // eslint-disable-next-line import/no-cycle

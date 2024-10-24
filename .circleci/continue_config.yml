@@ -76,6 +76,12 @@ commands:
       - run:
           name: Build e2e tests
           command: npm run build:e2e-test
+  
+  build_common:
+    steps:
+      - run:
+          name: Build common package
+          command: npm run build -w packages/common
 
   save_artifacts:
     steps:
@@ -603,6 +609,7 @@ jobs:
             - run: circleci-agent step halt
       - setup_ui
       - install_dependencies
+      - build_common
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
@@ -630,6 +637,7 @@ jobs:
             - run: circleci-agent step halt
       - setup_ui
       - install_dependencies
+      - build_common
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
@@ -663,6 +671,7 @@ jobs:
       - node_install
       - install_dependencies:
           install-cypress: true
+      - build_common
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
@@ -715,6 +724,7 @@ jobs:
       - setup_ui
       - install_dependencies:
           install-cypress: true
+      - build_common
       - when:
           condition:
             equal: [true, << parameters.ms-edge >>]
