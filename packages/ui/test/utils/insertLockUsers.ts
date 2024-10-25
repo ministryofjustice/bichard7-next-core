@@ -1,4 +1,4 @@
-import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import users from "../../cypress/fixtures/users"
