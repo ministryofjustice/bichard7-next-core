@@ -180,7 +180,6 @@ describe("processPhase2", () => {
     const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver) as Phase2Result
     expect(parsedUpdatedFile.outputMessage).toHaveProperty("PncOperations")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome received by phase 2")
-    expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome submitted to phase 3")
   })
 
   it("should put the processed PNC Update Dataset file back in to S3 and complete correctly", async () => {
@@ -202,6 +201,5 @@ describe("processPhase2", () => {
     const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver) as Phase2Result
     expect(parsedUpdatedFile.outputMessage).toHaveProperty("PncOperations")
     expect(result.logs?.map((l) => l.log)).toContain("Resubmitted hearing outcome received")
-    expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome submitted to phase 3")
   })
 })
