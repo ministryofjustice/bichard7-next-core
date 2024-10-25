@@ -1,7 +1,7 @@
-import type CourtCase from "services/entities/CourtCase"
-import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
+import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import { isError } from "lodash"
-import type { ResolvedException, Report } from "./Report"
+import type CourtCase from "services/entities/CourtCase"
+import type { Report, ResolvedException } from "./Report"
 
 export const createResolvedExceptionsReportLines = (courtCases: CourtCase[]): Report<ResolvedException> => {
   const report = courtCases.map((courtCase) => {

@@ -1,11 +1,11 @@
-import type { PncOffence } from "@moj-bichard7-developers/bichard7-next-core/core/types/PncQueryResult"
-import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import findCandidates from "./findCandidates"
-import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
-import type { Candidates } from "../../types/OffenceMatching"
+import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "@moj-bichard7/core/types/PncQueryResult"
 import HO100310 from "../../../cypress/fixtures/HO100310.json"
 import HO100332 from "../../../cypress/fixtures/HO100332.json"
+import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
+import type { Candidates } from "../../types/OffenceMatching"
 import parseCourtCaseWithDateObjects from "../date/parseCourtCaseWithDateObjects"
+import findCandidates from "./findCandidates"
 
 describe("findCandidates", () => {
   const caseReference = "case-reference"

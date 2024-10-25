@@ -1,6 +1,6 @@
-import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import createDummyResult from "./createDummyResult"
+import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import cloneDeep from "lodash.clonedeep"
+import createDummyResult from "./createDummyResult"
 
 const createDummyOffence = (): Offence =>
   ({

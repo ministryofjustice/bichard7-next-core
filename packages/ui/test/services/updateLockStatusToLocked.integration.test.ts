@@ -1,4 +1,4 @@
-import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
 import { userAccess } from "utils/userPermissions"

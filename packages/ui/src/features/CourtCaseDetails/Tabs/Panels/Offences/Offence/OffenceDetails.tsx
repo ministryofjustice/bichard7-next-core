@@ -1,7 +1,7 @@
-import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"

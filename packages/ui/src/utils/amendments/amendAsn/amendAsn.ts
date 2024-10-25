@@ -1,5 +1,5 @@
-import convertAsnToLongFormat from "@moj-bichard7-developers/bichard7-next-core/core/phase1/enrichAho/enrichFunctions/enrichDefendant/convertAsnToLongFormat"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import convertAsnToLongFormat from "@moj-bichard7/core/phase1/enrichAho/enrichFunctions/enrichDefendant/convertAsnToLongFormat"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { Amendments } from "types/Amendments"
 import isAsnFormatValid from "utils/exceptions/isAsnFormatValid"
 

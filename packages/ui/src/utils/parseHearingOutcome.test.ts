@@ -1,21 +1,19 @@
-import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPNCUpdateDatasetXml from "@moj-bichard7-developers/bichard7-next-core/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
+import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
+import parseAnnotatedPNCUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
 import fs from "fs"
 import dummyAho from "../../test/test-data/AnnotatedHO1.json"
 import parseHearingOutcome from "./parseHearingOutcome"
 
-jest.mock("@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml")
-jest.mock(
-  "@moj-bichard7-developers/bichard7-next-core/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
-)
+jest.mock("@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml")
+jest.mock("@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml")
 
 beforeEach(() => {
   ;(parseAhoXml as jest.Mock).mockImplementation(
-    jest.requireActual("@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml").default
+    jest.requireActual("@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml").default
   )
   ;(parseAnnotatedPNCUpdateDatasetXml as jest.Mock).mockImplementation(
     jest.requireActual(
-      "@moj-bichard7-developers/bichard7-next-core/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
+      "@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
     ).default
   )
 })
