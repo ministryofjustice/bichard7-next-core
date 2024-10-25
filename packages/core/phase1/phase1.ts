@@ -61,9 +61,7 @@ const phase1 = async (
     resultType = Phase1ResultType.ignored
   } else {
     const exceptions = generateExceptions(enrichedHearingOutcome)
-    exceptions.forEach(({ code, path }) => {
-      addExceptionsToAho(enrichedHearingOutcome as AnnotatedHearingOutcome, code, path)
-    })
+    addExceptionsToAho(enrichedHearingOutcome, exceptions)
 
     if (enrichedHearingOutcome.Exceptions.length > 0) {
       auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(enrichedHearingOutcome))

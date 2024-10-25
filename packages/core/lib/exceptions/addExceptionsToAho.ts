@@ -1,4 +1,3 @@
-import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
@@ -17,16 +16,18 @@ const removeExceptionWithPath = (path: ExceptionPath, existingExceptions: Except
   }
 }
 
-const addExceptionsToAho = (aho: AnnotatedHearingOutcome, code: ExceptionCode, path: (string | number)[]) => {
+const addExceptionsToAho = (aho: AnnotatedHearingOutcome, exceptions: Exception[]) => {
   if (!aho.Exceptions) {
     aho.Exceptions = []
   }
 
-  if (hasExceptionWithPath(path, aho.Exceptions) && !isPncException(code)) {
-    removeExceptionWithPath(path, aho.Exceptions)
-  }
+  exceptions.forEach((exception) => {
+    if (hasExceptionWithPath(exception.path, aho.Exceptions) && !isPncException(exception.code)) {
+      removeExceptionWithPath(exception.path, aho.Exceptions)
+    }
 
-  aho.Exceptions.push({ code, path })
+    aho.Exceptions.push(exception)
+  })
 }
 
 export default addExceptionsToAho

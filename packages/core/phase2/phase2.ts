@@ -47,7 +47,7 @@ const processMessage = (
   }
 
   const exceptions = generateExceptions(inputMessage)
-  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  addExceptionsToAho(outputMessage, exceptions)
   if (exceptions.some(({ code }) => code !== ExceptionCode.HO200200)) {
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
