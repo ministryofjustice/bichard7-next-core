@@ -1,5 +1,5 @@
 import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
-import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
