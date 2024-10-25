@@ -73,8 +73,6 @@ const processMessage = (
 
   outputMessage.PncOperations = refreshOperations(outputMessage, operations)
 
-  auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
-
   return { resultType: Phase2ResultType.success, triggerGenerationAttempted: false }
 }
 
