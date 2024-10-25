@@ -1,5 +1,5 @@
 import type { DataSource, EntityManager } from "typeorm"
-import type { UserGroup } from "../types/UserGroup"
+import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type PromiseResult from "../types/PromiseResult"
 import { isError } from "../types/Result"
 import User from "./entities/User"

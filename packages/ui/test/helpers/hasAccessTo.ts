@@ -1,4 +1,4 @@
-import { UserGroup } from "types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 export const hasAccessToAll = userAccess({ groups: Object.values(UserGroup) })

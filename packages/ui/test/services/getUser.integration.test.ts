@@ -1,5 +1,5 @@
 import type { DataSource } from "typeorm"
-import { UserGroup } from "types/UserGroup"
+import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 import getUser from "../../src/services/getUser"
