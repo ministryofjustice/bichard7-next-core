@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { randomUUID } from "crypto"
 import fs from "fs"
 import type Note from "services/entities/Note"
 import type Trigger from "services/entities/Trigger"
 import type { ResolutionStatus } from "types/ResolutionStatus"
-import { v4 as uuid } from "uuid"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import createAuditLogRecord from "../helpers/createAuditLogRecord"
@@ -73,7 +73,7 @@ const insertCourtCasesWithFields = async (cases: Partial<CourtCase>[]) => {
     existingCourtCases.push(
       await getDummyCourtCase({
         errorId: index,
-        messageId: uuid(),
+        messageId: randomUUID(),
         ptiurn: "Case" + String(index).padStart(5, "0"),
         ...cases[index]
       })
