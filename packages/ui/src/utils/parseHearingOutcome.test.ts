@@ -1,19 +1,19 @@
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPNCUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import fs from "fs"
 import dummyAho from "../../test/test-data/AnnotatedHO1.json"
 import parseHearingOutcome from "./parseHearingOutcome"
 
 jest.mock("@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml")
-jest.mock("@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml")
+jest.mock("@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml")
 
 beforeEach(() => {
   ;(parseAhoXml as jest.Mock).mockImplementation(
     jest.requireActual("@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml").default
   )
-  ;(parseAnnotatedPNCUpdateDatasetXml as jest.Mock).mockImplementation(
+  ;(parseAnnotatedPncUpdateDatasetXml as jest.Mock).mockImplementation(
     jest.requireActual(
-      "@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
+      "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
     ).default
   )
 })
@@ -28,12 +28,12 @@ describe("parseHearingOutcome", () => {
     expect(parseHearingOutcome("not an XML")).toEqual(new Error("Could not parse AHO XML"))
   })
 
-  it("Should call parseAnnotatedPNCUpdateDatasetXml when the XML is a isPncUpdateDataset", () => {
+  it("Should call parseAnnotatedPncUpdateDatasetXml when the XML is a isPncUpdateDataset", () => {
     const dummyPNCUpdateDataset = fs.readFileSync("test/test-data/AnnotatedPNCUpdateDataset.xml").toString()
     parseHearingOutcome(dummyPNCUpdateDataset)
 
-    expect(parseAnnotatedPNCUpdateDatasetXml).toHaveBeenCalledTimes(1)
-    expect(parseAnnotatedPNCUpdateDatasetXml).toHaveBeenCalledWith(dummyPNCUpdateDataset)
+    expect(parseAnnotatedPncUpdateDatasetXml).toHaveBeenCalledTimes(1)
+    expect(parseAnnotatedPncUpdateDatasetXml).toHaveBeenCalledWith(dummyPNCUpdateDataset)
   })
 
   it("Should call parseAhoXml when the XML is not a isPncUpdateDataset", () => {

@@ -1,5 +1,5 @@
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPNCUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPNCUpdateDatasetXml/parseAnnotatedPNCUpdateDatasetXml"
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { isError } from "../types/Result"
 import { isPncUpdateDataset } from "./isPncUpdateDataset"
@@ -8,7 +8,7 @@ const parseHearingOutcome = (hearingOutcome: string): AnnotatedHearingOutcome | 
   let aho: AnnotatedHearingOutcome | Error
 
   if (isPncUpdateDataset(hearingOutcome)) {
-    const pncUpdateDataset = parseAnnotatedPNCUpdateDatasetXml(hearingOutcome)
+    const pncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
 
     if (isError(pncUpdateDataset)) {
       console.error(`Failed to parse AnnotatedPNCUpdateDatasetXml: ${pncUpdateDataset}`)
