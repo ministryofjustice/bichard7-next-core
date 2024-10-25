@@ -1,8 +1,8 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import ActiveMqHelper from "@moj-bichard7/common/mq/ActiveMqHelper"
 import type TriggerCode from "bichard7-next-data-latest/types/TriggerCode"
+import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
-import { v4 as uuid } from "uuid"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
 import Phase from "../../types/Phase"
@@ -33,7 +33,7 @@ const processMessageBichard = async <BichardResultType>(
     phase = Phase.HEARING_OUTCOME
   }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
-  const correlationId = uuid()
+  const correlationId = randomUUID()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
 
   if (phase === Phase.HEARING_OUTCOME && !realPnc) {

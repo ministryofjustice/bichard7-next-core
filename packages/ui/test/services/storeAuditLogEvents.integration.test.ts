@@ -4,11 +4,11 @@ import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/ty
 import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
 import axios from "axios"
+import { randomUUID } from "crypto"
 import getDataSource from "services/getDataSource"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
-import { v4 as uuid } from "uuid"
 import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../../src/config"
 import createAuditLog from "../helpers/createAuditLog"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
@@ -59,7 +59,7 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("Should return undefined with no error if events array is empty", async () => {
-    const result = await storeMessageAuditLogEvents(uuid(), []).catch((error) => error)
+    const result = await storeMessageAuditLogEvents(randomUUID(), []).catch((error) => error)
     expect(isError(result)).toBeFalsy()
     expect(result).toBeUndefined()
   })

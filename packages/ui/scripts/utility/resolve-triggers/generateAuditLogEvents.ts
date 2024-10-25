@@ -1,7 +1,6 @@
-import Trigger from "../../../src/services/entities/Trigger"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 import AuditLogEvent from "../../../../../../bichard7-next-audit-logging/src/shared-types/src/AuditLogEvent"
+import Trigger from "../../../src/services/entities/Trigger"
 
 type GeneratedEvents = {
   events: AuditLogEvent[]
@@ -37,7 +36,7 @@ export default function generateAuditLogEvents(
   } as unknown as AuditLogEvent)
 
   const ahoValueLookup = {
-    id: uuid(),
+    id: randomUUID(),
     isCompressed: false,
     messageId,
     value: aho,

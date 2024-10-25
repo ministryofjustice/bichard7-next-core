@@ -1,10 +1,10 @@
 import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
 import type { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { randomUUID } from "crypto"
 import MockDate from "mockdate"
 import type { DataSource } from "typeorm"
 import { Repository } from "typeorm"
-import { v4 as uuid } from "uuid"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import { default as TriggerEntity } from "../../../src/services/entities/Trigger"
 import type User from "../../../src/services/entities/User"
@@ -20,7 +20,7 @@ const insertCourtCase = async (fields: Partial<CourtCase> = {}) => {
   const existingCourtCasesDbObject: Partial<CourtCase> = {
     errorId: 0,
     courtDate: new Date("2008-09-25"),
-    messageId: uuid(),
+    messageId: randomUUID(),
     triggerCount: 0,
     asn: "dummyAsn",
     ptiurn: "dummyPtiurn",
