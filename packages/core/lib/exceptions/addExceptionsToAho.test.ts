@@ -3,31 +3,39 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import addExceptionsToAho from "./addExceptionsToAho"
 
 describe("addExceptionsToAho", () => {
-  it("can add exceptions to a hearing outcome", () => {
-    const exception = {
-      code: ExceptionCode.HO100100,
-      path: ["path", "to", "exception"]
-    }
+  it("adds exceptions to a hearing outcome", () => {
+    const exceptions = [
+      {
+        code: ExceptionCode.HO100100,
+        path: ["path", "to", "exception"]
+      },
+      {
+        code: ExceptionCode.HO100102,
+        path: ["another", "path", "to", "exception"]
+      }
+    ]
     const aho = { Exceptions: [] } as unknown as AnnotatedHearingOutcome
-    addExceptionsToAho(aho, exception.code, exception.path)
-    expect(aho.Exceptions).toHaveLength(1)
-    expect(aho.Exceptions[0]).toStrictEqual(exception)
+
+    addExceptionsToAho(aho, exceptions)
+
+    expect(aho.Exceptions).toHaveLength(2)
+    expect(aho.Exceptions).toEqual(exceptions)
   })
 
-  it("will overwrite an existing exception if one already exists in that path", () => {
+  it("overwrites an existing exception if one already exists in that path", () => {
     const exceptionOne = {
       code: ExceptionCode.HO100100,
       path: ["path", "to", "exception"]
     }
-    const aho = { Exceptions: [] } as unknown as AnnotatedHearingOutcome
-    aho.Exceptions.push(exceptionOne)
-
+    const aho = { Exceptions: [exceptionOne] } as unknown as AnnotatedHearingOutcome
     const exceptionTwo = {
       code: ExceptionCode.HO100200,
       path: ["path", "to", "exception"]
     }
+    const exceptions = [exceptionTwo]
 
-    addExceptionsToAho(aho, exceptionTwo.code, exceptionTwo.path)
+    addExceptionsToAho(aho, exceptions)
+
     expect(aho.Exceptions).toHaveLength(1)
     expect(aho.Exceptions[0]).toStrictEqual(exceptionTwo)
   })
