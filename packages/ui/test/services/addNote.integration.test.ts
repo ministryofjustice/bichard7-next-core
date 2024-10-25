@@ -1,7 +1,7 @@
+import { randomUUID } from "crypto"
 import MockDate from "mockdate"
 import insertNotes from "services/insertNotes"
 import type { DataSource } from "typeorm"
-import { v4 as uuid } from "uuid"
 import addNote from "../../src/services/addNote"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -42,7 +42,7 @@ describe("addNote", () => {
   it("Should add note when record is fully locked by the user", async () => {
     await insertCourtCasesWithFields([
       {
-        messageId: uuid(),
+        messageId: randomUUID(),
         errorLockedByUsername: currentUsername,
         triggerLockedByUsername: currentUsername,
         ...existingCourtCasesDbObject
@@ -63,7 +63,7 @@ describe("addNote", () => {
   it("Should add note when record is partially locked by the user", async () => {
     await insertCourtCasesWithFields([
       {
-        messageId: uuid(),
+        messageId: randomUUID(),
         errorLockedByUsername: "BichardForce01",
         triggerLockedByUsername: currentUsername,
         ...existingCourtCasesDbObject
@@ -85,7 +85,7 @@ describe("addNote", () => {
     await insertCourtCasesWithFields([
       {
         ...existingCourtCasesDbObject,
-        messageId: uuid(),
+        messageId: randomUUID(),
         errorLockedByUsername: "BichardForce01",
         triggerLockedByUsername: "BichardForce02"
       }
@@ -116,7 +116,7 @@ describe("addNote", () => {
 
   it("Should add multiple notes when note text length is more than the 2000 characters", async () => {
     await insertCourtCasesWithFields([
-      { messageId: uuid(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
+      { messageId: randomUUID(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
     ])
 
     const result = await addNote(dataSource, 0, currentUsername, "A".repeat(4503))
@@ -132,7 +132,7 @@ describe("addNote", () => {
 
   it("Should not add multiple notes when note has a new line", async () => {
     await insertCourtCasesWithFields([
-      { messageId: uuid(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
+      { messageId: randomUUID(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
     ])
 
     const result = await addNote(dataSource, 0, currentUsername, "A\r\nB")
@@ -146,7 +146,7 @@ describe("addNote", () => {
 
   it("Should add multiple notes when text is over 2000 characters and contains new lines (doesn't split on new lines)", async () => {
     await insertCourtCasesWithFields([
-      { messageId: uuid(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
+      { messageId: randomUUID(), ...existingCourtCasesDbObject, errorLockedByUsername: currentUsername }
     ])
 
     const text = "Abba\r\n".repeat(500)
