@@ -32,7 +32,7 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
     )
     SELECT G.id, U.id FROM br7own.users AS U, br7own."groups" AS G
     WHERE
-    	G.id = (SELECT id FROM br7own.groups WHERE name=$1 LIMIT 1)
+    	G.id = (SELECT id FROM br7own.groups WHERE friendly_name=$1 LIMIT 1)
     	AND
     	U.id = (SELECT id FROM br7own.users WHERE email=$2 LIMIT 1)
     	AND
