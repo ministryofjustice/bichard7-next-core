@@ -848,6 +848,7 @@ jobs:
       - build_audit_logging_images
       - fetch_images:
           images: user-service nginx-auth-proxy
+      - build_core
       - run:
           command: npm run ui
       - run:
