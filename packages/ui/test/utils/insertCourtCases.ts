@@ -144,6 +144,8 @@ const insertDummyCourtCasesWithTriggers = async (
       orgForPoliceFilter: orgCode,
       triggerLockedByUsername,
       triggerCount: caseTriggers.length,
+      triggerReason: triggers[0].code,
+      triggerStatus: triggers.some((trigger) => trigger.status === "Unresolved") ? "Unresolved" : "Resolved",
       triggers: triggers.map(
         (trigger, _) =>
           ({

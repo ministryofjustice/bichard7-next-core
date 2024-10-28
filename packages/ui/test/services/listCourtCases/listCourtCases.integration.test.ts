@@ -24,6 +24,9 @@ import {
 import insertException from "../../utils/manageExceptions"
 import type { TestTrigger } from "../../utils/manageTriggers"
 import { insertTriggers } from "../../utils/manageTriggers"
+import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import postgres from "postgres"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -131,6 +134,83 @@ describe("listCourtCases", () => {
     expect(cases[0].notes).toHaveLength(1)
     expect(cases[1].notes).toHaveLength(3)
     expect(cases[2].notes).toHaveLength(3)
+  })
+
+  describe("Trigger exclusion", () => {
+    it("Should not display cases with user excluded triggers", async () => {
+      const dbConfig = createDbConfig()
+      const db = postgres({ ...dbConfig })
+      testUser.excludedTriggers = [TriggerCode.TRPR0001]
+
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: "TRPR0001",
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      for (let i = 0; i < 3; i++) {
+        await db<
+          ErrorListRecord[]
+        >`UPDATE br7own.error_list set error_count = 0, error_reason = null, error_report = '', error_status = null, error_insert_ts = null WHERE error_id = ${i}`
+      }
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
+    })
+
+    it("Should not display user excluded triggers but display those cases if they have exceptions", async () => {
+      testUser.excludedTriggers = [TriggerCode.TRPR0001]
+
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: "TRPR0001",
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display user excluded triggers but display those cases if they have non-exluded triggers", async () => {
+      const dbConfig = createDbConfig()
+      const db = postgres({ ...dbConfig })
+      testUser.excludedTriggers = [TriggerCode.TRPR0001]
+
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: "TRPR0001",
+          status: "Unresolved"
+        },
+        {
+          code: "TRPR0002",
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      for (let i = 0; i < 3; i++) {
+        await db<
+          ErrorListRecord[]
+        >`UPDATE br7own.error_list set error_count = 0, error_reason = null, error_report = '', error_status = null, error_insert_ts = null WHERE error_id = ${i}`
+      }
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
   })
 
   describe("Pagination", () => {
