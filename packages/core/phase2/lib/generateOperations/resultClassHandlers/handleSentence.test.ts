@@ -1,10 +1,10 @@
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
-import areAnyPncResults2007 from "../areAnyPncResults2007"
+import areAnyPncResults2007 from "../../areAnyPncResults2007"
 import { handleSentence } from "./handleSentence"
 
-jest.mock("../areAnyPncResults2007")
+jest.mock("../../areAnyPncResults2007")
 const mockedAreAnyPncResults2007 = areAnyPncResults2007 as jest.Mock
 
 describe("handleSentence", () => {

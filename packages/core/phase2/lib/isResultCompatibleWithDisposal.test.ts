@@ -1,5 +1,5 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import ResultClass from "../../../types/ResultClass"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../types/ResultClass"
 import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 
 describe("isResultCompatibleWithDisposal", () => {

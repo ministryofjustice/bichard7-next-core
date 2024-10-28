@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 
 const areAnyPncResults2007 = (aho: AnnotatedHearingOutcome, offence: Offence): boolean => {
   const offenceReasonSequence = offence.CriminalProsecutionReference.OffenceReasonSequence

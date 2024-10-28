@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import getCourtCaseReferenceFromOperation from "../lib/generateOperations/getCourtCaseReferenceFromOperation"
+import getCourtCaseReferenceFromOperation from "./getCourtCaseReferenceFromOperation"
 import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"

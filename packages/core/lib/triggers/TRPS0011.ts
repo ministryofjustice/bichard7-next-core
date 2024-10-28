@@ -1,5 +1,5 @@
 import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import isResultCompatibleWithDisposal from "../../phase2/lib/generateOperations/isResultCompatibleWithDisposal"
+import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"

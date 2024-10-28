@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import areAnyPncResults2007 from "./areAnyPncResults2007"
 
 const createInput = (
