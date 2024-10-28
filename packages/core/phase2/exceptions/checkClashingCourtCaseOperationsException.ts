@@ -4,7 +4,7 @@ import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import type Exception from "../../types/Exception"
 import getCourtCaseReferenceFromOperation, {
   courtCaseSpecificOperations
-} from "../lib/generateOperations/getCourtCaseReferenceFromOperation"
+} from "./getCourtCaseReferenceFromOperation"
 import type { PncOperation } from "../../types/PncOperation"
 import isEqual from "lodash.isequal"
 import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
