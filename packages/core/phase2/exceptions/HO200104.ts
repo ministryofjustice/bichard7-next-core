@@ -23,7 +23,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
       result.PNCAdjudicationExists &&
       ((result.ResultClass === ResultClass.SENTENCE && areAnyPncResults2007(aho, offence)) ||
         result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT) &&
-      !areAllPncResults2007(aho, offence?.CourtCaseReferenceNumber || undefined)
+      !areAllPncResults2007(aho, offence)
     ) {
       exceptions.push({
         code: ExceptionCode.HO200104,

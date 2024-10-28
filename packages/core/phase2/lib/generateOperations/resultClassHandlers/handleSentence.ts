@@ -6,8 +6,8 @@ import areAllPncResults2007 from "../../areAllPncResults2007"
 
 export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, result }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  const ccrId = offence?.CourtCaseReferenceNumber || undefined
-  const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
+  const courtCaseReference = offence?.CourtCaseReferenceNumber || undefined
+  const operationData = courtCaseReference ? { courtCaseReference } : undefined
 
   if (fixedPenalty) {
     return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
@@ -21,7 +21,7 @@ export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, 
     return [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)]
   }
 
-  if (resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)) {
+  if (resubmitted || areAllPncResults2007(aho, offence)) {
     return [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
   }
 

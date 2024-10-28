@@ -13,18 +13,18 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   result
 }) => {
   const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  const ccrId = offence?.CourtCaseReferenceNumber || undefined
-  const operationData = ccrId ? { courtCaseReference: ccrId } : undefined
+  const courtCaseReference = offence?.CourtCaseReferenceNumber || undefined
+  const operationData = courtCaseReference ? { courtCaseReference } : undefined
 
   if (fixedPenalty) {
     return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
   } else if (result.PNCAdjudicationExists) {
-    return resubmitted || areAllPncResults2007(aho, operationData?.courtCaseReference)
+    return resubmitted || areAllPncResults2007(aho, offence)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
   }
 
-  if (!areAllResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt) {
+  if (!areAllResultsOnPnc && hasUnmatchedPncOffences(aho, courtCaseReference) && !offence.AddedByTheCourt) {
     return []
   }
 
