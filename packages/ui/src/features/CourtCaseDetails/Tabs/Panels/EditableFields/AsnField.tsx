@@ -1,4 +1,4 @@
-import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
+import Phase from "@moj-bichard7/core/types/Phase"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"

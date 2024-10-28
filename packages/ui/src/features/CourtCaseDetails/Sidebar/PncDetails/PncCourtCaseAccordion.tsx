@@ -1,4 +1,4 @@
-import type { PncCourtCase } from "@moj-bichard7-developers/bichard7-next-core/core/types/PncQueryResult"
+import type { PncCourtCase } from "@moj-bichard7/core/types/PncQueryResult"
 import ConditionalRender from "components/ConditionalRender"
 import { useState } from "react"
 import Disposal from "./Disposal"

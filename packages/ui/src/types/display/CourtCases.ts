@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type CourtCase from "services/entities/CourtCase"
 import type { DisplayNote } from "./Notes"
 import type { DisplayTrigger } from "./Triggers"

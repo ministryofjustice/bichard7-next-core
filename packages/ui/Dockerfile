@@ -13,11 +13,13 @@ RUN yum install jq -y
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig*.json ./
-COPY packages/ui ./packages/ui
+COPY packages ./packages
+
+RUN npm ci && npm run build:core
 
 WORKDIR /core/packages/ui
 
-RUN npm i && npm run install:assets
+RUN npm run install:assets
 
 ENV NEXT_TELEMETRY_DISABLED=1
 

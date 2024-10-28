@@ -1,7 +1,4 @@
-import type {
-  AnnotatedHearingOutcome,
-  OrganisationUnitCodes
-} from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { ValidProperties } from "types/Amendments"
 
 const amendDefendantOrOffenceResult = (

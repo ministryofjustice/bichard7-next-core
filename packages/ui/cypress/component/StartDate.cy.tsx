@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { StartDate } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/StartDate"
 
 describe("Start Date", () => {

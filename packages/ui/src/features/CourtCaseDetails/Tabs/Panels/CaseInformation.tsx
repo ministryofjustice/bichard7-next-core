@@ -1,7 +1,7 @@
-import { Case } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import { TableRow } from "./TableRow"
+import { Case } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { Table } from "govuk-react"
 import formatForce from "utils/formatForce"
+import { TableRow } from "./TableRow"
 
 interface caseInformationProps {
   caseInformation: Case
