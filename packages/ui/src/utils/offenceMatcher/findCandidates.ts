@@ -1,5 +1,5 @@
-import { CaseType } from "@moj-bichard7-developers/bichard7-next-core/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
-import generateCandidate from "@moj-bichard7-developers/bichard7-next-core/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+import { CaseType } from "@moj-bichard7/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
+import generateCandidate from "@moj-bichard7/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
 import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
 import type { Candidates } from "../../types/OffenceMatching"
 

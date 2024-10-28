@@ -1,6 +1,6 @@
-import { Result } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
+import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import Phase from "@moj-bichard7/core/types/Phase"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
@@ -9,8 +9,8 @@ import { Heading, Table } from "govuk-react"
 import { findExceptions } from "types/ErrorMessages"
 import { ResolutionStatus } from "types/ResolutionStatus"
 import { Exception } from "types/exceptions"
-import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import { formatDisplayedDate } from "utils/date/formattedDate"
+import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import {
   capitaliseExpression,
   formatDuration,

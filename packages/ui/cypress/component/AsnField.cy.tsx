@@ -1,4 +1,4 @@
-import Phase from "@moj-bichard7-developers/bichard7-next-core/core/types/Phase"
+import Phase from "@moj-bichard7/core/types/Phase"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { AsnField } from "features/CourtCaseDetails/Tabs/Panels/EditableFields/AsnField"

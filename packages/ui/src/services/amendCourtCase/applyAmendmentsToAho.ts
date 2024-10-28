@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { AmendmentKeys, Amendments } from "types/Amendments"
 import amendAsn from "utils/amendments/amendAsn/amendAsn"
 import amendCourtCaseReference from "utils/amendments/amendCourtCaseReference/amendCourtCaseReference"

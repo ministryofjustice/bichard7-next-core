@@ -1,5 +1,5 @@
-import type { Case } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import { forces } from "@moj-bichard7-developers/bichard7-next-data"
+import type { Case } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 export default (force: NonNullable<Case["ForceOwner"]>): string | null => {
   const forceCode = force.OrganisationUnitCode

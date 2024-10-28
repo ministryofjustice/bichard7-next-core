@@ -1,12 +1,12 @@
-import { HearingDefendant } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
-import { format } from "date-fns"
-import { CourtCaseContext } from "../../src/context/CourtCaseContext"
+import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CurrentUserContext } from "context/CurrentUserContext"
-import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
-import { DisplayFullCourtCase } from "../../src/types/display/CourtCases"
+import { format } from "date-fns"
 import Permission from "types/Permission"
 import { DisplayFullUser } from "types/display/Users"
+import { CourtCaseContext } from "../../src/context/CourtCaseContext"
+import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
+import { DisplayFullCourtCase } from "../../src/types/display/CourtCases"
 
 describe("Defendant Details", () => {
   const currentUser = {

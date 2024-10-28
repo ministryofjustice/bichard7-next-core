@@ -1,7 +1,7 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { H3, Table } from "govuk-react"
-import { TableRow } from "./TableRow"
 import ConditionalRender from "../../../../components/ConditionalRender"
+import { TableRow } from "./TableRow"
 
 interface BailConditionsProps {
   bailConditions?: string[]
