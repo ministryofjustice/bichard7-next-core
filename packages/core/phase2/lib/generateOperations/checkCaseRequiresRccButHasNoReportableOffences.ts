@@ -14,13 +14,13 @@ const checkCaseRequiresRccButHasNoReportableOffences = (
 
   let caseRequiresRcc = false
   for (const offence of offences) {
-    const isDisarrCompatible = isResultCompatibleWithDisposal(offence)
-    if (offence.AddedByTheCourt && isDisarrCompatible) {
+    const isCompatibleWithDisposal = isResultCompatibleWithDisposal(offence)
+    if (offence.AddedByTheCourt && isCompatibleWithDisposal) {
       return false
     }
 
     const offenceRequiresRcc = offence.Result.some((result) => result.PNCDisposalType === 2060)
-    if (offenceRequiresRcc && (!offence.AddedByTheCourt || isDisarrCompatible)) {
+    if (offenceRequiresRcc && (!offence.AddedByTheCourt || isCompatibleWithDisposal)) {
       caseRequiresRcc = true
     }
   }
