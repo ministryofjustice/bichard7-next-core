@@ -47,15 +47,6 @@ const runQuery = async (query: string) => {
   return dataSource.manager.query(query)
 }
 
-// DB names have pre and postfixes
-const sanitiseGroupName = (name: string) => {
-  if (name.match(/(?<=B7)(.*)(?=_grp)/)) {
-    return name
-  }
-
-  return `B7${name}_grp`
-}
-
 export const insertUser = async (user: User, userGroups?: string[]): Promise<InsertResult | void> => {
   const dataSource = await getDataSource()
   const userRepository = dataSource.getRepository(User)
@@ -75,8 +66,7 @@ export const insertUser = async (user: User, userGroups?: string[]): Promise<Ins
 
   await Promise.all(
     userGroups.map((userGroup) => {
-      const group = sanitiseGroupName(userGroup)
-      return insertUserIntoGroup(user.email, group)
+      return insertUserIntoGroup(user.email, userGroup)
     })
   )
 }
