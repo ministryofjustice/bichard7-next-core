@@ -18,9 +18,11 @@ import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const excludeEventForBichard = (eventCode: string) =>
-  ![EventCode.ReceivedResubmittedHearingOutcome, EventCode.HearingOutcomeReceivedPhase2].includes(
-    eventCode as EventCode
-  )
+  ![
+    EventCode.ReceivedResubmittedHearingOutcome,
+    EventCode.HearingOutcomeReceivedPhase2,
+    EventCode.HearingOutcomeSubmittedPhase3
+  ].includes(eventCode as EventCode)
 const excludeEventForCore = (eventCode: string) => eventCode !== EventCode.IgnoredAlreadyOnPNC
 
 const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
