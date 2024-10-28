@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import isRecordableOffence from "../isRecordableOffence"
-import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import isRecordableOffence from "../lib/isRecordableOffence"
+import isResultCompatibleWithDisposal from "../lib/generateOperations/isResultCompatibleWithDisposal"
 
 const checkCaseRequiresRccButHasNoReportableOffences = (
   aho: AnnotatedHearingOutcome,
