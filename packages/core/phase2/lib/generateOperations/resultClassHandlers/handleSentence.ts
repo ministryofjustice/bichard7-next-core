@@ -1,4 +1,4 @@
-import areAnyPncResults2007 from "../../areAnyPncResults2007"
+import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
 import createOperation from "../createOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
@@ -17,7 +17,7 @@ export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, 
     return []
   }
 
-  if (!areAnyPncResults2007(aho, offence)) {
+  if (!areAnyPncDisposalsWithType(aho, offence, 2007)) {
     return [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)]
   }
 

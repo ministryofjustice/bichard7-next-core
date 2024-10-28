@@ -3,7 +3,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
-import areAnyPncResults2007 from "../lib/areAnyPncResults2007"
+import areAnyPncDisposalsWithType from "../lib/areAnyPncDisposalsWithType"
 import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
@@ -21,7 +21,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
     if (
       result.PNCAdjudicationExists &&
-      ((result.ResultClass === ResultClass.SENTENCE && areAnyPncResults2007(aho, offence)) ||
+      ((result.ResultClass === ResultClass.SENTENCE && areAnyPncDisposalsWithType(aho, offence, 2007)) ||
         result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT) &&
       !areAllPncDisposalsWithType(aho, offence, 2007)
     ) {

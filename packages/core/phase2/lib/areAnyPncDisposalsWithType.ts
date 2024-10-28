@@ -1,15 +1,15 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import findPncCourtCase from "./findPncCourtCase"
 
-const areAnyPncResults2007 = (aho: AnnotatedHearingOutcome, offence: Offence): boolean => {
+const areAnyPncDisposalsWithType = (aho: AnnotatedHearingOutcome, offence: Offence, disposalType: number): boolean => {
   const matchingPncCourtCase = findPncCourtCase(aho, offence)
 
   return !!matchingPncCourtCase?.offences?.some(
     (o) =>
       o.offence.sequenceNumber &&
       o.offence.sequenceNumber === Number(offence.CriminalProsecutionReference.OffenceReasonSequence) &&
-      o.disposals?.some((disposal) => disposal.type === 2007)
+      o.disposals?.some((disposal) => disposal.type === disposalType)
   )
 }
 
-export default areAnyPncResults2007
+export default areAnyPncDisposalsWithType
