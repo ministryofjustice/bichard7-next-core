@@ -2,7 +2,7 @@ import areAnyPncResults2007 from "../../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
-import areAllPncResults2007 from "../../areAllPncResults2007"
+import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
 
 export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, result }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
@@ -21,7 +21,7 @@ export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, 
     return [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)]
   }
 
-  if (resubmitted || areAllPncResults2007(aho, offence)) {
+  if (resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)) {
     return [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
   }
 

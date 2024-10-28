@@ -3,7 +3,7 @@ import createOperation from "../createOperation"
 import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
-import areAllPncResults2007 from "../../areAllPncResults2007"
+import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
@@ -19,7 +19,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   if (fixedPenalty) {
     return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
   } else if (result.PNCAdjudicationExists) {
-    return resubmitted || areAllPncResults2007(aho, offence)
+    return resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
   }

@@ -3,7 +3,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
-import areAllPncResults2007 from "../lib/areAllPncResults2007"
+import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
@@ -21,7 +21,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
     if (
       result.PNCAdjudicationExists &&
       result.ResultClass === ResultClass.ADJOURNMENT_WITH_JUDGEMENT &&
-      !areAllPncResults2007(aho, offence)
+      !areAllPncDisposalsWithType(aho, offence, 2007)
     ) {
       exceptions.push({
         code: ExceptionCode.HO200101,
