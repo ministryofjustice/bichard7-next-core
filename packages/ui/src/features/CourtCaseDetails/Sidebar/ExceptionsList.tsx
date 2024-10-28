@@ -29,8 +29,8 @@ interface Props {
 
 const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   const { courtCase, amendments, savedAmendments } = useCourtCase()
-  const pncExceptions = courtCase.aho.Exceptions.filter(({ code }) => isPncException(code))
-  const otherExceptions = courtCase.aho.Exceptions.filter(({ code }) => !isPncException(code))
+  const pncExceptions = courtCase.aho.Exceptions.filter(({ code }: { code: ExceptionCode }) => isPncException(code))
+  const otherExceptions = courtCase.aho.Exceptions.filter(({ code }: { code: ExceptionCode }) => !isPncException(code))
   const csrfToken = useCsrfToken()
   const previousPath = usePreviousPath()
   const router = useRouter()
