@@ -16,11 +16,7 @@ COPY tsconfig*.json ./
 
 COPY packages/ ./packages/
 
-RUN npm ci
-
-WORKDIR /core/packages/common
-
-RUN npm run build
+RUN npm ci && npm run build:core
 
 WORKDIR /core/packages/ui
 
