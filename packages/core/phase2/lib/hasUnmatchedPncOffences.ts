@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const hasUnmatchedPncOffences = (aho: AnnotatedHearingOutcome, courtCaseReferenceNumber?: string): boolean => {
   const pncCourtCaseRef =

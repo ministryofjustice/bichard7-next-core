@@ -1,8 +1,8 @@
 jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisposal")
-jest.mock("../../phase2/lib/generateOperations/isResultCompatibleWithDisposal")
+jest.mock("../../phase2/lib/isResultCompatibleWithDisposal")
 
-import isResultCompatibleWithDisposal from "../../phase2/lib/generateOperations/isResultCompatibleWithDisposal"
+import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"

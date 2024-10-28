@@ -1,4 +1,4 @@
-import areAnyPncResults2007 from "../areAnyPncResults2007"
+import areAnyPncResults2007 from "../../areAnyPncResults2007"
 import createOperation from "../createOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"

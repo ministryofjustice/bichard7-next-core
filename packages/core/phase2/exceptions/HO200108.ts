@@ -6,8 +6,8 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
-import checkCaseRequiresRccButHasNoReportableOffences from "../lib/generateOperations/checkCaseRequiresRccButHasNoReportableOffences"
-import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
+import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
+import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []

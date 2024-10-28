@@ -5,11 +5,11 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
+import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
 import areAllPncResults2007 from "../lib/areAllPncResults2007"
 
-jest.mock("../lib/generateOperations/hasUnmatchedPncOffences")
+jest.mock("../lib/hasUnmatchedPncOffences")
 jest.mock("../lib/generateOperations/areAllResultsOnPnc")
 jest.mock("../lib/areAllPncResults2007")
 

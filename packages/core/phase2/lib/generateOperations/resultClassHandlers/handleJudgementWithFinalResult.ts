@@ -1,6 +1,6 @@
 import type { Operation } from "../../../../types/PncUpdateDataset"
 import createOperation from "../createOperation"
-import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
+import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
 import { PncOperation } from "../../../../types/PncOperation"
 import areAllPncResults2007 from "../../areAllPncResults2007"
