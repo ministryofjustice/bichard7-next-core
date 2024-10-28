@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import Permission from "@moj-bichard7/common/types/Permission"
 import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
@@ -8,7 +9,6 @@ import User from "./User"
 import booleanIntTransformer from "./transformers/booleanIntTransformer"
 import dateTransformer from "./transformers/dateTransformer"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
-import Permission from "../../../../common/types/Permission"
 
 @Entity({ name: "error_list" })
 export default class CourtCase {
