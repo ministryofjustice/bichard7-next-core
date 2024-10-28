@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Exception } from "types/exceptions"

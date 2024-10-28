@@ -1,6 +1,7 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { Table } from "govuk-react"
 import Image from "next/image"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -8,7 +9,6 @@ import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
 import getOffenceCode from "utils/getOffenceCode"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import { IconContainer } from "./OffencesListRow.styles"
-import { useCurrentUser } from "context/CurrentUserContext"
 
 interface OffencesListRowProps {
   offence: Offence

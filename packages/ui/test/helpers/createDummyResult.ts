@@ -1,7 +1,4 @@
-import type {
-  Result,
-  ResultQualifierVariable
-} from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { Result, ResultQualifierVariable } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 export const dummyResultQualifierVariable = [{ Code: "00XX" }] as ResultQualifierVariable[]
 

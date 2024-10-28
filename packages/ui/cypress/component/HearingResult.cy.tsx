@@ -1,14 +1,14 @@
-import { CjsPlea } from "@moj-bichard7-developers/bichard7-next-core/core/types/Plea"
-import ResultClass from "@moj-bichard7-developers/bichard7-next-core/core/types/ResultClass"
-import { Result } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { CjsPlea } from "@moj-bichard7/core/types/Plea"
+import ResultClass from "@moj-bichard7/core/types/ResultClass"
 import { CourtCaseContext } from "context/CourtCaseContext"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
-import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 import { CurrentUserContext } from "context/CurrentUserContext"
+import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 
 const courtCase = {
   aho: {

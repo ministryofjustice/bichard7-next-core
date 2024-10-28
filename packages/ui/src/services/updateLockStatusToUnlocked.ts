@@ -1,15 +1,19 @@
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
 import type { EntityManager, Repository, UpdateResult } from "typeorm"
-import CourtCase from "./entities/CourtCase"
-import type User from "./entities/User"
-import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
+import Permission from "types/Permission"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCategory"
 import Permission from "@moj-bichard7/common/types/Permission"
-
 import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
+import CourtCase from "./entities/CourtCase"
+import type User from "./entities/User"
+
 
 const unlock = async (
   unlockReason: "Trigger" | "Exception",

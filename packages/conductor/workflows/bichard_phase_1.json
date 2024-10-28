@@ -110,7 +110,10 @@
                 "name": "send_to_phase2",
                 "taskReferenceName": "send_to_phase2",
                 "inputParameters": {
-                  "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
+                  "s3TaskDataPath": "${workflow.input.s3TaskDataPath}",
+                  "options": {
+                    "phase2CanaryRatio": -1
+                  }
                 },
                 "type": "SIMPLE",
                 "startDelay": 0,
