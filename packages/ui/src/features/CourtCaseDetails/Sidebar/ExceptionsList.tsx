@@ -58,7 +58,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
     <>
       {courtCase.aho.Exceptions.length === 0 && "There are no exceptions for this case."}
 
-      {pncExceptions.map(({ code }, index) => (
+      {pncExceptions.map(({ code }: { code: ExceptionCode }, index) => (
         <PncException key={`exception_${index}`} code={code} message={courtCase.aho.PncErrorMessage} />
       ))}
 

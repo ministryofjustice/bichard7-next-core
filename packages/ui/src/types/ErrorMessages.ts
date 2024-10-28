@@ -29,7 +29,7 @@ const findExceptions = (
     return undefined
   }
 
-  const exception = ahoExceptions.find(({ code }) => exceptions.includes(code))
+  const exception = ahoExceptions.find(({ code }: { code: ExceptionCode }) => exceptions.includes(code))
 
   return exception ? ErrorMessages[exception.code as keyof typeof ErrorMessages] : undefined
 }
