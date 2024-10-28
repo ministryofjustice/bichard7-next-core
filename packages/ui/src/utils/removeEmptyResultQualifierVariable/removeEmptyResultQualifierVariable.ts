@@ -1,7 +1,4 @@
-import type {
-  AnnotatedHearingOutcome,
-  ResultQualifierVariable
-} from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, ResultQualifierVariable } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 const removeEmptyResultQualifierVariableFn = (resultArray: ResultQualifierVariable[]): ResultQualifierVariable[] =>
   resultArray.filter((result) => result.Code || result.Code.length > 0)

@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import createForceOwner from "./createForceOwner"
 
 describe("createForceOwner", () => {

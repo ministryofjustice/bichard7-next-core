@@ -47,7 +47,7 @@ const processMessage = (
   }
 
   const exceptions = generateExceptions(inputMessage)
-  exceptions.forEach(({ code, path }) => addExceptionsToAho(outputMessage, code, path))
+  addExceptionsToAho(outputMessage, exceptions)
   if (exceptions.some(({ code }) => code !== ExceptionCode.HO200200)) {
     return { resultType: Phase2ResultType.exceptions, triggerGenerationAttempted: false }
   }
@@ -72,8 +72,6 @@ const processMessage = (
   }
 
   outputMessage.PncOperations = refreshOperations(outputMessage, operations)
-
-  auditLogger.info(EventCode.HearingOutcomeSubmittedPhase3)
 
   return { resultType: Phase2ResultType.success, triggerGenerationAttempted: false }
 }

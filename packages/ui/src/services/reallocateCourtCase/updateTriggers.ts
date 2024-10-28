@@ -1,7 +1,8 @@
-import getAuditLogEvent from "@moj-bichard7-developers/bichard7-next-core/core/lib/getAuditLogEvent"
-import type { AuditLogEvent } from "@moj-bichard7-developers/bichard7-next-core/common/types/AuditLogEvent"
-import EventCategory from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCategory"
-import type { Trigger } from "@moj-bichard7-developers/bichard7-next-core/core/types/Trigger"
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
+import type { Trigger } from "@moj-bichard7/core/types/Trigger"
 import type { EntityManager } from "typeorm"
 import { IsNull } from "typeorm"
 import { AUDIT_LOG_EVENT_SOURCE } from "../../config"
@@ -9,7 +10,6 @@ import { isError } from "../../types/Result"
 import type CourtCase from "../entities/CourtCase"
 import { default as TriggerEntity } from "../entities/Trigger"
 import type User from "../entities/User"
-import EventCode from "@moj-bichard7-developers/bichard7-next-core/common/types/EventCode"
 
 const getTriggersDetails = (triggers: Trigger[]) =>
   triggers.reduce((acc: Record<string, unknown>, trigger, index) => {

@@ -1,4 +1,4 @@
-import type { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { Exception } from "types/exceptions"
 import { OffenceDetails } from "./Offence/OffenceDetails"
 import { OffencesList } from "./OffencesList/OffencesList"
