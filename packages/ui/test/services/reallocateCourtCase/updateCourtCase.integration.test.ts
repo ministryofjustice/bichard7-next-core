@@ -1,9 +1,9 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { randomUUID } from "crypto"
 import MockDate from "mockdate"
 import type { DataSource, UpdateResult } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
-import { v4 as uuid } from "uuid"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"
 import getDataSource from "../../../src/services/getDataSource"
@@ -42,7 +42,7 @@ const insertCourtCase = async (fields: Partial<CourtCase> = {}) => {
   const existingCourtCasesDbObject: Partial<CourtCase> = {
     errorId: 0,
     courtDate: new Date("2008-09-25"),
-    messageId: uuid(),
+    messageId: randomUUID(),
     triggerCount: 0,
     asn: "dummyAsn",
     ptiurn: "dummyPtiurn",

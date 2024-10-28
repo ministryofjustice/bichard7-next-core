@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker"
-import parseAhoXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/parse/parseAhoXml/parseAhoXml"
-import serialiseToXml from "@moj-bichard7-developers/bichard7-next-core/core/lib/serialise/ahoXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
+import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { randomUUID } from "crypto"
 import { subYears } from "date-fns"
 import sample from "lodash.sample"
 import type Trigger from "services/entities/Trigger"
 import type { DataSource, EntityManager } from "typeorm"
-import { v4 as uuidv4 } from "uuid"
 import CourtCase from "../../src/services/entities/CourtCase"
 import type { Result } from "../../src/types/Result"
 import { isError } from "../../src/types/Result"
@@ -80,7 +80,7 @@ export default async (
 
   const courtCase = await dataSource.getRepository(CourtCase).save({
     errorId: caseId,
-    messageId: uuidv4(),
+    messageId: randomUUID(),
     orgForPoliceFilter: orgCode,
     errorLockedByUsername: !isResolved && hasExceptions && randomBoolean() ? randomUsername() : null,
     triggerLockedByUsername:

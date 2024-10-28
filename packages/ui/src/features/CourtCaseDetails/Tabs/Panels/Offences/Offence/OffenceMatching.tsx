@@ -1,5 +1,5 @@
-import { Offence } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
@@ -10,9 +10,9 @@ import { findExceptions } from "types/ErrorMessages"
 import { DisplayFullUser } from "types/display/Users"
 import { Exception } from "types/exceptions"
 import getExceptionDefinition from "utils/getExceptionDefinition"
+import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import findCandidates from "../../../../../../utils/offenceMatcher/findCandidates"
 import { TableRow } from "../../TableRow"
-import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import OffenceMatcher from "./OffenceMatcher"
 
 const enabled = (user: DisplayFullUser) => {

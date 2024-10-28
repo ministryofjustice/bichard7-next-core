@@ -2,7 +2,7 @@ import type {
   AnnotatedHearingOutcome,
   Offence,
   ResultQualifierVariable
-} from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+} from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import createDummyAho from "../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../test/helpers/createDummyOffence"
 import { dummyResultQualifierVariable as dummyResultQualifierVariableArr } from "../../../test/helpers/createDummyResult"

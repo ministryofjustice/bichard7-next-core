@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "@moj-bichard7-developers/bichard7-next-core/core/types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 export default (orgForPoliceFilter: string): OrganisationUnitCodes | Error => {
   const orgForPoliceFilterCode = orgForPoliceFilter.split(",")[0]
