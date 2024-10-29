@@ -1,7 +1,7 @@
-import type { PncCourtCaseSummary } from "../../../../comparison/types/MatchingComparisonOutput"
-import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "../../../../types/PncQueryResult"
-import generateAhoFromOffenceList from "../../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { PncCourtCaseSummary } from "../../comparison/types/MatchingComparisonOutput"
+import type { AnnotatedHearingOutcome, Hearing, Offence, Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "../../types/PncQueryResult"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
 
 describe("check isMatchToPncAdjudicationAndDisposals", () => {

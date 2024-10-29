@@ -1,1 +1,1 @@
-export { default as isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
+export { default as isMatchToPncAdjudicationAndDisposals } from "../../isMatchToPncAdjudicationAndDisposals"
