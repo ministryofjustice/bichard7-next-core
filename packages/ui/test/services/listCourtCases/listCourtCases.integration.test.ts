@@ -143,6 +143,14 @@ describe("listCourtCases", () => {
       const dbConfig = createDbConfig()
       const db = postgres({ ...dbConfig })
       testUser.excludedTriggers = [TriggerCode.TRPR0001]
+      testUser.groups = [
+        UserGroup.Allocator,
+        UserGroup.ExceptionHandler,
+        UserGroup.Supervisor,
+        UserGroup.TriggerHandler,
+        UserGroup.NewUI,
+        UserGroup.GeneralHandler
+      ]
 
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
@@ -151,7 +159,7 @@ describe("listCourtCases", () => {
         }
       ]
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
       for (let i = 0; i < 3; i++) {
         await db<
           ErrorListRecord[]
@@ -170,7 +178,7 @@ describe("listCourtCases", () => {
 
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
-          code: "TRPR0001",
+          code: TriggerCode.TRPR0001,
           status: "Unresolved"
         }
       ]
@@ -191,11 +199,11 @@ describe("listCourtCases", () => {
 
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
-          code: "TRPR0001",
+          code: TriggerCode.TRPR0001,
           status: "Unresolved"
         },
         {
-          code: "TRPR0002",
+          code: TriggerCode.TRPR0002,
           status: "Unresolved"
         }
       ]
@@ -216,15 +224,14 @@ describe("listCourtCases", () => {
 
     it("Should not display any case when there is an exception and a trigger, I am the triggerHandler, and trigger is excluded for me", async () => {
       const testUser1 = new User()
-      testUser1.visibleForces = [forceCode]
+      testUser1.visibleForces = ["001"]
       testUser1.visibleCourts = []
       testUser1.groups = [UserGroup.TriggerHandler, UserGroup.NewUI]
       testUser1.excludedTriggers = [TriggerCode.TRPR0001]
-      testUser1.groups = [UserGroup.TriggerHandler]
 
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
-          code: "TRPR0001",
+          code: TriggerCode.TRPR0001,
           status: "Unresolved"
         }
       ]
