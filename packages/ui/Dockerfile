@@ -13,7 +13,6 @@ RUN yum install jq -y
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig*.json ./
-
 COPY packages/ ./packages/
 
 RUN npm ci && npm run build:core

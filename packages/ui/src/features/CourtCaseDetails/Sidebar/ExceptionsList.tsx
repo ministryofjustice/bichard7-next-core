@@ -29,8 +29,8 @@ interface Props {
 
 const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   const { courtCase, amendments, savedAmendments } = useCourtCase()
-  const pncExceptions = courtCase.aho.Exceptions.filter(({ code }: { code: ExceptionCode }) => isPncException(code))
-  const otherExceptions = courtCase.aho.Exceptions.filter(({ code }: { code: ExceptionCode }) => !isPncException(code))
+  const pncExceptions = courtCase.aho.Exceptions.filter(({ code }) => isPncException(code))
+  const otherExceptions = courtCase.aho.Exceptions.filter(({ code }) => !isPncException(code))
   const csrfToken = useCsrfToken()
   const previousPath = usePreviousPath()
   const router = useRouter()
@@ -58,7 +58,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
     <>
       {courtCase.aho.Exceptions.length === 0 && "There are no exceptions for this case."}
 
-      {pncExceptions.map(({ code }: { code: ExceptionCode }, index) => (
+      {pncExceptions.map(({ code }, index) => (
         <PncException key={`exception_${index}`} code={code} message={courtCase.aho.PncErrorMessage} />
       ))}
 
