@@ -1,4 +1,4 @@
-import type { PncAdjudication, PncOffence } from "../../../../../types/PncQueryResult"
+import type { PncAdjudication, PncOffence } from "../../../../types/PncQueryResult"
 import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
 
 describe("check isMatchToPncAdj", () => {

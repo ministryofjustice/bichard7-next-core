@@ -1,6 +1,6 @@
 jest.mock("./createPncAdjudication")
 import { verdict } from "bichard7-next-data-latest"
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 import createPncAdjudication from "./createPncAdjudication"
 import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 

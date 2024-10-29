@@ -1,5 +1,5 @@
-import type { Offence, Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../../../types/PncQueryResult"
 import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
 
 describe("areResultsMatchingAPncDisposal", () => {
