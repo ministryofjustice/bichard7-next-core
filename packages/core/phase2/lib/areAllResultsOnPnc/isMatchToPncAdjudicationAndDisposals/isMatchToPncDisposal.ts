@@ -1,5 +1,5 @@
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../../../types/PncQueryResult"
 import arePncDisposalsMatching from "./arePncDisposalsMatching"
 import { createPncDisposalFromResult } from "./createPncDisposalFromResult"
 

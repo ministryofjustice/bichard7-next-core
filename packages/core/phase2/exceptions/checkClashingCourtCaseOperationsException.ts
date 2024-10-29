@@ -7,7 +7,7 @@ import type { PncOperation } from "../../types/PncOperation"
 import isEqual from "lodash.isequal"
 import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
 import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 
 const checkClashingCourtCaseOperationsException = (
