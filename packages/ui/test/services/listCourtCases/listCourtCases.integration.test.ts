@@ -37,11 +37,7 @@ describe("listCourtCases", () => {
   let dataSource: DataSource
   const orgCode = "36FPA1"
   const forceCode = "036"
-  const testUser = {
-    visibleForces: [forceCode],
-    visibleCourts: [],
-    hasAccessTo: hasAccessToAll
-  } as Partial<User> as User
+  let testUser: User
 
   beforeAll(async () => {
     dataSource = await getDataSource()
@@ -59,6 +55,11 @@ describe("listCourtCases", () => {
     ;(leftJoinAndSelectTriggersQuery as jest.Mock).mockImplementation(
       jest.requireActual("services/queries/leftJoinAndSelectTriggersQuery").default
     )
+    testUser = {
+      visibleForces: [forceCode],
+      visibleCourts: [],
+      hasAccessTo: hasAccessToAll
+    } as Partial<User> as User
   })
 
   afterAll(async () => {
@@ -174,7 +175,7 @@ describe("listCourtCases", () => {
         }
       ]
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
 
       const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
       expect(isError(result)).toBe(false)
@@ -199,7 +200,7 @@ describe("listCourtCases", () => {
         }
       ]
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
       for (let i = 0; i < 3; i++) {
         await db<
           ErrorListRecord[]
