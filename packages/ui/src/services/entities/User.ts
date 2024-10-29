@@ -1,7 +1,8 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn, Relation } from "typeorm"
-import Permission from "types/Permission"
-import { UserGroup } from "../../types/UserGroup"
-import { userAccess } from "../../utils/userPermissions"
+
+import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import delimitedString from "./transformers/delimitedString"
 import jsonTransformer from "./transformers/jsonTransformer"
 // eslint-disable-next-line import/no-cycle

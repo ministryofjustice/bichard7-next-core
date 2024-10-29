@@ -37,7 +37,7 @@ import User from "../../../services/entities/User"
 import getLastSwitchingFormSubmission from "../../../services/getLastSwitchingFormSubmission"
 import { AttentionBanner, AttentionContainer } from "../../../styles/index.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "../../../types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
 import shouldShowSwitchingFeedbackForm from "../../../utils/shouldShowSwitchingFeedbackForm"
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
