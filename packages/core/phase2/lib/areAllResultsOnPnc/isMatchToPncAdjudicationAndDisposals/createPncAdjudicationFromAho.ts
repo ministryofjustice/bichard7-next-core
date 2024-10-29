@@ -1,7 +1,7 @@
-import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../../../../lib/dataLookup"
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { PncAdjudication } from "../../../../../types/PncQueryResult"
-import isRecordableResult from "../../../isRecordableResult"
+import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../../../lib/dataLookup"
+import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { PncAdjudication } from "../../../../types/PncQueryResult"
+import isRecordableResult from "../../isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 
 const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PncAdjudication | undefined => {

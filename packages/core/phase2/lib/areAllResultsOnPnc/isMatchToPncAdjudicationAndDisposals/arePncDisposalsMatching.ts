@@ -1,4 +1,4 @@
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import type { PncDisposal } from "../../../../types/PncQueryResult"
 
 const areStringsEqual = (firstObject: string | undefined, secondObject: string | undefined) =>
   (!firstObject && !secondObject) || firstObject === secondObject
