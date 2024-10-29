@@ -3,10 +3,10 @@ import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { areAllResultsOnPnc } from "../areAllResultsOnPnc"
-import hasUnmatchedPncOffences from "../hasUnmatchedPncOffences"
+import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 
-jest.mock("../hasUnmatchedPncOffences")
+jest.mock("../../hasUnmatchedPncOffences")
 jest.mock("../areAllResultsOnPnc")
 
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock

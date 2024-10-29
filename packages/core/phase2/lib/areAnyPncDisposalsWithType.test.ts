@@ -1,7 +1,7 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
-import areAnyPncResults2007 from "./areAnyPncResults2007"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+import areAnyPncDisposalsWithType from "./areAnyPncDisposalsWithType"
 
-const createInput = (
+const generateAhoAndOffence = (
   hoCcr: string | undefined,
   hoOffence: { ccr?: string; reasonSequence?: string },
   pncCourtCases: { offences?: { sequenceNumber: number; disposalTypes?: number[] }[]; ccr: string }[],
@@ -28,17 +28,17 @@ const createInput = (
   } as Offence
 })
 
-describe("areAnyPncResults2007", () => {
-  it("should return false when court case references and offence reason sequence are not set, PNCQuery does not exist in AHO", () => {
-    const { aho, offence } = createInput(undefined, { ccr: undefined, reasonSequence: undefined }, [], false)
+describe("areAnyPncDisposalsWithType", () => {
+  it("returns false when court case references and offence reason sequence are not set, PNC Query does not exist in AHO", () => {
+    const { aho, offence } = generateAhoAndOffence(undefined, { ccr: undefined, reasonSequence: undefined }, [], false)
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("should return true when there is a matching PNC court case containing a 2007 result code", () => {
-    const { aho, offence } = createInput(
+  it("returns true when there is a matching PNC court case using the offence CCR containing a matching disposal type", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "456",
       { ccr: "123", reasonSequence: "1" },
       [
@@ -50,13 +50,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("should return true when there is a matching PNC using the case court case reference number", () => {
-    const { aho, offence } = createInput(
+  it("returns true when there is a matching PNC court case using the AHO CCR containing a matching disposal type", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: undefined, reasonSequence: "1" },
       [
@@ -68,13 +68,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("should return false when there is a matching PNC court case but no 2007 result code", () => {
-    const { aho, offence } = createInput(
+  it("returns false when there is a matching PNC court case but no matching disposal type", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "1" },
       [
@@ -86,13 +86,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("should return false when there is a matching PNC court case but disposals is undefined", () => {
-    const { aho, offence } = createInput(
+  it("returns false when there is a matching PNC court case but disposals is undefined", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
       [
@@ -104,13 +104,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("should return false when there is a matching PNC court case but disposals is empty", () => {
-    const { aho, offence } = createInput(
+  it("returns false when there is a matching PNC court case but no disposals", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
       [
@@ -122,13 +122,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("should return false when there is a matching PNC court case but offences is empty", () => {
-    const { aho, offence } = createInput(
+  it("returns false when there is a matching PNC court case but no offences", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
       [
@@ -140,13 +140,13 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("should return false when there is a matching PNC court case but offences is undefined", () => {
-    const { aho, offence } = createInput(
+  it("returns false when there is a matching PNC court case but offences is undefined", () => {
+    const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
       [
@@ -158,7 +158,7 @@ describe("areAnyPncResults2007", () => {
       true
     )
 
-    const result = areAnyPncResults2007(aho, offence)
+    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })

@@ -5,23 +5,23 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
+import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
-import areAllPncResults2007 from "../lib/areAllPncResults2007"
+import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
 
-jest.mock("../lib/generateOperations/hasUnmatchedPncOffences")
+jest.mock("../lib/hasUnmatchedPncOffences")
 jest.mock("../lib/generateOperations/areAllResultsOnPnc")
-jest.mock("../lib/areAllPncResults2007")
+jest.mock("../lib/areAllPncDisposalsWithType")
 
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
-const mockedAreAllPncResults2007 = areAllPncResults2007 as jest.Mock
+const mockedAllPncDisposalsWithType = areAllPncDisposalsWithType as jest.Mock
 
 describe("HO200108", () => {
   it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, offence and result are recordable, no fixed penalty, no pnc adjudication, doesn't satisfy conditions for exception HO200124, PNCDisposalType is 2060, and RCC check fails", () => {
     mockedHasUnmatchedPncOffences.mockReturnValue(false)
     mockedAreAllResultsOnPnc.mockReturnValue(true)
-    mockedAreAllPncResults2007.mockReturnValue(false)
+    mockedAllPncDisposalsWithType.mockReturnValue(false)
     const aho = generateAhoFromOffenceList([
       {
         AddedByTheCourt: false,
