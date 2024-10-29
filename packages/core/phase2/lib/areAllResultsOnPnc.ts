@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import isRecordableResult from "../isRecordableResult"
-import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import isRecordableResult from "./isRecordableResult"
+import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
 
 const areAllResultsOnPnc = (aho: AnnotatedHearingOutcome): boolean =>
   !!aho.PncQuery?.pncId &&

@@ -6,7 +6,7 @@ import checkResultClassExceptions from "./checkResultClassExceptions"
 import areAnyPncDisposalsWithType from "../lib/areAnyPncDisposalsWithType"
 import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
 
