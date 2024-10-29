@@ -4,12 +4,12 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import hasUnmatchedPncOffences from "../lib/generateOperations/hasUnmatchedPncOffences"
-import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
+import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
-jest.mock("../lib/generateOperations/hasUnmatchedPncOffences")
-jest.mock("../lib/generateOperations/areAllResultsOnPnc")
+jest.mock("../lib/hasUnmatchedPncOffences")
+jest.mock("../lib/areAllResultsOnPnc")
 
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock

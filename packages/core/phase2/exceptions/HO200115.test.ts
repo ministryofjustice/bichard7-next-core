@@ -2,10 +2,10 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import HO200115 from "./HO200115"
-import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
 import type { PncQueryResult } from "../../types/PncQueryResult"
 
-jest.mock("../lib/generateOperations/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsOnPnc")
 
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)

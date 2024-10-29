@@ -1,10 +1,10 @@
 import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import HO200114 from "./HO200114"
-import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
 import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 
-jest.mock("../lib/generateOperations/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsOnPnc")
 
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)
