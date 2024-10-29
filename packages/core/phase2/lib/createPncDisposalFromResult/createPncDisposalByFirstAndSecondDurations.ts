@@ -1,5 +1,5 @@
-import type { Result } from "../../../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../../types/PncQueryResult"
 import createPncDisposal from "./createPncDisposal"
 import { getDisposalTextFromResult } from "./getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
