@@ -2,7 +2,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import "reflect-metadata"
 import Note from "services/entities/Note"
-import type User from "services/entities/User"
+import User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import type { DataSource } from "typeorm"
@@ -27,6 +27,7 @@ import { insertTriggers } from "../../utils/manageTriggers"
 import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
+import { UserGroup } from "types/UserGroup"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -210,6 +211,30 @@ describe("listCourtCases", () => {
       const { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display any case when there is an exception and a trigger, I am the triggerHandler, and trigger is excluded for me", async () => {
+      const testUser1 = new User()
+      testUser1.visibleForces = [forceCode]
+      testUser1.visibleCourts = []
+      testUser1.groups = [UserGroup.TriggerHandler, UserGroup.NewUI]
+      testUser1.excludedTriggers = [TriggerCode.TRPR0001]
+      testUser1.groups = [UserGroup.TriggerHandler]
+
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: "TRPR0001",
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser1)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
     })
   })
 

@@ -15,6 +15,9 @@ import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQ
 import QueryColumns from "./QueryColumns"
 import { formatName } from "../helpers/formatName"
 
+const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
+  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
+
 const listCourtCases = async (
   connection: DataSource,
   {
@@ -210,16 +213,20 @@ const listCourtCases = async (
     query.andWhere("false")
   }
 
-  if (!user.hasAccessTo[Permission.Triggers]) {
+  if (user.hasAccessTo[Permission.Exceptions] && !user.hasAccessTo[Permission.Triggers]) {
     query.andWhere({
       errorCount: MoreThan(0)
     })
   }
 
-  if (!user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere({
-      triggerCount: MoreThan(0)
-    })
+  if (user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) {
+    query.andWhere(
+      "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0",
+      {
+        caseStatus: caseState === "Resolved" ? "2" : "1",
+        excludedTriggers: getExcludedTriggers(user.excludedTriggers)
+      }
+    )
   }
 
   const result = await query.getManyAndCount().catch((error: Error) => error)
