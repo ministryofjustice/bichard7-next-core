@@ -1,9 +1,9 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
-import { createPncDisposalFromResult } from "./createPncDisposalFromResult"
+import { createPncDisposalsFromResult } from "./createPncDisposalsFromResult"
 
 const isMatchToPncDisposal = (pncDisposals: PncDisposal[], result: Result): boolean =>
-  createPncDisposalFromResult(result).every((ahoDisposal) =>
+  createPncDisposalsFromResult(result).every((ahoDisposal) =>
     pncDisposals.some((pncDisposal) => arePncDisposalsMatching(ahoDisposal, pncDisposal))
   )
 
