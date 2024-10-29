@@ -27,7 +27,7 @@ import { insertTriggers } from "../../utils/manageTriggers"
 import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
-import { UserGroup } from "types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
