@@ -7,7 +7,7 @@ import type { SelectQueryBuilder } from "typeorm"
 import { Brackets, IsNull, Not } from "typeorm"
 import type { CaseState } from "types/CaseListQueryParams"
 import { Reason } from "types/CaseListQueryParams"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 const reasonFilterOnlyIncludesTriggers = (reason?: Reason): boolean => reason === Reason.Triggers
 

@@ -728,6 +728,7 @@ jobs:
       - setup_ui
       - install_dependencies:
           install-cypress: true
+      - build_core
       - when:
           condition:
             equal: [true, << parameters.ms-edge >>]
