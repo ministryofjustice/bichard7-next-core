@@ -214,13 +214,13 @@ const listCourtCases = async (
     query.andWhere("false")
   }
 
-  if (user.hasAccessTo[Permission.Exceptions] && !user.hasAccessTo[Permission.Triggers]) {
+  if (!user.hasAccessTo[Permission.Triggers]) {
     query.andWhere({
       errorCount: MoreThan(0)
     })
   }
 
-  if (user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) {
+  if (!user.hasAccessTo[Permission.Exceptions]) {
     query.andWhere(
       "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0",
       {
@@ -233,9 +233,9 @@ const listCourtCases = async (
   if (user.hasAccessTo[Permission.Triggers] && user.hasAccessTo[Permission.Exceptions]) {
     query.andWhere(
       `(
-        courtCase.errorStatus = :caseStatus
+        courtCase.errorCount > 0
         OR
-        (SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0
+        (SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0
         )`,
       {
         caseStatus: caseState === "Resolved" ? "2" : "1",
