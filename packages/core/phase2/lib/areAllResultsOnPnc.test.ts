@@ -1,8 +1,8 @@
 jest.mock("./isMatchToPncAdjudicationAndDisposals")
-import type { AnnotatedHearingOutcome, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import areAllResultsOnPnc from "./areAllResultsOnPnc"
-import { isMatchToPncAdjudicationAndDisposals } from "./isMatchToPncAdjudicationAndDisposals"
+import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
 
 const mockedisMatchToPncAdjudicationAndDisposals = isMatchToPncAdjudicationAndDisposals as jest.Mock
 type TestInput = {
