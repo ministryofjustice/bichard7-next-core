@@ -1,4 +1,3 @@
-// TODO: How do I import from packages/common? Doesn't seem to recognise it
 import { baseConfig } from "@moj-bichard7/common/db/baseConfig"
 import type { DataSourceOptions } from "typeorm"
 import { DataSource } from "typeorm"
