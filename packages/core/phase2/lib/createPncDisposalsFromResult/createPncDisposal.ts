@@ -1,4 +1,4 @@
-import type { PncDisposal } from "../../../../../types/PncQueryResult"
+import type { PncDisposal } from "../../../types/PncQueryResult"
 
 const DURATION_UNIT_LIFE = "L"
 const DURATION_UNIT_SESSION = "S"

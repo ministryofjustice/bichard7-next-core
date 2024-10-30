@@ -5,7 +5,7 @@ import getCourtCaseReferenceFromOperation from "./getCourtCaseReferenceFromOpera
 import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 

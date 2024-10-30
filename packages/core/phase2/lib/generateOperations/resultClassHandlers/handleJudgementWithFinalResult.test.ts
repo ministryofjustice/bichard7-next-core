@@ -2,7 +2,7 @@ import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
-import { areAllResultsOnPnc } from "../../areAllResultsOnPnc"
+import areAllResultsOnPnc from "../../areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 

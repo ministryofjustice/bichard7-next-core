@@ -3,7 +3,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
-import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 import errorPaths from "../../lib/exceptions/errorPaths"

@@ -6,7 +6,7 @@ import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
-import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
 
 jest.mock("../lib/hasUnmatchedPncOffences")
