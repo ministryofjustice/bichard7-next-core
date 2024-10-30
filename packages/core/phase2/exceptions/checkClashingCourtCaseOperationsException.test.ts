@@ -4,9 +4,9 @@ import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"
 import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import { areAllResultsOnPnc } from "../lib/generateOperations/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 
-jest.mock("../lib/generateOperations/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsOnPnc")
 
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)

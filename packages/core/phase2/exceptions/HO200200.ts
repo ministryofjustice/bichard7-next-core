@@ -3,9 +3,9 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import { getDisposalTextFromResult } from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/createPncDisposalFromResult/getDisposalTextFromResult"
+import { getDisposalTextFromResult } from "../lib/createPncDisposalsFromResult/getDisposalTextFromResult"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
-import { maxDisposalTextLength } from "../lib/generateOperations/areAllResultsOnPnc/isMatchToPncAdjudicationAndDisposals/createPncDisposalFromResult/createPncDisposalByFirstAndSecondDurations"
+import { maxDisposalTextLength } from "../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 
 const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []

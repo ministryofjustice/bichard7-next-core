@@ -1,5 +1,5 @@
 import type { DataSource } from "typeorm"
-import { UserGroup } from "types/UserGroup"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 import getUser from "../../src/services/getUser"
@@ -25,6 +25,7 @@ describe("getUser", () => {
     const expectedGroups: UserGroup[] = [UserGroup.Supervisor, UserGroup.GeneralHandler]
 
     const result = await getUser(dataSource, inputUser!.username, groups)
+
     expect(isError(result)).toBe(false)
 
     const actualUser = result as User

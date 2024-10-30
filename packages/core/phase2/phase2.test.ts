@@ -10,10 +10,10 @@ import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 import ResultClass from "../types/ResultClass"
 import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
-import areAllResultsOnPnc from "./lib/generateOperations/areAllResultsOnPnc/areAllResultsOnPnc"
+import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
-jest.mock("./lib/generateOperations/areAllResultsOnPnc/areAllResultsOnPnc")
+jest.mock("./lib/areAllResultsOnPnc")
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
 
 describe("Bichard Core Phase 2 processing logic", () => {
