@@ -1,19 +1,22 @@
-# Bichard7 Tests
+# @moj-bichard7/e2e-tests
 
-This repository contains the end-to-end and characterisation tests to run against Bichard in order to validate functionality.
+This package contains the end-to-end and characterisation tests to run against Bichard in order to validate functionality.
 
 ## Contents
 
-- [Running the end-to-end tests](#running-the-end-to-end-tests)
-  - [Locally](#locally)
-  - [Against E2E Test environment](#against-e2e-test-environment)
-  - [Against pre-production](#against-pre-production)
-  - [Configuration parameters](#configuration-parameters)
-  - [Debugging](#debugging)
-  - [VS Code Extension](#vs-code-extension)
-- [Running the characterisation tests](#running-the-characterisation-tests)
-  - [For Core](#for-core)
-  - [For legacy Bichard](#for-legacy-bichard)
+- [@moj-bichard7/e2e-tests](#moj-bichard7e2e-tests)
+  - [Contents](#contents)
+  - [Running the end-to-end tests](#running-the-end-to-end-tests)
+    - [Locally](#locally)
+      - [Cucumber test individual features](#cucumber-test-individual-features)
+    - [Against E2E Test environment](#against-e2e-test-environment)
+    - [Against pre-production](#against-pre-production)
+    - [Configuration parameters](#configuration-parameters)
+    - [Debugging](#debugging)
+    - [VS Code Extension](#vs-code-extension)
+  - [Running the characterisation tests](#running-the-characterisation-tests)
+    - [For Core](#for-core)
+    - [For legacy Bichard](#for-legacy-bichard)
 
 ## Running the end-to-end tests
 
@@ -26,18 +29,36 @@ Before running the tests locally, you need to make sure that the environment is 
 
 Once the stack is up and running, you can run the following commands to run the tests:
 
-```
+```bash
 npm install
 npm run test
 ```
 
 If you get an error which looks like:
 
-```
+```bash
 Error: Could not find expected browser (chrome) locally.
 ```
 
 Run `npm install` to download the correct Chromium revision (856583), then run `node node_modules/puppeteer/install.js`.
+
+#### Cucumber test individual features
+
+To run a Cucumber test locally we need to have all docker images built and running. We need any of the latest changes.
+
+For example, if we want to test a change in the Next UI, we need to kill the current docker container for the UI. Build
+a new docker image that contains the new changes. And then boot it up from the root of the core directory using `npm run all`.
+
+We can then run this command:
+
+```bash
+MS_EDGE=true HEADLESS=false NEXTUI=true AWS_URL=http://localhost:4566 npm run test:file features/186*
+```
+
+- `MS_EDGE` is what browser it runs the test with. By default it uses Chrome, you need to have download MS Edge to use this feature.
+- `HEADLESS` is whether or not we see the browser
+- `NEXTUI` is whether we the test in the new UI or the old UI
+- `features/186*` runs the feature we want
 
 ### Against E2E Test environment
 
@@ -74,19 +95,19 @@ You will need to restart the OpenUTM service that runs it. To do this, SSH into 
 
 To SSH into the instance you need to first install `mssh`:
 
-```
+```bash
 pip3 install ec2instanceconnectcli
 ```
 
 You can then SSH into the instance by running the following command:
 
-```
+```bash
 aws-vault exec <preprod profile> -- mssh ansible@10.129.3.16 -t <ec2 instance id> -oHostKeyAlgorithms=+ssh-dss
 ```
 
 To restart the OpenUTM service, run the following commands:
 
-```
+```bash
 # Sudo to the utm user
 sudo su utm
 # cd into the UTM project directory
@@ -99,7 +120,7 @@ cd /home/utm/SpsTtUtm
 
 Once you have started the UTM service, you can check it's working by visiting the [Test Tool UI](https://10.129.3.16/), selecting `PNC NASCH Enquiry` and then searching for e.g. `John Smith` - you should see results being returned. If not, try to telnet to the PNC Test endpoint via SSH:
 
-```
+```bash
 telnet test-pnc.cjse.org 102
 ```
 
@@ -107,7 +128,7 @@ It should connect and after you press `Enter` 10 times should disconnect you.
 
 If the Test Tool looks healthy then you can run a test using it as follows (068 is a good test because it doesn't change anything on the PNC so can be run repeatedly)
 
-```
+```bash
 PNC_TEST_TOOL=https://10.129.3.16 REAL_PNC=true npm run test:file features/068*
 ```
 
@@ -163,7 +184,7 @@ There are other, lesser used parameters:
 
 To watch the tests running in a browser, run:
 
-```
+```bash
 HEADLESS=false npm run test:local
 ```
 
@@ -177,7 +198,7 @@ With these settings:
 
 ```json
 {
-  "cucumberautocomplete.steps": ["steps/*.js"],
+  "cucumberautocomplete.steps": ["packages/e2e-test/steps/*.ts", "steps/*.ts"],
   "cucumberautocomplete.strictGherkinCompletion": true,
   "cucumberautocomplete.formatConfOverride": {
     "And": 3,
@@ -204,7 +225,7 @@ This runs by default on [localhost:6000](localhost:6000).
 
 2. From this tests repository, run the characterisation tests for Core:
 
-```
+```bash
 npm run test:characterisation
 ```
 
