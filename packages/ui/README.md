@@ -1,6 +1,23 @@
-# bichard7-next-ui
+# @moj-bichard7/ui
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Contents
+
+- [@moj-bichard7/ui](#moj-bichard7ui)
+  - [Contents](#contents)
+  - [Getting Started](#getting-started)
+    - [Running the database, user-service and nginx-auth-proxy](#running-the-database-user-service-and-nginx-auth-proxy)
+  - [Development](#development)
+    - [Layout](#layout)
+  - [Testing](#testing)
+    - [Unit Testing](#unit-testing)
+      - [Code-based](#code-based)
+      - [React Component Testing](#react-component-testing)
+    - [Integration/E2e Testing](#integratione2e-testing)
+      - [Integration](#integration)
+      - [E2E](#e2e)
+  - [Building the docker image](#building-the-docker-image)
 
 ## Getting Started
 
@@ -37,6 +54,9 @@ Once the dependencies have run follow these login instruction:
 
 ## Development
 
+You need to have built `bichard7-next-core/packages/core` and `bichard7-next-core/packages/common` before you can run
+this package.
+
 ### Layout
 
 | Directory  | Purpose                                                                       |
@@ -63,6 +83,16 @@ To run code-based (non-visual, no components get rendered) unit tests, run
     npm run test:unit
 ```
 
+#### React Component Testing
+
+You should have the UI running locally (`npm run dev`) and run the following:
+
+```bash
+    npm run cypress:open
+```
+
+From there you will be able to select Component tests.
+
 ### Integration/E2e Testing
 
 #### Integration
@@ -83,8 +113,14 @@ To run the `cypress` tests against this, run:
     npm run cypress:open:docker
 ```
 
-or if you're running the UI locally (`npm run dev` - will require you to kill the UI docker container first):
+or if you're running the UI locally (`npm run dev`):
 
 ```bash
     npm run cypress:open
 ```
+
+## Building the docker image
+
+From the root level of core: `./scripts/build-ui-docker.sh`
+
+Or from the root of the package: `make build`
