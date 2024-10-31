@@ -27,13 +27,13 @@ const ResolvedDateFilter: React.FC<Props> = ({ dispatch, dateRange: caseResolved
           <div className="govuk-radios__conditional" id="conditional-resolved-date-range">
             <div className="govuk-radios govuk-radios--small">
               <DateInput
-                dateType="from"
+                dateType="resolvedFrom"
                 dispatch={dispatch}
                 value={caseResolvedDateRange?.from ?? ""}
                 dateRange={caseResolvedDateRange}
               />
               <DateInput
-                dateType="to"
+                dateType="resolvedTo"
                 dispatch={dispatch}
                 value={caseResolvedDateRange?.to ?? ""}
                 dateRange={caseResolvedDateRange}
