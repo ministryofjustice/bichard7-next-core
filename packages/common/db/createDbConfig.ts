@@ -1,7 +1,7 @@
 import { baseConfig } from "./baseConfig"
 
 // Note: we are declaring both user and username properties
-// in the config object.This is because the pg-promise
+// in the config object. This is because the pg-promise
 // library expects the username property to be present
 // in the config object. However, the baseConfig object
 // uses the user property. To avoid any confusion,
