@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify"
 import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 import build from "../../app"
-import FakeGateway from "../../services/gateways/fakeGateway"
+import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fakeDataStoreGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaults = {
@@ -12,7 +12,7 @@ const defaults = {
 }
 
 describe("authenticate", () => {
-  const gateway = new FakeGateway()
+  const gateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {

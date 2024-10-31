@@ -1,11 +1,11 @@
-import type { User } from "@moj-bichard7/common/types/User"
-import formatForceNumbers from "../services/formatForceNumbers"
-import type Gateway from "../services/gateways/interfaces/gateway"
 import Permission from "@moj-bichard7/common/types/Permission"
+import type { User } from "@moj-bichard7/common/types/User"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import formatForceNumbers from "../services/formatForceNumbers"
+import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
 
 type ResubmitProps = {
-  gateway: Gateway
+  gateway: DataStoreGateway
   user: User
   caseId: number
 }

@@ -1,10 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import postgresFactory from "../db/postgresFactory"
-import type Gateway from "./interfaces/gateway"
+import postgresFactory from "../../db/postgresFactory"
+import type DataStoreGateway from "../interfaces/dataStoreGateway"
 import caseCanBeResubmitted from "./postgres/canCaseBeResubmitted"
 import fetchUserByUsername from "./postgres/fetchUserByUsername"
 
-class PostgresGateway implements Gateway {
+class PostgresGateway implements DataStoreGateway {
   protected readonly db = postgresFactory()
 
   async fetchUserByUsername(username: string): Promise<User> {

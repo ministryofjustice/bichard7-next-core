@@ -8,7 +8,7 @@ import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
-import type Gateway from "../../services/gateways/interfaces/gateway"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import canUserResubmitCase from "../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({
@@ -18,7 +18,7 @@ const bodySchema = z.object({
 export type ResubmitBody = z.infer<typeof bodySchema>
 
 type HandlerProps = {
-  gateway: Gateway
+  gateway: DataStoreGateway
   user: User
   caseId: number
   body: ResubmitBody

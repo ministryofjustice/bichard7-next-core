@@ -1,12 +1,12 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import FakeGateway from "../../services/gateways/fakeGateway"
+import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fakeDataStoreGateway"
 import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
 import jwtVerify from "./jwtVerify"
 
 const validJwtId = "c058a1bf-ce6a-45d9-8e84-9729aeac5246"
 
 describe("jwtVerify", () => {
-  const gateway = new FakeGateway()
+  const gateway = new FakeDataStoreGateway()
 
   afterEach(() => {
     jest.restoreAllMocks()

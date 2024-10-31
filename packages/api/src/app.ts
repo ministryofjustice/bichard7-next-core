@@ -5,17 +5,17 @@ import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
 import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
-import type Gateway from "./services/gateways/interfaces/gateway"
-import PostgresGateway from "./services/gateways/postgresGateway"
+import PostgresGateway from "./services/gateways/dataStoreGateways/postgresGateway"
+import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGateway"
 
 declare module "fastify" {
   interface FastifyRequest {
     user: User
-    gateway: Gateway
+    gateway: DataStoreGateway
   }
 }
 
-export default async function (gateway: Gateway = new PostgresGateway()) {
+export default async function (gateway: DataStoreGateway = new PostgresGateway()) {
   const fastify = createFastify()
 
   await setupZod(fastify)

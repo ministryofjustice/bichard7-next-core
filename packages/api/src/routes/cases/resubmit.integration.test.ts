@@ -4,7 +4,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import build from "../../app"
-import FakeGateway from "../../services/gateways/fakeGateway"
+import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fakeDataStoreGateway"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
@@ -19,7 +19,7 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
 }
 
 describe("resubmit", () => {
-  const gateway = new FakeGateway()
+  const gateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {

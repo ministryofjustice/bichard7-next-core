@@ -1,10 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import FakeGateway from "../services/gateways/fakeGateway"
+import FakeDataStoreGateway from "../services/gateways/dataStoreGateways/fakeDataStoreGateway"
 import canUseResubmitCaseExecute from "./canUserResubmitCase"
 
 describe("canUseResubmitCase", () => {
-  const gateway = new FakeGateway()
+  const gateway = new FakeDataStoreGateway()
 
   describe("execute", () => {
     it("returns false if the groups attribute is not defined", async () => {
