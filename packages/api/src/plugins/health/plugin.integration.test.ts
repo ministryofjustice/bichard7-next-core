@@ -9,7 +9,7 @@ describe("health plugin", () => {
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(dataStoreGateway)
+    app = await build({ dataStoreGateway })
     await app.ready()
   })
 
