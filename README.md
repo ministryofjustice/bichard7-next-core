@@ -6,6 +6,7 @@ The code to replace the processing logic of Bichard 7.
 
 - [Bichard 7 Core](#bichard-7-core)
   - [Contents](#contents)
+  - [Structure of this Monorepo](#structure-of-this-monorepo)
   - [Quickstart](#quickstart)
     - [Pre-Requisites](#pre-requisites)
     - [Booting the infrastructure](#booting-the-infrastructure)
@@ -21,6 +22,19 @@ The code to replace the processing logic of Bichard 7.
     - [Comparing outputs locally](#comparing-outputs-locally)
     - [Configuration](#configuration)
   - [Conductor](#conductor)
+
+## Structure of this Monorepo
+
+Packages:
+
+- [api](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api)
+- [common](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/common)
+- [conductor](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor)
+- [core](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/core)
+- [e2e-test](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/e2e-test)
+- [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
+- [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
+- [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
 
 ## Quickstart
 
