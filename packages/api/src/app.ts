@@ -5,17 +5,24 @@ import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
 import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
-import PostgresGateway from "./services/gateways/dataStoreGateways/postgresGateway"
+import type AuditLogGateway from "./services/gateways/interfaces/auditLogGateway"
+import type AwsS3Gateway from "./services/gateways/interfaces/awsS3Gateway"
 import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGateway"
 
 declare module "fastify" {
   interface FastifyRequest {
     user: User
-    dataSourceGateway: DataStoreGateway
+    dataStoreGateway: DataStoreGateway
   }
 }
 
-export default async function (dataSourceGateway: DataStoreGateway = new PostgresGateway()) {
+type Gateways = {
+  dataStoreGateway: DataStoreGateway
+  auditLogGateway?: AuditLogGateway
+  awsS3Gateway?: AwsS3Gateway
+}
+
+export default async function ({ dataStoreGateway }: Gateways) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -34,7 +41,7 @@ export default async function (dataSourceGateway: DataStoreGateway = new Postgre
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      await authenticate(dataSourceGateway, request, reply)
+      await authenticate(dataStoreGateway, request, reply)
     })
 
     await instance.register(AutoLoad, {

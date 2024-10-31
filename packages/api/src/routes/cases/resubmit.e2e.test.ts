@@ -29,16 +29,16 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.dataSourceGateway.clearDb()
+    await helper.dataStoreGateway.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.dataSourceGateway.close()
+    await helper.dataStoreGateway.close()
   })
 
   it("will receive a 400 error if there's no case found", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.dataSourceGateway)
+    const [encodedJwt] = await createUserAndJwtToken(helper.dataStoreGateway)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -46,8 +46,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 400 error if there's a case found and not with the users force", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.dataSourceGateway)
-    await createCase(helper.dataSourceGateway, { org_for_police_filter: "002" })
+    const [encodedJwt] = await createUserAndJwtToken(helper.dataStoreGateway)
+    await createCase(helper.dataStoreGateway, { org_for_police_filter: "002" })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -55,8 +55,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 400 error if there's a case found and the user doesn't have the correct permission", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.dataSourceGateway, [UserGroup.TriggerHandler])
-    await createCase(helper.dataSourceGateway)
+    const [encodedJwt] = await createUserAndJwtToken(helper.dataStoreGateway, [UserGroup.TriggerHandler])
+    await createCase(helper.dataStoreGateway)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -64,8 +64,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 403 error if there's a case found and the user doesn't have the error lock", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.dataSourceGateway, [UserGroup.GeneralHandler])
-    await createCase(helper.dataSourceGateway)
+    const [encodedJwt] = await createUserAndJwtToken(helper.dataStoreGateway, [UserGroup.GeneralHandler])
+    await createCase(helper.dataStoreGateway)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -73,8 +73,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 403 error if there's a case found and the case is resolved", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataSourceGateway, [UserGroup.GeneralHandler])
-    await createCase(helper.dataSourceGateway, {
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataStoreGateway, [UserGroup.GeneralHandler])
+    await createCase(helper.dataStoreGateway, {
       error_locked_by_id: user.username,
       resolution_ts: new Date().toDateString()
     })
@@ -85,8 +85,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 403 error if there's a case found and the case is submitted", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataSourceGateway, [UserGroup.GeneralHandler])
-    await createCase(helper.dataSourceGateway, { error_locked_by_id: user.username, error_status: 3 })
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataStoreGateway, [UserGroup.GeneralHandler])
+    await createCase(helper.dataStoreGateway, { error_locked_by_id: user.username, error_status: 3 })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -94,8 +94,8 @@ describe("/cases/:caseId/resubmit e2e", () => {
   })
 
   it("will receive a 200 error if there's a case found and the case is locked by the user", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataSourceGateway, [UserGroup.GeneralHandler])
-    await createCase(helper.dataSourceGateway, { error_locked_by_id: user.username })
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataStoreGateway, [UserGroup.GeneralHandler])
+    await createCase(helper.dataStoreGateway, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 

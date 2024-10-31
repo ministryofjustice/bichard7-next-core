@@ -12,11 +12,11 @@ const defaults = {
 }
 
 describe("authenticate", () => {
-  const dataSourceGateway = new FakeDataStoreGateway()
+  const dataStoreGateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(dataSourceGateway)
+    app = await build({ dataStoreGateway })
     await app.ready()
   })
 
@@ -72,7 +72,7 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with a missing user", async () => {
-    const spy = jest.spyOn(dataSourceGateway, "fetchUserByUsername")
+    const spy = jest.spyOn(dataStoreGateway, "fetchUserByUsername")
     spy.mockRejectedValue(new Error('User "User 1" does not exist'))
 
     const [encodedJwt] = generateJwtForStaticUser()
@@ -90,7 +90,7 @@ describe("authenticate", () => {
 
   it("returns 200 if the verification result is a User", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    const spy = jest.spyOn(dataSourceGateway, "fetchUserByUsername")
+    const spy = jest.spyOn(dataStoreGateway, "fetchUserByUsername")
     spy.mockResolvedValue(user)
 
     const { statusCode } = await app.inject({
@@ -109,7 +109,7 @@ describe("authenticate", () => {
     const error = new Error("AggregateError")
     error.name = "AggregateError"
     error.stack = "Something Sql or pOstGreS"
-    jest.spyOn(dataSourceGateway, "fetchUserByUsername").mockRejectedValue(error)
+    jest.spyOn(dataStoreGateway, "fetchUserByUsername").mockRejectedValue(error)
 
     const { statusCode } = await app.inject({
       ...defaults,

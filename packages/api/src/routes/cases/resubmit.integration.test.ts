@@ -19,11 +19,11 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
 }
 
 describe("resubmit", () => {
-  const dataSourceGateway = new FakeDataStoreGateway()
+  const dataStoreGateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(dataSourceGateway)
+    app = await build({ dataStoreGateway })
     await app.ready()
   })
 
@@ -50,7 +50,7 @@ describe("resubmit", () => {
       UserGroup.SuperUserManager,
       UserGroup.NewUI
     ])
-    jest.spyOn(dataSourceGateway, "fetchUserByUsername").mockResolvedValue(user)
+    jest.spyOn(dataStoreGateway, "fetchUserByUsername").mockResolvedValue(user)
 
     await assertStatusCode(encodedJwt, FORBIDDEN)
   })
@@ -59,7 +59,7 @@ describe("resubmit", () => {
     "succeeds if user is in role: %s",
     async (role) => {
       const [encodedJwt, user] = generateJwtForStaticUser([role])
-      jest.spyOn(dataSourceGateway, "fetchUserByUsername").mockResolvedValue(user)
+      jest.spyOn(dataStoreGateway, "fetchUserByUsername").mockResolvedValue(user)
 
       await assertStatusCode(encodedJwt, OK)
     }
@@ -71,11 +71,11 @@ describe("resubmit", () => {
 
     beforeEach(() => {
       ;[encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-      jest.spyOn(dataSourceGateway, "fetchUserByUsername").mockResolvedValue(user)
+      jest.spyOn(dataStoreGateway, "fetchUserByUsername").mockResolvedValue(user)
     })
 
     const canCaseBeResubmittedFalse = () => {
-      jest.spyOn(dataSourceGateway, "canCaseBeResubmitted").mockResolvedValue(false)
+      jest.spyOn(dataStoreGateway, "canCaseBeResubmitted").mockResolvedValue(false)
     }
 
     it("case doesn't belong to same force as user", async () => {
@@ -91,7 +91,7 @@ describe("resubmit", () => {
     })
 
     it("case does not exist", async () => {
-      jest.spyOn(dataSourceGateway, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
+      jest.spyOn(dataStoreGateway, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
 
       await assertStatusCode(encodedJwt, BAD_REQUEST)
     })
@@ -112,7 +112,7 @@ describe("resubmit", () => {
       const error = new Error("AggregateError")
       error.name = "AggregateError"
       error.stack = "Something Sql or pOstGreS"
-      jest.spyOn(dataSourceGateway, "canCaseBeResubmitted").mockRejectedValue(error)
+      jest.spyOn(dataStoreGateway, "canCaseBeResubmitted").mockRejectedValue(error)
 
       await assertStatusCode(encodedJwt, BAD_GATEWAY)
     })

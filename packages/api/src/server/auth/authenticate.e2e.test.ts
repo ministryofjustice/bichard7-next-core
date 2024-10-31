@@ -20,12 +20,12 @@ describe("authentication e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.dataSourceGateway.clearDb()
+    await helper.dataStoreGateway.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.dataSourceGateway.close()
+    await helper.dataStoreGateway.close()
   })
 
   it("will return with no headers 401 - Unauthorized", async () => {
@@ -48,7 +48,7 @@ describe("authentication e2e", () => {
   })
 
   it("returns 401 Unauthorized with a missing user", async () => {
-    await createUserAndJwtToken(helper.dataSourceGateway)
+    await createUserAndJwtToken(helper.dataStoreGateway)
     const [encodedJwt] = generateTestJwtToken({
       username: "UnknownUser",
       email: "unknownuser@exmaple.com"
@@ -65,7 +65,7 @@ describe("authentication e2e", () => {
   })
 
   it("returns 200 if the verification result is a User", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.dataSourceGateway)
+    const [encodedJwt] = await createUserAndJwtToken(helper.dataStoreGateway)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET",

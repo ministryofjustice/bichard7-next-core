@@ -5,12 +5,12 @@ import formatForceNumbers from "../services/formatForceNumbers"
 import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
 
 type ResubmitProps = {
-  dataSourceGateway: DataStoreGateway
+  dataStoreGateway: DataStoreGateway
   user: User
   caseId: number
 }
 
-const canUserResubmitCase = async ({ dataSourceGateway, user, caseId }: ResubmitProps): Promise<boolean> => {
+const canUserResubmitCase = async ({ dataStoreGateway, user, caseId }: ResubmitProps): Promise<boolean> => {
   const normalizedUser = { ...user, groups: user.groups ?? [] }
   if (!userAccess(normalizedUser)[Permission.CanResubmit]) {
     return false
@@ -18,7 +18,7 @@ const canUserResubmitCase = async ({ dataSourceGateway, user, caseId }: Resubmit
 
   const forceNumbers = formatForceNumbers(user.visible_forces)
 
-  return await dataSourceGateway.canCaseBeResubmitted(user.username, caseId, forceNumbers)
+  return await dataStoreGateway.canCaseBeResubmitted(user.username, caseId, forceNumbers)
 }
 
 export default canUserResubmitCase
