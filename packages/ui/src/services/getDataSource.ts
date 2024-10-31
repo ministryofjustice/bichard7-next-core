@@ -12,19 +12,14 @@ import { NoteSubscriber } from "./subscribers/noteSubscriber"
 let appDataSource: DataSource
 const getDataSource = async (): Promise<DataSource> => {
   const config: DataSourceOptions = {
+    ...baseConfig,
     type: "postgres",
     applicationName: "ui-connection",
-    host: baseConfig.host,
-    port: baseConfig.port,
     username: baseConfig.user,
-    password: baseConfig.password,
-    database: baseConfig.database,
-    ssl: baseConfig.ssl,
     synchronize: false, // It must be always false, otherwise it changes the database structure.
     entities: [CourtCase, User, Trigger, Note, SurveyFeedback],
     subscribers: [CourtCaseSubscriber, NoteSubscriber],
     migrations: [],
-    schema: "br7own",
     logging: false, // Set to true to see what queries are being sent to Postgres
     extra: {
       max: 1
