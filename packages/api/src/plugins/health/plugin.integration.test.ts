@@ -5,11 +5,11 @@ import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fake
 import HealthRoutes from "./routes"
 
 describe("health plugin", () => {
-  const gateway = new FakeDataStoreGateway()
+  const dataSourceGateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(gateway)
+    app = await build(dataSourceGateway)
     await app.ready()
   })
 

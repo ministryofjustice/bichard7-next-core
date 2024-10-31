@@ -19,11 +19,11 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string,
 }
 
 export const createUserAndJwtToken = async (
-  gateway: End2EndPostgresGateway,
+  dataSourceGateway: End2EndPostgresGateway,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
 ): Promise<[string, User]> => {
   const jwtId = randomUUID()
-  const user = await gateway.createTestUser({
+  const user = await dataSourceGateway.createTestUser({
     username: "User1",
     groups,
     jwt_id: jwtId,

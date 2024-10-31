@@ -6,11 +6,11 @@ import FakeDataStoreGateway from "../services/gateways/dataStoreGateways/fakeDat
 import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
 
 describe("/me", () => {
-  const gateway = new FakeDataStoreGateway()
+  const dataSourceGateway = new FakeDataStoreGateway()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(gateway)
+    app = await build(dataSourceGateway)
     await app.ready()
   })
 
@@ -24,7 +24,7 @@ describe("/me", () => {
 
   it("will return the current user with a correct JWT", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    const spy = jest.spyOn(dataSourceGateway, "fetchUserByUsername")
     spy.mockResolvedValue(user)
 
     const response = await app.inject({

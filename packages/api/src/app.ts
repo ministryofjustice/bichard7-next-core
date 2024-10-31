@@ -11,11 +11,11 @@ import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGatew
 declare module "fastify" {
   interface FastifyRequest {
     user: User
-    gateway: DataStoreGateway
+    dataSourceGateway: DataStoreGateway
   }
 }
 
-export default async function (gateway: DataStoreGateway = new PostgresGateway()) {
+export default async function (dataSourceGateway: DataStoreGateway = new PostgresGateway()) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -34,7 +34,7 @@ export default async function (gateway: DataStoreGateway = new PostgresGateway()
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      await authenticate(gateway, request, reply)
+      await authenticate(dataSourceGateway, request, reply)
     })
 
     await instance.register(AutoLoad, {

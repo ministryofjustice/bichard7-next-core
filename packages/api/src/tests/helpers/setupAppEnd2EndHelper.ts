@@ -4,12 +4,12 @@ import End2EndPostgresGateway from "../testGateways/e2ePostgresGateway"
 
 export class SetupAppEnd2EndHelper {
   static async setup(port: number = 8888): Promise<SetupAppEnd2EndHelper> {
-    const gateway = new End2EndPostgresGateway()
-    const app = await build(gateway)
+    const dataSourceGateway = new End2EndPostgresGateway()
+    const app = await build(dataSourceGateway)
     await app.ready()
     app.listen({ port })
 
-    return new SetupAppEnd2EndHelper(port, app, gateway)
+    return new SetupAppEnd2EndHelper(port, app, dataSourceGateway)
   }
 
   readonly address: string
@@ -17,7 +17,7 @@ export class SetupAppEnd2EndHelper {
   constructor(
     readonly port: number,
     readonly app: FastifyInstance,
-    readonly gateway: End2EndPostgresGateway
+    readonly dataSourceGateway: End2EndPostgresGateway
   ) {
     this.address = `http://localhost:${port}`
   }

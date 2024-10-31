@@ -1,8 +1,8 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 import type End2EndPostgresGateway from "../testGateways/e2ePostgresGateway"
 
-export const createCase = async (gateway: End2EndPostgresGateway, overrides: object = {}): Promise<Case> => {
-  const dbCase = await gateway.createTestCase({
+export const createCase = async (dataSourceGateway: End2EndPostgresGateway, overrides: object = {}): Promise<Case> => {
+  const dbCase = await dataSourceGateway.createTestCase({
     annotated_msg: "AHO",
     court_reference: "ABC",
     create_ts: new Date().toDateString(),
