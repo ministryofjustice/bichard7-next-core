@@ -119,7 +119,7 @@ or if you're running the UI locally (`npm run dev`):
     npm run cypress:open
 ```
 
-## Building the docker image
+## Building the Docker image
 
 From the root level of core: `./scripts/build-ui-docker.sh`
 
