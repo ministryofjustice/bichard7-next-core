@@ -17,7 +17,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
     - [Integration/E2e Testing](#integratione2e-testing)
       - [Integration](#integration)
       - [E2E](#e2e)
-  - [Building the docker image](#building-the-docker-image)
+  - [Building the Docker image](#building-the-docker-image)
 
 ## Getting Started
 
@@ -54,8 +54,7 @@ Once the dependencies have run follow these login instruction:
 
 ## Development
 
-You need to have built `bichard7-next-core/packages/core` and `bichard7-next-core/packages/common` before you can run
-this package.
+[See how build core and common here.](https://github.com/ministryofjustice/bichard7-next-core#running-packages-locally)
 
 ### Layout
 
