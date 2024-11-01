@@ -47,7 +47,8 @@ To run a Cucumber test locally you need to have all Docker images built and runn
 For example, if you want to test a change in the Next UI:
 
 1. Kill the current Docker container for the UI.
-1. [Build a new Docker image that contains the new changes](https://github.com/ministryofjustice/bichard7-next-core/blob/main/packages/ui/README.md#building-the-docker-image). 1. Run `npm run all` at the root of the Core repository to boot everything up again.
+2. [Build a new Docker image that contains the new changes](https://github.com/ministryofjustice/bichard7-next-core/blob/main/packages/ui/README.md#building-the-docker-image).
+3. Run `npm run all` at the root of the Core repository to boot everything up again.
 
 You can then run this command:
 

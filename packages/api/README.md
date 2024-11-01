@@ -25,7 +25,7 @@ Then from this directory run `npm run server:dev`
 You shouldn't need to manually build this package the dev server takes care of building, server and auto-building after
 a change.
 
-However, if need to build `packages/common` [see how build core and common here.](https://github.com/ministryofjustice/bichard7-next-core#running-packages-locally)
+However, if you need to build `packages/common` [see how build core and common here.](https://github.com/ministryofjustice/bichard7-next-core#running-packages-locally)
 
 ## Docker
 
