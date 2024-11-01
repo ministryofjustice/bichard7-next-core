@@ -121,6 +121,6 @@ or if you're running the UI locally (`npm run dev`):
 
 ## Building the Docker image
 
-From the root level of core: `./scripts/build-ui-docker.sh`
+From the root level of Core: `./scripts/build-ui-docker.sh`
 
 Or from the root of the package: `make build`
