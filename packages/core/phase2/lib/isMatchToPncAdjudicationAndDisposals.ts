@@ -1,22 +1,33 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
-import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
-import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
+import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
 import findPncCourtCase from "./findPncCourtCase"
+import isRecordableResult from "./isRecordableResult"
+import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
+import areResultsMatchingAPncDisposal from "./areResultsMatchingAPncDisposal"
 
-const isMatchToPncAdjudicationAndDisposals = (aho: AnnotatedHearingOutcome, offence: Offence): boolean => {
+export type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
+
+const isMatchToPncAdjudicationAndDisposals = (
+  aho: AnnotatedHearingOutcome,
+  offence: Offence,
+  offenceIndex?: number,
+  checkExceptionFn?: CheckExceptionFn
+): boolean => {
   const offenceReasonSequence = offence.CriminalProsecutionReference?.OffenceReasonSequence ?? undefined
-  const adjFromAho = createPncAdjudicationFromAho(
-    offence.Result,
-    aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
-  )
+
+  if (offence.Result.length === 0 || !offenceReasonSequence) {
+    return !offence.Result.some(isRecordableResult)
+  }
 
   return (
-    !!adjFromAho &&
+    !!aho.PncQuery?.pncId &&
     !!findPncCourtCase(aho, offence)?.offences.some(
       (pncOffence) =>
-        isMatchToPncAdjudication(adjFromAho, pncOffence, offenceReasonSequence) &&
-        areResultsMatchAPncDisposal(offence, pncOffence.disposals ?? [])
+        isMatchToPncAdjudication(
+          offence.Result,
+          aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
+          pncOffence,
+          offenceReasonSequence
+        ) && areResultsMatchingAPncDisposal(offence, pncOffence.disposals ?? [], offenceIndex, checkExceptionFn)
     )
   )
 }
