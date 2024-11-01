@@ -1,5 +1,5 @@
 import type { DataSource } from "typeorm"
-import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm"
+import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
 import type { CaseListQueryParams } from "types/CaseListQueryParams"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
@@ -210,38 +210,26 @@ const listCourtCases = async (
     }
   }
 
-  if (!user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) {
+  const ExceptionsAndtriggerHandlersQuery = []
+  let ExceptionsAndtriggerHandlersParams = {}
+  if (user.hasAccessTo[Permission.Exceptions]) {
+    ExceptionsAndtriggerHandlersQuery.push("courtCase.errorCount > 0")
+  }
+
+  if (user.hasAccessTo[Permission.Triggers]) {
+    ExceptionsAndtriggerHandlersQuery.push(
+      "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0"
+    )
+    ExceptionsAndtriggerHandlersParams = {
+      caseStatus: caseState === "Resolved" ? "2" : "1",
+      excludedTriggers: getExcludedTriggers(user.excludedTriggers)
+    }
+  }
+
+  if (ExceptionsAndtriggerHandlersQuery.length > 0) {
+    query.andWhere(`(${ExceptionsAndtriggerHandlersQuery.join(" OR ")})`, ExceptionsAndtriggerHandlersParams)
+  } else {
     query.andWhere("false")
-  }
-
-  if (!user.hasAccessTo[Permission.Triggers]) {
-    query.andWhere({
-      errorCount: MoreThan(0)
-    })
-  }
-
-  if (!user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere(
-      "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0",
-      {
-        caseStatus: caseState === "Resolved" ? "2" : "1",
-        excludedTriggers: getExcludedTriggers(user.excludedTriggers)
-      }
-    )
-  }
-
-  if (user.hasAccessTo[Permission.Triggers] && user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere(
-      `(
-        courtCase.errorCount > 0
-        OR
-        (SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0
-        )`,
-      {
-        caseStatus: caseState === "Resolved" ? "2" : "1",
-        excludedTriggers: getExcludedTriggers(user.excludedTriggers)
-      }
-    )
   }
 
   const result = await query.getManyAndCount().catch((error: Error) => error)
