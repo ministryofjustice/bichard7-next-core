@@ -1,6 +1,6 @@
 import type AuditLogGateway from "../interfaces/auditLogGateway"
 
-class FakeAuditLogGateway implements AuditLogGateway {
+class FakeAuditLogging implements AuditLogGateway {
   private readonly auditLog: Array<string> = []
 
   createAuditLog(record: string): void {
@@ -8,4 +8,4 @@ class FakeAuditLogGateway implements AuditLogGateway {
   }
 }
 
-export default FakeAuditLogGateway
+export default FakeAuditLogging

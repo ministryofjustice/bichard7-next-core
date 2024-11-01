@@ -1,9 +1,9 @@
 import type AuditLogGateway from "../interfaces/auditLogGateway"
 
-class AuditLogRemoteGateway implements AuditLogGateway {
+class AuditLogging implements AuditLogGateway {
   createAuditLog(record: string): void {
     console.log(record)
   }
 }
 
-export default AuditLogRemoteGateway
+export default AuditLogging

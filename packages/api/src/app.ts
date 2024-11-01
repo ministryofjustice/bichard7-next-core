@@ -13,13 +13,15 @@ declare module "fastify" {
   interface FastifyRequest {
     user: User
     db: DataStoreGateway
+    auditLog: AuditLogGateway
+    s3: AwsS3Gateway
   }
 }
 
 type Gateways = {
   db: DataStoreGateway
-  auditLogGateway?: AuditLogGateway
-  awsS3Gateway?: AwsS3Gateway
+  auditLog?: AuditLogGateway
+  s3?: AwsS3Gateway
 }
 
 export default async function ({ db }: Gateways) {
