@@ -1,23 +1,21 @@
-# @moj-bichard7/ui
+# @moj-bichard7/ui<!-- omit from toc -->
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Contents
+## Contents<!-- omit from toc -->
 
-- [@moj-bichard7/ui](#moj-bichard7ui)
-  - [Contents](#contents)
-  - [Getting Started](#getting-started)
-    - [Running the database, user-service and nginx-auth-proxy](#running-the-database-user-service-and-nginx-auth-proxy)
-  - [Development](#development)
-    - [Layout](#layout)
-  - [Testing](#testing)
-    - [Unit Testing](#unit-testing)
-      - [Code-based](#code-based)
-      - [React Component Testing](#react-component-testing)
-    - [Integration/E2e Testing](#integratione2e-testing)
-      - [Integration](#integration)
-      - [E2E](#e2e)
-  - [Building the Docker image](#building-the-docker-image)
+- [Getting Started](#getting-started)
+  - [Running the database, user-service and nginx-auth-proxy](#running-the-database-user-service-and-nginx-auth-proxy)
+- [Development](#development)
+  - [Layout](#layout)
+- [Testing](#testing)
+  - [Unit Testing](#unit-testing)
+    - [Code-based](#code-based)
+    - [React Component Testing](#react-component-testing)
+  - [Integration/E2e Testing](#integratione2e-testing)
+    - [Integration](#integration)
+    - [E2E](#e2e)
+- [Building the Docker image](#building-the-docker-image)
 
 ## Getting Started
 

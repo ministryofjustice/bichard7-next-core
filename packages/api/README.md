@@ -1,6 +1,18 @@
-# Bichard 7 API
+# Bichard 7 API<!-- omit from toc -->
 
 The Bichard7 API acts as a single point of access for the database and conductor.
+
+## Contents<!-- omit from toc -->
+
+- [Setup](#setup)
+- [Building](#building)
+- [Docker](#docker)
+- [Endpoints](#endpoints)
+- [Structure of folders and files](#structure-of-folders-and-files)
+  - [Tests](#tests)
+  - [Files and Folders](#files-and-folders)
+  - [Plugins](#plugins)
+  - [Routes](#routes)
 
 ## Setup
 

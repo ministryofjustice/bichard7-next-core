@@ -1,22 +1,20 @@
-# @moj-bichard7/e2e-tests
+# @moj-bichard7/e2e-tests<!-- omit from toc -->
 
 This package contains the end-to-end and characterisation tests to run against Bichard in order to validate functionality.
 
-## Contents
+## Contents<!-- omit from toc -->
 
-- [@moj-bichard7/e2e-tests](#moj-bichard7e2e-tests)
-  - [Contents](#contents)
-  - [Running the end-to-end tests](#running-the-end-to-end-tests)
-    - [Locally](#locally)
-      - [Cucumber test individual features](#cucumber-test-individual-features)
-    - [Against E2E Test environment](#against-e2e-test-environment)
-    - [Against pre-production](#against-pre-production)
-    - [Configuration parameters](#configuration-parameters)
-    - [Debugging](#debugging)
-    - [VS Code Extension](#vs-code-extension)
-  - [Running the characterisation tests](#running-the-characterisation-tests)
-    - [For Core](#for-core)
-    - [For legacy Bichard](#for-legacy-bichard)
+- [Running the end-to-end tests](#running-the-end-to-end-tests)
+  - [Locally](#locally)
+    - [Cucumber test individual features](#cucumber-test-individual-features)
+  - [Against E2E Test environment](#against-e2e-test-environment)
+  - [Against pre-production](#against-pre-production)
+  - [Configuration parameters](#configuration-parameters)
+  - [Debugging](#debugging)
+  - [VS Code Extension](#vs-code-extension)
+- [Running the characterisation tests](#running-the-characterisation-tests)
+  - [For Core](#for-core)
+  - [For legacy Bichard](#for-legacy-bichard)
 
 ## Running the end-to-end tests
 

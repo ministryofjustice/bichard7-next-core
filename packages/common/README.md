@@ -1,9 +1,10 @@
-# @moj-bichard7/common
+# @moj-bichard7/common<!-- omit from toc -->
 
-- [@moj-bichard7/common](#moj-bichard7common)
-  - [What is the package?](#what-is-the-package)
-  - [Development](#development)
-    - [When do I need to build this?](#when-do-i-need-to-build-this)
+## Contents<!-- omit from toc -->
+
+- [What is the package?](#what-is-the-package)
+- [Development](#development)
+  - [When do I need to build this?](#when-do-i-need-to-build-this)
 
 ## What is the package?
 
