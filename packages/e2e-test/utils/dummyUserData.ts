@@ -33,6 +33,14 @@ const dummyUsers: Record<string, DummyUser> = {
     excluded_triggers: [],
     groups: ["B7TriggerHandler", "B7NewUI"]
   },
+  triggerhandlerwithexcludedtrigger: {
+    inclusionList: [],
+    exclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"],
+    excluded_triggers: ["TRPR0006"],
+    groups: ["B7TriggerHandler", "B7NewUI"]
+  },
   exceptionhandler: {
     inclusionList: [],
     exclusionList: [],
