@@ -1,9 +1,9 @@
 import build from "./app"
-import PostgresGateway from "./services/gateways/dataStoreGateways/postgresGateway"
+import Postgres from "./services/gateways/dataStoreGateways/postgres"
 
 async function start() {
   const port: number = parseInt(process.env.PORT ?? "3321", 10)
-  const app = await build({ dataStoreGateway: new PostgresGateway() })
+  const app = await build({ db: new Postgres() })
 
   await app.ready()
 

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify"
 import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 import build from "../../app"
-import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fakeDataStoreGateway"
+import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaults = {
@@ -12,11 +12,11 @@ const defaults = {
 }
 
 describe("authenticate", () => {
-  const dataStoreGateway = new FakeDataStoreGateway()
+  const db = new FakeDataStore()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build({ dataStoreGateway })
+    app = await build({ db })
     await app.ready()
   })
 
@@ -72,7 +72,7 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with a missing user", async () => {
-    const spy = jest.spyOn(dataStoreGateway, "fetchUserByUsername")
+    const spy = jest.spyOn(db, "fetchUserByUsername")
     spy.mockRejectedValue(new Error('User "User 1" does not exist'))
 
     const [encodedJwt] = generateJwtForStaticUser()
@@ -90,7 +90,7 @@ describe("authenticate", () => {
 
   it("returns 200 if the verification result is a User", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    const spy = jest.spyOn(dataStoreGateway, "fetchUserByUsername")
+    const spy = jest.spyOn(db, "fetchUserByUsername")
     spy.mockResolvedValue(user)
 
     const { statusCode } = await app.inject({
@@ -109,7 +109,7 @@ describe("authenticate", () => {
     const error = new Error("AggregateError")
     error.name = "AggregateError"
     error.stack = "Something Sql or pOstGreS"
-    jest.spyOn(dataStoreGateway, "fetchUserByUsername").mockRejectedValue(error)
+    jest.spyOn(db, "fetchUserByUsername").mockRejectedValue(error)
 
     const { statusCode } = await app.inject({
       ...defaults,

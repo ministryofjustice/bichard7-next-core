@@ -4,7 +4,7 @@ import type DataStoreGateway from "../interfaces/dataStoreGateway"
 import caseCanBeResubmitted from "./postgres/canCaseBeResubmitted"
 import fetchUserByUsername from "./postgres/fetchUserByUsername"
 
-class PostgresGateway implements DataStoreGateway {
+class Postgres implements DataStoreGateway {
   protected readonly db = postgresFactory()
 
   async fetchUserByUsername(username: string): Promise<User> {
@@ -16,4 +16,4 @@ class PostgresGateway implements DataStoreGateway {
   }
 }
 
-export default PostgresGateway
+export default Postgres

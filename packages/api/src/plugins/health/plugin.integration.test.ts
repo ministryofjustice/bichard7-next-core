@@ -1,15 +1,15 @@
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
 import build from "../../app"
-import FakeDataStoreGateway from "../../services/gateways/dataStoreGateways/fakeDataStoreGateway"
+import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import HealthRoutes from "./routes"
 
 describe("health plugin", () => {
-  const dataStoreGateway = new FakeDataStoreGateway()
+  const db = new FakeDataStore()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build({ dataStoreGateway })
+    app = await build({ db })
     await app.ready()
   })
 

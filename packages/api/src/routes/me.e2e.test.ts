@@ -15,16 +15,16 @@ describe("/me e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.dataStoreGateway.clearDb()
+    await helper.db.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.dataStoreGateway.close()
+    await helper.db.close()
   })
 
   it("will return the current user with a correct JWT", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataStoreGateway)
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.db)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET",
@@ -45,7 +45,7 @@ describe("/me e2e", () => {
 
   it("will return the current user that has user groups, with a correct JWT", async () => {
     const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.dataStoreGateway, expectedGroups)
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.db, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET",
@@ -65,6 +65,6 @@ describe("/me e2e", () => {
   it("will throw an error with a user that has no groups", async () => {
     const noGroups: UserGroup[] = []
 
-    await expect(createUserAndJwtToken(helper.dataStoreGateway, noGroups)).rejects.toThrow("User has no Groups")
+    await expect(createUserAndJwtToken(helper.db, noGroups)).rejects.toThrow("User has no Groups")
   })
 })

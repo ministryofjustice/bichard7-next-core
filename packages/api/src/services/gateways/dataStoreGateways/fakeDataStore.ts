@@ -2,7 +2,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
-class FakeDataStoreGateway implements DataStoreGateway {
+class FakeDataStore implements DataStoreGateway {
   async fetchUserByUsername(username: string): Promise<User> {
     return Promise.resolve({
       id: 1,
@@ -19,4 +19,4 @@ class FakeDataStoreGateway implements DataStoreGateway {
   }
 }
 
-export default FakeDataStoreGateway
+export default FakeDataStore

@@ -1,15 +1,15 @@
 import type { FastifyInstance } from "fastify"
 import build from "../../app"
-import End2EndPostgresGateway from "../testGateways/e2ePostgresGateway"
+import End2EndPostgres from "../testGateways/e2ePostgres"
 
 export class SetupAppEnd2EndHelper {
   static async setup(port: number = 8888): Promise<SetupAppEnd2EndHelper> {
-    const dataStoreGateway = new End2EndPostgresGateway()
-    const app = await build({ dataStoreGateway })
+    const db = new End2EndPostgres()
+    const app = await build({ db: db })
     await app.ready()
     app.listen({ port })
 
-    return new SetupAppEnd2EndHelper(port, app, dataStoreGateway)
+    return new SetupAppEnd2EndHelper(port, app, db)
   }
 
   readonly address: string
@@ -17,7 +17,7 @@ export class SetupAppEnd2EndHelper {
   constructor(
     readonly port: number,
     readonly app: FastifyInstance,
-    readonly dataStoreGateway: End2EndPostgresGateway
+    readonly db: End2EndPostgres
   ) {
     this.address = `http://localhost:${port}`
   }

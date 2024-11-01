@@ -5,7 +5,7 @@ import handleDisconnectedError from "../../services/db/handleDisconnectedError"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import jwtVerify from "./jwtVerify"
 
-export default async function (dataStoreGateway: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
+export default async function (db: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers["authorization"]
 
   if (!token?.startsWith("Bearer ")) {
@@ -15,7 +15,7 @@ export default async function (dataStoreGateway: DataStoreGateway, request: Fast
 
   try {
     const jwtString = token.replace("Bearer ", "")
-    const verificationResult: User | undefined = await jwtVerify(dataStoreGateway, jwtString)
+    const verificationResult: User | undefined = await jwtVerify(db, jwtString)
 
     if (!verificationResult) {
       reply.code(UNAUTHORIZED).send()
@@ -23,7 +23,7 @@ export default async function (dataStoreGateway: DataStoreGateway, request: Fast
     }
 
     request.user = verificationResult
-    request.dataStoreGateway = dataStoreGateway
+    request.db = db
   } catch (error) {
     request.log.error(error)
 
