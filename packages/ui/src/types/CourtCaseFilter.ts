@@ -16,7 +16,7 @@ export type FilterAction =
   | { method: FilterMethodReasonCheckbox; type: "reasonCodesCheckbox"; value: string }
   | { method: "add"; type: "caseResolvedFrom"; value: string }
   | { method: "add"; type: "caseResolvedTo"; value: string }
-  | { method: "remove"; type: "resolvedDateRange"; value: string }
+  | { method: "remove"; type: "caseResolvedDateRange"; value: string }
 
 export type FilterType =
   | "defendantName"
