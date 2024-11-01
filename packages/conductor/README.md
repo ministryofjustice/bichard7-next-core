@@ -1,11 +1,11 @@
-# Conductor
+# Conductor<!-- omit from toc -->
 
 [Conductor](https://github.com/conductor-oss/conductor) is a workflow orchestration system
 with [core concepts involving tasks, workflows and workers](https://orkes.io/content/core-concepts).
 It's used to manage the processing of messages from the Courts to the Police, and can be used to run our
 [comparison tests](../../README.md#comparing-new-and-old-bichard).
 
-## Contents
+## Contents<!-- omit from toc -->
 
 - [Getting started](#getting-started)
   - [Viewing Conductor in a deployed environment](#viewing-conductor-in-a-deployed-environment)
