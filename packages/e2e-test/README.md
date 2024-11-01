@@ -44,12 +44,14 @@ Run `npm install` to download the correct Chromium revision (856583), then run `
 
 #### Cucumber test individual features
 
-To run a Cucumber test locally we need to have all docker images built and running. We need any of the latest changes.
+To run a Cucumber test locally you need to have all Docker images built and running with the latest changes.
 
-For example, if we want to test a change in the Next UI, we need to kill the current docker container for the UI. Build
-a new docker image that contains the new changes. And then boot it up from the root of the core directory using `npm run all`.
+For example, if you want to test a change in the Next UI:
 
-We can then run this command:
+1. Kill the current Docker container for the UI.
+1. [Build a new Docker image that contains the new changes](https://github.com/ministryofjustice/bichard7-next-core/blob/main/packages/ui/README.md#building-the-docker-image). 1. Run `npm run all` at the root of the Core repository to boot everything up again.
+
+You can then run this command:
 
 ```bash
 MS_EDGE=true HEADLESS=false NEXTUI=true AWS_URL=http://localhost:4566 npm run test:file features/186*
