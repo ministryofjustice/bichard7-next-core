@@ -115,10 +115,13 @@ We can't pull the images down from ECR for an M1 Mac because they are not in ARM
 
 1. From the root directory `npm ci`
 2. Run `npm run build:core`
-3. If you need to change `packages/common` you have to two options, `cd packages/common`
-   1. And run `npm run build`
-   2. Or `npm run watch`
-   3. `build` will just build the package once or `watch` all listen for changes and rebuild
+3. If you need to change `packages/common` you have to two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
+   1. `cd packages/common`
+      1. And run `npm run build`
+      2. Or `npm run watch`
+   2. Or from the root of Core:
+      1. `npm run build -w packages/common`
+      2. Or, `npm run watch -w packages/common`
 4. Go to the package you want to change and follow that package's README
 
 ## Publishing package updates
