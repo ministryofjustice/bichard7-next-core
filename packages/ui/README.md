@@ -88,7 +88,7 @@ To run code-based (non-visual, no components get rendered) unit tests, run
 You should have the UI running locally (`npm run dev`) and run the following:
 
 ```bash
-    npm run cypress:open
+npm run cypress:open
 ```
 
 From there you will be able to select Component tests.
