@@ -32,7 +32,7 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
     )
     SELECT G.id, U.id FROM br7own.users AS U, br7own."groups" AS G
     WHERE
-    	G.id = (SELECT id FROM br7own.groups WHERE name=$1 LIMIT 1)
+    	G.id = (SELECT id FROM br7own.groups WHERE friendly_name=$1 LIMIT 1)
     	AND
     	U.id = (SELECT id FROM br7own.users WHERE email=$2 LIMIT 1)
     	AND
@@ -45,15 +45,6 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
 const runQuery = async (query: string) => {
   const dataSource = await getDataSource()
   return dataSource.manager.query(query)
-}
-
-// DB names have pre and postfixes
-const sanitiseGroupName = (name: string) => {
-  if (name.match(/(?<=B7)(.*)(?=_grp)/)) {
-    return name
-  }
-
-  return `B7${name}_grp`
 }
 
 export const insertUser = async (user: User, userGroups?: string[]): Promise<InsertResult | void> => {
@@ -75,8 +66,7 @@ export const insertUser = async (user: User, userGroups?: string[]): Promise<Ins
 
   await Promise.all(
     userGroups.map((userGroup) => {
-      const group = sanitiseGroupName(userGroup)
-      return insertUserIntoGroup(user.email, group)
+      return insertUserIntoGroup(user.email, userGroup)
     })
   )
 }

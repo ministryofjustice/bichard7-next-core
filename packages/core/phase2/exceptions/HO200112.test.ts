@@ -2,7 +2,7 @@ import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFro
 import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import HO200112 from "./HO200112"
-import { areAllResultsOnPnc } from "../lib/areAllResultsOnPnc"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 
 jest.mock("../lib/areAllResultsOnPnc")
 

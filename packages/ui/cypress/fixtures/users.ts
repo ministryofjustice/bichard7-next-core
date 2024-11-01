@@ -1,5 +1,5 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
-import { UserGroup } from "../../src/types/UserGroup"
 import hashedPassword from "./hashedPassword"
 
 const numberedUsers = () => {

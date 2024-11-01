@@ -2,11 +2,11 @@ import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/typ
 import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { format } from "date-fns"
-import Permission from "types/Permission"
-import { DisplayFullUser } from "types/display/Users"
 import { CourtCaseContext } from "../../src/context/CourtCaseContext"
 import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
 import { DisplayFullCourtCase } from "../../src/types/display/CourtCases"
+import { DisplayFullUser } from "types/display/Users"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 describe("Defendant Details", () => {
   const currentUser = {
@@ -24,7 +24,8 @@ describe("Defendant Details", () => {
       [Permission.UnlockOtherUsersCases]: false,
       [Permission.ListAllCases]: false,
       [Permission.ViewReports]: false,
-      [Permission.ViewUserManagement]: false
+      [Permission.ViewUserManagement]: false,
+      [Permission.CanResubmit]: false
     }
   } as DisplayFullUser
 

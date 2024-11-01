@@ -3,7 +3,8 @@ import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, No
 import type { CaseListQueryParams } from "types/CaseListQueryParams"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
+
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import CourtCase from "./entities/CourtCase"

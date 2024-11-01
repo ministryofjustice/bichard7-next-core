@@ -5,7 +5,8 @@ import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTr
 import type { DataSource } from "typeorm"
 import { Brackets, LessThanOrEqual, MoreThanOrEqual } from "typeorm"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import Permission from "types/Permission"
+import Permission from "@moj-bichard7/common/types/Permission"
+
 import type PromiseResult from "types/PromiseResult"
 import type { ReportDateRange } from "types/ReportQueryParams"
 import { CaseDetailsReportType } from "types/ReportQueryParams"
