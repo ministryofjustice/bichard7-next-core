@@ -507,6 +507,9 @@ jobs:
       - set_locale
       - node_install
       - install_dependencies
+      - run:
+          name: Run lint
+          command: nvm use && npm run -w packages/api lint
       - build_api
       - run:
           name: Run unit and integration tests against API code
