@@ -6,6 +6,8 @@ const semver = new RegExp(
   Pinned:
   - chalk
     - v5 is a breaking change
+  - fastify-zod-openapi
+    - https://github.com/samchungy/fastify-zod-openapi/issues/192
 
   Ignored:
   - bichard7-next-data-x.x.x
