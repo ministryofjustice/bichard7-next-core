@@ -1,6 +1,6 @@
 import { collapseFilterSection, confirmFiltersAppliedContains, expandFilterSection, removeFilterTagWhilstSearchPanelIsHidden } from "../../../support/helpers"
 
-describe("Filtering cases", () => {
+describe("Filtering cases by resolved date", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
     cy.task("clearTriggers")
