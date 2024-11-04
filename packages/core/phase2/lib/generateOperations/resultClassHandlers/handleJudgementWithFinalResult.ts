@@ -17,7 +17,9 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   if (fixedPenalty) {
     return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
-  } else if (result.PNCAdjudicationExists) {
+  }
+
+  if (result.PNCAdjudicationExists) {
     return resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
