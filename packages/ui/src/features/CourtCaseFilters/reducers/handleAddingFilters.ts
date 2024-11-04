@@ -39,6 +39,12 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "resolvedByUsernameFilter": {
+      newState.resolvedByUsernameFilter.value = action.value
+      newState.resolvedByUsernameFilter.state = "Selected"
+      break
+    }
+
     case "reason": {
       newState.reasonFilter.value = action.value
       newState.reasonFilter.state = "Selected"

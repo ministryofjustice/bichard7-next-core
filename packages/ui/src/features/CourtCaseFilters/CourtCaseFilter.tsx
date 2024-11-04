@@ -42,7 +42,8 @@ const CourtCaseFilter: React.FC<Props> = ({
   lockedState,
   caseState,
   order,
-  orderBy
+  orderBy,
+  resolvedByUsername
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -60,7 +61,8 @@ const CourtCaseFilter: React.FC<Props> = ({
     courtNameSearch: courtName !== null ? { value: courtName, state: "Applied", label: courtName } : {},
     reasonCodes: reasonCodes?.map((reasonCode) => ({ value: reasonCode, state: "Applied", label: reasonCode })) ?? [],
     ptiurnSearch: ptiurn !== null ? { value: ptiurn, state: "Applied", label: ptiurn } : {},
-    reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {}
+    reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {},
+    resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {}
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)
   const currentUser = useCurrentUser()
