@@ -1,5 +1,5 @@
 import type { HearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-import isAintCase from "./isAintCase"
+import isAncillaryInterimCase from "./isAncillaryInterimCase"
 
 const createHearingOutcome = (offences: Offence[]) =>
   ({
@@ -10,7 +10,7 @@ const createHearingOutcome = (offences: Offence[]) =>
     }
   }) as HearingOutcome
 
-describe("isAintCase", () => {
+describe("isAncillaryInterimCase", () => {
   it("should return true when a case has an AINT result", () => {
     const hearingOutcome = createHearingOutcome([
       {
@@ -31,7 +31,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(true)
   })
@@ -56,7 +56,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(false)
   })
@@ -81,7 +81,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(false)
   })
@@ -106,7 +106,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(false)
   })
@@ -131,7 +131,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(false)
   })
@@ -158,7 +158,7 @@ describe("isAintCase", () => {
       }
     ] as Offence[])
 
-    const result = isAintCase(hearingOutcome)
+    const result = isAncillaryInterimCase(hearingOutcome)
 
     expect(result).toBe(false)
   })
