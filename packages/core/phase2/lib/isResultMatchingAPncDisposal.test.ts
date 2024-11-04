@@ -38,7 +38,7 @@ describe("isResultMatchingAPncDisposal", () => {
   } as Result
 
   it("returns true when an AHO result matches a PNC disposal on all its matching fields", () => {
-    const result = isResultMatchingAPncDisposal([pncDisposal], ahoResult)
+    const result = isResultMatchingAPncDisposal(ahoResult, [pncDisposal])
 
     expect(result).toBe(true)
   })
@@ -46,7 +46,7 @@ describe("isResultMatchingAPncDisposal", () => {
   it("returns false when disposals list is empty", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
 
-    const result = isResultMatchingAPncDisposal([], ahoResult)
+    const result = isResultMatchingAPncDisposal(ahoResult, [])
 
     expect(result).toBe(false)
   })
@@ -54,7 +54,7 @@ describe("isResultMatchingAPncDisposal", () => {
   it("returns false when an AHO result has a different type to the PNC disposal", () => {
     const nonMatchingAhoResult = { ...ahoResult, PNCDisposalType: 1234 }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -62,7 +62,7 @@ describe("isResultMatchingAPncDisposal", () => {
   it("returns false when an AHO result has different qualifiers to the PNC disposal", () => {
     const nonMatchingAhoResult = { ...ahoResult, ResultQualifierVariable: [{ Code: "XXX" }] }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -78,7 +78,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -94,7 +94,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -111,7 +111,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -122,7 +122,7 @@ describe("isResultMatchingAPncDisposal", () => {
       Duration: []
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -133,7 +133,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ResultVariableText: "SOMETHING DIFFERENT"
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -144,7 +144,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ResultVariableText: undefined
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], nonMatchingAhoResult)
+    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
 
     expect(result).toBe(false)
   })
@@ -155,7 +155,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ResultVariableText: ahoResult.ResultVariableText?.toUpperCase()
     }
 
-    const result = isResultMatchingAPncDisposal([pncDisposal], matchingAhoResult)
+    const result = isResultMatchingAPncDisposal(matchingAhoResult, [pncDisposal])
 
     expect(result).toBe(true)
   })

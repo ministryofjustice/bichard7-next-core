@@ -15,7 +15,7 @@ const areResultsMatchingAPncDisposal = (
       checkExceptionFn(result, offenceIndex, resultIndex)
     }
 
-    return !isRecordableResult(result) || isResultMatchingAPncDisposal(disposals, result)
+    return !isRecordableResult(result) || isResultMatchingAPncDisposal(result, disposals)
   })
 
 export default areResultsMatchingAPncDisposal
