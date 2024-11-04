@@ -1,9 +1,9 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
+import areResultsMatchingPncAdjudicationAndDisposals from "./areResultsMatchingPncAdjudicationAndDisposals"
 
 const areAllResultsOnPnc = (aho: AnnotatedHearingOutcome): boolean =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.every((offence) =>
-    isMatchToPncAdjudicationAndDisposals(aho, offence)
+    areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
   )
 
 export default areAllResultsOnPnc

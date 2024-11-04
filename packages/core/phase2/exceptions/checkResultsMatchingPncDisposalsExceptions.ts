@@ -1,13 +1,13 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { CheckExceptionFn } from "../lib/isMatchToPncAdjudicationAndDisposals"
-import isMatchToPncAdjudicationAndDisposals from "../lib/isMatchToPncAdjudicationAndDisposals"
+import type { CheckExceptionFn } from "../lib/areResultsMatchingPncAdjudicationAndDisposals"
+import areResultsMatchingPncAdjudicationAndDisposals from "../lib/areResultsMatchingPncAdjudicationAndDisposals"
 
 const checkResultsMatchingPncDisposalsExceptions = (
   aho: AnnotatedHearingOutcome,
   checkExceptionFn: CheckExceptionFn
 ): void => {
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.every((offence, offenceIndex) =>
-    isMatchToPncAdjudicationAndDisposals(aho, offence, offenceIndex, checkExceptionFn)
+    areResultsMatchingPncAdjudicationAndDisposals(aho, offence, offenceIndex, checkExceptionFn)
   )
 }
 

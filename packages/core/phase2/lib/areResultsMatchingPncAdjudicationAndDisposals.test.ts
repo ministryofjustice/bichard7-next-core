@@ -1,13 +1,13 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
-import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
+import areResultsMatchingPncAdjudicationAndDisposals from "./areResultsMatchingPncAdjudicationAndDisposals"
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 
-describe("isMatchToPncAdjudicationAndDisposals", () => {
+describe("areResultsMatchingPncAdjudicationAndDisposals", () => {
   it("returns true when no results", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({ hasResults: false })
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(true)
   })
@@ -17,7 +17,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     offence.Result = [{ PNCDisposalType: 1000 }] as Result[]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(true)
   })
@@ -26,7 +26,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({ hasOffenceReasonSequence: false })
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(false)
   })
@@ -35,7 +35,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({ hasPncId: false })
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(false)
   })
@@ -44,7 +44,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({ hasPncOffences: false })
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(false)
   })
@@ -53,7 +53,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(true)
   })
@@ -62,7 +62,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({ firstPncDisposalType: 9999 })
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(false)
   })
@@ -72,7 +72,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     offence.Result[0].Verdict = "NG"
 
-    const result = isMatchToPncAdjudicationAndDisposals(aho, offence)
+    const result = areResultsMatchingPncAdjudicationAndDisposals(aho, offence)
 
     expect(result).toBe(false)
   })
@@ -82,7 +82,7 @@ describe("isMatchToPncAdjudicationAndDisposals", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    isMatchToPncAdjudicationAndDisposals(aho, offence, 0, checkExceptionFn)
+    areResultsMatchingPncAdjudicationAndDisposals(aho, offence, 0, checkExceptionFn)
 
     expect(checkExceptionFn).toHaveBeenCalled()
   })

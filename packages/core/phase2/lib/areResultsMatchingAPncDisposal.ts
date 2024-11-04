@@ -2,7 +2,7 @@ import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
 import isRecordableResult from "./isRecordableResult"
 import isMatchToPncDisposal from "./isMatchToPncDisposal"
-import type { CheckExceptionFn } from "./isMatchToPncAdjudicationAndDisposals"
+import type { CheckExceptionFn } from "./areResultsMatchingPncAdjudicationAndDisposals"
 
 const areResultsMatchingAPncDisposal = (
   offence: Offence,
