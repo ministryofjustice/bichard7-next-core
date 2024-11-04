@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { User } from "@moj-bichard7/common/types/User"
-import type Gateway from "./interfaces/gateway"
+import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
-class FakeGateway implements Gateway {
+class FakeDataStore implements DataStoreGateway {
   async fetchUserByUsername(username: string): Promise<User> {
     return Promise.resolve({
       id: 1,
@@ -19,4 +19,4 @@ class FakeGateway implements Gateway {
   }
 }
 
-export default FakeGateway
+export default FakeDataStore

@@ -2,15 +2,15 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
 import build from "../app"
-import FakeGateway from "../services/gateways/fakeGateway"
+import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
 
 describe("/me", () => {
-  const gateway = new FakeGateway()
+  const db = new FakeDataStore()
   let app: FastifyInstance
 
   beforeAll(async () => {
-    app = await build(gateway)
+    app = await build({ db })
     await app.ready()
   })
 
@@ -24,7 +24,7 @@ describe("/me", () => {
 
   it("will return the current user with a correct JWT", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    const spy = jest.spyOn(gateway, "fetchUserByUsername")
+    const spy = jest.spyOn(db, "fetchUserByUsername")
     spy.mockResolvedValue(user)
 
     const response = await app.inject({
