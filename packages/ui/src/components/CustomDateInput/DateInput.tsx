@@ -3,16 +3,25 @@ import { SerializedDateRange } from "types/CaseListQueryParams"
 import { FilterAction } from "types/CourtCaseFilter"
 import { SmallButton } from "./DateInput.styles"
 
+type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
+type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
 interface Props {
-  dateType: "from" | "to"
+  dateType: DateType
   dispatch: Dispatch<FilterAction>
   value: string
   dateRange: SerializedDateRange | undefined
 }
 
+const dateActions = {
+  from: "dateFrom",
+  to: "dateTo",
+  resolvedFrom: "caseResolvedFrom",
+  resolvedTo: "caseResolvedTo"
+}
+
 const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {
-  const actionType = dateType === "from" ? "dateFrom" : "dateTo"
-  const renderSameDateButton = dateType === "to" && dateRange?.from
+  const actionType = dateActions[dateType] as ActionType
+  const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
   const setSameDateValue = () => {
     if (dateRange?.from) {
       dispatch({ method: "add", type: actionType, value: dateRange.from })
