@@ -1,4 +1,4 @@
-Feature: {416} Do not display any cases that has only excluded triggers for the currently signed-in user.
+Feature: {416} Do not display any cases that have only excluded triggers for the currently signed-in user.
 
 			"""
 			As a trigger handler with TRPR0006 excluded for my user profile, I shouldn't see cases that only have TRPR0006.

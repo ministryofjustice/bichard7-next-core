@@ -1,7 +1,7 @@
 Feature: {417} Do not display excluded triggers on cases for the currently signed-in user.
 
 			"""
-			As a trigger handler with TRPR0008 excluded for my user profile, I should not see TRPR0006 on any cases when I log in.
+			As a trigger handler with TRPR0008 excluded for my user profile, I should not see TRPR0008 on any cases when I log in.
 			"""
 
 	Background:
