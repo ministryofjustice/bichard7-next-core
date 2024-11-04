@@ -126,3 +126,17 @@ export const resolveExceptionsManually = () => {
   cy.get('select[name="reason"]').select("PNCRecordIsAccurate")
   cy.get("button").contains("Resolve").click()
 }
+
+export function collapseFilterSection(sectionToBeCollapsed: string, optionToBeCollapsed: string) {
+  cy.get(`button${sectionToBeCollapsed}`).click()
+  cy.get(optionToBeCollapsed).should("not.exist")
+}
+
+export function expandFilterSection(sectionToBeExpanded: string, optionToBeExpanded: string) {
+  cy.get(`button${sectionToBeExpanded}`).click()
+  cy.get(optionToBeExpanded).should("exist")
+}
+
+export function removeFilterTagWhilstSearchPanelIsHidden(filterTag: string) {
+  cy.get(".moj-filter-tags a.moj-filter__tag").contains(filterTag).click({ force: true })
+}
