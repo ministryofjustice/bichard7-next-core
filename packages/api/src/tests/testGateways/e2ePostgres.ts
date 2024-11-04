@@ -1,13 +1,13 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
-import type Gateway from "../../services/gateways/interfaces/gateway"
-import PostgresGateway from "../../services/gateways/postgresGateway"
-import clearAllTables from "./e2ePostgresGateway/clearAllTables"
-import insertCase from "./e2ePostgresGateway/insertCase"
-import insertUser from "./e2ePostgresGateway/insertUser"
-import insertUserIntoGroup from "./e2ePostgresGateway/insertUserIntoGroup"
+import Postgres from "../../services/gateways/dataStoreGateways/postgres"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import clearAllTables from "./e2ePostgres/clearAllTables"
+import insertCase from "./e2ePostgres/insertCase"
+import insertUser from "./e2ePostgres/insertUser"
+import insertUserIntoGroup from "./e2ePostgres/insertUserIntoGroup"
 
-class End2EndPostgresGateway extends PostgresGateway implements Gateway {
+class End2EndPostgres extends Postgres implements DataStoreGateway {
   constructor() {
     super()
   }
@@ -38,4 +38,4 @@ class End2EndPostgresGateway extends PostgresGateway implements Gateway {
   }
 }
 
-export default End2EndPostgresGateway
+export default End2EndPostgres
