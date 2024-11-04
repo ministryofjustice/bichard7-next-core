@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
 import findPncCourtCase from "./findPncCourtCase"
 import isRecordableResult from "./isRecordableResult"
-import isMatchToPncAdjudication from "./isMatchToPncAdjudication"
+import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 import areResultsMatchingAPncDisposal from "./areResultsMatchingAPncDisposal"
 
 export type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
@@ -22,7 +22,7 @@ const isMatchToPncAdjudicationAndDisposals = (
     !!aho.PncQuery?.pncId &&
     !!findPncCourtCase(aho, offence)?.offences.some(
       (pncOffence) =>
-        isMatchToPncAdjudication(
+        areResultsMatchingPncAdjudication(
           offence.Result,
           aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
           offenceReasonSequence,

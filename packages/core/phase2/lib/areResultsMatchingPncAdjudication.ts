@@ -2,7 +2,7 @@ import type { PncOffence } from "../../types/PncQueryResult"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 
-const isMatchToPncAdjudication = (
+const areResultsMatchingPncAdjudication = (
   results: Result[],
   hearingDate: Date,
   offenceReasonSequence: string,
@@ -23,4 +23,4 @@ const isMatchToPncAdjudication = (
   )
 }
 
-export default isMatchToPncAdjudication
+export default areResultsMatchingPncAdjudication
