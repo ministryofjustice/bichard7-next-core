@@ -1,6 +1,17 @@
-# UAT Scenarios
+# UAT Scenarios<!-- omit from toc -->
 
 The purpose of these scenarios is to populate the UAT environment with realistic looking cases.
+
+## Contents<!-- omit from toc -->
+
+- [Seeding local Environment](#seeding-local-environment)
+- [Seeding UAT Environment](#seeding-uat-environment)
+- [Find a Matching Scenario](#find-a-matching-scenario)
+- [Retrieving Original Message](#retrieving-original-message)
+- [Retrieving PNC Response](#retrieving-pnc-response)
+- [Anonymising Data](#anonymising-data)
+  - [Anonymising Incoming Message](#anonymising-incoming-message)
+  - [Anonymising PNC Response](#anonymising-pnc-response)
 
 ## Seeding local Environment
 
