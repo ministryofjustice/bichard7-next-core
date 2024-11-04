@@ -9,7 +9,7 @@ import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const allResultsOnPnc = areAllResultsOnPnc(aho)
@@ -45,4 +45,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200108

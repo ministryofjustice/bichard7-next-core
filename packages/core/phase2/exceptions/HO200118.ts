@@ -16,7 +16,7 @@ const doRecordableOffencesHaveNonRecordableResults = (aho: AnnotatedHearingOutco
   )
 }
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
+const HO200118: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
   doRecordableOffencesHaveNonRecordableResults(aho) ? [{ code: ExceptionCode.HO200118, path: errorPaths.case.asn }] : []
 
-export default generator
+export default HO200118
