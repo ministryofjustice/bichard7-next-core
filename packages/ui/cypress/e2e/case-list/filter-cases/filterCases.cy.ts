@@ -3,29 +3,18 @@ import { addDays, format, subDays } from "date-fns"
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import a11yConfig from "../../../support/a11yConfig"
 import {
+  collapseFilterSection,
   confirmFiltersAppliedContains,
   confirmMultipleFieldsDisplayed,
   confirmMultipleFieldsNotDisplayed,
-  filterByCaseAge
+  expandFilterSection,
+  filterByCaseAge,
+  removeFilterTagWhilstSearchPanelIsHidden
 } from "../../../support/helpers"
 import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
 
 function visitBasePath() {
   cy.visit("/bichard")
-}
-
-function collapseFilterSection(sectionToBeCollapsed: string, optionToBeCollapsed: string) {
-  cy.get(`button${sectionToBeCollapsed}`).click()
-  cy.get(optionToBeCollapsed).should("not.exist")
-}
-
-function expandFilterSection(sectionToBeExpanded: string, optionToBeExpanded: string) {
-  cy.get(`button${sectionToBeExpanded}`).click()
-  cy.get(optionToBeExpanded).should("exist")
-}
-
-function removeFilterTagWhilstSearchPanelIsHidden(filterTag: string) {
-  cy.get(".moj-filter-tags a.moj-filter__tag").contains(filterTag).click({ force: true })
 }
 
 function inputAndSearch(inputId: string, phrase: string) {
