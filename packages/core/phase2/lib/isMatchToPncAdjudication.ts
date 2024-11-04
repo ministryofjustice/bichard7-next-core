@@ -5,8 +5,8 @@ import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 const isMatchToPncAdjudication = (
   results: Result[],
   hearingDate: Date,
-  pncOffence: PncOffence,
-  offenceReasonSequence: string
+  offenceReasonSequence: string,
+  pncOffence: PncOffence
 ): boolean => {
   const hoAdjudication = createPncAdjudicationFromAho(results, hearingDate)
   const pncAdjudication = pncOffence.adjudication

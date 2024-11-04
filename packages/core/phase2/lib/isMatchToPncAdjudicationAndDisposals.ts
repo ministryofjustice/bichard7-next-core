@@ -25,8 +25,8 @@ const isMatchToPncAdjudicationAndDisposals = (
         isMatchToPncAdjudication(
           offence.Result,
           aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
-          pncOffence,
-          offenceReasonSequence
+          offenceReasonSequence,
+          pncOffence
         ) && areResultsMatchingAPncDisposal(offence, pncOffence.disposals ?? [], offenceIndex, checkExceptionFn)
     )
   )

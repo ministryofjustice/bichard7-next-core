@@ -24,8 +24,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       results,
       matchingHearingDate,
-      matchingPncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
@@ -37,8 +37,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       matchingResults,
       matchingHearingDate,
-      pncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      pncOffence
     )
 
     expect(result).toBe(false)
@@ -50,8 +50,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       matchingResults,
       matchingHearingDate,
-      matchingPncOffence,
-      offenceReasonSequence
+      offenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
@@ -63,8 +63,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       results,
       matchingHearingDate,
-      matchingPncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
@@ -76,8 +76,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       results,
       matchingHearingDate,
-      matchingPncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
@@ -89,8 +89,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       results,
       matchingHearingDate,
-      matchingPncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
@@ -102,8 +102,8 @@ describe("isMatchToPncAdjudication", () => {
     const result = isMatchToPncAdjudication(
       matchingResults,
       hearingDate,
-      matchingPncOffence,
-      matchingOffenceReasonSequence
+      matchingOffenceReasonSequence,
+      matchingPncOffence
     )
 
     expect(result).toBe(false)
