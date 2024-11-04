@@ -1,7 +1,7 @@
-Feature: {416} Do not display cases that have a trigger excluded for the currently signed-in user.Given
+Feature: {416} Do not display any cases that has only excluded triggers for the currently signed-in user.
 
 			"""
-			Given I am a trigger handler with a TRPR0006 excluded on me as a user, when I log in, I should not see cases that only have TRPR0006
+			As a trigger handler with TRPR0006 excluded for my user profile, I shouldn't see cases that only have TRPR0006.
 			"""
 
 	Background:
@@ -15,7 +15,7 @@ Feature: {416} Do not display cases that have a trigger excluded for the current
 		Then there are no exceptions raised for "Bethel Barry"
 			And there should only be "1" records
 			And I see trigger "PR06 - Imprisoned" in the exception list table
-		When I am logged in as "TriggerHandlerWithExcludedTrigger"
+		When I am logged in as "TriggerHandlerWithExcludedTRPR0006"
 			And I reload the page
 			And there should only be "0" records
 			And I cannot see trigger "PR06" in the exception list table
