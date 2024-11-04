@@ -65,7 +65,7 @@ const CourtCaseFilter: React.FC<Props> = ({
     reasonCodes: reasonCodes?.map((reasonCode) => ({ value: reasonCode, state: "Applied", label: reasonCode })) ?? [],
     ptiurnSearch: ptiurn !== null ? { value: ptiurn, state: "Applied", label: ptiurn } : {},
     reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {},
-    resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {}
+    resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {},
     resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
     resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {}
   }
@@ -118,7 +118,11 @@ const CourtCaseFilter: React.FC<Props> = ({
             </div>
           </FormGroup>
 
-          <CaseStateFilter dispatch={dispatch} value={state.caseStateFilter.value} />
+          <CaseStateFilter
+            dispatch={dispatch}
+            caseState={state.caseStateFilter.value}
+            resolvedByUsername={state.resolvedByUsernameFilter.value}
+          />
 
           <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.Triggers]}>
             <Divider />

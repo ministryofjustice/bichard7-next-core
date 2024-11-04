@@ -12,7 +12,8 @@ const anyFilterChips = (state: Filter, countOfState?: FilterState): boolean => {
       state.reasonCodes[0],
       state.ptiurnSearch,
       state.resolvedFrom,
-      state.resolvedTo
+      state.resolvedTo,
+      state.resolvedByUsernameFilter
     ].some(
       (filter): boolean =>
         filter?.value !== undefined &&

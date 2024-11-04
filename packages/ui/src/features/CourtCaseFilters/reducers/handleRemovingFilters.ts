@@ -60,6 +60,12 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "resolvedByUsernameFilter": {
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      break
+    }
+
     case "ptiurn": {
       newState.ptiurnSearch.value = ""
       newState.ptiurnSearch.label = undefined

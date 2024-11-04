@@ -19,6 +19,7 @@ interface Props {
     lockedState?: string | null
     caseState?: string | null
     caseResolvedDateRange?: SerializedDateRange | null
+    resolvedByUsername?: string | null
   }
 }
 
@@ -37,7 +38,8 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
     (!!filters.lockedState && filters.lockedState !== LockedState.All) ||
     !!filters.caseState ||
     !!filters.caseResolvedDateRange?.from ||
-    !!filters.caseResolvedDateRange?.to
+    !!filters.caseResolvedDateRange?.to ||
+    !!filters.resolvedByUsername
 
   const removeFilterFromPath = (paramToRemove: { [key: string]: string }): string => {
     let searchParams = deleteQueryParam(paramToRemove, query)
@@ -158,6 +160,15 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
               <FilterTag
                 tag={caseStateLabels[String(filters.caseState)] ?? ""}
                 href={removeFilterFromPath({ state: filters.caseState ?? "" })}
+              />
+            </li>
+          </ConditionalRender>
+
+          <ConditionalRender isRendered={!!filters.resolvedByUsername}>
+            <li>
+              <FilterTag
+                tag={caseStateLabels[String(filters.resolvedByUsername)] ?? ""}
+                href={removeFilterFromPath({ state: filters.resolvedByUsername ?? "" })}
               />
             </li>
           </ConditionalRender>
