@@ -1,7 +1,7 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
 import isRecordableResult from "./isRecordableResult"
-import isMatchToPncDisposal from "./isMatchToPncDisposal"
+import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
 import type { CheckExceptionFn } from "./areResultsMatchingPncAdjudicationAndDisposals"
 
 const areResultsMatchingAPncDisposal = (
@@ -15,7 +15,7 @@ const areResultsMatchingAPncDisposal = (
       checkExceptionFn(result, offenceIndex, resultIndex)
     }
 
-    return !isRecordableResult(result) || isMatchToPncDisposal(disposals, result)
+    return !isRecordableResult(result) || isResultMatchingAPncDisposal(disposals, result)
   })
 
 export default areResultsMatchingAPncDisposal
