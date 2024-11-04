@@ -8,7 +8,7 @@ import type { FilterAction } from "types/CourtCaseFilter"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
-import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./CourtDateFilter.styles"
+import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./DateFilter.styles"
 
 interface Props {
   caseAges?: string[]
