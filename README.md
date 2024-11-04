@@ -1,14 +1,16 @@
-# Bichard 7 Core
+# Bichard 7 Core<!-- omit from toc -->
 
 The code to replace the processing logic of Bichard 7.
 
-## Contents
+## Contents<!-- omit from toc -->
 
+- [Structure of this Monorepo](#structure-of-this-monorepo)
 - [Quickstart](#quickstart)
   - [Pre-Requisites](#pre-requisites)
   - [Booting the infrastructure](#booting-the-infrastructure)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
   - [Building on an M1 Mac](#building-on-an-m1-mac)
+- [Running Packages locally](#running-packages-locally)
 - [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
@@ -18,6 +20,19 @@ The code to replace the processing logic of Bichard 7.
   - [Comparing outputs locally](#comparing-outputs-locally)
   - [Configuration](#configuration)
 - [Conductor](#conductor)
+
+## Structure of this Monorepo
+
+Packages:
+
+- [api](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api)
+- [common](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/common)
+- [conductor](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor)
+- [core](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/core)
+- [e2e-test](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/e2e-test)
+- [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
+- [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
+- [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
 
 ## Quickstart
 
@@ -51,7 +66,7 @@ following out and run `make build` in each repository:
 
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
-```
+```bash
 aws-vault exec bichard7-shared -- npm run all
 ```
 
@@ -65,13 +80,13 @@ You can also run subsets of the infrastructure using:
 
 You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) against core in Conductor with:
 
-```
+```bash
 npm run test:e2e
 ```
 
 Finally, to bring all of that infrastructure down again, you can use:
 
-```
+```bash
 npm run destroy
 ```
 
@@ -94,7 +109,20 @@ We can't pull the images down from ECR for an M1 Mac because they are not in ARM
 1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
 1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
 1. In the [bichard7-next-user-service](https://github.com/ministryofjustice/bichard7-next-user-service/) repository run `make build`
-1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-ui/) repository, run `make build`
+1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-ui-docker.sh`
+
+## Running Packages locally
+
+1. From the root directory `npm ci`
+2. Run `npm run build:core`
+3. If you need to change `packages/common` you have to two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
+   1. `cd packages/common`
+      1. And run `npm run build`
+      2. Or `npm run watch`
+   2. Or from the root of Core:
+      1. `npm run build -w packages/common`
+      2. Or, `npm run watch -w packages/common`
+4. Go to the package you want to change and follow that package's README
 
 ## Publishing package updates
 
@@ -151,13 +179,13 @@ If all comparisons between the new and old Bichard are successful, `compareResul
 
 You can run a cli tool to see if a comparison json file matches using:
 
-```
+```bash
 npm run compare -- -f <path to json file>
 ```
 
 You can also run this tool against the comparison files collected in production using the following arguments:
 
-```
+```bash
 Options
 
   -f, --file string     Specify either the local file path or an S3 URL
@@ -174,7 +202,7 @@ You will need to run it using `aws-vault`
 
 ### Checking a comparison file on old Bichard
 
-```
+```bash
 npm run compare:runonbichard -- <path to json file>
 ```
 

@@ -25,6 +25,18 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "caseResolvedFrom": {
+      newState.resolvedFrom.value = action.value.toString()
+      newState.resolvedFrom.state = "Selected"
+      break
+    }
+
+    case "caseResolvedTo": {
+      newState.resolvedTo.value = action.value
+      newState.resolvedTo.state = "Selected"
+      break
+    }
+
     case "caseState": {
       newState.caseStateFilter.value = action.value
       newState.caseStateFilter.label = caseStateLabels[action.value ?? ""]

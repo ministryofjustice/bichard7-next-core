@@ -1,7 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
-import type End2EndPostgresGateway from "../testGateways/e2ePostgresGateway"
+import type End2EndPostgres from "../testGateways/e2ePostgres"
 import { generateTestJwtToken } from "./jwtHelper"
 
 export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string, User] => {
@@ -19,11 +19,11 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string,
 }
 
 export const createUserAndJwtToken = async (
-  gateway: End2EndPostgresGateway,
+  db: End2EndPostgres,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
 ): Promise<[string, User]> => {
   const jwtId = randomUUID()
-  const user = await gateway.createTestUser({
+  const user = await db.createTestUser({
     username: "User1",
     groups,
     jwt_id: jwtId,

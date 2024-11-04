@@ -19,6 +19,7 @@ import CourtDateFilter from "../../components/SearchFilters/CourtDateFilter"
 import { FilterOptionsContainer, SelectedFiltersContainer } from "./CourtCaseFilter.styles"
 import FilterChipSection from "./FilterChipSection"
 import { filtersReducer } from "./reducers/filters"
+import ResolvedDateFilter from "components/SearchFilters/ResolvedDateFilter"
 
 const Divider = () => (
   <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
@@ -28,6 +29,7 @@ type Props = CaseListQueryParams & {
   caseAge: string[]
   caseAgeCounts: Record<string, number>
   dateRange: SerializedDateRange | null
+  caseResolvedDateRange: SerializedDateRange | null
 }
 
 const CourtCaseFilter: React.FC<Props> = ({
@@ -43,7 +45,8 @@ const CourtCaseFilter: React.FC<Props> = ({
   caseState,
   order,
   orderBy,
-  resolvedByUsername
+  resolvedByUsername,
+  caseResolvedDateRange
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -63,6 +66,8 @@ const CourtCaseFilter: React.FC<Props> = ({
     ptiurnSearch: ptiurn !== null ? { value: ptiurn, state: "Applied", label: ptiurn } : {},
     reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {},
     resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {}
+    resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
+    resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {}
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)
   const currentUser = useCurrentUser()
@@ -128,6 +133,12 @@ const CourtCaseFilter: React.FC<Props> = ({
             caseAgeCounts={caseAgeCounts}
             dispatch={dispatch}
             dateRange={{ from: state.dateFrom.value, to: state.dateTo.value }}
+          />
+          <Divider />
+
+          <ResolvedDateFilter
+            dispatch={dispatch}
+            dateRange={{ from: state.resolvedFrom.value, to: state.resolvedTo.value }}
           />
           <Divider />
 
