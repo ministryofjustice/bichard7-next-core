@@ -1,197 +1,90 @@
-jest.mock("./isMatchToPncAdjudicationAndDisposals")
-import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import areAllResultsOnPnc from "./areAllResultsOnPnc"
-import isMatchToPncAdjudicationAndDisposals from "./isMatchToPncAdjudicationAndDisposals"
-
-const mockedisMatchToPncAdjudicationAndDisposals = isMatchToPncAdjudicationAndDisposals as jest.Mock
-type TestInput = {
-  output: boolean
-  when: string
-  offences: {
-    ccr?: string
-    reasonSequence?: string
-    results: { pncDisposalType: number }[]
-    isMatchToPncAdjudicationAndDisposalsValue?: boolean
-  }[]
-}
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 
 describe("areAllResultsOnPnc", () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
-  it("given an offence without a pnc record (no pnc case id), returns false", () => {
-    const recordableResult: Result = {
-      CJSresultCode: 2063,
-      PNCDisposalType: 2063,
-      PNCAdjudicationExists: false
-    } as unknown as Result
-    const offence: Offence = {
-      Result: [recordableResult],
-      CriminalProsecutionReference: {
-        OffenceReasonSequence: "001"
-      }
-    } as Offence
-    const aho = generateAhoFromOffenceList([offence])
-    const result = areAllResultsOnPnc(aho)
-
-    expect(result).toBe(false)
-  })
-
-  it.each<TestInput>([
-    {
-      output: true,
-      when: "all offences have results, CCR and reason sequence and offences match PNC adjudications and disposals",
-      offences: [
-        {
-          ccr: "123",
-          reasonSequence: "1",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        }
-      ]
-    },
-    {
-      output: false,
-      when: "all offences have results, CCR and reason sequence, but one offence does not match PNC adjudications and disposals",
-      offences: [
-        {
-          ccr: "123",
-          reasonSequence: "1",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: false
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        }
-      ]
-    },
-    {
-      output: true,
-      when: "first offence has non-recordable results and no reason sequence, and second offence has results, CCR and reason sequence, and match PNC adjudications and disposals",
-      offences: [
-        {
-          ccr: "123",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        }
-      ]
-    },
-    {
-      output: false,
-      when: "first offence has recordable results and no reason sequence, and second offence has results, CCR and reason sequence, and match PNC adjudications and disposals",
-      offences: [
-        {
-          ccr: "123",
-          results: [{ pncDisposalType: 1001 }, { pncDisposalType: 1002 }],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        }
-      ]
-    },
-    {
-      output: false,
-      when: "first offence has non-recordable results and no reason sequence, and second offence has results, CCR and reason sequence, but does not match PNC adjudications and disposals",
-      offences: [
-        {
-          ccr: "123",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: false
-        }
-      ]
-    },
-    {
-      output: true,
-      when: "first offence has non-recordable results and no reason sequence, and second offence has non-recordable results and no court case reference",
-      offences: [
-        {
-          ccr: "123",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        },
-        {
-          reasonSequence: "2",
-          results: [{ pncDisposalType: 1000 }, { pncDisposalType: 1000 }],
-          isMatchToPncAdjudicationAndDisposalsValue: true
-        }
-      ]
-    },
-    {
-      output: true,
-      when: "both offences have no results",
-      offences: [
-        {
-          ccr: "123",
-          reasonSequence: "1",
-          results: [],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        },
-        {
-          ccr: "234",
-          reasonSequence: "2",
-          results: [],
-          isMatchToPncAdjudicationAndDisposalsValue: undefined
-        }
-      ]
-    }
-  ])("should return $output when $when", ({ output, offences }) => {
-    const aho = {
-      PncQuery: {
-        pncId: "2016/099999"
-      },
-      AnnotatedHearingOutcome: {
-        HearingOutcome: {
-          Case: {
-            HearingDefendant: {
-              Offence: offences.map((offence) => ({
-                CourtCaseReferenceNumber: offence.ccr,
-                CriminalProsecutionReference: { OffenceReasonSequence: offence.reasonSequence },
-                Result: offence.results.map((result) => ({ PNCDisposalType: result.pncDisposalType }))
-              }))
-            }
+  const matchingAho = {
+    AnnotatedHearingOutcome: {
+      HearingOutcome: {
+        Hearing: { DateOfHearing: new Date(2024, 3, 1) },
+        Case: {
+          HearingDefendant: {
+            Offence: [
+              {
+                CourtCaseReferenceNumber: "1",
+                Result: [
+                  {
+                    PNCDisposalType: 2063,
+                    Verdict: "G",
+                    PleaStatus: "G",
+                    ResultQualifierVariable: [{ Code: "A" }]
+                  }
+                ],
+                CriminalProsecutionReference: { OffenceReasonSequence: "001" }
+              }
+            ]
           }
         }
       }
-    } as unknown as AnnotatedHearingOutcome
+    },
+    PncQuery: {
+      pncId: "1",
+      courtCases: [
+        {
+          courtCaseReference: "1",
+          offences: [
+            {
+              offence: { sequenceNumber: 1 },
+              adjudication: {
+                verdict: "GUILTY",
+                plea: "GUILTY",
+                sentenceDate: new Date(2024, 3, 1),
+                offenceTICNumber: 0,
+                weedFlag: undefined
+              },
+              disposals: [
+                {
+                  qtyDate: "",
+                  qtyDuration: "",
+                  type: 2063,
+                  qtyUnitsFined: "",
+                  qtyMonetaryValue: "",
+                  qualifiers: "A",
+                  text: ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  } as AnnotatedHearingOutcome
 
-    offences
-      .filter((offence) => offence.isMatchToPncAdjudicationAndDisposalsValue !== undefined)
-      .forEach(({ isMatchToPncAdjudicationAndDisposalsValue }) => {
-        mockedisMatchToPncAdjudicationAndDisposals.mockReturnValueOnce(isMatchToPncAdjudicationAndDisposalsValue)
-      })
-    mockedisMatchToPncAdjudicationAndDisposals.mockImplementation(() => {
-      throw Error("Too many invocations!")
-    })
+  it("returns true when all offences match to the PNC adjudication and disposals", () => {
+    const result = areAllResultsOnPnc(matchingAho)
+
+    expect(result).toBe(true)
+  })
+
+  it("returns false when not all offences match to the PNC adjudication and disposals", () => {
+    const aho = structuredClone(matchingAho)
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      matchingAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0],
+      {
+        CourtCaseReferenceNumber: "2",
+        Result: [
+          {
+            PNCDisposalType: 2063,
+            Verdict: "NG",
+            PleaStatus: "G",
+            ResultQualifierVariable: [{ Code: "A" }]
+          }
+        ],
+        CriminalProsecutionReference: { OffenceReasonSequence: "002" }
+      }
+    ] as Offence[]
 
     const result = areAllResultsOnPnc(aho)
 
-    expect(result).toBe(output)
+    expect(result).toBe(false)
   })
 })
