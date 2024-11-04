@@ -8,7 +8,7 @@ Feature: {416} Do not display any cases that have only excluded triggers for the
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Should @NextUI
+	@NextUI @ExcludeOnLegacyUI
 	Scenario: Display correct cases according to permissions and excluded triggers.
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
