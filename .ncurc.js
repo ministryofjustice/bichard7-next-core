@@ -6,6 +6,8 @@ const semver = new RegExp(
   Pinned:
   - chalk
     - v5 is a breaking change
+  - @types/diff
+    - changed the Change type to require extra values
 
   Ignored:
   - bichard7-next-data-x.x.x
