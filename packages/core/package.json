@@ -57,7 +57,7 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "devDependencies": {
-    "@types/diff": "^6.0.0",
+    "@types/diff": "^5.2.3",
     "@types/jest": "^29.5.14",
     "@types/lodash.differencewith": "^4.5.9",
     "@types/lodash.isequal": "^4.5.8",
