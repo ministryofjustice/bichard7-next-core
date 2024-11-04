@@ -3,7 +3,7 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import { getDisposalTextFromResult } from "../lib/createPncDisposalsFromResult/getDisposalTextFromResult"
+import { getDisposalTextFromResult } from "../lib/getDisposalTextFromResult"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 import { maxDisposalTextLength } from "../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 
