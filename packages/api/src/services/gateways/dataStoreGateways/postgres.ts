@@ -4,6 +4,8 @@ import type DataStoreGateway from "../interfaces/dataStoreGateway"
 import caseCanBeResubmitted from "./postgres/canCaseBeResubmitted"
 import fetchUserByUsername from "./postgres/fetchUserByUsername"
 
+// TODO: Check what permission the user has (triggers or exceptions) and add lock
+// TODO: Add AuditLogEvent
 class Postgres implements DataStoreGateway {
   protected readonly db = postgresFactory()
 
