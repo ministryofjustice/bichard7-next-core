@@ -5,7 +5,7 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200201: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
@@ -23,4 +23,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200201

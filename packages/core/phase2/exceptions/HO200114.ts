@@ -5,11 +5,11 @@ import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseO
 import { PncOperation } from "../../types/PncOperation"
 import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
+const HO200114: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
   checkClashingCourtCaseOperationsException(
     aho,
     [PncOperation.SENTENCE_DEFERRED, PncOperation.DISPOSAL_UPDATED],
     ExceptionCode.HO200114
   )
 
-export default generator
+export default HO200114

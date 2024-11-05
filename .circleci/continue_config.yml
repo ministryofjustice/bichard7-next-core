@@ -623,33 +623,6 @@ jobs:
           name: Run integration tests
           command: npm run -w packages/ui test:integration
 
-  seed_data:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - setup_ui
-      - install_dependencies
-      - fetch_images:
-          images: nodejs-20-2023
-      - build_audit_logging_images
-      - start_services:
-          SERVICES: db-seed audit-log-api localstack
-      - build_core
-      - run:
-          name: Run the seed-data script
-          command: DEPLOY_NAME=e2e-test npm run -w packages/ui seed-data
-
   cypress_component_test:
     machine:
       image: ubuntu-2204:current
@@ -914,10 +887,6 @@ workflows:
       - characterisation_test_legacy_phase2
       - comparison_test
 
-      - seed_data:
-          name: seed_data
-          requires:
-            - test_ui
       - build-ui:
           name: build-ui
           requires:

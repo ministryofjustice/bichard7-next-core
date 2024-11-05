@@ -9,7 +9,7 @@ import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const allResultsOnPnc = areAllResultsOnPnc(aho)
@@ -19,11 +19,11 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   }
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
-    const ccrId = offence?.CourtCaseReferenceNumber || undefined
+    const courtCaseReference = offence?.CourtCaseReferenceNumber || undefined
 
     if (
       result.PNCAdjudicationExists ||
-      (!allResultsOnPnc && hasUnmatchedPncOffences(aho, ccrId) && !offence.AddedByTheCourt)
+      (!allResultsOnPnc && hasUnmatchedPncOffences(aho, courtCaseReference) && !offence.AddedByTheCourt)
     ) {
       return
     }
@@ -32,7 +32,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
       result.ResultClass &&
       [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       result.PNCDisposalType === 2060 &&
-      checkCaseRequiresRccButHasNoReportableOffences(aho, ccrId)
+      checkCaseRequiresRccButHasNoReportableOffences(aho, courtCaseReference)
     ) {
       const exception = {
         code: ExceptionCode.HO200108,
@@ -45,4 +45,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200108

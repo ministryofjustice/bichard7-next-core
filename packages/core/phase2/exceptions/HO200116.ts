@@ -6,7 +6,7 @@ import errorPaths from "../../lib/exceptions/errorPaths"
 
 const MAX_ALLOWABLE_OFFENCES = 100
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200116: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
 
   if (offences.length > MAX_ALLOWABLE_OFFENCES) {
@@ -16,4 +16,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return []
 }
 
-export default generator
+export default HO200116

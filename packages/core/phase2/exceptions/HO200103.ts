@@ -6,7 +6,7 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200103: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
@@ -26,4 +26,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200103
