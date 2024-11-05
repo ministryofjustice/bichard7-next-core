@@ -5,7 +5,7 @@ const findPncCourtCase = (aho: AnnotatedHearingOutcome, offence: Offence) => {
     offence.CourtCaseReferenceNumber ?? aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
 
   return courtCaseReference
-    ? aho.PncQuery?.courtCases?.find((x) => x.courtCaseReference === courtCaseReference)
+    ? aho.PncQuery?.courtCases?.find((pncCourtCase) => pncCourtCase.courtCaseReference === courtCaseReference)
     : undefined
 }
 
