@@ -33,7 +33,7 @@ describe("handleAdjournmentWithJudgement", () => {
     jest.resetAllMocks()
   })
 
-  it("should return a remand operation when ccrId has value", () => {
+  it("should return a remand operation when court case reference exists", () => {
     const params = generateResultClassHandlerParams({
       result: {
         NextResultSourceOrganisation: organisationUnit

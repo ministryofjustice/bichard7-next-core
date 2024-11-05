@@ -116,7 +116,7 @@ describe("generateOperations", () => {
     expect(operations).toStrictEqual([])
   })
 
-  it("generates disposal operation when offence added by the Court disposal ccrId matches remand ccrId", () => {
+  it("generates disposal operation when court case reference in offence added by the Court disposal matches court case reference in remand", () => {
     const areAllResultsOnPnc = false
     const aho = {
       Exceptions: [],

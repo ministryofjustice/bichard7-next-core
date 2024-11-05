@@ -18,7 +18,7 @@ const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
   }
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
-    const ccrId = offence?.CourtCaseReferenceNumber || undefined
+    const courtCaseReference = offence?.CourtCaseReferenceNumber || undefined
 
     if (result.PNCAdjudicationExists) {
       return
@@ -27,7 +27,7 @@ const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
     if (
       result.ResultClass &&
       [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
-      hasUnmatchedPncOffences(aho, ccrId) &&
+      hasUnmatchedPncOffences(aho, courtCaseReference) &&
       !offence.AddedByTheCourt
     ) {
       const exception = {
