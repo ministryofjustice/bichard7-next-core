@@ -178,6 +178,9 @@ commands:
       ENABLE_PHASE_3:
         default: "true"
         type: string
+      SKIP_IMAGES:
+        default: ""
+        type: string
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -186,7 +189,7 @@ commands:
           name: Start bichard7 legacy
           command: |
             ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
-            .circleci/scripts/run-infrastructure.sh '' all-legacy
+            .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
   lint_and_build:
@@ -784,7 +787,8 @@ jobs:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
           command: "npm run install-browsers"
-      - start_bichard7_legacy
+      - start_bichard7_legacy:
+          SKIP_IMAGES: "ui"
       - run_test_chunk:
           ARGS: >-
             NEXTUI="true"

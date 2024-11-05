@@ -20,6 +20,7 @@ const leftJoinAndSelectTriggersQuery = (
       triggerStatus: caseState === "Resolved" ? "2" : "1"
     }
   )
+
   return query
 }
 
