@@ -1,4 +1,3 @@
-import type { Operation } from "../../../../types/PncUpdateDataset"
 import createOperation from "../createOperation"
 import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
@@ -18,7 +17,9 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
 
   if (fixedPenalty) {
     return [createOperation(PncOperation.PENALTY_HEARING, operationData)]
-  } else if (result.PNCAdjudicationExists) {
+  }
+
+  if (result.PNCAdjudicationExists) {
     return resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
@@ -28,17 +29,19 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
     return []
   }
 
-  const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
-
-  const operations: Operation[] = []
   if (!offence.AddedByTheCourt) {
-    operations.push(createOperation(PncOperation.NORMAL_DISPOSAL, operationData))
-  } else if (offence.AddedByTheCourt && !contains2007Result) {
-    operations.push({
-      ...createOperation(PncOperation.NORMAL_DISPOSAL, operationData),
-      addedByTheCourt: true
-    })
+    return [createOperation(PncOperation.NORMAL_DISPOSAL, operationData)]
   }
 
-  return operations
+  const contains2007Result = !!offence?.Result.some((r) => r.PNCDisposalType === 2007)
+  if (offence.AddedByTheCourt && !contains2007Result) {
+    return [
+      {
+        ...createOperation(PncOperation.NORMAL_DISPOSAL, operationData),
+        addedByTheCourt: true
+      }
+    ]
+  }
+
+  return []
 }
