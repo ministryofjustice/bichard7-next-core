@@ -210,24 +210,22 @@ const listCourtCases = async (
     }
   }
 
-  const ExceptionsAndtriggerHandlersQuery = []
-  let ExceptionsAndtriggerHandlersParams = {}
+  const exceptionsAndtriggerHandlersQuery = []
+  const exceptionsAndtriggerHandlersParams: Record<string, string | string[]> = {}
   if (user.hasAccessTo[Permission.Exceptions]) {
-    ExceptionsAndtriggerHandlersQuery.push("courtCase.errorCount > 0")
+    exceptionsAndtriggerHandlersQuery.push("courtCase.errorCount > 0")
   }
 
   if (user.hasAccessTo[Permission.Triggers]) {
-    ExceptionsAndtriggerHandlersQuery.push(
+    exceptionsAndtriggerHandlersQuery.push(
       "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status = :caseStatus AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0"
     )
-    ExceptionsAndtriggerHandlersParams = {
-      caseStatus: caseState === "Resolved" ? "2" : "1",
-      excludedTriggers: getExcludedTriggers(user.excludedTriggers)
-    }
+    exceptionsAndtriggerHandlersParams["caseStatus"] = caseState === "Resolved" ? "2" : "1"
+    exceptionsAndtriggerHandlersParams["excludedTriggers"] = getExcludedTriggers(user.excludedTriggers)
   }
 
-  if (ExceptionsAndtriggerHandlersQuery.length > 0) {
-    query.andWhere(`(${ExceptionsAndtriggerHandlersQuery.join(" OR ")})`, ExceptionsAndtriggerHandlersParams)
+  if (exceptionsAndtriggerHandlersQuery.length > 0) {
+    query.andWhere(`(${exceptionsAndtriggerHandlersQuery.join(" OR ")})`, exceptionsAndtriggerHandlersParams)
   } else {
     query.andWhere("false")
   }
