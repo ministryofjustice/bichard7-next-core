@@ -1,5 +1,5 @@
-import { lookupDurationUnitByCjsCode } from "../../../../lib/dataLookup"
-import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import { lookupDurationUnitByCjsCode } from "../../../lib/dataLookup"
+import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import disqualifiedFromKeepingDisposalText from "./disqualifiedFromKeepingDisposalText"
 import exclusionOrderDisposalText from "./exclusionOrderDisposalText"
 import exclusionRequirementsDisposalText from "./exclusionRequirementsDisposalText"
