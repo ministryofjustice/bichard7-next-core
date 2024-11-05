@@ -60,39 +60,29 @@ export const preProcessDisposalQuantity = (
   durationUnit: string | undefined,
   durationLength: number | undefined,
   pncDisposalType: number | undefined,
-  dateSpecInResult: Date | undefined,
-  amtSpecInResult: number | undefined
+  dateFromResult: Date | undefined,
+  amountFromResult: number | undefined
 ) => {
-  let disposalQuantity = ""
-
+  let durationAndLength
   switch (durationUnit) {
     case DURATION_UNIT_LIFE:
-      disposalQuantity += PNC_REPRESENTATION_OF_LIFE
+      durationAndLength = PNC_REPRESENTATION_OF_LIFE
       break
     case DURATION_UNIT_SESSION:
     case "":
-      disposalQuantity += " ".repeat(4)
+      durationAndLength = " ".repeat(4)
       break
     default:
-      disposalQuantity += durationUnit || " "
-      disposalQuantity += durationLength ? durationLength.toString().padEnd(3, " ") : " ".repeat(3)
+      const length = durationLength ? durationLength.toString().padEnd(3, " ") : " ".repeat(3)
+      durationAndLength = (durationUnit || " ") + length
   }
 
-  if (dateSpecInResult && pncDisposalType && !NO_DISPOSAL_DATE_LIST.includes(pncDisposalType)) {
-    disposalQuantity += preProcessDate(dateSpecInResult)
-  } else {
-    disposalQuantity += " ".repeat(8)
-  }
+  const hasDate = dateFromResult && pncDisposalType && !NO_DISPOSAL_DATE_LIST.includes(pncDisposalType)
+  const date = hasDate ? preProcessDate(dateFromResult) : " ".repeat(8)
 
-  if (amtSpecInResult) {
-    disposalQuantity += amtSpecInResult.toFixed(2).toString().padStart(10, "0")
-  } else {
-    disposalQuantity += "0".repeat(7) + ".00"
-  }
+  const amount = amountFromResult ? amountFromResult.toFixed(2).toString().padStart(10, "0") : "0".repeat(7) + ".00"
 
-  disposalQuantity += "00"
-
-  return disposalQuantity
+  return durationAndLength + date + amount + "00"
 }
 
 export const preProcessDisposalQualifiers = (

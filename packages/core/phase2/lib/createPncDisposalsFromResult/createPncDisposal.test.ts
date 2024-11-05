@@ -5,14 +5,14 @@ import createPncDisposal, {
 } from "./createPncDisposal"
 
 describe("preProcessDate", () => {
-  it("returns a string in dnnnDDMMYYYYNNNNNNN.NNUU format", () => {
+  it("returns a string in ddmmyyyy format", () => {
     const result = preProcessDate(new Date("2024-05-10"))
     expect(result).toBe("10052024")
   })
 })
 
 describe("preProcessDisposalQuantity", () => {
-  it("returns the correct format", () => {
+  it("returns a string in dnnnDDMMYYYYNNNNNNN.NNUU format", () => {
     const result = preProcessDisposalQuantity("d", 123, 1, new Date("2024-05-10"), 9999999.99)
     expect(result).toHaveLength(24)
     expect(result).toBe("d123100520249999999.9900")
