@@ -19,6 +19,12 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "caseResolvedDateRange": {
+      newState.resolvedFrom.value = undefined
+      newState.resolvedTo.value = undefined
+      break
+    }
+
     case "caseState": {
       newState.caseStateFilter.value = undefined
       newState.caseStateFilter.label = undefined

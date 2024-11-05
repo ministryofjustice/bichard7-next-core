@@ -18,6 +18,7 @@ interface Props {
     dateRange?: SerializedDateRange | null
     lockedState?: string | null
     caseState?: string | null
+    caseResolvedDateRange?: SerializedDateRange | null
   }
 }
 
@@ -34,7 +35,9 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
     !!filters.dateRange?.from ||
     !!filters.dateRange?.to ||
     (!!filters.lockedState && filters.lockedState !== LockedState.All) ||
-    !!filters.caseState
+    !!filters.caseState ||
+    !!filters.caseResolvedDateRange?.from ||
+    !!filters.caseResolvedDateRange?.to
 
   const removeFilterFromPath = (paramToRemove: { [key: string]: string }): string => {
     let searchParams = deleteQueryParam(paramToRemove, query)
@@ -126,6 +129,17 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
                   filters.dateRange?.to
                 )}`}
                 href={removeQueryParamsByName(["from", "to", "pageNum"])}
+              />
+            </li>
+          </ConditionalRender>
+
+          <ConditionalRender isRendered={!!filters.caseResolvedDateRange?.from && !!filters.caseResolvedDateRange.to}>
+            <li>
+              <FilterTag
+                tag={`${formatStringDateAsDisplayedDate(filters.caseResolvedDateRange?.from)} - ${formatStringDateAsDisplayedDate(
+                  filters.caseResolvedDateRange?.to
+                )}`}
+                href={removeQueryParamsByName(["resolvedFrom", "resolvedTo", "pageNum"])}
               />
             </li>
           </ConditionalRender>

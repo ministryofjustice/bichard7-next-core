@@ -30,6 +30,10 @@ const FilterChipSection: React.FC<Props> = ({
     state.dateTo.value
   )}`
 
+  const resolvedDateRangeLabel = `${formatStringDateAsDisplayedDate(state.resolvedFrom.value)} - ${formatStringDateAsDisplayedDate(
+    state.resolvedTo.value
+  )}`
+
   return (
     <>
       <ConditionalRender isRendered={anyFilterChips(state, sectionState)}>
@@ -158,6 +162,21 @@ const FilterChipSection: React.FC<Props> = ({
               ))}
           </ul>
         </ConditionalRender>
+
+        <FilterChipRow
+          chipLabel={resolvedDateRangeLabel}
+          condition={
+            state.resolvedFrom.value !== undefined &&
+            state.resolvedTo.value !== undefined &&
+            state.resolvedFrom.state === sectionState &&
+            state.resolvedTo.state === sectionState
+          }
+          dispatch={dispatch}
+          type="caseResolvedDateRange"
+          label="Case resolved date range"
+          state={state.resolvedFrom.state || sectionState}
+          value={resolvedDateRangeLabel}
+        />
 
         <FilterChipRow
           chipLabel={state.caseStateFilter.label!}

@@ -1,0 +1,26 @@
+import type { PncOffence } from "../../types/PncQueryResult"
+import type { Result } from "../../types/AnnotatedHearingOutcome"
+import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
+
+const areResultsMatchingPncAdjudication = (
+  results: Result[],
+  hearingDate: Date,
+  offenceReasonSequence: string,
+  pncOffence: PncOffence
+): boolean => {
+  const hoAdjudication = createPncAdjudicationFromAho(results, hearingDate)
+  const pncAdjudication = pncOffence.adjudication
+  const pncOffenceSequence = pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
+
+  return (
+    !!hoAdjudication &&
+    !!pncAdjudication &&
+    offenceReasonSequence === pncOffenceSequence &&
+    hoAdjudication.verdict === pncAdjudication.verdict &&
+    hoAdjudication.plea === pncAdjudication.plea &&
+    hoAdjudication.offenceTICNumber === pncAdjudication.offenceTICNumber &&
+    hoAdjudication.sentenceDate?.getTime() === pncAdjudication.sentenceDate?.getTime()
+  )
+}
+
+export default areResultsMatchingPncAdjudication
