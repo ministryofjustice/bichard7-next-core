@@ -8,7 +8,7 @@ import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
-import type Gateway from "../../services/gateways/interfaces/gateway"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import canUserResubmitCase from "../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({
@@ -18,7 +18,7 @@ const bodySchema = z.object({
 export type ResubmitBody = z.infer<typeof bodySchema>
 
 type HandlerProps = {
-  gateway: Gateway
+  db: DataStoreGateway
   user: User
   caseId: number
   body: ResubmitBody
@@ -44,7 +44,7 @@ const schema = {
   }
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => {
+const handler = async ({ db, user, caseId, body, reply }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -68,7 +68,7 @@ const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => 
   // - in theory this should either be 502 or 504
 
   try {
-    const result = await canUserResubmitCase({ gateway, user, caseId })
+    const result = await canUserResubmitCase({ db, user, caseId })
 
     if (!result) {
       reply.code(FORBIDDEN).send()
@@ -92,7 +92,7 @@ const handler = async ({ gateway, user, caseId, body, reply }: HandlerProps) => 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
     await handler({
-      gateway: req.gateway,
+      db: req.db,
       user: req.user,
       caseId: Number(req.params.caseId),
       body: req.body,

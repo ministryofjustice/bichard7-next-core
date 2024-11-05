@@ -10,7 +10,9 @@ const anyFilterChips = (state: Filter, countOfState?: FilterState): boolean => {
       state.defendantNameSearch,
       state.courtNameSearch,
       state.reasonCodes[0],
-      state.ptiurnSearch
+      state.ptiurnSearch,
+      state.resolvedFrom,
+      state.resolvedTo
     ].some(
       (filter): boolean =>
         filter?.value !== undefined &&
