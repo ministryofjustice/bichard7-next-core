@@ -1,7 +1,7 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
-import nonRecordableResults from "../../lib/nonRecordableResults"
+import nonRecordableResultCodes from "../../lib/nonRecordableResultCodes"
 
 const isRecordableResult = (result: Result): boolean =>
-  !!result.PNCDisposalType && !nonRecordableResults.includes(result.PNCDisposalType)
+  !!result.PNCDisposalType && !nonRecordableResultCodes.includes(result.PNCDisposalType)
 
 export default isRecordableResult

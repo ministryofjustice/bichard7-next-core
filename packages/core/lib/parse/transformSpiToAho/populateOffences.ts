@@ -4,7 +4,7 @@ import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode }
 import { COMMON_LAWS, INDICTMENT } from "../../offenceTypes"
 import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
-import nonRecordableResults from "../../nonRecordableResults"
+import nonRecordableResultCodes from "../../nonRecordableResultCodes"
 
 const enteredInErrorResultCode = 4583 // Hearing Removed
 const dontKnowValue = "D"
@@ -32,7 +32,7 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
     const resultCode = result.ResultCode !== undefined ? Number(result.ResultCode) : undefined
     if (resultCode === adjournmentSineDieResultCode) {
       a2007ResultFound = true
-    } else if (!nonRecordableResults.includes(resultCode ?? 1000)) {
+    } else if (!nonRecordableResultCodes.includes(resultCode ?? 1000)) {
       aFailConditionResultFound = true
     }
   })

@@ -1,11 +1,11 @@
 import isEqual from "lodash.isequal"
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import nonRecordableResults from "../../../../lib/nonRecordableResults"
+import nonRecordableResultCodes from "../../../../lib/nonRecordableResultCodes"
 
 const disposalTextResultCodes = [1100, 3008, 3025, 3041, 3106, 3047]
 
 const resultIsNonRecordable = (result: Result): boolean =>
-  !!result.CJSresultCode && nonRecordableResults.includes(result.CJSresultCode)
+  !!result.CJSresultCode && nonRecordableResultCodes.includes(result.CJSresultCode)
 
 const resultIsRecordable = (result: Result): boolean => !resultIsNonRecordable(result)
 

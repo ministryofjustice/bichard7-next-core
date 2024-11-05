@@ -6,7 +6,7 @@ import ResultClass from "../../types/ResultClass"
 import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
 import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import nonRecordableResults from "../../lib/nonRecordableResults"
+import nonRecordableResultCodes from "../../lib/nonRecordableResultCodes"
 
 const HO100305: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []
@@ -25,7 +25,7 @@ const HO100305: ExceptionGenerator = (hearingOutcome) => {
       if (
         isResultClassCode(CJSresultCode) ||
         isNotGuiltyVerdict(Verdict) ||
-        (offence.AddedByTheCourt === undefined && !nonRecordableResults.includes(CJSresultCode))
+        (offence.AddedByTheCourt === undefined && !nonRecordableResultCodes.includes(CJSresultCode))
       ) {
         generatedExceptions.push({
           code: ExceptionCode.HO100305,
