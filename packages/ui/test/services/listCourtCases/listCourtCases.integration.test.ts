@@ -139,10 +139,10 @@ describe("listCourtCases", () => {
   })
 
   describe("Trigger exclusion", () => {
-    async function removeExceptions(exceptionsCount: number) {
+    async function removeExceptions(caseCount: number) {
       const db = postgres({ ...createDbConfig() })
 
-      for (let i = 0; i < exceptionsCount; i++) {
+      for (let i = 0; i < caseCount; i++) {
         await db<
           ErrorListRecord[]
         >`UPDATE br7own.error_list set error_count = 0, error_reason = null, error_report = '', error_status = null, error_insert_ts = null WHERE error_id = ${i}`
