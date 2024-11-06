@@ -168,24 +168,22 @@ describe("listCourtCases", () => {
       }
     ]
 
-    const userWithExcludedTRPR0001 = (userGroup: UserGroup) => {
-      const testUserWithExcludedTrigger = new User()
-      testUserWithExcludedTrigger.groups = [userGroup, UserGroup.NewUI]
-      testUserWithExcludedTrigger.visibleForces = ["001"]
-      testUserWithExcludedTrigger.visibleCourts = []
-      testUserWithExcludedTrigger.excludedTriggers = [TriggerCode.TRPR0001]
-      return testUserWithExcludedTrigger
+    const createUserWithExcludedTrigger = (userGroups: UserGroup[], triggerCode: TriggerCode): User => {
+      const user = new User()
+      user.groups = userGroups
+      user.visibleForces = ["001"]
+      user.visibleCourts = []
+      user.excludedTriggers = [triggerCode]
+      return user
     }
 
-    const excludeTriggers = (triggerCodes: TriggerCode[]) => (testUser.excludedTriggers = triggerCodes)
-
     it("Should not display cases with user excluded triggers", async () => {
-      excludeTriggers([TriggerCode.TRPR0001])
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
       await removeExceptions(3)
 
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
       expect(isError(result)).toBe(false)
       const { result: cases } = result as ListCourtCaseResult
 
@@ -193,11 +191,11 @@ describe("listCourtCases", () => {
     })
 
     it("Should not display user excluded triggers but display those cases when they have exceptions", async () => {
-      excludeTriggers([TriggerCode.TRPR0001])
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
 
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
       expect(isError(result)).toBe(false)
       const { result: cases } = result as ListCourtCaseResult
 
@@ -205,30 +203,7 @@ describe("listCourtCases", () => {
     })
 
     it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user has access to all", async () => {
-      excludeTriggers([TriggerCode.TRPR0001])
-      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
-        {
-          code: TriggerCode.TRPR0001,
-          status: "Unresolved"
-        },
-        {
-          code: TriggerCode.TRPR0002,
-          status: "Unresolved"
-        }
-      ]
-      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
-      await insertDummyCourtCasesWithTriggers(caseTriggers, "36")
-      await removeExceptions(3)
-
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
-      expect(isError(result)).toBe(false)
-      const { result: cases } = result as ListCourtCaseResult
-
-      expect(cases).toHaveLength(3)
-    })
-
-    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user is a trigger handler", async () => {
-      const triggerHandlerWithExcludedTRPR0001 = userWithExcludedTRPR0001(UserGroup.TriggerHandler)
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
           code: TriggerCode.TRPR0001,
@@ -243,7 +218,30 @@ describe("listCourtCases", () => {
       await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
       await removeExceptions(3)
 
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandlerWithExcludedTRPR0001)
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user is a trigger handler", async () => {
+      const triggerHandler = createUserWithExcludedTrigger([UserGroup.TriggerHandler], TriggerCode.TRPR0001)
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: TriggerCode.TRPR0001,
+          status: "Unresolved"
+        },
+        {
+          code: TriggerCode.TRPR0002,
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await removeExceptions(3)
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandler)
       expect(isError(result)).toBe(false)
       const { result: cases } = result as ListCourtCaseResult
 
@@ -251,7 +249,7 @@ describe("listCourtCases", () => {
     })
 
     it("Should not display any case when there is an exception and a trigger, user is the supervisor, exception is resolved and a trigger is excluded for user", async () => {
-      const supervisorWithExcludedTRPR0001 = userWithExcludedTRPR0001(UserGroup.Supervisor)
+      const supervisor = createUserWithExcludedTrigger([UserGroup.Supervisor], TriggerCode.TRPR0001)
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
           code: TriggerCode.TRPR0001,
@@ -262,7 +260,7 @@ describe("listCourtCases", () => {
       await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
       await resolveException()
 
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, supervisorWithExcludedTRPR0001)
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, supervisor)
       expect(isError(result)).toBe(false)
       const { result: cases } = result as ListCourtCaseResult
 
@@ -270,11 +268,11 @@ describe("listCourtCases", () => {
     })
 
     it("Should not display any case when there is an exception and a trigger, user is the triggerHandler, and a trigger is excluded for user", async () => {
-      const triggerHandlerWithExcludedTRPR0001 = userWithExcludedTRPR0001(UserGroup.TriggerHandler)
+      const triggerHandler = createUserWithExcludedTrigger([UserGroup.TriggerHandler], TriggerCode.TRPR0001)
       const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
       await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
 
-      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandlerWithExcludedTRPR0001)
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandler)
       expect(isError(result)).toBe(false)
       const { result: cases } = result as ListCourtCaseResult
 
