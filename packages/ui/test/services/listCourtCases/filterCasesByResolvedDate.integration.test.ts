@@ -62,7 +62,8 @@ describe("Filter cases by resolved date", () => {
         orgForPoliceFilter: orgCode,
         resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
         errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved"
       }))
     )
 
@@ -88,7 +89,8 @@ describe("Filter cases by resolved date", () => {
         orgForPoliceFilter: orgCode,
         resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
         errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved"
       }))
     )
 
@@ -115,7 +117,8 @@ describe("Filter cases by resolved date", () => {
         orgForPoliceFilter: orgCode,
         resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
         errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved"
       }))
     )
 
@@ -141,7 +144,8 @@ describe("Filter cases by resolved date", () => {
         orgForPoliceFilter: orgCode,
         resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
         errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved"
       }))
     )
 
