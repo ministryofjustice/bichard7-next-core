@@ -1,3 +1,5 @@
+import "zod-openapi/extend"
+
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 const auth: FastifyZodOpenApiSchema = {

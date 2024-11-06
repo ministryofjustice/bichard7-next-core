@@ -1,3 +1,5 @@
+import "zod-openapi/extend"
+
 import { z } from "zod"
 import { UserGroup } from "./UserGroup"
 

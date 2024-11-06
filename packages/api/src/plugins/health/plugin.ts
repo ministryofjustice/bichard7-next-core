@@ -1,3 +1,5 @@
+import "zod-openapi/extend"
+
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"

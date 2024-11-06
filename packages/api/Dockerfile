@@ -1,32 +1,24 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS builder
 
 RUN echo $NOTIIFCATION
 LABEL maintainer="CJSE"
-
-RUN dnf update -y \
-  && dnf install -y findutils \
-  && rm -rf /var/log/* \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf
 
 WORKDIR /core
 
 COPY package.json .
 COPY package-lock.json .
-COPY packages/api ./packages/api
-COPY packages/common ./packages/common
+COPY packages ./packages
 COPY tsconfig*.json ./
 
-WORKDIR /core/packages/common
-
-RUN npm i --ignore-scripts && npm run build \
-  && ls | grep -v package.json | grep -v dist | xargs rm -rf
+RUN npm ci && npm run build -w packages/common
 
 WORKDIR /core/packages/api
 
 COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
-RUN mkdir -p /certs && \
+
+RUN npm run esbuild && \
+  mkdir -p /certs && \
   openssl req \
   -x509 \
   -nodes \
@@ -38,9 +30,18 @@ RUN mkdir -p /certs && \
   -extensions 'v3_req' && \
   rm -rf /tmp/openssl.cnf
 
-RUN npm i --ignore-scripts && npm run build \
-  && npm run esbuild \
-  && cp -r build/static . \
-  && ls | grep -v package.json | grep -v dist | grep -v static | xargs rm -rf
 
-CMD [ "node", "dist/src/index.js" ]
+FROM ${BUILD_IMAGE}
+
+WORKDIR /
+
+COPY --from=builder /core/packages/api/build /core/packages/api/build
+COPY --from=builder /certs /certs
+
+WORKDIR /core/packages/api
+
+COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
+
+WORKDIR /core/packages/api
+
+CMD [ "node", "build/index.js" ]

@@ -1,9 +1,10 @@
+import "zod-openapi/extend"
+
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
-import "zod-openapi/extend"
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
@@ -28,15 +29,10 @@ type HandlerProps = {
 const schema = {
   ...auth,
   tags: ["Cases"],
-  params: z.object({
-    caseId: z.string().openapi({
-      description: "Case ID"
-    })
-  }),
-  body: bodySchema,
+  body: bodySchema.openapi({ example: { phase: 2 } }),
   response: {
     [OK]: z
-      .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })
+      .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase", example: 1 }) })
       .openapi({ description: "Worked" }),
     ...unauthorizedError,
     ...forbiddenError,
@@ -89,12 +85,17 @@ const handler = async ({ db, user, caseId, body, reply }: HandlerProps) => {
   reply.code(OK).send({ phase: body.phase })
 }
 
+type Params = {
+  caseId: string
+}
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
+    const { caseId } = req.params as Params
+
     await handler({
       db: req.db,
       user: req.user,
-      caseId: Number(req.params.caseId),
+      caseId: Number(caseId),
       body: req.body,
       reply
     })

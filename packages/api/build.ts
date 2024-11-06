@@ -22,7 +22,7 @@ function esbuildPluginFastifySwaggerUi(): Plugin {
   const entryPoints = await glob("src/**/!(*.test).ts")
 
   build({
-    entryPoints,
+    entryPoints: entryPoints.filter((f) => !f.includes("test")),
     logLevel: "info",
     outdir: "build",
     bundle: true,

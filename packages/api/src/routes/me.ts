@@ -1,4 +1,7 @@
+import "zod-openapi/extend"
+
 import { UserSchema } from "@moj-bichard7/common/types/User"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
@@ -11,7 +14,8 @@ const schema = {
   tags: ["Root"],
   response: {
     [OK]: UserSchema.omit({ id: true, jwt_id: true, visible_forces: true }).openapi({
-      description: "Returns details of authorised user"
+      description: "Returns details of authorised user",
+      examples: [{ username: "UserName", email: "username@example.com", groups: [UserGroup.GeneralHandler] }]
     }),
     ...unauthorizedError
   }

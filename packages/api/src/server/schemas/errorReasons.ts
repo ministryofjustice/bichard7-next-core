@@ -1,3 +1,5 @@
+import "zod-openapi/extend"
+
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "http-status"
 import z from "zod"
 
