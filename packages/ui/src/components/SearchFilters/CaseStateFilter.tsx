@@ -1,6 +1,4 @@
 import { useCurrentUser } from "context/CurrentUserContext"
-import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
-import { FormGroup } from "govuk-react"
 import { ChangeEvent, Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 
@@ -17,64 +15,57 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
 
   return (
     <fieldset className="govuk-fieldset">
-      <FormGroup className={`govuk-form-group reasons`}>
-        <ExpandingFilters filterName={"Case state"} classNames="filters-reason">
-          <fieldset className="govuk-fieldset">
-            <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
-              <div className="govuk-radios__item">
-                <input
-                  className="govuk-radios__input"
-                  id="resolved"
-                  name="state"
-                  type="radio"
-                  value="Resolved"
-                  checked={caseState === "Resolved" && !resolvedByUsername}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    dispatch({
-                      method: event.currentTarget.checked ? "add" : "remove",
-                      type: "caseState",
-                      value: "Resolved"
-                    })
-                  }}
-                ></input>
-                <label className="govuk-label govuk-radios__label" htmlFor="ResolvedCases">
-                  {"Resolved cases"}
-                </label>
-              </div>
-            </div>
-          </fieldset>
-          <fieldset className="govuk-fieldset">
-            <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
-              <div className="govuk-radios__item">
-                <input
-                  className="govuk-radios__input"
-                  id="myResolvedCases"
-                  name="resolvedByUsername"
-                  type="radio"
-                  value={currentUser.username}
-                  checked={resolvedByUsername === currentUser.username}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    dispatch({
-                      method: event.currentTarget.checked ? "add" : "remove",
-                      type: "caseState",
-                      value: "Resolved"
-                    })
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Case state"}</legend>
+      <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+        {/* <div className="govuk-checkboxes__item">
+          <input
+            className="govuk-checkboxes__input"
+            id="resolved"
+            name="state"
+            type="checkbox"
+            value="Resolved"
+            checked={caseState === "Resolved" && !resolvedByUsername}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              dispatch({
+                method: event.currentTarget.checked ? "add" : "remove",
+                type: "caseState",
+                value: "Resolved"
+              })
+            }}
+          />
+          <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
+            {"Resolved cases"}
+          </label>
+        </div> */}
+        <div className="govuk-checkboxes__item">
+          <input
+            className="govuk-checkboxes__input"
+            id="myResolvedCases"
+            name="resolvedByUsername"
+            type="checkbox"
+            value={currentUser.username}
+            checked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              const isChecked = event.currentTarget.checked
 
-                    dispatch({
-                      method: event.currentTarget.checked ? "add" : "remove",
-                      type: "resolvedByUsernameFilter",
-                      value: currentUser.username
-                    })
-                  }}
-                ></input>
-                <label className="govuk-label govuk-radios__label" htmlFor="myResolvedCases">
-                  {"My resolved cases"}
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </ExpandingFilters>
-      </FormGroup>
+              dispatch({
+                method: isChecked ? "add" : "remove",
+                type: "caseState",
+                value: "Resolved"
+              })
+
+              dispatch({
+                method: isChecked ? "add" : "remove",
+                type: "resolvedByUsernameFilter",
+                value: currentUser.username
+              })
+            }}
+          />
+          <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
+            {"My resolved cases"}
+          </label>
+        </div>
+      </div>
     </fieldset>
   )
 }

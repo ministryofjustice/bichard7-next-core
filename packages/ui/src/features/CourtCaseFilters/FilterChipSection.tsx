@@ -106,6 +106,20 @@ const FilterChipSection: React.FC<Props> = ({
           ))}
         </FilterChipContainer>
 
+        <FilterChipRow
+          chipLabel={state.resolvedByUsernameFilter.label!}
+          condition={
+            state.resolvedByUsernameFilter.value !== undefined &&
+            state.resolvedByUsernameFilter.label !== undefined &&
+            state.resolvedByUsernameFilter.state === sectionState
+          }
+          dispatch={dispatch}
+          type="resolvedByUsername"
+          label="My resolved cases"
+          state={state.resolvedByUsernameFilter.state || sectionState}
+          value={state.resolvedByUsernameFilter.value!}
+        />
+
         <ConditionalRender
           isRendered={
             !!state.reasonFilter &&
