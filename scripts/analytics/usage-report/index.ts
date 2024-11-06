@@ -23,7 +23,7 @@ import { getDateString } from "./common"
 import WorkbookGenerator from "./WorkbookGenerator"
 import { DataSource } from "typeorm"
 import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
-import getDataSource, { defaultDatabaseConfig } from "@moj-bichard7/api/src/services/getDataSource"
+import baseConfig from "@moj-bichard7/common/db/baseConfig"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let dynamo: DocumentClient
@@ -70,13 +70,15 @@ async function setup() {
     (endpoint) => endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
   )?.[0]
   process.env.DB_USER = process.env.DB_PASSWORD = process.env.DB_SSL = "true"
-  postgres = await getDataSource({
-    ...defaultDatabaseConfig,
+  postgres = await new DataSource({
+    ...baseConfig,
     host: dbHost || "",
-    user: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_USER || "",
+    username: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_USER || "",
     password: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_PASSWORD || "",
-    ssl: true
-  })
+    type: "postgres",
+    applicationName: "ui-connection",
+    ssl: { rejectUnauthorized: false }
+  }).initialize()
 }
 
 const run = async () => {
