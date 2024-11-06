@@ -6,7 +6,7 @@ import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
-import isAintCase from "./lib/isAintCase"
+import isAncillaryInterimCase from "./lib/isAncillaryInterimCase"
 import refreshOperations from "./lib/refreshOperations"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
@@ -23,7 +23,7 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
   const isResubmitted = isPncUpdateDataset(inputMessage)
   const hearingOutcome = inputMessage.AnnotatedHearingOutcome.HearingOutcome
 
-  if (!isResubmitted && isAintCase(hearingOutcome)) {
+  if (!isResubmitted && isAncillaryInterimCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
 
     return {

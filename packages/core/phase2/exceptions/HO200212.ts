@@ -11,7 +11,7 @@ const getErrorPath = (offence: Offence, offenceIndex: number) =>
     ? errorPaths.offence(offenceIndex).offenceReason.offenceCodeReason
     : errorPaths.offence(offenceIndex).offenceReason.localOffenceCode
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
+const HO200212: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
     (exceptions: Exception[], offence, offenceIndex) => {
       if (!offence.AddedByTheCourt && isRecordableOffence(offence) && !offence.Result.some(isRecordableResult)) {
@@ -23,4 +23,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
     []
   )
 
-export default generator
+export default HO200212

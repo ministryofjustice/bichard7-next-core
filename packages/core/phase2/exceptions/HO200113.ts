@@ -9,7 +9,7 @@ import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200113: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   const operations = generateOperationsFromOffenceResults(aho, areAllResultsOnPnc(aho), isPncUpdateDataset(aho))
@@ -42,4 +42,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200113

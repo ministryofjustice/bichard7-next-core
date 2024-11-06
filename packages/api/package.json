@@ -61,13 +61,13 @@
     "@fastify/autoload": "6.0.2",
     "@fastify/swagger": "^9.2.0",
     "@fastify/swagger-ui": "^5.1.0",
-    "fastify": "^5.0.0",
-    "fastify-zod-openapi": "^2.0.0",
+    "fastify": "^5.1.0",
+    "fastify-zod-openapi": "^3.0.2",
     "http-status": "^1.8.1",
     "jsonwebtoken": "^9.0.2",
     "postgres": "^3.4.5",
     "qs": "^6.13.0",
     "zod": "^3.23.8",
-    "zod-openapi": "^3.1.1"
+    "zod-openapi": "^3.3.0"
   }
 }

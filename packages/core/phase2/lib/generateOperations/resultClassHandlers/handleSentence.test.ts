@@ -12,7 +12,7 @@ describe("handleSentence", () => {
     jest.resetAllMocks()
   })
 
-  it("should return PENHRG operation when fixedPenalty is true and ccrId has value", () => {
+  it("returns penalty hearing operation with data when penalty notice case reference number and court case reference exists", () => {
     const params = generateResultClassHandlerParams({ fixedPenalty: true })
 
     const operations = handleSentence(params)
@@ -22,7 +22,7 @@ describe("handleSentence", () => {
     ])
   })
 
-  it("should return PENHRG operation when fixedPenalty is true and ccrId does not have value", () => {
+  it("returns penalty hearing operation without data when penalty notice case reference number exists and court case reference doesn't exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: true,
       offence: {
@@ -35,7 +35,7 @@ describe("handleSentence", () => {
     expect(operations).toStrictEqual([{ code: PncOperation.PENALTY_HEARING, data: undefined, status: "NotAttempted" }])
   })
 
-  it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId has value", () => {
+  it("returns sentence deferred operation with data when PNC adjudication exists, court case reference exists and offence has no 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { PNCAdjudicationExists: true } as Result
@@ -49,7 +49,7 @@ describe("handleSentence", () => {
     ])
   })
 
-  it("should return SENDEF operation when adjudication exists, there are no 2007 result code, and ccrId does not have value", () => {
+  it("returns sentence deferred operation without data when PNC adjudication exists, offence has no 2007 result code and court case reference doesn't exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { PNCAdjudicationExists: true } as Result,
@@ -66,7 +66,7 @@ describe("handleSentence", () => {
     ])
   })
 
-  it("should return SUBVAR operation when adjudication exists, and there is a 2007 result code", () => {
+  it("returns disposal updated operation with data when PNC adjudication exists, court case reference exists and offence has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       resubmitted: true,
@@ -84,7 +84,7 @@ describe("handleSentence", () => {
     ])
   })
 
-  it("should return SUBVAR operation without operation data when adjudication exists, there is a 2007 result code, and ccrId is not set", () => {
+  it("returns disposal updated operation without data when PNC adjudication exists, offence has a 2007 result code and court case reference doesn't exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       resubmitted: true,
@@ -108,7 +108,7 @@ describe("handleSentence", () => {
     ])
   })
 
-  it("should return no operations when PNC adjudication does not exist", () => {
+  it("returns no operations when PNC adjudication does not exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       result: { PNCAdjudicationExists: false } as Result,
