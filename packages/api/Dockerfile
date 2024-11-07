@@ -11,7 +11,7 @@ COPY package-lock.json .
 COPY packages ./packages
 COPY tsconfig*.json ./
 
-RUN npm ci && npm run build -w packages/common
+RUN npm ci --ignore-scripts && npm run build -w packages/common
 
 WORKDIR /core/packages/api
 
