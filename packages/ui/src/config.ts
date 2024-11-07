@@ -12,7 +12,7 @@ export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === 
 export const CSRF = {
   tokenName: "CSRFToken",
   formSecret: process.env.CSRF_FORM_SECRET ?? "OliverTwist2",
-  maximumTokenAgeInSeconds: parseInt(process.env.CSRF_TOKEN_MAX_AGE ?? "600", 10)
+  maximumTokenAgeInSeconds: Number(process.env.CSRF_TOKEN_MAX_AGE ?? "600")
 }
 export const EXCEPTION_PATH_PROPERTY_INDEXES = {
   offenceIndex: 5,
