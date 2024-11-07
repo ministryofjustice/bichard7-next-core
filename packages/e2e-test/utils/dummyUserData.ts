@@ -49,6 +49,30 @@ const dummyUsers: Record<string, DummyUser> = {
     excluded_triggers: [],
     groups: ["B7Audit", "B7NewUI"]
   },
+  supervisorwithexcludedtrpr0006: {
+    inclusionList: [],
+    exclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"],
+    excluded_triggers: ["TRPR0006"],
+    groups: ["B7Supervisor", "B7NewUI"]
+  },
+  triggerhandlerwithexcludedtrpr0006: {
+    inclusionList: [],
+    exclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"],
+    excluded_triggers: ["TRPR0006"],
+    groups: ["B7TriggerHandler", "B7NewUI"]
+  },
+  triggerhandlerwithexcludedtrpr0008: {
+    inclusionList: [],
+    exclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"],
+    excluded_triggers: ["TRPR0008"],
+    groups: ["B7TriggerHandler", "B7NewUI"]
+  },
   "old.bichard.user": {
     inclusionList: [],
     exclusionList: [],

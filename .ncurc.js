@@ -6,8 +6,8 @@ const semver = new RegExp(
   Pinned:
   - chalk
     - v5 is a breaking change
-  - fastify-zod-openapi
-    - https://github.com/samchungy/fastify-zod-openapi/issues/192
+  - @types/diff
+    - changed the Change type to require extra values
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -18,7 +18,7 @@ const semver = new RegExp(
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
 */
-const pinned = ["chalk", "eslint", "fastify-zod-openapi"]
+const pinned = ["chalk", "eslint", "@types/diff"]
 const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber", "http-status"]
 
 module.exports = {

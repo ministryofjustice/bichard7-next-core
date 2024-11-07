@@ -3,6 +3,7 @@ import swaggerUi from "@fastify/swagger-ui"
 import type { FastifyInstance } from "fastify"
 import { fastifyZodOpenApiTransform } from "fastify-zod-openapi"
 import path from "path"
+import type { ZodOpenApiVersion } from "zod-openapi"
 
 export default async function (fastify: FastifyInstance) {
   await fastify.register(swagger, {
@@ -12,6 +13,7 @@ export default async function (fastify: FastifyInstance) {
         description: "API documentation about Bichard",
         version: "0.0.1"
       },
+      openapi: "3.1.0" satisfies ZodOpenApiVersion,
       components: {
         securitySchemes: {
           bearerAuth: {

@@ -7,7 +7,7 @@ import { getDisposalTextFromResult } from "../lib/getDisposalTextFromResult"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 import { maxDisposalTextLength } from "../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200200: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
@@ -22,4 +22,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200200
