@@ -15,21 +15,27 @@ const insertTrigger = (status = "Unresolved") => {
   })
 }
 
+const insertDummyCourtCases = ( params: {errorLockedByUsername?: string,  triggerLockedByUsername?: string, errorStatus?: string, triggerStatus?: string} ) => {
+  cy.task("insertCourtCasesWithFields", [
+    {
+      errorLockedByUsername: params.errorLockedByUsername,
+      triggerLockedByUsername: params.triggerLockedByUsername,
+      orgForPoliceFilter: "01",
+      errorCount: 1,
+      errorStatus: params.errorStatus,
+      triggerCount: 1,
+      triggerStatus: params.triggerStatus
+    }
+  ])
+}
+
 describe("Lock court cases", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
 
   it("should lock a case when a user views a case details page", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        triggerCount: 1
-      }
-    ])
+    insertDummyCourtCases({})
     insertTrigger()
 
     loginAndVisit()
@@ -45,15 +51,7 @@ describe("Lock court cases", () => {
 
   it("should not lock a case that is already locked to another user", () => {
     const existingUserLock = "BichardForce04"
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: existingUserLock,
-        triggerLockedByUsername: existingUserLock,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        triggerCount: 1
-      }
-    ])
+    insertDummyCourtCases({ errorLockedByUsername: existingUserLock, triggerLockedByUsername: existingUserLock })
 
     loginAndVisit()
     cy.findByText("NAME Defendant").click()
@@ -66,13 +64,7 @@ describe("Lock court cases", () => {
   })
 
   it("should not lock exceptions when a trigger handler clicks into a case", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        triggerCount: 1
-      }
-    ])
+    insertDummyCourtCases({})
     insertTrigger()
 
     loginAndVisit("TriggerHandler")
@@ -83,17 +75,7 @@ describe("Lock court cases", () => {
   })
 
   it("should only lock exceptions on an unlocked case if triggers are already resolved", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        errorStatus: "Unresolved",
-        triggerCount: 1,
-        triggerStatus: "Resolved"
-      }
-    ])
+    insertDummyCourtCases({ errorStatus: "Unresolved", triggerStatus: "Resolved" })
 
     loginAndVisit()
     cy.findByText("NAME Defendant").click()
@@ -105,17 +87,7 @@ describe("Lock court cases", () => {
   })
 
   it("should only lock triggers on an unlocked case if exceptions are already resolved", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        errorStatus: "Resolved",
-        triggerCount: 1,
-        triggerStatus: "Unresolved"
-      }
-    ])
+    insertDummyCourtCases({ errorStatus: "Resolved", triggerStatus: "Unresolved" })
     insertTrigger()
 
     loginAndVisit()
@@ -128,17 +100,7 @@ describe("Lock court cases", () => {
   })
 
   it("shouldn't lock exceptions on an unlocked case if exceptions are submitted", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        errorStatus: "Submitted",
-        triggerCount: 1,
-        triggerStatus: "Unresolved"
-      }
-    ])
+    insertDummyCourtCases({ errorStatus: "Submitted", triggerStatus: "Unresolved" })
     insertTrigger()
 
     loginAndVisit()
@@ -151,17 +113,7 @@ describe("Lock court cases", () => {
   })
 
   it("shouldn't display any cases if exceptions are submitted and triggers are resolved", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        errorStatus: "Submitted",
-        triggerCount: 1,
-        triggerStatus: "Resolved"
-      }
-    ])
+    insertDummyCourtCases({ errorStatus: "Submitted", triggerStatus: "Resolved" })
     insertTrigger("Resolved")
 
     loginAndVisit()
@@ -169,17 +121,7 @@ describe("Lock court cases", () => {
   })
 
   it("shouldn't lock either triggers nor exceptions on an unlocked case if both are already resolved", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        errorCount: 1,
-        errorStatus: "Resolved",
-        triggerCount: 1,
-        triggerStatus: "Resolved"
-      }
-    ])
+    insertDummyCourtCases({ errorStatus: "Resolved", triggerStatus: "Resolved" })
     insertTrigger("Resolved")
 
     loginAndVisit("/bichard/court-cases/0")
