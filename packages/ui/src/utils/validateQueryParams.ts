@@ -41,6 +41,8 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
     : LockedState.All
   const allocatedToUserName = lockedState === LockedState.LockedToMe ? currentUser.username : null
   const caseState = caseStateFilters.includes(String(query.state)) ? (query.state as CaseState) : null
+  console.log(query.resolvedByUsername)
+
   const resolvedByUsername =
     caseState === "Resolved" &&
     (currentUser.hasAccessTo[Permission.ListAllCases] || query.resolvedByUsername === currentUser.username)

@@ -10,21 +10,19 @@ interface CaseStateFilterProps {
 
 const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateFilterProps) => {
   const currentUser = useCurrentUser()
-  console.log(resolvedByUsername)
-  console.log(currentUser.username)
 
   return (
     <fieldset className="govuk-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Case state"}</legend>
       <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-        {/* <div className="govuk-checkboxes__item">
+        <div className="govuk-checkboxes__item">
           <input
             className="govuk-checkboxes__input"
             id="resolved"
             name="state"
             type="checkbox"
             value="Resolved"
-            checked={caseState === "Resolved" && !resolvedByUsername}
+            checked={caseState === "Resolved"}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               dispatch({
                 method: event.currentTarget.checked ? "add" : "remove",
@@ -36,7 +34,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
           <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
             {"Resolved cases"}
           </label>
-        </div> */}
+        </div>
         <div className="govuk-checkboxes__item">
           <input
             className="govuk-checkboxes__input"
@@ -44,15 +42,9 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
             name="resolvedByUsername"
             type="checkbox"
             value={currentUser.username}
-            checked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
+            checked={resolvedByUsername === currentUser.username}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               const isChecked = event.currentTarget.checked
-
-              dispatch({
-                method: isChecked ? "add" : "remove",
-                type: "caseState",
-                value: "Resolved"
-              })
 
               dispatch({
                 method: isChecked ? "add" : "remove",

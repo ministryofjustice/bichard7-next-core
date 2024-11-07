@@ -6,6 +6,7 @@ import { LockedState, Reason, SerializedDateRange } from "types/CaseListQueryPar
 import { caseStateLabels } from "utils/caseStateFilters"
 import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { formatStringDateAsDisplayedDate } from "utils/date/formattedDate"
+import { useCurrentUser } from "context/CurrentUserContext"
 
 interface Props {
   filters: {
@@ -25,7 +26,7 @@ interface Props {
 
 const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
   const { basePath, query } = useRouter()
-
+  const currentUser = useCurrentUser()
   const hasAnyAppliedFilters = (): boolean =>
     (!!filters.reason && filters.reason !== Reason.All) ||
     !!filters.defendantName ||
@@ -164,10 +165,10 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
             </li>
           </ConditionalRender>
 
-          <ConditionalRender isRendered={!!filters.resolvedByUsername}>
+          <ConditionalRender isRendered={filters.resolvedByUsername === currentUser.username}>
             <li>
               <FilterTag
-                tag={caseStateLabels[String(filters.resolvedByUsername)] ?? ""}
+                tag={"My resolved cases"}
                 href={removeFilterFromPath({ state: filters.resolvedByUsername ?? "" })}
               />
             </li>
