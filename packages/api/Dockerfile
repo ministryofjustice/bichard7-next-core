@@ -25,6 +25,9 @@ RUN npm i --ignore-scripts && npm run build \
 
 WORKDIR /core/packages/api
 
+RUN npm i --ignore-scripts && npm run build \
+  && ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
+
 COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
 RUN mkdir -p /certs && \
   openssl req \
@@ -37,9 +40,6 @@ RUN mkdir -p /certs && \
   -config /tmp/openssl.cnf \
   -extensions 'v3_req' && \
   rm -rf /tmp/openssl.cnf
-
-RUN npm i --ignore-scripts && npm run build \
-  && ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
 
 WORKDIR /core
 
