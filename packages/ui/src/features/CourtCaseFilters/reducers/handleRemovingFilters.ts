@@ -63,6 +63,8 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
     case "resolvedByUsernameFilter": {
       newState.resolvedByUsernameFilter.value = undefined
       newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
+
       break
     }
 

@@ -167,10 +167,7 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
 
           <ConditionalRender isRendered={filters.resolvedByUsername === currentUser.username}>
             <li>
-              <FilterTag
-                tag={"My resolved cases"}
-                href={removeFilterFromPath({ state: filters.resolvedByUsername ?? "" })}
-              />
+              <FilterTag tag={"My resolved cases"} href={removeQueryParamsByName(["resolvedByUsername"])} />
             </li>
           </ConditionalRender>
 

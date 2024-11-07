@@ -33,7 +33,7 @@ const FilterChipSection: React.FC<Props> = ({
   const resolvedDateRangeLabel = `${formatStringDateAsDisplayedDate(state.resolvedFrom.value)} - ${formatStringDateAsDisplayedDate(
     state.resolvedTo.value
   )}`
-
+  console.log(state.resolvedByUsernameFilter.state)
   return (
     <>
       <ConditionalRender isRendered={anyFilterChips(state, sectionState)}>
