@@ -40,6 +40,11 @@ describe("View resolution status", () => {
 
       cy.visit("/bichard")
 
+      if(expectedResolutionStatus === "Submitted") {
+        cy.findByText("There are no court cases to show")
+        return
+      }
+
       if (expectedResolutionStatus === "Unresolved") {
         cy.get(`.moj-badge`).should("not.exist")
         cy.visit("/bichard/court-cases/0")
