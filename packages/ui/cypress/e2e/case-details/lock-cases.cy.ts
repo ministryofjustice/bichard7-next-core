@@ -116,6 +116,7 @@ describe("Lock court cases", () => {
         triggerStatus: "Unresolved"
       }
     ])
+    insertTrigger()
 
     loginAndVisit()
     cy.findByText("NAME Defendant").click()
@@ -138,6 +139,7 @@ describe("Lock court cases", () => {
         triggerStatus: "Unresolved"
       }
     ])
+    insertTrigger()
 
     loginAndVisit()
     cy.findByText("NAME Defendant").click()
@@ -148,7 +150,7 @@ describe("Lock court cases", () => {
     cy.get("#triggers-locked-tag-lockee").should("contain.text", "Locked to you")
   })
 
-  it("shouldn't lock exceptions or triggers on an unlocked case if exceptions are submitted and triggers are resolved", () => {
+  it("shouldn't display any cases if exceptions are submitted and triggers are resolved", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
@@ -163,12 +165,7 @@ describe("Lock court cases", () => {
     insertTrigger("Resolved")
 
     loginAndVisit()
-    cy.findByText("NAME Defendant").click()
-
-    cy.get(".exceptions-submitted-tag").should("exist").should("contain.text", "Submitted")
-    cy.get(".exceptions-locked-tag").should("not.exist")
-    cy.get(".triggers-resolved-tag").should("exist").should("contain.text", "Resolved")
-    cy.get(".triggers-locked-tag").should("not.exist")
+    cy.findByText("There are no court cases to show")
   })
 
   it("shouldn't lock either triggers nor exceptions on an unlocked case if both are already resolved", () => {
