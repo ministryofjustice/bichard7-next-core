@@ -117,7 +117,12 @@ describe("Lock court cases", () => {
     insertTrigger("Resolved")
 
     loginAndVisit()
-    cy.findByText("There are no court cases to show")
+    cy.findByText("NAME Defendant").click()
+
+    cy.get(".exceptions-submitted-tag").should("exist").should("contain.text", "Submitted")
+    cy.get(".exceptions-locked-tag").should("not.exist")
+    cy.get(".triggers-resolved-tag").should("exist").should("contain.text", "Resolved")
+    cy.get(".triggers-locked-tag").should("not.exist")
   })
 
   it("shouldn't lock either triggers nor exceptions on an unlocked case if both are already resolved", () => {
