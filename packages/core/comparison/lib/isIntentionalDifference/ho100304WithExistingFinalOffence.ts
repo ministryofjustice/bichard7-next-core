@@ -1,7 +1,7 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Often we receive results for the remaining non-final offences in the PNC
