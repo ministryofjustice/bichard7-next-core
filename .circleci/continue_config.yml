@@ -666,11 +666,10 @@ jobs:
       - build_core
       - run:
           name: Run UI component tests
-          command: sh ./.circleci/scripts/ui-scripts/run-component-tests.sh
+          command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            MS_EDGE: << parameters.ms-edge >>
       - store_artifacts:
           path: ./cypress/videos
       - store_artifacts:
@@ -730,11 +729,10 @@ jobs:
           command: bash .circleci/scripts/run-infrastructure.sh ui ui
       - run:
           name: Run UI tests
-          command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
+          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            MS_EDGE: << parameters.ms-edge >>
       - store_test_results:
           path: ./cypress/results
       - store_artifacts:
