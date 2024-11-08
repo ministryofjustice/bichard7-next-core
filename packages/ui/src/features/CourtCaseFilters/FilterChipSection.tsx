@@ -184,7 +184,7 @@ const FilterChipSection: React.FC<Props> = ({
         >
           <ConditionalRender isRendered={!!state.caseStateFilter.value}>
             <FilterChip
-              chipLabel={"Resolved"}
+              chipLabel={"Resolved cases"}
               dispatch={dispatch}
               removeAction={() => {
                 return { method: "remove", type: "caseState", value: state.caseStateFilter.value! } as FilterAction
