@@ -1,4 +1,4 @@
-import type ExceptionCode from "bichard7-next-data-latest/types/ExceptionCode"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/types/ExceptionCode"
 import { XMLParser } from "fast-xml-parser"
 import type { AnnotatedHearingOutcome, Result } from "../../types/AnnotatedHearingOutcome"
 import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"

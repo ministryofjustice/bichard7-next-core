@@ -1,6 +1,6 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { extractExceptionsFromXml, parseAhoXml } from "../../lib/parse/parseAhoXml"

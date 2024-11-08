@@ -1,4 +1,5 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
@@ -6,7 +7,6 @@ import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
-import errorPaths from "../../lib/exceptions/errorPaths"
 
 const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []

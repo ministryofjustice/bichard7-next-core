@@ -1,8 +1,8 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import { PncOperation } from "../../types/PncOperation"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"
 
 const HO200112: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] =>

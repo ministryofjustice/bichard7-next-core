@@ -1,4 +1,4 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../../lib/exceptions/errorPaths"
 import isPncException from "../../../lib/exceptions/isPncException"
 import addAhoErrors from "../../../lib/serialise/ahoXml/addAhoErrors"
