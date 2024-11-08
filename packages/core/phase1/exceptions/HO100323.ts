@@ -1,9 +1,9 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isCaseRecordable from "../../lib/isCaseRecordable"
 import type Exception from "../../types/Exception"
-import findException from "../lib/findException"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+import findException from "../lib/findException"
 
 const hasHO100322 = (exceptions: Exception[], offenceIndex: number, resultIndex: number): boolean =>
   !!findException(

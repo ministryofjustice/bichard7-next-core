@@ -1,13 +1,13 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import type { ComparisonData } from "../../types/ComparisonData"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import {
   flattenCases,
   type PncOffenceWithCaseRef
 } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Bichard arbitrarily matches offences if the

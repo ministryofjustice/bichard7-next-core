@@ -28,6 +28,18 @@ describe("Filter cases by resolved date", () => {
     hasAccessTo: hasAccessToAll
   } as Partial<User> as User
 
+  const insertDummyCourtCases = async (courtCasesCount: number) => {
+    await insertCourtCasesWithFields(
+      Array.from(Array(courtCasesCount)).map((_, index) => ({
+        orgForPoliceFilter: orgCode,
+        resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved"
+      }))
+    )
+  }
+
   beforeAll(async () => {
     dataSource = await getDataSource()
   })
@@ -57,14 +69,7 @@ describe("Filter cases by resolved date", () => {
       from: new Date("2024-05-03 00:00:.000"),
       to: new Date("2024-05-05 23:59:59.000")
     } as DateRange
-    await insertCourtCasesWithFields(
-      Array.from(Array(8)).map((_, index) => ({
-        orgForPoliceFilter: orgCode,
-        resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
-      }))
-    )
+    await insertDummyCourtCases(8)
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
@@ -83,14 +88,7 @@ describe("Filter cases by resolved date", () => {
     const resolvedDateRange = {
       from: new Date("2024-05-05 00:00:.000")
     } as DateRange
-    await insertCourtCasesWithFields(
-      Array.from(Array(8)).map((_, index) => ({
-        orgForPoliceFilter: orgCode,
-        resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
-      }))
-    )
+    await insertDummyCourtCases(8)
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
@@ -110,14 +108,7 @@ describe("Filter cases by resolved date", () => {
     const resolvedDateRange = {
       to: new Date("2024-05-05 23:59:59.000")
     } as DateRange
-    await insertCourtCasesWithFields(
-      Array.from(Array(8)).map((_, index) => ({
-        orgForPoliceFilter: orgCode,
-        resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
-      }))
-    )
+    await insertDummyCourtCases(8)
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
@@ -136,14 +127,7 @@ describe("Filter cases by resolved date", () => {
 
   it("Returns all cases resolved if both 'from' and 'to' are ommitted", async () => {
     const resolvedDateRange = {} as DateRange
-    await insertCourtCasesWithFields(
-      Array.from(Array(8)).map((_, index) => ({
-        orgForPoliceFilter: orgCode,
-        resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
-      }))
-    )
+    await insertDummyCourtCases(8)
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,

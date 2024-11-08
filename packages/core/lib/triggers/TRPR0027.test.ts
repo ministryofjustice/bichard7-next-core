@@ -1,5 +1,5 @@
-import { excludedTriggerConfig as excludedTriggers } from "bichard7-next-data-latest"
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7-developers/bichard7-next-data"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import TRPR0027 from "./TRPR0027"
 

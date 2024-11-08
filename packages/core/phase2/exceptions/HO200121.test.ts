@@ -1,8 +1,8 @@
-import HO200121 from "./HO200121"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200121 from "./HO200121"
 
 describe("HO200121", () => {
   it("returns a HO200121 exception when there are no recordable offences", () => {
