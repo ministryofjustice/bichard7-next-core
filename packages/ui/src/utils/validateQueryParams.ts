@@ -43,7 +43,7 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
   const caseState = caseStateFilters.includes(String(query.state)) ? (query.state as CaseState) : null
 
   const resolvedByUsername =
-    caseState === "Resolved" && !currentUser.hasAccessTo[Permission.ListAllCases]
+    query.resolvedByUsername && caseState === "Resolved" && !currentUser.hasAccessTo[Permission.ListAllCases]
       ? currentUser.username
       : (query.resolvedByUsername as string)
 
