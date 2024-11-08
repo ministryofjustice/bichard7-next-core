@@ -1,4 +1,16 @@
+import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
 import { caseURL, defaultTriggerCases, resolvedTriggers, unresolvedTriggers } from "../../../../fixtures/triggers"
+
+const insertTriggers = (triggers: TestTrigger[]) => {
+  cy.task("clearCourtCases")
+  cy.task("insertCourtCasesWithFields", [
+    {
+      triggerLockedByUsername: "BichardForce04",
+      orgForPoliceFilter: "01"
+    }
+  ])
+  cy.task("insertTriggers", { caseId: 0, triggers })
+}
 
 describe("Trigger status", () => {
   beforeEach(() => {
@@ -28,14 +40,7 @@ describe("Trigger status", () => {
   })
 
   it("Should show a complete badge against each resolved trigger when the trigger lock is not held", () => {
-    cy.task("clearCourtCases")
-    cy.task("insertCourtCasesWithFields", [
-      {
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
-      }
-    ])
-    cy.task("insertTriggers", { caseId: 0, triggers: resolvedTriggers })
+    insertTriggers(resolvedTriggers)
 
     cy.visit(caseURL)
 
@@ -48,15 +53,10 @@ describe("Trigger status", () => {
   })
 
   it("Should not show checkboxes if somebody else has the triggers locked", () => {
-    cy.task("clearCourtCases")
-    cy.task("insertCourtCasesWithFields", [
-      {
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
-      }
-    ])
-    cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
+    insertTriggers(unresolvedTriggers)
+
     cy.visit(caseURL)
+
     cy.get(".trigger-header input[type='checkbox']").should("not.exist")
     cy.get(".trigger-header input[type='checkbox']").should("not.exist")
   })
