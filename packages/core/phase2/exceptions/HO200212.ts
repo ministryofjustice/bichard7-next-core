@@ -1,10 +1,10 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import isRecordableResult from "../lib/isRecordableResult"
 import isRecordableOffence from "../lib/isRecordableOffence"
-import errorPaths from "../../lib/exceptions/errorPaths"
+import isRecordableResult from "../lib/isRecordableResult"
 
 const getErrorPath = (offence: Offence, offenceIndex: number) =>
   offence.CriminalProsecutionReference?.OffenceReason?.__type === "NationalOffenceReason"

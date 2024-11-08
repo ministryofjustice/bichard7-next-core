@@ -1,10 +1,10 @@
-import HO200106 from "./HO200106"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
-import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200106 from "./HO200106"
 
 describe("HO200106", () => {
   it("returns a HO200106 exception where its not a fixed penalty, offence and result are recorable, result class is Sentence, no PNC adjudications on the result and the offence is not added by the court", () => {

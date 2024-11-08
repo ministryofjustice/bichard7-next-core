@@ -1,11 +1,11 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import errorPaths from "../../lib/exceptions/errorPaths"
+import { maxDisposalTextLength } from "../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 import { getDisposalTextFromResult } from "../lib/getDisposalTextFromResult"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
-import { maxDisposalTextLength } from "../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 
 const HO200200: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []

@@ -1,9 +1,9 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isCaseRecordable from "../../lib/isCaseRecordable"
 import type Exception from "../../types/Exception"
-import isAdjourned from "../lib/result/isAdjourned"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+import isAdjourned from "../lib/result/isAdjourned"
 
 const HO100322: ExceptionGenerator = (hearingOutcome) => {
   if (!isCaseRecordable(hearingOutcome)) {

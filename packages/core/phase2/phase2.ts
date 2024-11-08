@@ -1,18 +1,18 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
 import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
+import generateExceptions from "./exceptions/generateExceptions"
+import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import { generateOperations } from "./lib/generateOperations"
 import isAncillaryInterimCase from "./lib/isAncillaryInterimCase"
 import refreshOperations from "./lib/refreshOperations"
 import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
-import generateExceptions from "./exceptions/generateExceptions"
-import { generateOperations } from "./lib/generateOperations"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 
 const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID

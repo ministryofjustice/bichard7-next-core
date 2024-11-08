@@ -23,7 +23,7 @@ import {
   vehicleCode,
   verdict,
   yesNo
-} from "bichard7-next-data-latest"
+} from "@moj-bichard7-developers/bichard7-next-data"
 import type {
   ActualOffenceDate,
   CourtType,
@@ -44,8 +44,8 @@ import type {
   VehicleCode,
   Verdict,
   YesNo
-} from "bichard7-next-data-latest/dist/types/types"
-import type { OrganisationUnit } from "bichard7-next-data-latest/types/types"
+} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
 import type { SpiPlea } from "../../types/Plea"
 
 interface DataLookupResult {

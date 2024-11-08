@@ -1,6 +1,6 @@
+import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import ActiveMqHelper from "@moj-bichard7/common/mq/ActiveMqHelper"
-import type TriggerCode from "bichard7-next-data-latest/types/TriggerCode"
 import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
