@@ -731,6 +731,9 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+      pnc-api:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -738,6 +741,7 @@ jobs:
       AUTH_TYPE: user-service
       TZ: "Europe/London"
       MS_EDGE: << parameters.ms-edge >>
+      PNC_HTTP_ENDPOINTS_ENABLED: <<#parameters.pnc-api>>connectivity,query,remand,appeals-update,committed-sentencing,disposal-update,normal-disposal,sentence-deferred,penalty-notice-charge<</parameters.pnc-api>>
     steps:
       - unless:
           condition:
@@ -897,6 +901,12 @@ workflows:
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           ms-edge: false
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_with_pnc_api
+          ms-edge: false
+          pnc-api: true
           requires:
             - build-ui
       - cucumber_e2e_tests:
