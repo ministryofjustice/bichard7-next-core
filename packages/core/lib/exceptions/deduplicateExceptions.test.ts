@@ -1,4 +1,4 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type Exception from "../../types/Exception"
 import deduplicateExceptions from "./deduplicateExceptions"
 

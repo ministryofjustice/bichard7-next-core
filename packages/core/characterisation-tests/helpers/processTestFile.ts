@@ -1,4 +1,4 @@
-import type TriggerCode from "bichard7-next-data-latest/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/types/TriggerCode"
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"

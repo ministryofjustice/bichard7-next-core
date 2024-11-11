@@ -1,10 +1,10 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../lib/dataLookup"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
-import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 const COURT_HEARING_LOCATION_PATH: ExceptionPath =
   "AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode".split(".")

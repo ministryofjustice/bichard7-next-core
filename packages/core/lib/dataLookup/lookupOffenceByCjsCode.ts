@@ -1,5 +1,5 @@
-import { offenceCode } from "bichard7-next-data-latest"
-import type { OffenceCode } from "bichard7-next-data-latest/dist/types/types"
+import { offenceCode } from "@moj-bichard7-developers/bichard7-next-data"
+import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 
 export const lookupOffenceByCjsCode = (cjsCode: string): OffenceCode | undefined =>
   offenceCode.find((x) => x.cjsCode === cjsCode)
