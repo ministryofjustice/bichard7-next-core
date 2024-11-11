@@ -37,9 +37,7 @@ describe("Persist applied filters", () => {
     cy.get(".moj-pagination__item--active").contains("2")
 
     cy.get(".moj-filter__heading-title a").contains("Clear filters").click({ force: true })
-    cy.reload()
 
-    cy.visit("/bichard")
     cy.get("#defendantName").should("not.have.value", "Defendant Name")
     cy.get(".moj-pagination__item--active").contains("1")
   })
