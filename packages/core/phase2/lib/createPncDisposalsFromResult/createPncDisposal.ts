@@ -101,19 +101,15 @@ export const preProcessDisposalQualifiers = (
   }
 
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
-    let psQualifierFound = ""
     resultQualifiers?.forEach((qualifier) => {
-      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
-        if (["P", "S"].includes(qualifier)) {
-          psQualifierFound = qualifier
-        } else {
-          disposalQualifier += `${qualifier} `
-        }
+      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier) && qualifier !== "S") {
+        disposalQualifier += `${qualifier} `
       }
     })
 
-    if (psQualifierFound) {
-      disposalQualifier += `${psQualifierFound} `
+    const hasSQualifier = resultQualifiers?.some((qualifier) => "S" == qualifier)
+    if (hasSQualifier) {
+      disposalQualifier += "S"
     }
 
     if (secondaryDurationQualifier && disposalQualifier.length <= DISPOSAL_QUALIFIERS_FIELD_LENGTH - 6) {
