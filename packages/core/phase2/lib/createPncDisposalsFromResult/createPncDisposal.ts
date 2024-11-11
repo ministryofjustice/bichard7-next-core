@@ -7,7 +7,7 @@ const NO_QUALIFIERS_LIST = [2059]
 // prettier-ignore
 const INCLUDE_QUALIFIERS_LIST = [
   "A",  "BA",  "BB",  "C",  "E",  "EF",  "F",  "FA",  "FB",  "FH",  "FX",  "FZ",  "GR",
-  "GS",  "HA",  "HB", "HC",  "HD",  "K",  "Q",  "S",  "V",  "YU",  "YV",  "YW"
+  "GS",  "HA",  "HB", "HC",  "HD",  "K",  "Q",  "V",  "YU",  "YV",  "YW"
 ]
 const NO_DISPOSAL_DATE_LIST = [2059, 3050, 3105]
 const DISPOSAL_QUALIFIERS_FIELD_LENGTH = 12
@@ -103,7 +103,7 @@ const preProcessDisposalQualifiers = (
   let disposalQualifier = ""
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
     resultQualifiers?.forEach((qualifier) => {
-      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier) && qualifier !== "S") {
+      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
         disposalQualifier += `${qualifier} `
       }
     })
