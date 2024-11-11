@@ -1,4 +1,5 @@
 import type { PncDisposal } from "../../../types/PncQueryResult"
+import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
 const DURATION_UNIT_LIFE = "L"
 const DURATION_UNIT_SESSION = "S"
@@ -27,7 +28,7 @@ const createPncDisposal = (
   return {
     qtyDuration: qtyDuration,
     qtyMonetaryValue: amountSpecifiedInResult?.toString(),
-    qtyDate: dateSpecifiedInResult ? preProcessDate(dateSpecifiedInResult) : "",
+    qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
     qtyUnitsFined: preProcessDisposalQuantity(
       durationUnit,
       durationLength,
@@ -44,16 +45,6 @@ const createPncDisposal = (
     text: disposalText,
     type: pncDisposalType
   }
-}
-
-export const preProcessDate = (date: Date): string => {
-  return date
-    .toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    })
-    .replace(/\//gm, "")
 }
 
 const preProcessDisposalQuantity = (
@@ -78,7 +69,7 @@ const preProcessDisposalQuantity = (
   }
 
   const hasDate = dateSpecifiedInResult && pncDisposalType && !NO_DISPOSAL_DATE_LIST.includes(pncDisposalType)
-  const date = hasDate ? preProcessDate(dateSpecifiedInResult) : " ".repeat(8)
+  const date = hasDate ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : " ".repeat(8)
 
   const amount = amountSpecifiedInResult
     ? amountSpecifiedInResult.toFixed(2).toString().padStart(10, "0")
