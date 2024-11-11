@@ -18,22 +18,22 @@ const createPncDisposal = (
   durationLength: number | undefined,
   secondaryDurationUnit: string | undefined,
   secondaryDurationLength: number | undefined,
-  dateSpecInResult: Date | undefined,
-  amtSpecInResult: number | undefined,
+  dateSpecifiedInResult: Date | undefined,
+  amountSpecifiedInResult: number | undefined,
   resultQualifiers: string[] | undefined,
   disposalText: string | undefined
 ): PncDisposal => {
   const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
     qtyDuration: qtyDuration,
-    qtyMonetaryValue: amtSpecInResult?.toString(),
-    qtyDate: dateSpecInResult ? preProcessDate(dateSpecInResult) : "",
+    qtyMonetaryValue: amountSpecifiedInResult?.toString(),
+    qtyDate: dateSpecifiedInResult ? preProcessDate(dateSpecifiedInResult) : "",
     qtyUnitsFined: preProcessDisposalQuantity(
       durationUnit,
       durationLength,
       pncDisposalType,
-      dateSpecInResult,
-      amtSpecInResult
+      dateSpecifiedInResult,
+      amountSpecifiedInResult
     ),
     qualifiers: preProcessDisposalQualifiers(
       secondaryDurationUnit,
@@ -60,8 +60,8 @@ export const preProcessDisposalQuantity = (
   durationUnit: string | undefined,
   durationLength: number | undefined,
   pncDisposalType: number | undefined,
-  dateFromResult: Date | undefined,
-  amountFromResult: number | undefined
+  dateSpecifiedInResult: Date | undefined,
+  amountSpecifiedInResult: number | undefined
 ) => {
   let durationAndLength
   switch (durationUnit) {
@@ -77,10 +77,12 @@ export const preProcessDisposalQuantity = (
       durationAndLength = (durationUnit || " ") + length
   }
 
-  const hasDate = dateFromResult && pncDisposalType && !NO_DISPOSAL_DATE_LIST.includes(pncDisposalType)
-  const date = hasDate ? preProcessDate(dateFromResult) : " ".repeat(8)
+  const hasDate = dateSpecifiedInResult && pncDisposalType && !NO_DISPOSAL_DATE_LIST.includes(pncDisposalType)
+  const date = hasDate ? preProcessDate(dateSpecifiedInResult) : " ".repeat(8)
 
-  const amount = amountFromResult ? amountFromResult.toFixed(2).toString().padStart(10, "0") : "0".repeat(7) + ".00"
+  const amount = amountSpecifiedInResult
+    ? amountSpecifiedInResult.toFixed(2).toString().padStart(10, "0")
+    : "0".repeat(7) + ".00"
 
   return durationAndLength + date + amount + "00"
 }
