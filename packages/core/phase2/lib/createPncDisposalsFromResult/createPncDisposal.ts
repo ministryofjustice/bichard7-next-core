@@ -91,15 +91,14 @@ export const preProcessDisposalQualifiers = (
   resultQualifiers: string[] | undefined,
   pncDisposalType: number | undefined
 ) => {
-  let disposalQualifier = ""
   let secondaryDurationQualifier = ""
-
   if (secondaryDurationUnit === DURATION_UNIT_LIFE) {
     secondaryDurationQualifier = PNC_REPRESENTATION_OF_LIFE
-  } else if (secondaryDurationUnit !== undefined && secondaryDurationLength !== undefined) {
+  } else if (secondaryDurationUnit && secondaryDurationLength) {
     secondaryDurationQualifier = secondaryDurationUnit + secondaryDurationLength
   }
 
+  let disposalQualifier = ""
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
     resultQualifiers?.forEach((qualifier) => {
       if (INCLUDE_QUALIFIERS_LIST.includes(qualifier) && qualifier !== "S") {
