@@ -1,4 +1,4 @@
-import { collapseFilterSection, confirmFiltersAppliedContains, expandFilterSection, removeFilterTagWhilstSearchPanelIsHidden } from "../../../support/helpers"
+import { collapseFilterSection, confirmFiltersAppliedContains, removeFilterTagWhilstSearchPanelIsHidden } from "../../../support/helpers"
 
 describe("Filtering cases by resolved date", () => {
   beforeEach(() => {
@@ -7,22 +7,14 @@ describe("Filtering cases by resolved date", () => {
     cy.loginAs("GeneralHandler")
   })
 
-  it("Should expand and collapse Case resolved date filter navigation with the radio conditional sections collapsed after the second expand", () => {
+  it("Should expand and collapse Case resolved date filter navigation", () => {
     cy.visit("/bichard")
 
     cy.contains("Case resolved")
 
-    // expand filter section
-    cy.get(`label[for="resolved-date-range"]`).click()
     cy.get(`label[for="date-resolvedFrom"]`).should("be.visible")
     cy.get(`label[for="date-resolvedTo"]`).should("be.visible")
 
-    // collapse filter section and open again
-    cy.contains("Case resolved date").parent().parent().parent().find("button").click()
-    expandFilterSection(".filters-case-resolved-date", "#date-resolvedFrom")
-    cy.get(`label[for="date-resolvedTo"]`).should("exist")
-
-    // collapse filter section again
     collapseFilterSection(".filters-case-resolved-date", "#date-resolvedFrom")
     cy.get(`label[for="date-resolvedTo"]`).should("not.exist")
   })
@@ -49,15 +41,12 @@ describe("Filtering cases by resolved date", () => {
     cy.visit("/bichard")
 
     cy.get(`label[for="resolved"]`).click()
-    cy.get(`label[for="resolved-date-range"]`).click()
     cy.get(`label[for="date-resolvedFrom"]`).type("2022-01-01")
     cy.get(`label[for="date-resolvedTo"]`).type("2022-12-31")
     cy.get(".govuk-heading-s").contains("Case resolved date range").should("exist")
     cy.get(".moj-filter__tag").contains("01/01/2022 - 31/12/2022")
     cy.get("button#search").click()
 
-    cy.get(`label[for="resolved-date-range"]`).click()
-    cy.get("#resolved-date-range").should("be.checked")
     cy.get("#date-resolvedFrom").should("have.value", "2022-01-01")
     cy.get("#date-resolvedTo").should("have.value", "2022-12-31")
 
@@ -72,7 +61,6 @@ describe("Filtering cases by resolved date", () => {
 
   it("Should update 'selected filter' chip when changing Case resolved date filter", () => {
     cy.visit("/bichard")
-    cy.get(`label[for="resolved-date-range"]`).click()
 
     cy.get(`label[for="date-resolvedFrom"]`).type("1999-01-01")
     cy.get(`label[for="date-resolvedTo"]`).type("2000-12-31")
