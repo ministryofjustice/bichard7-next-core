@@ -56,7 +56,7 @@ export const preProcessDate = (date: Date): string => {
     .replace(/\//gm, "")
 }
 
-export const preProcessDisposalQuantity = (
+const preProcessDisposalQuantity = (
   durationUnit: string | undefined,
   durationLength: number | undefined,
   pncDisposalType: number | undefined,
@@ -87,7 +87,7 @@ export const preProcessDisposalQuantity = (
   return durationAndLength + date + amount + "00"
 }
 
-export const preProcessDisposalQualifiers = (
+const preProcessDisposalQualifiers = (
   secondaryDurationUnit: string | undefined,
   secondaryDurationLength: number | undefined,
   resultQualifiers: string[] | undefined,
