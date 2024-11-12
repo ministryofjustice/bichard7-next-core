@@ -5,6 +5,7 @@ import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
+import type { Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch &&
@@ -60,16 +61,22 @@ const formatTest = (name: string, success: boolean): string => {
   return `${chalk.red("✗")} ${name} failed`
 }
 
-export const printSingleSummary = (result: ComparisonResultDetail): void => {
+export const printSingleSummary = (result: ComparisonResultDetail | Phase3ComparisonResultDetail): void => {
   console.log(formatTest("Audit log events", result.auditLogEventsMatch))
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
+  if ("pncOperationsMatch" in result) {
+    console.log(formatTest("PNC operation requests", result.pncOperationsMatch))
+  }
+
   console.log(formatTest("XML Output", result.xmlOutputMatches))
   console.log(formatTest("XML Parsing", result.xmlParsingMatches))
 }
 
 const printResult = (
-  result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
+  result?:
+    | (ComparisonResultDetail | Phase3ComparisonResultDetail | SkippedFile)
+    | (ComparisonResultDetail | Phase3ComparisonResultDetail | SkippedFile)[],
   truncate = false,
   list = false
 ): boolean => {
@@ -118,6 +125,12 @@ const printResult = (
       console.log("Exceptions do not match")
       console.log("Core result: ", result.debugOutput.exceptions.coreResult)
       console.log("Bichard result: ", result.debugOutput.exceptions.comparisonResult)
+    }
+
+    if ("pncOperationsMatch" in result && !result.pncOperationsMatch) {
+      console.log("PNC operation requests do not match")
+      console.log("Core result: ", result.debugOutput.pncOperations.coreResult)
+      console.log("Bichard result: ", result.debugOutput.pncOperations.comparisonResult)
     }
 
     if (!result.xmlOutputMatches) {

@@ -118,7 +118,7 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
 
     case "triggerIndeterminate": {
       const values = Array.isArray(action.value) ? action.value : [action.value]
-      values.map((reason: string) => {
+      values.forEach((reason: string) => {
         newState.reasonCodes.push({
           value: reason,
           label: reason,
