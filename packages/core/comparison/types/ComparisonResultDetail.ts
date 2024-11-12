@@ -1,6 +1,7 @@
 import type { Change } from "diff"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
+import type { PncOperationRequest } from "./ComparisonFile"
 
 export type ComparisonResultDebugOutput = {
   triggers: {
@@ -19,6 +20,13 @@ export type ComparisonResultDebugOutput = {
   xmlParsingDiff: Change[]
 }
 
+export type Phase3ComparisonResultDebugOutput = ComparisonResultDebugOutput & {
+  pncOperations: {
+    coreResult: PncOperationRequest[]
+    comparisonResult: PncOperationRequest[]
+  }
+}
+
 type ComparisonResultDetail = {
   auditLogEventsMatch: boolean
   triggersMatch: boolean
@@ -32,6 +40,11 @@ type ComparisonResultDetail = {
   correlationId?: string
   intentionalDifference?: boolean
   incomingMessageType?: string
+}
+
+export type Phase3ComparisonResultDetail = ComparisonResultDetail & {
+  pncOperationsMatch: boolean
+  debugOutput?: Phase3ComparisonResultDebugOutput
 }
 
 export default ComparisonResultDetail

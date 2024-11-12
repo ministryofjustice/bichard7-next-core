@@ -41,15 +41,17 @@ export type Phase2Comparison = NewComparison & {
   sentToPhase3: boolean
 }
 
-export type PncOperation = {
+export type PncOperationRequest = {
   operation: string
   request: object
 }
 
 export type Phase3Comparison = NewComparison & {
   phase: 3
+  outgoingMessage?: string
+  triggers?: ComparisonTrigger[]
   auditLogEvents: string[]
-  pncOperations: PncOperation[]
+  pncOperations: PncOperationRequest[]
 }
 
 export type Comparison = OldPhase1Comparison | Phase1Comparison | Phase2Comparison | Phase3Comparison
