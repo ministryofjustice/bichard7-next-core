@@ -1,5 +1,5 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS builder
 
 RUN echo $NOTIIFCATION
 LABEL maintainer="CJSE"
@@ -25,6 +25,9 @@ RUN npm i --ignore-scripts && npm run build \
 
 WORKDIR /core/packages/api
 
+RUN npm i --ignore-scripts && npm run build \
+  && ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
+
 COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
 RUN mkdir -p /certs && \
   openssl req \
@@ -38,9 +41,19 @@ RUN mkdir -p /certs && \
   -extensions 'v3_req' && \
   rm -rf /tmp/openssl.cnf
 
-RUN npm i --ignore-scripts && npm run build \
-  && npm run esbuild \
-  && cp -r build/static . \
-  && ls | grep -v package.json | grep -v dist | grep -v static | xargs rm -rf
+WORKDIR /core
+
+RUN npm prune --omit=dev --workspaces --include-root
+
+FROM ${BUILD_IMAGE}
+
+WORKDIR /
+
+COPY --from=builder /core /core
+COPY --from=builder /certs /certs
+
+WORKDIR /core/packages/api
+
+COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
 CMD [ "node", "dist/src/index.js" ]
