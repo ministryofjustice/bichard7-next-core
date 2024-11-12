@@ -3,13 +3,13 @@ import type { Filter, FilterState } from "types/CourtCaseFilter"
 
 const anyFilterChips = (state: Filter, countOfState?: FilterState): boolean => {
   return (
+    state.reasonCodes.some((reasonCode) => countOfState === undefined || reasonCode.state === countOfState) ||
     [
       state.dateFrom,
       state.dateTo,
       state.caseStateFilter,
       state.defendantNameSearch,
       state.courtNameSearch,
-      state.reasonCodes[0],
       state.ptiurnSearch,
       state.resolvedFrom,
       state.resolvedTo

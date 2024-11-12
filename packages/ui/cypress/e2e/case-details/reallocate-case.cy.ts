@@ -4,6 +4,12 @@ import canReallocateTestData from "../../fixtures/canReallocateTestData.json"
 import { clickTab, loginAndVisit } from "../../support/helpers"
 
 describe("Case details", () => {
+  before(() => {
+    // Create sessions
+    loginAndVisit("BichardForce03")
+    loginAndVisit()
+  })
+
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
