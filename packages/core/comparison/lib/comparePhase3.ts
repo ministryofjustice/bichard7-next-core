@@ -15,10 +15,12 @@ import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 import phase3Handler from "../../phase3/phase3"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
+import MockPncGateway from "./MockPncGateway"
 
-const comparePhase3 = (comparison: Phase3Comparison, debug = false): Phase3ComparisonResultDetail => {
+const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<Phase3ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+  const pncGateway = new MockPncGateway(undefined)
 
   try {
     if (correlationId && correlationId === process.env.DEBUG_CORRELATION_ID) {
@@ -40,7 +42,11 @@ const comparePhase3 = (comparison: Phase3Comparison, debug = false): Phase3Compa
       throw new Error("Incompatible incoming message type")
     }
 
-    const coreResult = phase3Handler(parsedIncomingMessageResult.message, auditLogger)
+    const coreResult = await phase3Handler(parsedIncomingMessageResult.message, pncGateway, auditLogger)
+    if (isError(coreResult)) {
+      throw new Error("Unexpected exception while handling phase 3 message")
+    }
+
     const serialisedPhase2OutgoingMessage = serialiseToXml(coreResult.outputMessage, true)
 
     if (

@@ -27,7 +27,7 @@ const processFile = async (
   }
 
   if (isPhase3(comparison)) {
-    const result = comparePhase3(comparison, true)
+    const result = await comparePhase3(comparison, true)
     result.file = fileName
     return result
   }
