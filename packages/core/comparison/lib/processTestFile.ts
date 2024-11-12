@@ -15,14 +15,14 @@ export const parseComparisonFile = (contents: string, file?: string): Comparison
 
   if ("triggers" in parsed) {
     parsed.triggers = orderBy(
-      parsed.triggers.map((t) => {
+      parsed.triggers?.map((t) => {
         if ("identifier" in t && t.identifier) {
           t.offenceSequenceNumber = parseInt(t.identifier, 10)
         }
 
         delete t.identifier
         return t
-      }),
+      }) ?? [],
       ["code", "offenceSequenceNumber"]
     )
   }

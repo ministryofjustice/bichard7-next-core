@@ -73,7 +73,7 @@ const compareFiles: ConductorWorker = {
 
     const nonErrorTestResults = allTestResults.filter((res) => !isError(res)) as ComparisonResult[]
 
-    const phases = [1, 2]
+    const phases = [1, 2, 3]
 
     phases.forEach(async (phase) => {
       const phaseResults = nonErrorTestResults.filter((res) => res.phase === phase) as ComparisonResult[]
