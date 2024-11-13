@@ -1,7 +1,7 @@
 import AnnotatedHO from "../../../../../test/test-data/AnnotatedHO1.json"
 import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
-import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
 import AsnExceptionHO100301 from "../../../../../test/test-data/AsnExceptionHo100301.json"
+import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
 import ExceptionHO100239 from "../../../../../test/test-data/HO100239_1.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
 
@@ -351,6 +351,50 @@ describe("ASN", () => {
     cy.get("#asn").type("1101ZD0100000448754K")
 
     cy.get("#asn").should("have.value", "11/01ZD/01/00000448754K")
+  })
+
+  it("Should handle whitespace", () => {
+    cy.task("clearCourtCases")
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: AsnExceptionHO100321.hearingOutcomeXml,
+        updatedHearingOutcome: AsnExceptionHO100321.hearingOutcomeXml,
+        errorCount: 1,
+        errorLockedByUsername: "GeneralHandler"
+      }
+    ])
+
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get("#asn").clear()
+    cy.get("#asn").invoke("val", " 11/01ZD/01/448754K  ").type("{backspace}")
+
+    cy.get("#asn").should("have.value", "11/01ZD/01/448754K")
+
+    cy.get(".asn-row .success-message").contains("Input saved").should("exist")
+  })
+
+  it("Should handle whitespace pasted", () => {
+    cy.task("clearCourtCases")
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: AsnExceptionHO100321.hearingOutcomeXml,
+        updatedHearingOutcome: AsnExceptionHO100321.hearingOutcomeXml,
+        errorCount: 1,
+        errorLockedByUsername: "GeneralHandler"
+      }
+    ])
+
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get("#asn").clear()
+    cy.get("#asn").trigger("paste", { clipboardData: { getData: () => " 11/01ZD/01/448754K  " } })
+
+    cy.get("#asn").should("have.value", "11/01ZD/01/448754K")
+
+    cy.get(".asn-row .success-message").contains("Input saved").should("exist")
   })
 
   it("Should divide ASN into sections when user types or pastes asn into the input field ", () => {
