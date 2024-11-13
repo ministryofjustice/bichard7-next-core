@@ -58,12 +58,12 @@ export const AsnField = () => {
 
   const handleAsnChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { value: inputAsnValue, selectionStart, selectionEnd } = e.target
-    amendAsn(inputAsnValue, selectionStart, selectionEnd)
+    amendAsn(inputAsnValue.replaceAll(/\s/g, ""), selectionStart, selectionEnd)
   }
 
   const handleOnPaste = (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const asnFromClipboard = e.clipboardData.getData("text")
+    const asnFromClipboard = e.clipboardData.getData("text").replaceAll(/\s/g, "")
     const asnFromClipboardWithSlashes = Asn.divideAsn(asnFromClipboard)
     amendAsn(asnFromClipboard, asnFromClipboardWithSlashes.length, asnFromClipboardWithSlashes.length)
   }
