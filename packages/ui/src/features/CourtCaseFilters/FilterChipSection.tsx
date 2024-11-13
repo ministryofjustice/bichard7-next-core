@@ -213,10 +213,6 @@ const FilterChipSection: React.FC<Props> = ({
             />
           </ConditionalRender>
         </FilterChipContainer>
-          state={state.caseStateFilter.state ?? sectionState}
-          value={state.caseStateFilter.value!}
-        />
-
 
         <FilterChipRow
           chipLabel={state.lockedStateFilter.label!}
