@@ -1,6 +1,7 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import hashedPassword from "./hashedPassword"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 const numberedUsers = () => {
   const newUsers: Record<string, Partial<User> & { groups: UserGroup[] }> = {}
@@ -132,6 +133,16 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     email: "court02user@example.com",
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+  },
+  SupervisorWithExcludedTriggers: {
+    username: "SupervisorWithExcludedTriggers",
+    visibleForces: ["01"],
+    forenames: "Supervisor1",
+    surname: "WithExcludedTriggers",
+    email: "SupervisorWithExcludedTriggers@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
   },
   ...numberedUsers()
 }
