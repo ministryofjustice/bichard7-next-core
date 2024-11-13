@@ -6,6 +6,7 @@ import allGroupedTriggers from "utils/triggerGroups/allGroupedTriggers"
 import filteredReasonCodes from "utils/triggerGroups/filteredReasonCodes"
 import TriggerGroup from "./TriggerGroup"
 import { ScrollableFieldset } from "./TriggerGroups.styles"
+import { useCurrentUser } from "context/CurrentUserContext"
 
 interface TriggerGroupProps {
   dispatch: Dispatch<FilterAction>
@@ -13,6 +14,8 @@ interface TriggerGroupProps {
 }
 
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Element => {
+  const currentUser = useCurrentUser()
+
   return (
     <ScrollableFieldset className="govuk-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -22,8 +25,8 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Elemen
         <TriggerGroup
           key={`trigger-group-${i}`}
           name={key}
-          allGroupTriggers={allGroupedTriggers(key)}
-          filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key), reasonCodes)}
+          allGroupTriggers={allGroupedTriggers(key, currentUser.excludedTriggers)}
+          filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, currentUser.excludedTriggers), reasonCodes)}
           dispatch={dispatch}
         />
       ))}
