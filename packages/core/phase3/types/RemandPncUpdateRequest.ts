@@ -14,7 +14,7 @@ type RemandPncUpdateRequest = {
     courtNameType1: string
     courtNameType2: string
     localAuthorityCode: string
-    bailConditions: []
+    bailConditions: string[]
   }
 }
 
