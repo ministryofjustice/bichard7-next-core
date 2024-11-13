@@ -94,7 +94,7 @@ commands:
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
-          path: packages/e2e-test/test-results.xml
+          path: packages/e2e-test/test-results/results/report.xml
 
   set_locale:
     steps:

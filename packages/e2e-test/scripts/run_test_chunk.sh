@@ -27,4 +27,4 @@ echo "Phase 2 canary ratio: $PHASE2_CORE_CANARY_RATIO"
 echo "MS EDGE: $MS_EDGE"
 echo "---------------------------------------------"
 
-../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter  --format junit:./test-results.xml --tags "${TAGS}" $CHUNK
+../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter  --format junit:./test-results/results/report.xml --tags "${TAGS}" $CHUNK
