@@ -640,22 +640,22 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
-      - checkout
+      - setup_ui
+      - install_dependencies:
+          install-cypress: true
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run -w packages/ui install:assets
+      - build_core
       - when:
           condition:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
-      - node_install
-      - install_dependencies:
-          install-cypress: true
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
           background: true
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/ui install:assets
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -663,17 +663,18 @@ jobs:
       - run:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
-      - build_core
       - run:
           name: Run UI component tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
+      - store_test_results:
+          path: ~/project/packages/ui/cypress/results
       - store_artifacts:
-          path: ./cypress/videos
+          path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
-          path: ./cypress/screenshots
+          path: ~/project/packages/ui/cypress/screenshots
 
   cypress_e2e_tests:
     machine:
@@ -712,9 +713,8 @@ jobs:
       - run:
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
           background: true
-      - run: npm run -w packages/ui install:assets
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 user-service nginx-auth-proxy
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -723,8 +723,6 @@ jobs:
       - run:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
-      - fetch_images:
-          images: user-service nginx-auth-proxy
       - run:
           command: bash .circleci/scripts/run-infrastructure.sh ui ui
       - run:
@@ -734,11 +732,11 @@ jobs:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
       - store_test_results:
-          path: ./cypress/results
+          path: ~/project/packages/ui/cypress/results
       - store_artifacts:
-          path: ./cypress/videos
+          path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
-          path: ./cypress/screenshots
+          path: ~/project/packages/ui/cypress/screenshots
 
   cucumber_e2e_tests:
     machine:
@@ -793,9 +791,6 @@ jobs:
             MESSAGE_ENTRY_POINT="mq"
             MS_EDGE=<< parameters.ms-edge >>
       - save_artifacts
-      - store_test_results:
-          working_directory: ~/project/packages/e2e-test
-          path: ./cucumber/results
 
   zap_scanner:
     machine:

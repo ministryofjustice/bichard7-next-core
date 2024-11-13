@@ -1,8 +1,10 @@
 #!/bin/sh
 cd ~/project/packages/ui
 
+options="--reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
+
 if [[ $MS_EDGE == "true" ]]; then
-  npm run cypress:run:component:docker:ms-edge
+  npx cypress run --component --browser edge ${options}
 else
-  npm run cypress:run:component:docker
+  npx cypress run --component ${options}
 fi
