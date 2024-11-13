@@ -138,20 +138,6 @@ commands:
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
 
-  run_test_chunk:
-    parameters:
-      ARGS:
-        default: ""
-        type: "string"
-    steps:
-      - run:
-          name: Run test chunk
-          working_directory: ~/project/packages/e2e-test
-          command: |
-            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
-            <<parameters.ARGS>> \
-            npm run test:chunk:nextUI
-
   start_services:
     parameters:
       ARGS:
@@ -487,9 +473,7 @@ jobs:
           environment:
             AWS_URL: http://localhost:4566
             RECORD: "true"
-          command: |
-            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
+          command: bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
       - save_artifacts
 
   test_api:
@@ -785,11 +769,15 @@ jobs:
           command: "npm run install-browsers"
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
-      - run_test_chunk:
-          ARGS: >-
-            NEXTUI="true"
-            MESSAGE_ENTRY_POINT="mq"
-            MS_EDGE=<< parameters.ms-edge >>
+      - run:
+          name: Run e2e tests against UI code
+          working_directory: packages/e2e-test
+          environment:
+            RECORD: "true"
+            NEXTUI: "true"
+            MESSAGE_ENTRY_POINT: "mq"
+            MS_EDGE: "<< parameters.ms-edge >>"
+          command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
 
   zap_scanner:

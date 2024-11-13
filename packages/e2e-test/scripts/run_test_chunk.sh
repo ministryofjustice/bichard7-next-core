@@ -1,10 +1,16 @@
 #!/bin/bash
 
-set -e
-
 TAGS=$1
-CHUNK=${CHUNK:-$(find features -iname '*.feature' | sort | awk "(NR % $TOTAL_CHUNKS == $CHUNK_NUMBER)" | paste -d ' ' -s -)}
+
+which circleci
+if [ $? -eq 0 ]; then
+  CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings)
+else
+  CHUNK=${CHUNK:-$(find features -iname '*.feature' | sort | awk "(NR % $TOTAL_CHUNKS == $CHUNK_NUMBER)" | paste -d ' ' -s -)}
+fi
+
 NEXTUI=${NEXTUI:-"false"}
+MS_EDGE=${MS_EDGE:-"false"}
 
 if [ "${NEXTUI}x" == "truex" ]; then
   TAGS="${TAGS} and @NextUI"
