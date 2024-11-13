@@ -3,6 +3,7 @@ describe("Triggers excluded at user level", () => {
     cy.loginAs("SupervisorWithExcludedTriggers")
     cy.visit("/bichard")
   })
+
   it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Bails", () => {
     cy.get("input#bails").should("exist")
     cy.get("input#bails").click()
