@@ -129,8 +129,11 @@ const printResult = (
 
     if ("pncOperationsMatch" in result && !result.pncOperationsMatch) {
       console.log("PNC operation requests do not match")
-      console.log("Core PNC operation requests: ", result.debugOutput.pncOperations.coreResult)
-      console.log("Bichard PNC operation requests: ", result.debugOutput.pncOperations.comparisonResult)
+      console.log("Core PNC operation requests: ", JSON.stringify(result.debugOutput.pncOperations.coreResult, null, 2))
+      console.log(
+        "Bichard PNC operation requests: ",
+        JSON.stringify(result.debugOutput.pncOperations.comparisonResult, null, 2)
+      )
     }
 
     if (!result.xmlOutputMatches) {
