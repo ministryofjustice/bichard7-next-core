@@ -89,7 +89,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
         comparisonResult: sortedExceptions
       },
       pncOperations: {
-        coreResult: coreResult.pncOperations,
+        coreResult: pncGateway.updates,
         comparisonResult: pncOperations
       },
       auditLogEvents: {

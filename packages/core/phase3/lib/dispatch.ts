@@ -29,9 +29,7 @@ const dispatch = async (
   }
 
   const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-  const pncUpdateResult = await pncGateway
-    .update(operation.code, pncUpdateRequest, correlationId)
-    .catch((error: Error) => error)
+  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId).catch((error: Error) => error)
 
   if (isError(pncUpdateResult)) {
     // handleException(pncUpdateDataset, pncUpdateRequest)
