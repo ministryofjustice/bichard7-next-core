@@ -1,4 +1,4 @@
-Feature: Next Hearing Date Not Found Bichard UI
+Feature: 702 - Next Hearing Date Not Found Bichard UI
 
       """
       Next Hearing Date Not Found in Bichard - HO100322
