@@ -1,7 +1,7 @@
-Feature: {412} Switching between bichard versions for old-bichard-only users
+Feature: {412} Switching between bichard versions for old bichard user only
 
 			"""
-The bichard switching button allows users to switch to
+			The bichard switching button allows users to switch to
 			the alternate version of bichard and maintain the context
 			that they're currently in.
 

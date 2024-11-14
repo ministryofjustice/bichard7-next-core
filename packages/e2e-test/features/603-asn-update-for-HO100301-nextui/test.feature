@@ -1,4 +1,4 @@
-Feature: 605 - ASN Update / Correction in the Next UI when HO100301 raised
+Feature: 603 - ASN Update / Correction in the Next UI when HO100301 raised
 
 			"""
 			There is an exception (HO100301 - ASN not found on PNC) on the incoming message, which enables user to edit ASN. When fixed, shows the ASN correction.

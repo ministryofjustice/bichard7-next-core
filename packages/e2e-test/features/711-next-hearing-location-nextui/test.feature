@@ -1,4 +1,4 @@
-Feature: Next Hearing location Next UI
+Feature: 711 - Next Hearing location Next UI
 
 			"""
 			Next Hearing location - HO100300 in Next UI
@@ -68,6 +68,6 @@ Feature: Next Hearing location Next UI
 			And I correct "Next Hearing location" and type "B"
 			And I select the first option
 		Then I reload the page
-    		And I click the "Offences" tab
+			And I click the "Offences" tab
 			And I view offence with text "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over"
-    		And I see the correction for "Next Hearing location" to "B21XA00"
+			And I see the correction for "Next Hearing location" to "B21XA00"
