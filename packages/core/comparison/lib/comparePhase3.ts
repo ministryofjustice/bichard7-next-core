@@ -106,7 +106,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       auditLogEventsMatch,
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      pncOperationsMatch: isEqual(coreResult.pncOperations, pncOperations),
+      pncOperationsMatch: isEqual(pncGateway.updates, pncOperations),
       xmlOutputMatches:
         !normalisedOutgoingMessage || xmlOutputMatches(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
       xmlParsingMatches: true,
