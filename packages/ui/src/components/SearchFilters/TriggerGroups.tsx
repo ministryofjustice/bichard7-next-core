@@ -1,4 +1,5 @@
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
+import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
 import { Dispatch } from "react"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
@@ -8,7 +9,6 @@ import filteredReasonCodes from "utils/triggerGroups/filteredReasonCodes"
 import TriggerGroup from "./TriggerGroup"
 import { ScrollableFieldset } from "./TriggerGroups.styles"
 import { useCurrentUser } from "context/CurrentUserContext"
-import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 
 interface TriggerGroupProps {
   dispatch: Dispatch<FilterAction>

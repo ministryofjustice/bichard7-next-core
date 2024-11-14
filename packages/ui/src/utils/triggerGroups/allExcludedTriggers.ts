@@ -8,7 +8,7 @@ const allExcludedTriggers = (
 
   if (currentUser.visibleForces.length === 1) {
     const visibleForce: string = currentUser.visibleForces[0].slice(1)
-    const excludedTriggersOnForce = forceExcludedTriggers[visibleForce as keyof typeof forceExcludedTriggers]
+    const excludedTriggersOnForce = forceExcludedTriggers[visibleForce]
     allExcludedTriggers = [...new Set([...currentUser.excludedTriggers, ...excludedTriggersOnForce])]
   }
 
