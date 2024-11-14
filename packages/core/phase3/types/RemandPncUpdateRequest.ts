@@ -1,9 +1,9 @@
 type RemandPncUpdateRequest = {
   operation: "NEWREM"
   request: {
-    pncIdentifier: string
-    pncCheckName: string
-    croNumber: null | string
+    pncIdentifier: string | null
+    pncCheckName: string | null
+    croNumber: string | null
     arrestSummonsNumber: string
     forceStationCode: string
     hearingDate: string
