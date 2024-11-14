@@ -1,3 +1,5 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import ConditionalRender from "components/ConditionalRender"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { ChangeEvent, Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
@@ -35,28 +37,30 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
             {"Resolved cases"}
           </label>
         </div>
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="myResolvedCases"
-            name="resolvedByUsername"
-            type="checkbox"
-            value={currentUser.username}
-            checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              const isChecked = event.currentTarget.checked
+        <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
+          <div className="govuk-checkboxes__item">
+            <input
+              className="govuk-checkboxes__input"
+              id="myResolvedCases"
+              name="resolvedByUsername"
+              type="checkbox"
+              value={currentUser.username}
+              checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                const isChecked = event.currentTarget.checked
 
-              dispatch({
-                method: isChecked ? "add" : "remove",
-                type: "resolvedByUsernameFilter",
-                value: currentUser.username
-              })
-            }}
-          />
-          <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
-            {"My resolved cases"}
-          </label>
-        </div>
+                dispatch({
+                  method: isChecked ? "add" : "remove",
+                  type: "resolvedByUsernameFilter",
+                  value: currentUser.username
+                })
+              }}
+            />
+            <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
+              {"My resolved cases"}
+            </label>
+          </div>
+        </ConditionalRender>
       </div>
     </fieldset>
   )
