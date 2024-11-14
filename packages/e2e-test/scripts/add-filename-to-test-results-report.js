@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
 const { XMLParser, XMLBuilder } = require("fast-xml-parser")
@@ -19,8 +20,8 @@ const featuresThatDoNotHaveFileNumbers = [
 const featuresThatDoNotHaveFileNumbersRegex = new RegExp(`${featuresThatDoNotHaveFileNumbers.join("|")}`, "i")
 const featuresThatDoHaveFileNumbersRegex = /\d{3}[a-e]?/
 
-async function addFileToFeatureReport() {
-  const features = await glob("features/**/*.feature")
+async function addFilenameToTestResultsReport() {
+  const featuresFiles = await glob("features/**/*.feature")
 
   const options = {
     attributeNamePrefix: "@",
@@ -28,14 +29,13 @@ async function addFileToFeatureReport() {
     cdataPropName: "__cdata"
   }
 
-  const parser = new XMLParser(options)
-  const jObj = parser.parse(data)
+  const jsonXMLOject = new XMLParser(options).parse(data)
 
-  if (jObj.testsuite.testcase === undefined) {
+  if (jsonXMLOject.testsuite.testcase === undefined) {
     return
   }
 
-  jObj.testsuite.testcase.forEach((element) => {
+  jsonXMLOject.testsuite.testcase.forEach((element) => {
     if (element["@file"]) {
       return
     }
@@ -51,19 +51,16 @@ async function addFileToFeatureReport() {
         featureName = className.match(featuresThatDoHaveFileNumbersRegex)[0]
       }
     } catch (err) {
-      console.error(`Error happned in: "${className}"`)
+      console.error(`Error happened in: "${className}"`)
       throw err
     }
 
-    const file = features.find((feature) => feature.includes(featureName))
-
-    element["@file"] = file
+    element["@file"] = featuresFiles.find((featureFile) => featureFile.includes(featureName))
   })
 
-  const builder = new XMLBuilder(options)
-  const xmlContent = builder.build(jObj)
+  const xmlContent = new XMLBuilder(options).build(jsonXMLOject)
 
   fs.writeFileSync(reportFilename, xmlContent)
 }
 
-addFileToFeatureReport()
+addFilenameToTestResultsReport()
