@@ -25,7 +25,7 @@ const numberedUsers = () => {
 const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
   GeneralHandler: {
     username: "GeneralHandler",
-    visibleForces: ["01"],
+    visibleForces: ["001"],
     forenames: "General Handler",
     surname: "User",
     email: "generalhandler@example.com",
