@@ -1,7 +1,7 @@
-Feature: {131} BR7 R5.1.3-RCD467-Single CCR-SENDEF-NEWREM - part 2
+Feature: {131b} BR7 R5.1.3-RCD467-Single CCR-SENDEF-NEWREM - part 2
 
 			"""
-			{131} BR7 R5.1.3-RCD467-Single CCR-SENDEF-NEWREM
+			{131b} BR7 R5.1.3-RCD467-Single CCR-SENDEF-NEWREM
 			===============
 			Q-Solution Definition:
 			A Bichard7 Regression Test verifying NEWREM & SENDEF combinations.

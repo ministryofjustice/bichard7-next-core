@@ -1,4 +1,4 @@
-Feature: {034} R3.3_BR7_SPI ASN Validation - 1
+Feature: {034a} R3.3_BR7_SPI ASN Validation - 1
 
 			"""
 			{034} R3.3_BR7_SPI ASN Validation

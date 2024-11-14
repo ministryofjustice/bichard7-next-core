@@ -94,7 +94,7 @@ commands:
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
-          path: packages/e2e-test/test-results.xml
+          path: packages/e2e-test/test-results/results/report.xml
 
   set_locale:
     steps:
@@ -137,20 +137,6 @@ commands:
           name: Build audit logging images
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
-
-  run_test_chunk:
-    parameters:
-      ARGS:
-        default: ""
-        type: "string"
-    steps:
-      - run:
-          name: Run test chunk
-          working_directory: ~/project/packages/e2e-test
-          command: |
-            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
-            <<parameters.ARGS>> \
-            npm run test:chunk:nextUI
 
   start_services:
     parameters:
@@ -209,7 +195,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -284,7 +270,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
-    resource_class: large
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -487,9 +473,7 @@ jobs:
           environment:
             AWS_URL: http://localhost:4566
             RECORD: "true"
-          command: |
-            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
+          command: bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
       - save_artifacts
 
   test_api:
@@ -568,7 +552,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -597,7 +581,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -626,7 +610,7 @@ jobs:
   cypress_component_test:
     machine:
       image: ubuntu-2204:current
-    resource_class: xlarge
+    resource_class: medium
     parameters:
       ms-edge:
         type: boolean
@@ -680,7 +664,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
-    resource_class: xlarge
+    resource_class: large
     parallelism: 10
     parameters:
       ms-edge:
@@ -785,17 +769,22 @@ jobs:
           command: "npm run install-browsers"
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
-      - run_test_chunk:
-          ARGS: >-
-            NEXTUI="true"
-            MESSAGE_ENTRY_POINT="mq"
-            MS_EDGE=<< parameters.ms-edge >>
+      - run:
+          name: Run e2e tests against UI code
+          working_directory: packages/e2e-test
+          environment:
+            RECORD: "true"
+            NEXTUI: "true"
+            MESSAGE_ENTRY_POINT: "mq"
+            MS_EDGE: "<< parameters.ms-edge >>"
+          command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
 
   zap_scanner:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: xlarge
     steps:
       - unless:
           condition:
