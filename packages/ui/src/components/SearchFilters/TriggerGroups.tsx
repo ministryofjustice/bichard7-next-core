@@ -3,10 +3,12 @@ import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
 import { Dispatch } from "react"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
 import allGroupedTriggers from "utils/triggerGroups/allGroupedTriggers"
+import allExcludedTriggers from "utils/triggerGroups/allExcludedTriggers"
 import filteredReasonCodes from "utils/triggerGroups/filteredReasonCodes"
 import TriggerGroup from "./TriggerGroup"
 import { ScrollableFieldset } from "./TriggerGroups.styles"
 import { useCurrentUser } from "context/CurrentUserContext"
+import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 
 interface TriggerGroupProps {
   dispatch: Dispatch<FilterAction>
@@ -15,6 +17,7 @@ interface TriggerGroupProps {
 
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Element => {
   const currentUser = useCurrentUser()
+  const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
 
   return (
     <ScrollableFieldset className="govuk-fieldset">
@@ -25,8 +28,8 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Elemen
         <TriggerGroup
           key={`trigger-group-${i}`}
           name={key}
-          allGroupTriggers={allGroupedTriggers(key, currentUser.excludedTriggers)}
-          filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, currentUser.excludedTriggers), reasonCodes)}
+          allGroupTriggers={allGroupedTriggers(key, excludedTriggers)}
+          filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, excludedTriggers), reasonCodes)}
           dispatch={dispatch}
         />
       ))}
