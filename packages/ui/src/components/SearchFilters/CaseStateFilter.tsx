@@ -42,7 +42,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
             name="resolvedByUsername"
             type="checkbox"
             value={currentUser.username}
-            checked={resolvedByUsername === currentUser.username}
+            checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               const isChecked = event.currentTarget.checked
 
