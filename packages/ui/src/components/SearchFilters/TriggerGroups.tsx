@@ -24,9 +24,9 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Elemen
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
         <Legend>{"Trigger groups"}</Legend>
       </legend>
-      {Object.keys(GroupedTriggerCodes).map((key, i) => (
+      {Object.keys(GroupedTriggerCodes).map((key) => (
         <TriggerGroup
-          key={`trigger-group-${i}`}
+          key={`trigger-group-${key.toLowerCase().replaceAll(" ", "")}`}
           name={key}
           allGroupTriggers={allGroupedTriggers(key, excludedTriggers)}
           filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, excludedTriggers), reasonCodes)}
