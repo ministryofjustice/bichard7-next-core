@@ -4,7 +4,7 @@ import { DisplayFullUser } from "types/display/Users"
 
 describe("TriggerGroups", () => {
   const dispatch = () => {}
-  const currentUser = { excludedTriggers: [] } as unknown as DisplayFullUser
+  const currentUser = { visibleForces: ["001"], excludedTriggers: [] } as unknown as DisplayFullUser
   beforeEach(() => {
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
