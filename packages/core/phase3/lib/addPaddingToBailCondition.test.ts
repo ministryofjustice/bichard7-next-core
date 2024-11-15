@@ -1,4 +1,4 @@
-import addPaddingToBailCondition from "./addPaddingToBailCondition"
+import addPaddingToBailCondition from "./pncUpdateRequestGenerators/addPaddingToBailCondition"
 
 describe("addPaddingToBailCondition", () => {
   it("doesn't add padding when less than 50 characters long", () => {
