@@ -161,13 +161,18 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
     remandLocationCourt
   )
 
+  const arrestSummonsNumber = preProcessAsn(hearingDefendant.ArrestSummonsNumber)
+  if (isError(arrestSummonsNumber)) {
+    return arrestSummonsNumber
+  }
+
   return {
     operation: "NEWREM",
     request: {
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
       pncCheckName,
       croNumber: hearingDefendant.CRONumber ?? null,
-      arrestSummonsNumber: preProcessAsn(hearingDefendant.ArrestSummonsNumber),
+      arrestSummonsNumber,
       forceStationCode,
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       nextHearingDate: results[0].NextHearingDate
