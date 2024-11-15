@@ -7,8 +7,8 @@ const allExcludedTriggers = (
   let allExcludedTriggers: string[] = []
 
   if (currentUser.visibleForces.length === 1) {
-    const visibleForce: string = currentUser.visibleForces[0].slice(1)
-    const excludedTriggersOnForce = forceExcludedTriggers[visibleForce]
+    const visibleForce: string = currentUser.visibleForces[0].replace(/^0(\d+)/, "$1")
+    const excludedTriggersOnForce = forceExcludedTriggers[visibleForce] || []
     allExcludedTriggers = [...new Set([...currentUser.excludedTriggers, ...excludedTriggersOnForce])]
   }
 
