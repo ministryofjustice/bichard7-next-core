@@ -43,7 +43,7 @@ const compareFile = async (s3Path: string, bucket: string): PromiseResult<Compar
       comparisonResult = comparePhase2(comparison, false)
     } else if (isPhase3(comparison)) {
       phase = 3
-      comparisonResult = comparePhase3(comparison, false)
+      comparisonResult = await comparePhase3(comparison, false)
     }
   } catch (e) {
     return e as Error
