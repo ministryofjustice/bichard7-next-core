@@ -6,6 +6,7 @@ import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
 import type { Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
+import { diffJson } from "diff"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch &&
@@ -129,8 +130,14 @@ const printResult = (
 
     if ("pncOperationsMatch" in result && !result.pncOperationsMatch) {
       console.log("PNC operation requests do not match")
-      console.log("Core result: ", result.debugOutput.pncOperations.coreResult)
-      console.log("Bichard result: ", result.debugOutput.pncOperations.comparisonResult)
+      const pncOperationDiffs = diffJson(
+        result.debugOutput.pncOperations.coreResult,
+        result.debugOutput.pncOperations.comparisonResult
+      )
+
+      pncOperationDiffs.forEach((diff) => {
+        console.log(diff.added ? chalk.green(diff.value) : diff.removed ? chalk.red(diff.value) : diff.value)
+      })
     }
 
     if (!result.xmlOutputMatches) {
