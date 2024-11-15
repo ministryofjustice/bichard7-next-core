@@ -134,15 +134,35 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
   },
-  SupervisorWithExcludedTriggers: {
-    username: "SupervisorWithExcludedTriggers",
-    visibleForces: ["01"],
+  // SupervisorWithExcludedTriggers: {
+  //   username: "SupervisorWithExcludedTriggers",
+  //   visibleForces: ["01"],
+  //   forenames: "Supervisor1",
+  //   surname: "WithExcludedTriggers",
+  //   email: "supervisor1@example.com",
+  //   password: hashedPassword,
+  //   groups: [UserGroup.NewUI, UserGroup.Supervisor],
+  //   excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
+  // },
+  userExcludedTriggers: {
+    username: "userExcludedTriggers",
+    visibleForces: ["007"],
     forenames: "Supervisor1",
-    surname: "WithExcludedTriggers",
-    email: "SupervisorWithExcludedTriggers@example.com",
+    surname: "User",
+    email: "userExcludedTriggers@example.com",
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.Supervisor],
     excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
+  },
+  userExcludedTriggersMultiForces: {
+    username: "userExcludedTriggersMultiForces",
+    visibleForces: ["001", "002", "003"],
+    forenames: "Supervisor2",
+    surname: "User",
+    email: "userExclTriggsMultiForces@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0021, TriggerCode.TRPR0030]
   },
   ...numberedUsers()
 }

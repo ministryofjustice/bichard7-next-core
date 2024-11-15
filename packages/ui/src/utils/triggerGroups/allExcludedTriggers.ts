@@ -10,6 +10,8 @@ const allExcludedTriggers = (
     const visibleForce: string = currentUser.visibleForces[0].replace(/^0(\d+)/, "$1")
     const excludedTriggersOnForce = forceExcludedTriggers[visibleForce] ?? []
     allExcludedTriggers = [...new Set([...currentUser.excludedTriggers, ...excludedTriggersOnForce])]
+  } else {
+    allExcludedTriggers = currentUser.excludedTriggers
   }
 
   return allExcludedTriggers
