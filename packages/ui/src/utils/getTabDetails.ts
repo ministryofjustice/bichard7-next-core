@@ -98,6 +98,12 @@ const getTabDetails = (
 
   let offencesExceptionsResolved = false
 
+  // Excepeptions
+  // Editable exceptions
+  //  Next Hearing Date, Next hearing location, offence matching
+  // Non-editable exceptions
+  //  Create a method - getNonEditableOffenceExceptions
+
   if (
     hasNextHearingDateExceptions(exceptions) &&
     hasNextHearingLocationException(exceptions) &&
