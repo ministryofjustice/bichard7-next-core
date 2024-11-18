@@ -1,7 +1,7 @@
 import type { Change } from "diff"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
-import type { PncOperationRequest } from "./ComparisonFile"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 
 export type ComparisonResultDebugOutput = {
   triggers: {
@@ -22,8 +22,8 @@ export type ComparisonResultDebugOutput = {
 
 export type Phase3ComparisonResultDebugOutput = ComparisonResultDebugOutput & {
   pncOperations: {
-    coreResult: PncOperationRequest[]
-    comparisonResult: PncOperationRequest[]
+    coreResult: PncUpdateRequest[]
+    comparisonResult: PncUpdateRequest[]
   }
 }
 

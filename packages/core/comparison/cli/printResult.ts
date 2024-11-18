@@ -6,6 +6,7 @@ import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
 import type { Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
+import { diffJson } from "diff"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch &&
@@ -111,26 +112,32 @@ const printResult = (
   if (result.debugOutput) {
     if (!result.auditLogEventsMatch) {
       console.log("Audit log events do not match")
-      console.log("Core result: ", result.debugOutput.auditLogEvents.coreResult)
-      console.log("Bichard result: ", result.debugOutput.auditLogEvents.comparisonResult)
+      console.log("Core events: ", result.debugOutput.auditLogEvents.coreResult)
+      console.log("Bichard events: ", result.debugOutput.auditLogEvents.comparisonResult)
     }
 
     if (!result.triggersMatch) {
       console.log("Triggers do not match")
-      console.log("Core result: ", result.debugOutput.triggers.coreResult)
-      console.log("Bichard result: ", result.debugOutput.triggers.comparisonResult)
+      console.log("Core triggers: ", result.debugOutput.triggers.coreResult)
+      console.log("Bichard triggers: ", result.debugOutput.triggers.comparisonResult)
     }
 
     if (!result.exceptionsMatch) {
       console.log("Exceptions do not match")
-      console.log("Core result: ", result.debugOutput.exceptions.coreResult)
-      console.log("Bichard result: ", result.debugOutput.exceptions.comparisonResult)
+      console.log("Core exceptions: ", result.debugOutput.exceptions.coreResult)
+      console.log("Bichard exceptions: ", result.debugOutput.exceptions.comparisonResult)
     }
 
     if ("pncOperationsMatch" in result && !result.pncOperationsMatch) {
       console.log("PNC operation requests do not match")
-      console.log("Core result: ", result.debugOutput.pncOperations.coreResult)
-      console.log("Bichard result: ", result.debugOutput.pncOperations.comparisonResult)
+      const pncOperationDiffs = diffJson(
+        result.debugOutput.pncOperations.coreResult,
+        result.debugOutput.pncOperations.comparisonResult
+      )
+
+      pncOperationDiffs.forEach((diff) => {
+        console.log(diff.added ? chalk.green(diff.value) : diff.removed ? chalk.red(diff.value) : diff.value)
+      })
     }
 
     if (!result.xmlOutputMatches) {
