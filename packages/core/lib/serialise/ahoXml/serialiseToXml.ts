@@ -514,7 +514,9 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
             "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
-            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
+            "br7:PNCErrorMessage": !!aho.PncErrorMessage
+              ? aho.PncErrorMessage.map((e) => ({ "#text": e, "@_classification": "" }))
+              : undefined,
             ...xmlnsTags
           }
         }
@@ -539,7 +541,9 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
       ...hearingOutcome,
       CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
       "br7:PNCQueryDate": pud.PncQueryDate ? optionalFormatText(pud.PncQueryDate) : undefined,
-      "br7:PNCErrorMessage": optionalText(pud.PncErrorMessage),
+      "br7:PNCErrorMessage": !!pud.PncErrorMessage
+        ? pud.PncErrorMessage.map((e) => ({ "#text": e, "@_classification": "" }))
+        : undefined,
       ...xmlnsTags
     }
   }

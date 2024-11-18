@@ -11,6 +11,7 @@ import type {
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
+  Br7PncErrorMessageString,
   Br7Result,
   Br7ResultQualifierVariable,
   Br7SequenceTextString,
@@ -495,6 +496,17 @@ export const mapXmlHearingToAho = (xmlHearing: Br7Hearing): Hearing => ({
   CourtHouseName: xmlHearing["br7:CourtHouseName"]?.["#text"]
 })
 
+const mapXmlPncErrorMessageToAho = (
+  pncErrorMessages?: Br7PncErrorMessageString[] | Br7PncErrorMessageString
+): string[] | undefined => {
+  if (!pncErrorMessages) {
+    return
+  }
+
+  const messages: Br7PncErrorMessageString[] = Array.isArray(pncErrorMessages) ? pncErrorMessages : [pncErrorMessages]
+  return messages.map((message) => message["#text"])
+}
+
 export const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | Error => {
   const rootElement = aho["br7:AnnotatedHearingOutcome"] ? aho["br7:AnnotatedHearingOutcome"] : aho
   if (!rootElement["br7:HearingOutcome"]) {
@@ -513,7 +525,7 @@ export const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | Error => {
     PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
       ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]["#text"])
       : undefined,
-    PncErrorMessage: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.["#text"]
+    PncErrorMessage: mapXmlPncErrorMessageToAho(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"])
   }
 }
 
