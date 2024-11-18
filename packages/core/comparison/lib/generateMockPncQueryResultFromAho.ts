@@ -1,8 +1,7 @@
-import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import { mapXmlCxe01ToAho } from "../../lib/parse/parseAhoXml"
-import type { AhoXml } from "../../types/AhoXml"
+import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import type { PncQueryResult } from "../../types/PncQueryResult"
+import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+import { PncApiError } from "../../lib/PncGateway"
 
 /*
 Sample CXE element
@@ -25,28 +24,19 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): PncQueryResult | Error | undefined => {
-  const options = {
-    ignoreAttributes: false,
-    parseTagValue: false,
-    parseAttributeValue: false,
-    processEntities: false,
-    trimValues: false,
-    alwaysCreateTextNode: true,
-    attributeValueProcessor: decodeAttributeEntitiesProcessor,
-    tagValueProcessor: decodeTagEntitiesProcessor
-  }
-  const parser = new XMLParser(options)
-  const rawParsedObj = parser.parse(ahoXml) as AhoXml
+export default (ahoXml: string): PncQueryResult | PncApiError | undefined => {
+  const parsedAho = parseAhoXml(ahoXml)
 
-  const cxe = rawParsedObj["br7:AnnotatedHearingOutcome"]?.CXE01
-  if (cxe) {
-    return mapXmlCxe01ToAho(cxe)
+  if (isError(parsedAho)) {
+    throw parsedAho
   }
 
-  const error = rawParsedObj["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.["#text"]
-  if (error) {
-    return new Error(error)
+  if (parsedAho.PncQuery) {
+    return parsedAho.PncQuery
+  }
+
+  if (parsedAho.PncErrorMessage) {
+    return new PncApiError(parsedAho.PncErrorMessage)
   }
 
   return undefined
