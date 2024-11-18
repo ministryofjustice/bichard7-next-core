@@ -74,6 +74,7 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 const isPncAsnException = (exception: Exception): boolean =>
   isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
 
+// TODO: Refactor to remove duplication from this function and below
 const addExceptionsToPncUpdateDatasetXml = (
   aho: AhoXml,
   exceptions: Exception[] | undefined,
@@ -93,10 +94,13 @@ const addExceptionsToPncUpdateDatasetXml = (
   }
 
   // Add PNC errors to the PNC error message if it is set
-  if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
+  if (
+    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"] &&
+    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.length > 0
+  ) {
     const pncError = exceptions.find((e) => isPncException(e.code))
     if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
+      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"][0]["@_classification"] = pncError.code
     }
   }
 
@@ -118,10 +122,13 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
   }
 
   // Add PNC errors to the PNC error message if it is set
-  if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
+  if (
+    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"] &&
+    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.length > 0
+  ) {
     const pncError = exceptions.find((e) => isPncException(e.code))
     if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
+      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"][0]["@_classification"] = pncError.code
     }
   }
 

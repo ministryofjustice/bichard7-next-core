@@ -58,23 +58,25 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
 export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
 
 const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
-  if (typeof hearingOutcome.PncErrorMessage !== "string") {
+  if (hearingOutcome.PncErrorMessage === undefined) {
     return []
   }
 
-  if (isNotFoundError(hearingOutcome.PncErrorMessage)) {
-    return [ho100301]
-  }
-
-  const errorCode = hearingOutcome.PncErrorMessage?.substring(0, 5)
-
-  for (const { code, ranges } of errorRanges) {
-    if (inErrorRange(errorCode, ranges)) {
-      return [{ code, path: errorPaths.case.asn }]
+  return hearingOutcome.PncErrorMessage.map((errorMessage) => {
+    if (isNotFoundError(errorMessage)) {
+      return ho100301
     }
-  }
 
-  return [ho100314]
+    const errorCode = errorMessage.substring(0, 5)
+
+    for (const { code, ranges } of errorRanges) {
+      if (inErrorRange(errorCode, ranges)) {
+        return { code, path: errorPaths.case.asn }
+      }
+    }
+
+    return ho100314
+  })
 }
 
 export default pncExceptions
