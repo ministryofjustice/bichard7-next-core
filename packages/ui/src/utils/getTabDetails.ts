@@ -1,5 +1,6 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+import getOffenceExceptions from "./exceptions/getIneditableOffenceExceptions"
 import getNextHearingDateExceptions from "./exceptions/getNextHearingDateExceptions"
 import getNextHearingLocationExceptions from "./exceptions/getNextHearingLocationExceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
@@ -103,6 +104,7 @@ const getTabDetails = (
   //  Next Hearing Date, Next hearing location, offence matching
   // Non-editable exceptions
   //  Create a method - getNonEditableOffenceExceptions
+  const ineditableOffenceExceptions: Exception[] = getOffenceExceptions(exceptions)
 
   if (
     hasNextHearingDateExceptions(exceptions) &&
@@ -112,7 +114,8 @@ const getTabDetails = (
     offencesExceptionsResolved =
       nextHearingDateExceptionsDetails.ExceptionsResolved &&
       nextHearingLocationExceptionsDetails.ExceptionsResolved &&
-      offencesMatchedExceptionsDetails.ExceptionsResolved
+      offencesMatchedExceptionsDetails.ExceptionsResolved &&
+      ineditableOffenceExceptions.length === 0
   } else if (hasNextHearingDateExceptions(exceptions)) {
     offencesExceptionsResolved = nextHearingDateExceptionsDetails.ExceptionsResolved
   } else if (hasNextHearingLocationException(exceptions)) {
