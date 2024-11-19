@@ -3,6 +3,7 @@ import { expect } from "expect"
 import type { KeyInput, Page } from "puppeteer"
 import type BrowserHelper from "../helpers/BrowserHelper"
 import {
+  delay,
   reloadUntilContent,
   reloadUntilContentInSelector,
   reloadUntilNotContent,
@@ -514,6 +515,7 @@ export const selectTheFirstOption = async function (this: Bichard) {
   const { page } = this.browser
 
   // API request happens too slow for puppeteer
+  await delay(0.5)
 
   await page.keyboard.press("ArrowDown")
   await page.keyboard.press("Enter")
