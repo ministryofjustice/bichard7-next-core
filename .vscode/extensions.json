@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "esbenp.prettier-vscode",
+    "circleci.circleci",
+    "styled-components.vscode-styled-components",
+    "Jinho1011.auto-export-js",
+    "anseki.vscode-color",
+    "alexkrechik.cucumberautocomplete",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "christian-kohler.npm-intellisense",
+    "Syler.sass-indented",
+    "redhat.vscode-yaml",
+    "redhat.vscode-xml"
+  ]
+}
