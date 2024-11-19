@@ -1,3 +1,4 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
@@ -9,16 +10,15 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { Heading } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
 import Form from "../../components/Form"
+import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
 import { ButtonContainer, LockedTagContainer, StyledButton, StyledSecondaryButton } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
-import getResolutionStatus from "../../utils/getResolutionStatus"
 
 interface Props {
   canReallocate: boolean
