@@ -24,8 +24,8 @@ export const NotePreview = ({ latestNote, numberOfNotes }: NotePreviewProps) => 
     <Preview>
       <NotePreviewHeader className={`govuk-body govuk-!-font-weight-bold note-preview-heading`}>
         {numberOfNotes > 1
-          ? `Most recent note added ${displayDate}`
-          : `Note added ${displayDate} by ${latestNote.userFullName}`}
+          ? `Most recent note added ${displayDate} by ${latestNote.userId}`
+          : `Note added ${displayDate} by ${latestNote.userId}`}
       </NotePreviewHeader>
       <NotePreviewBody className={`note-preview-body`}>
         {truncate(latestNote?.noteText, { length: 103 })}
