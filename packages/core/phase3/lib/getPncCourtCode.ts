@@ -1,6 +1,6 @@
-import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
 import { type Result } from "@moj-bichard7/common/types/Result"
+import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 
 export const PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const CJS_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "B0000"
