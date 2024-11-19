@@ -1,14 +1,46 @@
 {
+  "cSpell.words": ["bichard", "fastify", "openapi", "govuk", "ptiurn", "typeorm"],
+
+  "cucumberautocomplete.steps": ["packages/e2e-test/steps/*.ts"],
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.formatConfOverride": {
+    "And": 3,
+    "But": "relative"
+  },
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
   "eslint.workingDirectories": [
     "packages/api",
     "packages/common",
     "packages/conductor",
     "packages/core",
-    "packages/message-forwarder"
+    "packages/e2e-test",
+    "packages/message-forwarder",
+    "packages/ui"
   ],
-  "cSpell.words": [
-    "bichard",
-    "fastify",
-    "openapi"
-  ]
+
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  }
 }
