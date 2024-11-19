@@ -1,20 +1,22 @@
+import type { Dispatch } from "react"
+import type { FilterAction } from "types/CourtCaseFilter"
+
 import DateInput from "components/CustomDateInput/DateInput"
 import RadioButton from "components/RadioButton/RadioButton"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import { FormGroup } from "govuk-react"
-import type { Dispatch } from "react"
 import { SerializedDateRange } from "types/CaseListQueryParams"
-import type { FilterAction } from "types/CourtCaseFilter"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
+
 import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./DateFilter.styles"
 
 interface Props {
-  caseAges?: string[]
   caseAgeCounts: Record<string, number>
-  dispatch: Dispatch<FilterAction>
+  caseAges?: string[]
   dateRange: SerializedDateRange | undefined
+  dispatch: Dispatch<FilterAction>
 }
 
 const getCaseAgeWithFormattedDate = (namedCaseAge: string): string => {
@@ -40,31 +42,31 @@ const labelForCaseAge = (namedCaseAge: string, caseAgeCounts: Record<string, num
 
 const caseAgeId = (caseAge: string): string => `case-age-${caseAge.toLowerCase().replace(/ /g, "-")}`
 
-const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, dateRange }: Props) => (
+const CourtDateFilter: React.FC<Props> = ({ caseAgeCounts, caseAges, dateRange, dispatch }: Props) => (
   <FormGroup className={"govuk-form-group"}>
-    <ExpandingFilters filterName={"Court date"} classNames="filters-court-date">
+    <ExpandingFilters classNames="filters-court-date" filterName={"Court date"}>
       <fieldset className="govuk-fieldset">
         <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
           <RadioButton
-            name={"courtDate"}
-            id={"date-range"}
             dataAriaControls={"conditional-date-range"}
             defaultChecked={!!dateRange?.from && !!dateRange.to}
+            id={"date-range"}
             label={"Date range"}
+            name={"courtDate"}
             onChange={(event) => dispatch({ method: "remove", type: "caseAge", value: event.target.value as string })}
           />
           <div className="govuk-radios__conditional" id="conditional-date-range">
             <div className="govuk-radios govuk-radios--small">
-              <DateInput dateType="from" dispatch={dispatch} value={dateRange?.from ?? ""} dateRange={dateRange} />
-              <DateInput dateType="to" dispatch={dispatch} value={dateRange?.to ?? ""} dateRange={dateRange} />
+              <DateInput dateRange={dateRange} dateType="from" dispatch={dispatch} value={dateRange?.from ?? ""} />
+              <DateInput dateRange={dateRange} dateType="to" dispatch={dispatch} value={dateRange?.to ?? ""} />
             </div>
           </div>
           <RadioButton
-            name={"courtDate"}
-            id={"case-age"}
             dataAriaControls={"conditional-case-age"}
             defaultChecked={caseAges && caseAges.length > 0 ? true : false}
+            id={"case-age"}
             label={"Case Received"}
+            name={"courtDate"}
           />
           <div className="govuk-radios__conditional" id="conditional-case-age">
             <ScrollableCaseAgesContainer className={"scrollable-case-ages"}>
@@ -73,12 +75,10 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
                   <CaseAgeContainer className={"case-age-option"} key={namedCaseAge}>
                     <div className="govuk-checkboxes__item">
                       <input
+                        checked={caseAges?.includes(namedCaseAge as string)}
                         className="govuk-checkboxes__input"
                         id={caseAgeId(namedCaseAge)}
                         name="caseAge"
-                        type="checkbox"
-                        value={namedCaseAge}
-                        checked={caseAges?.includes(namedCaseAge as string)}
                         onChange={(event) => {
                           dispatch({
                             method: "remove",
@@ -89,6 +89,8 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
                           const value = event.currentTarget.value as string
                           dispatch({ method: event.currentTarget.checked ? "add" : "remove", type: "caseAge", value })
                         }}
+                        type="checkbox"
+                        value={namedCaseAge}
                       ></input>
                       <label className="govuk-label govuk-checkboxes__label" htmlFor={caseAgeId(namedCaseAge)}>
                         {labelForCaseAge(namedCaseAge, caseAgeCounts)}

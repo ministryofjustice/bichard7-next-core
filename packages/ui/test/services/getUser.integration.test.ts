@@ -1,6 +1,9 @@
 import type { DataSource } from "typeorm"
+
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+
 import type User from "../../src/services/entities/User"
+
 import getDataSource from "../../src/services/getDataSource"
 import getUser from "../../src/services/getUser"
 import { isError } from "../../src/types/Result"
@@ -30,7 +33,7 @@ describe("getUser", () => {
 
     const actualUser = result as User
 
-    expect({ ...actualUser }).toStrictEqual({ ...inputUser, id: expect.any(Number), groups: expectedGroups })
+    expect({ ...actualUser }).toStrictEqual({ ...inputUser, groups: expectedGroups, id: expect.any(Number) })
   })
 
   it("shouldn't return the user when given different username", async () => {

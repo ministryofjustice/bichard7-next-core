@@ -5,12 +5,12 @@ import { ChangeEvent, Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 
 interface CaseStateFilterProps {
-  dispatch: Dispatch<FilterAction>
   caseState?: string
+  dispatch: Dispatch<FilterAction>
   resolvedByUsername?: string
 }
 
-const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateFilterProps) => {
+const CaseStateFilter = ({ caseState, dispatch, resolvedByUsername }: CaseStateFilterProps) => {
   const currentUser = useCurrentUser()
 
   return (
@@ -19,12 +19,10 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
       <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
         <div className="govuk-checkboxes__item">
           <input
+            checked={caseState === "Resolved"}
             className="govuk-checkboxes__input"
             id="resolved"
             name="state"
-            type="checkbox"
-            value="Resolved"
-            checked={caseState === "Resolved"}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               dispatch({
                 method: event.currentTarget.checked ? "add" : "remove",
@@ -32,6 +30,8 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
                 value: "Resolved"
               })
             }}
+            type="checkbox"
+            value="Resolved"
           />
           <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
             {"Resolved cases"}
@@ -40,12 +40,10 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
         <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
           <div className="govuk-checkboxes__item">
             <input
+              checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
               className="govuk-checkboxes__input"
               id="myResolvedCases"
               name="resolvedByUsername"
-              type="checkbox"
-              value={currentUser.username}
-              checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 const isChecked = event.currentTarget.checked
 
@@ -55,6 +53,8 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
                   value: currentUser.username
                 })
               }}
+              type="checkbox"
+              value={currentUser.username}
             />
             <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
               {"My resolved cases"}

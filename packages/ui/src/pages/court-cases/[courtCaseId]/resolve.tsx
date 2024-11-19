@@ -1,3 +1,6 @@
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
+import Permission from "@moj-bichard7/common/types/Permission"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
@@ -5,7 +8,6 @@ import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { BackLink, Button, Fieldset, FormGroup, Heading, Label, Link, Select, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
@@ -16,24 +18,24 @@ import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationU
 import getDataSource from "services/getDataSource"
 import resolveCourtCase from "services/resolveCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { ResolutionReasonKey, ResolutionReasons } from "types/ManualResolution"
-import { isError } from "types/Result"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
+import { ResolutionReasonKey, ResolutionReasons } from "types/ManualResolution"
+import { isError } from "types/Result"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import { validateManualResolution } from "utils/validators/validateManualResolution"
+
 import Form from "../../../components/Form"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, res, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, formData, query, req, res } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { courtCaseId, previousPath } = query as {
       courtCaseId: string
@@ -59,11 +61,11 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     const props: Props = {
-      csrfToken,
-      previousPath: previousPath ?? null,
-      user: userToDisplayFullUserDto(currentUser),
       courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-      lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username)
+      csrfToken,
+      lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username),
+      previousPath: previousPath ?? null,
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     if (isPost(req)) {
@@ -109,23 +111,23 @@ export const getServerSideProps = withMultipleServerSideProps(
 )
 
 interface Props {
-  user: DisplayFullUser
   courtCase: DisplayFullCourtCase
+  csrfToken: string
   lockedByAnotherUser: boolean
+  previousPath: null | string
   reasonTextError?: string
   selectedReason?: ResolutionReasonKey
-  csrfToken: string
-  previousPath: string | null
+  user: DisplayFullUser
 }
 
 const ResolveCourtCasePage: NextPage<Props> = ({
   courtCase,
-  user,
-  lockedByAnotherUser,
-  selectedReason,
-  reasonTextError,
   csrfToken,
-  previousPath
+  lockedByAnotherUser,
+  previousPath,
+  reasonTextError,
+  selectedReason,
+  user
 }: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -142,21 +144,21 @@ const ResolveCourtCasePage: NextPage<Props> = ({
         <Layout>
           <Head>
             <title>{"Bichard7 | Resolve Case"}</title>
-            <meta name="description" content="Bichard7 | Resolve Case" />
+            <meta content="Bichard7 | Resolve Case" name="description" />
           </Head>
           <BackLink href={backLink} onClick={function noRefCheck() {}}>
             {"Case Details"}
           </BackLink>
           <HeaderContainer id="header-container">
             <HeaderRow>
-              <Heading as="h1" size="LARGE" aria-label="Resolve Case">
+              <Heading aria-label="Resolve Case" as="h1" size="LARGE">
                 {"Resolve Case"}
               </Heading>
             </HeaderRow>
           </HeaderContainer>
           <ConditionalRender isRendered={lockedByAnotherUser}>{"Case is locked by another user."}</ConditionalRender>
           <ConditionalRender isRendered={!lockedByAnotherUser}>
-            <Form method="POST" action="#" csrfToken={csrfToken}>
+            <Form action="#" csrfToken={csrfToken} method="POST">
               <Fieldset>
                 <FormGroup>
                   <Label>{"Select a reason"}</Label>
@@ -168,7 +170,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                   >
                     {Object.keys(ResolutionReasons).map((reason) => {
                       return (
-                        <option selected={selectedReason === reason} key={reason} value={reason}>
+                        <option key={reason} selected={selectedReason === reason} value={reason}>
                           {ResolutionReasons[reason as ResolutionReasonKey]}
                         </option>
                       )

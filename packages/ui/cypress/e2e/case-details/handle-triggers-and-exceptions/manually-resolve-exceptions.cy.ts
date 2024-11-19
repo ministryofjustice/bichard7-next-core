@@ -8,10 +8,10 @@ describe("Manually resolve exceptions", () => {
   it("Should be able to resolve a case which is visible and locked by the user", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
         errorCount: 1,
-        triggerCount: 0,
         errorLockedByUsername: "GeneralHandler",
+        orgForPoliceFilter: "01",
+        triggerCount: 0,
         triggerLockedByUsername: "GeneralHandler"
       }
     ])
@@ -39,10 +39,10 @@ describe("Manually resolve exceptions", () => {
   it("Should prompt the user to enter resolution details if the reason is Reallocated", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
         errorCount: 1,
-        triggerCount: 0,
         errorLockedByUsername: "GeneralHandler",
+        orgForPoliceFilter: "01",
+        triggerCount: 0,
         triggerLockedByUsername: "GeneralHandler"
       }
     ])

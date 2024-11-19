@@ -1,4 +1,6 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { DataSource } from "typeorm"
+
 import { auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -7,8 +9,8 @@ import axios from "axios"
 import { randomUUID } from "crypto"
 import getDataSource from "services/getDataSource"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
-import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
+
 import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../../src/config"
 import createAuditLog from "../helpers/createAuditLog"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
@@ -50,8 +52,8 @@ describe("storeAuditLogEvents", () => {
       {
         attributes: { key1: "value1" },
         category: "information",
-        eventSource: "dummyEventSource",
         eventCode: "report-run",
+        eventSource: "dummyEventSource",
         eventType: auditLogEventLookup[EventCode.ReportRun],
         timestamp: expect.anything()
       }
@@ -72,10 +74,10 @@ describe("storeAuditLogEvents", () => {
     expect(isError(result)).toBeFalsy()
 
     expect(axios).toHaveBeenCalledWith({
-      url: `${AUDIT_LOG_API_URL}/messages/dummy_key/events`,
       data: "[{}]",
       headers: { "X-API-Key": AUDIT_LOG_API_KEY },
-      method: "POST"
+      method: "POST",
+      url: `${AUDIT_LOG_API_URL}/messages/dummy_key/events`
     })
   })
 })

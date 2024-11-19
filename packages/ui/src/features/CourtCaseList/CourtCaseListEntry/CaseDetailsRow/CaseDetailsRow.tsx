@@ -9,28 +9,29 @@ import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { LOCKED_ICON_URL } from "utils/icons"
+
 import { ResolutionStatus } from "../../../../types/ResolutionStatus"
+import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
-import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
-  reasonCell?: JSX.Element | string
   lockTag?: JSX.Element
-  resolutionStatus: ResolutionStatus
+  previousPath: null | string
+  reasonCell?: JSX.Element | string
 
-  previousPath: string | null
+  resolutionStatus: ResolutionStatus
 }
 
 export const CaseDetailsRow = ({
   courtCase,
-  reasonCell,
   lockTag,
   previousPath,
+  reasonCell,
   resolutionStatus
 }: CaseDetailsRowProps) => {
-  const { notes, errorLockedByUsername, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
+  const { courtDate, courtName, defendantName, errorId, errorLockedByUsername, notes, ptiurn } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const userNotes = filterUserNotes(notes)
@@ -46,11 +47,11 @@ export const CaseDetailsRow = ({
       <Table.Row className="caseDetailsRow">
         <Table.Cell>
           <ConditionalRender isRendered={!!errorLockedByUsername}>
-            <Image src={LOCKED_ICON_URL} priority width={20} height={20} alt="Lock icon" />
+            <Image alt="Lock icon" height={20} priority src={LOCKED_ICON_URL} width={20} />
           </ConditionalRender>
         </Table.Cell>
         <Table.Cell>
-          <Link href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name">
+          <Link className="defendant-name" href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`}>
             {defendantName}
             <br />
             <CaseListResolutionStatusBadgeWrapper>
@@ -64,7 +65,7 @@ export const CaseDetailsRow = ({
         <Table.Cell>{courtName}</Table.Cell>
         <Table.Cell>{ptiurn}</Table.Cell>
         <Table.Cell>
-          <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
+          <NotePreviewButton numberOfNotes={numberOfNotes} previewState={showPreview} setShowPreview={setShowPreview} />
         </Table.Cell>
         <Table.Cell>{reasonCell}</Table.Cell>
         <Table.Cell>{lockTag}</Table.Cell>

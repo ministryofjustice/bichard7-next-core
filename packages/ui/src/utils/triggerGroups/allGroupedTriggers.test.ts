@@ -1,4 +1,5 @@
 import TriggerCode, { TriggerCodeGroups } from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import allGroupedTriggers from "./allGroupedTriggers"
 
 describe("allGroupedTriggers", () => {

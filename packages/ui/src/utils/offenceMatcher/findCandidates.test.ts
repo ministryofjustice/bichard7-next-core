@@ -1,9 +1,11 @@
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { PncOffence } from "@moj-bichard7/core/types/PncQueryResult"
-import HO100310 from "../../../cypress/fixtures/HO100310.json"
-import HO100332 from "../../../cypress/fixtures/HO100332.json"
+
 import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
 import type { Candidates } from "../../types/OffenceMatching"
+
+import HO100310 from "../../../cypress/fixtures/HO100310.json"
+import HO100332 from "../../../cypress/fixtures/HO100332.json"
 import parseCourtCaseWithDateObjects from "../date/parseCourtCaseWithDateObjects"
 import findCandidates from "./findCandidates"
 
@@ -21,6 +23,14 @@ describe("findCandidates", () => {
       } as Offence
       const courtCase = {
         aho: {
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: { Offence: [offence] }
+              },
+              Hearing: { DateOfHearing: new Date() }
+            }
+          },
           PncQuery: {
             courtCases: [
               {
@@ -32,14 +42,6 @@ describe("findCandidates", () => {
                 offences: [pncOffence]
               }
             ]
-          },
-          AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Hearing: { DateOfHearing: new Date() },
-              Case: {
-                HearingDefendant: { Offence: [offence] }
-              }
-            }
           }
         }
       } as DisplayFullCourtCase
@@ -57,6 +59,14 @@ describe("findCandidates", () => {
       } as Offence
       const courtCase = {
         aho: {
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: { Offence: [offence] }
+              },
+              Hearing: { DateOfHearing: new Date() }
+            }
+          },
           PncQuery: {
             courtCases: [
               {
@@ -64,14 +74,6 @@ describe("findCandidates", () => {
                 offences: [pncOffence]
               }
             ]
-          },
-          AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Hearing: { DateOfHearing: new Date() },
-              Case: {
-                HearingDefendant: { Offence: [offence] }
-              }
-            }
           }
         }
       } as DisplayFullCourtCase
@@ -92,6 +94,14 @@ describe("findCandidates", () => {
 
       const courtCase = {
         aho: {
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: { Offence: [offence] }
+              },
+              Hearing: { DateOfHearing: new Date() }
+            }
+          },
           PncQuery: {
             courtCases: [
               {
@@ -99,14 +109,6 @@ describe("findCandidates", () => {
                 offences: [pncOffence]
               }
             ]
-          },
-          AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Hearing: { DateOfHearing: new Date() },
-              Case: {
-                HearingDefendant: { Offence: [offence] }
-              }
-            }
           }
         }
       } as DisplayFullCourtCase
@@ -131,14 +133,14 @@ describe("findCandidates", () => {
               offence: {
                 acpoOffenceCode: "12:15:24:1",
                 cjsOffenceCode: "TH68006",
-                title: "Theft of pedal cycle",
-                sequenceNumber: 1,
+                endDate: new Date("2010-12-05T00:00:00.000Z"),
+                endTime: "00:00",
                 qualifier1: "",
                 qualifier2: "",
+                sequenceNumber: 1,
                 startDate: new Date("2010-11-28T00:00:00.000Z"),
-                endDate: new Date("2010-12-05T00:00:00.000Z"),
                 startTime: "00:00",
-                endTime: "00:00"
+                title: "Theft of pedal cycle"
               }
             }
           ]
@@ -159,6 +161,14 @@ describe("findCandidates", () => {
 
       const courtCase = {
         aho: {
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: { Offence: [offence] }
+              },
+              Hearing: { DateOfHearing: new Date() }
+            }
+          },
           PncQuery: {
             courtCases: [
               {
@@ -166,14 +176,6 @@ describe("findCandidates", () => {
                 offences: [pncOffence, pncOffence]
               }
             ]
-          },
-          AnnotatedHearingOutcome: {
-            HearingOutcome: {
-              Hearing: { DateOfHearing: new Date() },
-              Case: {
-                HearingDefendant: { Offence: [offence] }
-              }
-            }
           }
         }
       } as DisplayFullCourtCase
@@ -202,11 +204,11 @@ describe("findCandidates", () => {
               offence: {
                 acpoOffenceCode: "1:9:7:1",
                 cjsOffenceCode: "OF61016",
-                title: "Section 18 - wounding with intent",
-                sequenceNumber: 1,
                 qualifier1: "",
                 qualifier2: "",
-                startDate: new Date("2009-06-01T00:00:00.000Z")
+                sequenceNumber: 1,
+                startDate: new Date("2009-06-01T00:00:00.000Z"),
+                title: "Section 18 - wounding with intent"
               }
             }
           ]
@@ -218,11 +220,11 @@ describe("findCandidates", () => {
               offence: {
                 acpoOffenceCode: "1:9:7:1",
                 cjsOffenceCode: "OF61016",
-                title: "Section 18 - wounding with intent",
-                sequenceNumber: 2,
                 qualifier1: "",
                 qualifier2: "",
-                startDate: new Date("2009-06-01T00:00:00.000Z")
+                sequenceNumber: 2,
+                startDate: new Date("2009-06-01T00:00:00.000Z"),
+                title: "Section 18 - wounding with intent"
               }
             }
           ]

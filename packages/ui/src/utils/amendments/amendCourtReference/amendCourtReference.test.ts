@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import amendCourtReference from "./amendCourtReference"
 

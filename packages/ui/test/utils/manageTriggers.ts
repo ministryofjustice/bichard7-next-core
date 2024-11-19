@@ -1,18 +1,19 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import Trigger from "../../src/services/entities/Trigger"
 import getDataSource from "../../src/services/getDataSource"
 import deleteFromEntity from "./deleteFromEntity"
 
 type TestTrigger = {
-  triggerId: number
-  triggerCode: TriggerCode
-  status: ResolutionStatus
-  triggerItemIdentity?: number
   createdAt: Date
-  resolvedBy?: string
   resolvedAt?: Date
+  resolvedBy?: string
+  status: ResolutionStatus
+  triggerCode: TriggerCode
+  triggerId: number
+  triggerItemIdentity?: number
 }
 
 const insertTriggers = async (caseId: number, triggers: TestTrigger[], username?: string): Promise<boolean> => {
@@ -24,9 +25,9 @@ const insertTriggers = async (caseId: number, triggers: TestTrigger[], username?
     .into(Trigger)
     .values(
       triggers.map((t) => ({
+        errorId: caseId,
         resolvedAt: t.status === "Resolved" ? new Date() : null,
         resolvedBy: t.status === "Resolved" ? (username ?? "GeneralHandler") : null,
-        errorId: caseId,
         ...t
       }))
     )
@@ -41,10 +42,10 @@ const insertTriggers = async (caseId: number, triggers: TestTrigger[], username?
     .createQueryBuilder()
     .update(CourtCase)
     .set({
-      triggerResolvedBy,
       triggerCount: () => `trigger_count + ${triggers.length}`,
-      triggerStatus: triggerResolvedBy ? "Resolved" : "Unresolved",
-      triggerReason: triggers[triggers.length - 1].triggerCode
+      triggerReason: triggers[triggers.length - 1].triggerCode,
+      triggerResolvedBy,
+      triggerStatus: triggerResolvedBy ? "Resolved" : "Unresolved"
     })
     .where("errorId = :id", { id: caseId })
     .execute()

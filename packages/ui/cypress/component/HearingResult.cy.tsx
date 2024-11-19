@@ -1,13 +1,14 @@
-import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CjsPlea } from "@moj-bichard7/core/types/Plea"
 import ResultClass from "@moj-bichard7/core/types/ResultClass"
+import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
+
 import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 
 const courtCase = {
@@ -32,23 +33,23 @@ const courtCase = {
 } as unknown as DisplayFullCourtCase
 
 const currentUser = {
-  username: "",
   email: "",
-  visibleForces: [],
-  visibleCourts: [],
   excludedTriggers: [],
   featureFlags: {},
   groups: [],
   hasAccessTo: {
+    [Permission.CanResubmit]: false,
     [Permission.CaseDetailsSidebar]: false,
     [Permission.Exceptions]: false,
+    [Permission.ListAllCases]: false,
     [Permission.Triggers]: false,
     [Permission.UnlockOtherUsersCases]: false,
-    [Permission.ListAllCases]: false,
     [Permission.ViewReports]: false,
-    [Permission.ViewUserManagement]: false,
-    [Permission.CanResubmit]: false
-  }
+    [Permission.ViewUserManagement]: false
+  },
+  username: "",
+  visibleCourts: [],
+  visibleForces: []
 } as DisplayFullUser
 
 describe("Hearing Result", () => {
@@ -58,28 +59,28 @@ describe("Hearing Result", () => {
   beforeEach(() => {
     result = {
       CJSresultCode: 1234,
-      ResultHearingType: "hearing type",
-      ResultHearingDate: new Date("2022-09-10"),
+      ModeOfTrialReason: "reason",
       NextHearingDate: new Date("2022-09-11"),
       PleaStatus: CjsPlea.Guilty,
-      Verdict: verdicts[1].cjsCode,
-      ModeOfTrialReason: "reason",
-      ResultVariableText: "this is some text",
+      PNCAdjudicationExists: true,
       PNCDisposalType: 1,
       ResultClass: ResultClass.ADJOURNMENT,
-      PNCAdjudicationExists: true
+      ResultHearingDate: new Date("2022-09-10"),
+      ResultHearingType: "hearing type",
+      ResultVariableText: "this is some text",
+      Verdict: verdicts[1].cjsCode
     } as Result
   })
 
   it("displays all mandatory fields", () => {
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+      <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
         <CurrentUserContext.Provider value={{ currentUser }}>
           <HearingResult
+            exceptions={[]}
             result={result}
             resultIndex={dummyIndex}
             selectedOffenceSequenceNumber={dummyIndex}
-            exceptions={[]}
             stopLeavingFn={() => {}}
           />
         </CurrentUserContext.Provider>
@@ -108,13 +109,13 @@ describe("Hearing Result", () => {
       ]
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[]}
               result={result}
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
-              exceptions={[]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -128,13 +129,13 @@ describe("Hearing Result", () => {
       result.Duration = undefined
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[]}
               result={result}
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
-              exceptions={[]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -158,13 +159,13 @@ describe("Hearing Result", () => {
         }
       ]
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[]}
               result={result}
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
-              exceptions={[]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -180,13 +181,13 @@ describe("Hearing Result", () => {
       result.NextHearingDate = undefined
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[]}
               result={result}
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
-              exceptions={[]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -200,13 +201,13 @@ describe("Hearing Result", () => {
       result.NextHearingDate = "false"
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[]}
               result={result}
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
-              exceptions={[]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -220,13 +221,13 @@ describe("Hearing Result", () => {
       result.NextHearingDate = undefined
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[{ code: ExceptionCode.HO100323, path: ["dummyPath", "NextHearingDate"] }]}
               result={result}
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
-              exceptions={[{ path: ["dummyPath", "NextHearingDate"], code: ExceptionCode.HO100323 }]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -240,18 +241,18 @@ describe("Hearing Result", () => {
       result.NextResultSourceOrganisation = undefined
 
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[
+                {
+                  code: ExceptionCode.HO100200,
+                  path: ["dummyPath", "NextResultSourceOrganisation", "OrganisationUnitCode"]
+                }
+              ]}
               result={result}
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
-              exceptions={[
-                {
-                  path: ["dummyPath", "NextResultSourceOrganisation", "OrganisationUnitCode"],
-                  code: ExceptionCode.HO100200
-                }
-              ]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
@@ -265,13 +266,13 @@ describe("Hearing Result", () => {
   describe("CJS result code", () => {
     it("Should display an error prompt when a HO100307 is raised", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <CurrentUserContext.Provider value={{ currentUser }}>
             <HearingResult
+              exceptions={[{ code: ExceptionCode.HO100307, path: ["dummyPath", "CJSresultCode"] }]}
               result={result}
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
-              exceptions={[{ path: ["dummyPath", "CJSresultCode"], code: ExceptionCode.HO100307 }]}
               stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>

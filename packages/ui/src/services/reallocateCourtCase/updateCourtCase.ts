@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { EntityManager } from "typeorm"
+
 import { isError } from "../../types/Result"
 import { TriggerQualityCheckStatus } from "../../utils/triggerQualityCheckStatus"
 import CourtCase from "../entities/CourtCase"
@@ -10,7 +11,7 @@ const updateCourtCase = async (
   courtCase: CourtCase,
   aho: AnnotatedHearingOutcome,
   hasAddedOrDeletedTriggers: boolean
-): Promise<Pick<CourtCase, "orgForPoliceFilter"> | Error> => {
+): Promise<Error | Pick<CourtCase, "orgForPoliceFilter">> => {
   const triggerTimestamp = new Date()
   const triggers = await entityManager
     .getRepository(Trigger)
@@ -26,10 +27,10 @@ const updateCourtCase = async (
   const { SecondLevelCode, ThirdLevelCode } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner ?? {}
   const orgForPoliceFilter = `${SecondLevelCode}${ThirdLevelCode !== "00" ? ThirdLevelCode : ""}`
   const updateParameters: Partial<CourtCase> = {
-    triggerCount: triggers.length,
     asn: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber.substring(0, asnSize),
+    orgForPoliceFilter,
     ptiurn: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN.substring(0, ptiurnSize),
-    orgForPoliceFilter
+    triggerCount: triggers.length
   }
 
   let triggerParameters: Partial<CourtCase> = {}
@@ -37,31 +38,31 @@ const updateCourtCase = async (
     if (triggers.length === 0) {
       triggerParameters = {
         ...(!courtCase.errorStatus || courtCase.errorStatus === "Resolved" ? { resolutionTimestamp: new Date() } : {}),
+        triggerInsertedTimestamp: null,
+        triggerQualityChecked: null,
         triggerReason: null,
-        triggerStatus: null,
         triggerResolvedBy: null,
         triggerResolvedTimestamp: null,
-        triggerQualityChecked: null,
-        triggerInsertedTimestamp: null
+        triggerStatus: null
       }
     } else if (triggers.every((trigger) => trigger.status === "Resolved")) {
       triggerParameters = {
         ...(!courtCase.errorStatus || courtCase.errorStatus === "Resolved" ? { resolutionTimestamp: new Date() } : {}),
+        triggerQualityChecked: TriggerQualityCheckStatus.Unchecked,
         triggerReason: triggers.filter((trigger) => trigger.status === "Resolved")[0].triggerCode,
-        triggerStatus: "Resolved",
         triggerResolvedBy: "System",
         triggerResolvedTimestamp: triggerTimestamp,
-        triggerQualityChecked: TriggerQualityCheckStatus.Unchecked
+        triggerStatus: "Resolved"
       }
     } else if (triggers.some((trigger) => trigger.status === "Resolved")) {
       triggerParameters = {
         resolutionTimestamp: null,
+        triggerInsertedTimestamp: triggerTimestamp,
+        triggerQualityChecked: TriggerQualityCheckStatus.Unchecked,
         triggerReason: triggers.filter((trigger) => trigger.status === "Resolved")[0].triggerCode,
-        triggerStatus: "Unresolved",
         triggerResolvedBy: null,
         triggerResolvedTimestamp: null,
-        triggerQualityChecked: TriggerQualityCheckStatus.Unchecked,
-        triggerInsertedTimestamp: triggerTimestamp
+        triggerStatus: "Unresolved"
       }
     }
   }

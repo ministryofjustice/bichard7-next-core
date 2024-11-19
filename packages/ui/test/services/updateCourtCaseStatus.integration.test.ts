@@ -1,9 +1,11 @@
-import MockDate from "mockdate"
 import type User from "services/entities/User"
-import { isError } from "services/mq/types/Result"
-import updateCourtCaseStatus from "services/updateCourtCaseStatus"
 import type { DataSource, UpdateResult } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
+
+import MockDate from "mockdate"
+import { isError } from "services/mq/types/Result"
+import updateCourtCaseStatus from "services/updateCourtCaseStatus"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -13,30 +15,30 @@ const courtCaseId = 0
 const testUser = { username: "GeneralHandler" } as User
 
 const insertRecord = async (
-  errorLockedByUsername: string | null = null,
-  triggerLockedByUsername: string | null = null,
-  errorStatus: ResolutionStatus | null = null,
-  triggerStatus: ResolutionStatus | null = null
+  errorLockedByUsername: null | string = null,
+  triggerLockedByUsername: null | string = null,
+  errorStatus: null | ResolutionStatus = null,
+  triggerStatus: null | ResolutionStatus = null
 ) => {
   const existingCourtCasesDbObjects = [
     await getDummyCourtCase({
       courtDate: new Date("2008-09-25"),
-      orgForPoliceFilter: "36FPA1".padEnd(6, " "),
       errorId: courtCaseId,
-      messageId: String(0).padStart(5, "x"),
       errorLockedByUsername: errorLockedByUsername,
-      triggerLockedByUsername: triggerLockedByUsername,
       errorStatus: errorStatus,
+      messageId: String(0).padStart(5, "x"),
+      orgForPoliceFilter: "36FPA1".padEnd(6, " "),
+      triggerLockedByUsername: triggerLockedByUsername,
       triggerStatus: triggerStatus
     }),
     await getDummyCourtCase({
       courtDate: new Date("2008-09-25"),
-      orgForPoliceFilter: "36FPA1".padEnd(6, " "),
       errorId: 1,
-      messageId: String(1).padStart(5, "x"),
       errorLockedByUsername: errorLockedByUsername,
-      triggerLockedByUsername: triggerLockedByUsername,
       errorStatus: errorStatus,
+      messageId: String(1).padStart(5, "x"),
+      orgForPoliceFilter: "36FPA1".padEnd(6, " "),
+      triggerLockedByUsername: triggerLockedByUsername,
       triggerStatus: triggerStatus
     })
   ]

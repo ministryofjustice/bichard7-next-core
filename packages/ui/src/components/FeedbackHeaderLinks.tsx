@@ -1,13 +1,14 @@
 import { BackLink } from "govuk-react"
+
 import { BackLinkWrapper, LinksRow, SkipLink } from "./FeedbackHeaderLinks.styles"
 import Form from "./Form"
 
 type Props = {
-  csrfToken: string
   backLinkUrl: string
+  csrfToken: string
   skipLinkUrl?: string
 }
-const FeedbackHeaderLinks = ({ csrfToken, backLinkUrl, skipLinkUrl }: Props) => {
+const FeedbackHeaderLinks = ({ backLinkUrl, csrfToken, skipLinkUrl }: Props) => {
   return (
     <LinksRow>
       <BackLinkWrapper>
@@ -15,7 +16,7 @@ const FeedbackHeaderLinks = ({ csrfToken, backLinkUrl, skipLinkUrl }: Props) => 
           {"Back"}
         </BackLink>
       </BackLinkWrapper>
-      <Form method="POST" action={skipLinkUrl} csrfToken={csrfToken}>
+      <Form action={skipLinkUrl} csrfToken={csrfToken} method="POST">
         <SkipLink id="skip-feedback" type="submit">
           {"Skip feedback"}
         </SkipLink>

@@ -1,17 +1,19 @@
-import listCourtCases from "services/listCourtCases"
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
 import type { DateRange } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
+
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"
-import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
+import listCourtCases from "services/listCourtCases"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource } from "typeorm"
+
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromEntity from "../../utils/deleteFromEntity"
+import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -23,19 +25,19 @@ describe("Filter cases by resolved date", () => {
   const orgCode = "36FPA1"
   const forceCode = "036"
   const testUser = {
-    visibleForces: [forceCode],
+    hasAccessTo: hasAccessToAll,
     visibleCourts: [],
-    hasAccessTo: hasAccessToAll
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const insertDummyCourtCases = async (courtCasesCount: number) => {
     await insertCourtCasesWithFields(
       Array.from(Array(courtCasesCount)).map((_, index) => ({
+        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
+        errorStatus: "Resolved",
         orgForPoliceFilter: orgCode,
         resolutionTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`),
-        errorStatus: "Resolved"
+        triggerResolvedTimestamp: new Date(`2024-05-0${index + 1}`)
       }))
     )
   }
@@ -73,7 +75,7 @@ describe("Filter cases by resolved date", () => {
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
-      { resolvedDateRange, caseState: "Resolved" },
+      { caseState: "Resolved", resolvedDateRange },
       testUser
     )) as ListCourtCaseResult
 
@@ -92,7 +94,7 @@ describe("Filter cases by resolved date", () => {
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
-      { resolvedDateRange, caseState: "Resolved" },
+      { caseState: "Resolved", resolvedDateRange },
       testUser
     )) as ListCourtCaseResult
 
@@ -112,7 +114,7 @@ describe("Filter cases by resolved date", () => {
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
-      { resolvedDateRange, caseState: "Resolved" },
+      { caseState: "Resolved", resolvedDateRange },
       testUser
     )) as ListCourtCaseResult
 
@@ -131,7 +133,7 @@ describe("Filter cases by resolved date", () => {
 
     const { result, totalCases } = (await listCourtCases(
       dataSource,
-      { resolvedDateRange, caseState: "Resolved" },
+      { caseState: "Resolved", resolvedDateRange },
       testUser
     )) as ListCourtCaseResult
 

@@ -1,11 +1,11 @@
 import { CorrectionBadge, InitialInputValueBadge } from "./Badges"
 
 interface InitialValueAndCorrectionFieldProps {
-  value?: string | React.ReactNode
-  updatedValue?: string | null
+  updatedValue?: null | string
+  value?: React.ReactNode | string
 }
 
-const InitialValueAndCorrectionField: React.FC<InitialValueAndCorrectionFieldProps> = ({ value, updatedValue }) => {
+const InitialValueAndCorrectionField: React.FC<InitialValueAndCorrectionFieldProps> = ({ updatedValue, value }) => {
   return (
     <>
       {value}

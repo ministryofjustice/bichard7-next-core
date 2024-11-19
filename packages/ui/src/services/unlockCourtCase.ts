@@ -1,8 +1,11 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
-import { isError } from "types/Result"
 import type UnlockReason from "types/UnlockReason"
+
+import { isError } from "types/Result"
+
 import type User from "./entities/User"
+
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
@@ -12,7 +15,7 @@ const unlockCourtCase = async (
   courtCaseId: number,
   user: User,
   unlockReason: UnlockReason
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const updateResult = await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
 

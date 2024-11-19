@@ -1,20 +1,22 @@
-import SurveyFeedback from "services/entities/SurveyFeedback"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { SwitchingFeedbackResponse } from "types/SurveyFeedback"
+
+import SurveyFeedback from "services/entities/SurveyFeedback"
 import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
-import type { DataSource } from "typeorm"
 import { Repository } from "typeorm"
 import { isError } from "types/Result"
-import type { SwitchingFeedbackResponse } from "types/SurveyFeedback"
 import { SurveyFeedbackType } from "types/SurveyFeedback"
+
 import getLastSwitchingFormSubmission from "../../src/services/getLastSwitchingFormSubmission"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { createUser } from "../utils/manageUsers"
 
 describe("getLastSwitchingFormSubmission", () => {
   let dataSource: DataSource
-  let bichardUser: User | null
-  let supervisorUser: User | null
+  let bichardUser: null | User
+  let supervisorUser: null | User
 
   beforeAll(async () => {
     dataSource = await getDataSource()
@@ -56,10 +58,10 @@ describe("getLastSwitchingFormSubmission", () => {
     await Promise.all(
       dateStrings.map((dateString) =>
         insertSurveyFeedback(dataSource, {
+          createdAt: new Date(dateString),
           feedbackType: SurveyFeedbackType.Switching,
           response: { skipped: true } as SwitchingFeedbackResponse,
-          userId: bichardUser?.id,
-          createdAt: new Date(dateString)
+          userId: bichardUser?.id
         } as SurveyFeedback)
       )
     )
@@ -77,19 +79,19 @@ describe("getLastSwitchingFormSubmission", () => {
     await Promise.all(
       dateStrings.map((dateString) =>
         insertSurveyFeedback(dataSource, {
+          createdAt: new Date(dateString),
           feedbackType: SurveyFeedbackType.Switching,
           response: { skipped: true } as SwitchingFeedbackResponse,
-          userId: bichardUser?.id,
-          createdAt: new Date(dateString)
+          userId: bichardUser?.id
         } as SurveyFeedback)
       )
     )
 
     await insertSurveyFeedback(dataSource, {
+      createdAt: new Date("2023-09-20T23:23:23"),
       feedbackType: SurveyFeedbackType.Switching,
       response: { skipped: true } as SwitchingFeedbackResponse,
-      userId: supervisorUser?.id,
-      createdAt: new Date("2023-09-20T23:23:23")
+      userId: supervisorUser?.id
     } as SurveyFeedback)
 
     const result = await getLastSwitchingFormSubmission(dataSource, bichardUser!.id)

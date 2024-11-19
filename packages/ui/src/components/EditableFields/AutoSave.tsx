@@ -3,23 +3,24 @@ import { isEmpty } from "lodash"
 import { useCallback, useEffect, useState } from "react"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import excludeSavedAmendments from "utils/autoSave/excludeSavedAmendments"
+
 import { useCourtCase } from "../../context/CourtCaseContext"
 import { AmendmentKeys, OffenceField, ResultQualifierCode } from "../../types/Amendments"
 import ErrorMessage from "./ErrorMessage"
 import SuccessMessage from "./SuccessMessage"
 
 interface AutoSaveProps {
-  setSaved: (onSave: boolean) => void
-  setChanged: (onChanged: boolean) => void
-  isValid: boolean
-  isSaved: boolean
-  isChanged: boolean
   amendmentFields: AmendmentKeys[]
   children?: React.ReactNode
+  isChanged: boolean
+  isSaved: boolean
+  isValid: boolean
+  setChanged: (onChanged: boolean) => void
+  setSaved: (onSave: boolean) => void
 }
 
-const AutoSave = ({ setSaved, setChanged, isValid, isSaved, isChanged, amendmentFields, children }: AutoSaveProps) => {
-  const { courtCase, amendments, savedAmend, savedAmendments, updateCourtCase } = useCourtCase()
+const AutoSave = ({ amendmentFields, children, isChanged, isSaved, isValid, setChanged, setSaved }: AutoSaveProps) => {
+  const { amendments, courtCase, savedAmend, savedAmendments, updateCourtCase } = useCourtCase()
   const [saving, setSaving] = useState<boolean>(false)
   const [httpResponseStatus, setHttpResponseStatus] = useState<number | undefined>(undefined)
   const [httpResponseError, setHttpResponseError] = useState<Error | undefined>(undefined)

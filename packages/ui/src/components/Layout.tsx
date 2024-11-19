@@ -1,9 +1,9 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Footer } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 import { ReactNode } from "react"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
@@ -19,22 +19,22 @@ interface BichardSwitchProps {
 
 const BichardSwitchButton: React.FC<BichardSwitchProps> = ({ href }: BichardSwitchProps) => {
   return (
-    <LinkButton className={"BichardSwitch"} style={{ marginBottom: "10px" }} href={href}>
+    <LinkButton className={"BichardSwitch"} href={href} style={{ marginBottom: "10px" }}>
       {"Switch to old Bichard"}
     </LinkButton>
   )
 }
 
 interface Props {
-  children: ReactNode
   bichardSwitch?: {
     display: boolean
-    href?: string
     displaySwitchingSurveyFeedback: boolean
+    href?: string
   }
+  children: ReactNode
 }
 
-const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSurveyFeedback: false } }: Props) => {
+const Layout = ({ bichardSwitch = { display: false, displaySwitchingSurveyFeedback: false }, children }: Props) => {
   const { basePath } = useRouter()
   const pathname = usePathname()
   const currentUser = useCurrentUser()
@@ -51,7 +51,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
 
   return (
     <>
-      <Header serviceName={"Bichard7"} organisationName={"Ministry of Justice"} userName={currentUser.username} />
+      <Header organisationName={"Ministry of Justice"} serviceName={"Bichard7"} userName={currentUser.username} />
       <NavBar
         hasAccessToReports={currentUser.hasAccessTo[Permission.ViewReports]}
         hasAccessToUserManagement={currentUser.hasAccessTo[Permission.ViewUserManagement]}

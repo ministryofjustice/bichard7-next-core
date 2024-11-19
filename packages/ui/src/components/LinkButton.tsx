@@ -1,22 +1,23 @@
 import { Button } from "govuk-react"
 import { useRouter } from "next/router"
 import { ReactNode } from "react"
+
 import { StyledSaveLinkButton } from "./LinkButton.styles"
 
 interface LinkButtonProps extends React.ComponentProps<"button"> {
+  buttonColour?: string
+  buttonShadowColour?: string
+  buttonTextColour?: string
   children: ReactNode
   href: string
-  buttonColour?: string
-  buttonTextColour?: string
-  buttonShadowColour?: string
 }
 
 const LinkButton: React.FC<LinkButtonProps> = ({
-  children,
-  href,
   buttonColour,
   buttonShadowColour,
   buttonTextColour,
+  children,
+  href,
   ...buttonProps
 }: LinkButtonProps) => {
   const { asPath, basePath } = useRouter()
@@ -25,8 +26,8 @@ const LinkButton: React.FC<LinkButtonProps> = ({
     <a href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}>
       <Button
         buttonColour={buttonColour}
-        buttonTextColour={buttonTextColour}
         buttonShadowColour={buttonShadowColour}
+        buttonTextColour={buttonTextColour}
         {...buttonProps}
       >
         {children}
@@ -36,19 +37,19 @@ const LinkButton: React.FC<LinkButtonProps> = ({
 }
 
 interface SaveLinkButtonProps extends React.ComponentProps<"button"> {
-  onClick: (event: React.MouseEvent<HTMLElement>) => void
-  id: string
-  disabled?: boolean
   buttonText?: string
   className?: string
+  disabled?: boolean
+  id: string
+  onClick: (event: React.MouseEvent<HTMLElement>) => void
 }
 
 const SaveLinkButton: React.FC<SaveLinkButtonProps> = ({
-  id,
-  disabled,
-  onClick,
+  buttonText = "Save Correction",
   className,
-  buttonText = "Save Correction"
+  disabled,
+  id,
+  onClick
 }: SaveLinkButtonProps) => {
   const handleOnClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
@@ -56,9 +57,9 @@ const SaveLinkButton: React.FC<SaveLinkButtonProps> = ({
   }
 
   const saveButtonProps = {
-    id,
-    disabled,
     className,
+    disabled,
+    id,
     onClick: handleOnClick
   }
 

@@ -1,6 +1,8 @@
 import type { DataSource, EntityManager } from "typeorm"
-import CourtCase from "./entities/CourtCase"
+
 import type PromiseResult from "../types/PromiseResult"
+
+import CourtCase from "./entities/CourtCase"
 
 const getCourtCase = (dataSource: DataSource | EntityManager, courtCaseId: number): PromiseResult<CourtCase | null> => {
   const repository = dataSource.getRepository(CourtCase)

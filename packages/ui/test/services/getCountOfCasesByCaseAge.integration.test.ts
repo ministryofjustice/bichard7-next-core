@@ -1,11 +1,13 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
+import "reflect-metadata"
 /* eslint-disable @typescript-eslint/naming-convention */
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
-import "reflect-metadata"
-import type User from "services/entities/User"
 import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
-import type { DataSource } from "typeorm"
 import { SelectQueryBuilder } from "typeorm"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import { isError } from "../../src/types/Result"
@@ -85,7 +87,7 @@ describe("listCourtCases", () => {
     await insertCourtCasesWithFields([
       { courtDate: dateToday, orgForPoliceFilter: orgCode },
       { courtDate: dateToday, orgForPoliceFilter: orgCode },
-      { courtDate: dateToday, orgForPoliceFilter: orgCode, errorStatus: "Resolved", triggerStatus: "Resolved" }
+      { courtDate: dateToday, errorStatus: "Resolved", orgForPoliceFilter: orgCode, triggerStatus: "Resolved" }
     ])
 
     const result = (await getCountOfCasesByCaseAge(dataSource, {

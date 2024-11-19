@@ -1,14 +1,17 @@
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import CourtCase from "services/entities/CourtCase"
 import Trigger from "services/entities/Trigger"
 import getDataSource from "services/getDataSource"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import { isError } from "types/Result"
+
+import type { TestTrigger } from "../utils/manageTriggers"
+
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields, insertDummyCourtCasesWithTriggers } from "../utils/insertCourtCases"
-import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 
 describe("leftJoinAndSelectTriggersQuery", () => {
@@ -157,31 +160,31 @@ describe("leftJoinAndSelectTriggersQuery", () => {
       const resolvedTriggerCode = TriggerCode.TRPR0002
 
       const firstResolvedTrigger: TestTrigger = {
-        triggerId: 0,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Resolved",
         triggerCode: resolvedTriggerCode,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerId: 0
       }
 
       const secondResolvedTrigger: TestTrigger = {
-        triggerId: 1,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Resolved",
         triggerCode: resolvedTriggerCode,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerId: 1
       }
 
       const firstUnresolvedTrigger: TestTrigger = {
-        triggerId: 2,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
         triggerCode: TriggerCode.TRPR0008,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerId: 2
       }
 
       const secondUnresolvedTrigger: TestTrigger = {
-        triggerId: 3,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
         triggerCode: TriggerCode.TRPR0008,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerId: 3
       }
 
       await insertCourtCasesWithFields(Array.from({ length: 2 }, () => ({ orgForPoliceFilter: dummyOrgCode })))

@@ -1,5 +1,5 @@
 export enum TriggerQualityCheckStatus {
-  "Unchecked" = 1,
+  "Failed" = 3,
   "Passed" = 2,
-  "Failed" = 3
+  "Unchecked" = 1
 }

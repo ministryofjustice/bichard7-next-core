@@ -1,5 +1,6 @@
 import type { SelectQueryBuilder } from "typeorm"
 import type { CaseState } from "types/CaseListQueryParams"
+
 import type CourtCase from "../entities/CourtCase"
 
 const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>

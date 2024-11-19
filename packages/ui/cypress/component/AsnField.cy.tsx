@@ -4,6 +4,7 @@ import { CurrentUserContext } from "context/CurrentUserContext"
 import { AsnField } from "features/CourtCaseDetails/Tabs/Panels/EditableFields/AsnField"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
+
 import HO100206 from "../fixtures/HO100206.json"
 
 describe("AsnField", () => {
@@ -19,7 +20,7 @@ describe("AsnField", () => {
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
         <CourtCaseContext.Provider
-          value={[{ courtCase, amendments: { asn: "1101ZD0100000448754K" }, savedAmendments: {} }, () => {}]}
+          value={[{ amendments: { asn: "1101ZD0100000448754K" }, courtCase, savedAmendments: {} }, () => {}]}
         >
           <AsnField />
         </CourtCaseContext.Provider>
@@ -37,7 +38,7 @@ describe("AsnField", () => {
   it("formats 2 digits Asn with forward slashes", () => {
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "11" }, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: { asn: "11" }, courtCase, savedAmendments: {} }, () => {}]}>
           <AsnField />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -54,7 +55,7 @@ describe("AsnField", () => {
   it("formats 3 digits Asn with forward slashes", () => {
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "110" }, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: { asn: "110" }, courtCase, savedAmendments: {} }, () => {}]}>
           <AsnField />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>

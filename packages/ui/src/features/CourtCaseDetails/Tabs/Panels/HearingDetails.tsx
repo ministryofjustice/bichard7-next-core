@@ -1,7 +1,8 @@
-import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
 import { Hearing } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
 import { Table } from "govuk-react"
 import { formatDisplayedDate } from "utils/date/formattedDate"
+
 import { TableRow } from "./TableRow"
 
 interface HearingDetailsProps {
@@ -11,18 +12,18 @@ interface HearingDetailsProps {
 export const HearingDetails = ({ hearing }: HearingDetailsProps) => {
   const getLanguage = (language: string) => {
     switch (language) {
+      case "D":
+        return `Don't know (${language})`
       case "E":
         return `English (${language})`
       case "W":
         return `Welsh (${language})`
-      case "D":
-        return `Don't know (${language})`
       default:
         return language
     }
   }
 
-  const getCourtType = (courtCode: string | null | undefined) => {
+  const getCourtType = (courtCode: null | string | undefined) => {
     let courtTypeWithDescription = courtCode
     courtTypes.forEach((type) => {
       if (type.cjsCode === courtCode) {

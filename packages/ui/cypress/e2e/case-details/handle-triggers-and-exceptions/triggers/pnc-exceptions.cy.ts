@@ -1,4 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import { caseURL } from "../../../../fixtures/triggers"
 import { loginAndVisit } from "../../../../support/helpers"
 
@@ -10,14 +11,14 @@ describe("PNC Exceptions", () => {
 
   it("should render PNC exception and correctly display the PNC error message", () => {
     cy.task("insertCourtCaseWithPncException", {
+      case: {
+        errorLockedByUsername: null,
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
+      },
       exceptions: {
         pncExceptionCode: "HO100402",
         pncExceptionMessage: "I1008 - GWAY - ENQUIRY ERROR NO SUITABLE DISPOSAL GROUPS 20/01JP/01/5151Y"
-      },
-      case: {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
       }
     })
 
@@ -36,13 +37,13 @@ describe("PNC Exceptions", () => {
 
   it("should render PNC exception and not display the PNC error message accordion when message is empty", () => {
     cy.task("insertCourtCaseWithPncException", {
-      exceptions: {
-        pncExceptionCode: "HO100402"
-      },
       case: {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
+      },
+      exceptions: {
+        pncExceptionCode: "HO100402"
       }
     })
 
@@ -57,15 +58,15 @@ describe("PNC Exceptions", () => {
 
   it("should render PNC exception on top of the exceptions list", () => {
     cy.task("insertCourtCaseWithPncException", {
-      exceptions: {
-        pncExceptionCode: ExceptionCode.HO100302,
-        ho100108: true,
-        ho100332: true
-      },
       case: {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
+      },
+      exceptions: {
+        ho100108: true,
+        ho100332: true,
+        pncExceptionCode: ExceptionCode.HO100302
       }
     })
 

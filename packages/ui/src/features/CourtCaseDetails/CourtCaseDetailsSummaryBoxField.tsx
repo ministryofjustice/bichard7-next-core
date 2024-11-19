@@ -1,15 +1,15 @@
 import { SummaryBoxDetail, SummaryBoxLabel, SummaryBoxValue } from "./CourtCaseDetailsSummaryBoxField.styles"
 
 interface CourtCaseDetailsSummaryBoxFieldProps {
-  label: string
-  value: string | null | undefined
   courtNameClass?: string
+  label: string
+  value: null | string | undefined
 }
 
 const CourtCaseDetailsSummaryBoxField = ({
+  courtNameClass = undefined,
   label,
-  value,
-  courtNameClass = undefined
+  value
 }: CourtCaseDetailsSummaryBoxFieldProps) => {
   const classNames = ["detail"]
 

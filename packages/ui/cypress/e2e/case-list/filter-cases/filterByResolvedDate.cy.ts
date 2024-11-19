@@ -23,19 +23,19 @@ describe("Filtering cases by resolved date", () => {
     const force = "011111"
 
     cy.task("insertCourtCasesWithFields", [
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2023-01-1"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2023-02-1"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-12-1"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-11-15"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-11-2"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-10-30"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-10-15"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-10-1"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2022-09-15"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2021-12-15"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2021-02-10"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2020-05-30"), orgForPoliceFilter: force },
-      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", resolutionTimestamp: new Date("2019-05-10"), orgForPoliceFilter: force }
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2023-01-1") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2023-02-1") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-12-1") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-11-15") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-11-2") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-10-30") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-10-15") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-10-1") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2022-09-15") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2021-12-15") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2021-02-10") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2020-05-30") },
+      { errorResolvedBy: "GeneralHandler", errorStatus: "Resolved", orgForPoliceFilter: force, resolutionTimestamp: new Date("2019-05-10") }
     ])
 
     cy.visit("/bichard")

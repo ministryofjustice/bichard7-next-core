@@ -1,22 +1,23 @@
 import ConditionalRender from "components/ConditionalRender"
+
 import { StyledBadge } from "./Badge.styles"
 
 export enum BadgeColours {
-  Red = "red",
   Blue = "blue",
-  Purple = "purple",
+  Green = "green",
   Grey = "grey",
-  Green = "green"
+  Purple = "purple",
+  Red = "red"
 }
 
 interface BadgeProps {
-  isRendered: boolean
   className?: string
   colour: BadgeColours
+  isRendered: boolean
   label: string
 }
 
-const Badge = ({ isRendered, className, colour, label }: BadgeProps) => {
+const Badge = ({ className, colour, isRendered, label }: BadgeProps) => {
   return (
     <ConditionalRender isRendered={isRendered}>
       <StyledBadge className={`moj-badge moj-badge--${colour} ${className}`}>{label}</StyledBadge>

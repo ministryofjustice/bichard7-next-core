@@ -1,5 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import cloneDeep from "lodash.clonedeep"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendOffenceReasonSequence from "./amendOffenceReasonSequence"
@@ -66,7 +68,7 @@ describe("amend offence reason sequence", () => {
 
     amendOffenceReasonSequence(amendments, aho)
 
-    amendments.forEach(({ value, offenceIndex }) => {
+    amendments.forEach(({ offenceIndex, value }) => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex]
           .CriminalProsecutionReference.OffenceReasonSequence

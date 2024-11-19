@@ -8,7 +8,7 @@ type displayTriggerPickedFields =
   | "triggerId"
   | "triggerItemIdentity"
 
-export type DisplayTrigger = Pick<Trigger, displayTriggerPickedFields> & {
+export type DisplayTrigger = {
   createdAt: string
   resolvedAt?: string
-}
+} & Pick<Trigger, displayTriggerPickedFields>

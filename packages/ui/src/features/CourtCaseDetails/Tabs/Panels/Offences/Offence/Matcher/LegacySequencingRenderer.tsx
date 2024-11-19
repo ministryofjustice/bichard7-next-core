@@ -1,11 +1,12 @@
 import { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
+
 import LegacySequencingBadgeTableRow from "./TableRows/LegacySequencingBadgeTableRow"
 import LegacySequencingMessageTableRow from "./TableRows/LegacySequencingMessageTableRow"
 
 interface LegacySequencingRenderProps {
-  offenceMatchingException?: OffenceMatchingException | boolean
+  offenceMatchingException?: boolean | OffenceMatchingException
   offenceMatchingExceptionMessage?: string
-  offenceReasonSequence?: string | null
+  offenceReasonSequence?: null | string
 }
 
 const LegacySequencingRenderer = ({

@@ -9,10 +9,10 @@ describe("Exception permissions", () => {
   canManuallyResolveAndSubmitTestData.forEach(
     ({
       canManuallyResolveAndSubmit,
-      exceptionStatus,
       exceptionLockedByAnotherUser,
-      loggedInAs,
-      exceptionsFeatureFlagEnabled
+      exceptionsFeatureFlagEnabled,
+      exceptionStatus,
+      loggedInAs
     }) => {
       it(`Should ${
         canManuallyResolveAndSubmit ? "be able to resolve or submit" : "NOT be able to resolve or submit"
@@ -23,9 +23,9 @@ describe("Exception permissions", () => {
       }`, () => {
         cy.task("insertCourtCasesWithFields", [
           {
-            orgForPoliceFilter: "01",
+            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : loggedInAs,
             errorStatus: exceptionStatus,
-            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : loggedInAs
+            orgForPoliceFilter: "01"
           }
         ])
         loginAndVisit(loggedInAs, "/bichard/court-cases/0")

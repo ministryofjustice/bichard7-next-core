@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { TestTrigger } from "../../../test/utils/manageTriggers"
 import a11yConfig from "../../support/a11yConfig"
 import { loginAndVisit } from "../../support/helpers"
@@ -37,8 +38,8 @@ describe("Case list", () => {
         "insertCourtCasesWithFields",
         lockUsernames.map((username) => ({
           errorLockedByUsername: username,
-          triggerLockedByUsername: username,
-          orgForPoliceFilter: "011111"
+          orgForPoliceFilter: "011111",
+          triggerLockedByUsername: username
         }))
       )
 
@@ -66,7 +67,7 @@ describe("Case list", () => {
 
   context("when there are multiple cases", () => {
     it("Should be accessible", () => {
-      cy.task("insertMultipleDummyCourtCases", { numToInsert: 50, force: "01" })
+      cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 50 })
       loginAndVisit()
       cy.injectAxe()
 
@@ -89,7 +90,7 @@ describe("Case list", () => {
     })
 
     it("Should display multiple cases", () => {
-      cy.task("insertMultipleDummyCourtCases", { numToInsert: 50, force: "01" })
+      cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 50 })
       loginAndVisit()
 
       cy.findByText(`Case00000`).should("exist")
@@ -124,14 +125,14 @@ describe("Case list", () => {
     it("Should display the resolved badge on cases marked as resolved", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          errorStatus: "Resolved",
-          resolutionTimestamp: new Date(),
           errorResolvedBy: "GeneralHandler",
           errorResolvedTimestamp: new Date(),
-          orgForPoliceFilter: "01"
+          errorStatus: "Resolved",
+          orgForPoliceFilter: "01",
+          resolutionTimestamp: new Date()
         },
-        { resolutionTimestamp: null, orgForPoliceFilter: "01" },
-        { resolutionTimestamp: null, orgForPoliceFilter: "01" }
+        { orgForPoliceFilter: "01", resolutionTimestamp: null },
+        { orgForPoliceFilter: "01", resolutionTimestamp: null }
       ])
 
       loginAndVisit()
@@ -148,14 +149,14 @@ describe("Case list", () => {
     it("Should display the resolved badge on cases marked as resolved using the bottom search button", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          errorStatus: "Resolved",
-          resolutionTimestamp: new Date(),
           errorResolvedBy: "GeneralHandler",
           errorResolvedTimestamp: new Date(),
-          orgForPoliceFilter: "01"
+          errorStatus: "Resolved",
+          orgForPoliceFilter: "01",
+          resolutionTimestamp: new Date()
         },
-        { resolutionTimestamp: null, orgForPoliceFilter: "01" },
-        { resolutionTimestamp: null, orgForPoliceFilter: "01" }
+        { orgForPoliceFilter: "01", resolutionTimestamp: null },
+        { orgForPoliceFilter: "01", resolutionTimestamp: null }
       ])
 
       loginAndVisit()
@@ -189,39 +190,39 @@ describe("Case list", () => {
     })
 
     it("Should display the correct number of user-created notes on cases", () => {
-      const caseNotes: { user: string; text: string }[][] = [
+      const caseNotes: { text: string; user: string }[][] = [
         [
           {
-            user: "System",
-            text: "System note 1"
+            text: "System note 1",
+            user: "System"
           }
         ],
         [
           {
-            user: "System",
-            text: "System note 2"
+            text: "System note 2",
+            user: "System"
           },
           {
-            user: "BichardForce01",
-            text: "Test note 1"
+            text: "Test note 1",
+            user: "BichardForce01"
           },
           {
-            user: "System",
-            text: "System note 3"
+            text: "System note 3",
+            user: "System"
           }
         ],
         [
           {
-            user: "BichardForce01",
-            text: "Test note 2"
+            text: "Test note 2",
+            user: "BichardForce01"
           },
           {
-            user: "BichardForce02",
-            text: "Test note 3"
+            text: "Test note 3",
+            user: "BichardForce02"
           },
           {
-            user: "BichardForce01",
-            text: "Test note 4"
+            text: "Test note 4",
+            user: "BichardForce01"
           }
         ]
       ]
@@ -236,7 +237,7 @@ describe("Case list", () => {
     })
 
     it("Should be able to navigate to the case details page and back", () => {
-      cy.task("insertMultipleDummyCourtCases", { numToInsert: 3, force: "01" })
+      cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 3 })
 
       loginAndVisit()
 
@@ -255,39 +256,39 @@ describe("Case list", () => {
     })
 
     it("Should display a preview of the notes", () => {
-      const caseNotes: { user: string; text: string }[][] = [
+      const caseNotes: { text: string; user: string }[][] = [
         [
           {
-            user: "System",
-            text: "System note 1"
+            text: "System note 1",
+            user: "System"
           }
         ],
         [
           {
-            user: "System",
-            text: "System note 2"
+            text: "System note 2",
+            user: "System"
           },
           {
-            user: "BichardForce01",
-            text: "Test note 1"
+            text: "Test note 1",
+            user: "BichardForce01"
           },
           {
-            user: "System",
-            text: "System note 3"
+            text: "System note 3",
+            user: "System"
           }
         ],
         [
           {
-            user: "BichardForce01",
-            text: "Test note 2"
+            text: "Test note 2",
+            user: "BichardForce01"
           },
           {
-            user: "BichardForce02",
-            text: "Test note 3"
+            text: "Test note 3",
+            user: "BichardForce02"
           },
           {
-            user: "BichardForce01",
-            text: "Test note 4"
+            text: "Test note 4",
+            user: "BichardForce01"
           }
         ]
       ]
@@ -304,32 +305,32 @@ describe("Case list", () => {
 
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
-        errorReport: "HO100310||ds:OffenceReasonSequence"
+        errorReport: "HO100310||ds:OffenceReasonSequence",
+        exceptionCode: "HO100310"
       })
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100322",
-        errorReport: "HO100322||ds:OrganisationUnitCode"
+        errorReport: "HO100322||ds:OrganisationUnitCode",
+        exceptionCode: "HO100322"
       })
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
-        errorReport: "HO100310||ds:OffenceReasonSequence"
+        errorReport: "HO100310||ds:OffenceReasonSequence",
+        exceptionCode: "HO100310"
       })
 
       const triggers: TestTrigger[] = [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 0
         },
         {
-          triggerId: 1,
-          triggerCode: TriggerCode.TRPR0015,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0015,
+          triggerId: 1
         }
       ]
       cy.task("insertTriggers", { caseId: 0, triggers })
@@ -345,38 +346,38 @@ describe("Case list", () => {
     it("Should only display error reason when the exceptions are not resolved (showing unresolved cases by default)", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "011111",
-          errorStatus: "Unresolved",
-          triggerStatus: "Unresolved",
           errorReason: "",
-          errorReport: ""
+          errorReport: "",
+          errorStatus: "Unresolved",
+          orgForPoliceFilter: "011111",
+          triggerStatus: "Unresolved"
         },
         {
-          orgForPoliceFilter: "011111",
-          errorStatus: "Resolved",
-          triggerStatus: "Unresolved",
           errorReason: "",
-          errorReport: ""
+          errorReport: "",
+          errorStatus: "Resolved",
+          orgForPoliceFilter: "011111",
+          triggerStatus: "Unresolved"
         }
       ])
 
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        errorStatus: "Unresolved"
+        errorStatus: "Unresolved",
+        exceptionCode: "HO100310"
       })
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        errorStatus: "Unresolved"
+        errorStatus: "Unresolved",
+        exceptionCode: "HO100310"
       })
       cy.task("insertException", {
         caseId: 1,
-        exceptionCode: "HO100322",
         errorReport: "HO100322||ds:OrganisationUnitCode",
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        exceptionCode: "HO100322"
       })
 
       loginAndVisit()
@@ -388,18 +389,18 @@ describe("Case list", () => {
     it("Should only display trigger reason when the triggers are not resolved", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "011111",
+          errorReason: "",
+          errorReport: "",
           errorStatus: "Unresolved",
           exceptionStatus: "Unresolved",
-          errorReason: "",
-          errorReport: ""
+          orgForPoliceFilter: "011111"
         },
         {
-          orgForPoliceFilter: "011111",
+          errorReason: "",
+          errorReport: "",
           errorStatus: "Resolved",
           exceptionStatus: "Unresolved",
-          errorReason: "",
-          errorReport: ""
+          orgForPoliceFilter: "011111"
         }
       ])
 
@@ -407,16 +408,16 @@ describe("Case list", () => {
         caseId: 0,
         triggers: [
           {
-            triggerId: 0,
-            triggerCode: TriggerCode.TRPR0001,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Unresolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0001,
+            triggerId: 0
           },
           {
-            triggerId: 1,
-            triggerCode: TriggerCode.TRPR0002,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Resolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0002,
+            triggerId: 1
           }
         ]
       })
@@ -424,16 +425,16 @@ describe("Case list", () => {
         caseId: 1,
         triggers: [
           {
-            triggerId: 2,
-            triggerCode: TriggerCode.TRPR0003,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Unresolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0003,
+            triggerId: 2
           },
           {
-            triggerId: 3,
-            triggerCode: TriggerCode.TRPR0004,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Resolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0004,
+            triggerId: 3
           }
         ]
       })
@@ -449,52 +450,52 @@ describe("Case list", () => {
     it("Should display resolved reason when the exceptions are resolved and filtering resolved cases", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "011111",
-          errorStatus: "Resolved",
-          triggerStatus: "Resolved",
           errorReason: "",
           errorReport: "",
           errorResolvedBy: "GeneralHandler",
-          triggerResolvedBy: "GeneralHandler"
+          errorStatus: "Resolved",
+          orgForPoliceFilter: "011111",
+          triggerResolvedBy: "GeneralHandler",
+          triggerStatus: "Resolved"
         },
         {
-          orgForPoliceFilter: "011111",
-          errorStatus: "Resolved",
-          triggerStatus: "Resolved",
           errorReason: "",
           errorReport: "",
           errorResolvedBy: "GeneralHandler",
-          triggerResolvedBy: "GeneralHandler"
+          errorStatus: "Resolved",
+          orgForPoliceFilter: "011111",
+          triggerResolvedBy: "GeneralHandler",
+          triggerStatus: "Resolved"
         }
       ])
 
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        exceptionCode: "HO100310"
       })
       cy.task("insertException", {
         caseId: 0,
-        exceptionCode: "HO100310",
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        exceptionCode: "HO100310"
       })
       cy.task("insertException", {
         caseId: 1,
-        exceptionCode: "HO100322",
         errorReport: "HO100322||ds:OrganisationUnitCode",
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        exceptionCode: "HO100322"
       })
 
       cy.task("insertTriggers", {
         caseId: 0,
         triggers: [
           {
-            triggerId: 0,
-            triggerCode: TriggerCode.TRPR0001,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Resolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0001,
+            triggerId: 0
           }
         ]
       })
@@ -502,10 +503,10 @@ describe("Case list", () => {
         caseId: 1,
         triggers: [
           {
-            triggerId: 1,
-            triggerCode: TriggerCode.TRPR0002,
+            createdAt: new Date("2022-07-09T10:22:34.000Z"),
             status: "Resolved",
-            createdAt: new Date("2022-07-09T10:22:34.000Z")
+            triggerCode: TriggerCode.TRPR0002,
+            triggerId: 1
           }
         ]
       })
@@ -524,23 +525,23 @@ describe("Case list", () => {
   it("Should display triggers only once when resolved exceptions are not displayed", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "011111",
-        errorStatus: "Resolved",
-        triggerStatus: "Unresolved",
         errorReason: "",
         errorReport: "",
         errorResolvedBy: "GeneralHandler",
-        triggerResolvedBy: "GeneralHandler"
+        errorStatus: "Resolved",
+        orgForPoliceFilter: "011111",
+        triggerResolvedBy: "GeneralHandler",
+        triggerStatus: "Unresolved"
       }
     ])
     cy.task("insertTriggers", {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0001,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0001,
+          triggerId: 0
         }
       ]
     })
@@ -548,10 +549,10 @@ describe("Case list", () => {
       caseId: 0,
       triggers: [
         {
-          triggerId: 1,
-          triggerCode: TriggerCode.TRPR0002,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0002,
+          triggerId: 1
         }
       ]
     })

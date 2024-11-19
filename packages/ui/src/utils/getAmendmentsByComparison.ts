@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { Amendments } from "types/Amendments"
+
 import { formatFormInputDateString } from "utils/date/formattedDate"
 
 const getAmendmentsByComparison = (aho: AnnotatedHearingOutcome, updatedAho?: AnnotatedHearingOutcome): Amendments => {
@@ -52,8 +53,8 @@ const getAmendmentsByComparison = (aho: AnnotatedHearingOutcome, updatedAho?: An
       if (updatedNextResultSourceOrganisation && nextResultSourceOrganisation !== updatedNextResultSourceOrganisation) {
         amendments.nextSourceOrganisation = amendments.nextSourceOrganisation || []
         amendments.nextSourceOrganisation.push({
-          resultIndex,
           offenceIndex,
+          resultIndex,
           value: updatedNextResultSourceOrganisation
         })
       }
@@ -63,8 +64,8 @@ const getAmendmentsByComparison = (aho: AnnotatedHearingOutcome, updatedAho?: An
       if (updatedNextHearingDate && updatedNextHearingDate !== nextHearingDate) {
         amendments.nextHearingDate = amendments.nextHearingDate || []
         amendments.nextHearingDate.push({
-          resultIndex,
           offenceIndex,
+          resultIndex,
           value: formatFormInputDateString(new Date(updatedNextHearingDate))
         })
       }

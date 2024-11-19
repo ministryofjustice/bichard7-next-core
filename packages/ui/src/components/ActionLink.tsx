@@ -1,4 +1,5 @@
 import type { ReactEventHandler } from "react"
+
 import { ActionLinkButton } from "./ActionLink.styles"
 
 interface Props extends React.ComponentProps<"a"> {
@@ -9,7 +10,7 @@ interface Props extends React.ComponentProps<"a"> {
 
 const ActionLink = ({ children, className, onClick }: Props) => {
   return (
-    <ActionLinkButton onClick={onClick} className={`${className} moj-action-link`}>
+    <ActionLinkButton className={`${className} moj-action-link`} onClick={onClick}>
       {children}
     </ActionLinkButton>
   )

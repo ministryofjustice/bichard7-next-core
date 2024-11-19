@@ -1,6 +1,8 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { Exception } from "types/exceptions"
+
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
+
 import getOffenceMatchingException from "./getOffenceMatchingException"
 
 describe("getOffenceMatchingException", () => {
@@ -12,13 +14,13 @@ describe("getOffenceMatchingException", () => {
   it("returns exception with AddedByCourt badge when given an exception in noOffencesMatched array", () => {
     const exception: Exception = { code: ExceptionCode.HO100507, path: ["test"] }
     const result = getOffenceMatchingException([exception], 0)
-    expect(result).toEqual({ code: ExceptionCode.HO100507, badge: ExceptionBadgeType.AddedByCourt })
+    expect(result).toEqual({ badge: ExceptionBadgeType.AddedByCourt, code: ExceptionCode.HO100507 })
   })
 
   it("returns exception with Unmatched badge when given an exception in noOffencesMatched array", () => {
     const exception: Exception = { code: ExceptionCode.HO100304, path: ["test"] }
     const result = getOffenceMatchingException([exception], 0)
-    expect(result).toEqual({ code: ExceptionCode.HO100304, badge: ExceptionBadgeType.Unmatched })
+    expect(result).toEqual({ badge: ExceptionBadgeType.Unmatched, code: ExceptionCode.HO100304 })
   })
 
   it("returns exception when given an exception in offenceNotMatched array & exceptionPath and hearingOutcomePath are equal", () => {
@@ -35,7 +37,7 @@ describe("getOffenceMatchingException", () => {
       ]
     }
     const result = getOffenceMatchingException([exception], 1)
-    expect(result).toEqual({ code: ExceptionCode.HO100310, badge: ExceptionBadgeType.Unmatched })
+    expect(result).toEqual({ badge: ExceptionBadgeType.Unmatched, code: ExceptionCode.HO100310 })
   })
 
   it("returns undefined when given an exception in offenceNotMatched array but exceptionPath and hearingOutcomePath are not equal", () => {
@@ -61,7 +63,7 @@ describe("getOffenceMatchingException", () => {
       { code: ExceptionCode.HO100304, path: ["test"] }
     ]
     const result = getOffenceMatchingException(exceptions, 1)
-    expect(result).toEqual({ code: ExceptionCode.HO100507, badge: ExceptionBadgeType.AddedByCourt })
+    expect(result).toEqual({ badge: ExceptionBadgeType.AddedByCourt, code: ExceptionCode.HO100507 })
   })
 
   it("returns first exception when given exceptions in offenceNotMatched array", () => {
@@ -92,7 +94,7 @@ describe("getOffenceMatchingException", () => {
       }
     ]
     const result = getOffenceMatchingException(exceptions, 2)
-    expect(result).toEqual({ code: ExceptionCode.HO100312, badge: ExceptionBadgeType.Unmatched })
+    expect(result).toEqual({ badge: ExceptionBadgeType.Unmatched, code: ExceptionCode.HO100312 })
   })
 
   it("returns first exception when given exceptions in noOffencesMatched array and offenceNotMatched array", () => {
@@ -112,6 +114,6 @@ describe("getOffenceMatchingException", () => {
       }
     ]
     const result = getOffenceMatchingException(exceptions, 1)
-    expect(result).toEqual({ code: ExceptionCode.HO100507, badge: ExceptionBadgeType.AddedByCourt })
+    expect(result).toEqual({ badge: ExceptionBadgeType.AddedByCourt, code: ExceptionCode.HO100507 })
   })
 })

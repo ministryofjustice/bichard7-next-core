@@ -1,10 +1,10 @@
 interface Props {
-  pageNum: number
   casesPerPage: number
+  pageNum: number
   totalCases: number
 }
 
-const PaginationResults: React.FC<Props> = ({ pageNum, casesPerPage, totalCases }: Props) => {
+const PaginationResults: React.FC<Props> = ({ casesPerPage, pageNum, totalCases }: Props) => {
   const content =
     totalCases > 0 ? (
       <>

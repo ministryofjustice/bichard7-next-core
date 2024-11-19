@@ -4,14 +4,15 @@ import {
 } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { Table } from "govuk-react"
 import { DisplayNote } from "types/display/Notes"
+
 import { NotePreview } from "./NotePreviewButton"
 
 interface NotePreviewRowProps {
-  notes: DisplayNote[]
   className?: string
+  notes: DisplayNote[]
 }
 
-export const NotePreviewRow = ({ notes, className }: NotePreviewRowProps) => {
+export const NotePreviewRow = ({ className, notes }: NotePreviewRowProps) => {
   const userNotes = filterUserNotes(notes)
   const mostRecentUserNote = getMostRecentNote(userNotes)
   const numberOfNotes = userNotes.length

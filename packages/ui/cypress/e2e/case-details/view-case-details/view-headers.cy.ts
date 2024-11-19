@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { loginAndVisit } from "../../../support/helpers"
 
 describe("View court case details header", () => {
@@ -9,18 +10,18 @@ describe("View court case details header", () => {
   it("should have a leave and lock button that returns to the case list when the case is locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "TriggerHandler",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "TriggerHandler"
       }
     ])
     cy.task("insertTriggers", {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 0
         }
       ]
     })
@@ -42,8 +43,8 @@ describe("View court case details header", () => {
   it("should have a return to case list button that returns to the case list when the case isn't locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "Supervisor",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "Supervisor"
       }
     ])
 
@@ -59,18 +60,18 @@ describe("View court case details header", () => {
   it("should have a leave and unlock button that unlocks the triggers when you have the triggers locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "TriggerHandler",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "TriggerHandler"
       }
     ])
     cy.task("insertTriggers", {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 0
         }
       ]
     })
@@ -95,19 +96,19 @@ describe("View court case details header", () => {
   it("should have a leave and unlock button that unlocks both triggers and exceptions when both triggers and exceptions are locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "GeneralHandler",
         errorLockedByUsername: "GeneralHandler",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "GeneralHandler"
       }
     ])
     cy.task("insertTriggers", {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 0
         }
       ]
     })
@@ -134,9 +135,9 @@ describe("View court case details header", () => {
       cy.task("insertCourtCasesWithFields", [
         {
           errorLockedByUsername: "Supervisor",
-          triggerLockedByUsername: "Supervisor",
           isUrgent: false,
-          orgForPoliceFilter: "01"
+          orgForPoliceFilter: "01",
+          triggerLockedByUsername: "Supervisor"
         }
       ])
 
@@ -148,9 +149,9 @@ describe("View court case details header", () => {
       cy.task("insertCourtCasesWithFields", [
         {
           errorLockedByUsername: "TriggerHandler",
-          triggerLockedByUsername: "TriggerHandler",
           isUrgent: false,
-          orgForPoliceFilter: "01"
+          orgForPoliceFilter: "01",
+          triggerLockedByUsername: "TriggerHandler"
         }
       ])
 
@@ -162,9 +163,9 @@ describe("View court case details header", () => {
       cy.task("insertCourtCasesWithFields", [
         {
           errorLockedByUsername: null,
-          triggerLockedByUsername: "TriggerHandler",
           isUrgent: false,
-          orgForPoliceFilter: "01"
+          orgForPoliceFilter: "01",
+          triggerLockedByUsername: "TriggerHandler"
         }
       ])
 
@@ -176,9 +177,9 @@ describe("View court case details header", () => {
       cy.task("insertCourtCasesWithFields", [
         {
           errorLockedByUsername: "Supervisor",
-          triggerLockedByUsername: "TriggerHandler",
           isUrgent: false,
-          orgForPoliceFilter: "01"
+          orgForPoliceFilter: "01",
+          triggerLockedByUsername: "TriggerHandler"
         }
       ])
 
@@ -193,8 +194,8 @@ describe("View court case details header", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             errorLockedByUsername: "GeneralHandler",
-            triggerLockedByUsername: "GeneralHandler",
-            orgForPoliceFilter: "01"
+            orgForPoliceFilter: "01",
+            triggerLockedByUsername: "GeneralHandler"
           }
         ])
 
@@ -209,8 +210,8 @@ describe("View court case details header", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             errorLockedByUsername: "GeneralHandler",
-            triggerLockedByUsername: "TriggerHandler",
-            orgForPoliceFilter: "01"
+            orgForPoliceFilter: "01",
+            triggerLockedByUsername: "TriggerHandler"
           }
         ])
 
@@ -227,8 +228,8 @@ describe("View court case details header", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             errorLockedByUsername: "TriggerHandler",
-            triggerLockedByUsername: "TriggerHandler",
-            orgForPoliceFilter: "01"
+            orgForPoliceFilter: "01",
+            triggerLockedByUsername: "TriggerHandler"
           }
         ])
 
@@ -246,8 +247,8 @@ describe("View court case details header", () => {
       it("When we have the triggers locked, it shows only the trigger lock", () => {
         cy.task("insertCourtCasesWithFields", [
           {
-            triggerLockedByUsername: "TriggerHandler",
-            orgForPoliceFilter: "01"
+            orgForPoliceFilter: "01",
+            triggerLockedByUsername: "TriggerHandler"
           }
         ])
 
@@ -261,8 +262,8 @@ describe("View court case details header", () => {
       it("When somebody else has the triggers locked, it shows only the trigger lock", () => {
         cy.task("insertCourtCasesWithFields", [
           {
-            triggerLockedByUsername: "GeneralHandler",
-            orgForPoliceFilter: "01"
+            orgForPoliceFilter: "01",
+            triggerLockedByUsername: "GeneralHandler"
           }
         ])
 

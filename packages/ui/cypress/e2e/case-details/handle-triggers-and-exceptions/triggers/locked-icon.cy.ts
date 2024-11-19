@@ -11,9 +11,9 @@ describe("Locked icon", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "BichardForce04",
         errorLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "BichardForce04"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
@@ -27,8 +27,8 @@ describe("Locked icon", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorStatus: "Resolved",
-        triggerStatus: "Resolved",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerStatus: "Resolved"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: resolvedTriggers })
@@ -53,8 +53,8 @@ describe("Locked icon", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "BichardForce04"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
@@ -66,8 +66,8 @@ describe("Locked icon", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "BichardForce04"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })

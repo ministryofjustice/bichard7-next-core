@@ -1,9 +1,13 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { differenceInMinutes } from "date-fns"
 import Note from "services/entities/Note"
-import type User from "services/entities/User"
-import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
+
+import type { TestTrigger } from "../utils/manageTriggers"
+
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import Trigger from "../../src/services/entities/Trigger"
@@ -16,7 +20,6 @@ import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import insertException from "../utils/manageExceptions"
-import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 
 jest.setTimeout(100000)
@@ -31,12 +34,6 @@ describe("resolveTriggers", () => {
     username = "TriggerHandler"
   ) => {
     return {
-      category: "information",
-      eventSource: AUDIT_LOG_EVENT_SOURCE,
-      eventType,
-      timestamp: expect.anything(),
-      eventCode,
-      user: username,
       attributes: {
         auditLogVersion: 2,
         "Number Of Triggers": triggers.length,
@@ -47,7 +44,13 @@ describe("resolveTriggers", () => {
           },
           {} as Record<string, unknown>
         )
-      }
+      },
+      category: "information",
+      eventCode,
+      eventSource: AUDIT_LOG_EVENT_SOURCE,
+      eventType,
+      timestamp: expect.anything(),
+      user: username
     }
   }
 
@@ -58,15 +61,15 @@ describe("resolveTriggers", () => {
     createTriggersEvent("triggers.all-resolved", "All triggers marked as resolved", triggers, username)
 
   const triggerUnlockedEvent = {
+    attributes: {
+      auditLogVersion: 2
+    },
     category: "information",
+    eventCode: "triggers.unlocked",
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: "Trigger unlocked",
     timestamp: expect.anything(),
-    user: "TriggerHandler",
-    eventCode: "triggers.unlocked",
-    attributes: {
-      auditLogVersion: 2
-    }
+    user: "TriggerHandler"
   }
 
   beforeAll(async () => {
@@ -88,24 +91,24 @@ describe("resolveTriggers", () => {
     const resolverUsername = "TriggerHandler"
     const visibleForce = "36"
     const user = {
-      visibleCourts: [],
-      visibleForces: [visibleForce],
+      hasAccessTo: hasAccessToAll,
       username: resolverUsername,
-      hasAccessTo: hasAccessToAll
+      visibleCourts: [],
+      visibleForces: [visibleForce]
     } as Partial<User> as User
 
     it("Should set the relevant columns when resolving a trigger", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
 
@@ -157,21 +160,21 @@ describe("resolveTriggers", () => {
     it("Should mark the entire case as resolved when there are no other unresolved triggers or exceptions", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorCount: 0,
+          errorLockedByUsername: resolverUsername,
+          errorReason: "",
           errorReport: "",
-          errorReason: ""
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
-        triggerItemIdentity: 1,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0,
+        triggerItemIdentity: 1
       }
       await insertTriggers(0, [trigger])
 
@@ -198,23 +201,23 @@ describe("resolveTriggers", () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const triggerNotToBeResolved: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       const triggerToBeResolved: TestTrigger = {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0002,
-        triggerItemIdentity: 2,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0002,
+        triggerId: 1,
+        triggerItemIdentity: 2
       }
       await insertTriggers(0, [triggerNotToBeResolved, triggerToBeResolved])
 
@@ -254,25 +257,25 @@ describe("resolveTriggers", () => {
 
     it("Shouldn't overwrite an already resolved trigger when attempting to resolve again", async () => {
       const reResolverUser = {
-        visibleCourts: [],
-        visibleForces: [visibleForce],
+        hasAccessTo: hasAccessToAll,
         username: "BichardForce02",
-        hasAccessTo: hasAccessToAll
+        visibleCourts: [],
+        visibleForces: [visibleForce]
       } as Partial<User> as User
 
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: user.username,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: user.username
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
-        triggerItemIdentity: 0,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0,
+        triggerItemIdentity: 0
       }
       await insertTriggers(courtCase.errorId, [trigger])
 
@@ -308,16 +311,16 @@ describe("resolveTriggers", () => {
       const lockHolderUsername = "BichardForce02"
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: lockHolderUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: lockHolderUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
 
@@ -344,10 +347,10 @@ describe("resolveTriggers", () => {
     it("Shouldn't resolve a trigger which is not locked", async () => {
       const [courtCase] = await insertCourtCasesWithFields([{ orgForPoliceFilter: "36" }])
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(courtCase.errorId, [trigger])
 
@@ -374,16 +377,16 @@ describe("resolveTriggers", () => {
     it("Should set the case trigger columns and unlock the case only when the last trigger is resolved", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
       const triggers: TestTrigger[] = [0, 1, 2].map((triggerId, index) => {
         return {
-          triggerId,
-          triggerCode: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003][index],
+          createdAt: new Date("2022-07-15T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-15T10:22:34.000Z")
+          triggerCode: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003][index],
+          triggerId
         }
       })
       await insertTriggers(courtCase.errorId, triggers)
@@ -436,31 +439,31 @@ describe("resolveTriggers", () => {
       expect(events).toContainEqual(createTriggersResolvedEvent(["TRPR0003"]))
       expect(events).toContainEqual(createAllTriggersResolvedEvent(["TRPR0001", "TRPR0002", "TRPR0003"]))
       expect(events).toContainEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "triggers.unlocked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Trigger unlocked",
         timestamp: expect.anything(),
-        user: user.username,
-        eventCode: "triggers.unlocked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: user.username
       })
     })
 
     it("Should be able to resolve all triggers on a case at once", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
       const triggers: TestTrigger[] = [0, 1, 2].map((triggerId, index) => {
         return {
-          triggerId,
-          triggerCode: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003][index],
+          createdAt: new Date("2022-07-15T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-15T10:22:34.000Z")
+          triggerCode: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003][index],
+          triggerId
         }
       })
       await insertTriggers(courtCase.errorId, triggers)
@@ -496,13 +499,14 @@ describe("resolveTriggers", () => {
     it("Should be able to resolve some of the triggers on a case at once", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
       const triggers: TestTrigger[] = [0, 1, 2, 3, 4].map((triggerId, index) => {
         return {
-          triggerId,
+          createdAt: new Date("2022-07-15T10:22:34.000Z"),
+          status: "Unresolved",
           triggerCode: [
             TriggerCode.TRPR0001,
             TriggerCode.TRPR0002,
@@ -510,8 +514,7 @@ describe("resolveTriggers", () => {
             TriggerCode.TRPR0004,
             TriggerCode.TRPR0005
           ][index],
-          status: "Unresolved",
-          createdAt: new Date("2022-07-15T10:22:34.000Z")
+          triggerId
         }
       })
       const triggersToResolve = [triggers[0].triggerId, triggers[2].triggerId, triggers[4].triggerId]
@@ -550,16 +553,16 @@ describe("resolveTriggers", () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
 
@@ -592,16 +595,16 @@ describe("resolveTriggers", () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
 
@@ -634,16 +637,16 @@ describe("resolveTriggers", () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
 

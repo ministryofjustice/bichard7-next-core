@@ -18,7 +18,7 @@ describe("How orgs and forces are presented", () => {
     const caseNotVisible = "NV01"
     cy.task("insertCourtCasesWithFields", [
       { orgForPoliceFilter: visibleForceCode, ptiurn: "expected1" },
-      { orgForPoliceFilter: caseNotVisible, courtCode: visibleCourtCode, ptiurn: "expected2" },
+      { courtCode: visibleCourtCode, orgForPoliceFilter: caseNotVisible, ptiurn: "expected2" },
       { courtCode: visibleCourtCode, ptiurn: "expected3" },
       { orgForPoliceFilter: caseNotVisible, ptiurn: "NotExpected" }
     ])

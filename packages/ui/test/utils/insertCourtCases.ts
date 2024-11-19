@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { randomUUID } from "crypto"
-import fs from "fs"
 import type Note from "services/entities/Note"
 import type Trigger from "services/entities/Trigger"
 import type { ResolutionStatus } from "types/ResolutionStatus"
+
+import { randomUUID } from "crypto"
+import fs from "fs"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import createAuditLogRecord from "../helpers/createAuditLogRecord"
@@ -33,19 +35,19 @@ const getAhoWithCustomExceptions = (exceptions: Record<string, ExceptionCode>) =
     )
 
   return {
+    errorCount,
     hearingOutcome: hearingOutcome,
-    updatedHearingOutcome: hearingOutcome,
-    errorCount
+    updatedHearingOutcome: hearingOutcome
   }
 }
 
 const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtCase> =>
   (await getDataSource()).getRepository(CourtCase).create({
     ...DummyCourtCase,
-    hearingOutcome: DummyMultipleOffencesAho.hearingOutcomeXml,
     errorCount: 1,
     errorReason: "HO100102",
     errorReport: "HO100102||ds:NextHearingDate",
+    hearingOutcome: DummyMultipleOffencesAho.hearingOutcomeXml,
     ...overrides
   } as CourtCase)
 
@@ -88,48 +90,48 @@ const insertCourtCasesWithFields = async (cases: Partial<CourtCase>[]) => {
 const insertMultipleDummyCourtCases = async (numToInsert: number, orgCode: string, otherFields: Partial<CourtCase>) => {
   return insertCourtCasesWithFields(
     Array.from(Array(numToInsert)).map((_, index) => ({
-      orgForPoliceFilter: orgCode,
       defendantName: `Defendant Name ${index}`,
+      orgForPoliceFilter: orgCode,
       ...(otherFields || {})
     }))
   )
 }
 
-const insertDummyCourtCasesWithNotes = async (caseNotes: { user: string; text: string }[][], orgCode: string) => {
+const insertDummyCourtCasesWithNotes = async (caseNotes: { text: string; user: string }[][], orgCode: string) => {
   return insertCourtCasesWithFields(
     caseNotes.map((notes, index) => ({
-      orgForPoliceFilter: orgCode,
       notes: notes.map(
         (note, _) =>
           ({
             createdAt: new Date(),
+            errorId: index,
             noteText: note.text,
-            userId: note.user,
-            errorId: index
+            userId: note.user
           }) as unknown as Note
-      )
+      ),
+      orgForPoliceFilter: orgCode
     }))
   )
 }
 
 const insertDummyCourtCasesWithNotesAndLock = async (
-  caseNotes: { user: string; text: string }[][],
+  caseNotes: { text: string; user: string }[][],
   orgCode: string
 ) => {
   return insertCourtCasesWithFields(
     caseNotes.map((notes, index) => ({
-      orgForPoliceFilter: orgCode,
       errorLockedByUsername: "BichardForce03",
-      triggerLockedByUsername: "BichardForce03",
       notes: notes.map(
         (note, _) =>
           ({
             createdAt: new Date(),
+            errorId: index,
             noteText: note.text,
-            userId: note.user,
-            errorId: index
+            userId: note.user
           }) as unknown as Note
-      )
+      ),
+      orgForPoliceFilter: orgCode,
+      triggerLockedByUsername: "BichardForce03"
     }))
   )
 }
@@ -142,19 +144,19 @@ const insertDummyCourtCasesWithTriggers = async (
   return insertCourtCasesWithFields(
     caseTriggers.map((triggers, index) => ({
       orgForPoliceFilter: orgCode,
-      triggerLockedByUsername,
       triggerCount: triggers.length,
+      triggerLockedByUsername,
       triggerReason: triggers[0].code,
-      triggerStatus: triggers.some((trigger) => trigger.status === "Unresolved") ? "Unresolved" : "Resolved",
       triggers: triggers.map(
         (trigger, _) =>
           ({
             createdAt: new Date(),
-            triggerCode: trigger.code,
             errorId: index,
-            status: trigger.status
+            status: trigger.status,
+            triggerCode: trigger.code
           }) as unknown as Trigger
-      )
+      ),
+      triggerStatus: triggers.some((trigger) => trigger.status === "Unresolved") ? "Unresolved" : "Resolved"
     }))
   )
 }

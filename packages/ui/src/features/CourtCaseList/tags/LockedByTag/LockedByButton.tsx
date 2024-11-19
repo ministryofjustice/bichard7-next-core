@@ -1,4 +1,5 @@
 import { useCsrfToken } from "context/CsrfTokenContext"
+
 import Form from "../../../../components/Form"
 import { StyledLockedByButton } from "./LockedByButton.styles"
 import LockedImage from "./LockedImage"
@@ -15,7 +16,7 @@ const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) =
     <>
       <p>{"Click the button to unlock the case"}</p>
       <div className="govuk-button-group">
-        <Form method="post" action={unlockPath} csrfToken={csrfToken}>
+        <Form action={unlockPath} csrfToken={csrfToken} method="post">
           <button className="govuk-button" data-module="govuk-button" id="unlock">
             {"Unlock"}
           </button>
@@ -36,17 +37,17 @@ const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) =
 }
 
 interface LockedByButtonProps {
-  lockedBy?: string | null
-  unlockPath?: string
-  showUnlockConfirmation: boolean
+  lockedBy?: null | string
   setShowUnlockConfirmation: (value: boolean) => void
+  showUnlockConfirmation: boolean
+  unlockPath?: string
 }
 
 const LockedByButton = ({
   lockedBy,
-  unlockPath,
+  setShowUnlockConfirmation,
   showUnlockConfirmation,
-  setShowUnlockConfirmation
+  unlockPath
 }: LockedByButtonProps) => {
   return (
     <>

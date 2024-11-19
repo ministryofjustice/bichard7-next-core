@@ -1,9 +1,9 @@
 interface ServiceResult {
+  Exception?: Error
   isSuccessful: boolean
   ValidationException?: string
-  Exception?: Error
 }
 
 type ServiceResultPromise = Promise<ServiceResult>
 
-export type { ServiceResultPromise, ServiceResult }
+export type { ServiceResult, ServiceResultPromise }

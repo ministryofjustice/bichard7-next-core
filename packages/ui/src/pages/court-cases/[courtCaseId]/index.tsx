@@ -1,3 +1,6 @@
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
+import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
@@ -8,7 +11,6 @@ import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
@@ -23,21 +25,21 @@ import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
 import { UpdateResult } from "typeorm"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { isError } from "types/Result"
-import UnlockReason from "types/UnlockReason"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
+import { isError } from "types/Result"
+import UnlockReason from "types/UnlockReason"
 import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
 import notSuccessful from "utils/notSuccessful"
 import redirectTo from "utils/redirectTo"
+
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CourtCase from "../../../services/entities/CourtCase"
 import User from "../../../services/entities/User"
 import getLastSwitchingFormSubmission from "../../../services/getLastSwitchingFormSubmission"
 import { AttentionBanner, AttentionContainer } from "../../../styles/index.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import shouldShowSwitchingFeedbackForm from "../../../utils/shouldShowSwitchingFeedbackForm"
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
@@ -54,14 +56,14 @@ export const getServerSideProps = withMultipleServerSideProps(
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
     const startTime = new Date().getTime()
-    const { req, currentUser, query, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, formData, query, req } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
-    const { courtCaseId, lock, resolveTrigger, resubmitCase, previousPath } = query as {
+    const { courtCaseId, lock, previousPath, resolveTrigger, resubmitCase } = query as {
       courtCaseId: string
       lock: string
+      previousPath: string
       resolveTrigger: string | string[] | undefined
       resubmitCase: string
-      previousPath: string
     }
     const dataSource = await getDataSource()
 
@@ -79,7 +81,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    let lockResult: UpdateResult | Error | undefined
+    let lockResult: Error | undefined | UpdateResult
 
     if (isPost(req) && lock === "false") {
       lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
@@ -137,7 +139,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req)) {
       const { noteText } = formData as { noteText: string }
       if (noteText) {
-        const { isSuccessful, ValidationException, Exception } = await addNote(
+        const { Exception, isSuccessful, ValidationException } = await addNote(
           dataSource,
           +courtCaseId,
           currentUser.username,
@@ -172,39 +174,39 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     return {
       props: {
-        csrfToken,
-        previousPath: previousPath ?? null,
-        user: userToDisplayFullUserDto(currentUser),
-        courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-        isLockedByCurrentUser: courtCase.isLockedByCurrentUser(currentUser.username),
         canReallocate: courtCase.canReallocate(currentUser.username),
         canResolveAndSubmit: courtCase.canResolveOrSubmit(currentUser),
-        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0))
+        courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
+        csrfToken,
+        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
+        isLockedByCurrentUser: courtCase.isLockedByCurrentUser(currentUser.username),
+        previousPath: previousPath ?? null,
+        user: userToDisplayFullUserDto(currentUser)
       }
     }
   }
 )
 
 interface Props {
-  user: DisplayFullUser
-  courtCase: DisplayFullCourtCase
-  isLockedByCurrentUser: boolean
   canReallocate: boolean
   canResolveAndSubmit: boolean
+  courtCase: DisplayFullCourtCase
   csrfToken: string
   displaySwitchingSurveyFeedback: boolean
+  isLockedByCurrentUser: boolean
   previousPath: string
+  user: DisplayFullUser
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({
-  courtCase,
-  user,
-  isLockedByCurrentUser,
   canReallocate,
   canResolveAndSubmit,
-  displaySwitchingSurveyFeedback,
+  courtCase,
   csrfToken,
-  previousPath
+  displaySwitchingSurveyFeedback,
+  isLockedByCurrentUser,
+  previousPath,
+  user
 }: Props) => {
   const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -215,7 +217,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
     <>
       <Head>
         <title>{"Bichard7 | Case Details"}</title>
-        <meta name="description" content="Bichard7 | Case Details" />
+        <meta content="Bichard7 | Case Details" name="description" />
       </Head>
       <CsrfTokenContext.Provider value={csrfTokenContext}>
         <CurrentUserContext.Provider value={currentUserContext}>
@@ -224,8 +226,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
               <Layout
                 bichardSwitch={{
                   display: true,
-                  href: `/bichard-ui/SelectRecord?unstick=true&error_id=${courtCase.errorId}`,
-                  displaySwitchingSurveyFeedback
+                  displaySwitchingSurveyFeedback,
+                  href: `/bichard-ui/SelectRecord?unstick=true&error_id=${courtCase.errorId}`
                 }}
               >
                 <ConditionalRender isRendered={courtCase.phase !== 1}>
@@ -241,8 +243,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 <Header canReallocate={canReallocate} />
                 <CourtCaseDetailsSummaryBox />
                 <CourtCaseDetails
-                  isLockedByCurrentUser={isLockedByCurrentUser}
                   canResolveAndSubmit={canResolveAndSubmit}
+                  isLockedByCurrentUser={isLockedByCurrentUser}
                 />
               </Layout>
             </PreviousPathContext.Provider>

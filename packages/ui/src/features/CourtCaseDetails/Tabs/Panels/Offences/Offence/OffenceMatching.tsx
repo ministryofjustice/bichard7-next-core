@@ -1,16 +1,17 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { findExceptions } from "types/ErrorMessages"
 import { DisplayFullUser } from "types/display/Users"
+import { findExceptions } from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import getExceptionDefinition from "utils/getExceptionDefinition"
 import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
+
 import findCandidates from "../../../../../../utils/offenceMatcher/findCandidates"
 import { TableRow } from "../../TableRow"
 import OffenceMatcher from "./OffenceMatcher"
@@ -28,19 +29,19 @@ const enabled = (user: DisplayFullUser) => {
 }
 
 type Props = {
-  offenceIndex: number
-  offence: Offence
-  isCaseUnresolved: boolean
   exceptions: Exception[]
   isCaseLockedToCurrentUser: boolean
+  isCaseUnresolved: boolean
+  offence: Offence
+  offenceIndex: number
 }
 
 export const OffenceMatching = ({
-  offenceIndex,
-  offence,
-  isCaseUnresolved,
   exceptions,
-  isCaseLockedToCurrentUser
+  isCaseLockedToCurrentUser,
+  isCaseUnresolved,
+  offence,
+  offenceIndex
 }: Props) => {
   const { courtCase, savedAmendments } = useCourtCase()
   const currentUser = useCurrentUser()
@@ -87,9 +88,9 @@ export const OffenceMatching = ({
             label={"Matched PNC offence"}
             value={
               <OffenceMatcher
-                offenceIndex={offenceIndex}
                 candidates={findCandidates(courtCase, offenceIndex)}
                 isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+                offenceIndex={offenceIndex}
               />
             }
           >
@@ -102,10 +103,10 @@ export const OffenceMatching = ({
               <>
                 <div>{offence.CriminalProsecutionReference.OffenceReasonSequence}</div>
                 <Badge
-                  isRendered={true}
-                  colour={BadgeColours.Purple}
-                  label={!updatedOffence ? "UNMATCHED" : updatedOffence.value === 0 ? "ADDED IN COURT" : "MATCHED"}
                   className="moj-badge--large"
+                  colour={BadgeColours.Purple}
+                  isRendered={true}
+                  label={!updatedOffence ? "UNMATCHED" : updatedOffence.value === 0 ? "ADDED IN COURT" : "MATCHED"}
                 />
               </>
             }
@@ -134,7 +135,7 @@ export const OffenceMatching = ({
             value={
               <>
                 <div>{offence.CriminalProsecutionReference.OffenceReasonSequence}</div>
-                <Badge isRendered={true} colour={BadgeColours.Purple} label="Matched" className="moj-badge--large" />
+                <Badge className="moj-badge--large" colour={BadgeColours.Purple} isRendered={true} label="Matched" />
               </>
             }
           />

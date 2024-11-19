@@ -1,18 +1,19 @@
 import { useRouter } from "next/router"
+
 import { MojNavContainer } from "./NavBar.styles"
 
 interface NavItemProps {
-  name: string
   link: string
+  name: string
   newTab?: boolean
 }
 
 interface NavBarProps {
-  hasAccessToUserManagement: boolean
   hasAccessToReports: boolean
+  hasAccessToUserManagement: boolean
 }
 
-const NavItem: React.FC<NavItemProps> = ({ name, link, newTab }: NavItemProps) => {
+const NavItem: React.FC<NavItemProps> = ({ link, name, newTab }: NavItemProps) => {
   const { basePath } = useRouter()
   const ariaCurrent = link === basePath + "/" ? "page" : undefined
 
@@ -30,17 +31,17 @@ const NavItem: React.FC<NavItemProps> = ({ name, link, newTab }: NavItemProps) =
   )
 }
 
-const NavBar: React.FC<NavBarProps> = ({ hasAccessToUserManagement, hasAccessToReports }) => {
+const NavBar: React.FC<NavBarProps> = ({ hasAccessToReports, hasAccessToUserManagement }) => {
   return (
     <div className="moj-primary-navigation" role="navigation">
       <MojNavContainer className={`moj-primary-navigation__container`}>
         <div className="moj-primary-navigation__nav">
-          <nav className="moj-primary-navigation" aria-label="Primary navigation">
+          <nav aria-label="Primary navigation" className="moj-primary-navigation">
             <ul className="moj-primary-navigation__list">
-              <NavItem name={"Case list"} link={"/bichard/"} />
-              {hasAccessToReports && <NavItem name={"Reports"} link={"/bichard-ui/ReturnToReportIndex"} />}
-              {hasAccessToUserManagement && <NavItem name={"User management"} link={"/users/users/"} />}
-              <NavItem name={"Help"} link={"/help/"} newTab />
+              <NavItem link={"/bichard/"} name={"Case list"} />
+              {hasAccessToReports && <NavItem link={"/bichard-ui/ReturnToReportIndex"} name={"Reports"} />}
+              {hasAccessToUserManagement && <NavItem link={"/users/users/"} name={"User management"} />}
+              <NavItem link={"/help/"} name={"Help"} newTab />
             </ul>
           </nav>
         </div>

@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { TestTrigger } from "../../../test/utils/manageTriggers"
 import canReallocateTestData from "../../fixtures/canReallocateTestData.json"
 import { clickTab, loginAndVisit } from "../../support/helpers"
@@ -18,10 +19,10 @@ describe("Case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -61,10 +62,10 @@ describe("Case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -101,10 +102,10 @@ describe("Case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -168,7 +169,7 @@ describe("Case details", () => {
   })
 
   canReallocateTestData.forEach(
-    ({ canReallocate, triggers, exceptions, triggersLockedByAnotherUser, exceptionLockedByAnotherUser }) => {
+    ({ canReallocate, exceptionLockedByAnotherUser, exceptions, triggers, triggersLockedByAnotherUser }) => {
       it(`should return 200 when triggers are ${triggers} and ${
         triggersLockedByAnotherUser ? "" : "NOT"
       } locked by another user, and exceptions are ${exceptions} and ${
@@ -176,11 +177,11 @@ describe("Case details", () => {
       } locked by another user`, () => {
         cy.task("insertCourtCasesWithFields", [
           {
-            orgForPoliceFilter: "01",
-            triggerStatus: triggers,
+            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : null,
             errorStatus: exceptions,
+            orgForPoliceFilter: "01",
             triggersLockedByAnotherUser: triggersLockedByAnotherUser ? "BichardForce03" : null,
-            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : null
+            triggerStatus: triggers
           }
         ])
 
@@ -205,10 +206,10 @@ describe("Case details", () => {
     ])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -238,12 +239,12 @@ describe("Case details", () => {
       caseNotes: [
         [
           {
-            user: "another.user1",
-            text: "Test note 1"
+            text: "Test note 1",
+            user: "another.user1"
           },
           {
-            user: "another.user2",
-            text: "Test note 2"
+            text: "Test note 2",
+            user: "another.user2"
           }
         ]
       ],
@@ -265,8 +266,8 @@ describe("Case details", () => {
       caseNotes: [
         [
           {
-            user: "another.user",
-            text: "Test note"
+            text: "Test note",
+            user: "another.user"
           }
         ]
       ],
@@ -286,12 +287,12 @@ describe("Case details", () => {
       caseNotes: [
         [
           {
-            user: "System",
-            text: "Test note 1"
+            text: "Test note 1",
+            user: "System"
           },
           {
-            user: "another.user2",
-            text: "Test note 2"
+            text: "Test note 2",
+            user: "another.user2"
           }
         ]
       ],
@@ -313,12 +314,12 @@ describe("Case details", () => {
       caseNotes: [
         [
           {
-            user: "another.user1",
-            text: "Test note 1"
+            text: "Test note 1",
+            user: "another.user1"
           },
           {
-            user: "another.user2",
-            text: "Test note 2"
+            text: "Test note 2",
+            user: "another.user2"
           }
         ]
       ],

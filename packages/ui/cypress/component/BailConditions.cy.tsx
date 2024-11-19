@@ -1,4 +1,5 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import { BailConditions } from "../../src/features/CourtCaseDetails/Tabs/Panels/BailConditions"
 
 describe("BailConditions", () => {
@@ -23,8 +24,8 @@ describe("BailConditions", () => {
     cy.mount(
       <BailConditions
         bailConditions={["Exclusion: first condition", "Curfew: second condition", "third condition"]}
-        offences={[]}
         bailReason={reason}
+        offences={[]}
       />
     )
     cy.contains("H3", "Bail conditions").should("exist")
@@ -38,23 +39,23 @@ describe("BailConditions", () => {
     cy.mount(
       <BailConditions
         bailConditions={["Exclusion: first condition", "Curfew: second condition", "third condition"]}
+        bailReason={reason}
         offences={
           [
             {
-              Result: [{ ResultVariableText: "First description of the offence Exclusion: first condition" }],
-              CourtOffenceSequenceNumber: 1
+              CourtOffenceSequenceNumber: 1,
+              Result: [{ ResultVariableText: "First description of the offence Exclusion: first condition" }]
             },
             {
-              Result: [{ ResultVariableText: "Second description of the offence third condition; other conditions" }],
-              CourtOffenceSequenceNumber: 2
+              CourtOffenceSequenceNumber: 2,
+              Result: [{ ResultVariableText: "Second description of the offence third condition; other conditions" }]
             },
             {
-              Result: [{ ResultVariableText: "Third description of the offence Curfew: second condition" }],
-              CourtOffenceSequenceNumber: 3
+              CourtOffenceSequenceNumber: 3,
+              Result: [{ ResultVariableText: "Third description of the offence Curfew: second condition" }]
             }
           ] as Offence[]
         }
-        bailReason={reason}
       />
     )
     cy.contains("H3", "Bail conditions").should("exist")

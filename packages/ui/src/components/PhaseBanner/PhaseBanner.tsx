@@ -12,7 +12,7 @@ const PhaseBanner: React.FC<PhaseBannerProps> = ({ phase }: PhaseBannerProps) =>
         <span className="govuk-phase-banner__text">
           {"This is a new service – your "}
           {/* TODO: Get /bichard from config */}
-          <Link href={`/feedback?previousPath=${usePathname()}`} className="govuk-link">
+          <Link className="govuk-link" href={`/feedback?previousPath=${usePathname()}`}>
             {"feedback"}
           </Link>
           {" will help us to improve it."}

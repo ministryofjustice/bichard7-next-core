@@ -1,4 +1,4 @@
-const getLongTriggerCode = (triggerCode?: string | null): string | null => {
+const getLongTriggerCode = (triggerCode?: null | string): null | string => {
   if (!triggerCode) {
     return null
   }

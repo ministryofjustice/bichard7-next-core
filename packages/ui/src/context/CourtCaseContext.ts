@@ -1,5 +1,4 @@
 import type { Dispatch, SetStateAction } from "react"
-import { createContext, useCallback, useContext, useState } from "react"
 import type {
   Amender,
   AmendmentKeys,
@@ -9,21 +8,24 @@ import type {
   ResultQualifierCode
 } from "types/Amendments"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+
+import { createContext, useCallback, useContext, useState } from "react"
 import getAmendmentsByComparison from "utils/getAmendmentsByComparison"
+
 import parseCourtCaseWithDateObjects from "../utils/date/parseCourtCaseWithDateObjects"
 
 export interface CourtCaseContextType {
-  courtCase: DisplayFullCourtCase
   amendments: Amendments
+  courtCase: DisplayFullCourtCase
   savedAmendments: Amendments
 }
 
 export interface CourtCaseContextResult {
-  courtCase: DisplayFullCourtCase
-  amendments: Amendments
-  savedAmendments: Amendments
   amend: Amender
+  amendments: Amendments
+  courtCase: DisplayFullCourtCase
   savedAmend: Amender
+  savedAmendments: Amendments
   updateCourtCase: (courtCase: DisplayFullCourtCase) => void
 }
 
@@ -41,12 +43,12 @@ const upsertAmendments = <T extends Record<string, unknown>>(previousValues: T[]
 const updateAmendments = (
   key: AmendmentKeys,
   newValue:
-    | string
     | boolean
     | OffenceField<number>
     | OffenceField<string>
-    | ResultQualifierCode
     | ResultField<string>
+    | ResultQualifierCode
+    | string
     | undefined,
   previousAmendments: Amendments
 ): Amendments => {
@@ -98,19 +100,19 @@ const useCourtCase = (): CourtCaseContextResult => {
   )
 
   return {
-    courtCase: parseCourtCaseWithDateObjects(context.courtCase),
-    amendments: context.amendments,
-    savedAmendments: context.savedAmendments,
     amend,
+    amendments: context.amendments,
+    courtCase: parseCourtCaseWithDateObjects(context.courtCase),
     savedAmend,
+    savedAmendments: context.savedAmendments,
     updateCourtCase
   }
 }
 
 const useCourtCaseContextState = (courtCase: DisplayFullCourtCase) =>
   useState<CourtCaseContextType>({
-    courtCase,
     amendments: getAmendmentsByComparison(courtCase.aho, courtCase.updatedHearingOutcome),
+    courtCase,
     savedAmendments: getAmendmentsByComparison(courtCase.aho, courtCase.updatedHearingOutcome)
   })
 

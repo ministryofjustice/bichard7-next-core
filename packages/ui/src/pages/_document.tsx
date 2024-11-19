@@ -2,42 +2,43 @@ import Document, { DocumentContext, DocumentInitialProps, Head, Html, Main, Next
 import { ServerStyleSheet } from "styled-components"
 import generateCsp from "utils/generateCsp"
 import generateNonce from "utils/generateNonce"
+
 import { basePath } from "../../next.config"
 
 const GovUkMetadata = () => {
   return (
     <>
       <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-      <meta name="theme-color" content="#0b0c0c" />
+      <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport" />
+      <meta content="#0b0c0c" name="theme-color" />
 
-      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+      <meta content="IE=edge" httpEquiv="X-UA-Compatible" />
 
       <link
+        href={`${basePath}/govuk_assets/images/favicon.ico`}
         rel="shortcut icon"
         sizes="16x16 32x32 48x48"
-        href={`${basePath}/govuk_assets/images/favicon.ico`}
         type="image/x-icon"
       />
-      <link rel="mask-icon" href={`${basePath}/govuk_assets/images/govuk-mask-icon.svg`} color="#0b0c0c" />
+      <link color="#0b0c0c" href={`${basePath}/govuk_assets/images/govuk-mask-icon.svg`} rel="mask-icon" />
       <link
+        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-180x180.png`}
         rel="apple-touch-icon"
         sizes="180x180"
-        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-180x180.png`}
       />
       <link
+        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-167x167.png`}
         rel="apple-touch-icon"
         sizes="167x167"
-        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-167x167.png`}
       />
       <link
+        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-152x152.png`}
         rel="apple-touch-icon"
         sizes="152x152"
-        href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-152x152.png`}
       />
-      <link rel="apple-touch-icon" href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon.png`} />
+      <link href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon.png`} rel="apple-touch-icon" />
 
-      <meta property="og:image" content={`${basePath}/govuk_assets/images/govuk-opengraph-image.png`} />
+      <meta content={`${basePath}/govuk_assets/images/govuk-opengraph-image.png`} property="og:image" />
     </>
   )
 }
@@ -89,7 +90,7 @@ class GovUkDocument extends Document<DocumentProps> {
     return (
       <Html className="govuk-template" lang="en">
         <Head>
-          <meta property="csp-nonce" content={nonce} />
+          <meta content={nonce} property="csp-nonce" />
           <GovUkMetadata />
         </Head>
 

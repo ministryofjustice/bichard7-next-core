@@ -1,11 +1,13 @@
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+
+import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource } from "typeorm"
-import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+
 import { isError } from "../../../src/types/Result"
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromEntity from "../../utils/deleteFromEntity"
@@ -19,9 +21,9 @@ describe("search by defendant name", () => {
   const orgCode = "36FPA1"
   const forceCode = "036"
   const testUser = {
-    visibleForces: [forceCode],
+    hasAccessTo: hasAccessToAll,
     visibleCourts: [],
-    hasAccessTo: hasAccessToAll
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const defendantToInclude = "WAYNE Bruce"
@@ -59,14 +61,14 @@ describe("search by defendant name", () => {
   })
 
   it("will match cases when the defendant name is case insensitive", async () => {
-    let result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "wayne Bruce" }, testUser)
+    let result = await listCourtCases(dataSource, { defendantName: "wayne Bruce", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     let { result: cases } = result as ListCourtCaseResult
 
     expect(cases).toHaveLength(1)
     expect(cases[0].defendantName).toStrictEqual(defendantToInclude)
 
-    result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "WAYNE Bruce" }, testUser)
+    result = await listCourtCases(dataSource, { defendantName: "WAYNE Bruce", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     cases = (result as ListCourtCaseResult).result
 
@@ -75,7 +77,7 @@ describe("search by defendant name", () => {
   })
 
   it("will match cases with wildcard match", async () => {
-    const result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "WAYNE B" }, testUser)
+    const result = await listCourtCases(dataSource, { defendantName: "WAYNE B", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     const cases = (result as ListCourtCaseResult).result
 
@@ -85,7 +87,7 @@ describe("search by defendant name", () => {
   })
 
   it("will match cases with user entered wildcard", async () => {
-    let result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "wa*b" }, testUser)
+    let result = await listCourtCases(dataSource, { defendantName: "wa*b", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     let cases = (result as ListCourtCaseResult).result
 
@@ -93,7 +95,7 @@ describe("search by defendant name", () => {
     expect(cases[0].defendantName).toStrictEqual(defendantToInclude)
     expect(cases[1].defendantName).toStrictEqual(defendantToIncludeWithPartialMatch)
 
-    result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "wa*b*" }, testUser)
+    result = await listCourtCases(dataSource, { defendantName: "wa*b*", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     cases = (result as ListCourtCaseResult).result
 
@@ -101,7 +103,7 @@ describe("search by defendant name", () => {
     expect(cases[0].defendantName).toStrictEqual(defendantToInclude)
     expect(cases[1].defendantName).toStrictEqual(defendantToIncludeWithPartialMatch)
 
-    result = await listCourtCases(dataSource, { maxPageItems: 100, defendantName: "wa*br*" }, testUser)
+    result = await listCourtCases(dataSource, { defendantName: "wa*br*", maxPageItems: 100 }, testUser)
     expect(isError(result)).toBe(false)
     cases = (result as ListCourtCaseResult).result
 

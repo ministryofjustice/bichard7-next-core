@@ -1,10 +1,11 @@
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
-import { Brackets } from "typeorm"
 import type { RecordType } from "types/RecordType"
 import type { ResolutionStatus } from "types/ResolutionStatus"
 import type { UpdateResolutionStatus } from "types/UpdateResolutionStatus"
+
+import CourtCase from "services/entities/CourtCase"
+import { Brackets } from "typeorm"
 
 const isErrorUpdate = (recordType: RecordType) => recordType === "Error"
 const isResolved = (resolutionStatus: ResolutionStatus) => resolutionStatus === "Resolved"
@@ -15,7 +16,7 @@ const updateCourtCaseStatus = async (
   recordType: RecordType,
   resolutionStatus: ResolutionStatus,
   { username }: User
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const timestamp = new Date()
   let updateResolutionStatus: UpdateResolutionStatus
   let updatedField: string
@@ -23,8 +24,8 @@ const updateCourtCaseStatus = async (
 
   if (isErrorUpdate(recordType)) {
     updateResolutionStatus = {
-      errorStatus: resolutionStatus,
       errorResolvedBy: username,
+      errorStatus: resolutionStatus,
       ...(isResolved(resolutionStatus) && { errorResolvedTimestamp: timestamp }),
       ...(((isResolved(resolutionStatus) && !courtCase?.triggerStatus) ||
         (courtCase && courtCase.triggerStatus && isResolved(courtCase.triggerStatus))) && {
@@ -34,8 +35,8 @@ const updateCourtCaseStatus = async (
     updatedField = "error"
   } else {
     updateResolutionStatus = {
-      triggerStatus: resolutionStatus,
       triggerResolvedBy: username,
+      triggerStatus: resolutionStatus,
       ...(isResolved(resolutionStatus) && { triggerResolvedTimestamp: timestamp }),
       ...(((isResolved(resolutionStatus) && !courtCase?.errorStatus) ||
         (courtCase && courtCase.errorStatus && isResolved(courtCase.errorStatus))) && {

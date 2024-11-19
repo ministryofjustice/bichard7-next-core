@@ -1,1 +1,1 @@
-export type ResolutionStatus = "Unresolved" | "Resolved" | "Submitted"
+export type ResolutionStatus = "Resolved" | "Submitted" | "Unresolved"

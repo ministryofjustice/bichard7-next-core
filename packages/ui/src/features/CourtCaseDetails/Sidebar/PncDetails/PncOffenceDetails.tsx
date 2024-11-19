@@ -1,34 +1,34 @@
 import { formatDisplayedDate } from "utils/date/formattedDate"
 
 interface PncOffenceDetailsProps {
+  adjudication?: {
+    offenceTICNumber: number
+    plea: string
+    sentenceDate?: Date
+    verdict: string
+    weedFlag?: string
+  }
   details: {
-    sequenceNumber?: number
-    cjsOffenceCode?: string
     acpoOffenceCode?: string
-    title?: string
-    startDate?: Date
+    cjsOffenceCode?: string
     endDate?: Date
     qualifier1?: string
     qualifier2?: string
-  }
-  adjudication?: {
-    verdict: string
-    plea: string
-    sentenceDate?: Date
-    offenceTICNumber: number
-    weedFlag?: string
+    sequenceNumber?: number
+    startDate?: Date
+    title?: string
   }
 }
 
 const PncOffenceDetails = ({
-  details: { sequenceNumber, cjsOffenceCode, acpoOffenceCode, title, startDate, endDate, qualifier1, qualifier2 },
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  adjudication: { verdict, plea, sentenceDate, offenceTICNumber } = {
-    verdict: "-",
+  adjudication: { offenceTICNumber, plea, sentenceDate, verdict } = {
+    offenceTICNumber: 0,
     plea: "-",
     sentenceDate: undefined,
-    offenceTICNumber: 0
-  }
+    verdict: "-"
+  },
+  details: { acpoOffenceCode, cjsOffenceCode, endDate, qualifier1, qualifier2, sequenceNumber, startDate, title }
 }: PncOffenceDetailsProps) => {
   return (
     <>

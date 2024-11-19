@@ -9,10 +9,11 @@ import Asn from "services/Asn"
 import { disabledKeys, handleAsnForwardSlashes, type Selection } from "utils/exceptions/handleAsnForwardSlashes"
 import isAsnFormatValid from "utils/exceptions/isAsnFormatValid"
 import isAsnException from "utils/exceptions/isException/isAsnException"
+
 import { AsnInput } from "./AsnField.styles"
 
 export const AsnField = () => {
-  const { courtCase, amendments, amend } = useCourtCase()
+  const { amend, amendments, courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
   const defendant = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
   const amendedAsn = amendments.asn ?? ""
@@ -32,10 +33,10 @@ export const AsnField = () => {
     handleAsnForwardSlashes(selection, amendedAsn, key, asnInputRef)
   }, [selection, amendedAsn, key])
 
-  const amendAsn = (asn: string, selectionStart: number | null, selectionEnd: number | null) => {
+  const amendAsn = (asn: string, selectionStart: null | number, selectionEnd: null | number) => {
     amend("asn")(asn.toUpperCase().replace(/\//g, ""))
 
-    setSelection({ start: selectionStart, end: selectionEnd })
+    setSelection({ end: selectionEnd, start: selectionStart })
     setAsnChanged(true)
     setIsSavedAsn(false)
     setIsValidAsn(isAsnFormatValid(asn.toUpperCase()))
@@ -52,12 +53,12 @@ export const AsnField = () => {
       e.preventDefault()
     }
 
-    const { selectionStart, selectionEnd } = e.currentTarget
-    setSelection({ start: selectionStart, end: selectionEnd })
+    const { selectionEnd, selectionStart } = e.currentTarget
+    setSelection({ end: selectionEnd, start: selectionStart })
   }
 
   const handleAsnChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { value: inputAsnValue, selectionStart, selectionEnd } = e.target
+    const { selectionEnd, selectionStart, value: inputAsnValue } = e.target
     amendAsn(inputAsnValue.replaceAll(/\s/g, ""), selectionStart, selectionEnd)
   }
 
@@ -82,37 +83,37 @@ export const AsnField = () => {
   return (
     <EditableFieldTableRow
       className={"asn-row"}
-      value={defendant.ArrestSummonsNumber}
-      updatedValue={updatedAhoAsn}
-      label="ASN"
       hasExceptions={isAsnEditable}
-      isEditable={isAsnEditable}
-      inputLabel="Enter the ASN"
       hintText="ASN format: Last 2 digits of year / 4 divisional ID location characters / 2 digits from owning force / 1 to 11 digits and 1 check letter \n Example: 22/49AB/49/1234C"
+      inputLabel="Enter the ASN"
+      isEditable={isAsnEditable}
+      label="ASN"
+      updatedValue={updatedAhoAsn}
+      value={defendant.ArrestSummonsNumber}
     >
       <div>
         <div>
           <AsnInput
-            ref={asnInputRef}
             className={`asn-input`}
+            error={!isValidAsn}
             id={"asn"}
             name={"asn"}
             onChange={handleAsnChange}
-            value={Asn.divideAsn(amendedAsn.toUpperCase())}
-            error={!isValidAsn}
-            onKeyDown={handleOnKeyDown}
-            onPaste={handleOnPaste}
             onCopy={handleOnCopy}
             onCut={handleOnCopy}
+            onKeyDown={handleOnKeyDown}
+            onPaste={handleOnPaste}
+            ref={asnInputRef}
+            value={Asn.divideAsn(amendedAsn.toUpperCase())}
           />
         </div>
         <AutoSave
-          setChanged={setAsnChanged}
-          setSaved={setIsSavedAsn}
-          isValid={isValidAsn}
           amendmentFields={["asn"]}
           isChanged={asnChanged}
           isSaved={isSavedAsn}
+          isValid={isValidAsn}
+          setChanged={setAsnChanged}
+          setSaved={setIsSavedAsn}
         >
           {!isValidAsn && <ErrorMessage message="Enter ASN in the correct format" />}
         </AutoSave>

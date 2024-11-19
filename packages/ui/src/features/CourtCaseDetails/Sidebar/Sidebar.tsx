@@ -1,29 +1,30 @@
+import type NavigationHandler from "types/NavigationHandler"
+
+import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Tabs } from "govuk-react"
 import { useState } from "react"
-import type NavigationHandler from "types/NavigationHandler"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 import ExceptionsList from "./ExceptionsList"
+import PncDetails from "./PncDetails/PncDetails"
 import { SidebarContainer, UnpaddedPanel } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
-import PncDetails from "./PncDetails/PncDetails"
 
 enum SidebarTab {
   Exceptions = 1, // makes .filter(Number) work
-  Triggers = 2,
-  Pnc = 3
+  Pnc = 3,
+  Triggers = 2
 }
 
 interface Props {
-  onNavigate: NavigationHandler
   canResolveAndSubmit: boolean
+  onNavigate: NavigationHandler
   stopLeavingFn: (newValue: boolean) => void
 }
 
-const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
+const Sidebar = ({ canResolveAndSubmit, onNavigate, stopLeavingFn }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
 
@@ -52,8 +53,8 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
           <Tabs.List>
             <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
               <Tabs.Tab
-                id="triggers-tab"
                 className={"tab"}
+                id="triggers-tab"
                 onClick={() => setSelectedTab(SidebarTab.Triggers)}
                 selected={selectedTab === SidebarTab.Triggers}
               >
@@ -63,8 +64,8 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
 
             <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Exceptions)}>
               <Tabs.Tab
-                id="exceptions-tab"
                 className={"tab"}
+                id="exceptions-tab"
                 onClick={() => setSelectedTab(SidebarTab.Exceptions)}
                 selected={selectedTab === SidebarTab.Exceptions}
               >
@@ -73,8 +74,8 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
             </ConditionalRender>
 
             <Tabs.Tab
-              id="pnc-details-tab"
               className={"tab"}
+              id="pnc-details-tab"
               onClick={() => setSelectedTab(SidebarTab.Pnc)}
               selected={selectedTab === SidebarTab.Pnc}
             >
@@ -84,9 +85,9 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
             <Tabs.Panel
+              className={`moj-tab-panel-triggers tab-panel-triggers`}
               id="triggers"
               selected={selectedTab === SidebarTab.Triggers}
-              className={`moj-tab-panel-triggers tab-panel-triggers`}
             >
               <TriggersList onNavigate={onNavigate} />
             </Tabs.Panel>
@@ -94,22 +95,22 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Exceptions)}>
             <Tabs.Panel
+              className="moj-tab-panel-exceptions"
               id="exceptions"
               selected={selectedTab === SidebarTab.Exceptions}
-              className="moj-tab-panel-exceptions"
             >
               <ExceptionsList
-                onNavigate={onNavigate}
                 canResolveAndSubmit={canResolveAndSubmit}
+                onNavigate={onNavigate}
                 stopLeavingFn={stopLeavingFn}
               />
             </Tabs.Panel>
           </ConditionalRender>
 
           <UnpaddedPanel
+            className="moj-tab-panel-pnc-details"
             id="pnc-details"
             selected={selectedTab === SidebarTab.Pnc}
-            className="moj-tab-panel-pnc-details"
           >
             <PncDetails />
           </UnpaddedPanel>

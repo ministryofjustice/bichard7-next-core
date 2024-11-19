@@ -1,6 +1,8 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import cloneDeep from "lodash.clonedeep"
 import type { Amendments } from "types/Amendments"
+
+import cloneDeep from "lodash.clonedeep"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendResultQualifierCode from "./amendResultQualifierCode"
@@ -25,8 +27,8 @@ describe("disposal qualifier code", () => {
       [
         {
           offenceIndex,
-          value,
-          resultQualifierIndex: 0
+          resultQualifierIndex: 0,
+          value
         }
       ],
       aho
@@ -55,7 +57,7 @@ describe("disposal qualifier code", () => {
         .ResultQualifierVariable[resultQualifierIndex].Code
     ).not.toBe(0)
 
-    amendResultQualifierCode([{ offenceIndex, value, resultQualifierIndex, resultIndex }], aho)
+    amendResultQualifierCode([{ offenceIndex, resultIndex, resultQualifierIndex, value }], aho)
 
     expect(
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
@@ -85,9 +87,9 @@ describe("disposal qualifier code", () => {
       [
         {
           offenceIndex,
-          value,
+          resultIndex,
           resultQualifierIndex,
-          resultIndex
+          value
         }
       ],
       aho
@@ -114,8 +116,8 @@ describe("disposal qualifier code", () => {
       [
         {
           offenceIndex,
-          value,
-          resultQualifierIndex
+          resultQualifierIndex,
+          value
         }
       ],
       aho
@@ -140,8 +142,8 @@ describe("disposal qualifier code", () => {
         [
           {
             offenceIndex,
-            value,
-            resultQualifierIndex
+            resultQualifierIndex,
+            value
           }
         ],
         aho
@@ -159,8 +161,8 @@ describe("disposal qualifier code", () => {
         [
           {
             offenceIndex,
-            value,
-            resultQualifierIndex
+            resultQualifierIndex,
+            value
           }
         ],
         aho
@@ -177,8 +179,8 @@ describe("disposal qualifier code", () => {
         [
           {
             offenceIndex,
-            value,
-            resultQualifierIndex: 4
+            resultQualifierIndex: 4,
+            value
           }
         ],
         aho
@@ -191,20 +193,20 @@ describe("disposal qualifier code", () => {
       {
         offenceIndex: 0,
         resultIndex: 0,
-        value: "new0",
-        resultQualifierIndex: 0
+        resultQualifierIndex: 0,
+        value: "new0"
       },
       {
         offenceIndex: 2,
         resultIndex: 0,
-        value: "new1",
-        resultQualifierIndex: 0
+        resultQualifierIndex: 0,
+        value: "new1"
       },
       {
         offenceIndex: 3,
         resultIndex: 0,
-        value: "new2",
-        resultQualifierIndex: 0
+        resultQualifierIndex: 0,
+        value: "new2"
       }
     ]
 
@@ -237,14 +239,14 @@ describe("disposal qualifier code", () => {
       {
         offenceIndex: 0,
         resultIndex: 0,
-        value: "new0",
-        resultQualifierIndex: 0
+        resultQualifierIndex: 0,
+        value: "new0"
       },
       {
         offenceIndex: 0,
         resultIndex: 1,
-        value: "new1",
-        resultQualifierIndex: 0
+        resultQualifierIndex: 0,
+        value: "new1"
       }
     ]
 

@@ -2,7 +2,7 @@ import Badge, { BadgeColours } from "components/Badge"
 import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
 
 interface LegacySequencingBadgeTableRowProps {
-  offenceReasonSequence?: string | null
+  offenceReasonSequence?: null | string
 }
 
 const LegacySequencingBadgeTableRow = ({ offenceReasonSequence }: LegacySequencingBadgeTableRowProps): JSX.Element => {
@@ -12,7 +12,7 @@ const LegacySequencingBadgeTableRow = ({ offenceReasonSequence }: LegacySequenci
       value={
         <>
           <div>{offenceReasonSequence}</div>
-          <Badge isRendered={true} colour={BadgeColours.Purple} label="Matched" className="moj-badge--large" />
+          <Badge className="moj-badge--large" colour={BadgeColours.Purple} isRendered={true} label="Matched" />
         </>
       }
     />

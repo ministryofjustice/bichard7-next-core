@@ -1,20 +1,21 @@
 import { DisplayNote } from "types/display/Notes"
+
 import { NotesTable } from "../../src/components/NotesTable"
 
 describe("NotesTable", () => {
   it("displays provided notes", () => {
     const notes: DisplayNote[] = [
       {
-        userFullName: "note user 1",
-        userId: "1",
+        createdAt: "Wed Oct 05 2023 16:48:00 GMT+0200",
         noteText: "this is a note",
-        createdAt: "Wed Oct 05 2023 16:48:00 GMT+0200"
+        userFullName: "note user 1",
+        userId: "1"
       },
       {
-        userFullName: "note user 2",
-        userId: "1",
+        createdAt: "Wed Oct 06 2023 17:48:32 GMT+0200",
         noteText: "this is a different note",
-        createdAt: "Wed Oct 06 2023 17:48:32 GMT+0200"
+        userFullName: "note user 2",
+        userId: "1"
       }
     ]
 
@@ -32,11 +33,11 @@ describe("NotesTable", () => {
   it("displays notes on seperate lines", () => {
     const notes: DisplayNote[] = [
       {
-        userFullName: "note user 1",
-        userId: "1",
+        createdAt: "Wed Oct 05 2023 16:49:00 GMT+0200",
         noteText: "this\r\nis\r\na\r\nnote",
+        userFullName: "note user 1",
 
-        createdAt: "Wed Oct 05 2023 16:49:00 GMT+0200"
+        userId: "1"
       }
     ]
     cy.mount(<NotesTable notes={notes} />)
@@ -50,18 +51,18 @@ describe("NotesTable", () => {
     const date = new Date().toISOString()
     const notes: DisplayNote[] = [
       {
-        userFullName: "note user 1",
-        userId: "1",
+        createdAt: date,
         noteText: "this is a note",
-        user: { visibleForces: ["01"], username: "note.user1" },
-        createdAt: date
+        user: { username: "note.user1", visibleForces: ["01"] },
+        userFullName: "note user 1",
+        userId: "1"
       },
       {
-        userFullName: "note user 2",
-        userId: "1",
+        createdAt: date,
         noteText: "this is a different note",
-        user: { visibleForces: ["01", "02", "03", "04"], username: "note.user2" },
-        createdAt: date
+        user: { username: "note.user2", visibleForces: ["01", "02", "03", "04"] },
+        userFullName: "note user 2",
+        userId: "1"
       }
     ]
 

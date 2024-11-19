@@ -1,13 +1,16 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
+import type { DataSource } from "typeorm"
+
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { randomUUID } from "crypto"
 import MockDate from "mockdate"
-import type { DataSource } from "typeorm"
 import { Repository } from "typeorm"
+
+import type User from "../../../src/services/entities/User"
+
 import CourtCase from "../../../src/services/entities/CourtCase"
 import { default as TriggerEntity } from "../../../src/services/entities/Trigger"
-import type User from "../../../src/services/entities/User"
 import getDataSource from "../../../src/services/getDataSource"
 import updateTriggers from "../../../src/services/reallocateCourtCase/updateTriggers"
 import { isError } from "../../../src/types/Result"
@@ -18,20 +21,20 @@ import { insertTriggers } from "../../utils/manageTriggers"
 
 const insertCourtCase = async (fields: Partial<CourtCase> = {}) => {
   const existingCourtCasesDbObject: Partial<CourtCase> = {
-    errorId: 0,
-    courtDate: new Date("2008-09-25"),
-    messageId: randomUUID(),
-    triggerCount: 0,
     asn: "dummyAsn",
-    ptiurn: "dummyPtiurn",
+    courtDate: new Date("2008-09-25"),
+    errorId: 0,
+    messageId: randomUUID(),
     orgForPoliceFilter: "123456",
+    ptiurn: "dummyPtiurn",
     resolutionTimestamp: null,
+    triggerCount: 0,
+    triggerInsertedTimestamp: null,
+    triggerQualityChecked: null,
     triggerReason: null,
-    triggerStatus: null,
     triggerResolvedBy: null,
     triggerResolvedTimestamp: null,
-    triggerQualityChecked: null,
-    triggerInsertedTimestamp: null,
+    triggerStatus: null,
     ...fields
   }
 
@@ -47,11 +50,11 @@ const addTriggers = async (courtCaseId: number, triggers: { code: TriggerCode; o
   await insertTriggers(
     courtCaseId,
     triggers.map((trigger, index) => ({
-      triggerId: index,
-      triggerItemIdentity: trigger.offenceSequenceNumber,
+      createdAt: new Date(),
       status: "Unresolved",
       triggerCode: trigger.code,
-      createdAt: new Date()
+      triggerId: index,
+      triggerItemIdentity: trigger.offenceSequenceNumber
     }))
   )
 }
@@ -115,32 +118,32 @@ describe("updateCourtCase", () => {
     expect(events).toHaveLength(2)
     expect(events).toStrictEqual([
       {
-        eventCode: "triggers.generated",
         attributes: {
-          user: "dummy.user",
           auditLogVersion: 2,
-          "Trigger and Exception Flag": false,
           "Number of Triggers": 1,
-          "Trigger 1 Details": "TRPR0005"
+          "Trigger 1 Details": "TRPR0005",
+          "Trigger and Exception Flag": false,
+          user: "dummy.user"
         },
-        timestamp: expect.anything(),
-        eventType: "Triggers generated",
+        category: "information",
+        eventCode: "triggers.generated",
         eventSource: "Bichard New UI",
-        category: "information"
+        eventType: "Triggers generated",
+        timestamp: expect.anything()
       },
       {
-        eventCode: "triggers.deleted",
         attributes: {
-          user: "dummy.user",
           auditLogVersion: 2,
-          "Trigger and Exception Flag": false,
           "Number of Triggers": 1,
-          "Trigger 1 Details": "TRPR0001"
+          "Trigger 1 Details": "TRPR0001",
+          "Trigger and Exception Flag": false,
+          user: "dummy.user"
         },
-        timestamp: expect.anything(),
-        eventType: "Triggers deleted",
+        category: "information",
+        eventCode: "triggers.deleted",
         eventSource: "Bichard New UI",
-        category: "information"
+        eventType: "Triggers deleted",
+        timestamp: expect.anything()
       }
     ])
   })

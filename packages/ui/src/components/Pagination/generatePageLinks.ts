@@ -1,5 +1,5 @@
-export type PageLabel = "Previous" | number | "Ellipsis" | "Next"
-export type PageLink = { label: PageLabel; destinationPage?: number }
+export type PageLabel = "Ellipsis" | "Next" | "Previous" | number
+export type PageLink = { destinationPage?: number; label: PageLabel }
 
 // Returns an list of elements to display in the pagination widget
 // Page numbers are 1-indexed
@@ -15,14 +15,14 @@ export const generatePageLinks = (currentPage: number, totalPages: number): Page
   // Previous page arrow
   if (currentPage > 1) {
     labels.push({
-      label: "Previous",
-      destinationPage: currentPage - 1
+      destinationPage: currentPage - 1,
+      label: "Previous"
     })
   }
 
   // First page
   if (currentPage > 2) {
-    labels.push({ label: 1, destinationPage: 1 })
+    labels.push({ destinationPage: 1, label: 1 })
   }
 
   // Abridged gap between first page and previous page
@@ -32,7 +32,7 @@ export const generatePageLinks = (currentPage: number, totalPages: number): Page
 
   // Previous page
   if (currentPage > 1) {
-    labels.push({ label: currentPage - 1, destinationPage: currentPage - 1 })
+    labels.push({ destinationPage: currentPage - 1, label: currentPage - 1 })
   }
 
   // Current page
@@ -42,7 +42,7 @@ export const generatePageLinks = (currentPage: number, totalPages: number): Page
 
   // Next page
   if (currentPage < totalPages) {
-    labels.push({ label: currentPage + 1, destinationPage: currentPage + 1 })
+    labels.push({ destinationPage: currentPage + 1, label: currentPage + 1 })
   }
 
   // Abridged gap between next and last page
@@ -52,12 +52,12 @@ export const generatePageLinks = (currentPage: number, totalPages: number): Page
 
   // Last page
   if (currentPage < totalPages - 1) {
-    labels.push({ label: totalPages, destinationPage: totalPages })
+    labels.push({ destinationPage: totalPages, label: totalPages })
   }
 
   // Next page arrow
   if (currentPage < totalPages) {
-    labels.push({ label: "Next", destinationPage: currentPage + 1 })
+    labels.push({ destinationPage: currentPage + 1, label: "Next" })
   }
 
   return labels

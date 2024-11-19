@@ -1,6 +1,8 @@
+import type { ReasonCode } from "types/CourtCaseFilter"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
-import type { ReasonCode } from "types/CourtCaseFilter"
+
 import filteredReasonCodes from "./filteredReasonCodes"
 
 const triggerCodes = [TriggerCode.TRPR0008, TriggerCode.TRPR0010]

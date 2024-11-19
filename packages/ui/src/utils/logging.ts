@@ -1,27 +1,28 @@
 import type User from "services/entities/User"
 import type { CaseListQueryParams } from "types/CaseListQueryParams"
+
 import logger from "./logger"
 
 export const logRenderTime = (
   startTime: number,
   pageName: string,
-  params: Record<string, string | number | boolean> = {}
+  params: Record<string, boolean | number | string> = {}
 ) => {
   const duration = new Date().getTime() - startTime
   logger.info({
+    duration,
     event: "pageRenderTime",
     pageName,
-    duration,
     ...params
   })
 }
 
 export const logCaseListRenderTime = (startTime: number, user: User, params: CaseListQueryParams) => {
   logRenderTime(startTime, "caseList", {
-    forces: user.visibleForces.sort().join("-"),
     caseState: params.caseState ?? "Unresolved",
-    reason: params.reason ?? "All",
+    forces: user.visibleForces.sort().join("-"),
+    lockedState: params.lockedState ?? "All",
     maxPageItems: params.maxPageItems ?? 50,
-    lockedState: params.lockedState ?? "All"
+    reason: params.reason ?? "All"
   })
 }

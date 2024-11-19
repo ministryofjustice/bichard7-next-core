@@ -1,13 +1,15 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import fs from "fs"
 import amendCourtCase from "services/amendCourtCase"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
-import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
-import type { DataSource } from "typeorm"
 import createForceOwner from "utils/createForceOwner"
+
 import getCourtCase from "../../src/services/getCourtCase"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases, insertCourtCasesWithFields } from "../utils/insertCourtCases"
@@ -24,8 +26,8 @@ describe("amend court case", () => {
   const orgCode = "36FPA1"
   const user = {
     username: userName,
-    visibleForces: [orgCode],
-    visibleCourts: []
+    visibleCourts: [],
+    visibleForces: [orgCode]
   } as Partial<User> as User
   let dataSource: DataSource
 
@@ -52,13 +54,13 @@ describe("amend court case", () => {
 
   it("Should amend the court case", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -79,13 +81,13 @@ describe("amend court case", () => {
 
   it("Should amend the court case when the lock is held by the current user", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: "BichardForce01",
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: "BichardForce01",
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -106,13 +108,13 @@ describe("amend court case", () => {
 
   it("Should generate system notes for each each amendments", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -120,7 +122,6 @@ describe("amend court case", () => {
     const result = await amendCourtCase(
       dataSource,
       {
-        forceOwner: "03",
         courtOffenceSequenceNumber: [
           {
             offenceIndex: 0,
@@ -130,7 +131,8 @@ describe("amend court case", () => {
             offenceIndex: 1,
             value: 1111
           }
-        ]
+        ],
+        forceOwner: "03"
       },
       inputCourtCase,
       user
@@ -159,13 +161,13 @@ describe("amend court case", () => {
 
   it("Should not generate a system note when its a no update resubmit amendment", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -184,24 +186,24 @@ describe("amend court case", () => {
   it("Should not update the db if the error is locked by somebody else", async () => {
     const [errorLockedBySomeoneElse, triggerLockedBySomeoneElse] = await insertCourtCasesWithFields([
       {
-        errorLockedByUsername: "BichardForce02",
-        triggerLockedByUsername: user.username,
         errorCount: 1,
-        triggerCount: 1,
-        phase: 1,
-        orgForPoliceFilter: orgCode,
         errorId: 0,
+        errorLockedByUsername: "BichardForce02",
         hearingOutcome: "Dummy",
+        orgForPoliceFilter: orgCode,
+        phase: 1,
+        triggerCount: 1,
+        triggerLockedByUsername: user.username,
         updatedHearingOutcome: "Dummy"
       },
       {
-        errorLockedByUsername: user.username,
-        triggerLockedByUsername: "BichardForce02",
         errorCount: 1,
-        triggerCount: 1,
-        phase: 1,
+        errorId: 1,
+        errorLockedByUsername: user.username,
         orgForPoliceFilter: orgCode,
-        errorId: 1
+        phase: 1,
+        triggerCount: 1,
+        triggerLockedByUsername: "BichardForce02"
       }
     ])
 
@@ -221,14 +223,14 @@ describe("amend court case", () => {
     const inputXml = fs.readFileSync("test/test-data/AnnotatedHONoForceOwner.xml").toString()
 
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
-      phase: 1,
       hearingOutcome: inputXml,
-      orgForPoliceFilter: orgCode
+      orgForPoliceFilter: orgCode,
+      phase: 1,
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -246,13 +248,13 @@ describe("amend court case", () => {
     ;(parseAhoXml as jest.Mock).mockImplementationOnce(() => new Error("Failed to parse aho"))
 
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -265,13 +267,13 @@ describe("amend court case", () => {
     ;(updateCourtCaseAho as jest.Mock).mockImplementationOnce(() => new Error("Failed to update the database"))
 
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
+      orgForPoliceFilter: orgCode,
       phase: 1,
-      orgForPoliceFilter: orgCode
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -287,14 +289,14 @@ describe("amend court case", () => {
     const inputXml = fs.readFileSync("test/test-data/AnnotatedHONoForceOwner.xml").toString()
 
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
-      triggerCount: 1,
-      phase: 1,
       hearingOutcome: inputXml,
-      orgForPoliceFilter: orgCode
+      orgForPoliceFilter: orgCode,
+      phase: 1,
+      triggerCount: 1,
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)

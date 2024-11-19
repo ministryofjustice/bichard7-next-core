@@ -1,10 +1,13 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import type { ManualResolution } from "types/ManualResolution"
+
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+
 import type CourtCase from "./entities/CourtCase"
 import type User from "./entities/User"
+
 import insertNotes from "./insertNotes"
 import resolveError from "./resolveError"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
@@ -15,7 +18,7 @@ const resolveCourtCase = async (
   courtCase: CourtCase,
   resolution: ManualResolution,
   user: User
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
 
@@ -40,10 +43,10 @@ const resolveCourtCase = async (
     // add manual resolution case note
     const addNoteResult = await insertNotes(entityManager, [
       {
+        errorId: courtCase.errorId,
         noteText:
           `${user.username}: Portal Action: Record Manually Resolved.` +
           ` Reason: ${resolution.reason}. Reason Text: ${resolution.reasonText}`,
-        errorId: courtCase.errorId,
         userId: "System"
       }
     ])

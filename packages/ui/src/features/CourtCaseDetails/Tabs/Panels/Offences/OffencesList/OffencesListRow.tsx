@@ -8,6 +8,7 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
 import getOffenceCode from "utils/getOffenceCode"
 import { CHECKMARK_ICON_URL } from "utils/icons"
+
 import { IconContainer } from "./OffencesListRow.styles"
 
 interface OffencesListRowProps {
@@ -17,7 +18,7 @@ interface OffencesListRowProps {
 }
 
 export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesListRowProps) => {
-  const { courtCase, amendments } = useCourtCase()
+  const { amendments, courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
   const exceptions = courtCase.aho.Exceptions
 
@@ -25,7 +26,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
 
   const checkmarkIcon = (
     <IconContainer className={`icon checkmark-icon`} key={offence.CourtOffenceSequenceNumber}>
-      <Image src={CHECKMARK_ICON_URL} width={30} height={30} alt="Checkmark icon" />
+      <Image alt="Checkmark icon" height={30} src={CHECKMARK_ICON_URL} width={30} />
     </IconContainer>
   )
   const warningIcon = (
@@ -52,9 +53,9 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
       <Table.Cell>{getOffenceCode(offence)}</Table.Cell>
       <Table.Cell>
         <a
-          id={`offence-${offence.CourtOffenceSequenceNumber}`}
           className={`govuk-link`}
           href="/"
+          id={`offence-${offence.CourtOffenceSequenceNumber}`}
           onClick={(e) => {
             e.preventDefault()
             onClick(offence)

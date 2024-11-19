@@ -4,11 +4,11 @@ import HO100332 from "./fixtures/HO100332.json"
 describe("Offence matching HO100332", () => {
   const fields = {
     defendantName: "Offence Matching HO100332",
-    orgForPoliceFilter: "01",
-    hearingOutcome: HO100332,
     errorCount: 2,
     errorReason: "HO100332",
-    errorReport: "HO100332||ds:OffenceReasonSequence, HO100332||ds:OffenceReasonSequence"
+    errorReport: "HO100332||ds:OffenceReasonSequence, HO100332||ds:OffenceReasonSequence",
+    hearingOutcome: HO100332,
+    orgForPoliceFilter: "01"
   }
 
   before(() => {
@@ -214,12 +214,12 @@ describe("Offence matching HO100332", () => {
       cy.get("@save")
         .its("request.body")
         .then((body) => {
-          const { offenceReasonSequence, offenceCourtCaseReferenceNumber } = body
-          return { offenceReasonSequence, offenceCourtCaseReferenceNumber }
+          const { offenceCourtCaseReferenceNumber, offenceReasonSequence } = body
+          return { offenceCourtCaseReferenceNumber, offenceReasonSequence }
         })
         .should("deep.equal", {
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "12/2732/000015R" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "12/2732/000015R" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         })
 
       cy.get("a").contains("Back to all offences").click()
@@ -231,12 +231,12 @@ describe("Offence matching HO100332", () => {
       cy.get("@save")
         .its("request.body")
         .then((body) => {
-          const { offenceReasonSequence, offenceCourtCaseReferenceNumber } = body
-          return { offenceReasonSequence, offenceCourtCaseReferenceNumber }
+          const { offenceCourtCaseReferenceNumber, offenceReasonSequence } = body
+          return { offenceCourtCaseReferenceNumber, offenceReasonSequence }
         })
         .should("deep.equal", {
-          offenceReasonSequence: [{ offenceIndex: 1, value: 2 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 1, value: "12/2732/000016T" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 1, value: "12/2732/000016T" }],
+          offenceReasonSequence: [{ offenceIndex: 1, value: 2 }]
         })
     })
 

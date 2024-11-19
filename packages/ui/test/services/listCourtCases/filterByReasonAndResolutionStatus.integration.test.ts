@@ -1,15 +1,19 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { CaseListQueryParams } from "types/CaseListQueryParams"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import { isError } from "lodash"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"
-import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
-import type { DataSource } from "typeorm"
-import type { CaseListQueryParams } from "types/CaseListQueryParams"
 import { Reason } from "types/CaseListQueryParams"
-import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import type { ResolutionStatus } from "types/ResolutionStatus"
+
+import type { TestTrigger } from "../../utils/manageTriggers"
+
 import {
   exceptionHandlerHasAccessTo,
   generalHandlerHasAccessTo,
@@ -20,7 +24,6 @@ import {
 import deleteFromEntity from "../../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 import insertException from "../../utils/manageExceptions"
-import type { TestTrigger } from "../../utils/manageTriggers"
 import { insertTriggers } from "../../utils/manageTriggers"
 
 describe("Filter cases by resolution status", () => {
@@ -30,38 +33,38 @@ describe("Filter cases by resolution status", () => {
   const anotherUserName = "someoneElse"
 
   const noGroupsUser = {
-    visibleForces: [forceCode],
-    visibleCourts: [],
     groups: [],
-    hasAccessTo: hasAccessToNone
+    hasAccessTo: hasAccessToNone,
+    visibleCourts: [],
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const exceptionHandler = {
+    hasAccessTo: exceptionHandlerHasAccessTo,
     username: "exceptionHandler",
-    visibleForces: [forceCode],
     visibleCourts: [],
-    hasAccessTo: exceptionHandlerHasAccessTo
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const triggerHandler = {
+    hasAccessTo: triggerHandlerHasAccessTo,
     username: "triggerHandler",
-    visibleForces: [forceCode],
     visibleCourts: [],
-    hasAccessTo: triggerHandlerHasAccessTo
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const generalHandler = {
+    hasAccessTo: generalHandlerHasAccessTo,
     username: "generalHandler",
-    visibleForces: [forceCode],
     visibleCourts: [],
-    hasAccessTo: generalHandlerHasAccessTo
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   const supervisor = {
+    hasAccessTo: supervisorHasAccessTo,
     username: "generalHandler",
-    visibleForces: [forceCode],
     visibleCourts: [],
-    hasAccessTo: supervisorHasAccessTo
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   beforeAll(async () => {
@@ -82,27 +85,26 @@ describe("Filter cases by resolution status", () => {
     const bailsTriggerCode = "TRPR0010"
     const getTrigger = (triggerCode: string, status: ResolutionStatus): TestTrigger => {
       return {
-        triggerCode: triggerCode,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: status,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: triggerCode
       } as TestTrigger
     }
 
     const insertTestCaseWithTriggersAndExceptions = async (args: {
       caseId: number
-      trigger?: {
-        triggerResolvedBy?: string
-        bailsTrigger?: boolean
-      }
       exception?: {
         exceptionResolvedBy?: string
+      }
+      trigger?: {
+        bailsTrigger?: boolean
+        triggerResolvedBy?: string
       }
     }) => {
       const triggerOrBailsTrigger = `${args.trigger?.bailsTrigger ? "Bails Trigger" : "Trigger"}`
 
       await insertCourtCasesWithFields([
         {
-          errorId: args.caseId,
           defendantName: `${
             args.exception?.exceptionResolvedBy
               ? `Exceptions Resolved by ${args.exception.exceptionResolvedBy}`
@@ -113,19 +115,20 @@ describe("Filter cases by resolution status", () => {
               : `${args.trigger ? `${triggerOrBailsTrigger} Unresolved` : "No triggers"}`
           }`,
           errorCount: args.exception ? 1 : 0,
-          orgForPoliceFilter: courtCode,
-          triggerResolvedBy: args.trigger?.triggerResolvedBy,
-          triggerResolvedTimestamp: args.trigger?.triggerResolvedBy ? new Date() : null,
-          triggerStatus: args.trigger ? (args.trigger.triggerResolvedBy ? "Resolved" : "Unresolved") : null,
-          errorStatus: args.exception ? (args.exception?.exceptionResolvedBy ? "Resolved" : "Unresolved") : null,
+          errorId: args.caseId,
           errorResolvedTimestamp: args.exception?.exceptionResolvedBy ? new Date() : null,
-          triggerCount: args.trigger ? 1 : 0,
+          errorStatus: args.exception ? (args.exception?.exceptionResolvedBy ? "Resolved" : "Unresolved") : null,
+          orgForPoliceFilter: courtCode,
           resolutionTimestamp:
             (args.trigger?.triggerResolvedBy && args.exception?.exceptionResolvedBy) ||
             (args.trigger?.triggerResolvedBy && !args.exception) ||
             (args.exception?.exceptionResolvedBy && !args.trigger)
               ? new Date()
-              : undefined
+              : undefined,
+          triggerCount: args.trigger ? 1 : 0,
+          triggerResolvedBy: args.trigger?.triggerResolvedBy,
+          triggerResolvedTimestamp: args.trigger?.triggerResolvedBy ? new Date() : null,
+          triggerStatus: args.trigger ? (args.trigger.triggerResolvedBy ? "Resolved" : "Unresolved") : null
         }
       ])
       if (args.trigger) {
@@ -155,255 +158,251 @@ describe("Filter cases by resolution status", () => {
     beforeAll(async () => {
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 0,
-        trigger: {
-          triggerResolvedBy: anotherUserName
-        },
         exception: {
           exceptionResolvedBy: undefined
+        },
+        trigger: {
+          triggerResolvedBy: anotherUserName
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 1,
-        trigger: {
-          triggerResolvedBy: undefined
-        },
         exception: {
           exceptionResolvedBy: exceptionHandler.username
+        },
+        trigger: {
+          triggerResolvedBy: undefined
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 2,
-        trigger: {
-          triggerResolvedBy: triggerHandler.username
-        },
         exception: {
           exceptionResolvedBy: exceptionHandler.username
+        },
+        trigger: {
+          triggerResolvedBy: triggerHandler.username
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 3,
-        trigger: {
-          triggerResolvedBy: generalHandler.username
-        },
         exception: {
           exceptionResolvedBy: anotherUserName
+        },
+        trigger: {
+          triggerResolvedBy: generalHandler.username
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 4,
-        trigger: {
-          triggerResolvedBy: anotherUserName
-        },
         exception: {
           exceptionResolvedBy: generalHandler.username
+        },
+        trigger: {
+          triggerResolvedBy: anotherUserName
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 5,
-        trigger: {
-          triggerResolvedBy: generalHandler.username
-        },
         exception: {
           exceptionResolvedBy: generalHandler.username
+        },
+        trigger: {
+          triggerResolvedBy: generalHandler.username
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 6,
-        trigger: {
-          triggerResolvedBy: undefined
-        },
         exception: {
           exceptionResolvedBy: undefined
+        },
+        trigger: {
+          triggerResolvedBy: undefined
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 7,
+        exception: undefined,
         trigger: {
-          triggerResolvedBy: anotherUserName,
-          bailsTrigger: true
-        },
-        exception: undefined
+          bailsTrigger: true,
+          triggerResolvedBy: anotherUserName
+        }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 8,
+        exception: undefined,
         trigger: {
-          triggerResolvedBy: triggerHandler.username,
-          bailsTrigger: true
-        },
-        exception: undefined
+          bailsTrigger: true,
+          triggerResolvedBy: triggerHandler.username
+        }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 9,
+        exception: undefined,
         trigger: {
-          triggerResolvedBy: undefined,
-          bailsTrigger: true
-        },
-        exception: undefined
+          bailsTrigger: true,
+          triggerResolvedBy: undefined
+        }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 10,
-        trigger: undefined,
         exception: {
           exceptionResolvedBy: undefined
-        }
+        },
+        trigger: undefined
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 11,
-        trigger: undefined,
         exception: {
           exceptionResolvedBy: generalHandler.username
-        }
+        },
+        trigger: undefined
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 12,
+        exception: undefined,
         trigger: {
-          triggerResolvedBy: generalHandler.username,
-          bailsTrigger: true
-        },
-        exception: undefined
+          bailsTrigger: true,
+          triggerResolvedBy: generalHandler.username
+        }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 13,
-        trigger: {
-          triggerResolvedBy: anotherUserName,
-          bailsTrigger: true
-        },
         exception: {
           exceptionResolvedBy: generalHandler.username
+        },
+        trigger: {
+          bailsTrigger: true,
+          triggerResolvedBy: anotherUserName
         }
       })
       await insertTestCaseWithTriggersAndExceptions({
         caseId: 14,
-        trigger: {
-          triggerResolvedBy: undefined,
-          bailsTrigger: true
-        },
         exception: {
           exceptionResolvedBy: undefined
+        },
+        trigger: {
+          bailsTrigger: true,
+          triggerResolvedBy: undefined
         }
       })
     })
 
     const testCases: {
       description: string
+      expectedCases: string[]
       filters: Partial<CaseListQueryParams>
       user: User
-      expectedCases: string[]
     }[] = [
       {
         description: "Shouldn't show cases to a user with no permissions",
+        expectedCases: [],
         filters: {},
-        user: noGroupsUser,
-        expectedCases: []
+        user: noGroupsUser
       },
       {
         description: "Shouldn't show cases to a user with no permissions when a reason filter is passed",
+        expectedCases: [],
         filters: {
           reason: Reason.Triggers
         },
-        user: noGroupsUser,
-        expectedCases: []
+        user: noGroupsUser
       },
       {
         description:
           "Should see cases with unresolved exceptions when user is an exception handler and unresolved filter applied",
-        filters: {
-          caseState: "Unresolved"
-        },
-        user: exceptionHandler,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved"
+        },
+        user: exceptionHandler
       },
       {
         description:
           "Should see cases with resolved exceptions when user is an exception handler and resolved filter applied",
-        filters: {
-          caseState: "Resolved"
-        },
-        user: exceptionHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved"
+        },
+        user: exceptionHandler
       },
       {
         description:
           "Should see cases with unresolved triggers when user is a trigger handler and unresolved filter applied",
-        filters: {
-          caseState: "Unresolved"
-        },
-        user: triggerHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Unresolved/Trigger Unresolved",
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved"
+        },
+        user: triggerHandler
       },
       {
         description:
           "Should see cases with unresolved triggers when user is a trigger handler and searches for TRPR0010",
-        filters: {
-          reasonCodes: ["TRPR0010"]
-        },
-        user: triggerHandler,
         expectedCases: [
           "Exceptions Unresolved/Bails Trigger Unresolved", // Sees this case as it has the reason code
           "No exceptions/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          reasonCodes: ["TRPR0010"]
+        },
+        user: triggerHandler
       },
       {
         description:
           "Should see cases with unresolved exception when user is a exception handler and searches for HO100300",
-        filters: {
-          reasonCodes: ["HO100300"]
-        },
-        user: exceptionHandler,
         expectedCases: [
           "Exceptions Unresolved/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          reasonCodes: ["HO100300"]
+        },
+        user: exceptionHandler
       },
 
       {
         description:
           "Should see cases with unresolved triggers when user is a general handler and searches for TRPR0010",
-        filters: {
-          reasonCodes: ["TRPR0010"]
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Unresolved/Bails Trigger Unresolved", // Sees this case as it has the reason code
           "No exceptions/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          reasonCodes: ["TRPR0010"]
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with unresolved exceptions when user is a general handler and searches for HO100300",
-        filters: {
-          reasonCodes: ["HO100300"]
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Unresolved/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          reasonCodes: ["HO100300"]
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with unresolved exceptions when user is a general handler and searches for HO100300 and TRPR0010",
-        filters: {
-          reasonCodes: ["HO100300", "TRPR0010"]
-        },
-        user: generalHandler,
         expectedCases: [
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved",
@@ -411,16 +410,15 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          reasonCodes: ["HO100300", "TRPR0010"]
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with resolved exceptions and triggers when user is a general handler and searches for HO100300 and TRPR0010",
-        filters: {
-          reasonCodes: ["HO100300", "TRPR0010"],
-          caseState: "Resolved"
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
@@ -428,58 +426,58 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
           "No exceptions/Bails Trigger Resolved by generalHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reasonCodes: ["HO100300", "TRPR0010"]
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with resolved exceptions when user is a general handler and searches for HO100300",
-        filters: {
-          reasonCodes: ["HO100300"],
-          caseState: "Resolved"
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reasonCodes: ["HO100300"]
+        },
+        user: generalHandler
       },
       {
         description: "Should see cases with resolved triggers when user is a general handler and searches for TRPR0010",
-        filters: {
-          reasonCodes: ["TRPR0010"],
-          caseState: "Resolved"
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "No exceptions/Bails Trigger Resolved by generalHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reasonCodes: ["TRPR0010"]
+        },
+        user: generalHandler
       },
       {
         description: "Should see all cases with resolved triggers when user is a supervisor and searches for TRPR0010",
-        filters: {
-          reasonCodes: ["TRPR0010"],
-          caseState: "Resolved"
-        },
-        user: supervisor,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "No exceptions/Bails Trigger Resolved by generalHandler",
           "No exceptions/Bails Trigger Resolved by someoneElse",
           "No exceptions/Bails Trigger Resolved by triggerHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reasonCodes: ["TRPR0010"]
+        },
+        user: supervisor
       },
       {
         description:
           "Should see all cases with resolved exceptions when user is a supervisor and searches for HO100300",
-        filters: {
-          reasonCodes: ["HO100300"],
-          caseState: "Resolved"
-        },
-        user: supervisor,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -488,27 +486,28 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reasonCodes: ["HO100300"]
+        },
+        user: supervisor
       },
       {
         description:
           "Should see cases with resolved triggers when user is a trigger handler and resolved filter applied",
-        filters: {
-          caseState: "Resolved"
-        },
-        user: triggerHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
           "No exceptions/Bails Trigger Resolved by triggerHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved"
+        },
+        user: triggerHandler
       },
       {
         description:
           "Should see cases with unresolved triggers or unresolved exceptions when user is a general handler and unresolved filter applied",
-        filters: {
-          caseState: "Unresolved"
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -516,15 +515,15 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved"
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with resolved triggers and exceptions when user is a general handler and resolved filter applied",
-        filters: {
-          caseState: "Resolved"
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
@@ -532,15 +531,15 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by generalHandler/No triggers",
           "No exceptions/Bails Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved"
+        },
+        user: generalHandler
       },
       {
         description:
           "Should see cases with unresolved triggers or unresolved exceptions when user is a supervisor and resolved filter applied",
-        filters: {
-          caseState: "Unresolved"
-        },
-        user: supervisor,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -548,15 +547,15 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved"
+        },
+        user: supervisor
       },
       {
         description:
           "Should see cases with triggers and exceptions, resolved by anyone when user is a supervisor and resolved filter applied",
-        filters: {
-          caseState: "Resolved"
-        },
-        user: supervisor,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
@@ -569,184 +568,186 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Resolved by generalHandler",
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved"
+        },
+        user: supervisor
       },
       {
         description:
           "Should return cases with unresolved triggers when filtering for unresolved triggers as general handler",
-        filters: {
-          caseState: "Unresolved",
-          reason: Reason.Triggers
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Unresolved/Trigger Unresolved",
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved",
+          reason: Reason.Triggers
+        },
+        user: generalHandler
       },
       {
         description:
           "Should return cases with resolved triggers when filtering for resolved triggers as a general handler",
-        filters: {
-          caseState: "Resolved",
-          reason: Reason.Triggers
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
           "No exceptions/Bails Trigger Resolved by generalHandler"
-        ]
+        ],
+        filters: {
+          caseState: "Resolved",
+          reason: Reason.Triggers
+        },
+        user: generalHandler
       },
       {
         description:
           "Should return cases with unresolved exceptions when filtering for unresolved exceptions as a general handler",
-        filters: {
-          caseState: "Unresolved",
-          reason: Reason.Exceptions
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved",
+          reason: Reason.Exceptions
+        },
+        user: generalHandler
       },
       {
         description:
           "Should return cases with resolved exceptions when filtering for resolved exceptions as a general handler",
-        filters: {
-          caseState: "Resolved",
-          reason: Reason.Exceptions
-        },
-        user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/No triggers",
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse"
-        ]
-      },
-      {
-        description: "Should see no cases when filtering for resolved exceptions as a trigger handler",
+        ],
         filters: {
           caseState: "Resolved",
           reason: Reason.Exceptions
         },
-        user: triggerHandler,
-        expectedCases: []
+        user: generalHandler
+      },
+      {
+        description: "Should see no cases when filtering for resolved exceptions as a trigger handler",
+        expectedCases: [],
+        filters: {
+          caseState: "Resolved",
+          reason: Reason.Exceptions
+        },
+        user: triggerHandler
       },
       {
         description:
           "Should only see cases with unresolved triggers when filtering for unresolved exceptions as a trigger handler",
-        filters: {
-          caseState: "Unresolved",
-          reason: Reason.Exceptions
-        },
-        user: triggerHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Unresolved/Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved",
           "No exceptions/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {
+          caseState: "Unresolved",
+          reason: Reason.Exceptions
+        },
+        user: triggerHandler
       },
       {
         description: "Should see no cases when filtering for resolved triggers as a exception handler",
+        expectedCases: [],
         filters: {
           caseState: "Resolved",
           reason: Reason.Triggers
         },
-        user: exceptionHandler,
-        expectedCases: []
+        user: exceptionHandler
       },
       {
         description:
           "Should only see cases with unresolved exceptions when filtering for unresolved triggers as a exception handler",
+        expectedCases: [
+          "Exceptions Unresolved/Trigger Unresolved",
+          "Exceptions Unresolved/No triggers",
+          "Exceptions Unresolved/Trigger Resolved by someoneElse",
+          "Exceptions Unresolved/Bails Trigger Unresolved"
+        ],
         filters: {
           caseState: "Unresolved",
           reason: Reason.Triggers
         },
-        user: exceptionHandler,
-        expectedCases: [
-          "Exceptions Unresolved/Trigger Unresolved",
-          "Exceptions Unresolved/No triggers",
-          "Exceptions Unresolved/Trigger Resolved by someoneElse",
-          "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        user: exceptionHandler
       },
       {
         description:
           "Should only see trigger that is resolved by themselves when searching a bails trigger code as a trigger handler",
+        expectedCases: ["No exceptions/Bails Trigger Resolved by triggerHandler"],
         filters: {
           caseState: "Resolved",
           reasonCodes: [bailsTriggerCode]
         },
-        user: triggerHandler,
-        expectedCases: ["No exceptions/Bails Trigger Resolved by triggerHandler"]
+        user: triggerHandler
       },
       {
         description:
           "Should only see exception that is resolved by themselves when searching an exception code as an exception handler",
+        expectedCases: [
+          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
+        ],
         filters: {
           caseState: "Resolved",
           reasonCodes: ["HO100300"]
         },
-        user: exceptionHandler,
-        expectedCases: [
-          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
-          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
-        ]
+        user: exceptionHandler
       },
       {
         description:
           "Should only see exception that has unresolved exception when searching a trigger code as an exception handler",
+        expectedCases: ["Exceptions Unresolved/Trigger Unresolved", "Exceptions Unresolved/Bails Trigger Unresolved"],
         filters: {
           caseState: "Unresolved",
           reasonCodes: [dummyTriggerCode, bailsTriggerCode]
         },
-        user: exceptionHandler,
-        expectedCases: ["Exceptions Unresolved/Trigger Unresolved", "Exceptions Unresolved/Bails Trigger Unresolved"]
+        user: exceptionHandler
       },
       {
         description:
           "Should only see exception that has exception resolved by themselves when searching a trigger code as an exception handler",
+        expectedCases: ["Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"],
         filters: {
           caseState: "Resolved",
           reasonCodes: ["TRPR0001"]
         },
-        user: exceptionHandler,
-        expectedCases: ["Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"]
+        user: exceptionHandler
       },
       {
         description: "Should only see unresolved triggers when case state is not set as a trigger handler",
-        filters: {},
-        user: triggerHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Unresolved/Trigger Unresolved",
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {},
+        user: triggerHandler
       },
       {
         description: "Should only see unresolved exceptions when case state is not set as an exceptions handler",
-        filters: {},
-        user: exceptionHandler,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Unresolved/Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {},
+        user: exceptionHandler
       },
       {
         description: "Should see unresolved triggers and exceptions when case state is not set as a general handler",
-        filters: {},
-        user: generalHandler,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -754,12 +755,12 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {},
+        user: generalHandler
       },
       {
         description: "Should see unresolved triggers and exceptions when case state is not set as a supervisor",
-        filters: {},
-        user: supervisor,
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -767,11 +768,13 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        ],
+        filters: {},
+        user: supervisor
       }
     ]
 
-    it.each(testCases)("$description", async ({ filters, user, expectedCases }) => {
+    it.each(testCases)("$description", async ({ expectedCases, filters, user }) => {
       const result = await listCourtCases(dataSource, { maxPageItems: 100, ...filters }, user)
 
       expect(isError(result)).toBeFalsy()

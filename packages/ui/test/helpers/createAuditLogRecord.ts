@@ -3,20 +3,20 @@ import type CourtCase from "../../src/services/entities/CourtCase"
 const createAuditLogRecord = (courtCase: CourtCase, createdBy = "Test Runner") => {
   const messageReceivedTimestamp = courtCase.messageReceivedTimestamp
   return {
-    triggerStatus: courtCase.triggerCount ? "Generated" : "NoTriggers",
-    messageId: courtCase.messageId,
-    version: 2,
-    isSanitised: 0,
-    createdBy: createdBy,
-    externalCorrelationId: courtCase.messageId,
+    _: "_",
     caseId: courtCase.messageId,
-    messageHash: courtCase.messageId,
-    pncStatus: "Processing",
+    createdBy: createdBy,
     eventsCount: 0,
+    externalCorrelationId: courtCase.messageId,
+    isSanitised: 0,
+    messageHash: courtCase.messageId,
+    messageId: courtCase.messageId,
+    pncStatus: "Processing",
     receivedDate:
       typeof messageReceivedTimestamp === "string" ? messageReceivedTimestamp : messageReceivedTimestamp.toISOString(),
-    _: "_",
-    status: "Processing"
+    status: "Processing",
+    triggerStatus: courtCase.triggerCount ? "Generated" : "NoTriggers",
+    version: 2
   }
 }
 

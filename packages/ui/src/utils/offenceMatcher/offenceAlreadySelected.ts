@@ -1,4 +1,5 @@
 import type { Amendments } from "types/Amendments"
+
 import offenceMatcherSelectValue from "./offenceMatcherSelectValue"
 
 const offenceAlreadySelected = (

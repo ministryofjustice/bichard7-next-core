@@ -1,9 +1,10 @@
 import type Note from "services/entities/Note"
 import type User from "services/entities/User"
 import type { Amendments } from "types/Amendments"
+
 import { formatDisplayedDate } from "utils/date/formattedDate"
 
-const formatValueOfUpdatedElement = (value: string | number | boolean | Date): string =>
+const formatValueOfUpdatedElement = (value: boolean | Date | number | string): string =>
   value instanceof Date ? formatDisplayedDate(value) : `${value}`
 
 const getSystemNotes = (amendments: Partial<Amendments>, userDetails: User, courtCaseId: number): Partial<Note>[] => {
@@ -21,8 +22,8 @@ const getSystemNotes = (amendments: Partial<Amendments>, userDetails: User, cour
       value.forEach((field) => {
         if (key === "offenceReasonSequence" && field.value === 0) {
           notes.push({
-            noteText: noteText + "Added in court",
             errorId: courtCaseId,
+            noteText: noteText + "Added in court",
             userId: "System"
           })
 
@@ -34,15 +35,15 @@ const getSystemNotes = (amendments: Partial<Amendments>, userDetails: User, cour
         }
 
         notes.push({
-          noteText: noteText + formatValueOfUpdatedElement(field.value),
           errorId: courtCaseId,
+          noteText: noteText + formatValueOfUpdatedElement(field.value),
           userId: "System"
         })
       })
     } else {
       notes.push({
-        noteText: noteText + formatValueOfUpdatedElement(value),
         errorId: courtCaseId,
+        noteText: noteText + formatValueOfUpdatedElement(value),
         userId: "System"
       })
     }

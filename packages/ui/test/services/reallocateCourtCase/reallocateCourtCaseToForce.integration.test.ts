@@ -1,15 +1,17 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import Note from "services/entities/Note"
 import SurveyFeedback from "services/entities/SurveyFeedback"
-import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
 import reallocateCourtCaseToForce from "services/reallocateCourtCase/reallocateCourtCaseToForce"
-import type { DataSource } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
+
 import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../../src/config"
 import amendCourtCase from "../../../src/services/amendCourtCase"
 import CourtCase from "../../../src/services/entities/CourtCase"
@@ -31,14 +33,14 @@ jest.mock("services/reallocateCourtCase/updateCourtCase")
 jest.mock("services/amendCourtCase")
 jest.mock("@moj-bichard7/core/lib/triggers/generateTriggers")
 
-const createUnlockedEvent = (unlockReason: "Trigger" | "Exception", userName: string) => {
+const createUnlockedEvent = (unlockReason: "Exception" | "Trigger", userName: string) => {
   return {
     attributes: { auditLogVersion: 2 },
     category: "information",
+    eventCode: `${unlockReason.toLowerCase()}s.unlocked`,
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: `${unlockReason} unlocked`,
     timestamp: expect.anything(),
-    eventCode: `${unlockReason.toLowerCase()}s.unlocked`,
     user: userName
   }
 }
@@ -49,8 +51,8 @@ const createReallocationEvent = (newForceOwner: string, userName: string) => {
       auditLogVersion: 2,
       "New Force Owner": newForceOwner
     },
-    eventCode: "hearing-outcome.reallocated",
     category: "information",
+    eventCode: "hearing-outcome.reallocated",
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: "Hearing outcome reallocated by user",
     timestamp: expect.anything(),
@@ -67,12 +69,12 @@ const createTriggersGeneratedEvent = (triggers: string[], hasUnresolvedException
   return {
     attributes: {
       auditLogVersion: 2,
-      "Trigger and Exception Flag": hasUnresolvedExceptions,
       "Number of Triggers": triggers.length,
+      "Trigger and Exception Flag": hasUnresolvedExceptions,
       ...triggersDetails
     },
-    eventCode: "triggers.generated",
     category: "information",
+    eventCode: "triggers.generated",
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: "Triggers generated",
     timestamp: expect.anything(),
@@ -124,18 +126,18 @@ describe("reallocate court case to another force", () => {
       const userName = "GeneralHandler"
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: userName,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: userName
         }
       ])
 
       const user = {
+        hasAccessTo: hasAccessToAll,
         username: userName,
-        visibleForces: [oldForceCode],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: [oldForceCode]
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, newForceCode)
@@ -189,18 +191,18 @@ describe("reallocate court case to another force", () => {
       const userName = "GeneralHandler"
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: userName,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: userName
         }
       ])
 
       const user = {
+        hasAccessTo: hasAccessToAll,
         username: userName,
-        visibleForces: [oldForceCode],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: [oldForceCode]
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(
@@ -262,19 +264,19 @@ describe("reallocate court case to another force", () => {
     const userName = "GeneralHandler"
     await insertCourtCasesWithFields([
       {
-        orgForPoliceFilter: oldForceCode,
         errorId: courtCaseId,
         errorLockedByUsername: null,
-        triggerLockedByUsername: userName,
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        orgForPoliceFilter: oldForceCode,
+        triggerLockedByUsername: userName
       }
     ])
 
     const user = {
+      hasAccessTo: hasAccessToAll,
       username: userName,
-      visibleForces: [oldForceCode],
       visibleCourts: [],
-      hasAccessTo: hasAccessToAll
+      visibleForces: [oldForceCode]
     } as Partial<User> as User
 
     const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, newForceCode)
@@ -300,19 +302,19 @@ describe("reallocate court case to another force", () => {
     const userName = "GeneralHandler"
     await insertCourtCasesWithFields([
       {
-        orgForPoliceFilter: oldForceCode,
         errorId: courtCaseId,
         errorLockedByUsername: null,
-        triggerLockedByUsername: userName,
-        errorStatus: "Unresolved"
+        errorStatus: "Unresolved",
+        orgForPoliceFilter: oldForceCode,
+        triggerLockedByUsername: userName
       }
     ])
 
     const user = {
+      hasAccessTo: hasAccessToAll,
       username: userName,
-      visibleForces: [oldForceCode],
       visibleCourts: [],
-      hasAccessTo: hasAccessToAll
+      visibleForces: [oldForceCode]
     } as Partial<User> as User
 
     const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, newForceCode)
@@ -330,16 +332,16 @@ describe("reallocate court case to another force", () => {
 
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: anotherOrgCode,
-          errorId: courtCaseId
+          errorId: courtCaseId,
+          orgForPoliceFilter: anotherOrgCode
         }
       ])
 
       const user = {
+        hasAccessTo: hasAccessToAll,
         username: "GeneralHandler",
-        visibleForces: [oldForceCode],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: [oldForceCode]
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
@@ -363,18 +365,18 @@ describe("reallocate court case to another force", () => {
       const anotherUser = "BichardForce02"
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: anotherUser,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: anotherUser
         }
       ])
 
       const user = {
+        hasAccessTo: hasAccessToAll,
         username: "GeneralHandler",
-        visibleForces: [oldForceCode],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: [oldForceCode]
       } as Partial<User> as User
 
       const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
@@ -395,20 +397,20 @@ describe("reallocate court case to another force", () => {
 
   describe("when there is an unexpected error", () => {
     const user = {
+      hasAccessTo: hasAccessToAll,
       username: "GeneralHandler",
-      visibleForces: [oldForceCode],
       visibleCourts: [],
-      hasAccessTo: hasAccessToAll
+      visibleForces: [oldForceCode]
     } as Partial<User> as User
 
     it("should return error when case is recordable, in PNC update phase, and exceptions are resolved", async () => {
       await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
-          phase: Phase.PNC_UPDATE,
-          errorStatus: "Resolved",
           errorLockedByUsername: user.username,
+          errorStatus: "Resolved",
+          orgForPoliceFilter: oldForceCode,
+          phase: Phase.PNC_UPDATE,
           triggerLockedByUsername: user.username
         }
       ])
@@ -420,11 +422,11 @@ describe("reallocate court case to another force", () => {
     it("should return error when case is recordable, in PNC update phase, and there are no exceptions", async () => {
       await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
-          phase: Phase.PNC_UPDATE,
-          errorStatus: null,
           errorLockedByUsername: user.username,
+          errorStatus: null,
+          orgForPoliceFilter: oldForceCode,
+          phase: Phase.PNC_UPDATE,
           triggerLockedByUsername: user.username
         }
       ])
@@ -436,9 +438,9 @@ describe("reallocate court case to another force", () => {
     it("Should return error if fails to update triggers", async () => {
       await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: user.username,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: user.username
         }
       ])
@@ -451,9 +453,9 @@ describe("reallocate court case to another force", () => {
     it("Should return the error if fails to amend court case", async () => {
       await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: user.username,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: user.username
         }
       ])
@@ -466,9 +468,9 @@ describe("reallocate court case to another force", () => {
     it("Should return error if fails to update court case", async () => {
       await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
           errorLockedByUsername: user.username,
+          orgForPoliceFilter: oldForceCode,
           triggerLockedByUsername: user.username
         }
       ])
@@ -481,8 +483,8 @@ describe("reallocate court case to another force", () => {
     it("Should return the error if fails to create notes", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
-          errorId: courtCaseId
+          errorId: courtCaseId,
+          orgForPoliceFilter: oldForceCode
         }
       ])
 
@@ -506,8 +508,8 @@ describe("reallocate court case to another force", () => {
     it("Should return error when fails to update orgForPoliceFilter", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
-          orgForPoliceFilter: oldForceCode,
-          errorId: courtCaseId
+          errorId: courtCaseId,
+          orgForPoliceFilter: oldForceCode
         }
       ])
 

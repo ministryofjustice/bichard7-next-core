@@ -1,4 +1,5 @@
 import type { DisplayFullUser } from "types/display/Users"
+
 import isEnabled from "./isEnabled"
 
 describe("isEnabled", () => {
@@ -6,14 +7,14 @@ describe("isEnabled", () => {
 
   beforeEach(() => {
     user = {
-      username: "GeneralHandler",
-      visibleForces: [],
       email: "generalhandler@example.com",
-      visibleCourts: [],
       excludedTriggers: [],
+      featureFlags: {},
       groups: [],
       hasAccessTo: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false },
-      featureFlags: {}
+      username: "GeneralHandler",
+      visibleCourts: [],
+      visibleForces: []
     }
   })
 

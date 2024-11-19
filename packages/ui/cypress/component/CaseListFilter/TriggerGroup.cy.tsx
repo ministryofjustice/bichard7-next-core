@@ -14,10 +14,10 @@ describe("TriggerGroup", () => {
   it("contains unchecked checkbox", () => {
     cy.mount(
       <TriggerGroup
-        dispatch={dispatch}
-        name={"Bails"}
         allGroupTriggers={GroupedTriggerCodes[TriggerCodeGroups.Bails]}
+        dispatch={dispatch}
         filteredReasonCodes={[]}
+        name={"Bails"}
       />
     )
 
@@ -28,10 +28,10 @@ describe("TriggerGroup", () => {
   it("contains all checked checkbox for a TriggerGroup", () => {
     cy.mount(
       <TriggerGroup
-        dispatch={dispatch}
-        name={"Bails"}
         allGroupTriggers={GroupedTriggerCodes[TriggerCodeGroups.Bails]}
+        dispatch={dispatch}
         filteredReasonCodes={filteredReasonCodes}
+        name={"Bails"}
       />
     )
 
@@ -45,10 +45,10 @@ describe("TriggerGroup", () => {
   it("contains indeterminate checkbox for a TriggerGroup", () => {
     cy.mount(
       <TriggerGroup
-        dispatch={dispatch}
-        name={"Bails"}
         allGroupTriggers={GroupedTriggerCodes[TriggerCodeGroups.Bails]}
+        dispatch={dispatch}
         filteredReasonCodes={[filteredReasonCodes[0]]}
+        name={"Bails"}
       />
     )
 

@@ -1,21 +1,21 @@
 import { useCurrentUser } from "context/CurrentUserContext"
-import { useEffect, useState } from "react"
 import { Heading } from "govuk-react"
+import { useEffect, useState } from "react"
 
 interface Props {
-  filter: React.ReactNode
-  courtCaseList: React.ReactNode
   appliedFilters: React.ReactNode
-  paginationTop: React.ReactNode
+  courtCaseList: React.ReactNode
+  filter: React.ReactNode
   paginationBottom: React.ReactNode
+  paginationTop: React.ReactNode
 }
 
 const CourtCaseFilterWrapper: React.FC<Props> = ({
-  filter,
   appliedFilters,
   courtCaseList,
-  paginationTop,
-  paginationBottom
+  filter,
+  paginationBottom,
+  paginationTop
 }: Props) => {
   const user = useCurrentUser()
   const filterPanelKey = `is-filter-panel-visible-${user.username}`
@@ -40,19 +40,18 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
       <div className="moj-filter-layout__filter">
         <div className={isSearchPanelShown ? "moj-filter" : "moj-filter moj-hidden"}>{filter}</div>
       </div>
-      <Heading className="hidden-header" as="h1" size="LARGE">
+      <Heading as="h1" className="hidden-header" size="LARGE">
         {"Case list"}
       </Heading>
       <div className="moj-filter-layout__content">
         <div className="moj-button-menu">
           <div className="moj-action-bar">
             <button
+              aria-expanded={isSearchPanelShown === true}
+              aria-haspopup="true"
+              className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
               data-module="govuk-button"
               id="filter-button"
-              className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={isSearchPanelShown === true}
               onClick={() => {
                 const showSearchPanel = !isSearchPanelShown
                 if (!showSearchPanel) {
@@ -62,6 +61,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
                 }
                 setIsSearchPanelShown(showSearchPanel)
               }}
+              type="button"
             >
               {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
             </button>

@@ -5,6 +5,7 @@ import { useCsrfToken } from "context/CsrfTokenContext"
 import { Button, Fieldset, FormGroup, HintText, Label, LabelText, Link, Select, TextArea } from "govuk-react"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
+
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
 import { StyledHintText } from "./ReallocationNotesForm.styles"
@@ -25,7 +26,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const csrfToken = useCsrfToken()
 
   return (
-    <Form method="POST" action="#" csrfToken={csrfToken || ""}>
+    <Form action="#" csrfToken={csrfToken || ""} method="POST">
       <Fieldset>
         <FormGroup>
           <Label>
@@ -48,7 +49,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
         <FormGroup>
           <Label className="govuk-heading-s">{"Add a note (optional)"}</Label>
           <StyledHintText className={"no-margin-bottom"}>{"Input reason for case reallocation"}</StyledHintText>
-          <TextArea input={{ name: "note", rows: 5, maxLength: MAX_NOTE_LENGTH, onInput: handleOnNoteChange }}>
+          <TextArea input={{ maxLength: MAX_NOTE_LENGTH, name: "note", onInput: handleOnNoteChange, rows: 5 }}>
             {""}
           </TextArea>
           <HintText>{`You have ${noteRemainingLength} characters remaining`}</HintText>

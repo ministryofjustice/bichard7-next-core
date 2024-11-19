@@ -1,16 +1,17 @@
+import { useCourtCase } from "context/CourtCaseContext"
 import CaseDetailsTab from "types/CaseDetailsTab"
 import { TabDetails } from "utils/getTabDetails"
 import { CHECKMARK_ICON_URL } from "utils/icons"
+
 import { CheckmarkIcon } from "./CourtCaseDetailsSingleTab.styles"
-import { useCourtCase } from "context/CourtCaseContext"
 
 interface CourtCaseDetailsSingleTabProps {
-  tab: TabDetails
   isActive: boolean
   onClick: (tab: CaseDetailsTab) => void
+  tab: TabDetails
 }
 
-export const CourtCaseDetailsSingleTab = ({ tab, isActive, onClick }: CourtCaseDetailsSingleTabProps) => {
+export const CourtCaseDetailsSingleTab = ({ isActive, onClick, tab }: CourtCaseDetailsSingleTabProps) => {
   const {
     courtCase: { errorStatus: errorStatus }
   } = useCourtCase()
@@ -19,8 +20,8 @@ export const CourtCaseDetailsSingleTab = ({ tab, isActive, onClick }: CourtCaseD
   return (
     <li className="moj-sub-navigation__item">
       <a
-        className="moj-sub-navigation__link"
         aria-current={isActive ? "page" : undefined}
+        className="moj-sub-navigation__link"
         href="/"
         onClick={(e) => {
           e.preventDefault()
@@ -30,16 +31,16 @@ export const CourtCaseDetailsSingleTab = ({ tab, isActive, onClick }: CourtCaseD
         {tab.name} <span />
         {tab.exceptionsResolved ? (
           <CheckmarkIcon
+            alt="Checkmark icon"
             className={`checkmark-icon checkmark`}
+            height={30}
             key={tab.name}
             src={CHECKMARK_ICON_URL}
             width={30}
-            height={30}
-            alt="Checkmark icon"
           />
         ) : (
           displayExceptionCount && (
-            <span key={tab.name} id="notifications" className="moj-notification-badge">
+            <span className="moj-notification-badge" id="notifications" key={tab.name}>
               {tab.exceptionsCount}
             </span>
           )

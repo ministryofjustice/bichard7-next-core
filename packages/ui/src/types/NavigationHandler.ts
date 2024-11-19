@@ -1,8 +1,8 @@
 import type NavigationLocation from "./NavigationLocation"
 
 type NavigationOptions = {
-  location: NavigationLocation
   args?: Record<string, unknown>
+  location: NavigationLocation
 }
 
 type NavigationHandler = (options: NavigationOptions) => void

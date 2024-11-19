@@ -1,5 +1,6 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { H3, Table } from "govuk-react"
+
 import ConditionalRender from "../../../../components/ConditionalRender"
 import { TableRow } from "./TableRow"
 
@@ -15,12 +16,12 @@ export const BailConditions = ({ bailConditions, bailReason, offences }: BailCon
         const conditionWithLabel = bailCondition.match(/^\s*([^:]+):\s*(.*)$/)
         return {
           label: conditionWithLabel ? conditionWithLabel[1].trim() : "Other",
-          value: bailCondition,
           offenceIndex: offences.find(
             (offence) =>
               offence.CourtOffenceSequenceNumber &&
               offence.Result.some((res) => res.ResultVariableText?.includes(bailCondition))
-          )?.CourtOffenceSequenceNumber
+          )?.CourtOffenceSequenceNumber,
+          value: bailCondition
         }
       })
     : []
@@ -32,9 +33,9 @@ export const BailConditions = ({ bailConditions, bailReason, offences }: BailCon
       <Table>
         {conditions.map((condition, i) => (
           <TableRow
+            hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
             key={`bail-condition-${i}`}
             label={condition.label}
-            hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
             value={condition.value}
           />
         ))}

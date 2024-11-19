@@ -1,11 +1,11 @@
 import type { ReactNode } from "react"
 
 interface Props {
-  isRendered: boolean
   children: ReactNode
+  isRendered: boolean
 }
 
-const ConditionalRender = ({ isRendered, children }: Props) => {
+const ConditionalRender = ({ children, isRendered }: Props) => {
   if (isRendered) {
     return <>{children}</>
   }

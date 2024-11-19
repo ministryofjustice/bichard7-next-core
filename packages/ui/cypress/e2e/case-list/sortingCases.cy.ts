@@ -123,8 +123,8 @@ describe("Sorting cases", () => {
     cy.task(
       "insertCourtCasesWithFields",
       PTIURNs.map((PTIURN) => ({
-        ptiurn: PTIURN,
-        orgForPoliceFilter: "011111"
+        orgForPoliceFilter: "011111",
+        ptiurn: PTIURN
       }))
     )
 

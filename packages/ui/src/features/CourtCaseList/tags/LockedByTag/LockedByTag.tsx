@@ -1,10 +1,11 @@
 import ConditionalRender from "components/ConditionalRender"
 import { useState } from "react"
+
 import LockedByButton from "./LockedByButton"
 import LockedByText from "./LockedByText"
 
 interface LockedByTagProps {
-  lockedBy?: string | null
+  lockedBy?: null | string
   unlockPath?: string
 }
 
@@ -16,9 +17,9 @@ const LockedByTag = ({ lockedBy, unlockPath }: LockedByTagProps) => {
       {unlockPath ? (
         <LockedByButton
           lockedBy={lockedBy}
-          unlockPath={unlockPath}
-          showUnlockConfirmation={showUnlockConfirmation}
           setShowUnlockConfirmation={setShowUnlockConfirmation}
+          showUnlockConfirmation={showUnlockConfirmation}
+          unlockPath={unlockPath}
         />
       ) : (
         <LockedByText lockedBy={lockedBy} unlockPath={unlockPath} />

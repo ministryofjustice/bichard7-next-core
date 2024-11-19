@@ -1,7 +1,9 @@
+import type { DataSource } from "typeorm"
+
 import { randomUUID } from "crypto"
 import MockDate from "mockdate"
 import insertNotes from "services/insertNotes"
-import type { DataSource } from "typeorm"
+
 import addNote from "../../src/services/addNote"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -13,8 +15,8 @@ jest.mock("services/insertNotes")
 const note = "Dummy note"
 const existingCourtCasesDbObject = {
   courtDate: new Date("2008-09-25"),
-  orgForPoliceFilter: "36FPA1".padEnd(6, " "),
-  errorId: 0
+  errorId: 0,
+  orgForPoliceFilter: "36FPA1".padEnd(6, " ")
 }
 const currentUsername = "GeneralHandler"
 
@@ -42,8 +44,8 @@ describe("addNote", () => {
   it("Should add note when record is fully locked by the user", async () => {
     await insertCourtCasesWithFields([
       {
-        messageId: randomUUID(),
         errorLockedByUsername: currentUsername,
+        messageId: randomUUID(),
         triggerLockedByUsername: currentUsername,
         ...existingCourtCasesDbObject
       }
@@ -63,8 +65,8 @@ describe("addNote", () => {
   it("Should add note when record is partially locked by the user", async () => {
     await insertCourtCasesWithFields([
       {
-        messageId: randomUUID(),
         errorLockedByUsername: "BichardForce01",
+        messageId: randomUUID(),
         triggerLockedByUsername: currentUsername,
         ...existingCourtCasesDbObject
       }
@@ -85,8 +87,8 @@ describe("addNote", () => {
     await insertCourtCasesWithFields([
       {
         ...existingCourtCasesDbObject,
-        messageId: randomUUID(),
         errorLockedByUsername: "BichardForce01",
+        messageId: randomUUID(),
         triggerLockedByUsername: "BichardForce02"
       }
     ])

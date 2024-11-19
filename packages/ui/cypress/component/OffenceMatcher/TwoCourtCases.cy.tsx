@@ -3,6 +3,7 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/Matcher/OffenceMatcher"
 import { Amendments } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import type { Candidates } from "../../../src/types/OffenceMatching"
 
 const courtCase = {} as unknown as DisplayFullCourtCase
@@ -35,8 +36,8 @@ describe("Offence matcher with single court case", () => {
   describe("Without existing amendments", () => {
     beforeEach(() => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
+          <OffenceMatcher candidates={candidates} isCaseLockedToCurrentUser={true} offenceIndex={0} />
         </CourtCaseContext.Provider>
       )
     })
@@ -77,23 +78,23 @@ describe("Offence matcher with single court case", () => {
 describe("With existing amendments", () => {
   it("loads amended value", () => {
     const amendments: Amendments = {
-      offenceReasonSequence: [
-        {
-          offenceIndex: 0,
-          value: 1
-        }
-      ],
       offenceCourtCaseReferenceNumber: [
         {
           offenceIndex: 0,
           value: "12/2732/000015R"
         }
+      ],
+      offenceReasonSequence: [
+        {
+          offenceIndex: 0,
+          value: 1
+        }
       ]
     }
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
-        <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+      <CourtCaseContext.Provider value={[{ amendments, courtCase, savedAmendments: {} }, () => {}]}>
+        <OffenceMatcher candidates={candidates} isCaseLockedToCurrentUser={true} offenceIndex={0} />
       </CourtCaseContext.Provider>
     )
 
@@ -102,23 +103,23 @@ describe("With existing amendments", () => {
 
   it("disables options that already exist in amendments", () => {
     const amendments: Amendments = {
-      offenceReasonSequence: [
-        {
-          offenceIndex: 1,
-          value: 1
-        }
-      ],
       offenceCourtCaseReferenceNumber: [
         {
           offenceIndex: 1,
           value: "12/2732/000015R"
         }
+      ],
+      offenceReasonSequence: [
+        {
+          offenceIndex: 1,
+          value: 1
+        }
       ]
     }
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
-        <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+      <CourtCaseContext.Provider value={[{ amendments, courtCase, savedAmendments: {} }, () => {}]}>
+        <OffenceMatcher candidates={candidates} isCaseLockedToCurrentUser={true} offenceIndex={0} />
       </CourtCaseContext.Provider>
     )
 

@@ -1,5 +1,5 @@
-import LockedByText from "../../src/features/CourtCaseList/tags/LockedByTag/LockedByText"
 import LockedByButton from "../../src/features/CourtCaseList/tags/LockedByTag/LockedByButton"
+import LockedByText from "../../src/features/CourtCaseList/tags/LockedByTag/LockedByText"
 
 describe("LockedByText.cy.tx", () => {
   it("shows the icon and the text", () => {
@@ -11,7 +11,7 @@ describe("LockedByText.cy.tx", () => {
 describe("LockedByButton.cy.tx", () => {
   it("shows the icon and the text", () => {
     cy.mount(
-      <LockedByButton lockedBy={"Bichard02"} showUnlockConfirmation={false} setShowUnlockConfirmation={() => {}} />
+      <LockedByButton lockedBy={"Bichard02"} setShowUnlockConfirmation={() => {}} showUnlockConfirmation={false} />
     )
     cy.contains("Bichard02")
   })

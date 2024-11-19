@@ -1,9 +1,10 @@
 import type { RefObject } from "react"
+
 import Asn from "services/Asn"
 
 export type Selection = {
-  start: number | null
-  end: number | null
+  end: null | number
+  start: null | number
 }
 
 // Do **not** add Tab to this list. It will break accessibility!
@@ -42,7 +43,7 @@ export const handleAsnForwardSlashes = (
     return false
   }
 
-  const { start: selectionStart, end: selectionEnd } = selection
+  const { end: selectionEnd, start: selectionStart } = selection
 
   // Handles selecting all and press Backspace.
   if (selectionStart === null || selectionEnd === null) {

@@ -3,6 +3,7 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import React, { useState } from "react"
 import { AmendmentKeys } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import HO100200 from "../fixtures/HO100200.json"
 
 describe("AutoSave", () => {
@@ -10,25 +11,25 @@ describe("AutoSave", () => {
   courtCase.errorId = 0
 
   interface HelperInterfaceProps {
-    isValid: boolean
-    hasBeenSaved: boolean
-    hasChanged: boolean
     amendmentFields: AmendmentKeys[]
     children?: React.ReactNode
+    hasBeenSaved: boolean
+    hasChanged: boolean
+    isValid: boolean
   }
-  const Helper = ({ isValid, hasBeenSaved, hasChanged, amendmentFields, children }: HelperInterfaceProps) => {
+  const Helper = ({ amendmentFields, children, hasBeenSaved, hasChanged, isValid }: HelperInterfaceProps) => {
     const [isSaved, setIsSaved] = useState<boolean>(hasBeenSaved)
     const [isChanged, setIsChanged] = useState<boolean>(hasChanged)
 
     return (
       <div>
         <AutoSave
-          setSaved={setIsSaved}
-          setChanged={setIsChanged}
-          isValid={isValid}
-          isSaved={isSaved}
-          isChanged={isChanged}
           amendmentFields={amendmentFields}
+          isChanged={isChanged}
+          isSaved={isSaved}
+          isValid={isValid}
+          setChanged={setIsChanged}
+          setSaved={setIsSaved}
         >
           {children}
         </AutoSave>
@@ -49,16 +50,16 @@ describe("AutoSave", () => {
 
     it("doesn't display children", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={[]} hasBeenSaved={true} hasChanged={false} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
 
     it("displays children", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={[]} hasBeenSaved={true} hasChanged={false} isValid={false}>
             {"This is a message"}
           </Helper>
         </CourtCaseContext.Provider>
@@ -67,24 +68,24 @@ describe("AutoSave", () => {
 
     it("doesn't have any amendments to save", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={[]} hasBeenSaved={true} hasChanged={false} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
 
     it("displays no message when it has been saved and has changed", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={true} amendmentFields={["asn"]} />
+        <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={["asn"]} hasBeenSaved={true} hasChanged={true} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
 
     it("displays no message when it hasn't been saved and has not been changed", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={false} amendmentFields={["asn"]} />
+        <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={false} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
@@ -92,17 +93,17 @@ describe("AutoSave", () => {
     it("displays no message when it has the same amendments and savedAmendments", () => {
       cy.mount(
         <CourtCaseContext.Provider
-          value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: { asn: "1234" } }, () => {}]}
+          value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: { asn: "1234" } }, () => {}]}
         >
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+          <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
 
     it("displays no message when the value is invalid", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+          <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={false} />
         </CourtCaseContext.Provider>
       )
     })
@@ -114,8 +115,8 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+      <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+        <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={true} />
       </CourtCaseContext.Provider>
     )
 
@@ -133,9 +134,9 @@ describe("AutoSave", () => {
 
     cy.mount(
       <CourtCaseContext.Provider
-        value={[{ courtCase, amendments: { asn: "5678" }, savedAmendments: { asn: "1234" } }, () => {}]}
+        value={[{ amendments: { asn: "5678" }, courtCase, savedAmendments: { asn: "1234" } }, () => {}]}
       >
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={true} />
       </CourtCaseContext.Provider>
     )
 
@@ -152,8 +153,8 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+      <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+        <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={true} />
       </CourtCaseContext.Provider>
     )
 
@@ -170,8 +171,8 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+      <CourtCaseContext.Provider value={[{ amendments: { asn: "1234" }, courtCase, savedAmendments: {} }, () => {}]}>
+        <Helper amendmentFields={["asn"]} hasBeenSaved={false} hasChanged={true} isValid={true} />
       </CourtCaseContext.Provider>
     )
 

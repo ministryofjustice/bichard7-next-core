@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { gdsGreen } from "utils/colours"
-import { gdsTransport, arial, sansSerif } from "utils/typography"
+import { arial, gdsTransport, sansSerif } from "utils/typography"
 
 const SuccessMessageContainer = styled.div`
   display: flex;
@@ -13,4 +13,4 @@ const Message = styled.span`
   color: ${gdsGreen};
 `
 
-export { SuccessMessageContainer, Message }
+export { Message, SuccessMessageContainer }

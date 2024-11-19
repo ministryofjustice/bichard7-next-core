@@ -12,21 +12,21 @@ import hasNextHearingDateExceptions from "utils/exceptions/hasNextHearingDateExc
 import isValidNextHearingDate from "utils/validators/isValidNextHearingDate"
 
 interface NextHearingDateFieldProps {
-  result: Result
   exceptions: Exception[]
-  offenceIndex: number
-  resultIndex: number
   isCaseEditable: boolean
+  offenceIndex: number
+  result: Result
+  resultIndex: number
 }
 
 export const NextHearingDateField = ({
-  result,
   exceptions,
+  isCaseEditable,
   offenceIndex,
-  resultIndex,
-  isCaseEditable
+  result,
+  resultIndex
 }: NextHearingDateFieldProps) => {
-  const { amendments, amend } = useCourtCase()
+  const { amend, amendments } = useCourtCase()
   const currentUser = useCurrentUser()
   const amendedNextHearingDate = getNextHearingDateValue(amendments, offenceIndex, resultIndex)
   const updatedNextHearingDate = getNextHearingDateValue(amendments, offenceIndex, resultIndex)
@@ -40,38 +40,38 @@ export const NextHearingDateField = ({
   return (
     <EditableFieldTableRow
       className={"next-hearing-date-row"}
-      label="Next hearing date"
       hasExceptions={hasNextHearingDateExceptions(exceptions)}
-      value={result.NextHearingDate && formatDisplayedDate(String(result.NextHearingDate))}
-      updatedValue={updatedNextHearingDate && formatDisplayedDate(updatedNextHearingDate)}
-      isEditable={isEditable}
-      inputLabel="Enter next hearing date"
       hintText="Enter date"
+      inputLabel="Enter next hearing date"
+      isEditable={isEditable}
+      label="Next hearing date"
+      updatedValue={updatedNextHearingDate && formatDisplayedDate(updatedNextHearingDate)}
+      value={result.NextHearingDate && formatDisplayedDate(String(result.NextHearingDate))}
     >
       <input
         className="govuk-input"
         id="next-hearing-date"
-        type="date"
         min={result.ResultHearingDate && formatFormInputDateString(result.ResultHearingDate)}
         name={"next-hearing-date"}
-        value={amendedNextHearingDate}
         onChange={(event) => {
           setNextHearingDateChanged(true)
           setIsNhdSaved(false)
           amend("nextHearingDate")({
-            resultIndex: resultIndex,
             offenceIndex: offenceIndex,
+            resultIndex: resultIndex,
             value: event.target.value
           })
         }}
+        type="date"
+        value={amendedNextHearingDate}
       />
       <AutoSave
-        setChanged={setNextHearingDateChanged}
-        setSaved={setIsNhdSaved}
-        isValid={isValidNextHearingDate(amendedNextHearingDate, result.ResultHearingDate)}
         amendmentFields={["nextHearingDate"]}
         isChanged={nextHearingDateChanged}
         isSaved={isNhdSaved}
+        isValid={isValidNextHearingDate(amendedNextHearingDate, result.ResultHearingDate)}
+        setChanged={setNextHearingDateChanged}
+        setSaved={setIsNhdSaved}
       >
         {!isValidNextHearingDate(amendedNextHearingDate, result.ResultHearingDate) && (
           <ErrorMessage message="Select valid Next hearing date" />

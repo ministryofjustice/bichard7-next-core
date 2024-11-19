@@ -1,9 +1,11 @@
+import type { OptionsType } from "cookies-next/lib/types"
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { getCookie, setCookie } from "cookies-next"
-import type { OptionsType } from "cookies-next/lib/types"
 import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
@@ -11,7 +13,6 @@ import CourtCaseList from "features/CourtCaseList/CourtCaseList"
 import { Main } from "govuk-react"
 import { isEqual } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
@@ -25,47 +26,48 @@ import listCourtCases from "services/listCourtCases"
 import unlockCourtCase from "services/unlockCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { CaseListQueryParams, QueryOrder, SerializedDateRange } from "types/CaseListQueryParams"
-import { isError } from "types/Result"
-import UnlockReason from "types/UnlockReason"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
+import { isError } from "types/Result"
+import UnlockReason from "types/UnlockReason"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatFormInputDateString } from "utils/date/formattedDate"
 import removeBlankQueryParams from "utils/deleteQueryParam/removeBlankQueryParams"
 import getQueryStringCookieName from "utils/getQueryStringCookieName"
 import { isPost } from "utils/http"
-import { logUiDetails } from "utils/logUiDetails"
 import { logCaseListRenderTime } from "utils/logging"
+import { logUiDetails } from "utils/logUiDetails"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import redirectTo from "utils/redirectTo"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
+
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
 
 type Props = {
-  build: string | null
+  build: null | string
   caseAge: string[]
   caseAgeCounts: Record<string, number>
+  caseResolvedDateRange: null | SerializedDateRange
   courtCases: DisplayPartialCourtCase[]
   csrfToken: string
-  dateRange: SerializedDateRange | null
+  dateRange: null | SerializedDateRange
   displaySwitchingSurveyFeedback: boolean
-  environment: string | null
+  environment: null | string
   oppositeOrder: QueryOrder
   queryStringCookieName: string
   totalCases: number
   user: DisplayFullUser
-  caseResolvedDateRange: SerializedDateRange | null
-} & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
+} & Omit<CaseListQueryParams, "allocatedToUserName" | "courtDateRange" | "resolvedByUsername" | "resolvedDateRange">
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
     const startTime = new Date().getTime()
-    const { req, currentUser, query, csrfToken } = context as CsrfServerSidePropsContext &
-      AuthenticationServerSidePropsContext
+    const { csrfToken, currentUser, query, req } = context as AuthenticationServerSidePropsContext &
+      CsrfServerSidePropsContext
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
@@ -145,6 +147,12 @@ export const getServerSideProps = withMultipleServerSideProps(
         build: process.env.NEXT_PUBLIC_BUILD || null,
         caseAge: caseAges,
         caseAgeCounts: caseAgeCounts,
+        caseResolvedDateRange: caseListQueryParams.resolvedDateRange
+          ? {
+              from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
+              to: formatFormInputDateString(caseListQueryParams.resolvedDateRange.to)
+            }
+          : null,
         courtCases: courtCases.result.map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
         csrfToken,
         dateRange:
@@ -160,12 +168,6 @@ export const getServerSideProps = withMultipleServerSideProps(
         queryStringCookieName,
         totalCases: courtCases.totalCases,
         user: userToDisplayFullUserDto(currentUser),
-        caseResolvedDateRange: caseListQueryParams.resolvedDateRange
-          ? {
-              from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
-              to: formatFormInputDateString(caseListQueryParams.resolvedDateRange.to)
-            }
-          : null,
         ...caseListQueryProps
       }
     }
@@ -175,15 +177,15 @@ export const getServerSideProps = withMultipleServerSideProps(
 const Home: NextPage<Props> = (props) => {
   const router = useRouter()
   const {
-    csrfToken,
-    user,
+    build,
     courtCases,
-    totalCases,
-    queryStringCookieName,
+    csrfToken,
     displaySwitchingSurveyFeedback,
     environment,
-    build,
     oppositeOrder,
+    queryStringCookieName,
+    totalCases,
+    user,
     ...searchParams
   } = props
 
@@ -213,30 +215,30 @@ const Home: NextPage<Props> = (props) => {
     <>
       <Head>
         <title>{"Bichard7 | Case List"}</title>
-        <meta name="description" content="Bichard7 | Case List" />
+        <meta content="Bichard7 | Case List" name="description" />
       </Head>
       <CsrfTokenContext.Provider value={csrfTokenContext}>
         <CurrentUserContext.Provider value={currentUserContext}>
           <Layout bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}>
             <Main />
             <CourtCaseWrapper
-              filter={<CourtCaseFilter {...searchParams} />}
               appliedFilters={<AppliedFilters filters={{ ...searchParams }} />}
               courtCaseList={<CourtCaseList courtCases={courtCases} order={oppositeOrder} />}
-              paginationTop={
-                <Pagination
-                  pageNum={searchParams.page}
-                  casesPerPage={searchParams.maxPageItems}
-                  totalCases={totalCases}
-                  name="top"
-                />
-              }
+              filter={<CourtCaseFilter {...searchParams} />}
               paginationBottom={
                 <Pagination
-                  pageNum={searchParams.page}
                   casesPerPage={searchParams.maxPageItems}
-                  totalCases={totalCases}
                   name="bottom"
+                  pageNum={searchParams.page}
+                  totalCases={totalCases}
+                />
+              }
+              paginationTop={
+                <Pagination
+                  casesPerPage={searchParams.maxPageItems}
+                  name="top"
+                  pageNum={searchParams.page}
+                  totalCases={totalCases}
                 />
               }
             />

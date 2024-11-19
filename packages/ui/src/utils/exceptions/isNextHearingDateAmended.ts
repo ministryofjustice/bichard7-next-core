@@ -1,6 +1,8 @@
-import { isEmpty } from "lodash"
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+
+import { isEmpty } from "lodash"
+
 import { filterNextHearingDateExceptions } from "./hasNextHearingDateExceptions"
 
 // TODO: nextHearingDate should be Date type

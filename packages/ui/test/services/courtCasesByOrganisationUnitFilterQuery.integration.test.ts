@@ -1,10 +1,12 @@
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+
+import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import courtCasesByVisibleCourtsQuery from "services/queries/courtCasesByVisibleCourtsQuery"
-import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
 import { isError } from "types/Result"
+
 import courtCasesByVisibleForcesQuery from "../../src/services/queries/courtCasesByVisibleForcesQuery"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
@@ -45,8 +47,8 @@ describe("courtCasesByOrganisationUnitQuery", () => {
     const dummyForceCode = "001"
     const dummyCourtCode = "01XY01"
     const user: Partial<User> = {
-      visibleForces: [dummyForceCode],
-      visibleCourts: [dummyCourtCode]
+      visibleCourts: [dummyCourtCode],
+      visibleForces: [dummyForceCode]
     }
 
     courtCasesByOrganisationUnitQuery(query, user as User)
@@ -62,11 +64,11 @@ describe("courtCasesByOrganisationUnitQuery", () => {
     const expectedOrgCodes = ["12GHA ", "12GHAB", "13BR  ", "14AT  "]
     const otherOrgCodes = ["15AA", "16AA"]
     const user: Partial<User> = {
-      visibleForces: ["012"],
-      visibleCourts: ["13BR", "14AT"]
+      visibleCourts: ["13BR", "14AT"],
+      visibleForces: ["012"]
     }
     await insertCourtCasesWithFields(
-      expectedOrgCodes.concat(otherOrgCodes).map((orgCode) => ({ orgForPoliceFilter: orgCode, courtCode: orgCode }))
+      expectedOrgCodes.concat(otherOrgCodes).map((orgCode) => ({ courtCode: orgCode, orgForPoliceFilter: orgCode }))
     )
 
     const result = await courtCasesByOrganisationUnitQuery(query, user as User)
@@ -84,11 +86,11 @@ describe("courtCasesByOrganisationUnitQuery", () => {
     const expectedOrgCodes = ["12GHA ", "12GHAB", "13BR  "]
     const otherOrgCodes = ["14AT  ", "15AA", "16AA"]
     const user: Partial<User> = {
-      visibleForces: ["012"],
-      visibleCourts: ["13BR"]
+      visibleCourts: ["13BR"],
+      visibleForces: ["012"]
     }
     await insertCourtCasesWithFields(
-      expectedOrgCodes.concat(otherOrgCodes).map((orgCode) => ({ orgForPoliceFilter: orgCode, courtCode: orgCode }))
+      expectedOrgCodes.concat(otherOrgCodes).map((orgCode) => ({ courtCode: orgCode, orgForPoliceFilter: orgCode }))
     )
 
     const updateQuery = query.update(CourtCase)

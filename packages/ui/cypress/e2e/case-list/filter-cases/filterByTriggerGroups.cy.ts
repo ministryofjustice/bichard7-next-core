@@ -1,6 +1,7 @@
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { flatten } from "lodash"
+
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import a11yConfig from "../../../support/a11yConfig"
 import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
@@ -132,10 +133,10 @@ describe("Filtering cases by trigger groups", () => {
       // Assign 17 cases with the group trigger code (Bails, Custody, Orders, Warrants)
       flatten(Object.values(GroupedTriggerCodes)).forEach((triggerCode, index) => {
         const trigger: TestTrigger = {
-          triggerId: index,
-          triggerCode,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode,
+          triggerId: index
         }
 
         cy.task("insertTriggers", { caseId: index, triggers: [trigger] })
@@ -145,10 +146,10 @@ describe("Filtering cases by trigger groups", () => {
       const courtCasesIds = [17, 18, 19]
       courtCasesIds.forEach((courtCasesId) => {
         const trigger: TestTrigger = {
-          triggerId: courtCasesId,
-          triggerCode: TriggerCode.TRPR0017,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0017,
+          triggerId: courtCasesId
         }
 
         cy.task("insertTriggers", { caseId: courtCasesId, triggers: [trigger] })

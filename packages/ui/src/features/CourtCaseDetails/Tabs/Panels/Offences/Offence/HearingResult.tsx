@@ -1,14 +1,14 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { Heading, Table } from "govuk-react"
 import { findExceptions } from "types/ErrorMessages"
-import { ResolutionStatus } from "types/ResolutionStatus"
 import { Exception } from "types/exceptions"
+import { ResolutionStatus } from "types/ResolutionStatus"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import {
@@ -18,23 +18,24 @@ import {
   getUrgentYesOrNo,
   getYesOrNo
 } from "utils/valueTransformers"
+
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { TableRow } from "../../TableRow"
 import { StyledTableRow } from "./HearingResult.styles"
 
 interface HearingResultProps {
-  result: Result
+  errorStatus?: null | ResolutionStatus
   exceptions: Exception[]
+  result: Result
   resultIndex: number
   selectedOffenceSequenceNumber: number
-  errorStatus?: ResolutionStatus | null
 }
 
 export const HearingResult = ({
-  result,
   errorStatus,
   exceptions,
+  result,
   resultIndex,
   selectedOffenceSequenceNumber
 }: HearingResultProps) => {
@@ -57,8 +58,8 @@ export const HearingResult = ({
         {cjsErrorMessage ? (
           <ExceptionFieldTableRow
             badgeText={ExceptionBadgeType.SystemError}
-            value={result.CJSresultCode}
             label={"CJS Code"}
+            value={result.CJSresultCode}
           >
             <ErrorPromptMessage message={cjsErrorMessage} />
           </ExceptionFieldTableRow>
@@ -88,21 +89,21 @@ export const HearingResult = ({
           />
         </ConditionalRender>
         <NextHearingLocationField
-          result={result}
           exceptions={exceptions}
-          offenceIndex={offenceIndex}
-          resultIndex={resultIndex}
           isCaseEditable={isCaseEditable}
+          offenceIndex={offenceIndex}
+          result={result}
+          resultIndex={resultIndex}
         />
         <NextHearingDateField
-          result={result}
           exceptions={exceptions}
-          offenceIndex={offenceIndex}
-          resultIndex={resultIndex}
           isCaseEditable={isCaseEditable}
+          offenceIndex={offenceIndex}
+          result={result}
+          resultIndex={resultIndex}
         />
         <TableRow label="Mode of trial reason" value={result.ModeOfTrialReason} />
-        <StyledTableRow label="Hearing result text" value={formattedResult} className={`result-text`} />
+        <StyledTableRow className={`result-text`} label="Hearing result text" value={formattedResult} />
         <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
         <TableRow label="Result class" value={result.ResultClass} />
         <TableRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />

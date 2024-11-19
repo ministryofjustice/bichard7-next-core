@@ -1,9 +1,12 @@
+import type { DataSource, EntityManager } from "typeorm"
+
 import { faker } from "@faker-js/faker"
 import { subSeconds } from "date-fns"
 import { countBy, sample } from "lodash"
-import type { DataSource, EntityManager } from "typeorm"
-import Note from "../../src/services/entities/Note"
+
 import type Trigger from "../../src/services/entities/Trigger"
+
+import Note from "../../src/services/entities/Note"
 
 export default (
   dataSource: DataSource | EntityManager,
@@ -43,10 +46,10 @@ export default (
 
   return noteTexts.map((noteText) =>
     dataSource.getRepository(Note).create({
-      noteText,
+      createdAt: subSeconds(new Date(), Math.random() * 60 * 60 * 24 * 30),
       errorId: caseId,
-      userId: `${faker.person.firstName().toLowerCase()}.${faker.person.lastName().toLowerCase()}`.slice(0, 31),
-      createdAt: subSeconds(new Date(), Math.random() * 60 * 60 * 24 * 30)
+      noteText,
+      userId: `${faker.person.firstName().toLowerCase()}.${faker.person.lastName().toLowerCase()}`.slice(0, 31)
     })
   )
 }

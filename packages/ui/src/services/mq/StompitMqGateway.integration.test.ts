@@ -1,4 +1,5 @@
 import type MqConfig from "./types/MqConfig"
+
 import StompitMqGateway from "./StompitMqGateway"
 import TestStompitMqGateway from "./TestStompitMqGateway"
 jest.retryTimes(10)
@@ -7,9 +8,9 @@ jest.setTimeout(30000)
 
 const queueName = "mq-gateway-integration-testing"
 const config: MqConfig = {
+  password: "admin",
   url: "failover:(stomp://localhost:61613)",
-  username: "admin",
-  password: "admin"
+  username: "admin"
 }
 
 const gateway = new StompitMqGateway(config)

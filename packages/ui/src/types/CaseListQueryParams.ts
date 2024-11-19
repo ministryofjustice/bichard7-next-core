@@ -9,8 +9,8 @@ export enum Reason {
 export enum LockedState {
   All = "All",
   Locked = "Locked",
-  Unlocked = "Unlocked",
-  LockedToMe = "LockedToMe"
+  LockedToMe = "LockedToMe",
+  Unlocked = "Unlocked"
 }
 
 export type DateRange = {
@@ -27,6 +27,7 @@ export type CaseState = "Resolved" | "Unresolved" | undefined
 
 export type CaseListQueryParams = {
   allocatedToUserName?: string
+  asn?: string
   caseState?: CaseState
   courtDateRange?: DateRange | DateRange[]
   courtName?: string
@@ -41,5 +42,4 @@ export type CaseListQueryParams = {
   reasonCodes?: string[]
   resolvedByUsername?: string
   resolvedDateRange?: DateRange
-  asn?: string
 }

@@ -4,7 +4,7 @@ interface PreviousPathContextType {
   previousPath: string
 }
 
-const PreviousPathContext = createContext<PreviousPathContextType | null>(null)
+const PreviousPathContext = createContext<null | PreviousPathContextType>(null)
 
 const usePreviousPath = (): string => {
   const previousPathContext = useContext(PreviousPathContext)

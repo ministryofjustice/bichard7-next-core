@@ -1,13 +1,15 @@
 import type { connect } from "stompit"
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
+
 import type MqConfig from "./types/MqConfig"
+
 import parseConnectionOptions from "./parseConnectionOptions"
 
 export default (config: MqConfig): connect.ConnectOptions[] => {
   const connectHeaders: connect.ConnectHeaders = {
+    "heart-beat": "5000,5000",
     login: config.username,
-    passcode: config.password,
-    "heart-beat": "5000,5000"
+    passcode: config.password
   }
 
   let { url } = config

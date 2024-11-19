@@ -1,7 +1,7 @@
+import Image from "next/image"
 import styled from "styled-components"
 import { gdsRed } from "utils/colours"
-import Image from "next/image"
-import { gdsTransport, arial, sansSerif } from "utils/typography"
+import { arial, gdsTransport, sansSerif } from "utils/typography"
 
 const ErrorMessageContainer = styled.div`
   display: flex;

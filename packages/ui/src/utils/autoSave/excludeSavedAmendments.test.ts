@@ -1,4 +1,5 @@
 import type { AmendmentKeys, Amendments } from "types/Amendments"
+
 import excludeSavedAmendments from "./excludeSavedAmendments"
 
 describe("excludeSavedAmendments", () => {
@@ -60,22 +61,22 @@ describe("excludeSavedAmendments", () => {
 
     it("returns nextSourceOrganisation when present in the amendments and not in the savedAmendments", () => {
       const amendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       }
       const saveAmendments: Amendments = {}
 
       const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
       expect(result).toStrictEqual({
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       })
     })
 
     it("returns empty object when present in the amendments and in the savedAmendments", () => {
       const amendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       }
       const saveAmendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       }
 
       const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
@@ -84,32 +85,32 @@ describe("excludeSavedAmendments", () => {
 
     it("returns nextSourceOrganisation when changed in the amendments and the old value is in the savedAmendments", () => {
       const amendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "C06BO00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "C06BO00" }]
       }
       const saveAmendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       }
 
       const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
       expect(result).toStrictEqual({
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "C06BO00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "C06BO00" }]
       })
     })
 
     it("returns a nextSourceOrganisation when two values are given and one is new", () => {
       const amendments: Amendments = {
         nextSourceOrganisation: [
-          { resultIndex: 0, offenceIndex: 0, value: "B21XA00" },
-          { resultIndex: 0, offenceIndex: 1, value: "C06BO00" }
+          { offenceIndex: 0, resultIndex: 0, value: "B21XA00" },
+          { offenceIndex: 1, resultIndex: 0, value: "C06BO00" }
         ]
       }
       const saveAmendments: Amendments = {
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+        nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
       }
 
       const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
       expect(result).toStrictEqual({
-        nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 1, value: "C06BO00" }]
+        nextSourceOrganisation: [{ offenceIndex: 1, resultIndex: 0, value: "C06BO00" }]
       })
     })
   })
@@ -133,25 +134,25 @@ describe("excludeSavedAmendments", () => {
       it("with only amendments it returns asn and nextSourceOrganisation", () => {
         const amendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
         const saveAmendments: Amendments = {}
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
         expect(result).toStrictEqual({
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         })
       })
 
       it("with amendments and the same savedAmendments it returns empty object", () => {
         const amendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
         const saveAmendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
@@ -161,11 +162,11 @@ describe("excludeSavedAmendments", () => {
       it("with changed asn amendment and old asn value are in the savedAmendments it returns only the updates", () => {
         const amendments: Amendments = {
           asn: "1101ZD0100000448754K",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
         const saveAmendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
@@ -175,16 +176,16 @@ describe("excludeSavedAmendments", () => {
       it("with changed nextSourceOrganisation amendments and old nextSourceOrganisation value are in the savedAmendments it returns only the updates", () => {
         const amendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "C06BO00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "C06BO00" }]
         }
         const saveAmendments: Amendments = {
           asn: "1101ZD0100000410836V",
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "B21XA00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "B21XA00" }]
         }
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
         expect(result).toStrictEqual({
-          nextSourceOrganisation: [{ resultIndex: 0, offenceIndex: 0, value: "C06BO00" }]
+          nextSourceOrganisation: [{ offenceIndex: 0, resultIndex: 0, value: "C06BO00" }]
         })
       })
     })
@@ -196,26 +197,26 @@ describe("excludeSavedAmendments", () => {
 
       it("with only amendments it returns offenceReasonSequence and offenceCourtCaseReferenceNumber", () => {
         const amendments: Amendments = {
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         }
         const saveAmendments: Amendments = {}
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
         expect(result).toStrictEqual({
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         })
       })
 
       it("with amendments and savedAmendments it returns offenceReasonSequence and offenceCourtCaseReferenceNumber", () => {
         const amendments: Amendments = {
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         }
         const saveAmendments: Amendments = {
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         }
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
@@ -226,38 +227,38 @@ describe("excludeSavedAmendments", () => {
 
       it("with amendments only it returns offenceReasonSequence and offenceCourtCaseReferenceNumber (Added in court)", () => {
         const amendments: Amendments = {
-          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }],
+          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }]
         }
         const saveAmendments: Amendments = {}
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
         expect(result).toStrictEqual({
-          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }],
+          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }]
         })
       })
 
       it("with amendments with savedAmendments it returns offenceReasonSequence and offenceCourtCaseReferenceNumber (Added in court)", () => {
         const amendments: Amendments = {
-          offenceReasonSequence: [
-            { offenceIndex: 3, value: 0 },
-            { offenceIndex: 0, value: 1 }
-          ],
           offenceCourtCaseReferenceNumber: [
             { offenceIndex: 3, value: "" },
             { offenceIndex: 0, value: "97/1626/008395Q" }
+          ],
+          offenceReasonSequence: [
+            { offenceIndex: 3, value: 0 },
+            { offenceIndex: 0, value: 1 }
           ]
         }
         const saveAmendments: Amendments = {
-          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 3, value: "" }],
+          offenceReasonSequence: [{ offenceIndex: 3, value: 0 }]
         }
 
         const result = excludeSavedAmendments(amendmentFields, amendments, saveAmendments)
         expect(result).toStrictEqual({
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         })
       })
     })

@@ -1,6 +1,7 @@
+import type { Report } from "utils/reports/Report"
+
 import { json2csv } from "json-2-csv"
 import { ReportType } from "utils/reports/ReportTypes"
-import type { Report } from "utils/reports/Report"
 
 const config: Record<string, object> = {
   [ReportType.RESOLVED_EXCEPTIONS]: {

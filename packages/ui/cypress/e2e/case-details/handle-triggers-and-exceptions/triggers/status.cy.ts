@@ -1,12 +1,13 @@
 import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
+
 import { caseURL, defaultTriggerCases, resolvedTriggers, unresolvedTriggers } from "../../../../fixtures/triggers"
 
 const insertTriggers = (triggers: TestTrigger[]) => {
   cy.task("clearCourtCases")
   cy.task("insertCourtCasesWithFields", [
     {
-      triggerLockedByUsername: "BichardForce04",
-      orgForPoliceFilter: "01"
+      orgForPoliceFilter: "01",
+      triggerLockedByUsername: "BichardForce04"
     }
   ])
   cy.task("insertTriggers", { caseId: 0, triggers })

@@ -1,8 +1,10 @@
+import type { QueryOrder } from "types/CaseListQueryParams"
+
 import ColumnHeading from "features/CourtCaseFilters/ColumnHeading"
 import ColumnOrderIcons from "features/CourtCaseFilters/ColumnOrderIcons"
 import { Table } from "govuk-react"
 import { useRouter } from "next/router"
-import type { QueryOrder } from "types/CaseListQueryParams"
+
 import { HeaderCell, HeaderCellAlt, HeaderLink } from "./CourtCaseListTableHeader.styles"
 
 interface CourtCaseListTableHeaderProps {
@@ -11,7 +13,7 @@ interface CourtCaseListTableHeaderProps {
 
 export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProps) => {
   const { basePath, query } = useRouter()
-  const orderByParams = (orderBy: string) => `${basePath}/?${new URLSearchParams({ ...query, orderBy, order })}`
+  const orderByParams = (orderBy: string) => `${basePath}/?${new URLSearchParams({ ...query, order, orderBy })}`
 
   return (
     <Table.Row>

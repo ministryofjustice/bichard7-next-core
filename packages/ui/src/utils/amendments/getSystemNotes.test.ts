@@ -1,4 +1,5 @@
 import type User from "services/entities/User"
+
 import getSystemNotes from "./getSystemNotes"
 
 describe("getSystemNotes", () => {
@@ -34,24 +35,24 @@ describe("getSystemNotes", () => {
     expect(
       getSystemNotes(
         {
-          offenceReasonSequence: [
-            {
-              offenceIndex: 0,
-              value: 1
-            }
-          ],
           courtOffenceSequenceNumber: [
             {
               offenceIndex: 0,
               value: 12345
             }
           ],
+          offenceReasonSequence: [
+            {
+              offenceIndex: 0,
+              value: 1
+            }
+          ],
           resultQualifierCode: [
             {
               offenceIndex: 0,
-              value: "newResultQualifierCodeValue",
               resultIndex: 1,
-              resultQualifierIndex: 2
+              resultQualifierIndex: 2,
+              value: "newResultQualifierCodeValue"
             }
           ]
         },
@@ -85,8 +86,8 @@ describe("getSystemNotes", () => {
           nextHearingDate: [
             {
               offenceIndex: 0,
-              value: updatedDate,
-              resultIndex: 1
+              resultIndex: 1,
+              value: updatedDate
             }
           ]
         },

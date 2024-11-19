@@ -1,4 +1,5 @@
 import type { DisplayNote } from "types/display/Notes"
+
 import { formatDisplayedDate } from "../../../../utils/date/formattedDate"
 
 export const filterUserNotes = (notes: DisplayNote[]) => {

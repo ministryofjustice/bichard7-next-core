@@ -1,11 +1,13 @@
-import axios from "axios"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
+import axios from "axios"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import unlockCourtCase from "services/unlockCourtCase"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
-import type { DataSource } from "typeorm"
 import UnlockReason from "types/UnlockReason"
+
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCase from "../../src/services/getCourtCase"
@@ -24,10 +26,10 @@ describe("unlock court case", () => {
   let dataSource: DataSource
   const lockedByName = "BichardForce04"
   const user = {
+    hasAccessTo: hasAccessToAll,
     username: lockedByName,
-    visibleForces: ["36"],
     visibleCourts: [],
-    hasAccessTo: hasAccessToAll
+    visibleForces: ["36"]
   } as Partial<User> as User
   let lockedCourtCase: CourtCase
 
@@ -52,10 +54,10 @@ describe("unlock court case", () => {
     lockedCourtCase = (
       (await insertCourtCasesWithFields([
         {
+          errorId: 0,
           errorLockedByUsername: lockedByName,
-          triggerLockedByUsername: lockedByName,
           orgForPoliceFilter: "36FPA ",
-          errorId: 0
+          triggerLockedByUsername: lockedByName
         }
       ])) as CourtCase[]
     )[0]
@@ -76,16 +78,16 @@ describe("unlock court case", () => {
         {
           attributes: { auditLogVersion: 2, user: lockedByName },
           category: "information",
-          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventCode: "exceptions.unlocked",
+          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventType: "Exception unlocked",
           timestamp: expect.anything()
         },
         {
           attributes: { auditLogVersion: 2, user: lockedByName },
           category: "information",
-          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventCode: "triggers.unlocked",
+          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventType: "Trigger unlocked",
           timestamp: expect.anything()
         }
@@ -122,7 +124,7 @@ describe("unlock court case", () => {
 
       // Creates audit log events
       const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const auditLogs = (await apiResult.data) as [{ events: [{ eventCode: string; timestamp: string }] }]
       const events = auditLogs[0].events
       expect(events).toHaveLength(2)
 
@@ -130,27 +132,27 @@ describe("unlock court case", () => {
       const unlockedTriggerEvent = events.find((event) => event.eventCode === "triggers.unlocked")
 
       expect(unlockedExceptionEvent).toStrictEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "exceptions.unlocked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception unlocked",
         timestamp: expect.anything(),
-        user: user.username,
-        eventCode: "exceptions.unlocked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: user.username
       })
 
       expect(unlockedTriggerEvent).toStrictEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "triggers.unlocked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Trigger unlocked",
         timestamp: expect.anything(),
-        user: user.username,
-        eventCode: "triggers.unlocked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: user.username
       })
     })
   })
@@ -196,7 +198,7 @@ describe("unlock court case", () => {
       expect(actualCourtCase.triggerLockedByUsername).toBe(lockedByName)
 
       const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const auditLogs = (await apiResult.data) as [{ events: [{ eventCode: string; timestamp: string }] }]
       const events = auditLogs[0].events
 
       expect(events).toHaveLength(0)

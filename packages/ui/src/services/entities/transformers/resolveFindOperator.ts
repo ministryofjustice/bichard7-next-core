@@ -1,7 +1,7 @@
 import { FindOperator } from "typeorm"
 
 const resolveFindOperator = <TInput, TOutput>(
-  transformerInput: TInput | FindOperator<TInput>,
+  transformerInput: FindOperator<TInput> | TInput,
   transformedValue: (input: TInput) => TOutput
 ) => {
   if (transformerInput instanceof FindOperator) {

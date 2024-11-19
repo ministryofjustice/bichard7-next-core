@@ -1,5 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { GridCol, GridRow, Link } from "govuk-react"
+
 import Accordion from "../Accordion"
 import Badge, { BadgeColours } from "../Badge"
 import { ExceptionRow } from "./Exception.styles"
@@ -44,7 +45,7 @@ const PncException = ({ code, message }: Props) => {
     <ExceptionRow className={`moj-exception-row`}>
       <GridRow className="exception-row exception-row__header">
         <GridCol>
-          <Badge isRendered={true} colour={BadgeColours.Red} label={"PNC Error"} className="moj-badge--large" />
+          <Badge className="moj-badge--large" colour={BadgeColours.Red} isRendered={true} label={"PNC Error"} />
         </GridCol>
       </GridRow>
 
@@ -58,7 +59,7 @@ const PncException = ({ code, message }: Props) => {
       <GridRow className="exception-row exception-row__help">
         <GridCol>
           {description && (
-            <Accordion id={`exception-${code.toLocaleLowerCase()}`} heading="PNC error message">
+            <Accordion heading="PNC error message" id={`exception-${code.toLocaleLowerCase()}`}>
               <InsetText className="b7-inset-text">
                 <InsetTextHeading className="b7-inset-text__heading">{"PNC error message"}</InsetTextHeading>
                 <span className="b7-inset-text__content">{description}</span>

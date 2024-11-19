@@ -1,21 +1,22 @@
 import { FormEventHandler, ReactNode } from "react"
+
 import { CSRF } from "../config"
 
 interface Props {
+  action?: string
   children: ReactNode
+  className?: string
   csrfToken: string
   method: string
-  action?: string
   onSubmit?: FormEventHandler<HTMLFormElement>
-  className?: string
 }
 
-const Form = ({ children, csrfToken, method, action, onSubmit, className }: Props) => {
+const Form = ({ action, children, className, csrfToken, method, onSubmit }: Props) => {
   const { tokenName } = CSRF
 
   return (
-    <form method={method} action={action} onSubmit={onSubmit} className={className}>
-      <input type="hidden" name={tokenName} value={csrfToken} />
+    <form action={action} className={className} method={method} onSubmit={onSubmit}>
+      <input name={tokenName} type="hidden" value={csrfToken} />
       {children}
     </form>
   )

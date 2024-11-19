@@ -1,6 +1,8 @@
 import type { DataSource, EntityManager } from "typeorm"
-import { isError } from "types/Result"
 import type { ServiceResultPromise } from "types/ServiceResult"
+
+import { isError } from "types/Result"
+
 import CourtCase from "./entities/CourtCase"
 import insertNotes from "./insertNotes"
 
@@ -37,8 +39,8 @@ const addNote = async (
 
   const notes =
     wholeNote?.map((text) => ({
-      noteText: text,
       errorId: courtCaseId,
+      noteText: text,
       userId: username
     })) ?? []
 
@@ -46,7 +48,7 @@ const addNote = async (
 
   if (isError(addNoteResult)) {
     console.error(addNoteResult)
-    return { isSuccessful: false, Exception: addNoteResult }
+    return { Exception: addNoteResult, isSuccessful: false }
   }
 
   return { isSuccessful: true }

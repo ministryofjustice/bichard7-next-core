@@ -9,26 +9,26 @@ describe("TriggerCheckbox", () => {
   const triggerCode = GroupedTriggerCodes[TriggerCodeGroups.Bails][0]
 
   it("contains unchecked checkbox", () => {
-    cy.mount(<TriggerCheckbox dispatch={dispatch} triggerCode={triggerCode} selectedTrigger={false} />)
+    cy.mount(<TriggerCheckbox dispatch={dispatch} selectedTrigger={false} triggerCode={triggerCode} />)
 
     cy.get(`input#${triggerCode.toLowerCase()}[checked]`).should("not.exist")
     cy.get(`input#${triggerCode.toLowerCase()}`).should("exist")
   })
 
   it("contains checked checkbox", () => {
-    cy.mount(<TriggerCheckbox dispatch={dispatch} triggerCode={triggerCode} selectedTrigger={true} />)
+    cy.mount(<TriggerCheckbox dispatch={dispatch} selectedTrigger={true} triggerCode={triggerCode} />)
 
     cy.get(`input#${triggerCode.toLowerCase()}[checked]`).should("exist")
   })
 
   it("contains the short code in the label", () => {
-    cy.mount(<TriggerCheckbox dispatch={dispatch} triggerCode={triggerCode} selectedTrigger={true} />)
+    cy.mount(<TriggerCheckbox dispatch={dispatch} selectedTrigger={true} triggerCode={triggerCode} />)
 
     cy.get(`label[for=${triggerCode.toLowerCase()}]`).contains("PR08")
   })
 
   it("contains the short description in the label", () => {
-    cy.mount(<TriggerCheckbox dispatch={dispatch} triggerCode={triggerCode} selectedTrigger={true} />)
+    cy.mount(<TriggerCheckbox dispatch={dispatch} selectedTrigger={true} triggerCode={triggerCode} />)
 
     cy.get(`label[for=${triggerCode.toLowerCase()}]`).contains("Breach of bail")
   })
@@ -41,7 +41,7 @@ describe("TriggerCheckbox", () => {
       expect(value).to.equals("PR08")
     }
 
-    cy.mount(<TriggerCheckbox dispatch={realDispatch} triggerCode={triggerCode} selectedTrigger={false} />)
+    cy.mount(<TriggerCheckbox dispatch={realDispatch} selectedTrigger={false} triggerCode={triggerCode} />)
 
     cy.get(`label[for=${triggerCode.toLowerCase()}]`).click()
   })
@@ -54,7 +54,7 @@ describe("TriggerCheckbox", () => {
       expect(value).to.equals("PR08")
     }
 
-    cy.mount(<TriggerCheckbox dispatch={realDispatch} triggerCode={triggerCode} selectedTrigger={true} />)
+    cy.mount(<TriggerCheckbox dispatch={realDispatch} selectedTrigger={true} triggerCode={triggerCode} />)
 
     cy.get(`label[for=${triggerCode.toLowerCase()}]`).click()
   })

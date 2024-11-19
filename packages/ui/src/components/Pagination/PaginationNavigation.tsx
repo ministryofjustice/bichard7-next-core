@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
+
 import { generatePageLinks } from "./generatePageLinks"
 
 interface RelativeNavigationProps {
@@ -26,20 +27,20 @@ const RelativeNavigation: React.FC<RelativeNavigationProps> = ({
 }
 
 interface PageNumProps {
-  pageNum: number
-  totalPages: number
   className?: string
   linkedPageNum?: number
+  pageNum: number
+  totalPages: number
 }
 
-const PageNum: React.FC<PageNumProps> = ({ pageNum, totalPages, className, linkedPageNum }: PageNumProps) => {
+const PageNum: React.FC<PageNumProps> = ({ className, linkedPageNum, pageNum, totalPages }: PageNumProps) => {
   const { query } = useRouter()
 
   const label = linkedPageNum ? (
     <Link
+      aria-label={`Page ${pageNum} of ${totalPages}`}
       className="moj-pagination__link"
       href={{ query: { ...query, page: linkedPageNum } }}
-      aria-label={`Page ${pageNum} of ${totalPages}`}
     >
       {pageNum}
     </Link>
@@ -52,22 +53,22 @@ const PageNum: React.FC<PageNumProps> = ({ pageNum, totalPages, className, linke
 const Ellipsis = () => <li className="moj-pagination__item moj-pagination__item--dots">{"…"}</li>
 
 interface PaginationNavigationProps {
+  name?: string
   pageNum: number
   totalPages: number
-  name?: string
 }
 
 const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
+  name,
   pageNum,
-  totalPages,
-  name
+  totalPages
 }: PaginationNavigationProps) => {
   const pageLinks = generatePageLinks(pageNum, totalPages)
 
   return (
     <nav
-      className={"moj-pagination"}
       aria-label={`Pagination navigation ${name}`}
+      className={"moj-pagination"}
       id={`pagination-navigation${name && "-" + name}`}
     >
       <ul className="moj-pagination__list">
@@ -76,18 +77,18 @@ const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
             return (
               <RelativeNavigation
                 className={"prev"}
+                key={index}
                 label="Previous"
                 linkedPageNum={pageLink.destinationPage || 1}
-                key={index}
               />
             )
           } else if (pageLink.label === "Next") {
             return (
               <RelativeNavigation
                 className={"next"}
+                key={index}
                 label="Next"
                 linkedPageNum={pageLink.destinationPage || totalPages}
-                key={index}
               />
             )
           } else if (pageLink.label === "Ellipsis") {
@@ -95,19 +96,19 @@ const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
           } else if (!pageLink.destinationPage) {
             return (
               <PageNum
-                pageNum={pageLink.label}
-                totalPages={totalPages}
                 className="moj-pagination__item--active"
                 key={index}
+                pageNum={pageLink.label}
+                totalPages={totalPages}
               />
             )
           } else {
             return (
               <PageNum
+                key={index}
+                linkedPageNum={pageLink.destinationPage}
                 pageNum={pageLink.label}
                 totalPages={totalPages}
-                linkedPageNum={pageLink.destinationPage}
-                key={index}
               />
             )
           }

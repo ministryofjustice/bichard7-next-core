@@ -1,39 +1,38 @@
-import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { format } from "date-fns"
+import { DisplayFullUser } from "types/display/Users"
+
 import { CourtCaseContext } from "../../src/context/CourtCaseContext"
 import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
 import { DisplayFullCourtCase } from "../../src/types/display/CourtCases"
-import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 describe("Defendant Details", () => {
   const currentUser = {
-    username: "",
     email: "",
-    visibleForces: [],
-    visibleCourts: [],
     excludedTriggers: [],
     featureFlags: {},
     groups: [],
     hasAccessTo: {
+      [Permission.CanResubmit]: false,
       [Permission.CaseDetailsSidebar]: false,
       [Permission.Exceptions]: false,
+      [Permission.ListAllCases]: false,
       [Permission.Triggers]: false,
       [Permission.UnlockOtherUsersCases]: false,
-      [Permission.ListAllCases]: false,
       [Permission.ViewReports]: false,
-      [Permission.ViewUserManagement]: false,
-      [Permission.CanResubmit]: false
-    }
+      [Permission.ViewUserManagement]: false
+    },
+    username: "",
+    visibleCourts: [],
+    visibleForces: []
   } as DisplayFullUser
 
   it("displays all defendant details", () => {
     const dob = new Date()
     const data: Partial<HearingDefendant> = {
-      ArrestSummonsNumber: "1101ZD01000004487545",
-      PNCCheckname: "PNCCheckName",
       Address: {
         AddressLine1: "AddressLine1",
         AddressLine2: "AddressLine2",
@@ -41,17 +40,19 @@ describe("Defendant Details", () => {
         AddressLine4: "AddressLine4",
         AddressLine5: "AddressLine5"
       },
-      RemandStatus: "UB",
+      ArrestSummonsNumber: "1101ZD01000004487545",
       DefendantDetail: {
-        GeneratedPNCFilename: "FirstName/LastName",
         BirthDate: dob,
+        Gender: GenderCode.MALE,
+        GeneratedPNCFilename: "FirstName/LastName",
         PersonName: {
+          FamilyName: "FamilyName",
           GivenName: ["GivenName"],
-          Title: "Title",
-          FamilyName: "FamilyName"
-        },
-        Gender: GenderCode.MALE
-      }
+          Title: "Title"
+        }
+      },
+      PNCCheckname: "PNCCheckName",
+      RemandStatus: "UB"
     }
 
     const courtCase = {
@@ -68,7 +69,7 @@ describe("Defendant Details", () => {
     } as unknown as DisplayFullCourtCase
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+      <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
         <CurrentUserContext.Provider value={{ currentUser }}>
           <DefendantDetails />
         </CurrentUserContext.Provider>
@@ -103,12 +104,12 @@ describe("Defendant Details", () => {
         AddressLine1: "AddressLine1"
       },
       DefendantDetail: {
+        Gender: GenderCode.MALE,
         GeneratedPNCFilename: "FirstName/LastName",
         PersonName: {
-          GivenName: ["FirstName", "MiddleName"],
-          FamilyName: "FamilyName"
-        },
-        Gender: GenderCode.MALE
+          FamilyName: "FamilyName",
+          GivenName: ["FirstName", "MiddleName"]
+        }
       }
     }
 
@@ -126,7 +127,7 @@ describe("Defendant Details", () => {
     } as unknown as DisplayFullCourtCase
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+      <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
         <CurrentUserContext.Provider value={{ currentUser }}>
           <DefendantDetails />
         </CurrentUserContext.Provider>

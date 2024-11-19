@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { caseURL, defaultTriggerCases, mixedTriggers } from "../../../../fixtures/triggers"
 import { loginAndVisit } from "../../../../support/helpers"
 
@@ -24,10 +25,10 @@ describe("Triggers and exceptions tabs", () => {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0001,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Resolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0001,
+          triggerId: 0
         }
       ]
     })
@@ -71,8 +72,8 @@ describe("Triggers and exceptions tabs", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 

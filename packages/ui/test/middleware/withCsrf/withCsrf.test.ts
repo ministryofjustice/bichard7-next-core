@@ -3,14 +3,15 @@ jest.mock("middleware/withCsrf/verifyCsrfToken")
 jest.mock("middleware/withCsrf/generateCsrfToken")
 
 import type { IncomingMessage } from "http"
-import { ServerResponse } from "http"
-import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
-import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
-import withCsrf from "middleware/withCsrf/withCsrf"
 import type { GetServerSidePropsContext } from "next"
 import type QueryString from "qs"
 import type { ParsedUrlQuery } from "querystring"
 import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+
+import { ServerResponse } from "http"
+import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
+import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
+import withCsrf from "middleware/withCsrf/withCsrf"
 
 it("should include form data and CSRF token in the context", async () => {
   const mockedVerifyCsrfToken = verifyCsrfToken as jest.MockedFunction<typeof verifyCsrfToken>
@@ -26,7 +27,7 @@ it("should include form data and CSRF token in the context", async () => {
   const dummyContext = { req: request, res: response } as GetServerSidePropsContext<ParsedUrlQuery>
 
   const handler = withCsrf((context) => {
-    const { formData, csrfToken, req } = context as CsrfServerSidePropsContext
+    const { csrfToken, formData, req } = context as CsrfServerSidePropsContext
 
     expect(req).toBeDefined()
     expect(csrfToken).toBe("DummyFormToken")
@@ -52,14 +53,14 @@ it("should set forbidden response code when CSRF token verification fails", asyn
   const headers: Record<string, string> = {}
   const dummyContext = {
     res: {
-      statusCode: 200,
-      statusMessage: "Ok",
+      end: () => {
+        isEndCalled = true
+      },
       setHeader: (name: string, value: string) => {
         headers[name] = value
       },
-      end: () => {
-        isEndCalled = true
-      }
+      statusCode: 200,
+      statusMessage: "Ok"
     }
   } as GetServerSidePropsContext<ParsedUrlQuery>
 

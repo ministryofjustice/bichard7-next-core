@@ -14,11 +14,12 @@ import SurveyFeedback from "services/entities/SurveyFeedback"
 import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import { DisplayFullUser } from "types/display/Users"
 import { isError } from "types/Result"
 import { SurveyFeedbackResponse, SurveyFeedbackType } from "types/SurveyFeedback"
-import { DisplayFullUser } from "types/display/Users"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
+
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
@@ -43,7 +44,7 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, formData, query, req } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { previousPath } = query as { previousPath: string }
 
@@ -51,26 +52,26 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const props = {
       csrfToken,
-      user: userToDisplayFullUserDto(currentUser),
-      previousPath
+      previousPath,
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     if (isPost(req)) {
-      const { isAnonymous, experience, feedback } = formData as {
-        isAnonymous: string
+      const { experience, feedback, isAnonymous } = formData as {
         experience: string
         feedback: string
+        isAnonymous: string
       }
 
       if (isAnonymous && experience && feedback) {
         const result = await insertSurveyFeedback(dataSource, {
           feedbackType: SurveyFeedbackType.General,
-          userId: isAnonymous === "no" ? currentUser.id : null,
           response: {
-            isAnonymous,
+            comment: feedback,
             experience: +experience,
-            comment: feedback
-          } as SurveyFeedbackResponse
+            isAnonymous
+          } as SurveyFeedbackResponse,
+          userId: isAnonymous === "no" ? currentUser.id : null
         } as SurveyFeedback)
 
         if (!isError(result)) {
@@ -84,9 +85,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         props: {
           ...props,
           fields: {
-            isAnonymous: { hasError: !isAnonymous ? true : false, value: isAnonymous ?? null },
             experience: { hasError: !experience ? true : false, value: experience ?? null },
-            feedback: { hasError: !feedback ? true : false, value: feedback }
+            feedback: { hasError: !feedback ? true : false, value: feedback },
+            isAnonymous: { hasError: !isAnonymous ? true : false, value: isAnonymous ?? null }
           }
         }
       }
@@ -98,13 +99,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
 interface Props {
   csrfToken: string
-  user: DisplayFullUser
-  previousPath: string
   fields?: {
-    isAnonymous: {
-      hasError: boolean
-      value: string
-    }
     experience: {
       hasError: boolean
       value: string
@@ -113,10 +108,16 @@ interface Props {
       hasError: boolean
       value: string
     }
+    isAnonymous: {
+      hasError: boolean
+      value: string
+    }
   }
+  previousPath: string
+  user: DisplayFullUser
 }
 
-const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }: Props) => {
+const FeedbackPage: NextPage<Props> = ({ csrfToken, fields, previousPath, user }: Props) => {
   const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(MAX_FEEDBACK_LENGTH)
   const router = useRouter()
 
@@ -132,7 +133,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
         <Layout>
           <Head>
             <title>{"Bichard7 | Report an issue"}</title>
-            <meta name="description" content="Bichard7 | User feedback" />
+            <meta content="Bichard7 | User feedback" name="description" />
           </Head>
           <BackLink href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
             {"Back"}
@@ -157,7 +158,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             {"Share your feedback"}
           </Heading>
 
-          <Form method="POST" action={"#"} csrfToken={csrfToken}>
+          <Form action={"#"} csrfToken={csrfToken} method="POST">
             <Paragraph>
               {
                 "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
@@ -173,18 +174,18 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                   }}
                 >
                   <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-no"}
                     defaultChecked={fields?.isAnonymous.value === "no"}
-                    value={"no"}
+                    id={"isAnonymous-no"}
                     label={"Yes, I am happy to be contacted about this feedback."}
+                    name={"isAnonymous"}
+                    value={"no"}
                   />
                   <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-yes"}
                     defaultChecked={fields?.isAnonymous.value === "yes"}
-                    value={"yes"}
+                    id={"isAnonymous-yes"}
                     label={"No, I would like to opt-out, which will mean my feedback will be anonymous."}
+                    name={"isAnonymous"}
+                    value={"yes"}
                   />
                 </MultiChoice>
               </FormGroup>
@@ -202,10 +203,10 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                 >
                   {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
                     <RadioButton
-                      id={experienceKey}
                       defaultChecked={experienceKey === fields?.experience.value}
-                      label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
+                      id={experienceKey}
                       key={experienceKey}
+                      label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
                       name={"experience"}
                       value={experienceKey}
                     />
@@ -220,11 +221,11 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
 
                 <TextArea
                   input={{
-                    name: "feedback",
                     defaultValue: fields?.feedback.value,
-                    rows: 5,
                     maxLength: MAX_FEEDBACK_LENGTH,
-                    onInput: handleFeedbackOnChange
+                    name: "feedback",
+                    onInput: handleFeedbackOnChange,
+                    rows: 5
                   }}
                   meta={{
                     error: "Input message into the text box",

@@ -4,28 +4,28 @@ import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
 
 type Props = {
   children: ReactNode
-  id?: string
   className?: string
-  type?: "submit" | "reset" | "button"
-  onClick?: () => void
   dataModule?: string
+  id?: string
+  onClick?: () => void
+  type?: "button" | "reset" | "submit"
 }
 
-const PrimaryButton = ({ id, children, className, type, onClick, dataModule }: Props) => (
-  <Button onClick={onClick} id={id} className={className} type={type} data-module={dataModule}>
+const PrimaryButton = ({ children, className, dataModule, id, onClick, type }: Props) => (
+  <Button className={className} data-module={dataModule} id={id} onClick={onClick} type={type}>
     {children}
   </Button>
 )
 
-const SecondaryButton = ({ id, children, className, type, onClick }: Props) => (
+const SecondaryButton = ({ children, className, id, onClick, type }: Props) => (
   <Button
-    onClick={onClick}
-    id={id}
-    className={className}
-    type={type}
     buttonColour={gdsLightGrey}
-    buttonTextColour={textPrimary}
     buttonShadowColour={gdsMidGrey}
+    buttonTextColour={textPrimary}
+    className={className}
+    id={id}
+    onClick={onClick}
+    type={type}
   >
     {children}
   </Button>

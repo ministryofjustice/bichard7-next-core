@@ -59,8 +59,8 @@ describe("Mark as complete button", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "BichardForce04"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })

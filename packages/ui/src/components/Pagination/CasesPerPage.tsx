@@ -1,20 +1,23 @@
 import { useRouter } from "next/router"
+
 import { CasesPerPagePicker } from "./CasesPerPage.styles"
 
 interface Props {
-  options: number[]
-  selected: number
-  pageNum: number
   casesPerPage: number
+  options: number[]
+  pageNum: number
+  selected: number
 }
 
-const CasesPerPage: React.FC<Props> = ({ options, selected, pageNum, casesPerPage }: Props) => {
+const CasesPerPage: React.FC<Props> = ({ casesPerPage, options, pageNum, selected }: Props) => {
   const router = useRouter()
 
   return (
     <div className="moj-pagination__results">
       {"View "}
       <CasesPerPagePicker
+        aria-label="Cases per page"
+        className={`cases-per-page cases-per-page-picker`}
         onChange={(event) => {
           const newCasesPerPage = event.target.value
 
@@ -25,11 +28,9 @@ const CasesPerPage: React.FC<Props> = ({ options, selected, pageNum, casesPerPag
           router.push({ query: { ...router.query, maxPageItems: newCasesPerPage, page: newPageNum } })
         }}
         value={selected}
-        className={`cases-per-page cases-per-page-picker`}
-        aria-label="Cases per page"
       >
         {options.map((option) => (
-          <option value={option} key={option}>
+          <option key={option} value={option}>
             {option}
           </option>
         ))}

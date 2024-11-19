@@ -4,11 +4,11 @@ import HO100310 from "./fixtures/HO100310.json"
 describe("Offence matching HO100310", () => {
   const fields = {
     defendantName: "Offence Matching HO100310",
-    orgForPoliceFilter: "01",
-    hearingOutcome: HO100310,
     errorCount: 2,
     errorReason: "HO100310",
-    errorReport: "HO100310||ds:OffenceReasonSequence, HO100310||ds:OffenceReasonSequence"
+    errorReport: "HO100310||ds:OffenceReasonSequence, HO100310||ds:OffenceReasonSequence",
+    hearingOutcome: HO100310,
+    orgForPoliceFilter: "01"
   }
 
   before(() => {
@@ -209,12 +209,12 @@ describe("Offence matching HO100310", () => {
       cy.get("@save")
         .its("request.body")
         .then((body) => {
-          const { offenceReasonSequence, offenceCourtCaseReferenceNumber } = body
-          return { offenceReasonSequence, offenceCourtCaseReferenceNumber }
+          const { offenceCourtCaseReferenceNumber, offenceReasonSequence } = body
+          return { offenceCourtCaseReferenceNumber, offenceReasonSequence }
         })
         .should("deep.equal", {
-          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }]
+          offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: "97/1626/008395Q" }],
+          offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
         })
     })
 

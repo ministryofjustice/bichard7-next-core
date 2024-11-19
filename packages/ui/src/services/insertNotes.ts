@@ -1,12 +1,14 @@
 import type { DataSource, EntityManager, InsertResult } from "typeorm"
 import type PromiseResult from "types/PromiseResult"
-import Note from "./entities/Note"
+
 import { isError } from "types/Result"
+
+import Note from "./entities/Note"
 
 const insertNotes = async (
   dataSource: DataSource | EntityManager,
   notes: Partial<Note>[]
-): PromiseResult<InsertResult | Error> => {
+): PromiseResult<Error | InsertResult> => {
   const noteRepository = dataSource.getRepository(Note)
   const insertResult = await noteRepository
     .createQueryBuilder()

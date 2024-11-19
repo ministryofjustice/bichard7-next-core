@@ -1,14 +1,14 @@
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
-import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
-import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import type { DataSource } from "typeorm"
-import { Brackets, LessThanOrEqual, MoreThanOrEqual } from "typeorm"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import Permission from "@moj-bichard7/common/types/Permission"
-
 import type PromiseResult from "types/PromiseResult"
 import type { ReportDateRange } from "types/ReportQueryParams"
+
+import Permission from "@moj-bichard7/common/types/Permission"
+import CourtCase from "services/entities/CourtCase"
+import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
+import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
+import { Brackets, LessThanOrEqual, MoreThanOrEqual } from "typeorm"
 import { CaseDetailsReportType } from "types/ReportQueryParams"
 import { isError } from "types/Result"
 

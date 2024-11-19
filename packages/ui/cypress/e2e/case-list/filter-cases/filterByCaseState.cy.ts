@@ -15,20 +15,20 @@ describe("Filtering cases by case state", () => {
       const resolutionTimestamp = new Date()
       const force = "011111"
       cy.task("insertCourtCasesWithFields", [
-        { resolutionTimestamp: null, orgForPoliceFilter: force },
+        { orgForPoliceFilter: force, resolutionTimestamp: null },
         {
-          resolutionTimestamp,
-          errorResolvedTimestamp: resolutionTimestamp,
-          orgForPoliceFilter: force,
           errorResolvedBy: "GeneralHandler",
-          errorStatus: "Resolved"
+          errorResolvedTimestamp: resolutionTimestamp,
+          errorStatus: "Resolved",
+          orgForPoliceFilter: force,
+          resolutionTimestamp
         },
         {
-          resolutionTimestamp,
-          errorResolvedTimestamp: resolutionTimestamp,
-          orgForPoliceFilter: force,
           errorResolvedBy: "Supervisor",
-          errorStatus: "Resolved"
+          errorResolvedTimestamp: resolutionTimestamp,
+          errorStatus: "Resolved",
+          orgForPoliceFilter: force,
+          resolutionTimestamp
         }
       ])
 

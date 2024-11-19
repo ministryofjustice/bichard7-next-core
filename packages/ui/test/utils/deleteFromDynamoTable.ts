@@ -3,9 +3,9 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 const deleteFromDynamoTable = async (tableName: string, keyName: string) => {
   const config = {
+    accessKeyId: "S3RVER",
     endpoint: "http://localhost:4566",
     region: "eu-west-2",
-    accessKeyId: "S3RVER",
     secretAccessKey: "S3RVER"
   }
 
@@ -24,10 +24,10 @@ const deleteFromDynamoTable = async (tableName: string, keyName: string) => {
     items.Items?.map((item) =>
       client
         .delete({
-          TableName: tableName,
           Key: {
             [keyName]: item[keyName]
-          }
+          },
+          TableName: tableName
         })
         .promise()
     ) ?? []

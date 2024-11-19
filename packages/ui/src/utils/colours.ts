@@ -18,16 +18,16 @@ export {
   blue,
   darkGrey,
   gdsBlack,
+  gdsGreen,
   gdsGrey,
   gdsLightGrey,
   gdsMidGrey,
+  gdsRed,
   grey,
   lightGrey,
   tagBlue,
   textBlue,
   textPrimary,
   textSecondary,
-  yellow,
-  gdsGreen,
-  gdsRed
+  yellow
 }

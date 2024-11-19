@@ -8,12 +8,12 @@ describe("IndeterminateCheckbox", () => {
   it("renders with the unchecked state", () => {
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={false}
+        dispatch={handleDispatch}
         id={"bails"}
+        indeterminate={false}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={false}
-        indeterminate={false}
-        dispatch={handleDispatch}
       />
     )
 
@@ -23,12 +23,12 @@ describe("IndeterminateCheckbox", () => {
   it("renders with the checked state", () => {
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={true}
+        dispatch={handleDispatch}
         id={"bails"}
+        indeterminate={false}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={true}
-        indeterminate={false}
-        dispatch={handleDispatch}
       />
     )
 
@@ -38,12 +38,12 @@ describe("IndeterminateCheckbox", () => {
   it("renders with the indeterminate state with the checkedValue not matching the value", () => {
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={false}
+        dispatch={handleDispatch}
         id={"bails"}
+        indeterminate={true}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={false}
-        indeterminate={true}
-        dispatch={handleDispatch}
       />
     )
 
@@ -54,12 +54,12 @@ describe("IndeterminateCheckbox", () => {
   it("renders with the indeterminate state with the checkedValue matching the value", () => {
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={false}
+        dispatch={handleDispatch}
         id={"bails"}
+        indeterminate={true}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={false}
-        indeterminate={true}
-        dispatch={handleDispatch}
       />
     )
 
@@ -77,12 +77,12 @@ describe("IndeterminateCheckbox", () => {
 
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={false}
+        dispatch={handleDispatchForChecked}
         id={"bails"}
+        indeterminate={false}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={false}
-        indeterminate={false}
-        dispatch={handleDispatchForChecked}
       />
     )
 
@@ -99,12 +99,12 @@ describe("IndeterminateCheckbox", () => {
 
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={true}
+        dispatch={handleDispatchForUnchecked}
         id={"bails"}
+        indeterminate={false}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={true}
-        indeterminate={false}
-        dispatch={handleDispatchForUnchecked}
       />
     )
 
@@ -121,12 +121,12 @@ describe("IndeterminateCheckbox", () => {
 
     cy.mount(
       <IndeterminateCheckbox
+        checkedValue={true}
+        dispatch={handleDispatchForIndeterminate}
         id={"bails"}
+        indeterminate={true}
         labelText={"Bails"}
         value={"bails"}
-        checkedValue={true}
-        indeterminate={true}
-        dispatch={handleDispatchForIndeterminate}
       />
     )
 

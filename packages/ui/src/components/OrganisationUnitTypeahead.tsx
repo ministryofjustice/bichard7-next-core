@@ -3,26 +3,27 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { Input } from "govuk-react"
 import { useCallback, useEffect, useState } from "react"
+
 import OrganisationUnitApiResponse from "../types/OrganisationUnitApiResponse"
 import { isError } from "../types/Result"
 import { ListWrapper } from "./OrganisationUnitTypeahead.styles"
 
 interface Props {
-  resultIndex: number
   offenceIndex: number
-  value?: string
-  setOrganisations?: (OrganisationUnitApiResponse: OrganisationUnitApiResponse) => void
+  resultIndex: number
   setChanged?: (changed: boolean) => void
+  setOrganisations?: (OrganisationUnitApiResponse: OrganisationUnitApiResponse) => void
   setSaved?: (changed: boolean) => void
+  value?: string
 }
 
 const OrganisationUnitTypeahead: React.FC<Props> = ({
-  value,
-  resultIndex,
   offenceIndex,
-  setOrganisations,
+  resultIndex,
   setChanged,
-  setSaved
+  setOrganisations,
+  setSaved,
+  value
 }: Props) => {
   const { amend } = useCourtCase()
   const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
@@ -51,13 +52,15 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     [setOrganisations]
   )
 
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
+  const { getInputProps, getItemProps, getMenuProps, highlightedIndex, inputValue, isOpen } = useCombobox({
+    initialInputValue: value,
     items: inputItems,
+    itemToString: (item) => item?.fullOrganisationCode ?? "",
     // eslint-disable-next-line @typescript-eslint/no-shadow
     onInputValueChange: ({ inputValue }) => {
       amend("nextSourceOrganisation")({
-        resultIndex: resultIndex,
         offenceIndex: offenceIndex,
+        resultIndex: resultIndex,
         value: inputValue
       })
       if (setChanged) {
@@ -66,9 +69,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       if (setSaved) {
         setSaved(false)
       }
-    },
-    initialInputValue: value,
-    itemToString: (item) => item?.fullOrganisationCode ?? ""
+    }
   })
 
   useEffect(() => {
@@ -95,9 +96,9 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
           {isOpen
             ? inputItems.map((item, index) => (
                 <li
-                  style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
                   key={`${item}${index}`}
-                  {...getItemProps({ item, index })}
+                  style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
+                  {...getItemProps({ index, item })}
                 >
                   {item.fullOrganisationCode}
                   <span>{item.fullOrganisationName}</span>

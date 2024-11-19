@@ -1,7 +1,9 @@
+import type { QueryOrder } from "types/CaseListQueryParams"
+
 import { Paragraph } from "govuk-react"
 import { useRouter } from "next/router"
-import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
+
 import CourtCaseListEntry from "./CourtCaseListEntry/CourtCaseListEntry"
 import { CourtCaseListTableHeader } from "./CourtCaseListTableHeader"
 
@@ -39,9 +41,9 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
         <CourtCaseListEntry
           courtCase={courtCase}
           exceptionHasBeenRecentlyUnlocked={courtCase.errorId.toString() === recentlyUnlockedExceptionId}
-          triggerHasBeenRecentlyUnlocked={courtCase.errorId.toString() === recentlyUnlockedTriggerId}
           key={`court-case-${courtCase.errorId}`}
           previousPath={queryString}
+          triggerHasBeenRecentlyUnlocked={courtCase.errorId.toString() === recentlyUnlockedTriggerId}
         />
       ))}
     </table>

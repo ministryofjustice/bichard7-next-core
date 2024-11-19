@@ -1,17 +1,19 @@
+import type NotesViewOption from "types/NotesViewOption"
+
 import ConditionalRender from "components/ConditionalRender"
 import NotesFilterOptions from "components/NotesFilterOptions"
 import { useCourtCase } from "context/CourtCaseContext"
 import { Paragraph } from "govuk-react"
 import { useState } from "react"
-import type NotesViewOption from "types/NotesViewOption"
 import { DisplayNote } from "types/display/Notes"
+
 import { NotesTable } from "../../../../../components/NotesTable"
 import { CourtCaseDetailsPanel } from "../../CourtCaseDetailsPanels"
 import AddNoteForm from "./AddNoteForm"
 
 interface NotesProps {
-  visible: boolean
   isLockedByCurrentUser: boolean
+  visible: boolean
 }
 
 const filterNotes = (notes: DisplayNote[], viewOption?: NotesViewOption) => {
@@ -34,7 +36,7 @@ const filterNotes = (notes: DisplayNote[], viewOption?: NotesViewOption) => {
   return [filteredNotes, noNoteText] as const
 }
 
-export const Notes = ({ visible, isLockedByCurrentUser }: NotesProps) => {
+export const Notes = ({ isLockedByCurrentUser, visible }: NotesProps) => {
   const { courtCase } = useCourtCase()
   const notes: DisplayNote[] = courtCase.notes
 
@@ -44,7 +46,7 @@ export const Notes = ({ visible, isLockedByCurrentUser }: NotesProps) => {
   const hasFilteredNotes = filteredNotes.length > 0
 
   return (
-    <CourtCaseDetailsPanel visible={visible} heading={"Notes"}>
+    <CourtCaseDetailsPanel heading={"Notes"} visible={visible}>
       <NotesFilterOptions dispatch={setViewOption} selectedOption={viewOption} />
       <ConditionalRender isRendered={hasNotes}>
         <NotesTable notes={filteredNotes} />

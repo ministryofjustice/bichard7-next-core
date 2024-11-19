@@ -1,19 +1,21 @@
+import type { EntityManager, FindOperator, Repository, UpdateResult } from "typeorm"
+
 import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import type { EntityManager, FindOperator, Repository, UpdateResult } from "typeorm"
-import { IsNull, MoreThan } from "typeorm"
 import Permission from "@moj-bichard7/common/types/Permission"
-
+import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
+import { IsNull, MoreThan } from "typeorm"
 import { isError } from "types/Result"
-import { AUDIT_LOG_EVENT_SOURCE } from "../config"
-import CourtCase from "./entities/CourtCase"
+
 import type User from "./entities/User"
 
-type LockReason = "Trigger" | "Exception"
+import { AUDIT_LOG_EVENT_SOURCE } from "../config"
+import CourtCase from "./entities/CourtCase"
+
+type LockReason = "Exception" | "Trigger"
 type WhereClause<T> = {
-  [P in keyof T]?: T[P] | FindOperator<T[P]>
+  [P in keyof T]?: FindOperator<T[P]> | T[P]
 }
 
 const getUpdateQueryClauses = (lockReason: LockReason, courtCaseId: number, user: User) => {
@@ -41,7 +43,7 @@ const lock = async (
   courtCaseId: number,
   user: User,
   events: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const [setClause, whereClause] = getUpdateQueryClauses(lockReason, courtCaseId, user)
 
   const result = await courtCaseRepository
@@ -67,8 +69,8 @@ const lock = async (
         EventCategory.information,
         AUDIT_LOG_EVENT_SOURCE,
         {
-          user: user.username,
-          auditLogVersion: 2
+          auditLogVersion: 2,
+          user: user.username
         }
       )
     )
@@ -82,9 +84,9 @@ const updateLockStatusToLocked = async (
   courtCaseId: number,
   user: User,
   events: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const courtCaseRepository = dataSource.getRepository(CourtCase)
-  let result: UpdateResult | Error | undefined
+  let result: Error | undefined | UpdateResult
 
   if (user.hasAccessTo[Permission.Exceptions]) {
     result = await lock("Exception", courtCaseRepository, courtCaseId, user, events)

@@ -1,31 +1,32 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import CourtCase from "services/entities/CourtCase"
+
 import dummyAho from "../../../../test/test-data/error_list_aho.json"
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import { loginAndVisit } from "../../../support/helpers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("View Court Case Details Summary Box", () => {
   const trigger: TestTrigger = {
-    triggerId: 0,
-    triggerCode: TriggerCode.TRPR0001,
+    createdAt: new Date("2022-07-09T10:22:34.000Z"),
     status: "Unresolved",
-    createdAt: new Date("2022-07-09T10:22:34.000Z")
+    triggerCode: TriggerCode.TRPR0001,
+    triggerId: 0
   }
 
   const exception = {
     caseId: 0,
-    exceptionCode: "HO100310",
-    errorReport: "HO100310||ds:OffenceReasonSequence"
+    errorReport: "HO100310||ds:OffenceReasonSequence",
+    exceptionCode: "HO100310"
   }
 
   const insertCaseWithTriggerAndException = (courtCase?: Partial<CourtCase>) => {
     cy.task("insertCourtCasesWithFields", [
       courtCase ?? {
-        ptiurn: "ptirn-value",
         asn: "asn-value",
         courtName: "cName-value",
+        hearingOutcome: dummyAho.hearingOutcomeXml.replace("9625UC0000000118191Z", "asn-value"),
         orgForPoliceFilter: "01",
-        hearingOutcome: dummyAho.hearingOutcomeXml.replace("9625UC0000000118191Z", "asn-value")
+        ptiurn: "ptirn-value"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })

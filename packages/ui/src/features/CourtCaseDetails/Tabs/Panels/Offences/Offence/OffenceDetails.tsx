@@ -1,7 +1,8 @@
+import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
@@ -14,6 +15,7 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import getOffenceCode from "utils/getOffenceCode"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
+
 import { TableRow } from "../../TableRow"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
@@ -22,23 +24,23 @@ import { OffenceNavigation } from "./OffenceNavigation"
 import { StartDate } from "./StartDate"
 
 interface OffenceDetailsProps {
+  exceptions: Exception[]
   offence: Offence
   offencesCount: number
   onBackToAllOffences: () => void
   onNextClick: () => void
   onPreviousClick: () => void
   selectedOffenceSequenceNumber: number
-  exceptions: Exception[]
 }
 
 export const OffenceDetails = ({
+  exceptions,
   offence,
   offencesCount,
   onBackToAllOffences,
   onNextClick,
   onPreviousClick,
-  selectedOffenceSequenceNumber,
-  exceptions
+  selectedOffenceSequenceNumber
 }: OffenceDetailsProps) => {
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
@@ -90,11 +92,11 @@ export const OffenceDetails = ({
   return (
     <OffenceDetailsContainer className={"offence-details"}>
       <OffenceNavigation
-        onBackToAllOffences={() => onBackToAllOffences()}
-        selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
-        onPreviousClick={() => onPreviousClick()}
-        onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
+        onBackToAllOffences={() => onBackToAllOffences()}
+        onNextClick={() => onNextClick()}
+        onPreviousClick={() => onPreviousClick()}
+        selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
       />
       <Heading as="h3" size="MEDIUM">
         {`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
@@ -106,8 +108,8 @@ export const OffenceDetails = ({
               {offenceCodeErrorPrompt ? (
                 <ExceptionFieldTableRow
                   badgeText={ExceptionBadgeType.SystemError}
-                  value={offenceCode}
                   label={"Offence code"}
+                  value={offenceCode}
                 >
                   <ErrorPromptMessage message={offenceCodeErrorPrompt} />
                 </ExceptionFieldTableRow>
@@ -132,11 +134,11 @@ export const OffenceDetails = ({
           />
 
           <OffenceMatching
-            offenceIndex={selectedOffenceSequenceNumber - 1}
-            offence={offence}
-            isCaseUnresolved={isCaseUnresolved}
             exceptions={exceptions}
             isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+            isCaseUnresolved={isCaseUnresolved}
+            offence={offence}
+            offenceIndex={selectedOffenceSequenceNumber - 1}
           ></OffenceMatching>
 
           <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
@@ -156,13 +158,13 @@ export const OffenceDetails = ({
           return (
             <div className={resultKey} key={resultKey}>
               <HearingResult
-                result={result}
+                errorStatus={courtCase.errorStatus}
                 exceptions={unresolvedExceptionsOnThisOffence.filter((resultException) =>
                   resultException.path.join(">").startsWith(thisResultPath(index))
                 )}
-                selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
+                result={result}
                 resultIndex={index}
-                errorStatus={courtCase.errorStatus}
+                selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
               />
             </div>
           )
@@ -175,7 +177,7 @@ export const OffenceDetails = ({
           </Heading>
           <Table>
             {qualifierErrorPrompt ? (
-              <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
+              <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} label={"Code"} value={qualifierCode}>
                 <ErrorPromptMessage message={qualifierErrorPrompt} />
               </ExceptionFieldTableRow>
             ) : (
@@ -185,11 +187,11 @@ export const OffenceDetails = ({
         </div>
       )}
       <OffenceNavigation
-        onBackToAllOffences={() => onBackToAllOffences()}
-        selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
-        onPreviousClick={() => onPreviousClick()}
-        onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
+        onBackToAllOffences={() => onBackToAllOffences()}
+        onNextClick={() => onNextClick()}
+        onPreviousClick={() => onPreviousClick()}
+        selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
       />
     </OffenceDetailsContainer>
   )

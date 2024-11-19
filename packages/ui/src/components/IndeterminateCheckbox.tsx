@@ -1,23 +1,24 @@
 import { ChangeEvent, Dispatch, useEffect, useRef } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
+
 import { IndeterminateCheckboxWrapper } from "./IndeterminateCheckbox.styles"
 
 interface IndeterminateCheckboxProps {
-  id: string
   checkedValue: boolean
-  labelText: string
-  indeterminate: boolean
-  value: string | string[]
   dispatch: Dispatch<FilterAction>
+  id: string
+  indeterminate: boolean
+  labelText: string
+  value: string | string[]
 }
 
 const IndeterminateCheckbox = ({
-  id,
   checkedValue,
-  labelText,
+  dispatch,
+  id,
   indeterminate,
-  value,
-  dispatch
+  labelText,
+  value
 }: IndeterminateCheckboxProps): JSX.Element => {
   const checkboxRef = useRef<HTMLInputElement>(null)
 
@@ -32,12 +33,9 @@ const IndeterminateCheckbox = ({
       <div className="govuk-checkboxes__item">
         <IndeterminateCheckboxWrapper>
           <input
-            ref={checkboxRef}
+            checked={checkedValue}
             className="govuk-checkboxes__input"
             id={id}
-            type="checkbox"
-            value={id}
-            checked={checkedValue}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               dispatch({
                 method: event.currentTarget.checked
@@ -49,6 +47,9 @@ const IndeterminateCheckbox = ({
                 value
               })
             }}
+            ref={checkboxRef}
+            type="checkbox"
+            value={id}
           ></input>
           <label className="govuk-label govuk-checkboxes__label" htmlFor={id}>
             {labelText}

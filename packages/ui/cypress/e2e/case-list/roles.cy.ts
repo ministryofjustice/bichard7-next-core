@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import {
   confirmCaseDisplayed,
   confirmCaseNotDisplayed,
@@ -10,7 +11,6 @@ import {
 describe("Shows relevant information to a user's role", () => {
   const mixedReasonCases = [
     {
-      orgForPoliceFilter: "011111",
       errorId: 0,
       exceptions: [
         {
@@ -22,31 +22,31 @@ describe("Shows relevant information to a user's role", () => {
           field: "ds:OffenceReasonSequence"
         }
       ],
+      orgForPoliceFilter: "011111",
       triggers: []
     },
     {
-      orgForPoliceFilter: "011111",
-      errorId: 1,
       errorCount: 0,
+      errorId: 1,
       errorReason: "",
       exceptions: [],
+      orgForPoliceFilter: "011111",
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date(),
           status: "Unresolved",
-          createdAt: new Date()
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 0
         },
         {
-          triggerId: 1,
-          triggerCode: "TRPR0011",
+          createdAt: new Date(),
           status: "Unresolved",
-          createdAt: new Date()
+          triggerCode: "TRPR0011",
+          triggerId: 1
         }
       ]
     },
     {
-      orgForPoliceFilter: "011111",
       errorId: 2,
       exceptions: [
         {
@@ -58,18 +58,19 @@ describe("Shows relevant information to a user's role", () => {
           field: "ds:OffenceReasonSequence"
         }
       ],
+      orgForPoliceFilter: "011111",
       triggers: [
         {
-          triggerId: 2,
-          triggerCode: TriggerCode.TRPR0010,
+          createdAt: new Date(),
           status: "Unresolved",
-          createdAt: new Date()
+          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 2
         },
         {
-          triggerId: 3,
-          triggerCode: "TRPR0011",
+          createdAt: new Date(),
           status: "Unresolved",
-          createdAt: new Date()
+          triggerCode: "TRPR0011",
+          triggerId: 3
         }
       ]
     }
@@ -80,10 +81,10 @@ describe("Shows relevant information to a user's role", () => {
       "insertCourtCasesWithFields",
       mixedReasonCases.map((courtCase) => {
         return {
-          errorId: courtCase.errorId,
-          orgForPoliceFilter: courtCase.orgForPoliceFilter,
           errorCount: courtCase.errorCount,
-          errorReason: courtCase.errorReason
+          errorId: courtCase.errorId,
+          errorReason: courtCase.errorReason,
+          orgForPoliceFilter: courtCase.orgForPoliceFilter
         }
       })
     )
@@ -91,8 +92,8 @@ describe("Shows relevant information to a user's role", () => {
       courtCase.exceptions?.forEach((exception) => {
         cy.task("insertException", {
           caseId: courtCase.errorId,
-          exceptionCode: exception.code,
-          errorReport: `${exception.code}||${exception.field}`
+          errorReport: `${exception.code}||${exception.field}`,
+          exceptionCode: exception.code
         })
       })
       if (courtCase.triggers && courtCase.triggers.length > 0) {

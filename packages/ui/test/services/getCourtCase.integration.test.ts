@@ -1,4 +1,5 @@
 import type { DataSource } from "typeorm"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCase from "../../src/services/getCourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -25,12 +26,12 @@ describe("get court case", () => {
 
   it("Should amend the court case", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
+      phase: 1,
       triggerCount: 1,
-      phase: 1
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -45,12 +46,12 @@ describe("get court case", () => {
 
   it("Should return null if the court case doesn't exist", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
+      phase: 1,
       triggerCount: 1,
-      phase: 1
+      triggerLockedByUsername: null
     })
     const result = await getCourtCase(dataSource, inputCourtCase.errorId)
 

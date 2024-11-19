@@ -1,18 +1,19 @@
+import type { Candidates } from "types/OffenceMatching"
+
 import Badge, { BadgeColours } from "components/Badge"
 import AutoSave from "components/EditableFields/AutoSave"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCallback, useEffect, useState } from "react"
-import type { Candidates } from "types/OffenceMatching"
 import offenceAlreadySelected from "utils/offenceMatcher/offenceAlreadySelected"
 import offenceMatcherSelectValue from "utils/offenceMatcher/offenceMatcherSelectValue"
 
 interface Props {
-  offenceIndex: number
   candidates?: Candidates[]
   isCaseLockedToCurrentUser: boolean
+  offenceIndex: number
 }
 
-const OffenceMatcher = ({ offenceIndex, candidates, isCaseLockedToCurrentUser }: Props) => {
+const OffenceMatcher = ({ candidates, isCaseLockedToCurrentUser, offenceIndex }: Props) => {
   const { amend, amendments } = useCourtCase()
 
   const findPncOffence = useCallback(() => {
@@ -64,15 +65,15 @@ const OffenceMatcher = ({ offenceIndex, candidates, isCaseLockedToCurrentUser }:
                 {c.offences.map((pnc, index) => {
                   return (
                     <option
-                      key={`${index}-${pnc.offence.cjsOffenceCode}`}
-                      value={offenceMatcherSelectValue(pnc.offence.sequenceNumber, c.courtCaseReference)}
+                      data-ccr={c.courtCaseReference}
                       disabled={offenceAlreadySelected(
                         amendments,
                         offenceIndex,
                         pnc.offence.sequenceNumber,
                         c.courtCaseReference
                       )}
-                      data-ccr={c.courtCaseReference}
+                      key={`${index}-${pnc.offence.cjsOffenceCode}`}
+                      value={offenceMatcherSelectValue(pnc.offence.sequenceNumber, c.courtCaseReference)}
                     >
                       {`${String(pnc.offence.sequenceNumber).padStart(3, "0")} - ${pnc.offence.cjsOffenceCode}`}
                     </option>
@@ -84,18 +85,18 @@ const OffenceMatcher = ({ offenceIndex, candidates, isCaseLockedToCurrentUser }:
           <option value="0">{"Added in court"}</option>
         </select>
         <AutoSave
-          key={selectedValue}
-          setChanged={setOffenceMatcherChanged}
-          setSaved={setOffenceMatcherSaved}
-          isValid={true}
           amendmentFields={["offenceReasonSequence", "offenceCourtCaseReferenceNumber"]}
           isChanged={offenceMatcherChanged}
           isSaved={offenceMatcherSaved}
+          isValid={true}
+          key={selectedValue}
+          setChanged={setOffenceMatcherChanged}
+          setSaved={setOffenceMatcherSaved}
         />
       </>
     )
   } else {
-    return <Badge isRendered={true} colour={BadgeColours.Purple} label={"Unmatched"} className="moj-badge--large" />
+    return <Badge className="moj-badge--large" colour={BadgeColours.Purple} isRendered={true} label={"Unmatched"} />
   }
 }
 

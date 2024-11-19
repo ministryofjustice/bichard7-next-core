@@ -5,7 +5,7 @@ const getValidIndex = (resultQualifierIndex: number, arrLen: number): number =>
   resultQualifierIndex > arrLen - 1 ? arrLen + 1 : resultQualifierIndex
 
 const amendResultQualifierCode = (offences: Amendments["resultQualifierCode"], aho: AnnotatedHearingOutcome) => {
-  offences?.forEach(({ resultQualifierIndex, resultIndex, offenceIndex, value }) => {
+  offences?.forEach(({ offenceIndex, resultIndex, resultQualifierIndex, value }) => {
     if (!value) {
       return
     }

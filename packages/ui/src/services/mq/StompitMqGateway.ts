@@ -1,9 +1,12 @@
 import type { Client, connect } from "stompit"
+
 import { ConnectFailover } from "stompit"
-import deconstructServers from "./deconstructServers"
+
 import type MqConfig from "./types/MqConfig"
 import type MqGateway from "./types/MqGateway"
 import type { PromiseResult } from "./types/Result"
+
+import deconstructServers from "./deconstructServers"
 import { isError } from "./types/Result"
 
 const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
@@ -14,26 +17,13 @@ const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
 }
 
 export default class StompitMqGateway implements MqGateway {
-  private readonly connectionOptions: connect.ConnectOptions[]
-
   private client: Client | null
+
+  private readonly connectionOptions: connect.ConnectOptions[]
 
   constructor(config: MqConfig) {
     this.connectionOptions = deconstructServers(config)
     this.client = null
-  }
-
-  private connectAsync(): PromiseResult<Client> {
-    return new Promise((resolve, reject) => {
-      const connectionManager = new ConnectFailover(this.connectionOptions, reconnectOptions)
-      connectionManager.connect((error: Error | null, client: Client) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(client)
-        }
-      })
-    })
   }
 
   protected async connectIfRequired(): PromiseResult<Client> {
@@ -50,17 +40,34 @@ export default class StompitMqGateway implements MqGateway {
     return this.client
   }
 
-  async execute(message: string, queueName: string): PromiseResult<void> {
-    const client = await this.connectIfRequired()
+  private connectAsync(): PromiseResult<Client> {
+    return new Promise((resolve, reject) => {
+      const connectionManager = new ConnectFailover(this.connectionOptions, reconnectOptions)
+      connectionManager.connect((error: Error | null, client: Client) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(client)
+        }
+      })
+    })
+  }
 
-    if (isError(client)) {
-      return client
-    }
+  private disconnectAsync(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this.client === null) {
+        reject("Cannot disconnect. Client is undefined")
+        return
+      }
 
-    const sendResult = await this.sendMessage(message, queueName)
-    const disposeResult = await this.dispose()
-
-    return isError(sendResult) ? sendResult : disposeResult
+      this.client.disconnect((error: Error | null) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve()
+        }
+      })
+    })
   }
 
   private sendMessage(message: string, queueName: string): Promise<void> {
@@ -75,8 +82,8 @@ export default class StompitMqGateway implements MqGateway {
       }
 
       const options: Client.SendOptions = {
-        onReceipt: () => resolve(),
-        onError: (error: Error) => reject(error)
+        onError: (error: Error) => reject(error),
+        onReceipt: () => resolve()
       }
 
       const writable = this.client.send(headers, options)
@@ -100,20 +107,16 @@ export default class StompitMqGateway implements MqGateway {
     return disconnectionResult
   }
 
-  private disconnectAsync(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      if (this.client === null) {
-        reject("Cannot disconnect. Client is undefined")
-        return
-      }
+  async execute(message: string, queueName: string): PromiseResult<void> {
+    const client = await this.connectIfRequired()
 
-      this.client.disconnect((error: Error | null) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve()
-        }
-      })
-    })
+    if (isError(client)) {
+      return client
+    }
+
+    const sendResult = await this.sendMessage(message, queueName)
+    const disposeResult = await this.dispose()
+
+    return isError(sendResult) ? sendResult : disposeResult
   }
 }

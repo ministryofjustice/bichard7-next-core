@@ -10,11 +10,11 @@ describe("Exception resolution message", () => {
   it("displays 'Exceptions Manually resolved' when resolved manually", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
-        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml
       }
     ])
 
@@ -31,10 +31,10 @@ describe("Exception resolution message", () => {
   it("displays 'Exceptions Manually resolved' when resolved multiple exceptions manually", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: multipleEditableFieldsExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: multipleEditableFieldsExceptions.updatedHearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: multipleEditableFieldsExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -51,11 +51,11 @@ describe("Exception resolution message", () => {
   it("displays 'Exceptions Submitted' when resubmitted the case", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
-        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml
       }
     ])
 

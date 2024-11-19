@@ -1,14 +1,15 @@
 import { Table } from "govuk-react"
+
 import { StyledHintText, StyledTableRow } from "./TableRow.styles"
 
 interface TableRowProps {
-  label: string
-  hintText?: string
-  value: string | number | null | undefined | React.ReactNode
   className?: string
+  hintText?: string
+  label: string
+  value: null | number | React.ReactNode | string | undefined
 }
 
-export const TableRow = ({ label, value, hintText, className }: TableRowProps) => {
+export const TableRow = ({ className, hintText, label, value }: TableRowProps) => {
   const rowClassName = `table-row__${label.replaceAll(/ /g, "-").toLowerCase()}`
   return (
     <StyledTableRow className={`table-row ${rowClassName} row ${className}`}>

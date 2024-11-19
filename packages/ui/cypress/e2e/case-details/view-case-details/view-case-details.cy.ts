@@ -1,9 +1,11 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
+import type { TestTrigger } from "../../../../test/utils/manageTriggers"
+
 import DummyMultipleOffencesNoErrorAho from "../../../../test/test-data/AnnotatedHO1.json"
 import DummyHO100200Aho from "../../../../test/test-data/HO100200_1.json"
 import DummyHO100302Aho from "../../../../test/test-data/HO100302_1.json"
 import dummyMultipleHearingResultsAho from "../../../../test/test-data/multipleHearingResultsOnOffence.json"
-import type { TestTrigger } from "../../../../test/utils/manageTriggers"
 import canReallocateTestData from "../../../fixtures/canReallocateTestData.json"
 import a11yConfig from "../../../support/a11yConfig"
 import { clickTab, loginAndVisit } from "../../../support/helpers"
@@ -15,13 +17,13 @@ describe("View case details", () => {
   })
 
   it("Should be accessible", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
+    cy.task("insertCourtCasesWithFields", [{ errorCount: 0, orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -81,10 +83,10 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -99,8 +101,8 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -121,8 +123,8 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -162,8 +164,8 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -188,8 +190,8 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -214,8 +216,8 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -358,9 +360,9 @@ describe("View case details", () => {
   it("Should be able to see 'Hearing result' heading before every hearing result, when there are multiple", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: dummyMultipleHearingResultsAho.hearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01"
       }
     ])
 
@@ -374,9 +376,9 @@ describe("View case details", () => {
   it("Should be able to see 'Hearing result' heading before every hearing result, when there is one", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: DummyHO100200Aho.hearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01"
       }
     ])
 
@@ -391,18 +393,18 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0010,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0010,
+        triggerId: 0,
+        triggerItemIdentity: 1
       },
       {
-        triggerId: 1,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0015,
+        createdAt: new Date("2022-07-09T11:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T11:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0015,
+        triggerId: 1,
+        triggerItemIdentity: 1
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -440,11 +442,11 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0010,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0010,
+        triggerId: 0,
+        triggerItemIdentity: 1
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -465,7 +467,7 @@ describe("View case details", () => {
 
   it("display a message when there are no exceptions for the case", () => {
     cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", hearingOutcome: DummyMultipleOffencesNoErrorAho.hearingOutcomeXml }
+      { hearingOutcome: DummyMultipleOffencesNoErrorAho.hearingOutcomeXml, orgForPoliceFilter: "01" }
     ])
 
     loginAndVisit("/bichard/court-cases/0")
@@ -483,18 +485,18 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0010,
-        triggerItemIdentity: 1,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0010,
+        triggerId: 0,
+        triggerItemIdentity: 1
       },
       {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0015,
-        triggerItemIdentity: 2,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0015,
+        triggerId: 1,
+        triggerItemIdentity: 2
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -537,7 +539,7 @@ describe("View case details", () => {
 
   it("Should take the user to the case tab when exception is clicked", () => {
     cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", hearingOutcome: DummyHO100200Aho.hearingOutcomeXml }
+      { hearingOutcome: DummyHO100200Aho.hearingOutcomeXml, orgForPoliceFilter: "01" }
     ])
 
     loginAndVisit("/bichard/court-cases/0")
@@ -552,10 +554,10 @@ describe("View case details", () => {
   it("Should show contextual help for a trigger when the accordion button is clicked", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
+      createdAt: new Date(),
       status: "Unresolved",
-      createdAt: new Date()
+      triggerCode: TriggerCode.TRPR0001,
+      triggerId: 0
     }
     cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
 
@@ -590,7 +592,7 @@ describe("View case details", () => {
 
   it("Should generate a more information link for each exception (Non-PNC excception)", () => {
     cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", hearingOutcome: DummyHO100200Aho.hearingOutcomeXml }
+      { hearingOutcome: DummyHO100200Aho.hearingOutcomeXml, orgForPoliceFilter: "01" }
     ])
 
     loginAndVisit("/bichard/court-cases/0")
@@ -605,7 +607,7 @@ describe("View case details", () => {
 
   it("Should generate a more information link for each exception (PNC excception)", () => {
     cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", hearingOutcome: DummyHO100302Aho.hearingOutcomeXml }
+      { hearingOutcome: DummyHO100302Aho.hearingOutcomeXml, orgForPoliceFilter: "01" }
     ])
 
     loginAndVisit("/bichard/court-cases/0")
@@ -620,15 +622,15 @@ describe("View case details", () => {
 
   it("Should show a complete badge for triggers which have been resolved", () => {
     cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", hearingOutcome: DummyHO100302Aho.hearingOutcomeXml }
+      { hearingOutcome: DummyHO100302Aho.hearingOutcomeXml, orgForPoliceFilter: "01" }
     ])
     const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Resolved",
       createdAt: new Date(),
       resolvedAt: new Date(),
-      resolvedBy: "BichardForce01"
+      resolvedBy: "BichardForce01",
+      status: "Resolved",
+      triggerCode: TriggerCode.TRPR0001,
+      triggerId: 0
     }
     cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
 
@@ -638,7 +640,7 @@ describe("View case details", () => {
   })
 
   canReallocateTestData.forEach(
-    ({ canReallocate, triggers, exceptions, triggersLockedByAnotherUser, exceptionLockedByAnotherUser }) => {
+    ({ canReallocate, exceptionLockedByAnotherUser, exceptions, triggers, triggersLockedByAnotherUser }) => {
       it(`should show Reallocate button when triggers are ${triggers} and ${
         triggersLockedByAnotherUser ? "" : "NOT"
       } locked by another user, and exceptions are ${exceptions} and ${
@@ -646,11 +648,11 @@ describe("View case details", () => {
       } locked by another user`, () => {
         cy.task("insertCourtCasesWithFields", [
           {
-            orgForPoliceFilter: "01",
-            triggerStatus: triggers,
+            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : null,
             errorStatus: exceptions,
+            orgForPoliceFilter: "01",
             triggersLockedByAnotherUser: triggersLockedByAnotherUser ? "BichardForce03" : null,
-            errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : null
+            triggerStatus: triggers
           }
         ])
 

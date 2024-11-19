@@ -1,15 +1,17 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "@moj-bichard7/core/lib/exceptions/errorPaths"
-import { isEqual } from "lodash"
 import type { Exception } from "types/exceptions"
+
+import errorPaths from "@moj-bichard7/core/lib/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { isEqual } from "lodash"
+
 import { ExceptionBadgeType } from "../exceptions/exceptionBadgeType"
 import offenceMatchingExceptions from "./offenceMatchingExceptions"
 
 const getOffenceReasonSequencePath = (offenceIndex: number) => errorPaths.offence(offenceIndex).reasonSequence
 
 type OffenceMatchingException = {
-  code: ExceptionCode
   badge: ExceptionBadgeType.AddedByCourt | ExceptionBadgeType.Unmatched
+  code: ExceptionCode
 }
 
 const getOffenceMatchingException = (
@@ -34,11 +36,11 @@ const getOffenceMatchingException = (
   }
 
   return {
-    code: offenceMatchingException.code,
     badge:
       offenceMatchingException.code === ExceptionCode.HO100507
         ? ExceptionBadgeType.AddedByCourt
-        : ExceptionBadgeType.Unmatched
+        : ExceptionBadgeType.Unmatched,
+    code: offenceMatchingException.code
   }
 }
 

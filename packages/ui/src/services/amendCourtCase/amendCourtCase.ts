@@ -1,16 +1,19 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { DataSource, EntityManager } from "typeorm"
+import type { Amendments } from "types/Amendments"
+
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
-import type { DataSource, EntityManager } from "typeorm"
-import type { Amendments } from "types/Amendments"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
 import createForceOwner from "utils/createForceOwner"
+
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
+
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
 const amendCourtCase = async (

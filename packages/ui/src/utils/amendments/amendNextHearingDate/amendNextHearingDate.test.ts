@@ -1,5 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import cloneDeep from "lodash.clonedeep"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendNextHearingDate from "./amendNextHearingDate"
@@ -20,7 +22,7 @@ describe("amend fresult variable text", () => {
 
     expect(aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextHearingDate).toBeUndefined()
 
-    amendNextHearingDate([{ offenceIndex, value, resultIndex }], aho)
+    amendNextHearingDate([{ offenceIndex, resultIndex, value }], aho)
 
     const actualNextHearingDate =
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.NextHearingDate
@@ -45,7 +47,7 @@ describe("amend fresult variable text", () => {
         .NextHearingDate
     ).toBeUndefined()
 
-    amendNextHearingDate([{ offenceIndex, value, resultIndex }], aho)
+    amendNextHearingDate([{ offenceIndex, resultIndex, value }], aho)
 
     const actualNextHearingDate =
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex].Result[resultIndex]
@@ -66,8 +68,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -85,8 +87,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -104,8 +106,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -117,13 +119,13 @@ describe("amend fresult variable text", () => {
     const amendments = [
       {
         offenceIndex: 0,
-        value: "2022-08-24",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "2022-08-24"
       },
       {
         offenceIndex: 3,
-        value: "2022-07-24",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "2022-07-24"
       }
     ]
 
@@ -156,13 +158,13 @@ describe("amend fresult variable text", () => {
     const amendments = [
       {
         offenceIndex: 0,
-        value: "2022-08-24",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "2022-08-24"
       },
       {
         offenceIndex: 3,
-        value: "2022-07-24",
-        resultIndex: 1
+        resultIndex: 1,
+        value: "2022-07-24"
       }
     ]
 

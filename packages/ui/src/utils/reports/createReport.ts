@@ -1,7 +1,8 @@
 import type CourtCase from "services/entities/CourtCase"
 import type { Report, ResolvedException } from "utils/reports/Report"
-import { ReportType } from "./ReportTypes"
+
 import { createResolvedExceptionsReportLines } from "./createResolvedExceptionsReportLines"
+import { ReportType } from "./ReportTypes"
 
 type ReportTypeMap = {
   [ReportType.RESOLVED_EXCEPTIONS]: ResolvedException

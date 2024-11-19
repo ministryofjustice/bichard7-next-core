@@ -1,38 +1,38 @@
 import type { ChangeEvent } from "react"
 
 interface Props {
-  name: string
-  id: string
+  checked?: boolean
   dataAriaControls?: string
   defaultChecked?: boolean
-  checked?: boolean
-  value?: string
+  id: string
   label: string
+  name: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  value?: string
 }
 
 const RadioButton: React.FC<Props> = ({
-  name,
-  id,
+  checked,
   dataAriaControls,
   defaultChecked,
-  checked,
-  value,
+  id,
   label,
-  onChange
+  name,
+  onChange,
+  value
 }: Props) => {
   return (
     <div className="govuk-radios__item">
       <input
-        className="govuk-radios__input"
-        name={name}
-        id={id}
-        type="radio"
-        data-aria-controls={dataAriaControls}
-        value={value}
-        defaultChecked={defaultChecked}
         checked={checked}
+        className="govuk-radios__input"
+        data-aria-controls={dataAriaControls}
+        defaultChecked={defaultChecked}
+        id={id}
+        name={name}
         onChange={onChange}
+        type="radio"
+        value={value}
       />
       <label className="govuk-label govuk-radios__label" htmlFor={id}>
         {label}

@@ -1,4 +1,5 @@
 import type { Amendments } from "types/Amendments"
+
 import offenceAlreadySelected from "./offenceAlreadySelected"
 
 describe("offenceAlreadySelected", () => {
@@ -15,8 +16,8 @@ describe("offenceAlreadySelected", () => {
   describe("with one amendment", () => {
     const courtCaseReference = "97/1626/008395Q"
     const amendments: Amendments = {
-      offenceReasonSequence: [{ offenceIndex: 0, value: 1 }],
-      offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: courtCaseReference }]
+      offenceCourtCaseReferenceNumber: [{ offenceIndex: 0, value: courtCaseReference }],
+      offenceReasonSequence: [{ offenceIndex: 0, value: 1 }]
     }
 
     it("should be false if we're looking at offence index 0 and our Sequence Number is 1", () => {
@@ -51,13 +52,13 @@ describe("offenceAlreadySelected", () => {
     beforeEach(() => {
       courtCaseReference = "97/1626/008395Q"
       amendments = {
-        offenceReasonSequence: [
-          { offenceIndex: 0, value: 1 },
-          { offenceIndex: 3, value: 0 }
-        ],
         offenceCourtCaseReferenceNumber: [
           { offenceIndex: 0, value: courtCaseReference },
           { offenceIndex: 3, value: "" }
+        ],
+        offenceReasonSequence: [
+          { offenceIndex: 0, value: 1 },
+          { offenceIndex: 3, value: 0 }
         ]
       }
     })
@@ -97,13 +98,13 @@ describe("offenceAlreadySelected", () => {
     const courtCaseReference2 = "12/2732/000016T"
 
     const amendments: Amendments = {
-      offenceReasonSequence: [
-        { offenceIndex: 0, value: 1 },
-        { offenceIndex: 3, value: 1 }
-      ],
       offenceCourtCaseReferenceNumber: [
         { offenceIndex: 0, value: courtCaseReference1 },
         { offenceIndex: 3, value: courtCaseReference2 }
+      ],
+      offenceReasonSequence: [
+        { offenceIndex: 0, value: 1 },
+        { offenceIndex: 3, value: 1 }
       ]
     }
 

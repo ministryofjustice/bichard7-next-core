@@ -12,10 +12,10 @@ describe("Court cases - Submit exceptions", () => {
   it("Should resubmit a case when edits are made and the submit button is clicked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
         errorCount: 1,
-        orgForPoliceFilter: "01"
+        errorLockedByUsername: null,
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -48,10 +48,10 @@ describe("Court cases - Submit exceptions", () => {
   it("Should be able to resubmit a case when no updates made on editable field", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
         errorCount: 1,
-        orgForPoliceFilter: "01"
+        errorLockedByUsername: null,
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -63,10 +63,10 @@ describe("Court cases - Submit exceptions", () => {
   it("Should not resubmit a case when cancel button is clicked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
         errorCount: 1,
-        orgForPoliceFilter: "01"
+        errorLockedByUsername: null,
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -112,10 +112,10 @@ describe("Court cases - Submit exceptions", () => {
     const insertCourtCase = (hearingOutcomeXml: string): void => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: hearingOutcomeXml,
           errorCount: 1,
           errorLockedByUsername: null,
+          hearingOutcome: hearingOutcomeXml,
+          orgForPoliceFilter: "01",
           triggerLockedByUsername: null
         }
       ])

@@ -1,8 +1,10 @@
+import type CaseDetailsTab from "types/CaseDetailsTab"
+import type NavigationHandler from "types/NavigationHandler"
+
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCallback, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
-import type CaseDetailsTab from "types/CaseDetailsTab"
-import type NavigationHandler from "types/NavigationHandler"
+
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -14,14 +16,14 @@ import { Notes } from "./Tabs/Panels/Notes/Notes"
 import { Offences } from "./Tabs/Panels/Offences/Offences"
 
 interface Props {
-  isLockedByCurrentUser: boolean
   canResolveAndSubmit: boolean
+  isLockedByCurrentUser: boolean
 }
 
 const sideBarWidth = "33%"
 const contentWidth = "67%"
 
-const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAndSubmit }) => {
+const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit, isLockedByCurrentUser }) => {
   const { courtCase } = useCourtCase()
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
@@ -33,7 +35,7 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
 
   useBeforeunload(useBeforeUnload ? (event: BeforeUnloadEvent) => event.preventDefault() : undefined)
 
-  const handleNavigation: NavigationHandler = ({ location, args }) => {
+  const handleNavigation: NavigationHandler = ({ args, location }) => {
     switch (location) {
       case "Case Details > Case":
         setActiveTab("Case")
@@ -59,35 +61,35 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
 
       <PanelsGridRow>
         <PanelsGridCol setWidth={contentWidth}>
-          <CourtCaseDetailsPanel visible={activeTab === "Defendant"} heading={"Defendant details"}>
+          <CourtCaseDetailsPanel heading={"Defendant details"} visible={activeTab === "Defendant"}>
             <DefendantDetails />
           </CourtCaseDetailsPanel>
 
-          <CourtCaseDetailsPanel visible={activeTab === "Hearing"} heading={"Hearing details"}>
+          <CourtCaseDetailsPanel heading={"Hearing details"} visible={activeTab === "Hearing"}>
             <HearingDetails hearing={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing} />
           </CourtCaseDetailsPanel>
 
-          <CourtCaseDetailsPanel visible={activeTab === "Case"} heading={"Case"}>
+          <CourtCaseDetailsPanel heading={"Case"} visible={activeTab === "Case"}>
             <CaseInformation caseInformation={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case} />
           </CourtCaseDetailsPanel>
 
           <Offences
-            visible={activeTab === "Offences"}
             exceptions={courtCase.aho.Exceptions}
             offences={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case?.HearingDefendant?.Offence}
             onOffenceSelected={(offenceIndex) => {
               setSelectedOffenceSequenceNumber(offenceIndex)
             }}
             selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
+            visible={activeTab === "Offences"}
           />
 
-          <Notes visible={activeTab === "Notes"} isLockedByCurrentUser={isLockedByCurrentUser} />
+          <Notes isLockedByCurrentUser={isLockedByCurrentUser} visible={activeTab === "Notes"} />
         </PanelsGridCol>
 
         <SideBar setWidth={sideBarWidth}>
           <TriggersAndExceptions
-            onNavigate={handleNavigation}
             canResolveAndSubmit={canResolveAndSubmit}
+            onNavigate={handleNavigation}
             stopLeavingFn={stopLeavingFn}
           />
         </SideBar>

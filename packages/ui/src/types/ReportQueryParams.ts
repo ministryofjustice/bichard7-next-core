@@ -1,7 +1,7 @@
 export enum CaseDetailsReportType {
   Exceptions = "Exceptions",
-  Triggers = "Triggers",
-  ExceptionsAndTriggers = "ExceptionsAndTriggers"
+  ExceptionsAndTriggers = "ExceptionsAndTriggers",
+  Triggers = "Triggers"
 }
 
 export type ReportDateRange = {
@@ -10,6 +10,6 @@ export type ReportDateRange = {
 }
 
 export type ReportQueryParams = {
-  reportDateRange?: ReportDateRange
   caseDetailsReportType?: CaseDetailsReportType
+  reportDateRange?: ReportDateRange
 }

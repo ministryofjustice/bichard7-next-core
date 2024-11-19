@@ -1,4 +1,5 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import { StartDate } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/StartDate"
 
 describe("Start Date", () => {
@@ -50,11 +51,11 @@ describe("Start Date", () => {
   it("renders date code 4 correctly", () => {
     const offence: Partial<Offence> = {
       ActualOffenceDateCode: "4",
-      ActualOffenceStartDate: {
-        StartDate: new Date("08/29/1997")
-      },
       ActualOffenceEndDate: {
         EndDate: new Date("07/25/2003")
+      },
+      ActualOffenceStartDate: {
+        StartDate: new Date("08/29/1997")
       }
     }
 

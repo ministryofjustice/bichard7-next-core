@@ -1,4 +1,5 @@
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+
 import CourtCase from "./entities/CourtCase"
 
 const updateCourtCaseAho = async (
@@ -6,7 +7,7 @@ const updateCourtCaseAho = async (
   courtCaseId: number,
   updatedHo: string,
   userUpdated: boolean
-): Promise<UpdateResult | Error> =>
+): Promise<Error | UpdateResult> =>
   await dataSource
     .getRepository(CourtCase)
     .createQueryBuilder()

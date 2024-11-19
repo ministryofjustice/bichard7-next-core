@@ -5,7 +5,7 @@ const amendOffenceCourtCaseReferenceNumber = (
   amendments: Amendments["offenceCourtCaseReferenceNumber"],
   aho: AnnotatedHearingOutcome
 ) => {
-  amendments?.forEach(({ value, offenceIndex }) => {
+  amendments?.forEach(({ offenceIndex, value }) => {
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].CourtCaseReferenceNumber =
       value
 

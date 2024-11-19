@@ -1,5 +1,6 @@
 import { useCourtCase } from "context/CourtCaseContext"
 import { formatDisplayedDate } from "utils/date/formattedDate"
+
 import {
   StyledSummaryBoxFieldInside,
   StyledSummaryBoxFieldOutside,
@@ -34,11 +35,11 @@ const CourtCaseDetailsSummaryBox = () => {
           value={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode.toString()}
         />
         <StyledSummaryBoxFieldInside>
-          <CourtCaseDetailsSummaryBoxField label="Court name" value={courtCase.courtName} courtNameClass={"inside"} />
+          <CourtCaseDetailsSummaryBoxField courtNameClass={"inside"} label="Court name" value={courtCase.courtName} />
         </StyledSummaryBoxFieldInside>
       </SummaryBoxGrid>
       <StyledSummaryBoxFieldOutside>
-        <CourtCaseDetailsSummaryBoxField label="Court name" value={courtCase.courtName} courtNameClass={"outside"} />
+        <CourtCaseDetailsSummaryBoxField courtNameClass={"outside"} label="Court name" value={courtCase.courtName} />
       </StyledSummaryBoxFieldOutside>
     </SummaryBox>
   )

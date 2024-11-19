@@ -8,7 +8,7 @@ describe("Pagination", () => {
   })
 
   it("Should be accessible", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 100, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 100 })
 
     loginAndVisit()
 
@@ -21,7 +21,7 @@ describe("Pagination", () => {
   })
 
   it("lets users select how many cases to show per page", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 200, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 200 })
 
     loginAndVisit()
 
@@ -50,7 +50,7 @@ describe("Pagination", () => {
   })
 
   it("keeps roughly the same position in the case list when changing page size", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 100, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 100 })
 
     loginAndVisit()
 
@@ -81,7 +81,7 @@ describe("Pagination", () => {
   })
 
   it("doesn't show navigation options when there is only one page", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 3, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 3 })
 
     loginAndVisit()
 
@@ -89,7 +89,7 @@ describe("Pagination", () => {
   })
 
   it("has correct pagination information when there is only one page", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 3, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 3 })
 
     loginAndVisit()
 
@@ -97,7 +97,7 @@ describe("Pagination", () => {
   })
 
   it("lets users navigate back and forth between pages using the page numbers", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 250, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 250 })
 
     loginAndVisit()
 
@@ -124,7 +124,7 @@ describe("Pagination", () => {
   })
 
   it("lets users navigate back and forth between pages using the next and previous arrows", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 250, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 250 })
 
     loginAndVisit()
 
@@ -151,7 +151,7 @@ describe("Pagination", () => {
   })
 
   it("has correct pagination information on page 3 out of 5", () => {
-    cy.task("insertMultipleDummyCourtCases", { numToInsert: 250, force: "01" })
+    cy.task("insertMultipleDummyCourtCases", { force: "01", numToInsert: 250 })
 
     loginAndVisit("/bichard?page=3")
 
@@ -162,8 +162,8 @@ describe("Pagination", () => {
 
   it("keeps other filters applied when changing pages", () => {
     cy.task("insertMultipleDummyCourtCases", {
-      numToInsert: 100,
       force: "01",
+      numToInsert: 100,
       otherFields: {
         errorLockedByUsername: "GeneralHandler",
         triggerLockedByUsername: "GeneralHandler"

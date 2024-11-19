@@ -30,8 +30,8 @@ Cypress.Commands.add("loginAs", (type: string) => {
   }
 
   cy.task("insertUsers", {
-    users: [user],
-    userGroups: user.groups
+    userGroups: user.groups,
+    users: [user]
   })
   cy.login(user.email!, "password")
 })
@@ -55,26 +55,26 @@ Cypress.Commands.add("login", (emailAddress, password) => {
 
 Cypress.Commands.add("checkCsrf", (url) => {
   cy.request({
-    failOnStatusCode: false,
-    method: "POST",
-    url,
-    headers: {
-      cookie: "CSRFToken%2Flogin=JMHZOOog-n0ZMO-UfRCZTCUxiQutsEeLpS8I.CJOHfajQ2zDKOZPaBh5J8VT%2FK4UrG6rB6o33VIvK04g"
-    },
-    form: true,
-    followRedirect: false,
     body: {
       CSRFToken:
         "CSRFToken%2Flogin=1629375460103.JMHZOOog-n0ZMO-UfRCZTCUxiQutsEeLpS8I.7+42/hdHVuddtxLw8IvGvIPVhkFj6kbvYukS1mGm64o"
-    }
+    },
+    failOnStatusCode: false,
+    followRedirect: false,
+    form: true,
+    headers: {
+      cookie: "CSRFToken%2Flogin=JMHZOOog-n0ZMO-UfRCZTCUxiQutsEeLpS8I.CJOHfajQ2zDKOZPaBh5J8VT%2FK4UrG6rB6o33VIvK04g"
+    },
+    method: "POST",
+    url
   }).then((withTokensResponse) => {
     expect(withTokensResponse.status.toString()).not.to.match(/2\d{2}/, `${url} response code is 2xx`)
     cy.request({
       failOnStatusCode: false,
-      method: "POST",
-      url,
+      followRedirect: false,
       form: true,
-      followRedirect: false
+      method: "POST",
+      url
     }).then((withoutTokensResponse) => {
       expect(withoutTokensResponse.status.toString()).not.to.match(/2\d{2}/, `${url} response code is 2xx`)
     })
@@ -99,10 +99,10 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
+      checkCsrf(url: string): Chainable<Element>
       findByText(text: string): Chainable<Element>
       login(emailAddress: string, password: string): Chainable<Element>
       loginAs(type: string): Chainable<Element>
-      checkCsrf(url: string): Chainable<Element>
       toBeUnauthorized(url: string): Chainable<Element>
     }
   }

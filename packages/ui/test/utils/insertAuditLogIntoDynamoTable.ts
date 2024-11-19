@@ -8,8 +8,8 @@ const config = {
   ...(workspace
     ? {}
     : {
-        endpoint: "http://localhost:4566",
         accessKeyId: "S3RVER",
+        endpoint: "http://localhost:4566",
         secretAccessKey: "S3RVER"
       })
 }
@@ -24,9 +24,9 @@ const insertAuditLogIntoDynamoTable = async <T>(records: T[]) => {
     TransactItems: records.map((record) => {
       return {
         Put: {
-          TableName: tableName,
+          ConditionExpression: "attribute_not_exists(messageId)",
           Item: { _: "_", ...record },
-          ConditionExpression: "attribute_not_exists(messageId)"
+          TableName: tableName
         }
       }
     })

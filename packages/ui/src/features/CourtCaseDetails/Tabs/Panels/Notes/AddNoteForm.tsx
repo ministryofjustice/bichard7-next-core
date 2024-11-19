@@ -4,6 +4,7 @@ import { useCsrfToken } from "context/CsrfTokenContext"
 import { Button, FormGroup, HintText, Label, TextArea } from "govuk-react"
 import { FormEvent, FormEventHandler, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
+
 import Form from "../../../../../components/Form"
 
 interface Props {
@@ -45,7 +46,7 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
 
   return (
     <ConditionalRender isRendered={isLockedByCurrentUser}>
-      <Form method="POST" action="" onSubmit={handleSubmit} csrfToken={csrfToken}>
+      <Form action="" csrfToken={csrfToken} method="POST" onSubmit={handleSubmit}>
         <FormGroup>
           <Label className="govuk-heading-m b7-form-label-lg" htmlFor="note-text">
             {"Add a new note"}
@@ -53,10 +54,10 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
           <TextArea
             input={{
               id: "note-text",
-              name: "noteText",
-              rows: 5,
               maxLength: MAX_NOTE_LENGTH,
-              onInput: handleOnNoteChange
+              name: "noteText",
+              onInput: handleOnNoteChange,
+              rows: 5
             }}
             meta={{
               error: "The note cannot be empty",

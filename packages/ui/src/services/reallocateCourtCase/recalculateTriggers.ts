@@ -1,11 +1,14 @@
-import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
+import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { isEmpty } from "lodash"
-import { OUT_OF_AREA_TRIGGER_CODE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
+
 import type { TriggersOutcome } from "../../types/TriggersOutcome"
 import type { default as TriggerEntity } from "../entities/Trigger"
 
-type PartialTriggerEntity = Pick<TriggerEntity, "triggerCode" | "triggerItemIdentity" | "status">
+import { OUT_OF_AREA_TRIGGER_CODE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
+
+type PartialTriggerEntity = Pick<TriggerEntity, "status" | "triggerCode" | "triggerItemIdentity">
 
 const reallocateCaseTrigger = { code: REALLOCATE_CASE_TRIGGER_CODE } as Trigger
 const outOfAreaCaseTrigger = { code: OUT_OF_AREA_TRIGGER_CODE } as Trigger
@@ -27,9 +30,9 @@ const asTrigger = (triggerEntity: PartialTriggerEntity): Trigger => {
 
 const asTriggerEntity = (trigger: Trigger): PartialTriggerEntity => {
   return {
+    status: "Unresolved",
     triggerCode: trigger.code,
-    triggerItemIdentity: trigger.offenceSequenceNumber,
-    status: "Unresolved"
+    triggerItemIdentity: trigger.offenceSequenceNumber
   }
 }
 

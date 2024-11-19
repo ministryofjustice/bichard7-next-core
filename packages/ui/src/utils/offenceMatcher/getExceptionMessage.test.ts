@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import getExceptionMessage from "./getExceptionMessage"
 
 describe("getExceptionMessage", () => {
@@ -7,23 +8,23 @@ describe("getExceptionMessage", () => {
 
   beforeEach(() => {
     courtCase = {
-      asn: "",
-      courtName: "",
-      errorId: 0,
-      errorStatus: "Unresolved",
-      errorReport: "",
-      isUrgent: false,
-      ptiurn: "",
-      triggerCount: 0,
-      defendantName: "",
-      orgForPoliceFilter: null,
-      courtCode: null,
-      courtReference: "",
-      notes: [],
-      canUserEditExceptions: false,
-      triggers: [],
-      resolutionTimestamp: null,
       aho: {} as AnnotatedHearingOutcome,
+      asn: "",
+      canUserEditExceptions: false,
+      courtCode: null,
+      courtName: "",
+      courtReference: "",
+      defendantName: "",
+      errorId: 0,
+      errorReport: "",
+      errorStatus: "Unresolved",
+      isUrgent: false,
+      notes: [],
+      orgForPoliceFilter: null,
+      ptiurn: "",
+      resolutionTimestamp: null,
+      triggerCount: 0,
+      triggers: [],
       updatedHearingOutcome: {} as AnnotatedHearingOutcome
     }
   })

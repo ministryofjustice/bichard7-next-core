@@ -10,10 +10,10 @@ describe("View offence matching exception prompts", () => {
   it("Should not display an error prompt when HO100304 is not raised", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: NextHearingDateExceptions.hearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: NextHearingDateExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01"
       }
     ])
 
@@ -29,10 +29,10 @@ describe("View offence matching exception prompts", () => {
   it.skip("Should display an error prompt when HO100304 is raised", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: ExceptionHO100304.hearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: ExceptionHO100304.hearingOutcomeXml,
+        orgForPoliceFilter: "01"
       }
     ])
 

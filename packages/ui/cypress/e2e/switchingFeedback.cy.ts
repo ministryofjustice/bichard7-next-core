@@ -1,8 +1,9 @@
 import { addHours, addMinutes } from "date-fns"
 import SurveyFeedback from "services/entities/SurveyFeedback"
-import { Page, SwitchingReason, type SwitchingFeedbackResponse } from "../../src/types/SurveyFeedback"
 
-const getDate = ({ minutes, hours }: { minutes: number; hours: number }) => {
+import { Page, type SwitchingFeedbackResponse, SwitchingReason } from "../../src/types/SurveyFeedback"
+
+const getDate = ({ hours, minutes }: { hours: number; minutes: number }) => {
   let date = new Date()
   if (minutes) {
     date = addMinutes(date, minutes)
@@ -65,20 +66,20 @@ const verifyNoFeedbackExists = () => {
 
 const insertFeedback = (createdAt: Date, username = "Supervisor") => {
   cy.task("insertFeedback", {
-    username,
-    response: { skipped: true },
+    createdAt,
     feedbackType: 1,
-    createdAt
+    response: { skipped: true },
+    username
   })
 }
 
 describe("Switching Bichard Version Feedback Form", () => {
   before(() => {
     cy.intercept("GET", "/bichard-ui/*", {
-      statusCode: 200,
       body: {
         name: "Dummy response"
-      }
+      },
+      statusCode: 200
     })
 
     cy.task("clearCourtCases")

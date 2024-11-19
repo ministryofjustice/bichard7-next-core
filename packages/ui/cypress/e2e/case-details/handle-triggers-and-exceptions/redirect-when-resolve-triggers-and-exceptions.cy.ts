@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import redirectWhenResolveTriggersAndExceptions from "../../../fixtures/redirectWhenResolveTriggersAndExceptions.json"
 import { loginAndVisit } from "../../../support/helpers"
@@ -9,7 +10,7 @@ describe("Redirect when resolve triggers and exceptions", () => {
   })
 
   redirectWhenResolveTriggersAndExceptions.forEach(
-    ({ loggedInAs, expectedPath, hasExceptions, hasTriggers, resolveExceptions, resolveTriggers }) => {
+    ({ expectedPath, hasExceptions, hasTriggers, loggedInAs, resolveExceptions, resolveTriggers }) => {
       it(`Should redirect to ${expectedPath} when user is a ${loggedInAs} and there are ${
         hasExceptions ? "unresolved exceptions" : ""
       } ${hasExceptions && hasTriggers ? "and" : ""} ${hasTriggers ? "unresolved triggers" : ""} and ${loggedInAs} ${
@@ -18,9 +19,9 @@ describe("Redirect when resolve triggers and exceptions", () => {
         cy.task("clearCourtCases")
         cy.task("insertCourtCasesWithFields", [
           {
-            orgForPoliceFilter: "01",
-            errorStatus: hasExceptions ? "Unresolved" : null,
             errorCount: hasExceptions ? 1 : 0,
+            errorStatus: hasExceptions ? "Unresolved" : null,
+            orgForPoliceFilter: "01",
             triggerStatus: hasTriggers ? "Unresolved" : null
           }
         ])
@@ -28,9 +29,9 @@ describe("Redirect when resolve triggers and exceptions", () => {
         if (hasTriggers) {
           const caseTriggers: Partial<TestTrigger>[] = [
             {
-              triggerCode: TriggerCode.TRPR0001,
+              createdAt: new Date("2022-07-09T10:22:34.000Z"),
               status: "Unresolved",
-              createdAt: new Date("2022-07-09T10:22:34.000Z")
+              triggerCode: TriggerCode.TRPR0001
             }
           ]
           cy.task("insertTriggers", { caseId: 0, triggers: caseTriggers })

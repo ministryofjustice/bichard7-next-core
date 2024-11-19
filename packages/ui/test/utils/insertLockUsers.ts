@@ -1,6 +1,8 @@
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+
 import users from "../../cypress/fixtures/users"
 import { getDummyUser, insertUsersWithOverrides } from "./manageUsers"
 

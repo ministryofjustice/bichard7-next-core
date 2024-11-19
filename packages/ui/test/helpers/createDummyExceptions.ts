@@ -1,7 +1,9 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import exponential from "@stdlib/random-base-exponential"
 import sampleMany from "@stdlib/random-sample"
 import { sample as sampleOne } from "lodash"
+
 import {
   HO100206,
   HO100212,
@@ -52,10 +54,10 @@ export default (
   hasTriggers: boolean,
   aho: AnnotatedHearingOutcome
 ): {
+  ahoWithExceptions?: AnnotatedHearingOutcome
   errorReason: string
   errorReport: string
   exceptionCount: number
-  ahoWithExceptions?: AnnotatedHearingOutcome
 } => {
   if (hasTriggers && Math.random() > 0.5) {
     return { errorReason: "", errorReport: "", exceptionCount: 0 }
@@ -69,9 +71,9 @@ export default (
   })
 
   return {
-    errorReport: exceptions.map((exception) => `${exception}||br7:${sampleOne(fields)}`).join(", "),
+    ahoWithExceptions: aho,
     errorReason: exceptions[0],
-    exceptionCount: exceptions.length,
-    ahoWithExceptions: aho
+    errorReport: exceptions.map((exception) => `${exception}||br7:${sampleOne(fields)}`).join(", "),
+    exceptionCount: exceptions.length
   }
 }

@@ -1,11 +1,14 @@
 import type { DataSource } from "typeorm"
-import { Brackets } from "typeorm"
 import type PromiseResult from "types/PromiseResult"
+
+import { Brackets } from "typeorm"
 import { isError } from "types/Result"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatFormInputDateString } from "utils/date/formattedDate"
-import CourtCase from "./entities/CourtCase"
+
 import type User from "./entities/User"
+
+import CourtCase from "./entities/CourtCase"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 
 const asKey = (caseAgeOption: string) => "_" + caseAgeOption.toLowerCase().replace(/ /g, "")

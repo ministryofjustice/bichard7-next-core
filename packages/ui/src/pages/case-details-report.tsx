@@ -24,8 +24,8 @@ const extractCaseDetailsParamsFromQuery = (query: ParsedUrlQuery): ReportQueryPa
   })
 
   return {
-    reportDateRange: dateRange,
-    caseDetailsReportType: query.caseDetailReportType as CaseDetailsReportType
+    caseDetailsReportType: query.caseDetailReportType as CaseDetailsReportType,
+    reportDateRange: dateRange
   }
 }
 
@@ -33,7 +33,7 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, csrfToken } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, query } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { ...caseDetailQueryParams } = query
     const caseDetailsQuery = extractCaseDetailsParamsFromQuery(caseDetailQueryParams)
@@ -51,11 +51,11 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     const props = {
-      csrfToken,
-      user: userToDisplayFullUserDto(currentUser),
       courtCasesForCaseDetailsReport: courtCasesForCaseDetailsReport.result.map((courtCase) =>
         courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)
-      )
+      ),
+      csrfToken,
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     return {
@@ -65,13 +65,13 @@ export const getServerSideProps = withMultipleServerSideProps(
 )
 
 interface Props {
+  courtCasesForCaseDetailsReport: DisplayPartialCourtCase[]
   csrfToken: string
   user: DisplayFullUser
-  courtCasesForCaseDetailsReport: DisplayPartialCourtCase[]
 }
 
 const CaseDetailReportPage: NextPage<Props> = (props) => {
-  const { csrfToken, user, courtCasesForCaseDetailsReport } = props
+  const { courtCasesForCaseDetailsReport, csrfToken, user } = props
 
   const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })

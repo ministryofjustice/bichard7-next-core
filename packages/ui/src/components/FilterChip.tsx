@@ -1,5 +1,6 @@
 import { Dispatch } from "react"
 import { FilterAction, FilterState } from "types/CourtCaseFilter"
+
 import { Button, ButtonAlt } from "./FilterChip.styles"
 
 interface Props {
@@ -14,10 +15,10 @@ const FilterChip: React.FC<Props> = ({ chipLabel, dispatch, removeAction, state 
     return (
       <li>
         <ButtonAlt
-          type="button"
           className={"moj-filter__tag"}
           onClick={() => dispatch(removeAction())}
           style={{ cursor: "pointer" }}
+          type="button"
         >
           <span className="govuk-visually-hidden">{"Remove this filter"}</span>
           {chipLabel}
@@ -29,10 +30,10 @@ const FilterChip: React.FC<Props> = ({ chipLabel, dispatch, removeAction, state 
   return (
     <li>
       <Button
-        type="button"
         className={"moj-filter__tag"}
         onClick={() => dispatch(removeAction())}
         style={{ cursor: "pointer" }}
+        type="button"
       >
         <span className="govuk-visually-hidden">{"Remove this filter"}</span>
         {chipLabel}

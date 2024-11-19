@@ -1,18 +1,19 @@
 import type { InsertResult } from "typeorm"
+
 import users from "../../cypress/fixtures/users"
 import User from "../../src/services/entities/User"
 import getDataSource from "../../src/services/getDataSource"
 
 const TemplateUser: Partial<User> = {
-  username: "Bichard01",
-  visibleForces: ["01"],
-  visibleCourts: [],
+  email: "bichard01@example.com",
   excludedTriggers: [],
+  featureFlags: { exceptionsEnabled: true, offenceMatchingEnabled: true, pncDetailsTabEnabled: true, test_flag: true },
   forenames: "Bichard Test User",
   password: "",
   surname: "01",
-  email: "bichard01@example.com",
-  featureFlags: { test_flag: true, exceptionsEnabled: true, offenceMatchingEnabled: true, pncDetailsTabEnabled: true }
+  username: "Bichard01",
+  visibleCourts: [],
+  visibleForces: ["01"]
 }
 
 const getDummyUser = async (overrides?: Partial<User>): Promise<User> =>
@@ -71,7 +72,7 @@ export const insertUser = async (user: User, userGroups?: string[]): Promise<Ins
   )
 }
 
-export const createUser = async (type: string): Promise<User | null> => {
+export const createUser = async (type: string): Promise<null | User> => {
   const user = users[type]
 
   if (!user) {

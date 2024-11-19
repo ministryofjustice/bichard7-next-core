@@ -1,22 +1,25 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { EntityManager, Repository, UpdateResult } from "typeorm"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import type { EntityManager, Repository, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
-import { AUDIT_LOG_EVENT_SOURCE } from "../config"
-import Permission from "@moj-bichard7/common/types/Permission"
-import CourtCase from "./entities/CourtCase"
+
 import type User from "./entities/User"
 
+import { AUDIT_LOG_EVENT_SOURCE } from "../config"
+import CourtCase from "./entities/CourtCase"
+
 const unlock = async (
-  unlockReason: "Trigger" | "Exception",
+  unlockReason: "Exception" | "Trigger",
   courtCaseRepository: Repository<CourtCase>,
   courtCaseId: number,
   user: User,
   events: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const updatedFieldName = {
     Exception: "errorLockedByUsername",
     Trigger: "triggerLockedByUsername"
@@ -45,8 +48,8 @@ const unlock = async (
         EventCategory.information,
         AUDIT_LOG_EVENT_SOURCE,
         {
-          user: user.username,
-          auditLogVersion: 2
+          auditLogVersion: 2,
+          user: user.username
         }
       )
     )
@@ -61,7 +64,7 @@ const updateLockStatusToUnlocked = async (
   user: User,
   unlockReason: UnlockReason,
   events: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const shouldUnlockExceptions =
     user.hasAccessTo[Permission.Exceptions] &&
     (unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Exception)
@@ -85,7 +88,7 @@ const updateLockStatusToUnlocked = async (
     return new Error("Case is not locked")
   }
 
-  let result: UpdateResult | Error | undefined
+  let result: Error | undefined | UpdateResult
   const courtCaseRepository = dataSource.getRepository(CourtCase)
 
   if (shouldUnlockExceptions && !!courtCase.errorLockedByUsername) {

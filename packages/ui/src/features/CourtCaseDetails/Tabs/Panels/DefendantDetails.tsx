@@ -10,6 +10,7 @@ import { findExceptions } from "types/ErrorMessages"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import { capitalizeString } from "utils/valueTransformers"
+
 import { useCourtCase } from "../../../../context/CourtCaseContext"
 import { AddressCell } from "./AddressCell"
 import { BailConditions } from "./BailConditions"
@@ -32,11 +33,11 @@ export const DefendantDetails = () => {
       <Table>
         {asnSystemErrorExceptionPrompt ? (
           <ExceptionFieldTableRow
-            badgeText={ExceptionBadgeType.SystemError}
-            value={defendant.ArrestSummonsNumber}
             badgeColour={BadgeColours.Purple}
-            label={"ASN"}
+            badgeText={ExceptionBadgeType.SystemError}
             displayError={!!asnSystemErrorExceptionPrompt}
+            label={"ASN"}
+            value={defendant.ArrestSummonsNumber}
           >
             <ErrorPromptMessage message={asnSystemErrorExceptionPrompt} />
           </ExceptionFieldTableRow>

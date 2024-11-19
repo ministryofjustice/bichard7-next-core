@@ -1,3 +1,6 @@
+import type { Property } from "csstype"
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
 import ActionLink from "components/ActionLink"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
@@ -8,12 +11,10 @@ import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseCon
 import { CsrfTokenContext } from "context/CsrfTokenContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
-import type { Property } from "csstype"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { GridCol, GridRow, Heading } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
@@ -24,13 +25,14 @@ import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationU
 import getDataSource from "services/getDataSource"
 import reallocateCourtCase from "services/reallocateCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { isError } from "types/Result"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayNote } from "types/display/Notes"
 import { DisplayFullUser } from "types/display/Users"
+import { isError } from "types/Result"
 import forbidden from "utils/forbidden"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
+
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import { NotesTableContainer, ShowMoreContainer } from "../../../styles/reallocate.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
@@ -39,7 +41,7 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, res, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, formData, query, req, res } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { courtCaseId, previousPath } = query as {
       courtCaseId: string
@@ -69,12 +71,12 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     const props = {
-      csrfToken,
-      previousPath: previousPath || "",
-      user: userToDisplayFullUserDto(currentUser),
+      canReallocate: courtCase.canReallocate(currentUser.username),
       courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
+      csrfToken,
       lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username),
-      canReallocate: courtCase.canReallocate(currentUser.username)
+      previousPath: previousPath || "",
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     if (isPost(req)) {
@@ -93,22 +95,22 @@ export const getServerSideProps = withMultipleServerSideProps(
 )
 
 interface Props {
-  user: DisplayFullUser
+  canReallocate: boolean
   courtCase: DisplayFullCourtCase
+  csrfToken: string
   lockedByAnotherUser: boolean
   noteTextError?: string
-  csrfToken: string
   previousPath: string
-  canReallocate: boolean
+  user: DisplayFullUser
 }
 
 const ReallocateCasePage: NextPage<Props> = ({
+  canReallocate,
   courtCase,
-  user,
-  lockedByAnotherUser,
   csrfToken,
+  lockedByAnotherUser,
   previousPath,
-  canReallocate
+  user
 }: Props) => {
   const { basePath } = useRouter()
 
@@ -161,7 +163,7 @@ const ReallocateCasePage: NextPage<Props> = ({
     <>
       <Head>
         <title>{"Bichard7 | Case Reallocation"}</title>
-        <meta name="description" content="Bichard7 | Case Reallocation" />
+        <meta content="Bichard7 | Case Reallocation" name="description" />
       </Head>
       <CurrentUserContext.Provider value={{ currentUser: user }}>
         <CourtCaseContext.Provider value={courtCaseContext}>
@@ -172,7 +174,7 @@ const ReallocateCasePage: NextPage<Props> = ({
                   <Header canReallocate={canReallocate} />
                   <CourtCaseDetailsSummaryBox />
                   <HeaderRow>
-                    <Heading as="h2" size="MEDIUM" aria-label="Reallocate Case">
+                    <Heading aria-label="Reallocate Case" as="h2" size="MEDIUM">
                       {"Case reallocation"}
                     </Heading>
                   </HeaderRow>
@@ -194,8 +196,8 @@ const ReallocateCasePage: NextPage<Props> = ({
                       </NotesTableContainer>
                       <ShowMoreContainer className={"show-more-container"}>
                         <ActionLink
-                          onClick={() => setShowMore(!showMore)}
                           id={showMore ? "show-more-action" : "show-less-action"}
+                          onClick={() => setShowMore(!showMore)}
                         >
                           {showMore ? "show less" : "show more"}
                         </ActionLink>

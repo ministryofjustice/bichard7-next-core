@@ -1,5 +1,6 @@
 import { subDays } from "date-fns"
 import fs from "fs"
+
 import CourtCase from "../src/services/entities/CourtCase"
 import { default as Note, default as Trigger } from "../src/services/entities/Trigger"
 import getDataSource from "../src/services/getDataSource"

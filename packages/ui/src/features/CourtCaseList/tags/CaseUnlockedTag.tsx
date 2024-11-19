@@ -4,7 +4,7 @@ import ConditionalRender from "components/ConditionalRender"
 const CaseUnlockedTag: React.FC<{ isCaseUnlocked: boolean }> = (props: { isCaseUnlocked: boolean }) => {
   return (
     <ConditionalRender isRendered={props.isCaseUnlocked}>
-      <Badge isRendered={true} colour={BadgeColours.Green} label={"Case unlocked"} className="moj-badge--large" />
+      <Badge className="moj-badge--large" colour={BadgeColours.Green} isRendered={true} label={"Case unlocked"} />
     </ConditionalRender>
   )
 }

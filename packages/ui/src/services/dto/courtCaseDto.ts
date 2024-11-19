@@ -1,9 +1,12 @@
-import { sortBy } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
-import parseHearingOutcome from "utils/parseHearingOutcome"
+
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
+import { sortBy } from "lodash"
+import parseHearingOutcome from "utils/parseHearingOutcome"
+
 import type User from "../entities/User"
+
 import { noteToDisplayNoteDto } from "./noteDto"
 import { triggerToDisplayTriggerDto } from "./triggerDto"
 
@@ -13,25 +16,25 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
 ): DisplayPartialCourtCase => {
   const displayPartialCourtCase: DisplayPartialCourtCase = {
     asn: courtCase.asn,
-    courtDate: courtCase.courtDate ? courtCase.courtDate.toISOString() : undefined,
-    courtName: courtCase.courtName,
-    errorId: courtCase.errorId,
-    errorLockedByUsername: courtCase.errorLockedByUsername,
-    errorReport: courtCase.errorReport,
-    errorStatus: courtCase.errorStatus ?? null,
     canUserEditExceptions:
       courtCase.errorLockedByUsername === currentUser?.username &&
       hasAccessToExceptions(currentUser) &&
       courtCase.errorStatus === "Unresolved",
+    courtDate: courtCase.courtDate ? courtCase.courtDate.toISOString() : undefined,
+    courtName: courtCase.courtName,
+    defendantName: courtCase.defendantName,
+    errorId: courtCase.errorId,
+    errorLockedByUsername: courtCase.errorLockedByUsername,
+    errorReport: courtCase.errorReport,
+    errorStatus: courtCase.errorStatus ?? null,
     isUrgent: courtCase.isUrgent,
     notes: sortBy(courtCase.notes.map(noteToDisplayNoteDto), "createdAt"),
     ptiurn: courtCase.ptiurn,
     resolutionTimestamp: courtCase.resolutionTimestamp ? courtCase.resolutionTimestamp.toISOString() : null,
+    triggerCount: courtCase.triggerCount,
     triggerLockedByUsername: courtCase.triggerLockedByUsername,
     triggers: courtCase.triggers.map(triggerToDisplayTriggerDto),
-    triggerStatus: courtCase.triggerStatus ?? null,
-    triggerCount: courtCase.triggerCount,
-    defendantName: courtCase.defendantName
+    triggerStatus: courtCase.triggerStatus ?? null
   }
 
   if (courtCase.errorLockedByUserFullName) {
@@ -51,11 +54,11 @@ export const courtCaseToDisplayFullCourtCaseDto = (courtCase: CourtCase, user: U
 
   const courtCaseInfo: DisplayFullCourtCase = {
     ...courtCaseToDisplayPartialCourtCaseDto(courtCase, user),
-    orgForPoliceFilter: courtCase.orgForPoliceFilter,
+    aho: JSON.parse(JSON.stringify(annotatedHearingOutcome)),
     courtCode: courtCase.courtCode,
     courtReference: courtCase.courtReference,
+    orgForPoliceFilter: courtCase.orgForPoliceFilter,
     phase: courtCase.phase,
-    aho: JSON.parse(JSON.stringify(annotatedHearingOutcome)),
     updatedHearingOutcome: JSON.parse(JSON.stringify(updatedHearingOutcome))
   }
 

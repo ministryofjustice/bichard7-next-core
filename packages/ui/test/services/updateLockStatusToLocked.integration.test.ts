@@ -1,14 +1,17 @@
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+
+import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
+
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCase from "../../src/services/getCourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import updateLockStatusToLocked from "../../src/services/updateLockStatusToLocked"
-import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
 import { isError } from "../../src/types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
@@ -17,179 +20,179 @@ describe("Update lock status to locked", () => {
   let dataSource: DataSource
 
   const exceptionLockedEvent = (username = "GeneralHandler") => ({
+    attributes: {
+      auditLogVersion: 2,
+      user: username
+    },
     category: "information",
+    eventCode: "exceptions.locked",
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: "Exception locked",
-    eventCode: "exceptions.locked",
-    timestamp: expect.anything(),
-    attributes: {
-      user: username,
-      auditLogVersion: 2
-    }
+    timestamp: expect.anything()
   })
   const triggerLockedEvent = (username = "GeneralHandler") => ({
+    attributes: {
+      auditLogVersion: 2,
+      user: username
+    },
     category: "information",
+    eventCode: "triggers.locked",
     eventSource: AUDIT_LOG_EVENT_SOURCE,
     eventType: "Trigger locked",
-    eventCode: "triggers.locked",
-    timestamp: expect.anything(),
-    attributes: {
-      user: username,
-      auditLogVersion: 2
-    }
+    timestamp: expect.anything()
   })
 
   const testCases = [
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler can lock a case that is not locked",
-      triggerLockedBy: null,
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: "GeneralHandler",
+      expectedEvents: [exceptionLockedEvent(), triggerLockedEvent()],
       expectExceptionsToBeLockedBy: "GeneralHandler",
-      expectedEvents: [exceptionLockedEvent(), triggerLockedEvent()]
+      expectTriggersToBeLockedBy: "GeneralHandler",
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler can lock the exception when the trigger is already locked ",
-      triggerLockedBy: "BichardForce02",
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: "BichardForce02",
+      expectedEvents: [exceptionLockedEvent()],
       expectExceptionsToBeLockedBy: "GeneralHandler",
-      expectedEvents: [exceptionLockedEvent()]
+      expectTriggersToBeLockedBy: "BichardForce02",
+      triggerLockedBy: "BichardForce02"
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler can lock the exception when the trigger status is submitted ",
-      triggerLockedBy: null,
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: null,
+      expectedEvents: [exceptionLockedEvent()],
       expectExceptionsToBeLockedBy: "GeneralHandler",
-      triggerStatus: "Submitted" as ResolutionStatus,
-      expectedEvents: [exceptionLockedEvent()]
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null,
+      triggerStatus: "Submitted" as ResolutionStatus
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler can lock the trigger when the exception is already locked ",
-      triggerLockedBy: null,
       exceptionLockedBy: "BichardForce02",
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: "GeneralHandler",
+      expectedEvents: [triggerLockedEvent()],
       expectExceptionsToBeLockedBy: "BichardForce02",
-      expectedEvents: [triggerLockedEvent()]
+      expectTriggersToBeLockedBy: "GeneralHandler",
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler can lock the trigger when the error status is submitted",
-      triggerLockedBy: null,
-      exceptionLockedBy: null,
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: "GeneralHandler",
       errorStatus: "Submitted" as ResolutionStatus,
+      exceptionLockedBy: null,
+      expectedEvents: [triggerLockedEvent()],
       expectExceptionsToBeLockedBy: null,
-      expectedEvents: [triggerLockedEvent()]
+      expectTriggersToBeLockedBy: "GeneralHandler",
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler cannot lock a case that is already locked",
-      triggerLockedBy: "BichardForce02",
       exceptionLockedBy: "BichardForce02",
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: "BichardForce02",
+      expectedEvents: [],
       expectExceptionsToBeLockedBy: "BichardForce02",
-      expectedEvents: []
+      expectTriggersToBeLockedBy: "BichardForce02",
+      triggerLockedBy: "BichardForce02"
     },
     {
+      currentUserGroup: UserGroup.GeneralHandler,
       description: "General handler cannot lock a case when the error status and trigger status is submitted",
-      triggerLockedBy: null,
-      exceptionLockedBy: null,
-      currentUserGroup: UserGroup.GeneralHandler,
-      expectTriggersToBeLockedBy: null,
-      expectExceptionsToBeLockedBy: null,
       errorStatus: "Submitted" as ResolutionStatus,
-      triggerStatus: "Submitted" as ResolutionStatus,
-      expectedEvents: []
+      exceptionLockedBy: null,
+      expectedEvents: [],
+      expectExceptionsToBeLockedBy: null,
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null,
+      triggerStatus: "Submitted" as ResolutionStatus
     },
     {
+      currentUserGroup: UserGroup.TriggerHandler,
       description: "Trigger handler can lock the trigger when the exception is already locked ",
-      triggerLockedBy: null,
       exceptionLockedBy: "BichardForce02",
-      currentUserGroup: UserGroup.TriggerHandler,
-      expectTriggersToBeLockedBy: "GeneralHandler",
+      expectedEvents: [triggerLockedEvent()],
       expectExceptionsToBeLockedBy: "BichardForce02",
-      expectedEvents: [triggerLockedEvent()]
+      expectTriggersToBeLockedBy: "GeneralHandler",
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.TriggerHandler,
       description: "Trigger handler can lock the trigger when the exception is not locked ",
-      triggerLockedBy: null,
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.TriggerHandler,
+      expectedEvents: [triggerLockedEvent()],
+      expectExceptionsToBeLockedBy: null,
       expectTriggersToBeLockedBy: "GeneralHandler",
-      expectExceptionsToBeLockedBy: null,
-      expectedEvents: [triggerLockedEvent()]
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.TriggerHandler,
       description: "Trigger handler cannot lock a case that is already locked",
-      triggerLockedBy: "BichardForce02",
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.TriggerHandler,
-      expectTriggersToBeLockedBy: "BichardForce02",
+      expectedEvents: [],
       expectExceptionsToBeLockedBy: null,
-      expectedEvents: []
+      expectTriggersToBeLockedBy: "BichardForce02",
+      triggerLockedBy: "BichardForce02"
     },
     {
+      currentUserGroup: UserGroup.TriggerHandler,
       description: "Trigger handler cannot lock a case when the trigger status is submitted",
-      triggerLockedBy: null,
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.TriggerHandler,
-      expectTriggersToBeLockedBy: null,
+      expectedEvents: [],
       expectExceptionsToBeLockedBy: null,
-      triggerStatus: "Submitted" as ResolutionStatus,
-      expectedEvents: []
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null,
+      triggerStatus: "Submitted" as ResolutionStatus
     },
     {
+      currentUserGroup: UserGroup.ExceptionHandler,
       description: "Exception handler can lock the exception when the trigger is already locked ",
-      triggerLockedBy: "BichardForce02",
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.ExceptionHandler,
+      expectedEvents: [exceptionLockedEvent()],
+      expectExceptionsToBeLockedBy: "GeneralHandler",
       expectTriggersToBeLockedBy: "BichardForce02",
-      expectExceptionsToBeLockedBy: "GeneralHandler",
-      expectedEvents: [exceptionLockedEvent()]
+      triggerLockedBy: "BichardForce02"
     },
     {
+      currentUserGroup: UserGroup.ExceptionHandler,
       description: "Exception handler can lock the trigger when the exception is not locked ",
-      triggerLockedBy: null,
       exceptionLockedBy: null,
-      currentUserGroup: UserGroup.ExceptionHandler,
-      expectTriggersToBeLockedBy: null,
+      expectedEvents: [exceptionLockedEvent()],
       expectExceptionsToBeLockedBy: "GeneralHandler",
-      expectedEvents: [exceptionLockedEvent()]
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null
     },
     {
+      currentUserGroup: UserGroup.ExceptionHandler,
       description: "Exception handler cannot lock a case that is already locked",
-      triggerLockedBy: null,
       exceptionLockedBy: "BichardForce02",
-      currentUserGroup: UserGroup.ExceptionHandler,
-      expectTriggersToBeLockedBy: null,
+      expectedEvents: [],
       expectExceptionsToBeLockedBy: "BichardForce02",
-      expectedEvents: []
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null
     },
     {
-      description: "Exception handler cannot lock a case when the error status is submitted",
-      triggerLockedBy: null,
-      exceptionLockedBy: null,
       currentUserGroup: UserGroup.ExceptionHandler,
-      expectTriggersToBeLockedBy: null,
-      expectExceptionsToBeLockedBy: null,
+      description: "Exception handler cannot lock a case when the error status is submitted",
       errorStatus: "Submitted" as ResolutionStatus,
-      expectedEvents: []
+      exceptionLockedBy: null,
+      expectedEvents: [],
+      expectExceptionsToBeLockedBy: null,
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null
     },
     {
-      description: "Auditor cannot lock a case",
-      triggerLockedBy: null,
-      exceptionLockedBy: null,
       currentUserGroup: UserGroup.Audit,
-      expectTriggersToBeLockedBy: null,
-      expectExceptionsToBeLockedBy: null,
+      description: "Auditor cannot lock a case",
+      exceptionLockedBy: null,
+      expectedEvents: [],
       expectError: "update requires a lock (exception or trigger) to update",
-      expectedEvents: []
+      expectExceptionsToBeLockedBy: null,
+      expectTriggersToBeLockedBy: null,
+      triggerLockedBy: null
     }
   ]
 
@@ -210,31 +213,31 @@ describe("Update lock status to locked", () => {
   test.each(testCases)(
     "$description",
     async ({
-      triggerLockedBy,
-      exceptionLockedBy,
       currentUserGroup,
       errorStatus,
-      triggerStatus,
-      expectTriggersToBeLockedBy,
-      expectExceptionsToBeLockedBy,
+      exceptionLockedBy,
+      expectedEvents,
       expectError,
-      expectedEvents
+      expectExceptionsToBeLockedBy,
+      expectTriggersToBeLockedBy,
+      triggerLockedBy,
+      triggerStatus
     }) => {
       const inputCourtCase = await getDummyCourtCase({
-        errorLockedByUsername: exceptionLockedBy,
-        triggerLockedByUsername: triggerLockedBy,
         errorCount: 1,
+        errorLockedByUsername: exceptionLockedBy,
         errorStatus: errorStatus ?? "Unresolved",
         triggerCount: 1,
+        triggerLockedByUsername: triggerLockedBy,
         triggerStatus: triggerStatus ?? "Unresolved"
       })
       await insertCourtCases(inputCourtCase)
 
       const user = {
+        hasAccessTo: userAccess({ groups: [currentUserGroup] }),
         username: "GeneralHandler",
-        visibleForces: ["36"],
         visibleCourts: [],
-        hasAccessTo: userAccess({ groups: [currentUserGroup] })
+        visibleForces: ["36"]
       } as Partial<User> as User
 
       const events: AuditLogEvent[] = []
@@ -248,11 +251,11 @@ describe("Update lock status to locked", () => {
       }
 
       const expectedCourtCase = await getDummyCourtCase({
-        errorLockedByUsername: expectExceptionsToBeLockedBy,
-        triggerLockedByUsername: expectTriggersToBeLockedBy,
         errorCount: 1,
+        errorLockedByUsername: expectExceptionsToBeLockedBy,
         errorStatus: errorStatus ?? "Unresolved",
         triggerCount: 1,
+        triggerLockedByUsername: expectTriggersToBeLockedBy,
         triggerStatus: triggerStatus ?? "Unresolved"
       })
 

@@ -16,45 +16,46 @@ import SurveyFeedback from "services/entities/SurveyFeedback"
 import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import { DisplayFullUser } from "types/display/Users"
 import { isError } from "types/Result"
 import { Page, SurveyFeedbackType, SwitchingFeedbackResponse, SwitchingReason } from "types/SurveyFeedback"
-import { DisplayFullUser } from "types/display/Users"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
+
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 
 const SwitchingReasonLabel: Record<SwitchingReason, string> = {
   issue: "I have found an issue(s) when using the new version of Bichard which is blocking me from completing my task.",
-  preference: "I prefer working in the old version, and I dislike working in the new version.",
-  other: "Other (please specify)"
+  other: "Other (please specify)",
+  preference: "I prefer working in the old version, and I dislike working in the new version."
 }
 
 interface SwitchingFeedbackFormState {
-  switchingReason?: SwitchingReason
-  pageWithIssue?: Page
   feedback?: string
+  pageWithIssue?: Page
+  switchingReason?: SwitchingReason
 }
 
 interface Props {
-  user: DisplayFullUser
   csrfToken: string
-  previousPath: string
   fields?: {
-    switchingReason: {
+    feedback: {
       hasError: boolean
-      value?: SwitchingReason | null
+      value?: null | string
     }
     pageWithIssue: {
       hasError: boolean
-      value?: Page | null
+      value?: null | Page
     }
-    feedback: {
+    switchingReason: {
       hasError: boolean
-      value?: string | null
+      value?: null | SwitchingReason
     }
   }
+  previousPath: string
+  user: DisplayFullUser
 }
 
 function validateForm(form: SwitchingFeedbackFormState): boolean {
@@ -72,22 +73,22 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, csrfToken, formData } = context as CsrfServerSidePropsContext &
-      AuthenticationServerSidePropsContext
+    const { csrfToken, currentUser, formData, query, req } = context as AuthenticationServerSidePropsContext &
+      CsrfServerSidePropsContext
     const {
-      previousPath,
       isSkipped,
+      previousPath,
       redirectTo: redirectToUrl
-    } = query as { previousPath: string; isSkipped?: string; redirectTo?: string }
+    } = query as { isSkipped?: string; previousPath: string; redirectTo?: string }
 
     if (!redirectToUrl) {
       throw new Error("no redirectTo URL")
     }
 
     const props = {
-      user: userToDisplayFullUserDto(currentUser),
+      csrfToken,
       previousPath,
-      csrfToken
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     if (isPost(req)) {
@@ -98,8 +99,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       if (isSkipped === "true") {
         const result = await insertSurveyFeedback(dataSource, {
           feedbackType: SurveyFeedbackType.Switching,
-          userId: currentUser.id,
-          response: { skipped: true } as SwitchingFeedbackResponse
+          response: { skipped: true } as SwitchingFeedbackResponse,
+          userId: currentUser.id
         } as SurveyFeedback)
 
         if (!isError(result)) {
@@ -118,8 +119,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
         const result = await insertSurveyFeedback(dataSource, {
           feedbackType: SurveyFeedbackType.Switching,
-          userId: currentUser.id,
-          response
+          response,
+          userId: currentUser.id
         } as SurveyFeedback)
 
         if (!isError(result)) {
@@ -132,15 +133,15 @@ export const getServerSideProps = withMultipleServerSideProps(
           props: {
             ...props,
             fields: {
-              switchingReason: {
-                hasError: !form.switchingReason ? true : false,
-                value: form.switchingReason ?? null
-              },
+              feedback: { hasError: !form.feedback ? true : false, value: form.feedback ?? null },
               pageWithIssue: {
                 hasError: !form.pageWithIssue ? true : false,
                 value: form.pageWithIssue ?? null
               },
-              feedback: { hasError: !form.feedback ? true : false, value: form.feedback ?? null }
+              switchingReason: {
+                hasError: !form.switchingReason ? true : false,
+                value: form.switchingReason ?? null
+              }
             }
           }
         }
@@ -151,15 +152,15 @@ export const getServerSideProps = withMultipleServerSideProps(
   }
 )
 
-const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }: Props) => {
-  const [skipUrl, setSkipUrl] = useState<URL | null>(null)
+const SwitchingFeedbackPage: NextPage<Props> = ({ csrfToken, fields, previousPath, user }: Props) => {
+  const [skipUrl, setSkipUrl] = useState<null | URL>(null)
   const router = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   const [formState, setFormState] = useState<SwitchingFeedbackFormState>({
     feedback: fields?.feedback.value ?? undefined,
-    switchingReason: fields?.switchingReason.value as SwitchingReason,
-    pageWithIssue: fields?.pageWithIssue.value as Page
+    pageWithIssue: fields?.pageWithIssue.value as Page,
+    switchingReason: fields?.switchingReason.value as SwitchingReason
   })
   const handleFormChange = useCallback(
     <T extends keyof SwitchingFeedbackFormState>(field: T, value: SwitchingFeedbackFormState[T]) => {
@@ -187,18 +188,18 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
       <Layout>
         <Head>
           <title>{"Bichard7 | Report an issue using new Bichard"}</title>
-          <meta name="description" content="Bichard7 | User switching version feedback" />
+          <meta content="Bichard7 | User switching version feedback" name="description" />
         </Head>
 
         <FeedbackHeaderLinks
-          csrfToken={csrfToken}
           backLinkUrl={`${router.basePath}` + previousPath}
+          csrfToken={csrfToken}
           skipLinkUrl={skipUrl?.search}
         />
 
         <Heading as="h1">{"Share your feedback"}</Heading>
 
-        <Form className="b7-switching-feedback-form" method="POST" action={"#"} csrfToken={csrfToken}>
+        <Form action={"#"} className="b7-switching-feedback-form" csrfToken={csrfToken} method="POST">
           <Fieldset>
             <p className="govuk-body">
               {
@@ -222,28 +223,28 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
                 }}
               >
                 <RadioButton
-                  name={"switchingReason"}
-                  id={`switchingReason-${SwitchingReason.issue}`}
                   defaultChecked={fields?.switchingReason.value === SwitchingReason.issue}
-                  value={SwitchingReason.issue}
-                  onChange={() => handleFormChange("switchingReason", SwitchingReason.issue)}
+                  id={`switchingReason-${SwitchingReason.issue}`}
                   label={SwitchingReasonLabel[SwitchingReason.issue]}
+                  name={"switchingReason"}
+                  onChange={() => handleFormChange("switchingReason", SwitchingReason.issue)}
+                  value={SwitchingReason.issue}
                 />
                 <RadioButton
-                  name={"switchingReason"}
-                  id={`switchingReason-${SwitchingReason.preference}`}
                   defaultChecked={fields?.switchingReason.value === SwitchingReason.preference}
-                  value={SwitchingReason.preference}
-                  onChange={() => handleFormChange("switchingReason", SwitchingReason.preference)}
+                  id={`switchingReason-${SwitchingReason.preference}`}
                   label={SwitchingReasonLabel[SwitchingReason.preference]}
+                  name={"switchingReason"}
+                  onChange={() => handleFormChange("switchingReason", SwitchingReason.preference)}
+                  value={SwitchingReason.preference}
                 />
                 <RadioButton
-                  name={"switchingReason"}
-                  id={`switchingReason-${SwitchingReason.other}`}
                   defaultChecked={fields?.switchingReason.value === SwitchingReason.other}
-                  value={SwitchingReason.other}
-                  onChange={() => handleFormChange("switchingReason", SwitchingReason.other)}
+                  id={`switchingReason-${SwitchingReason.other}`}
                   label={SwitchingReasonLabel[SwitchingReason.other]}
+                  name={"switchingReason"}
+                  onChange={() => handleFormChange("switchingReason", SwitchingReason.other)}
+                  value={SwitchingReason.other}
                 />
               </MultiChoice>
             </FormGroup>
@@ -263,20 +264,20 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
                   }}
                 >
                   <RadioButton
-                    name={"pageWithIssue"}
-                    id={"pageWithIssue-case-list"}
                     defaultChecked={fields?.pageWithIssue.value === Page.caseList}
-                    value={Page.caseList}
+                    id={"pageWithIssue-case-list"}
                     label={"Case list page"}
+                    name={"pageWithIssue"}
                     onChange={() => handleFormChange("pageWithIssue", Page.caseList)}
+                    value={Page.caseList}
                   />
                   <RadioButton
-                    name={"pageWithIssue"}
-                    id={"pageWithIssue-case-detail"}
                     defaultChecked={fields?.pageWithIssue.value === Page.caseDetails}
-                    value={Page.caseDetails}
-                    onChange={() => handleFormChange("pageWithIssue", Page.caseDetails)}
+                    id={"pageWithIssue-case-detail"}
                     label={"Case details page"}
+                    name={"pageWithIssue"}
+                    onChange={() => handleFormChange("pageWithIssue", Page.caseDetails)}
+                    value={Page.caseDetails}
                   />
                 </MultiChoice>
               </FormGroup>
@@ -285,18 +286,18 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
                   {"Could you explain in detail what problem you have experienced?"}
                 </Heading>
                 <TextArea
+                  hint="Tell us why you have made this selection."
                   input={{
-                    name: "feedback",
                     defaultValue: fields?.feedback.value ?? undefined,
-                    rows: 5,
                     maxLength: MAX_FEEDBACK_LENGTH,
-                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value)
+                    name: "feedback",
+                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value),
+                    rows: 5
                   }}
                   meta={{
                     error: "Input message into the text box",
                     touched: fields?.feedback.hasError
                   }}
-                  hint="Tell us why you have made this selection."
                 >
                   {""}
                 </TextArea>
@@ -312,18 +313,18 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
                   }
                 </Heading>
                 <TextArea
+                  hint="Tell us why you have made this selection."
                   input={{
-                    name: "feedback",
                     defaultValue: fields?.feedback.value ?? undefined,
-                    rows: 5,
                     maxLength: MAX_FEEDBACK_LENGTH,
-                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value)
+                    name: "feedback",
+                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value),
+                    rows: 5
                   }}
                   meta={{
                     error: "Input message into the text box",
                     touched: fields?.feedback.hasError
                   }}
-                  hint="Tell us why you have made this selection."
                 >
                   {""}
                 </TextArea>
@@ -337,18 +338,18 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, fields, cs
                   {"Is there another reason why you are switching version of Bichard?"}
                 </Heading>
                 <TextArea
+                  hint="Tell us why you have made this selection."
                   input={{
-                    name: "feedback",
                     defaultValue: fields?.feedback.value ?? undefined,
-                    rows: 5,
                     maxLength: MAX_FEEDBACK_LENGTH,
-                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value)
+                    name: "feedback",
+                    onChange: (e) => handleFormChange("feedback", e.currentTarget.value),
+                    rows: 5
                   }}
                   meta={{
                     error: "Input message into the text box",
                     touched: fields?.feedback.hasError
                   }}
-                  hint="Tell us why you have made this selection."
                 >
                   {""}
                 </TextArea>

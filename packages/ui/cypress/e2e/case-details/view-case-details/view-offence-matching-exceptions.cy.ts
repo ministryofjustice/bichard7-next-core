@@ -1,4 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import { clickTab, loginAndVisit } from "../../../support/helpers"
 
 // exceptions here can be removed as suites are added for offence matching
@@ -7,21 +8,21 @@ describe("View offence matching exceptions", () => {
     { asn: ExceptionCode.HO100304, firstOffenceBadge: "Unmatched" },
     { asn: ExceptionCode.HO100328, firstOffenceBadge: "Unmatched" },
     { asn: ExceptionCode.HO100507, firstOffenceBadge: "Added by Court", secondOffenceBadge: "Added by Court" },
-    { offenceReasonSequence: ExceptionCode.HO100203, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100228, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100311, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100312, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100320, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100329, firstOffenceBadge: "Unmatched" },
-    { offenceReasonSequence: ExceptionCode.HO100333, firstOffenceBadge: "Unmatched" }
-  ].forEach(({ asn, offenceReasonSequence, firstOffenceBadge = "Matched", secondOffenceBadge = "Unmatched" }) => {
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100203 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100228 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100311 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100312 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100320 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100329 },
+    { firstOffenceBadge: "Unmatched", offenceReasonSequence: ExceptionCode.HO100333 }
+  ].forEach(({ asn, firstOffenceBadge = "Matched", offenceReasonSequence, secondOffenceBadge = "Unmatched" }) => {
     it(`Should display the correct error for ${asn ?? offenceReasonSequence}`, () => {
       cy.task("clearCourtCases")
       cy.task("insertCourtCaseWithFieldsWithExceptions", {
         case: {
           errorLockedByUsername: null,
-          triggerLockedByUsername: null,
-          orgForPoliceFilter: "01"
+          orgForPoliceFilter: "01",
+          triggerLockedByUsername: null
         },
         exceptions: {
           asn,

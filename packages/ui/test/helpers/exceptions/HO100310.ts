@@ -1,5 +1,6 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { cloneDeep } from "lodash"
 
 export default function (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome {

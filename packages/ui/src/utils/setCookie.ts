@@ -1,6 +1,8 @@
 import type { SerializeOptions } from "cookie"
-import { serialize } from "cookie"
 import type { ServerResponse } from "http"
+
+import { serialize } from "cookie"
+
 import { COOKIES_SECURE_OPTION } from "../config"
 
 const cookieOptions: SerializeOptions = {

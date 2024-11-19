@@ -1,4 +1,5 @@
 import type { Filter, FilterAction } from "types/CourtCaseFilter"
+
 import handleAddingFilters from "./handleAddingFilters"
 import handleRemovingFilters from "./handleRemovingFilters"
 

@@ -1,73 +1,74 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
+
 import PncDetails from "../../src/features/CourtCaseDetails/Sidebar/PncDetails/PncDetails"
 
 describe("PNC details", () => {
   const currentUser = {
-    username: "",
     email: "",
-    visibleForces: [],
-    visibleCourts: [],
     excludedTriggers: [],
     featureFlags: {},
     groups: [],
     hasAccessTo: {
+      [Permission.CanResubmit]: false,
       [Permission.CaseDetailsSidebar]: false,
       [Permission.Exceptions]: false,
+      [Permission.ListAllCases]: false,
       [Permission.Triggers]: false,
       [Permission.UnlockOtherUsersCases]: false,
-      [Permission.ListAllCases]: false,
       [Permission.ViewReports]: false,
-      [Permission.ViewUserManagement]: false,
-      [Permission.CanResubmit]: false
-    }
+      [Permission.ViewUserManagement]: false
+    },
+    username: "",
+    visibleCourts: [],
+    visibleForces: []
   } as DisplayFullUser
 
   it("displays all PNC data", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "XOXO",
           offences: [
             {
-              offence: {
-                acpoOffenceCode: "5:5:5:1",
-                cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1,
-                qualifier1: "Q1",
-                qualifier2: "Q2",
-                startDate: "2010-11-28T00:00:00.000Z",
-                endDate: "2010-12-31T00:00:00.000Z"
-              },
               adjudication: {
-                verdict: "GUILTY",
-                sentenceDate: "2011-09-25T00:00:00.000Z",
+                offenceTICNumber: 321,
                 plea: "NOT GUILTY",
-                offenceTICNumber: 321
+                sentenceDate: "2011-09-25T00:00:00.000Z",
+                verdict: "GUILTY"
               },
               disposals: [
                 {
                   qtyDate: "2012-01-25T00:00:00.000Z",
                   qtyDuration: "Y999",
-                  type: 2007,
-                  qtyUnitsFined: "",
                   qtyMonetaryValue: "1000",
+                  qtyUnitsFined: "",
                   qualifiers: "AA",
-                  text: "This is a dummy text"
+                  text: "This is a dummy text",
+                  type: 2007
                 }
-              ]
+              ],
+              offence: {
+                acpoOffenceCode: "5:5:5:1",
+                cjsOffenceCode: "TH68001",
+                endDate: "2010-12-31T00:00:00.000Z",
+                qualifier1: "Q1",
+                qualifier2: "Q2",
+                sequenceNumber: 1,
+                startDate: "2010-11-28T00:00:00.000Z",
+                title: "Theft from the person of another"
+              }
             }
-          ],
-          crimeOffenceReference: "XOXO"
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -79,7 +80,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -111,30 +112,30 @@ describe("PNC details", () => {
 
   it("displays missing pnc data as dash", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "",
           offences: [
             {
-              offence: {
-                acpoOffenceCode: "5:5:5:1",
-                cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
-              },
               disposals: [
                 {
                   type: 2007
                 }
-              ]
+              ],
+              offence: {
+                acpoOffenceCode: "5:5:5:1",
+                cjsOffenceCode: "TH68001",
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
+              }
             }
-          ],
-          crimeOffenceReference: ""
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -146,7 +147,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -181,7 +182,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -193,30 +194,30 @@ describe("PNC details", () => {
 
   it("collapses only when the header is clicked", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "",
           offences: [
             {
-              offence: {
-                acpoOffenceCode: "5:5:5:1",
-                cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
-              },
               disposals: [
                 {
                   type: 2007
                 }
-              ]
+              ],
+              offence: {
+                acpoOffenceCode: "5:5:5:1",
+                cjsOffenceCode: "TH68001",
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
+              }
             }
-          ],
-          crimeOffenceReference: ""
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -228,7 +229,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -246,49 +247,49 @@ describe("PNC details", () => {
 
   it("Displays only first courtCase opened when there are multiple courtCases", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "",
           offences: [
             {
-              offence: {
-                acpoOffenceCode: "5:5:5:1",
-                cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
-              },
               disposals: [
                 {
                   type: 2007
                 }
-              ]
-            }
-          ],
-          crimeOffenceReference: ""
-        },
-        {
-          courtCaseReference: "11/2222/000001Z",
-          offences: [
-            {
+              ],
               offence: {
                 acpoOffenceCode: "5:5:5:1",
                 cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
-              },
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
+              }
+            }
+          ]
+        },
+        {
+          courtCaseReference: "11/2222/000001Z",
+          crimeOffenceReference: "",
+          offences: [
+            {
               disposals: [
                 {
                   type: 2010
                 }
-              ]
+              ],
+              offence: {
+                acpoOffenceCode: "5:5:5:1",
+                cjsOffenceCode: "TH68001",
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
+              }
             }
-          ],
-          crimeOffenceReference: ""
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -300,7 +301,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -312,26 +313,26 @@ describe("PNC details", () => {
 
   it("Displays message 'No disposals' where disposals have empty array", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "",
           offences: [
             {
+              disposals: [],
               offence: {
                 acpoOffenceCode: "5:5:5:1",
                 cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
-              },
-              disposals: []
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
+              }
             }
-          ],
-          crimeOffenceReference: ""
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -343,7 +344,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>
@@ -355,25 +356,25 @@ describe("PNC details", () => {
 
   it("Displays message 'No disposals' where disposals are undefined", () => {
     const pncQueryData = {
-      forceStationCode: "01ZD",
       checkName: "LEBOWSKI",
-      pncId: "2021/0000006A",
       courtCases: [
         {
           courtCaseReference: "21/2732/000006N",
+          crimeOffenceReference: "",
           offences: [
             {
               offence: {
                 acpoOffenceCode: "5:5:5:1",
                 cjsOffenceCode: "TH68001",
-                title: "Theft from the person of another",
-                sequenceNumber: 1
+                sequenceNumber: 1,
+                title: "Theft from the person of another"
               }
             }
-          ],
-          crimeOffenceReference: ""
+          ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2021/0000006A"
     }
 
     const courtCase = {
@@ -385,7 +386,7 @@ describe("PNC details", () => {
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ amendments: {}, courtCase, savedAmendments: {} }, () => {}]}>
           <PncDetails />
         </CourtCaseContext.Provider>
       </CurrentUserContext.Provider>

@@ -1,19 +1,20 @@
 import type { ManualResolution } from "types/ManualResolution"
+
 import { validateManualResolution } from "./validateManualResolution"
 
 describe("validateManualResolution", () => {
   it.each([
-    { input: { reason: "PNCRecordIsAccurate" } as ManualResolution, expected: { valid: true } },
+    { expected: { valid: true }, input: { reason: "PNCRecordIsAccurate" } as ManualResolution },
     {
-      input: { reason: "Reallocated", reasonText: undefined } as ManualResolution,
-      expected: { valid: false, error: "Reason text is required" }
+      expected: { error: "Reason text is required", valid: false },
+      input: { reason: "Reallocated", reasonText: undefined } as ManualResolution
     },
     {
-      input: { reason: "Reallocated", reasonText: "" } as ManualResolution,
-      expected: { valid: false, error: "Reason text is required" }
+      expected: { error: "Reason text is required", valid: false },
+      input: { reason: "Reallocated", reasonText: "" } as ManualResolution
     },
-    { input: { reason: "Reallocated", reasonText: "Should be valid" } as ManualResolution, expected: { valid: true } }
-  ])("test validateManualResolution with '$input' returns '$expected'", ({ input, expected }) => {
+    { expected: { valid: true }, input: { reason: "Reallocated", reasonText: "Should be valid" } as ManualResolution }
+  ])("test validateManualResolution with '$input' returns '$expected'", ({ expected, input }) => {
     expect(validateManualResolution(input)).toEqual(expected)
   })
 })

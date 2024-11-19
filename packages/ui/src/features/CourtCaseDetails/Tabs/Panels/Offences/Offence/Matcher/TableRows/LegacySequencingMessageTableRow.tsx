@@ -1,6 +1,7 @@
+import type { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
+
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
-import type { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
 
 interface LegacySequencingMessageTableRowProps {
   exception: OffenceMatchingException

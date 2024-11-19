@@ -6,12 +6,12 @@ import { ResolutionStatus } from "../../types/ResolutionStatus"
 
 const LockStatusTag = ({
   isRendered,
-  resolutionStatus,
-  lockName
+  lockName,
+  resolutionStatus
 }: {
   isRendered: boolean
-  resolutionStatus?: ResolutionStatus | null
-  lockName: "Triggers" | "Exceptions"
+  lockName: "Exceptions" | "Triggers"
+  resolutionStatus?: null | ResolutionStatus
 }) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -28,8 +28,8 @@ const LockStatusTag = ({
     <ResolutionStatusTag itemName={lockName} resolutionStatus={resolutionStatus} />
   ) : (
     <LockedTag
-      lockName={lockName}
       lockedBy={currentUser.username === lockedByUserName ? "Locked to you" : displayLockUserName}
+      lockName={lockName}
     />
   )
 }

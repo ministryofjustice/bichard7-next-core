@@ -1,7 +1,8 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { subHours } from "date-fns"
 import CourtCase from "services/entities/CourtCase"
+
 import { confirmMultipleFieldsDisplayed, confirmMultipleFieldsNotDisplayed, loginAndVisit } from "../../support/helpers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("Only shows relevant resolved cases to the user", () => {
   beforeEach(() => {
@@ -20,12 +21,12 @@ describe("Only shows relevant resolved cases to the user", () => {
     const cases: Partial<CourtCase>[] = casesConfig.map((caseConfig, index) => {
       const resolutionDate = subHours(new Date(), Math.random() * 100)
       return {
+        errorCount: 1,
         errorId: index,
-        orgForPoliceFilter: caseConfig.force,
-        resolutionTimestamp: caseConfig.resolved ? resolutionDate : null,
         errorResolvedTimestamp: caseConfig.resolved ? resolutionDate : null,
         errorStatus: caseConfig.resolved ? "Resolved" : "Unresolved",
-        errorCount: 1
+        orgForPoliceFilter: caseConfig.force,
+        resolutionTimestamp: caseConfig.resolved ? resolutionDate : null
       }
     })
     cy.task("insertCourtCasesWithFields", cases)
@@ -55,13 +56,13 @@ describe("Only shows relevant resolved cases to the user", () => {
     const cases: Partial<CourtCase>[] = casesConfig.map((caseConfig, errorId) => {
       const resolutionDate = subHours(new Date(), Math.random() * 100)
       return {
-        errorId,
-        orgForPoliceFilter: caseConfig.force,
-        resolutionTimestamp: caseConfig.resolved ? resolutionDate : null,
         errorCount: 1,
+        errorId,
+        errorResolvedBy: caseConfig.resolvedBy ?? null,
         errorResolvedTimestamp: caseConfig.resolved ? resolutionDate : null,
         errorStatus: caseConfig.resolved ? "Resolved" : "Unresolved",
-        errorResolvedBy: caseConfig.resolvedBy ?? null
+        orgForPoliceFilter: caseConfig.force,
+        resolutionTimestamp: caseConfig.resolved ? resolutionDate : null
       }
     })
     cy.task("insertCourtCasesWithFields", cases)
@@ -92,9 +93,9 @@ describe("Only shows relevant resolved cases to the user", () => {
         orgForPoliceFilter: caseConfig.force,
         resolutionTimestamp: caseConfig.resolved ? resolutionDate : null,
         triggerCount: 1,
+        triggerResolvedBy: caseConfig.resolvedBy ?? null,
         triggerResolvedTimestamp: caseConfig.resolved ? resolutionDate : null,
-        triggerStatus: caseConfig.resolved ? "Resolved" : "Unresolved",
-        triggerResolvedBy: caseConfig.resolvedBy ?? null
+        triggerStatus: caseConfig.resolved ? "Resolved" : "Unresolved"
       }
     })
     cy.task("insertCourtCasesWithFields", cases)
@@ -106,11 +107,11 @@ describe("Only shows relevant resolved cases to the user", () => {
           caseId: caseConfig.errorId,
           triggers: [
             {
-              triggerCode: TriggerCode.TRPR0010,
-              status: "Resolved",
               createdAt: new Date("2023-03-07T10:22:34.000Z"),
+              resolvedAt: new Date("2023-03-07T12:22:34.000Z"),
               resolvedBy: caseConfig.triggerResolvedBy,
-              resolvedAt: new Date("2023-03-07T12:22:34.000Z")
+              status: "Resolved",
+              triggerCode: TriggerCode.TRPR0010
             }
           ]
         })

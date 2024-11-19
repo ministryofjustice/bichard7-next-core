@@ -1,10 +1,11 @@
 import type { DataSource, UpdateResult } from "typeorm"
+
+import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import updateCourtCaseAho from "../../src/services/updateCourtCaseAho"
-import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
-import deleteFromEntity from "../utils/deleteFromEntity"
 import { isError } from "../../src/types/Result"
-import CourtCase from "../../src/services/entities/CourtCase"
+import deleteFromEntity from "../utils/deleteFromEntity"
+import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 
 jest.setTimeout(60 * 60 * 1000)
 
@@ -25,12 +26,12 @@ describe("update court case updated hearing outcome", () => {
 
   it("Should update the court case `updated_msg` field in the db", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
+      phase: 1,
       triggerCount: 1,
-      phase: 1
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -47,12 +48,12 @@ describe("update court case updated hearing outcome", () => {
 
   it("Should not update the `user_updated_flag` field in the db", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
+      phase: 1,
       triggerCount: 1,
-      phase: 1
+      triggerLockedByUsername: null
     })
 
     await insertCourtCases(inputCourtCase)
@@ -69,12 +70,12 @@ describe("update court case updated hearing outcome", () => {
 
   it("Should not update if the court case doesn't exist", async () => {
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: null,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: null,
       errorStatus: "Unresolved",
+      phase: 1,
       triggerCount: 1,
-      phase: 1
+      triggerLockedByUsername: null
     })
 
     const result = await updateCourtCaseAho(dataSource, inputCourtCase.errorId, "this_new_string", true)

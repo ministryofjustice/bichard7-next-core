@@ -1,17 +1,17 @@
 export type Amendments = {
   asn?: string
-  offenceReasonSequence?: OffenceField<number>[]
-  offenceCourtCaseReferenceNumber?: OffenceField<string>[]
   courtCaseReference?: OffenceField<string>[]
-  resultQualifierCode?: ResultQualifierCode[]
-  nextSourceOrganisation?: ResultField<string>[]
-  nextHearingDate?: ResultField<string>[]
-  courtPNCIdentifier?: string
-  resultVariableText?: ResultField<string>[]
-  courtReference?: string
   courtOffenceSequenceNumber?: OffenceField<number>[]
+  courtPNCIdentifier?: string
+  courtReference?: string
   forceOwner?: string
+  nextHearingDate?: ResultField<string>[]
+  nextSourceOrganisation?: ResultField<string>[]
   noUpdatesResubmit?: boolean
+  offenceCourtCaseReferenceNumber?: OffenceField<string>[]
+  offenceReasonSequence?: OffenceField<number>[]
+  resultQualifierCode?: ResultQualifierCode[]
+  resultVariableText?: ResultField<string>[]
 }
 
 export type AmendmentKeys = keyof Amendments
@@ -25,17 +25,17 @@ export type OffenceField<T> = {
   value?: T
 }
 
-export type ResultField<T> = OffenceField<T> & {
+export type ResultField<T> = {
   resultIndex: number
-}
+} & OffenceField<T>
 
-export type ResultQualifierCode = OffenceField<string> & {
+export type ResultQualifierCode = {
   resultIndex?: number
   resultQualifierIndex: number
-}
+} & OffenceField<string>
 
 export enum ValidProperties {
-  NextResultSourceOrganisation = "NextResultSourceOrganisation",
   NextHearingDate = "NextHearingDate",
+  NextResultSourceOrganisation = "NextResultSourceOrganisation",
   ResultVariableText = "ResultVariableText"
 }

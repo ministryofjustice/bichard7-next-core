@@ -1,5 +1,6 @@
-import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
+
+import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
 import QueryColumns from "services/QueryColumns"
@@ -18,7 +19,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  const { req, res, currentUser } = auth
+  const { currentUser, req, res } = auth
   const { reportType } = req.query
   const caseListQueryParams = extractSearchParamsFromQuery(req.query, currentUser)
 

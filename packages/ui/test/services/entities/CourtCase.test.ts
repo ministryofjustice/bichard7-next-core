@@ -1,6 +1,7 @@
+import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import { expect } from "@jest/globals"
 import CourtCase from "services/entities/CourtCase"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 
 describe("CourtCase", () => {
   it("Should be locked by another user when error is locked by another user", () => {
@@ -44,57 +45,57 @@ describe("CourtCase", () => {
 
   test.each([
     {
-      expectedResult: false,
-      triggers: "Resolved",
+      exceptionLockedByAnotherUser: "are NOT",
       exceptions: "Resolved",
-      triggersLockedByAnotherUser: "are NOT",
-      exceptionLockedByAnotherUser: "are NOT"
-    },
-    {
       expectedResult: false,
       triggers: "Resolved",
-      exceptions: "Submitted",
-      triggersLockedByAnotherUser: "are NOT",
-      exceptionLockedByAnotherUser: "are NOT"
+      triggersLockedByAnotherUser: "are NOT"
     },
     {
+      exceptionLockedByAnotherUser: "are NOT",
+      exceptions: "Submitted",
       expectedResult: false,
       triggers: "Resolved",
-      exceptions: "Unresolved",
-      triggersLockedByAnotherUser: "are NOT",
-      exceptionLockedByAnotherUser: "are"
+      triggersLockedByAnotherUser: "are NOT"
     },
     {
+      exceptionLockedByAnotherUser: "are",
+      exceptions: "Unresolved",
+      expectedResult: false,
+      triggers: "Resolved",
+      triggersLockedByAnotherUser: "are NOT"
+    },
+    {
+      exceptionLockedByAnotherUser: "are NOT",
+      exceptions: "Submitted",
       expectedResult: false,
       triggers: "Unresolved",
-      exceptions: "Submitted",
-      triggersLockedByAnotherUser: "are",
-      exceptionLockedByAnotherUser: "are NOT"
+      triggersLockedByAnotherUser: "are"
     },
     {
-      expectedResult: true,
-      triggers: "Unresolved",
+      exceptionLockedByAnotherUser: "are NOT",
       exceptions: "Unresolved",
-      triggersLockedByAnotherUser: "are NOT",
-      exceptionLockedByAnotherUser: "are NOT"
-    },
-    {
       expectedResult: true,
       triggers: "Unresolved",
+      triggersLockedByAnotherUser: "are NOT"
+    },
+    {
+      exceptionLockedByAnotherUser: "are",
       exceptions: "Resolved",
-      triggersLockedByAnotherUser: "are NOT",
-      exceptionLockedByAnotherUser: "are"
+      expectedResult: true,
+      triggers: "Unresolved",
+      triggersLockedByAnotherUser: "are NOT"
     },
     {
+      exceptionLockedByAnotherUser: "are NOT",
+      exceptions: "Unresolved",
       expectedResult: true,
       triggers: "Resolved",
-      exceptions: "Unresolved",
-      triggersLockedByAnotherUser: "are",
-      exceptionLockedByAnotherUser: "are NOT"
+      triggersLockedByAnotherUser: "are"
     }
   ])(
     "It should return $expectedResult when triggers are $triggers and $triggersLockedByAnotherUser locked by another user and exceptions are $exceptions and $exceptionLockedByAnotherUser locked by another user",
-    ({ expectedResult, triggers, exceptions, triggersLockedByAnotherUser, exceptionLockedByAnotherUser }) => {
+    ({ exceptionLockedByAnotherUser, exceptions, expectedResult, triggers, triggersLockedByAnotherUser }) => {
       const courtCase = new CourtCase()
       courtCase.triggerStatus = triggers as ResolutionStatus
       courtCase.errorStatus = exceptions as ResolutionStatus

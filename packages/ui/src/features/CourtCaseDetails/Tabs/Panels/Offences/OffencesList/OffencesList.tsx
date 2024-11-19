@@ -1,7 +1,7 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { Heading, Table } from "govuk-react"
-
 import getOffenceCode from "utils/getOffenceCode"
+
 import { OffencesListRow } from "./OffencesListRow"
 
 interface OffencesListProps {

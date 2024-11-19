@@ -1,9 +1,10 @@
 import ConditionalRender from "components/ConditionalRender"
 import { DisplayTrigger } from "types/display/Triggers"
+
 import CaseUnlockedTag from "../tags/CaseUnlockedTag"
 import LockedByTag from "../tags/LockedByTag/LockedByTag"
 
-type TriggerWithCount = Partial<DisplayTrigger> & { count: number }
+type TriggerWithCount = { count: number } & Partial<DisplayTrigger>
 
 const triggersWithCounts = (triggers: DisplayTrigger[]) => {
   return Object.values(
@@ -28,7 +29,7 @@ export const TriggersReasonCell = ({ triggers }: { triggers: DisplayTrigger[] })
   return (
     <>
       {triggersWithCounts(triggers).map((trigger, triggerId) => (
-        <div key={`trigger_${triggerId}`} className={"trigger-description"}>
+        <div className={"trigger-description"} key={`trigger_${triggerId}`}>
           {trigger.description}
           <ConditionalRender isRendered={trigger.count > 1}>
             <b>{` (${trigger.count})`}</b>
@@ -40,16 +41,16 @@ export const TriggersReasonCell = ({ triggers }: { triggers: DisplayTrigger[] })
 }
 
 export const TriggersLockTag = ({
-  triggersLockedByUsername,
-  triggersLockedByFullName,
-  triggersHaveBeenRecentlyUnlocked,
   canUnlockCase,
+  triggersHaveBeenRecentlyUnlocked,
+  triggersLockedByFullName,
+  triggersLockedByUsername,
   unlockPath
 }: {
-  triggersLockedByUsername: string | null | undefined
-  triggersLockedByFullName: string | null | undefined
-  triggersHaveBeenRecentlyUnlocked: boolean
   canUnlockCase: boolean
+  triggersHaveBeenRecentlyUnlocked: boolean
+  triggersLockedByFullName: null | string | undefined
+  triggersLockedByUsername: null | string | undefined
   unlockPath: string
 }) => {
   return (

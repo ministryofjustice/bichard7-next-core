@@ -1,4 +1,5 @@
 import type { DisplayNote } from "types/display/Notes"
+
 import {
   filterUserNotes,
   getMostRecentNote,
@@ -9,19 +10,19 @@ describe("number of notes", () => {
   it("Should filter out all the system notes and only show user entered notes", () => {
     const caseNote: DisplayNote[] = [
       {
+        createdAt: "2019-12-30T13:00:00.000Z",
         noteText: "This is a note created by System",
-        userId: "System",
-        createdAt: "2019-12-30T13:00:00.000Z"
+        userId: "System"
       },
       {
+        createdAt: "2020-01-01T08:00:00.000Z",
         noteText: "Second note",
-        userId: "coy.funk",
-        createdAt: "2020-01-01T08:00:00.000Z"
+        userId: "coy.funk"
       },
       {
+        createdAt: "2020-01-01T12:00:00.000Z",
         noteText: "Latest note",
-        userId: "sonny.badger",
-        createdAt: "2020-01-01T12:00:00.000Z"
+        userId: "sonny.badger"
       }
     ]
     const result = filterUserNotes(caseNote).length
@@ -33,10 +34,10 @@ describe("getMostRecentNote Test", () => {
   it("Should return an object that contains createdAt and noteText values", () => {
     const caseNote: DisplayNote[] = [
       {
+        createdAt: "2023-02-11T10:36:11.488Z",
         noteText:
           "Abdullah.Fahey: Portal Action: Record Manually Resolved. Reason: PNC record already has accurate results. Reason Text:",
-        userId: "tomasa.bogan",
-        createdAt: "2023-02-11T10:36:11.488Z"
+        userId: "tomasa.bogan"
       }
     ]
 
@@ -49,20 +50,20 @@ describe("getMostRecentNote Test", () => {
   it("Should return the most recently dated note Object from many objects", () => {
     const caseNote: DisplayNote[] = [
       {
+        createdAt: "2022-01-01T00:00:00.000Z",
         noteText:
           "Ova.Pfeffer: Portal Action: Record Manually Resolved. Reason: Updated remand(s) manually on the PNC. Reason Text:Molestias dolor officiis placeat adipisci ea a culpa vitae.",
-        userId: "gina.thiel",
-        createdAt: "2022-01-01T00:00:00.000Z"
+        userId: "gina.thiel"
       },
       {
+        createdAt: "2023-01-01T00:00:00.000Z",
         noteText: "Wilson.Grady: Portal Action: Trigger Resolved. Code: TRPR0010",
-        userId: "coy.funk",
-        createdAt: "2023-01-01T00:00:00.000Z"
+        userId: "coy.funk"
       },
       {
+        createdAt: "2021-01-01T00:00:00.000Z",
         noteText: "Bernie.Ankunding: Portal Action: Trigger Resolved. Code: TRPR0001",
-        userId: "sonny.badger",
-        createdAt: "2021-01-01T00:00:00.000Z"
+        userId: "sonny.badger"
       }
     ]
 
@@ -73,19 +74,19 @@ describe("getMostRecentNote Test", () => {
   it("Should return the most recent note based off time", () => {
     const caseNote: DisplayNote[] = [
       {
+        createdAt: "2020-01-01T00:00:00.000Z",
         noteText: "First note",
-        userId: "gina.thiel",
-        createdAt: "2020-01-01T00:00:00.000Z"
+        userId: "gina.thiel"
       },
       {
+        createdAt: "2020-01-01T08:00:00.000Z",
         noteText: "Second note",
-        userId: "coy.funk",
-        createdAt: "2020-01-01T08:00:00.000Z"
+        userId: "coy.funk"
       },
       {
+        createdAt: "2020-01-01T12:00:00.000Z",
         noteText: "Latest note",
-        userId: "sonny.badger",
-        createdAt: "2020-01-01T12:00:00.000Z"
+        userId: "sonny.badger"
       }
     ]
 
@@ -97,19 +98,19 @@ describe("getMostRecentNote Test", () => {
   it("Should return the correct `createdAt` date associated with the most recent note", () => {
     const caseNote: DisplayNote[] = [
       {
+        createdAt: "2019-12-30T13:00:00.000Z",
         noteText: "Old note",
-        userId: "gina.thiel",
-        createdAt: "2019-12-30T13:00:00.000Z"
+        userId: "gina.thiel"
       },
       {
+        createdAt: "2020-01-01T08:00:00.000Z",
         noteText: "Second note",
-        userId: "coy.funk",
-        createdAt: "2020-01-01T08:00:00.000Z"
+        userId: "coy.funk"
       },
       {
+        createdAt: "2020-01-01T12:00:00.000Z",
         noteText: "Latest note",
-        userId: "sonny.badger",
-        createdAt: "2020-01-01T12:00:00.000Z"
+        userId: "sonny.badger"
       }
     ]
 

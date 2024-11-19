@@ -1,17 +1,20 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { Trigger } from "@moj-bichard7/core/types/Trigger"
+import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
 import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import Phase from "@moj-bichard7/core/types/Phase"
-import type { Trigger } from "@moj-bichard7/core/types/Trigger"
-import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+
+import type User from "../entities/User"
+
 import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
 import parseHearinOutcome from "../../utils/parseHearingOutcome"
 import amendCourtCase from "../amendCourtCase"
-import type User from "../entities/User"
 import getCourtCaseByOrganisationUnit from "../getCourtCaseByOrganisationUnit"
 import insertNotes from "../insertNotes"
 import { storeMessageAuditLogEvents } from "../storeAuditLogEvents"
@@ -26,9 +29,9 @@ const reallocateCourtCaseToForce = async (
   user: User,
   forceCode: string,
   note?: string
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   return await dataSource
-    .transaction("SERIALIZABLE", async (entityManager): Promise<UpdateResult | Error> => {
+    .transaction("SERIALIZABLE", async (entityManager): Promise<Error | UpdateResult> => {
       const events: AuditLogEvent[] = []
 
       const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
@@ -102,8 +105,8 @@ const reallocateCourtCaseToForce = async (
 
       const addNoteResult = await insertNotes(entityManager, [
         {
-          noteText: `${user.username}: Case reallocated to new force owner: ${newForceCode}`,
           errorId: courtCaseId,
+          noteText: `${user.username}: Case reallocated to new force owner: ${newForceCode}`,
           userId: "System"
         }
       ])
@@ -115,8 +118,8 @@ const reallocateCourtCaseToForce = async (
       if (note) {
         const addUserNoteResult = await insertNotes(entityManager, [
           {
-            noteText: note,
             errorId: courtCaseId,
+            noteText: note,
             userId: user.username
           }
         ])
@@ -128,9 +131,9 @@ const reallocateCourtCaseToForce = async (
 
       events.push(
         getAuditLogEvent(EventCode.HearingOutcomeReallocated, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-          user: user.username,
           auditLogVersion: 2,
-          "New Force Owner": `${newForceCode}`
+          "New Force Owner": `${newForceCode}`,
+          user: user.username
         })
       )
 

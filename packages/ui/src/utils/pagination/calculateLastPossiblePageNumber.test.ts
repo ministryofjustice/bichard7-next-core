@@ -2,17 +2,17 @@ import { calculateLastPossiblePageNumber } from "./calculateLastPossiblePageNumb
 
 describe("calculateLastPossiblePageNumber", () => {
   it.each([
-    { totalCases: 10, maxPageItems: 10, expected: 1 },
-    { totalCases: 5, maxPageItems: 10, expected: 1 },
-    { totalCases: 10, maxPageItems: 25, expected: 1 },
-    { totalCases: 10, maxPageItems: 50, expected: 1 },
-    { totalCases: 5, maxPageItems: 100, expected: 1 },
-    { totalCases: 11, maxPageItems: 10, expected: 2 },
-    { totalCases: 26, maxPageItems: 10, expected: 3 },
-    { totalCases: 0, maxPageItems: 10, expected: 1 }
+    { expected: 1, maxPageItems: 10, totalCases: 10 },
+    { expected: 1, maxPageItems: 10, totalCases: 5 },
+    { expected: 1, maxPageItems: 25, totalCases: 10 },
+    { expected: 1, maxPageItems: 50, totalCases: 10 },
+    { expected: 1, maxPageItems: 100, totalCases: 5 },
+    { expected: 2, maxPageItems: 10, totalCases: 11 },
+    { expected: 3, maxPageItems: 10, totalCases: 26 },
+    { expected: 1, maxPageItems: 10, totalCases: 0 }
   ])(
     "calculate the last possible page number when total cases are $totalCases and max page items are $maxPageItems",
-    ({ totalCases, maxPageItems, expected }) => {
+    ({ expected, maxPageItems, totalCases }) => {
       expect(calculateLastPossiblePageNumber(totalCases, maxPageItems)).toBe(expected)
     }
   )

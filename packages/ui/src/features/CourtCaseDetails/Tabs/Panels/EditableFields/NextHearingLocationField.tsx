@@ -6,26 +6,26 @@ import OrganisationUnitTypeahead from "components/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useState } from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { Exception } from "types/exceptions"
+import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import getNextHearingLocationValue from "utils/amendments/getAmendmentValues/getNextHearingLocationValue"
 import hasNextHearingLocationException from "utils/exceptions/hasNextHearingLocationException"
 import isValidNextHearingLocation from "utils/validators/isValidNextHearingLocation"
 
 interface NextHearingLocationFieldProps {
-  result: Result
   exceptions: Exception[]
-  offenceIndex: number
-  resultIndex: number
   isCaseEditable: boolean
+  offenceIndex: number
+  result: Result
+  resultIndex: number
 }
 
 export const NextHearingLocationField = ({
-  result,
   exceptions,
+  isCaseEditable,
   offenceIndex,
-  resultIndex,
-  isCaseEditable
+  result,
+  resultIndex
 }: NextHearingLocationFieldProps) => {
   const { amendments } = useCourtCase()
   const currentUser = useCurrentUser()
@@ -42,29 +42,29 @@ export const NextHearingLocationField = ({
   return (
     <EditableFieldTableRow
       className={"next-hearing-location-row"}
-      label="Next hearing location"
       hasExceptions={hasNextHearingLocationException(exceptions)}
-      value={result.NextResultSourceOrganisation?.OrganisationUnitCode}
-      updatedValue={amendedNextHearingLocation}
-      isEditable={isEditable}
-      inputLabel="Enter next hearing location"
       hintText="OU code, 6-7 characters"
+      inputLabel="Enter next hearing location"
+      isEditable={isEditable}
+      label="Next hearing location"
+      updatedValue={amendedNextHearingLocation}
+      value={result.NextResultSourceOrganisation?.OrganisationUnitCode}
     >
       <OrganisationUnitTypeahead
-        value={amendedNextHearingLocation ?? result.NextResultSourceOrganisation?.OrganisationUnitCode}
-        resultIndex={resultIndex}
         offenceIndex={offenceIndex}
-        setOrganisations={setOrganisations}
+        resultIndex={resultIndex}
         setChanged={setIsNhlChanged}
+        setOrganisations={setOrganisations}
         setSaved={setIsNhlSaved}
+        value={amendedNextHearingLocation ?? result.NextResultSourceOrganisation?.OrganisationUnitCode}
       />
       <AutoSave
-        setChanged={setIsNhlChanged}
-        setSaved={setIsNhlSaved}
-        isValid={isValidNhl}
         amendmentFields={["nextSourceOrganisation"]}
         isChanged={isNhlChanged}
         isSaved={isNhlSaved}
+        isValid={isValidNhl}
+        setChanged={setIsNhlChanged}
+        setSaved={setIsNhlSaved}
       >
         {isNhlChanged && !isValidNhl && <ErrorMessage message="Select valid Next hearing location" />}
       </AutoSave>

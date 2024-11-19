@@ -6,23 +6,23 @@ export const ExceptionsReasonCell = ({ exceptionCounts }: { exceptionCounts: Rec
   return (
     <>
       {Object.keys(exceptionCounts).map((exception, exceptionId) => {
-        return <SingleException key={exceptionId} exception={exception} exceptionCounter={exceptionCounts[exception]} />
+        return <SingleException exception={exception} exceptionCounter={exceptionCounts[exception]} key={exceptionId} />
       })}
     </>
   )
 }
 
 export const ExceptionsLockTag = ({
-  errorLockedByFullName,
   canUnlockCase,
-  unlockPath,
-  exceptionsHaveBeenRecentlyUnlocked
+  errorLockedByFullName,
+  exceptionsHaveBeenRecentlyUnlocked,
+  unlockPath
 }: {
-  errorLockedByUsername: string | null | undefined
-  errorLockedByFullName: string | null | undefined
   canUnlockCase: boolean
-  unlockPath: string
+  errorLockedByFullName: null | string | undefined
+  errorLockedByUsername: null | string | undefined
   exceptionsHaveBeenRecentlyUnlocked: boolean
+  unlockPath: string
 }) => {
   return (
     <>

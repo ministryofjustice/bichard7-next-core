@@ -1,35 +1,36 @@
 import { ChangeEventHandler } from "react"
+
 import { StyledCheckbox } from "./Checkbox.styles"
 
-type ValueType = string | number | readonly string[] | undefined
+type ValueType = number | readonly string[] | string | undefined
 
 interface Props<TValue> {
-  id?: string
+  checked?: boolean
   children?: React.ReactNode
   className?: string
-  value?: TValue
-  checked?: boolean
   disabled?: boolean
+  id?: string
   onChange?: ChangeEventHandler | undefined
+  value?: TValue
 }
 
 export default function Checkbox<TValue extends ValueType>({
-  id,
+  checked,
   children,
   className,
-  value,
-  checked,
   disabled,
-  onChange
+  id,
+  onChange,
+  value
 }: Props<TValue>) {
   return (
     <StyledCheckbox
-      id={id}
-      value={value}
       checked={checked}
-      onChange={onChange}
-      disabled={disabled}
       className={`${className} moj-checkbox govuk-!-display-inline-block`}
+      disabled={disabled}
+      id={id}
+      onChange={onChange}
+      value={value}
     >
       {children}
     </StyledCheckbox>

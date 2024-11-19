@@ -1,15 +1,18 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { Trigger } from "@moj-bichard7/core/types/Trigger"
+import type { EntityManager } from "typeorm"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import type { Trigger } from "@moj-bichard7/core/types/Trigger"
-import type { EntityManager } from "typeorm"
 import { IsNull } from "typeorm"
+
+import type CourtCase from "../entities/CourtCase"
+import type User from "../entities/User"
+
 import { AUDIT_LOG_EVENT_SOURCE } from "../../config"
 import { isError } from "../../types/Result"
-import type CourtCase from "../entities/CourtCase"
 import { default as TriggerEntity } from "../entities/Trigger"
-import type User from "../entities/User"
 
 const getTriggersDetails = (triggers: Trigger[]) =>
   triggers.reduce((acc: Record<string, unknown>, trigger, index) => {
@@ -19,10 +22,10 @@ const getTriggersDetails = (triggers: Trigger[]) =>
 
 const generateEvent = (eventCode: EventCode, triggers: Trigger[], user: User, hasUnresolvedException: boolean) =>
   getAuditLogEvent(eventCode, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-    user: user.username,
     auditLogVersion: 2,
-    "Trigger and Exception Flag": hasUnresolvedException,
     "Number of Triggers": triggers.length,
+    "Trigger and Exception Flag": hasUnresolvedException,
+    user: user.username,
     ...getTriggersDetails(triggers)
   })
 
@@ -42,11 +45,11 @@ const updateTriggers = async (
       .getRepository(TriggerEntity)
       .insert(
         triggersToAdd.map((triggerToAdd) => ({
-          triggerCode: triggerToAdd.code,
-          triggerItemIdentity: triggerToAdd.offenceSequenceNumber,
-          status: "Unresolved",
           createdAt: new Date(),
-          errorId: courtCase.errorId
+          errorId: courtCase.errorId,
+          status: "Unresolved",
+          triggerCode: triggerToAdd.code,
+          triggerItemIdentity: triggerToAdd.offenceSequenceNumber
         }))
       )
       .catch((error) => error)
@@ -63,8 +66,8 @@ const updateTriggers = async (
       triggersToDelete.map((triggerToDelete) =>
         entityManager.getRepository(TriggerEntity).delete({
           errorId: courtCase.errorId,
-          triggerCode: triggerToDelete.code,
           status: "Unresolved",
+          triggerCode: triggerToDelete.code,
           triggerItemIdentity: triggerToDelete.offenceSequenceNumber ?? IsNull()
         })
       )

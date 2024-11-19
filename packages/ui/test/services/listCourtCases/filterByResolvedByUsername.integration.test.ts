@@ -1,17 +1,19 @@
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+
+import CourtCase from "services/entities/CourtCase"
+import Note from "services/entities/Note"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource } from "typeorm"
-import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
+
+import Trigger from "../../../src/services/entities/Trigger"
 import { isError } from "../../../src/types/Result"
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromEntity from "../../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
-import Trigger from "../../../src/services/entities/Trigger"
-import Note from "services/entities/Note"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -21,9 +23,9 @@ describe("listCourtCases", () => {
   let dataSource: DataSource
   const forceCode = "036"
   const testUser = {
-    visibleForces: [forceCode],
+    hasAccessTo: hasAccessToAll,
     visibleCourts: [],
-    hasAccessTo: hasAccessToAll
+    visibleForces: [forceCode]
   } as Partial<User> as User
 
   beforeAll(async () => {

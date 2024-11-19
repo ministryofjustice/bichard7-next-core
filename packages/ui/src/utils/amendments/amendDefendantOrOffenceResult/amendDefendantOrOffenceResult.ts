@@ -6,7 +6,7 @@ const amendDefendantOrOffenceResult = (
   resultIndex: number,
   aho: AnnotatedHearingOutcome,
   propertyToAmend: ValidProperties,
-  valueToAmend: OrganisationUnitCodes | Date | string
+  valueToAmend: Date | OrganisationUnitCodes | string
 ) => {
   const defendant = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
   if (offenceIndex === -1) {

@@ -1,6 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import CourtCase from "../../../../src/services/entities/CourtCase"
+
 import type { TestTrigger } from "../../../../test/utils/manageTriggers"
+
+import CourtCase from "../../../../src/services/entities/CourtCase"
 import a11yConfig from "../../../support/a11yConfig"
 import { clickTab, loginAndVisit } from "../../../support/helpers"
 import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
@@ -11,16 +13,16 @@ const loginAndGoToNotes = () => {
 }
 
 const trigger: TestTrigger = {
-  triggerId: 0,
-  triggerCode: TriggerCode.TRPR0001,
+  createdAt: new Date("2022-07-09T10:22:34.000Z"),
   status: "Unresolved",
-  createdAt: new Date("2022-07-09T10:22:34.000Z")
+  triggerCode: TriggerCode.TRPR0001,
+  triggerId: 0
 }
 
 const exception = {
   caseId: 0,
-  exceptionCode: "HO100310",
-  errorReport: "HO100310||ds:OffenceReasonSequence"
+  errorReport: "HO100310||ds:OffenceReasonSequence",
+  exceptionCode: "HO100310"
 }
 
 const insertCaseWithTriggerAndException = (courtCase?: Partial<CourtCase>) => {
@@ -54,8 +56,8 @@ describe("View notes", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [
         [
-          { user: "GeneralHandler", text: "Test note 1" },
-          { user: "System", text: "Test note 2" }
+          { text: "Test note 1", user: "GeneralHandler" },
+          { text: "Test note 2", user: "System" }
         ]
       ],
       force: "01"
@@ -73,8 +75,8 @@ describe("View notes", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [
         [
-          { user: "GeneralHandler", text: "Test note 1" },
-          { user: "System", text: "Test note 2" }
+          { text: "Test note 1", user: "GeneralHandler" },
+          { text: "Test note 2", user: "System" }
         ]
       ],
       force: "01"
@@ -97,7 +99,7 @@ describe("View notes", () => {
 
   it("Should display no user notes message", () => {
     cy.task("insertCourtCasesWithNotes", {
-      caseNotes: [[{ user: "System", text: "Test note 2" }]],
+      caseNotes: [[{ text: "Test note 2", user: "System" }]],
       force: "01"
     })
 
@@ -111,7 +113,7 @@ describe("View notes", () => {
 
   it("Should display no system notes message", () => {
     cy.task("insertCourtCasesWithNotes", {
-      caseNotes: [[{ user: "GeneralHandler", text: "Test note 1" }]],
+      caseNotes: [[{ text: "Test note 1", user: "GeneralHandler" }]],
       force: "01"
     })
 
@@ -172,7 +174,7 @@ describe("View notes", () => {
   })
 
   it("Should be able to add a note when case is visible to the user and error locked by another user", () => {
-    insertCaseWithTriggerAndException({ orgForPoliceFilter: "01", errorLockedByUsername: "BichardForce01" })
+    insertCaseWithTriggerAndException({ errorLockedByUsername: "BichardForce01", orgForPoliceFilter: "01" })
     loginAndGoToNotes()
     cy.get("textarea").type("Dummy note")
     cy.get("button").contains("Add note").click()

@@ -1,31 +1,32 @@
 import { Table } from "govuk-react"
+
 import { LabelCell } from "./EditableFieldTableRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
 import InputField from "./InputField"
 import LabelField from "./LabelField"
 
 type Props = {
-  className?: string
-  label: string
-  hasExceptions: boolean
-  value?: string | React.ReactNode
-  updatedValue?: string | null
-  isEditable: boolean
   children?: React.ReactNode
-  inputLabel: string
+  className?: string
+  hasExceptions: boolean
   hintText: string
+  inputLabel: string
+  isEditable: boolean
+  label: string
+  updatedValue?: null | string
+  value?: React.ReactNode | string
 }
 
 const EditableFieldTableRow = ({
+  children,
   className,
-  value,
-  updatedValue,
-  label,
   hasExceptions,
-  isEditable,
-  inputLabel,
   hintText,
-  children
+  inputLabel,
+  isEditable,
+  label,
+  updatedValue,
+  value
 }: Props) => {
   const isRendered = !!(value || updatedValue || hasExceptions)
   const hasCorrection = updatedValue && value !== updatedValue
@@ -37,12 +38,12 @@ const EditableFieldTableRow = ({
   const fieldToRender = (): React.ReactNode => {
     if (isEditable) {
       return (
-        <InputField value={value} inputLabel={inputLabel} hintText={hintText}>
+        <InputField hintText={hintText} inputLabel={inputLabel} value={value}>
           {children}
         </InputField>
       )
     } else if (hasCorrection) {
-      return <InitialValueAndCorrectionField value={value} updatedValue={updatedValue} />
+      return <InitialValueAndCorrectionField updatedValue={updatedValue} value={value} />
     } else {
       return value
     }
@@ -51,7 +52,7 @@ const EditableFieldTableRow = ({
   return (
     <Table.Row className={className}>
       <LabelCell>
-        <LabelField label={label} isEditable={isEditable} />
+        <LabelField isEditable={isEditable} label={label} />
       </LabelCell>
       <Table.Cell>{fieldToRender()}</Table.Cell>
     </Table.Row>

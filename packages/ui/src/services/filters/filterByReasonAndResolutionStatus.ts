@@ -1,13 +1,14 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { every } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import type { SelectQueryBuilder } from "typeorm"
-import { Brackets, IsNull, Not } from "typeorm"
 import type { CaseState } from "types/CaseListQueryParams"
-import { Reason } from "types/CaseListQueryParams"
+
 import Permission from "@moj-bichard7/common/types/Permission"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { every } from "lodash"
+import { Brackets, IsNull, Not } from "typeorm"
+import { Reason } from "types/CaseListQueryParams"
 
 const reasonFilterOnlyIncludesTriggers = (reason?: Reason): boolean => reason === Reason.Triggers
 

@@ -1,3 +1,5 @@
+import type NavigationHandler from "types/NavigationHandler"
+
 import ActionLink from "components/ActionLink"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
@@ -8,9 +10,8 @@ import { sortBy } from "lodash"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
-
-import type NavigationHandler from "types/NavigationHandler"
 import { triggersAreLockedByAnotherUser } from "utils/caseLocks"
+
 import Form from "../../../components/Form"
 import LockStatusTag from "../LockStatusTag"
 import Trigger from "./Trigger"
@@ -51,11 +52,11 @@ const TriggersList = ({ onNavigate }: Props) => {
   }
 
   const handleClick = (offenceOrderIndex?: number) => {
-    onNavigate({ location: "Case Details > Offences", args: { offenceOrderIndex } })
+    onNavigate({ args: { offenceOrderIndex }, location: "Case Details > Offences" })
   }
 
   const resolveTriggerUrl = (triggerIds: number[]) => {
-    const resolveQuery = { ...query, resolveTrigger: triggerIds.map((id) => id.toString()), courtCaseId: undefined }
+    const resolveQuery = { ...query, courtCaseId: undefined, resolveTrigger: triggerIds.map((id) => id.toString()) }
 
     // Delete the `courtCaseId` param, which comes from the URL dynamic router, not the query string
     const filteredQuery = Object.fromEntries(Object.entries(resolveQuery).filter(([key]) => key !== "courtCaseId"))
@@ -70,12 +71,12 @@ const TriggersList = ({ onNavigate }: Props) => {
   }
 
   return (
-    <Form method="post" action={resolveTriggerUrl(selectedTriggerIds)} csrfToken={csrfToken}>
+    <Form action={resolveTriggerUrl(selectedTriggerIds)} csrfToken={csrfToken} method="post">
       {!hasTriggers && "There are no triggers for this case."}
       <ConditionalRender isRendered={hasUnresolvedTriggers && !triggersLockedByAnotherUser}>
         <SelectAllTriggersGridRow id={"select-all-triggers"}>
           <GridCol>
-            <ActionLink onClick={selectAll} id="select-all-action">
+            <ActionLink id="select-all-action" onClick={selectAll}>
               {"Select all"}
             </ActionLink>
           </GridCol>
@@ -83,19 +84,19 @@ const TriggersList = ({ onNavigate }: Props) => {
       </ConditionalRender>
       {triggers.map((trigger, index) => (
         <Trigger
-          key={index}
-          trigger={trigger}
           disabled={triggersLockedByAnotherUser}
+          key={index}
           onClick={() => handleClick(trigger.triggerItemIdentity)}
           selectedTriggerIds={selectedTriggerIds}
           setTriggerSelection={setTriggerSelection}
+          trigger={trigger}
         />
       ))}
 
       <ConditionalRender isRendered={hasTriggers && !triggersLockedByAnotherUser}>
         <GridRow>
           <MarkCompleteGridCol>
-            <Button type="submit" disabled={selectedTriggerIds.length === 0} id="mark-triggers-complete-button">
+            <Button disabled={selectedTriggerIds.length === 0} id="mark-triggers-complete-button" type="submit">
               {"Mark trigger(s) as complete"}
             </Button>
           </MarkCompleteGridCol>
@@ -106,8 +107,8 @@ const TriggersList = ({ onNavigate }: Props) => {
         <LockStatus>
           <LockStatusTag
             isRendered={triggers.length > 0}
-            resolutionStatus={courtCase.triggerStatus}
             lockName="Triggers"
+            resolutionStatus={courtCase.triggerStatus}
           />
         </LockStatus>
       </ConditionalRender>

@@ -1,3 +1,6 @@
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
+import Permission from "@moj-bichard7/common/types/Permission"
 import Banner from "components/Banner"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
@@ -7,7 +10,6 @@ import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { BackLink, Button, Heading, Link, Paragraph } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
@@ -18,15 +20,15 @@ import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationU
 import getDataSource from "services/getDataSource"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { isError } from "types/Result"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
+import { isError } from "types/Result"
 import amendmentsHaveChanged from "utils/amendmentsHaveChanged"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
+
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
 
 const hasAmendments = (amendments: string | undefined): boolean =>
@@ -36,7 +38,7 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, res, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { csrfToken, currentUser, formData, query, req, res } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
 
     const { confirm } = query
@@ -63,11 +65,11 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     const props: Props = {
+      amendments: "{}",
+      courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
       csrfToken,
       previousPath: previousPath ?? null,
-      user: userToDisplayFullUserDto(currentUser),
-      courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-      amendments: "{}"
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     if (isPost(req)) {
@@ -105,13 +107,13 @@ export const getServerSideProps = withMultipleServerSideProps(
   }
 )
 interface Props {
-  user: DisplayFullUser
+  amendments?: string
   courtCase: DisplayFullCourtCase
   csrfToken: string
-  previousPath: string | null
-  amendments?: string
+  previousPath: null | string
+  user: DisplayFullUser
 }
-const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, amendments, csrfToken }: Props) => {
+const SubmitCourtCasePage: NextPage<Props> = ({ amendments, courtCase, csrfToken, previousPath, user }: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   let backLink = `${basePath}/court-cases/${courtCase.errorId}`
@@ -126,14 +128,14 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
       <Layout>
         <Head>
           <title>{"Bichard7 | Submit Case Exception(s)"}</title>
-          <meta name="description" content="Bichard7 | Submit Case Exception(s)" />
+          <meta content="Bichard7 | Submit Case Exception(s)" name="description" />
         </Head>
         <BackLink href={backLink} onClick={function noRefCheck() {}}>
           {"Case Details"}
         </BackLink>
         <HeaderContainer id="header-container">
           <HeaderRow>
-            <Heading as="h1" size="LARGE" aria-label="Submit Exception(s)">
+            <Heading aria-label="Submit Exception(s)" as="h1" size="LARGE">
               {"Submit Exception(s)"}
             </Heading>
           </HeaderRow>
@@ -151,8 +153,8 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
             {"Do you want to submit case details to the PNC and mark the exception(s) as resolved?"}
           </Paragraph>
         </ConditionalRender>
-        <Form action={resubmitCasePath} method="post" csrfToken={csrfToken}>
-          <input type="hidden" name="amendments" value={amendments} />
+        <Form action={resubmitCasePath} csrfToken={csrfToken} method="post">
+          <input name="amendments" type="hidden" value={amendments} />
           <ButtonsGroup>
             <Button id="confirm-submit" type="submit">
               {"Submit exception(s)"}

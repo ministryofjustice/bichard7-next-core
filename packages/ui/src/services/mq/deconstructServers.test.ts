@@ -1,11 +1,13 @@
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
+
 import type MqConfig from "./types/MqConfig"
+
 import deconstructServers from "./deconstructServers"
 
 const config: MqConfig = {
+  password: "admin",
   url: "failover:(stomp://localhost:61613)",
-  username: "admin",
-  password: "admin"
+  username: "admin"
 }
 
 describe("deconstructServers()", () => {

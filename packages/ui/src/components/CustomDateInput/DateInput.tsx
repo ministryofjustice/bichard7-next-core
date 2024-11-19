@@ -1,22 +1,23 @@
 import { Dispatch } from "react"
 import { SerializedDateRange } from "types/CaseListQueryParams"
 import { FilterAction } from "types/CourtCaseFilter"
+
 import { SmallButton } from "./DateInput.styles"
 
-type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
-type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
+type DateType = "from" | "resolvedFrom" | "resolvedTo" | "to"
+type ActionType = "caseResolvedFrom" | "caseResolvedTo" | "dateFrom" | "dateTo"
 interface Props {
+  dateRange: SerializedDateRange | undefined
   dateType: DateType
   dispatch: Dispatch<FilterAction>
   value: string
-  dateRange: SerializedDateRange | undefined
 }
 
 const dateActions = {
   from: "dateFrom",
-  to: "dateTo",
   resolvedFrom: "caseResolvedFrom",
-  resolvedTo: "caseResolvedTo"
+  resolvedTo: "caseResolvedTo",
+  to: "dateTo"
 }
 
 const formatLabelText = (dateType: DateType): string => {
@@ -31,7 +32,7 @@ const formatLabelText = (dateType: DateType): string => {
   return "Date"
 }
 
-const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {
+const DateInput: React.FC<Props> = ({ dateRange, dateType, dispatch, value }: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
   const setSameDateValue = () => {
@@ -42,11 +43,11 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
 
   const SameDateButton = (
     <SmallButton
-      style={{ marginLeft: "160px" }}
-      type="button"
       className={`small-button--tag`}
       id={"apply-same-date-button"}
       onClick={setSameDateValue}
+      style={{ marginLeft: "160px" }}
+      type="button"
     >
       {"Same date"}
     </SmallButton>
@@ -62,13 +63,13 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
       </>
       <input
         className="govuk-input"
-        type="date"
         id={`date-${dateType}`}
         name={dateType}
-        value={value}
         onChange={(event) => {
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
+        type="date"
+        value={value}
       />
     </div>
   )

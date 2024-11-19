@@ -1,23 +1,45 @@
 const intOrString = (input: string): string => (input.match(/^\d*$/) ? input : "")
 
 class Asn {
-  static yearChars = 2
+  static divideAsn = (asn: string): string => {
+    if (!asn) {
+      return ""
+    }
+
+    return asn
+      .replace(/\//g, "")
+      .split("")
+      .map((el, i) => {
+        if (
+          i === this.yearChars - 1 ||
+          i === this.yearChars + this.forceAndUnitChars - 1 ||
+          i === this.yearChars + this.forceAndUnitChars + this.systemChars - 1
+        ) {
+          return `${el}/`
+        } else {
+          return el
+        }
+      })
+      .join("")
+  }
 
   static forceAndUnitChars = 4
 
   static systemChars = 2
 
-  public asn: string
+  static yearChars = 2
 
-  public year: string | undefined
+  public asn: string
 
   public force: string | undefined
 
-  public unit: string | undefined
+  public sequence: number | undefined
 
   public system: string | undefined
 
-  public sequence: number | undefined
+  public unit: string | undefined
+
+  public year: string | undefined
 
   constructor(asn: string) {
     this.asn = asn
@@ -47,28 +69,6 @@ class Asn {
     return `${this.year}${this.force}${this.unit}${this.system}${
       this.sequence ?? "".toString().padStart(11, "0")
     }${this.checkCharacter()}`
-  }
-
-  static divideAsn = (asn: string): string => {
-    if (!asn) {
-      return ""
-    }
-
-    return asn
-      .replace(/\//g, "")
-      .split("")
-      .map((el, i) => {
-        if (
-          i === this.yearChars - 1 ||
-          i === this.yearChars + this.forceAndUnitChars - 1 ||
-          i === this.yearChars + this.forceAndUnitChars + this.systemChars - 1
-        ) {
-          return `${el}/`
-        } else {
-          return el
-        }
-      })
-      .join("")
   }
 }
 

@@ -1,5 +1,6 @@
 import type { FindOperator, ValueTransformer } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import resolveFindOperator from "./resolveFindOperator"
 
 const resolutionStatusByCode: Record<number, ResolutionStatus> = {
@@ -17,7 +18,7 @@ const resolutionStatusTransformer: ValueTransformer = {
   from: (value: number) => {
     return resolutionStatusByCode[value] ?? null
   },
-  to: (value: ResolutionStatus | FindOperator<ResolutionStatus>) => {
+  to: (value: FindOperator<ResolutionStatus> | ResolutionStatus) => {
     return resolveFindOperator(value, (input) => getResolutionStatusCodeByText(input))
   }
 }

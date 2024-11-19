@@ -1,19 +1,20 @@
 import ConditionalRender from "components/ConditionalRender"
 import { isEmpty } from "lodash"
 import { formatDisplayedDate } from "utils/date/formattedDate"
+
 import { DisposalDetails, DisposalText, StyledDetails } from "./Disposal.styles"
 
 interface DisposalProps {
   qtyDate?: string
   qtyDuration?: string
-  type?: number
-  qtyUnitsFined?: string
   qtyMonetaryValue?: string
+  qtyUnitsFined?: string
   qualifiers?: string
   text?: string
+  type?: number
 }
 
-const Disposal = ({ qtyDate, qtyDuration, type, qtyUnitsFined, qtyMonetaryValue, qualifiers, text }: DisposalProps) => {
+const Disposal = ({ qtyDate, qtyDuration, qtyMonetaryValue, qtyUnitsFined, qualifiers, text, type }: DisposalProps) => {
   return (
     <div className="disposal">
       <StyledDetails summary={`Disposal - ${type}`}>

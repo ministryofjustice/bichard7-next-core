@@ -1,4 +1,5 @@
 import type { Amendments } from "types/Amendments"
+
 import createDummyAho from "../../../test/helpers/createDummyAho"
 import { HO100323 } from "../../../test/helpers/exceptions"
 import HO100300 from "../../../test/helpers/exceptions/HO100300"
@@ -16,8 +17,8 @@ describe("isNextHearingLocationAmended", () => {
       asn: "1101ZD0100000448754K",
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: ""
         }
       ]
@@ -35,8 +36,8 @@ describe("isNextHearingLocationAmended", () => {
       asn: "1101ZD0100000448754K",
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         }
       ]
@@ -55,13 +56,13 @@ describe("isNextHearingLocationAmended", () => {
       asn: "1101ZD0100000448754K",
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         },
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: ""
         }
       ]
@@ -80,13 +81,13 @@ describe("isNextHearingLocationAmended", () => {
       asn: "1101ZD0100000448754K",
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         },
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA11"
         }
       ]

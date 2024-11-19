@@ -1,9 +1,11 @@
 import type { Amendments } from "types/Amendments"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import getOffenceAlertsDetails, { exceptionsResolvedFn } from "./getOffenceAlertsDetails"
+
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100102, HO100200, HO100322 } from "../../test/helpers/exceptions"
-import type { DisplayFullCourtCase } from "types/display/CourtCases"
+import getOffenceAlertsDetails, { exceptionsResolvedFn } from "./getOffenceAlertsDetails"
 
 const nextHearingDateException = {
   code: ExceptionCode.HO100102,
@@ -39,18 +41,18 @@ const nextHearingLocationException = {
 describe("exceptionsResolvedFn", () => {
   it("Should return true when relevant exception is resolved", () => {
     const updatedFields = {
-      nextSourceOrganisation: [
-        {
-          resultIndex: 1,
-          offenceIndex: 1,
-          value: "B21XA00"
-        }
-      ],
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2024-03-30"
+        }
+      ],
+      nextSourceOrganisation: [
+        {
+          offenceIndex: 1,
+          resultIndex: 1,
+          value: "B21XA00"
         }
       ]
     } as Amendments
@@ -93,8 +95,8 @@ describe("exceptionsResolvedFn", () => {
     const updatedFields = {
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "B21XA00"
         }
       ]
@@ -115,8 +117,8 @@ describe("exceptionsResolvedFn", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "2024-03-30"
         }
       ]
@@ -137,8 +139,8 @@ describe("exceptionsResolvedFn", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 1,
           offenceIndex: 0,
+          resultIndex: 1,
           value: "2024-03-30"
         }
       ]
@@ -159,8 +161,8 @@ describe("exceptionsResolvedFn", () => {
     const updatedFields = {
       nextSourceOrganisation: [
         {
-          resultIndex: 1,
           offenceIndex: 0,
+          resultIndex: 1,
           value: "B21XA00"
         }
       ]
@@ -197,8 +199,8 @@ describe("exceptionsResolvedFn", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: undefined,
+          resultIndex: 0,
           value: "2024-03-30"
         }
       ]
@@ -251,8 +253,8 @@ describe("getOffenceAlertDetails", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ]
@@ -275,8 +277,8 @@ describe("getOffenceAlertDetails", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ]
@@ -297,15 +299,15 @@ describe("getOffenceAlertDetails", () => {
     const updatedFields = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ],
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "B21XA00"
         }
       ]
@@ -327,8 +329,8 @@ describe("getOffenceAlertDetails", () => {
       const updatedFields = {
         nextHearingDate: [
           {
-            resultIndex: 0,
             offenceIndex: 0,
+            resultIndex: 0,
             value: "2002-10-10"
           }
         ]
@@ -349,8 +351,8 @@ describe("getOffenceAlertDetails", () => {
       const updatedFields = {
         nextSourceOrganisation: [
           {
-            resultIndex: 0,
             offenceIndex: 0,
+            resultIndex: 0,
             value: "B21XA00"
           }
         ]
@@ -372,23 +374,23 @@ describe("getOffenceAlertDetails", () => {
 
       const courtCase = { aho: dummyAho } as unknown as DisplayFullCourtCase
       const updatedFields = {
-        nextSourceOrganisation: [
-          {
-            resultIndex: 0,
-            offenceIndex: 0,
-            value: "B21XA00"
-          }
-        ],
         nextHearingDate: [
           {
-            resultIndex: 0,
             offenceIndex: 0,
+            resultIndex: 0,
             value: "2002-10-10"
           },
           {
-            resultIndex: 1,
             offenceIndex: 0,
+            resultIndex: 1,
             value: "2002-10-10"
+          }
+        ],
+        nextSourceOrganisation: [
+          {
+            offenceIndex: 0,
+            resultIndex: 0,
+            value: "B21XA00"
           }
         ]
       } as Amendments
@@ -410,28 +412,28 @@ describe("getOffenceAlertDetails", () => {
 
     const courtCase = { aho: dummyAho } as unknown as DisplayFullCourtCase
     const updatedFields = {
-      nextSourceOrganisation: [
-        {
-          resultIndex: 0,
-          offenceIndex: 0,
-          value: "B21XA00"
-        },
-        {
-          resultIndex: 1,
-          offenceIndex: 0,
-          value: "B21XA00"
-        }
-      ],
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         },
         {
-          resultIndex: 1,
           offenceIndex: 0,
+          resultIndex: 1,
           value: "2002-10-10"
+        }
+      ],
+      nextSourceOrganisation: [
+        {
+          offenceIndex: 0,
+          resultIndex: 0,
+          value: "B21XA00"
+        },
+        {
+          offenceIndex: 0,
+          resultIndex: 1,
+          value: "B21XA00"
         }
       ]
     } as Amendments

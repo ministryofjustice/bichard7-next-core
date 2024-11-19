@@ -4,6 +4,8 @@ import type {
   Result,
   ResultQualifierVariable
 } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { Amendments } from "types/Amendments"
+
 import cloneDeep from "lodash.clonedeep"
 import amendAsn from "utils/amendments/amendAsn"
 import amendCourtCaseReference from "utils/amendments/amendCourtCaseReference"
@@ -16,9 +18,8 @@ import amendOffenceReasonSequence from "utils/amendments/amendOffenceReasonSeque
 import amendResultQualifierCode from "utils/amendments/amendResultQualifierCode"
 import amendResultVariableText from "utils/amendments/amendResultVariableText"
 import removeEmptyResultQualifierVariable from "utils/removeEmptyResultQualifierVariable"
-import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
-import type { Amendments } from "types/Amendments"
+import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
 jest.mock("utils/amendments/amendAsn/amendAsn")
 jest.mock("utils/amendments/amendOffenceReasonSequence/amendOffenceReasonSequence")
@@ -52,8 +53,8 @@ describe("applyAmendmentsToAho", () => {
         DefendantOrOffender: {
           DefendantOrOffenderSequenceNumber: "0000"
         },
-        OffenceReasonSequence: "0000",
-        OffenceReason: { __type: "NationalOffenceReason" }
+        OffenceReason: { __type: "NationalOffenceReason" },
+        OffenceReasonSequence: "0000"
       },
 
       Result: [dummyResult]
@@ -63,14 +64,14 @@ describe("applyAmendmentsToAho", () => {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
           Case: {
+            CourtReference: {
+              CrownCourtReference: "random_crown_ref",
+              MagistratesCourtReference: "random_magristrates_ref"
+            },
             HearingDefendant: {
               ArrestSummonsNumber: "original_value",
               Offence: [dummyOffence],
               Result: dummyResult
-            },
-            CourtReference: {
-              MagistratesCourtReference: "random_magristrates_ref",
-              CrownCourtReference: "random_crown_ref"
             }
           }
         }
@@ -142,9 +143,9 @@ describe("applyAmendmentsToAho", () => {
       resultQualifierCode: [
         {
           offenceIndex,
-          value: "newQualifierCode",
+          resultIndex,
           resultQualifierIndex: 0,
-          resultIndex
+          value: "newQualifierCode"
         }
       ]
     } as Amendments
@@ -167,9 +168,9 @@ describe("applyAmendmentsToAho", () => {
       resultQualifierCode: [
         {
           offenceIndex,
-          value: "",
+          resultIndex: 0,
           resultQualifierIndex: 2,
-          resultIndex: 0
+          value: ""
         }
       ]
     } as Amendments
@@ -201,8 +202,8 @@ describe("applyAmendmentsToAho", () => {
       nextSourceOrganisation: [
         {
           offenceIndex,
-          value: "RANDOM_TEST_STRING",
-          resultIndex: 0
+          resultIndex: 0,
+          value: "RANDOM_TEST_STRING"
         }
       ]
     } as Amendments
@@ -225,8 +226,8 @@ describe("applyAmendmentsToAho", () => {
       nextHearingDate: [
         {
           offenceIndex,
-          value: "2022-08-24",
-          resultIndex: 0
+          resultIndex: 0,
+          value: "2022-08-24"
         }
       ]
     } as Amendments
@@ -260,8 +261,8 @@ describe("applyAmendmentsToAho", () => {
       resultVariableText: [
         {
           offenceIndex,
-          value: "random_string",
-          resultIndex: 0
+          resultIndex: 0,
+          value: "random_string"
         }
       ]
     } as Amendments
@@ -316,10 +317,10 @@ describe("applyAmendmentsToAho", () => {
     } as Amendments
 
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
-      SecondLevelCode: null,
-      ThirdLevelCode: null,
       BottomLevelCode: null,
-      OrganisationUnitCode: "original_value"
+      OrganisationUnitCode: "original_value",
+      SecondLevelCode: null,
+      ThirdLevelCode: null
     }
 
     applyAmendmentsToAho(amendments, aho)
@@ -333,10 +334,10 @@ describe("applyAmendmentsToAho", () => {
     } as Amendments
 
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
-      SecondLevelCode: null,
-      ThirdLevelCode: null,
       BottomLevelCode: null,
-      OrganisationUnitCode: "original_value"
+      OrganisationUnitCode: "original_value",
+      SecondLevelCode: null,
+      ThirdLevelCode: null
     }
 
     applyAmendmentsToAho(amendments, aho)

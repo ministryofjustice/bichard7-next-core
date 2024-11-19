@@ -1,5 +1,6 @@
-import { Reason } from "types/CaseListQueryParams"
 import type { Filter, FilterAction } from "types/CourtCaseFilter"
+
+import { Reason } from "types/CaseListQueryParams"
 
 const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
   switch (action.type) {
@@ -10,12 +11,6 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
         newState.caseAgeFilter = []
       }
 
-      break
-    }
-
-    case "dateRange": {
-      newState.dateFrom.value = undefined
-      newState.dateTo.value = undefined
       break
     }
 
@@ -34,15 +29,15 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
-    case "lockedState": {
-      newState.lockedStateFilter.value = undefined
-      newState.lockedStateFilter.label = undefined
+    case "courtName": {
+      newState.courtNameSearch.value = ""
+      newState.courtNameSearch.label = undefined
       break
     }
 
-    case "reason": {
-      newState.reasonFilter.value = Reason.All
-      newState.reasonFilter.state = "Selected"
+    case "dateRange": {
+      newState.dateFrom.value = undefined
+      newState.dateTo.value = undefined
       break
     }
 
@@ -52,22 +47,9 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
-    case "courtName": {
-      newState.courtNameSearch.value = ""
-      newState.courtNameSearch.label = undefined
-      break
-    }
-
-    case "reasonCodes": {
-      newState.reasonCodes = newState.reasonCodes.filter((reasonCode) => reasonCode.value !== action.value)
-      break
-    }
-
-    case "resolvedByUsernameFilter": {
-      newState.resolvedByUsernameFilter.value = undefined
-      newState.resolvedByUsernameFilter.label = undefined
-      newState.resolvedByUsernameFilter.state = undefined
-
+    case "lockedState": {
+      newState.lockedStateFilter.value = undefined
+      newState.lockedStateFilter.label = undefined
       break
     }
 
@@ -77,8 +59,27 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "reason": {
+      newState.reasonFilter.value = Reason.All
+      newState.reasonFilter.state = "Selected"
+      break
+    }
+
+    case "reasonCodes": {
+      newState.reasonCodes = newState.reasonCodes.filter((reasonCode) => reasonCode.value !== action.value)
+      break
+    }
+
     case "reasonCodesCheckbox": {
       newState.reasonCodes = newState.reasonCodes.filter((reasonCode) => reasonCode.value !== action.value)
+      break
+    }
+
+    case "resolvedByUsernameFilter": {
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
+
       break
     }
 

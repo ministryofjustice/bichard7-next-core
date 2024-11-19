@@ -5,7 +5,7 @@ const amendOffenceReasonSequence = (
   newOffenceReasonSequence: Amendments["offenceReasonSequence"],
   aho: AnnotatedHearingOutcome
 ) => {
-  newOffenceReasonSequence?.forEach(({ value, offenceIndex }) => {
+  newOffenceReasonSequence?.forEach(({ offenceIndex, value }) => {
     if (value === undefined) {
       return
     }

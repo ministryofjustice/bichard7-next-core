@@ -1,17 +1,20 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { EntityManager, UpdateResult } from "typeorm"
+import type { ManualResolution } from "types/ManualResolution"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import type { EntityManager, UpdateResult } from "typeorm"
 import { MoreThan, Not } from "typeorm"
-import type { ManualResolution } from "types/ManualResolution"
 import { ResolutionReasonCode } from "types/ManualResolution"
 import { isError } from "types/Result"
 import { validateManualResolution } from "utils/validators/validateManualResolution"
+
+import type User from "./entities/User"
+
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import CourtCase from "./entities/CourtCase"
 import Trigger from "./entities/Trigger"
-import type User from "./entities/User"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 
 const resolveError = async (
@@ -20,7 +23,7 @@ const resolveError = async (
   user: User,
   resolution: ManualResolution,
   events?: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const resolutionError = validateManualResolution(resolution).error
 
   if (resolutionError) {
@@ -35,9 +38,9 @@ const resolveError = async (
   )
 
   const queryParams: Record<string, unknown> = {
-    errorStatus: "Resolved",
     errorResolvedBy: resolver,
-    errorResolvedTimestamp: resolutionTimestamp
+    errorResolvedTimestamp: resolutionTimestamp,
+    errorStatus: "Resolved"
   }
 
   const triggersResolved =
@@ -56,9 +59,9 @@ const resolveError = async (
 
   query.set(queryParams)
   query.andWhere({
+    errorCount: MoreThan(0),
     errorId: courtCase.errorId,
     errorLockedByUsername: resolver,
-    errorCount: MoreThan(0),
     errorStatus: "Unresolved"
   })
 
@@ -74,10 +77,10 @@ const resolveError = async (
 
   events?.push(
     getAuditLogEvent(EventCode.ExceptionsResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-      user: user.username,
       auditLogVersion: 2,
       resolutionReasonCode: ResolutionReasonCode[resolution.reason],
-      resolutionReasonText: resolution.reasonText
+      resolutionReasonText: resolution.reasonText,
+      user: user.username
     })
   )
 

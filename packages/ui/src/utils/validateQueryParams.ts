@@ -1,8 +1,10 @@
 import type { ParsedUrlQuery } from "querystring"
 import type User from "services/entities/User"
-import type { QueryOrder, CaseListQueryParams, CaseState } from "types/CaseListQueryParams"
-import { Reason, LockedState } from "types/CaseListQueryParams"
+import type { CaseListQueryParams, CaseState, QueryOrder } from "types/CaseListQueryParams"
+
 import Permission from "@moj-bichard7/common/types/Permission"
+import defaults from "defaults"
+import { LockedState, Reason } from "types/CaseListQueryParams"
 
 import caseStateFilters from "./caseStateFilters"
 import dedupeTriggerCodes from "./dedupeTriggerCodes"
@@ -10,7 +12,6 @@ import { reasonOptions } from "./reasonOptions"
 import { mapCaseAges } from "./validators/validateCaseAges"
 import { validateDateRange } from "./validators/validateDateRange"
 import { validateQueryParams } from "./validators/validateQueryParams"
-import defaults from "defaults"
 
 export const validateOrder = (param: unknown): param is QueryOrder => param === "asc" || param === "desc"
 
@@ -57,11 +58,11 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
     ...(reasonCodes && { reasonCodes: reasonCodes }),
     ...(ptiurn && { ptiurn }),
     ...(asn && { asn }),
-    reason,
     maxPageItems: validateQueryParams(query.maxPageItems) ? +Number(query.maxPageItems) : defaults.maxPageItems,
-    page: validateQueryParams(query.page) ? +Number(query.page) : 1,
-    orderBy: validateQueryParams(query.orderBy) ? query.orderBy : "courtDate",
     order: validateOrder(query.order) && query.order == "asc" ? "asc" : "desc",
+    orderBy: validateQueryParams(query.orderBy) ? query.orderBy : "courtDate",
+    page: validateQueryParams(query.page) ? +Number(query.page) : 1,
+    reason,
     ...(courtDateRange && { courtDateRange }),
     lockedState,
     ...(caseState && { caseState }),

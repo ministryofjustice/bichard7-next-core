@@ -1,5 +1,5 @@
-import nextHearingDateExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import dummyAho from "../../../../../test/test-data/error_list_aho.json"
+import nextHearingDateExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
 
 describe("NextHearingDate", () => {
@@ -7,10 +7,10 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml
       }
     ])
   })
@@ -18,9 +18,9 @@ describe("NextHearingDate", () => {
   it("Should not be able to edit next hearing date field there is no exception", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: dummyAho.hearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01"
       }
     ])
 
@@ -37,20 +37,20 @@ describe("NextHearingDate", () => {
     const resolvedCaseId = 1
     cy.task("insertCourtCasesWithFields", [
       {
-        errorStatus: "Submitted",
+        errorCount: 1,
         errorId: submittedCaseId,
-        orgForPoliceFilter: "01",
+        errorStatus: "Submitted",
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml
       },
       {
-        errorStatus: "Resolved",
+        errorCount: 1,
         errorId: resolvedCaseId,
-        orgForPoliceFilter: "01",
+        errorStatus: "Resolved",
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -81,10 +81,10 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100102,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100102,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100102
       }
     ])
 
@@ -109,8 +109,8 @@ describe("NextHearingDate", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ["<ds:NextHearingDate>false</ds:NextHearingDate>"],
-      updatedMessageHaveContent: ["<ds:NextHearingDate>2024-01-01</ds:NextHearingDate>"]
+      updatedMessageHaveContent: ["<ds:NextHearingDate>2024-01-01</ds:NextHearingDate>"],
+      updatedMessageNotHaveContent: ["<ds:NextHearingDate>false</ds:NextHearingDate>"]
     })
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
@@ -125,10 +125,10 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -152,8 +152,8 @@ describe("NextHearingDate", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ["<ds:NextHearingDate />"],
-      updatedMessageHaveContent: ["<ds:NextHearingDate>2023-12-24</ds:NextHearingDate>"]
+      updatedMessageHaveContent: ["<ds:NextHearingDate>2023-12-24</ds:NextHearingDate>"],
+      updatedMessageNotHaveContent: ["<ds:NextHearingDate />"]
     })
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
@@ -191,11 +191,11 @@ describe("NextHearingDate", () => {
     cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ["<ds:NextHearingDate>false</ds:NextHearingDate>", "<ds:NextHearingDate />"],
       updatedMessageHaveContent: [
         "<ds:NextHearingDate>2024-01-01</ds:NextHearingDate>",
         "<ds:NextHearingDate>2023-12-24</ds:NextHearingDate>"
-      ]
+      ],
+      updatedMessageNotHaveContent: ["<ds:NextHearingDate>false</ds:NextHearingDate>", "<ds:NextHearingDate />"]
     })
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
@@ -228,13 +228,13 @@ describe("NextHearingDate", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Unresolved" },
-      updatedMessageNotHaveContent: [
-        "<ds:NextHearingDate>false</ds:NextHearingDate>",
-        "<ds:NextHearingDate>203-12-aa</ds:NextHearingDate>"
-      ],
       updatedMessageHaveContent: [
         "<ds:NextHearingDate>2024-01-01</ds:NextHearingDate>",
         "<ds:NextHearingDate>2025-12-12</ds:NextHearingDate>"
+      ],
+      updatedMessageNotHaveContent: [
+        "<ds:NextHearingDate>false</ds:NextHearingDate>",
+        "<ds:NextHearingDate>203-12-aa</ds:NextHearingDate>"
       ]
     })
 
@@ -246,10 +246,10 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXml
       }
     ])
 
@@ -275,10 +275,10 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -293,8 +293,8 @@ describe("NextHearingDate", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Unresolved" },
-      updatedMessageNotHaveContent: ["<ds:NextHearingDate />"],
-      updatedMessageHaveContent: ["<ds:NextHearingDate>2023-12-24</ds:NextHearingDate>"]
+      updatedMessageHaveContent: ["<ds:NextHearingDate>2023-12-24</ds:NextHearingDate>"],
+      updatedMessageNotHaveContent: ["<ds:NextHearingDate />"]
     })
   })
 
@@ -305,11 +305,11 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323
       }
     ])
     cy.intercept("PUT", `/bichard/api/court-cases/${errorId}/update`).as("save")
@@ -344,11 +344,11 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "BichardForce02"
+        errorLockedByUsername: "BichardForce02",
+        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -362,11 +362,11 @@ describe("NextHearingDate", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        phase: 2
+        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        phase: 2,
+        updatedHearingOutcome: nextHearingDateExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -391,11 +391,11 @@ describe("NextHearingDate", () => {
       cy.task("clearCourtCases")
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
-          updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
           errorCount: 1,
-          errorLockedByUsername: "GeneralHandler"
+          errorLockedByUsername: "GeneralHandler",
+          hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323,
+          orgForPoliceFilter: "01",
+          updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100323
         }
       ])
       cy.intercept("PUT", `/bichard/api/court-cases/${errorId}/update`).as("save")

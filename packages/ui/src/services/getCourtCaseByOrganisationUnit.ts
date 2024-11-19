@@ -1,8 +1,10 @@
 import type { DataSource, EntityManager } from "typeorm"
-import CourtCase from "./entities/CourtCase"
+
 import type PromiseResult from "../types/PromiseResult"
-import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import type User from "./entities/User"
+
+import CourtCase from "./entities/CourtCase"
+import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
 
 const getCourtCaseByOrganisationUnit = (

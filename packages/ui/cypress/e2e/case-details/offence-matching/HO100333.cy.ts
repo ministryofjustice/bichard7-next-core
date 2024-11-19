@@ -4,11 +4,11 @@ import HO100333 from "./fixtures/HO100333.json"
 describe("Offence matching HO100333", () => {
   const fields = {
     defendantName: "Offence Matching HO100333",
-    orgForPoliceFilter: "01",
-    hearingOutcome: HO100333,
     errorCount: 2,
     errorReason: "HO100333",
-    errorReport: "HO100333||ds:OffenceReasonSequence"
+    errorReport: "HO100333||ds:OffenceReasonSequence",
+    hearingOutcome: HO100333,
+    orgForPoliceFilter: "01"
   }
 
   before(() => {

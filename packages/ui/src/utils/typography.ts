@@ -3,4 +3,4 @@ const arial = "arial"
 const sansSerif = "sans-serif"
 const nta = "nta"
 
-export { gdsTransport, arial, sansSerif, nta }
+export { arial, gdsTransport, nta, sansSerif }

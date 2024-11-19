@@ -4,16 +4,16 @@ type BannerProps = {
 
 const Banner: React.FC<BannerProps> = ({ message }) => {
   return (
-    <div className="moj-banner" role="region" aria-label="information">
+    <div aria-label="information" className="moj-banner" role="region">
       <svg
         className="moj-banner__icon"
         fill="currentColor"
-        role="presentation"
         focusable="false"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 25 25"
         height="25"
+        role="presentation"
+        viewBox="0 0 25 25"
         width="25"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <path
           d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8

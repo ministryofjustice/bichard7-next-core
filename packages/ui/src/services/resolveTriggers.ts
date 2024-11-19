@@ -1,16 +1,19 @@
+import type { DataSource, UpdateResult } from "typeorm"
+
 import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import type { DataSource, UpdateResult } from "typeorm"
 import { In, IsNull } from "typeorm"
 import { isError } from "types/Result"
 import getSystemNotesForTriggers from "utils/getSystemNotesForTriggers"
+
+import type User from "./entities/User"
+
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import UnlockReason from "../types/UnlockReason"
 import CourtCase from "./entities/CourtCase"
 import Trigger from "./entities/Trigger"
-import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
@@ -29,7 +32,7 @@ const resolveTriggers = async (
   triggerIds: number[],
   courtCaseId: number,
   user: User
-): Promise<UpdateResult | Error> => {
+): Promise<Error | UpdateResult> => {
   const resolver = user.username
 
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
@@ -59,9 +62,9 @@ const resolveTriggers = async (
 
     const updateTriggersResult = await entityManager.getRepository(Trigger).update(
       {
-        triggerId: In(triggerIds),
         resolvedAt: IsNull(),
-        resolvedBy: IsNull()
+        resolvedBy: IsNull(),
+        triggerId: In(triggerIds)
       },
       {
         resolvedAt: new Date(),
@@ -91,9 +94,9 @@ const resolveTriggers = async (
 
     events.push(
       getAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-        user: user.username,
         auditLogVersion: 2,
         "Number Of Triggers": triggerIds.length,
+        user: user.username,
         ...generateTriggersAttributes(courtCase.triggers.filter((trigger) => triggerIds.includes(trigger.triggerId)))
       })
     )
@@ -116,9 +119,9 @@ const resolveTriggers = async (
             triggerResolvedTimestamp: IsNull()
           },
           {
+            resolutionTimestamp: hasUnresolvedExceptions ? null : new Date(),
             triggerResolvedBy: resolver,
             triggerResolvedTimestamp: new Date(),
-            resolutionTimestamp: hasUnresolvedExceptions ? null : new Date(),
             triggerStatus: "Resolved"
           }
         )
@@ -134,9 +137,9 @@ const resolveTriggers = async (
 
       events.push(
         getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-          user: user.username,
           auditLogVersion: 2,
           "Number Of Triggers": allTriggers.length,
+          user: user.username,
           ...generateTriggersAttributes(allTriggers)
         })
       )

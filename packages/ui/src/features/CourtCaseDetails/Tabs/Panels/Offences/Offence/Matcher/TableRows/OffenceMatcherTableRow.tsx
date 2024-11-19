@@ -3,16 +3,17 @@ import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import findCandidates from "utils/offenceMatcher/findCandidates"
 import getExceptionMessage from "utils/offenceMatcher/getExceptionMessage"
+
 import OffenceMatcher from "../OffenceMatcher"
 
 interface OffenceMatcherTableRowProps {
-  offenceIndex: number
   isCaseLockedToCurrentUser: boolean
+  offenceIndex: number
 }
 
 const OffenceMatcherTableRow = ({
-  offenceIndex,
-  isCaseLockedToCurrentUser
+  isCaseLockedToCurrentUser,
+  offenceIndex
 }: OffenceMatcherTableRowProps): JSX.Element => {
   const { courtCase } = useCourtCase()
   const offenceMatchingExceptionMessage = getExceptionMessage(courtCase, offenceIndex)
@@ -22,9 +23,9 @@ const OffenceMatcherTableRow = ({
       label={"Matched PNC offence"}
       value={
         <OffenceMatcher
-          offenceIndex={offenceIndex}
           candidates={findCandidates(courtCase, offenceIndex)}
           isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+          offenceIndex={offenceIndex}
         />
       }
     >

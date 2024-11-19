@@ -1,6 +1,9 @@
-import { isEmpty } from "lodash"
 import type { Amendments } from "types/Amendments"
+
+import { isEmpty } from "lodash"
+
 import type { Exception } from "../../types/exceptions"
+
 import { filterNextHearingLocationException } from "./hasNextHearingLocationException"
 
 const isNextHearingLocationAmended = (

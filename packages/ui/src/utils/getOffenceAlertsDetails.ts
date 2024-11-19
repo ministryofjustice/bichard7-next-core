@@ -1,12 +1,14 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
-import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
-import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
+
 import { EXCEPTION_PATH_PROPERTY_INDEXES } from "config"
 
+import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
+import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
+
 export type OffenceAlert = {
-  offenceIndex: string | number
   isResolved: boolean
+  offenceIndex: number | string
 }
 
 const hasException = (field: "nextHearingDate" | "nextSourceOrganisation", exception: Exception): boolean => {
@@ -54,7 +56,7 @@ const getOffenceAlertsDetails = (exceptions: Exception[], updatedFields: Amendme
       return
     }
 
-    offenceAlerts.push({ offenceIndex, isResolved })
+    offenceAlerts.push({ isResolved, offenceIndex })
   })
 
   return offenceAlerts

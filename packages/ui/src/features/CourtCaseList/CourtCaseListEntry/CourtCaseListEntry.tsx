@@ -1,12 +1,12 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
 import getLongTriggerCode from "services/entities/transformers/getLongTriggerCode"
-import Permission from "@moj-bichard7/common/types/Permission"
-
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { deleteQueryParamsByName } from "utils/deleteQueryParam"
 import groupErrorsFromReport from "utils/formatReasons/groupErrorsFromReport"
+
 import getResolutionStatus from "../../../utils/getResolutionStatus"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { ExceptionsLockTag, ExceptionsReasonCell } from "./ExceptionsColumns"
@@ -16,24 +16,24 @@ import { TriggersLockTag, TriggersReasonCell } from "./TriggersColumns"
 interface Props {
   courtCase: DisplayPartialCourtCase
   exceptionHasBeenRecentlyUnlocked: boolean
+  previousPath: null | string
   triggerHasBeenRecentlyUnlocked: boolean
-  previousPath: string | null
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
   courtCase,
   exceptionHasBeenRecentlyUnlocked,
-  triggerHasBeenRecentlyUnlocked,
-  previousPath
+  previousPath,
+  triggerHasBeenRecentlyUnlocked
 }: Props) => {
   const {
     errorId,
-    errorStatus,
-    errorLockedByUsername,
     errorLockedByUserFullName,
+    errorLockedByUsername,
     errorReport,
-    triggerLockedByUsername,
+    errorStatus,
     triggerLockedByUserFullName,
+    triggerLockedByUsername,
     triggers
   } = courtCase
 
@@ -48,7 +48,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
           .join(" ")
       : query.reasonCodes?.map((reasonCode) => getLongTriggerCode(reasonCode))
 
-  const unlockCaseWithReasonPath = (reason: "Trigger" | "Exception", caseId: string) => {
+  const unlockCaseWithReasonPath = (reason: "Exception" | "Trigger", caseId: string) => {
     deleteQueryParamsByName(["unlockException", "unlockTrigger"], searchParams)
 
     searchParams.append(`unlock${reason}`, caseId)
@@ -62,7 +62,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
   const hasTriggers = triggers.length > 0
   const hasExceptions = !!errorReport
 
-  let exceptionsReasonCell, exceptionsLockTag, triggersReasonCell, triggersLockTag
+  let exceptionsLockTag, exceptionsReasonCell, triggersLockTag, triggersReasonCell
   if (hasExceptions && currentUser.hasAccessTo[Permission.Exceptions]) {
     const displayExceptions = (query.state === "Resolved" && errorStatus === "Resolved") || errorStatus === "Unresolved"
     const exceptions = groupErrorsFromReport(errorReport)
@@ -74,11 +74,11 @@ const CourtCaseListEntry: React.FC<Props> = ({
     )
     exceptionsLockTag = displayExceptions && (
       <ExceptionsLockTag
-        errorLockedByUsername={errorLockedByUsername}
-        errorLockedByFullName={errorLockedByUserFullName}
         canUnlockCase={!!errorLockedByUsername && canUnlockCase(errorLockedByUsername)}
-        unlockPath={unlockCaseWithReasonPath("Exception", `${errorId}`)}
+        errorLockedByFullName={errorLockedByUserFullName}
+        errorLockedByUsername={errorLockedByUsername}
         exceptionsHaveBeenRecentlyUnlocked={exceptionHasBeenRecentlyUnlocked}
+        unlockPath={unlockCaseWithReasonPath("Exception", `${errorId}`)}
       />
     )
   }
@@ -90,10 +90,10 @@ const CourtCaseListEntry: React.FC<Props> = ({
     )
     triggersLockTag = (
       <TriggersLockTag
-        triggersLockedByUsername={triggerLockedByUsername}
-        triggersLockedByFullName={triggerLockedByUserFullName}
-        triggersHaveBeenRecentlyUnlocked={triggerHasBeenRecentlyUnlocked}
         canUnlockCase={!!triggerLockedByUsername && canUnlockCase(triggerLockedByUsername)}
+        triggersHaveBeenRecentlyUnlocked={triggerHasBeenRecentlyUnlocked}
+        triggersLockedByFullName={triggerLockedByUserFullName}
+        triggersLockedByUsername={triggerLockedByUsername}
         unlockPath={unlockCaseWithReasonPath("Trigger", `${errorId}`)}
       />
     )
@@ -103,16 +103,16 @@ const CourtCaseListEntry: React.FC<Props> = ({
     <tbody>
       <CaseDetailsRow
         courtCase={courtCase}
-        reasonCell={exceptionsReasonCell || triggersReasonCell}
         lockTag={exceptionsLockTag || triggersLockTag}
-        resolutionStatus={getResolutionStatus(courtCase)}
         previousPath={previousPath}
+        reasonCell={exceptionsReasonCell || triggersReasonCell}
+        resolutionStatus={getResolutionStatus(courtCase)}
       />
       {exceptionsLockTag && triggersLockTag && triggersReasonCell && (
         <ExtraReasonRow
           isLocked={!!triggerLockedByUsername}
-          reasonCell={triggersReasonCell}
           lockTag={triggersLockTag}
+          reasonCell={triggersReasonCell}
         />
       )}
     </tbody>

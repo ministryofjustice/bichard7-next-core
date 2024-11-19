@@ -1,14 +1,17 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type Trigger from "services/entities/Trigger"
+import type { DataSource, EntityManager } from "typeorm"
+
 import { faker } from "@faker-js/faker"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
 import { subYears } from "date-fns"
 import sample from "lodash.sample"
-import type Trigger from "services/entities/Trigger"
-import type { DataSource, EntityManager } from "typeorm"
-import CourtCase from "../../src/services/entities/CourtCase"
+
 import type { Result } from "../../src/types/Result"
+
+import CourtCase from "../../src/services/entities/CourtCase"
 import { isError } from "../../src/types/Result"
 import createDummyAsn from "./createDummyAsn"
 import createDummyCourtCode from "./createDummyCourtCode"
@@ -56,7 +59,7 @@ export default async (
 
   const hasUnresolvedTriggers = triggers.filter((trigger) => trigger.status === "Unresolved").length > 0
 
-  const randomisedAho = generateAho({ firstName, lastName, courtName, ptiurn, ahoTemplate })
+  const randomisedAho = generateAho({ ahoTemplate, courtName, firstName, lastName, ptiurn })
 
   const parsedAho: Result<AnnotatedHearingOutcome> = parseAhoXml(randomisedAho)
 
@@ -66,7 +69,7 @@ export default async (
   }
 
   const notes = createDummyNotes(dataSource, caseId, triggers, isResolved)
-  const { errorReport, errorReason, exceptionCount, ahoWithExceptions } = createDummyExceptions(
+  const { ahoWithExceptions, errorReason, errorReport, exceptionCount } = createDummyExceptions(
     hasUnresolvedTriggers,
     parsedAho
   )
@@ -79,50 +82,50 @@ export default async (
   }
 
   const courtCase = await dataSource.getRepository(CourtCase).save({
-    errorId: caseId,
-    messageId: randomUUID(),
-    orgForPoliceFilter: orgCode,
-    errorLockedByUsername: !isResolved && hasExceptions && randomBoolean() ? randomUsername() : null,
-    triggerLockedByUsername:
-      !isResolved && hasUnresolvedTriggers && randomBoolean() && triggersExist ? randomUsername() : null,
-    phase: 1,
-    errorStatus: exceptionCount === 0 ? null : !isResolved && hasExceptions ? "Unresolved" : "Resolved",
-    triggerStatus: triggers.length === 0 ? null : hasUnresolvedTriggers ? "Unresolved" : "Resolved",
-    errorQualityChecked: 1,
-    triggerQualityChecked: 1,
-    triggerCount: triggers.length,
-    isUrgent: randomBoolean(),
     asn: createDummyAsn(caseDate.getFullYear(), orgCode + faker.string.alpha(2).toUpperCase()),
     courtCode: createDummyCourtCode(orgCode),
-    hearingOutcome: errorReport
-      ? ahoWithExceptionsXml
-      : generateAho({ firstName, lastName, courtName, ptiurn, ahoTemplate }),
-    errorReport: errorReport,
-    createdTimestamp: caseDate,
-    errorReason: errorReason,
-    triggerReason: triggers.length > 0 ? triggers[0].triggerCode : null,
-    errorCount: exceptionCount,
-    userUpdatedFlag: randomBoolean() ? 1 : 0,
     courtDate: caseDate,
-    ptiurn: ptiurn,
     courtName: courtName,
-    messageReceivedTimestamp: caseDate,
-    defendantName: `${firstName} ${lastName}`,
+    courtReference: ptiurn,
     courtRoom: Math.round(Math.random() * 15)
       .toString()
       .padStart(2, "0"),
-    courtReference: ptiurn,
+    createdTimestamp: caseDate,
+    defendantName: `${firstName} ${lastName}`,
+    errorCount: exceptionCount,
+    errorId: caseId,
     errorInsertedTimestamp: caseDate,
-    triggerInsertedTimestamp: caseDate,
-    pncUpdateEnabled: "Y",
-    notes: notes,
-    triggers: triggers,
-    resolutionTimestamp: resolutionDate,
+    errorLockedByUsername: !isResolved && hasExceptions && randomBoolean() ? randomUsername() : null,
+    errorQualityChecked: 1,
+    errorReason: errorReason,
+    errorReport: errorReport,
     errorResolvedBy: isResolved ? randomName() : null,
+    errorResolvedTimestamp: isResolved ? resolutionDate : null,
+    errorStatus: exceptionCount === 0 ? null : !isResolved && hasExceptions ? "Unresolved" : "Resolved",
+    hearingOutcome: errorReport
+      ? ahoWithExceptionsXml
+      : generateAho({ ahoTemplate, courtName, firstName, lastName, ptiurn }),
+    isUrgent: randomBoolean(),
+    messageId: randomUUID(),
+    messageReceivedTimestamp: caseDate,
+    notes: notes,
+    orgForPoliceFilter: orgCode,
+    phase: 1,
+    pncUpdateEnabled: "Y",
+    ptiurn: ptiurn,
+    resolutionTimestamp: resolutionDate,
+    triggerCount: triggers.length,
+    triggerInsertedTimestamp: caseDate,
+    triggerLockedByUsername:
+      !isResolved && hasUnresolvedTriggers && randomBoolean() && triggersExist ? randomUsername() : null,
+    triggerQualityChecked: 1,
+    triggerReason: triggers.length > 0 ? triggers[0].triggerCode : null,
     triggerResolvedBy: (isResolved && triggersExist) || (triggersExist && !hasUnresolvedTriggers) ? randomName() : null,
     triggerResolvedTimestamp:
       (isResolved && triggersExist) || (triggersExist && !hasUnresolvedTriggers) ? new Date() : null,
-    errorResolvedTimestamp: isResolved ? resolutionDate : null
+    triggers: triggers,
+    triggerStatus: triggers.length === 0 ? null : hasUnresolvedTriggers ? "Unresolved" : "Resolved",
+    userUpdatedFlag: randomBoolean() ? 1 : 0
   })
 
   return courtCase

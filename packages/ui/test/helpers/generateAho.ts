@@ -1,9 +1,9 @@
 export type GenerateAhoParams = {
   ahoTemplate: string
+  courtName: string
   firstName: string
   lastName: string
   ptiurn: string
-  courtName: string
 }
 
 const generateAho = (params: GenerateAhoParams) => {

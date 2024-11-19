@@ -1,5 +1,7 @@
 import { createRef } from "react"
+
 import type { Selection } from "./handleAsnForwardSlashes"
+
 import handleAsnForwardSlashes, {
   handleBackwardJumpingForwardSlash,
   handleDeletingFirstCharacter,
@@ -10,7 +12,7 @@ describe("handleAsnForwardSlashes", () => {
   const asnInputRef = createRef<HTMLInputElement>()
 
   it("Tracks the movement of the cursor on change", () => {
-    const selection: Selection = { start: 4, end: 4 }
+    const selection: Selection = { end: 4, start: 4 }
     const amendedAsn = "123456"
     const key = ""
 
@@ -30,7 +32,7 @@ describe("handleAsnForwardSlashes", () => {
   })
 
   it("returns true if selection start is 'null'", () => {
-    const selection: Selection = { start: null, end: 4 }
+    const selection: Selection = { end: 4, start: null }
     const amendedAsn = "123456"
     const key = ""
 
@@ -40,7 +42,7 @@ describe("handleAsnForwardSlashes", () => {
   })
 
   it("returns true if selection end is 'null'", () => {
-    const selection: Selection = { start: 4, end: null }
+    const selection: Selection = { end: null, start: 4 }
     const amendedAsn = "123456"
     const key = ""
 

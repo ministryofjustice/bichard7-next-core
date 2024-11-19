@@ -1,4 +1,5 @@
 import { useState } from "react"
+
 import {
   AccordionButton,
   AccordionContent,
@@ -8,27 +9,27 @@ import {
 } from "./Accordion.styles"
 
 type Props = {
-  id: string
-  heading: string
   children: React.ReactNode
+  heading: string
+  id: string
 }
 
-const Accordion = ({ id, heading, children }: Props) => {
+const Accordion = ({ children, heading, id }: Props) => {
   const [isContentVisible, setIsContentVisible] = useState(false)
 
   const toggleContentVisibility = () => setIsContentVisible((previousValue) => !previousValue)
 
   return (
-    <div id={id} className="govuk-accordion__section b7-accordion">
+    <div className="govuk-accordion__section b7-accordion" id={id}>
       <AccordionHeader className="govuk-accordion__section-header">
         <AccordionHeading className="govuk-accordion__section-heading">
           <AccordionButton
-            type="button"
             aria-controls={`${id}-content`}
-            className="govuk-accordion__section-button b7-accordion__button"
             aria-expanded={isContentVisible}
             aria-label={heading}
+            className="govuk-accordion__section-button b7-accordion__button"
             onClick={toggleContentVisibility}
+            type="button"
           >
             <AccordionToggle className="govuk-accordion__section-toggle">
               <span className="govuk-accordion__section-toggle-focus">
@@ -42,7 +43,7 @@ const Accordion = ({ id, heading, children }: Props) => {
         </AccordionHeading>
       </AccordionHeader>
       {isContentVisible && (
-        <AccordionContent id={`${id}-content`} className="accordion__content">
+        <AccordionContent className="accordion__content" id={`${id}-content`}>
           {children}
         </AccordionContent>
       )}

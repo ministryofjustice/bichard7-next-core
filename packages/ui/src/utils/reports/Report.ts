@@ -3,14 +3,14 @@ export interface Report<T> {
 }
 
 export interface ResolvedException {
-  ASN: string | null
-  PTIURN: string
-  defendantName: string | null
-  courtName: string
-  hearingDate: string
+  ASN: null | string
   caseReference: string
+  courtName: string
   dateTimeRecievedByCJSE: string
   dateTimeResolved: string
+  defendantName: null | string
+  hearingDate: string
   notes: string[]
+  PTIURN: string
   resolutionAction: string
 }

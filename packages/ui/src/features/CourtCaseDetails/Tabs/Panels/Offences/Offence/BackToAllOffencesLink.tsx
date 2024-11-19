@@ -7,13 +7,13 @@ interface BackToAllOffencesLinkProps {
 export const BackToAllOffencesLink = ({ onClick }: BackToAllOffencesLinkProps) => {
   return (
     <a
-      style={{ color: textBlue }}
-      href="/"
       className="govuk-back-link"
+      href="/"
       onClick={(e) => {
         e.preventDefault()
         onClick()
       }}
+      style={{ color: textBlue }}
     >
       {"Back to all offences"}
     </a>

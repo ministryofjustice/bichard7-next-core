@@ -65,8 +65,8 @@ describe("Select all", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        triggerLockedByUsername: "BichardForce04",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        triggerLockedByUsername: "BichardForce04"
       }
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })

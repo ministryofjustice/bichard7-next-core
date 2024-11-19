@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import amendForceOwner from "./amendForceOwner"
 
@@ -13,10 +14,10 @@ describe("amend force owner", () => {
 
   it("amends force owner when force owner property exist", () => {
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
-      SecondLevelCode: null,
-      ThirdLevelCode: null,
       BottomLevelCode: null,
-      OrganisationUnitCode: "original_value"
+      OrganisationUnitCode: "original_value",
+      SecondLevelCode: null,
+      ThirdLevelCode: null
     }
 
     amendForceOwner(testString, aho)

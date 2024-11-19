@@ -1,4 +1,5 @@
 import SurveyFeedback from "services/entities/SurveyFeedback"
+
 import { expectToHaveNumberOfFeedbacks, loginAndVisit } from "../support/helpers"
 
 const submitAFeedback = () => {

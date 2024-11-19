@@ -1,5 +1,6 @@
-import { CSRF } from "config"
 import type { NextApiRequest, NextApiResponse } from "next"
+
+import { CSRF } from "config"
 
 export default function handler(_: NextApiRequest, res: NextApiResponse) {
   const { NODE_ENV } = process.env

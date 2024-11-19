@@ -1,5 +1,5 @@
 export enum ExceptionBadgeType {
-  SystemError = "System Error",
   AddedByCourt = "Added by Court",
+  SystemError = "System Error",
   Unmatched = "Unmatched"
 }

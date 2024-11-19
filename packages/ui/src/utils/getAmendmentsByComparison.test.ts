@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import getAmendmentsByComparison from "./getAmendmentsByComparison"
 
 describe("getAmendmentsByComparison", () => {

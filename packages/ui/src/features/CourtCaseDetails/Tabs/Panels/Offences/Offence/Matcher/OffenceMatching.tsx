@@ -6,23 +6,24 @@ import getExceptionMessage from "utils/offenceMatcher/getExceptionMessage"
 import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import isEnabled from "utils/offenceMatcher/isEnabled"
 import offenceMatchingExceptions from "utils/offenceMatcher/offenceMatchingExceptions"
+
 import LegacySequencingRenderer from "./LegacySequencingRenderer"
 import OffenceMatcherRenderer from "./OffenceMatcherRenderer"
 
 type OffenceMatchingProps = {
-  offenceIndex: number
-  offence: Offence
-  isCaseUnresolved: boolean
   exceptions: Exception[]
   isCaseLockedToCurrentUser: boolean
+  isCaseUnresolved: boolean
+  offence: Offence
+  offenceIndex: number
 }
 
 export const OffenceMatching = ({
-  offenceIndex,
-  offence,
-  isCaseUnresolved,
   exceptions,
-  isCaseLockedToCurrentUser
+  isCaseLockedToCurrentUser,
+  isCaseUnresolved,
+  offence,
+  offenceIndex
 }: OffenceMatchingProps) => {
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
@@ -38,9 +39,9 @@ export const OffenceMatching = ({
     <>
       {displayOffenceMatcher ? (
         <OffenceMatcherRenderer
-          offenceMatchingException={!!offenceMatchingException}
-          offenceIndex={offenceIndex}
           isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+          offenceIndex={offenceIndex}
+          offenceMatchingException={!!offenceMatchingException}
           offenceReasonSequence={offenceReasonSequence}
         />
       ) : (

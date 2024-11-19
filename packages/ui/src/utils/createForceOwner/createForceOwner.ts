@@ -1,6 +1,6 @@
 import type { OrganisationUnitCodes } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
-export default (orgForPoliceFilter: string): OrganisationUnitCodes | Error => {
+export default (orgForPoliceFilter: string): Error | OrganisationUnitCodes => {
   const orgForPoliceFilterCode = orgForPoliceFilter.split(",")[0]
 
   if (orgForPoliceFilterCode.length < 2) {
@@ -12,9 +12,9 @@ export default (orgForPoliceFilter: string): OrganisationUnitCodes | Error => {
   const bottomLevelCode = "00"
 
   return {
-    SecondLevelCode: secondLevelCode,
-    ThirdLevelCode: thirdLevelCode,
     BottomLevelCode: bottomLevelCode,
-    OrganisationUnitCode: secondLevelCode + thirdLevelCode + bottomLevelCode
+    OrganisationUnitCode: secondLevelCode + thirdLevelCode + bottomLevelCode,
+    SecondLevelCode: secondLevelCode,
+    ThirdLevelCode: thirdLevelCode
   }
 }

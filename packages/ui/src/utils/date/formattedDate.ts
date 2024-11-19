@@ -20,7 +20,7 @@ export const formatDisplayedDate = (date: Date | string, formatString = displaye
 export const formatFormInputDateString = (date: Date): string =>
   isValid(date) ? format(date, formInputDateFormat) : ""
 
-export const formatStringDateAsDisplayedDate = (dateString?: string | null): string => {
+export const formatStringDateAsDisplayedDate = (dateString?: null | string): string => {
   const dateStringAsDate = !!dateString && parse(dateString, formInputDateFormat, new Date())
   return dateStringAsDate && isValid(dateStringAsDate) ? formatDisplayedDate(dateStringAsDate) : ""
 }

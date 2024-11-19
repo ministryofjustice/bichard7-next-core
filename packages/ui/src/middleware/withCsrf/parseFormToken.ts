@@ -1,6 +1,8 @@
-import { unsign } from "cookie-signature"
 import type QueryString from "qs"
 import type { Result } from "types/Result"
+
+import { unsign } from "cookie-signature"
+
 import { CSRF } from "../../config"
 
 export interface ParseFormTokenResult {
@@ -8,7 +10,7 @@ export interface ParseFormTokenResult {
 }
 
 export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> => {
-  const { tokenName, formSecret } = CSRF
+  const { formSecret, tokenName } = CSRF
 
   // eslint-disable-next-line no-prototype-builtins
   if (!formData.hasOwnProperty(tokenName)) {

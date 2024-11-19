@@ -1,6 +1,8 @@
 import type { PncCourtCase } from "@moj-bichard7/core/types/PncQueryResult"
+
 import ConditionalRender from "components/ConditionalRender"
 import { useState } from "react"
+
 import Disposal from "./Disposal"
 import {
   CCR,
@@ -31,11 +33,11 @@ const PncCourtCaseAccordion = ({
   return (
     <CourtCase key={courtCaseReference}>
       <CourtCaseHeaderContainer
+        aria-controls={`CCR-${courtCaseReference}-content`}
+        aria-expanded={isContentVisible}
+        aria-label={`CCR-${courtCaseReference}`}
         className={`courtcase-toggle ${isContentVisible ? "expanded" : ""}`}
         onClick={toggleContentVisibility}
-        aria-expanded={isContentVisible}
-        aria-controls={`CCR-${courtCaseReference}-content`}
-        aria-label={`CCR-${courtCaseReference}`}
       >
         <CourtCaseHeader>
           <CCR className="govuk-heading-m">{courtCaseReference}</CCR>
@@ -52,12 +54,12 @@ const PncCourtCaseAccordion = ({
 
       {isContentVisible && (
         <div id={`CCR-${courtCaseReference}-content`}>
-          {offences?.map(({ offence: details, adjudication, disposals }, i) => {
+          {offences?.map(({ adjudication, disposals, offence: details }, i) => {
             const hasDisposals = disposals?.length !== undefined && disposals.length > 0
 
             return (
               <Offence className="pnc-offence" key={`${i}-${details.sequenceNumber}`}>
-                <PncOffenceDetails details={details} adjudication={adjudication} />
+                <PncOffenceDetails adjudication={adjudication} details={details} />
                 <DisposalHeader>{"Disposals"}</DisposalHeader>
                 <ConditionalRender isRendered={!hasDisposals}>
                   <p className={"no-disposals-message"}>{"No disposals"}</p>

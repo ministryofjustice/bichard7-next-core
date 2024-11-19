@@ -1,16 +1,20 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { ManualResolution } from "types/ManualResolution"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import axios from "axios"
 import { differenceInMilliseconds } from "date-fns"
-import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
-import type { DataSource } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
-import type { ManualResolution } from "types/ManualResolution"
 import { ResolutionReasonCode } from "types/ManualResolution"
 import { isError } from "types/Result"
+
+import type { TestTrigger } from "../utils/manageTriggers"
+
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "../../src/services/getCourtCaseByOrganisationUnit"
@@ -20,7 +24,6 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
-import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 
 jest.setTimeout(100000)
@@ -45,10 +48,10 @@ describe("resolveCourtCase", () => {
   const visibleForce = "36"
   const resolverUsername = "GeneralHandler"
   const user = {
-    visibleCourts: [],
-    visibleForces: [visibleForce],
+    hasAccessTo: hasAccessToAll,
     username: resolverUsername,
-    hasAccessTo: hasAccessToAll
+    visibleCourts: [],
+    visibleForces: [visibleForce]
   } as Partial<User> as User
 
   beforeAll(async () => {
@@ -80,11 +83,11 @@ describe("resolveCourtCase", () => {
   it("Should call cases by organisation unit query", async () => {
     const [courtCase] = await insertCourtCasesWithFields([
       {
+        errorCount: 4,
         errorLockedByUsername: resolverUsername,
-        triggerLockedByUsername: resolverUsername,
-        orgForPoliceFilter: visibleForce,
         errorStatus: "Unresolved",
-        errorCount: 4
+        orgForPoliceFilter: visibleForce,
+        triggerLockedByUsername: resolverUsername
       }
     ])
     await resolveCourtCase(
@@ -104,11 +107,11 @@ describe("resolveCourtCase", () => {
     it("Should resolve a case and populate a resolutionTimestamp", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 4,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 4
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
@@ -164,21 +167,21 @@ describe("resolveCourtCase", () => {
 
       // Creates audit log events
       const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${courtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const auditLogs = (await apiResult.data) as [{ events: [{ eventCode: string; timestamp: string }] }]
       const events = auditLogs[0].events
       const unlockedEvent = events.find((event) => event.eventCode === "exceptions.unlocked")
       const resolvedEvent = events.find((event) => event.eventCode === "exceptions.resolved")
 
       expect(unlockedEvent).toStrictEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "exceptions.unlocked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception unlocked",
         timestamp: expect.anything(),
-        user: resolverUsername,
-        eventCode: "exceptions.unlocked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: resolverUsername
       })
 
       expect(resolvedEvent).toStrictEqual({
@@ -188,11 +191,11 @@ describe("resolveCourtCase", () => {
           resolutionReasonText: resolution.reasonText
         },
         category: "information",
+        eventCode: "exceptions.resolved",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception marked as resolved by user",
-        eventCode: "exceptions.resolved",
-        user: resolverUsername,
-        timestamp: expect.anything()
+        timestamp: expect.anything(),
+        user: resolverUsername
       })
 
       expect(new Date(unlockedEvent!.timestamp).getTime()).toBeGreaterThanOrEqual(
@@ -205,20 +208,20 @@ describe("resolveCourtCase", () => {
       const secondCaseId = 1
       const [firstCourtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorId: firstCaseId,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         },
         {
+          errorCount: 1,
           errorId: secondCaseId,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
@@ -248,12 +251,12 @@ describe("resolveCourtCase", () => {
       const caseId = 0
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorId: caseId,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: "3LSE",
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: "3LSE",
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
@@ -280,11 +283,11 @@ describe("resolveCourtCase", () => {
       const anotherUser = "BichardForce02"
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorLockedByUsername: anotherUser,
-          triggerLockedByUsername: anotherUser,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: anotherUser
         }
       ])
 
@@ -307,11 +310,11 @@ describe("resolveCourtCase", () => {
     it("Should not resolve a case when the case is not locked", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorLockedByUsername: null,
-          triggerLockedByUsername: null,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: null
         }
       ])
 
@@ -334,11 +337,11 @@ describe("resolveCourtCase", () => {
     it("Should return the error when the resolution reason is 'Reallocated' but reasonText is not provided", async () => {
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
@@ -372,19 +375,19 @@ describe("resolveCourtCase", () => {
     beforeEach(async () => {
       ;[courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
     })
@@ -423,19 +426,19 @@ describe("resolveCourtCase", () => {
     beforeEach(async () => {
       courtCases = await insertCourtCasesWithFields([
         {
-          errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          errorStatus: null,
           errorCount: 0,
-          orgForPoliceFilter: visibleForce
+          errorLockedByUsername: resolverUsername,
+          errorStatus: null,
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
 
       const trigger: TestTrigger = {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-12T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-12T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
       await insertTriggers(0, [trigger])
     })
@@ -474,11 +477,11 @@ describe("resolveCourtCase", () => {
     beforeEach(async () => {
       courtCases = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorLockedByUsername: resolverUsername,
-          triggerLockedByUsername: resolverUsername,
-          orgForPoliceFilter: visibleForce,
           errorStatus: "Unresolved",
-          errorCount: 1
+          orgForPoliceFilter: visibleForce,
+          triggerLockedByUsername: resolverUsername
         }
       ])
     })

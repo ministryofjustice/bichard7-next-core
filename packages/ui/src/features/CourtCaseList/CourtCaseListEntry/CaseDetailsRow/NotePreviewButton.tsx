@@ -2,6 +2,7 @@ import { Preview } from "components/Preview"
 import { truncate } from "lodash"
 import { Dispatch, SetStateAction } from "react"
 import { DisplayNote } from "types/display/Notes"
+
 import ConditionalRender from "../../../../components/ConditionalRender"
 import { validateMostRecentNoteDate } from "./CourtCaseListEntryHelperFunction"
 import { NotePreviewBody, NotePreviewHeader, StyledPreviewButton } from "./NotePreviewButton.styles"
@@ -12,9 +13,9 @@ interface NotePreviewProps {
 }
 
 interface NotePreviewButtonProps {
+  numberOfNotes: number
   previewState: boolean
   setShowPreview: Dispatch<SetStateAction<boolean>>
-  numberOfNotes: number
 }
 
 export const NotePreview = ({ latestNote, numberOfNotes }: NotePreviewProps) => {
@@ -39,10 +40,10 @@ export const NotePreviewButton: React.FC<NotePreviewButtonProps> = (props: NoteP
     <>
       <ConditionalRender isRendered={props.numberOfNotes > 0}>
         <StyledPreviewButton
-          showPreview={props.previewState}
+          hideLabel={buttonText}
           onClick={props.setShowPreview}
           previewLabel={buttonText}
-          hideLabel={buttonText}
+          showPreview={props.previewState}
         />
       </ConditionalRender>
     </>

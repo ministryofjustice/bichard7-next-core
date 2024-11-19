@@ -3,6 +3,7 @@ jest.mock("utils/parseFormData")
 
 import type { IncomingMessage } from "http"
 import type QueryString from "qs"
+
 import generateCsrfToken from "../../../src/middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "../../../src/middleware/withCsrf/verifyCsrfToken"
 import parseFormData from "../../../src/utils/parseFormData"
@@ -42,7 +43,7 @@ it("should be valid when request method is GET", async () => {
 
   expect(result).toBeDefined()
 
-  const { isValid, formData } = result
+  const { formData, isValid } = result
   expect(isValid).toBe(true)
   expectFormDataToBeValid(formData, validFormToken)
 })
@@ -55,7 +56,7 @@ it("should be invalid when form token is expired", async () => {
 
   expect(result).toBeDefined()
 
-  const { isValid, formData } = result
+  const { formData, isValid } = result
   expect(isValid).toBe(false)
   expectFormDataToBeValid(formData, expiredFormToken)
 })
@@ -69,7 +70,7 @@ it("should be invalid when form token returns error", async () => {
 
   expect(result).toBeDefined()
 
-  const { isValid, formData } = result
+  const { formData, isValid } = result
   expect(isValid).toBe(false)
   expectFormDataToBeValid(formData, invalidFormToken)
 })

@@ -1,6 +1,7 @@
 import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import type { ParsedUrlQuery } from "querystring"
 import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+
 import generateCsrfToken from "./generateCsrfToken"
 import verifyCsrfToken from "./verifyCsrfToken"
 
@@ -12,7 +13,7 @@ export default <Props extends { [key: string]: any }>(
     context: GetServerSidePropsContext<ParsedUrlQuery>
   ): Promise<GetServerSidePropsResult<Props>> => {
     const { req, res } = context
-    const { isValid, formData } = await verifyCsrfToken(req)
+    const { formData, isValid } = await verifyCsrfToken(req)
 
     if (!isValid) {
       res.statusCode = 403
@@ -24,7 +25,7 @@ export default <Props extends { [key: string]: any }>(
 
     const formToken = generateCsrfToken(req)
 
-    return getServerSidePropsFunction({ ...context, formData, csrfToken: formToken } as CsrfServerSidePropsContext)
+    return getServerSidePropsFunction({ ...context, csrfToken: formToken, formData } as CsrfServerSidePropsContext)
   }
 
   return result

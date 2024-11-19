@@ -1,18 +1,20 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+import type { Amendments } from "types/Amendments"
+import type PromiseResult from "types/PromiseResult"
+
+import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import amendCourtCase from "services/amendCourtCase"
 import insertNotes from "services/insertNotes"
 import sendToQueue from "services/mq/sendToQueue"
 import updateCourtCaseStatus from "services/updateCourtCaseStatus"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
-import type { DataSource } from "typeorm"
-import type { Amendments } from "types/Amendments"
-import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 
 const phase1ResubmissionQueue = process.env.PHASE_1_RESUBMIT_QUEUE_NAME ?? "PHASE_1_RESUBMIT_QUEUE"
@@ -52,8 +54,8 @@ const resubmitCourtCase = async (
 
         const addNoteResult = await insertNotes(entityManager, [
           {
-            noteText: `${user.username}: Portal Action: Resubmitted Message.`,
             errorId: courtCaseId,
+            noteText: `${user.username}: Portal Action: Resubmitted Message.`,
             userId: "System"
           }
         ])

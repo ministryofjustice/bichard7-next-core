@@ -1,14 +1,16 @@
+import type { DataSource } from "typeorm"
+
 import SurveyFeedback from "services/entities/SurveyFeedback"
 import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
-import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
 import { SurveyFeedbackType } from "types/SurveyFeedback"
+
 import deleteFromEntity from "../utils/deleteFromEntity"
 
 describe("insertSurveyFeedback", () => {
   let dataSource: DataSource
-  const dummyResponse = { experience: 0, comment: "some comment" }
+  const dummyResponse = { comment: "some comment", experience: 0 }
   const feedbackId = 0
 
   beforeAll(async () => {
@@ -25,9 +27,9 @@ describe("insertSurveyFeedback", () => {
 
   it("should insert a new survey", async () => {
     const feedback = {
+      feedbackType: SurveyFeedbackType.General,
       id: feedbackId,
-      response: dummyResponse,
-      feedbackType: SurveyFeedbackType.General
+      response: dummyResponse
     }
 
     const result = await insertSurveyFeedback(dataSource, feedback as SurveyFeedback)
@@ -42,9 +44,9 @@ describe("insertSurveyFeedback", () => {
   it("Should return the error when the query fails", async () => {
     const nonExistentUserId = 9999
     const feedback = {
+      feedbackType: SurveyFeedbackType.General,
       id: feedbackId,
       response: dummyResponse,
-      feedbackType: SurveyFeedbackType.General,
       userId: nonExistentUserId
     }
 

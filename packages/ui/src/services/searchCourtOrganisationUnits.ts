@@ -1,4 +1,5 @@
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+
 import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
 import { sortBy } from "lodash"
 

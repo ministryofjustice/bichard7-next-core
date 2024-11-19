@@ -5,36 +5,36 @@ describe("View resolution status", () => {
   })
   ;[
     {
-      expectedResolutionStatus: "Unresolved",
       errorStatus: "Unresolved",
+      expectedResolutionStatus: "Unresolved",
       triggerStatus: "Unresolved"
     },
     {
-      expectedResolutionStatus: "Submitted",
       errorStatus: "Submitted",
+      expectedResolutionStatus: "Submitted",
       triggerStatus: "Unresolved"
     },
     {
-      expectedResolutionStatus: "Resolved",
       errorStatus: "Resolved",
+      expectedResolutionStatus: "Resolved",
       triggerStatus: "Resolved"
     }
-  ].forEach(({ expectedResolutionStatus, errorStatus, triggerStatus }) => {
+  ].forEach(({ errorStatus, expectedResolutionStatus, triggerStatus }) => {
     it(`Should correctly display ${expectedResolutionStatus} status`, () => {
       const errorResolved = errorStatus === "Resolved"
       const triggerResolved = triggerStatus === "Resolved"
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
           errorCount: errorStatus ? 1 : 0,
-          errorStatus: errorStatus,
-          triggerCount: triggerStatus ? 1 : 0,
-          triggerStatus: triggerStatus,
-          errorResolvedTimestamp: errorResolved ? new Date() : null,
-          triggerResolvedTimestamp: triggerResolved ? new Date() : null,
           errorResolvedBy: errorResolved ? "GeneralHandler" : null,
+          errorResolvedTimestamp: errorResolved ? new Date() : null,
+          errorStatus: errorStatus,
+          orgForPoliceFilter: "01",
+          resolutionTimestamp: errorResolved && triggerResolved ? new Date() : null,
+          triggerCount: triggerStatus ? 1 : 0,
           triggerResolvedBy: triggerResolved ? "GeneralHandler" : null,
-          resolutionTimestamp: errorResolved && triggerResolved ? new Date() : null
+          triggerResolvedTimestamp: triggerResolved ? new Date() : null,
+          triggerStatus: triggerStatus
         }
       ])
 

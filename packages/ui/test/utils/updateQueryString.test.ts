@@ -6,7 +6,7 @@ describe("updateQueryString", () => {
 
     global.window = {
       location: new URL("https://localhost:4080/bichard?key1=value1&key2=value2#OtherValue") as unknown as Location
-    } as unknown as Window & typeof globalThis
+    } as unknown as typeof globalThis & Window
 
     global.history = {
       pushState: (_, __, url) => {

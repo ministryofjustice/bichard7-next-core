@@ -22,8 +22,8 @@ describe("GOV.UK Assets", () => {
       .then((iconHref) => {
         const iconUrl = iconHref as unknown as string
         cy.request({
-          url: iconUrl,
-          failOnStatusCode: false
+          failOnStatusCode: false,
+          url: iconUrl
         }).then((resp) => {
           expect(resp.status).not.to.equal(404)
           expect(resp.status).to.equal(200)

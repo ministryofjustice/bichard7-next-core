@@ -3,11 +3,11 @@ import { Table } from "govuk-react"
 import { DisplayNote } from "types/display/Notes"
 
 interface Props {
-  notes: DisplayNote[]
   displayForce?: boolean
+  notes: DisplayNote[]
 }
 
-export const NotesTable = ({ notes, displayForce }: Props) => {
+export const NotesTable = ({ displayForce, notes }: Props) => {
   return (
     <Table
       className={"notes-table"}

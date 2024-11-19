@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { gdsBlack } from "utils/colours"
-import { nta, arial, sansSerif } from "utils/typography"
+import { arial, nta, sansSerif } from "utils/typography"
 
 const LinksRow = styled.div`
   display: flex;

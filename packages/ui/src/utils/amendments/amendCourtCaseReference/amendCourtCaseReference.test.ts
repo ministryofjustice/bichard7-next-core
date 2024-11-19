@@ -1,5 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import cloneDeep from "lodash.clonedeep"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendCourtCaseReference from "./amendCourtCaseReference"
@@ -81,7 +83,7 @@ describe("court case reference", () => {
 
     amendCourtCaseReference(amendments, aho)
 
-    amendments.forEach(({ value, offenceIndex }) => {
+    amendments.forEach(({ offenceIndex, value }) => {
       expect(
         aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].CourtCaseReferenceNumber
       ).toEqual(value)

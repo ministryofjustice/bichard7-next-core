@@ -1,15 +1,8 @@
-import { subDays } from "date-fns"
 import type { DateRange } from "types/CaseListQueryParams"
 
+import { subDays } from "date-fns"
+
 export const CaseAgeOptions: Record<string, () => DateRange> = {
-  Today: () => {
-    const today = new Date()
-    return { from: today, to: today }
-  },
-  Yesterday: () => {
-    const yesterday = subDays(new Date(), 1)
-    return { from: yesterday, to: yesterday }
-  },
   "2 days ago": () => {
     const day2 = subDays(new Date(), 2)
     return { from: day2, to: day2 }
@@ -66,5 +59,13 @@ export const CaseAgeOptions: Record<string, () => DateRange> = {
     const unixEpoch = new Date(0)
     const day15 = subDays(new Date(), 15)
     return { from: unixEpoch, to: day15 }
+  },
+  Today: () => {
+    const today = new Date()
+    return { from: today, to: today }
+  },
+  Yesterday: () => {
+    const yesterday = subDays(new Date(), 1)
+    return { from: yesterday, to: yesterday }
   }
 }

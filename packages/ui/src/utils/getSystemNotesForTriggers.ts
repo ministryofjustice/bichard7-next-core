@@ -9,8 +9,8 @@ const getSystemNotesForTriggers = (triggers: Trigger[], resolver: string, errorI
     const noteText = `${portalActionText} ${trigger.shortTriggerCode}`
 
     notes.push({
-      noteText,
       errorId,
+      noteText,
       userId: "System"
     })
   })

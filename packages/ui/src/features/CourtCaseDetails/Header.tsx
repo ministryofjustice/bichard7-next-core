@@ -1,3 +1,4 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
@@ -9,16 +10,15 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { Heading } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
-import Permission from "@moj-bichard7/common/types/Permission"
-
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
+
 import Form from "../../components/Form"
+import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
 import { ButtonContainer, LockedTagContainer, StyledButton, StyledSecondaryButton } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
-import getResolutionStatus from "../../utils/getResolutionStatus"
 
 interface Props {
   canReallocate: boolean
@@ -64,29 +64,29 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   return (
     <HeaderContainer id="header-container">
       <HeaderRow>
-        <Heading className="hidden-header" as="h1" size="LARGE">
+        <Heading as="h1" className="hidden-header" size="LARGE">
           {"Case details"}
         </Heading>
         <Heading as="h2" size="MEDIUM">
           {courtCase.defendantName}
           {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
           <Badge
+            className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
+            colour={BadgeColours.Blue}
             isRendered={caseIsViewOnly}
             label="View only"
-            colour={BadgeColours.Blue}
-            className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
           />
         </Heading>
         <LockedTagContainer>
           <LockStatusTag
             isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-            resolutionStatus={courtCase.errorStatus}
             lockName="Exceptions"
+            resolutionStatus={courtCase.errorStatus}
           />
           <LockStatusTag
             isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-            resolutionStatus={courtCase.triggerStatus}
             lockName="Triggers"
+            resolutionStatus={courtCase.triggerStatus}
           />
         </LockedTagContainer>
       </HeaderRow>
@@ -94,30 +94,30 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
       <ButtonContainer>
         <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
           <LinkButton
-            href={reallocatePath}
-            className="b7-reallocate-button"
             buttonColour={gdsLightGrey}
-            buttonTextColour={textPrimary}
             buttonShadowColour={gdsMidGrey}
+            buttonTextColour={textPrimary}
+            className="b7-reallocate-button"
+            href={reallocatePath}
           >
             {"Reallocate Case"}
           </LinkButton>
         </ConditionalRender>
         <ConditionalRender isRendered={hasCaseLock}>
           <a href={basePath}>
-            <StyledButton id="leave-and-lock" className={`button`}>
+            <StyledButton className={`button`} id="leave-and-lock">
               {"Leave and lock"}
             </StyledButton>
           </a>
-          <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
-            <StyledButton id="leave-and-unlock" className={`button`} type="submit">
+          <Form action={leaveAndUnlockUrl} csrfToken={csrfToken} method="post">
+            <StyledButton className={`button`} id="leave-and-unlock" type="submit">
               {"Leave and unlock"}
             </StyledButton>
           </Form>
         </ConditionalRender>
         <ConditionalRender isRendered={!hasCaseLock}>
           <a href={basePath}>
-            <StyledSecondaryButton id="return-to-case-list" className={`button`}>
+            <StyledSecondaryButton className={`button`} id="return-to-case-list">
               {"Return to case list"}
             </StyledSecondaryButton>
           </a>

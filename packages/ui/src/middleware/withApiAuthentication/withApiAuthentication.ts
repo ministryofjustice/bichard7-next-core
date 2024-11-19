@@ -1,9 +1,10 @@
-import parseJwtCookie from "middleware/withAuthentication/parseJwtCookie"
 import type { NextApiRequest, NextApiResponse } from "next"
 import type User from "services/entities/User"
+import type { Result } from "types/Result"
+
+import parseJwtCookie from "middleware/withAuthentication/parseJwtCookie"
 import getDataSource from "services/getDataSource"
 import getUser from "services/getUser"
-import type { Result } from "types/Result"
 import { isError } from "types/Result"
 
 export default async function withApiAuthentication(
@@ -12,7 +13,7 @@ export default async function withApiAuthentication(
   allowedMethods: string[]
 ) {
   const authJwt = parseJwtCookie(req)
-  let currentUser: Result<User | null> = null
+  let currentUser: Result<null | User> = null
 
   if (authJwt) {
     const dataSource = await getDataSource()
@@ -42,5 +43,5 @@ export default async function withApiAuthentication(
     return
   }
 
-  return { req, res, currentUser }
+  return { currentUser, req, res }
 }

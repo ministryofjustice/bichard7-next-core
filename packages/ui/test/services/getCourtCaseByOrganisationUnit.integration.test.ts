@@ -1,7 +1,9 @@
-import Trigger from "services/entities/Trigger"
 import type User from "services/entities/User"
-import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import type { DataSource } from "typeorm"
+
+import Trigger from "services/entities/Trigger"
+import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "../../src/services/getCourtCaseByOrganisationUnit"
 import getDataSource from "../../src/services/getDataSource"
@@ -40,9 +42,9 @@ describe("getCourtCaseByOrganisationUnits", () => {
     const dummyErrorId = 0
     const dummyExcludedTriggers = ["TRPDUMMY"]
     await getCourtCaseByOrganisationUnit(dataSource, dummyErrorId, {
-      visibleForces: [forceCode],
+      excludedTriggers: dummyExcludedTriggers,
       visibleCourts: [],
-      excludedTriggers: dummyExcludedTriggers
+      visibleForces: [forceCode]
     } as Partial<User> as User)
 
     expect(leftJoinAndSelectTriggersQuery).toHaveBeenCalledTimes(1)
@@ -56,8 +58,8 @@ describe("getCourtCaseByOrganisationUnits", () => {
     await insertCourtCases(inputCourtCase)
 
     let result = await getCourtCaseByOrganisationUnit(dataSource, inputCourtCase.errorId, {
-      visibleForces: [forceCode],
-      visibleCourts: []
+      visibleCourts: [],
+      visibleForces: [forceCode]
     } as Partial<User> as User)
     expect(isError(result)).toBe(false)
 
@@ -65,8 +67,8 @@ describe("getCourtCaseByOrganisationUnits", () => {
     expect(actualCourtCase).toStrictEqual(inputCourtCase)
 
     result = await getCourtCaseByOrganisationUnit(dataSource, inputCourtCase.errorId, {
-      visibleForces: [courtCode.substring(0, 2)],
-      visibleCourts: []
+      visibleCourts: [],
+      visibleForces: [courtCode.substring(0, 2)]
     } as Partial<User> as User)
     expect(isError(result)).toBe(false)
 
@@ -76,8 +78,8 @@ describe("getCourtCaseByOrganisationUnits", () => {
 
   it("Should return null if the court case doesn't exist", async () => {
     const result = await getCourtCaseByOrganisationUnit(dataSource, 0, {
-      visibleForces: [forceCode],
-      visibleCourts: []
+      visibleCourts: [],
+      visibleForces: [forceCode]
     } as Partial<User> as User)
 
     expect(result).toBeNull()
@@ -90,8 +92,8 @@ describe("getCourtCaseByOrganisationUnits", () => {
     })
     await insertCourtCases(inputCourtCase)
     const result = await getCourtCaseByOrganisationUnit(dataSource, 0, {
-      visibleForces: [differentOrgCode],
-      visibleCourts: []
+      visibleCourts: [],
+      visibleForces: [differentOrgCode]
     } as Partial<User> as User)
 
     expect(result).toBeNull()
@@ -103,8 +105,8 @@ describe("getCourtCaseByOrganisationUnits", () => {
     })
     await insertCourtCases(inputCourtCase)
     const result = await getCourtCaseByOrganisationUnit(dataSource, 0, {
-      visibleForces: [],
-      visibleCourts: []
+      visibleCourts: [],
+      visibleForces: []
     } as Partial<User> as User)
 
     expect(result).toBeNull()

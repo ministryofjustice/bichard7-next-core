@@ -4,11 +4,11 @@ import HO100310 from "./fixtures/HO100310.json"
 describe("renders based on feature flag value for user", () => {
   const fields = {
     defendantName: "Offence Matching HO100310",
-    orgForPoliceFilter: "01",
-    hearingOutcome: HO100310,
     errorCount: 2,
     errorReason: "HO100310",
-    errorReport: "HO100310||ds:OffenceReasonSequence, HO100310||ds:OffenceReasonSequence"
+    errorReport: "HO100310||ds:OffenceReasonSequence, HO100310||ds:OffenceReasonSequence",
+    hearingOutcome: HO100310,
+    orgForPoliceFilter: "01"
   }
 
   beforeEach(() => {

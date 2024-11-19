@@ -4,11 +4,11 @@ export interface ExceptionPathDetailsResult {
   field: string
   formattedFieldName: string
   location?: string
-  tab?: CaseDetailsTab
   offenceOrderIndex?: number
+  tab?: CaseDetailsTab
 }
 
-const getExceptionPathDetails = (path: (string | number)[]): ExceptionPathDetailsResult => {
+const getExceptionPathDetails = (path: (number | string)[]): ExceptionPathDetailsResult => {
   const offenceIndex = path.findIndex((p) => p === "Offence")
   let tab: CaseDetailsTab | undefined
   let offenceOrderIndex: number | undefined

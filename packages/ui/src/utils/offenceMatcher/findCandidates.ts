@@ -1,5 +1,6 @@
 import { CaseType } from "@moj-bichard7/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/annotatePncMatch"
 import generateCandidate from "@moj-bichard7/core/phase1/enrichAho/enrichFunctions/matchOffencesToPnc/generateCandidate"
+
 import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
 import type { Candidates } from "../../types/OffenceMatching"
 
@@ -15,7 +16,7 @@ const findCandidates = (courtCase: DisplayFullCourtCase, offenceIndex: number): 
         (pncOffence) =>
           !!generateCandidate(
             offence,
-            { pncOffence, caseType: CaseType.court, caseReference: c.courtCaseReference },
+            { caseReference: c.courtCaseReference, caseType: CaseType.court, pncOffence },
             courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
           )
       )

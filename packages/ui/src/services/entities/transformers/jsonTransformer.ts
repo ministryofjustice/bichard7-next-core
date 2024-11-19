@@ -1,8 +1,8 @@
 import type { ValueTransformer } from "typeorm"
 
 const jsonTransformer: ValueTransformer = {
-  to: (value) => value,
-  from: (value) => value ?? {}
+  from: (value) => value ?? {},
+  to: (value) => value
 }
 
 export default jsonTransformer

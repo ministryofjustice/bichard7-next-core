@@ -1,5 +1,6 @@
-import { validateQueryParams } from "./validateQueryParams"
 import lockedFilters from "utils/lockedFilters"
+
+import { validateQueryParams } from "./validateQueryParams"
 
 export const validateLockFilter = (lockFilter: string | string[] | undefined): boolean =>
   validateQueryParams(lockFilter) && lockedFilters.includes(lockFilter)

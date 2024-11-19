@@ -1,6 +1,8 @@
-import type { DataSource, EntityManager } from "typeorm"
 import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import type { DataSource, EntityManager } from "typeorm"
+
 import type PromiseResult from "../types/PromiseResult"
+
 import { isError } from "../types/Result"
 import User from "./entities/User"
 
@@ -8,7 +10,7 @@ export default async (
   dataSource: DataSource | EntityManager,
   username: string,
   groups?: string[]
-): PromiseResult<User | null> => {
+): PromiseResult<null | User> => {
   const user = await dataSource
     .getRepository(User)
     .findOneBy({ username: username })

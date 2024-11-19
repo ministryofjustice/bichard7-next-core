@@ -5,10 +5,10 @@ describe("When I can see triggers on cases", () => {
   const makeTriggers = (code?: number, count = 5) =>
     Array.from(Array(count ?? 5)).map((_, idx) => {
       return {
-        triggerId: idx,
-        triggerCode: `TRPR000${code ?? idx + 1}`,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: `TRPR000${code ?? idx + 1}`,
+        triggerId: idx
       }
     })
 

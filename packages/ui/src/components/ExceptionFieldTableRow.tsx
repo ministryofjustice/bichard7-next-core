@@ -1,21 +1,22 @@
 import { Table } from "govuk-react"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
+
 import Badge, { BadgeColours } from "./Badge"
 import ErrorIcon from "./ErrorIcon"
 import ErrorPromptMessage from "./ErrorPromptMessage"
 import { Content, Label } from "./ExceptionFieldTableRow.styles"
 
 type Props = {
-  badgeText?: ExceptionBadgeType
-  value?: string | React.ReactNode
   badgeColour?: BadgeColours
-  label: string
+  badgeText?: ExceptionBadgeType
   children?: React.ReactNode
   displayError?: boolean
+  label: string
   message?: string
+  value?: React.ReactNode | string
 }
 
-const ExceptionFieldTableRow = ({ badgeText, badgeColour, value, label, displayError, message, children }: Props) => {
+const ExceptionFieldTableRow = ({ badgeColour, badgeText, children, displayError, label, message, value }: Props) => {
   return (
     <Table.Row>
       <Label>
@@ -35,8 +36,8 @@ const ExceptionFieldTableRow = ({ badgeText, badgeColour, value, label, displayE
           <div className="badge-wrapper">
             <Badge
               className="error-badge moj-badge--large"
-              isRendered={true}
               colour={badgeColour ?? BadgeColours.Purple}
+              isRendered={true}
               label={badgeText}
             />
           </div>

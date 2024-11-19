@@ -3,6 +3,7 @@ import type {
   Offence,
   ResultQualifierVariable
 } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import createDummyAho from "../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../test/helpers/createDummyOffence"
 import { dummyResultQualifierVariable as dummyResultQualifierVariableArr } from "../../../test/helpers/createDummyResult"

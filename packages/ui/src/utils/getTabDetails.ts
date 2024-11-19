@@ -1,5 +1,6 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+
 import getNextHearingDateExceptions from "./exceptions/getNextHearingDateExceptions"
 import getNextHearingLocationExceptions from "./exceptions/getNextHearingLocationExceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
@@ -10,9 +11,9 @@ import getOffenceMatchingExceptions from "./offenceMatcher/getOffenceMatchingExc
 import hasOffenceMatchingExceptions from "./offenceMatcher/hasOffenceMatchingExceptions"
 
 export type TabDetails = {
-  name: "Defendant" | "Hearing" | "Case" | "Offences" | "Notes"
   exceptionsCount: number
   exceptionsResolved: boolean
+  name: "Case" | "Defendant" | "Hearing" | "Notes" | "Offences"
 }
 
 type ExceptionDetails = {
@@ -124,29 +125,29 @@ const getTabDetails = (
 
   return [
     {
-      name: "Defendant",
       exceptionsCount: defendantExceptionsCount,
-      exceptionsResolved: asnExceptionDetails.ExceptionsResolved
+      exceptionsResolved: asnExceptionDetails.ExceptionsResolved,
+      name: "Defendant"
     },
     {
-      name: "Hearing",
       exceptionsCount: 0,
-      exceptionsResolved: false
+      exceptionsResolved: false,
+      name: "Hearing"
     },
     {
-      name: "Case",
       exceptionsCount: 0,
-      exceptionsResolved: false
+      exceptionsResolved: false,
+      name: "Case"
     },
     {
-      name: "Offences",
       exceptionsCount: offencesExceptionsCount,
-      exceptionsResolved: offencesExceptionsResolved
+      exceptionsResolved: offencesExceptionsResolved,
+      name: "Offences"
     },
     {
-      name: "Notes",
       exceptionsCount: 0,
-      exceptionsResolved: false
+      exceptionsResolved: false,
+      name: "Notes"
     }
   ]
 }

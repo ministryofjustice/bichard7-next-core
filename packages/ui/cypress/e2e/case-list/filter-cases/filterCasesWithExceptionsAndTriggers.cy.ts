@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import resolvedAsnAho from "../../../fixtures/resolvedAsnAho.json"
 import unresolvedAsnAho from "../../../fixtures/unResolvedAsnAho.json"
@@ -18,45 +19,45 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
     before(() => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: resolvedAsnAho.hearingOutcomeXml,
-          updatedHearingOutcome: resolvedAsnAho.hearingOutcomeXml,
+          defendantName: "WAYNE Bruce",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorStatus: "Resolved",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
-          errorResolvedTimestamp: new Date(),
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorResolvedBy: "GeneralHandler",
+          errorResolvedTimestamp: new Date(),
+          errorStatus: "Resolved",
+          hearingOutcome: resolvedAsnAho.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
           resolutionTimestamp: new Date(),
-          defendantName: "WAYNE Bruce"
+          updatedHearingOutcome: resolvedAsnAho.hearingOutcomeXml
         },
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
-          updatedHearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
+          defendantName: "GORDON Barbara",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
-          defendantName: "GORDON Barbara"
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
+          hearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
+          updatedHearingOutcome: unresolvedAsnAho.hearingOutcomeXml
         }
       ])
 
       const trigger1: TestTrigger[] = [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0017,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0017,
+          triggerId: 0
         }
       ]
       const trigger2: TestTrigger[] = [
         {
-          triggerId: 1,
-          triggerCode: TriggerCode.TRPR0017,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0017,
+          triggerId: 1
         }
       ]
       cy.task("insertTriggers", { caseId: 0, triggers: trigger1 })
@@ -94,47 +95,47 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
     before(() => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: resolvedAsnAho.hearingOutcomeXml,
-          updatedHearingOutcome: resolvedAsnAho.hearingOutcomeXml,
+          defendantName: "WAYNE Bruce",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorStatus: "Resolved",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
-          errorResolvedTimestamp: new Date(),
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorResolvedBy: "GeneralHandler",
+          errorResolvedTimestamp: new Date(),
+          errorStatus: "Resolved",
+          hearingOutcome: resolvedAsnAho.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
+          resolutionTimestamp: new Date(),
           triggerResolvedBy: "GeneralHandler",
           triggerResolvedTimestamp: new Date(),
-          resolutionTimestamp: new Date(),
-          defendantName: "WAYNE Bruce"
+          updatedHearingOutcome: resolvedAsnAho.hearingOutcomeXml
         },
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
-          updatedHearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
+          defendantName: "GORDON Barbara",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
-          defendantName: "GORDON Barbara"
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
+          hearingOutcome: unresolvedAsnAho.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
+          updatedHearingOutcome: unresolvedAsnAho.hearingOutcomeXml
         }
       ])
 
       const trigger1: TestTrigger[] = [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0017,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Resolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0017,
+          triggerId: 0
         }
       ]
       const trigger2: TestTrigger[] = [
         {
-          triggerId: 1,
-          triggerCode: TriggerCode.TRPR0017,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0017,
+          triggerId: 1
         }
       ]
       cy.task("insertTriggers", { caseId: 0, triggers: trigger1 })

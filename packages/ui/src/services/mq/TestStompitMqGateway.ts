@@ -1,7 +1,9 @@
-import type { PromiseResult } from "./types/Result"
-import { isError } from "./types/Result"
 import type { Client } from "stompit"
+
+import type { PromiseResult } from "./types/Result"
+
 import StompitMqGateway from "./StompitMqGateway"
+import { isError } from "./types/Result"
 
 const readMessage = (message: Client.Message): PromiseResult<string> => {
   return new Promise<string>((resolve, reject) => {

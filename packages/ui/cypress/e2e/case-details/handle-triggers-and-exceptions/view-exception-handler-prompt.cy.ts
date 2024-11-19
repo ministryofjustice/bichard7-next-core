@@ -1,4 +1,5 @@
 import ErrorMessages from "types/ErrorMessages"
+
 import HO100306andHO100251 from "../../../../test/test-data/HO100306andHO100251.json"
 import HO100307 from "../../../../test/test-data/HO100307.json"
 import HO100309 from "../../../../test/test-data/HO100309.json"
@@ -16,25 +17,25 @@ describe("View Exception Handler Prompts", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
+        errorCount: 1,
         errorId: caseWithOffenceQualifierError,
+        hearingOutcome: HO100309.hearingOutcomeXml,
         orgForPoliceFilter: "01",
-        errorCount: 1,
-        triggerCount: 1,
-        hearingOutcome: HO100309.hearingOutcomeXml
+        triggerCount: 1
       },
       {
+        errorCount: 1,
         errorId: caseWithOffenceCodeErrors,
+        hearingOutcome: HO100306andHO100251.hearingOutcomeXml,
         orgForPoliceFilter: "01",
-        errorCount: 1,
-        triggerCount: 1,
-        hearingOutcome: HO100306andHO100251.hearingOutcomeXml
+        triggerCount: 1
       },
       {
-        errorId: caseWithCJSCodeError,
-        orgForPoliceFilter: "01",
         errorCount: 1,
-        triggerCount: 1,
-        hearingOutcome: HO100307.hearingOutcomeXml
+        errorId: caseWithCJSCodeError,
+        hearingOutcome: HO100307.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        triggerCount: 1
       },
       {
         errorId: caseWithNoError,
@@ -174,8 +175,8 @@ describe("View Exception Handler Prompts", () => {
     it("Should not display an error prompt when a HO200113 is not raised", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
           errorCount: 1,
+          orgForPoliceFilter: "01",
           triggerCount: 1
         }
       ])
@@ -189,10 +190,10 @@ describe("View Exception Handler Prompts", () => {
     it("Should display an error prompt when a HO200113 is raised", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
           errorCount: 1,
-          triggerCount: 1,
-          hearingOutcome: HO200113.hearingOutcomeXml
+          hearingOutcome: HO200113.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
+          triggerCount: 1
         }
       ])
 
@@ -205,8 +206,8 @@ describe("View Exception Handler Prompts", () => {
     it("Should not display an error prompt when a HO200114 is not raised", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
           errorCount: 1,
+          orgForPoliceFilter: "01",
           triggerCount: 1
         }
       ])
@@ -220,10 +221,10 @@ describe("View Exception Handler Prompts", () => {
     it("Should display an error prompt when a HO200114 is raised", () => {
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
           errorCount: 1,
-          triggerCount: 1,
-          hearingOutcome: HO200114.hearingOutcomeXml
+          hearingOutcome: HO200114.hearingOutcomeXml,
+          orgForPoliceFilter: "01",
+          triggerCount: 1
         }
       ])
 

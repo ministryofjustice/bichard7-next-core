@@ -8,11 +8,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml
       }
     ])
   })
@@ -28,9 +28,9 @@ describe("NextHearingLocation", () => {
   it("Shouldn't see next hearing location field when it has no value", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: dummyAho.hearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01"
       }
     ])
 
@@ -45,11 +45,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200
       }
     ])
 
@@ -77,8 +77,8 @@ describe("NextHearingLocation", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>'],
-      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B01EF01</ds:OrganisationUnitCode>"]
+      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B01EF01</ds:OrganisationUnitCode>"],
+      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>']
     })
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
@@ -93,11 +93,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100300,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100300,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100300,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100300
       }
     ])
 
@@ -123,8 +123,8 @@ describe("NextHearingLocation", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100300">B46AM03</ds:OrganisationUnitCode>'],
-      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B46DB00</ds:OrganisationUnitCode>"]
+      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B46DB00</ds:OrganisationUnitCode>"],
+      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100300">B46AM03</ds:OrganisationUnitCode>']
     })
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
@@ -139,11 +139,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322
       }
     ])
 
@@ -171,8 +171,8 @@ describe("NextHearingLocation", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100322" />'],
-      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B01EF00</ds:OrganisationUnitCode>"]
+      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B01EF00</ds:OrganisationUnitCode>"],
+      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100322" />']
     })
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
@@ -189,11 +189,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100322
       }
     ])
 
@@ -249,15 +249,15 @@ describe("NextHearingLocation", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
-      updatedMessageNotHaveContent: [
-        '<ds:OrganisationUnitCode Error="HO100300">B46AM03</ds:OrganisationUnitCode>',
-        '<ds:OrganisationUnitCode Error="HO100322" />',
-        '<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>'
-      ],
       updatedMessageHaveContent: [
         "<ds:OrganisationUnitCode>B01EF00</ds:OrganisationUnitCode>",
         "<ds:OrganisationUnitCode>B46DB00</ds:OrganisationUnitCode>",
         "<ds:OrganisationUnitCode>B21XA00</ds:OrganisationUnitCode>"
+      ],
+      updatedMessageNotHaveContent: [
+        '<ds:OrganisationUnitCode Error="HO100300">B46AM03</ds:OrganisationUnitCode>',
+        '<ds:OrganisationUnitCode Error="HO100322" />',
+        '<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>'
       ]
     })
 
@@ -289,11 +289,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.nextHearingLocationExceptionOnMultipleResults,
-        updatedHearingOutcome: nextHearingLocationExceptions.nextHearingLocationExceptionOnMultipleResults,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.nextHearingLocationExceptionOnMultipleResults,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.nextHearingLocationExceptionOnMultipleResults
       }
     ])
     loginAndVisit("/bichard/court-cases/0")
@@ -316,13 +316,13 @@ describe("NextHearingLocation", () => {
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Unresolved" },
-      updatedMessageNotHaveContent: [
-        '<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>',
-        '<ds:OrganisationUnitCode Error="HO100200">NOTANEXTHEARINGLOCATION</ds:OrganisationUnitCode>'
-      ],
       updatedMessageHaveContent: [
         "<ds:OrganisationUnitCode>B01EF00</ds:OrganisationUnitCode>",
         "<ds:OrganisationUnitCode>C04BF00</ds:OrganisationUnitCode>"
+      ],
+      updatedMessageNotHaveContent: [
+        '<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>',
+        '<ds:OrganisationUnitCode Error="HO100200">NOTANEXTHEARINGLOCATION</ds:OrganisationUnitCode>'
       ]
     })
 
@@ -335,22 +335,22 @@ describe("NextHearingLocation", () => {
     const resolvedCaseId = 1
     cy.task("insertCourtCasesWithFields", [
       {
-        errorStatus: "Submitted",
-        errorId: submittedCaseId,
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorId: submittedCaseId,
+        errorLockedByUsername: "GeneralHandler",
+        errorStatus: "Submitted",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml
       },
       {
-        errorStatus: "Resolved",
-        errorId: resolvedCaseId,
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorId: resolvedCaseId,
+        errorLockedByUsername: "GeneralHandler",
+        errorStatus: "Resolved",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -369,11 +369,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        errorLockedByUsername: "BichardForce02"
+        errorLockedByUsername: "BichardForce02",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -388,11 +388,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml,
         errorCount: 1,
-        phase: 2
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
+        orgForPoliceFilter: "01",
+        phase: 2,
+        updatedHearingOutcome: nextHearingLocationExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -415,10 +415,10 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
+        errorCount: 1,
         hearingOutcome: multipleExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: multipleExceptions.updatedHearingOutcomeXml,
-        errorCount: 1
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: multipleExceptions.updatedHearingOutcomeXml
       }
     ])
 
@@ -444,11 +444,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200
       }
     ])
     cy.intercept("PUT", "/bichard/api/court-cases/0/update").as("save")
@@ -463,8 +463,8 @@ describe("NextHearingLocation", () => {
     cy.wait("@save")
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Unresolved" },
-      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>'],
-      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B43UY00</ds:OrganisationUnitCode>"]
+      updatedMessageHaveContent: ["<ds:OrganisationUnitCode>B43UY00</ds:OrganisationUnitCode>"],
+      updatedMessageNotHaveContent: ['<ds:OrganisationUnitCode Error="HO100200">B@1EF$1</ds:OrganisationUnitCode>']
     })
   })
 
@@ -475,11 +475,11 @@ describe("NextHearingLocation", () => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
-        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
         errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
+        errorLockedByUsername: "GeneralHandler",
+        hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
+        orgForPoliceFilter: "01",
+        updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200
       }
     ])
     cy.intercept("PUT", `/bichard/api/court-cases/${errorId}/update`).as("save")
@@ -529,11 +529,11 @@ describe("NextHearingLocation", () => {
       cy.task("clearCourtCases")
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
-          updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
           errorCount: 1,
-          errorLockedByUsername: "GeneralHandler"
+          errorLockedByUsername: "GeneralHandler",
+          hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200,
+          orgForPoliceFilter: "01",
+          updatedHearingOutcome: nextHearingLocationExceptions.hearingOutcomeXmlHO100200
         }
       ])
       cy.intercept("PUT", `/bichard/api/court-cases/${errorId}/update`).as("save")

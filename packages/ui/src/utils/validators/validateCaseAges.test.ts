@@ -1,5 +1,6 @@
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
+
 import { mapCaseAges } from "./validateCaseAges"
 
 describe("mapCaseAges", () => {

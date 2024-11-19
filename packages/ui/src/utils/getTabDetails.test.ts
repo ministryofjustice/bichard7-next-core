@@ -1,5 +1,6 @@
 import type { Amendments } from "types/Amendments"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100310 } from "../../test/helpers/exceptions"
 import HO100102 from "../../test/helpers/exceptions/HO100102"
@@ -97,8 +98,8 @@ describe("getNextHearingDateExceptionsDetails", () => {
     const savedAmendments = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ]
@@ -118,13 +119,13 @@ describe("getNextHearingDateExceptionsDetails", () => {
     const savedAmendments = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2025-10-10"
         },
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "2026-10-10"
         }
       ]
@@ -208,8 +209,8 @@ describe("getNextHearingLocationExceptionsDetails", () => {
     const savedAmendments = {
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         }
       ]
@@ -232,13 +233,13 @@ describe("getNextHearingLocationExceptionsDetails", () => {
     const savedAmendments = {
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         },
         {
-          resultIndex: 1,
           offenceIndex: 2,
+          resultIndex: 1,
           value: "B21XA11"
         }
       ]
@@ -385,8 +386,8 @@ describe("getTabDetails", () => {
     const amendments = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ]
@@ -411,8 +412,8 @@ describe("getTabDetails", () => {
     const amendments = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ]
@@ -436,15 +437,15 @@ describe("getTabDetails", () => {
     const amendments = {
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 0,
+          resultIndex: 0,
           value: "2002-10-10"
         }
       ],
       nextSourceOrganisation: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "B21XA00"
         }
       ]

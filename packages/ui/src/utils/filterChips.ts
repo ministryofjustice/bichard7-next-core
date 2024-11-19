@@ -1,5 +1,6 @@
-import { LockedState, Reason } from "types/CaseListQueryParams"
 import type { Filter, FilterState } from "types/CourtCaseFilter"
+
+import { LockedState, Reason } from "types/CaseListQueryParams"
 
 const anyFilterChips = (state: Filter, countOfState?: FilterState): boolean => {
   return (

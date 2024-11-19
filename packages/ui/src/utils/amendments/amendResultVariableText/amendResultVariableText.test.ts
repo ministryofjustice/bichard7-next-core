@@ -1,5 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+
 import cloneDeep from "lodash.clonedeep"
+
 import createDummyAho from "../../../../test/helpers/createDummyAho"
 import createDummyOffence from "../../../../test/helpers/createDummyOffence"
 import amendResultVariableText from "./amendResultVariableText"
@@ -24,8 +26,8 @@ describe("amend fresult variable text", () => {
       [
         {
           offenceIndex,
-          value,
-          resultIndex
+          resultIndex,
+          value
         }
       ],
       aho
@@ -58,8 +60,8 @@ describe("amend fresult variable text", () => {
       [
         {
           offenceIndex,
-          value,
-          resultIndex
+          resultIndex,
+          value
         }
       ],
       aho
@@ -83,8 +85,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -102,8 +104,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -121,8 +123,8 @@ describe("amend fresult variable text", () => {
         [
           {
             offenceIndex,
-            value,
-            resultIndex
+            resultIndex,
+            value
           }
         ],
         aho
@@ -134,13 +136,13 @@ describe("amend fresult variable text", () => {
     const amendments = [
       {
         offenceIndex: 0,
-        value: "random_string_0",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "random_string_0"
       },
       {
         offenceIndex: 2,
-        value: "random_string_2",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "random_string_2"
       }
     ]
 
@@ -172,13 +174,13 @@ describe("amend fresult variable text", () => {
     const amendments = [
       {
         offenceIndex: 0,
-        value: "random_string_0",
-        resultIndex: 0
+        resultIndex: 0,
+        value: "random_string_0"
       },
       {
         offenceIndex: 0,
-        value: "random_string_1",
-        resultIndex: 1
+        resultIndex: 1,
+        value: "random_string_1"
       }
     ]
 

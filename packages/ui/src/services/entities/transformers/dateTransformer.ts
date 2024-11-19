@@ -1,8 +1,8 @@
 import type { ValueTransformer } from "typeorm"
 
 const dateTransformer: ValueTransformer = {
-  to: (value) => value,
-  from: (value) => (value !== null ? new Date(value) : null)
+  from: (value) => (value !== null ? new Date(value) : null),
+  to: (value) => value
 }
 
 export default dateTransformer

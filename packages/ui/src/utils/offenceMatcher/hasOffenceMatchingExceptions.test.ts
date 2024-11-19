@@ -1,5 +1,7 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { Exception } from "types/exceptions"
+
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import hasOffenceMatchingExceptions from "./hasOffenceMatchingExceptions"
 
 describe("hasOffenceMatchingExceptions", () => {

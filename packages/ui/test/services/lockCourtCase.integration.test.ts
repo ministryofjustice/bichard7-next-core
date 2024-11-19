@@ -1,12 +1,16 @@
+import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import axios from "axios"
-import type User from "services/entities/User"
 import getCourtCase from "services/getCourtCase"
 import lockCourtCase from "services/lockCourtCase"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
-import type { DataSource } from "typeorm"
+
+import type { TestTrigger } from "../utils/manageTriggers"
+
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -15,7 +19,6 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
-import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 
 jest.mock("services/updateLockStatusToLocked")
@@ -26,10 +29,10 @@ describe("lock court case", () => {
   let dataSource: DataSource
   const lockedByName = "BichardForce04"
   const user = {
+    hasAccessTo: hasAccessToAll,
     username: lockedByName,
-    visibleForces: ["36"],
     visibleCourts: [],
-    hasAccessTo: hasAccessToAll
+    visibleForces: ["36"]
   } as Partial<User> as User
   let unlockedCourtCase: CourtCase
 
@@ -49,20 +52,20 @@ describe("lock court case", () => {
     )
     ;[unlockedCourtCase] = await insertCourtCasesWithFields([
       {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
         errorCount: 1,
-        triggerCount: 1,
+        errorId: 0,
+        errorLockedByUsername: null,
         orgForPoliceFilter: "36FPA",
-        errorId: 0
+        triggerCount: 1,
+        triggerLockedByUsername: null
       }
     ])
 
     const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
+      createdAt: new Date("2022-07-12T10:22:34.000Z"),
       status: "Unresolved",
-      createdAt: new Date("2022-07-12T10:22:34.000Z")
+      triggerCode: TriggerCode.TRPR0001,
+      triggerId: 0
     }
     await insertTriggers(0, [trigger])
     ;(courtCasesByOrganisationUnitQuery as jest.Mock).mockImplementation(
@@ -85,16 +88,16 @@ describe("lock court case", () => {
         {
           attributes: { auditLogVersion: 2, user: lockedByName },
           category: "information",
-          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventCode: "exceptions.locked",
+          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventType: "Exception locked",
           timestamp: expect.anything()
         },
         {
           attributes: { auditLogVersion: 2, user: lockedByName },
           category: "information",
-          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventCode: "triggers.locked",
+          eventSource: AUDIT_LOG_EVENT_SOURCE,
           eventType: "Trigger locked",
           timestamp: expect.anything()
         }
@@ -129,7 +132,7 @@ describe("lock court case", () => {
 
       // Creates audit log events
       const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const auditLogs = (await apiResult.data) as [{ events: [{ eventCode: string; timestamp: string }] }]
       const events = auditLogs[0].events
       expect(events).toHaveLength(2)
 
@@ -137,27 +140,27 @@ describe("lock court case", () => {
       const lockedTriggerEvent = events.find((event) => event.eventCode === "triggers.locked")
 
       expect(lockedExceptionEvent).toStrictEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "exceptions.locked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception locked",
         timestamp: expect.anything(),
-        user: user.username,
-        eventCode: "exceptions.locked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: user.username
       })
 
       expect(lockedTriggerEvent).toStrictEqual({
+        attributes: {
+          auditLogVersion: 2
+        },
         category: "information",
+        eventCode: "triggers.locked",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Trigger locked",
         timestamp: expect.anything(),
-        user: user.username,
-        eventCode: "triggers.locked",
-        attributes: {
-          auditLogVersion: 2
-        }
+        user: user.username
       })
     })
   })
@@ -193,7 +196,7 @@ describe("lock court case", () => {
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
 
       const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const auditLogs = (await apiResult.data) as [{ events: [{ eventCode: string; timestamp: string }] }]
       const events = auditLogs[0].events
 
       expect(events).toHaveLength(0)
@@ -205,14 +208,14 @@ describe("lock court case", () => {
       const courtCaseId = 1
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorId: courtCaseId,
           errorLockedByUsername: null,
-          triggerLockedByUsername: null,
-          errorCount: 1,
           errorStatus: "Unresolved",
+          orgForPoliceFilter: "36FPA ",
           triggerCount: 1,
-          triggerStatus: "Resolved",
-          orgForPoliceFilter: "36FPA "
+          triggerLockedByUsername: null,
+          triggerStatus: "Resolved"
         }
       ])
 
@@ -231,14 +234,14 @@ describe("lock court case", () => {
       const courtCaseId = 1
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorId: courtCaseId,
           errorLockedByUsername: null,
-          triggerLockedByUsername: null,
-          errorCount: 1,
           errorStatus: "Resolved",
+          orgForPoliceFilter: "36FPA ",
           triggerCount: 1,
-          triggerStatus: "Unresolved",
-          orgForPoliceFilter: "36FPA "
+          triggerLockedByUsername: null,
+          triggerStatus: "Unresolved"
         }
       ])
 
@@ -257,14 +260,14 @@ describe("lock court case", () => {
       const courtCaseId = 1
       const [courtCase] = await insertCourtCasesWithFields([
         {
+          errorCount: 1,
           errorId: courtCaseId,
           errorLockedByUsername: null,
-          triggerLockedByUsername: null,
-          errorCount: 1,
           errorStatus: "Resolved",
+          orgForPoliceFilter: "36FPA ",
           triggerCount: 1,
-          triggerStatus: "Resolved",
-          orgForPoliceFilter: "36FPA "
+          triggerLockedByUsername: null,
+          triggerStatus: "Resolved"
         }
       ])
 

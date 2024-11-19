@@ -4,7 +4,7 @@ import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
 
 interface OffenceMatchingBadgeTableRowProps {
   offenceIndex: number
-  offenceReasonSequence?: string | null
+  offenceReasonSequence?: null | string
 }
 
 const OffenceMatchingBadgeTableRow = ({
@@ -25,7 +25,7 @@ const OffenceMatchingBadgeTableRow = ({
       value={
         <>
           <div>{offenceReasonSequence}</div>
-          <Badge isRendered={true} colour={BadgeColours.Purple} label={badgeLabel} className="moj-badge--large" />
+          <Badge className="moj-badge--large" colour={BadgeColours.Purple} isRendered={true} label={badgeLabel} />
         </>
       }
     />

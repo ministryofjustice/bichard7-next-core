@@ -8,9 +8,9 @@ describe("reports API endpoint", () => {
 
     it("returns a 404 if unknown report-type", () => {
       cy.request({
+        failOnStatusCode: false,
         method: "GET",
-        url: `/bichard/api/reports/not-a-report`,
-        failOnStatusCode: false
+        url: `/bichard/api/reports/not-a-report`
       }).then((response) => {
         expect(response.status).to.equal(404)
       })
@@ -22,37 +22,37 @@ describe("GET /reports/resolved-exceptions", () => {
   beforeEach(() => {
     cy.readFile("test/test-data/AnnotatedHOTemplate.xml").then((ahoXml) => {
       const aho = generateAho({
+        ahoTemplate: ahoXml,
+        courtName: "court-name",
         firstName: "first-name",
         lastName: "last-name",
-        ahoTemplate: ahoXml,
-        ptiurn: "ptirun",
-        courtName: "court-name"
+        ptiurn: "ptirun"
       })
       cy.loginAs("GeneralHandler")
       cy.task("insertCourtCasesWithFields", [
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: aho,
-          updatedHearingOutcome: aho,
+          defendantName: "WAYNE Bruce",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorStatus: "Resolved",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorResolvedBy: "GeneralHandler",
-          defendantName: "WAYNE Bruce",
+          errorStatus: "Resolved",
+          hearingOutcome: aho,
+          messageReceivedTimestamp: "2024-10-07 10:51:23",
+          orgForPoliceFilter: "01",
           resolutionTimestamp: "2024-10-07 10:51:23",
-          messageReceivedTimestamp: "2024-10-07 10:51:23"
+          updatedHearingOutcome: aho
         },
         {
-          orgForPoliceFilter: "01",
-          hearingOutcome: aho,
-          updatedHearingOutcome: aho,
+          defendantName: "GORDON Barbara",
           errorCount: 1,
           errorLockedByUsername: "GeneralHandler",
-          errorReport: "HO100321||ds:ArrestSummonsNumber",
           errorReason: "HO100321",
-          defendantName: "GORDON Barbara"
+          errorReport: "HO100321||ds:ArrestSummonsNumber",
+          hearingOutcome: aho,
+          orgForPoliceFilter: "01",
+          updatedHearingOutcome: aho
         }
       ])
     })
@@ -60,9 +60,9 @@ describe("GET /reports/resolved-exceptions", () => {
 
   it("returns a 400 if resolved dates not included in query string", () => {
     cy.request({
+      failOnStatusCode: false,
       method: "GET",
-      url: `/bichard/api/reports/resolved-exceptions`,
-      failOnStatusCode: false
+      url: `/bichard/api/reports/resolved-exceptions`
     }).then((response) => {
       expect(response.status).to.equal(400)
     })

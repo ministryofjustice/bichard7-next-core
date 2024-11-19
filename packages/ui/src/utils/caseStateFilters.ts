@@ -1,6 +1,6 @@
 export const caseStateLabels: Record<string, string> = {
-  Unresolved: "Unresolved cases",
-  Resolved: "Resolved cases"
+  Resolved: "Resolved cases",
+  Unresolved: "Unresolved cases"
 }
 
 const caseStateFilters: string[] = ["Unresolved", "Resolved"]

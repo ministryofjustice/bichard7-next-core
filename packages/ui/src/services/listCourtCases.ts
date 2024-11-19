@@ -1,15 +1,18 @@
-import Permission from "@moj-bichard7/common/types/Permission"
 import type { DataSource, SelectQueryBuilder } from "typeorm"
-import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
 import type { CaseListQueryParams, CaseState, DateRange, QueryOrder } from "types/CaseListQueryParams"
-import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import type PromiseResult from "types/PromiseResult"
+
+import Permission from "@moj-bichard7/common/types/Permission"
+import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
+import { LockedState } from "types/CaseListQueryParams"
 import { isError } from "types/Result"
+
+import type User from "./entities/User"
+
 import { formatName } from "../helpers/formatName"
 import CourtCase from "./entities/CourtCase"
 import getLongTriggerCode from "./entities/transformers/getLongTriggerCode"
-import type User from "./entities/User"
 import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolutionStatus"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
@@ -69,18 +72,18 @@ const caseSortOrder = (
 }
 
 interface Filters {
-  defendantName?: string
-  courtName?: string
-  ptiurn?: string
   asn?: string
-  reasonCodes?: string[]
   courtDateRange?: DateRange | DateRange[]
+  courtName?: string
+  defendantName?: string
+  ptiurn?: string
+  reasonCodes?: string[]
   resolvedByUsername?: string
 }
 
 const filters = (
   query: SelectQueryBuilder<CourtCase>,
-  { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername }: Filters
+  { asn, courtDateRange, courtName, defendantName, ptiurn, reasonCodes, resolvedByUsername }: Filters
 ): SelectQueryBuilder<CourtCase> => {
   // Filters
   if (defendantName) {
@@ -224,22 +227,22 @@ const exceptionsAndTriggers = (
 const listCourtCases = async (
   connection: DataSource,
   {
-    page,
-    maxPageItems,
-    orderBy,
-    order,
-    defendantName,
+    allocatedToUserName,
+    asn,
+    caseState,
+    courtDateRange,
     courtName,
+    defendantName,
+    lockedState,
+    maxPageItems,
+    order,
+    orderBy,
+    page,
     ptiurn,
     reason,
-    courtDateRange,
-    lockedState,
-    caseState,
-    allocatedToUserName,
     reasonCodes,
     resolvedByUsername,
-    resolvedDateRange,
-    asn
+    resolvedDateRange
   }: CaseListQueryParams,
   user: User,
   selectColumns: string[] = QueryColumns.CaseListQuery
@@ -255,7 +258,7 @@ const listCourtCases = async (
 
   query = caseSortOrder(query, order, orderBy)
 
-  query = filters(query, { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername })
+  query = filters(query, { asn, courtDateRange, courtName, defendantName, ptiurn, reasonCodes, resolvedByUsername })
 
   // Existing filters
   query = filterByReasonAndResolutionStatus(query, user, reason, reasonCodes, caseState, resolvedByUsername)

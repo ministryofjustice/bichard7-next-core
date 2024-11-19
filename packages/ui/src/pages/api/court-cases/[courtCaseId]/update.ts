@@ -1,5 +1,6 @@
-import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
+
+import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import amendCourtCase from "services/amendCourtCase/amendCourtCase"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import CourtCase from "services/entities/CourtCase"
@@ -15,7 +16,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  const { req, res, currentUser } = auth
+  const { currentUser, req, res } = auth
 
   const dataSource = await getDataSource()
   const amendments = req.body

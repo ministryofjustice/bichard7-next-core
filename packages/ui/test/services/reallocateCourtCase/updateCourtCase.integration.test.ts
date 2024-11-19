@@ -1,14 +1,17 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { DataSource, UpdateResult } from "typeorm"
+
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { randomUUID } from "crypto"
 import MockDate from "mockdate"
-import type { DataSource, UpdateResult } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
+
+import type { ResolutionStatus } from "../../../src/types/ResolutionStatus"
+
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"
 import getDataSource from "../../../src/services/getDataSource"
 import updateCourtCase from "../../../src/services/reallocateCourtCase/updateCourtCase"
-import type { ResolutionStatus } from "../../../src/types/ResolutionStatus"
 import { isError } from "../../../src/types/Result"
 import deleteFromDynamoTable from "../../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../../utils/deleteFromEntity"
@@ -16,10 +19,10 @@ import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 import { insertTriggers } from "../../utils/manageTriggers"
 
 const getAho = (
-  asn: string | null = "a".repeat(50),
-  ptiurn: string | null = "b".repeat(50),
-  secondLevelCode: string | null = "AB",
-  thirdLevelCode: string | null = "12"
+  asn: null | string = "a".repeat(50),
+  ptiurn: null | string = "b".repeat(50),
+  secondLevelCode: null | string = "AB",
+  thirdLevelCode: null | string = "12"
 ) =>
   ({
     AnnotatedHearingOutcome: {
@@ -40,20 +43,20 @@ const getAho = (
 
 const insertCourtCase = async (fields: Partial<CourtCase> = {}) => {
   const existingCourtCasesDbObject: Partial<CourtCase> = {
-    errorId: 0,
-    courtDate: new Date("2008-09-25"),
-    messageId: randomUUID(),
-    triggerCount: 0,
     asn: "dummyAsn",
-    ptiurn: "dummyPtiurn",
+    courtDate: new Date("2008-09-25"),
+    errorId: 0,
+    messageId: randomUUID(),
     orgForPoliceFilter: "123456",
+    ptiurn: "dummyPtiurn",
     resolutionTimestamp: null,
+    triggerCount: 0,
+    triggerInsertedTimestamp: null,
+    triggerQualityChecked: null,
     triggerReason: null,
-    triggerStatus: null,
     triggerResolvedBy: null,
     triggerResolvedTimestamp: null,
-    triggerQualityChecked: null,
-    triggerInsertedTimestamp: null,
+    triggerStatus: null,
     ...fields
   }
 
@@ -65,14 +68,14 @@ const insertCourtCase = async (fields: Partial<CourtCase> = {}) => {
   return courtCases[0]
 }
 
-const addTriggers = async (courtCaseId: number, triggers: { status: ResolutionStatus; code: TriggerCode }[]) => {
+const addTriggers = async (courtCaseId: number, triggers: { code: TriggerCode; status: ResolutionStatus }[]) => {
   await insertTriggers(
     courtCaseId,
     triggers.map((trigger, index) => ({
-      triggerId: index,
+      createdAt: new Date(),
       status: trigger.status,
       triggerCode: trigger.code,
-      createdAt: new Date()
+      triggerId: index
     }))
   )
 }
@@ -100,224 +103,219 @@ describe("updateCourtCase", () => {
 
   test.each([
     {
-      description: "should truncate asn and ptiurn when string values are too long",
-      secondLevelCode: "12",
-      thirdLevelCode: "AB",
       asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: false,
-      triggers: [],
+      description: "should truncate asn and ptiurn when string values are too long",
       errorStatus: "Resolved",
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: undefined,
       expectedTriggerCount: 0,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: null,
       expectedTriggerReason: null,
-      expectedTriggerStatus: null,
       expectedTriggerResolvedBy: null,
       expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: null,
-      expectedTriggerInsertedTimestamp: undefined
+      expectedTriggerStatus: null,
+      hasAddedOrDeletedTriggers: false,
+      ptiurn: "b".repeat(50),
+      secondLevelCode: "12",
+      thirdLevelCode: "AB",
+      triggers: []
     },
     {
+      asn: "a".repeat(50),
       description: [
         "should not include force third level code in orgForPoliceFilter when third level code is 00",
         "should not update court case when no triggers have been added or deleted"
       ],
+      errorStatus: "Resolved",
+      expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12    ",
+      expectedPtiurn: "b".repeat(11),
+      expectedResolutionTimestamp: undefined,
+      expectedTriggerCount: 0,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: null,
+      expectedTriggerReason: null,
+      expectedTriggerResolvedBy: null,
+      expectedTriggerResolvedTimestamp: undefined,
+      expectedTriggerStatus: null,
+      hasAddedOrDeletedTriggers: false,
+      ptiurn: "b".repeat(50),
       secondLevelCode: "12",
       thirdLevelCode: "00",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: false,
-      triggers: [],
-      errorStatus: "Resolved",
-      expectedOrgForPoliceFilter: "12    ",
-      expectedAsn: "a".repeat(21),
-      expectedPtiurn: "b".repeat(11),
-      expectedResolutionTimestamp: undefined,
-      expectedTriggerCount: 0,
-      expectedTriggerReason: null,
-      expectedTriggerStatus: null,
-      expectedTriggerResolvedBy: null,
-      expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: null,
-      expectedTriggerInsertedTimestamp: undefined
+      triggers: []
     },
     {
+      asn: "a".repeat(50),
       description: "should set resolution timestamp when there are no triggers and exceptions",
-      secondLevelCode: "12",
-      thirdLevelCode: "AB",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
-      triggers: [],
       errorStatus: null,
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: timestamp,
       expectedTriggerCount: 0,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: null,
       expectedTriggerReason: null,
-      expectedTriggerStatus: null,
       expectedTriggerResolvedBy: null,
       expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: null,
-      expectedTriggerInsertedTimestamp: undefined
+      expectedTriggerStatus: null,
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
+      secondLevelCode: "12",
+      thirdLevelCode: "AB",
+      triggers: []
     },
     {
+      asn: "a".repeat(50),
       description: "should set resolution timestamp when there are no triggers and exceptions are resolved",
-      secondLevelCode: "12",
-      thirdLevelCode: "AB",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
-      triggers: [],
       errorStatus: "Resolved",
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: timestamp,
       expectedTriggerCount: 0,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: null,
       expectedTriggerReason: null,
-      expectedTriggerStatus: null,
       expectedTriggerResolvedBy: null,
       expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: null,
-      expectedTriggerInsertedTimestamp: undefined
-    },
-    {
-      description: "should not set resolution timestamp when there are no triggers and unresolved exceptions",
+      expectedTriggerStatus: null,
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
       secondLevelCode: "12",
       thirdLevelCode: "AB",
+      triggers: []
+    },
+    {
       asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
-      triggers: [],
+      description: "should not set resolution timestamp when there are no triggers and unresolved exceptions",
       errorStatus: "Unresolved",
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: undefined,
       expectedTriggerCount: 0,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: null,
       expectedTriggerReason: null,
-      expectedTriggerStatus: null,
       expectedTriggerResolvedBy: null,
       expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: null,
-      expectedTriggerInsertedTimestamp: undefined
+      expectedTriggerStatus: null,
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
+      secondLevelCode: "12",
+      thirdLevelCode: "AB",
+      triggers: []
     },
     {
+      asn: "a".repeat(50),
       description:
         "should set resolution timestamp and trigger fields when all triggers are resolved and there are no exceptions",
-      secondLevelCode: "12",
-      thirdLevelCode: "AB",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
-      triggers: [
-        { code: TriggerCode.TRPR0001, status: "Resolved" },
-        { code: TriggerCode.TRPR0002, status: "Resolved" }
-      ],
       errorStatus: null,
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: timestamp,
       expectedTriggerCount: 2,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: 1,
       expectedTriggerReason: TriggerCode.TRPR0001,
-      expectedTriggerStatus: "Resolved",
       expectedTriggerResolvedBy: "System",
       expectedTriggerResolvedTimestamp: timestamp,
-      expectedTriggerQualityChecked: 1,
-      expectedTriggerInsertedTimestamp: undefined
-    },
-    {
-      description: "should set resolution timestamp and trigger fields when all triggers and exceptions are resolved",
+      expectedTriggerStatus: "Resolved",
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
       secondLevelCode: "12",
       thirdLevelCode: "AB",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
       triggers: [
         { code: TriggerCode.TRPR0001, status: "Resolved" },
         { code: TriggerCode.TRPR0002, status: "Resolved" }
-      ],
+      ]
+    },
+    {
+      asn: "a".repeat(50),
+      description: "should set resolution timestamp and trigger fields when all triggers and exceptions are resolved",
       errorStatus: "Resolved",
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: timestamp,
       expectedTriggerCount: 2,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: 1,
       expectedTriggerReason: TriggerCode.TRPR0001,
-      expectedTriggerStatus: "Resolved",
       expectedTriggerResolvedBy: "System",
       expectedTriggerResolvedTimestamp: timestamp,
-      expectedTriggerQualityChecked: 1,
-      expectedTriggerInsertedTimestamp: undefined
+      expectedTriggerStatus: "Resolved",
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
+      secondLevelCode: "12",
+      thirdLevelCode: "AB",
+      triggers: [
+        { code: TriggerCode.TRPR0001, status: "Resolved" },
+        { code: TriggerCode.TRPR0002, status: "Resolved" }
+      ]
     },
     {
+      asn: "a".repeat(50),
       description:
         "should set trigger fields but not resolution timestamp when all triggers are resolved but exceptions are unresolved",
-      secondLevelCode: "12",
-      thirdLevelCode: "AB",
-      asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
-      hasAddedOrDeletedTriggers: true,
-      triggers: [
-        { code: TriggerCode.TRPR0001, status: "Resolved" },
-        { code: TriggerCode.TRPR0002, status: "Resolved" }
-      ],
       errorStatus: "Unresolved",
-      expectedOrgForPoliceFilter: "12AB  ",
       expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
       expectedPtiurn: "b".repeat(11),
       expectedResolutionTimestamp: undefined,
       expectedTriggerCount: 2,
+      expectedTriggerInsertedTimestamp: undefined,
+      expectedTriggerQualityChecked: 1,
       expectedTriggerReason: TriggerCode.TRPR0001,
-      expectedTriggerStatus: "Resolved",
       expectedTriggerResolvedBy: "System",
       expectedTriggerResolvedTimestamp: timestamp,
-      expectedTriggerQualityChecked: 1,
-      expectedTriggerInsertedTimestamp: undefined
-    },
-    {
-      description: "should set trigger fields when some triggers are resolved",
+      expectedTriggerStatus: "Resolved",
+      hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
       secondLevelCode: "12",
       thirdLevelCode: "AB",
+      triggers: [
+        { code: TriggerCode.TRPR0001, status: "Resolved" },
+        { code: TriggerCode.TRPR0002, status: "Resolved" }
+      ]
+    },
+    {
       asn: "a".repeat(50),
-      ptiurn: "b".repeat(50),
+      description: "should set trigger fields when some triggers are resolved",
+      errorStatus: null,
+      expectedAsn: "a".repeat(21),
+      expectedOrgForPoliceFilter: "12AB  ",
+      expectedPtiurn: "b".repeat(11),
+      expectedResolutionTimestamp: undefined,
+      expectedTriggerCount: 3,
+      expectedTriggerInsertedTimestamp: timestamp,
+      expectedTriggerQualityChecked: 1,
+      expectedTriggerReason: TriggerCode.TRPR0005,
+      expectedTriggerResolvedBy: null,
+      expectedTriggerResolvedTimestamp: undefined,
+      expectedTriggerStatus: "Unresolved",
       hasAddedOrDeletedTriggers: true,
+      ptiurn: "b".repeat(50),
+      secondLevelCode: "12",
+      thirdLevelCode: "AB",
       triggers: [
         { code: TriggerCode.TRPR0005, status: "Resolved" },
         { code: TriggerCode.TRPR0004, status: "Unresolved" },
         { code: TriggerCode.TRPR0004, status: "Unresolved" }
-      ],
-      errorStatus: null,
-      expectedOrgForPoliceFilter: "12AB  ",
-      expectedAsn: "a".repeat(21),
-      expectedPtiurn: "b".repeat(11),
-      expectedResolutionTimestamp: undefined,
-      expectedTriggerCount: 3,
-      expectedTriggerReason: TriggerCode.TRPR0005,
-      expectedTriggerStatus: "Unresolved",
-      expectedTriggerResolvedBy: null,
-      expectedTriggerResolvedTimestamp: undefined,
-      expectedTriggerQualityChecked: 1,
-      expectedTriggerInsertedTimestamp: timestamp
+      ]
     }
   ])(
     "$description",
     async ({
-      secondLevelCode,
-      thirdLevelCode,
       asn,
-      ptiurn,
-      hasAddedOrDeletedTriggers,
-      triggers,
       errorStatus,
-      expectedOrgForPoliceFilter,
       expectedAsn,
+      expectedOrgForPoliceFilter,
       expectedPtiurn,
       expectedResolutionTimestamp,
       expectedTriggerCount,
@@ -326,7 +324,12 @@ describe("updateCourtCase", () => {
       expectedTriggerReason,
       expectedTriggerResolvedBy,
       expectedTriggerResolvedTimestamp,
-      expectedTriggerStatus
+      expectedTriggerStatus,
+      hasAddedOrDeletedTriggers,
+      ptiurn,
+      secondLevelCode,
+      thirdLevelCode,
+      triggers
     }) => {
       const aho = getAho(asn, ptiurn, secondLevelCode, thirdLevelCode)
       const courtCase = (await insertCourtCase({ errorStatus: errorStatus as ResolutionStatus })) as CourtCase

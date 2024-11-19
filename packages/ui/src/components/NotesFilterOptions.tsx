@@ -1,14 +1,15 @@
-import RadioButton from "components/RadioButton/RadioButton"
 import type { ChangeEvent, Dispatch } from "react"
 import type NotesViewOption from "types/NotesViewOption"
+
+import RadioButton from "components/RadioButton/RadioButton"
 import { NOTES_VIEW_OPTIONS } from "types/NotesViewOption"
 
 interface Props {
-  selectedOption?: NotesViewOption
   dispatch: Dispatch<NotesViewOption>
+  selectedOption?: NotesViewOption
 }
 
-const NotesFilterOptions: React.FC<Props> = ({ selectedOption, dispatch }: Props) => {
+const NotesFilterOptions: React.FC<Props> = ({ dispatch, selectedOption }: Props) => {
   return (
     <fieldset className="govuk-fieldset">
       <div className="govuk-radios govuk-radios--small govuk-radios--inline" data-module="govuk-radios">
@@ -16,15 +17,15 @@ const NotesFilterOptions: React.FC<Props> = ({ selectedOption, dispatch }: Props
           const id = `notes-filter-${option.replace(/ /g, "-").toLowerCase()}`
           return (
             <RadioButton
-              name={"locked"}
-              key={id}
-              id={id}
               checked={selectedOption === option || (selectedOption === undefined && option === "View all notes")}
-              value={option}
+              id={id}
+              key={id}
               label={option}
+              name={"locked"}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 dispatch(event.target.value as NotesViewOption)
               }}
+              value={option}
             />
           )
         })}

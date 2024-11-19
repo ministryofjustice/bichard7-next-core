@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { TestTrigger } from "../../../test/utils/manageTriggers"
 import { loginAndVisit } from "../../support/helpers"
 
@@ -54,11 +55,11 @@ describe("Case unlocked badge", () => {
   it("Should show case unlocked badge when exception handler unlocks the case", () => {
     cy.task("insertCourtCasesWithFields", [
       {
-        errorLockedByUsername: "ExceptionHandler",
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "011111",
         errorCount: 1,
-        errorReport: "HO100310||ds:OffenceReasonSequence"
+        errorLockedByUsername: "ExceptionHandler",
+        errorReport: "HO100310||ds:OffenceReasonSequence",
+        orgForPoliceFilter: "011111",
+        triggerLockedByUsername: null
       }
     ])
 
@@ -77,17 +78,17 @@ describe("Case unlocked badge", () => {
       {
         caseId: 0,
         errorLockedByUsername: null,
-        triggerLockedByUsername: "TriggerHandler",
         orgForPoliceFilter: "011111",
-        triggerCount: 1
+        triggerCount: 1,
+        triggerLockedByUsername: "TriggerHandler"
       }
     ])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -107,20 +108,20 @@ describe("Case unlocked badge", () => {
     cy.task(
       "insertCourtCasesWithFields",
       lockUsernames.map((username) => ({
-        errorLockedByUsername: username,
-        triggerLockedByUsername: username,
-        orgForPoliceFilter: "011111",
         errorCount: 1,
+        errorLockedByUsername: username,
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        triggerCount: 1
+        orgForPoliceFilter: "011111",
+        triggerCount: 1,
+        triggerLockedByUsername: username
       }))
     )
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -150,16 +151,16 @@ describe("Case unlocked badge", () => {
       "insertCourtCasesWithFields",
       lockUsernames.map((username) => ({
         errorLockedByUsername: username,
-        triggerLockedByUsername: username,
-        orgForPoliceFilter: "011111"
+        orgForPoliceFilter: "011111",
+        triggerLockedByUsername: username
       }))
     )
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -184,21 +185,21 @@ describe("Case unlocked badge", () => {
     cy.task(
       "insertCourtCasesWithFields",
       lockUsernames.map((username) => ({
-        errorLockedByUsername: username,
-        triggerLockedByUsername: username,
-        orgForPoliceFilter: "011111",
         errorCount: 1,
+        errorLockedByUsername: username,
         errorReport: "HO100310||ds:OffenceReasonSequence",
-        triggerCount: 1
+        orgForPoliceFilter: "011111",
+        triggerCount: 1,
+        triggerLockedByUsername: username
       }))
     )
 
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })

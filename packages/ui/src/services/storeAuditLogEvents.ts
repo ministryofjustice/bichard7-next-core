@@ -1,24 +1,26 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+
 import axios from "axios"
+
 import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../config"
 import { statusOk } from "../utils/http"
 
 const storeAuditLogEvents = async (
   messageIdOrUsername: string,
   events: AuditLogEvent[],
-  route: "users" | "messages"
+  route: "messages" | "users"
 ) => {
   if (events.length === 0) {
     return
   }
 
   return axios({
-    url: `${AUDIT_LOG_API_URL}/${route}/${messageIdOrUsername}/events`,
-    method: "POST",
+    data: JSON.stringify(events),
     headers: {
       "X-API-Key": AUDIT_LOG_API_KEY
     },
-    data: JSON.stringify(events)
+    method: "POST",
+    url: `${AUDIT_LOG_API_URL}/${route}/${messageIdOrUsername}/events`
   })
     .then((response) => {
       if (!statusOk(response.status)) {

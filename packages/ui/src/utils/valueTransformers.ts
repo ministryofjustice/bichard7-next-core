@@ -1,7 +1,8 @@
-import { Durations } from "@moj-bichard7-developers/bichard7-next-data/dist/types/Duration"
 import type { Duration } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+
 import pleaStatus from "@moj-bichard7-developers/bichard7-next-data/dist/data/plea-status.json"
 import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
+import { Durations } from "@moj-bichard7-developers/bichard7-next-data/dist/types/Duration"
 
 export const capitalizeString = (str = ""): string => {
   return str.charAt(0).toLocaleUpperCase() + str.slice(1)

@@ -1,11 +1,11 @@
 import type { ResolutionStatus } from "./ResolutionStatus"
 
 export type UpdateResolutionStatus = {
-  errorStatus?: ResolutionStatus
   errorResolvedBy?: string
   errorResolvedTimestamp?: Date
-  triggerStatus?: ResolutionStatus
+  errorStatus?: ResolutionStatus
+  resolutionTimestamp?: Date
   triggerResolvedBy?: string
   triggerResolvedTimestamp?: Date
-  resolutionTimestamp?: Date
+  triggerStatus?: ResolutionStatus
 }

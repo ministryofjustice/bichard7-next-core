@@ -1,158 +1,148 @@
+import type { Relation } from "typeorm"
+import type { ResolutionStatus } from "types/ResolutionStatus"
+
 /* eslint-disable import/no-cycle */
 import Permission from "@moj-bichard7/common/types/Permission"
-import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import Note from "./Note"
-import Trigger from "./Trigger"
-import User from "./User"
 import booleanIntTransformer from "./transformers/booleanIntTransformer"
 import dateTransformer from "./transformers/dateTransformer"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
+import Trigger from "./Trigger"
+import User from "./User"
 
 @Entity({ name: "error_list" })
 export default class CourtCase {
-  @PrimaryColumn({ name: "error_id" })
-  errorId!: number
+  @Column({ name: "asn", nullable: true, type: "varchar" })
+  asn!: null | string
 
-  @Column({ name: "message_id" })
-  messageId!: string
-
-  @Column({ name: "phase" })
-  phase!: number
-
-  @Column({ name: "error_status", type: "int4", transformer: resolutionStatusTransformer })
-  errorStatus!: ResolutionStatus | null
-
-  @Column({ name: "trigger_status", type: "int4", transformer: resolutionStatusTransformer })
-  triggerStatus?: ResolutionStatus | null
-
-  @Column({ name: "error_quality_checked", type: "int4", nullable: true })
-  errorQualityChecked!: number | null
-
-  @Column({ name: "trigger_quality_checked", type: "int4", nullable: true })
-  triggerQualityChecked!: number | null
-
-  @Column({ name: "trigger_count" })
-  triggerCount!: number
-
-  @Column({ name: "is_urgent", type: "int2", transformer: booleanIntTransformer })
-  isUrgent!: boolean
-
-  @Column({ name: "asn", type: "varchar", nullable: true })
-  asn!: string | null
-
-  @Column({ name: "court_code", type: "varchar", nullable: true })
-  courtCode!: string | null
-
-  @Column({ name: "annotated_msg", type: "varchar" })
-  hearingOutcome!: string
-
-  @Column({ name: "updated_msg", type: "varchar", nullable: true })
-  updatedHearingOutcome!: string | null
-
-  @Column({ name: "error_report" })
-  errorReport!: string
-
-  @Column({ name: "create_ts", type: "timestamptz" })
-  createdTimestamp!: Date
-
-  @Column({ name: "error_reason", type: "varchar", nullable: true })
-  errorReason!: string | null
-
-  @Column({ name: "trigger_reason", type: "varchar", nullable: true })
-  triggerReason!: string | null
-
-  @Column({ name: "error_count" })
-  errorCount!: number
-
-  @Column({ name: "user_updated_flag", type: "int2", nullable: true })
-  userUpdatedFlag!: number | null
+  @Column({ name: "court_code", nullable: true, type: "varchar" })
+  courtCode!: null | string
 
   // TODO: only show Date part of this and not time-stamp
-  @Column({ name: "court_date", type: "date", nullable: true, transformer: dateTransformer })
+  @Column({ name: "court_date", nullable: true, transformer: dateTransformer, type: "date" })
   courtDate!: Date | null
-
-  @Column({ name: "ptiurn" })
-  ptiurn!: string
 
   @Column({ name: "court_name" })
   courtName!: string
 
-  @Column({ name: "resolution_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
-  resolutionTimestamp!: Date | null
-
-  @Column({ name: "msg_received_ts", type: "timestamptz", transformer: dateTransformer })
-  messageReceivedTimestamp!: Date
-
-  @Column({ name: "error_resolved_by", type: "varchar", nullable: true })
-  errorResolvedBy!: string | null
-
-  @Column({ name: "trigger_resolved_by", type: "varchar", nullable: true })
-  triggerResolvedBy!: string | null
-
-  @Column({ name: "error_resolved_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
-  errorResolvedTimestamp!: Date | null
-
-  @Column({ name: "trigger_resolved_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
-  triggerResolvedTimestamp!: Date | null
-
-  @Column({ name: "defendant_name", type: "varchar", nullable: true })
-  defendantName!: string | null
-
-  @Column({ name: "org_for_police_filter", type: "varchar", nullable: true })
-  orgForPoliceFilter!: string | null
-
-  @Column({ name: "court_room", type: "varchar", nullable: true })
-  courtRoom!: string | null
-
   @Column({ name: "court_reference" })
   courtReference!: string
 
-  @Column({ name: "error_insert_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
+  @Column({ name: "court_room", nullable: true, type: "varchar" })
+  courtRoom!: null | string
+
+  @Column({ name: "create_ts", type: "timestamptz" })
+  createdTimestamp!: Date
+
+  @Column({ name: "defendant_name", nullable: true, type: "varchar" })
+  defendantName!: null | string
+
+  @Column({ name: "error_count" })
+  errorCount!: number
+
+  @PrimaryColumn({ name: "error_id" })
+  errorId!: number
+
+  @Column({ name: "error_insert_ts", nullable: true, transformer: dateTransformer, type: "timestamptz" })
   errorInsertedTimestamp!: Date | null
-
-  @Column({ name: "trigger_insert_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
-  triggerInsertedTimestamp!: Date | null
-
-  @Column({ name: "pnc_update_enabled", type: "varchar", nullable: true })
-  pncUpdateEnabled!: string | null
-
-  @OneToMany(() => Trigger, (trigger) => trigger.courtCase, { eager: true, cascade: ["insert", "update"] })
-  triggers!: Relation<Trigger>[]
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "error_locked_by_id", referencedColumnName: "username" })
-  errorLockedByUser!: User | null
+  errorLockedByUser!: null | User
 
-  @Column({ name: "error_locked_by_id", type: "varchar", nullable: true })
-  errorLockedByUsername?: string | null
+  errorLockedByUserFullName?: null | string
 
-  errorLockedByUserFullName?: string | null
+  @Column({ name: "error_locked_by_id", nullable: true, type: "varchar" })
+  errorLockedByUsername?: null | string
+
+  @Column({ name: "error_quality_checked", nullable: true, type: "int4" })
+  errorQualityChecked!: null | number
+
+  @Column({ name: "error_reason", nullable: true, type: "varchar" })
+  errorReason!: null | string
+
+  @Column({ name: "error_report" })
+  errorReport!: string
+
+  @Column({ name: "error_resolved_by", nullable: true, type: "varchar" })
+  errorResolvedBy!: null | string
+
+  @Column({ name: "error_resolved_ts", nullable: true, transformer: dateTransformer, type: "timestamptz" })
+  errorResolvedTimestamp!: Date | null
+
+  @Column({ name: "error_status", transformer: resolutionStatusTransformer, type: "int4" })
+  errorStatus!: null | ResolutionStatus
+
+  @Column({ name: "annotated_msg", type: "varchar" })
+  hearingOutcome!: string
+
+  @Column({ name: "is_urgent", transformer: booleanIntTransformer, type: "int2" })
+  isUrgent!: boolean
+
+  @Column({ name: "message_id" })
+  messageId!: string
+
+  @Column({ name: "msg_received_ts", transformer: dateTransformer, type: "timestamptz" })
+  messageReceivedTimestamp!: Date
+
+  @OneToMany(() => Note, (note) => note.courtCase, { cascade: ["insert", "update"], eager: true })
+  notes!: Relation<Note>[]
+
+  @Column({ name: "org_for_police_filter", nullable: true, type: "varchar" })
+  orgForPoliceFilter!: null | string
+
+  @Column({ name: "phase" })
+  phase!: number
+
+  @Column({ name: "pnc_update_enabled", nullable: true, type: "varchar" })
+  pncUpdateEnabled!: null | string
+
+  @Column({ name: "ptiurn" })
+  ptiurn!: string
+
+  @Column({ name: "resolution_ts", nullable: true, transformer: dateTransformer, type: "timestamptz" })
+  resolutionTimestamp!: Date | null
+
+  @Column({ name: "trigger_count" })
+  triggerCount!: number
+
+  @Column({ name: "trigger_insert_ts", nullable: true, transformer: dateTransformer, type: "timestamptz" })
+  triggerInsertedTimestamp!: Date | null
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "trigger_locked_by_id", referencedColumnName: "username" })
-  triggerLockedByUser!: User | null
+  triggerLockedByUser!: null | User
 
-  @Column({ name: "trigger_locked_by_id", type: "varchar", nullable: true })
-  triggerLockedByUsername?: string | null
+  triggerLockedByUserFullName?: null | string
 
-  triggerLockedByUserFullName?: string | null
+  @Column({ name: "trigger_locked_by_id", nullable: true, type: "varchar" })
+  triggerLockedByUsername?: null | string
 
-  @OneToMany(() => Note, (note) => note.courtCase, { eager: true, cascade: ["insert", "update"] })
-  notes!: Relation<Note>[]
+  @Column({ name: "trigger_quality_checked", nullable: true, type: "int4" })
+  triggerQualityChecked!: null | number
 
-  exceptionsAreLockedByAnotherUser(username: string) {
-    return !!this.errorLockedByUsername && this.errorLockedByUsername !== username
-  }
+  @Column({ name: "trigger_reason", nullable: true, type: "varchar" })
+  triggerReason!: null | string
 
-  triggersAreLockedByAnotherUser(username: string) {
-    return !!this.triggerLockedByUsername && this.triggerLockedByUsername !== username
-  }
+  @Column({ name: "trigger_resolved_by", nullable: true, type: "varchar" })
+  triggerResolvedBy!: null | string
 
-  isLockedByAnotherUser(username: string) {
-    return this.exceptionsAreLockedByAnotherUser(username) || this.triggersAreLockedByAnotherUser(username)
-  }
+  @Column({ name: "trigger_resolved_ts", nullable: true, transformer: dateTransformer, type: "timestamptz" })
+  triggerResolvedTimestamp!: Date | null
+
+  @OneToMany(() => Trigger, (trigger) => trigger.courtCase, { cascade: ["insert", "update"], eager: true })
+  triggers!: Relation<Trigger>[]
+
+  @Column({ name: "trigger_status", transformer: resolutionStatusTransformer, type: "int4" })
+  triggerStatus?: null | ResolutionStatus
+
+  @Column({ name: "updated_msg", nullable: true, type: "varchar" })
+  updatedHearingOutcome!: null | string
+
+  @Column({ name: "user_updated_flag", nullable: true, type: "int2" })
+  userUpdatedFlag!: null | number
 
   canReallocate(username: string) {
     const canReallocateAsExceptionHandler =
@@ -176,15 +166,27 @@ export default class CourtCase {
     return canResolveOrSubmit
   }
 
-  triggersAreLockedByCurrentUser(username: string) {
-    return !!this.triggerLockedByUsername && this.triggerLockedByUsername === username
+  exceptionsAreLockedByAnotherUser(username: string) {
+    return !!this.errorLockedByUsername && this.errorLockedByUsername !== username
   }
 
   exceptionsAreLockedByCurrentUser(username: string) {
     return !!this.errorLockedByUsername && this.errorLockedByUsername === username
   }
 
+  isLockedByAnotherUser(username: string) {
+    return this.exceptionsAreLockedByAnotherUser(username) || this.triggersAreLockedByAnotherUser(username)
+  }
+
   isLockedByCurrentUser(username: string) {
     return this.triggersAreLockedByCurrentUser(username) || this.exceptionsAreLockedByCurrentUser(username)
+  }
+
+  triggersAreLockedByAnotherUser(username: string) {
+    return !!this.triggerLockedByUsername && this.triggerLockedByUsername !== username
+  }
+
+  triggersAreLockedByCurrentUser(username: string) {
+    return !!this.triggerLockedByUsername && this.triggerLockedByUsername === username
   }
 }

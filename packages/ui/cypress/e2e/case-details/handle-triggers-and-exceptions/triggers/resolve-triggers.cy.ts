@@ -1,5 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatus } from "types/ResolutionStatus"
+
 import { TestTrigger } from "../../../../../test/utils/manageTriggers"
 import { caseURL } from "../../../../fixtures/triggers"
 import { clickTab } from "../../../../support/helpers"
@@ -7,22 +8,22 @@ import { clickTab } from "../../../../support/helpers"
 const createCasesWithTriggers = () => {
   const caseTriggers: Partial<TestTrigger>[] = [
     {
-      triggerCode: TriggerCode.TRPR0001,
+      createdAt: new Date("2022-07-09T10:22:34.000Z"),
       status: "Unresolved",
-      createdAt: new Date("2022-07-09T10:22:34.000Z")
+      triggerCode: TriggerCode.TRPR0001
     },
     {
-      triggerCode: TriggerCode.TRPR0002,
+      createdAt: new Date("2022-07-09T10:22:34.000Z"),
       status: "Unresolved",
-      createdAt: new Date("2022-07-09T10:22:34.000Z")
+      triggerCode: TriggerCode.TRPR0002
     }
   ]
 
   cy.task("insertCourtCasesWithFields", [
     {
-      triggerLockedByUsername: "GeneralHandler",
+      errorStatus: "Resolved",
       orgForPoliceFilter: "01",
-      errorStatus: "Resolved"
+      triggerLockedByUsername: "GeneralHandler"
     }
   ])
   cy.task("insertTriggers", { caseId: 0, triggers: caseTriggers })

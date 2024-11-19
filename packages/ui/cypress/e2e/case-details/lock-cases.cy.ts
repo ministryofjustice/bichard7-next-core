@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import { loginAndVisit } from "../../support/helpers"
 
 const insertTrigger = (status = "Unresolved") => {
@@ -6,24 +7,24 @@ const insertTrigger = (status = "Unresolved") => {
     caseId: 0,
     triggers: [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status,
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
   })
 }
 
-const insertDummyCourtCases = ( params: {errorLockedByUsername?: string,  triggerLockedByUsername?: string, errorStatus?: string, triggerStatus?: string} ) => {
+const insertDummyCourtCases = ( params: {errorLockedByUsername?: string,  errorStatus?: string, triggerLockedByUsername?: string, triggerStatus?: string} ) => {
   cy.task("insertCourtCasesWithFields", [
     {
-      errorLockedByUsername: params.errorLockedByUsername,
-      triggerLockedByUsername: params.triggerLockedByUsername,
-      orgForPoliceFilter: "01",
       errorCount: 1,
+      errorLockedByUsername: params.errorLockedByUsername,
       errorStatus: params.errorStatus,
+      orgForPoliceFilter: "01",
       triggerCount: 1,
+      triggerLockedByUsername: params.triggerLockedByUsername,
       triggerStatus: params.triggerStatus
     }
   ])

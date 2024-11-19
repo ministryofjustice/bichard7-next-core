@@ -1,12 +1,14 @@
-import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
+import type { DataSource } from "typeorm"
+
+import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
+import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import insertNotes from "services/insertNotes"
 import sendToQueue from "services/mq/sendToQueue"
 import resubmitCourtCase from "services/resubmitCourtCase"
-import type { DataSource } from "typeorm"
+
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import offenceSequenceException from "../test-data/HO100302_1.json"
 import deleteFromEntity from "../utils/deleteFromEntity"
@@ -38,15 +40,15 @@ describe("resubmit court case", () => {
   it("Should resubmit a court case with no updates", async () => {
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: userName,
-      triggerLockedByUsername: userName,
       errorCount: 1,
+      errorLockedByUsername: userName,
       errorStatus: "Unresolved",
-      triggerCount: 1,
-      phase: 1,
       hearingOutcome: offenceSequenceException.hearingOutcomeXml,
-      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
-      orgForPoliceFilter: "01"
+      orgForPoliceFilter: "01",
+      phase: 1,
+      triggerCount: 1,
+      triggerLockedByUsername: userName,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml
     })
 
     // insert the record to the db
@@ -56,10 +58,10 @@ describe("resubmit court case", () => {
     expect(sendToQueue).toHaveBeenCalledTimes(0)
 
     const result = await resubmitCourtCase(dataSource, { noUpdatesResubmit: true }, inputCourtCase.errorId, {
+      hasAccessTo: hasAccessToAll,
       username: userName,
-      visibleForces: ["01"],
       visibleCourts: [],
-      hasAccessTo: hasAccessToAll
+      visibleForces: ["01"]
     } as Partial<User> as User)
 
     expect(result).not.toBeInstanceOf(Error)
@@ -89,15 +91,15 @@ describe("resubmit court case", () => {
   it("Should resubmit a court case with updates to Court Offence Sequence Number", async () => {
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: userName,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: userName,
       errorStatus: "Unresolved",
-      triggerCount: 1,
-      phase: 1,
       hearingOutcome: offenceSequenceException.hearingOutcomeXml,
-      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
-      orgForPoliceFilter: "1111"
+      orgForPoliceFilter: "1111",
+      phase: 1,
+      triggerCount: 1,
+      triggerLockedByUsername: null,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml
     })
 
     // insert the record to the db
@@ -121,10 +123,10 @@ describe("resubmit court case", () => {
       { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
       inputCourtCase.errorId,
       {
+        hasAccessTo: hasAccessToAll,
         username: userName,
-        visibleForces: ["11"],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: ["11"]
       } as Partial<User> as User
     )
 
@@ -170,15 +172,15 @@ describe("resubmit court case", () => {
 
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
-      errorLockedByUsername: userName,
-      triggerLockedByUsername: null,
       errorCount: 1,
+      errorLockedByUsername: userName,
       errorStatus: "Unresolved",
-      triggerCount: 1,
-      phase: 1,
       hearingOutcome: offenceSequenceException.hearingOutcomeXml,
-      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
-      orgForPoliceFilter: "1111"
+      orgForPoliceFilter: "1111",
+      phase: 1,
+      triggerCount: 1,
+      triggerLockedByUsername: null,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml
     })
 
     // insert the record to the db
@@ -207,10 +209,10 @@ describe("resubmit court case", () => {
       },
       inputCourtCase.errorId,
       {
+        hasAccessTo: hasAccessToAll,
         username: userName,
-        visibleForces: ["11"],
         visibleCourts: [],
-        hasAccessTo: hasAccessToAll
+        visibleForces: ["11"]
       } as Partial<User> as User
     )
 

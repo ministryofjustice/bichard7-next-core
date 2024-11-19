@@ -1,4 +1,5 @@
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100102, HO100206, HO100300 } from "../../test/helpers/exceptions"
 import amendmentsHaveChanged from "./amendmentsHaveChanged"
@@ -30,18 +31,18 @@ describe("amendmentsHaveChanged", () => {
 
     const amendments = {
       asn: "",
-      nextSourceOrganisation: [
-        {
-          resultIndex: 0,
-          offenceIndex: 1,
-          value: "B01EF01"
-        }
-      ],
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "2024-10-10"
+        }
+      ],
+      nextSourceOrganisation: [
+        {
+          offenceIndex: 1,
+          resultIndex: 0,
+          value: "B01EF01"
         }
       ]
     }
@@ -61,18 +62,18 @@ describe("amendmentsHaveChanged", () => {
 
     const amendments = {
       asn: "1101ZD0100000448754K",
-      nextSourceOrganisation: [
-        {
-          resultIndex: 0,
-          offenceIndex: 1,
-          value: "B01EF01"
-        }
-      ],
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "2024-10-10"
+        }
+      ],
+      nextSourceOrganisation: [
+        {
+          offenceIndex: 1,
+          resultIndex: 0,
+          value: "B01EF01"
         }
       ]
     }
@@ -92,18 +93,18 @@ describe("amendmentsHaveChanged", () => {
 
     const amendments = {
       asn: "1101ZD0100000410836A",
-      nextSourceOrganisation: [
-        {
-          resultIndex: 0,
-          offenceIndex: 1,
-          value: "B01EF01"
-        }
-      ],
       nextHearingDate: [
         {
-          resultIndex: 0,
           offenceIndex: 1,
+          resultIndex: 0,
           value: "2024-10-10"
+        }
+      ],
+      nextSourceOrganisation: [
+        {
+          offenceIndex: 1,
+          resultIndex: 0,
+          value: "B01EF01"
         }
       ]
     }

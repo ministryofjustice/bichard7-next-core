@@ -1,5 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { addDays, format, subDays } from "date-fns"
+
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import a11yConfig from "../../../support/a11yConfig"
 import {
@@ -194,9 +195,9 @@ describe("Filtering cases", () => {
 
   it("Should display cases filtered by PTIURN", () => {
     cy.task("insertCourtCasesWithFields", [
-      { ptiurn: "Case00001", orgForPoliceFilter: "011111" },
-      { ptiurn: "Case00002", orgForPoliceFilter: "011111" },
-      { ptiurn: "Case00003", orgForPoliceFilter: "011111" }
+      { orgForPoliceFilter: "011111", ptiurn: "Case00001" },
+      { orgForPoliceFilter: "011111", ptiurn: "Case00002" },
+      { orgForPoliceFilter: "011111", ptiurn: "Case00003" }
     ])
 
     visitBasePath()
@@ -223,14 +224,14 @@ describe("Filtering cases", () => {
 
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0017,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0017,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
 
     visitBasePath()
 
@@ -268,30 +269,30 @@ describe("Filtering cases", () => {
     ])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0017,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0017,
+        triggerId: 0
       },
       {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0015,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0015,
+        triggerId: 1
       }
     ]
 
     cy.task("insertTriggers", { caseId: 0, triggers })
-    cy.task("insertException", { caseId: 0, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
-    cy.task("insertException", { caseId: 0, exceptionCode: "HO200200", errorReport: "HO200200||ds:Reason" })
+    cy.task("insertException", { caseId: 0, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
+    cy.task("insertException", { caseId: 0, errorReport: "HO200200||ds:Reason", exceptionCode: "HO200200" })
 
     cy.task("insertTriggers", { caseId: 1, triggers })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200239", errorReport: "HO200239||ds:Reason" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200239||ds:Reason", exceptionCode: "HO200239" })
 
     cy.task("insertTriggers", { caseId: 2, triggers })
-    cy.task("insertException", { caseId: 2, exceptionCode: "HO200247", errorReport: "HO200247||ds:Reason" })
-    cy.task("insertException", { caseId: 2, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
+    cy.task("insertException", { caseId: 2, errorReport: "HO200247||ds:Reason", exceptionCode: "HO200247" })
+    cy.task("insertException", { caseId: 2, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
 
     cy.visit("/bichard")
 
@@ -344,20 +345,20 @@ describe("Filtering cases", () => {
 
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0017,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0017,
+        triggerId: 0
       },
       {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0011,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0011,
+        triggerId: 1
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
 
     visitBasePath()
     inputAndSearch("reasonCodes", "PR17")
@@ -391,14 +392,14 @@ describe("Filtering cases", () => {
 
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0017,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0017,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
 
     visitBasePath()
 
@@ -419,24 +420,24 @@ describe("Filtering cases", () => {
 
   it("Should let users use all search fields", () => {
     cy.task("insertCourtCasesWithFields", [
-      { defendantName: "WAYNE Bruce", courtName: "London Court", ptiurn: "Case00001", orgForPoliceFilter: "011111" },
-      { defendantName: "GORDON Bruce", courtName: "London Court", ptiurn: "Case00002", orgForPoliceFilter: "011111" },
+      { courtName: "London Court", defendantName: "WAYNE Bruce", orgForPoliceFilter: "011111", ptiurn: "Case00001" },
+      { courtName: "London Court", defendantName: "GORDON Bruce", orgForPoliceFilter: "011111", ptiurn: "Case00002" },
       {
-        defendantName: "PENNYWORTH Bruce",
         courtName: "Manchester Court",
-        ptiurn: "Case00003",
-        orgForPoliceFilter: "011111"
+        defendantName: "PENNYWORTH Bruce",
+        orgForPoliceFilter: "011111",
+        ptiurn: "Case00003"
       },
       {
-        defendantName: "PENNYWORTH Alfred",
         courtName: "London Court",
-        ptiurn: "Case00004",
-        orgForPoliceFilter: "011111"
+        defendantName: "PENNYWORTH Alfred",
+        orgForPoliceFilter: "011111",
+        ptiurn: "Case00004"
       }
     ])
-    cy.task("insertException", { caseId: 0, exceptionCode: "HO200212", errorReport: "HO200212||ds:Reason" })
-    cy.task("insertException", { caseId: 1, exceptionCode: "HO200213", errorReport: "HO200213||ds:Reason" })
-    cy.task("insertException", { caseId: 2, exceptionCode: "HO200214", errorReport: "HO200214||ds:Reason" })
+    cy.task("insertException", { caseId: 0, errorReport: "HO200212||ds:Reason", exceptionCode: "HO200212" })
+    cy.task("insertException", { caseId: 1, errorReport: "HO200213||ds:Reason", exceptionCode: "HO200213" })
+    cy.task("insertException", { caseId: 2, errorReport: "HO200214||ds:Reason", exceptionCode: "HO200214" })
 
     visitBasePath()
 
@@ -676,15 +677,15 @@ describe("Filtering cases", () => {
   it("Should filter cases by whether they have triggers and exceptions", () => {
     cy.task("insertCourtCasesWithFields", [
       { orgForPoliceFilter: "011111" },
-      { orgForPoliceFilter: "011111", errorCount: 0, errorStatus: null, errorReason: "", errorReport: "" },
+      { errorCount: 0, errorReason: "", errorReport: "", errorStatus: null, orgForPoliceFilter: "011111" },
       { orgForPoliceFilter: "011111" }
     ])
     const triggers: TestTrigger[] = [
       {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
         status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
+        triggerCode: TriggerCode.TRPR0001,
+        triggerId: 0
       }
     ]
     cy.task("insertTriggers", { caseId: 0, triggers })
@@ -728,8 +729,8 @@ describe("Filtering cases", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         errorLockedByUsername: "BichardForce01",
-        triggerLockedByUsername: "BichardForce01",
-        orgForPoliceFilter: "011111"
+        orgForPoliceFilter: "011111",
+        triggerLockedByUsername: "BichardForce01"
       },
       { orgForPoliceFilter: "011111" }
     ])
@@ -800,31 +801,31 @@ describe("Filtering cases", () => {
       cy.task("insertCourtCasesWithFields", [
         {
           errorLockedByUsername: "GeneralHandler",
-          triggerLockedByUsername: "GeneralHandler",
-          orgForPoliceFilter: "01XY"
+          orgForPoliceFilter: "01XY",
+          triggerLockedByUsername: "GeneralHandler"
         },
         {
           orgForPoliceFilter: "01XY",
           triggerLockedByUsername: "GeneralHandler"
         },
         {
-          orgForPoliceFilter: "01XY",
-          errorLockedByUsername: "GeneralHandler"
+          errorLockedByUsername: "GeneralHandler",
+          orgForPoliceFilter: "01XY"
         },
         {
           errorLockedByUsername: "BichardForce02",
-          triggerLockedByUsername: "BichardForce02",
-          orgForPoliceFilter: "01XY"
+          orgForPoliceFilter: "01XY",
+          triggerLockedByUsername: "BichardForce02"
         },
         { orgForPoliceFilter: "01XY" }
       ])
 
       const triggers: TestTrigger[] = [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0001,
+          createdAt: new Date("2022-07-09T10:22:34.000Z"),
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
+          triggerCode: TriggerCode.TRPR0001,
+          triggerId: 0
         }
       ]
       cy.task("insertTriggers", { caseId: 0, triggers })

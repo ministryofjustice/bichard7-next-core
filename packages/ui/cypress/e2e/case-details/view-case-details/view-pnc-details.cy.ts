@@ -2,7 +2,7 @@ import { loginAndVisit } from "../../../support/helpers"
 
 describe("when viewing case-details sidebar", () => {
   beforeEach(() => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
+    cy.task("insertCourtCasesWithFields", [{ errorCount: 0, orgForPoliceFilter: "01" }])
   })
 
   afterEach(() => {

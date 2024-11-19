@@ -8,6 +8,7 @@ import { GridCol, GridRow, Heading, Paragraph } from "govuk-react"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
 import { DisplayTrigger } from "types/display/Triggers"
 import getTriggerDefinition from "utils/getTriggerDefinition"
+
 import {
   CjsResultCode,
   TriggerCodeLabel,
@@ -18,16 +19,16 @@ import {
 } from "./Trigger.styles"
 
 interface Props {
-  trigger: DisplayTrigger
+  disabled?: boolean
   onClick: (index: number | undefined) => void
   selectedTriggerIds: number[]
   setTriggerSelection: (event: ChangeEvent<HTMLInputElement>) => void
-  disabled?: boolean
+  trigger: DisplayTrigger
 }
 
-const TriggerCompleteBadge = () => <Badge isRendered={true} colour={BadgeColours.Green} label={"Complete"} />
+const TriggerCompleteBadge = () => <Badge colour={BadgeColours.Green} isRendered={true} label={"Complete"} />
 
-const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, disabled }: Props) => {
+const Trigger = ({ disabled, onClick, selectedTriggerIds, setTriggerSelection, trigger }: Props) => {
   const triggerDefinition = getTriggerDefinition(trigger.triggerCode)
   const [showHelpBox, setShowHelpBox] = useState(false)
 
@@ -35,7 +36,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
   const isResolved = trigger.status === "Resolved"
 
   return (
-    <TriggerContainer key={trigger.triggerId} className={`moj-trigger-row trigger-container`}>
+    <TriggerContainer className={`moj-trigger-row trigger-container`} key={trigger.triggerId}>
       <TriggerHeaderRow className={`trigger-header trigger-header-row`}>
         <GridCol className="trigger-details-column" setWidth="85%">
           <TriggerCodeLabel className={`trigger-code trigger-code`} htmlFor={checkBoxId}>
@@ -62,10 +63,10 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
             </ConditionalRender>
             <ConditionalRender isRendered={!disabled && !isResolved}>
               <Checkbox
-                id={checkBoxId}
-                value={trigger.triggerId}
                 checked={selectedTriggerIds.includes(trigger.triggerId)}
+                id={checkBoxId}
                 onChange={setTriggerSelection}
+                value={trigger.triggerId}
               />
             </ConditionalRender>
           </TriggerStatus>
@@ -76,9 +77,9 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
           <TriggerDefinition>{triggerDefinition?.description}</TriggerDefinition>
           <PreviewButton
             className="triggers-help-preview"
-            showPreview={!showHelpBox}
-            previewLabel="More information"
             onClick={() => setShowHelpBox(!showHelpBox)}
+            previewLabel="More information"
+            showPreview={!showHelpBox}
           />
         </GridCol>
       </GridRow>

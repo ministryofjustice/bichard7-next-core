@@ -1,22 +1,23 @@
 import { SecondaryButton } from "components/Buttons"
 import { GridCol, GridRow } from "govuk-react"
+
 import { BackToAllOffencesLink } from "./BackToAllOffencesLink"
 import { NextButton, PreviousButton } from "./OffenceNavigation.styles"
 
 interface OffenceNavigationProps {
-  onBackToAllOffences: () => void
-  selectedOffenceSequenceNumber: number
-  onPreviousClick: () => void
-  onNextClick: () => void
   offencesCount: number
+  onBackToAllOffences: () => void
+  onNextClick: () => void
+  onPreviousClick: () => void
+  selectedOffenceSequenceNumber: number
 }
 
 export const OffenceNavigation = ({
+  offencesCount,
   onBackToAllOffences,
-  selectedOffenceSequenceNumber,
-  onPreviousClick,
   onNextClick,
-  offencesCount
+  onPreviousClick,
+  selectedOffenceSequenceNumber
 }: OffenceNavigationProps) => {
   return (
     <GridRow>

@@ -1,4 +1,5 @@
 import type { ResolutionStatus } from "types/ResolutionStatus"
+
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 

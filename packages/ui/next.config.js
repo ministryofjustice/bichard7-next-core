@@ -1,29 +1,29 @@
 const nextConfig = {
-  basePath: "/bichard",
   assetPrefix: "/bichard/",
-  reactStrictMode: true,
-  transpilePackages: ["hex-rgb", "is-plain-obj"],
-  output: "standalone",
-  poweredByHeader: false,
-  async rewrites() {
-    return [
-      {
-        source: "/bichard/help/",
-        destination: "/help/"
-      },
-      {
-        source: "/bichard/bichard-ui/ReturnToReportIndex",
-        destination: "/bichard-ui/ReturnToReportIndex"
-      },
-      {
-        source: "/bichard/users/users/",
-        destination: "/users/users/"
-      }
-    ]
-  },
+  basePath: "/bichard",
   compiler: {
     styledComponents: true
   },
+  output: "standalone",
+  poweredByHeader: false,
+  reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        destination: "/help/",
+        source: "/bichard/help/"
+      },
+      {
+        destination: "/bichard-ui/ReturnToReportIndex",
+        source: "/bichard/bichard-ui/ReturnToReportIndex"
+      },
+      {
+        destination: "/users/users/",
+        source: "/bichard/users/users/"
+      }
+    ]
+  },
+  transpilePackages: ["hex-rgb", "is-plain-obj"],
   typescript: {
     tsconfigPath: "./tsconfig.build.json"
   }
