@@ -1,5 +1,6 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
+
 import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
 
 describe("areResultsMatchingAPncDisposal", () => {
@@ -10,11 +11,11 @@ describe("areResultsMatchingAPncDisposal", () => {
     {
       qtyDate: "",
       qtyDuration: "",
-      type: 2063,
-      qtyUnitsFined: "",
       qtyMonetaryValue: "",
+      qtyUnitsFined: "",
       qualifiers: "",
-      text: ""
+      text: "",
+      type: 2063
     }
   ] as PncDisposal[]
 

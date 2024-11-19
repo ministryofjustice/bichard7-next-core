@@ -1,4 +1,5 @@
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
+
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200212 from "./HO200212"
 
@@ -101,14 +102,6 @@ describe("HO200212", () => {
   it("should generate exception for 'LocalOffenceCode > OffenceCode' when results of an offence are non-recordable", () => {
     const aho = generateAhoFromOffenceList([
       {
-        Result: [
-          {
-            PNCDisposalType: 1000
-          },
-          {
-            PNCDisposalType: 1000
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "LocalOffenceReason",
@@ -116,7 +109,15 @@ describe("HO200212", () => {
               OffenceCode: "ABC"
             }
           }
-        }
+        },
+        Result: [
+          {
+            PNCDisposalType: 1000
+          },
+          {
+            PNCDisposalType: 1000
+          }
+        ]
       },
       {
         Result: [
@@ -164,14 +165,6 @@ describe("HO200212", () => {
         ]
       },
       {
-        Result: [
-          {
-            PNCDisposalType: 1000
-          },
-          {
-            PNCDisposalType: 1000
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason",
@@ -179,7 +172,15 @@ describe("HO200212", () => {
               Reason: "Dummy reason"
             }
           }
-        }
+        },
+        Result: [
+          {
+            PNCDisposalType: 1000
+          },
+          {
+            PNCDisposalType: 1000
+          }
+        ]
       }
     ] as Offence[])
 
@@ -220,7 +221,6 @@ describe("HO200212", () => {
         Result: nonRecordableResult
       },
       {
-        Result: nonRecordableResult,
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason",
@@ -228,7 +228,8 @@ describe("HO200212", () => {
               Reason: "Dummy reason"
             }
           }
-        }
+        },
+        Result: nonRecordableResult
       }
     ] as Offence[])
 

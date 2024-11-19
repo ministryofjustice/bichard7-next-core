@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -13,8 +14,8 @@ describe.ifPhase1("HO100325", () => {
       offences: [
         {
           convictionDate: "2011-09-25",
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
-          recordable: true
+          recordable: true,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -38,15 +39,15 @@ describe.ifPhase1("HO100325", () => {
       offences: [
         {
           convictionDate: "2011-09-25",
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          offenceSequenceNumber: 1,
           recordable: true,
-          offenceSequenceNumber: 1
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         },
         {
           convictionDate: "2011-09-25",
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          offenceSequenceNumber: 2,
           recordable: true,
-          offenceSequenceNumber: 2
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -55,9 +56,9 @@ describe.ifPhase1("HO100325", () => {
       offences: [
         {
           convictionDate: "2011-09-25",
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          offenceSequenceNumber: 1,
           recordable: true,
-          offenceSequenceNumber: 1
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -65,8 +66,8 @@ describe.ifPhase1("HO100325", () => {
     const {
       hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, {
-      recordable: true,
-      pncMessage
+      pncMessage,
+      recordable: true
     })
 
     expect(exceptions).toStrictEqual([

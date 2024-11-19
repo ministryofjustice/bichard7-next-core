@@ -1,12 +1,14 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { randomUUID } from "crypto"
 import fs from "fs"
+
 import transformIncomingMessageToAho, {
   type TransformedOutput
 } from "../../lib/parse/transformSpiToAho/transformIncomingMessageToAho"
@@ -39,7 +41,7 @@ describe("convertSpiToAho", () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
     await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     const auditLogRecord = {
       caseId: "01ZD0303208",
@@ -73,7 +75,7 @@ describe("convertSpiToAho", () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-001.xml"))
     await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     expect(result.status).toBe("COMPLETED")
 
@@ -97,7 +99,7 @@ describe("convertSpiToAho", () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-invalid-002.xml"))
     await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     expect(result.status).toBe("COMPLETED")
 
@@ -128,7 +130,7 @@ describe("convertSpiToAho", () => {
   it("should still create audit log record even if the file has no valid data in it", async () => {
     await putFileToS3Default("invalid", s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     expect(result.status).toBe("COMPLETED")
 
@@ -161,7 +163,7 @@ describe("convertSpiToAho", () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
     await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     expect(result).toHaveProperty("status", "FAILED")
     expect(result.logs?.map((l) => l.log)).toContain("Failed to parse S3 path")
@@ -184,7 +186,7 @@ describe("convertSpiToAho", () => {
     const inputMessage = String(fs.readFileSync("phase1/tests/fixtures/input-message-routedata-001.xml"))
     await putFileToS3Default(inputMessage, s3Path, INCOMING_BUCKET_NAME!, s3Config)
 
-    const result = await convertSpiToAho.execute({ inputData: { s3Path, correlationId } })
+    const result = await convertSpiToAho.execute({ inputData: { correlationId, s3Path } })
 
     expect(result).toHaveProperty("status", "FAILED")
     expect(result.logs?.map((l) => l.log)).toContain("Could not put file to S3")

@@ -1,8 +1,10 @@
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
-import { mapXmlCxe01ToAho } from "../../lib/parse/parseAhoXml"
+
 import type { AhoXml } from "../../types/AhoXml"
 import type { PncQueryResult } from "../../types/PncQueryResult"
+
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
+import { mapXmlCxe01ToAho } from "../../lib/parse/parseAhoXml"
 
 /*
 Sample CXE element
@@ -25,16 +27,16 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): PncQueryResult | Error | undefined => {
+export default (ahoXml: string): Error | PncQueryResult | undefined => {
   const options = {
-    ignoreAttributes: false,
-    parseTagValue: false,
-    parseAttributeValue: false,
-    processEntities: false,
-    trimValues: false,
     alwaysCreateTextNode: true,
     attributeValueProcessor: decodeAttributeEntitiesProcessor,
-    tagValueProcessor: decodeTagEntitiesProcessor
+    ignoreAttributes: false,
+    parseAttributeValue: false,
+    parseTagValue: false,
+    processEntities: false,
+    tagValueProcessor: decodeTagEntitiesProcessor,
+    trimValues: false
   }
   const parser = new XMLParser(options)
   const rawParsedObj = parser.parse(ahoXml) as AhoXml

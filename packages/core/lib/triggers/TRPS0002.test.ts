@@ -1,5 +1,6 @@
-import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import Phase from "../../types/Phase"
 import TRPS0002 from "./TRPS0002"
 
@@ -8,16 +9,16 @@ describe("TRPS0002", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason"
           }
-        }
+        },
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ]
       }
     ] as Offence[])
     const result = TRPS0002(generatedHearingOutcome, options)

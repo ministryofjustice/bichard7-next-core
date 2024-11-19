@@ -1,53 +1,56 @@
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import getTriggersCount from "./getTriggersCount"
 import type { Sql } from "postgres"
-import postgres from "postgres"
-import type ErrorListRecord from "../../types/ErrorListRecord"
-import { randomUUID } from "crypto"
-import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
+import postgres from "postgres"
+
+import type ErrorListRecord from "../../types/ErrorListRecord"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import getTriggersCount from "./getTriggersCount"
 
 const dbConfig = createDbConfig()
 const db = postgres({
   ...dbConfig,
   types: {
     date: {
-      to: 25,
       from: [1082],
-      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      }
+      },
+      serialize: (x: string): string => x,
+      to: 25
     }
   }
 })
 
 const generateErrorListRecord = (input: Partial<ErrorListRecord> = {}): ErrorListRecord => ({
-  message_id: randomUUID(),
-  error_id: 111,
-  phase: 1,
-  trigger_count: 0,
-  is_urgent: 0,
   annotated_msg: "",
-  updated_msg: "",
-  error_report: "",
+  court_reference: "",
   create_ts: new Date(),
   error_count: 0,
-  user_updated_flag: 0,
+  error_id: 111,
+  error_report: "",
+  is_urgent: 0,
+  message_id: randomUUID(),
   msg_received_ts: new Date(),
-  court_reference: "",
+  phase: 1,
+  trigger_count: 0,
+  updated_msg: "",
+  user_updated_flag: 0,
   ...input
 })
 
 const generateErrorListTriggerRecord = (errorId: number): ErrorListTriggerRecord => ({
-  trigger_id: 1,
-  error_id: errorId,
-  trigger_code: "TRPR0018",
-  trigger_item_identity: null,
-  status: 0,
   create_ts: new Date(),
+  error_id: errorId,
   resolved_by: null,
-  resolved_ts: null
+  resolved_ts: null,
+  status: 0,
+  trigger_code: "TRPR0018",
+  trigger_id: 1,
+  trigger_item_identity: null
 })
 
 const errorListRecord = generateErrorListRecord()

@@ -1,8 +1,10 @@
 import logger from "@moj-bichard7/common/utils/logger"
-import { lookupOrganisationUnitByCode } from "../../../lib/dataLookup"
+
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
-import isAsnValid from "../../lib/isAsnValid"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
+
+import { lookupOrganisationUnitByCode } from "../../../lib/dataLookup"
+import isAsnValid from "../../lib/isAsnValid"
 
 // prettier-ignore
 const validForceCodes = [
@@ -22,10 +24,10 @@ const populateForceOwner = (
   const bottomLevelCode = "00"
 
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
-    SecondLevelCode: secondLevelCode,
-    ThirdLevelCode: thirdLevelCode,
     BottomLevelCode: bottomLevelCode,
-    OrganisationUnitCode: secondLevelCode + thirdLevelCode + bottomLevelCode
+    OrganisationUnitCode: secondLevelCode + thirdLevelCode + bottomLevelCode,
+    SecondLevelCode: secondLevelCode,
+    ThirdLevelCode: thirdLevelCode
   }
   return hearingOutcome
 }
@@ -59,10 +61,10 @@ const getValidForceOrForceStation = (code: string | undefined): string | undefin
       if (code.length >= 4) {
         const stationCode = code.substring(2, 4)
         const lookupResult = lookupOrganisationUnitByCode({
-          TopLevelCode: "",
+          BottomLevelCode: "00",
           SecondLevelCode: forceCode,
           ThirdLevelCode: stationCode,
-          BottomLevelCode: "00"
+          TopLevelCode: ""
         } as OrganisationUnitCodes)
         if (lookupResult) {
           return `${forceCode}${stationCode}`

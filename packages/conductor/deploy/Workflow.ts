@@ -1,6 +1,9 @@
 import type { WorkflowDef } from "@io-orkes/conductor-javascript"
+
 import fs from "fs"
+
 import type ConductorGateway from "./ConductorGateway"
+
 import { hashFile } from "./utils"
 
 const commitHash = process.env.GIT_COMMIT_HASH
@@ -22,6 +25,14 @@ class Workflow {
     this.localWorkflowHash = hashFile(fileContent)
   }
 
+  private getUpdatedBy(): string {
+    return `Workflow file: ${this.localWorkflowHash}, Commit hash: ${commitHash}`
+  }
+
+  private workflowNeedsUpdating(remoteWorkflow: WorkflowDef): boolean {
+    return !remoteWorkflow.updatedBy?.includes(this.localWorkflowHash)
+  }
+
   async upsert(): Promise<void> {
     const remoteWorkflow = await this.conductor.getWorkflow(this.localWorkflow.name)
     this.localWorkflow.updatedBy = this.getUpdatedBy()
@@ -41,14 +52,6 @@ class Workflow {
         console.log(`Workflow '${this.localWorkflow.name}' does not need updating`)
       }
     }
-  }
-
-  private getUpdatedBy(): string {
-    return `Workflow file: ${this.localWorkflowHash}, Commit hash: ${commitHash}`
-  }
-
-  private workflowNeedsUpdating(remoteWorkflow: WorkflowDef): boolean {
-    return !remoteWorkflow.updatedBy?.includes(this.localWorkflowHash)
   }
 }
 

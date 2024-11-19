@@ -2,6 +2,8 @@ import { mockUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -15,16 +17,16 @@ export default () => [
         <COF>K003    12:15:13:1   RT88191 28112010                </COF>
       </ASI>
       <GMT>000010073ENQR000306R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU02", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><CCR>K21/2732/6N                    </CCR><COU>I2576                                                                       LEBOWSKI/JEFFREY                                      250920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><CCR>K21/2732/6N                    </CCR><COU>I2576                                                                       LEBOWSKI/JEFFREY                                      250920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>"
   }),
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -44,13 +46,11 @@ export default () => [
         <DIS>I2007                                                                                                    </DIS>
       </ASI>
       <GMT>000016073ENQR000307R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU03", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/6N                    </CCR><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000101.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000102.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000103.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/6N                    </CCR><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000101.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000102.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000103.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS>"
   })
 ]

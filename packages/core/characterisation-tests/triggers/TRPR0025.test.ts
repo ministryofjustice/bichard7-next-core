@@ -1,5 +1,6 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -80,8 +81,8 @@ describe.ifPhase1("TRPR0025", () => {
       offences: [
         {
           code: offenceCode,
-          results: [{ code: resultCode }],
-          recordable: false
+          recordable: false,
+          results: [{ code: resultCode }]
         }
       ]
     })

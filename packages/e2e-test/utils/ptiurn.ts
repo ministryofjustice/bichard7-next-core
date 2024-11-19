@@ -1,7 +1,7 @@
 class PTIURN {
   forcePNC: string
-  unitPNC: string
   sequenceNumber: number
+  unitPNC: string
 
   constructor(ptiurn: string) {
     this.forcePNC = ptiurn.slice(0, 2)

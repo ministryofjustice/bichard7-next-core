@@ -1,6 +1,7 @@
 import type { IDatabase } from "pg-promise"
-import pgPromise from "pg-promise"
 import type pg from "pg-promise/typescript/pg-subset"
+
+import pgPromise from "pg-promise"
 
 const pgp = pgPromise()
 

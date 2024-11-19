@@ -1,74 +1,75 @@
-import getComparisonStatistics from "./getComparisonStatistics"
 import type { SkippedFile } from "./processRange"
+
+import getComparisonStatistics from "./getComparisonStatistics"
 
 const passingAhoResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  incomingMessageType: "AnnotatedHearingOutcome",
+  triggersMatch: true,
   xmlOutputMatches: true,
-  xmlParsingMatches: true,
-  incomingMessageType: "AnnotatedHearingOutcome"
+  xmlParsingMatches: true
 }
 
 const failedAhoResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  incomingMessageType: "AnnotatedHearingOutcome",
+  triggersMatch: true,
   xmlOutputMatches: false,
-  xmlParsingMatches: true,
-  incomingMessageType: "AnnotatedHearingOutcome"
+  xmlParsingMatches: true
 }
 
 const passingPncUpdateDatasetResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  incomingMessageType: "PncUpdateDataset",
+  triggersMatch: true,
   xmlOutputMatches: true,
-  xmlParsingMatches: true,
-  incomingMessageType: "PncUpdateDataset"
+  xmlParsingMatches: true
 }
 
 const failedPncUpdateDatasetResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  incomingMessageType: "PncUpdateDataset",
+  triggersMatch: true,
   xmlOutputMatches: false,
-  xmlParsingMatches: true,
-  incomingMessageType: "PncUpdateDataset"
+  xmlParsingMatches: true
 }
 
 const failedResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  triggersMatch: true,
   xmlOutputMatches: false,
   xmlParsingMatches: true
 }
 
 const intentionalFailedResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  intentionalDifference: true,
+  triggersMatch: true,
   xmlOutputMatches: false,
-  xmlParsingMatches: true,
-  intentionalDifference: true
+  xmlParsingMatches: true
 }
 
 const passingResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  triggersMatch: true,
   xmlOutputMatches: true,
   xmlParsingMatches: true
 }
 
 const passingOtherResult = {
   auditLogEventsMatch: true,
-  triggersMatch: true,
   exceptionsMatch: true,
+  incomingMessageType: "Other",
+  triggersMatch: true,
   xmlOutputMatches: true,
-  xmlParsingMatches: true,
-  incomingMessageType: "Other"
+  xmlParsingMatches: true
 }
 
 const skippedResult: SkippedFile = {

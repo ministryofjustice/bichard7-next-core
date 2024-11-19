@@ -1,13 +1,15 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import Phase from "../../types/Phase"
 import TRPR0015 from "./TRPR0015"
 
 describe("TRPR0015", () => {
   const triggerOptions = {
+    phase: Phase.HEARING_OUTCOME,
     triggers: [{ code: TriggerCode.TRPR0008 }],
-    triggersExcluded: true,
-    phase: Phase.HEARING_OUTCOME
+    triggersExcluded: true
   }
 
   const triggerCode = TriggerCode.TRPR0015
@@ -20,12 +22,12 @@ describe("TRPR0015", () => {
             HearingDefendant: {
               Offence: [
                 {
+                  RecordableOnPNCindicator: RecordableOnPNCindicator,
                   Result: [
                     {
                       CJSresultCode: resultCode
                     }
-                  ],
-                  RecordableOnPNCindicator: RecordableOnPNCindicator
+                  ]
                 }
               ]
             }

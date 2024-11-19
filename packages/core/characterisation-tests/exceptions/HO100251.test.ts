@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -23,7 +24,7 @@ describe.ifPhase1("HO100306", () => {
     // Legacy Bichard raises 'Offence Code not recognised' but core raises 'Offence Code not found' exception
     const expectedExceptionCode = process.env.USE_BICHARD ? "HO100251" : "HO100306"
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{ code: 1015 }], code: "$$$" }]
+      offences: [{ code: "$$$", results: [{ code: 1015 }] }]
     })
 
     const {

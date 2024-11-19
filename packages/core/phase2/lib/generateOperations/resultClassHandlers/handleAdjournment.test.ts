@@ -1,14 +1,15 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../../types/PncOperation"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { handleAdjournment } from "./handleAdjournment"
 
 const organisationUnit = {
-  TopLevelCode: "A",
+  BottomLevelCode: "FG",
+  OrganisationUnitCode: "ABCDEFG",
   SecondLevelCode: "BC",
   ThirdLevelCode: "DE",
-  BottomLevelCode: "FG",
-  OrganisationUnitCode: "ABCDEFG"
+  TopLevelCode: "A"
 }
 
 describe("handleAdjournment", () => {
@@ -23,11 +24,11 @@ describe("handleAdjournment", () => {
       {
         code: PncOperation.REMAND,
         courtCaseReference: "234",
-        isAdjournmentPreJudgement: false,
         data: {
           nextHearingDate: undefined,
           nextHearingLocation: organisationUnit
         },
+        isAdjournmentPreJudgement: false,
         status: "NotAttempted"
       }
     ])

@@ -1,9 +1,10 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import readS3FileTags from "@moj-bichard7/common/s3/readS3FileTags"
 import writeS3FileTags from "@moj-bichard7/common/s3/writeS3FileTags"
@@ -13,8 +14,8 @@ import { z } from "zod"
 const s3Config = createS3Config()
 
 const inputDataSchema = z.object({
-  fileName: z.string(),
   bucketId: z.string(),
+  fileName: z.string(),
   lockId: z.string()
 })
 type InputData = z.infer<typeof inputDataSchema>
@@ -36,9 +37,8 @@ const lockKey = "lockedByWorkstream"
 // Currently there's a window of 2 - 5 seconds where multiple workflows could be started
 // for the same message - this reduces the window to a few milliseconds
 const lockS3File: ConductorWorker = {
-  taskDefName: "lock_s3_file",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { fileName, bucketId, lockId } = task.inputData
+    const { bucketId, fileName, lockId } = task.inputData
 
     const bucket = buckets[bucketId]
     if (!bucket) {
@@ -83,7 +83,8 @@ const lockS3File: ConductorWorker = {
     }
 
     return completed({ lockState: "success" }, "File successfully locked")
-  })
+  }),
+  taskDefName: "lock_s3_file"
 }
 
 export default lockS3File

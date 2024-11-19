@@ -1,5 +1,6 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -80,7 +81,7 @@ describe.ifPhase1("TRPR0002", () => {
 
   it("should generate a trigger when record is not recordable", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{ code: resultCode }], recordable: false }]
+      offences: [{ recordable: false, results: [{ code: resultCode }] }]
     })
 
     const { triggers } = await processPhase1Message(inputMessage, { recordable: false })

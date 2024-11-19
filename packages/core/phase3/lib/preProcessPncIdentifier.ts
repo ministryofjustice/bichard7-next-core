@@ -3,7 +3,7 @@ const preProcessPncIdentifier = (pncIdentifier?: string) => {
     return null
   }
 
-  const { year, identifier } = pncIdentifier.match(/\d{2}(?<year>\d{2})\/0*(?<identifier>.+)/)?.groups ?? {}
+  const { identifier, year } = pncIdentifier.match(/\d{2}(?<year>\d{2})\/0*(?<identifier>.+)/)?.groups ?? {}
 
   return `${year}/${identifier}`
 }

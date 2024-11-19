@@ -1,4 +1,5 @@
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
 import Asn from "../lib/Asn"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
 
@@ -12,9 +13,9 @@ const convertAsnToOrganisationUnit = (asn: string): OrganisationUnitCodes => {
 
   return {
     ...(topLevelCode ? { TopLevelCode: topLevelCode } : {}),
+    BottomLevelCode: asn.substring(7 - offset, 9 - offset).toUpperCase(),
     SecondLevelCode: asn.substring(3 - offset, 5 - offset).toUpperCase(),
-    ThirdLevelCode: asn.substring(5 - offset, 7 - offset).toUpperCase(),
-    BottomLevelCode: asn.substring(7 - offset, 9 - offset).toUpperCase()
+    ThirdLevelCode: asn.substring(5 - offset, 7 - offset).toUpperCase()
   } as OrganisationUnitCodes
 }
 

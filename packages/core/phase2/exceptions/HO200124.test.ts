@@ -1,7 +1,9 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
@@ -26,8 +28,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
           }
         ]
       },
@@ -37,8 +39,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
           }
         ]
       }
@@ -63,7 +65,6 @@ describe("HO200124", () => {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
           Case: {
-            PenaltyNoticeCaseReferenceNumber: "XXXXXX",
             HearingDefendant: {
               Offence: [
                 {
@@ -72,13 +73,14 @@ describe("HO200124", () => {
                   Result: [
                     {
                       PNCAdjudicationExists: false,
-                      ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-                      PNCDisposalType: 9999
+                      PNCDisposalType: 9999,
+                      ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
                     }
                   ]
                 }
               ]
-            }
+            },
+            PenaltyNoticeCaseReferenceNumber: "XXXXXX"
           }
         }
       }
@@ -97,8 +99,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
           }
         ]
       }
@@ -116,8 +118,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE,
-            PNCDisposalType: 2060
+            PNCDisposalType: 2060,
+            ResultClass: ResultClass.SENTENCE
           }
         ]
       }
@@ -139,8 +141,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
           }
         ]
       }
@@ -162,8 +164,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
           }
         ]
       }
@@ -185,8 +187,8 @@ describe("HO200124", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-            PNCDisposalType: 9999
+            PNCDisposalType: 9999,
+            ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
           }
         ]
       }

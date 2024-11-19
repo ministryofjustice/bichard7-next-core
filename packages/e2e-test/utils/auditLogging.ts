@@ -1,8 +1,10 @@
 import { expect } from "expect"
+
 import type { AuditLog, AuditLogEvent } from "../helpers/AuditLogApiHelper"
+import type Bichard from "./world"
+
 import { isError } from "./isError"
 import Poller from "./Poller"
-import type Bichard from "./world"
 
 export const checkEventByExternalCorrelationId = async (
   context: Bichard,
@@ -15,9 +17,6 @@ export const checkEventByExternalCorrelationId = async (
 
   const events: AuditLogEvent[] = []
   const options = {
-    timeout: 90000,
-    delay: 1000,
-    name: eventType,
     condition: (message: AuditLog | undefined) => {
       if (!message) {
         return false
@@ -28,7 +27,10 @@ export const checkEventByExternalCorrelationId = async (
       const hasEvent = message.events.some((event) => event.eventType === eventType)
 
       return !!contains === hasEvent
-    }
+    },
+    delay: 1000,
+    name: eventType,
+    timeout: 90000
   }
 
   const result = await new Poller(getMessages)
@@ -61,10 +63,10 @@ export const checkAuditLogRecordExists = async (context: Bichard, correlationId:
   const getMessages = (): Promise<AuditLog | undefined> => auditLogApi.getMessageByExternalCorrelationId(correlationId)
 
   const options = {
-    timeout: 90000,
+    condition: (message: AuditLog | undefined) => !!message,
     delay: 1000,
     name: "checkForRecord",
-    condition: (message: AuditLog | undefined) => !!message
+    timeout: 90000
   }
 
   const result = await new Poller<AuditLog | undefined>(getMessages)

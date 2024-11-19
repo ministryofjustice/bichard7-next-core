@@ -1,7 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
+
 import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
 
-const insertErrorListNotes = async (db: Sql, error_id: number, notes: (string | null)[]): Promise<void> => {
+const insertErrorListNotes = async (db: Sql, error_id: number, notes: (null | string)[]): Promise<void> => {
   try {
     for (const note of notes) {
       if (!note) {
@@ -9,10 +10,10 @@ const insertErrorListNotes = async (db: Sql, error_id: number, notes: (string | 
       }
 
       const noteRecord: ErrorListNoteRecord = {
+        create_ts: new Date(),
         error_id,
         note_text: note,
-        user_id: "System",
-        create_ts: new Date()
+        user_id: "System"
       }
       await db`
         INSERT INTO br7own.error_list_notes ${db(noteRecord)}`

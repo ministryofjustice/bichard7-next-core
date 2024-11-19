@@ -1,16 +1,17 @@
 import { S3 } from "aws-sdk"
 import { format } from "date-fns"
+
 import getUtcDate from "../utils/getUtcDate"
 
 type IncomingMessageBucketConfig = {
+  incomingMessageBucketName: string
   region: string
   url: string
-  incomingMessageBucketName: string
 }
 
 class IncomingMessageBucket {
-  s3Client: S3
   incomingMessageBucketName: string
+  s3Client: S3
   uploadedS3Files: string[]
 
   constructor(config: IncomingMessageBucketConfig) {
@@ -38,9 +39,9 @@ class IncomingMessageBucket {
     this.uploadedS3Files.push(s3FileName)
 
     const params = {
+      Body: message,
       Bucket: this.incomingMessageBucketName,
-      Key: s3FileName,
-      Body: message
+      Key: s3FileName
     }
 
     return this.s3Client

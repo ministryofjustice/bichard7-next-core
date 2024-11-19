@@ -1,4 +1,5 @@
 import type { Phase2Comparison } from "../types/ComparisonFile"
+
 import comparePhase2 from "./comparePhase2"
 import processTestFile from "./processTestFile"
 

@@ -2,6 +2,7 @@ import { dummyUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?XML VERSION="1.0" STANDALONE="YES"?>
     <CXE01>
@@ -17,8 +18,7 @@ export default () => [
         <COF>K001    1:9:7:1      OF61016 01062009                </COF>
       </ASI>
       <GMT>000008073ENQR004540S</GMT>
-    </CXE01>`,
-    expectedRequest: ""
+    </CXE01>`
   },
   dummyUpdate
 ]

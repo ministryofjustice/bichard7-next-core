@@ -1,17 +1,18 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncQueryResult } from "../../types/PncQueryResult"
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 
 export default class MockPncGateway implements PncGatewayInterface {
   updates: PncUpdateRequest[] = []
 
   constructor(
-    private result: PncQueryResult | Error | undefined,
+    private result: Error | PncQueryResult | undefined,
     public queryTime: Date | undefined = undefined
   ) {}
 
-  query(_: string): Promise<PncQueryResult | Error | undefined> {
+  query(_: string): Promise<Error | PncQueryResult | undefined> {
     return Promise.resolve(this.result)
   }
 

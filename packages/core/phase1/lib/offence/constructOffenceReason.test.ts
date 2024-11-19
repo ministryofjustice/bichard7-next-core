@@ -1,5 +1,6 @@
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+
+import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import constructOffenceReason from "./constructOffenceReason"
 
 const localOffenceReason: OffenceReason = {
@@ -12,9 +13,9 @@ const nationalCommonLawOffenceReason: OffenceReason = {
   OffenceCode: {
     __type: "CommonLawOffenceCode",
     CommonLawOffence: COMMON_LAWS,
-    Reason: "ML001",
+    FullCode: `${COMMON_LAWS}001A`,
     Qualifier: "A",
-    FullCode: `${COMMON_LAWS}001A`
+    Reason: "ML001"
   }
 }
 
@@ -22,10 +23,10 @@ const nationalIndictmentOffenceReason: OffenceReason = {
   __type: "NationalOffenceReason",
   OffenceCode: {
     __type: "IndictmentOffenceCode",
+    FullCode: `${INDICTMENT}001B`,
     Indictment: INDICTMENT,
-    Reason: "001",
     Qualifier: "B",
-    FullCode: `${INDICTMENT}001B`
+    Reason: "001"
   }
 }
 
@@ -34,9 +35,9 @@ const nationalNonMatchingOffenceReason: OffenceReason = {
   OffenceCode: {
     __type: "NonMatchingOffenceCode",
     ActOrSource: "CO",
-    Year: "88",
+    FullCode: "CO88013",
     Reason: "88013",
-    FullCode: "CO88013"
+    Year: "88"
   }
 }
 
@@ -50,9 +51,9 @@ describe("GIVEN parseOffence", () => {
         OffenceCode: {
           __type: "CommonLawOffenceCode",
           CommonLawOffence: COMMON_LAWS,
-          Reason: "001",
+          FullCode: `${COMMON_LAWS}001A`,
           Qualifier: "A",
-          FullCode: `${COMMON_LAWS}001A`
+          Reason: "001"
         }
       })
     })
@@ -64,10 +65,10 @@ describe("GIVEN parseOffence", () => {
         __type: "NationalOffenceReason",
         OffenceCode: {
           __type: "IndictmentOffenceCode",
+          FullCode: `${INDICTMENT}001B`,
           Indictment: INDICTMENT,
-          Reason: "001",
           Qualifier: "B",
-          FullCode: `${INDICTMENT}001B`
+          Reason: "001"
         }
       })
     })
@@ -80,9 +81,9 @@ describe("GIVEN parseOffence", () => {
         OffenceCode: {
           __type: "NonMatchingOffenceCode",
           ActOrSource: "CO",
-          Year: "88",
+          FullCode: "CO88013",
           Reason: "013",
-          FullCode: "CO88013"
+          Year: "88"
         }
       })
     })

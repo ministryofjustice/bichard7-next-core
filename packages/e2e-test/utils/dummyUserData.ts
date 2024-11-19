@@ -1,165 +1,165 @@
 type DummyUser = {
-  inclusionList: string[]
+  excluded_triggers: string[]
   exclusionList: string[]
+  groups: string[]
+  inclusionList: string[]
   visible_courts: string[]
   visible_forces: string[]
-  excluded_triggers: string[]
-  groups: string[]
 }
 
 // Note: These users are only created automatically when running against Postgres - they will need seeding in DB2 or LDAP
 const dummyUsers: Record<string, DummyUser> = {
-  supervisor: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  generalhandler: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: [],
-    groups: ["B7GeneralHandler", "B7NewUI"]
-  },
-  triggerhandler: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: [],
-    groups: ["B7TriggerHandler", "B7NewUI"]
-  },
-  exceptionhandler: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: [],
-    groups: ["B7ExceptionHandler", "B7NewUI"]
-  },
   auditor: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
     excluded_triggers: [],
-    groups: ["B7Audit", "B7NewUI"]
-  },
-  supervisorwithexcludedtrpr0006: {
+    exclusionList: [],
+    groups: ["B7Audit", "B7NewUI"],
     inclusionList: [],
-    exclusionList: [],
     visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: ["TRPR0006"],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  triggerhandlerwithexcludedtrpr0006: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: ["TRPR0006"],
-    groups: ["B7TriggerHandler", "B7NewUI"]
-  },
-  triggerhandlerwithexcludedtrpr0008: {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: ["TRPR0008"],
-    groups: ["B7TriggerHandler", "B7NewUI"]
-  },
-  "old.bichard.user": {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: ["B01", "B41ME00"],
-    visible_forces: ["01"],
-    excluded_triggers: [],
-    groups: ["B7GeneralHandler"]
-  },
-  "met.police": {
-    inclusionList: ["001"],
-    exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["001"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  "wilt.shire": {
-    inclusionList: ["054"],
-    exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["054"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  "super.fivefour": {
-    inclusionList: ["054"],
-    exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["054"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
+    visible_forces: ["01"]
   },
   "br7.btp": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
     inclusionList: ["093"],
-    exclusionList: [],
     visible_courts: [],
-    visible_forces: ["093"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  "west.yorkshire": {
-    inclusionList: [],
-    exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["013"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
+    visible_forces: ["093"]
   },
   "essex.user": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
     inclusionList: ["042"],
-    exclusionList: [],
     visible_courts: [],
-    visible_forces: ["042"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
+    visible_forces: ["042"]
   },
-  "norfolk.user": {
-    inclusionList: ["036"],
+  exceptionhandler: {
+    excluded_triggers: [],
     exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["036"],
-    excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
-  },
-  "trigger.fivefourexcl": {
-    inclusionList: ["B01HO", "B01EF"],
-    exclusionList: ["TRPR0003", "TRPR0004", "TRPR0006"],
-    visible_courts: ["B01HO", "B01EF"],
-    visible_forces: [],
-    excluded_triggers: ["TRPR0003", "TRPR0004", "TRPR0006"],
-    groups: ["B7TriggerHandler", "B7NewUI"]
+    groups: ["B7ExceptionHandler", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
   },
   "general.handlerexclone": {
-    inclusionList: ["B01HO", "B01EF"],
-    exclusionList: ["TRPR0004", "TRPR0006"],
-    visible_courts: ["B01HO", "B01EF"],
-    visible_forces: [],
     excluded_triggers: ["TRPR0004", "TRPR0006"],
-    groups: ["B7GeneralHandler", "B7NewUI"]
+    exclusionList: ["TRPR0004", "TRPR0006"],
+    groups: ["B7GeneralHandler", "B7NewUI"],
+    inclusionList: ["B01HO", "B01EF"],
+    visible_courts: ["B01HO", "B01EF"],
+    visible_forces: []
+  },
+  generalhandler: {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7GeneralHandler", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
   },
   "herts.user": {
-    inclusionList: ["041"],
-    exclusionList: [],
-    visible_courts: [],
-    visible_forces: ["041"],
     excluded_triggers: [],
-    groups: ["B7Supervisor", "B7NewUI"]
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: ["041"],
+    visible_courts: [],
+    visible_forces: ["041"]
+  },
+  "met.police": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: ["001"],
+    visible_courts: [],
+    visible_forces: ["001"]
+  },
+  "norfolk.user": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: ["036"],
+    visible_courts: [],
+    visible_forces: ["036"]
+  },
+  "old.bichard.user": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7GeneralHandler"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  "super.fivefour": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: ["054"],
+    visible_courts: [],
+    visible_forces: ["054"]
+  },
+  supervisor: {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  supervisorwithexcludedtrpr0006: {
+    excluded_triggers: ["TRPR0006"],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  "trigger.fivefourexcl": {
+    excluded_triggers: ["TRPR0003", "TRPR0004", "TRPR0006"],
+    exclusionList: ["TRPR0003", "TRPR0004", "TRPR0006"],
+    groups: ["B7TriggerHandler", "B7NewUI"],
+    inclusionList: ["B01HO", "B01EF"],
+    visible_courts: ["B01HO", "B01EF"],
+    visible_forces: []
+  },
+  triggerhandler: {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7TriggerHandler", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  triggerhandlerwithexcludedtrpr0006: {
+    excluded_triggers: ["TRPR0006"],
+    exclusionList: [],
+    groups: ["B7TriggerHandler", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  triggerhandlerwithexcludedtrpr0008: {
+    excluded_triggers: ["TRPR0008"],
+    exclusionList: [],
+    groups: ["B7TriggerHandler", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: ["B01", "B41ME00"],
+    visible_forces: ["01"]
+  },
+  "west.yorkshire": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: [],
+    visible_courts: [],
+    visible_forces: ["013"]
+  },
+  "wilt.shire": {
+    excluded_triggers: [],
+    exclusionList: [],
+    groups: ["B7Supervisor", "B7NewUI"],
+    inclusionList: ["054"],
+    visible_courts: [],
+    visible_forces: ["054"]
   }
 }
 

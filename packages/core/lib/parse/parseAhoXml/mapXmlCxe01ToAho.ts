@@ -7,15 +7,16 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "../../../types/PncQueryResult"
+
 import parsePncDate from "../../parsePncDate"
 
 type OffenceDates = {
-  startDate: Date
   endDate?: Date
+  startDate: Date
 }
 type OffenceTimes = {
-  startTime?: string
   endTime?: string
+  startTime?: string
 }
 
 const extractDates = (offence: AhoXmlPncOffence): OffenceDates => {
@@ -38,7 +39,7 @@ const extractDates = (offence: AhoXmlPncOffence): OffenceDates => {
 }
 
 const extractTimes = (offence: AhoXmlPncOffence): OffenceTimes => {
-  const times: OffenceTimes = { startTime: undefined, endTime: undefined }
+  const times: OffenceTimes = { endTime: undefined, startTime: undefined }
   const cofStartTime = offence.COF["@_OffStartTime"]
   if (cofStartTime && cofStartTime !== "" && cofStartTime.length === 4) {
     times.startTime = `${cofStartTime.substring(0, 2)}:${cofStartTime.substring(2)}`
@@ -61,11 +62,11 @@ const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PncDisposal[] | und
   return allDis.map((disElem) => ({
     qtyDate: disElem["@_QtyDate"],
     qtyDuration: disElem["@_QtyDuration"],
-    type: Number(disElem["@_Type"]),
-    qtyUnitsFined: disElem["@_QtyUnitsFined"],
     qtyMonetaryValue: disElem["@_QtyMonetaryValue"],
+    qtyUnitsFined: disElem["@_QtyUnitsFined"],
     qualifiers: disElem["@_Qualifiers"],
-    text: disElem["@_Text"]
+    text: disElem["@_Text"],
+    type: Number(disElem["@_Type"])
   }))
 }
 
@@ -75,10 +76,10 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   }
 
   return {
-    verdict: adj["@_Adjudication1"],
-    sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
-    plea: adj["@_Plea"],
     offenceTICNumber: Number(adj["@_OffenceTICNumber"]),
+    plea: adj["@_Plea"],
+    sentenceDate: parsePncDate(adj["@_DateOfSentence"]),
+    verdict: adj["@_Adjudication1"],
     weedFlag: adj["@_WeedFlag"]
   }
 }
@@ -86,18 +87,18 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
 const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PncOffence[] =>
   offences.map(
     (offence): PncOffence => ({
+      adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
+      disposals: mapXmlDisposalsToAho(offence.DISList?.DIS),
       offence: {
         acpoOffenceCode: offence.COF["@_ACPOOffenceCode"],
         cjsOffenceCode: offence.COF["@_CJSOffenceCode"],
-        title: offence.COF["@_OffenceTitle"],
-        sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
         qualifier1: offence.COF["@_OffenceQualifier1"],
         qualifier2: offence.COF["@_OffenceQualifier2"],
+        sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
+        title: offence.COF["@_OffenceTitle"],
         ...extractDates(offence),
         ...extractTimes(offence)
-      },
-      adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
-      disposals: mapXmlDisposalsToAho(offence.DISList?.DIS)
+      }
     })
   )
 
@@ -137,18 +138,18 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     }
 
     penaltyCases = cxe.PenaltyCases?.PenaltyCase.map((penaltyCase) => ({
-      penaltyCaseReference: penaltyCase.PCR["@_PenaltyCaseRefNo"],
-      offences: mapXmlOffencesToAho(penaltyCase.Offences.Offence as AhoXmlPncOffence[])
+      offences: mapXmlOffencesToAho(penaltyCase.Offences.Offence as AhoXmlPncOffence[]),
+      penaltyCaseReference: penaltyCase.PCR["@_PenaltyCaseRefNo"]
     }))
   }
 
   const checkName = cxe.IDS["@_Checkname"]
   const result: PncQueryResult = {
-    forceStationCode: cxe.FSC["@_FSCode"],
     checkName,
-    pncId: cxe.IDS["@_PNCID"],
     courtCases,
-    penaltyCases
+    forceStationCode: cxe.FSC["@_FSCode"],
+    penaltyCases,
+    pncId: cxe.IDS["@_PNCID"]
   }
   return result
 }

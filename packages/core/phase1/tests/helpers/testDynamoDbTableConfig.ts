@@ -4,7 +4,6 @@ import type * as dynamodb from "@aws-sdk/client-dynamodb"
 // bichard7-next-infrastructure.git/terraform/stack_data_storage/main.tf
 
 const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommandInput => ({
-  TableName: tableName,
   AttributeDefinitions: [
     { AttributeName: "s3Path", AttributeType: "S" },
     { AttributeName: "_", AttributeType: "S" },
@@ -13,11 +12,10 @@ const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommand
     { AttributeName: "latestRunAt", AttributeType: "S" },
     { AttributeName: "latestResult", AttributeType: "N" }
   ],
-  KeySchema: [{ AttributeName: "s3Path", KeyType: "HASH" }],
+  BillingMode: "PAY_PER_REQUEST",
   GlobalSecondaryIndexes: [
     {
       IndexName: "initialRunAtIndex",
-      Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
           AttributeName: "_",
@@ -27,11 +25,11 @@ const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommand
           AttributeName: "initialRunAt",
           KeyType: "RANGE"
         }
-      ]
+      ],
+      Projection: { ProjectionType: "ALL" }
     },
     {
       IndexName: "initialResultByDateIndex",
-      Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
           AttributeName: "initialResult",
@@ -41,11 +39,11 @@ const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommand
           AttributeName: "initialRunAt",
           KeyType: "RANGE"
         }
-      ]
+      ],
+      Projection: { ProjectionType: "ALL" }
     },
     {
       IndexName: "latestRunAtIndex",
-      Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
           AttributeName: "_",
@@ -55,11 +53,11 @@ const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommand
           AttributeName: "latestRunAt",
           KeyType: "RANGE"
         }
-      ]
+      ],
+      Projection: { ProjectionType: "ALL" }
     },
     {
       IndexName: "latestResultByDateIndex",
-      Projection: { ProjectionType: "ALL" },
       KeySchema: [
         {
           AttributeName: "latestResult",
@@ -69,10 +67,12 @@ const testDynamoDbTableConfig = (tableName: string): dynamodb.CreateTableCommand
           AttributeName: "initialRunAt",
           KeyType: "RANGE"
         }
-      ]
+      ],
+      Projection: { ProjectionType: "ALL" }
     }
   ],
-  BillingMode: "PAY_PER_REQUEST"
+  KeySchema: [{ AttributeName: "s3Path", KeyType: "HASH" }],
+  TableName: tableName
 })
 
 export default testDynamoDbTableConfig

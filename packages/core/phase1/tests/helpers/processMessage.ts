@@ -1,29 +1,31 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
+
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
+import type Phase1Result from "../../types/Phase1Result"
+
 import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import extractExceptionsFromAho from "../../../lib/parse/parseAhoXml/extractExceptionsFromXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
-import PostgresHelper from "../../tests/helpers/PostgresHelper"
 import defaults from "../../tests/helpers/defaults"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "../../tests/helpers/mockRecordInPnc"
-import type Phase1Result from "../../types/Phase1Result"
+import PostgresHelper from "../../tests/helpers/PostgresHelper"
 import { Phase1ResultType } from "../../types/Phase1Result"
 
 const pgHelper = new PostgresHelper({
-  host: defaults.postgresHost,
-  port: defaults.postgresPort,
   database: "bichard",
-  user: defaults.postgresUser,
+  host: defaults.postgresHost,
   password: defaults.postgresPassword,
-  ssl: false
+  port: defaults.postgresPort,
+  ssl: false,
+  user: defaults.postgresUser
 })
 
 const realPnc = process.env.REAL_PNC === "true"
@@ -31,11 +33,11 @@ const realPnc = process.env.REAL_PNC === "true"
 const processMessageCore = (
   messageXml: string,
   {
-    recordable = true,
-    pncOverrides = {},
+    pncAdjudication = false,
     pncCaseType = "court",
     pncMessage,
-    pncAdjudication = false
+    pncOverrides = {},
+    recordable = true
   }: ProcessMessageOptions
 ): Promise<Phase1Result> => {
   const response = recordable
@@ -51,11 +53,11 @@ const processMessageCore = (
 type ProcessMessageOptions = {
   expectRecord?: boolean
   expectTriggers?: boolean
-  recordable?: boolean
-  pncCaseType?: string
-  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
-  pncMessage?: string
   pncAdjudication?: boolean
+  pncCaseType?: string
+  pncMessage?: string
+  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
+  recordable?: boolean
 }
 
 const processMessageBichard = async (
@@ -63,11 +65,11 @@ const processMessageBichard = async (
   {
     expectRecord = true,
     expectTriggers = true,
-    recordable = true,
-    pncOverrides = {},
+    pncAdjudication = false,
     pncCaseType = "court",
     pncMessage,
-    pncAdjudication = false
+    pncOverrides = {},
+    recordable = true
   }: ProcessMessageOptions
 ): Promise<Phase1Result> => {
   const correlationId = randomUUID()
@@ -87,9 +89,9 @@ const processMessageBichard = async (
 
   // Push the message to MQ
   const mq = new ActiveMqHelper({
-    url: process.env.MQ_URL || defaults.mqUrl,
     login: process.env.MQ_USER || defaults.mqUser,
-    password: process.env.MQ_PASSWORD || defaults.mqPassword
+    password: process.env.MQ_PASSWORD || defaults.mqPassword,
+    url: process.env.MQ_URL || defaults.mqUrl
   })
   await mq.sendMessage("COURT_RESULT_INPUT_QUEUE", messageXmlWithUuid)
 
@@ -99,9 +101,9 @@ const processMessageBichard = async (
   const fetchRecords = () => (expectRecord ? pgHelper.pg.one(recordQuery) : pgHelper.pg.none(recordQuery))
 
   const recordResult = await promisePoller({
-    taskFn: fetchRecords,
     interval: 20,
-    retries: 1000
+    retries: 1000,
+    taskFn: fetchRecords
   })
 
   const exceptions = recordResult ? extractExceptionsFromAho(recordResult.annotated_msg) : []
@@ -120,9 +122,9 @@ const processMessageBichard = async (
 
   const triggerResult =
     (await promisePoller({
-      taskFn: fetchTriggers,
       interval: 20,
-      retries: 1000
+      retries: 1000,
+      taskFn: fetchTriggers
     }).catch(() => [])) ?? []
 
   const triggers = triggerResult.map((record) => ({
@@ -132,7 +134,7 @@ const processMessageBichard = async (
 
   const hearingOutcome = { Exceptions: exceptions } as AnnotatedHearingOutcome
 
-  return { correlationId, triggers, hearingOutcome, auditLogEvents: [], resultType: Phase1ResultType.success }
+  return { auditLogEvents: [], correlationId, hearingOutcome, resultType: Phase1ResultType.success, triggers }
 }
 
 export default (messageXml: string, options: ProcessMessageOptions = {}): Promise<Phase1Result> => {

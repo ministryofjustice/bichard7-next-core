@@ -7,12 +7,12 @@ export enum TriggerCreationType {
 }
 
 const noteText = {
-  [TriggerCreationType.CREATE]: "Trigger codes",
   [TriggerCreationType.ADD]: "Triggers added",
+  [TriggerCreationType.CREATE]: "Trigger codes",
   [TriggerCreationType.DELETE]: "Triggers deleted"
 }
 
-const generateTriggersNoteText = (triggers: Trigger[], type = TriggerCreationType.CREATE): string | null => {
+const generateTriggersNoteText = (triggers: Trigger[], type = TriggerCreationType.CREATE): null | string => {
   if (triggers.length === 0) {
     return null
   }

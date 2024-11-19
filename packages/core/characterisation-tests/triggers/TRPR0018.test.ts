@@ -1,15 +1,17 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
+import type { ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
-import type { ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
 
 const code = TriggerCode.TRPR0018
 const resultCode = 1015
 
 type PncOffenceDateOverride = {
-  startDate: string
   endDate?: string
+  startDate: string
 }
 
 const pncOffenceDateOverrides = (dates: PncOffenceDateOverride[]) => ({
@@ -21,11 +23,11 @@ const pncOffenceDateOverrides = (dates: PncOffenceDateOverride[]) => ({
             BaseOffenceDetails: {
               OffenceTiming: {
                 OffenceDateCode: 1,
-                OffenceStart: {
-                  OffenceDateStartDate: date.startDate
-                },
                 OffenceEnd: {
                   OffenceEndDate: date.endDate
+                },
+                OffenceStart: {
+                  OffenceDateStartDate: date.startDate
                 }
               }
             }
@@ -49,21 +51,21 @@ describe.ifPhase1("TRPR0018", () => {
     ${"2022-02-28"} | ${undefined}    | ${"2022-02-27"} | ${"2022-03-02"} | ${"offence end date is missing and offence start date is after PNC start date"}
     ${"2022-02-28"} | ${undefined}    | ${"2022-02-28"} | ${"2022-03-02"} | ${"offence end date is missing and offence start date is the same as PNC start date"}
     ${"2022-02-28"} | ${"2022-03-01"} | ${"2022-02-27"} | ${undefined}    | ${"PNC end date is missing and offence start date is after the PNC start date"}
-  `("should generate trigger when $description", async ({ offenceStart, offenceEnd, pncStart, pncEnd }) => {
+  `("should generate trigger when $description", async ({ offenceEnd, offenceStart, pncEnd, pncStart }) => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          startDate: new Date(offenceStart),
           endDate: offenceEnd ? new Date(offenceEnd) : undefined,
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date(offenceStart)
         }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
-    } = await processPhase1Message(inputMessage, pncOffenceDateOverrides([{ startDate: pncStart, endDate: pncEnd }]))
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
+    } = await processPhase1Message(inputMessage, pncOffenceDateOverrides([{ endDate: pncEnd, startDate: pncStart }]))
 
     expect(exceptions).toHaveLength(0)
     expect(triggers).toStrictEqual([{ code, offenceSequenceNumber: 1 }])
@@ -73,26 +75,26 @@ describe.ifPhase1("TRPR0018", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          startDate: new Date("2021-02-28"),
           endDate: new Date("2021-03-02"),
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date("2021-02-28")
         },
         {
-          startDate: new Date("2022-02-28"),
           endDate: new Date("2022-03-02"),
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date("2022-02-28")
         }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(
       inputMessage,
       pncOffenceDateOverrides([
-        { startDate: "2021-02-27", endDate: "2021-03-03" },
-        { startDate: "2022-02-27", endDate: "2022-03-03" }
+        { endDate: "2021-03-03", startDate: "2021-02-27" },
+        { endDate: "2022-03-03", startDate: "2022-02-27" }
       ])
     )
 
@@ -107,16 +109,16 @@ describe.ifPhase1("TRPR0018", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          startDate: new Date("2021-02-28"),
           endDate: undefined,
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date("2021-02-28")
         }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage, {
       expectRecord: false,
       ...pncOffenceDateOverrides([{ startDate: "2021-02-28" }])
@@ -130,19 +132,19 @@ describe.ifPhase1("TRPR0018", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          startDate: new Date("2021-01-28"),
           endDate: new Date("2021-02-28"),
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date("2021-01-28")
         }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage, {
       expectRecord: false,
-      ...pncOffenceDateOverrides([{ startDate: "2021-01-28", endDate: "2021-02-28" }])
+      ...pncOffenceDateOverrides([{ endDate: "2021-02-28", startDate: "2021-01-28" }])
     })
 
     expect(exceptions).toHaveLength(0)
@@ -153,19 +155,19 @@ describe.ifPhase1("TRPR0018", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          startDate: new Date("2021-02-28"),
           endDate: new Date("2021-02-28"),
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          startDate: new Date("2021-02-28")
         }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage, {
       expectRecord: false,
-      ...pncOffenceDateOverrides([{ startDate: "2021-02-28", endDate: "2021-02-28" }])
+      ...pncOffenceDateOverrides([{ endDate: "2021-02-28", startDate: "2021-02-28" }])
     })
 
     expect(exceptions).toHaveLength(0)

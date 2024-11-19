@@ -10,8 +10,8 @@ export const waitForCompletedWorkflow = async (
     {
       freeText,
       query: {
-        workflowType,
-        status
+        status,
+        workflowType
       }
     },
     timeout

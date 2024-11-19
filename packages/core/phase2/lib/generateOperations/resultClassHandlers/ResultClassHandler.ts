@@ -3,10 +3,10 @@ import type { Operation } from "../../../../types/PncUpdateDataset"
 
 export type ResultClassHandlerParams = {
   aho: AnnotatedHearingOutcome
-  offence: Offence
-  result: Result
-  resubmitted: boolean
   areAllResultsOnPnc: boolean
+  offence: Offence
+  resubmitted: boolean
+  result: Result
 }
 
 export type ResultClassHandler = (params: ResultClassHandlerParams) => Operation[]

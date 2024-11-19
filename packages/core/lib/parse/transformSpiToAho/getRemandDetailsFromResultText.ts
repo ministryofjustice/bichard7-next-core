@@ -1,11 +1,12 @@
 import type { OrganisationUnitCodes, Result } from "../../../types/AnnotatedHearingOutcome"
+
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
 import lookupCrownCourtByNameAndFirstPsaCode from "../../dataLookup/lookupCrownCourtByNameAndFirstPsaCode"
 
 export interface RemandDetails {
-  location?: OrganisationUnitCodes
   date?: Date
+  location?: OrganisationUnitCodes
 }
 
 interface ExtractedResultTextDate {
@@ -32,14 +33,12 @@ const resultTextPatternCodes: Record<string, string[]> = {
   "4054": ["1"],
   "4057": ["4"],
   "4058": ["3a"],
-  "4570": ["1"],
-  "4571": ["1"],
   "4530": ["2ab", "2c3b"],
-  "4542": ["2ab"],
   "4531": ["3a", "2c3b"],
   "4533": ["3a", "2c3b"],
   "4537": ["3a", "2c3b"],
   "4539": ["3a", "2c3b"],
+  "4542": ["2ab"],
   "4558": ["4"],
   "4559": ["4"],
   "4560": ["4"],
@@ -49,24 +48,26 @@ const resultTextPatternCodes: Record<string, string[]> = {
   "4564": ["4"],
   "4565": ["1", "4"],
   "4566": ["1"],
-  "4567": ["4"]
+  "4567": ["4"],
+  "4570": ["1"],
+  "4571": ["1"]
 }
 
 const resultTextPatternRegex: Record<string, RegExp> = {
   "1": /[Cc]ommitted to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
   "2ab": /to appear (?:at|before) (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "4": /Act \d{4} to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
-  "3a": /[tT]o be brought before (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
   "2c3b":
-    /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/
+    /until the Crown Court hearing (?:(?:.*on (?<Date>.*) or such other date.*as the Crown Court directs,? (?<Court>.*? (?:Crown|Criminal) Court))|(?:.*time to be fixed,? (?<Court2>.*? (?:Crown|Criminal) Court)))/,
+  "3a": /[tT]o be brought before (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/,
+  "4": /Act \d{4} to (?<Court>.*? (?:Crown|Criminal) Court)(?:.*on (?<Date>.*) or such other date)?/
 }
 
 const grimsby = lookupOrganisationUnitByThirdLevelPsaCode("0425")
 const newport = lookupOrganisationUnitByThirdLevelPsaCode("0441")
 
 const crownCourtNameMappingOverrides: Record<string, OrganisationUnitCodes | undefined> = {
-  "Newport (South Wales) Crown Court": newport ? extractCodesFromOU(newport) : undefined,
-  "Great Grimsby Crown Court": grimsby ? extractCodesFromOU(grimsby) : undefined
+  "Great Grimsby Crown Court": grimsby ? extractCodesFromOU(grimsby) : undefined,
+  "Newport (South Wales) Crown Court": newport ? extractCodesFromOU(newport) : undefined
 }
 
 const extractResultTextData = (patterns: string[], resultText: string): ExtractedResultTextDate => {
@@ -121,7 +122,7 @@ const getRemandDetailsFromResultText = (result: Result): RemandDetails => {
     }
   }
 
-  return { location, date }
+  return { date, location }
 }
 
 export default getRemandDetailsFromResultText

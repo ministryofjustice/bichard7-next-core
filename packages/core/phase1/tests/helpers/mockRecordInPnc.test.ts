@@ -1,4 +1,5 @@
 import type { PncQueryResult } from "../../../types/PncQueryResult"
+
 import { mockEnquiryFromPncResult } from "../../tests/helpers/mockRecordInPnc"
 
 const normaliseResponse = (response: string): string[] => response.split("\n").map((line) => line.trim())
@@ -6,9 +7,7 @@ const normaliseResponse = (response: string): string[] => response.split("\n").m
 describe("mockEnquiryFromPncResult()", () => {
   it("@moj-bichard7/common/pnc/PncQueryResult", () => {
     const pncResult: PncQueryResult = {
-      forceStationCode: "01ZD",
       checkName: "SEXOFFENCE",
-      pncId: "2000/0448754K",
       courtCases: [
         {
           courtCaseReference: "97/1626/008395Q",
@@ -17,41 +16,43 @@ describe("mockEnquiryFromPncResult()", () => {
               offence: {
                 acpoOffenceCode: "12:15:24:1",
                 cjsOffenceCode: "SX03001A",
-                title: "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003",
-                sequenceNumber: 1,
                 qualifier1: "",
                 qualifier2: "",
+                sequenceNumber: 1,
                 startDate: new Date("2010-11-28T00:00:00.000Z"),
-                startTime: "00:00"
+                startTime: "00:00",
+                title: "Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003"
               }
             },
             {
               offence: {
                 acpoOffenceCode: "12:15:24:1",
                 cjsOffenceCode: "SX03001",
-                title: "Rape a girl aged 13 / 14 / 15 - SOA 2003",
-                sequenceNumber: 2,
                 qualifier1: "",
                 qualifier2: "",
+                sequenceNumber: 2,
                 startDate: new Date("2010-11-28T00:00:00.000Z"),
-                startTime: "00:00"
+                startTime: "00:00",
+                title: "Rape a girl aged 13 / 14 / 15 - SOA 2003"
               }
             },
             {
               offence: {
                 acpoOffenceCode: "12:15:24:1",
                 cjsOffenceCode: "RT88191",
-                title: "Use a motor vehicle on a road / public place without third party insurance",
-                sequenceNumber: 3,
                 qualifier1: "",
                 qualifier2: "",
+                sequenceNumber: 3,
                 startDate: new Date("2010-11-28T00:00:00.000Z"),
-                startTime: "00:00"
+                startTime: "00:00",
+                title: "Use a motor vehicle on a road / public place without third party insurance"
               }
             }
           ]
         }
-      ]
+      ],
+      forceStationCode: "01ZD",
+      pncId: "2000/0448754K"
     }
 
     const outcome = mockEnquiryFromPncResult(pncResult)

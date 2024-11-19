@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -12,7 +13,7 @@ describe.ifPhase1("HO100321", () => {
   it("should create an exception when there is a recordable offence but the Arrest Summons Number is a dummy", async () => {
     const inputMessage = generateSpiMessage({
       ASN: dummyASN,
-      offences: [{ results: [{ code: 4592 }], recordable: true }]
+      offences: [{ recordable: true, results: [{ code: 4592 }] }]
     })
 
     const {
@@ -36,8 +37,8 @@ describe.ifPhase1("HO100321", () => {
       offences: [
         {
           code: nonRecordableOffenceCode,
-          results: [{ code: 4592 }],
-          recordable: false
+          recordable: false,
+          results: [{ code: 4592 }]
         }
       ]
     })

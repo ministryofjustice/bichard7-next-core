@@ -3,8 +3,9 @@ jest.mock("../getDisposalTextFromResult")
 jest.mock("./isDriverDisqualificationResult")
 
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
+
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 
@@ -19,12 +20,12 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
 
   it("should return PNC disposal when disposal text has value and is valid", () => {
     const hoResult = {
-      ResultQualifierVariable: [] as unknown,
       AmountSpecifiedInResult: [{ Amount: 11 }],
       Duration: [
-        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-      ]
+        { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
+        { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+      ],
+      ResultQualifierVariable: [] as unknown
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
@@ -46,13 +47,13 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
 
   it("should return PNC disposal when ResultVariableText has value and is valid", () => {
     const hoResult = {
-      ResultVariableText: "Dummy text",
-      ResultQualifierVariable: [] as unknown,
       AmountSpecifiedInResult: [{ Amount: 11 }],
       Duration: [
-        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-      ]
+        { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
+        { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+      ],
+      ResultQualifierVariable: [] as unknown,
+      ResultVariableText: "Dummy text"
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
@@ -74,12 +75,12 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
 
   it("should return PNC disposal and validate disposal text when disposal text has value and is valid", () => {
     const hoResult = {
-      ResultQualifierVariable: [] as unknown,
       AmountSpecifiedInResult: [{ Amount: 11 }],
       Duration: [
-        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-      ]
+        { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
+        { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+      ],
+      ResultQualifierVariable: [] as unknown
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
@@ -101,12 +102,12 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
 
   it("should return PNC disposal and use DateSpecifiedInResult for disposal text when disposal text does not have value", () => {
     const hoResult = {
-      ResultQualifierVariable: [] as unknown,
       AmountSpecifiedInResult: [{ Amount: 11 }],
       Duration: [
-        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-      ]
+        { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
+        { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+      ],
+      ResultQualifierVariable: [] as unknown
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))

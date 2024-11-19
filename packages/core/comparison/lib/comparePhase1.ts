@@ -1,20 +1,22 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
+
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { extractExceptionsFromXml, parseAhoXml } from "../../lib/parse/parseAhoXml"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import phase1Handler from "../../phase1/phase1"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
-import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
 import isIntentionalDifference from "./isIntentionalDifference"
+import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
@@ -51,7 +53,7 @@ const comparePhase1 = async (
   debug = false,
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<ComparisonResultDetail> => {
-  const { incomingMessage, annotatedHearingOutcome, triggers, standingDataVersion } = comparison
+  const { annotatedHearingOutcome, incomingMessage, standingDataVersion, triggers } = comparison
   const correlationId = getCorrelationId(comparison)
   const normalisedAho = annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
 
@@ -100,11 +102,11 @@ const comparePhase1 = async (
     if (isIntentionalDifference(parsedAho, coreResult.hearingOutcome as AnnotatedHearingOutcome, originalInputAho, 1)) {
       return {
         auditLogEventsMatch: true,
-        triggersMatch: true,
         exceptionsMatch: true,
+        intentionalDifference: true,
+        triggersMatch: true,
         xmlOutputMatches: true,
-        xmlParsingMatches: true,
-        intentionalDifference: true
+        xmlParsingMatches: true
       }
     }
 
@@ -112,17 +114,17 @@ const comparePhase1 = async (
     const generatedXml = serialiseToXml(parsedAho)
 
     const debugOutput: ComparisonResultDebugOutput = {
-      triggers: {
-        coreResult: sortedCoreTriggers,
-        comparisonResult: triggers
+      auditLogEvents: {
+        comparisonResult: [],
+        coreResult: []
       },
       exceptions: {
-        coreResult: sortedCoreExceptions,
-        comparisonResult: exceptions
+        comparisonResult: exceptions,
+        coreResult: sortedCoreExceptions
       },
-      auditLogEvents: {
-        coreResult: [],
-        comparisonResult: []
+      triggers: {
+        comparisonResult: triggers,
+        coreResult: sortedCoreTriggers
       },
       xmlOutputDiff: xmlOutputDiff(ahoXml, normalisedAho),
       xmlParsingDiff: xmlOutputDiff(generatedXml, normalisedAho)
@@ -149,21 +151,21 @@ const comparePhase1 = async (
 
     return {
       auditLogEventsMatch: true,
-      triggersMatch: ignoreNewMatcherTrigger18Differences ? true : isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: ignoreNewMatcherXmlDifferences ? true : isEqual(sortedCoreExceptions, sortedExceptions),
+      incomingMessageType: getMessageType(incomingMessage),
+      triggersMatch: ignoreNewMatcherTrigger18Differences ? true : isEqual(sortedCoreTriggers, sortedTriggers),
       xmlOutputMatches: xmlOutputMatchesValue,
       xmlParsingMatches: isIgnored ? true : xmlOutputMatches(generatedXml, normalisedAho),
-      incomingMessageType: getMessageType(incomingMessage),
       ...(debug && { debugOutput })
     }
   } catch (e) {
     return {
       auditLogEventsMatch: false,
-      triggersMatch: false,
+      error: e,
       exceptionsMatch: false,
+      triggersMatch: false,
       xmlOutputMatches: false,
-      xmlParsingMatches: false,
-      error: e
+      xmlParsingMatches: false
     }
   }
 }

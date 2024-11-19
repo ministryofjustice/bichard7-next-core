@@ -1,15 +1,15 @@
 const intOrString = (input: string): string => (input.match(/^\d*$/) ? input : "")
 
 class Asn {
-  public year: string
-
   public force: string
 
-  public unit: string
+  public sequence: number
 
   public system: string
 
-  public sequence: number
+  public unit: string
+
+  public year: string
 
   constructor(asn: string) {
     this.year = asn.slice(0, 2)

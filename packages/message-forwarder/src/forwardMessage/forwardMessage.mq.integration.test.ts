@@ -1,16 +1,15 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "mq"
 
-import { randomUUID } from "crypto"
-import fs from "fs"
-
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
+import { randomUUID } from "crypto"
+import fs from "fs"
 
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()

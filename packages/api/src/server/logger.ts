@@ -1,27 +1,27 @@
 import type { LoggerOptions } from "pino"
 
-type Options = LoggerOptions | boolean
+type Options = boolean | LoggerOptions
 
 const logger = (env?: string): Options => {
   let loggerOpts: Options
 
   switch (env?.toLowerCase()) {
-    case "test":
-      loggerOpts = false
-      break
     case "dev":
     case "development":
       loggerOpts = {
         transport: {
-          target: "pino-pretty",
           options: {
-            destination: 1,
             colorize: true,
-            translateTime: "HH:MM:ss.l",
-            ignore: "pid,hostname"
-          }
+            destination: 1,
+            ignore: "pid,hostname",
+            translateTime: "HH:MM:ss.l"
+          },
+          target: "pino-pretty"
         }
       }
+      break
+    case "test":
+      loggerOpts = false
       break
     default:
       loggerOpts = true

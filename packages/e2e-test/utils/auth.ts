@@ -1,9 +1,11 @@
 import { expect } from "expect"
 import jwt from "jsonwebtoken"
+
+import type Bichard from "./world"
+
 import { authType, config } from "./config"
 import dummyUsers from "./dummyUserData"
 import { authenticateUrl, login } from "./urls"
-import type Bichard from "./world"
 
 const nextui = process.env.NEXTUI === "true"
 
@@ -79,16 +81,16 @@ const logInDirectToBichardWithJwtAs = async function (world: Bichard, name: stri
   }
 
   const tokenData = {
-    username,
-    exclusionList: user.exclusionList,
-    inclusionList: user.inclusionList,
-    forenames: "Bichard User",
-    surname: "01",
     emailAddress: `${username}@example.com`,
+    exclusionList: user.exclusionList,
+    exp: 9999999999,
+    forenames: "Bichard User",
     groups: user.groups,
     iat: 1626187368,
-    exp: 9999999999,
-    iss: "Bichard"
+    inclusionList: user.inclusionList,
+    iss: "Bichard",
+    surname: "01",
+    username
   }
   const token = jwt.sign(tokenData, tokenSecret())
   const url = authenticateUrl(token)

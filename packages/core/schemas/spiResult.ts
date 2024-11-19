@@ -1,4 +1,5 @@
 import { z } from "zod"
+
 import { SpiPlea } from "../types/Plea"
 import toArray from "./toArray"
 
@@ -16,65 +17,65 @@ export const nextHearingSchema = z.object({
 })
 
 export const durationSchema = z.object({
-  DurationValue: z.string().optional(),
-  DurationUnit: z.string().optional(),
-  SecondaryDurationValue: z.string().optional(),
-  SecondaryDurationUnit: z.string().optional(),
+  DurationEndDate: z.preprocess(toArray, z.string().array().min(0)),
   DurationStartDate: z.preprocess(toArray, z.string().array().min(0)),
-  DurationEndDate: z.preprocess(toArray, z.string().array().min(0))
+  DurationUnit: z.string().optional(),
+  DurationValue: z.string().optional(),
+  SecondaryDurationUnit: z.string().optional(),
+  SecondaryDurationValue: z.string().optional()
 })
 
 export const outcomeSchema = z.object({
-  ResultAmountSterling: z.string().optional(),
+  Duration: durationSchema.optional(),
   PenaltyPoints: z.string().optional(),
-  Duration: durationSchema.optional()
+  ResultAmountSterling: z.string().optional()
 })
 
 export const resultParsedXmlSchema = z.object({
-  ResultCode: z.string().optional(),
-  ResultText: z.string(),
-  ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
+  NextHearing: nextHearingSchema.optional(),
   Outcome: outcomeSchema.optional(),
-  NextHearing: nextHearingSchema.optional()
+  ResultCode: z.string().optional(),
+  ResultCodeQualifier: z.preprocess(toArray, z.string().array().min(0)),
+  ResultText: z.string()
 })
 
 export const offenceParsedXmlSchema = z.object({
   BaseOffenceDetails: z.object({
-    OffenceSequenceNumber: z.string(),
-    OffenceCode: z.string(),
-    OffenceWording: z.string(),
-    ChargeDate: z.string().optional(),
-    ArrestDate: z.string().optional(),
-    LocationOfOffence: z.string().optional(),
-    OffenceTitle: z.string().optional(),
-    ConvictionDate: z.string().optional(),
     AlcoholRelatedOffence: z
       .object({
         AlcoholLevelAmount: z.string(),
         AlcoholLevelMethod: z.string()
       })
       .optional(),
+    ArrestDate: z.string().optional(),
+    ChargeDate: z.string().optional(),
+    ConvictionDate: z.string().optional(),
+    LocationOfOffence: z.string().optional(),
+    OffenceCode: z.string(),
+    OffenceSequenceNumber: z.string(),
     OffenceTiming: z.object({
       OffenceDateCode: z.string(),
-      OffenceStart: z.object({
-        OffenceDateStartDate: z.string(),
-        OffenceStartTime: z.string().optional()
-      }),
       OffenceEnd: z
         .object({
           OffenceEndDate: z.string(),
           OffenceEndTime: z.string().optional()
         })
-        .optional()
-    })
+        .optional(),
+      OffenceStart: z.object({
+        OffenceDateStartDate: z.string(),
+        OffenceStartTime: z.string().optional()
+      })
+    }),
+    OffenceTitle: z.string().optional(),
+    OffenceWording: z.string()
   }),
-  InitiatedDate: z.string(),
-  Plea: spiPleaSchema,
-  ModeOfTrial: z.string().optional(),
-  FinalDisposalIndicator: z.string(),
-  ConvictionDate: z.string().optional(),
   ConvictingCourt: z.preprocess((s) => (s ? String(s) : undefined), z.string().optional()),
+  ConvictionDate: z.string().optional(),
+  FinalDisposalIndicator: z.string(),
   Finding: z.string().optional(),
+  InitiatedDate: z.string(),
+  ModeOfTrial: z.string().optional(),
+  Plea: spiPleaSchema,
   Result: z.preprocess(toArray, resultParsedXmlSchema.array().min(0))
 })
 
@@ -90,55 +91,55 @@ export const simpleAddressSchema = z.object({
 
 export const complexAddressSchema = z.object({
   ComplexAddress: z.object({
-    PAON: z.string().optional(),
-    StreetDescription: z.string().optional(),
-    Locality: z.string().optional(),
-    Town: z.string().optional(),
-    UniqueStreetReferenceNumber: z.string().optional(),
     AdministrativeArea: z.string().optional(),
-    PostCode: z.string().optional()
+    Locality: z.string().optional(),
+    PAON: z.string().optional(),
+    PostCode: z.string().optional(),
+    StreetDescription: z.string().optional(),
+    Town: z.string().optional(),
+    UniqueStreetReferenceNumber: z.string().optional()
   })
 })
 
 export const spiAddressSchema = z.union([simpleAddressSchema, complexAddressSchema])
 
 export const spiCourtIndividualDefendantSchema = z.object({
-  PresentAtHearing: z.string(),
+  Address: spiAddressSchema,
   BailStatus: z.string(),
   PersonDefendant: z.object({
-    PNCidentifier: z.string().optional(),
     BailConditions: z.string().optional(),
     BasePersonDetails: z.object({
       Birthdate: z.string().optional(),
       Gender: z.string(),
       PersonName: z.object({
-        PersonTitle: z.string().optional(),
+        PersonFamilyName: z.string(),
         PersonGivenName1: z.string().optional(),
         PersonGivenName2: z.string().optional(),
         PersonGivenName3: z.string().optional(),
-        PersonFamilyName: z.string()
+        PersonTitle: z.string().optional()
       })
-    })
+    }),
+    PNCidentifier: z.string().optional()
   }),
-  Address: spiAddressSchema,
+  PresentAtHearing: z.string(),
   ReasonForBailConditionsOrCustody: z.string().optional()
 })
 
 export const spiCourtCorporateDefendantSchema = z.object({
-  PNCidentifier: z.string().optional(),
-  PresentAtHearing: z.string(),
+  Address: spiAddressSchema,
   BailStatus: z.string(),
   OrganisationName: z.object({
     OrganisationName: z.string()
   }),
-  Address: spiAddressSchema
+  PNCidentifier: z.string().optional(),
+  PresentAtHearing: z.string()
 })
 
 // TODO: See if it's possible to make CourtIndividualDefendant and CourtCorporateDefendant mutually exclusive
 export const defendantSchema = z
   .object({
-    CourtIndividualDefendant: spiCourtIndividualDefendantSchema.optional(),
     CourtCorporateDefendant: spiCourtCorporateDefendantSchema.optional(),
+    CourtIndividualDefendant: spiCourtIndividualDefendantSchema.optional(),
     Offence: z.preprocess(toArray, offenceParsedXmlSchema.array().min(0)),
     ProsecutorReference: z.string()
   })
@@ -154,8 +155,8 @@ export const defendantSchema = z
 export const resultedCaseMessageParsedXmlSchema = z.object({
   Session: z.object({
     Case: z.object({
-      PTIURN: z.string(),
-      Defendant: defendantSchema
+      Defendant: defendantSchema,
+      PTIURN: z.string()
     }),
     CourtHearing: z.object({
       Hearing: z.object({
@@ -174,7 +175,7 @@ export const fullResultedCaseMessageParsedXmlSchema = z.object({
 
 export const incomingMessageParsedXmlSchema = z.object({
   DeliverRequest: z.object({
-    MessageIdentifier: z.string(),
-    Message: fullResultedCaseMessageParsedXmlSchema
+    Message: fullResultedCaseMessageParsedXmlSchema,
+    MessageIdentifier: z.string()
   })
 })

@@ -1,11 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../../../lib/exceptions/errorPaths"
+
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "../../../../types/PncQueryResult"
-import OffenceMatcher from "./OffenceMatcher"
+
+import errorPaths from "../../../../lib/exceptions/errorPaths"
 import annotatePncMatch, { CaseType } from "./annotatePncMatch"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 import offenceHasFinalResult from "./offenceHasFinalResult"
+import OffenceMatcher from "./OffenceMatcher"
 
 export type PncOffenceWithCaseRef = {
   caseReference: string
@@ -94,7 +96,7 @@ const getCaseType = (pncCase: PncCourtCase | PncPenaltyCase): CaseType =>
 export const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
   courtCases
     ?.map((cc) =>
-      cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc), caseType: getCaseType(cc) }))
+      cc.offences.map((o) => ({ caseReference: getCaseReference(cc), caseType: getCaseType(cc), pncOffence: o }))
     )
     .flat() ?? []
 

@@ -1,3 +1,26 @@
+import type {
+  ActualOffenceDate,
+  CourtType,
+  DefendantPresentAtHearing,
+  DurationType,
+  DurationUnit,
+  Gender,
+  ModeOfTrialReason,
+  OffenceCategory,
+  OffenceInitiation,
+  PncDisposal,
+  ResultClass,
+  ResultCode,
+  ResultQualifierCode,
+  Summons,
+  TargetCourtType,
+  TypeOfHearing,
+  VehicleCode,
+  Verdict,
+  YesNo
+} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+
 import {
   actualOffenceDate,
   alcoholLevelMethod,
@@ -24,37 +47,16 @@ import {
   verdict,
   yesNo
 } from "@moj-bichard7-developers/bichard7-next-data"
-import type {
-  ActualOffenceDate,
-  CourtType,
-  DefendantPresentAtHearing,
-  DurationType,
-  DurationUnit,
-  Gender,
-  ModeOfTrialReason,
-  OffenceCategory,
-  OffenceInitiation,
-  PncDisposal,
-  ResultClass,
-  ResultCode,
-  ResultQualifierCode,
-  Summons,
-  TargetCourtType,
-  TypeOfHearing,
-  VehicleCode,
-  Verdict,
-  YesNo
-} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+
 import type { SpiPlea } from "../../types/Plea"
 
 interface DataLookupResult {
   cjsCode: string
   description: string
   pncCode?: string
-  spiCode?: string
   recordableOnPnc?: string
-  resultHalfLifeHours?: string | null
+  resultHalfLifeHours?: null | string
+  spiCode?: string
 }
 
 const lookupRemandStatusBySpiCode = (spiCode: string): DataLookupResult | undefined =>
@@ -72,7 +74,7 @@ const lookupPleaStatusByCjsCode = (plea: string): DataLookupResult | undefined =
 const lookupVerdictBySpiCode = (spiCode: string): DataLookupResult | undefined =>
   verdict.find((x) => x.spiCode === spiCode)
 
-const lookupVerdictByCjsCode = (cjsCode: string): Verdict | undefined => verdict.find((x) => x.cjsCode === cjsCode)
+const lookupVerdictByCjsCode = (cjsCode: string): undefined | Verdict => verdict.find((x) => x.cjsCode === cjsCode)
 
 const lookupModeOfTrialReasonBySpiCode = (spiCode: string): ModeOfTrialReason | undefined =>
   modeOfTrialReason.find((x) => x.spiCode === spiCode)
@@ -101,7 +103,7 @@ const forceCodeExists = (code: string): boolean => organisationUnit.some((ou) =>
 const lookupResultCodeByCjsCode = (cjsCode: string): ResultCode | undefined =>
   resultCode.find((x) => x.cjsCode === cjsCode)
 
-const lookupPncDisposalByCjsCode = (cjsCode: string | number): PncDisposal | undefined =>
+const lookupPncDisposalByCjsCode = (cjsCode: number | string): PncDisposal | undefined =>
   pncDisposal.find((x) => x.cjsCode === cjsCode.toString())
 
 const lookupCourtTypeByCjsCode = (cjsCode: string): CourtType | undefined =>
@@ -136,9 +138,9 @@ const lookupSummonsCodeByCjsCode = (cjsCode: string): Summons | undefined => sum
 const lookupOffenceDateCodeByCjsCode = (cjsCode: string): ActualOffenceDate | undefined =>
   actualOffenceDate.find((x) => x.cjsCode === cjsCode)
 
-const lookupYesNoByCjsCode = (cjsCode: string): YesNo | undefined => yesNo.find((x) => x.cjsCode === cjsCode)
+const lookupYesNoByCjsCode = (cjsCode: string): undefined | YesNo => yesNo.find((x) => x.cjsCode === cjsCode)
 
-const lookupVehicleCodeByCjsCode = (cjsCode: string): VehicleCode | undefined =>
+const lookupVehicleCodeByCjsCode = (cjsCode: string): undefined | VehicleCode =>
   vehicleCode.find((x) => x.cjsCode === cjsCode)
 
 const lookupDefendantPresentAtHearingByCjsCode = (cjsCode: string): DefendantPresentAtHearing | undefined =>

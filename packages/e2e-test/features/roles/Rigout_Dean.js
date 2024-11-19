@@ -1,5 +1,6 @@
 module.exports = [
   {
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?XML VERSION="1.0" STANDALONE="YES"?>
     <CXE01>
@@ -11,7 +12,6 @@ module.exports = [
         <COF>K001    12:15:24:1   TH68006 281120102220            </COF>
       </ASI>
       <GMT>000008073ENQR004540S</GMT>
-    </CXE01>`,
-    expectedRequest: ""
+    </CXE01>`
   }
 ]

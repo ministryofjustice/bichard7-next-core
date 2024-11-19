@@ -2,9 +2,11 @@ jest.setTimeout(9999999)
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import type Email from "@moj-bichard7/common/email/Email"
+
 import * as getEmailer from "@moj-bichard7/common/email/getEmailer"
 import { randomUUID } from "crypto"
 import mailhogClient from "mailhog"
+
 import { type ErrorReportData } from "../types/errorReportData"
 import alertCommonPlatform from "./alertCommonPlatform"
 
@@ -24,11 +26,11 @@ const getEmailerDefault = (config: getEmailer.SmtpConfig) => ({
 })
 
 const errorReportData: ErrorReportData = {
-  receivedDate: "2023-08-31T14:48:00.000Z",
-  messageId: randomUUID(),
+  errorMessage: "Error parsing input message",
   externalId: randomUUID(),
+  messageId: randomUUID(),
   ptiUrn: "01ZD0303208",
-  errorMessage: "Error parsing input message"
+  receivedDate: "2023-08-31T14:48:00.000Z"
 }
 
 describe("alertCommonPlatform", () => {

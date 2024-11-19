@@ -1,11 +1,13 @@
 import type { AxiosRequestConfig } from "axios"
+
 import axios from "axios"
 import https from "https"
+
 import Poller from "./Poller"
 
 type HealthCheckData = {
-  name: string
   healthy: boolean
+  name: string
 }
 
 export default () => {
@@ -43,10 +45,10 @@ export default () => {
 
   return new Poller(fetchHealthcheck)
     .poll({
-      timeout: 60000,
+      condition: checkHealthcheck,
       delay: 1000,
       name: "Health check",
-      condition: checkHealthcheck
+      timeout: 60000
     })
     .then(() => true)
     .catch(() => {

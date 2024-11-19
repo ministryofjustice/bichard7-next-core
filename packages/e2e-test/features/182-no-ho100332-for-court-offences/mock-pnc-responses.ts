@@ -2,6 +2,8 @@ import { mockUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -16,18 +18,16 @@ export default () => [
         <COF>K001    5:5:2:1      TH68001 01062009                </COF>
       </ASI>
       <GMT>000011073ENQR000142R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU02", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/28F                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M13                   00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/28F                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M13                   00                                                                            </DIS>"
   }),
   mockUpdate("CXU02", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/29G                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/29G                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>"
   })
 ]

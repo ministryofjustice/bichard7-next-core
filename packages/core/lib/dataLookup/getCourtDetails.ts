@@ -1,5 +1,6 @@
-import { lookupOrganisationUnitByCode } from "."
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
+import { lookupOrganisationUnitByCode } from "."
 
 const topLevelMagistratesCourtCode = "B"
 const youthCourt = "YOUTH"
@@ -8,16 +9,16 @@ const mcAdult = "MCA"
 const crownCourt = "CC"
 
 type CourtDetailsResult = {
-  courtType: string
   courtName: string
+  courtType: string
 }
 
 const getCourtName = (ouData: OrganisationUnitCodes): string => {
   const courtRecord = lookupOrganisationUnitByCode({
-    TopLevelCode: ouData.TopLevelCode,
+    BottomLevelCode: ouData.BottomLevelCode,
     SecondLevelCode: ouData.SecondLevelCode,
     ThirdLevelCode: ouData.ThirdLevelCode,
-    BottomLevelCode: ouData.BottomLevelCode
+    TopLevelCode: ouData.TopLevelCode
   } as OrganisationUnitCodes)
   return [
     courtRecord?.topLevelName,
@@ -40,7 +41,7 @@ const getCourtDetails = (organisationUnitData: OrganisationUnitCodes): CourtDeta
     courtType = crownCourt
   }
 
-  return { courtType, courtName }
+  return { courtName, courtType }
 }
 
 export default getCourtDetails

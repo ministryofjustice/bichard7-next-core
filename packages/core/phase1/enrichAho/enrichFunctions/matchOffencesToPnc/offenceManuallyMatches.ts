@@ -1,5 +1,6 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
+
 import { normaliseCCR } from "./normaliseCCR"
 
 export const offenceManuallyMatches = (hoOffence: Offence, pncOffence: PncOffenceWithCaseRef): boolean => {

@@ -1,13 +1,15 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type TriggerConfig from "../../types/TriggerConfig"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
+
 import TriggerRecordable from "../../types/TriggerRecordable"
 import generateTriggersFromResultQualifier from "./generateTriggersFromResultQualifier"
 
 const config: TriggerConfig = {
-  triggerCode: TriggerCode.TRPR0024,
-  resultCodeQualifier: "LH",
   caseLevelTrigger: true,
+  resultCodeQualifier: "LH",
+  triggerCode: TriggerCode.TRPR0024,
   triggerRecordable: TriggerRecordable.Both
 }
 

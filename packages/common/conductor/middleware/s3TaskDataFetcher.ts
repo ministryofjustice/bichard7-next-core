@@ -1,29 +1,32 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
-import { ZodIssueCode, z } from "zod"
+
+import { z, ZodIssueCode } from "zod"
+
+import type Task from "../types/Task"
+
 import createS3Config from "../../s3/createS3Config"
 import getFileFromS3 from "../../s3/getFileFromS3"
 import readS3FileTags from "../../s3/readS3FileTags"
 import { isError } from "../../types/Result"
 import logger from "../../utils/logger"
 import { failed, failedTerminal } from "../helpers"
-import type Task from "../types/Task"
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
 
 type OriginalHandler = ConductorWorker["execute"]
-type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "workflowInstanceId" | "taskId">>
+type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "taskId" | "workflowInstanceId">>
 type TaskDataInputData<T> = {
-  s3TaskData: T
-  s3TaskDataPath: string
   lockId?: string
   options?: Record<string, unknown>
+  s3TaskData: T
+  s3TaskDataPath: string
 }
 
 const inputDataSchema = z.object({
-  s3TaskDataPath: z.string(),
   lockId: z.string().optional(),
-  options: z.record(z.unknown()).optional()
+  options: z.record(z.unknown()).optional(),
+  s3TaskDataPath: z.string()
 })
 
 const lockKey = "lockedByWorkstream"
@@ -44,7 +47,7 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
       return failedTerminal(...formatErrorMessages("Input data schema", inputParseResult.error))
     }
 
-    const { s3TaskDataPath, lockId, options } = inputParseResult.data
+    const { lockId, options, s3TaskDataPath } = inputParseResult.data
 
     if (lockId) {
       const objectTags = await readS3FileTags(s3TaskDataPath, taskDataBucket, s3Config)
@@ -69,10 +72,10 @@ const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInpu
     if (parseResult.success) {
       const task: Task<TaskDataInputData<T>> = {
         inputData: {
-          s3TaskDataPath,
           lockId,
+          options,
           s3TaskData: parseResult.data,
-          options
+          s3TaskDataPath
         }
       }
       return handler(task)

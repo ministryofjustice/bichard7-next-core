@@ -1,6 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // When sequence numbers don't match exactly e.g. "2" and "002", and there are disposals with a 2007 result code, the
@@ -9,8 +11,8 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // number before checking its equivalence to an offence sequence number (which is a number, unlike in Bichard).
 
 const bichardRaisesHo200114ForNonExactSequenceNumbers = ({
-  expected,
   actual,
+  expected,
   incomingMessage,
   phase
 }: ComparisonData) =>

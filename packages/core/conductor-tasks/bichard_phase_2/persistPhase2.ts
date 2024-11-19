@@ -1,4 +1,5 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
@@ -6,15 +7,16 @@ import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskD
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
+
+import type Phase2Result from "../../phase2/types/Phase2Result"
+
 import saveErrorListRecord from "../../lib/database/saveErrorListRecord"
 import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
-import type Phase2Result from "../../phase2/types/Phase2Result"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 
 const dbConfig = createDbConfig()
 
 const persistPhase2: ConductorWorker = {
-  taskDefName: "persist_phase2",
   execute: s3TaskDataFetcher<Phase2Result>(phase2ResultSchema, async (task) => {
     const { s3TaskData } = task.inputData
     const db = postgres(dbConfig)
@@ -35,7 +37,8 @@ const persistPhase2: ConductorWorker = {
     }
 
     return completed("Phase 2 result persisted successfully")
-  })
+  }),
+  taskDefName: "persist_phase2"
 }
 
 export default persistPhase2

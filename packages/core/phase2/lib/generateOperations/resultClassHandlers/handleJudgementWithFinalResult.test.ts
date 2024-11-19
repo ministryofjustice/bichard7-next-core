@@ -1,4 +1,5 @@
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
@@ -40,7 +41,7 @@ describe("handleJudgementWithFinalResult", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
       resubmitted: true,
-      result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result
+      result: { PNCAdjudicationExists: true, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT } as Result
     })
 
     const operations = handleJudgementWithFinalResult(params)
@@ -53,11 +54,11 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns disposal updated operation without data when adjudication exists and court case reference doesn't exist", () => {
     const params = generateResultClassHandlerParams({
       fixedPenalty: false,
-      resubmitted: true,
-      result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: true } as Result,
       offence: {
         CourtCaseReferenceNumber: undefined
-      } as Offence
+      } as Offence,
+      resubmitted: true,
+      result: { PNCAdjudicationExists: true, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT } as Result
     })
 
     const operations = handleJudgementWithFinalResult(params)
@@ -67,8 +68,8 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("returns disposal operation when offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsOnPnc: true,
+      offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -81,8 +82,8 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("returns disposal operation with data and added by the court when offence is added by the court and has no 2007 result code", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsOnPnc: true,
+      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
@@ -90,9 +91,9 @@ describe("handleJudgementWithFinalResult", () => {
 
     expect(operations).toStrictEqual([
       {
+        addedByTheCourt: true,
         code: PncOperation.NORMAL_DISPOSAL,
         data: { courtCaseReference: "234" },
-        addedByTheCourt: true,
         status: "NotAttempted"
       }
     ])
@@ -100,26 +101,26 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("returns disposal operation with added by the court but without data when offence is added by the court, has no 2007 result code and no court case reference", () => {
     const params = generateResultClassHandlerParams({
+      areAllResultsOnPnc: true,
       offence: {
         AddedByTheCourt: true,
-        Result: [{ PNCDisposalType: 4000 }],
-        CourtCaseReferenceNumber: undefined
-      } as Offence,
-      areAllResultsOnPnc: true
+        CourtCaseReferenceNumber: undefined,
+        Result: [{ PNCDisposalType: 4000 }]
+      } as Offence
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 
     expect(operations).toStrictEqual([
-      { code: PncOperation.NORMAL_DISPOSAL, data: undefined, addedByTheCourt: true, status: "NotAttempted" }
+      { addedByTheCourt: true, code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }
     ])
   })
 
   it("returns no operations when offence is added by the court but has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
-      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsOnPnc: true,
+      offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence
     })
     mockedHasUnmatchedPncOffences.mockReturnValue(true)
 

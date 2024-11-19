@@ -1,5 +1,6 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -19,8 +20,8 @@ describe.ifPhase1("TRPR0015", () => {
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toHaveLength(0)
@@ -33,8 +34,8 @@ describe.ifPhase1("TRPR0015", () => {
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toHaveLength(0)
@@ -44,14 +45,14 @@ describe.ifPhase1("TRPR0015", () => {
   it("should generate a case level trigger if another trigger is generated when the case is not recordable", async () => {
     const inputMessage = generateSpiMessage({
       offences: [
-        { results: [{ code: resultCode }], recordable: false },
-        { results: [{ code: otherResultCode }], recordable: false }
+        { recordable: false, results: [{ code: resultCode }] },
+        { recordable: false, results: [{ code: otherResultCode }] }
       ]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage, { recordable: false })
 
     expect(exceptions).toHaveLength(0)
@@ -60,15 +61,15 @@ describe.ifPhase1("TRPR0015", () => {
 
   it("should not generate a case level trigger if another trigger is not generated when the case is not recordable", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{ code: resultCode }], recordable: false }]
+      offences: [{ recordable: false, results: [{ code: resultCode }] }]
     })
 
     const {
-      triggers,
-      hearingOutcome: { Exceptions: exceptions }
+      hearingOutcome: { Exceptions: exceptions },
+      triggers
     } = await processPhase1Message(inputMessage, {
-      recordable: false,
-      expectRecord: false
+      expectRecord: false,
+      recordable: false
     })
 
     expect(exceptions).toHaveLength(0)

@@ -1,9 +1,10 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import deleteFileFromS3 from "@moj-bichard7/common/s3/deleteFileFromS3"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -12,8 +13,8 @@ import { z } from "zod"
 const s3Config = createS3Config()
 
 const inputDataSchema = z.object({
-  fileName: z.string(),
-  bucketId: z.string()
+  bucketId: z.string(),
+  fileName: z.string()
 })
 type InputData = z.infer<typeof inputDataSchema>
 
@@ -27,9 +28,8 @@ const buckets: Record<string, string> = {
 }
 
 const deleteS3File: ConductorWorker = {
-  taskDefName: "delete_s3_file",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { fileName, bucketId } = task.inputData
+    const { bucketId, fileName } = task.inputData
 
     const bucket = buckets[bucketId]
     if (!bucket) {
@@ -42,7 +42,8 @@ const deleteS3File: ConductorWorker = {
     }
 
     return completed(`S3 file marked for deletion: ${fileName}`)
-  })
+  }),
+  taskDefName: "delete_s3_file"
 }
 
 export default deleteS3File

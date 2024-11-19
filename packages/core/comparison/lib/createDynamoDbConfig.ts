@@ -2,13 +2,13 @@ import type { DynamoDbConfig } from "../types"
 
 export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig {
   const {
-    DYNAMO_URL,
+    DYNAMO_AWS_ACCESS_KEY_ID,
+    DYNAMO_AWS_SECRET_ACCESS_KEY,
     DYNAMO_REGION,
+    DYNAMO_URL,
     PHASE1_COMPARISON_TABLE_NAME,
     PHASE2_COMPARISON_TABLE_NAME,
-    PHASE3_COMPARISON_TABLE_NAME,
-    DYNAMO_AWS_ACCESS_KEY_ID,
-    DYNAMO_AWS_SECRET_ACCESS_KEY
+    PHASE3_COMPARISON_TABLE_NAME
   } = process.env
 
   if (!DYNAMO_URL) {
@@ -40,8 +40,8 @@ export default function createDynamoDbConfig(phase: number = 2): DynamoDbConfig 
   }
 
   const config: DynamoDbConfig = {
-    DYNAMO_URL,
     DYNAMO_REGION: DYNAMO_REGION ?? "eu-west-2",
+    DYNAMO_URL,
     TABLE_NAME: tableName
   }
 

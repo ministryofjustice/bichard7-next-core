@@ -1,8 +1,8 @@
 enum DateSpecifiedInResultSequence {
-  FirstStartDate = 1,
   FirstEndDate = 2,
-  SecondStartDate = 3,
-  SecondEndDate = 4
+  FirstStartDate = 1,
+  SecondEndDate = 4,
+  SecondStartDate = 3
 }
 
 export default DateSpecifiedInResultSequence

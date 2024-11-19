@@ -1,7 +1,9 @@
 jest.mock("../../../../lib/dataLookup")
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../../lib/dataLookup"
+
 import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../../lib/dataLookup"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 
 describe("populateSourceOrganisation", () => {
@@ -10,13 +12,13 @@ describe("populateSourceOrganisation", () => {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
           Hearing: {
-            CourtHouseCode: 123,
             CourtHearingLocation: {
-              TopLevelCode: "a",
+              BottomLevelCode: "fg",
               SecondLevelCode: "bc",
               ThirdLevelCode: "de",
-              BottomLevelCode: "fg"
-            }
+              TopLevelCode: "a"
+            },
+            CourtHouseCode: 123
           }
         }
       }
@@ -28,7 +30,7 @@ describe("populateSourceOrganisation", () => {
 
     expect(result.SourceOrganisation).toBeDefined()
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } =
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } =
       result.SourceOrganisation
     expect(TopLevelCode).toBe("A")
     expect(SecondLevelCode).toBe("BC")
@@ -41,10 +43,10 @@ describe("populateSourceOrganisation", () => {
     const mockedLookupOrganisationUnitByThirdLevelPsaCode =
       lookupOrganisationUnitByThirdLevelPsaCode as jest.MockedFunction<typeof lookupOrganisationUnitByThirdLevelPsaCode>
     mockedLookupOrganisationUnitByThirdLevelPsaCode.mockReturnValue({
-      topLevelCode: "h",
+      bottomLevelCode: "mn",
       secondLevelCode: "ij",
       thirdLevelCode: "kl",
-      bottomLevelCode: "mn"
+      topLevelCode: "h"
     } as OrganisationUnit)
 
     const hearingOutcome = {
@@ -63,7 +65,7 @@ describe("populateSourceOrganisation", () => {
 
     expect(result.SourceOrganisation).toBeDefined()
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } =
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } =
       result.SourceOrganisation
     expect(TopLevelCode).toBe("H")
     expect(SecondLevelCode).toBe("IJ")
@@ -77,13 +79,13 @@ describe("populateSourceOrganisation", () => {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
           Hearing: {
-            CourtHouseCode: 123,
             CourtHearingLocation: {
-              TopLevelCode: "a",
+              BottomLevelCode: "fg",
               SecondLevelCode: "bc",
               ThirdLevelCode: "de",
-              BottomLevelCode: "fg"
-            }
+              TopLevelCode: "a"
+            },
+            CourtHouseCode: 123
           }
         }
       }
@@ -91,10 +93,10 @@ describe("populateSourceOrganisation", () => {
 
     const result = {
       SourceOrganisation: {
-        TopLevelCode: "o",
+        BottomLevelCode: "tu",
         SecondLevelCode: "pq",
         ThirdLevelCode: "rs",
-        BottomLevelCode: "tu"
+        TopLevelCode: "o"
       }
     } as Result
 
@@ -102,7 +104,7 @@ describe("populateSourceOrganisation", () => {
 
     expect(result.SourceOrganisation).toBeDefined()
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } =
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } =
       result.SourceOrganisation
     expect(TopLevelCode).toBe("O")
     expect(SecondLevelCode).toBe("PQ")

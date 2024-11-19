@@ -1,4 +1,5 @@
 import type { HearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+
 import getOffenceCode from "../offence/getOffenceCode"
 
 const getOffenceDetails = (offences: Offence[]): Record<string, string> =>
@@ -17,10 +18,10 @@ const getIncomingMessageLogAttributes = (hearingOutcome: HearingOutcome): Record
     "Time Of Hearing": hearingOutcome.Hearing.TimeOfHearing
   }),
   ASN: hearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-  "Number Of Offences": hearingOutcome.Case.HearingDefendant.Offence.length,
   "Court Hearing Location": hearingOutcome.Hearing.CourtHearingLocation.OrganisationUnitCode,
-  PTIURN: hearingOutcome.Case.PTIURN,
+  "Number Of Offences": hearingOutcome.Case.HearingDefendant.Offence.length,
   "PSA Code": hearingOutcome.Hearing.CourtHouseCode,
+  PTIURN: hearingOutcome.Case.PTIURN,
   ...(!!hearingOutcome.Case.ForceOwner?.OrganisationUnitCode && {
     "Force Owner": hearingOutcome.Case.ForceOwner?.OrganisationUnitCode
   }),

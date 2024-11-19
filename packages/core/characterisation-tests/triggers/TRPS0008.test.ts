@@ -1,5 +1,6 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
@@ -11,8 +12,8 @@ describe.ifPhase2("TRPS0008", () => {
 
   it("creates a TRPS0008 for AnnotatedHearingOutcome when no operations and exceptions are generated and result code is 3105", async () => {
     const inputMessage = generatePhase2Message({
-      messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       hoTemplate: "NoOperationsAndExceptions",
+      messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [{ results: [{ cjsResultCode: 3105 }] }]
     })
 
@@ -25,8 +26,8 @@ describe.ifPhase2("TRPS0008", () => {
     "creates a TRPS0008 for PncUpdateDataset when no operations and exceptions are generated and result code is 3105",
     async () => {
       const inputMessage = generatePhase2Message({
-        messageType: MessageType.PNC_UPDATE_DATASET,
         hoTemplate: "NoOperationsAndExceptions",
+        messageType: MessageType.PNC_UPDATE_DATASET,
         offences: [{ results: [{ cjsResultCode: 3105 }] }]
       })
 
@@ -38,8 +39,8 @@ describe.ifPhase2("TRPS0008", () => {
 
   it("creates a TRPS0008 for AnnotatedHearingOutcome when hearing outcome is AINT case are generated and result code is 3105", async () => {
     const inputMessage = generatePhase2Message({
-      messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       hoTemplate: "AintCase",
+      messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [{ results: [{ cjsResultCode: 3105 }] }]
     })
 

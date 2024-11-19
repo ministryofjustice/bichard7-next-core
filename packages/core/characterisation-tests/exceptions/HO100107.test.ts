@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -9,8 +10,8 @@ describe.ifPhase1("HO100107", () => {
 
   it.ifNewBichard("should create an exception if the reasonForOffenceBailConditions is too long", async () => {
     const inputMessage = generateSpiMessage({
-      reasonForBailConditionsOrCustody: "X".repeat(2501),
-      offences: [{ results: [{}] }]
+      offences: [{ results: [{}] }],
+      reasonForBailConditionsOrCustody: "X".repeat(2501)
     })
 
     const {

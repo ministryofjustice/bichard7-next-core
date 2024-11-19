@@ -1,8 +1,10 @@
 import axios from "axios"
 import { expect } from "expect"
 import promisePoller from "promise-poller"
-import conductorConfig from "../helpers/ConductorHelper"
+
 import type Bichard from "./world"
+
+import conductorConfig from "../helpers/ConductorHelper"
 
 const { CONDUCTOR_API_URL, CONDUCTOR_PASSWORD, CONDUCTOR_USER } = conductorConfig
 
@@ -41,7 +43,7 @@ export const checkConductorWorkflowCompleted = async function (world: Bichard) {
   expect(incomingMessageHandlerWorkflowSearch).toBeDefined()
 
   const incomingMessageHandlerWorkflowSummary = incomingMessageHandlerWorkflowSearch.results.find(
-    (r: { input: (string | null)[] }) => r.input.includes(world.currentCorrelationId)
+    (r: { input: (null | string)[] }) => r.input.includes(world.currentCorrelationId)
   )
 
   expect(incomingMessageHandlerWorkflowSummary).toBeDefined()
@@ -60,9 +62,9 @@ export const checkConductorWorkflowCompleted = async function (world: Bichard) {
   expect(beginProcessingTask).toBeDefined()
 
   const workflow = await promisePoller({
-    taskFn: () => fetchCompletedBichardProcessWorkflow(beginProcessingTask.outputData.workflowId),
     interval: 100,
-    retries: 900
+    retries: 900,
+    taskFn: () => fetchCompletedBichardProcessWorkflow(beginProcessingTask.outputData.workflowId)
   }).catch((e) => e)
 
   expect(workflow.status).toEqual("COMPLETED")

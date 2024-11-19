@@ -1,7 +1,9 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200106 from "./HO200106"
@@ -14,8 +16,8 @@ describe("HO200106", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE,
-            PNCDisposalType: 1001
+            PNCDisposalType: 1001,
+            ResultClass: ResultClass.SENTENCE
           },
           {
             PNCAdjudicationExists: true
@@ -41,8 +43,8 @@ describe("HO200106", () => {
           },
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE,
-            PNCDisposalType: 1001
+            PNCDisposalType: 1001,
+            ResultClass: ResultClass.SENTENCE
           }
         ]
       }
@@ -67,7 +69,6 @@ describe("HO200106", () => {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
           Case: {
-            PenaltyNoticeCaseReferenceNumber: "XXXXXX",
             HearingDefendant: {
               Offence: [
                 {
@@ -75,13 +76,14 @@ describe("HO200106", () => {
                   Result: [
                     {
                       PNCAdjudicationExists: false,
-                      ResultClass: ResultClass.SENTENCE,
-                      PNCDisposalType: 1001
+                      PNCDisposalType: 1001,
+                      ResultClass: ResultClass.SENTENCE
                     }
                   ]
                 }
               ]
-            }
+            },
+            PenaltyNoticeCaseReferenceNumber: "XXXXXX"
           }
         }
       }
@@ -99,8 +101,8 @@ describe("HO200106", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            ResultClass: ResultClass.SENTENCE,
-            PNCDisposalType: 1001
+            PNCDisposalType: 1001,
+            ResultClass: ResultClass.SENTENCE
           }
         ]
       }
@@ -118,8 +120,8 @@ describe("HO200106", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE,
-            PNCDisposalType: 1001
+            PNCDisposalType: 1001,
+            ResultClass: ResultClass.SENTENCE
           }
         ]
       }

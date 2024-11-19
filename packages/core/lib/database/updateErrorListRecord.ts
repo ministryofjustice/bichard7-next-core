@@ -1,6 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
+
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
@@ -8,11 +10,11 @@ import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => {
   const record = convertResultToErrorListRecord(result)
   const fields: Partial<ErrorListRecord> = {
-    phase: record.phase,
-    asn: record.asn,
-    ptiurn: record.ptiurn,
-    org_for_police_filter: record.org_for_police_filter,
     annotated_msg: record.annotated_msg,
+    asn: record.asn,
+    org_for_police_filter: record.org_for_police_filter,
+    phase: record.phase,
+    ptiurn: record.ptiurn,
     updated_msg: record.updated_msg,
     user_updated_flag: record.user_updated_flag
   }

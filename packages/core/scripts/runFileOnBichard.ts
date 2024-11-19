@@ -1,21 +1,22 @@
-import getFile from "../comparison/lib/getFile"
 import type {
   Comparison,
   OldPhase1Comparison,
   Phase1Comparison,
   Phase2Comparison
 } from "../comparison/types/ComparisonFile"
+
+import getFile from "../comparison/lib/getFile"
 import ActiveMqHelper from "../phase1/tests/helpers/ActiveMqHelper"
 import defaults from "../phase1/tests/helpers/defaults"
 import { mockAhoRecordInPnc } from "../phase1/tests/helpers/mockRecordInPnc"
 
 const mq = new ActiveMqHelper({
-  url: process.env.MQ_URL || defaults.mqUrl,
   login: process.env.MQ_USER || defaults.mqUser,
-  password: process.env.MQ_PASSWORD || defaults.mqPassword
+  password: process.env.MQ_PASSWORD || defaults.mqPassword,
+  url: process.env.MQ_URL || defaults.mqUrl
 })
 
-const runFileOnBichardPhase1 = async (comparison: Phase1Comparison | OldPhase1Comparison): Promise<void> => {
+const runFileOnBichardPhase1 = async (comparison: OldPhase1Comparison | Phase1Comparison): Promise<void> => {
   // Insert matching record in PNC
   await mockAhoRecordInPnc(comparison.annotatedHearingOutcome)
 

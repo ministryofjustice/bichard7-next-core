@@ -1,4 +1,5 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+
 import penaltyPointsDisposalText from "./penaltyPointsDisposalText"
 
 describe("check penaltyPointsDisposalText", () => {

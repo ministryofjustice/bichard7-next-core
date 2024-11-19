@@ -1,21 +1,22 @@
-import type { PncOffence } from "../../types/PncQueryResult"
-import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../types/PncQueryResult"
+
+import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 
 describe("areResultsMatchingPncAdjudication", () => {
-  const matchingResult = { PNCDisposalType: 2063, Verdict: "G", PleaStatus: "G" } as Result
+  const matchingResult = { PleaStatus: "G", PNCDisposalType: 2063, Verdict: "G" } as Result
   const matchingResults = [matchingResult]
   const matchingHearingDate = new Date(2024, 3, 1)
   const matchingOffenceReasonSequence = "001"
   const matchingPncOffence = {
-    offence: { sequenceNumber: 1 },
     adjudication: {
-      verdict: "GUILTY",
+      offenceTICNumber: 0,
       plea: "GUILTY",
       sentenceDate: matchingHearingDate,
-      offenceTICNumber: 0,
+      verdict: "GUILTY",
       weedFlag: undefined
-    }
+    },
+    offence: { sequenceNumber: 1 }
   } as PncOffence
 
   it("returns false when a PNC adjudication cannot be created from results", () => {

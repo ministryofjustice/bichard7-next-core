@@ -1,7 +1,8 @@
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import logger from "@moj-bichard7/common/utils/logger"
-import MessageForwarder from "./MessageForwarder"
+
 import createStompClient from "./createStompClient"
+import MessageForwarder from "./MessageForwarder"
 
 const stompClient = createStompClient()
 const conductorClient = createConductorClient()

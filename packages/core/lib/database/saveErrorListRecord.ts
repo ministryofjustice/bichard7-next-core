@@ -1,6 +1,8 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
+
 import type PhaseResult from "../../types/PhaseResult"
+
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"

@@ -1,10 +1,12 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
+
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
+import errorPaths from "../../lib/exceptions/errorPaths"
+
 type ErrorRange = {
-  start: string
   end?: string
+  start: string
 }
 
 type ErrorRangeDefinition = {
@@ -18,7 +20,7 @@ const ho100314 = { code: ExceptionCode.HO100314, path: errorPaths.case.asn }
 const errorRanges: ErrorRangeDefinition[] = [
   {
     code: ExceptionCode.HO100301,
-    ranges: [{ start: "I0013", end: "I0022" }]
+    ranges: [{ end: "I0022", start: "I0013" }]
   },
   {
     code: ExceptionCode.HO100302,
@@ -26,28 +28,28 @@ const errorRanges: ErrorRangeDefinition[] = [
   },
   {
     code: ExceptionCode.HO100313,
-    ranges: [{ start: "I0208", end: "I0209" }, { start: "I0212" }, { start: "I0256" }]
+    ranges: [{ end: "I0209", start: "I0208" }, { start: "I0212" }, { start: "I0256" }]
   },
   {
     code: ExceptionCode.HO100314,
     ranges: [
-      { start: "I0007", end: "I0008" },
-      { start: "I0014", end: "I0015" },
+      { end: "I0008", start: "I0007" },
+      { end: "I0015", start: "I0014" },
       { start: "I0021" },
       { start: "I0023" },
-      { start: "I0031", end: "I0036" },
-      { start: "I1001", end: "I1041" },
-      { start: "I6001", end: "I6002" }
+      { end: "I0036", start: "I0031" },
+      { end: "I1041", start: "I1001" },
+      { end: "I6002", start: "I6001" }
     ]
   },
   {
     code: ExceptionCode.HO100315,
-    ranges: [{ start: "I5001", end: "I5999" }]
+    ranges: [{ end: "I5999", start: "I5001" }]
   }
 ]
 
 const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
-  ranges.some(({ start, end }) => {
+  ranges.some(({ end, start }) => {
     if (end) {
       return code >= start && code <= end
     }

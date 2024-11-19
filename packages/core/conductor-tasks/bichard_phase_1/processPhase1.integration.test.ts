@@ -1,21 +1,22 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
+import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import fs from "fs"
-import { MockServer } from "jest-mock-server"
-import "jest-xml-matcher"
-import postgres from "postgres"
-import { test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
-import processPhase1 from "./processPhase1"
-
-import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
+import "jest-xml-matcher"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
+import fs from "fs"
+import { MockServer } from "jest-mock-server"
+import postgres from "postgres"
+
 import type Phase1Result from "../../phase1/types/Phase1Result"
+
+import { test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
+import processPhase1 from "./processPhase1"
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -26,12 +27,12 @@ const sql = postgres({
   ...dbConfig,
   types: {
     date: {
-      to: 25,
       from: [1082],
-      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      }
+      },
+      serialize: (x: string): string => x,
+      to: 25
     }
   }
 })

@@ -2,8 +2,8 @@ import axios from "axios"
 import { randomUUID } from "crypto"
 
 type ConstructorOptions = {
-  apiUrl: string
   apiKey: string
+  apiUrl: string
 }
 
 export type AuditLogEvent = {
@@ -16,21 +16,12 @@ export type AuditLog = {
 }
 
 class AuditLogApiHelper {
-  apiUrl: string
   apiKey: string
+  apiUrl: string
 
   constructor(options: ConstructorOptions) {
     this.apiUrl = options.apiUrl
     this.apiKey = options.apiKey
-  }
-
-  async getMessageByExternalCorrelationId(externalCorrelationId: string): Promise<AuditLog | undefined> {
-    const response = await axios.get(`${this.apiUrl}/messages?externalCorrelationId=${externalCorrelationId}`, {
-      headers: { "X-API-Key": this.apiKey },
-      validateStatus: undefined
-    })
-
-    return response.data && response.data.length > 0 ? response.data[0] : undefined
   }
 
   createAuditLogMessage(correlationId: string) {
@@ -56,6 +47,15 @@ class AuditLogApiHelper {
         }
       }
     )
+  }
+
+  async getMessageByExternalCorrelationId(externalCorrelationId: string): Promise<AuditLog | undefined> {
+    const response = await axios.get(`${this.apiUrl}/messages?externalCorrelationId=${externalCorrelationId}`, {
+      headers: { "X-API-Key": this.apiKey },
+      validateStatus: undefined
+    })
+
+    return response.data && response.data.length > 0 ? response.data[0] : undefined
   }
 }
 

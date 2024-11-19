@@ -1,9 +1,12 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
-import generateTriggers from "../lib/triggers/generateTriggers"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
+import type Phase2Result from "./types/Phase2Result"
+
+import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
+import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import generateExceptions from "./exceptions/generateExceptions"
@@ -11,7 +14,6 @@ import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import { generateOperations } from "./lib/generateOperations"
 import isAncillaryInterimCase from "./lib/isAncillaryInterimCase"
 import refreshOperations from "./lib/refreshOperations"
-import type Phase2Result from "./types/Phase2Result"
 import { Phase2ResultType } from "./types/Phase2Result"
 
 const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditLogger: AuditLogger): Phase2Result => {
@@ -30,9 +32,9 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      resultType: Phase2ResultType.ignored,
       triggerGenerationAttempted: true,
-      resultType: Phase2ResultType.ignored
+      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE)
     }
   }
 
@@ -44,9 +46,9 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: [],
+      resultType: Phase2ResultType.ignored,
       triggerGenerationAttempted: false,
-      resultType: Phase2ResultType.ignored
+      triggers: []
     }
   }
 
@@ -57,9 +59,9 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: [],
+      resultType: Phase2ResultType.exceptions,
       triggerGenerationAttempted: false,
-      resultType: Phase2ResultType.exceptions
+      triggers: []
     }
   }
 
@@ -78,9 +80,9 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      resultType: isResubmitted ? Phase2ResultType.success : Phase2ResultType.ignored,
       triggerGenerationAttempted: true,
-      resultType: isResubmitted ? Phase2ResultType.success : Phase2ResultType.ignored
+      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE)
     }
   }
 
@@ -90,9 +92,9 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage,
-    triggers: [],
+    resultType: Phase2ResultType.success,
     triggerGenerationAttempted: false,
-    resultType: Phase2ResultType.success
+    triggers: []
   }
 }
 

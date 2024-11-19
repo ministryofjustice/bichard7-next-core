@@ -1,4 +1,5 @@
 import fs from "fs/promises"
+
 import ConductorGateway from "./ConductorGateway"
 import EventHandler from "./EventHandler"
 import Task from "./Task"
@@ -9,9 +10,9 @@ const taskDir = "./tasks"
 const eventHandlerDir = "./event-handlers"
 
 const conductor = new ConductorGateway({
+  password: process.env.CONDUCTOR_PASSWORD ?? "password",
   url: process.env.CONDUCTOR_URL ?? "http://localhost:5002/api",
-  username: process.env.CONDUCTOR_USERNAME ?? "bichard",
-  password: process.env.CONDUCTOR_PASSWORD ?? "password"
+  username: process.env.CONDUCTOR_USERNAME ?? "bichard"
 })
 
 const main = async () => {

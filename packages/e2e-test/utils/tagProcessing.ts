@@ -1,7 +1,9 @@
 import { randomUUID } from "crypto"
+
+import type Bichard from "./world"
+
 import ASN from "./asn"
 import PTIURN from "./ptiurn"
-import type Bichard from "./world"
 
 const tags = ["PTIURN", "PersonGivenName1", "PersonGivenName2", "PersonFamilyName", "ProsecutorReference"]
 

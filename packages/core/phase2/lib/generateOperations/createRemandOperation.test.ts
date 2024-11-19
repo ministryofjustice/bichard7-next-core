@@ -1,18 +1,19 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../types/PncOperation"
 import createRemandOperation from "./createRemandOperation"
 
 describe("createRemandOperation", () => {
   it("should return a remand operation", () => {
     const result = {
+      NextHearingDate: new Date().toISOString(),
       NextResultSourceOrganisation: {
-        TopLevelCode: "",
+        BottomLevelCode: "",
+        OrganisationUnitCode: "",
         SecondLevelCode: "",
         ThirdLevelCode: "",
-        BottomLevelCode: "",
-        OrganisationUnitCode: ""
-      },
-      NextHearingDate: new Date().toISOString()
+        TopLevelCode: ""
+      }
     } as Result
 
     const remandOperation = createRemandOperation(result, "123")
@@ -27,11 +28,11 @@ describe("createRemandOperation", () => {
   it("should return a remand operation without a NextHearingDate", () => {
     const result = {
       NextResultSourceOrganisation: {
-        TopLevelCode: "",
+        BottomLevelCode: "",
+        OrganisationUnitCode: "",
         SecondLevelCode: "",
         ThirdLevelCode: "",
-        BottomLevelCode: "",
-        OrganisationUnitCode: ""
+        TopLevelCode: ""
       }
     } as Result
 
@@ -47,41 +48,41 @@ describe("createRemandOperation", () => {
   it("should return a remand operation with data if warrant has not been issued", () => {
     const result = {
       CJSresultCode: 4574,
+      NextHearingDate: "2024-05-03",
       NextResultSourceOrganisation: {
-        TopLevelCode: "1",
+        BottomLevelCode: "04",
+        OrganisationUnitCode: "1020304",
         SecondLevelCode: "02",
         ThirdLevelCode: "03",
-        BottomLevelCode: "04",
-        OrganisationUnitCode: "1020304"
-      },
-      NextHearingDate: "2024-05-03"
+        TopLevelCode: "1"
+      }
     } as Result
 
     const remandOperation = createRemandOperation(result, undefined)
 
     expect(remandOperation).toStrictEqual({
       code: PncOperation.REMAND,
-      status: "NotAttempted",
       courtCaseReference: undefined,
-      isAdjournmentPreJudgement: false,
       data: {
+        nextHearingDate: new Date("2024-05-03T00:00:00.000Z"),
         nextHearingLocation: {
-          TopLevelCode: "1",
+          BottomLevelCode: "04",
+          OrganisationUnitCode: "1020304",
           SecondLevelCode: "02",
           ThirdLevelCode: "03",
-          BottomLevelCode: "04",
-          OrganisationUnitCode: "1020304"
-        },
-        nextHearingDate: new Date("2024-05-03T00:00:00.000Z")
-      }
+          TopLevelCode: "1"
+        }
+      },
+      isAdjournmentPreJudgement: false,
+      status: "NotAttempted"
     })
   })
 
   it("should return a remand operation without data if warrant has not been issued but NextResultSourceOrganisation is not set", () => {
     const result = {
       CJSresultCode: 4574,
-      NextResultSourceOrganisation: undefined,
-      NextHearingDate: "2024-05-03"
+      NextHearingDate: "2024-05-03",
+      NextResultSourceOrganisation: undefined
     } as Result
 
     const remandOperation = createRemandOperation(result, "123")
@@ -100,14 +101,14 @@ describe("createRemandOperation", () => {
     (resultCode) => {
       const result = {
         CJSresultCode: resultCode,
+        NextHearingDate: "2024-05-03",
         NextResultSourceOrganisation: {
-          TopLevelCode: "1",
+          BottomLevelCode: "04",
+          OrganisationUnitCode: "1020304",
           SecondLevelCode: "02",
           ThirdLevelCode: "03",
-          BottomLevelCode: "04",
-          OrganisationUnitCode: "1020304"
-        },
-        NextHearingDate: "2024-05-03"
+          TopLevelCode: "1"
+        }
       } as Result
 
       const remandOperation = createRemandOperation(result, "123")

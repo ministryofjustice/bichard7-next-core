@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -12,10 +13,10 @@ describe.ifPhase1("HO100324", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          finding: null,
           convictionDate: null,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
-          recordable: true
+          finding: null,
+          recordable: true,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -23,8 +24,8 @@ describe.ifPhase1("HO100324", () => {
     const {
       hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, {
-      recordable: true,
-      pncAdjudication: true
+      pncAdjudication: true,
+      recordable: true
     })
 
     expect(exceptions).toStrictEqual([
@@ -39,18 +40,18 @@ describe.ifPhase1("HO100324", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          finding: null,
           convictionDate: null,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          finding: null,
+          offenceSequenceNumber: 1,
           recordable: true,
-          offenceSequenceNumber: 1
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         },
         {
-          finding: null,
           convictionDate: null,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          finding: null,
+          offenceSequenceNumber: 2,
           recordable: true,
-          offenceSequenceNumber: 2
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -58,11 +59,11 @@ describe.ifPhase1("HO100324", () => {
     const pncMessage = generateSpiMessage({
       offences: [
         {
-          finding: null,
           convictionDate: null,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          finding: null,
+          offenceSequenceNumber: 1,
           recordable: true,
-          offenceSequenceNumber: 1
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
         }
       ]
     })
@@ -70,9 +71,9 @@ describe.ifPhase1("HO100324", () => {
     const {
       hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, {
-      recordable: true,
       pncAdjudication: true,
-      pncMessage
+      pncMessage,
+      recordable: true
     })
 
     expect(exceptions).toStrictEqual([

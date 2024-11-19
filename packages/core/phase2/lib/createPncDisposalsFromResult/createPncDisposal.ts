@@ -1,4 +1,5 @@
 import type { PncDisposal } from "../../../types/PncQueryResult"
+
 import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
 const DURATION_UNIT_LIFE = "L"
@@ -26,9 +27,9 @@ const createPncDisposal = (
 ): PncDisposal => {
   const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
+    qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
     qtyDuration: qtyDuration,
     qtyMonetaryValue: amountSpecifiedInResult?.toString(),
-    qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
     qtyUnitsFined: preProcessDisposalQuantity(
       durationUnit,
       durationLength,
@@ -56,12 +57,12 @@ const preProcessDisposalQuantity = (
 ) => {
   let durationAndLength
   switch (durationUnit) {
+    case "":
+    case DURATION_UNIT_SESSION:
+      durationAndLength = " ".repeat(4)
+      break
     case DURATION_UNIT_LIFE:
       durationAndLength = PNC_REPRESENTATION_OF_LIFE
-      break
-    case DURATION_UNIT_SESSION:
-    case "":
-      durationAndLength = " ".repeat(4)
       break
     default:
       const length = durationLength ? durationLength.toString().padEnd(3, " ") : " ".repeat(3)

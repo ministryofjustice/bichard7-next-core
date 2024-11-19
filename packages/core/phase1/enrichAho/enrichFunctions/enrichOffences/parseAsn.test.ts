@@ -6,10 +6,10 @@ describe("parseAsn", () => {
       bottomLevelCode: "SS",
       checkDigit: "D",
       secondLevelCode: "FF",
+      sequenceNumber: "00000000123",
       thirdLevelCode: "UU",
       topLevelCode: undefined,
-      year: "YY",
-      sequenceNumber: "00000000123"
+      year: "YY"
     })
   })
 
@@ -18,10 +18,10 @@ describe("parseAsn", () => {
       bottomLevelCode: "SS",
       checkDigit: "D",
       secondLevelCode: "FF",
+      sequenceNumber: "00000000123",
       thirdLevelCode: "UU",
       topLevelCode: "B",
-      year: "YY",
-      sequenceNumber: "00000000123"
+      year: "YY"
     })
   })
 
@@ -30,10 +30,10 @@ describe("parseAsn", () => {
       bottomLevelCode: "SS",
       checkDigit: null,
       secondLevelCode: "FF",
+      sequenceNumber: null,
       thirdLevelCode: "UU",
       topLevelCode: undefined,
-      year: "YY",
-      sequenceNumber: null
+      year: "YY"
     })
   })
 })

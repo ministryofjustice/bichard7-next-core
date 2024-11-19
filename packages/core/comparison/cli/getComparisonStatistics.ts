@@ -1,19 +1,20 @@
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import { resultMatches } from "./printResult"
 import type { SkippedFile } from "./processRange"
 
+import { resultMatches } from "./printResult"
+
 type ComparisonResultStatistics = {
-  total: number
-  passed: number
-  expectedPassed: number
-  skipped: number
-  intentional: number
   errored: number
-  passedAho: number
+  expectedPassed: number
   expectedPassedAho: number
-  passedPncUpdateDataset: number
   expectedPassedPncUpdateDataset: number
   failed: number
+  intentional: number
+  passed: number
+  passedAho: number
+  passedPncUpdateDataset: number
+  skipped: number
+  total: number
 }
 
 const isIncomingMessageAho = (result: ComparisonResultDetail): boolean => {
@@ -37,18 +38,18 @@ const getComparisonResultStatistics = (
   const errored = results.filter((result) => "error" in result && result.error).length
 
   return {
-    total: results.length,
-    passed,
-    expectedPassed,
-    skipped: results.filter((result) => result.skipped && !result.intentionalDifference).length,
-    intentional: results.filter((result) => "intentionalDifference" in result && result.intentionalDifference).length,
     errored,
-    passedAho: passedResults.filter((result) => isIncomingMessageAho(result)).length,
+    expectedPassed,
     expectedPassedAho: expectedPassingResults.filter((result) => isIncomingMessageAho(result)).length,
-    passedPncUpdateDataset: passedResults.filter((result) => isIncomingMessagePncUpdateDataset(result)).length,
     expectedPassedPncUpdateDataset: expectedPassingResults.filter((result) => isIncomingMessagePncUpdateDataset(result))
       .length,
-    failed: expectedPassed - passed - errored
+    failed: expectedPassed - passed - errored,
+    intentional: results.filter((result) => "intentionalDifference" in result && result.intentionalDifference).length,
+    passed,
+    passedAho: passedResults.filter((result) => isIncomingMessageAho(result)).length,
+    passedPncUpdateDataset: passedResults.filter((result) => isIncomingMessagePncUpdateDataset(result)).length,
+    skipped: results.filter((result) => result.skipped && !result.intentionalDifference).length,
+    total: results.length
   }
 }
 

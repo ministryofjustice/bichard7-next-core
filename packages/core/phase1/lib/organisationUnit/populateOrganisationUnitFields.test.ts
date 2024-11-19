@@ -1,4 +1,5 @@
 import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+
 import populateOrganisationUnitFields from "./populateOrganisationUnitFields"
 
 describe("populateOrganisationUnitFields", () => {
@@ -9,7 +10,7 @@ describe("populateOrganisationUnitFields", () => {
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } = result
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } = result
     expect(OrganisationUnitCode).toBe("ABCDEFG")
     expect(TopLevelCode).toBe("A")
     expect(SecondLevelCode).toBe("BC")
@@ -24,7 +25,7 @@ describe("populateOrganisationUnitFields", () => {
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } = result
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } = result
     expect(OrganisationUnitCode).toBe("BCDEFG")
     expect(TopLevelCode).toBeUndefined()
     expect(SecondLevelCode).toBe("BC")
@@ -34,15 +35,15 @@ describe("populateOrganisationUnitFields", () => {
 
   it("should populate organisation unit code by top, second, third, and bottom levels", () => {
     const organisationUnit = {
-      TopLevelCode: "a",
+      BottomLevelCode: "fg",
       SecondLevelCode: "bc",
       ThirdLevelCode: "de",
-      BottomLevelCode: "fg"
+      TopLevelCode: "a"
     } as OrganisationUnitCodes
 
     const result = populateOrganisationUnitFields(organisationUnit)
 
-    const { TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode, OrganisationUnitCode } = result
+    const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } = result
     expect(OrganisationUnitCode).toBe("ABCDEFG")
     expect(TopLevelCode).toBe("A")
     expect(SecondLevelCode).toBe("BC")

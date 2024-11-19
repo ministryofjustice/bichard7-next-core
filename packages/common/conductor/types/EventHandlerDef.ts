@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type StartWorkflow = {
-  name?: string
-  version?: number
   correlationId?: string
   input?: Record<string, any>
+  name?: string
   taskToDomain?: Record<string, string>
+  version?: number
 }
 
 type TaskDetails = {
-  workflowId?: string
-  taskRefName?: string
   output?: Record<string, any>
   taskId?: string
+  taskRefName?: string
+  workflowId?: string
 }
 
 type Action = {
-  action?: "start_workflow" | "complete_task" | "fail_task"
-  start_workflow?: StartWorkflow
+  action?: "complete_task" | "fail_task" | "start_workflow"
   complete_task?: TaskDetails
-  fail_task?: TaskDetails
   expandInlineJSON?: boolean
+  fail_task?: TaskDetails
+  start_workflow?: StartWorkflow
 }
 
 type EventHandlerDef = {
-  name: string
-  event: string
-  condition?: string
   actions: Array<Action>
   active?: boolean
+  condition?: string
   evaluatorType?: string
+  event: string
+  name: string
 }
 
 export default EventHandlerDef

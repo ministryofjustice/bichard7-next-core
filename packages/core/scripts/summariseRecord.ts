@@ -1,5 +1,11 @@
 import fs from "fs"
 import { exec } from "node:child_process"
+
+import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
+import type Exception from "../types/Exception"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../types/PncQueryResult"
+import type { Trigger } from "../types/Trigger"
+
 import getFile from "../comparison/lib/getFile"
 import hoOffencesAreEqual from "../comparison/lib/hoOffencesAreEqual"
 import summariseMatching from "../comparison/lib/summariseMatching"
@@ -9,16 +15,12 @@ import parseSpiResult from "../lib/parse/parseSpiResult"
 import transformSpiToAho from "../lib/parse/transformSpiToAho"
 import offenceHasFinalResult from "../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import getOffenceCode from "../phase1/lib/offence/getOffenceCode"
-import type { AnnotatedHearingOutcome, Offence } from "../types/AnnotatedHearingOutcome"
-import type Exception from "../types/Exception"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../types/PncQueryResult"
-import type { Trigger } from "../types/Trigger"
 
 interface ComparisonFile {
-  incomingMessage: string
   annotatedHearingOutcome: string
-  triggers?: Trigger[]
   exceptions?: Exception[]
+  incomingMessage: string
+  triggers?: Trigger[]
 }
 
 const fileName = process.argv[2]

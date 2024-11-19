@@ -1,27 +1,25 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
+
 import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
 
 describe("isResultMatchingAPncDisposal", () => {
   const pncDisposal: PncDisposal = {
-    qtyDuration: "A4",
     qtyDate: "21052024",
+    qtyDuration: "A4",
     qtyMonetaryValue: "25000",
     qualifiers: "Q",
-    type: 9999,
-    text: "EXCLUDED FROM LOCATION"
+    text: "EXCLUDED FROM LOCATION",
+    type: 9999
   }
   const ahoResult: Result = {
-    PNCDisposalType: 9999,
-    CJSresultCode: 3041,
-    ResultQualifierVariable: [{ Code: "Q" }],
-    ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION FOR A PERIOD OF TIME",
     AmountSpecifiedInResult: [
       {
         Amount: 25000,
         DecimalPlaces: 2
       }
     ],
+    CJSresultCode: 3041,
     DateSpecifiedInResult: [
       {
         Date: new Date("05/21/2024"),
@@ -34,7 +32,10 @@ describe("isResultMatchingAPncDisposal", () => {
         DurationType: "",
         DurationUnit: "A"
       }
-    ]
+    ],
+    PNCDisposalType: 9999,
+    ResultQualifierVariable: [{ Code: "Q" }],
+    ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION FOR A PERIOD OF TIME"
   } as Result
 
   it("returns true when an AHO result matches a PNC disposal on all its matching fields", () => {

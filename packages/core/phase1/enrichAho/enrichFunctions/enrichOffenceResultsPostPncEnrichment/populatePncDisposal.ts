@@ -1,5 +1,6 @@
-import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
 import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+
+import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
 import ResultClass from "../../../../types/ResultClass"
 
 const victimSurchargeCrestCodes = [
@@ -17,17 +18,17 @@ const victimSurchargeCrestCodes = [
 const victimSurchargeAmountInPounds = 15
 const guiltyOfAlternative = "NA"
 const pncDisposalTypes = {
-  VICTIM_SURCHARGE: 3117,
-  GUILTY_OF_ALTERNATIVE: 2060
+  GUILTY_OF_ALTERNATIVE: 2060,
+  VICTIM_SURCHARGE: 3117
 }
 
 const populatePncDisposal = (hearingOutcome: AnnotatedHearingOutcome, result: Result) => {
   const {
-    CJSresultCode,
-    ResultClass: resultClass,
-    CRESTDisposalCode,
-    ResultVariableText,
     AmountSpecifiedInResult,
+    CJSresultCode,
+    CRESTDisposalCode,
+    ResultClass: resultClass,
+    ResultVariableText,
     Verdict
   } = result
   const { CourtType } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing

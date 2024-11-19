@@ -1,5 +1,6 @@
-import createRemandOperation from "../createRemandOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-export const handleAdjournmentPreJudgement: ResultClassHandler = ({ result, offence }) =>
+import createRemandOperation from "../createRemandOperation"
+
+export const handleAdjournmentPreJudgement: ResultClassHandler = ({ offence, result }) =>
   !result.PNCAdjudicationExists ? [createRemandOperation(result, offence?.CourtCaseReferenceNumber)] : []

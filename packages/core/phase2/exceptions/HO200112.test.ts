@@ -1,8 +1,9 @@
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import HO200112 from "./HO200112"
+
+import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200112 from "./HO200112"
 
 jest.mock("../lib/areAllResultsOnPnc")
 
@@ -16,13 +17,13 @@ describe("HO200112", () => {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "1" },
         Result: [
-          { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCDisposalType: 1015, PNCAdjudicationExists: false }
+          { PNCAdjudicationExists: false, PNCDisposalType: 1015, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT }
         ]
       },
       {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "2" },
-        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
+        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
       }
     ] as Offence[])
 

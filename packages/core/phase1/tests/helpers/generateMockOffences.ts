@@ -1,80 +1,81 @@
-import parsePncDate from "../../../lib/parsePncDate"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
 
+import parsePncDate from "../../../lib/parsePncDate"
+
 export type CreateHoOffenceOptions = {
   actOrSource?: string
-  year?: string
-  reason?: string
-  startDate: string
-  endDate?: string
-  resultCodes?: string[]
-  offenceCategory?: string
-  sequenceNumber?: number
   courtCaseReferenceNumber?: string
+  endDate?: string
   manualSequenceNumber?: number
+  offenceCategory?: string
   offenceDateCode?: string
+  reason?: string
+  resultCodes?: string[]
+  sequenceNumber?: number
+  startDate: string
+  year?: string
 }
 
 export const createHOOffence = ({
   actOrSource = "VG",
-  year = "24",
-  reason = "030",
-  startDate,
-  endDate,
-  resultCodes,
-  offenceCategory,
-  sequenceNumber,
   courtCaseReferenceNumber,
+  endDate,
   manualSequenceNumber,
-  offenceDateCode
+  offenceCategory,
+  offenceDateCode,
+  reason = "030",
+  resultCodes,
+  sequenceNumber,
+  startDate,
+  year = "24"
 }: CreateHoOffenceOptions): Offence => {
   const offence: Partial<Offence> = {
+    ActualOffenceDateCode: offenceDateCode,
+    ActualOffenceStartDate: {
+      StartDate: new Date(startDate)
+    },
+    CourtCaseReferenceNumber: courtCaseReferenceNumber,
     CriminalProsecutionReference: {
+      DefendantOrOffender: {
+        CheckDigit: "",
+        DefendantOrOffenderSequenceNumber: "",
+        OrganisationUnitIdentifierCode: {
+          BottomLevelCode: "00",
+          OrganisationUnitCode: "B01EF00",
+          SecondLevelCode: "01",
+          ThirdLevelCode: "EF",
+          TopLevelCode: "B"
+        },
+        Year: ""
+      },
       OffenceReason: {
         __type: "NationalOffenceReason",
         OffenceCode: {
           __type: "NonMatchingOffenceCode",
           ActOrSource: actOrSource,
-          Year: year,
+          FullCode: `${actOrSource}${year}${reason}`,
           Reason: reason,
-          FullCode: `${actOrSource}${year}${reason}`
+          Year: year
         }
-      },
-      DefendantOrOffender: {
-        Year: "",
-        OrganisationUnitIdentifierCode: {
-          TopLevelCode: "B",
-          SecondLevelCode: "01",
-          ThirdLevelCode: "EF",
-          BottomLevelCode: "00",
-          OrganisationUnitCode: "B01EF00"
-        },
-        DefendantOrOffenderSequenceNumber: "",
-        CheckDigit: ""
       },
       OffenceReasonSequence: sequenceNumber?.toString()
     },
-    ActualOffenceStartDate: {
-      StartDate: new Date(startDate)
-    },
-    ActualOffenceDateCode: offenceDateCode,
+    OffenceCategory: offenceCategory,
     Result: resultCodes
       ? resultCodes.map(
           (code): Result => ({
             CJSresultCode: parseInt(code, 10),
+            ResultQualifierVariable: [{ Code: "A" }],
             SourceOrganisation: {
-              SecondLevelCode: "01",
-              ThirdLevelCode: "OK",
               BottomLevelCode: "00",
-              OrganisationUnitCode: "01OK00"
-            },
-            ResultQualifierVariable: [{ Code: "A" }]
+              OrganisationUnitCode: "01OK00",
+              SecondLevelCode: "01",
+              ThirdLevelCode: "OK"
+            }
           })
         )
-      : [],
-    OffenceCategory: offenceCategory,
-    CourtCaseReferenceNumber: courtCaseReferenceNumber
+      : []
   }
 
   if (!!endDate) {
@@ -91,26 +92,26 @@ export const createHOOffence = ({
 }
 
 export type CreatePNCCourtCaseOffenceOptions = {
-  offenceCode?: string
-  startDate: string
-  endDate?: string
   disposalCodes?: number[]
+  endDate?: string
+  offenceCode?: string
   sequenceNumber?: number
+  startDate: string
 }
 
 export const createPNCCourtCaseOffence = ({
-  offenceCode = "VG24030",
-  startDate,
-  endDate,
   disposalCodes,
-  sequenceNumber = 1
+  endDate,
+  offenceCode = "VG24030",
+  sequenceNumber = 1,
+  startDate
 }: CreatePNCCourtCaseOffenceOptions): PncOffence => {
   const offence: PncOffence = {
     offence: {
       acpoOffenceCode: offenceCode,
       cjsOffenceCode: offenceCode,
-      startDate: parsePncDate(startDate),
-      sequenceNumber
+      sequenceNumber,
+      startDate: parsePncDate(startDate)
     }
   }
 

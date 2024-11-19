@@ -1,8 +1,10 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import postgres from "postgres"
-import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+
 import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
+
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import insertErrorListRecord from "./insertErrorListRecord"
 import insertErrorListTriggers from "./insertErrorListTriggers"
 import updateErrorListTriggers from "./updateErrorListTriggers"
@@ -12,12 +14,12 @@ const db = postgres({
   ...dbConfig,
   types: {
     date: {
-      to: 25,
       from: [1082],
-      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      }
+      },
+      serialize: (x: string): string => x,
+      to: 25
     }
   }
 })

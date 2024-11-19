@@ -1,10 +1,12 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import postgres from "postgres"
-import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
-import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import errorPaths from "../exceptions/errorPaths"
 import insertErrorListRecord from "./insertErrorListRecord"
@@ -15,25 +17,25 @@ const db = postgres({
   ...dbConfig,
   types: {
     date: {
-      to: 25,
       from: [1082],
-      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      }
+      },
+      serialize: (x: string): string => x,
+      to: 25
     }
   }
 })
 
 const snapshotExclusions = {
-  error_id: expect.any(Number),
-  trigger_insert_ts: expect.any(Date),
-  msg_received_ts: expect.any(Date),
-  error_insert_ts: expect.any(Date),
-  create_ts: expect.any(Date),
   annotated_msg: expect.any(String),
-  updated_msg: expect.any(String),
-  message_id: expect.any(String)
+  create_ts: expect.any(Date),
+  error_id: expect.any(Number),
+  error_insert_ts: expect.any(Date),
+  message_id: expect.any(String),
+  msg_received_ts: expect.any(Date),
+  trigger_insert_ts: expect.any(Date),
+  updated_msg: expect.any(String)
 }
 
 describe("updateErrorListRecord", () => {

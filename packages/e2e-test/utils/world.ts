@@ -1,8 +1,12 @@
 import type { IWorldOptions } from "@cucumber/cucumber"
+
 import { World } from "@cucumber/cucumber"
 import ActiveMqHelper from "@moj-bichard7/common/mq/ActiveMqHelper"
 import { randomUUID } from "crypto"
 import { promises as fs } from "fs"
+
+import type { PncMock } from "./pnc"
+
 import AuditLogApiHelper from "../helpers/AuditLogApiHelper"
 import BrowserHelper from "../helpers/BrowserHelper"
 import BrowserHelperEdge from "../helpers/BrowserHelperEdge"
@@ -12,29 +16,28 @@ import PNCTestTool from "../helpers/PNCTestTool"
 import PostgresHelper from "../helpers/PostgresHelper"
 import { config, type Config } from "./config"
 import defaults from "./defaults"
-import type { PncMock } from "./pnc"
 
 const ActualBrowserHelper = process.env.MS_EDGE === "true" ? BrowserHelperEdge : BrowserHelper
 
 class Bichard extends World {
+  auditLogApi: AuditLogApiHelper
+  browser: BrowserHelper
+  config: Config
+  currentCorrelationId: null | string
+  currentProsecutorReference: string[][]
+  currentPTIURN: string
+  currentPTIURNValues: string[][]
+  currentTestFamilyNames: string[][]
   currentTestGivenNames1: string[][]
   currentTestGivenNames2: string[][]
-  currentTestFamilyNames: string[][]
-  currentProsecutorReference: string[][]
-  currentPTIURNValues: string[][]
-  currentPTIURN: string
-  currentCorrelationId: string | null
-  config: Config
   db: PostgresHelper
-  mq: ActiveMqHelper
-  incomingMessageBucket: IncomingMessageBucket
-  pnc: PNCTestTool | MockPNCHelper
-  browser: BrowserHelper
-  auditLogApi: AuditLogApiHelper
-  outputDir: string
   featureUri: string
-  recordId: string
+  incomingMessageBucket: IncomingMessageBucket
   mocks: PncMock[]
+  mq: ActiveMqHelper
+  outputDir: string
+  pnc: MockPNCHelper | PNCTestTool
+  recordId: string
 
   constructor() {
     super({} as IWorldOptions)
@@ -50,24 +53,24 @@ class Bichard extends World {
     this.currentCorrelationId = null
 
     this.db = new PostgresHelper({
-      host: process.env.DB_HOST || defaults.postgresHost,
-      port: Number(process.env.DB_PORT || defaults.postgresPort),
       database: "bichard",
-      user: process.env.DB_USER || defaults.postgresUser,
+      host: process.env.DB_HOST || defaults.postgresHost,
       password: process.env.DB_PASSWORD || defaults.postgresPassword,
-      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false
+      port: Number(process.env.DB_PORT || defaults.postgresPort),
+      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
+      user: process.env.DB_USER || defaults.postgresUser
     })
 
     this.mq = new ActiveMqHelper({
-      url: process.env.MQ_URL || defaults.mqUrl,
       login: process.env.MQ_USER || defaults.mqUser,
-      password: process.env.MQ_PASSWORD || defaults.mqPassword
+      password: process.env.MQ_PASSWORD || defaults.mqPassword,
+      url: process.env.MQ_URL || defaults.mqUrl
     })
 
     this.incomingMessageBucket = new IncomingMessageBucket({
-      url: process.env.AWS_URL || defaults.awsUrl,
+      incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket,
       region: process.env.S3_REGION || defaults.awsRegion,
-      incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket
+      url: process.env.AWS_URL || defaults.awsUrl
     })
 
     if (this.config.realPNC) {
@@ -90,13 +93,14 @@ class Bichard extends World {
     })
 
     this.auditLogApi = new AuditLogApiHelper({
-      apiUrl: process.env.AUDIT_LOG_API_URL ?? "http://localhost:7010",
-      apiKey: process.env.AUDIT_LOG_API_KEY ?? "xxx"
+      apiKey: process.env.AUDIT_LOG_API_KEY ?? "xxx",
+      apiUrl: process.env.AUDIT_LOG_API_URL ?? "http://localhost:7010"
     })
   }
 
-  setCorrelationId(correlationId: string) {
-    this.currentCorrelationId = correlationId
+  async dumpData() {
+    const data = await this.db.dumpData()
+    await fs.writeFile(`${this.outputDir}/db.json`, JSON.stringify(data))
   }
 
   getRecordName() {
@@ -109,9 +113,8 @@ class Bichard extends World {
     return `${this.currentTestFamilyNames[1][1]} ${this.currentTestGivenNames1[1][1]}`
   }
 
-  async dumpData() {
-    const data = await this.db.dumpData()
-    await fs.writeFile(`${this.outputDir}/db.json`, JSON.stringify(data))
+  setCorrelationId(correlationId: string) {
+    this.currentCorrelationId = correlationId
   }
 }
 

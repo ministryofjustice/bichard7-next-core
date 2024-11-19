@@ -1,12 +1,13 @@
 import { z } from "zod"
+
 import AuditLogStatus from "../types/AuditLogStatus"
 import { auditLogEventSchema } from "./auditLogEvent"
 
 export const auditLogApiRecordInputSchema = z.object({
   caseId: z.string(),
   createdBy: z.string(),
-  externalId: z.string().optional(),
   externalCorrelationId: z.string(),
+  externalId: z.string().optional(),
   isSanitised: z.number(),
   messageHash: z.string(),
   messageId: z.string(),

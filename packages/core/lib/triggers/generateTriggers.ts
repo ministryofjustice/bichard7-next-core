@@ -1,9 +1,11 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data//dist/types/TriggerCode"
-import * as triggers from "."
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import Phase from "../../types/Phase"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator, TriggerGeneratorOptions } from "../../types/TriggerGenerator"
+
+import * as triggers from "."
+import Phase from "../../types/Phase"
 import deduplicateTriggers from "./deduplicateTriggers"
 import filterExcludedTriggers from "./filterExcludedTriggers"
 
@@ -20,7 +22,7 @@ const generateSetOfTriggers = (
   phase = Phase.HEARING_OUTCOME,
   existingTriggers: Trigger[] = []
 ): Trigger[] => {
-  const generatedTriggers = generator(aho, { triggers: existingTriggers, phase })
+  const generatedTriggers = generator(aho, { phase, triggers: existingTriggers })
   const filteredTriggers = filterExcludedTriggers(aho, generatedTriggers)
 
   // Generate TRPR0027 which depends on whether triggers have been excluded or not

@@ -1,22 +1,24 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+
+import type Phase1Result from "../../phase1/types/Phase1Result"
+import type Phase2Result from "../../phase2/types/Phase2Result"
+import type { ProcessMessageOptions } from "./processMessage"
+
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import CorePhase1 from "../../phase1/phase1"
-import type Phase1Result from "../../phase1/types/Phase1Result"
 import CorePhase2 from "../../phase2/phase2"
-import type Phase2Result from "../../phase2/types/Phase2Result"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
-import type { ProcessMessageOptions } from "./processMessage"
 
 export const processMessageCorePhase1 = async (
   messageXml: string,
   {
-    recordable = true,
-    pncOverrides = {},
+    pncAdjudication = false,
     pncCaseType = "court",
     pncMessage,
-    pncAdjudication = false
+    pncOverrides = {},
+    recordable = true
   }: ProcessMessageOptions
 ): Promise<Phase1Result> => {
   const pncQueryResult = recordable

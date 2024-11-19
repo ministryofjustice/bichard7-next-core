@@ -1,20 +1,21 @@
 import fs from "fs"
+
 import Poller from "../utils/Poller"
 
 export const checkForFile = (directory: string, fileName: string) => {
   const dir = `./${directory}`
-  const getDirContents = (): Promise<string[] | false> => Promise.resolve(fs.existsSync(dir) && fs.readdirSync(dir))
+  const getDirContents = (): Promise<false | string[]> => Promise.resolve(fs.existsSync(dir) && fs.readdirSync(dir))
 
-  const checkFileExists = (dirContents: string[] | false) => dirContents && dirContents.includes(fileName)
+  const checkFileExists = (dirContents: false | string[]) => dirContents && dirContents.includes(fileName)
 
   const options = {
-    timeout: 5000,
+    condition: checkFileExists,
     delay: 100,
     name: "fs check for file",
-    condition: checkFileExists
+    timeout: 5000
   }
 
-  return new Poller<string[] | false>(getDirContents)
+  return new Poller<false | string[]>(getDirContents)
     .poll(options)
     .then(() => true)
     .catch((error) => error)

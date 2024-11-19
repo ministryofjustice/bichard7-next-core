@@ -1,7 +1,9 @@
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
-import { extractAllTags, replaceAllTags } from "./tagProcessing"
+
 import type Bichard from "./world"
+
+import { extractAllTags, replaceAllTags } from "./tagProcessing"
 
 const parser = new XMLParser()
 
@@ -10,11 +12,11 @@ type ParsedNCMOffence = {
     OffenceCode: string
     OffenceSequenceNumber: number
     OffenceTiming: {
-      OffenceStart: {
-        OffenceDateStartDate: string
-      }
       OffenceEnd: {
         OffenceEndDate: string
+      }
+      OffenceStart: {
+        OffenceDateStartDate: string
       }
     }
   }
@@ -24,7 +26,7 @@ type ParsedNCM = {
   NewCaseMessage: {
     Case: {
       Defendant: {
-        ProsecutorReference: string
+        Offence: ParsedNCMOffence | ParsedNCMOffence[]
         PoliceIndividualDefendant: {
           PersonDefendant: {
             BasePersonDetails: {
@@ -34,7 +36,7 @@ type ParsedNCM = {
             }
           }
         }
-        Offence: ParsedNCMOffence | ParsedNCMOffence[]
+        ProsecutorReference: string
       }
       PTIURN: string
     }
@@ -63,13 +65,13 @@ const extractDates = (offence: ParsedNCMOffence) => {
     endDate = "            "
   }
 
-  return { startDate, endDate }
+  return { endDate, startDate }
 }
 
 type pncMockOptions = {
-  matchRegex?: string
-  expectedRequest?: string
   count?: number
+  expectedRequest?: string
+  matchRegex?: string
 }
 
 export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard, options: pncMockOptions = {}) => {
@@ -115,17 +117,17 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard, options: pnc
     </CXE01>`
 
   return {
-    matchRegex: options.matchRegex || "CXE01",
-    response,
+    count: options.count || null,
     expectedRequest: options.expectedRequest || "",
-    count: options.count || null
+    matchRegex: options.matchRegex || "CXE01",
+    response
   }
 }
 
 export const dummyUpdate = {
+  expectedRequest: "",
   matchRegex: "CXU",
-  response: '<?XML VERSION="1.0" STANDALONE="YES"?><DUMMY></DUMMY>',
-  expectedRequest: ""
+  response: '<?XML VERSION="1.0" STANDALONE="YES"?><DUMMY></DUMMY>'
 }
 
 export const mockUpdate = (code: string, options: pncMockOptions = {}) => {
@@ -139,9 +141,9 @@ export const mockUpdate = (code: string, options: pncMockOptions = {}) => {
     </${code}>`
 
   return {
-    matchRegex: options.matchRegex || code,
-    response,
+    count: options.count || null,
     expectedRequest: options.expectedRequest || "",
-    count: options.count || null
+    matchRegex: options.matchRegex || code,
+    response
   }
 }

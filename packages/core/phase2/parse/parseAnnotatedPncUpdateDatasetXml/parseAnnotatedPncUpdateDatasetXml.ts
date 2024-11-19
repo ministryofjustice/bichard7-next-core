@@ -1,10 +1,13 @@
 import type { Result } from "@moj-bichard7/common/types/Result"
+
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
-import { extractExceptionsFromXml } from "../../../lib/parse/parseAhoXml"
+
 import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
 import type AnnotatedPncUpdateDatasetParsedXml from "../../types/AnnotatedPncUpdateDatasetParsedXml"
+
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
+import { extractExceptionsFromXml } from "../../../lib/parse/parseAhoXml"
 import { mapXmlToPncUpdateDataSet } from "../parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 
 //TODO: Validate this against a real file
@@ -29,14 +32,14 @@ const mapXmlToAnnotatedPncUpdateDataset = (
 
 export default (xml: string): AnnotatedPncUpdateDataset | Error => {
   const options = {
-    ignoreAttributes: false,
-    parseTagValue: false,
-    parseAttributeValue: false,
-    processEntities: false,
-    trimValues: false,
     alwaysCreateTextNode: true,
     attributeValueProcessor: decodeAttributeEntitiesProcessor,
-    tagValueProcessor: decodeTagEntitiesProcessor
+    ignoreAttributes: false,
+    parseAttributeValue: false,
+    parseTagValue: false,
+    processEntities: false,
+    tagValueProcessor: decodeTagEntitiesProcessor,
+    trimValues: false
   }
 
   const parser = new XMLParser(options)

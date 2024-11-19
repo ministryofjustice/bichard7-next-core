@@ -1,5 +1,7 @@
 import type DynamoDB from "aws-sdk/clients/dynamodb"
+
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
+
 import type { ComparisonLog } from "../comparison/types"
 
 const config: DynamoDB.ClientConfiguration = {
@@ -19,8 +21,8 @@ const main = async (skippedBy: string, skippedReason: string, file: string, inte
 
   const existing = await client
     .get({
-      TableName: tableName,
-      Key: { s3Path: key }
+      Key: { s3Path: key },
+      TableName: tableName
     })
     .promise()
 
@@ -35,12 +37,12 @@ const main = async (skippedBy: string, skippedReason: string, file: string, inte
 
   await client
     .put({
-      TableName: tableName,
-      Item: test,
       ConditionExpression: "attribute_exists(version) and version = :version",
       ExpressionAttributeValues: {
         ":version": existingVersion
-      }
+      },
+      Item: test,
+      TableName: tableName
     })
     .promise()
 }

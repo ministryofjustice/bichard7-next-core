@@ -1,6 +1,7 @@
-import createRemandOperation from "../createRemandOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-export const handleAdjournment: ResultClassHandler = ({ result, offence }) => [
+import createRemandOperation from "../createRemandOperation"
+
+export const handleAdjournment: ResultClassHandler = ({ offence, result }) => [
   createRemandOperation(result, offence?.CourtCaseReferenceNumber)
 ]

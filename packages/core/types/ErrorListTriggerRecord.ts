@@ -1,12 +1,12 @@
 type ErrorListTriggerRecord = {
-  trigger_id?: number
-  error_id: number
-  trigger_code: string
-  trigger_item_identity?: string | null
-  status: number
   create_ts: Date
-  resolved_by?: string | null
+  error_id: number
+  resolved_by?: null | string
   resolved_ts?: Date | null
+  status: number
+  trigger_code: string
+  trigger_id?: number
+  trigger_item_identity?: null | string
 }
 
 export default ErrorListTriggerRecord

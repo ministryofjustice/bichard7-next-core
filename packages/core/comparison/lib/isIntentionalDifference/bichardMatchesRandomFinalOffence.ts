@@ -1,13 +1,15 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
+
+import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import {
   flattenCases,
   type PncOffenceWithCaseRef
 } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { ComparisonData } from "../../types/ComparisonData"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import OffenceMatcher from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Bichard arbitrarily matches offences if the
@@ -21,7 +23,7 @@ import { checkIntentionalDifferenceForPhases } from "./index"
 // Core raises a 304 in Phase 1 to inform users
 // early that the update must be made manually.
 
-const bichardMatchesRandomFinalOffence = ({ expected, actual, incomingMessage, phase }: ComparisonData) =>
+const bichardMatchesRandomFinalOffence = ({ actual, expected, incomingMessage, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

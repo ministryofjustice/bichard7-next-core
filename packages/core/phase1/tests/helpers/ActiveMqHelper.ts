@@ -1,14 +1,15 @@
 import type { Client } from "stompit"
-import { ConnectFailover } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
 
+import { ConnectFailover } from "stompit"
+
 type Options = {
-  url: string
   login: string
   password: string
+  url: string
 }
 
-const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<string | null> =>
+const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<null | string> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line prefer-const
     let timeout: NodeJS.Timeout
@@ -38,7 +39,7 @@ const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Pro
       }
     }
 
-    subscription = client.subscribe({ destination: queueName, ack: "client" }, callback)
+    subscription = client.subscribe({ ack: "client", destination: queueName }, callback)
     timeout = setTimeout(() => {
       subscription.unsubscribe()
       resolve(null)
@@ -46,20 +47,20 @@ const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Pro
   })
 
 export default class ActiveMqHelper {
-  private url: string
+  private client?: Client
 
   private options: unknown
 
-  private client?: Client
+  private url: string
 
-  constructor({ url, login, password }: Options) {
+  constructor({ login, password, url }: Options) {
     this.url = url
     this.options = {
       connect: {
         connectHeaders: {
+          "heart-beat": "5000,5000",
           login: login,
-          passcode: password,
-          "heart-beat": "5000,5000"
+          passcode: password
         }
       }
     }
@@ -98,26 +99,8 @@ export default class ActiveMqHelper {
     return this.client
   }
 
-  async sendMessage(queueName: string, message: string): Promise<void> {
-    const client = await this.connectIfRequired()
-    const headers = {
-      destination: `/queue/${queueName}`
-    }
-
-    return new Promise((resolve, reject) => {
-      const writable = client.send(headers)
-
-      writable.write(message)
-      writable.end()
-      this.client?.disconnect((error) => {
-        this.client = undefined
-        if (error) {
-          reject(error)
-        } else {
-          resolve()
-        }
-      })
-    })
+  disconnect(): undefined | void {
+    return this.client?.disconnect()
   }
 
   async getMessages(queueName: string, timeout = 500): Promise<string[]> {
@@ -138,7 +121,25 @@ export default class ActiveMqHelper {
     return messages
   }
 
-  disconnect(): undefined | void {
-    return this.client?.disconnect()
+  async sendMessage(queueName: string, message: string): Promise<void> {
+    const client = await this.connectIfRequired()
+    const headers = {
+      destination: `/queue/${queueName}`
+    }
+
+    return new Promise((resolve, reject) => {
+      const writable = client.send(headers)
+
+      writable.write(message)
+      writable.end()
+      this.client?.disconnect((error) => {
+        this.client = undefined
+        if (error) {
+          reject(error)
+        } else {
+          resolve()
+        }
+      })
+    })
   }
 }

@@ -1,23 +1,25 @@
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { MockServer } from "jest-mock-server"
+
 import type Phase1Result from "../../phase1/types/Phase1Result"
-import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
+import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import storeAuditLogEvents from "./storeAuditLogEvents"
 
 const dummyAuditLogEvent = {
+  category: EventCategory.error,
   eventCode: EventCode.AllTriggersResolved,
   eventSource: "Test",
   eventType: "Type",
-  category: EventCategory.error,
   timestamp: new Date()
 }
 
 const invalidAuditLogEvent = {
+  category: EventCategory.error,
   eventCode: EventCode.AllTriggersResolved,
   eventType: "Type",
-  category: EventCategory.error,
   timestamp: new Date()
 }
 
@@ -34,26 +36,26 @@ describe("storeAuditLogEvents", () => {
 
   it("should store multiple events in a single call to the API", async () => {
     const phase1Result: Phase1Result = {
-      correlationId: "dummy-id",
       auditLogEvents: [
         {
+          category: EventCategory.information,
           eventCode: EventCode.AllTriggersResolved,
           eventSource: "Test",
           eventType: "Type",
-          category: EventCategory.information,
           timestamp: new Date()
         },
         {
+          category: EventCategory.error,
           eventCode: EventCode.DuplicateMessage,
           eventSource: "Test2",
           eventType: "Type2",
-          category: EventCategory.error,
           timestamp: new Date()
         }
       ],
-      triggers: [],
+      correlationId: "dummy-id",
       hearingOutcome: {} as AnnotatedHearingOutcome,
-      resultType: Phase1ResultType.success
+      resultType: Phase1ResultType.success,
+      triggers: []
     }
     const mockApiCall = auditLogApi
       .post(`/messages/${phase1Result.correlationId}/events`)
@@ -62,7 +64,7 @@ describe("storeAuditLogEvents", () => {
       })
 
     await storeAuditLogEvents.execute({
-      inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
+      inputData: { auditLogEvents: phase1Result.auditLogEvents, correlationId: phase1Result.correlationId }
     })
     expect(mockApiCall).toHaveBeenCalledTimes(1)
     const expectedAuditLogEvents = phase1Result.auditLogEvents.map((e) => ({
@@ -74,18 +76,18 @@ describe("storeAuditLogEvents", () => {
 
   it("should return FAILED if it fails to write to the audit log", async () => {
     const phase1Result: Phase1Result = {
-      correlationId: "dummy-id",
       auditLogEvents: [dummyAuditLogEvent],
-      triggers: [],
+      correlationId: "dummy-id",
       hearingOutcome: {} as AnnotatedHearingOutcome,
-      resultType: Phase1ResultType.success
+      resultType: Phase1ResultType.success,
+      triggers: []
     }
     auditLogApi.post(`/messages/${phase1Result.correlationId}/events`).mockImplementationOnce((ctx) => {
       ctx.status = 500
     })
 
     const result = await storeAuditLogEvents.execute({
-      inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
+      inputData: { auditLogEvents: phase1Result.auditLogEvents, correlationId: phase1Result.correlationId }
     })
 
     expect(result.status).toBe("FAILED")
@@ -109,7 +111,7 @@ describe("storeAuditLogEvents", () => {
 
   it("should fail with terminal error if the audit logs are invalid", async () => {
     const result = await storeAuditLogEvents.execute({
-      inputData: { correlationId: "foo", auditLogEvents: [invalidAuditLogEvent] }
+      inputData: { auditLogEvents: [invalidAuditLogEvent], correlationId: "foo" }
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")

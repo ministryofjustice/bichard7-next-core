@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
-const { XMLParser, XMLBuilder } = require("fast-xml-parser")
+const { XMLBuilder, XMLParser } = require("fast-xml-parser")
 const fs = require("node:fs")
 const path = require("node:path")
 const glob = require("tiny-glob")
@@ -25,8 +25,8 @@ async function addFilenameToTestResultsReport() {
 
   const options = {
     attributeNamePrefix: "@",
-    ignoreAttributes: false,
-    cdataPropName: "__cdata"
+    cdataPropName: "__cdata",
+    ignoreAttributes: false
   }
 
   const jsonXMLOject = new XMLParser(options).parse(data)

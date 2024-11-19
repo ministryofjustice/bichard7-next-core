@@ -1,7 +1,11 @@
+import type { KeyInput, Page } from "puppeteer"
+
 import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
 import { expect } from "expect"
-import type { KeyInput, Page } from "puppeteer"
+
 import type BrowserHelper from "../helpers/BrowserHelper"
+import type Bichard from "./world"
+
 import {
   delay,
   reloadUntilContent,
@@ -10,9 +14,8 @@ import {
   reloadUntilXPathSelector
 } from "./puppeteer-utils"
 import { caseListPage } from "./urls"
-import type Bichard from "./world"
 
-const waitForRecord = (name: string | null, page: Page, reloadAttempts?: number) => {
+const waitForRecord = (name: null | string, page: Page, reloadAttempts?: number) => {
   const selector = `xpath/.//table/tbody/tr${name ? `[contains(.,"${name}")]` : ""}`
 
   return reloadUntilXPathSelector(page, selector, reloadAttempts)
@@ -54,10 +57,10 @@ const getShortTriggerCode = (triggerCode: string) => {
 }
 
 type TriggerElement = {
-  triggerCode?: string
+  exact?: boolean
   offenceId?: number
   status?: string
-  exact?: boolean
+  triggerCode?: string
 }
 
 const getTriggersFromPage = async (world: Bichard): Promise<TriggerElement[]> => {
@@ -78,7 +81,7 @@ const getTriggersFromPage = async (world: Bichard): Promise<TriggerElement[]> =>
               ?.match(/Offence (?<offenceId>\d+)/)?.groups?.offenceId
         )
       )
-      return { triggerCode, offenceId }
+      return { offenceId, triggerCode }
     })
   )
 
@@ -104,18 +107,18 @@ const checkTriggers = async (world: Bichard, expectedTriggers: TriggerElement[])
 export const checkTriggerforOffence = async function (this: Bichard, triggerCode: string, offenceId: number) {
   await checkTriggers(this, [
     {
-      triggerCode,
-      offenceId
+      offenceId,
+      triggerCode
     }
   ])
 }
 
 export const checkCompleteTriggerforOffence = async function (this: Bichard, triggerCode: string, offenceId: number) {
-  await checkTriggers(this, [{ triggerCode, offenceId, status: "Complete" }])
+  await checkTriggers(this, [{ offenceId, status: "Complete", triggerCode }])
 }
 
 export const checkTrigger = async function (this: Bichard, triggerCode: string) {
-  await checkTriggers(this, [{ triggerCode, exact: false }])
+  await checkTriggers(this, [{ exact: false, triggerCode }])
 }
 
 export const findRecordFor = async function (this: Bichard, name: string) {
@@ -170,7 +173,7 @@ export const openRecordForCurrentTest = async function (this: Bichard) {
 }
 
 export const loadTab = async function (this: Bichard, tabName: string) {
-  if (["Triggers", "Exceptions"].includes(tabName)) {
+  if (["Exceptions", "Triggers"].includes(tabName)) {
     await this.browser.page.click(`#${tabName.toLowerCase()}-tab`)
     return
   }

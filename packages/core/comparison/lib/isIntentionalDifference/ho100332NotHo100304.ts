@@ -1,10 +1,12 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
+import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const ho100332NotHo100304 = ({ expected, actual, phase }: ComparisonData) =>
+const ho100332NotHo100304 = ({ actual, expected, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

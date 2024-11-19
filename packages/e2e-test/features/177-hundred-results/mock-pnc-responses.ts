@@ -2,6 +2,8 @@ import { mockUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -112,11 +114,10 @@ export default () => [
         <COF>K100    5:5:1:1      TH68020 09042010                </COF>
       </ASI>
       <GMT>000107073ENQR000155R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU02", {
+    count: 1,
     expectedRequest:
       "<FSC>K01YZ</FSC>" +
       "<IDS>K21/4Y      ATWOOD                  </IDS>" +
@@ -521,7 +522,6 @@ export default () => [
       "<CCH>K100              TH68020 </CCH>" +
       "<ADJ>INOT GUILTY   GUILTY        280920110000 </ADJ>" +
       "<DIS>I1002M12                   00                                                                            </DIS>" +
-      "<DIS>I1015            0000100.0000                                                                            </DIS>",
-    count: 1
+      "<DIS>I1015            0000100.0000                                                                            </DIS>"
   })
 ]

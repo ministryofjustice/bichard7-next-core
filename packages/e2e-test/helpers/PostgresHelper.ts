@@ -1,6 +1,7 @@
 import type { IDatabase } from "pg-promise"
-import pgpLib from "pg-promise"
 import type { IClient, IConnectionParameters } from "pg-promise/typescript/pg-subset"
+
+import pgpLib from "pg-promise"
 
 const pgp = pgpLib()
 
@@ -22,6 +23,11 @@ class PostgresHelper {
   // eslint-disable-next-line class-methods-use-this
   clearExceptions() {
     return this.pg.none("delete from BR7OWN.ERROR_LIST")
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  closeConnection() {
+    pgp.end()
   }
 
   async createUser(
@@ -71,25 +77,10 @@ class PostgresHelper {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  closeConnection() {
-    pgp.end()
-  }
-
-  // eslint-disable-next-line class-methods-use-this
   async dumpData() {
     const errorList = await this.pg.any("select * from BR7OWN.ERROR_LIST")
     const errorListTriggers = await this.pg.any("select * from BR7OWN.ERROR_LIST_TRIGGERS")
     return { errorList, errorListTriggers }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  async resetEmailVerificationCode(emailAddress: string) {
-    const query = `
-      UPDATE br7own.users
-      SET email_verification_code = $1
-      WHERE email = $2
-    `
-    await this.pg.any(query, [process.env.VERIFICATION_CODE, emailAddress])
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -110,6 +101,16 @@ class PostgresHelper {
 
   query(sql: string) {
     return this.pg.none(sql)
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async resetEmailVerificationCode(emailAddress: string) {
+    const query = `
+      UPDATE br7own.users
+      SET email_verification_code = $1
+      WHERE email = $2
+    `
+    await this.pg.any(query, [process.env.VERIFICATION_CODE, emailAddress])
   }
 }
 

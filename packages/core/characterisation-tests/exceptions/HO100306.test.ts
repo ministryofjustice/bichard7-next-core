@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -21,7 +22,7 @@ describe.ifPhase1("HO100306", () => {
 
   it("should create an exception if the offence code lookup fails and offence is not ignored", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{ code: 1015 }], code: "BLAHHHHH" }]
+      offences: [{ code: "BLAHHHHH", results: [{ code: 1015 }] }]
     })
 
     const {

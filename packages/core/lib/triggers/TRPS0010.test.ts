@@ -2,11 +2,12 @@ jest.mock("../../phase2/lib/isRecordableOffence")
 jest.mock("./hasCompletedDisposal")
 jest.mock("../../phase2/lib/isResultCompatibleWithDisposal")
 
-import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
+import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
 import hasCompletedDisposal from "./hasCompletedDisposal"
@@ -21,23 +22,23 @@ describe("TRPS0010", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason"
           }
-        }
+        },
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ]
       }
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
       {
         code: PncOperation.NORMAL_DISPOSAL,
-        status: "Completed",
-        data: undefined
+        data: undefined,
+        status: "Completed"
       }
     ]
     const result = TRPS0010(generatedHearingOutcome, options)
@@ -48,16 +49,16 @@ describe("TRPS0010", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        Result: [
-          {
-            CJSresultCode: 1234
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason"
           }
-        }
+        },
+        Result: [
+          {
+            CJSresultCode: 1234
+          }
+        ]
       }
     ] as Offence[])
     const result = TRPS0010(generatedHearingOutcome, options)
@@ -68,16 +69,16 @@ describe("TRPS0010", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        Result: [
-          {
-            CJSresultCode: 1234
-          }
-        ],
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason"
           }
-        }
+        },
+        Result: [
+          {
+            CJSresultCode: 1234
+          }
+        ]
       }
     ] as Offence[])
     const result = TRPS0010(generatedHearingOutcome, options)
@@ -92,43 +93,43 @@ describe("TRPS0010", () => {
   })
 
   it.each([
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: false },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: true, disarrCompatibleResultClass: true },
-    { addedByCourt: false, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: false },
-    { addedByCourt: false, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: true, hasCompletedDisarr: false, disarrCompatibleResultClass: true },
-    { addedByCourt: true, isRecordable: false, hasCompletedDisarr: true, disarrCompatibleResultClass: true }
+    { addedByCourt: false, disarrCompatibleResultClass: false, hasCompletedDisarr: false, isRecordable: false },
+    { addedByCourt: true, disarrCompatibleResultClass: false, hasCompletedDisarr: false, isRecordable: false },
+    { addedByCourt: false, disarrCompatibleResultClass: false, hasCompletedDisarr: false, isRecordable: true },
+    { addedByCourt: false, disarrCompatibleResultClass: false, hasCompletedDisarr: true, isRecordable: false },
+    { addedByCourt: false, disarrCompatibleResultClass: true, hasCompletedDisarr: false, isRecordable: false },
+    { addedByCourt: true, disarrCompatibleResultClass: false, hasCompletedDisarr: false, isRecordable: true },
+    { addedByCourt: true, disarrCompatibleResultClass: false, hasCompletedDisarr: true, isRecordable: true },
+    { addedByCourt: false, disarrCompatibleResultClass: true, hasCompletedDisarr: true, isRecordable: true },
+    { addedByCourt: false, disarrCompatibleResultClass: true, hasCompletedDisarr: true, isRecordable: false },
+    { addedByCourt: true, disarrCompatibleResultClass: true, hasCompletedDisarr: false, isRecordable: false },
+    { addedByCourt: true, disarrCompatibleResultClass: false, hasCompletedDisarr: true, isRecordable: false },
+    { addedByCourt: false, disarrCompatibleResultClass: true, hasCompletedDisarr: false, isRecordable: true },
+    { addedByCourt: true, disarrCompatibleResultClass: true, hasCompletedDisarr: false, isRecordable: true },
+    { addedByCourt: true, disarrCompatibleResultClass: true, hasCompletedDisarr: true, isRecordable: false }
   ])(
     "should return an empty array if AddedByTheCourt is $addedByCourt, isRecordableOffence is $isRecordable, hasCompletedDisarr is $hasCompletedDisarr, and disarrCompatibleResultClass is $disarrCompatibleResultClass for offence",
-    ({ addedByCourt, isRecordable, disarrCompatibleResultClass, hasCompletedDisarr }) => {
+    ({ addedByCourt, disarrCompatibleResultClass, hasCompletedDisarr, isRecordable }) => {
       const options = { phase: Phase.PNC_UPDATE }
       const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
         {
-          Result: [
-            {
-              CJSresultCode: 9999
-            }
-          ],
           CriminalProsecutionReference: {
             OffenceReason: {
               __type: "NationalOffenceReason",
               OffenceCode: {
                 __type: "NonMatchingOffenceCode",
                 ActOrSource: "Act",
-                Reason: "test",
-                FullCode: "test"
+                FullCode: "test",
+                Reason: "test"
               }
             },
             OffenceReasonSequence: "A1"
-          }
+          },
+          Result: [
+            {
+              CJSresultCode: 9999
+            }
+          ]
         }
       ] as Offence[])
 
@@ -148,24 +149,24 @@ describe("TRPS0010", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
+        CourtOffenceSequenceNumber: 1,
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason",
             OffenceCode: {
               __type: "NonMatchingOffenceCode",
               ActOrSource: "Act",
-              Reason: "test",
-              FullCode: "test"
+              FullCode: "test",
+              Reason: "test"
             }
           },
           OffenceReasonSequence: "A1"
         },
-        CourtOffenceSequenceNumber: 1
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ]
       }
     ] as Offence[])
 

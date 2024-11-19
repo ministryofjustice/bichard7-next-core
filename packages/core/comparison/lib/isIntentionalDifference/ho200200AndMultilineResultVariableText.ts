@@ -1,7 +1,9 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
+import type { ComparisonData, ComparisonOutput } from "../../types/ComparisonData"
+
 import { maxDisposalTextLength } from "../../../phase2/lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 import licencedPremisesExclusionOrderDisposalText from "../../../phase2/lib/getDisposalTextFromResult/licencedPremisesExclusionOrderDisposalText"
-import type { ComparisonData, ComparisonOutput } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Previously Bichard would not raise a HO200200 exception when ResultVariableText
@@ -43,7 +45,7 @@ const hasCoreResultRaisedHo200200DueToImprovedRegEx = (
   return !bichardDisposalText && coreDisposalText.length > maxDisposalTextLength
 }
 
-const ho200200AndMultilineResultVariableText = ({ expected, actual, phase }: ComparisonData) =>
+const ho200200AndMultilineResultVariableText = ({ actual, expected, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([2], phase, (): boolean => {
     const actualOffences = actual.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
     const coreRaisesHo200200DueToImprovedRegex = actualOffences.some((offence, offenceIndex) =>

@@ -5,13 +5,13 @@ const generateAho = (resultVariableText?: string) => {
   const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0] = {
     ...aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0],
-    ResultVariableText: resultVariableText,
     CJSresultCode: 3041,
-    ResultQualifierVariable: [],
     Duration: [
-      { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
-      { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
-    ]
+      { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
+      { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+    ],
+    ResultQualifierVariable: [],
+    ResultVariableText: resultVariableText
   }
 
   return aho

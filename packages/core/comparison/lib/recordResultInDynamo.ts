@@ -1,7 +1,10 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
 import { isError } from "@moj-bichard7/common/types/Result"
+
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type DynamoGateway from "./DynamoGateway"
+
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 
@@ -38,26 +41,26 @@ const recordResultInDynamo = async (
   const date = new Date().toISOString()
 
   const record = getOneResult?.Item ?? {
-    s3Path,
-    initialRunAt: initialDate,
-    initialResult: latestResult,
+    correlationId,
     history: [],
-    version: 1,
-    correlationId
+    initialResult: latestResult,
+    initialRunAt: initialDate,
+    s3Path,
+    version: 1
   }
 
   record.latestRunAt = date
   record.latestResult = latestResult
 
   record.history.push({
-    runAt: getOneResult?.Item ? date : initialDate,
-    result: record.latestResult,
     details: {
-      triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
       exceptionsMatch: comparisonResult.exceptionsMatch ? 1 : 0,
+      triggersMatch: comparisonResult.triggersMatch ? 1 : 0,
       xmlOutputMatches: comparisonResult.xmlOutputMatches ? 1 : 0,
       xmlParsingMatches: comparisonResult.xmlParsingMatches ? 1 : 0
-    }
+    },
+    result: record.latestResult,
+    runAt: getOneResult?.Item ? date : initialDate
   })
 
   const table = dynamoTables[phase]

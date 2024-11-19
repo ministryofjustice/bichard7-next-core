@@ -41,10 +41,10 @@ const createPncAdjudication = (
   dateOfHearing: Date,
   numberOfOffencesTIC: number
 ): PncAdjudication => ({
-  verdict: preProcessVerdict(disposalType, verdict),
-  sentenceDate: preProcessHearingDate(disposalType, dateOfHearing),
   offenceTICNumber: numberOfOffencesTIC,
-  plea: preProcessPleaStatus(disposalType, pleaStatus)
+  plea: preProcessPleaStatus(disposalType, pleaStatus),
+  sentenceDate: preProcessHearingDate(disposalType, dateOfHearing),
+  verdict: preProcessVerdict(disposalType, verdict)
 })
 
 export default createPncAdjudication

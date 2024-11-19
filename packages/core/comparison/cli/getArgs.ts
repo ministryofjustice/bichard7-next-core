@@ -6,87 +6,87 @@ export interface IArguments {
   directory?: string
   end?: string
   file?: string
+  filelist?: string
   filter?: string
   help?: boolean
   list?: boolean
   matching?: boolean
   noTruncate?: boolean
+  phase?: number
   runMissing?: string
   start?: string
-  filelist?: string
-  phase?: number
 }
 
 export const getArgs = () =>
   parse<IArguments>(
     {
-      file: {
-        type: String,
-        alias: "f",
+      cache: {
+        alias: "c",
+        defaultValue: false,
+        description: "Cache the comparison files",
         optional: true,
-        description: "Specify either the local file path or an S3 URL"
+        type: Boolean
       },
       directory: {
-        type: String,
         alias: "d",
+        description: "Specify a local directory to run the tests from",
         optional: true,
-        description: "Specify a local directory to run the tests from"
+        type: String
+      },
+      end: { alias: "e", description: "Specify the end timestamp in ISO8601 format", optional: true, type: String },
+      file: {
+        alias: "f",
+        description: "Specify either the local file path or an S3 URL",
+        optional: true,
+        type: String
       },
       filelist: {
-        type: String,
         alias: "z",
+        description: "Specify a file containing a list of tests to run",
         optional: true,
-        description: "Specify a file containing a list of tests to run"
+        type: String
       },
-      list: {
-        type: Boolean,
-        alias: "l",
-        optional: true,
-        description: "Just output the failure paths as a list"
-      },
-      runMissing: {
-        type: String,
-        alias: "m",
-        optional: true,
-        description: "Specify part of the the S3 URL e.g. 2022/08/31"
-      },
-      start: { type: String, alias: "s", optional: true, description: "Specify the start timestamp in ISO8601 format" },
-      end: { type: String, alias: "e", optional: true, description: "Specify the end timestamp in ISO8601 format" },
       filter: {
-        type: String,
         alias: "p",
-        optional: true,
         defaultValue: "failure",
         description:
-          "Filter based on the last result. Specify either 'failure', 'success', 'both'. Default is 'failure'"
-      },
-      cache: {
-        type: Boolean,
-        alias: "c",
+          "Filter based on the last result. Specify either 'failure', 'success', 'both'. Default is 'failure'",
         optional: true,
-        defaultValue: false,
-        description: "Cache the comparison files"
+        type: String
       },
-      help: { type: Boolean, optional: true, alias: "h", description: "Prints this usage guide" },
-      noTruncate: {
-        type: Boolean,
+      help: { alias: "h", description: "Prints this usage guide", optional: true, type: Boolean },
+      list: {
+        alias: "l",
+        description: "Just output the failure paths as a list",
         optional: true,
-        alias: "t",
-        description: "Stops truncating the unchanged sections of XML diffs"
+        type: Boolean
       },
       matching: {
-        type: Boolean,
-        optional: true,
-        defaultValue: false,
         alias: "x",
-        description: "Runs using the PNC offence matching algorithm"
+        defaultValue: false,
+        description: "Runs using the PNC offence matching algorithm",
+        optional: true,
+        type: Boolean
+      },
+      noTruncate: {
+        alias: "t",
+        description: "Stops truncating the unchanged sections of XML diffs",
+        optional: true,
+        type: Boolean
       },
       phase: {
-        type: Number,
-        optional: true,
         defaultValue: 2,
-        description: "Select which project phase to use"
-      }
+        description: "Select which project phase to use",
+        optional: true,
+        type: Number
+      },
+      runMissing: {
+        alias: "m",
+        description: "Specify part of the the S3 URL e.g. 2022/08/31",
+        optional: true,
+        type: String
+      },
+      start: { alias: "s", description: "Specify the start timestamp in ISO8601 format", optional: true, type: String }
     },
     {
       helpArg: "help"

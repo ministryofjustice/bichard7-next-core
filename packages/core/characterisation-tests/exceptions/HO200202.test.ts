@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import { resultQualifierVariableCodePath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
@@ -18,16 +19,16 @@ describe.ifPhase2("HO200202", () => {
           {
             results: [
               {
-                resultQualifierVariables: [{ code: 1 }, { code: 2 }, { code: 3 }, { code: 4 }, { code: 5 }],
+                numberOfOffencesTic: true,
                 pncAdjudicationExists: true,
-                numberOfOffencesTic: true
+                resultQualifierVariables: [{ code: 1 }, { code: 2 }, { code: 3 }, { code: 4 }, { code: 5 }]
               }
             ]
           }
         ],
-        pncId: "2000/0000000X",
         pncAdjudication: {},
-        pncDisposals: [{ type: 1000 }]
+        pncDisposals: [{ type: 1000 }],
+        pncId: "2000/0000000X"
       })
 
       const {
@@ -50,10 +51,10 @@ describe.ifPhase2("HO200202", () => {
     async (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
-        offences: [{ results: [{ resultQualifierVariables: [{ code: 1 }], pncAdjudicationExists: true }] }],
-        pncId: "2000/0000000X",
+        offences: [{ results: [{ pncAdjudicationExists: true, resultQualifierVariables: [{ code: 1 }] }] }],
         pncAdjudication: {},
-        pncDisposals: [{ type: 1000 }]
+        pncDisposals: [{ type: 1000 }],
+        pncId: "2000/0000000X"
       })
 
       const {

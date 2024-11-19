@@ -11,8 +11,9 @@ import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import MessageForwarder from "./MessageForwarder"
+
 import createStompClient from "./createStompClient"
+import MessageForwarder from "./MessageForwarder"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
 
 const stompClient = createStompClient()
@@ -44,7 +45,7 @@ describe("Server in conductor mode", () => {
     await createAuditLogRecord(correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    stompClient.publish({ destination: sourceQueue, body: messageData })
+    stompClient.publish({ body: messageData, destination: sourceQueue })
 
     const workflow = await waitForCompletedWorkflow(correlationId)
     expect(workflow).toBeDefined()
@@ -53,7 +54,7 @@ describe("Server in conductor mode", () => {
   it("puts the message on a failure queue if there is an exception", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(`${sourceQueue}.FAILURE`)
-    stompClient.publish({ destination: sourceQueue, body: "BAD DATA" })
+    stompClient.publish({ body: "BAD DATA", destination: sourceQueue })
     const message = await mqListener.waitForMessage()
     expect(message).toBe("BAD DATA")
     mqListener.stop()

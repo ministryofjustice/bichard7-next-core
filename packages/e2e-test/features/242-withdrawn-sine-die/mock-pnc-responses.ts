@@ -2,6 +2,8 @@ import { mockUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -14,16 +16,16 @@ export default () => [
         <COF>K002    5:7:11:10    TH68151 28112010                </COF>
       </ASI>
       <GMT>000009073ENQR000720R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU02", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><CCR>K21/2732/16Z                   </CCR><COU>I2576                                                                       SINEDIE/WITHDRAWN                                     260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><CCR>K21/2732/16Z                   </CCR><COU>I2576                                                                       SINEDIE/WITHDRAWN                                     260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>"
   }),
   {
+    count: 1,
+    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -40,13 +42,11 @@ export default () => [
         <DIS>I2007                                                                                                    </DIS>
       </ASI>
       <GMT>000013073ENQR000721R</GMT>
-    </CXE01>`,
-    expectedRequest: "",
-    count: 1
+    </CXE01>`
   },
   mockUpdate("CXU03", {
+    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/16Z                   </CCR><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS>",
-    count: 1
+      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/16Z                   </CCR><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS>"
   })
 ]

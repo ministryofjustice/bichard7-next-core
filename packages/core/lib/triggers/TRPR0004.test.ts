@@ -1,6 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import { CjsVerdict } from "../../types/Verdict"
 import TRPR0004 from "./TRPR0004"
 
@@ -46,17 +48,17 @@ describe("TRPR0004", () => {
   ) => {
     return generateAhoFromOffenceList([
       {
+        CourtOffenceSequenceNumber: 1,
+        CriminalProsecutionReference: {
+          OffenceReason: { OffenceCode: { FullCode: offenceCode } }
+        },
         Result: [
           {
             CJSresultCode: resultCode,
             ResultVariableText: resultVariableText,
             Verdict: verdict
           }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: { OffenceCode: { FullCode: offenceCode } }
-        },
-        CourtOffenceSequenceNumber: 1
+        ]
       }
     ] as Offence[])
   }

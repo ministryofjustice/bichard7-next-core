@@ -1,10 +1,10 @@
 import { fakerEN_GB as faker } from "@faker-js/faker"
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
 import IncomingMessageBucket from "@moj-bichard7/e2e-tests/helpers/IncomingMessageBucket"
 import MockPNCHelper from "@moj-bichard7/e2e-tests/helpers/MockPNCHelper"
 import ASN from "@moj-bichard7/e2e-tests/utils/asn"
 import defaults from "@moj-bichard7/e2e-tests/utils/defaults"
 import { mockUpdate } from "@moj-bichard7/e2e-tests/utils/pncMocks"
+import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
 import { randomUUID } from "crypto"
 import fs from "fs"
 
@@ -16,7 +16,7 @@ import fs from "fs"
 // - Grab the original incoming message
 // - Anonymise it and make the PNC message match
 
-const { REPEAT_SCENARIOS = 1, DEPLOY_NAME } = process.env
+const { DEPLOY_NAME, REPEAT_SCENARIOS = 1 } = process.env
 
 if (DEPLOY_NAME !== "uat") {
   console.error("Not running in uat environment, bailing out. Set DEPLOY_NAME='uat' if you're sure.")
@@ -29,9 +29,9 @@ const pnc = new MockPNCHelper({
 })
 
 const incomingMessageBucket = new IncomingMessageBucket({
-  url: process.env.AWS_URL ?? "",
+  incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket,
   region: process.env.S3_REGION || defaults.awsRegion,
-  incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket
+  url: process.env.AWS_URL ?? ""
 })
 
 const SCENARIO_PATH = "./data/"
@@ -90,10 +90,10 @@ const seedScenario = async (scenario: string) => {
 
   const s3Path = await incomingMessageBucket.upload(incomingMessage, randomUUID())
   console.log({
-    scenario,
     asn,
     ptiurn,
-    s3Path
+    s3Path,
+    scenario
   })
 }
 

@@ -2,11 +2,13 @@ import { randomUUID } from "crypto"
 import { expect } from "expect"
 import fs from "fs"
 import path from "path"
+
+import type Bichard from "./world"
+
 import { checkAuditLogRecordExists } from "./auditLogging"
 import convertMessageToNewFormat from "./convertMessageToNewFormat"
 import { isError } from "./isError"
 import { replaceAllTags } from "./tagProcessing"
-import type Bichard from "./world"
 
 const uploadToS3 = async (context: Bichard, message: string, correlationId: string) => {
   const fileName = await context.incomingMessageBucket.upload(message, correlationId)

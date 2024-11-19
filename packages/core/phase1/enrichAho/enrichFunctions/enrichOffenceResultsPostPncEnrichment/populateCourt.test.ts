@@ -1,9 +1,11 @@
 jest.mock("../../../../lib/dataLookup")
 jest.mock("../../../../lib/dataLookup/getCourtDetails")
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import { lookupOrganisationUnitByCode } from "../../../../lib/dataLookup"
 import getCourtDetails from "../../../../lib/dataLookup/getCourtDetails"
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
 import populateCourt from "./populateCourt"
 
 const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.MockedFunction<
@@ -12,10 +14,10 @@ const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.
 const mockedGetCourtDetails = getCourtDetails as jest.MockedFunction<typeof getCourtDetails>
 const mockLookupOrganisationUnitByCodeToReturnValue = () =>
   mockedLookupOrganisationUnitByCode.mockReturnValue({
-    topLevelCode: "",
+    bottomLevelCode: "",
     secondLevelCode: "",
     thirdLevelCode: "",
-    bottomLevelCode: ""
+    topLevelCode: ""
   } as OrganisationUnit)
 
 const hearingOutcome = {
@@ -61,11 +63,11 @@ describe("populateCourt", () => {
     expect(result.CourtType).toBe("Dummy Court Type 1")
     expect(result.NextCourtType).toBe("Dummy Court Type 2")
     expect(result.NextResultSourceOrganisation).toStrictEqual({
-      TopLevelCode: "A",
+      BottomLevelCode: "FG",
+      OrganisationUnitCode: "ABCDEFG",
       SecondLevelCode: "BC",
       ThirdLevelCode: "DE",
-      BottomLevelCode: "FG",
-      OrganisationUnitCode: "ABCDEFG"
+      TopLevelCode: "A"
     })
   })
 
@@ -82,11 +84,11 @@ describe("populateCourt", () => {
     expect(result.CourtType).toBeUndefined()
     expect(result.NextCourtType).toBeUndefined()
     expect(result.NextResultSourceOrganisation).toStrictEqual({
-      TopLevelCode: "A",
+      BottomLevelCode: "FG",
+      OrganisationUnitCode: "ABCDEFG",
       SecondLevelCode: "BC",
       ThirdLevelCode: "DE",
-      BottomLevelCode: "FG",
-      OrganisationUnitCode: "ABCDEFG"
+      TopLevelCode: "A"
     })
   })
 })

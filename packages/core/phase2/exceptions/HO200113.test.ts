@@ -1,6 +1,7 @@
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import ResultClass from "../../types/ResultClass"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200113 from "./HO200113"
 
 describe("HO200113", () => {
@@ -9,8 +10,8 @@ describe("HO200113", () => {
       {
         CriminalProsecutionReference: {},
         Result: [
-          { ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, PNCDisposalType: 1015 },
-          { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }
+          { PNCDisposalType: 1015, ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT },
+          { PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }
         ]
       }
     ] as Offence[])
@@ -28,11 +29,11 @@ describe("HO200113", () => {
   it("generates an exception when sentence deferred generated with remand CCRs contains CCR", () => {
     const aho = generateAhoFromOffenceList([
       {
-        CriminalProsecutionReference: {},
         CourtCaseReferenceNumber: "1",
+        CriminalProsecutionReference: {},
         Result: [
-          { ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT, PNCDisposalType: 1015, PNCAdjudicationExists: true },
-          { ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }
+          { PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT },
+          { PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }
         ]
       }
     ] as Offence[])
@@ -50,16 +51,16 @@ describe("HO200113", () => {
   it("doesn't generate an exception when sentence deferred operation generated and remand CCRs doesn't contain its CCR", () => {
     const aho = generateAhoFromOffenceList([
       {
-        CriminalProsecutionReference: {},
         CourtCaseReferenceNumber: "1",
+        CriminalProsecutionReference: {},
         Result: [
-          { ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT, PNCDisposalType: 1015, PNCAdjudicationExists: true }
+          { PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT }
         ]
       },
       {
-        CriminalProsecutionReference: {},
         CourtCaseReferenceNumber: "2",
-        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
+        CriminalProsecutionReference: {},
+        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
       }
     ] as Offence[])
 
@@ -72,7 +73,7 @@ describe("HO200113", () => {
     const aho = generateAhoFromOffenceList([
       {
         CriminalProsecutionReference: {},
-        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
+        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
       }
     ] as Offence[])
 

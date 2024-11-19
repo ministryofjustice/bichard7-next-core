@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import ResultClass from "../../types/ResultClass"
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
@@ -18,8 +19,8 @@ describe.ifPhase2("HO200106", () => {
           messageType,
           offences: [
             {
-              results: [{ resultClass: ResultClass.SENTENCE, pncAdjudicationExists: false }],
-              addedByTheCourt: false
+              addedByTheCourt: false,
+              results: [{ pncAdjudicationExists: false, resultClass: ResultClass.SENTENCE }]
             }
           ]
         })
@@ -42,8 +43,8 @@ describe.ifPhase2("HO200106", () => {
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
         offences: [
           {
-            results: [{ resultClass: ResultClass.SENTENCE, pncAdjudicationExists: true }],
-            addedByTheCourt: false
+            addedByTheCourt: false,
+            results: [{ pncAdjudicationExists: true, resultClass: ResultClass.SENTENCE }]
           }
         ]
       })
@@ -63,8 +64,8 @@ describe.ifPhase2("HO200106", () => {
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
         offences: [
           {
-            results: [{ resultClass: ResultClass.SENTENCE, pncAdjudicationExists: false }],
-            addedByTheCourt: true
+            addedByTheCourt: true,
+            results: [{ pncAdjudicationExists: false, resultClass: ResultClass.SENTENCE }]
           }
         ]
       })

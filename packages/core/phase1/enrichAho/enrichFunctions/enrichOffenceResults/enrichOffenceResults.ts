@@ -1,5 +1,6 @@
-import { lookupResultCodeByCjsCode } from "../../../../lib/dataLookup"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+
+import { lookupResultCodeByCjsCode } from "../../../../lib/dataLookup"
 import populateBailConditions from "./populateBailConditions"
 
 const urgencyThresholdInHours = 48
@@ -23,7 +24,7 @@ const enrichOffenceResults: EnrichAhoFunction = (hearingOutcome) => {
             result.ResultHalfLifeHours = parseInt(halfLifeHours, 10)
 
             if (result.ResultHalfLifeHours < urgencyThresholdInHours) {
-              result.Urgent = { urgent: true, urgency: result.ResultHalfLifeHours }
+              result.Urgent = { urgency: result.ResultHalfLifeHours, urgent: true }
             }
           }
         }

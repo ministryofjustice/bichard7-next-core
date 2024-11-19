@@ -1,23 +1,26 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/types/TriggerCode"
+
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import ActiveMqHelper from "@moj-bichard7/common/mq/ActiveMqHelper"
 import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
-import Phase from "../../types/Phase"
 import type { Trigger } from "../../types/Trigger"
+import type { ProcessMessageOptions } from "./processMessage"
+
+import Phase from "../../types/Phase"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
-import type { ProcessMessageOptions } from "./processMessage"
 
 type TriggerEntity = { trigger_code: TriggerCode; trigger_item_identity?: string }
 
 const pg = new PostgresHelper().db
 const mq = new ActiveMqHelper({
-  url: process.env.MQ_URL || "failover:(stomp://localhost:61613)",
   login: process.env.MQ_USER || "bichard",
-  password: process.env.MQ_PASSWORD || "password"
+  password: process.env.MQ_PASSWORD || "password",
+  url: process.env.MQ_URL || "failover:(stomp://localhost:61613)"
 })
 const realPnc = process.env.REAL_PNC === "true"
 
@@ -25,12 +28,12 @@ const processMessageBichard = async <BichardResultType>(
   messageXml: string,
   {
     expectRecord = true,
-    recordable = true,
-    pncOverrides = {},
+    phase = Phase.HEARING_OUTCOME,
+    pncAdjudication = false,
     pncCaseType = "court",
     pncMessage,
-    pncAdjudication = false,
-    phase = Phase.HEARING_OUTCOME
+    pncOverrides = {},
+    recordable = true
   }: ProcessMessageOptions
 ): Promise<BichardResultType> => {
   const correlationId = randomUUID()
@@ -60,9 +63,9 @@ const processMessageBichard = async <BichardResultType>(
   const fetchRecords = () => (expectRecord ? pg.one(recordQuery) : pg.none(recordQuery))
 
   const recordResult = await promisePoller({
-    taskFn: fetchRecords,
     interval: 20,
-    retries: 1000
+    retries: 1000,
+    taskFn: fetchRecords
   }).catch((e: Error) => e)
 
   if (recordResult && !("annotated_msg" in recordResult)) {
@@ -91,9 +94,9 @@ const processMessageBichard = async <BichardResultType>(
 
     const triggerResult =
       (await promisePoller<TriggerEntity[]>({
-        taskFn: fetchTriggers,
         interval: 20,
-        retries: 1000
+        retries: 1000,
+        taskFn: fetchTriggers
       }).catch(() => [])) ?? []
 
     triggers = triggerResult.map((record) => ({
@@ -103,10 +106,10 @@ const processMessageBichard = async <BichardResultType>(
   }
 
   if (phase === Phase.HEARING_OUTCOME) {
-    return { triggers, hearingOutcome: { Exceptions: exceptions } as AnnotatedHearingOutcome } as BichardResultType
+    return { hearingOutcome: { Exceptions: exceptions } as AnnotatedHearingOutcome, triggers } as BichardResultType
   }
 
-  return { triggers, outputMessage: { Exceptions: exceptions } as AnnotatedHearingOutcome } as BichardResultType
+  return { outputMessage: { Exceptions: exceptions } as AnnotatedHearingOutcome, triggers } as BichardResultType
 }
 
 export default processMessageBichard

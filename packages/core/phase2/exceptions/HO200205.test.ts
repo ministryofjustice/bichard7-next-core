@@ -8,7 +8,7 @@ const generateAho = (numberOfDurations?: number, amounts?: number[]) => {
       ? undefined
       : Array(numberOfDurations)
           .fill(0)
-          .map(() => ({ DurationType: "dummy", DurationUnit: "dummy", DurationLength: 1 }))
+          .map(() => ({ DurationLength: 1, DurationType: "dummy", DurationUnit: "dummy" }))
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].Duration = durations
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].AmountSpecifiedInResult =
     amounts?.map((amount) => ({ Amount: amount, DecimalPlaces: 1 }))
@@ -105,33 +105,33 @@ describe("HO200205", () => {
   })
 
   it.each([
-    { when: "first amount specified in result is valid", durations: 0, amounts: [1234567.1] },
+    { amounts: [1234567.1], durations: 0, when: "first amount specified in result is valid" },
     {
-      when: "third duration exists and third amount specified in result is valid",
+      amounts: [1234567.1, 1234567.1, 1234567.1],
       durations: 3,
-      amounts: [1234567.1, 1234567.1, 1234567.1]
+      when: "third duration exists and third amount specified in result is valid"
     },
     {
-      when: "third amount specified in result is invalid but there are only 2 durations in result",
+      amounts: [1234567.1, 1234567.1, 12345678.1],
       durations: 2,
-      amounts: [1234567.1, 1234567.1, 12345678.1]
+      when: "third amount specified in result is invalid but there are only 2 durations in result"
     },
     {
-      when: "third amount specified in result is invalid but durations in result are undefined",
+      amounts: [1234567.1, 1234567.1, 12345678.1],
       durations: undefined,
-      amounts: [1234567.1, 1234567.1, 12345678.1]
+      when: "third amount specified in result is invalid but durations in result are undefined"
     },
     {
-      when: "there are no amounts specified in result",
+      amounts: [],
       durations: 3,
-      amounts: []
+      when: "there are no amounts specified in result"
     },
     {
-      when: "amount specified in result is undefined",
+      amounts: undefined,
       durations: 3,
-      amounts: undefined
+      when: "amount specified in result is undefined"
     }
-  ])("should not return exception when $when", ({ durations, amounts }) => {
+  ])("should not return exception when $when", ({ amounts, durations }) => {
     const aho = generateAho(durations, amounts)
 
     const exceptions = HO200205(aho)

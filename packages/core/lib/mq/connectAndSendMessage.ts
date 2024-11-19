@@ -1,6 +1,8 @@
-import logger from "@moj-bichard7/common/utils/logger"
 import type { Client } from "stompit"
+
+import logger from "@moj-bichard7/common/utils/logger"
 import { ConnectFailover } from "stompit"
+
 import createMqConfig from "./createMqConfig"
 import deconstructServers from "./deconstructServers"
 
@@ -34,8 +36,8 @@ const connectAndSendMessage = (destination: string, body: string): Promise<void>
       }
 
       const options: Client.SendOptions = {
-        onReceipt: cleanup,
-        onError: reject
+        onError: reject,
+        onReceipt: cleanup
       }
 
       const writable = client.send({ destination: `/queue/${destination}` }, options)

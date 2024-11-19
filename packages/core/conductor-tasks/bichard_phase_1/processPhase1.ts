@@ -1,21 +1,24 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import postgres from "postgres"
+
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
-import PncGateway from "../../lib/PncGateway"
 import createPncApiConfig from "../../lib/createPncApiConfig"
+import getTriggersCount from "../../lib/database/getTriggersCount"
+import PncGateway from "../../lib/PncGateway"
 import phase1 from "../../phase1/phase1"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import getTriggersCount from "../../lib/database/getTriggersCount"
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import postgres from "postgres"
 
 const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
@@ -25,9 +28,8 @@ const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data
 const lockKey: string = "lockedByWorkstream"
 
 const processPhase1: ConductorWorker = {
-  taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
-    const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
+    const { lockId, s3TaskData, s3TaskDataPath } = task.inputData
     const pncGateway = new PncGateway(pncApiConfig)
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     const db = postgres(dbConfig)
@@ -56,10 +58,11 @@ const processPhase1: ConductorWorker = {
     }
 
     return completed(
-      { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions },
+      { auditLogEvents: result.auditLogEvents, hasTriggersOrExceptions, resultType: result.resultType },
       ...result.auditLogEvents.map((e) => e.eventType)
     )
-  })
+  }),
+  taskDefName: "process_phase1"
 }
 
 export default processPhase1

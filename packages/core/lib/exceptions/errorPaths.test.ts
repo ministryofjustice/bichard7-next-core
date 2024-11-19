@@ -13,6 +13,6 @@ describe("errorPath", () => {
     const resultQualifierVariableCode = result.resultQualifierVariable(2)
     const amountSpecifiedInResult = result.amountSpecifiedInResult(3)
 
-    expect({ offence, result, resultQualifierVariableCode, amountSpecifiedInResult }).toMatchSnapshot()
+    expect({ amountSpecifiedInResult, offence, result, resultQualifierVariableCode }).toMatchSnapshot()
   })
 })

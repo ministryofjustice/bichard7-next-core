@@ -2,15 +2,17 @@ import { type Result } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { XMLParser } from "fast-xml-parser"
 import { fromZodError } from "zod-validation-error"
-import { incomingMessageSchema } from "../../../schemas/incomingMessage"
+
 import type IncomingMessage from "../../../types/IncomingMessage"
+
+import { incomingMessageSchema } from "../../../schemas/incomingMessage"
 
 const parserDefaults = {
   ignoreAttributes: true,
-  removeNSPrefix: true,
   parseTagValue: false,
-  trimValues: true,
-  processEntities: false
+  processEntities: false,
+  removeNSPrefix: true,
+  trimValues: true
 }
 
 export const extractIncomingMessage = (incomingMessage: string): Result<IncomingMessage> => {

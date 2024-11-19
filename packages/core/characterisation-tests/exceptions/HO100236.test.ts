@@ -1,4 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+
 import { lookupOffenceByCjsCode } from "../../lib/dataLookup"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -21,12 +22,12 @@ describe.ifPhase1("HO100236", () => {
   it.skip("should not throw an exception for a valid home Office Classification", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
-      offenceCategory: "CB",
-      offenceTitle: "Application to reopen case",
-      recordableOnPnc: false,
       description: "blah",
       homeOfficeClassification: "123/45",
-      notifiableToHo: true
+      notifiableToHo: true,
+      offenceCategory: "CB",
+      offenceTitle: "Application to reopen case",
+      recordableOnPnc: false
     })
 
     const inputMessage = generateSpiMessage({
@@ -45,12 +46,12 @@ describe.ifPhase1("HO100236", () => {
   it.skip("should create an exception if the home office classifcation is an empty string", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
-      offenceCategory: "CB",
-      offenceTitle: "valid",
-      recordableOnPnc: false,
       description: "blah",
       homeOfficeClassification: "",
-      notifiableToHo: true
+      notifiableToHo: true,
+      offenceCategory: "CB",
+      offenceTitle: "valid",
+      recordableOnPnc: false
     })
 
     const inputMessage = generateSpiMessage({
@@ -81,12 +82,12 @@ describe.ifPhase1("HO100236", () => {
   it.skip("should create an exception if the home office classification doesn't match the specified regex", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockImplementation(() => ({
       cjsCode: "MC8080524",
-      offenceCategory: "CB",
-      offenceTitle: "valid",
-      recordableOnPnc: false,
       description: "blah",
       homeOfficeClassification: "467/123",
-      notifiableToHo: true
+      notifiableToHo: true,
+      offenceCategory: "CB",
+      offenceTitle: "valid",
+      recordableOnPnc: false
     }))
 
     const inputMessage = generateSpiMessage({

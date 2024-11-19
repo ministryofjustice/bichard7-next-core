@@ -1,6 +1,8 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-import { amountSpecifiedInResultPath } from "../helpers/errorPaths"
+
 import type { Duration, GeneratePhase2MessageOptions } from "../helpers/generatePhase2Message"
+
+import { amountSpecifiedInResultPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
@@ -20,18 +22,18 @@ describe.ifPhase2("HO200205", () => {
       {
         results: [
           {
-            cjsResultCode: 1100,
             amountSpecifiedInResults,
+            cjsResultCode: 1100,
             durations,
-            pncAdjudicationExists: true,
-            numberOfOffencesTic: true
+            numberOfOffencesTic: true,
+            pncAdjudicationExists: true
           }
         ]
       }
     ],
-    pncId: "2000/0000000X",
     pncAdjudication: {},
-    pncDisposals: [{ type: 1000 }]
+    pncDisposals: [{ type: 1000 }],
+    pncId: "2000/0000000X"
   })
 
   describe("when two durations in result", () => {
@@ -43,8 +45,8 @@ describe.ifPhase2("HO200205", () => {
             messageType,
             [10_000_000.99, 100],
             [
-              { type: "Custodial", unit: "D", length: 30 },
-              { type: "Community Punishment", unit: "H", length: 123 }
+              { length: 30, type: "Custodial", unit: "D" },
+              { length: 123, type: "Community Punishment", unit: "H" }
             ]
           )
         )
@@ -70,9 +72,9 @@ describe.ifPhase2("HO200205", () => {
             messageType,
             [100, 100, 10_000_000.99],
             [
-              { type: "Custodial", unit: "D", length: 30 },
-              { type: "Community Punishment", unit: "H", length: 123 },
-              { type: "Rehabilitation", unit: "H", length: 42 }
+              { length: 30, type: "Custodial", unit: "D" },
+              { length: 123, type: "Community Punishment", unit: "H" },
+              { length: 42, type: "Rehabilitation", unit: "H" }
             ]
           )
         )
@@ -97,8 +99,8 @@ describe.ifPhase2("HO200205", () => {
           messageType,
           [100, 100],
           [
-            { type: "Custodial", unit: "D", length: 30 },
-            { type: "Community Punishment", unit: "H", length: 123 }
+            { length: 30, type: "Custodial", unit: "D" },
+            { length: 123, type: "Community Punishment", unit: "H" }
           ]
         )
       )

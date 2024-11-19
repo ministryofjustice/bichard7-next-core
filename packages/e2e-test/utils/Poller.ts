@@ -1,10 +1,10 @@
 const clearTimeouts = (handles: NodeJS.Timeout[]) => handles.forEach(clearTimeout)
 
 type PollerOptions<T> = {
-  timeout: number
-  delay: number
   condition: (result: T) => boolean
+  delay: number
   name: string
+  timeout: number
 }
 
 class Poller<T> {
@@ -15,7 +15,7 @@ class Poller<T> {
   }
 
   poll(options: PollerOptions<T>): Promise<T> {
-    const { timeout, delay, condition, name } = options
+    const { condition, delay, name, timeout } = options
     let isDone = false
 
     return new Promise((resolve, reject) => {
