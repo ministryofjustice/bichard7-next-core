@@ -1,6 +1,5 @@
-import type { OldPhase1Comparison } from "../types/ComparisonFile"
-
 import comparePhase1 from "./comparePhase1"
+import type { OldPhase1Comparison } from "../types/ComparisonFile"
 import processTestFile from "./processTestFile"
 
 describe("compare", () => {

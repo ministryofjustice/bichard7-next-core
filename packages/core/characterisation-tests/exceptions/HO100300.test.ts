@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -51,16 +50,16 @@ describe.ifPhase1("HO100300", () => {
           results: [
             {
               code: 1015,
+              text: "Dummy result text",
               nextHearing: {
-                bailStatusOffence: "U",
                 nextHearingDetails: {
                   courtHearingLocation: "B01NI01",
                   dateOfHearing: "2011-10-08",
                   timeOfHearing: "14:00:00"
                 },
-                nextHearingReason: "Dummy reason"
-              },
-              text: "Dummy result text"
+                nextHearingReason: "Dummy reason",
+                bailStatusOffence: "U"
+              }
             }
           ]
         }

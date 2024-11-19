@@ -1,6 +1,5 @@
 import type { SpiPlea } from "../../types/Plea"
 import type { SpiVerdict } from "../../types/Verdict"
-
 import generateMessage from "./generateMessage"
 
 type NextHearingDetails = {
@@ -10,26 +9,26 @@ type NextHearingDetails = {
 }
 
 type NextHearing = {
-  bailStatusOffence?: string
   nextHearingDetails?: NextHearingDetails
   nextHearingReason?: string
+  bailStatusOffence?: string
 }
 
 export type Result = {
-  bailStatus?: string
   code?: number
+  qualifier?: string
+  text?: string
+  bailStatus?: string
   nextHearing?: NextHearing
+  resultQualifierCode?: string
   outcome?: {
-    amountSterling?: number
     duration?: {
-      unit?: string
       value?: number
+      unit?: string
     }
+    amountSterling?: number
     penaltyPoints?: number
   }
-  qualifier?: string
-  resultQualifierCode?: string
-  text?: string
 }
 
 export type AlcoholLevel = {
@@ -38,22 +37,22 @@ export type AlcoholLevel = {
 }
 
 export type Offence = {
-  alcoholLevel?: AlcoholLevel
   code?: string
-  convictionDate?: null | string
-  endDate?: Date
-  endTime?: string
-  finding?: null | SpiVerdict
-  location?: string
-  modeOfTrial?: string
-  offenceDateCode?: number
-  offenceSequenceNumber?: number
-  offenceWording?: string
-  plea?: SpiPlea
-  recordable?: boolean
+  finding?: SpiVerdict | null
   results: Result[]
+  recordable?: boolean
+  plea?: SpiPlea
   startDate?: Date
   startTime?: string
+  endDate?: Date
+  endTime?: string
+  modeOfTrial?: string
+  location?: string
+  offenceWording?: string
+  offenceSequenceNumber?: number
+  convictionDate?: string | null
+  offenceDateCode?: number
+  alcoholLevel?: AlcoholLevel
 }
 
 export type Address = {
@@ -66,12 +65,12 @@ export type Address = {
 }
 
 type Person = {
-  address?: Address
+  title?: string
   familyName?: string
   givenName1?: string
   givenName2?: string
   givenName3?: string
-  title?: string
+  address?: Address
 }
 
 type Organisation = {
@@ -79,18 +78,18 @@ type Organisation = {
 }
 
 export type GenerateSpiMessageOptions = {
-  ASN?: string
-  bailConditions?: string
-  bailStatus?: string
+  timeOfHearing?: string
+  organisation?: Organisation
+  reasonForBailConditionsOrCustody?: string
+  offences: Offence[]
+  PTIURN?: string
   courtHearingLocation?: string
   courtPncIdentifier?: string
-  offences: Offence[]
-  organisation?: Organisation
   person?: Person
+  bailConditions?: string
+  bailStatus?: string
+  ASN?: string
   psaCode?: number
-  PTIURN?: string
-  reasonForBailConditionsOrCustody?: string
-  timeOfHearing?: string
 }
 
 const generateSpiMessage = (options: GenerateSpiMessageOptions) =>

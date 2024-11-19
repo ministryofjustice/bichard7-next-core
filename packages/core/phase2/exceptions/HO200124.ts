@@ -1,10 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
+import errorPaths from "../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-
-import errorPaths from "../../lib/exceptions/errorPaths"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
@@ -28,7 +26,7 @@ const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
 
     if (
       result.ResultClass &&
-      [ResultClass.ADJOURNMENT_WITH_JUDGEMENT, ResultClass.JUDGEMENT_WITH_FINAL_RESULT].includes(result.ResultClass) &&
+      [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       hasUnmatchedPncOffences(aho, courtCaseReference) &&
       !offence.AddedByTheCourt
     ) {

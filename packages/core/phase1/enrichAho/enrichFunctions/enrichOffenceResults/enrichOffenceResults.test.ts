@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-
 import generateMockAho from "../../../tests/helpers/generateMockAho"
 import enrichOffenceResults from "./enrichOffenceResults"
 
@@ -31,6 +30,6 @@ describe("EnrichOffenceResults", () => {
     expect(offences[0].Result).toHaveLength(2)
     expect(offences[0].Result[0].Urgent).toBeUndefined()
     expect(offences[0].Result[1].Urgent).toBeUndefined()
-    expect(offences[1].Result[0].Urgent).toStrictEqual({ urgency: 24, urgent: true })
+    expect(offences[1].Result[0].Urgent).toStrictEqual({ urgent: true, urgency: 24 })
   })
 })

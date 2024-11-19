@@ -1,28 +1,27 @@
 import type { Offence, OffenceCode } from "../../../types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../../types/SpiResult"
-
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
-import nonRecordableResultCodes from "../../nonRecordableResultCodes"
 import { COMMON_LAWS, INDICTMENT } from "../../offenceTypes"
 import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
+import nonRecordableResultCodes from "../../nonRecordableResultCodes"
 
 const enteredInErrorResultCode = 4583 // Hearing Removed
 const dontKnowValue = "D"
 const adjournmentSineDieResultCode = 2007
 // TODO: Refactor into an enum
 const timeRange = {
-  AFTER: 3,
+  ON_OR_IN: 1,
   BEFORE: 2,
+  AFTER: 3,
   BETWEEN: 4,
   ON_OR_ABOUT: 5,
-  ON_OR_BEFORE: 6,
-  ON_OR_IN: 1
+  ON_OR_BEFORE: 6
 }
 
 export interface OffencesResult {
-  bailConditions: string[]
   offences: Offence[]
+  bailConditions: string[]
 }
 
 const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
@@ -48,7 +47,7 @@ const hasEnteredInErrorResult = (spiOffence: OffenceParsedXml): boolean =>
 
 const getOffenceReason = (spiOffenceCode: string): OffenceCode => {
   const spiOffenceCodeLength = spiOffenceCode.length
-  const offenceCode: Pick<OffenceCode, "FullCode" | "Reason"> = {
+  const offenceCode: Pick<OffenceCode, "Reason" | "FullCode"> = {
     Reason: spiOffenceCodeLength > 4 ? spiOffenceCode.substring(4, Math.min(7, spiOffenceCodeLength)) : "",
     ...(spiOffenceCodeLength > 7 ? { Qualifier: spiOffenceCode.substring(7) } : {}),
     FullCode: spiOffenceCode
@@ -89,20 +88,20 @@ const populateOffence = (
 
   const {
     BaseOffenceDetails: {
-      AlcoholRelatedOffence: spiAlcoholRelatedOffence,
+      OffenceCode: spiOffenceCode,
+      OffenceSequenceNumber: spiOffenceSequenceNumber,
       ArrestDate: spiArrestDate,
       ChargeDate: spiChargeDate,
       LocationOfOffence: spiLocationOfOffence,
-      OffenceCode: spiOffenceCode,
-      OffenceSequenceNumber: spiOffenceSequenceNumber,
-      OffenceTiming: { OffenceDateCode: spiOffenceDateCode, OffenceEnd: spiOffenceEnd, OffenceStart: spiOffenceStart },
-      OffenceWording: spiOffenceWording
+      OffenceWording: spiOffenceWording,
+      AlcoholRelatedOffence: spiAlcoholRelatedOffence,
+      OffenceTiming: { OffenceDateCode: spiOffenceDateCode, OffenceStart: spiOffenceStart, OffenceEnd: spiOffenceEnd }
     },
     ConvictionDate: spiConvictionDate,
     Result: spiResults
   } = spiOffence
 
-  const { bailQualifiers, results } = populateOffenceResults(spiOffence, courtResult)
+  const { results, bailQualifiers } = populateOffenceResults(spiOffence, courtResult)
 
   if (bailQualifiers.length > 0) {
     bailQualifiers.forEach((bailQualifier) => {
@@ -114,24 +113,24 @@ const populateOffence = (
   }
 
   const offence: Offence = {
+    CriminalProsecutionReference: {
+      OffenceReason: {
+        OffenceCode: getOffenceReason(spiOffenceCode ?? ""),
+        __type: "NationalOffenceReason"
+      }
+    },
+    ArrestDate: spiArrestDate ? new Date(spiArrestDate) : undefined,
+    ChargeDate: spiChargeDate ? new Date(spiChargeDate) : undefined,
     ActualOffenceDateCode: spiOffenceDateCode?.toString(),
-    ActualOffenceEndDate: spiOffenceEnd ? { EndDate: new Date(spiOffenceEnd.OffenceEndDate) } : undefined,
     ActualOffenceStartDate: {
       StartDate: new Date(spiOffenceStart.OffenceDateStartDate)
     },
-    ActualOffenceWording: spiOffenceWording,
-    ArrestDate: spiArrestDate ? new Date(spiArrestDate) : undefined,
-    ChargeDate: spiChargeDate ? new Date(spiChargeDate) : undefined,
-    CommittedOnBail: dontKnowValue,
-    ConvictionDate: spiConvictionDate ? new Date(spiConvictionDate) : undefined,
-    CourtOffenceSequenceNumber: Number(spiOffenceSequenceNumber),
-    CriminalProsecutionReference: {
-      OffenceReason: {
-        __type: "NationalOffenceReason",
-        OffenceCode: getOffenceReason(spiOffenceCode ?? "")
-      }
-    },
+    ActualOffenceEndDate: spiOffenceEnd ? { EndDate: new Date(spiOffenceEnd.OffenceEndDate) } : undefined,
     LocationOfOffence: spiLocationOfOffence,
+    ActualOffenceWording: spiOffenceWording,
+    CommittedOnBail: dontKnowValue,
+    CourtOffenceSequenceNumber: Number(spiOffenceSequenceNumber),
+    ConvictionDate: spiConvictionDate ? new Date(spiConvictionDate) : undefined,
     Result: results
   }
 
@@ -148,8 +147,8 @@ const populateOffence = (
     const spiOffenceStartTime = removeSeconds(spiOffenceStart.OffenceStartTime)
 
     const offenceDateCode = Number(spiOffenceDateCode)
-    const { AFTER, BEFORE, BETWEEN, ON_OR_ABOUT, ON_OR_BEFORE, ON_OR_IN } = timeRange
-    if ([AFTER, BEFORE, ON_OR_ABOUT, ON_OR_BEFORE, ON_OR_IN].includes(offenceDateCode)) {
+    const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = timeRange
+    if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(offenceDateCode)) {
       offence.OffenceTime = spiOffenceStartTime
     } else if (offenceDateCode === BETWEEN) {
       offence.StartTime = spiOffenceStartTime
@@ -168,7 +167,7 @@ const populateOffence = (
     }
   }
 
-  return { adjournmentSineDieConditionWasMet, bailConditions, offence }
+  return { offence, bailConditions, adjournmentSineDieConditionWasMet }
 }
 
 const populateOffences = (courtResult: ResultedCaseMessageParsedXml): OffencesResult => {
@@ -178,7 +177,7 @@ const populateOffences = (courtResult: ResultedCaseMessageParsedXml): OffencesRe
   let isAdjournmentSineDieConditionMet: boolean = false
 
   for (const spiOffence of spiOffences) {
-    const { adjournmentSineDieConditionWasMet, bailConditions, offence } = populateOffence(
+    const { offence, bailConditions, adjournmentSineDieConditionWasMet } = populateOffence(
       spiOffence,
       courtResult,
       isAdjournmentSineDieConditionMet
@@ -188,7 +187,7 @@ const populateOffences = (courtResult: ResultedCaseMessageParsedXml): OffencesRe
     offences.push(offence)
   }
 
-  return { bailConditions: allBailConditions, offences }
+  return { offences, bailConditions: allBailConditions }
 }
 
 export default populateOffences

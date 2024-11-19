@@ -1,5 +1,4 @@
 import { readFileSync } from "fs"
-
 import parseSpiResult from "../parseSpiResult"
 import populateOffences from "./populateOffences"
 

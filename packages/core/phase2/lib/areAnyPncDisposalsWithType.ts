@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-
 import findPncCourtCase from "./findPncCourtCase"
 
 const areAnyPncDisposalsWithType = (aho: AnnotatedHearingOutcome, offence: Offence, disposalType: number): boolean => {

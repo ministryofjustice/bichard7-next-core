@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -13,10 +12,10 @@ describe.ifPhase1("HO100324", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          convictionDate: null,
           finding: null,
-          recordable: true,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
+          convictionDate: null,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
+          recordable: true
         }
       ]
     })
@@ -24,8 +23,8 @@ describe.ifPhase1("HO100324", () => {
     const {
       hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, {
-      pncAdjudication: true,
-      recordable: true
+      recordable: true,
+      pncAdjudication: true
     })
 
     expect(exceptions).toStrictEqual([
@@ -40,18 +39,18 @@ describe.ifPhase1("HO100324", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          convictionDate: null,
           finding: null,
-          offenceSequenceNumber: 1,
+          convictionDate: null,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
           recordable: true,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
+          offenceSequenceNumber: 1
         },
         {
-          convictionDate: null,
           finding: null,
-          offenceSequenceNumber: 2,
+          convictionDate: null,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
           recordable: true,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
+          offenceSequenceNumber: 2
         }
       ]
     })
@@ -59,11 +58,11 @@ describe.ifPhase1("HO100324", () => {
     const pncMessage = generateSpiMessage({
       offences: [
         {
-          convictionDate: null,
           finding: null,
-          offenceSequenceNumber: 1,
+          convictionDate: null,
+          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }],
           recordable: true,
-          results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }]
+          offenceSequenceNumber: 1
         }
       ]
     })
@@ -71,9 +70,9 @@ describe.ifPhase1("HO100324", () => {
     const {
       hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, {
+      recordable: true,
       pncAdjudication: true,
-      pncMessage,
-      recordable: true
+      pncMessage
     })
 
     expect(exceptions).toStrictEqual([

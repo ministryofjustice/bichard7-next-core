@@ -1,6 +1,5 @@
-import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
-
 import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
+import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
 import { getLocalOffenceReason, getNationalOffenceReason } from "./getOffenceReason"
 import regexTestNationalOffenceCode from "./regexTestNationalOffenceCode"
 

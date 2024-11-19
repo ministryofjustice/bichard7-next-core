@@ -1,53 +1,52 @@
-import type { Operation } from "../../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../../types/PncOperation"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import sortOperations from "./sortOperations"
 
 describe("check sortOperations", () => {
   const sendef: Operation = {
     code: PncOperation.SENTENCE_DEFERRED,
+    status: "Completed",
     data: {
       courtCaseReference: "FOO1"
-    },
-    status: "Completed"
+    }
   }
   const sendef2: Operation = {
     code: PncOperation.SENTENCE_DEFERRED,
+    status: "Completed",
     data: {
       courtCaseReference: "FOO2"
-    },
-    status: "Completed"
+    }
   }
   const disarr: Operation = {
     code: PncOperation.NORMAL_DISPOSAL,
+    status: "Completed",
     data: {
       courtCaseReference: "FOO"
-    },
-    status: "Completed"
+    }
   }
   const newrem1: Operation = {
     code: PncOperation.REMAND,
+    status: "Completed",
     data: {
       nextHearingLocation: {
-        BottomLevelCode: null,
-        OrganisationUnitCode: "ABCDEFG",
         SecondLevelCode: null,
-        ThirdLevelCode: null
+        BottomLevelCode: null,
+        ThirdLevelCode: null,
+        OrganisationUnitCode: "ABCDEFG"
       }
-    },
-    status: "Completed"
+    }
   }
   const newrem2: Operation = {
     code: PncOperation.REMAND,
+    status: "Completed",
     data: {
       nextHearingLocation: {
-        BottomLevelCode: null,
-        OrganisationUnitCode: "HIJKLMN",
         SecondLevelCode: null,
-        ThirdLevelCode: null
+        BottomLevelCode: null,
+        ThirdLevelCode: null,
+        OrganisationUnitCode: "HIJKLMN"
       }
-    },
-    status: "Completed"
+    }
   }
   it("After sorting NEWREM is after other operations", () => {
     const operations = [newrem1, sendef, disarr]

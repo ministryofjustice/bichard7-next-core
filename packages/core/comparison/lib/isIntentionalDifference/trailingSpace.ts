@@ -1,11 +1,10 @@
-import type { ComparisonData } from "../../types/ComparisonData"
-
 import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
+import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core will remove a trailing space in the bail conditions
 
-const trailingSpace = ({ actual, expected, phase }: ComparisonData) =>
+const trailingSpace = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     if (JSON.stringify(expected.courtResultMatchingSummary) !== JSON.stringify(actual.courtResultMatchingSummary)) {
       return false

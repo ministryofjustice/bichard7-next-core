@@ -2,9 +2,7 @@
 import chalk from "chalk"
 import crypto from "crypto"
 import fs from "fs"
-
 import type { ImportedComparison } from "../../comparison/types/ImportedComparison"
-
 import ActiveMqHelper from "../../phase1/tests/helpers/ActiveMqHelper"
 import defaults from "../../phase1/tests/helpers/defaults"
 import runFileOnBichard from "../../scripts/runFileOnBichard"
@@ -39,9 +37,9 @@ const main = async () => {
   console.log(`Repeating ${iterations} times`)
 
   const mq = new ActiveMqHelper({
+    url: process.env.MQ_URL || defaults.mqUrl,
     login: process.env.MQ_USER || defaults.mqUser,
-    password: process.env.MQ_PASSWORD || defaults.mqPassword,
-    url: process.env.MQ_URL || defaults.mqUrl
+    password: process.env.MQ_PASSWORD || defaults.mqPassword
   })
 
   // Clear the queue

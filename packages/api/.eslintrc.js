@@ -1,4 +1,7 @@
 module.exports = {
+  parserOptions: {
+    project: "./tsconfig.json"
+  },
   overrides: [
     {
       files: ["**/*.ts"],
@@ -6,8 +9,5 @@ module.exports = {
         "require-await": "off"
       }
     }
-  ],
-  parserOptions: {
-    project: "./tsconfig.json"
-  }
+  ]
 }

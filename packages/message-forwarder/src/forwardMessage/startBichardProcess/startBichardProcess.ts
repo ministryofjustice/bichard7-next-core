@@ -1,13 +1,12 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
-
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { type AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import Phase from "@moj-bichard7/core/types/Phase"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { randomUUID } from "crypto"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!taskDataBucket) {
@@ -38,10 +37,10 @@ export const startBichardProcess = async (
   }
 
   logger.info({
-    correlationId,
     event: `message-forwarder:started-workflow:${phase === Phase.PNC_UPDATE ? "phase-2" : "phase-1"}`,
+    workflowName,
     s3TaskDataPath,
-    workflowId,
-    workflowName
+    correlationId,
+    workflowId
   })
 }

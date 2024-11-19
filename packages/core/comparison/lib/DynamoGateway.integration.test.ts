@@ -1,12 +1,10 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import "phase1/tests/helpers/setEnvironmentVariables"
-
-import type { ComparisonLog } from "../types"
-
 import MockDynamo from "../../phase1/tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../phase1/tests/helpers/testDynamoDbTableConfig"
-import createDynamoDbConfig from "./createDynamoDbConfig"
+import type { ComparisonLog } from "../types"
 import DynamoGateway from "./DynamoGateway"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const dynamoDbGatewayConfig = createDynamoDbConfig(1)
 
@@ -16,26 +14,26 @@ const createRecord = (
   runAt = "2022-07-09T10:12:13.000Z",
   skipped = false
 ): ComparisonLog => ({
+  version: 1,
+  initialResult: result,
+  initialRunAt: runAt,
+  latestResult: result,
+  latestRunAt: runAt,
+  skipped,
+  s3Path,
   history: [
     {
+      result: result,
+      runAt,
       details: {
         auditLogEventsMatch: result,
         exceptionsMatch: result,
         triggersMatch: result,
         xmlOutputMatches: result,
         xmlParsingMatches: result
-      },
-      result: result,
-      runAt
+      }
     }
-  ],
-  initialResult: result,
-  initialRunAt: runAt,
-  latestResult: result,
-  latestRunAt: runAt,
-  s3Path,
-  skipped,
-  version: 1
+  ]
 })
 
 jest.retryTimes(5, { logErrorsBeforeRetry: false })

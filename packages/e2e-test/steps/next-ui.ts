@@ -1,7 +1,4 @@
 import { Given, Then, When } from "@cucumber/cucumber"
-
-import type Bichard from "../utils/world"
-
 import * as legacy from "../utils/actions.legacy-ui"
 import * as ui from "../utils/actions.next-ui"
 import { checkAuditLogExists } from "../utils/auditLogging"
@@ -9,6 +6,7 @@ import { logInAs } from "../utils/auth"
 import * as messages from "../utils/message"
 import * as pnc from "../utils/pnc"
 import * as reports from "../utils/reports"
+import type Bichard from "../utils/world"
 
 export const setupNextSteps = () => {
   Given("I am logged in as {string}", logInAs)

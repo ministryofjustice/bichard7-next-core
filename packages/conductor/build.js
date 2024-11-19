@@ -1,12 +1,12 @@
 const buildOptions = {
-  bundle: true,
   entryPoints: ["src/worker.ts"],
-  format: "cjs",
+  bundle: true,
   logLevel: "info",
-  minify: true,
   outdir: "build",
-  platform: "node",
-  target: "node16"
+  minify: true,
+  target: "node16",
+  format: "cjs",
+  platform: "node"
 }
 
 // eslint-disable-next-line import/no-extraneous-dependencies

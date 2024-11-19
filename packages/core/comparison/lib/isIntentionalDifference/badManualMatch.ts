@@ -1,7 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { ComparisonData } from "../../types/ComparisonData"
-
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 const badManualMatch = ({ actual, phase }: ComparisonData) =>

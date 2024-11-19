@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -26,9 +25,9 @@ describe.ifPhase1("Trigger force configuration", () => {
   it("should generate a trigger when only allowed by a court", async () => {
     // TRPR0001 is allowed by the B01DU court but not by force 91
     const inputMessage = generateSpiMessage({
+      PTIURN: "91EC0303908",
       courtHearingLocation: "B01DU00",
-      offences: [{ results: [{ code: trigger1ResultCode }] }],
-      PTIURN: "91EC0303908"
+      offences: [{ results: [{ code: trigger1ResultCode }] }]
     })
 
     const { triggers } = await processPhase1Message(inputMessage)
@@ -52,9 +51,9 @@ describe.ifPhase1("Trigger force configuration", () => {
     // TRPR0005 is not allowed by either force 02 or court B01DU
     // Since the court and force don't match a TRPR0027 is generated since it is out of area
     const inputMessage = generateSpiMessage({
+      PTIURN: "02ZD0303908",
       courtHearingLocation: "B01DU00",
-      offences: [{ results: [{ code: trigger5ResultCode }] }],
-      PTIURN: "02ZD0303908"
+      offences: [{ results: [{ code: trigger5ResultCode }] }]
     })
 
     const { triggers } = await processPhase1Message(inputMessage)

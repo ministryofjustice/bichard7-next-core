@@ -1,5 +1,4 @@
 import type { PostgresError, Sql } from "postgres"
-
 import type ErrorListRecord from "../../types/ErrorListRecord"
 
 const fetchErrorListRecordId = async (db: Sql, correlationId: string): Promise<number | undefined> => {

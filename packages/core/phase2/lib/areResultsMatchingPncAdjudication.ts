@@ -1,6 +1,5 @@
-import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../types/PncQueryResult"
-
+import type { Result } from "../../types/AnnotatedHearingOutcome"
 import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 
 const areResultsMatchingPncAdjudication = (

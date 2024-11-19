@@ -1,15 +1,14 @@
 import type { Client } from "stompit"
+import { ConnectFailover } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
 
-import { ConnectFailover } from "stompit"
-
 type Options = {
+  url: string
   login: string
   password: string
-  url: string
 }
 
-const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<null | string> =>
+const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Promise<string | null> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line prefer-const
     let timeout: NodeJS.Timeout
@@ -39,7 +38,7 @@ const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Pro
       }
     }
 
-    subscription = client.subscribe({ ack: "client", destination: queueName }, callback)
+    subscription = client.subscribe({ destination: queueName, ack: "client" }, callback)
     timeout = setTimeout(() => {
       subscription.unsubscribe()
       resolve(null)
@@ -47,20 +46,20 @@ const getMessage = (client: Client, queueName: string, timeoutAmount = 500): Pro
   })
 
 export default class ActiveMqHelper {
-  private client?: Client
+  private url: string
 
   private options: unknown
 
-  private url: string
+  private client?: Client
 
-  constructor({ login, password, url }: Options) {
+  constructor({ url, login, password }: Options) {
     this.url = url
     this.options = {
       connect: {
         connectHeaders: {
-          "heart-beat": "5000,5000",
           login: login,
-          passcode: password
+          passcode: password,
+          "heart-beat": "5000,5000"
         }
       }
     }
@@ -99,28 +98,6 @@ export default class ActiveMqHelper {
     return this.client
   }
 
-  disconnect(): undefined | void {
-    return this.client?.disconnect()
-  }
-
-  async getMessages(queueName: string, timeout = 500): Promise<string[]> {
-    const messages = []
-    const client = await this.connectIfRequired()
-    let waiting = true
-
-    while (waiting) {
-      // eslint-disable-next-line no-await-in-loop
-      const message = await getMessage(client, queueName, timeout)
-      if (message) {
-        messages.push(message)
-      } else {
-        waiting = false
-      }
-    }
-
-    return messages
-  }
-
   async sendMessage(queueName: string, message: string): Promise<void> {
     const client = await this.connectIfRequired()
     const headers = {
@@ -141,5 +118,27 @@ export default class ActiveMqHelper {
         }
       })
     })
+  }
+
+  async getMessages(queueName: string, timeout = 500): Promise<string[]> {
+    const messages = []
+    const client = await this.connectIfRequired()
+    let waiting = true
+
+    while (waiting) {
+      // eslint-disable-next-line no-await-in-loop
+      const message = await getMessage(client, queueName, timeout)
+      if (message) {
+        messages.push(message)
+      } else {
+        waiting = false
+      }
+    }
+
+    return messages
+  }
+
+  disconnect(): undefined | void {
+    return this.client?.disconnect()
   }
 }

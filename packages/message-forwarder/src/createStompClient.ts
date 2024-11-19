@@ -2,13 +2,13 @@ import logger from "@moj-bichard7/common/utils/logger"
 import { Client } from "@stomp/stompjs"
 
 const createStompClient = (): Client => {
-  const { MQ_AUTH, MQ_URL } = process.env
+  const { MQ_URL, MQ_AUTH } = process.env
 
   if (!MQ_URL || !MQ_AUTH) {
     throw Error("MQ environment variables must all have value.")
   }
 
-  const { password, username } = JSON.parse(MQ_AUTH)
+  const { username, password } = JSON.parse(MQ_AUTH)
   if (!username || !password) {
     throw Error("MQ_AUTH environment variable set incorrectly")
   }
@@ -20,6 +20,11 @@ const createStompClient = (): Client => {
   let activeBrokerIndex = 0
 
   const client = new Client({
+    brokerURL: brokerUrls[0],
+    connectHeaders: {
+      login: username,
+      passcode: password
+    },
     beforeConnect: () => {
       client.brokerURL = brokerUrls[activeBrokerIndex]
       logger.info(`Connecting to ${client.brokerURL}`)
@@ -27,11 +32,6 @@ const createStompClient = (): Client => {
       if (!brokerUrls[activeBrokerIndex]) {
         activeBrokerIndex = 0
       }
-    },
-    brokerURL: brokerUrls[0],
-    connectHeaders: {
-      login: username,
-      passcode: password
     }
   })
   return client

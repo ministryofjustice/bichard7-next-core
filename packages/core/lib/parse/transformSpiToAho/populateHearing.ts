@@ -1,24 +1,23 @@
 import type { Hearing } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiDefendant } from "../../../types/SpiResult"
-
 import getOrganisationUnit from "../../getOrganisationUnit"
 import removeSeconds from "./removeSeconds"
 
 type DefendantDetailsData = {
-  name: string
   presentAtHearing: string
+  name: string
 }
 
 const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData => {
   if (spiDefendant.CourtIndividualDefendant) {
     const {
       CourtIndividualDefendant: {
+        PresentAtHearing: presentAtHearing,
         PersonDefendant: {
           BasePersonDetails: {
-            PersonName: { PersonFamilyName: familyName, PersonGivenName1: givenName }
+            PersonName: { PersonGivenName1: givenName, PersonFamilyName: familyName }
           }
-        },
-        PresentAtHearing: presentAtHearing
+        }
       }
     } = spiDefendant
 
@@ -26,7 +25,7 @@ const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData =
       .filter((namePart) => namePart)
       .join(" ")
       .trim()
-    return { name, presentAtHearing }
+    return { presentAtHearing, name }
   } else if (spiDefendant.CourtCorporateDefendant) {
     const {
       CourtCorporateDefendant: {
@@ -35,7 +34,7 @@ const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData =
       }
     } = spiDefendant
     const name = spiOrganisationName.trim()
-    return { name, presentAtHearing }
+    return { presentAtHearing, name }
   }
 
   throw new Error("Defendant details contained neither CourtIndividualDefendant or CourtCorporateDefendant")
@@ -44,7 +43,6 @@ const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData =
 const populateHearing = (messageId: string, courtResult: ResultedCaseMessageParsedXml): Hearing => {
   const {
     Session: {
-      Case: { Defendant: spiDefendant },
       CourtHearing: {
         Hearing: {
           CourtHearingLocation: spiCourtHearingLocation,
@@ -52,25 +50,26 @@ const populateHearing = (messageId: string, courtResult: ResultedCaseMessagePars
           TimeOfHearing: spiTimeOfHearing
         },
         PSAcode: spiPsaCode
-      }
+      },
+      Case: { Defendant: spiDefendant }
     }
   } = courtResult
 
-  const { name, presentAtHearing } = getDefendantDetails(spiDefendant)
+  const { presentAtHearing, name } = getDefendantDetails(spiDefendant)
 
   const hearingOutcomeHearing: Hearing = {
     CourtHearingLocation: getOrganisationUnit(spiCourtHearingLocation),
-    CourtHouseCode: Number(spiPsaCode),
     DateOfHearing: new Date(spiDateOfHearing),
-    DefendantPresentAtHearing: presentAtHearing,
-    HearingDocumentationLanguage: "D",
+    TimeOfHearing: removeSeconds(spiTimeOfHearing),
     HearingLanguage: "D",
+    HearingDocumentationLanguage: "D",
+    CourtHouseCode: Number(spiPsaCode),
     SourceReference: {
       DocumentName: `SPI ${name}`,
       DocumentType: "SPI Case Result",
       UniqueID: messageId
     },
-    TimeOfHearing: removeSeconds(spiTimeOfHearing)
+    DefendantPresentAtHearing: presentAtHearing
   }
 
   return hearingOutcomeHearing

@@ -1,17 +1,14 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
-
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
-
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
-
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import canUserResubmitCase from "../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({
@@ -21,21 +18,22 @@ const bodySchema = z.object({
 export type ResubmitBody = z.infer<typeof bodySchema>
 
 type HandlerProps = {
-  body: ResubmitBody
-  caseId: number
   db: DataStoreGateway
-  reply: FastifyReply
   user: User
+  caseId: number
+  body: ResubmitBody
+  reply: FastifyReply
 }
 
 const schema = {
   ...auth,
-  body: bodySchema,
+  tags: ["Cases"],
   params: z.object({
     caseId: z.string().openapi({
       description: "Case ID"
     })
   }),
+  body: bodySchema,
   response: {
     [OK]: z
       .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })
@@ -43,11 +41,10 @@ const schema = {
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
-  },
-  tags: ["Cases"]
+  }
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
+const handler = async ({ db, user, caseId, body, reply }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -71,7 +68,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
   // - in theory this should either be 502 or 504
 
   try {
-    const result = await canUserResubmitCase({ caseId, db, user })
+    const result = await canUserResubmitCase({ db, user, caseId })
 
     if (!result) {
       reply.code(FORBIDDEN).send()
@@ -95,11 +92,11 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
     await handler({
-      body: req.body,
-      caseId: Number(req.params.caseId),
       db: req.db,
-      reply,
-      user: req.user
+      user: req.user,
+      caseId: Number(req.params.caseId),
+      body: req.body,
+      reply
     })
   })
 }

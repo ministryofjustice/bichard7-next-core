@@ -1,11 +1,11 @@
 import { z } from "zod"
 
 export const errorReportDataSchema = z.object({
-  errorMessage: z.string(),
-  externalId: z.string(),
+  receivedDate: z.string(),
   messageId: z.string(),
+  externalId: z.string(),
   ptiUrn: z.string(),
-  receivedDate: z.string()
+  errorMessage: z.string()
 })
 
 export type ErrorReportData = z.infer<typeof errorReportDataSchema>

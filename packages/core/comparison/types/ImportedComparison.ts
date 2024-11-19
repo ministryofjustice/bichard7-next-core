@@ -3,11 +3,11 @@ import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import type { Trigger } from "../../types/Trigger"
 
 export type ImportedComparison = {
-  annotatedHearingOutcome: string
-  auditLogEvents?: string[]
-  dbContent?: { errorList: ErrorListRecord[]; errorListTriggers: ErrorListTriggerRecord[] }
   file?: string
   incomingMessage: string
+  annotatedHearingOutcome: string
   standingDataVersion: string
   triggers: Trigger[]
+  dbContent?: { errorList: ErrorListRecord[]; errorListTriggers: ErrorListTriggerRecord[] }
+  auditLogEvents?: string[]
 }

@@ -1,17 +1,15 @@
 import type { Sql } from "postgres"
-
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
-import type { Trigger } from "../../types/Trigger"
-
 import ResolutionStatus from "../../types/ResolutionStatus"
+import type { Trigger } from "../../types/Trigger"
 
 const insertErrorListTriggers = async (db: Sql, recordId: number, triggers: Trigger[]): Promise<void> => {
   for (const trigger of triggers) {
     const triggerRecord: ErrorListTriggerRecord = {
-      create_ts: new Date(),
       error_id: recordId,
+      trigger_code: trigger.code,
       status: ResolutionStatus.UNRESOLVED,
-      trigger_code: trigger.code
+      create_ts: new Date()
     }
     if (trigger.offenceSequenceNumber) {
       triggerRecord.trigger_item_identity = String(trigger.offenceSequenceNumber)

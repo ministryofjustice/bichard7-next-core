@@ -1,10 +1,8 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
-import type { Client, Message, StompSubscription } from "@stomp/stompjs"
-
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
+import type { Client, Message, StompSubscription } from "@stomp/stompjs"
 import { WebSocket } from "ws"
-
 import forwardMessage from "./forwardMessage/forwardMessage"
 Object.assign(global, { WebSocket })
 

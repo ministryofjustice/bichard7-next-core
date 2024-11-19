@@ -1,20 +1,18 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
-import type { AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
-import type { Result } from "@moj-bichard7/common/types/Result"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import type { AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
 import { z } from "zod"
-
 import {
   extractIncomingMessage,
   extractXMLEntityContent,
@@ -63,7 +61,7 @@ const fallbackAuditLogRecord = (
     ptiUrn = extractXMLEntityContent(stream, "PTIURN")
   }
 
-  const { correlationId, externalId, receivedDate } = messageMetadata
+  const { externalId, correlationId, receivedDate } = messageMetadata
 
   return {
     caseId: ptiUrn,
@@ -93,6 +91,9 @@ const buildParsingFailedOutput = (
   }
 
   return {
+    correlationId,
+    error: "parsing_failed",
+    auditLogRecord,
     auditLogEvents: [
       {
         category: "error",
@@ -102,15 +103,12 @@ const buildParsingFailedOutput = (
         timestamp: new Date()
       }
     ],
-    auditLogRecord,
-    correlationId,
-    error: "parsing_failed",
     errorReportData: {
-      errorMessage,
-      externalId,
+      receivedDate: receivedDate.toISOString(),
       messageId: correlationId,
+      externalId,
       ptiUrn: auditLogRecord.caseId,
-      receivedDate: receivedDate.toISOString()
+      errorMessage
     }
   }
 }
@@ -122,8 +120,9 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const convertSpiToAho: ConductorWorker = {
+  taskDefName: "convert_spi_to_aho",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
-    const { correlationId, s3Path } = task.inputData
+    const { s3Path, correlationId } = task.inputData
 
     const s3Config = createS3Config()
     const s3FileResult = await getFileFromS3(s3Path, incomingBucket, s3Config)
@@ -168,6 +167,7 @@ const convertSpiToAho: ConductorWorker = {
     }
 
     const outputData = {
+      s3TaskDataPath: putPath,
       auditLogRecord: {
         caseId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
         createdBy: "Incoming message handler",
@@ -179,13 +179,11 @@ const convertSpiToAho: ConductorWorker = {
         receivedDate,
         s3Path,
         systemId
-      },
-      s3TaskDataPath: putPath
+      }
     }
 
     return completed(outputData, "Incoming message successfully converted to AHO")
-  }),
-  taskDefName: "convert_spi_to_aho"
+  })
 }
 
 export default convertSpiToAho

@@ -1,9 +1,5 @@
-import type { Page } from "puppeteer"
-
 import { expect } from "expect"
-
-import type Bichard from "./world"
-
+import type { Page } from "puppeteer"
 import { checkForFile } from "../helpers/fsHelper"
 import {
   reloadUntilContent,
@@ -13,6 +9,7 @@ import {
   waitForRecord
 } from "./puppeteer-utils"
 import { caseListPage } from "./urls"
+import type Bichard from "./world"
 
 const filterByRecordName = async function (world: Bichard) {
   const name = world.getRecordName()
@@ -56,8 +53,8 @@ export const getRawTableData = async function (world: Bichard, selector: string)
 
 type DataTableValue = {
   column: number
-  exact: boolean
   value: string
+  exact: boolean
 }
 
 const checkDataTable = async function (world: Bichard, values: DataTableValue[]) {
@@ -127,13 +124,13 @@ export const loadTriggersTab = async function (page: Page) {
 
 export const loadTab = async function (this: Bichard, tabName: string) {
   const tabIds: Record<string, string> = {
+    hearing: "#br7_button_Hearing",
     case: "#br7_button_Case",
     defendant: "#br7_button_Defendant",
-    hearing: "#br7_button_Hearing",
-    notes: "#br7_button_Note",
     offences: "#br7_button_OffenceList",
-    "pnc errors": "#br7_button_PNCError",
-    triggers: "#br7_button_Trigger"
+    notes: "#br7_button_Note",
+    triggers: "#br7_button_Trigger",
+    "pnc errors": "#br7_button_PNCError"
   }
   const tabId = tabIds[tabName.toLowerCase()]
   if (!tabId) {
@@ -388,21 +385,21 @@ export const cannotReallocateCase = async function (this: Bichard) {
 
 export const checkTriggerforOffence = async function (this: Bichard, triggerId: string, offenceId: string) {
   await checkDataTable(this, [
-    { column: 1, exact: false, value: triggerId },
-    { column: 2, exact: true, value: offenceId }
+    { column: 1, value: triggerId, exact: false },
+    { column: 2, value: offenceId, exact: true }
   ])
 }
 
 export const checkCompleteTriggerforOffence = async function (this: Bichard, triggerId: string, offenceId: string) {
   await checkDataTable(this, [
-    { column: 1, exact: false, value: triggerId },
-    { column: 2, exact: true, value: offenceId },
-    { column: 3, exact: true, value: "Complete" }
+    { column: 1, value: triggerId, exact: false },
+    { column: 2, value: offenceId, exact: true },
+    { column: 3, value: "Complete", exact: true }
   ])
 }
 
 export const checkTrigger = async function (this: Bichard, triggerId: string) {
-  await checkDataTable(this, [{ column: 1, exact: false, value: triggerId }])
+  await checkDataTable(this, [{ column: 1, value: triggerId, exact: false }])
 }
 
 export const resolveAllTriggers = async function (this: Bichard) {
@@ -441,7 +438,7 @@ export const manuallyResolveRecord = async function (this: Bichard) {
 }
 
 const filterRecords = async function (world: Bichard, resolvedType: string, recordType: string) {
-  const recordSelectId = { exception: "1", record: "0", trigger: "2" }[recordType.toLowerCase()]
+  const recordSelectId = { record: "0", exception: "1", trigger: "2" }[recordType.toLowerCase()]
   if (!recordSelectId) {
     throw new Error(`Record type '${recordType}' is unknown`)
   }
@@ -449,7 +446,7 @@ const filterRecords = async function (world: Bichard, resolvedType: string, reco
   await world.browser.page.waitForSelector("select#exceptionTypeFilter")
   await world.browser.page.select("select#exceptionTypeFilter", recordSelectId)
 
-  const resolutionSelectId = { resolved: "2", unresolved: "1" }[resolvedType.toLowerCase()]
+  const resolutionSelectId = { unresolved: "1", resolved: "2" }[resolvedType.toLowerCase()]
   if (!resolutionSelectId) {
     throw new Error(`Resolution type '${resolvedType}' is unknown`)
   }
@@ -505,8 +502,8 @@ export const viewOffence = async function (this: Bichard, offenceId: string) {
 
 export const checkOffenceData = async function (this: Bichard, value: string, key: string) {
   await checkDataTable(this, [
-    { column: 1, exact: true, value: key },
-    { column: 2, exact: true, value }
+    { column: 1, value: key, exact: true },
+    { column: 2, value, exact: true }
   ])
 }
 
@@ -519,8 +516,8 @@ export const checkNoteExists = async function (this: Bichard, value: string) {
 
 export const checkOffenceDataError = async function (this: Bichard, value: string, key: string) {
   await checkDataTable(this, [
-    { column: 1, exact: true, value: key },
-    { column: 3, exact: false, value }
+    { column: 1, value: key, exact: true },
+    { column: 3, value, exact: false }
   ])
 }
 
@@ -653,8 +650,8 @@ export const waitForRecordStep = async function (this: Bichard, record: string) 
 
 export const checkOffence = async function (this: Bichard, offenceCode: string, offenceId: string) {
   await checkDataTable(this, [
-    { column: 2, exact: true, value: offenceId },
-    { column: 4, exact: true, value: offenceCode }
+    { column: 2, value: offenceId, exact: true },
+    { column: 4, value: offenceCode, exact: true }
   ])
 }
 

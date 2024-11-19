@@ -1,7 +1,6 @@
+import areOrganisationUnitsEqual from "../../lib/areOrganisationUnitsEqual"
 import type { PncOperation } from "../../types/PncOperation"
 import type { Operation } from "../../types/PncUpdateDataset"
-
-import areOrganisationUnitsEqual from "../../lib/areOrganisationUnitsEqual"
 
 const areRemandOperationsEqual = (
   firstRemand: Operation<PncOperation.REMAND>,

@@ -1,5 +1,4 @@
 import type { z } from "zod"
-
 import type {
   defendantSchema,
   nextHearingDetailsSchema,
@@ -9,7 +8,6 @@ import type {
   spiAddressSchema,
   spiCourtIndividualDefendantSchema
 } from "../schemas/spiResult"
-
 import { incomingMessageParsedXmlSchema } from "../schemas/spiResult"
 
 export type ResultParsedXml = z.infer<typeof resultParsedXmlSchema>

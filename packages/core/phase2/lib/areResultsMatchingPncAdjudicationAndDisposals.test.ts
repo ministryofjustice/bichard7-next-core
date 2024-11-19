@@ -1,7 +1,6 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
-
-import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 import areResultsMatchingPncAdjudicationAndDisposals from "./areResultsMatchingPncAdjudicationAndDisposals"
+import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 
 describe("areResultsMatchingPncAdjudicationAndDisposals", () => {
   it("returns true when no results", () => {

@@ -1,6 +1,5 @@
 import type { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import type { S3Client } from "@aws-sdk/client-s3"
-
 import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
@@ -8,7 +7,7 @@ import fs from "fs"
 
 const sendFileToS3 = async (s3Client: S3Client, srcFilename: string, destFilename: string, bucket: string) => {
   const Body = await fs.promises.readFile(srcFilename)
-  const command = new PutObjectCommand({ Body, Bucket: bucket, Key: destFilename })
+  const command = new PutObjectCommand({ Bucket: bucket, Key: destFilename, Body })
   return s3Client.send(command)
 }
 
@@ -16,8 +15,8 @@ const getDynamoRecord = async (
   dynamoDbClient: DynamoDBClient,
   s3Path: string,
   tableName: string
-): Promise<Record<string, unknown> | undefined> => {
-  const getCommand = new GetCommand({ Key: { s3Path }, TableName: tableName })
+): Promise<undefined | Record<string, unknown>> => {
+  const getCommand = new GetCommand({ TableName: tableName, Key: { s3Path } })
   const docClient = DynamoDBDocumentClient.from(dynamoDbClient)
   const result = await docClient.send(getCommand)
   return result.Item
@@ -33,7 +32,7 @@ const setDynamoRecordToFailedStatus = async (
     latestResult: 0
   }
 
-  const putCommand = new PutCommand({ Item: updatedRecord, TableName: tableName })
+  const putCommand = new PutCommand({ TableName: tableName, Item: updatedRecord })
   const docClient = DynamoDBDocumentClient.from(dynamoDbClient)
   await docClient.send(putCommand)
 }

@@ -1,7 +1,6 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOffenceWithCaseRef } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import type { Candidate } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
-
+import type { PncOffenceWithCaseRef } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import offenceIsBreach from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
 import getOffenceCode from "../../../lib/offence/getOffenceCode"
 import { datesMatchApproximately } from "./datesMatchApproximately"
@@ -21,7 +20,7 @@ const generateCandidate = (
   hoOffence: Offence,
   pncOffence: PncOffenceWithCaseRef,
   hearingDate: Date
-): Candidate | void => {
+): void | Candidate => {
   const ignoreDates = offenceIsBreach(hoOffence)
   const hoOffenceCode = getOffenceCode(hoOffence)
   const pncOffenceCode = pncOffence.pncOffence.offence.cjsOffenceCode

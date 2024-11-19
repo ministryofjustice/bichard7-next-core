@@ -1,10 +1,9 @@
 import { XMLParser } from "fast-xml-parser"
-
 import type { PncOffence, PncQueryResult } from "../../types/PncQueryResult"
 
 type OffenceDates = {
-  endDate?: Date
   startDate: Date
+  endDate?: Date
 }
 
 type AhoPncOffence = {
@@ -12,13 +11,13 @@ type AhoPncOffence = {
     "@_ACPOOffenceCode": string
     "@_CJSOffenceCode": string
     "@_IntfcUpdateType": string
-    "@_OffenceQualifier1": string
-    "@_OffenceQualifier2": string
-    "@_OffenceTitle": string
     "@_OffEndDate": string
     "@_OffEndTime": string
     "@_OffStartDate": string
     "@_OffStartTime": string
+    "@_OffenceQualifier1": string
+    "@_OffenceQualifier2": string
+    "@_OffenceTitle": string
     "@_ReferenceNumber": string
   }
 }
@@ -37,18 +36,18 @@ type AhoPncCourtCase = {
 type ParsedAHO = {
   AnnotatedHearingOutcome: {
     CXE01: {
-      CourtCases: {
-        CourtCase: AhoPncCourtCase | AhoPncCourtCase[]
-      }
       FSC: {
         "@_FSCode": string
         "@_IntfcUpdateType": string
       }
       IDS: {
-        "@_Checkname": string
         "@_CRONumber": string
+        "@_Checkname": string
         "@_IntfcUpdateType": string
         "@_PNCID": string
+      }
+      CourtCases: {
+        CourtCase: AhoPncCourtCase | AhoPncCourtCase[]
       }
     }
   }
@@ -151,10 +150,10 @@ export default (ahoXml: string): PncQueryResult | undefined => {
 
   const checkName = cxe.IDS["@_Checkname"]
   const result: PncQueryResult = {
-    checkName,
-    courtCases: cases,
     forceStationCode: cxe.FSC["@_FSCode"],
-    pncId: cxe.IDS["@_PNCID"]
+    checkName,
+    pncId: cxe.IDS["@_PNCID"],
+    courtCases: cases
   }
   return result
 }

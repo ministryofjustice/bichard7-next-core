@@ -1,5 +1,4 @@
 import { z } from "zod"
-
 import { ahoDescription } from "./schemaDescription"
 
 export const pncDisposalSchema = z.object({
@@ -13,28 +12,28 @@ export const pncDisposalSchema = z.object({
 })
 
 export const pncAdjudicationSchema = z.object({
+  verdict: z.string(),
+  sentenceDate: z.coerce.date().optional(),
   offenceTICNumber: z.number(),
   plea: z.string(),
-  sentenceDate: z.coerce.date().optional(),
-  verdict: z.string(),
   weedFlag: z.string().optional()
 })
 
 export const pncOffenceSchema = z.object({
-  adjudication: pncAdjudicationSchema.optional(),
-  disposals: z.array(pncDisposalSchema).optional(),
   offence: z.object({
     acpoOffenceCode: z.string().optional(),
     cjsOffenceCode: z.string(),
+    startDate: z.coerce.date(),
+    startTime: z.string().optional(),
     endDate: z.coerce.date().optional(),
     endTime: z.string().optional(),
     qualifier1: z.string().optional(),
     qualifier2: z.string().optional(),
-    sequenceNumber: z.number(),
-    startDate: z.coerce.date(),
-    startTime: z.string().optional(),
-    title: z.string().optional()
-  })
+    title: z.string().optional(),
+    sequenceNumber: z.number()
+  }),
+  adjudication: pncAdjudicationSchema.optional(),
+  disposals: z.array(pncDisposalSchema).optional()
 })
 
 export const pncCourtCaseSchema = z.object({
@@ -44,15 +43,15 @@ export const pncCourtCaseSchema = z.object({
 })
 
 export const pncPenaltyCaseSchema = z.object({
-  offences: z.array(pncOffenceSchema),
-  penaltyCaseReference: z.string()
+  penaltyCaseReference: z.string(),
+  offences: z.array(pncOffenceSchema)
 })
 
 export const pncQueryResultSchema = z.object({
-  checkName: z.string(),
-  courtCases: z.array(pncCourtCaseSchema).optional(),
-  croNumber: z.string().optional(),
   forceStationCode: z.string().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.forceStationCode.$description),
-  penaltyCases: z.array(pncPenaltyCaseSchema).optional(),
-  pncId: z.string()
+  croNumber: z.string().optional(),
+  checkName: z.string(),
+  pncId: z.string(),
+  courtCases: z.array(pncCourtCaseSchema).optional(),
+  penaltyCases: z.array(pncPenaltyCaseSchema).optional()
 })

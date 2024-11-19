@@ -1,11 +1,9 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { Sql } from "postgres"
-
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import type PhaseResult from "../../types/PhaseResult"
-import type { Trigger } from "../../types/Trigger"
-
 import ResolutionStatus from "../../types/ResolutionStatus"
+import type { Trigger } from "../../types/Trigger"
 import insertErrorListTriggers from "./insertErrorListTriggers"
 
 type TriggerUpdates = {

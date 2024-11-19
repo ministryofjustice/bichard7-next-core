@@ -1,7 +1,5 @@
 import { readFileSync } from "fs"
-
 import type { HearingDefendant } from "../../../types/AnnotatedHearingOutcome"
-
 import parseSpiResult from "../parseSpiResult"
 import populateCase from "./populateCase"
 import populateDefendant from "./populateDefendant"

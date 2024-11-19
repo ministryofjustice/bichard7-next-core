@@ -1,7 +1,6 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
-
+import type { ComparisonData } from "../../types/ComparisonData"
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
@@ -36,7 +35,7 @@ const groupOffences = (offences: Offence[], matches: OffenceMatchingSummary[]): 
   )
 }
 
-const identicalOffenceSwitchedSequenceNumbers = ({ actual, expected, phase }: ComparisonData) =>
+const identicalOffenceSwitchedSequenceNumbers = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

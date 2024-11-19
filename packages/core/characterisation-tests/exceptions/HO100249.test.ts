@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -10,8 +9,8 @@ describe.ifPhase1("HO100249", () => {
 
   it.ifNewBichard("should be raised if the courthouse code is invalid", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{}] }],
-      psaCode: 12345
+      psaCode: 12345,
+      offences: [{ results: [{}] }]
     })
 
     const {

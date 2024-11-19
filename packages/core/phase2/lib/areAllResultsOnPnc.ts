@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-
 import areResultsMatchingPncAdjudicationAndDisposals from "./areResultsMatchingPncAdjudicationAndDisposals"
 
 const areAllResultsOnPnc = (aho: AnnotatedHearingOutcome): boolean =>

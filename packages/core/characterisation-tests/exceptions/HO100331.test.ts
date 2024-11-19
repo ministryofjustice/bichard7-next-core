@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -10,7 +9,7 @@ describe.ifPhase1("HO100331", () => {
 
   it("should create an exception when there are more than 100 offences", async () => {
     const inputMessage = generateSpiMessage({
-      offences: Array(101).fill({ recordable: true, results: [{}] })
+      offences: Array(101).fill({ results: [{}], recordable: true })
     })
 
     const {

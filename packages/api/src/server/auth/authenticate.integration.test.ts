@@ -1,16 +1,14 @@
 import type { FastifyInstance } from "fastify"
-
 import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
-
 import build from "../../app"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaults = {
+  url: "/me",
   headers: {
     Authorization: "Bearer "
-  },
-  url: "/me"
+  }
 }
 
 describe("authenticate", () => {

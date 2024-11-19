@@ -1,7 +1,6 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
 import TRPS0004 from "./TRPS0004"
@@ -11,16 +10,16 @@ describe("TRPS0004", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
         Result: [
           {
             CJSresultCode: 9999
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
       }
     ] as Offence[])
     const result = TRPS0004(generatedHearingOutcome, options)
@@ -31,16 +30,16 @@ describe("TRPS0004", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
         Result: [
           {
             CJSresultCode: 1234
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
       }
     ] as Offence[])
     const result = TRPS0004(generatedHearingOutcome, options)
@@ -51,16 +50,16 @@ describe("TRPS0004", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
         Result: [
           {
             CJSresultCode: 9999
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
       }
     ] as Offence[])
     generatedHearingOutcome.PncOperations = []
@@ -72,22 +71,22 @@ describe("TRPS0004", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
         Result: [
           {
             CJSresultCode: 9999
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
       }
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
       {
-        code: PncOperation.REMAND,
-        status: "Completed"
+        status: "Completed",
+        code: PncOperation.REMAND
       }
     ]
     const result = TRPS0004(generatedHearingOutcome, options)

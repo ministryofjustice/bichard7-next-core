@@ -1,9 +1,9 @@
 class ASN {
-  forcePNC: string
-  sequencePNC: number
-  systemPNC: string
-  unitPNC: string
   yearPNC: string
+  forcePNC: string
+  unitPNC: string
+  systemPNC: string
+  sequencePNC: number
 
   constructor(asn: string) {
     this.yearPNC = asn.slice(0, 2)

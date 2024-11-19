@@ -1,56 +1,53 @@
-import type { Sql } from "postgres"
-
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import { isError } from "@moj-bichard7/common/types/Result"
-import { randomUUID } from "crypto"
-import postgres from "postgres"
-
-import type ErrorListRecord from "../../types/ErrorListRecord"
-import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
-
 import getTriggersCount from "./getTriggersCount"
+import type { Sql } from "postgres"
+import postgres from "postgres"
+import type ErrorListRecord from "../../types/ErrorListRecord"
+import { randomUUID } from "crypto"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const dbConfig = createDbConfig()
 const db = postgres({
   ...dbConfig,
   types: {
     date: {
+      to: 25,
       from: [1082],
+      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
+      }
     }
   }
 })
 
 const generateErrorListRecord = (input: Partial<ErrorListRecord> = {}): ErrorListRecord => ({
-  annotated_msg: "",
-  court_reference: "",
-  create_ts: new Date(),
-  error_count: 0,
-  error_id: 111,
-  error_report: "",
-  is_urgent: 0,
   message_id: randomUUID(),
-  msg_received_ts: new Date(),
+  error_id: 111,
   phase: 1,
   trigger_count: 0,
+  is_urgent: 0,
+  annotated_msg: "",
   updated_msg: "",
+  error_report: "",
+  create_ts: new Date(),
+  error_count: 0,
   user_updated_flag: 0,
+  msg_received_ts: new Date(),
+  court_reference: "",
   ...input
 })
 
 const generateErrorListTriggerRecord = (errorId: number): ErrorListTriggerRecord => ({
-  create_ts: new Date(),
-  error_id: errorId,
-  resolved_by: null,
-  resolved_ts: null,
-  status: 0,
-  trigger_code: "TRPR0018",
   trigger_id: 1,
-  trigger_item_identity: null
+  error_id: errorId,
+  trigger_code: "TRPR0018",
+  trigger_item_identity: null,
+  status: 0,
+  create_ts: new Date(),
+  resolved_by: null,
+  resolved_ts: null
 })
 
 const errorListRecord = generateErrorListRecord()

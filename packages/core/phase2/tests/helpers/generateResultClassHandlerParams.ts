@@ -1,31 +1,30 @@
+import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
+import ResultClass from "../../../types/ResultClass"
 import type { ResultClassHandlerParams } from "../../lib/generateOperations/resultClassHandlers/ResultClassHandler"
 
-import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
-import ResultClass from "../../../types/ResultClass"
-
 type Params = {
-  areAllResultsOnPnc: boolean
   fixedPenalty: boolean
-  offence: Offence
-  offenceIndex: number
   resubmitted: boolean
+  areAllResultsOnPnc: boolean
+  offence: Offence
   result: Result
+  offenceIndex: number
   resultIndex: number
 }
 
 const defaultParams: Params = {
-  areAllResultsOnPnc: false,
   fixedPenalty: false,
-  offence: { AddedByTheCourt: false, CourtCaseReferenceNumber: "234", Result: [{ PNCDisposalType: 4000 }] } as Offence,
-  offenceIndex: 1,
   resubmitted: false,
-  result: { PNCAdjudicationExists: false, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT } as Result,
+  areAllResultsOnPnc: false,
+  offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }], CourtCaseReferenceNumber: "234" } as Offence,
+  result: { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCAdjudicationExists: false } as Result,
+  offenceIndex: 1,
   resultIndex: 1
 }
 
 const generateResultClassHandlerParams = (params: Partial<Params> = defaultParams) => {
-  const { areAllResultsOnPnc, fixedPenalty, offence, offenceIndex, resubmitted, result, resultIndex } = {
+  const { fixedPenalty, resubmitted, areAllResultsOnPnc, offence, result, offenceIndex, resultIndex } = {
     ...defaultParams,
     ...params,
     offence: {
@@ -40,11 +39,11 @@ const generateResultClassHandlerParams = (params: Partial<Params> = defaultParam
         HearingOutcome: { Case: { PenaltyNoticeCaseReferenceNumber: fixedPenalty ? "1" : undefined } }
       }
     }),
+    resubmitted,
     areAllResultsOnPnc,
     offence,
-    offenceIndex,
-    resubmitted,
     result,
+    offenceIndex,
     resultIndex
   }) as unknown as ResultClassHandlerParams
 }

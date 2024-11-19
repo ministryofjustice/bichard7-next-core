@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { asnPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
@@ -17,8 +16,8 @@ describe.ifPhase2("HO200121", () => {
         messageType,
         offences: [
           {
-            offenceCategory: { code: "B7", description: "Bichard 7-specific category" },
             offenceReasonSequence: false,
+            offenceCategory: { code: "B7", description: "Bichard 7-specific category" },
             results: [{}]
           }
         ]
@@ -42,8 +41,8 @@ describe.ifPhase2("HO200121", () => {
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [
         {
-          offenceCategory: { code: "B7", description: "Bichard 7-specific category" },
           offenceReasonSequence: true,
+          offenceCategory: { code: "B7", description: "Bichard 7-specific category" },
           results: [{}]
         }
       ]

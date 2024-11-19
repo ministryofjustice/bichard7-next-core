@@ -1,8 +1,7 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 
 export type ComparisonTrigger = {
   code: TriggerCode
@@ -11,44 +10,44 @@ export type ComparisonTrigger = {
 }
 
 export type OldPhase1Comparison = {
-  annotatedHearingOutcome: string
-  auditLogEvents?: string[]
-  dbContent?: { errorList: ErrorListRecord[]; errorListTriggers: ErrorListTriggerRecord[] }
-  file?: string
   incomingMessage: string
+  annotatedHearingOutcome: string
   standingDataVersion: string
   triggers: ComparisonTrigger[]
+  file?: string
+  dbContent?: { errorList: ErrorListRecord[]; errorListTriggers: ErrorListTriggerRecord[] }
+  auditLogEvents?: string[]
 }
 
 export type NewComparison = {
-  correlationId: string
-  file?: string
-  incomingMessage: string
   phase: number
+  correlationId: string
+  incomingMessage: string
   standingDataVersion: string
+  file?: string
 }
 
-export type Phase1Comparison = {
-  annotatedHearingOutcome: string
+export type Phase1Comparison = NewComparison & {
   phase: 1
+  annotatedHearingOutcome: string
+  triggers: ComparisonTrigger[]
   sentToPhase2: boolean
-  triggers: ComparisonTrigger[]
-} & NewComparison
+}
 
-export type Phase2Comparison = {
-  auditLogEvents: string[]
-  outgoingMessage: string
+export type Phase2Comparison = NewComparison & {
   phase: 2
-  sentToPhase3: boolean
+  outgoingMessage: string
   triggers: ComparisonTrigger[]
-} & NewComparison
-
-export type Phase3Comparison = {
   auditLogEvents: string[]
-  outgoingMessage?: string
+  sentToPhase3: boolean
+}
+
+export type Phase3Comparison = NewComparison & {
   phase: 3
-  pncOperations: PncUpdateRequest[]
+  outgoingMessage?: string
   triggers?: ComparisonTrigger[]
-} & NewComparison
+  auditLogEvents: string[]
+  pncOperations: PncUpdateRequest[]
+}
 
 export type Comparison = OldPhase1Comparison | Phase1Comparison | Phase2Comparison | Phase3Comparison

@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -14,7 +13,7 @@ describe.ifPhase1("TRPR0030", () => {
 
   it("should generate a trigger correctly with single non-recordable offences", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ code: offenceCode, recordable: false, results: [{ code: 1015 }] }]
+      offences: [{ code: offenceCode, results: [{ code: 1015 }], recordable: false }]
     })
 
     const { triggers } = await processPhase1Message(inputMessage, { recordable: false })
@@ -25,9 +24,9 @@ describe.ifPhase1("TRPR0030", () => {
   it("should generate a single case level trigger with multiple non-recordable offences", async () => {
     const inputMessage = generateSpiMessage({
       offences: [
-        { code: offenceCode, recordable: false, results: [{ code: 1015 }] },
-        { code: offenceCode, recordable: false, results: [{ code: 1015 }] },
-        { code: offenceCode, recordable: false, results: [{ code: 1015 }] }
+        { code: offenceCode, results: [{ code: 1015 }], recordable: false },
+        { code: offenceCode, results: [{ code: 1015 }], recordable: false },
+        { code: offenceCode, results: [{ code: 1015 }], recordable: false }
       ]
     })
 

@@ -1,10 +1,6 @@
 jest.setTimeout(30_000)
 jest.retryTimes(10)
 
-import { randomUUID } from "crypto"
-import waitForExpect from "wait-for-expect"
-
-import { dbClient, s3Client } from "./helpers/clients"
 import {
   getDynamoRecord,
   getPhaseTableName,
@@ -12,6 +8,9 @@ import {
   setDynamoRecordToFailedStatus,
   startWorkflow
 } from "./helpers/e2eHelpers"
+import waitForExpect from "wait-for-expect"
+import { s3Client, dbClient } from "./helpers/clients"
+import { randomUUID } from "crypto"
 
 describe("Rerun failures workflow", () => {
   it("should rerun failed phase 2 comparisons and update dynamo record", async () => {

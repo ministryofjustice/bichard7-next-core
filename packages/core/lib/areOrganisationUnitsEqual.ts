@@ -1,8 +1,8 @@
 import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
 
 const areOrganisationUnitsEqual = (
-  firstOrganisationUnit?: null | OrganisationUnitCodes,
-  secondOrganisationUnit?: null | OrganisationUnitCodes
+  firstOrganisationUnit?: OrganisationUnitCodes | null,
+  secondOrganisationUnit?: OrganisationUnitCodes | null
 ) =>
   (firstOrganisationUnit?.TopLevelCode || undefined) === (secondOrganisationUnit?.TopLevelCode || undefined) &&
   (firstOrganisationUnit?.SecondLevelCode || undefined) === (secondOrganisationUnit?.SecondLevelCode || undefined) &&

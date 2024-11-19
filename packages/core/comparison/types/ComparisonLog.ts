@@ -1,25 +1,25 @@
 export default interface ComparisonLog {
-  history: [
-    {
-      details: {
-        auditLogEventsMatch: number
-        exceptionsMatch: number
-        triggersMatch: number
-        xmlOutputMatches: number
-        xmlParsingMatches: number
-      }
-      result: number
-      runAt: string
-    }
-  ]
-  initialResult: number
-  initialRunAt: string
-  intentionalDifference?: boolean
-  latestResult: number
-  latestRunAt: string
+  version: number
   s3Path: string
+  initialRunAt: string
+  initialResult: number
+  latestRunAt: string
+  latestResult: number
   skipped?: boolean
   skippedBy?: string
   skippedReason?: string
-  version: number
+  intentionalDifference?: boolean
+  history: [
+    {
+      runAt: string
+      result: number
+      details: {
+        auditLogEventsMatch: number
+        triggersMatch: number
+        exceptionsMatch: number
+        xmlOutputMatches: number
+        xmlParsingMatches: number
+      }
+    }
+  ]
 }

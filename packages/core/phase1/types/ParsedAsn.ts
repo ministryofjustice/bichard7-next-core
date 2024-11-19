@@ -1,9 +1,9 @@
 export type ParsedAsn = {
-  bottomLevelCode: null | string
-  checkDigit: null | string
-  secondLevelCode: null | string
-  sequenceNumber: null | string
-  thirdLevelCode: null | string
+  year: string | null
   topLevelCode?: string
-  year: null | string
+  secondLevelCode: string | null
+  thirdLevelCode: string | null
+  bottomLevelCode: string | null
+  sequenceNumber: string | null
+  checkDigit: string | null
 }

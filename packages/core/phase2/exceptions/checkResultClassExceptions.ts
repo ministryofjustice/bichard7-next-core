@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-
 import isRecordableOffence from "../lib/isRecordableOffence"
 import isRecordableResult from "../lib/isRecordableResult"
 

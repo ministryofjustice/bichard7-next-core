@@ -1,16 +1,14 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isMatch from "lodash.ismatch"
-
-import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
-import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
-
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import CorePhase1 from "../../phase1/phase1"
+import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
+import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
+import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
-import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import summariseMatching from "./summariseMatching"
 
@@ -22,7 +20,7 @@ const comparePncMatching = async (
   comparison: OldPhase1Comparison | Phase1Comparison,
   { defaultStandingDataVersion }: CompareOptions = {}
 ): Promise<PncComparisonResultDetail> => {
-  const { annotatedHearingOutcome, incomingMessage, standingDataVersion } = comparison
+  const { incomingMessage, annotatedHearingOutcome, standingDataVersion } = comparison
   const dataVersion = standingDataVersion || defaultStandingDataVersion || "latest"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(global as any).dataVersion = dataVersion
@@ -51,9 +49,9 @@ const comparePncMatching = async (
   }
 
   return {
-    actual: actualMatch,
+    pass,
     expected: expectedMatch,
-    pass
+    actual: actualMatch
   }
 }
 

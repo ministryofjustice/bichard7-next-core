@@ -1,56 +1,55 @@
 import type { PncCourtCaseSummary } from "../../../comparison/types/MatchingComparisonOutput"
 import type { Hearing, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
-
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 
 export type GenerateAhoMatchingPncAdjudicationAndDisposalsOptions = {
-  firstPncDisposalType?: number
-  firstResultDisposalType?: number
-  hasAdditionalMatchingOffence?: boolean
-  hasMatchingPncAdjudication?: boolean
-  hasOffenceReasonSequence?: boolean
-  hasOffences?: boolean
   hasPncId?: boolean
   hasPncOffences?: boolean
+  hasOffences?: boolean
+  hasOffenceReasonSequence?: boolean
   hasResults?: boolean
+  hasMatchingPncAdjudication?: boolean
+  hasAdditionalMatchingOffence?: boolean
+  firstResultDisposalType?: number
+  firstPncDisposalType?: number
 }
 
 const generateResult = (pncDisposalType: number): Result => ({
-  AmountSpecifiedInResult: [
-    {
-      Amount: 25,
-      DecimalPlaces: 2
-    }
-  ],
-  CJSresultCode: 3041,
+  PNCDisposalType: pncDisposalType,
   DateSpecifiedInResult: [
     {
       Date: new Date("05/22/2024"),
       Sequence: 1
     }
   ],
-  Duration: [
-    {
-      DurationLength: 3,
-      DurationType: "",
-      DurationUnit: "Y"
-    }
-  ],
-  PNCDisposalType: pncDisposalType,
   ResultQualifierVariable: [
     {
       Code: "A"
     }
   ],
   ResultVariableText: "DEFENDANT EXCLUDED FROM LOCATION FOR A PERIOD OF TIME",
+  CJSresultCode: 3041,
+  AmountSpecifiedInResult: [
+    {
+      Amount: 25,
+      DecimalPlaces: 2
+    }
+  ],
   SourceOrganisation: {
-    BottomLevelCode: "",
     OrganisationUnitCode: "",
+    TopLevelCode: "",
     SecondLevelCode: "",
     ThirdLevelCode: "",
-    TopLevelCode: ""
-  }
+    BottomLevelCode: ""
+  },
+  Duration: [
+    {
+      DurationUnit: "Y",
+      DurationLength: 3,
+      DurationType: ""
+    }
+  ]
 })
 
 const generateAhoMatchingPncAdjudicationAndDisposals = (
@@ -61,25 +60,25 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
       ? []
       : [
           {
-            CourtCaseReferenceNumber: "FOO",
-            CriminalProsecutionReference: {
-              OffenceReasonSequence: options.hasOffenceReasonSequence === false ? undefined : "001"
-            },
             Result:
               options.hasResults === false
                 ? []
-                : [generateResult(options.firstResultDisposalType ?? 2063), generateResult(2064)]
+                : [generateResult(options.firstResultDisposalType ?? 2063), generateResult(2064)],
+            CriminalProsecutionReference: {
+              OffenceReasonSequence: options.hasOffenceReasonSequence === false ? undefined : "001"
+            },
+            CourtCaseReferenceNumber: "FOO"
           } as Offence
         ]
   )
 
   if (options.hasAdditionalMatchingOffence) {
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.push({
-      CourtCaseReferenceNumber: "BAR",
+      Result: [generateResult(2063)],
       CriminalProsecutionReference: {
         OffenceReasonSequence: "001"
       },
-      Result: [generateResult(2063)]
+      CourtCaseReferenceNumber: "BAR"
     } as Offence)
   }
 
@@ -90,46 +89,46 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
         ? []
         : [
             {
+              offence: {
+                sequenceNumber: options.hasMatchingPncAdjudication === false ? 0 : 1,
+                cjsOffenceCode: "offence-code",
+                startDate: new Date("05/22/2024")
+              },
               adjudication: {
-                offenceTICNumber: 0,
-                plea: "",
                 sentenceDate: new Date("05/22/2024"),
-                verdict: "NON-CONVICTION"
+                verdict: "NON-CONVICTION",
+                offenceTICNumber: 0,
+                plea: ""
               },
               disposals: [
                 {
+                  type: options.firstPncDisposalType ?? 2063,
                   qtyDate: "22052024",
                   qtyDuration: "Y3",
                   qtyMonetaryValue: "25",
                   qtyUnitsFined: "Y3  220520240000000.0000",
                   qualifiers: "A",
-                  text: "EXCLUDED FROM LOCATION",
-                  type: options.firstPncDisposalType ?? 2063
+                  text: "EXCLUDED FROM LOCATION"
                 },
                 {
+                  type: 2064,
                   qtyDate: "22052024",
                   qtyDuration: "Y3",
                   qtyMonetaryValue: "25",
                   qtyUnitsFined: "Y3  220520240000000.0000",
                   qualifiers: "A",
-                  text: "EXCLUDED FROM LOCATION",
-                  type: 2064
+                  text: "EXCLUDED FROM LOCATION"
                 }
-              ],
-              offence: {
-                cjsOffenceCode: "offence-code",
-                sequenceNumber: options.hasMatchingPncAdjudication === false ? 0 : 1,
-                startDate: new Date("05/22/2024")
-              }
+              ]
             } as PncOffence
           ]
   }
 
   const pncQuery = {
-    checkName: "",
-    courtCases: [courtCase],
     forceStationCode: "06",
-    pncId: options.hasPncId === false ? undefined : "123"
+    checkName: "",
+    pncId: options.hasPncId === false ? undefined : "123",
+    courtCases: [courtCase]
   } as PncQueryResult
 
   if (options.hasAdditionalMatchingOffence) {
@@ -137,28 +136,28 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
       courtCaseReference: "BAR",
       offences: [
         {
+          offence: {
+            sequenceNumber: 1,
+            cjsOffenceCode: "offence-code",
+            startDate: new Date("05/22/2024")
+          },
           adjudication: {
-            offenceTICNumber: 0,
-            plea: "",
             sentenceDate: new Date("05/22/2024"),
-            verdict: "NON-CONVICTION"
+            verdict: "NON-CONVICTION",
+            offenceTICNumber: 0,
+            plea: ""
           },
           disposals: [
             {
+              type: 2063,
               qtyDate: "22052024",
               qtyDuration: "Y3",
               qtyMonetaryValue: "25",
               qtyUnitsFined: "Y3  220520240000000.0000",
               qualifiers: "A",
-              text: "EXCLUDED FROM LOCATION",
-              type: 2063
+              text: "EXCLUDED FROM LOCATION"
             }
-          ],
-          offence: {
-            cjsOffenceCode: "offence-code",
-            sequenceNumber: 1,
-            startDate: new Date("05/22/2024")
-          }
+          ]
         } as PncOffence
       ]
     })

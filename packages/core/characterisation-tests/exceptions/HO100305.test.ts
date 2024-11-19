@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -11,7 +10,7 @@ describe.ifPhase1("HO100305", () => {
 
   it("should create an exception if the case has no conviction date", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ convictionDate: null, results: [{}] }]
+      offences: [{ results: [{}], convictionDate: null }]
     })
 
     const {
@@ -29,7 +28,7 @@ describe.ifPhase1("HO100305", () => {
   it("should create an exception if the case has no conviction date and is adjourned", async () => {
     const inputMessage = generateSpiMessage({
       offences: [
-        { convictionDate: null, results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }, { code: 2050 }] }
+        { results: [{ code: 4001, nextHearing: { nextHearingDetails: {} } }, { code: 2050 }], convictionDate: null }
       ]
     })
 

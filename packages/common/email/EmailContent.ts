@@ -1,11 +1,11 @@
 interface Attachment {
-  content: string
   filename: string
+  content: string
 }
 
 export default interface EmailContent {
-  attachments?: Attachment[]
-  html?: string
   subject: string
   text: string
+  attachments?: Attachment[]
+  html?: string
 }

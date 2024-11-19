@@ -1,10 +1,8 @@
 import merge from "lodash.merge"
-
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { GenerateMessageOptions } from "../../tests/helpers/generateMessage"
-
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAnnotatedHearingOutcome from "../../../lib/parse/transformSpiToAho"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { GenerateMessageOptions } from "../../tests/helpers/generateMessage"
 import generateMessage from "../../tests/helpers/generateMessage"
 
 const generateMockAho = (overrides: GenerateMessageOptions = { offences: [] }): AnnotatedHearingOutcome => {

@@ -1,23 +1,20 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
-import { type AuditLogEvent, auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventSource, auditLogEventLookup, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import path from "path"
-
-import type Phase1Result from "../../phase1/types/Phase1Result"
-
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 
 const s3Config = createS3Config()
 const conductorClient = createConductorClient()
@@ -55,8 +52,9 @@ const getDestination = (phase2CanaryRatio?: number): Destination => {
 }
 
 const sendToPhase2: ConductorWorker = {
+  taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
-    const { options, s3TaskData, s3TaskDataPath } = task.inputData
+    const { s3TaskData, s3TaskDataPath, options } = task.inputData
     const correlationId =
       s3TaskData.hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
@@ -73,7 +71,7 @@ const sendToPhase2: ConductorWorker = {
         return failed("Failed to write to MQ", result.message)
       }
 
-      logger.info({ correlationId, event: "send-to-phase2:sent-to-mq" })
+      logger.info({ event: "send-to-phase2:sent-to-mq", correlationId })
     } else {
       const phase2S3TaskDataPath = path.parse(s3TaskDataPath).name.concat("-phase2.json")
 
@@ -99,26 +97,25 @@ const sendToPhase2: ConductorWorker = {
       }
 
       logger.info({
-        correlationId,
         event: "send-to-phase2:started-workflow",
+        workflowName: phase2WorkflowName,
         s3TaskDataPath,
-        workflowId,
-        workflowName: phase2WorkflowName
+        correlationId,
+        workflowId
       })
     }
 
     const auditLog: AuditLogEvent = {
-      attributes: {},
-      category: EventCategory.debug,
       eventCode: EventCode.HearingOutcomeSubmittedPhase2,
-      eventSource: AuditLogEventSource.CorePhase1,
       eventType: auditLogEventLookup[EventCode.HearingOutcomeSubmittedPhase2],
-      timestamp: new Date()
+      category: EventCategory.debug,
+      eventSource: AuditLogEventSource.CorePhase1,
+      timestamp: new Date(),
+      attributes: {}
     }
 
     return completed({ auditLogEvents: [auditLog] }, `Sent to Phase 2 via ${destination}`)
-  }),
-  taskDefName: "send_to_phase2"
+  })
 }
 
 export default sendToPhase2

@@ -1,8 +1,6 @@
 import type EventHandlerDef from "@moj-bichard7/common/conductor/types/EventHandlerDef"
-
 import fs from "fs"
 import isMatch from "lodash.ismatch"
-
 import type ConductorGateway from "./ConductorGateway"
 
 class EventHandler {
@@ -14,10 +12,6 @@ class EventHandler {
   ) {
     const fileContent = fs.readFileSync(filename)
     this.localEventHandler = JSON.parse(fileContent.toString()) as EventHandlerDef
-  }
-
-  private eventHandlerNeedsUpdating(remoteEventHandler: EventHandlerDef): boolean {
-    return !isMatch(remoteEventHandler, this.localEventHandler)
   }
 
   async upsert(): Promise<void> {
@@ -39,6 +33,10 @@ class EventHandler {
         console.log(`EventHandler '${this.localEventHandler.name}' does not need updating`)
       }
     }
+  }
+
+  private eventHandlerNeedsUpdating(remoteEventHandler: EventHandlerDef): boolean {
+    return !isMatch(remoteEventHandler, this.localEventHandler)
   }
 }
 

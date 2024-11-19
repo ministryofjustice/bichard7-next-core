@@ -1,22 +1,19 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 import { isError } from "@moj-bichard7/common/types/Result"
-
-import type ComparisonResult from "../types/ComparisonResult"
-
+import DynamoGateway from "../lib/DynamoGateway"
 import compareFile from "../lib/compareFile"
 import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import DynamoGateway from "../lib/DynamoGateway"
 import isPass from "../lib/isPass"
 import recordResultsInDynamo from "../lib/recordResultsInDynamo"
+import type ComparisonResult from "../types/ComparisonResult"
 
 const bucket = process.env.COMPARISON_BUCKET ?? "bichard-7-production-processing-validation"
 
 type ResultRecord = {
-  [phase: number]: { fail: number; pass: number }
+  [phase: number]: { pass: number; fail: number }
 }
 
 const logResult = (logs: string[], results: ResultRecord) => {
@@ -32,7 +29,7 @@ const recordPass = (resultRecord: ResultRecord, phase: number) => {
   if (resultRecord[phase]) {
     resultRecord[phase].pass++
   } else {
-    resultRecord[phase] = { fail: 0, pass: 1 }
+    resultRecord[phase] = { pass: 1, fail: 0 }
   }
 }
 
@@ -40,12 +37,14 @@ const recordFail = (resultRecord: ResultRecord, phase: number) => {
   if (resultRecord[phase]) {
     resultRecord[phase].fail++
   } else {
-    resultRecord[phase] = { fail: 1, pass: 0 }
+    resultRecord[phase] = { pass: 0, fail: 1 }
   }
 }
 
 const compareFiles: ConductorWorker = {
+  taskDefName: "compare_files",
   concurrency: 10,
+  pollInterval: 1000,
   execute: async (task: Task) => {
     const records = task.inputData?.records as string[]
 
@@ -88,9 +87,7 @@ const compareFiles: ConductorWorker = {
     logResult(logs, resultRecord)
 
     return completed(resultRecord, ...logs)
-  },
-  pollInterval: 1000,
-  taskDefName: "compare_files"
+  }
 }
 
 export default compareFiles

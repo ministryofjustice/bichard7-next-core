@@ -1,15 +1,13 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
-import type Email from "@moj-bichard7/common/email/Email"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
+import type Email from "@moj-bichard7/common/email/Email"
 import getEmailer from "@moj-bichard7/common/email/getEmailer"
 import getSmtpConfig from "@moj-bichard7/common/email/getSmtpConfig"
 import { z } from "zod"
-
-import { type ErrorReportData, errorReportDataSchema } from "../types/errorReportData"
+import { errorReportDataSchema, type ErrorReportData } from "../types/errorReportData"
 
 const inputDataSchema = z.object({
   errorReportData: errorReportDataSchema
@@ -28,14 +26,16 @@ ${inputData.errorMessage}
   `
 
 const alertCommonPlatform: ConductorWorker = {
+  taskDefName: "alert_common_platform",
+  pollInterval: 10000,
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { errorReportData } = task.inputData
 
     const email: Email = {
       from: "no-reply@mail.bichard7.service.justice.gov.uk",
+      to: process.env.ERROR_REPORT_ADDRESSES ?? "moj-bichard7@madetech.cjsm.net",
       subject: "Failed to ingest SPI message, schema mismatch",
-      text: generateEmailContent(errorReportData),
-      to: process.env.ERROR_REPORT_ADDRESSES ?? "moj-bichard7@madetech.cjsm.net"
+      text: generateEmailContent(errorReportData)
     }
 
     try {
@@ -47,9 +47,7 @@ const alertCommonPlatform: ConductorWorker = {
     }
 
     return completed("Message sent to Common Platform")
-  }),
-  pollInterval: 10000,
-  taskDefName: "alert_common_platform"
+  })
 }
 
 export default alertCommonPlatform

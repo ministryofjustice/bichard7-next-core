@@ -1,15 +1,14 @@
+import createOperation from "../createOperation"
+import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import type { ResultClassHandler } from "./ResultClassHandler"
-
 import { PncOperation } from "../../../../types/PncOperation"
 import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
-import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
-import createOperation from "../createOperation"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
+  resubmitted,
   aho,
   areAllResultsOnPnc,
   offence,
-  resubmitted,
   result
 }) => {
   const fixedPenalty = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber

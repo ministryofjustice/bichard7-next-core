@@ -1,5 +1,7 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
+import { WorkflowResourceService } from "../../../../node_modules/@io-orkes/conductor-javascript"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -7,14 +9,11 @@ import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/cr
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import { randomUUID } from "crypto"
 import fs from "fs"
-
-import type Phase1Result from "../../phase1/types/Phase1Result"
-
-import { WorkflowResourceService } from "../../../../node_modules/@io-orkes/conductor-javascript"
+import TestMqGateway from "../../lib/mq/TestMqGateway"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
-import TestMqGateway from "../../lib/mq/TestMqGateway"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
+import type Phase1Result from "../../phase1/types/Phase1Result"
 import { default as sendToPhase2Fn } from "./sendToPhase2"
 
 jest.mock("../../lib/mq/connectAndSendMessage")
@@ -35,7 +34,7 @@ const getPhase1Result = () => {
   const phase1Result = phase1ResultFixture.replace(/EXTERNAL_CORRELATION_ID/g, correlationId)
   const parsedPhase1Result = JSON.parse(phase1Result, dateReviver) as Phase1Result
 
-  return { parsedPhase1Result, phase1Result, s3TaskDataPath }
+  return { phase1Result, parsedPhase1Result, s3TaskDataPath }
 }
 
 const sendToPhase2 = (canaryRatio: string | undefined, inputData: Record<string, unknown>) => {
@@ -59,7 +58,7 @@ describe("sendToPhase2", () => {
     it.each(["0.0", undefined, "ABC"])(
       "should send a message to MQ when canary ratio is %s",
       async (phase2CoreCanaryRatio) => {
-        const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+        const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
         await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
@@ -92,7 +91,7 @@ describe("sendToPhase2", () => {
     const phase2CoreCanaryRatio = "1.0"
 
     it("should start Phase 2 Conductor workflow", async () => {
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
@@ -114,7 +113,7 @@ describe("sendToPhase2", () => {
     })
 
     it("should return failed status when putFileToS3 returns error", async () => {
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
@@ -127,7 +126,7 @@ describe("sendToPhase2", () => {
     })
 
     it("should return failed status when putFileToS3 rejects", async () => {
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
@@ -143,7 +142,7 @@ describe("sendToPhase2", () => {
       const spyStartWorkflow = jest
         .spyOn(WorkflowResourceService.prototype, "startWorkflow1")
         .mockRejectedValue(Error("Dummy Conductor error"))
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
@@ -164,14 +163,14 @@ describe("sendToPhase2", () => {
   describe("when Phase 2 canary ratio is set in the task input", () => {
     it("should start Phase 2 Conductor workflow when canary ratio in task input is -1", async () => {
       const phase2CoreCanaryRatioEnvVar = "1"
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
       const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
-        options: { phase2CanaryRatio: -1 },
-        s3TaskDataPath
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: -1 }
       })
 
       expect(result.status).toBe("COMPLETED")
@@ -190,13 +189,13 @@ describe("sendToPhase2", () => {
 
     it("should send a message to MQ when canary ratio in task input is -1", async () => {
       const phase2CoreCanaryRatioEnvVar = "0"
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
       const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
-        options: { phase2CanaryRatio: -1 },
-        s3TaskDataPath
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: -1 }
       })
 
       expect(result.status).toBe("COMPLETED")
@@ -210,13 +209,13 @@ describe("sendToPhase2", () => {
 
     it("should override canary ratio env var and send a message to MQ", async () => {
       const phase2CoreCanaryRatioEnvVar = "1"
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
       const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
-        options: { phase2CanaryRatio: 0 },
-        s3TaskDataPath
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: 0 }
       })
 
       expect(result.status).toBe("COMPLETED")
@@ -230,14 +229,14 @@ describe("sendToPhase2", () => {
 
     it("should override canary ratio env var and start Phase 2 Conductor workflow when canary ratio in task input is 1", async () => {
       const phase2CoreCanaryRatioEnvVar = "0"
-      const { parsedPhase1Result, phase1Result, s3TaskDataPath } = getPhase1Result()
+      const { phase1Result, parsedPhase1Result, s3TaskDataPath } = getPhase1Result()
 
       await createAuditLogRecord(parsedPhase1Result.correlationId)
       await putFileToS3(phase1Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
       const result = await sendToPhase2(phase2CoreCanaryRatioEnvVar, {
-        options: { phase2CanaryRatio: 1 },
-        s3TaskDataPath
+        s3TaskDataPath,
+        options: { phase2CanaryRatio: 1 }
       })
 
       expect(result.status).toBe("COMPLETED")

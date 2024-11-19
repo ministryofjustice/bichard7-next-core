@@ -1,6 +1,5 @@
-import type { Operation } from "../../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../../types/PncOperation"
+import type { Operation } from "../../../types/PncUpdateDataset"
 
 const filterDisposalsAddedInCourt = (operations: Operation[]): Operation[] => {
   const adjournmentPreJudgementRemandCcrs = operations

@@ -1,7 +1,5 @@
 import fs from "fs"
-
 import type { TransformedOutput } from "./transformIncomingMessageToAho"
-
 import transformIncomingMessageToAho from "./transformIncomingMessageToAho"
 
 describe("transformIncomingMessageToAho", () => {

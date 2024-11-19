@@ -1,8 +1,7 @@
-import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
-
 import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../../lib/dataLookup"
 import getCourtDetails from "../../../lib/dataLookup/getCourtDetails"
 import populateOrganisationUnitFields from "../../lib/organisationUnit/populateOrganisationUnitFields"
+import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
 const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
   let { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing
@@ -20,11 +19,11 @@ const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
 
   if (organisationUnitData) {
     const { courtName, courtType } = getCourtDetails({
-      BottomLevelCode: organisationUnitData.bottomLevelCode,
-      OrganisationUnitCode: "",
+      TopLevelCode: organisationUnitData.topLevelCode,
       SecondLevelCode: organisationUnitData.secondLevelCode,
       ThirdLevelCode: organisationUnitData.thirdLevelCode,
-      TopLevelCode: organisationUnitData.topLevelCode
+      BottomLevelCode: organisationUnitData.bottomLevelCode,
+      OrganisationUnitCode: ""
     })
     Hearing.CourtType = courtType
     Hearing.CourtHouseName = courtName

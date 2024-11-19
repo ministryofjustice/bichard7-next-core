@@ -1,5 +1,4 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import populateBailConditions from "./populateBailConditions"
 
 describe("populateBailConditions", () => {

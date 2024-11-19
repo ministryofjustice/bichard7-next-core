@@ -15,14 +15,14 @@ describe("isAmountSpecifiedInResultValid", () => {
 
   it.each([
     {
-      amount: 12345678.9,
-      when: "integral part length is 8 characters and total length is 10 characters"
+      when: "integral part length is 8 characters and total length is 10 characters",
+      amount: 12345678.9
     },
-    { amount: 12345678, when: "integral part length is 8 characters without decimal part" },
-    { amount: 1234567.891, when: "integral part length is 7 characters but total length is 11 characters" },
+    { when: "integral part length is 8 characters without decimal part", amount: 12345678 },
+    { when: "integral part length is 7 characters but total length is 11 characters", amount: 1234567.891 },
     // prettier-ignore
-    { amount: .123456789, when: "integral part is missing and total length is 10 characters" },
-    { amount: 0.123456789, when: "integral part length is 1 character and total length is 10 characters" }
+    { when: "integral part is missing and total length is 10 characters", amount: .123456789 },
+    { when: "integral part length is 1 character and total length is 10 characters", amount: 0.123456789 }
   ])("should return false when amount $when", ({ amount }) => {
     const amountResult = isAmountSpecifiedInResultValid(amount)
 

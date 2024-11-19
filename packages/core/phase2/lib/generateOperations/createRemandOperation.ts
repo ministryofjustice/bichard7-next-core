@@ -1,7 +1,6 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../../types/PncOperation"
+import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
 
@@ -13,14 +12,14 @@ const generateOperationData = (result: Result): OperationData<PncOperation.REMAN
   }
 
   return {
-    nextHearingDate: result.NextHearingDate ? new Date(result.NextHearingDate) : undefined,
-    nextHearingLocation: { ...result.NextResultSourceOrganisation }
+    nextHearingLocation: { ...result.NextResultSourceOrganisation },
+    nextHearingDate: result.NextHearingDate ? new Date(result.NextHearingDate) : undefined
   }
 }
 
 const createRemandOperation = (
   result: Result,
-  courtCaseReference: null | string | undefined
+  courtCaseReference: string | undefined | null
 ): Operation<PncOperation.REMAND> => ({
   ...createOperation(PncOperation.REMAND, generateOperationData(result)),
   courtCaseReference: courtCaseReference ?? undefined,

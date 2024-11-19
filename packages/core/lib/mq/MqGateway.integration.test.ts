@@ -1,7 +1,5 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-
 import type MqConfig from "./MqConfig"
-
 import MqGateway from "./MqGateway"
 import TestMqGateway from "./TestMqGateway"
 
@@ -9,9 +7,9 @@ jest.setTimeout(30000)
 
 const queueName = "mq-gateway-integration-testing"
 const config: MqConfig = {
-  password: "admin",
   url: "failover:(stomp://localhost:61613)",
-  username: "admin"
+  username: "admin",
+  password: "admin"
 }
 
 const gateway = new MqGateway(config)

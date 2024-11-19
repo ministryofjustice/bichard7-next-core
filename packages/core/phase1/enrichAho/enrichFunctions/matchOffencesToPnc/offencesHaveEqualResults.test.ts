@@ -1,18 +1,17 @@
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import offencesHaveEqualResults from "./offencesHaveEqualResults"
 
 const createOffenceWithResults = (
   results: Pick<
     Result,
-    "CJSresultCode" | "NextHearingDate" | "PNCAdjudicationExists" | "ResultHearingDate" | "ResultVariableText"
+    "CJSresultCode" | "ResultHearingDate" | "PNCAdjudicationExists" | "ResultVariableText" | "NextHearingDate"
   >[]
 ): Offence =>
   ({
     Result: results.map((result) => ({
       ...result,
-      PNCAdjudicationExists: !!result.PNCAdjudicationExists,
-      ResultHearingDate: result.ResultHearingDate ?? new Date("2009-09-09")
+      ResultHearingDate: result.ResultHearingDate ?? new Date("2009-09-09"),
+      PNCAdjudicationExists: !!result.PNCAdjudicationExists
     }))
   }) as Offence
 
@@ -26,7 +25,7 @@ it("should return false if there are different recordable result codes and adjud
 it("should return false if results are different but adjudications are the same", () => {
   const o1 = createOffenceWithResults([{ CJSresultCode: 7520, ResultHearingDate: new Date("2009-09-09") }])
   const o2 = createOffenceWithResults([
-    { CJSresultCode: 4520, PNCAdjudicationExists: true, ResultHearingDate: new Date("2009-09-10") }
+    { CJSresultCode: 4520, ResultHearingDate: new Date("2009-09-10"), PNCAdjudicationExists: true }
   ])
   const result = offencesHaveEqualResults([o1, o2])
   expect(result).toBe(false)
@@ -62,10 +61,10 @@ it("should return true if all fields are the same except the adjudication", () =
 
 it("should return false if all fields are the same except the date", () => {
   const o1 = createOffenceWithResults([
-    { CJSresultCode: 4563, PNCAdjudicationExists: true, ResultHearingDate: new Date("2009-09-09") }
+    { CJSresultCode: 4563, ResultHearingDate: new Date("2009-09-09"), PNCAdjudicationExists: true }
   ])
   const o2 = createOffenceWithResults([
-    { CJSresultCode: 4563, PNCAdjudicationExists: true, ResultHearingDate: new Date("2009-09-10") }
+    { CJSresultCode: 4563, ResultHearingDate: new Date("2009-09-10"), PNCAdjudicationExists: true }
   ])
   const result = offencesHaveEqualResults([o1, o2])
   expect(result).toBe(false)

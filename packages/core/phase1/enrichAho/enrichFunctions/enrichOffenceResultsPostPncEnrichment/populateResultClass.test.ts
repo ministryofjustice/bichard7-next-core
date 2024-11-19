@@ -1,5 +1,4 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import ResultClass from "../../../../types/ResultClass"
 import populateResultClass from "./populateResultClass"
 
@@ -9,14 +8,14 @@ const NON_ADJOURNED_RESULT_CODE = 0
 describe("populateResultClass", () => {
   it("should unset NextResultSourceOrganisation when adjourned and organisation unit code is not set", () => {
     const result = {
+      ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: ADJOURNED_RESULT_CODE,
       NextResultSourceOrganisation: {
-        BottomLevelCode: "FG",
+        TopLevelCode: "A",
         SecondLevelCode: "BC",
         ThirdLevelCode: "DE",
-        TopLevelCode: "A"
-      },
-      ResultClass: ResultClass.UNRESULTED
+        BottomLevelCode: "FG"
+      }
     } as Result
 
     populateResultClass(result, new Date(), new Date())
@@ -27,8 +26,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Adjournment post Judgement", () => {
     const result = {
-      CJSresultCode: ADJOURNED_RESULT_CODE,
-      ResultClass: ResultClass.UNRESULTED
+      ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: ADJOURNED_RESULT_CODE
     } as Result
 
     const convictionDate = new Date("2022-03-28T10:12:13")
@@ -40,8 +39,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Sentence", () => {
     const result = {
-      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      ResultClass: ResultClass.UNRESULTED
+      ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: NON_ADJOURNED_RESULT_CODE
     } as Result
 
     const convictionDate = new Date("2022-03-28T10:12:13")
@@ -53,8 +52,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Adjournment with Judgement", () => {
     const result = {
-      CJSresultCode: ADJOURNED_RESULT_CODE,
-      ResultClass: ResultClass.UNRESULTED
+      ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: ADJOURNED_RESULT_CODE
     } as Result
 
     const convictionDate = new Date("2022-03-28T10:12:00.000Z")
@@ -66,8 +65,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Judgement with final result when adjourned and conviction date is equal to date of hearing", () => {
     const result = {
-      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      ResultClass: ResultClass.UNRESULTED
+      ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: NON_ADJOURNED_RESULT_CODE
     } as Result
 
     const convictionDate = new Date("2022-03-28T10:12:00.000Z")
@@ -79,9 +78,9 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Judgement with final result when not adjourned and plea is in pleas list", () => {
     const result = {
+      ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: NON_ADJOURNED_RESULT_CODE,
-      PleaStatus: "ADM",
-      ResultClass: ResultClass.UNRESULTED
+      PleaStatus: "ADM"
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -91,11 +90,11 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Unresulted when adjourned and CJS result code is in result codes list", () => {
     const result = {
+      ResultClass: ResultClass.UNRESULTED,
       CJSresultCode: 2050,
       NextResultSourceOrganisation: {
         OrganisationUnitCode: "ABCDEFG"
-      },
-      ResultClass: ResultClass.UNRESULTED
+      }
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -105,8 +104,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Unresulted when adjourned and verdict is in verdicts list", () => {
     const result = {
-      CJSresultCode: ADJOURNED_RESULT_CODE,
       ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: ADJOURNED_RESULT_CODE,
       Verdict: "NG"
     } as Result
 
@@ -117,8 +116,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Judgement with final result when not adjourned and CJS result code is in result codes list", () => {
     const result = {
-      CJSresultCode: 2050,
-      ResultClass: ResultClass.UNRESULTED
+      ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: 2050
     } as Result
 
     populateResultClass(result, undefined, new Date())
@@ -128,8 +127,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Judgement with final result when not adjourned and verdict is in verdicts list", () => {
     const result = {
-      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
       ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
       Verdict: "NG"
     } as Result
 
@@ -140,8 +139,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Adjournment pre Judgement", () => {
     const result = {
-      CJSresultCode: ADJOURNED_RESULT_CODE,
       ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: ADJOURNED_RESULT_CODE,
       Verdict: undefined
     } as Result
 
@@ -152,8 +151,8 @@ describe("populateResultClass", () => {
 
   it("should set the result class to Unresulted for all other cases", () => {
     const result = {
-      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
       ResultClass: ResultClass.UNRESULTED,
+      CJSresultCode: NON_ADJOURNED_RESULT_CODE,
       Verdict: "phase1/types/Verdict"
     } as Result
 

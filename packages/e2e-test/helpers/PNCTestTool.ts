@@ -1,15 +1,12 @@
 import type { AxiosResponse } from "axios"
-
 import axiosClass from "axios"
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
 import https from "https"
 import tls from "tls"
-
-import type { PncMock } from "../utils/pnc"
-
-import { isError } from "../utils/isError"
 import Poller from "../utils/Poller"
+import { isError } from "../utils/isError"
+import type { PncMock } from "../utils/pnc"
 
 tls.DEFAULT_MIN_VERSION = "TLSv1"
 
@@ -107,93 +104,8 @@ class PNCTestTool {
     this.baseUrl = options.baseUrl
   }
 
-  // eslint-disable-next-line class-methods-use-this, no-unused-vars, @typescript-eslint/no-unused-vars
-  addMock(_matchRegex: string, _response: string, _count?: number) {
-    throw new Error("addMock incorrectly called for PNCTestTool")
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  awaitMockRequest(_id: string, _timeout = 40000) {
-    throw new Error("awaitMockRequest incorrectly called for PNCTestTool")
-  }
-
-  async checkRecord(specFolder: string): Promise<boolean> {
-    const name = extractNameFromFiles(specFolder)
-
-    // Retrieve the record
-    const record = await this.fetchRecord(name, "xml")
-    if (!record || isError(record)) {
-      throw new Error("Could not fetch record from PNC")
-    }
-
-    const afterPath = `${specFolder}/pnc-data.after.xml`
-    if (updateExpectations) {
-      fs.writeFileSync(afterPath, record)
-      // Fetch the HTML version too for easier comparison
-      const recordHTML = await this.fetchRecord(name, "html")
-      if (recordHTML) {
-        fs.writeFileSync(afterPath.replace(".xml", ".html"), recordHTML)
-      }
-    }
-
-    const afterState = fs.readFileSync(afterPath).toString().trim()
-    return record === afterState
-  }
-
-  async createRecord(ncmFile: string) {
-    const xmlData = fs.readFileSync(ncmFile, "utf8").toString()
-    const url = `${this.baseUrl}/create.php`
-    try {
-      await axios.post(url, xmlData, { timeout: 5000 })
-    } catch (err) {
-      console.log((err as Error).message)
-      throw new Error("Error creating record in PNC")
-    }
-  }
-
-  fetchRecord(options: { forename: string; surname: string }, format: string): Promise<false | string> {
-    const action = (): Promise<AxiosResponse | false> => {
-      const url = `${
-        this.baseUrl
-      }/query.php?forename=${options.forename.toUpperCase()}&surname=${options.surname.toUpperCase()}&format=${format}`
-
-      try {
-        return axios.get(url, { ...axiosConfig, timeout: 1000 })
-      } catch (err) {
-        return Promise.resolve(false)
-      }
-    }
-
-    const condition = (resp: AxiosResponse | false): boolean => resp && (resp.status === 200 || resp.status === 404)
-
-    return new Poller<AxiosResponse | false>(action)
-      .poll({
-        condition,
-        delay: 1000,
-        name: "PNC Test Tool query request poller",
-        timeout: 10000
-      })
-      .then((result: AxiosResponse | false) => {
-        if (!result || result.status !== 200) {
-          return false
-        }
-
-        return removeVariableData(result.data, format).trim()
-      })
-      .catch((error) => error)
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getMock(_id: string): Promise<PncMock> {
-    throw new Error("getMock incorrectly called for PNCTestTool")
-  }
-
-  getRequests() {
-    throw new Error("getMock incorrectly called for PNCTestTool")
-  }
-
   async setupRecord(specFolder: string) {
-    let existingRecord: false | string
+    let existingRecord: string | false
     const ncmFile = `${specFolder}/pnc-data.xml`
     const name = extractNameFromFiles(specFolder)
 
@@ -225,6 +137,91 @@ class PNCTestTool {
     if (existingRecord !== beforeState) {
       throw new Error("PNC record does not match expected before state")
     }
+  }
+
+  async checkRecord(specFolder: string): Promise<boolean> {
+    const name = extractNameFromFiles(specFolder)
+
+    // Retrieve the record
+    const record = await this.fetchRecord(name, "xml")
+    if (!record || isError(record)) {
+      throw new Error("Could not fetch record from PNC")
+    }
+
+    const afterPath = `${specFolder}/pnc-data.after.xml`
+    if (updateExpectations) {
+      fs.writeFileSync(afterPath, record)
+      // Fetch the HTML version too for easier comparison
+      const recordHTML = await this.fetchRecord(name, "html")
+      if (recordHTML) {
+        fs.writeFileSync(afterPath.replace(".xml", ".html"), recordHTML)
+      }
+    }
+
+    const afterState = fs.readFileSync(afterPath).toString().trim()
+    return record === afterState
+  }
+
+  fetchRecord(options: { forename: string; surname: string }, format: string): Promise<string | false> {
+    const action = (): Promise<AxiosResponse | false> => {
+      const url = `${
+        this.baseUrl
+      }/query.php?forename=${options.forename.toUpperCase()}&surname=${options.surname.toUpperCase()}&format=${format}`
+
+      try {
+        return axios.get(url, { ...axiosConfig, timeout: 1000 })
+      } catch (err) {
+        return Promise.resolve(false)
+      }
+    }
+
+    const condition = (resp: AxiosResponse | false): boolean => resp && (resp.status === 200 || resp.status === 404)
+
+    return new Poller<AxiosResponse | false>(action)
+      .poll({
+        condition,
+        timeout: 10000,
+        delay: 1000,
+        name: "PNC Test Tool query request poller"
+      })
+      .then((result: AxiosResponse | false) => {
+        if (!result || result.status !== 200) {
+          return false
+        }
+
+        return removeVariableData(result.data, format).trim()
+      })
+      .catch((error) => error)
+  }
+
+  async createRecord(ncmFile: string) {
+    const xmlData = fs.readFileSync(ncmFile, "utf8").toString()
+    const url = `${this.baseUrl}/create.php`
+    try {
+      await axios.post(url, xmlData, { timeout: 5000 })
+    } catch (err) {
+      console.log((err as Error).message)
+      throw new Error("Error creating record in PNC")
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars, @typescript-eslint/no-unused-vars
+  addMock(_matchRegex: string, _response: string, _count?: number) {
+    throw new Error("addMock incorrectly called for PNCTestTool")
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  awaitMockRequest(_id: string, _timeout = 40000) {
+    throw new Error("awaitMockRequest incorrectly called for PNCTestTool")
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getMock(_id: string): Promise<PncMock> {
+    throw new Error("getMock incorrectly called for PNCTestTool")
+  }
+
+  getRequests() {
+    throw new Error("getMock incorrectly called for PNCTestTool")
   }
 }
 

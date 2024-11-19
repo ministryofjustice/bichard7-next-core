@@ -1,15 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Bichard sometimes raises a HO100332 for offences that have identical results. Core detects this and
 // assigns a match anyway (as it doesn't matter!)
 
-const ho100332WithSameResults = ({ actual, expected, phase }: ComparisonData) =>
+const ho100332WithSameResults = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

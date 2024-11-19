@@ -1,16 +1,15 @@
 import promisePoller from "promise-poller"
-
 import createConductorClient from "../../conductor/createConductorClient"
 
 const conductorClient = createConductorClient()
 
 export type WorkflowSearchParams = {
-  count?: number
   freeText?: string
+  count?: number
   query: {
+    workflowType?: string
     correlationId?: string
     status?: string
-    workflowType?: string
   }
 }
 
@@ -42,9 +41,9 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
 
 const waitForWorkflows = (query: WorkflowSearchParams, timeout = 60000) =>
   promisePoller({
-    interval: 100, // milliseconds
+    taskFn: () => searchWorkflows(query),
     retries: timeout / 100,
-    taskFn: () => searchWorkflows(query)
+    interval: 100 // milliseconds
   }).catch(() => {
     throw new Error("Could not find workflow")
   })

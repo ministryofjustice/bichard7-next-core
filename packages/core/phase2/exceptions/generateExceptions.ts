@@ -1,7 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-
 import HO200100 from "./HO200100"
 import HO200101 from "./HO200101"
 import HO200103 from "./HO200103"

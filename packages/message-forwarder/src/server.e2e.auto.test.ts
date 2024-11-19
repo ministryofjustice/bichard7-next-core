@@ -14,9 +14,8 @@ import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import { randomUUID } from "crypto"
 import fs from "fs"
-
-import createStompClient from "./createStompClient"
 import MessageForwarder from "./MessageForwarder"
+import createStompClient from "./createStompClient"
 import successExceptionsAHOFixture from "./test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
 
@@ -62,15 +61,15 @@ describe("Server in auto mode", () => {
 
     let workflows = await waitForWorkflows({
       count: 1,
-      query: { correlationId, status: "COMPLETED", workflowType: "bichard_phase_1" }
+      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
     })
     expect(workflows).toHaveLength(1)
 
-    await stompClient.publish({ body: messageData, destination: sourceQueue })
+    await stompClient.publish({ destination: sourceQueue, body: messageData })
 
     workflows = await waitForWorkflows({
       count: 2,
-      query: { correlationId, status: "COMPLETED", workflowType: "bichard_phase_1" }
+      query: { workflowType: "bichard_phase_1", status: "COMPLETED", correlationId }
     })
     expect(workflows).toHaveLength(2)
   })
@@ -78,7 +77,7 @@ describe("Server in auto mode", () => {
   it("sends the message to the destination queue if no workflow exists", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(destinationQueue)
-    await stompClient.publish({ body: messageData, destination: sourceQueue })
+    await stompClient.publish({ destination: sourceQueue, body: messageData })
     const message = await mqListener.waitForMessage()
     expect(message).toEqual(messageData)
     mqListener.stop()
@@ -87,7 +86,7 @@ describe("Server in auto mode", () => {
   it("puts the message on a failure queue if there is an exception", async () => {
     const mqListener = new MqListener(mqConfig)
     mqListener.listen(`${sourceQueue}.FAILURE`)
-    await stompClient.publish({ body: "BAD DATA", destination: sourceQueue })
+    await stompClient.publish({ destination: sourceQueue, body: "BAD DATA" })
     const message = await mqListener.waitForMessage()
     expect(message).toBe("BAD DATA")
     mqListener.stop()

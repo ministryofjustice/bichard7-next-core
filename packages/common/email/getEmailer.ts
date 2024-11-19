@@ -1,39 +1,38 @@
 /* eslint-disable no-console */
 import nodemailer from "nodemailer"
-
 import type Email from "./Email"
 import type Emailer from "./Emailer"
 
 export interface SmtpConfig {
-  debug: boolean
   host: string
+  user: string
   password: string
   port: number
   tls: boolean
-  user: string
+  debug: boolean
 }
 
 const getSmtpMailer = (config: SmtpConfig): Emailer =>
   nodemailer.createTransport({
-    auth: {
-      pass: config.password,
-      user: config.user
-    },
-    debug: config.debug,
     host: config.host,
-    logger: config.debug,
     port: config.port,
-    secure: config.tls
+    secure: config.tls,
+    debug: config.debug,
+    logger: config.debug,
+    auth: {
+      user: config.user,
+      pass: config.password
+    }
   })
 
 const getConsoleMailer = (): Emailer => ({
   // eslint-disable-next-line require-await
   sendMail: async (email: Email) => {
     console.log({
-      body: email.text,
       from: email.from,
+      to: email.to,
       subject: email.subject,
-      to: email.to
+      body: email.text
     })
     if (email.attachments) {
       email.attachments.forEach((a) => console.log(a))

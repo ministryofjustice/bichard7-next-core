@@ -1,5 +1,4 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import ResultClass from "../../types/ResultClass"
 import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 

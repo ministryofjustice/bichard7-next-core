@@ -1,26 +1,24 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
-
-import type { Phase3Comparison } from "../types/ComparisonFile"
-import type { Phase3ComparisonResultDebugOutput, Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
-
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import phase3Handler from "../../phase3/phase3"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Phase3Comparison } from "../types/ComparisonFile"
+import type { Phase3ComparisonResultDebugOutput, Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
-import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import phase3Handler from "../../phase3/phase3"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
+import MockPncGateway from "./MockPncGateway"
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<Phase3ComparisonResultDetail> => {
-  const { auditLogEvents, correlationId, incomingMessage, outgoingMessage, pncOperations, triggers } = comparison
+  const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   const pncGateway = new MockPncGateway(undefined)
 
@@ -62,12 +60,12 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     ) {
       return {
         auditLogEventsMatch: true,
-        exceptionsMatch: true,
-        intentionalDifference: true,
-        pncOperationsMatch: true,
         triggersMatch: true,
+        exceptionsMatch: true,
+        pncOperationsMatch: true,
         xmlOutputMatches: true,
-        xmlParsingMatches: true
+        xmlParsingMatches: true,
+        intentionalDifference: true
       }
     }
 
@@ -82,48 +80,48 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const auditLogEventsMatch = isEqual(coreAuditLogEvents, bichardAuditLogEvents)
 
     const debugOutput: Phase3ComparisonResultDebugOutput = {
-      auditLogEvents: {
-        comparisonResult: bichardAuditLogEvents,
-        coreResult: coreAuditLogEvents
+      triggers: {
+        coreResult: sortedCoreTriggers,
+        comparisonResult: sortedTriggers
       },
       exceptions: {
-        comparisonResult: sortedExceptions,
-        coreResult: sortedCoreExceptions
+        coreResult: sortedCoreExceptions,
+        comparisonResult: sortedExceptions
       },
       pncOperations: {
-        comparisonResult: pncOperations,
-        coreResult: pncGateway.updates
+        coreResult: pncGateway.updates,
+        comparisonResult: pncOperations
       },
-      triggers: {
-        comparisonResult: sortedTriggers,
-        coreResult: sortedCoreTriggers
+      auditLogEvents: {
+        coreResult: coreAuditLogEvents,
+        comparisonResult: bichardAuditLogEvents
       },
+      xmlParsingDiff: [],
       xmlOutputDiff: normalisedOutgoingMessage
         ? xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage)
-        : [],
-      xmlParsingDiff: []
+        : []
     }
 
     return {
       auditLogEventsMatch,
-      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      incomingMessageType: incomingMessageType,
-      pncOperationsMatch: isEqual(pncGateway.updates, pncOperations),
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
+      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
+      pncOperationsMatch: isEqual(pncGateway.updates, pncOperations),
       xmlOutputMatches:
         !normalisedOutgoingMessage || xmlOutputMatches(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
       xmlParsingMatches: true,
+      incomingMessageType: incomingMessageType,
       ...(debug && { debugOutput })
     }
   } catch (e) {
     return {
       auditLogEventsMatch: false,
-      error: e,
+      triggersMatch: false,
       exceptionsMatch: false,
       pncOperationsMatch: false,
-      triggersMatch: false,
       xmlOutputMatches: false,
-      xmlParsingMatches: false
+      xmlParsingMatches: false,
+      error: e
     }
   }
 }

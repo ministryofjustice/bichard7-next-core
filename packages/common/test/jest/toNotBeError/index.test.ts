@@ -1,5 +1,4 @@
 import type { Result } from "../../../types/Result"
-
 import "./index"
 
 describe(".toNotBeError()", () => {

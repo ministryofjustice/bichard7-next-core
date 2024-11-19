@@ -1,7 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { AhoXml, Br7Result } from "../../../types/AhoXml"
-
 import Phase from "../../../types/Phase"
 import addAhoErrors from "./addAhoErrors"
 
@@ -10,7 +8,9 @@ describe("addAhoErrors()", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -18,10 +18,8 @@ describe("addAhoErrors()", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -42,7 +40,9 @@ describe("addAhoErrors()", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -50,10 +50,8 @@ describe("addAhoErrors()", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -74,7 +72,9 @@ describe("addAhoErrors()", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -82,10 +82,8 @@ describe("addAhoErrors()", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -108,7 +106,9 @@ describe("addAhoErrors()", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -119,10 +119,8 @@ describe("addAhoErrors()", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "error_here" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -147,7 +145,9 @@ describe("addAhoErrors()", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -159,10 +159,8 @@ describe("addAhoErrors()", () => {
                   "br7:Result": [{ "ds:CJSresultCode": { "#text": "error_here" } }]
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml

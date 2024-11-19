@@ -1,10 +1,7 @@
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-
 import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import axios from "axios"
 import https from "https"
-
-import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
+import { pncApiResultSchema } from "../schemas/pncApiResult"
 import type PncApiConfig from "../types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../types/PncApiResult"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
@@ -16,8 +13,8 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "../types/PncQueryResult"
-
-import { pncApiResultSchema } from "../schemas/pncApiResult"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 
@@ -30,10 +27,10 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
       offence.hearingDate
     ) {
       return {
-        offenceTICNumber: offence.numberOffencesTakenIntoAccount,
-        plea: offence.pleaStatus,
+        verdict: offence.verdict,
         sentenceDate: offence.hearingDate,
-        verdict: offence.verdict
+        plea: offence.pleaStatus,
+        offenceTICNumber: offence.numberOffencesTakenIntoAccount
       }
     }
   }
@@ -57,23 +54,26 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
   }
 
   const getOffences = (o: PncApiOffence): PncOffence => ({
-    adjudication: getAdjudication(o),
-    disposals: getDisposals(o),
     offence: {
       acpoOffenceCode: o.acpoOffenceCode,
       cjsOffenceCode: o.cjsOffenceCode,
+      startDate: o.startDate || undefined,
+      startTime: o.startTime,
       endDate: o.endDate || undefined,
       endTime: o.endTime,
       qualifier1: o.offenceQualifier1,
       qualifier2: o.offenceQualifier2,
-      sequenceNumber: Number(o.referenceNumber),
-      startDate: o.startDate || undefined,
-      startTime: o.startTime,
-      title: o.title
-    }
+      title: o.title,
+      sequenceNumber: Number(o.referenceNumber)
+    },
+    adjudication: getAdjudication(o),
+    disposals: getDisposals(o)
   })
   return {
+    forceStationCode: apiResponse.forceStationCode,
+    croNumber: apiResponse.croNumber,
     checkName: apiResponse.pncCheckName,
+    pncId: apiResponse.pncIdentifier,
     courtCases: apiResponse.courtCases.map(
       (c): PncCourtCase => ({
         courtCaseReference: c.courtCaseRefNo,
@@ -81,15 +81,12 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
         offences: c.offences.map(getOffences)
       })
     ),
-    croNumber: apiResponse.croNumber,
-    forceStationCode: apiResponse.forceStationCode,
     penaltyCases: apiResponse.penaltyCases.map(
       (c): PncPenaltyCase => ({
-        offences: c.offences.map(getOffences),
-        penaltyCaseReference: c.penaltyCaseRefNo
+        penaltyCaseReference: c.penaltyCaseRefNo,
+        offences: c.offences.map(getOffences)
       })
-    ),
-    pncId: apiResponse.pncIdentifier
+    )
   }
 }
 
@@ -100,18 +97,18 @@ class PncApiError extends Error {
 }
 
 export default class PncGateway implements PncGatewayInterface {
-  queryTime: Date | undefined
-
   constructor(private config: PncApiConfig) {}
 
-  query(asn: string, correlationId: string): Promise<Error | PncQueryResult | undefined> {
+  queryTime: Date | undefined
+
+  query(asn: string, correlationId: string): Promise<PncQueryResult | Error | undefined> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {
         headers: {
-          accept: "application/json",
+          "X-Api-Key": this.config.key,
           correlationId,
-          "X-Api-Key": this.config.key
+          accept: "application/json"
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false

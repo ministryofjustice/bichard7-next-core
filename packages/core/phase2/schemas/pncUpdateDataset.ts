@@ -1,5 +1,4 @@
 import { z } from "zod"
-
 import {
   courtCaseReferenceNumberSchema,
   organisationUnitSchema,
@@ -11,25 +10,25 @@ export const operationStatusSchema = z.union([z.literal("Completed"), z.literal(
 
 export const newremOperationSchema = z.object({
   code: z.literal(PncOperation.REMAND),
-  courtCaseReference: courtCaseReferenceNumberSchema.optional(),
   data: z
     .object({
       nextHearingDate: z.coerce.date().optional(),
       nextHearingLocation: organisationUnitSchema
     })
     .optional(),
+  courtCaseReference: courtCaseReferenceNumberSchema.optional(),
   isAdjournmentPreJudgement: z.boolean().optional(),
   status: operationStatusSchema
 })
 
 const disarrOperationSchema = z.object({
-  addedByTheCourt: z.boolean().optional(),
   code: z.literal(PncOperation.NORMAL_DISPOSAL),
   data: z
     .object({
       courtCaseReference: courtCaseReferenceNumberSchema
     })
     .optional(),
+  addedByTheCourt: z.boolean().optional(),
   status: operationStatusSchema
 })
 

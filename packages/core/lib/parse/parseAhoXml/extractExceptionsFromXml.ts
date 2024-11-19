@@ -1,10 +1,7 @@
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import { XMLParser } from "fast-xml-parser"
-
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
-
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../exceptions/errorPaths"
 
@@ -17,7 +14,7 @@ const extractPncExceptions = (aho: any): Exception[] => {
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extract = (el: any, path: (number | string)[] = []): Exception[] => {
+const extract = (el: any, path: (string | number)[] = []): Exception[] => {
   const exceptions: Exception[] = []
   for (const key in el) {
     if (key === "@_Error") {

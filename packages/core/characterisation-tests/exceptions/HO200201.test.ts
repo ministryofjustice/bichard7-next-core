@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { resultQualifierVariableDurationTypePath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
@@ -19,16 +18,16 @@ describe.ifPhase2("HO200201", () => {
           {
             results: [
               {
-                numberOfOffencesTic: true,
+                resultQualifierVariables: [{ code: 1, duration: { type: "Custodial", unit: "D", length: 30 } }],
                 pncAdjudicationExists: true,
-                resultQualifierVariables: [{ code: 1, duration: { length: 30, type: "Custodial", unit: "D" } }]
+                numberOfOffencesTic: true
               }
             ]
           }
         ],
+        pncId: "2000/0000000X",
         pncAdjudication: {},
-        pncDisposals: [{ type: 1000 }],
-        pncId: "2000/0000000X"
+        pncDisposals: [{ type: 1000 }]
       })
 
       const {
@@ -51,15 +50,15 @@ describe.ifPhase2("HO200201", () => {
           {
             results: [
               {
-                pncAdjudicationExists: true,
-                resultQualifierVariables: [{ code: 1 }]
+                resultQualifierVariables: [{ code: 1 }],
+                pncAdjudicationExists: true
               }
             ]
           }
         ],
+        pncId: "2000/0000000X",
         pncAdjudication: {},
-        pncDisposals: [{ type: 1000 }],
-        pncId: "2000/0000000X"
+        pncDisposals: [{ type: 1000 }]
       })
 
       const {

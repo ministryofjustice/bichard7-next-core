@@ -1,5 +1,4 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
 import ResultClass from "../../../types/ResultClass"
 
@@ -18,9 +17,9 @@ const getFirstDateSpecifiedInResult = (result: Result): Date | undefined => {
   return result.NextHearingDate &&
     result.ResultClass &&
     [
-      ResultClass.ADJOURNMENT_POST_JUDGEMENT,
       ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
-      ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+      ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
+      ResultClass.ADJOURNMENT_POST_JUDGEMENT
     ].includes(result.ResultClass)
     ? new Date(result.NextHearingDate)
     : undefined

@@ -17,8 +17,8 @@ type ProcessFunction<T> = (contents: string, fileName: string, date: Date) => Pr
 
 export type SkippedFile = {
   file: string
-  intentionalDifference?: boolean
   skipped: true
+  intentionalDifference?: boolean
 }
 
 const processRange = async <T>(
@@ -29,11 +29,11 @@ const processRange = async <T>(
   cache: boolean,
   list: boolean,
   processFunction: ProcessFunction<T>
-): Promise<(SkippedFile | T)[]> => {
+): Promise<(T | SkippedFile)[]> => {
   const dynamoConfig = createDynamoDbConfig(phase)
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
-  const results: (SkippedFile | T)[] = []
+  const results: (T | SkippedFile)[] = []
   let count = 0
 
   for await (const batch of dynamo.getRange(start, end, filterValue, 1000, true)) {
@@ -52,7 +52,7 @@ const processRange = async <T>(
       record
     } of files) {
       if (record.intentionalDifference) {
-        results.push({ file: fileName, intentionalDifference: true, skipped: true })
+        results.push({ file: fileName, skipped: true, intentionalDifference: true })
       } else if (contents) {
         const date = getDateFromComparisonFilePath(fileName)
         const result = await processFunction(contents, fileName, date)

@@ -1,6 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { CheckExceptionFn } from "../lib/areResultsMatchingPncAdjudicationAndDisposals"
-
 import areResultsMatchingPncAdjudicationAndDisposals from "../lib/areResultsMatchingPncAdjudicationAndDisposals"
 
 const checkResultsMatchingPncDisposalsExceptions = (

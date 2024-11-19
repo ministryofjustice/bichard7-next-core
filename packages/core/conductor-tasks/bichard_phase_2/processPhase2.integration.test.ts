@@ -1,23 +1,22 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
-import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import "jest-xml-matcher"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import "jest-xml-matcher"
+import postgres from "postgres"
+import processPhase2 from "./processPhase2"
+
+import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
-import postgres from "postgres"
-
-import type Phase2Result from "../../phase2/types/Phase2Result"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import generateFakePncUpdateDataset from "../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
+import type Phase2Result from "../../phase2/types/Phase2Result"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
-import processPhase2 from "./processPhase2"
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -28,12 +27,12 @@ const sql = postgres({
   ...dbConfig,
   types: {
     date: {
+      to: 25,
       from: [1082],
+      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
+      }
     }
   }
 })
@@ -118,8 +117,8 @@ describe("processPhase2", () => {
         Result: [
           {
             ...offence[0].Result[0],
-            PNCAdjudicationExists: false,
-            ResultClass: ResultClass.SENTENCE
+            ResultClass: ResultClass.SENTENCE,
+            PNCAdjudicationExists: false
           }
         ]
       }

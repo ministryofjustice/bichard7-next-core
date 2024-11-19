@@ -1,49 +1,48 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-
 import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import enrichOffences from "../../enrichAho/enrichFunctions/enrichOffences"
 import generateMockAho from "../../tests/helpers/generateMockAho"
 
 const mockNationalIndictmmentOffence = [
   {
-    ActualOffenceDateCode: "1",
-    ActualOffenceEndDate: {},
-    ActualOffenceStartDate: {
-      StartDate: "2010-11-28T00:00:00.000Z"
-    },
-    ActualOffenceWording: "Theft of pedal cycle.",
-    CommittedOnBail: "D",
-    CourtOffenceSequenceNumber: 1,
     CriminalProsecutionReference: {
       OffenceReason: {
         __type: "NationalOffenceReason",
         OffenceCode: {
           __type: "IndictmentOffenceCode",
-          FullCode: "TH68046C",
-          Indictment: "XX00",
+          Reason: "68046",
           Qualifier: "C",
-          Reason: "68046"
+          FullCode: "TH68046C",
+          Indictment: "XX00"
         }
       }
     },
+    ActualOffenceDateCode: "1",
+    ActualOffenceStartDate: {
+      StartDate: "2010-11-28T00:00:00.000Z"
+    },
+    ActualOffenceEndDate: {},
     LocationOfOffence: "Kingston High Street",
+    ActualOffenceWording: "Theft of pedal cycle.",
+    CommittedOnBail: "D",
+    CourtOffenceSequenceNumber: 1,
     Result: [
       {
         CJSresultCode: 1015,
-        ModeOfTrialReason: "SUM",
-        PleaStatus: "NG",
-        ResultHearingDate: "2011-09-26T00:00:00.000Z",
-        ResultHearingType: "OTHER",
-        ResultQualifierVariable: [],
-        ResultVariableText: "RESULT_TEXT",
         SourceOrganisation: {
-          BottomLevelCode: "01",
-          OrganisationUnitCode: "B01EF01",
+          TopLevelCode: "B",
           SecondLevelCode: "01",
           ThirdLevelCode: "EF",
-          TopLevelCode: "B"
+          BottomLevelCode: "01",
+          OrganisationUnitCode: "B01EF01"
         },
-        Verdict: "G"
+        ResultHearingType: "OTHER",
+        ResultHearingDate: "2011-09-26T00:00:00.000Z",
+        PleaStatus: "NG",
+        Verdict: "G",
+        ModeOfTrialReason: "SUM",
+        ResultVariableText: "RESULT_TEXT",
+        ResultQualifierVariable: []
       }
     ]
   }
@@ -51,44 +50,44 @@ const mockNationalIndictmmentOffence = [
 
 const mockNationalCommonLawOffence = [
   {
-    ActualOffenceDateCode: "1",
-    ActualOffenceEndDate: {},
-    ActualOffenceStartDate: {
-      StartDate: "2010-11-28T00:00:00.000Z"
-    },
-    ActualOffenceWording: "Theft of pedal cycle.",
-    CommittedOnBail: "D",
-    CourtOffenceSequenceNumber: 1,
     CriminalProsecutionReference: {
       OffenceReason: {
         __type: "NationalOffenceReason",
         OffenceCode: {
           __type: "CommonLawOffenceCode",
-          CommonLawOffence: "COML",
-          FullCode: "COML001C",
+          Reason: "001",
           Qualifier: "C",
-          Reason: "001"
+          FullCode: "COML001C",
+          CommonLawOffence: "COML"
         }
       }
     },
+    ActualOffenceDateCode: "1",
+    ActualOffenceStartDate: {
+      StartDate: "2010-11-28T00:00:00.000Z"
+    },
+    ActualOffenceEndDate: {},
     LocationOfOffence: "Kingston High Street",
+    ActualOffenceWording: "Theft of pedal cycle.",
+    CommittedOnBail: "D",
+    CourtOffenceSequenceNumber: 1,
     Result: [
       {
         CJSresultCode: 1015,
-        ModeOfTrialReason: "SUM",
-        PleaStatus: "NG",
-        ResultHearingDate: "2011-09-26T00:00:00.000Z",
-        ResultHearingType: "OTHER",
-        ResultQualifierVariable: [],
-        ResultVariableText: "RESULT_TEXT",
         SourceOrganisation: {
-          BottomLevelCode: "01",
-          OrganisationUnitCode: "B01EF01",
+          TopLevelCode: "B",
           SecondLevelCode: "01",
           ThirdLevelCode: "EF",
-          TopLevelCode: "B"
+          BottomLevelCode: "01",
+          OrganisationUnitCode: "B01EF01"
         },
-        Verdict: "G"
+        ResultHearingType: "OTHER",
+        ResultHearingDate: "2011-09-26T00:00:00.000Z",
+        PleaStatus: "NG",
+        Verdict: "G",
+        ModeOfTrialReason: "SUM",
+        ResultVariableText: "RESULT_TEXT",
+        ResultQualifierVariable: []
       }
     ]
   }
@@ -96,14 +95,6 @@ const mockNationalCommonLawOffence = [
 
 const mockLocalOffence = [
   {
-    ActualOffenceDateCode: "1",
-    ActualOffenceEndDate: {},
-    ActualOffenceStartDate: {
-      StartDate: "2010-11-28T00:00:00.000Z"
-    },
-    ActualOffenceWording: "Theft of pedal cycle.",
-    CommittedOnBail: "D",
-    CourtOffenceSequenceNumber: 1,
     CriminalProsecutionReference: {
       OffenceReason: {
         __type: "LocalOffenceReason",
@@ -113,24 +104,32 @@ const mockLocalOffence = [
         }
       }
     },
+    ActualOffenceDateCode: "1",
+    ActualOffenceStartDate: {
+      StartDate: "2010-11-28T00:00:00.000Z"
+    },
+    ActualOffenceEndDate: {},
     LocationOfOffence: "Kingston High Street",
+    ActualOffenceWording: "Theft of pedal cycle.",
+    CommittedOnBail: "D",
+    CourtOffenceSequenceNumber: 1,
     Result: [
       {
         CJSresultCode: 1015,
-        ModeOfTrialReason: "SUM",
-        PleaStatus: "NG",
-        ResultHearingDate: "2011-09-26T00:00:00.000Z",
-        ResultHearingType: "OTHER",
-        ResultQualifierVariable: [],
-        ResultVariableText: "RESULT_TEXT",
         SourceOrganisation: {
-          BottomLevelCode: "01",
-          OrganisationUnitCode: "B01EF01",
+          TopLevelCode: "B",
           SecondLevelCode: "01",
           ThirdLevelCode: "EF",
-          TopLevelCode: "B"
+          BottomLevelCode: "01",
+          OrganisationUnitCode: "B01EF01"
         },
-        Verdict: "G"
+        ResultHearingType: "OTHER",
+        ResultHearingDate: "2011-09-26T00:00:00.000Z",
+        PleaStatus: "NG",
+        Verdict: "G",
+        ModeOfTrialReason: "SUM",
+        ResultVariableText: "RESULT_TEXT",
+        ResultQualifierVariable: []
       }
     ]
   }
@@ -151,26 +150,26 @@ describe("enrichOffences", () => {
       const cpRef = offence.CriminalProsecutionReference
       expect(cpRef).toStrictEqual({
         DefendantOrOffender: {
-          CheckDigit: "K",
-          DefendantOrOffenderSequenceNumber: "00000448754",
+          Year: "11",
           OrganisationUnitIdentifierCode: {
-            BottomLevelCode: "01",
-            OrganisationUnitCode: "01ZD01",
             SecondLevelCode: "01",
-            ThirdLevelCode: "ZD"
+            ThirdLevelCode: "ZD",
+            BottomLevelCode: "01",
+            OrganisationUnitCode: "01ZD01"
           },
-          Year: "11"
+          DefendantOrOffenderSequenceNumber: "00000448754",
+          CheckDigit: "K"
         },
         OffenceReason: {
-          __type: "NationalOffenceReason",
           OffenceCode: {
-            __type: "NonMatchingOffenceCode",
             ActOrSource: "TH",
             FullCode: "TH68046C",
             Qualifier: "C",
             Reason: "046",
-            Year: "68"
-          }
+            Year: "68",
+            __type: "NonMatchingOffenceCode"
+          },
+          __type: "NationalOffenceReason"
         }
       })
     })
@@ -185,15 +184,15 @@ describe("enrichOffences", () => {
       expect(cpRef).toHaveProperty("OffenceReason")
       expect(cpRef.OffenceReason).toHaveProperty("OffenceCode")
       expect(cpRef.OffenceReason).toStrictEqual({
-        __type: "NationalOffenceReason",
         OffenceCode: {
-          __type: "NonMatchingOffenceCode",
           ActOrSource: "TH",
           FullCode: "TH68046C",
           Qualifier: "C",
           Reason: "046",
-          Year: "68"
-        }
+          Year: "68",
+          __type: "NonMatchingOffenceCode"
+        },
+        __type: "NationalOffenceReason"
       })
     })
   })
@@ -211,14 +210,14 @@ describe("enrichOffences", () => {
       expect(cpRef).toHaveProperty("OffenceReason")
       expect(cpRef.OffenceReason).toHaveProperty("OffenceCode")
       expect(cpRef.OffenceReason).toStrictEqual({
-        __type: "NationalOffenceReason",
         OffenceCode: {
-          __type: "IndictmentOffenceCode",
-          FullCode: "TH68046C",
           Indictment: INDICTMENT,
+          FullCode: "TH68046C",
           Qualifier: "C",
-          Reason: "68046"
-        }
+          Reason: "68046",
+          __type: "IndictmentOffenceCode"
+        },
+        __type: "NationalOffenceReason"
       })
     })
   })
@@ -234,14 +233,14 @@ describe("enrichOffences", () => {
       expect(cpRef).toHaveProperty("OffenceReason")
       expect(cpRef.OffenceReason).toHaveProperty("OffenceCode")
       expect(cpRef.OffenceReason).toStrictEqual({
-        __type: "NationalOffenceReason",
         OffenceCode: {
-          __type: "CommonLawOffenceCode",
           CommonLawOffence: COMMON_LAWS,
           FullCode: "COML001C",
           Qualifier: "C",
-          Reason: "001"
-        }
+          Reason: "001",
+          __type: "CommonLawOffenceCode"
+        },
+        __type: "NationalOffenceReason"
       })
     })
   })
@@ -257,11 +256,11 @@ describe("enrichOffences", () => {
       expect(cpRef).toHaveProperty("OffenceReason")
       expect(cpRef.OffenceReason).toHaveProperty("LocalOffenceCode")
       expect(cpRef.OffenceReason).toStrictEqual({
-        __type: "LocalOffenceReason",
         LocalOffenceCode: {
           AreaCode: "01",
           OffenceCode: "01CP003"
-        }
+        },
+        __type: "LocalOffenceReason"
       })
     })
   })

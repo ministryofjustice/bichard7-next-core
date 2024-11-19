@@ -1,7 +1,5 @@
 import isEqual from "lodash.isequal"
-
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import nonRecordableResultCodes from "../../../../lib/nonRecordableResultCodes"
 
 const disposalTextResultCodes = [1100, 3008, 3025, 3041, 3106, 3047]

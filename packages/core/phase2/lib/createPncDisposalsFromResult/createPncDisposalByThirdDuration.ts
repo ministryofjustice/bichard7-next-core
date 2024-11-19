@@ -1,7 +1,6 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
-
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
+import type { PncDisposal } from "../../../types/PncQueryResult"
 import createPncDisposal from "./createPncDisposal"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 

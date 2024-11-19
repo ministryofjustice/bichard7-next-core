@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { lookupOffenceByCjsCode } from "../../lib/dataLookup"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -17,12 +16,12 @@ describe.ifPhase1("HO100233", () => {
   it.skip("should not throw an exception for a valid offence title", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
-      description: "blah",
-      homeOfficeClassification: "123/45",
-      notifiableToHo: true,
       offenceCategory: "CB",
       offenceTitle: "Application to reopen case",
-      recordableOnPnc: false
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true
     })
 
     const inputMessage = generateSpiMessage({
@@ -41,12 +40,12 @@ describe.ifPhase1("HO100233", () => {
   it.skip("should create an exception if the offence title is less than the min length", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockReturnValue({
       cjsCode: "MC8080524",
-      description: "blah",
-      homeOfficeClassification: "123/45",
-      notifiableToHo: true,
       offenceCategory: "CB",
       offenceTitle: "",
-      recordableOnPnc: false
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true
     })
 
     const inputMessage = generateSpiMessage({
@@ -69,12 +68,12 @@ describe.ifPhase1("HO100233", () => {
   it.skip("should create an exception if the offence title is greater than the max length", async () => {
     ;(lookupOffenceByCjsCode as jest.MockedFunction<typeof lookupOffenceByCjsCode>).mockImplementation(() => ({
       cjsCode: "MC8080524",
-      description: "blah",
-      homeOfficeClassification: "123/45",
-      notifiableToHo: true,
       offenceCategory: "CB",
       offenceTitle: "x".repeat(121),
-      recordableOnPnc: false
+      recordableOnPnc: false,
+      description: "blah",
+      homeOfficeClassification: "123/45",
+      notifiableToHo: true
     }))
 
     const inputMessage = generateSpiMessage({

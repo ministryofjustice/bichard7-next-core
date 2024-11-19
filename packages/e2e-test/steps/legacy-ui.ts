@@ -1,10 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber"
-
-import type Bichard from "../utils/world"
-
 import * as legacy from "../utils/actions.legacy-ui"
-import * as ui from "../utils/actions.next-ui"
-import { checkAuditLogExists } from "../utils/auditLogging"
 import { logInAs } from "../utils/auth"
 import { sendMessageForTest } from "../utils/message"
 import {
@@ -28,6 +23,11 @@ import {
   reportContains,
   reportDoesNotContain
 } from "../utils/reports"
+
+import * as ui from "../utils/actions.next-ui"
+
+import { checkAuditLogExists } from "../utils/auditLogging"
+import type Bichard from "../utils/world"
 
 export const setupLegacySteps = () => {
   Given("the data for this test is in the PNC", mockPNCDataForTest)

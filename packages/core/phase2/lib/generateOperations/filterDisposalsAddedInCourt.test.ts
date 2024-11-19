@@ -1,20 +1,19 @@
-import type { Operation } from "../../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../../types/PncOperation"
+import type { Operation } from "../../../types/PncUpdateDataset"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 
 const remandOperation: Operation = {
   code: PncOperation.REMAND,
-  courtCaseReference: "444",
   data: undefined,
+  courtCaseReference: "444",
   isAdjournmentPreJudgement: true,
   status: "NotAttempted"
 }
 
 const disposalOperationAddedInCourt: Operation = {
-  addedByTheCourt: true,
   code: PncOperation.NORMAL_DISPOSAL,
   data: { courtCaseReference: "444" },
+  addedByTheCourt: true,
   status: "NotAttempted"
 }
 

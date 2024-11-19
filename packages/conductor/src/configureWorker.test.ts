@@ -1,7 +1,5 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
-
 import { configureWorker } from "./configureWorker"
 
 describe("configureWorker", () => {
@@ -14,8 +12,8 @@ describe("configureWorker", () => {
 
   it("should add in default values for concurrency and poll interval", () => {
     const worker: ConductorWorker = {
-      execute: (_: Task) => completed(),
-      taskDefName: "test_task"
+      taskDefName: "test_task",
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 
@@ -25,10 +23,10 @@ describe("configureWorker", () => {
 
   it("should use the task defaults for concurrency and poll interval", () => {
     const worker: ConductorWorker = {
+      taskDefName: "test_task",
       concurrency: 5,
-      execute: (_: Task) => completed(),
       pollInterval: 50,
-      taskDefName: "test_task"
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 
@@ -39,8 +37,8 @@ describe("configureWorker", () => {
   it("should allow concurrency to be overridden by an environment variable", () => {
     process.env.CONCURRENCY = "99"
     const worker: ConductorWorker = {
-      execute: (_: Task) => completed(),
-      taskDefName: "test_task"
+      taskDefName: "test_task",
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 
@@ -50,8 +48,8 @@ describe("configureWorker", () => {
   it("should allow concurrency to be overridden by an environment variable per task", () => {
     process.env.CONCURRENCY_TEST_TASK = "999"
     const worker: ConductorWorker = {
-      execute: (_: Task) => completed(),
-      taskDefName: "test_task"
+      taskDefName: "test_task",
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 
@@ -61,8 +59,8 @@ describe("configureWorker", () => {
   it("should allow poll interval to be overridden by an environment variable", () => {
     process.env.POLL_INTERVAL = "999"
     const worker: ConductorWorker = {
-      execute: (_: Task) => completed(),
-      taskDefName: "test_task"
+      taskDefName: "test_task",
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 
@@ -72,8 +70,8 @@ describe("configureWorker", () => {
   it("should allow poll interval to be overridden by an environment variable per task", () => {
     process.env.POLL_INTERVAL_TEST_TASK = "9999"
     const worker: ConductorWorker = {
-      execute: (_: Task) => completed(),
-      taskDefName: "test_task"
+      taskDefName: "test_task",
+      execute: (_: Task) => completed()
     }
     const wrappedWorker = configureWorker(worker)
 

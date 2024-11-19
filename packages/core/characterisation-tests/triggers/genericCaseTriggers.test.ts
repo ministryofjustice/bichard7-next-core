@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerRecordable from "../../types/TriggerRecordable"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -8,33 +7,33 @@ import { processPhase1Message } from "../helpers/processMessage"
 const offenceTests = [
   {
     code: TriggerCode.TRPR0005,
-    recordable: TriggerRecordable.Both,
-    resultCode: 4012
+    resultCode: 4012,
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0006,
-    recordable: TriggerRecordable.Both,
-    resultCode: 1002
+    resultCode: 1002,
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0007,
-    recordable: TriggerRecordable.Both,
-    resultCode: 2065
+    resultCode: 2065,
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0012,
-    recordable: TriggerRecordable.Both,
-    resultCode: 2509
+    resultCode: 2509,
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0019,
-    recordable: TriggerRecordable.Both,
-    resultCode: 4017
+    resultCode: 4017,
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0022,
-    recordable: TriggerRecordable.Both,
-    resultCode: 4022
+    resultCode: 4022,
+    recordable: TriggerRecordable.Both
   }
 ]
 

@@ -1,8 +1,6 @@
 import type { TaskDef } from "@io-orkes/conductor-javascript"
-
 import fs from "fs"
 import { isMatch } from "lodash"
-
 import type ConductorGateway from "./ConductorGateway"
 
 class Task {
@@ -14,10 +12,6 @@ class Task {
   ) {
     const fileContent = fs.readFileSync(filename)
     this.localTask = JSON.parse(fileContent.toString()) as TaskDef
-  }
-
-  private taskNeedsUpdating(remoteTask: TaskDef): boolean {
-    return !isMatch(remoteTask, this.localTask)
   }
 
   async upsert(): Promise<void> {
@@ -36,6 +30,10 @@ class Task {
         console.log(`Task '${this.localTask.name}' does not need updating`)
       }
     }
+  }
+
+  private taskNeedsUpdating(remoteTask: TaskDef): boolean {
+    return !isMatch(remoteTask, this.localTask)
   }
 }
 

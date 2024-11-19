@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -10,7 +9,7 @@ describe.ifPhase1("HO100232", () => {
 
   it("should not throw an exception for a valid offence location", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ code: "MC80524", location: "somewhere", results: [{ code: 4584 }] }]
+      offences: [{ code: "MC80524", results: [{ code: 4584 }], location: "somewhere" }]
     })
 
     const {
@@ -22,7 +21,7 @@ describe.ifPhase1("HO100232", () => {
 
   it("should create an exception if the offence location is less than the min length", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ location: "", results: [{ code: 1015 }] }]
+      offences: [{ results: [{ code: 1015 }], location: "" }]
     })
 
     const {
@@ -47,7 +46,7 @@ describe.ifPhase1("HO100232", () => {
 
   it.ifNewBichard("should create an exception if the offence location is greater than the max length", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ location: "x".repeat(100), results: [{ code: 1015 }] }]
+      offences: [{ results: [{ code: 1015 }], location: "x".repeat(100) }]
     })
 
     const {

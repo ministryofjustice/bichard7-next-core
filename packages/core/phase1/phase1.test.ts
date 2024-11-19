@@ -1,9 +1,8 @@
-import { auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventSource, auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
-
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseSpiResult from "../lib/parse/parseSpiResult"
@@ -40,21 +39,21 @@ describe("Bichard Core processing logic", () => {
             ASN: "1101ZD0100000448754K",
             "Court Hearing Location": "B01EF01",
             "Date Of Hearing": "2011-09-26",
-            "Force Owner": "010000",
             // "Message Size": 7082,
             // "Message Type": "SPIResults",
             "Number Of Offences": 3,
+            "PSA Code": 2576,
+            PTIURN: "01ZD0303208",
+            "Time Of Hearing": "10:00",
             "Offence 1 Details": "SX03001A||001||3078",
             "Offence 2 Details": "SX03001||002||3052",
             "Offence 3 Details": "RT88191||003||1015",
-            "PSA Code": 2576,
-            PTIURN: "01ZD0303208",
-            "Time Of Hearing": "10:00"
+            "Force Owner": "010000"
           },
-          category: EventCategory.information,
+          eventType: auditLogEventLookup[EventCode.HearingOutcomeDetails],
           eventCode: EventCode.HearingOutcomeDetails,
           eventSource: AuditLogEventSource.CorePhase1,
-          eventType: auditLogEventLookup[EventCode.HearingOutcomeDetails],
+          category: EventCategory.information,
           timestamp: mockedDate
         })
       ])
@@ -71,10 +70,10 @@ describe("Bichard Core processing logic", () => {
         attributes: {
           ASN: "1101ZD0100000448754K"
         },
-        category: EventCategory.information,
+        eventType: auditLogEventLookup[EventCode.IgnoredNoOffences],
         eventCode: EventCode.IgnoredNoOffences,
         eventSource: AuditLogEventSource.CorePhase1,
-        eventType: auditLogEventLookup[EventCode.IgnoredNoOffences],
+        category: EventCategory.information,
         timestamp: mockedDate
       }
     ])
@@ -93,10 +92,10 @@ describe("Bichard Core processing logic", () => {
             "Exception Type": "HO100304",
             "Number Of Errors": 1
           },
-          category: EventCategory.information,
+          eventType: auditLogEventLookup[EventCode.ExceptionsGenerated],
           eventCode: EventCode.ExceptionsGenerated,
           eventSource: AuditLogEventSource.CorePhase1,
-          eventType: auditLogEventLookup[EventCode.ExceptionsGenerated],
+          category: EventCategory.information,
           timestamp: mockedDate
         })
       ])

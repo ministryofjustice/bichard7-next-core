@@ -4,7 +4,7 @@ function isValidDate(date: unknown): boolean {
   return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
 }
 
-export default function toDate(element: unknown): Date | unknown {
+export default function toDate(element: unknown): unknown | Date {
   if (typeof element === "string" && dateFormat.test(element)) {
     const potentialDate = new Date(element)
     if (isValidDate(potentialDate)) {

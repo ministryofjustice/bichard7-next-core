@@ -3,9 +3,8 @@ jest.mock("./populateResultClass")
 jest.mock("./populatePncDisposal")
 jest.mock("../../../../lib/isCaseRecordable")
 
-import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
-
 import isCaseRecordable from "../../../../lib/isCaseRecordable"
+import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import enrichOffenceResultsPostPncEnrichment from "./index"
 import populateCourt from "./populateCourt"
 import populatePncDisposal from "./populatePncDisposal"
@@ -30,13 +29,13 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     const hearingOutcome = {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
+          Hearing: {
+            DateOfHearing: new Date()
+          },
           Case: {
             HearingDefendant: {
               Offence: [offence]
             }
-          },
-          Hearing: {
-            DateOfHearing: new Date()
           }
         }
       }
@@ -44,7 +43,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
 
     enrichOffenceResultsPostPncEnrichment(hearingOutcome)
 
-    const { Duration, ResultApplicableQualifierCode, ResultHearingDate } = offence.Result[0]
+    const { ResultHearingDate, ResultApplicableQualifierCode, Duration } = offence.Result[0]
     expect(ResultHearingDate).toBe(convictionDate)
     expect(ResultApplicableQualifierCode).toHaveLength(0)
     expect(populateCourt).toHaveBeenCalledTimes(1)
@@ -68,13 +67,13 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     const hearingOutcome = {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
+          Hearing: {
+            DateOfHearing: dateOfHearing
+          },
           Case: {
             HearingDefendant: {
               Offence: [offence]
             }
-          },
-          Hearing: {
-            DateOfHearing: dateOfHearing
           }
         }
       }
@@ -82,7 +81,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
 
     enrichOffenceResultsPostPncEnrichment(hearingOutcome)
 
-    const { Duration, ResultApplicableQualifierCode, ResultHearingDate } = offence.Result[0]
+    const { ResultHearingDate, ResultApplicableQualifierCode, Duration } = offence.Result[0]
     expect(ResultHearingDate).toBe(dateOfHearing)
     expect(ResultApplicableQualifierCode).toHaveLength(0)
     expect(populateCourt).toHaveBeenCalledTimes(1)
@@ -99,6 +98,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
       Result: [
         {
           CJSresultCode: 1115,
+          ResultApplicableQualifierCode: ["A", "B"],
           Duration: [
             {
               DurationLength: 1,
@@ -115,8 +115,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
               DurationType: "Duration type should not change",
               DurationUnit: "Duration unit should not change"
             }
-          ],
-          ResultApplicableQualifierCode: ["A", "B"]
+          ]
         }
       ]
     } as Offence
@@ -124,13 +123,13 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     const hearingOutcome = {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
+          Hearing: {
+            DateOfHearing: new Date()
+          },
           Case: {
             HearingDefendant: {
               Offence: [offence]
             }
-          },
-          Hearing: {
-            DateOfHearing: new Date()
           }
         }
       }
@@ -138,7 +137,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
 
     enrichOffenceResultsPostPncEnrichment(hearingOutcome)
 
-    const { Duration, ResultApplicableQualifierCode, ResultHearingDate } = offence.Result[0]
+    const { ResultHearingDate, ResultApplicableQualifierCode, Duration } = offence.Result[0]
     expect(ResultHearingDate).toBe(convictionDate)
     expect(ResultApplicableQualifierCode).toHaveLength(0)
     expect(populateCourt).toHaveBeenCalledTimes(1)
@@ -173,13 +172,13 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
     const hearingOutcome = {
       AnnotatedHearingOutcome: {
         HearingOutcome: {
+          Hearing: {
+            DateOfHearing: new Date()
+          },
           Case: {
             HearingDefendant: {
               Offence: [offence]
             }
-          },
-          Hearing: {
-            DateOfHearing: new Date()
           }
         }
       }
@@ -187,7 +186,7 @@ describe("enrichOffenceResultsPostPncEnrichment", () => {
 
     enrichOffenceResultsPostPncEnrichment(hearingOutcome)
 
-    const { Duration, ResultApplicableQualifierCode, ResultHearingDate } = offence.Result[0]
+    const { ResultHearingDate, ResultApplicableQualifierCode, Duration } = offence.Result[0]
     expect(ResultHearingDate).toBe(convictionDate)
     expect(ResultApplicableQualifierCode).toHaveLength(0)
     expect(populateCourt).toHaveBeenCalledTimes(1)

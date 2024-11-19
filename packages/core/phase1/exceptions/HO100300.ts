@@ -1,10 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../lib/dataLookup"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../lib/dataLookup"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
 

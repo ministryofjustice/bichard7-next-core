@@ -9,9 +9,9 @@ type PncDisposal = {
 type PncAdjudication = {}
 
 export type Duration = {
-  length: number
   type: string
   unit: string
+  length: number
 }
 
 type ResultQualifierVariable = {
@@ -20,15 +20,15 @@ type ResultQualifierVariable = {
 }
 
 type Result = {
-  amountSpecifiedInResults?: number[]
   cjsResultCode?: number
-  durations?: Duration[]
-  numberOfOffencesTic?: boolean
-  pncAdjudicationExists?: boolean
+  resultVariableText?: string
   pncDisposalType?: number
   resultClass?: ResultClass
+  pncAdjudicationExists?: boolean
+  durations?: Duration[]
   resultQualifierVariables?: ResultQualifierVariable[]
-  resultVariableText?: string
+  amountSpecifiedInResults?: number[]
+  numberOfOffencesTic?: boolean
 }
 
 type OffenceCategory = {
@@ -37,26 +37,26 @@ type OffenceCategory = {
 }
 
 type Offence = {
-  addedByTheCourt?: boolean
-  courtCaseReferenceNumber?: boolean
-  offenceCategory?: OffenceCategory
   offenceReasonSequence?: boolean
+  offenceCategory?: OffenceCategory
   recordableOnPncIndicator?: boolean
+  addedByTheCourt?: boolean
   results?: Result[]
+  courtCaseReferenceNumber?: boolean
 }
 
 export type GeneratePhase2MessageOptions = {
-  arrestSummonsNumber?: string
-  hasCompletedDisarrOperation?: boolean
-  hoTemplate?: "AintCase" | "NoOperationsAndExceptions"
   messageType: MessageType
-  offences?: Offence[]
+  hoTemplate?: "NoOperationsAndExceptions" | "AintCase"
   penaltyNoticeCaseReference?: boolean
+  recordableOnPncIndicator?: boolean
+  arrestSummonsNumber?: string
   penaltyNoticeCaseReferenceNumber?: string
+  offences?: Offence[]
+  pncId?: string
   pncAdjudication?: PncAdjudication
   pncDisposals?: PncDisposal[]
-  pncId?: string
-  recordableOnPncIndicator?: boolean
+  hasCompletedDisarrOperation?: boolean
 }
 
 const updateOptionsForNoOperationsAndExceptions = (

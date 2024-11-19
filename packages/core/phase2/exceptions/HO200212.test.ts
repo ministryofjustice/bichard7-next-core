@@ -1,5 +1,4 @@
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
-
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200212 from "./HO200212"
 
@@ -102,14 +101,6 @@ describe("HO200212", () => {
   it("should generate exception for 'LocalOffenceCode > OffenceCode' when results of an offence are non-recordable", () => {
     const aho = generateAhoFromOffenceList([
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "LocalOffenceReason",
-            LocalOffenceCode: {
-              OffenceCode: "ABC"
-            }
-          }
-        },
         Result: [
           {
             PNCDisposalType: 1000
@@ -117,7 +108,15 @@ describe("HO200212", () => {
           {
             PNCDisposalType: 1000
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "LocalOffenceReason",
+            LocalOffenceCode: {
+              OffenceCode: "ABC"
+            }
+          }
+        }
       },
       {
         Result: [
@@ -165,14 +164,6 @@ describe("HO200212", () => {
         ]
       },
       {
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason",
-            OffenceCode: {
-              Reason: "Dummy reason"
-            }
-          }
-        },
         Result: [
           {
             PNCDisposalType: 1000
@@ -180,7 +171,15 @@ describe("HO200212", () => {
           {
             PNCDisposalType: 1000
           }
-        ]
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason",
+            OffenceCode: {
+              Reason: "Dummy reason"
+            }
+          }
+        }
       }
     ] as Offence[])
 
@@ -221,6 +220,7 @@ describe("HO200212", () => {
         Result: nonRecordableResult
       },
       {
+        Result: nonRecordableResult,
         CriminalProsecutionReference: {
           OffenceReason: {
             __type: "NationalOffenceReason",
@@ -228,8 +228,7 @@ describe("HO200212", () => {
               Reason: "Dummy reason"
             }
           }
-        },
-        Result: nonRecordableResult
+        }
       }
     ] as Offence[])
 

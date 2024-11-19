@@ -1,10 +1,10 @@
 import type { CourtResultMatchingSummary } from "./MatchingComparisonOutput"
 
 type PncComparisonResultDetail = {
-  actual: CourtResultMatchingSummary | null
-  expected: CourtResultMatchingSummary | null
-  file?: string
   pass: boolean
+  expected: CourtResultMatchingSummary | null
+  actual: CourtResultMatchingSummary | null
+  file?: string
 }
 
 export default PncComparisonResultDetail

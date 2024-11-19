@@ -1,5 +1,4 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-
 import ResultClass from "../../../types/ResultClass"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 
@@ -63,8 +62,8 @@ describe("getFirstDateSpecifiedInResult", () => {
     (resultClass) => {
       const dateResult = getFirstDateSpecifiedInResult({
         DateSpecifiedInResult: undefined,
-        NextHearingDate: new Date("2024-05-18"),
-        ResultClass: resultClass
+        ResultClass: resultClass,
+        NextHearingDate: new Date("2024-05-18")
       } as Result)
 
       expect(dateResult?.toISOString()).toBe(new Date("2024-05-18").toISOString())
@@ -76,8 +75,8 @@ describe("getFirstDateSpecifiedInResult", () => {
     (resultClass) => {
       const dateResult = getFirstDateSpecifiedInResult({
         DateSpecifiedInResult: [],
-        NextHearingDate: new Date("2024-05-18"),
-        ResultClass: resultClass
+        ResultClass: resultClass,
+        NextHearingDate: new Date("2024-05-18")
       } as unknown as Result)
 
       expect(dateResult?.toISOString()).toBe(new Date("2024-05-18").toISOString())
@@ -89,8 +88,8 @@ describe("getFirstDateSpecifiedInResult", () => {
     (resultClass) => {
       const dateResult = getFirstDateSpecifiedInResult({
         DateSpecifiedInResult: [],
-        NextHearingDate: undefined,
-        ResultClass: resultClass
+        ResultClass: resultClass,
+        NextHearingDate: undefined
       } as unknown as Result)
 
       expect(dateResult).toBeUndefined()
@@ -102,8 +101,8 @@ describe("getFirstDateSpecifiedInResult", () => {
     (resultClass) => {
       const dateResult = getFirstDateSpecifiedInResult({
         DateSpecifiedInResult: undefined,
-        NextHearingDate: new Date("2024-05-18"),
-        ResultClass: resultClass
+        ResultClass: resultClass,
+        NextHearingDate: new Date("2024-05-18")
       } as Result)
 
       expect(dateResult).toBeUndefined()
@@ -113,8 +112,8 @@ describe("getFirstDateSpecifiedInResult", () => {
   it("should return undefined when DateSpecifiedInResult is undefined, NextHearingDate has value, and ResultClass is undefined", () => {
     const dateResult = getFirstDateSpecifiedInResult({
       DateSpecifiedInResult: undefined,
-      NextHearingDate: new Date("2024-05-18"),
-      ResultClass: undefined
+      ResultClass: undefined,
+      NextHearingDate: new Date("2024-05-18")
     } as Result)
 
     expect(dateResult).toBeUndefined()

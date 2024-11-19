@@ -1,6 +1,5 @@
-import type { Operation } from "../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../types/PncOperation"
+import type { Operation } from "../../types/PncUpdateDataset"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
 import refreshOperations from "./refreshOperations"
 
@@ -31,13 +30,13 @@ describe("refreshOperations", () => {
         const operations: Operation[] = [{ code: PncOperation.REMAND, data: undefined, status: "NotAttempted" }]
         const pncOperations = [
           {
+            status: "Completed",
             code: PncOperation.REMAND,
-            data: { nextHearingDate: new Date("2024-05-28") },
-            status: "Completed"
+            data: { nextHearingDate: new Date("2024-05-28") }
           } as unknown as Operation,
           {
-            code: PncOperation.NORMAL_DISPOSAL,
-            status: "Completed"
+            status: "Completed",
+            code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -46,11 +45,11 @@ describe("refreshOperations", () => {
 
         expect(actualOperations).toStrictEqual([
           {
+            status: "Completed",
             code: PncOperation.REMAND,
-            data: { nextHearingDate: new Date("2024-05-28") },
-            status: "Completed"
+            data: { nextHearingDate: new Date("2024-05-28") }
           },
-          { code: PncOperation.NORMAL_DISPOSAL, status: "Completed" },
+          { status: "Completed", code: PncOperation.NORMAL_DISPOSAL },
           { code: PncOperation.REMAND, data: undefined, status: "NotAttempted" }
         ])
       })
@@ -59,12 +58,12 @@ describe("refreshOperations", () => {
         const operations: Operation[] = [{ code: PncOperation.REMAND, data: undefined, status: "NotAttempted" }]
         const pncOperations = [
           {
-            code: PncOperation.REMAND,
-            status: "Completed"
+            status: "Completed",
+            code: PncOperation.REMAND
           } as unknown as Operation,
           {
-            code: PncOperation.NORMAL_DISPOSAL,
-            status: "Completed"
+            status: "Completed",
+            code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -77,13 +76,13 @@ describe("refreshOperations", () => {
       it("keeps only the existing operations when no new operations", () => {
         const pncOperations = [
           {
+            status: "Completed",
             code: PncOperation.REMAND,
-            data: { nextHearingDate: new Date("2024-05-28") },
-            status: "Completed"
+            data: { nextHearingDate: new Date("2024-05-28") }
           } as unknown as Operation,
           {
-            code: PncOperation.NORMAL_DISPOSAL,
-            status: "Completed"
+            status: "Completed",
+            code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
         const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -92,11 +91,11 @@ describe("refreshOperations", () => {
 
         expect(actualOperations).toStrictEqual([
           {
+            status: "Completed",
             code: PncOperation.REMAND,
-            data: { nextHearingDate: new Date("2024-05-28") },
-            status: "Completed"
+            data: { nextHearingDate: new Date("2024-05-28") }
           },
-          { code: PncOperation.NORMAL_DISPOSAL, status: "Completed" }
+          { status: "Completed", code: PncOperation.NORMAL_DISPOSAL }
         ])
       })
     })
@@ -104,12 +103,12 @@ describe("refreshOperations", () => {
     it("removes the NEWREM operation if it hasn't been attempted", () => {
       const pncOperations = [
         {
-          code: PncOperation.REMAND,
-          status: "NotAttempted"
+          status: "NotAttempted",
+          code: PncOperation.REMAND
         } as unknown as Operation,
         {
-          code: PncOperation.NORMAL_DISPOSAL,
-          status: "Completed"
+          status: "Completed",
+          code: PncOperation.NORMAL_DISPOSAL
         } as unknown as Operation
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
@@ -122,12 +121,12 @@ describe("refreshOperations", () => {
     it("removes the NEWREM operation if it has failed", () => {
       const pncOperations = [
         {
-          code: PncOperation.NORMAL_DISPOSAL,
-          status: "Completed"
+          status: "Completed",
+          code: PncOperation.NORMAL_DISPOSAL
         } as unknown as Operation,
         {
-          code: PncOperation.REMAND,
-          status: "Failed"
+          status: "Failed",
+          code: PncOperation.REMAND
         } as unknown as Operation
       ]
       const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })

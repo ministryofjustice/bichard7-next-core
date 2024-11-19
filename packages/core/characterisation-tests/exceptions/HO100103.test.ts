@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -10,8 +9,8 @@ describe.ifPhase1("HO100103", () => {
 
   it.ifNewBichard("should create an exception if the hearing time is invalid", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{}] }],
-      timeOfHearing: "XXXX"
+      timeOfHearing: "XXXX",
+      offences: [{ results: [{}] }]
     })
 
     const {
@@ -26,7 +25,7 @@ describe.ifPhase1("HO100103", () => {
 
   it.ifNewBichard("should create an exception if the offence time is invalid", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{}], startTime: "XXXX" }]
+      offences: [{ startTime: "XXXX", results: [{}] }]
     })
 
     const {
@@ -41,7 +40,7 @@ describe.ifPhase1("HO100103", () => {
 
   it.ifNewBichard("should create an exception if the offence start time is invalid", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ offenceDateCode: 4, results: [{}], startTime: "XXXX" }]
+      offences: [{ startTime: "XXXX", offenceDateCode: 4, results: [{}] }]
     })
 
     const {

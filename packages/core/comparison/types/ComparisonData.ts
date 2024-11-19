@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type Phase from "../../types/Phase"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { CourtResultMatchingSummary } from "./MatchingComparisonOutput"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type Phase from "../../types/Phase"
 
 export type ComparisonOutput = {
   aho: AnnotatedHearingOutcome
@@ -12,8 +12,8 @@ export type BichardComparisonOutput = ComparisonOutput
 export type CoreComparisonOutput = ComparisonOutput
 
 export type ComparisonData = {
-  actual: CoreComparisonOutput
   expected: BichardComparisonOutput
+  actual: CoreComparisonOutput
   incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset
   phase: Phase
 }

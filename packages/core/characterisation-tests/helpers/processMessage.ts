@@ -1,19 +1,18 @@
 import type Phase1Result from "../../phase1/types/Phase1Result"
 import type Phase2Result from "../../phase2/types/Phase2Result"
-import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
-
 import Phase from "../../types/Phase"
+import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 import processMessageBichard from "./processMessageBichard"
 import { processMessageCorePhase1, processMessageCorePhase2 } from "./processMessageCore"
 
 export type ProcessMessageOptions = {
   expectRecord?: boolean
-  phase?: Phase
-  pncAdjudication?: boolean
-  pncCaseType?: string
-  pncMessage?: string
-  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
   recordable?: boolean
+  pncCaseType?: string
+  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
+  pncMessage?: string
+  pncAdjudication?: boolean
+  phase?: Phase
 }
 
 export const processPhase1Message = (

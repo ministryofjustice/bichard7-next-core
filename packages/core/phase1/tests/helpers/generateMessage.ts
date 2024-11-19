@@ -1,6 +1,5 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
-
 import type { SpiPlea } from "../../../types/Plea"
 import type { SpiVerdict } from "../../../types/Verdict"
 
@@ -11,32 +10,32 @@ type NextHearingDetails = {
 }
 
 type NextHearing = {
-  bailStatusOffence?: string
   nextHearingDetails?: NextHearingDetails
   nextHearingReason?: string
+  bailStatusOffence?: string
 }
 
 type Result = {
-  bailStatus?: string
   code?: number
-  nextHearing?: NextHearing
   qualifier?: string
   text?: string
+  bailStatus?: string
+  nextHearing?: NextHearing
 }
 
 type Offence = {
   code?: string
-  convictionDate?: null | string
-  endDate?: Date
-  finding?: null | SpiVerdict
-  location?: string
-  modeOfTrial?: string
-  offenceSequenceNumber?: number
-  offenceWording?: string
-  plea?: SpiPlea
-  recordable?: boolean
+  finding?: SpiVerdict | null
   results: Result[]
+  recordable?: boolean
+  plea?: SpiPlea
   startDate?: Date
+  endDate?: Date
+  modeOfTrial?: string
+  location?: string
+  offenceWording?: string
+  offenceSequenceNumber?: number
+  convictionDate?: string | null
 }
 
 type Person = {
@@ -44,14 +43,14 @@ type Person = {
 }
 
 export type GenerateMessageOptions = {
-  ASN?: string
-  bailConditions?: string
-  bailStatus?: string
+  offences: Offence[]
+  PTIURN?: string
   courtHearingLocation?: string
   courtPncIdentifier?: string
-  offences: Offence[]
   person?: Person
-  PTIURN?: string
+  bailConditions?: string
+  bailStatus?: string
+  ASN?: string
 }
 
 const padStart = function (str: string, maxLength: number, fillString?: string): string {

@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import ResultClass from "../../types/ResultClass"
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
@@ -14,7 +13,7 @@ describe.ifPhase2("HO200101", () => {
   it("creates a HO200101 exception for AHO when adjournment with judgement", async () => {
     const aho = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
-      offences: [{ results: [{ pncAdjudicationExists: true, resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT }] }]
+      offences: [{ results: [{ resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, pncAdjudicationExists: true }] }]
     })
 
     const {
@@ -36,20 +35,20 @@ describe.ifPhase2("HO200101", () => {
     },
     {
       messageType: MessageType.PNC_UPDATE_DATASET,
-      processMessageOptions: { expectRecord: false },
-      resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+      resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
+      processMessageOptions: { expectRecord: false }
     },
     {
       messageType: MessageType.PNC_UPDATE_DATASET,
-      processMessageOptions: { expectRecord: false },
-      resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+      resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+      processMessageOptions: { expectRecord: false }
     }
   ])(
     "doesn't create a HO200101 exception for $messageType when $resultClass",
-    async ({ messageType, processMessageOptions, resultClass }) => {
+    async ({ messageType, resultClass, processMessageOptions }) => {
       const inputMessage = generatePhase2Message({
         messageType,
-        offences: [{ results: [{ pncAdjudicationExists: true, resultClass }] }]
+        offences: [{ results: [{ resultClass, pncAdjudicationExists: true }] }]
       })
 
       const {

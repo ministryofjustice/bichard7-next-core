@@ -1,6 +1,5 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
-
 import { createPncDisposalsFromResult } from "./createPncDisposalsFromResult"
 
 const isResultMatchingAPncDisposal = (result: Result, pncDisposals: PncDisposal[]): boolean =>

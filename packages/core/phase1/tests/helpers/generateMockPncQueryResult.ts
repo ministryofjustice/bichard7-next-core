@@ -1,13 +1,11 @@
 import merge from "lodash.merge"
-
+import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-
 type OffenceDates = {
-  endDate?: Date
   startDate: Date
+  endDate?: Date
 }
 
 const extractDates = (offence: OffenceParsedXml): OffenceDates => {
@@ -46,7 +44,7 @@ export default (
         ...dates
       },
       ...(pncAdjudication && {
-        adjudication: { offenceTICNumber: 1, plea: "GUILTY", sentenceDate: new Date("2020-01-02"), verdict: "GUILTY" }
+        adjudication: { verdict: "GUILTY", sentenceDate: new Date("2020-01-02"), offenceTICNumber: 1, plea: "GUILTY" }
       })
     }
   })
@@ -64,15 +62,15 @@ export default (
       : {
           penaltyCases: [
             {
-              offences,
-              penaltyCaseReference: "12/3456/789012Q"
+              penaltyCaseReference: "12/3456/789012Q",
+              offences
             }
           ]
         }
 
   const result: PncQueryResult = {
-    checkName,
     forceStationCode: spiCase.PTIURN.substring(0, 3),
+    checkName,
     pncId: `2000/${prosecutorRef}`,
     ...pncCase
   }

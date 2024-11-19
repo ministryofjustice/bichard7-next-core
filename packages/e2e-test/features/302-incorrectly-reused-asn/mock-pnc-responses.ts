@@ -2,8 +2,6 @@ import { mockUpdate } from "../../utils/pncMocks"
 
 export default () => [
   {
-    count: 1,
-    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -15,16 +13,16 @@ export default () => [
         <COF>K001    8:7:69:3     CJ03510 01102009                </COF>
       </ASI>
       <GMT>000008073ENQR000728R</GMT>
-    </CXE01>`
+    </CXE01>`,
+    expectedRequest: "",
+    count: 1
   },
   mockUpdate("CXU02", {
-    count: 1,
     expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/23U     TWICEBREACHE            </IDS><CCR>K21/2732/17A                   </CCR><COU>I2576                                                                       TWICEBREACHED/ASNREUSED                               261020090000</COU><CCH>K001              CJ03510 </CCH><ADJ>INO PLEA TAKENNOT GUILTY    261020090000 </ADJ><DIS>I2006                      00                                                                            </DIS>"
+      "<FSC>K01YZ</FSC><IDS>K21/23U     TWICEBREACHE            </IDS><CCR>K21/2732/17A                   </CCR><COU>I2576                                                                       TWICEBREACHED/ASNREUSED                               261020090000</COU><CCH>K001              CJ03510 </CCH><ADJ>INO PLEA TAKENNOT GUILTY    261020090000 </ADJ><DIS>I2006                      00                                                                            </DIS>",
+    count: 1
   }),
   {
-    count: 2,
-    expectedRequest: "",
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -38,6 +36,8 @@ export default () => [
         <DIS>I2006                                                                                                    </DIS>
       </ASI>
       <GMT>000010073ENQR000729R</GMT>
-    </CXE01>`
+    </CXE01>`,
+    expectedRequest: "",
+    count: 2
   }
 ]

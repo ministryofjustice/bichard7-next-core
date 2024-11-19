@@ -1,6 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { ComparisonData } from "../../types/ComparisonData"
-
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core will remove double spaces in the names
@@ -13,7 +12,7 @@ const ahoHasDoubleSpaces = (aho: AnnotatedHearingOutcome): boolean | undefined =
     /\s+\s+/
   )
 
-const doubleSpacesInNames = ({ actual, expected, phase }: ComparisonData) =>
+const doubleSpacesInNames = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1, 2], phase, (): boolean => {
     const expectedAhoHasDoubleSpaces = ahoHasDoubleSpaces(expected.aho)
     const actualAhoHasDoubleSpaces = ahoHasDoubleSpaces(actual.aho)

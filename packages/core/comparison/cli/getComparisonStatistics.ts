@@ -1,20 +1,19 @@
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import { resultMatches } from "./printResult"
 import type { SkippedFile } from "./processRange"
 
-import { resultMatches } from "./printResult"
-
 type ComparisonResultStatistics = {
-  errored: number
+  total: number
+  passed: number
   expectedPassed: number
+  skipped: number
+  intentional: number
+  errored: number
+  passedAho: number
   expectedPassedAho: number
+  passedPncUpdateDataset: number
   expectedPassedPncUpdateDataset: number
   failed: number
-  intentional: number
-  passed: number
-  passedAho: number
-  passedPncUpdateDataset: number
-  skipped: number
-  total: number
 }
 
 const isIncomingMessageAho = (result: ComparisonResultDetail): boolean => {
@@ -38,18 +37,18 @@ const getComparisonResultStatistics = (
   const errored = results.filter((result) => "error" in result && result.error).length
 
   return {
-    errored,
+    total: results.length,
+    passed,
     expectedPassed,
+    skipped: results.filter((result) => result.skipped && !result.intentionalDifference).length,
+    intentional: results.filter((result) => "intentionalDifference" in result && result.intentionalDifference).length,
+    errored,
+    passedAho: passedResults.filter((result) => isIncomingMessageAho(result)).length,
     expectedPassedAho: expectedPassingResults.filter((result) => isIncomingMessageAho(result)).length,
+    passedPncUpdateDataset: passedResults.filter((result) => isIncomingMessagePncUpdateDataset(result)).length,
     expectedPassedPncUpdateDataset: expectedPassingResults.filter((result) => isIncomingMessagePncUpdateDataset(result))
       .length,
-    failed: expectedPassed - passed - errored,
-    intentional: results.filter((result) => "intentionalDifference" in result && result.intentionalDifference).length,
-    passed,
-    passedAho: passedResults.filter((result) => isIncomingMessageAho(result)).length,
-    passedPncUpdateDataset: passedResults.filter((result) => isIncomingMessagePncUpdateDataset(result)).length,
-    skipped: results.filter((result) => result.skipped && !result.intentionalDifference).length,
-    total: results.length
+    failed: expectedPassed - passed - errored
   }
 }
 

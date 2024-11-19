@@ -2,7 +2,6 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type AuditLogger from "../../types/AuditLogger"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
-
 import {
   enrichCase,
   enrichCourt,

@@ -1,8 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import TriggerRecordable from "../../types/TriggerRecordable"
 import isCaseRecordable from "../isCaseRecordable"
 import generateTriggersFromResultCode from "./generateTriggersFromResultCode"
@@ -16,10 +14,10 @@ describe("generateTriggersFromResultCode", () => {
 
     const fn = () => {
       generateTriggersFromResultCode(generatedHearingOutcome, {
-        caseLevelTrigger: false,
-        resultCodesForTrigger: undefined,
         triggerCode: TriggerCode.TRPR0004,
-        triggerRecordable: TriggerRecordable.Yes
+        resultCodesForTrigger: undefined,
+        triggerRecordable: TriggerRecordable.Yes,
+        caseLevelTrigger: false
       })
     }
 
@@ -31,10 +29,10 @@ describe("generateTriggersFromResultCode", () => {
     const generatedHearingOutcome = generateAhoFromOffenceList([] as Offence[])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: false,
-      resultCodesForTrigger: [1234],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.Yes
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.Yes,
+      caseLevelTrigger: false
     })
 
     expect(result).toEqual([])
@@ -45,10 +43,10 @@ describe("generateTriggersFromResultCode", () => {
     const generatedHearingOutcome = generateAhoFromOffenceList([] as Offence[])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: false,
-      resultCodesForTrigger: [1234],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.No
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.No,
+      caseLevelTrigger: false
     })
 
     expect(result).toEqual([])
@@ -58,16 +56,16 @@ describe("generateTriggersFromResultCode", () => {
     mockedIsCaseRecordable.mockReturnValue(true)
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CourtOffenceSequenceNumber: 1,
-        Result: [{ CJSresultCode: 1234 }]
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
       } as Offence
     ])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: false,
-      resultCodesForTrigger: [1234],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.Yes
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.Yes,
+      caseLevelTrigger: false
     })
 
     expect(result).toEqual([{ code: TriggerCode.TRPR0004, offenceSequenceNumber: 1 }])
@@ -77,16 +75,16 @@ describe("generateTriggersFromResultCode", () => {
     mockedIsCaseRecordable.mockReturnValue(false)
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CourtOffenceSequenceNumber: 1,
-        Result: [{ CJSresultCode: 1234 }]
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
       } as Offence
     ])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: false,
-      resultCodesForTrigger: [1234],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.No
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.No,
+      caseLevelTrigger: false
     })
 
     expect(result).toEqual([{ code: TriggerCode.TRPR0004, offenceSequenceNumber: 1 }])
@@ -96,16 +94,16 @@ describe("generateTriggersFromResultCode", () => {
     mockedIsCaseRecordable.mockReturnValue(true)
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CourtOffenceSequenceNumber: 1,
-        Result: [{ CJSresultCode: 1234 }]
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
       } as Offence
     ])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: false,
-      resultCodesForTrigger: [9999],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.Both
+      resultCodesForTrigger: [9999],
+      triggerRecordable: TriggerRecordable.Both,
+      caseLevelTrigger: false
     })
 
     expect(result).toEqual([])
@@ -115,16 +113,16 @@ describe("generateTriggersFromResultCode", () => {
     mockedIsCaseRecordable.mockReturnValue(true)
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CourtOffenceSequenceNumber: 1,
-        Result: [{ CJSresultCode: 1234 }]
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
       } as Offence
     ])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: true,
-      resultCodesForTrigger: [1234],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.Yes
+      resultCodesForTrigger: [1234],
+      triggerRecordable: TriggerRecordable.Yes,
+      caseLevelTrigger: true
     })
 
     expect(result).toEqual([{ code: TriggerCode.TRPR0004 }])
@@ -134,16 +132,16 @@ describe("generateTriggersFromResultCode", () => {
     mockedIsCaseRecordable.mockReturnValue(true)
     const generatedHearingOutcome = generateAhoFromOffenceList([
       {
-        CourtOffenceSequenceNumber: 1,
-        Result: [{ CJSresultCode: 1234 }]
+        Result: [{ CJSresultCode: 1234 }],
+        CourtOffenceSequenceNumber: 1
       } as Offence
     ])
 
     const result = generateTriggersFromResultCode(generatedHearingOutcome, {
-      caseLevelTrigger: true,
-      resultCodesForTrigger: [9999],
       triggerCode: TriggerCode.TRPR0004,
-      triggerRecordable: TriggerRecordable.Both
+      resultCodesForTrigger: [9999],
+      triggerRecordable: TriggerRecordable.Both,
+      caseLevelTrigger: true
     })
 
     expect(result).toEqual([])

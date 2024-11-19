@@ -1,33 +1,32 @@
-import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
-
 import matchOffencesToPnc from "."
 import summariseMatching from "../../../../comparison/lib/summariseMatching"
+import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
 import errorPaths from "../../../../lib/exceptions/errorPaths"
+import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 
 type Adjudication = {
-  sentenceDate?: Date
   verdict: string
+  sentenceDate?: Date
 }
 
 type OffenceData = {
-  adjudications?: Adjudication[]
-  category?: string
   code?: string
-  convictionDate?: Date
-  disposals?: number[]
-  end?: Date | null
-  manualCourtCase?: string
-  manualSequence?: number | string
-  resultCodes?: number[]
-  sequence?: number
   start?: Date
+  end?: Date | null
+  sequence?: number
+  resultCodes?: number[]
+  disposals?: number[]
+  adjudications?: Adjudication[]
+  manualSequence?: number | string
+  manualCourtCase?: string
+  category?: string
+  convictionDate?: Date
 }
 
 type PncCourtCaseData = {
   courtCaseReference?: string
-  offences: OffenceData[]
   penaltyCaseReference?: string
+  offences: OffenceData[]
 }
 
 const finalDisposal = 2063
@@ -39,9 +38,9 @@ const generateMockPncOffences = (offences: OffenceData[]) =>
   offences.map((o, index) => ({
     offence: {
       cjsOffenceCode: o.code ?? "AB1234",
+      startDate: o.start ?? new Date("2022-01-01"),
       endDate: o.end,
-      sequenceNumber: o.sequence ?? index + 1,
-      startDate: o.start ?? new Date("2022-01-01")
+      sequenceNumber: o.sequence ?? index + 1
     },
     ...(o.disposals && o.disposals?.length > 0 ? { disposals: o.disposals.map((code) => ({ type: code })) } : {}),
     ...(o.adjudications && o.adjudications?.length > 0 ? { adjudication: o.adjudications } : {})
@@ -55,8 +54,8 @@ const generateMockPncCourtCases = (cases: PncCourtCaseData[]) =>
 
 const generateMockPncPenaltyCases = (cases: PncCourtCaseData[]) =>
   cases.map((pncCase: PncCourtCaseData) => ({
-    offences: generateMockPncOffences(pncCase.offences),
-    penaltyCaseReference: pncCase.penaltyCaseReference
+    penaltyCaseReference: pncCase.penaltyCaseReference,
+    offences: generateMockPncOffences(pncCase.offences)
   }))
 
 const generateMockAhoWithOffences = (
@@ -73,9 +72,6 @@ const generateMockAhoWithOffences = (
         Case: {
           HearingDefendant: {
             Offence: offences.map((o, index) => ({
-              ActualOffenceStartDate: {
-                StartDate: o.start ?? new Date("2022-01-01")
-              },
               CriminalProsecutionReference: {
                 OffenceReason: {
                   __type: "NationalOffenceReason",
@@ -84,6 +80,9 @@ const generateMockAhoWithOffences = (
                   }
                 },
                 ...(o.manualSequence !== undefined ? { OffenceReasonSequence: o.manualSequence } : {})
+              },
+              ActualOffenceStartDate: {
+                StartDate: o.start ?? new Date("2022-01-01")
               },
               ...(o.end !== null
                 ? {
@@ -95,7 +94,7 @@ const generateMockAhoWithOffences = (
               CourtOffenceSequenceNumber: o.sequence ?? index + 1,
               Result: (o.resultCodes ?? [1234]).map((CJSresultCode) => ({ CJSresultCode })),
               ...(o.manualCourtCase !== undefined
-                ? { CourtCaseReferenceNumber: o.manualCourtCase, ManualCourtCaseReference: true }
+                ? { ManualCourtCaseReference: true, CourtCaseReferenceNumber: o.manualCourtCase }
                 : {}),
               ...(o.manualSequence !== undefined ? { ManualSequenceNumber: true } : {}),
               OffenceCategory: o.category ?? "XX",
@@ -106,11 +105,11 @@ const generateMockAhoWithOffences = (
         Hearing: { DateOfHearing: hearingDate }
       }
     },
-    Exceptions: [],
     PncQuery: {
       ...(ccrs.length > 0 ? { courtCases: generateMockPncCourtCases(ccrs) } : {}),
       ...(pcrs.length > 0 ? { penaltyCases: generateMockPncPenaltyCases(pcrs) } : {})
-    }
+    },
+    Exceptions: []
   } as unknown as AnnotatedHearingOutcome
 }
 
@@ -131,7 +130,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence], [{ offences: [offence] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -142,8 +141,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -161,8 +160,8 @@ describe("matchOffencesToPnc", () => {
       )
       expect(matchingSummary).toStrictEqual({
         offences: [
-          { addedByCourt: false, courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -175,33 +174,33 @@ describe("matchOffencesToPnc", () => {
 
   describe("fuzzy matching dates", () => {
     it("should match single offences where everything else matches", () => {
-      const hoOffence = { end: new Date("2022-01-09"), start: new Date("2022-01-02") }
+      const hoOffence = { start: new Date("2022-01-02"), end: new Date("2022-01-09") }
       const pncOffence = { end: new Date("2022-01-10") }
       const matchingSummary = matchOffences([hoOffence], [{ offences: [pncOffence] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
     it("should match multiple offences where everything else matches", () => {
-      const hoOffence1 = { end: new Date("2022-01-09"), start: new Date("2022-01-02") }
-      const hoOffence2 = { code: "AC1234", end: new Date("2022-01-09"), start: new Date("2022-01-02") }
+      const hoOffence1 = { start: new Date("2022-01-02"), end: new Date("2022-01-09") }
+      const hoOffence2 = { code: "AC1234", start: new Date("2022-01-02"), end: new Date("2022-01-09") }
       const pncOffence1 = { end: new Date("2022-01-10") }
       const pncOffence2 = { code: "AC1234", end: new Date("2022-01-10") }
       const matchingSummary = matchOffences([hoOffence1, hoOffence2], [{ offences: [pncOffence1, pncOffence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
 
     it("should match multiple offences where everything else matches across court cases", () => {
-      const hoOffence1 = { end: new Date("2022-01-09"), start: new Date("2022-01-02") }
-      const hoOffence2 = { code: "AC1234", end: new Date("2022-01-09"), start: new Date("2022-01-02") }
+      const hoOffence1 = { start: new Date("2022-01-02"), end: new Date("2022-01-09") }
+      const hoOffence2 = { code: "AC1234", start: new Date("2022-01-02"), end: new Date("2022-01-09") }
       const pncOffence1 = { end: new Date("2022-01-10") }
       const pncOffence2 = { code: "AC1234", end: new Date("2022-01-10") }
       const matchingSummary = matchOffences(
@@ -210,23 +209,23 @@ describe("matchOffencesToPnc", () => {
       )
       expect(matchingSummary).toStrictEqual({
         offences: [
-          { addedByCourt: false, courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
 
     it("should match exact date matches with priority over fuzzy date matches", () => {
-      const hoOffence1 = { end: new Date("2022-01-07"), start: new Date("2022-01-03") }
-      const hoOffence2 = { end: new Date("2022-01-09"), start: new Date("2022-01-02") }
+      const hoOffence1 = { start: new Date("2022-01-03"), end: new Date("2022-01-07") }
+      const hoOffence2 = { start: new Date("2022-01-02"), end: new Date("2022-01-09") }
       const pncOffence1 = { end: new Date("2022-01-10") }
-      const pncOffence2 = { end: new Date("2022-01-07"), start: new Date("2022-01-03") }
+      const pncOffence2 = { start: new Date("2022-01-03"), end: new Date("2022-01-07") }
       const matchingSummary = matchOffences([hoOffence1, hoOffence2], [{ offences: [pncOffence1, pncOffence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
@@ -240,7 +239,7 @@ describe("matchOffencesToPnc", () => {
       aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].ActualOffenceDateCode = "1"
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -250,17 +249,17 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([hoOffence], [{ offences: [pncOffence] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
     it("should ignore dates if the offence is breach", () => {
-      const hoOffence: OffenceData = { category: "CB", start: new Date("2023-03-18") }
-      const pncOffence: OffenceData = { end: new Date("2023-03-21"), start: new Date("2023-03-20") }
+      const hoOffence: OffenceData = { start: new Date("2023-03-18"), category: "CB" }
+      const pncOffence: OffenceData = { start: new Date("2023-03-20"), end: new Date("2023-03-21") }
       const matchingSummary = matchOffences([hoOffence], [{ offences: [pncOffence] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
   })
@@ -274,8 +273,8 @@ describe("matchOffencesToPnc", () => {
         expect(matchingSummary).toStrictEqual({
           caseReference: "21/1234/001234A",
           offences: [
-            { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: true, hoSequenceNumber: 2, pncSequenceNumber: undefined }
+            { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { hoSequenceNumber: 2, addedByCourt: true, pncSequenceNumber: undefined }
           ]
         })
       })
@@ -288,9 +287,9 @@ describe("matchOffencesToPnc", () => {
         expect(matchingSummary).toStrictEqual({
           caseReference: "21/1234/001234A",
           offences: [
-            { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: true, hoSequenceNumber: 2, pncSequenceNumber: undefined },
-            { addedByCourt: true, hoSequenceNumber: 3, pncSequenceNumber: undefined }
+            { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { hoSequenceNumber: 2, addedByCourt: true, pncSequenceNumber: undefined },
+            { hoSequenceNumber: 3, addedByCourt: true, pncSequenceNumber: undefined }
           ]
         })
       })
@@ -307,12 +306,12 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "21/1234/001234A",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -334,18 +333,18 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "21/21/1234/1234A",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             },
             {
-              addedByCourt: true,
               courtCaseReference: "21/21/1234/1234A",
               hoSequenceNumber: 4,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -355,7 +354,7 @@ describe("matchOffencesToPnc", () => {
       it("should choose the first court case for non-recordable offence categories", () => {
         const offence1 = {}
         const offence2 = { code: "AC1234" }
-        const offence3 = { category: "EF", code: "AD1234" }
+        const offence3 = { code: "AD1234", category: "EF" }
         const matchingSummary = matchOffences(
           [offence1, offence2, offence3],
           [
@@ -365,12 +364,12 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "21/21/1234/1234A",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -390,12 +389,12 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "22/efgh/1234",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -403,7 +402,7 @@ describe("matchOffencesToPnc", () => {
       })
 
       it("should choose the first matching court case without adjudications (after 2060 results) for recordable offence categories", () => {
-        const offence1 = { adjudications: [{ sentenceDate: new Date("2022-01-01"), verdict: "G" }] }
+        const offence1 = { adjudications: [{ verdict: "G", sentenceDate: new Date("2022-01-01") }] }
         const offence2 = { code: "AC1234" }
         const offence3 = { code: "AD1234" }
         const matchingSummary = matchOffences(
@@ -415,12 +414,12 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "22/efgh/1234",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -441,7 +440,7 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           caseReference: "21/21/1234/1234A",
-          offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+          offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
         })
       })
 
@@ -458,13 +457,13 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           caseReference: "22/efgh/1234",
-          offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+          offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
         })
       })
 
       it("should choose the first matching court case (after 2060 results and no adjudications) for recordable offence categories", () => {
         const offence1 = { adjudications: [{ verdict: "G" }] }
-        const offence2 = { adjudications: [{ verdict: "G" }], code: "AC1234" }
+        const offence2 = { code: "AC1234", adjudications: [{ verdict: "G" }] }
         const offence3 = { code: "AD1234" }
         const matchingSummary = matchOffences(
           [offence1, offence2, offence3],
@@ -475,12 +474,12 @@ describe("matchOffencesToPnc", () => {
         )
         expect(matchingSummary).toStrictEqual({
           offences: [
-            { addedByCourt: false, courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, pncSequenceNumber: 1 },
+            { courtCaseReference: "21/21/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { courtCaseReference: "22/efgh/1234", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 },
             {
-              addedByCourt: true,
               courtCaseReference: "21/21/1234/1234A",
               hoSequenceNumber: 3,
+              addedByCourt: true,
               pncSequenceNumber: undefined
             }
           ]
@@ -496,9 +495,9 @@ describe("matchOffencesToPnc", () => {
         expect(matchingSummary).toStrictEqual({
           caseReference: "21/1234/001234A",
           offences: [
-            { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-            { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 },
-            { addedByCourt: true, hoSequenceNumber: 3, pncSequenceNumber: undefined }
+            { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+            { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 },
+            { hoSequenceNumber: 3, addedByCourt: true, pncSequenceNumber: undefined }
           ]
         })
       })
@@ -512,7 +511,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence2], [{ offences: [offence1] }, { offences: [offence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "22/5678/005678B",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
   })
@@ -525,8 +524,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -541,10 +540,10 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 3 },
-          { addedByCourt: false, hoSequenceNumber: 3, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 4, pncSequenceNumber: 4 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 3 },
+          { hoSequenceNumber: 3, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 4, addedByCourt: false, pncSequenceNumber: 4 }
         ]
       })
     })
@@ -554,8 +553,8 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence1, offence1], [{ offences: [offence1] }, { offences: [offence1] }])
       expect(matchingSummary).toStrictEqual({
         offences: [
-          { addedByCourt: false, courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { courtCaseReference: "21/1234/001234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { courtCaseReference: "22/5678/005678B", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
@@ -564,32 +563,32 @@ describe("matchOffencesToPnc", () => {
   describe("manual matches", () => {
     it("should match with a single manual match", () => {
       const offence1 = { resultCodes: [1000] }
-      const offence2 = { manualSequence: 1, resultCodes: [2000] }
+      const offence2 = { resultCodes: [2000], manualSequence: 1 }
       const matchingSummary = matchOffences([offence1, offence2], [{ offences: [offence1, offence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
 
     it("should match with multiple manual matches", () => {
-      const offence1 = { manualSequence: 2, resultCodes: [1000] }
-      const offence2 = { manualSequence: 1, resultCodes: [2000] }
+      const offence1 = { resultCodes: [1000], manualSequence: 2 }
+      const offence2 = { resultCodes: [2000], manualSequence: 1 }
       const matchingSummary = matchOffences([offence1, offence2], [{ offences: [offence1, offence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
 
     it("should match with multiple manual matches with manual court case references", () => {
-      const offence1 = { manualSequence: 1, resultCodes: [1000] }
+      const offence1 = { resultCodes: [1000], manualSequence: 1 }
       const matchingSummary = matchOffences(
         [
           { ...offence1, manualCourtCase: "23/1234/1234A" },
@@ -602,8 +601,8 @@ describe("matchOffencesToPnc", () => {
       )
       expect(matchingSummary).toStrictEqual({
         offences: [
-          { addedByCourt: false, courtCaseReference: "23/1234/1234A", hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, courtCaseReference: "23/4321/1234A", hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { courtCaseReference: "23/1234/1234A", hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { courtCaseReference: "23/4321/1234A", hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
@@ -613,7 +612,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }, { offences: [offence1] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "22/5678/005678B",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -624,14 +623,14 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
 
     it("should match with just the court case reference", () => {
-      const offence1 = { manualCourtCase: "23/1234/1234A", resultCodes: [1000] }
+      const offence1 = { resultCodes: [1000], manualCourtCase: "23/1234/1234A" }
       const matchingSummary = matchOffences(
         [offence1],
         [
@@ -641,7 +640,7 @@ describe("matchOffencesToPnc", () => {
       )
       expect(matchingSummary).toStrictEqual({
         caseReference: "23/1234/1234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -650,7 +649,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }, { offences: [offence1] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "22/5678/005678B",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -659,7 +658,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence1], [{ offences: [offence1] }, { offences: [offence1] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "22/5678/005678B",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 
@@ -673,8 +672,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 2 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 1 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 2 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 1 }
         ]
       })
     })
@@ -686,7 +685,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence], [{ offences: [offence], penaltyCaseReference: "PCR1234" }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "PCR1234",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
   })
@@ -702,8 +701,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -718,8 +717,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -749,8 +748,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -766,8 +765,8 @@ describe("matchOffencesToPnc", () => {
       expect(matchingSummary).toStrictEqual({
         caseReference: "22/5678/005678B",
         offences: [
-          { addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 },
-          { addedByCourt: false, hoSequenceNumber: 2, pncSequenceNumber: 2 }
+          { hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 },
+          { hoSequenceNumber: 2, addedByCourt: false, pncSequenceNumber: 2 }
         ]
       })
     })
@@ -783,7 +782,7 @@ describe("matchOffencesToPnc", () => {
 
     it("should raise an exception if a PNC offence only partially matches a HO offence", () => {
       const offence1 = {}
-      const offence2 = { end: new Date("2023-01-01"), start: new Date("2023-01-01") }
+      const offence2 = { start: new Date("2023-01-01"), end: new Date("2023-01-01") }
       const matchingSummary = matchOffences([offence1], [{ offences: [offence2] }])
       expect(matchingSummary).toStrictEqual({ exceptions: [{ code: "HO100304", path: errorPaths.case.asn }] })
     })
@@ -815,7 +814,7 @@ describe("matchOffencesToPnc", () => {
       const matchingSummary = matchOffences([offence1], [{ offences: [offence1, offence2] }])
       expect(matchingSummary).toStrictEqual({
         caseReference: "21/1234/001234A",
-        offences: [{ addedByCourt: false, hoSequenceNumber: 1, pncSequenceNumber: 1 }]
+        offences: [{ hoSequenceNumber: 1, addedByCourt: false, pncSequenceNumber: 1 }]
       })
     })
 

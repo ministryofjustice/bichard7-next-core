@@ -1,9 +1,7 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
-
-import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
-
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
 import insertErrorListNotes from "./insertErrorListNotes"
 import insertErrorListRecord from "./insertErrorListRecord"
 
@@ -12,12 +10,12 @@ const db = postgres({
   ...dbConfig,
   types: {
     date: {
+      to: 25,
       from: [1082],
+      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
+      }
     }
   }
 })

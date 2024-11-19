@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import { SpiPlea } from "../../types/Plea"
 import { SpiVerdict } from "../../types/Verdict"
 import generateSpiMessage from "../helpers/generateSpiMessage"
@@ -36,8 +35,8 @@ describe.ifPhase1("TRPR0008", () => {
         {
           code: matchingOffenceCode,
           finding: SpiVerdict.NotGuilty,
-          plea: SpiPlea.Admits,
-          results: [{ code: 1015 }]
+          results: [{ code: 1015 }],
+          plea: SpiPlea.Admits
         }
       ]
     })
@@ -127,8 +126,8 @@ describe.ifPhase1("TRPR0008", () => {
         {
           code: matchingOffenceCode,
           finding: SpiVerdict.Guilty,
-          recordable: false,
-          results: [{ code: 1015 }]
+          results: [{ code: 1015 }],
+          recordable: false
         }
       ]
     })

@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -9,15 +8,13 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
-
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import phase2 from "../../phase2/phase2"
 import pncUpdateDatasetSchema from "../../phase2/schemas/pncUpdateDataset"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 
 const s3Config = createS3Config()
@@ -26,8 +23,9 @@ const lockKey: string = "lockedByWorkstream"
 const ahoOrPncUpdateDatasetSchema = z.union([pncUpdateDatasetSchema, unvalidatedHearingOutcomeSchema])
 
 const processPhase2: ConductorWorker = {
+  taskDefName: "process_phase2",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome | PncUpdateDataset>(ahoOrPncUpdateDatasetSchema, async (task) => {
-    const { lockId, s3TaskData, s3TaskDataPath } = task.inputData
+    const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
 
     auditLogger.debug(
@@ -50,11 +48,10 @@ const processPhase2: ConductorWorker = {
       result.resultType === Phase2ResultType.ignored
 
     return completed(
-      { auditLogEvents: result.auditLogEvents, hasTriggersOrExceptionsOrIgnored, resultType: result.resultType },
+      { resultType: result.resultType, auditLogEvents: result.auditLogEvents, hasTriggersOrExceptionsOrIgnored },
       ...result.auditLogEvents.map((e) => e.eventType)
     )
-  }),
-  taskDefName: "process_phase2"
+  })
 }
 
 export default processPhase2

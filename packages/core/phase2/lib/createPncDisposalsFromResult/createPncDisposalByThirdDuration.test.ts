@@ -1,5 +1,4 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"
 
@@ -7,12 +6,12 @@ describe("createPncDisposalByThirdDuration", () => {
   describe("when the result doesn't have a third duration", () => {
     it("returns undefined", () => {
       const hoResult = {
-        AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }],
+        ResultQualifierVariable: [] as unknown,
         Duration: [
-          { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
-          { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" }
+          { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+          { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 }
         ],
-        ResultQualifierVariable: [] as unknown
+        AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }]
       } as Result
 
       const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
@@ -24,13 +23,13 @@ describe("createPncDisposalByThirdDuration", () => {
   describe("when the result does have a third duration", () => {
     const amountForThirdDuration = 3
     const resultWithThirdDuration = {
-      AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }, { Amount: amountForThirdDuration }],
+      ResultQualifierVariable: [] as unknown,
       Duration: [
-        { DurationLength: 3, DurationType: "Duration", DurationUnit: "D" },
-        { DurationLength: 5, DurationType: "Suspended", DurationUnit: "H" },
-        { DurationLength: 1, DurationType: "Duration", DurationUnit: "H" }
+        { DurationType: "Duration", DurationUnit: "D", DurationLength: 3 },
+        { DurationType: "Suspended", DurationUnit: "H", DurationLength: 5 },
+        { DurationType: "Duration", DurationUnit: "H", DurationLength: 1 }
       ],
-      ResultQualifierVariable: [] as unknown
+      AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }, { Amount: amountForThirdDuration }]
     } as Result
 
     it("validates the amount for the third duration", () => {

@@ -1,13 +1,12 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../types/Trigger"
 import type TriggerConfig from "../../types/TriggerConfig"
-
 import TriggerRecordable from "../../types/TriggerRecordable"
 import isCaseRecordable from "../isCaseRecordable"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,
-  { caseLevelTrigger, resultCodesForTrigger, triggerCode, triggerRecordable }: TriggerConfig
+  { triggerCode, resultCodesForTrigger, triggerRecordable, caseLevelTrigger }: TriggerConfig
 ): Trigger[] => {
   if (!resultCodesForTrigger) {
     throw new Error("resultCodesForTrigger is undefined")

@@ -1,12 +1,9 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-
 import type { ComparisonLog } from "../types"
 import type ComparisonResult from "../types/ComparisonResult"
 import type DynamoGateway from "./DynamoGateway"
-
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import isPass from "./isPass"
@@ -48,11 +45,11 @@ const recordResultsInDynamoBatch = async (
       : getDateFromComparisonFilePath(result.s3Path).toISOString()
 
     const record = logsInDynamoByS3Path[result.s3Path] ?? {
-      correlationId: result.correlationId,
-      history: [],
-      initialResult: passOrFail,
-      initialRunAt: runAt,
       s3Path: result.s3Path,
+      correlationId: result.correlationId,
+      initialRunAt: runAt,
+      initialResult: passOrFail,
+      history: [],
       version: 1
     }
 
@@ -60,15 +57,15 @@ const recordResultsInDynamoBatch = async (
     record.latestResult = passOrFail
 
     record.history.push({
+      runAt: runAt,
+      result: passOrFail,
       details: {
         auditLogEventsMatch: result.comparisonResult.auditLogEventsMatch ? 1 : 0,
-        exceptionsMatch: result.comparisonResult.exceptionsMatch ? 1 : 0,
         triggersMatch: result.comparisonResult.triggersMatch ? 1 : 0,
+        exceptionsMatch: result.comparisonResult.exceptionsMatch ? 1 : 0,
         xmlOutputMatches: result.comparisonResult.xmlOutputMatches ? 1 : 0,
         xmlParsingMatches: result.comparisonResult.xmlParsingMatches ? 1 : 0
-      },
-      result: passOrFail,
-      runAt: runAt
+      }
     })
 
     const table = dynamoTables[result.phase] ?? PHASE1_TABLE_NAME

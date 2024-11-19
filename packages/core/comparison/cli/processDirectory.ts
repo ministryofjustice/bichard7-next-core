@@ -1,9 +1,7 @@
 import fs from "fs"
-
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { SkippedFile } from "./processRange"
-
 import processFile from "./processFile"
+import type { SkippedFile } from "./processRange"
 
 const processDirectory = async (directory: string): Promise<(ComparisonResultDetail | SkippedFile)[]> => {
   const results: (ComparisonResultDetail | SkippedFile)[] = []

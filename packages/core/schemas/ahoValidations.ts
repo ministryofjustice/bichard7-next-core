@@ -1,9 +1,6 @@
 import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { z } from "zod"
-
-import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
-
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -23,6 +20,7 @@ import {
   lookupYesNoByCjsCode
 } from "../lib/dataLookup"
 import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../phase1/lib/isAsnValid"
+import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
 
 const invalid = () => false
 
@@ -36,7 +34,7 @@ const validateResultCode = (data: number, ctx: z.RefinementCtx): void => {
   }
 }
 
-const validateCourtType = (data: null | string): boolean => !!data && !!lookupCourtTypeByCjsCode(data.toString())
+const validateCourtType = (data: string | null): boolean => !!data && !!lookupCourtTypeByCjsCode(data.toString())
 
 const validateTypeOfHearing = (data: string): boolean => !!lookupTypeOfHearingByCjsCode(data.toString())
 

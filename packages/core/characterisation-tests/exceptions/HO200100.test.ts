@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import ResultClass from "../../types/ResultClass"
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
@@ -19,7 +18,7 @@ describe.ifPhase2("HO200100", () => {
           messageType,
           offences: [
             {
-              results: [{ pncAdjudicationExists: true, resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT }]
+              results: [{ resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: true }]
             }
           ]
         })
@@ -44,7 +43,7 @@ describe.ifPhase2("HO200100", () => {
           messageType,
           offences: [
             {
-              results: [{ pncAdjudicationExists: false, resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT }]
+              results: [{ resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: false }]
             }
           ]
         })

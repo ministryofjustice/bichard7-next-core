@@ -1,8 +1,8 @@
 const tagEntities: { [k: string]: string } = {
   "&amp;": "&",
-  "&apos;": "'",
+  "&lt;": "<",
   "&gt;": ">",
-  "&lt;": "<"
+  "&apos;": "'"
 }
 
 const attributeEntities: { [k: string]: string } = {

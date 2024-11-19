@@ -1,22 +1,20 @@
 import { expect } from "expect"
 import fs from "fs"
 import path from "path"
-
-import type Bichard from "./world"
-
-import { isError } from "./isError"
 import Poller from "./Poller"
+import { isError } from "./isError"
 import { extractAllTags, updateExpectedRequest } from "./tagProcessing"
+import type Bichard from "./world"
 
 const skipPNCValidation = process.env.SKIP_PNC_VALIDATION === "true"
 
 export type PncMock = {
-  count: number
-  expectedRequest: string
   id: string
   matchRegex: string
-  requests: string[]
   response: string
+  count: number
+  requests: string[]
+  expectedRequest: string
 }
 
 const setupMockInPncEmulator = async function (this: Bichard, specFolder: string) {
@@ -144,9 +142,9 @@ export const checkMocks = async function (this: Bichard) {
 
     const options = {
       condition,
+      timeout: 10000,
       delay: 250,
-      name: "Mock PNC request poller",
-      timeout: 10000
+      name: "Mock PNC request poller"
     }
     const result = await new Poller<boolean>(action)
       .poll(options)

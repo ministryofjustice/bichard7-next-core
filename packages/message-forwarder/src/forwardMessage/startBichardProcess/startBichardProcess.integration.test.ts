@@ -1,17 +1,15 @@
 import "../../test/setup/setEnvironmentVariables"
 
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
-
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
-import Phase from "@moj-bichard7/core/types/Phase"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { randomUUID } from "crypto"
-
 import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 const conductorClient = createConductorClient()
 
@@ -72,10 +70,10 @@ describe("startBichardProcess", () => {
 
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({
-        correlationId,
         event: "message-forwarder:started-workflow:phase-1",
-        s3TaskDataPath: expect.stringMatching(/.*\.json/),
-        workflowName: "bichard_phase_1"
+        correlationId,
+        workflowName: "bichard_phase_1",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
       })
     )
   })
@@ -93,10 +91,10 @@ describe("startBichardProcess", () => {
 
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({
-        correlationId,
         event: "message-forwarder:started-workflow:phase-2",
-        s3TaskDataPath: expect.stringMatching(/.*\.json/),
-        workflowName: "bichard_phase_2"
+        correlationId,
+        workflowName: "bichard_phase_2",
+        s3TaskDataPath: expect.stringMatching(/.*\.json/)
       })
     )
   })

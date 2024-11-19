@@ -1,10 +1,9 @@
+import getFile from "../lib/getFile"
 import type { ComparisonLog } from "../types"
 
-import getFile from "../lib/getFile"
-
 export type FileLookup = {
-  contents?: string
   fileName: string
+  contents?: string
 }
 
 const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLookup> => {
@@ -15,7 +14,7 @@ const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLoo
   }
 
   const contents = await getFile(s3Url, cache)
-  return { contents, fileName: s3Url }
+  return { fileName: s3Url, contents }
 }
 
 export default fetchFile

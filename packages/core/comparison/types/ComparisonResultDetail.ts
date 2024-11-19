@@ -1,51 +1,50 @@
 import type { Change } from "diff"
-
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type Exception from "../../types/Exception"
 import type { Trigger } from "../../types/Trigger"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 
 export type ComparisonResultDebugOutput = {
-  auditLogEvents: {
-    comparisonResult: string[]
-    coreResult: string[]
+  triggers: {
+    coreResult: Trigger[]
+    comparisonResult: Trigger[]
   }
   exceptions: {
-    comparisonResult: Exception[]
     coreResult: Exception[]
+    comparisonResult: Exception[]
   }
-  triggers: {
-    comparisonResult: Trigger[]
-    coreResult: Trigger[]
+  auditLogEvents: {
+    coreResult: string[]
+    comparisonResult: string[]
   }
   xmlOutputDiff: Change[]
   xmlParsingDiff: Change[]
 }
 
-export type Phase3ComparisonResultDebugOutput = {
+export type Phase3ComparisonResultDebugOutput = ComparisonResultDebugOutput & {
   pncOperations: {
-    comparisonResult: PncUpdateRequest[]
     coreResult: PncUpdateRequest[]
+    comparisonResult: PncUpdateRequest[]
   }
-} & ComparisonResultDebugOutput
+}
 
 type ComparisonResultDetail = {
   auditLogEventsMatch: boolean
-  correlationId?: string
-  debugOutput?: ComparisonResultDebugOutput
-  error?: unknown
-  exceptionsMatch: boolean
-  file?: string
-  incomingMessageType?: string
-  intentionalDifference?: boolean
-  skipped?: boolean
   triggersMatch: boolean
+  exceptionsMatch: boolean
   xmlOutputMatches: boolean
   xmlParsingMatches: boolean
+  error?: unknown
+  debugOutput?: ComparisonResultDebugOutput
+  file?: string
+  skipped?: boolean
+  correlationId?: string
+  intentionalDifference?: boolean
+  incomingMessageType?: string
 }
 
-export type Phase3ComparisonResultDetail = {
-  debugOutput?: Phase3ComparisonResultDebugOutput
+export type Phase3ComparisonResultDetail = ComparisonResultDetail & {
   pncOperationsMatch: boolean
-} & ComparisonResultDetail
+  debugOutput?: Phase3ComparisonResultDebugOutput
+}
 
 export default ComparisonResultDetail

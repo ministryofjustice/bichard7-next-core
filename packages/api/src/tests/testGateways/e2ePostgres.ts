@@ -1,9 +1,7 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
-
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
-
 import Postgres from "../../services/gateways/dataStoreGateways/postgres"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import clearAllTables from "./e2ePostgres/clearAllTables"
 import insertCase from "./e2ePostgres/insertCase"
 import insertUser from "./e2ePostgres/insertUser"
@@ -14,16 +12,8 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     super()
   }
 
-  async clearDb(): Promise<boolean> {
-    return await clearAllTables(this.db)
-  }
-
   async close() {
     await this.db.end()
-  }
-
-  async createTestCase(partialCase: Partial<Case>): Promise<Case> {
-    return await insertCase(this.db, partialCase)
   }
 
   async createTestUser(user: Partial<User>): Promise<User> {
@@ -37,6 +27,14 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     dbUser.groups = user.groups
 
     return dbUser
+  }
+
+  async createTestCase(partialCase: Partial<Case>): Promise<Case> {
+    return await insertCase(this.db, partialCase)
+  }
+
+  async clearDb(): Promise<boolean> {
+    return await clearAllTables(this.db)
   }
 }
 

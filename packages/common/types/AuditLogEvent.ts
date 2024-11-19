@@ -1,7 +1,5 @@
 import type { z } from "zod"
-
 import type { auditLogEventSchema } from "../schemas/auditLogEvent"
-
 import EventCode from "./EventCode"
 
 export type AuditLogEvent = z.infer<typeof auditLogEventSchema>

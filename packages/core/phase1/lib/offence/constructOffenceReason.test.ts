@@ -1,6 +1,5 @@
-import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
-
 import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
+import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
 import constructOffenceReason from "./constructOffenceReason"
 
 const localOffenceReason: OffenceReason = {
@@ -13,9 +12,9 @@ const nationalCommonLawOffenceReason: OffenceReason = {
   OffenceCode: {
     __type: "CommonLawOffenceCode",
     CommonLawOffence: COMMON_LAWS,
-    FullCode: `${COMMON_LAWS}001A`,
+    Reason: "ML001",
     Qualifier: "A",
-    Reason: "ML001"
+    FullCode: `${COMMON_LAWS}001A`
   }
 }
 
@@ -23,10 +22,10 @@ const nationalIndictmentOffenceReason: OffenceReason = {
   __type: "NationalOffenceReason",
   OffenceCode: {
     __type: "IndictmentOffenceCode",
-    FullCode: `${INDICTMENT}001B`,
     Indictment: INDICTMENT,
+    Reason: "001",
     Qualifier: "B",
-    Reason: "001"
+    FullCode: `${INDICTMENT}001B`
   }
 }
 
@@ -35,9 +34,9 @@ const nationalNonMatchingOffenceReason: OffenceReason = {
   OffenceCode: {
     __type: "NonMatchingOffenceCode",
     ActOrSource: "CO",
-    FullCode: "CO88013",
+    Year: "88",
     Reason: "88013",
-    Year: "88"
+    FullCode: "CO88013"
   }
 }
 
@@ -51,9 +50,9 @@ describe("GIVEN parseOffence", () => {
         OffenceCode: {
           __type: "CommonLawOffenceCode",
           CommonLawOffence: COMMON_LAWS,
-          FullCode: `${COMMON_LAWS}001A`,
+          Reason: "001",
           Qualifier: "A",
-          Reason: "001"
+          FullCode: `${COMMON_LAWS}001A`
         }
       })
     })
@@ -65,10 +64,10 @@ describe("GIVEN parseOffence", () => {
         __type: "NationalOffenceReason",
         OffenceCode: {
           __type: "IndictmentOffenceCode",
-          FullCode: `${INDICTMENT}001B`,
           Indictment: INDICTMENT,
+          Reason: "001",
           Qualifier: "B",
-          Reason: "001"
+          FullCode: `${INDICTMENT}001B`
         }
       })
     })
@@ -81,9 +80,9 @@ describe("GIVEN parseOffence", () => {
         OffenceCode: {
           __type: "NonMatchingOffenceCode",
           ActOrSource: "CO",
-          FullCode: "CO88013",
+          Year: "88",
           Reason: "013",
-          Year: "88"
+          FullCode: "CO88013"
         }
       })
     })

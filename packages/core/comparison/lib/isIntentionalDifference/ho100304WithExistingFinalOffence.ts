@@ -1,15 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
+import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-
-import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Often we receive results for the remaining non-final offences in the PNC
 // If there are also some final offences, Bichard will raise a HO100304 but Core will match
 
-const ho100304WithExistingFinalOffence = ({ actual, expected, phase }: ComparisonData) =>
+const ho100304WithExistingFinalOffence = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

@@ -1,6 +1,5 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../../lib/dataLookup"
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
 import populateOrganisationUnitFields from "../../../lib/organisationUnit/populateOrganisationUnitFields"
 
 const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {
@@ -17,15 +16,13 @@ const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHea
   if (!result.SourceOrganisation && CourtHouseCode) {
     const organisationUnitData = lookupOrganisationUnitByThirdLevelPsaCode(CourtHouseCode)
     if (organisationUnitData) {
-      const { bottomLevelCode, secondLevelCode, thirdLevelCode, topLevelCode } = organisationUnitData
+      const { topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode } = organisationUnitData
       result.SourceOrganisation = {
-        BottomLevelCode: bottomLevelCode,
-        OrganisationUnitCode: [topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode]
-          .filter((x) => x)
-          .join(""),
+        TopLevelCode: topLevelCode,
         SecondLevelCode: secondLevelCode,
         ThirdLevelCode: thirdLevelCode,
-        TopLevelCode: topLevelCode
+        BottomLevelCode: bottomLevelCode,
+        OrganisationUnitCode: [topLevelCode, secondLevelCode, thirdLevelCode, bottomLevelCode].filter((x) => x).join("")
       }
     }
   }

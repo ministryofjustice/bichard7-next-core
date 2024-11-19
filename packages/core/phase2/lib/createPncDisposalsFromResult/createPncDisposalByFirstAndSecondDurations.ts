@@ -1,12 +1,11 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../types/PncQueryResult"
-
-import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 import createPncDisposal from "./createPncDisposal"
-import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
+import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
+import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
 export const maxDisposalTextLength = 64
 

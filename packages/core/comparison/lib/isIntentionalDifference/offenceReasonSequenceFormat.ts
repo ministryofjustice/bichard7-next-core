@@ -1,15 +1,14 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-
+import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (null | string | undefined)[] =>
+const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (string | undefined | null)[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map(
     (o) => o.CriminalProsecutionReference.OffenceReasonSequence
   )
 
-const offenceReasonSequenceFormat = ({ actual, expected, phase }: ComparisonData) =>
+const offenceReasonSequenceFormat = ({ expected, actual, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

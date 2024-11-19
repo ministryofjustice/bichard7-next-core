@@ -1,20 +1,19 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generator from "./TRPR0003"
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 
 const generateMockAho = (offenceResults: number[][]): AnnotatedHearingOutcome =>
   generateAhoFromOffenceList(
     offenceResults.map(
       (offenceResult, index) =>
         ({
-          CourtOffenceSequenceNumber: index + 1,
+          Result: offenceResult.map((result) => ({ CJSresultCode: result })),
           CriminalProsecutionReference: {
             OffenceReason: {
               __type: "NationalOffenceReason"
             }
           },
-          Result: offenceResult.map((result) => ({ CJSresultCode: result }))
+          CourtOffenceSequenceNumber: index + 1
         }) as Offence
     )
   )

@@ -3,11 +3,11 @@ import "../../phase1/tests/helpers/setEnvironmentVariables"
 const bucketName = (process.env.TASK_DATA_BUCKET_NAME = "conductor-task-data")
 
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import * as deleteFileFromS3Module from "@moj-bichard7/common/s3/deleteFileFromS3"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { randomUUID } from "crypto"
-
 import deleteS3File from "./deleteS3File"
+
+import * as deleteFileFromS3Module from "@moj-bichard7/common/s3/deleteFileFromS3"
 const deleteFileFromS3 = deleteFileFromS3Module.default
 const deleteFileFromS3Error = () => new Error("S3 Error")
 const mockDeleteFileFromS3 = deleteFileFromS3Module as { default: any }

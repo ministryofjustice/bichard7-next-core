@@ -1,7 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import { PncOperation } from "../../types/PncOperation"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
@@ -20,13 +18,13 @@ describe("checkClashingCourtCaseOperationsException", () => {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "1" },
         Result: [
-          { PNCAdjudicationExists: false, PNCDisposalType: 1015, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT }
+          { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCDisposalType: 1015, PNCAdjudicationExists: false }
         ]
       },
       {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "2" },
-        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
+        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
       }
     ] as Offence[])
 
@@ -50,13 +48,13 @@ describe("checkClashingCourtCaseOperationsException", () => {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "1" },
         Result: [
-          { PNCAdjudicationExists: false, PNCDisposalType: 1015, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT }
+          { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCDisposalType: 1015, PNCAdjudicationExists: false }
         ]
       },
       {
         CourtCaseReferenceNumber: "2",
         CriminalProsecutionReference: { OffenceReasonSequence: "2" },
-        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
+        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
       }
     ] as Offence[])
 
@@ -75,13 +73,13 @@ describe("checkClashingCourtCaseOperationsException", () => {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "1" },
         Result: [
-          { PNCAdjudicationExists: false, PNCDisposalType: 1015, ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT }
+          { ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, PNCDisposalType: 1015, PNCAdjudicationExists: false }
         ]
       },
       {
         CourtCaseReferenceNumber: "1",
         CriminalProsecutionReference: { OffenceReasonSequence: "2" },
-        Result: [{ PNCAdjudicationExists: true, PNCDisposalType: 1015, ResultClass: ResultClass.SENTENCE }]
+        Result: [{ ResultClass: ResultClass.SENTENCE, PNCDisposalType: 1015, PNCAdjudicationExists: true }]
       }
     ] as Offence[])
 

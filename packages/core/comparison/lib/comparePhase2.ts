@@ -2,16 +2,14 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
-
-import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
-
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import phase2Handler from "../../phase2/phase2"
+import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
 import parseIncomingMessage from "./parseIncomingMessage"
@@ -21,13 +19,13 @@ import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const excludeEventForBichard = (eventCode: string) =>
   ![
+    EventCode.ReceivedResubmittedHearingOutcome,
     EventCode.HearingOutcomeReceivedPhase2,
-    EventCode.HearingOutcomeSubmittedPhase3,
-    EventCode.ReceivedResubmittedHearingOutcome
+    EventCode.HearingOutcomeSubmittedPhase3
   ].includes(eventCode as EventCode)
 const excludeEventForCore = (eventCode: string) => eventCode !== EventCode.IgnoredAlreadyOnPNC
 
-const getCorrelationId = (comparison: NewComparison | OldPhase1Comparison): string | undefined => {
+const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
   if ("correlationId" in comparison) {
     return comparison.correlationId
   }
@@ -46,7 +44,7 @@ const getCorrelationId = (comparison: NewComparison | OldPhase1Comparison): stri
 }
 
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
-  const { auditLogEvents, incomingMessage, outgoingMessage, triggers } = comparison
+  const { incomingMessage, outgoingMessage, triggers, auditLogEvents } = comparison
   const correlationId = getCorrelationId(comparison)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   let serialisedOutgoingMessage: string
@@ -88,11 +86,11 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     ) {
       return {
         auditLogEventsMatch: true,
-        exceptionsMatch: true,
-        intentionalDifference: true,
         triggersMatch: true,
+        exceptionsMatch: true,
         xmlOutputMatches: true,
-        xmlParsingMatches: true
+        xmlParsingMatches: true,
+        intentionalDifference: true
       }
     }
 
@@ -107,39 +105,39 @@ const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonR
     const auditLogEventsMatch = isEqual(coreAuditLogEvents, bichardAuditLogEvents)
 
     const debugOutput: ComparisonResultDebugOutput = {
-      auditLogEvents: {
-        comparisonResult: bichardAuditLogEvents,
-        coreResult: coreAuditLogEvents
+      triggers: {
+        coreResult: sortedCoreTriggers,
+        comparisonResult: sortedTriggers
       },
       exceptions: {
-        comparisonResult: sortedExceptions,
-        coreResult: sortedCoreExceptions
+        coreResult: sortedCoreExceptions,
+        comparisonResult: sortedExceptions
       },
-      triggers: {
-        comparisonResult: sortedTriggers,
-        coreResult: sortedCoreTriggers
+      auditLogEvents: {
+        coreResult: coreAuditLogEvents,
+        comparisonResult: bichardAuditLogEvents
       },
-      xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
-      xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, normalisedOutgoingMessage)
+      xmlParsingDiff: xmlOutputDiff(serialisedOutgoingMessage, normalisedOutgoingMessage),
+      xmlOutputDiff: xmlOutputDiff(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage)
     }
 
     return {
       auditLogEventsMatch,
-      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      incomingMessageType: incomingMessageType,
       triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
+      exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       xmlOutputMatches: xmlOutputMatches(serialisedPhase2OutgoingMessage, normalisedOutgoingMessage),
       xmlParsingMatches: xmlOutputMatches(serialisedOutgoingMessage, normalisedOutgoingMessage),
+      incomingMessageType: incomingMessageType,
       ...(debug && { debugOutput })
     }
   } catch (e) {
     return {
       auditLogEventsMatch: false,
-      error: e,
-      exceptionsMatch: false,
       triggersMatch: false,
+      exceptionsMatch: false,
       xmlOutputMatches: false,
-      xmlParsingMatches: false
+      xmlParsingMatches: false,
+      error: e
     }
   }
 }

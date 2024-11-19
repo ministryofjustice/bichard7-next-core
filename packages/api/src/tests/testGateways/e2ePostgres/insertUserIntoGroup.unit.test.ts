@@ -1,22 +1,20 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
-
+import insertUserIntoGroup from "./insertUserIntoGroup"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
-
-import insertUserIntoGroup from "./insertUserIntoGroup"
 
 describe("insertUserIntoGroup", () => {
   it("insert user into a group", async () => {
     const sql = jest.fn(() => [UserGroup.TriggerHandler]) as unknown as postgres.Sql
 
     const user: User = {
-      email: "user1@example.com",
-      groups: [],
-      id: 1,
-      jwt_id: randomUUID(),
       username: "User1",
-      visible_forces: "001"
+      groups: [],
+      jwt_id: randomUUID(),
+      id: 1,
+      visible_forces: "001",
+      email: "user1@example.com"
     }
 
     const group = await insertUserIntoGroup(sql, user, [UserGroup.TriggerHandler])
@@ -29,12 +27,12 @@ describe("insertUserIntoGroup", () => {
     const sql = jest.fn(() => [expectedGroups]) as unknown as postgres.Sql
 
     const user: User = {
-      email: "user1@example.com",
-      groups: [],
-      id: 1,
-      jwt_id: randomUUID(),
       username: "User1",
-      visible_forces: "001"
+      groups: [],
+      jwt_id: randomUUID(),
+      id: 1,
+      visible_forces: "001",
+      email: "user1@example.com"
     }
 
     const groups = await insertUserIntoGroup(sql, user, expectedGroups)

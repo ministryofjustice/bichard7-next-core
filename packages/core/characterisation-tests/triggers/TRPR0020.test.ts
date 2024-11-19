@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import { SpiVerdict } from "../../types/Verdict"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -33,8 +32,8 @@ describe.ifPhase1("TRPR0020", () => {
       offences: [
         {
           code: offenceCode,
-          finding: SpiVerdict.Guilty,
-          results: [{ code: 3502 }]
+          results: [{ code: 3502 }],
+          finding: SpiVerdict.Guilty
         }
       ]
     })
@@ -49,23 +48,23 @@ describe.ifPhase1("TRPR0020", () => {
       offences: [
         {
           code: "MC80515",
-          finding: SpiVerdict.Guilty,
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          finding: SpiVerdict.Guilty
         },
         {
           code: "MC80515",
-          finding: SpiVerdict.Guilty,
-          results: [{ code: 3502 }]
+          results: [{ code: 3502 }],
+          finding: SpiVerdict.Guilty
         },
         {
           code: "MC80515",
-          finding: SpiVerdict.Guilty,
-          results: [{ code: resultCode }]
+          results: [{ code: resultCode }],
+          finding: SpiVerdict.Guilty
         },
         {
           code: offenceCode,
-          finding: SpiVerdict.Guilty,
-          results: [{ code: 3502 }]
+          results: [{ code: 3502 }],
+          finding: SpiVerdict.Guilty
         }
       ]
     })
@@ -84,8 +83,8 @@ describe.ifPhase1("TRPR0020", () => {
       offences: [
         {
           code: offenceCode,
-          finding: SpiVerdict.NotGuilty,
-          results: [{ code: 1015 }]
+          results: [{ code: 1015 }],
+          finding: SpiVerdict.NotGuilty
         }
       ]
     })
@@ -100,8 +99,8 @@ describe.ifPhase1("TRPR0020", () => {
       offences: [
         {
           code: offenceCode,
-          finding: SpiVerdict.Guilty,
-          results: [{ code: 1085 }]
+          results: [{ code: 1085 }],
+          finding: SpiVerdict.Guilty
         }
       ]
     })

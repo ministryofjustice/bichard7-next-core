@@ -4,7 +4,7 @@ import type TriggerConfig from "../../types/TriggerConfig"
 
 export default (
   hearingOutcome: AnnotatedHearingOutcome,
-  { resultCodeQualifier, triggerCode }: TriggerConfig
+  { triggerCode, resultCodeQualifier }: TriggerConfig
 ): Trigger[] => {
   if (
     hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.some((offence) =>

@@ -1,9 +1,8 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-
-import areResultsMatchingAPncDisposal from "./areResultsMatchingAPncDisposal"
-import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 import findPncCourtCase from "./findPncCourtCase"
 import isRecordableResult from "./isRecordableResult"
+import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
+import areResultsMatchingAPncDisposal from "./areResultsMatchingAPncDisposal"
 
 export type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
 

@@ -2,22 +2,22 @@
 const ignorePlugin = require("esbuild-plugin-ignore")
 
 const buildOptions = {
-  bundle: true,
   entryPoints: ["phase1/phase1.ts"],
-  format: "cjs",
+  bundle: true,
   logLevel: "info",
-  minify: true,
   outdir: "build",
+  minify: true,
+  target: "node16",
+  format: "cjs",
   platform: "node",
   plugins: [
     ignorePlugin([
       {
-        contextRegExp: /node_modules\/pg/,
-        resourceRegExp: /pg-native$/
+        resourceRegExp: /pg-native$/,
+        contextRegExp: /node_modules\/pg/
       }
     ])
-  ],
-  target: "node16"
+  ]
 }
 
 // eslint-disable-next-line import/no-extraneous-dependencies

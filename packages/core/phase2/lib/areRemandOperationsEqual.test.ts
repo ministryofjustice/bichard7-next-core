@@ -1,70 +1,69 @@
-import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../types/PncOperation"
 import type { Operation } from "../../types/PncUpdateDataset"
-
+import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
+import type { PncOperation } from "../../types/PncOperation"
 
 const emptyOrganisationUnit: OrganisationUnitCodes = {
-  BottomLevelCode: "",
-  OrganisationUnitCode: "",
+  TopLevelCode: "",
   SecondLevelCode: "",
   ThirdLevelCode: "",
-  TopLevelCode: ""
+  BottomLevelCode: "",
+  OrganisationUnitCode: ""
 }
 
 const nullOrganisationUnit: OrganisationUnitCodes = {
-  BottomLevelCode: null,
-  OrganisationUnitCode: null,
+  TopLevelCode: undefined,
   SecondLevelCode: null,
   ThirdLevelCode: null,
-  TopLevelCode: undefined
+  BottomLevelCode: null,
+  OrganisationUnitCode: null
 }
 
 const nonEmptyOrganisationUnit: OrganisationUnitCodes = {
-  BottomLevelCode: "00",
-  OrganisationUnitCode: "C01HA00",
+  TopLevelCode: "C",
   SecondLevelCode: "01",
   ThirdLevelCode: "HA",
-  TopLevelCode: "C"
+  BottomLevelCode: "00",
+  OrganisationUnitCode: "C01HA00"
 }
 
 const anotherNonEmptyOrganisationUnit: OrganisationUnitCodes = {
-  BottomLevelCode: "00",
-  OrganisationUnitCode: "01CJ00",
+  TopLevelCode: "",
   SecondLevelCode: "01",
   ThirdLevelCode: "CJ",
-  TopLevelCode: ""
+  BottomLevelCode: "00",
+  OrganisationUnitCode: "01CJ00"
 }
 
 describe("areRemandOperationsEqual", () => {
   const generateTestCases = (organisationUnit: OrganisationUnitCodes, expectedResult: boolean) => [
-    { expectedResult, firstData: organisationUnit, secondData: undefined },
-    { expectedResult, firstData: organisationUnit, secondData: null },
-    { expectedResult, firstData: organisationUnit, secondData: {} },
-    { expectedResult, firstData: undefined, secondData: organisationUnit },
-    { expectedResult, firstData: null, secondData: organisationUnit },
-    { expectedResult, firstData: {}, secondData: organisationUnit }
+    { firstData: organisationUnit, secondData: undefined, expectedResult },
+    { firstData: organisationUnit, secondData: null, expectedResult },
+    { firstData: organisationUnit, secondData: {}, expectedResult },
+    { firstData: undefined, secondData: organisationUnit, expectedResult },
+    { firstData: null, secondData: organisationUnit, expectedResult },
+    { firstData: {}, secondData: organisationUnit, expectedResult }
   ]
 
   it.each([
-    { expectedResult: true, firstData: undefined, secondData: undefined },
-    { expectedResult: true, firstData: null, secondData: null },
-    { expectedResult: true, firstData: null, secondData: undefined },
-    { expectedResult: true, firstData: undefined, secondData: null },
-    { expectedResult: true, firstData: undefined, secondData: {} },
-    { expectedResult: true, firstData: null, secondData: {} },
-    { expectedResult: true, firstData: {}, secondData: undefined },
-    { expectedResult: true, firstData: {}, secondData: null },
-    { expectedResult: true, firstData: emptyOrganisationUnit, secondData: emptyOrganisationUnit },
-    { expectedResult: true, firstData: nullOrganisationUnit, secondData: nullOrganisationUnit },
-    { expectedResult: true, firstData: nonEmptyOrganisationUnit, secondData: nonEmptyOrganisationUnit },
-    { expectedResult: false, firstData: nonEmptyOrganisationUnit, secondData: anotherNonEmptyOrganisationUnit },
+    { firstData: undefined, secondData: undefined, expectedResult: true },
+    { firstData: null, secondData: null, expectedResult: true },
+    { firstData: null, secondData: undefined, expectedResult: true },
+    { firstData: undefined, secondData: null, expectedResult: true },
+    { firstData: undefined, secondData: {}, expectedResult: true },
+    { firstData: null, secondData: {}, expectedResult: true },
+    { firstData: {}, secondData: undefined, expectedResult: true },
+    { firstData: {}, secondData: null, expectedResult: true },
+    { firstData: emptyOrganisationUnit, secondData: emptyOrganisationUnit, expectedResult: true },
+    { firstData: nullOrganisationUnit, secondData: nullOrganisationUnit, expectedResult: true },
+    { firstData: nonEmptyOrganisationUnit, secondData: nonEmptyOrganisationUnit, expectedResult: true },
+    { firstData: nonEmptyOrganisationUnit, secondData: anotherNonEmptyOrganisationUnit, expectedResult: false },
     ...generateTestCases(emptyOrganisationUnit, true),
     ...generateTestCases(nullOrganisationUnit, true),
     ...generateTestCases(nonEmptyOrganisationUnit, false)
   ])(
     "returns $expectedResult when first next hearing location is $firstData and second next hearing location is $secondData",
-    ({ expectedResult, firstData, secondData }) => {
+    ({ firstData, secondData, expectedResult }) => {
       const firstRemandOperation = {
         data: { nextHearingLocation: firstData }
       } as unknown as Operation<PncOperation.REMAND>
@@ -79,14 +78,14 @@ describe("areRemandOperationsEqual", () => {
   )
 
   it.each([
-    { expectedResult: true, firstDate: undefined, secondDate: undefined },
-    { expectedResult: false, firstDate: undefined, secondDate: new Date("2024-05-28") },
-    { expectedResult: false, firstDate: new Date("2024-05-28"), secondDate: undefined },
-    { expectedResult: false, firstDate: new Date("2024-05-29"), secondDate: new Date("2024-05-28") },
-    { expectedResult: true, firstDate: new Date("2024-05-28"), secondDate: new Date("2024-05-28") }
+    { firstDate: undefined, secondDate: undefined, expectedResult: true },
+    { firstDate: undefined, secondDate: new Date("2024-05-28"), expectedResult: false },
+    { firstDate: new Date("2024-05-28"), secondDate: undefined, expectedResult: false },
+    { firstDate: new Date("2024-05-29"), secondDate: new Date("2024-05-28"), expectedResult: false },
+    { firstDate: new Date("2024-05-28"), secondDate: new Date("2024-05-28"), expectedResult: true }
   ])(
     "returns $expectedResult when first next hearing date is $firstDate and second next hearing date is $secondDate",
-    ({ expectedResult, firstDate, secondDate }) => {
+    ({ firstDate, secondDate, expectedResult }) => {
       const firstRemandOperation = { data: { nextHearingDate: firstDate } } as unknown as Operation<PncOperation.REMAND>
       const secondRemandOperation = {
         data: { nextHearingDate: secondDate }

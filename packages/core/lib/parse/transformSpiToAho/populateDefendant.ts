@@ -5,7 +5,6 @@ import type {
   SpiCourtIndividualDefendant,
   SpiDefendant
 } from "../../../types/SpiResult"
-
 import { lookupRemandStatusBySpiCode } from "../../dataLookup"
 import populateOffences from "./populateOffences"
 
@@ -16,15 +15,15 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
   const {
     PersonDefendant: {
       BasePersonDetails: {
-        Birthdate: spiBirthDate,
-        Gender: spiGender,
         PersonName: {
-          PersonFamilyName: spiPersonFamilyName,
+          PersonTitle: spiPersonTitle,
           PersonGivenName1: spiPersonGivenName1,
           PersonGivenName2: spiPersonGivenName2,
           PersonGivenName3: spiPersonGivenName3,
-          PersonTitle: spiPersonTitle
-        }
+          PersonFamilyName: spiPersonFamilyName
+        },
+        Gender: spiGender,
+        Birthdate: spiBirthDate
       }
     }
   } = spiCourtIndividualDefendant
@@ -35,13 +34,13 @@ const populatePersonDefendantDetail = (spiCourtIndividualDefendant: SpiCourtIndi
     .map((name) => name.replace(/\s+/g, " "))
 
   return {
-    BirthDate: spiBirthDate ? new Date(spiBirthDate) : undefined,
-    Gender: Number(spiGender),
     PersonName: {
-      FamilyName: spiPersonFamilyName.replace(/\s+/g, " ").trim(),
+      Title: spiPersonTitle?.trim() || undefined,
       GivenName: spiGivenNames,
-      Title: spiPersonTitle?.trim() || undefined
-    }
+      FamilyName: spiPersonFamilyName.replace(/\s+/g, " ").trim()
+    },
+    BirthDate: spiBirthDate ? new Date(spiBirthDate) : undefined,
+    Gender: Number(spiGender)
   }
 }
 
@@ -60,7 +59,7 @@ const populateAddress = (spiAddress: SpiAddress): Address => {
     }
   } else {
     const {
-      ComplexAddress: { AdministrativeArea, Locality, StreetDescription, Town, UniqueStreetReferenceNumber }
+      ComplexAddress: { Locality, StreetDescription, Town, AdministrativeArea, UniqueStreetReferenceNumber }
     } = spiAddress
 
     const hearingOutcomeAddress = [
@@ -93,53 +92,53 @@ const parseBailConditions = (spiBailConditions?: string): string[] => {
 }
 
 type PartialDefendantDetails =
-  | Pick<HearingDefendant, "Address" | "BailConditions" | "OrganisationName" | "PNCIdentifier" | "RemandStatus">
   | Pick<
       HearingDefendant,
-      | "Address"
-      | "BailConditions"
       | "CourtPNCIdentifier"
       | "DefendantDetail"
-      | "ReasonForBailConditions"
+      | "Address"
       | "RemandStatus"
+      | "BailConditions"
+      | "ReasonForBailConditions"
     >
+  | Pick<HearingDefendant, "PNCIdentifier" | "OrganisationName" | "Address" | "RemandStatus" | "BailConditions">
 
 const processDefendant = (spiDefendant: SpiDefendant): PartialDefendantDetails => {
   if (spiDefendant.CourtIndividualDefendant) {
     const {
       CourtIndividualDefendant: {
-        Address: spiAddress,
+        PersonDefendant: { PNCidentifier: spiPNCidentifier, BailConditions: spiBailConditions },
         BailStatus: spiBailStatus,
-        PersonDefendant: { BailConditions: spiBailConditions, PNCidentifier: spiPNCidentifier },
+        Address: spiAddress,
         ReasonForBailConditionsOrCustody: spiReasonForBailConditionsOrCustody
       }
     } = spiDefendant
 
     return {
-      Address: populateAddress(spiAddress),
-      BailConditions: parseBailConditions(spiBailConditions),
       CourtPNCIdentifier: formatPncIdentifier(spiPNCidentifier),
       DefendantDetail: populatePersonDefendantDetail(spiDefendant.CourtIndividualDefendant),
-      ReasonForBailConditions: spiReasonForBailConditionsOrCustody,
-      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
+      Address: populateAddress(spiAddress),
+      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus,
+      BailConditions: parseBailConditions(spiBailConditions),
+      ReasonForBailConditions: spiReasonForBailConditionsOrCustody
     }
   }
 
   if (spiDefendant.CourtCorporateDefendant) {
     // Corporate Defendant
     const {
-      Address: spiAddress,
-      BailStatus: spiBailStatus,
+      PNCidentifier: spiPNCidentifier,
       OrganisationName: { OrganisationName: spiOrganisationName },
-      PNCidentifier: spiPNCidentifier
+      Address: spiAddress,
+      BailStatus: spiBailStatus
     } = spiDefendant.CourtCorporateDefendant
 
     return {
-      Address: populateAddress(spiAddress),
-      BailConditions: [],
       CourtPNCIdentifier: formatPncIdentifier(spiPNCidentifier),
       OrganisationName: spiOrganisationName,
-      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus
+      Address: populateAddress(spiAddress),
+      RemandStatus: lookupRemandStatusBySpiCode(spiBailStatus)?.cjsCode ?? spiBailStatus,
+      BailConditions: []
     }
   }
 
@@ -153,7 +152,7 @@ export default (courtResult: ResultedCaseMessageParsedXml): HearingDefendant => 
     }
   } = courtResult
 
-  const { bailConditions, offences } = populateOffences(courtResult)
+  const { offences, bailConditions } = populateOffences(courtResult)
 
   const partialDefendant = processDefendant(spiDefendant)
 

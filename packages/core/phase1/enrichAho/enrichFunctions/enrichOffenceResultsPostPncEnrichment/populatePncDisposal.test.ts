@@ -1,7 +1,6 @@
 jest.mock("../../../../lib/dataLookup")
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
+import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../../../types/ResultClass"
 import populatePncDisposal from "./populatePncDisposal"
 
@@ -17,10 +16,10 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 345 }, { Amount: 15 }],
       CJSresultCode: 123,
       CRESTDisposalCode: "FDINST",
       ResultVariableText: "It expects to see {victim surcharge}",
+      AmountSpecifiedInResult: [{ Amount: 345 }, { Amount: 15 }],
       Verdict: ""
     } as Result
 
@@ -40,10 +39,10 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 0 }],
       CJSresultCode: 123,
       CRESTDisposalCode: "",
       ResultVariableText: "",
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: "NA"
     } as Result
 
@@ -73,11 +72,11 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 0 }],
       CJSresultCode: 123,
-      CRESTDisposalCode: "",
       ResultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+      CRESTDisposalCode: "",
       ResultVariableText: "",
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -107,11 +106,11 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 0 }],
       CJSresultCode: 123,
-      CRESTDisposalCode: "",
       ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
+      CRESTDisposalCode: "",
       ResultVariableText: "",
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -141,11 +140,11 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 0 }],
       CJSresultCode: 123,
-      CRESTDisposalCode: "",
       ResultClass: ResultClass.UNRESULTED,
+      CRESTDisposalCode: "",
       ResultVariableText: "",
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 
@@ -170,11 +169,11 @@ describe("populatePncDisposal", () => {
       }
     } as AnnotatedHearingOutcome
     const result = {
-      AmountSpecifiedInResult: [{ Amount: 0 }],
       CJSresultCode: 999,
-      CRESTDisposalCode: "",
       ResultClass: ResultClass.UNRESULTED,
+      CRESTDisposalCode: "",
       ResultVariableText: "",
+      AmountSpecifiedInResult: [{ Amount: 0 }],
       Verdict: ""
     } as Result
 

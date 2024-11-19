@@ -1,14 +1,12 @@
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
-
 import { GetObjectTaggingCommand, S3Client } from "@aws-sdk/client-s3"
-
 import { isError } from "../types/Result"
 
 const readS3FileTags = async (
   fileName: string,
   bucket: string,
   config: S3ClientConfig
-): Promise<Error | Record<string, string>> => {
+): Promise<Record<string, string> | Error> => {
   const client = new S3Client(config)
   const command = new GetObjectTaggingCommand({ Bucket: bucket, Key: fileName })
 

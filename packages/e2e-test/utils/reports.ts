@@ -3,10 +3,8 @@ import fs from "fs"
 
 // eslint-disable-next-line import/no-unresolved
 import { parse } from "csv-parse/sync"
-
-import type Bichard from "./world"
-
 import { getRawTableData, getTableData } from "./actions.legacy-ui"
+import type Bichard from "./world"
 
 export const accessReport = async function (this: Bichard, report: string) {
   const [, reportsBtn] = await this.browser.page.$$("span.wpsNavLevel1")
@@ -68,8 +66,8 @@ export const checkResolvedExceptionsReport = function () {
   const csv = fs.readFileSync("./tmp/ResolvedExceptions.csv", "utf8")
   const data = parse(csv, {
     columns: false,
-    from_line: 3,
-    skip_empty_lines: true
+    skip_empty_lines: true,
+    from_line: 3
   })
   const notesField = data[1][10]
   expect(notesField).toMatch(

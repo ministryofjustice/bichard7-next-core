@@ -1,5 +1,4 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
-
 import ResultClass from "../../types/ResultClass"
 import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 
@@ -21,11 +20,11 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "B7",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
@@ -38,11 +37,11 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "456",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "456",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
@@ -55,11 +54,11 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2061 } as unknown as Result]
       }
     ])
@@ -72,11 +71,11 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: true,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
@@ -89,11 +88,11 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: true,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])
@@ -106,20 +105,20 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       },
       {
         AddedByTheCourt: true,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060, ResultClass: ResultClass.SENTENCE } as unknown as Result]
       }
     ])
@@ -132,20 +131,20 @@ describe("checkCaseRequiresRccButHasNoReportableOffences", () => {
     const aho = createAho([
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       },
       {
         AddedByTheCourt: false,
-        CourtCaseReferenceNumber: "123",
         CriminalProsecutionReference: {
           OffenceReasonSequence: undefined
         },
         OffenceCategory: "ZZ",
+        CourtCaseReferenceNumber: "123",
         Result: [{ PNCDisposalType: 2060 } as unknown as Result]
       }
     ])

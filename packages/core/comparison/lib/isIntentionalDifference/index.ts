@@ -2,10 +2,9 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type Phase from "../../../types/Phase"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ComparisonData } from "../../types/ComparisonData"
-
 import summariseMatching from "../summariseMatching"
-import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import badManualMatch from "./badManualMatch"
+import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import bichardMatchesRandomFinalOffence from "./bichardMatchesRandomFinalOffence"
 import bichardRaisesHo200114ForNonExactSequenceNumbers from "./bichardRaisesHo200114ForNonExactSequenceNumbers"
 import convictionDateMatching from "./convictionDateMatching"
@@ -20,7 +19,6 @@ import ho100332NotHo100304 from "./ho100332NotHo100304"
 import ho100332WithConvictionDate from "./ho100332WithConvictionDate"
 import ho100332WithSameResults from "./ho100332WithSameResults"
 import ho100333AndCCRHasLeadingZero from "./ho100333AndCCRHasLeadingZero"
-import ho200114InsteadOfHo200113 from "./ho200114InsteadOfHo200113"
 import ho200200AndMultilineResultVariableText from "./ho200200AndMultilineResultVariableText"
 import identicalOffenceSwitchedSequenceNumbers from "./identicalOffenceSwitchedSequenceNumbers"
 import invalidASN from "./invalidASN"
@@ -30,6 +28,7 @@ import nonMatchingManualSequenceNumber from "./nonMatchingManualSequenceNumber"
 import offenceReasonSequenceFormat from "./offenceReasonSequenceFormat"
 import prioritiseNonFinal from "./prioritiseNonFinal"
 import trailingSpace from "./trailingSpace"
+import ho200114InsteadOfHo200113 from "./ho200114InsteadOfHo200113"
 
 const filters = [
   badlyAnnotatedSingleCaseMatch,
@@ -73,8 +72,8 @@ const isIntentionalDifference = (
   phase: Phase = 1
 ): boolean => {
   const comparisonData: ComparisonData = {
-    actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
     expected: { aho: expected, courtResultMatchingSummary: summariseMatching(expected, true) },
+    actual: { aho: actual, courtResultMatchingSummary: summariseMatching(actual, true) },
     incomingMessage,
     phase
   }

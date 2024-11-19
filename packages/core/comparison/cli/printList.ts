@@ -1,11 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import { resultMatches } from "./printResult"
 import type { SkippedFile } from "./processRange"
 
-import { resultMatches } from "./printResult"
-
 const printList = (
-  result?: (ComparisonResultDetail | SkippedFile)[] | (ComparisonResultDetail | SkippedFile)
+  result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[]
 ): boolean => {
   if (!result) {
     return false

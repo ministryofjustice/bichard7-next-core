@@ -1,23 +1,20 @@
-import type { DocumentClient } from "aws-sdk/clients/dynamodb"
-
 import { isError } from "@moj-bichard7/common/types/Result"
+import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import MockDate from "mockdate"
 import "phase1/tests/helpers/setEnvironmentVariables"
-
-import type { ComparisonLog } from "../types"
-
 import MockDynamo from "../../phase1/tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../phase1/tests/helpers/testDynamoDbTableConfig"
-import createDynamoDbConfig from "./createDynamoDbConfig"
+import type { ComparisonLog } from "../types"
 import DynamoGateway from "./DynamoGateway"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import recordResultInDynamo from "./recordResultInDynamo"
 
 const config = createDynamoDbConfig(1)
 const dynamoGateway = new DynamoGateway(config)
 const comparisonResult = {
   auditLogEventsMatch: true,
-  exceptionsMatch: true,
   triggersMatch: true,
+  exceptionsMatch: true,
   xmlOutputMatches: true,
   xmlParsingMatches: true
 }
@@ -52,25 +49,25 @@ describe("recordResultInDynamo", () => {
     const record = (getOneResult as DocumentClient.GetItemOutput).Item as ComparisonLog
     expect(record).toStrictEqual({
       _: "_",
+      s3Path: "DummyPath",
       correlationId: "correlation-id",
+      initialRunAt: mockedDate.toISOString(),
+      initialResult: 1,
       history: [
         {
+          runAt: mockedDate.toISOString(),
+          result: 1,
           details: {
-            exceptionsMatch: 1,
             triggersMatch: 1,
+            exceptionsMatch: 1,
             xmlOutputMatches: 1,
             xmlParsingMatches: 1
-          },
-          result: 1,
-          runAt: mockedDate.toISOString()
+          }
         }
       ],
-      initialResult: 1,
-      initialRunAt: mockedDate.toISOString(),
-      latestResult: 1,
+      version: 1,
       latestRunAt: mockedDate.toISOString(),
-      s3Path: "DummyPath",
-      version: 1
+      latestResult: 1
     })
   })
 
@@ -94,24 +91,24 @@ describe("recordResultInDynamo", () => {
     await dynamoGateway.insertOne(
       {
         _: "_",
+        s3Path: "DummyPath",
+        initialRunAt: initialDateString,
+        initialResult: 0,
         history: [
           {
+            runAt: mockedDate.toISOString(),
+            result: 0,
             details: {
-              exceptionsMatch: 1,
               triggersMatch: 0,
+              exceptionsMatch: 1,
               xmlOutputMatches: 1,
               xmlParsingMatches: 1
-            },
-            result: 0,
-            runAt: mockedDate.toISOString()
+            }
           }
         ],
-        initialResult: 0,
-        initialRunAt: initialDateString,
-        latestResult: 0,
+        version: 1,
         latestRunAt: mockedDate.toISOString(),
-        s3Path: "DummyPath",
-        version: 1
+        latestResult: 0
       },
       "s3Path"
     )
@@ -123,34 +120,34 @@ describe("recordResultInDynamo", () => {
     const record = (getOneResult as DocumentClient.GetItemOutput).Item as ComparisonLog
     expect(record).toStrictEqual({
       _: "_",
+      s3Path: "DummyPath",
+      initialRunAt: initialDateString,
+      initialResult: 0,
       history: [
         {
+          runAt: mockedDate.toISOString(),
+          result: 0,
           details: {
-            exceptionsMatch: 1,
             triggersMatch: 0,
+            exceptionsMatch: 1,
             xmlOutputMatches: 1,
             xmlParsingMatches: 1
-          },
-          result: 0,
-          runAt: mockedDate.toISOString()
+          }
         },
         {
+          runAt: mockedDate.toISOString(),
+          result: 1,
           details: {
-            exceptionsMatch: 1,
             triggersMatch: 1,
+            exceptionsMatch: 1,
             xmlOutputMatches: 1,
             xmlParsingMatches: 1
-          },
-          result: 1,
-          runAt: mockedDate.toISOString()
+          }
         }
       ],
-      initialResult: 0,
-      initialRunAt: initialDateString,
-      latestResult: 1,
+      version: 2,
       latestRunAt: mockedDate.toISOString(),
-      s3Path: "DummyPath",
-      version: 2
+      latestResult: 1
     })
   })
 

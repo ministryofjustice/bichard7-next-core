@@ -1,21 +1,19 @@
-import { isError } from "@moj-bichard7/common/types/Result"
-
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../types/PncOperation"
-import type { Operation } from "../../../types/PncUpdateDataset"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
-
-import areOrganisationUnitsEqual from "../../../lib/areOrganisationUnitsEqual"
-import { lookupRemandStatusByCjsCode } from "../../../lib/dataLookup"
-import isWarrantIssued from "../../../phase1/lib/result/isWarrantIssued"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
+import type { Operation } from "../../../types/PncUpdateDataset"
+import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
+import type { PncOperation } from "../../../types/PncOperation"
 import ResultClass from "../../../types/ResultClass"
+import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
+import { lookupRemandStatusByCjsCode } from "../../../lib/dataLookup"
 import addPaddingToBailCondition from "../addPaddingToBailCondition"
 import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../getPncCourtCode"
+import isWarrantIssued from "../../../phase1/lib/result/isWarrantIssued"
+import { isError } from "@moj-bichard7/common/types/Result"
 import preProcessAsn from "../preProcessAsn"
 import preProcessPncIdentifier from "../preProcessPncIdentifier"
+import areOrganisationUnitsEqual from "../../../lib/areOrganisationUnitsEqual"
 
 const firstInstanceQualifier = "LE"
 const bichardThirdLevelCode = "YZ"
@@ -171,22 +169,22 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   return {
     operation: "NEWREM",
     request: {
-      arrestSummonsNumber,
-      bailConditions,
-      courtNameType1,
-      courtNameType2,
+      pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
+      pncCheckName,
       croNumber: hearingDefendant.CRONumber ?? null,
+      arrestSummonsNumber,
       forceStationCode,
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
-      localAuthorityCode: LOCAL_AUTHORITY_CODE,
       nextHearingDate: results[0].NextHearingDate
         ? formatDateSpecifiedInResult(new Date(results[0].NextHearingDate), true)
         : "",
-      pncCheckName,
-      pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
       pncRemandStatus: pncRemandStatus ?? "",
+      remandLocationCourt,
       psaCourtCode,
-      remandLocationCourt
+      courtNameType1,
+      courtNameType2,
+      localAuthorityCode: LOCAL_AUTHORITY_CODE,
+      bailConditions
     }
   }
 }

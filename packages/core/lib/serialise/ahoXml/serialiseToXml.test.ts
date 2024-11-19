@@ -1,10 +1,8 @@
 import "jest-xml-matcher"
 import MockDate from "mockdate"
-
-import type Phase1Result from "../../../phase1/types/Phase1Result"
-
 import generateMessage from "../../../phase1/tests/helpers/generateMessage"
 import processMessage from "../../../phase1/tests/helpers/processMessage"
+import type Phase1Result from "../../../phase1/types/Phase1Result"
 import serialiseToXml from "./serialiseToXml"
 
 describe("generateLegacyAhoXml", () => {

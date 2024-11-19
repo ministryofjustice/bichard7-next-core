@@ -1,12 +1,10 @@
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
-
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
-
-import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import errorPaths from "../exceptions/errorPaths"
 import saveErrorListRecord from "./saveErrorListRecord"
 
@@ -15,12 +13,12 @@ const db = postgres({
   ...dbConfig,
   types: {
     date: {
+      to: 25,
       from: [1082],
+      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
+      }
     }
   }
 })
@@ -40,8 +38,8 @@ describe("saveErrorListRecord", () => {
 
   it("should insert the appropriate resources", async () => {
     const phase1Result = generateMockPhase1Result({
-      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] },
-      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }]
+      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
     })
 
     await saveErrorListRecord(db, phase1Result)
@@ -67,8 +65,8 @@ describe("saveErrorListRecord", () => {
 
   it("should update the error record and add new triggers with notes", async () => {
     const phase1Result = generateMockPhase1Result({
-      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] },
-      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }]
+      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
     })
 
     await saveErrorListRecord(db, phase1Result)
@@ -103,8 +101,8 @@ describe("saveErrorListRecord", () => {
 
   it("should update the error record and delete removed triggers with notes", async () => {
     const phase1Result = generateMockPhase1Result({
-      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] },
-      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }]
+      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
     })
 
     await saveErrorListRecord(db, phase1Result)
@@ -135,8 +133,8 @@ describe("saveErrorListRecord", () => {
 
   it("should update the error record and add and remove triggers with notes", async () => {
     const phase1Result = generateMockPhase1Result({
-      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] },
-      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }]
+      triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
     })
 
     await saveErrorListRecord(db, phase1Result)
@@ -171,8 +169,8 @@ describe("saveErrorListRecord", () => {
 
   it("should update the error record and add new triggers even when no exception is raised after resubmission", async () => {
     const phase1Result = generateMockPhase1Result({
-      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100206, path: errorPaths.case.asn }] },
-      triggers: []
+      triggers: [],
+      hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100206, path: errorPaths.case.asn }] }
     })
 
     await saveErrorListRecord(db, phase1Result)

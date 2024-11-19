@@ -1,10 +1,8 @@
 import fs from "fs"
-
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { SkippedFile } from "./processRange"
-
 import getFile from "../lib/getFile"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import processFile from "./processFile"
+import type { SkippedFile } from "./processRange"
 
 const processFilelist = async (filelist: string, cache: boolean): Promise<(ComparisonResultDetail | SkippedFile)[]> => {
   const results: (ComparisonResultDetail | SkippedFile)[] = []

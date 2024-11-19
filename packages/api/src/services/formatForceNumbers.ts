@@ -1,4 +1,4 @@
-export default (forceNumbers?: null | string): number[] => {
+export default (forceNumbers?: string | null): number[] => {
   if (!forceNumbers) {
     return []
   }

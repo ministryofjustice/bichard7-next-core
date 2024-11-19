@@ -1,18 +1,16 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
-import type { Client } from "@stomp/stompjs"
-
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import parsePncUpdateDataSetXml from "@moj-bichard7/core/phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
-import Phase from "@moj-bichard7/core/types/Phase"
-
+import type { Client } from "@stomp/stompjs"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
+import Phase from "@moj-bichard7/core/types/Phase"
 
 enum DestinationType {
+  MQ = "mq",
   AUTO = "auto",
-  CONDUCTOR = "conductor",
-  MQ = "mq"
+  CONDUCTOR = "conductor"
 }
 
 const conductorWorkflows: Record<string, Phase> = {

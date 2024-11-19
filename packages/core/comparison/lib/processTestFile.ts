@@ -2,7 +2,6 @@ import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"
-
 import type { Comparison } from "../types/ComparisonFile"
 
 export const parseComparisonFile = (contents: string, file?: string): Comparison => {

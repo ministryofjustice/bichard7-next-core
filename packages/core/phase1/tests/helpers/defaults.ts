@@ -1,11 +1,11 @@
 export default {
-  mqPassword: "password",
+  postgresHost: "localhost",
+  postgresPort: 5432,
+  postgresUser: "bichard",
+  postgresPassword: "password",
   mqUrl: "failover:(stomp://localhost:61613)",
   mqUser: "bichard",
+  mqPassword: "password",
   pncHost: "localhost",
-  pncPort: "3000",
-  postgresHost: "localhost",
-  postgresPassword: "password",
-  postgresPort: 5432,
-  postgresUser: "bichard"
+  pncPort: "3000"
 }

@@ -1,9 +1,7 @@
 import { randomUUID } from "crypto"
 import merge from "lodash.merge"
-
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type Phase2Result from "../../types/Phase2Result"
-
 import { Phase2ResultType } from "../../types/Phase2Result"
 import generateFakePncUpdateDataset from "../fixtures/helpers/generateFakePncUpdateDataset"
 
@@ -18,12 +16,12 @@ const generateMockPhase2Result = (
   outputMessage.PncOperations ??= []
 
   return {
-    auditLogEvents: input.auditLogEvents ?? [],
     correlationId,
     outputMessage,
-    resultType: input.resultType ?? Phase2ResultType.success,
+    auditLogEvents: input.auditLogEvents ?? [],
+    triggers: input.triggers ?? [],
     triggerGenerationAttempted: !!input.triggerGenerationAttempted,
-    triggers: input.triggers ?? []
+    resultType: input.resultType ?? Phase2ResultType.success
   }
 }
 

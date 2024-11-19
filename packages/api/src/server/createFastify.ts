@@ -1,9 +1,7 @@
 import type { FastifyInstance } from "fastify"
-import type { IncomingMessage, Server, ServerResponse } from "http"
-
 import { fastify as Fastify } from "fastify"
 import fs from "fs"
-
+import type { IncomingMessage, Server, ServerResponse } from "http"
 import logger from "./logger"
 
 export default function (): FastifyInstance<Server, IncomingMessage, ServerResponse> {
@@ -14,7 +12,7 @@ export default function (): FastifyInstance<Server, IncomingMessage, ServerRespo
   if (process.env.USE_SSL === "true") {
     fastify = Fastify({
       ...options,
-      https: { cert: fs.readFileSync("/certs/server.crt"), key: fs.readFileSync("/certs/server.key") }
+      https: { key: fs.readFileSync("/certs/server.key"), cert: fs.readFileSync("/certs/server.crt") }
     })
   } else {
     fastify = Fastify(options)

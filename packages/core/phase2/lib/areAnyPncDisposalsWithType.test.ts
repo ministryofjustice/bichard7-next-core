@@ -1,16 +1,15 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-
 import areAnyPncDisposalsWithType from "./areAnyPncDisposalsWithType"
 
 const generateAhoAndOffence = (
   hoCcr: string | undefined,
   hoOffence: { ccr?: string; reasonSequence?: string },
-  pncCourtCases: { ccr: string; offences?: { disposalTypes?: number[]; sequenceNumber: number }[] }[],
+  pncCourtCases: { offences?: { sequenceNumber: number; disposalTypes?: number[] }[]; ccr: string }[],
   pncQueryExists: boolean
 ) => ({
   aho: {
-    AnnotatedHearingOutcome: { HearingOutcome: { Case: { CourtCaseReferenceNumber: hoCcr } } },
     Exceptions: [],
+    AnnotatedHearingOutcome: { HearingOutcome: { Case: { CourtCaseReferenceNumber: hoCcr } } },
     PncQuery: pncQueryExists
       ? {
           courtCases: pncCourtCases.map((courtCase) => ({

@@ -1,7 +1,6 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-
-import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 import type { PncQueryResult } from "./PncQueryResult"
+import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 
 interface PncGatewayInterface {
   query: (asn: string, correlationId: string) => PromiseResult<PncQueryResult | undefined>

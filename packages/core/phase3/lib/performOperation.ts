@@ -1,12 +1,9 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-
 import { isError } from "@moj-bichard7/common/types/Result"
-
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-
 import dispatch from "./dispatch"
 import handleError from "./handleError"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 
 const performOperation = async (
   pncUpdateDataset: PncUpdateDataset,

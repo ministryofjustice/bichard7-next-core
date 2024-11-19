@@ -1,14 +1,12 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-
 import type AuditLogger from "../types/AuditLogger"
-import type PncGatewayInterface from "../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import type Phase3Result from "./types/Phase3Result"
-
+import { Phase3ResultType } from "./types/Phase3Result"
+import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import handleBusinessException, { pncAsnUpdateFacadeBusinessExceptionSchema } from "./lib/handleBusinessException"
 import performOperation from "./lib/performOperation"
-import { Phase3ResultType } from "./types/Phase3Result"
+import type PncGatewayInterface from "../types/PncGatewayInterface"
 
 const phase3 = async (
   inputMessage: PncUpdateDataset,
@@ -37,9 +35,9 @@ const phase3 = async (
     correlationId: "",
     outputMessage: inputMessage,
     pncOperations: [],
-    resultType: Phase3ResultType.success,
+    triggers: [],
     triggerGenerationAttempted: false,
-    triggers: []
+    resultType: Phase3ResultType.success
   }
 }
 

@@ -1,9 +1,7 @@
-import { auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { AuditLogEventSource, auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-
 import type AuditLogger from "../types/AuditLogger"
-
 import CoreAuditLogger from "./CoreAuditLogger"
 
 describe("CoreAuditLogger", () => {
@@ -20,11 +18,11 @@ describe("CoreAuditLogger", () => {
 
     expect(auditLogger.getEvents()).toHaveLength(1)
     expect(auditLogger.getEvents()[0]).toStrictEqual({
-      attributes,
-      category: EventCategory.information,
       eventCode: EventCode.ExceptionsGenerated,
-      eventSource: AuditLogEventSource.CorePhase1,
       eventType: auditLogEventLookup[EventCode.ExceptionsGenerated],
+      category: EventCategory.information,
+      eventSource: AuditLogEventSource.CorePhase1,
+      attributes,
       timestamp: expect.any(Date)
     })
   })
@@ -35,11 +33,11 @@ describe("CoreAuditLogger", () => {
 
     expect(auditLogger.getEvents()).toHaveLength(1)
     expect(auditLogger.getEvents()[0]).toStrictEqual({
-      attributes,
-      category: EventCategory.error,
       eventCode: EventCode.MessageRejected,
-      eventSource: AuditLogEventSource.CorePhase1,
       eventType: auditLogEventLookup[EventCode.MessageRejected],
+      category: EventCategory.error,
+      eventSource: AuditLogEventSource.CorePhase1,
+      attributes,
       timestamp: expect.any(Date)
     })
   })
@@ -50,11 +48,11 @@ describe("CoreAuditLogger", () => {
 
     expect(auditLogger.getEvents()).toHaveLength(1)
     expect(auditLogger.getEvents()[0]).toStrictEqual({
-      attributes,
-      category: EventCategory.warning,
       eventCode: EventCode.DuplicateMessage,
-      eventSource: AuditLogEventSource.CorePhase1,
       eventType: auditLogEventLookup[EventCode.DuplicateMessage],
+      category: EventCategory.warning,
+      eventSource: AuditLogEventSource.CorePhase1,
+      attributes,
       timestamp: expect.any(Date)
     })
   })
@@ -65,11 +63,11 @@ describe("CoreAuditLogger", () => {
 
     expect(auditLogger.getEvents()).toHaveLength(1)
     expect(auditLogger.getEvents()[0]).toStrictEqual({
-      attributes,
-      category: EventCategory.debug,
       eventCode: EventCode.ExceptionsGenerated,
-      eventSource: AuditLogEventSource.CorePhase1,
       eventType: auditLogEventLookup[EventCode.ExceptionsGenerated],
+      category: EventCategory.debug,
+      eventSource: AuditLogEventSource.CorePhase1,
+      attributes,
       timestamp: expect.any(Date)
     })
   })

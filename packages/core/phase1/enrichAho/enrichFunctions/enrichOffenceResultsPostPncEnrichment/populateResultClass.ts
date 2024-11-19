@@ -1,5 +1,4 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
-
 import ResultClass from "../../../../types/ResultClass"
 import isAdjourned from "../../../lib/result/isAdjourned"
 import isWarrantIssued from "../../../lib/result/isWarrantIssued"
@@ -18,7 +17,7 @@ const populateResultClass = (result: Result, convictionDate: Date | undefined, d
     result.NextResultSourceOrganisation = undefined
   }
 
-  const { CJSresultCode, PleaStatus, Verdict } = result
+  const { Verdict, PleaStatus, CJSresultCode } = result
 
   let resultClass = ResultClass.UNRESULTED
   if (convictionDate && dateOfHearing && convictionDate.getTime() < dateOfHearing.getTime()) {

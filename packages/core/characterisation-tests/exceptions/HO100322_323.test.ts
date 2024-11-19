@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -12,8 +11,8 @@ describe.ifPhase1("HO100322", () => {
     const inputMessage = generateSpiMessage({
       offences: [
         {
-          recordable: true,
-          results: [{ code: 4009 }]
+          results: [{ code: 4009 }],
+          recordable: true
         }
       ]
     })
@@ -64,8 +63,8 @@ describe.ifPhase1("HO100322", () => {
       offences: [
         {
           code: nonRecordableOffenceCode,
-          recordable: false,
-          results: [{ code: 4009 }]
+          results: [{ code: 4009 }],
+          recordable: false
         }
       ]
     })

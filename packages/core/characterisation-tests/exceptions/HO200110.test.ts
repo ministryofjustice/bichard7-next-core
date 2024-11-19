@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import { asnPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
@@ -15,10 +14,10 @@ describe.ifPhase2("HO200110", () => {
       "creates a HO200110 exception for %s when recordable on PNC",
       async (messageType) => {
         const inputMessage = generatePhase2Message({
-          arrestSummonsNumber: "0800PP0111111111111A",
           messageType,
-          offences: [{ results: [{}] }],
-          recordableOnPncIndicator: true
+          recordableOnPncIndicator: true,
+          arrestSummonsNumber: "0800PP0111111111111A",
+          offences: [{ results: [{}] }]
         })
 
         const {
@@ -36,10 +35,10 @@ describe.ifPhase2("HO200110", () => {
 
     it("doesn't create a HO200110 exception when not recordable on PNC", async () => {
       const inputMessage = generatePhase2Message({
-        arrestSummonsNumber: "0800PP0111111111111A",
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
-        offences: [{ results: [{}] }],
-        recordableOnPncIndicator: false
+        recordableOnPncIndicator: false,
+        arrestSummonsNumber: "0800PP0111111111111A",
+        offences: [{ results: [{}] }]
       })
 
       const {

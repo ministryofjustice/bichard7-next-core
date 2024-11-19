@@ -9,7 +9,7 @@ export const phase2ResultSchema = z.object({
   auditLogEvents: z.array(auditLogEventSchema),
   correlationId: z.string(),
   outputMessage: pncUpdateDatasetSchema,
-  resultType: z.nativeEnum(Phase2ResultType),
+  triggers: z.array(triggerSchema),
   triggerGenerationAttempted: z.boolean(),
-  triggers: z.array(triggerSchema)
+  resultType: z.nativeEnum(Phase2ResultType)
 })

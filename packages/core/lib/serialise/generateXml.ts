@@ -1,14 +1,13 @@
 import { XMLBuilder, type XmlBuilderOptions } from "fast-xml-parser"
-
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../encoding"
 
 const defaultOptions: Partial<XmlBuilderOptions> = {
-  attributeValueProcessor: encodeAttributeEntitiesProcessor,
   ignoreAttributes: false,
+  suppressEmptyNode: true,
   processEntities: false,
   suppressBooleanAttributes: false,
-  suppressEmptyNode: true,
-  tagValueProcessor: encodeTagEntitiesProcessor
+  tagValueProcessor: encodeTagEntitiesProcessor,
+  attributeValueProcessor: encodeAttributeEntitiesProcessor
 }
 
 const generateXml = (obj: unknown, options: XmlBuilderOptions = defaultOptions): string => {

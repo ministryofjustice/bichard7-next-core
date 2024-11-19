@@ -1,14 +1,13 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
-
 import { offenceManuallyMatches } from "./offenceManuallyMatches"
 
 const mockHoOffence = (caseRef?: string, sequence?: number | string): Offence =>
   ({
-    CourtCaseReferenceNumber: caseRef ?? "21/1234/001234A",
-    CriminalProsecutionReference: { OffenceReasonSequence: sequence ?? 1 },
+    ManualSequenceNumber: sequence !== undefined,
     ManualCourtCaseReference: caseRef !== undefined,
-    ManualSequenceNumber: sequence !== undefined
+    CriminalProsecutionReference: { OffenceReasonSequence: sequence ?? 1 },
+    CourtCaseReferenceNumber: caseRef ?? "21/1234/001234A"
   }) as unknown as Offence
 
 const mockPncOffence = (caseRef?: string, sequence?: number): PncOffenceWithCaseRef =>

@@ -1,7 +1,5 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import type { GeneratePhase2MessageOptions } from "../helpers/generatePhase2Message"
-
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
@@ -18,20 +16,20 @@ describe.ifPhase2("HO200200", () => {
         results: [
           {
             cjsResultCode: 1100,
+            resultVariableText,
             durations: [
-              { length: 30, type: "Custodial", unit: "D" },
-              { length: 123, type: "Community Punishment", unit: "H" }
+              { type: "Custodial", unit: "D", length: 30 },
+              { type: "Community Punishment", unit: "H", length: 123 }
             ],
-            numberOfOffencesTic: true,
             pncAdjudicationExists: true,
-            resultVariableText
+            numberOfOffencesTic: true
           }
         ]
       }
     ],
+    pncId: "2000/0000000X",
     pncAdjudication: {},
-    pncDisposals: [{ type: 1000 }],
-    pncId: "2000/0000000X"
+    pncDisposals: [{ type: 1000 }]
   })
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(

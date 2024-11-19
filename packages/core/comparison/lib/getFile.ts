@@ -1,13 +1,12 @@
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import fs from "fs"
-
 import { cacheFileExists, clearCache, getCacheFile, storeCacheFile } from "../cli/cache"
 
 const s3Config = createS3Config()
 
 const getFile = async (file: string, cache: boolean): Promise<string> => {
-  let contents: Error | string
+  let contents: string | Error
   if (!cache) {
     await clearCache()
   }

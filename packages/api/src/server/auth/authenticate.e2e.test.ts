@@ -1,8 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
-
 import { OK, UNAUTHORIZED } from "http-status"
-
 import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
 import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
@@ -52,8 +50,8 @@ describe("authentication e2e", () => {
   it("returns 401 Unauthorized with a missing user", async () => {
     await createUserAndJwtToken(helper.db)
     const [encodedJwt] = generateTestJwtToken({
-      email: "unknownuser@exmaple.com",
-      username: "UnknownUser"
+      username: "UnknownUser",
+      email: "unknownuser@exmaple.com"
     } as User)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
@@ -70,11 +68,11 @@ describe("authentication e2e", () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.db)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
+      method: "GET",
       headers: {
         ...defaultsHeaders,
         Authorization: `Bearer ${encodedJwt}`
-      },
-      method: "GET"
+      }
     })
 
     expect(response.status).toBe(OK)

@@ -15,17 +15,17 @@ const s3Config = createS3Config()
 const sendFileToS3 = async (srcFilename: string, destFilename: string, bucket: string) => {
   const client = new S3Client(s3Config)
   const Body = await fs.promises.readFile(srcFilename)
-  const command = new PutObjectCommand({ Body, Bucket: bucket, Key: destFilename })
+  const command = new PutObjectCommand({ Bucket: bucket, Key: destFilename, Body })
   return client.send(command)
 }
 
-const getDynamoRecord = async (s3Path: string, tableName: string): Promise<Record<string, any> | undefined> => {
+const getDynamoRecord = async (s3Path: string, tableName: string): Promise<undefined | Record<string, any>> => {
   const db = new DynamoDBClient({
-    credentials: { accessKeyId, secretAccessKey },
     endpoint,
-    region: "eu-west-2"
+    region: "eu-west-2",
+    credentials: { accessKeyId, secretAccessKey }
   })
-  const getCommand = new GetCommand({ Key: { s3Path }, TableName: tableName })
+  const getCommand = new GetCommand({ TableName: tableName, Key: { s3Path } })
   const docClient = DynamoDBDocumentClient.from(db)
   const result = await docClient.send(getCommand)
   return result.Item

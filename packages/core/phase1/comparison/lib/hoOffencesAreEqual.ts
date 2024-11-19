@@ -1,5 +1,4 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-
 import offencesHaveEqualResults from "../../enrichAho/enrichFunctions/matchOffencesToPnc/offencesHaveEqualResults"
 import getOffenceCode from "../../lib/offence/getOffenceCode"
 

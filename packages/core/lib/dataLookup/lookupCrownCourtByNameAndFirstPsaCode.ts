@@ -1,7 +1,5 @@
 import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
-
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "./dataLookup"
 import extractCodesFromOU from "./extractCodesFromOU"
 import matchCourtNames from "./matchCourtNames"

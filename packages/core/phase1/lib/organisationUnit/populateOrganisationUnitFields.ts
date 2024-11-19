@@ -1,10 +1,10 @@
 import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
 
-const safeSubstring = (input: string, start: number, end: number): null | string =>
+const safeSubstring = (input: string, start: number, end: number): string | null =>
   input.length >= end ? input.substring(start, end) : null
 
 const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes): OrganisationUnitCodes => {
-  const { BottomLevelCode, OrganisationUnitCode, SecondLevelCode, ThirdLevelCode, TopLevelCode } = organisationUnit
+  const { OrganisationUnitCode, TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode } = organisationUnit
   if (!OrganisationUnitCode) {
     organisationUnit.OrganisationUnitCode = [TopLevelCode, SecondLevelCode, ThirdLevelCode, BottomLevelCode]
       .filter((x) => x)

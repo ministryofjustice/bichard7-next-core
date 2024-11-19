@@ -16,7 +16,6 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import postgres from "postgres"
-
 import ignoredTriggersPncMock from "./fixtures/ignored-aho-triggers.pnc.json"
 import onlyTriggersPncMock from "./fixtures/only-triggers-aho.pnc.json"
 import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json"
@@ -201,7 +200,7 @@ describe("bichard_phase_2 workflow", () => {
     const secondWorkflowId = await startWorkflow("bichard_phase_2", { s3TaskDataPath }, correlationId)
     const workflows = await waitForWorkflows({
       count: 2,
-      query: { correlationId, status: "COMPLETED", workflowType: "bichard_phase_2" }
+      query: { workflowType: "bichard_phase_2", status: "COMPLETED", correlationId }
     })
     const secondWorkflow = workflows.find((wf) => wf.workflowId === secondWorkflowId)
     expect(secondWorkflow?.reasonForIncompletion).toMatch(/Workflow is COMPLETED by TERMINATE task/)

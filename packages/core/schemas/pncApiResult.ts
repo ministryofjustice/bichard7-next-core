@@ -32,22 +32,22 @@ export const pncApiDisposalSchema = z.object({
 })
 
 export const pncApiOffenceSchema = z.object({
-  acpoOffenceCode: z.preprocess(stringOrUndefined, z.string().optional()),
-  cjsOffenceCode: z.string(),
-  disposals: z.array(pncApiDisposalSchema),
-  endDate: z.preprocess(dateOrUndefined, z.date().optional()),
-  endTime: z.preprocess(stringOrUndefined, z.string().optional()),
+  pleaStatus: z.preprocess(stringOrUndefined, z.string().optional()),
+  verdict: z.preprocess(stringOrUndefined, z.string().optional()),
   hearingDate: z.preprocess(dateOrUndefined, z.date().optional()),
+  sentenceDate: z.preprocess(dateOrUndefined, z.date().optional()),
   numberOffencesTakenIntoAccount: z.preprocess(numberOrUndefined, z.number().optional()),
   offenceQualifier1: z.preprocess(stringOrUndefined, z.string().optional()),
   offenceQualifier2: z.preprocess(stringOrUndefined, z.string().optional()),
-  pleaStatus: z.preprocess(stringOrUndefined, z.string().optional()),
+  acpoOffenceCode: z.preprocess(stringOrUndefined, z.string().optional()),
+  title: z.preprocess(stringOrUndefined, z.string().optional()),
   referenceNumber: z.string(),
-  sentenceDate: z.preprocess(dateOrUndefined, z.date().optional()),
+  cjsOffenceCode: z.string(),
   startDate: z.date(),
   startTime: z.preprocess(stringOrUndefined, z.string().optional()),
-  title: z.preprocess(stringOrUndefined, z.string().optional()),
-  verdict: z.preprocess(stringOrUndefined, z.string().optional())
+  endDate: z.preprocess(dateOrUndefined, z.date().optional()),
+  endTime: z.preprocess(stringOrUndefined, z.string().optional()),
+  disposals: z.array(pncApiDisposalSchema)
 })
 
 export const pncApiCourtCaseSchema = z.object({
@@ -57,16 +57,16 @@ export const pncApiCourtCaseSchema = z.object({
 })
 
 export const pncApiPenaltyCaseSchema = z.object({
+  penaltyCaseRefNo: z.string(),
   crimeOffenceRefNo: z.preprocess(stringOrUndefined, z.string().optional()),
-  offences: z.array(pncApiOffenceSchema),
-  penaltyCaseRefNo: z.string()
+  offences: z.array(pncApiOffenceSchema)
 })
 
 export const pncApiResultSchema = z.object({
-  courtCases: z.array(pncApiCourtCaseSchema),
-  croNumber: z.preprocess(stringOrUndefined, z.string().optional()),
   forceStationCode: z.string(),
-  penaltyCases: z.array(pncApiPenaltyCaseSchema),
+  pncIdentifier: z.string(),
   pncCheckName: z.string(),
-  pncIdentifier: z.string()
+  croNumber: z.preprocess(stringOrUndefined, z.string().optional()),
+  courtCases: z.array(pncApiCourtCaseSchema),
+  penaltyCases: z.array(pncApiPenaltyCaseSchema)
 })

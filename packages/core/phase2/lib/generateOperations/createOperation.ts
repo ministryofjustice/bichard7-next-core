@@ -6,8 +6,8 @@ const createOperation = <T extends Operation["code"], K extends Operation<T>>(
 ) =>
   ({
     code: operationCode,
-    data: operationData,
-    status: "NotAttempted"
+    status: "NotAttempted",
+    data: operationData
   }) as K
 
 export default createOperation

@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerRecordable from "../../types/TriggerRecordable"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
@@ -8,15 +7,15 @@ import { processPhase1Message } from "../helpers/processMessage"
 const offenceTests = [
   {
     code: TriggerCode.TRPR0023,
-    recordable: TriggerRecordable.Both,
     resultCode: 4594,
-    resultQualifier: "LG"
+    resultQualifier: "LG",
+    recordable: TriggerRecordable.Both
   },
   {
     code: TriggerCode.TRPR0024,
-    recordable: TriggerRecordable.Both,
     resultCode: 4594,
-    resultQualifier: "LH"
+    resultQualifier: "LH",
+    recordable: TriggerRecordable.Both
   }
 ]
 
@@ -58,7 +57,7 @@ describe.ifPhase1("Generic offence triggers", () => {
 
     it("should generate a trigger when record is not recordable", async () => {
       const inputMessage = generateSpiMessage({
-        offences: [{ recordable: false, results: [{ code: resultCode, qualifier: resultQualifier }] }]
+        offences: [{ results: [{ code: resultCode, qualifier: resultQualifier }], recordable: false }]
       })
 
       const { triggers } = await processPhase1Message(inputMessage, { recordable: false })

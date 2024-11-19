@@ -1,26 +1,23 @@
-import type { Request, Response } from "express"
-
 /* eslint-disable import/no-extraneous-dependencies */
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { Request, Response } from "express"
 import express from "express"
-
-import type { PncQueryResult } from "../types/PncQueryResult"
-
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import CorePhase1 from "../phase1/phase1"
 import CorePhase2 from "../phase2/phase2"
 import Phase from "../types/Phase"
+import type { PncQueryResult } from "../types/PncQueryResult"
 
 const app = express()
-app.use(express.raw({ limit: 10_000_000, type: "*/*" }))
+app.use(express.raw({ type: "*/*", limit: 10_000_000 }))
 const port = 6000
 
 type TestInput = {
   inputMessage: string
-  phase: Phase
   pncQueryResult?: PncQueryResult
+  phase: Phase
 }
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z$/
@@ -33,7 +30,7 @@ function formatter(_: string, value: unknown) {
 }
 
 app.post("/", async (req: Request, res: Response): Promise<void> => {
-  const { inputMessage, phase, pncQueryResult } = JSON.parse(req.body.toString(), formatter) as TestInput
+  const { pncQueryResult, inputMessage, phase } = JSON.parse(req.body.toString(), formatter) as TestInput
 
   const auditLogEventSource =
     phase === Phase.HEARING_OUTCOME ? AuditLogEventSource.CorePhase1 : AuditLogEventSource.CorePhase2

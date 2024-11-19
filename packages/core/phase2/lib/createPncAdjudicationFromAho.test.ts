@@ -1,8 +1,6 @@
 jest.mock("./createPncAdjudication")
 import { verdict } from "@moj-bichard7-developers/bichard7-next-data"
-
 import type { Result } from "../../types/AnnotatedHearingOutcome"
-
 import createPncAdjudication from "./createPncAdjudication"
 import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"
 
@@ -24,9 +22,9 @@ describe("createPncAdjudicationFromAho", () => {
   it("should use the first recordable offence to create PNC ajdudication and count number of offences TIC correctly", () => {
     const result = createPncAdjudicationFromAho(
       [
-        { NumberOfOffencesTIC: 2, PleaStatus: "DEN", PNCDisposalType: 1000, Verdict: "NC" } as Result,
-        { NumberOfOffencesTIC: 3, PleaStatus: "CON", PNCDisposalType: 1001, Verdict: "G" } as Result,
-        { NumberOfOffencesTIC: 4, PleaStatus: "ADM", PNCDisposalType: 1002, Verdict: "G" } as Result
+        { PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: "NC", PleaStatus: "DEN" } as Result,
+        { PNCDisposalType: 1001, NumberOfOffencesTIC: 3, Verdict: "G", PleaStatus: "CON" } as Result,
+        { PNCDisposalType: 1002, NumberOfOffencesTIC: 4, Verdict: "G", PleaStatus: "ADM" } as Result
       ],
       new Date("2024-05-10")
     )
@@ -37,7 +35,7 @@ describe("createPncAdjudicationFromAho", () => {
 
   it("should return a PNC adjudication when NumberOfOffencesTIC, Verdict, PleaStatus have value", () => {
     const result = createPncAdjudicationFromAho(
-      [{ NumberOfOffencesTIC: 2, PleaStatus: "DEN", PNCDisposalType: 1000, Verdict: "NC" } as Result],
+      [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: "NC", PleaStatus: "DEN" } as Result],
       new Date("2024-05-10")
     )
 
@@ -55,7 +53,7 @@ describe("createPncAdjudicationFromAho", () => {
     "should set verdict to GUILTY when plea is ADM and verdict is %s",
     (verdict) => {
       const result = createPncAdjudicationFromAho(
-        [{ NumberOfOffencesTIC: 2, PleaStatus: "ADM", PNCDisposalType: 1000, Verdict: verdict } as Result],
+        [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: verdict, PleaStatus: "ADM" } as Result],
         new Date("2024-05-10")
       )
 
@@ -68,7 +66,7 @@ describe("createPncAdjudicationFromAho", () => {
     "should set verdict to $pncCode when verdict is $cjsCode",
     ({ cjsCode, pncCode }) => {
       const result = createPncAdjudicationFromAho(
-        [{ NumberOfOffencesTIC: 2, PleaStatus: "ADM", PNCDisposalType: 1000, Verdict: cjsCode } as Result],
+        [{ PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: cjsCode, PleaStatus: "ADM" } as Result],
         new Date("2024-05-10")
       )
 

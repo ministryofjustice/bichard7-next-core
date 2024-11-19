@@ -2,20 +2,19 @@ import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
-import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
-
 import createStompClient from "../createStompClient"
 import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
 import forwardMessage from "./forwardMessage"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()

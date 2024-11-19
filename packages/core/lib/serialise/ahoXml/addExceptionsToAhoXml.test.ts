@@ -1,7 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { AhoXml } from "../../../types/AhoXml"
-
 import { addExceptionsToAhoXml } from "./addExceptionsToAhoXml"
 
 describe("addExceptionsToAhoXml", () => {
@@ -9,7 +7,9 @@ describe("addExceptionsToAhoXml", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -17,10 +17,8 @@ describe("addExceptionsToAhoXml", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -40,7 +38,10 @@ describe("addExceptionsToAhoXml", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
+            "ds:CourtCaseReferenceNumber": { "#text": "12345" },
             "br7:HearingDefendant": {
               "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
@@ -48,11 +49,8 @@ describe("addExceptionsToAhoXml", () => {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:CourtCaseReferenceNumber": { "#text": "12345" },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -81,19 +79,19 @@ describe("addExceptionsToAhoXml", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
-              "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:BailConditions": [{ "#text": "12345" }],
+              "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
                 {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml
@@ -116,19 +114,19 @@ describe("addExceptionsToAhoXml", () => {
     const rawAho: AhoXml = {
       "br7:AnnotatedHearingOutcome": {
         "br7:HearingOutcome": {
+          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } },
           "br7:Case": {
+            "ds:PTIURN": { "#text": "12345" },
             "br7:HearingDefendant": {
-              "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:BailConditions": [{ "#text": "12345" }, { "#text": "12345" }],
+              "br7:ArrestSummonsNumber": { "#text": "foo" },
               "br7:Offence": [
                 {
                   "br7:CourtOffenceSequenceNumber": { "#text": "bar" }
                 }
               ]
-            },
-            "ds:PTIURN": { "#text": "12345" }
-          },
-          "br7:Hearing": { "ds:HearingDocumentationLanguage": { "#text": "Birmingham" } }
+            }
+          }
         }
       }
     } as AhoXml

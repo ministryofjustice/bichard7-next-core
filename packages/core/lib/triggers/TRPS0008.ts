@@ -1,9 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import Phase from "../../types/Phase"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
-
-import Phase from "../../types/Phase"
 
 const triggerCode = TriggerCode.TRPS0008
 const triggerResultCode = 3105

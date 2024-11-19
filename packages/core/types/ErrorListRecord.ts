@@ -5,47 +5,47 @@ export enum QualityCheckStatus {
 }
 
 type ErrorListRecord = {
-  annotated_msg: string
+  error_id?: number
+  message_id: string
+  phase: number
+  error_status?: ResolutionStatus | null
+  trigger_status?: ResolutionStatus | null
+  error_quality_checked?: QualityCheckStatus | null
+  trigger_quality_checked?: QualityCheckStatus | null
+  trigger_count: number
+  error_locked_by_id?: string
+  trigger_locked_by_id?: string
+  is_urgent: number
   asn?: string
   court_code?: string
-  court_date?: Date
-  court_name?: string
-  court_name_upper?: string
-  court_reference: string
-  court_room?: string
-  create_ts: Date
-  defendant_name?: string
-  defendant_name_upper?: string
-  error_count: number
-  error_id?: number
-  error_insert_ts?: Date
-  error_locked_by_id?: string
-  error_quality_checked?: null | QualityCheckStatus
-  error_reason?: null | string
-  error_report: string
-  error_resolved_by?: null | string
-  error_resolved_ts?: Date | null
-  error_status?: null | ResolutionStatus
-  is_urgent: number
-  last_pnc_failure_resubmission_ts?: Date
-  message_id: string
-  msg_received_ts: Date
-  org_for_police_filter?: string
-  phase: number
-  pnc_update_enabled?: "N" | "Y"
-  ptiurn?: string
-  resolution_ts?: Date
-  total_pnc_failure_resubmissions?: number
-  trigger_count: number
-  trigger_insert_ts?: Date
-  trigger_locked_by_id?: string
-  trigger_quality_checked?: null | QualityCheckStatus
-  trigger_reason?: null | string
-  trigger_resolved_by?: null | string
-  trigger_resolved_ts?: Date
-  trigger_status?: null | ResolutionStatus
+  annotated_msg: string
   updated_msg?: string
+  error_report: string
+  create_ts: Date
+  error_reason?: string | null
+  trigger_reason?: string | null
+  error_count: number
   user_updated_flag: number
+  court_date?: Date
+  ptiurn?: string
+  court_name?: string
+  resolution_ts?: Date
+  msg_received_ts: Date
+  error_resolved_by?: string | null
+  trigger_resolved_by?: string | null
+  error_resolved_ts?: Date | null
+  trigger_resolved_ts?: Date
+  defendant_name?: string
+  org_for_police_filter?: string
+  court_room?: string
+  court_reference: string
+  error_insert_ts?: Date
+  trigger_insert_ts?: Date
+  pnc_update_enabled?: "Y" | "N"
+  defendant_name_upper?: string
+  court_name_upper?: string
+  last_pnc_failure_resubmission_ts?: Date
+  total_pnc_failure_resubmissions?: number
 }
 
 export default ErrorListRecord

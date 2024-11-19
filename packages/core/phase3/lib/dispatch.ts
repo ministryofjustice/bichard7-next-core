@@ -1,15 +1,13 @@
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
-
 import { PncOperation } from "../../types/PncOperation"
-import disposalUpdateGenerator from "./pncUpdateRequestGenerators/disposalUpdateGenerator"
+import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
+import disposalUpdateGenerator from "./pncUpdateRequestGenerators/disposalUpdateGenerator"
 import penaltyNoticeChargeGenerator from "./pncUpdateRequestGenerators/penaltyNoticeChargeGenerator"
 import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
   [PncOperation.DISPOSAL_UPDATED]: disposalUpdateGenerator,

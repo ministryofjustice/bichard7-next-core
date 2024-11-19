@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -11,7 +10,7 @@ describe.ifPhase1("HO100228 and HO100239", () => {
   // legacy bichard throws runtime exception Caused by: uk.gov.ocjr.mtu.br7.common.xmlconverter.UnmarshalFailedException: javax.xml.bind.UnmarshalException: the value is out of the range (minInclusive specifies 0).\n - with linked exception:
   it.ifNewBichard("should not throw an exception for a valid CourtOffenceSequenceNumber", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ offenceSequenceNumber: 1, results: [{ code: 4584 }] }]
+      offences: [{ results: [{ code: 4584 }], offenceSequenceNumber: 1 }]
     })
 
     const {
@@ -25,7 +24,7 @@ describe.ifPhase1("HO100228 and HO100239", () => {
     "should create an exception if the CourtOffenceSequenceNumber is less than the min length",
     async () => {
       const inputMessage = generateSpiMessage({
-        offences: [{ offenceSequenceNumber: -1, results: [{ code: 1015 }] }]
+        offences: [{ results: [{ code: 1015 }], offenceSequenceNumber: -1 }]
       })
 
       const {
@@ -66,7 +65,7 @@ describe.ifPhase1("HO100228 and HO100239", () => {
     "should create an exception if the CourtOffenceSequenceNumber is greater than the max length",
     async () => {
       const inputMessage = generateSpiMessage({
-        offences: [{ offenceSequenceNumber: 1000, results: [{ code: 1015 }] }]
+        offences: [{ results: [{ code: 1015 }], offenceSequenceNumber: 1000 }]
       })
 
       const {

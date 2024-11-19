@@ -1,14 +1,14 @@
 export enum SpiVerdict {
-  AltGuilty = "A",
   Caution = "C",
+  AltGuilty = "A",
   Guilty = "G",
-  NoConviction = "O",
-  NotGuilty = "N"
+  NotGuilty = "N",
+  NoConviction = "O"
 }
 
 export enum CjsVerdict {
-  AltGuilty = "NA",
   Guilty = "G",
-  NoConviction = "NC",
-  NotGuilty = "NG"
+  NotGuilty = "NG",
+  AltGuilty = "NA",
+  NoConviction = "NC"
 }

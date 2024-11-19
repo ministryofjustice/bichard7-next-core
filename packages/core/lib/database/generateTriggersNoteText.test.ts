@@ -1,7 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
 import type { Trigger } from "../../types/Trigger"
-
 import generateTriggersNoteText, { TriggerCreationType } from "./generateTriggersNoteText"
 
 const mockTriggers: Trigger[] = [

@@ -1,5 +1,4 @@
 import type { User } from "@moj-bichard7/common/types/User"
-
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
 import jwtVerify from "./jwtVerify"
@@ -22,23 +21,23 @@ describe("jwtVerify", () => {
   })
 
   it("will return a User if the username exists in the db and the JWT ID matches", async () => {
-    const user = { jwt_id: validJwtId, username: "UserFound" } as User
+    const user = { username: "UserFound", jwt_id: validJwtId } as User
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
     spy.mockImplementation((username: string): Promise<User> => {
       const fakeUser = {
-        email: `${username}@example.com`,
-        groups: [],
         id: 1,
-        jwt_id: validJwtId,
         username: user.username,
-        visible_forces: ""
+        jwt_id: validJwtId,
+        groups: [],
+        visible_forces: "",
+        email: `${username}@example.com`
       } satisfies User
       return Promise.resolve(fakeUser)
     })
 
-    const result: undefined | User = await jwtVerify(db, jwtString)
+    const result: User | undefined = await jwtVerify(db, jwtString)
 
     if (result === undefined) {
       throw new Error("Test is wrong")
@@ -54,23 +53,23 @@ describe("jwtVerify", () => {
   })
 
   it("will return undefined if the username exists in the db and the JWT ID doesn't match", async () => {
-    const user = { jwt_id: null, username: "UserFound" } as User
+    const user = { username: "UserFound", jwt_id: null } as User
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
     spy.mockImplementation((username: string): Promise<User> => {
       const fakeUser = {
-        email: `${username}@example.com`,
-        groups: [],
         id: 1,
-        jwt_id: null,
         username: user.username,
-        visible_forces: ""
+        jwt_id: null,
+        groups: [],
+        visible_forces: "",
+        email: `${username}@example.com`
       } satisfies User
       return Promise.resolve(fakeUser)
     })
 
-    const result: undefined | User = await jwtVerify(db, jwtString)
+    const result: User | undefined = await jwtVerify(db, jwtString)
 
     expect(result).toBeUndefined()
   })

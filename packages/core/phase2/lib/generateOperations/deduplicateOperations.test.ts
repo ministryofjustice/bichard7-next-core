@@ -1,14 +1,13 @@
-import type { Operation, OperationStatus } from "../../../types/PncUpdateDataset"
-
 import { PncOperation } from "../../../types/PncOperation"
+import type { Operation, OperationStatus } from "../../../types/PncUpdateDataset"
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {
-  BottomLevelCode: "00",
   OrganisationUnitCode: "B20BN00",
+  TopLevelCode: "B",
   SecondLevelCode: "20",
   ThirdLevelCode: "BN",
-  TopLevelCode: "B"
+  BottomLevelCode: "00"
 }
 
 const organisationUnitCode2 = {
@@ -25,16 +24,16 @@ const generateRemandOperation = (
 ) =>
   ({
     code: PncOperation.REMAND,
+    status,
     courtCaseReference,
+    isAdjournmentPreJudgement,
     data: {
       ...{
         nextHearingDate: new Date("2024-06-12"),
         nextHearingLocation: { ...organisationUnitCode1 }
       },
       ...params
-    },
-    isAdjournmentPreJudgement,
-    status
+    }
   }) as Operation<PncOperation.REMAND>
 
 const generateOperation = (
@@ -46,13 +45,13 @@ const generateOperation = (
 ) =>
   ({
     code,
+    status,
     data: {
       ...{
         courtCaseReference: "1"
       },
       ...params
-    },
-    status
+    }
   }) as Operation
 
 describe("deduplicateOperations", () => {

@@ -1,6 +1,5 @@
-import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
+import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -19,8 +18,8 @@ describe.ifPhase1("TRPR0010", () => {
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toStrictEqual([])
@@ -33,8 +32,8 @@ describe.ifPhase1("TRPR0010", () => {
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toStrictEqual([])
@@ -48,8 +47,8 @@ describe.ifPhase1("TRPR0010", () => {
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toStrictEqual([])
@@ -63,8 +62,8 @@ describe.ifPhase1("TRPR0010", () => {
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, { expectRecord: false })
 
     expect(triggers).toHaveLength(0)
@@ -73,16 +72,16 @@ describe.ifPhase1("TRPR0010", () => {
 
   it("should only generate one trigger for multiple matching conditions", async () => {
     const inputMessage = generateSpiMessage({
-      bailConditions: "Some bail conditions",
       offences: [
         { code: "TH68006", results: [{ code: resultCode }] },
         { results: [{ code: 1015, qualifier: resultQualifier }] }
-      ]
+      ],
+      bailConditions: "Some bail conditions"
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage)
 
     expect(exceptions).toStrictEqual([])
@@ -91,12 +90,12 @@ describe.ifPhase1("TRPR0010", () => {
 
   it("should generate a trigger when the result is not recordable", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ recordable: false, results: [{ code: resultCode }] }]
+      offences: [{ results: [{ code: resultCode }], recordable: false }]
     })
 
     const {
-      hearingOutcome: { Exceptions: exceptions },
-      triggers
+      triggers,
+      hearingOutcome: { Exceptions: exceptions }
     } = await processPhase1Message(inputMessage, { recordable: false })
 
     expect(exceptions).toHaveLength(0)

@@ -1,22 +1,20 @@
+import { UserSchema } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
-
-import { UserSchema } from "@moj-bichard7/common/types/User"
 import { OK } from "http-status"
-
 import auth from "../server/schemas/auth"
 import { unauthorizedError } from "../server/schemas/errorReasons"
 import useZod from "../server/useZod"
 
 const schema = {
   ...auth,
+  tags: ["Root"],
   response: {
     [OK]: UserSchema.omit({ id: true, jwt_id: true, visible_forces: true }).openapi({
       description: "Returns details of authorised user"
     }),
     ...unauthorizedError
-  },
-  tags: ["Root"]
+  }
 } satisfies FastifyZodOpenApiSchema
 
 const route = async (fastify: FastifyInstance) => {

@@ -1,11 +1,8 @@
 import type { AxiosResponse } from "axios"
-
 import axios from "axios"
 import merge from "lodash.merge"
-
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../types/SpiResult"
-
 import parseSpiResult from "../../lib/parse/parseSpiResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 import config from "./config"
 import reformatDate from "./reformatDate"
 
@@ -22,7 +19,7 @@ const extractDates = (offence: OffenceParsedXml) => {
     endDate = "            "
   }
 
-  return { endDate, startDate }
+  return { startDate, endDate }
 }
 
 const mockEnquiry = (
@@ -90,8 +87,8 @@ const mockEnquiryError = (): string => {
   return '<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>'
 }
 
-const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
-  const data = { count, matchRegex, response }
+const addMock = async (matchRegex: string, response: string, count: number | null = null): Promise<string> => {
+  const data = { matchRegex, response, count }
   const resp = await axios.post(`http://${config.pncHost}:${config.pncPort}/mocks`, data)
   if (resp.status < 200 || resp.status >= 300) {
     throw new Error("Error setting mock in PNC Emulator")

@@ -1,8 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
-
 import { lookupRemandStatusByCjsCode } from "../dataLookup"
 
 const triggerCode = TriggerCode.TRPR0010
@@ -29,7 +27,7 @@ const generator: TriggerGenerator = (hearingOutcome) => {
     AnnotatedHearingOutcome: {
       HearingOutcome: {
         Case: {
-          HearingDefendant: { BailConditions: bailConditions, Offence: offences, RemandStatus: remandStatus }
+          HearingDefendant: { Offence: offences, BailConditions: bailConditions, RemandStatus: remandStatus }
         }
       }
     }

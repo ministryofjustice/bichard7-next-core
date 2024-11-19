@@ -1,8 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-
 import errorPaths from "../../lib/exceptions/errorPaths"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import ResultClass from "../../types/ResultClass"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200100 from "./HO200100"
@@ -14,8 +12,8 @@ describe("HO200100", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            PNCDisposalType: 9999,
-            ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT
+            ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -37,8 +35,8 @@ describe("HO200100", () => {
         Result: [
           {
             PNCAdjudicationExists: true,
-            PNCDisposalType: 9999,
-            ResultClass: ResultClass.SENTENCE
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 9999
           }
         ]
       }
@@ -55,8 +53,8 @@ describe("HO200100", () => {
         Result: [
           {
             PNCAdjudicationExists: false,
-            PNCDisposalType: 9999,
-            ResultClass: ResultClass.SENTENCE
+            ResultClass: ResultClass.SENTENCE,
+            PNCDisposalType: 9999
           }
         ]
       }

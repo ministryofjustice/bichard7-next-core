@@ -1,9 +1,7 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { randomUUID } from "crypto"
 import postgres from "postgres"
-
 import type ErrorListRecord from "../../types/ErrorListRecord"
-
 import fetchErrorListRecordId from "./fetchErrorListRecordId"
 
 const dbConfig = createDbConfig()
@@ -11,29 +9,29 @@ const db = postgres({
   ...dbConfig,
   types: {
     date: {
+      to: 25,
       from: [1082],
+      serialize: (x: string): string => x,
       parse: (x: string): Date => {
         return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
+      }
     }
   }
 })
 
 const generateErrorListRecord = (input: Partial<ErrorListRecord> = {}): ErrorListRecord => ({
-  annotated_msg: "",
-  court_reference: "",
-  create_ts: new Date(),
-  error_count: 0,
-  error_report: "",
-  is_urgent: 0,
   message_id: randomUUID(),
-  msg_received_ts: new Date(),
   phase: 1,
   trigger_count: 0,
+  is_urgent: 0,
+  annotated_msg: "",
   updated_msg: "",
+  error_report: "",
+  create_ts: new Date(),
+  error_count: 0,
   user_updated_flag: 0,
+  msg_received_ts: new Date(),
+  court_reference: "",
   ...input
 })
 

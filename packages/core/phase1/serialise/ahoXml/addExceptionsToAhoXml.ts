@@ -1,16 +1,14 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
-import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../../types/AhoXml"
-import type Exception from "../../../types/Exception"
-
 import errorPaths from "../../../lib/exceptions/errorPaths"
 import isPncException from "../../../lib/exceptions/isPncException"
 import addAhoErrors from "../../../lib/serialise/ahoXml/addAhoErrors"
+import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../../types/AhoXml"
+import type Exception from "../../../types/Exception"
 import Phase from "../../../types/Phase"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
-const findNamespacedKey = (element: GenericAhoXmlValue, key: number | string): Error | GenericAhoXmlValue => {
+const findNamespacedKey = (element: GenericAhoXmlValue, key: string | number): GenericAhoXmlValue | Error => {
   if (Array.isArray(element) && typeof key === "number") {
     return element[key]
   }
@@ -58,7 +56,7 @@ const reorderAttributesToPutErrorFirst = (element: Partial<Br7TypeTextString>): 
   }
 }
 
-const addException = (aho: AhoXml, exception: Exception): Error | void => {
+const addException = (aho: AhoXml, exception: Exception): void | Error => {
   const element = findElement(aho as unknown as GenericAhoXml, exception.path)
   if (element instanceof Error) {
     return element
@@ -80,7 +78,7 @@ const addExceptionsToPncUpdateDatasetXml = (
   aho: AhoXml,
   exceptions: Exception[] | undefined,
   addFalseHasErrorAttributes = true
-): Error | void => {
+): void | Error => {
   if (!exceptions) {
     return
   }
@@ -105,7 +103,7 @@ const addExceptionsToPncUpdateDatasetXml = (
   addAhoErrors(aho, exceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
 }
 
-const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): Error | void => {
+const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
   if (!exceptions) {
     return
   }

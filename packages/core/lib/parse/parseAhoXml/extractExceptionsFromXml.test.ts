@@ -1,10 +1,11 @@
 import fs from "fs"
-
 import extractExceptionsFromXml from "./extractExceptionsFromXml"
 
 describe("extractExceptionsFromXml", () => {
   it.each([
     {
+      messageType: "AnnotatedHearingOutcome",
+      xmlFile: "phase1/tests/fixtures/AnnotatedHO1-with-exceptions.xml",
       expected: [
         {
           code: "HO100301",
@@ -24,11 +25,11 @@ describe("extractExceptionsFromXml", () => {
             "ResultClass"
           ]
         }
-      ],
-      messageType: "AnnotatedHearingOutcome",
-      xmlFile: "phase1/tests/fixtures/AnnotatedHO1-with-exceptions.xml"
+      ]
     },
     {
+      messageType: "PncUpdateDataset",
+      xmlFile: "phase2/tests/fixtures/PncUpdateDataSet-with-operations-and-exception.xml",
       expected: [
         {
           code: "HO200101",
@@ -45,11 +46,11 @@ describe("extractExceptionsFromXml", () => {
             "ResultClass"
           ]
         }
-      ],
-      messageType: "PncUpdateDataset",
-      xmlFile: "phase2/tests/fixtures/PncUpdateDataSet-with-operations-and-exception.xml"
+      ]
     },
     {
+      messageType: "AnnotatedPncUpdateDataset",
+      xmlFile: "phase2/tests/fixtures/AnnotatedPncUpdateDataset.xml",
       expected: [
         {
           code: "HO200124",
@@ -67,11 +68,9 @@ describe("extractExceptionsFromXml", () => {
             "ResultClass"
           ]
         }
-      ],
-      messageType: "AnnotatedPncUpdateDataset",
-      xmlFile: "phase2/tests/fixtures/AnnotatedPncUpdateDataset.xml"
+      ]
     }
-  ])("should extract exceptions from $messageType XML", ({ expected, xmlFile }) => {
+  ])("should extract exceptions from $messageType XML", ({ xmlFile, expected }) => {
     const inputXml = fs.readFileSync(xmlFile).toString()
     const actualExceptions = extractExceptionsFromXml(inputXml)
 

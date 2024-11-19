@@ -1,14 +1,12 @@
 import "../../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "mq"
 
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
-
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const conductorClient = createConductorClient()
 

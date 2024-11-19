@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import ResultClass from "../../types/ResultClass"
 import { asnPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
@@ -26,18 +25,18 @@ describe.ifPhase2("HO200115", () => {
             { messageType: MessageType.PNC_UPDATE_DATASET }
           ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
             const resultGeneratesDisarr = {
-              pncAdjudicationExists: false,
-              resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
+              resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
+              pncAdjudicationExists: false
             }
             const inputMessage = generatePhase2Message({
               messageType,
+              penaltyNoticeCaseReference: false,
               offences: [
                 {
                   addedByTheCourt: false,
-                  results: [resultGeneratesDisarr, { pncAdjudicationExists: true, resultClass: resultGeneratingSubvar }]
+                  results: [resultGeneratesDisarr, { resultClass: resultGeneratingSubvar, pncAdjudicationExists: true }]
                 }
               ],
-              penaltyNoticeCaseReference: false,
               pncAdjudication: true,
               pncDisposals: [{ type: 2007 }]
             })
@@ -65,22 +64,22 @@ describe.ifPhase2("HO200115", () => {
             { messageType: MessageType.PNC_UPDATE_DATASET }
           ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
             const resultsGeneratingDisarr = [
-              { pncAdjudicationExists: false, resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT },
-              { pncAdjudicationExists: false, resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT }
+              { resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, pncAdjudicationExists: false },
+              { resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: false }
             ]
             const inputMessage = generatePhase2Message({
               messageType,
+              penaltyNoticeCaseReference: false,
               offences: [
                 {
-                  addedByTheCourt: true,
                   courtCaseReferenceNumber: true,
+                  addedByTheCourt: true,
                   results: [
                     ...resultsGeneratingDisarr,
-                    { pncAdjudicationExists: true, resultClass: resultGeneratingSubvar }
+                    { resultClass: resultGeneratingSubvar, pncAdjudicationExists: true }
                   ]
                 }
               ],
-              penaltyNoticeCaseReference: false,
               pncAdjudication: true,
               pncDisposals: [{ type: 2007 }]
             })
@@ -108,18 +107,18 @@ describe.ifPhase2("HO200115", () => {
             { messageType: MessageType.PNC_UPDATE_DATASET }
           ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
             const resultGeneratesDisarr = {
-              pncAdjudicationExists: false,
-              resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+              resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
+              pncAdjudicationExists: false
             }
             const inputMessage = generatePhase2Message({
               messageType,
+              penaltyNoticeCaseReference: false,
               offences: [
                 {
                   addedByTheCourt: false,
-                  results: [resultGeneratesDisarr, { pncAdjudicationExists: true, resultClass: resultGeneratingSubvar }]
+                  results: [resultGeneratesDisarr, { resultClass: resultGeneratingSubvar, pncAdjudicationExists: true }]
                 }
               ],
-              penaltyNoticeCaseReference: false,
               pncAdjudication: true,
               pncDisposals: [{ type: 2007 }]
             })
@@ -147,22 +146,22 @@ describe.ifPhase2("HO200115", () => {
             { messageType: MessageType.PNC_UPDATE_DATASET }
           ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
             const resultsGeneratingDisarr = [
-              { pncAdjudicationExists: false, resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT },
-              { pncAdjudicationExists: false, resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT }
+              { resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, pncAdjudicationExists: false },
+              { resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: false }
             ]
             const inputMessage = generatePhase2Message({
               messageType,
+              penaltyNoticeCaseReference: false,
               offences: [
                 {
-                  addedByTheCourt: true,
                   courtCaseReferenceNumber: true,
+                  addedByTheCourt: true,
                   results: [
                     ...resultsGeneratingDisarr,
-                    { pncAdjudicationExists: true, resultClass: resultGeneratingSubvar }
+                    { resultClass: resultGeneratingSubvar, pncAdjudicationExists: true }
                   ]
                 }
               ],
-              penaltyNoticeCaseReference: false,
               pncAdjudication: true,
               pncDisposals: [{ type: 2007 }]
             })

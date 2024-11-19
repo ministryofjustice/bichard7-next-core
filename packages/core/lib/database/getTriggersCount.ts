@@ -1,7 +1,6 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { Sql } from "postgres"
-
 import { isError } from "@moj-bichard7/common/types/Result"
+import type { Sql } from "postgres"
 
 const getTriggersCount = async (db: Sql, correlationId: string): PromiseResult<number> => {
   const triggers = await db`SELECT COUNT(*) FROM br7own.error_list_triggers AS T

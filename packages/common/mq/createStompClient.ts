@@ -1,8 +1,6 @@
 import { Client } from "@stomp/stompjs"
-
-import type MqConfig from "./MqConfig"
-
 import logger from "../utils/logger"
+import type MqConfig from "./MqConfig"
 
 const createStompClient = (mqConfig: MqConfig): Client => {
   const brokerURL = mqConfig.url.replace(/\s/g, "")
@@ -12,6 +10,11 @@ const createStompClient = (mqConfig: MqConfig): Client => {
   let activeBrokerIndex = 0
 
   const client = new Client({
+    brokerURL: brokerUrls[0],
+    connectHeaders: {
+      login: mqConfig.username,
+      passcode: mqConfig.password
+    },
     beforeConnect: () => {
       client.brokerURL = brokerUrls[activeBrokerIndex]
       logger.info(`Connecting to ${client.brokerURL}`)
@@ -19,11 +22,6 @@ const createStompClient = (mqConfig: MqConfig): Client => {
       if (!brokerUrls[activeBrokerIndex]) {
         activeBrokerIndex = 0
       }
-    },
-    brokerURL: brokerUrls[0],
-    connectHeaders: {
-      login: mqConfig.username,
-      passcode: mqConfig.password
     }
   })
   return client

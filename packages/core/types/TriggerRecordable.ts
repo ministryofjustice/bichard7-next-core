@@ -1,7 +1,7 @@
 enum TriggerRecordable {
-  Both = "BOTH",
+  Yes = "YES",
   No = "NO",
-  Yes = "YES"
+  Both = "BOTH"
 }
 
 export default TriggerRecordable

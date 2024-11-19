@@ -1,18 +1,19 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
-
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 
 export type GenerateDayTasksOutput = {
+  start: string
   end: string
-  newMatcher: boolean
   onlyFailures: boolean
   persistResults: boolean
+  newMatcher: boolean
   phase: number
-  start: string
 }
 
 const generateRerunTasks: ConductorWorker = {
+  taskDefName: "generate_rerun_tasks",
+  pollInterval: 10000,
   execute: (task: Task) => {
     const startDate = new Date(task.inputData?.startDate ?? "2023-02-08")
     const endDate = new Date(task.inputData?.endDate ?? new Date().toISOString())
@@ -35,7 +36,7 @@ const generateRerunTasks: ConductorWorker = {
     for (let d = startDate.getTime(); d < endMs; d += durationMs) {
       const start = new Date(d).toISOString()
       const end = new Date(d + durationMs > endMs ? endMs : d + durationMs).toISOString()
-      ranges.push({ end: end, newMatcher, onlyFailures, persistResults, phase, start })
+      ranges.push({ start, end: end, onlyFailures, persistResults, newMatcher, phase })
     }
 
     const generateTaskReferenceName = (taskNumber: number, startDate: string, endDate: string): string => {
@@ -56,9 +57,7 @@ const generateRerunTasks: ConductorWorker = {
     }
 
     return completed(outputData, `Generated ${ranges.length} tasks`)
-  },
-  pollInterval: 10000,
-  taskDefName: "generate_rerun_tasks"
+  }
 }
 
 export default generateRerunTasks

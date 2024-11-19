@@ -3,9 +3,9 @@ import type { ParsedAsn } from "../../types/ParsedAsn"
 
 const formatOuCode = (
   topLevelCode: string | undefined,
-  secondLevelCode: null | string,
-  thirdLevelCode: null | string,
-  bottomLevelCode: null | string
+  secondLevelCode: string | null,
+  thirdLevelCode: string | null,
+  bottomLevelCode: string | null
 ) => {
   if (secondLevelCode && thirdLevelCode && bottomLevelCode) {
     return `${topLevelCode ? topLevelCode : ""}${secondLevelCode}${thirdLevelCode}${bottomLevelCode}`
@@ -19,21 +19,21 @@ export default (
   parsedOffenceReason: OffenceReason | undefined
 ): CriminalProsecutionReference => ({
   DefendantOrOffender: {
-    CheckDigit: parsedAsn.checkDigit ?? "",
-    DefendantOrOffenderSequenceNumber: parsedAsn.sequenceNumber ?? "",
+    Year: parsedAsn.year,
     OrganisationUnitIdentifierCode: {
       ...(parsedAsn.topLevelCode && { TopLevelCode: parsedAsn.topLevelCode }),
+      SecondLevelCode: parsedAsn.secondLevelCode,
+      ThirdLevelCode: parsedAsn.thirdLevelCode,
       BottomLevelCode: parsedAsn.bottomLevelCode,
       OrganisationUnitCode: formatOuCode(
         parsedAsn.topLevelCode,
         parsedAsn.secondLevelCode,
         parsedAsn.thirdLevelCode,
         parsedAsn.bottomLevelCode
-      ),
-      SecondLevelCode: parsedAsn.secondLevelCode,
-      ThirdLevelCode: parsedAsn.thirdLevelCode
+      )
     },
-    Year: parsedAsn.year
+    DefendantOrOffenderSequenceNumber: parsedAsn.sequenceNumber ?? "",
+    CheckDigit: parsedAsn.checkDigit ?? ""
   },
   ...(parsedOffenceReason && { OffenceReason: parsedOffenceReason })
 })

@@ -1,10 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
+import errorPaths from "../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-
-import errorPaths from "../../lib/exceptions/errorPaths"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import ResultClass from "../../types/ResultClass"
 import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"

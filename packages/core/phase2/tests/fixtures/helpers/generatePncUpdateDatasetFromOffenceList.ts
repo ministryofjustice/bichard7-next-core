@@ -5,26 +5,26 @@ const generatePncUpdateDatasetFromOffenceList = (offences: Offence[]) =>
   ({
     AnnotatedHearingOutcome: {
       HearingOutcome: {
-        Case: {
-          ForceOwner: {
-            BottomLevelCode: "",
-            OrganisationUnitCode: "",
-            SecondLevelCode: "second-level-code",
-            ThirdLevelCode: "",
-            TopLevelCode: ""
-          },
-          HearingDefendant: {
-            BailConditions: [],
-            Offence: offences
-          }
-        },
         Hearing: {
           CourtHearingLocation: {
-            BottomLevelCode: "",
-            OrganisationUnitCode: "",
+            TopLevelCode: "",
             SecondLevelCode: "",
             ThirdLevelCode: "",
-            TopLevelCode: ""
+            BottomLevelCode: "",
+            OrganisationUnitCode: ""
+          }
+        },
+        Case: {
+          HearingDefendant: {
+            Offence: offences,
+            BailConditions: []
+          },
+          ForceOwner: {
+            TopLevelCode: "",
+            SecondLevelCode: "second-level-code",
+            ThirdLevelCode: "",
+            BottomLevelCode: "",
+            OrganisationUnitCode: ""
           }
         }
       }

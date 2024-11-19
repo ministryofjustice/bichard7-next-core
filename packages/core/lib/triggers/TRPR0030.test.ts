@@ -1,7 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-
 import TRPR0030 from "./TRPR0030"
 
 const triggerCode = TriggerCode.TRPR0030
@@ -15,10 +13,10 @@ const generateMockAho = (recordableOnPNCindicator: boolean, offenceCode: string,
           HearingDefendant: {
             Offence: [
               {
+                RecordableOnPNCindicator: recordableOnPNCindicator,
                 CriminalProsecutionReference: {
                   OffenceReason: { OffenceCode: { FullCode: offenceCode } }
-                },
-                RecordableOnPNCindicator: recordableOnPNCindicator
+                }
               }
             ]
           }

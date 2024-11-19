@@ -11,11 +11,11 @@ import { baseConfig } from "./baseConfig"
 const createDbConfig = () =>
   ({
     ...baseConfig,
-    idle_timeout: 20,
+    username: baseConfig.user,
     max: 10,
+    idle_timeout: 20,
     max_lifetime: 60 * 30,
-    onnotice: () => false,
-    username: baseConfig.user
+    onnotice: () => false
   }) as const
 
 export default createDbConfig

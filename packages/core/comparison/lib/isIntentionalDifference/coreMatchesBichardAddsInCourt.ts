@@ -1,9 +1,8 @@
-import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-
+import type { ComparisonData } from "../../types/ComparisonData"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const coreMatchesBichardAddsInCourt = ({ actual, expected, incomingMessage, phase }: ComparisonData) =>
+const coreMatchesBichardAddsInCourt = ({ expected, actual, incomingMessage, phase }: ComparisonData) =>
   checkIntentionalDifferenceForPhases([1], phase, (): boolean => {
     const expectedMatchingSummary = expected.courtResultMatchingSummary as CourtResultMatchingSummary
     const actualMatchingSummary = actual.courtResultMatchingSummary as CourtResultMatchingSummary

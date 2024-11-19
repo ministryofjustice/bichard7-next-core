@@ -1,9 +1,8 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { S3 } from "aws-sdk"
-
-import createDynamoDbConfig from "./createDynamoDbConfig"
 import DynamoGateway from "./DynamoGateway"
 import InvokeCompareLambda from "./InvokeCompareLambda"
+import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const workspace = process.env.WORKSPACE || "production"
 const region = "eu-west-2"
@@ -46,8 +45,8 @@ const getAllKeys = async (s3PathPrefix: string): Promise<string[]> => {
     const objectsList = await s3Client
       .listObjectsV2({
         Bucket: comparisonBucketName,
-        ContinuationToken: nextContinuationToken,
-        Prefix: s3PathPrefix
+        Prefix: s3PathPrefix,
+        ContinuationToken: nextContinuationToken
       })
       .promise()
 

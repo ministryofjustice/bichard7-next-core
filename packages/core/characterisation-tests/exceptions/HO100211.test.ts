@@ -1,5 +1,4 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
@@ -11,8 +10,8 @@ describe.ifPhase1("HO100211", () => {
   // TODO: We haven't implemented organisations yet
   it.skip("should create an exception if the Organisation Name is too many characters", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [] }],
-      organisation: { name: "X".repeat(256) }
+      organisation: { name: "X".repeat(256) },
+      offences: [{ results: [] }]
     })
 
     const {
@@ -37,8 +36,8 @@ describe.ifPhase1("HO100211", () => {
 
   it.skip("should create an exception if the Organisation Name is too few characters", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [] }],
-      organisation: { name: "" }
+      organisation: { name: "" },
+      offences: [{ results: [] }]
     })
 
     const {

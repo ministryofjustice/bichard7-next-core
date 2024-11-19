@@ -1,26 +1,24 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
-
-import type { Br7TextString } from "../../../types/AhoXml"
-import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
-
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
 import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseAhoXml"
 import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
+import type { Br7TextString } from "../../../types/AhoXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
 import { PncOperation } from "../../../types/PncOperation"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {
-    C: "Completed",
     F: "Failed",
+    C: "Completed",
     N: "NotAttempted"
   }
 
   return statuses[statusXml] || statusXml
 }
 
-const isEmptyElement = <T>(result: Br7TextString | T): result is Br7TextString => {
+const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString => {
   return (result as Br7TextString)["#text"] === ""
 }
 
@@ -127,7 +125,7 @@ const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Op
   return [operations]
 }
 
-export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParsedXml): Error | PncUpdateDataset => {
+export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParsedXml): PncUpdateDataset | Error => {
   const rootElement = pncUpdateDataSet["PNCUpdateDataset"]
   if (!rootElement?.["br7:AnnotatedHearingOutcome"]) {
     return Error("Could not parse PNC update dataset XML")
@@ -142,23 +140,23 @@ export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParse
 
   const pncUpdateDataset = {
     ...aho,
-    HasError: rootElement["br7:AnnotatedHearingOutcome"]["br7:HasError"]?.["#text"]?.toString() === "true",
-    PncOperations: mapXmlToOperation(operationsArray)
+    PncOperations: mapXmlToOperation(operationsArray),
+    HasError: rootElement["br7:AnnotatedHearingOutcome"]["br7:HasError"]?.["#text"]?.toString() === "true"
   }
 
   return pncUpdateDataset
 }
 
-export default (xml: string): Error | PncUpdateDataset => {
+export default (xml: string): PncUpdateDataset | Error => {
   const options = {
+    ignoreAttributes: false,
+    parseTagValue: false,
+    parseAttributeValue: false,
+    processEntities: false,
+    trimValues: false,
     alwaysCreateTextNode: true,
     attributeValueProcessor: decodeAttributeEntitiesProcessor,
-    ignoreAttributes: false,
-    parseAttributeValue: false,
-    parseTagValue: false,
-    processEntities: false,
-    tagValueProcessor: decodeTagEntitiesProcessor,
-    trimValues: false
+    tagValueProcessor: decodeTagEntitiesProcessor
   }
 
   const parser = new XMLParser(options)

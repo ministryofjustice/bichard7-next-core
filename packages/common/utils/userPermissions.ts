@@ -28,14 +28,14 @@ const isUserManager = (user: User): boolean =>
 
 const userAccess = (user: User): { [key in Permission]: boolean } => {
   return {
-    [Permission.CanResubmit]: hasAccessToExceptions(user),
-    [Permission.CaseDetailsSidebar]: hasAccessToTriggers(user) || hasAccessToExceptions(user),
-    [Permission.Exceptions]: hasAccessToExceptions(user),
-    [Permission.ListAllCases]: isSupervisor(user),
     [Permission.Triggers]: hasAccessToTriggers(user),
+    [Permission.Exceptions]: hasAccessToExceptions(user),
+    [Permission.CaseDetailsSidebar]: hasAccessToTriggers(user) || hasAccessToExceptions(user),
     [Permission.UnlockOtherUsersCases]: isSupervisor(user),
+    [Permission.ListAllCases]: isSupervisor(user),
     [Permission.ViewReports]: isSupervisor(user),
-    [Permission.ViewUserManagement]: isUserManager(user)
+    [Permission.ViewUserManagement]: isUserManager(user),
+    [Permission.CanResubmit]: hasAccessToExceptions(user)
   }
 }
 

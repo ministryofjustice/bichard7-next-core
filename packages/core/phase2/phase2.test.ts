@@ -1,19 +1,17 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
-
-import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
-import type { PncUpdateDataset } from "../types/PncUpdateDataset"
-
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
-import ResultClass from "../types/ResultClass"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
+import ResultClass from "../types/ResultClass"
+import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
+import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 
 jest.mock("./lib/areAllResultsOnPnc")
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
@@ -45,8 +43,8 @@ describe("Bichard Core Phase 2 processing logic", () => {
         Result: [
           {
             PNCDisposalType: 1000,
-            ResultQualifierVariable: [],
-            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text."
+            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+            ResultQualifierVariable: []
           } as unknown as Result
         ]
       }
@@ -67,8 +65,8 @@ describe("Bichard Core Phase 2 processing logic", () => {
         Result: [
           {
             PNCDisposalType: 1000,
-            ResultQualifierVariable: [],
-            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text."
+            ResultVariableText: "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text.",
+            ResultQualifierVariable: []
           } as unknown as Result
         ]
       }
@@ -146,8 +144,8 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([
-    { ...ahoTestCase, resultDescription: "an ignored", resultType: Phase2ResultType.ignored },
-    { ...pncUpdateDataSetTestCase, resultDescription: "a successful", resultType: Phase2ResultType.success }
+    { ...ahoTestCase, resultType: Phase2ResultType.ignored, resultDescription: "an ignored" },
+    { ...pncUpdateDataSetTestCase, resultType: Phase2ResultType.success, resultDescription: "a successful" }
   ])(
     "returns $resultDescription result when no operations and only a HO200200 exception is generated from getting operations for $messageType",
     ({ inputMessage, resultType }) => {
@@ -162,53 +160,53 @@ describe("Bichard Core Phase 2 processing logic", () => {
           },
           Result: [
             {
-              AmountSpecifiedInResult: [{ Amount: 25, DecimalPlaces: 2 }],
-              CJSresultCode: 3106,
-              DateSpecifiedInResult: [{ Date: new Date("05/22/2024"), Sequence: 1 }],
-              Duration: [{ DurationLength: 3, DurationType: "", DurationUnit: "Y" }],
               PNCDisposalType: 2063,
+              DateSpecifiedInResult: [{ Date: new Date("05/22/2024"), Sequence: 1 }],
               ResultQualifierVariable: [{ Code: "A" }],
-              ResultVariableText: `NOT ENTER ${"A".repeat(100)} THIS EXCLUSION REQUIREMENT LASTS FOR TIME`
+              ResultVariableText: `NOT ENTER ${"A".repeat(100)} THIS EXCLUSION REQUIREMENT LASTS FOR TIME`,
+              CJSresultCode: 3106,
+              AmountSpecifiedInResult: [{ Amount: 25, DecimalPlaces: 2 }],
+              Duration: [{ DurationUnit: "Y", DurationLength: 3, DurationType: "" }]
             }
           ]
         }
       ] as Offence[]
 
       inputMessageWithException.PncQuery = {
+        forceStationCode: "06",
+        pncId: "123",
         courtCases: [
           {
             courtCaseReference:
               inputMessageWithException.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber,
             offences: [
               {
+                offence: {
+                  sequenceNumber: 1,
+                  cjsOffenceCode: "offence-code",
+                  startDate: new Date("05/22/2024")
+                },
                 adjudication: {
-                  offenceTICNumber: 0,
-                  plea: "",
                   sentenceDate: new Date("05/22/2024"),
-                  verdict: "NON-CONVICTION"
+                  verdict: "NON-CONVICTION",
+                  offenceTICNumber: 0,
+                  plea: ""
                 },
                 disposals: [
                   {
+                    type: 2063,
                     qtyDate: "22052024",
                     qtyDuration: "Y3",
                     qtyMonetaryValue: "25",
                     qtyUnitsFined: "Y3  220520240000000.0000",
                     qualifiers: "A",
-                    text: "EXCLUDED FROM LOCATION",
-                    type: 2063
+                    text: "EXCLUDED FROM LOCATION"
                   }
-                ],
-                offence: {
-                  cjsOffenceCode: "offence-code",
-                  sequenceNumber: 1,
-                  startDate: new Date("05/22/2024")
-                }
+                ]
               } as PncOffence
             ]
           }
-        ],
-        forceStationCode: "06",
-        pncId: "123"
+        ]
       } as PncQueryResult
 
       const result = phase2Handler(inputMessageWithException, auditLogger)
@@ -250,8 +248,8 @@ describe("Bichard Core Phase 2 processing logic", () => {
   )
 
   it.each([
-    { ...ahoTestCase, resultDescription: "an ignored", resultType: Phase2ResultType.ignored },
-    { ...pncUpdateDataSetTestCase, resultDescription: "a successful", resultType: Phase2ResultType.success }
+    { ...ahoTestCase, resultType: Phase2ResultType.ignored, resultDescription: "an ignored" },
+    { ...pncUpdateDataSetTestCase, resultType: Phase2ResultType.success, resultDescription: "a successful" }
   ])(
     "returns $resultDescription result when there are no operations and no exceptions for $messageType",
     ({ inputMessage, resultType }) => {
@@ -263,8 +261,8 @@ describe("Bichard Core Phase 2 processing logic", () => {
           },
           Result: [
             {
-              PNCDisposalType: 1001,
               ResultClass: ResultClass.UNRESULTED,
+              PNCDisposalType: 1001,
               ResultQualifierVariable: []
             } as unknown as Result
           ]

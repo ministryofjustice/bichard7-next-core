@@ -5,7 +5,6 @@ import type {
   SpiOffence,
   SpiResult
 } from "../../../types/SpiResult"
-
 import countDecimalPlaces from "../../countDecimalPlaces"
 import {
   lookupModeOfTrialReasonBySpiCode,
@@ -32,22 +31,22 @@ const durationTypes = {
   DURATION: "Duration"
 }
 const durationUnits = {
-  HOURS: "H",
-  SESSIONS: "S"
+  SESSIONS: "S",
+  HOURS: "H"
 }
 const resultPenaltyPoints = 3008
 const resultCurfew1 = 1052
 const resultCurfew2 = 3105
 
 export interface OffenceResultsResult {
-  bailQualifiers: string[]
   results: Result[]
+  bailQualifiers: string[]
 }
 
 const createDuration = (durationUnit: string, durationValue: number): Duration => ({
-  DurationLength: durationValue,
   DurationType: durationTypes.DURATION,
-  DurationUnit: !durationUnit || durationUnit === "." ? durationUnits.SESSIONS : durationUnit
+  DurationUnit: !durationUnit || durationUnit === "." ? durationUnits.SESSIONS : durationUnit,
+  DurationLength: durationValue
 })
 
 const populateNextHearingDetails = (result: Result, nextHearingDetails: SpiNextHearingDetails): void => {
@@ -68,8 +67,8 @@ const populateNextHearingDetails = (result: Result, nextHearingDetails: SpiNextH
 }
 
 type PopulateResultOutput = {
-  baResultCodeQualifierExcluded: boolean
   result: Result
+  baResultCodeQualifierExcluded: boolean
 }
 
 const populateResult = (
@@ -91,20 +90,20 @@ const populateResult = (
   } = courtResult
   const { ConvictingCourt: spiConvictingCourt, ConvictionDate: spiConvictionDate } = spiOffence
   const {
-    NextHearing: spiNextHearing,
-    Outcome: spiOutcome,
     ResultCode: spiResultCode,
-    ResultCodeQualifier: spiResultCodeQualifier
+    NextHearing: spiNextHearing,
+    ResultCodeQualifier: spiResultCodeQualifier,
+    Outcome: spiOutcome
   } = spiResult
   const spiResultCodeNumber = spiResultCode ? Number(spiResultCode) : freeTextResultCode
 
   const result: Result = {
     CJSresultCode: spiResultCodeNumber,
     ConvictingCourt: spiConvictingCourt,
-    ResultHearingDate: new Date(spiConvictionDate ?? spiDateOfHearing),
     ResultHearingType: otherValue,
-    ResultQualifierVariable: [],
-    SourceOrganisation: getOrganisationUnit(courtResult.Session.CourtHearing.Hearing.CourtHearingLocation)
+    ResultHearingDate: new Date(spiConvictionDate ?? spiDateOfHearing),
+    SourceOrganisation: getOrganisationUnit(courtResult.Session.CourtHearing.Hearing.CourtHearingLocation),
+    ResultQualifierVariable: []
   }
 
   if (spiNextHearing?.BailStatusOffence) {
@@ -123,18 +122,18 @@ const populateResult = (
   if (spiOutcome) {
     const {
       Duration: spiDuration,
-      PenaltyPoints: spiPenaltyPoints,
-      ResultAmountSterling: spiResultAmountSterling
+      ResultAmountSterling: spiResultAmountSterling,
+      PenaltyPoints: spiPenaltyPoints
     } = spiOutcome
     result.Duration = result.Duration ?? []
     if (spiDuration) {
       const {
-        DurationEndDate: spiDurationEndDate,
-        DurationStartDate: spiDurationStartDate,
         DurationUnit: spiDurationUnit,
         DurationValue: spiDurationValue,
+        SecondaryDurationValue: spiSecondaryDurationValue,
         SecondaryDurationUnit: spiSecondaryDurationUnit,
-        SecondaryDurationValue: spiSecondaryDurationValue
+        DurationStartDate: spiDurationStartDate,
+        DurationEndDate: spiDurationEndDate
       } = spiDuration
       if (spiDurationUnit && spiDurationValue !== undefined) {
         result.Duration.push(createDuration(spiDurationUnit, Number(spiDurationValue)))
@@ -188,12 +187,12 @@ const populateResult = (
     } = spiNextHearing
     if (spiNextCourtHearingLocation) {
       result.NextResultSourceOrganisation = {
-        BottomLevelCode: null,
         OrganisationUnitCode:
           lookupOrganisationUnitByThirdLevelPsaCode(spiNextCourtHearingLocation)?.thirdLevelCode ??
           spiNextCourtHearingLocation,
         SecondLevelCode: null,
-        ThirdLevelCode: null
+        ThirdLevelCode: null,
+        BottomLevelCode: null
       }
 
       result.NextHearingDate = new Date(spiNextDateOfHearing)
@@ -262,7 +261,7 @@ const populateResult = (
     }
   }
 
-  return { baResultCodeQualifierExcluded, result }
+  return { result, baResultCodeQualifierExcluded }
 }
 
 const addBailResultQualifierVariable = (results: Result[]): boolean => {
@@ -292,7 +291,7 @@ const populateOffenceResults = (
   const results: Result[] = []
 
   for (const spiResult of spiResults) {
-    const { baResultCodeQualifierExcluded, result } = populateResult(
+    const { result, baResultCodeQualifierExcluded } = populateResult(
       spiResult,
       courtResult,
       spiOffence,
@@ -309,7 +308,7 @@ const populateOffenceResults = (
     }
   }
 
-  return { bailQualifiers: Array.from(bailQualifiers), results }
+  return { results, bailQualifiers: Array.from(bailQualifiers) }
 }
 
 export default populateOffenceResults

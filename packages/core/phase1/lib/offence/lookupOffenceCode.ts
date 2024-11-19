@@ -1,8 +1,6 @@
 import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-
-import type { OffenceCode as OffenceCodeLocal, OffenceReason } from "../../../types/AnnotatedHearingOutcome"
-
 import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "../../../lib/dataLookup"
+import type { OffenceCode as OffenceCodeLocal, OffenceReason } from "../../../types/AnnotatedHearingOutcome"
 
 const validQualifiers = ["A", "B", "C", "I"]
 

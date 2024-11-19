@@ -24,9 +24,8 @@ const resultQualifierVariable = (offenceIndex: number, resultIndex: number) => (
 })
 
 const result = (offenceIndex: number) => (resultIndex: number) => ({
-  amountSpecifiedInResult: (amountSpecifiedInResultIndex: number) =>
-    resultPath(offenceIndex, resultIndex).concat("AmountSpecifiedInResult", amountSpecifiedInResultIndex),
   cjsResultCode: resultPath(offenceIndex, resultIndex).concat("CJSresultCode"),
+  resultClass: resultPath(offenceIndex, resultIndex).concat("ResultClass"),
   nextHearingDate: resultPath(offenceIndex, resultIndex).concat("NextHearingDate"),
   nextResultSourceOrganisation: {
     organisationUnitCode: resultPath(offenceIndex, resultIndex).concat(
@@ -34,28 +33,29 @@ const result = (offenceIndex: number) => (resultIndex: number) => ({
       "OrganisationUnitCode"
     )
   },
-  resultClass: resultPath(offenceIndex, resultIndex).concat("ResultClass"),
+  resultVariableText: resultPath(offenceIndex, resultIndex).concat("ResultVariableText"),
   resultQualifierVariable: resultQualifierVariable(offenceIndex, resultIndex),
-  resultVariableText: resultPath(offenceIndex, resultIndex).concat("ResultVariableText")
+  amountSpecifiedInResult: (amountSpecifiedInResultIndex: number) =>
+    resultPath(offenceIndex, resultIndex).concat("AmountSpecifiedInResult", amountSpecifiedInResultIndex)
 })
 
 const offence = (offenceIndex: number) => ({
   courtCaseReference: offencePath(offenceIndex).concat("CourtCaseReferenceNumber"),
+  reasonSequence: offencePath(offenceIndex).concat("CriminalProsecutionReference", "OffenceReasonSequence"),
   offenceReason: {
-    localOffenceCode: offencePath(offenceIndex).concat(
-      "CriminalProsecutionReference",
-      "OffenceReason",
-      "LocalOffenceCode",
-      "OffenceCode"
-    ),
     offenceCodeReason: offencePath(offenceIndex).concat(
       "CriminalProsecutionReference",
       "OffenceReason",
       "OffenceCode",
       "Reason"
+    ),
+    localOffenceCode: offencePath(offenceIndex).concat(
+      "CriminalProsecutionReference",
+      "OffenceReason",
+      "LocalOffenceCode",
+      "OffenceCode"
     )
   },
-  reasonSequence: offencePath(offenceIndex).concat("CriminalProsecutionReference", "OffenceReasonSequence"),
   result: result(offenceIndex)
 })
 
@@ -66,8 +66,8 @@ const $case = {
 }
 
 const errorPaths = {
-  case: $case,
-  offence
+  offence,
+  case: $case
 }
 
 export default errorPaths
