@@ -9,8 +9,10 @@
   },
 
   "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
+  "editor.formatOnSave": true,
 
   "eslint.workingDirectories": [
     "packages/api",
