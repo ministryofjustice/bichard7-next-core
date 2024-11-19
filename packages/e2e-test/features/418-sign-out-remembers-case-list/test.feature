@@ -9,6 +9,7 @@ Feature: {418} If the user signs out or the session is ended return to case list
 			And "input-message" is received
 
 	@NextUI
+	@ExcludeOnLegacyUI
 	Scenario: The case list remembers the filters
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
