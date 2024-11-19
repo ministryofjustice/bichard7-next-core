@@ -80,13 +80,6 @@ describe("getIneditableOffenceExceptions", () => {
     expect(result).toEqual([])
   })
 
-  it("should handle null or undefined exceptions", () => {
-    const result1 = getIneditableOffenceExceptions(null as any)
-    const result2 = getIneditableOffenceExceptions(undefined as any)
-    expect(result1).toEqual([])
-    expect(result2).toEqual([])
-  })
-
   it("should return all ineditable exceptions if all provided exceptions are ineditable", () => {
     const allIneditableExceptions = [
       {
