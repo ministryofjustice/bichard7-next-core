@@ -59,8 +59,8 @@
     "nunjucks": "^3.2.4",
     "pg-promise": "^11.10.2",
     "promise-poller": "^1.9.1",
-    "puppeteer": "^23.7.1",
-    "puppeteer-core": "^23.7.1",
+    "puppeteer": "^23.8.0",
+    "puppeteer-core": "^23.8.0",
     "puppeteer-mass-screenshots": "^1.0.15",
     "stompit": "^1.0.0",
     "tiny-glob": "^0.2.9",
@@ -88,7 +88,7 @@
     "gherkin-lint": "^4.2.4",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "npm-check-updates": "^17.1.10",
+    "npm-check-updates": "^17.1.11",
     "prettier": "^3.3.3"
   },
   "lint-staged": {

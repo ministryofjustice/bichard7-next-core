@@ -25,7 +25,7 @@ class Asn {
       const number = `${intOrString(this.force)}${intOrString(this.system)}${this.year}${sequence}`
       const modulus = Number(BigInt(number) % BigInt(23))
       return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
-    } catch (e) {
+    } catch {
       return undefined
     }
   }

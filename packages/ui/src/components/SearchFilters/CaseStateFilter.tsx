@@ -1,40 +1,69 @@
-import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import ConditionalRender from "components/ConditionalRender"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { ChangeEvent, Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 
 interface CaseStateFilterProps {
   dispatch: Dispatch<FilterAction>
-  value?: string
+  caseState?: string
+  resolvedByUsername?: string
 }
 
-const CaseStateFilter = ({ dispatch, value }: CaseStateFilterProps) => (
-  <fieldset className="govuk-fieldset">
-    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-      <Legend>{"Case state"}</Legend>
-    </legend>
-    <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-      <div className="govuk-checkboxes__item">
-        <input
-          className="govuk-checkboxes__input"
-          id="resolved"
-          name="state"
-          type="checkbox"
-          value={value}
-          checked={value === "Resolved"}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            dispatch({
-              method: event.currentTarget.checked ? "add" : "remove",
-              type: "caseState",
-              value: "Resolved"
-            })
-          }}
-        ></input>
-        <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
-          {"Resolved"}
-        </label>
+const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateFilterProps) => {
+  const currentUser = useCurrentUser()
+
+  return (
+    <fieldset className="govuk-fieldset">
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Case state"}</legend>
+      <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+        <div className="govuk-checkboxes__item">
+          <input
+            className="govuk-checkboxes__input"
+            id="resolved"
+            name="state"
+            type="checkbox"
+            value="Resolved"
+            checked={caseState === "Resolved"}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              dispatch({
+                method: event.currentTarget.checked ? "add" : "remove",
+                type: "caseState",
+                value: "Resolved"
+              })
+            }}
+          />
+          <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
+            {"Resolved cases"}
+          </label>
+        </div>
+        <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
+          <div className="govuk-checkboxes__item">
+            <input
+              className="govuk-checkboxes__input"
+              id="myResolvedCases"
+              name="resolvedByUsername"
+              type="checkbox"
+              value={currentUser.username}
+              checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                const isChecked = event.currentTarget.checked
+
+                dispatch({
+                  method: isChecked ? "add" : "remove",
+                  type: "resolvedByUsernameFilter",
+                  value: currentUser.username
+                })
+              }}
+            />
+            <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
+              {"My resolved cases"}
+            </label>
+          </div>
+        </ConditionalRender>
       </div>
-    </div>
-  </fieldset>
-)
+    </fieldset>
+  )
+}
 
 export default CaseStateFilter

@@ -13,6 +13,8 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "../types/PncQueryResult"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 
@@ -123,5 +125,9 @@ export default class PncGateway implements PncGatewayInterface {
 
         return e as Error
       })
+  }
+
+  update(_request: PncUpdateRequest, _correlationId: string): PromiseResult<void> {
+    return Promise.resolve()
   }
 }

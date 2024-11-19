@@ -33,7 +33,6 @@ const FilterChipSection: React.FC<Props> = ({
   const resolvedDateRangeLabel = `${formatStringDateAsDisplayedDate(state.resolvedFrom.value)} - ${formatStringDateAsDisplayedDate(
     state.resolvedTo.value
   )}`
-
   return (
     <div className={`${sectionState.toLowerCase()}-filters`}>
       <ConditionalRender isRendered={anyFilterChips(state, sectionState)}>
@@ -184,19 +183,35 @@ const FilterChipSection: React.FC<Props> = ({
           value={resolvedDateRangeLabel}
         />
 
-        <FilterChipRow
-          chipLabel={state.caseStateFilter.label!}
-          condition={
-            state.caseStateFilter.value !== undefined &&
-            state.caseStateFilter.label !== undefined &&
-            state.caseStateFilter.state === sectionState
-          }
-          dispatch={dispatch}
-          type="caseState"
+        <FilterChipContainer
           label="Case state"
-          state={state.caseStateFilter.state ?? sectionState}
-          value={state.caseStateFilter.value!}
-        />
+          condition={!!state.resolvedByUsernameFilter.value || !!state.caseStateFilter.value}
+        >
+          <ConditionalRender isRendered={!!state.caseStateFilter.value}>
+            <FilterChip
+              chipLabel={"Resolved cases"}
+              dispatch={dispatch}
+              removeAction={() => {
+                return { method: "remove", type: "caseState", value: state.caseStateFilter.value! } as FilterAction
+              }}
+              state={state.caseStateFilter.state || sectionState}
+            />
+          </ConditionalRender>
+          <ConditionalRender isRendered={!!state.resolvedByUsernameFilter.value}>
+            <FilterChip
+              chipLabel={"My resolved cases"}
+              dispatch={dispatch}
+              removeAction={() => {
+                return {
+                  method: "remove",
+                  type: "resolvedByUsernameFilter",
+                  value: state.resolvedByUsernameFilter.value!
+                } as FilterAction
+              }}
+              state={state.resolvedByUsernameFilter.state || sectionState}
+            />
+          </ConditionalRender>
+        </FilterChipContainer>
 
         <FilterChipRow
           chipLabel={state.lockedStateFilter.label!}
