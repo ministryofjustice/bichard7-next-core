@@ -134,16 +134,6 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
   },
-  // SupervisorWithExcludedTriggers: {
-  //   username: "SupervisorWithExcludedTriggers",
-  //   visibleForces: ["01"],
-  //   forenames: "Supervisor1",
-  //   surname: "WithExcludedTriggers",
-  //   email: "supervisor1@example.com",
-  //   password: hashedPassword,
-  //   groups: [UserGroup.NewUI, UserGroup.Supervisor],
-  //   excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
-  // },
   userExcludedTriggers: {
     username: "userExcludedTriggers",
     visibleForces: ["007"],
