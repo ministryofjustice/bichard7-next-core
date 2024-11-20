@@ -1,6 +1,6 @@
 import { loginAndVisit } from "../../support/helpers"
 
-describe("Display username in note preview of latest note", () => {
+describe("Note preview", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
