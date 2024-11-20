@@ -47,7 +47,8 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger
+  auditLogger: AuditLogger,
+  isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -76,7 +77,7 @@ export default async (
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
-      if (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome)) {
+      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
         annotatedHearingOutcome.Exceptions.push(generatePncExceptionFromMessage(message))
       }
     }

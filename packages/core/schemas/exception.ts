@@ -14,4 +14,4 @@ export const pncExceptionSchema = z.object({
   message: z.string()
 })
 
-export const exceptionSchema = z.union([ahoExceptionSchema, pncExceptionSchema])
+export const exceptionSchema = z.union([pncExceptionSchema, ahoExceptionSchema])
