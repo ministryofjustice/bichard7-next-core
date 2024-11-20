@@ -70,4 +70,36 @@ describe("NotesTable", () => {
     cy.contains("(01)")
     cy.contains("(01, 02, 03)")
   })
+
+  it("displays up notes in descending order", () => {
+    const notes: DisplayNote[] = [
+      {
+        userFullName: "note user 1",
+        userId: "1",
+        noteText: "this is a note",
+        user: { visibleForces: ["01"], username: "note.user1" },
+        createdAt: new Date("2024-11-20").toISOString()
+      },
+      {
+        userFullName: "note user 2",
+        userId: "1",
+        noteText: "this is a different note",
+        user: { visibleForces: ["01", "02", "03", "04"], username: "note.user2" },
+        createdAt: new Date("2024-11-18").toISOString()
+      },
+      {
+        userFullName: "note user 2",
+        userId: "1",
+        noteText: "this is a different note",
+        user: { visibleForces: ["01", "02", "03", "04"], username: "note.user2" },
+        createdAt: new Date("2024-11-25").toISOString()
+      }
+    ]
+
+    cy.mount(<NotesTable displayForce notes={notes} />)
+
+    cy.get('tbody tr:nth-child(1) td:nth-child(2) time[aria-label="time"]').should("contain", "25/11/2024")
+    cy.get('tbody tr:nth-child(2) td:nth-child(2) time[aria-label="time"]').should("contain", "20/11/2024")
+    cy.get('tbody tr:nth-child(3) td:nth-child(2) time[aria-label="time"]').should("contain", "18/11/2024")
+  })
 })
