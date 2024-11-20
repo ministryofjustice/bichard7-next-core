@@ -8,6 +8,8 @@ interface Props {
 }
 
 export const NotesTable = ({ notes, displayForce }: Props) => {
+  const sortedNotes = [...notes].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
   return (
     <Table
       className={"notes-table"}
@@ -19,7 +21,7 @@ export const NotesTable = ({ notes, displayForce }: Props) => {
         </Table.Row>
       }
     >
-      {notes.map((note, index) => {
+      {sortedNotes.map((note, index) => {
         const userName = note.userFullName
         const userForces = `(${note.user?.visibleForces.slice(0, 3).join(", ")})`
 
