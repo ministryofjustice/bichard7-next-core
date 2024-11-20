@@ -726,7 +726,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: large
     parallelism: 10
     parameters:
       ms-edge:
@@ -784,7 +784,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -873,17 +873,17 @@ workflows:
           name: build-ui
           requires:
             - test_ui
-
       - cypress_component_test:
           name: cypress_component_test
           ms-edge: false
           requires:
-            - build-ui
+            - test_ui
       - cypress_component_test:
           name: cypress_component_test_ms_edge
           ms-edge: true
           requires:
-            - build-ui
+            - test_ui
+
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           ms-edge: false
