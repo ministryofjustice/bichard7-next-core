@@ -1,8 +1,8 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
-import getOffenceExceptions from "./exceptions/getIneditableOffenceExceptions"
 import getNextHearingDateExceptions from "./exceptions/getNextHearingDateExceptions"
 import getNextHearingLocationExceptions from "./exceptions/getNextHearingLocationExceptions"
+import getNumberOfIneditableOffenceExceptions from "./exceptions/getNumberOfIneditableOffenceExceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
 import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
 import isAsnFormatValid from "./exceptions/isAsnFormatValid"
@@ -104,7 +104,7 @@ const getTabDetails = (
   //  Next Hearing Date, Next hearing location, offence matching
   // Non-editable exceptions
   //  Create a method - getNonEditableOffenceExceptions
-  const ineditableOffenceExceptions: Exception[] = getOffenceExceptions(exceptions)
+  const ineditableOffenceExceptions = getNumberOfIneditableOffenceExceptions(exceptions)
 
   if (
     hasNextHearingDateExceptions(exceptions) &&
@@ -114,8 +114,7 @@ const getTabDetails = (
     offencesExceptionsResolved =
       nextHearingDateExceptionsDetails.ExceptionsResolved &&
       nextHearingLocationExceptionsDetails.ExceptionsResolved &&
-      offencesMatchedExceptionsDetails.ExceptionsResolved &&
-      ineditableOffenceExceptions.length === 0
+      offencesMatchedExceptionsDetails.ExceptionsResolved
   } else if (hasNextHearingDateExceptions(exceptions)) {
     offencesExceptionsResolved = nextHearingDateExceptionsDetails.ExceptionsResolved
   } else if (hasNextHearingLocationException(exceptions)) {
@@ -124,11 +123,14 @@ const getTabDetails = (
     offencesExceptionsResolved = offencesMatchedExceptionsDetails.ExceptionsResolved
   }
 
+  offencesExceptionsResolved &&= ineditableOffenceExceptions === 0
+
   const defendantExceptionsCount = exceptionsEnabled ? asnExceptionDetails.ExceptionsCount : 0
   const offencesExceptionsCount = exceptionsEnabled
     ? nextHearingDateExceptionsDetails.ExceptionsCount +
       nextHearingLocationExceptionsDetails.ExceptionsCount +
-      offencesMatchedExceptionsDetails.ExceptionsCount
+      offencesMatchedExceptionsDetails.ExceptionsCount +
+      ineditableOffenceExceptions
     : 0
 
   return [
