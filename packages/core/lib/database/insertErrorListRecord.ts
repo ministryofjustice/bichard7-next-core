@@ -1,6 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
+
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 const insertErrorListRecord = async (db: Sql, result: PhaseResult): Promise<number> => {

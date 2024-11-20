@@ -3,8 +3,9 @@ jest.mock("../getDisposalTextFromResult")
 jest.mock("./isDriverDisqualificationResult")
 
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
+
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 

@@ -1,7 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
+
 import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
 
-const insertErrorListNotes = async (db: Sql, error_id: number, notes: (string | null)[]): Promise<void> => {
+const insertErrorListNotes = async (db: Sql, error_id: number, notes: (null | string)[]): Promise<void> => {
   try {
     for (const note of notes) {
       if (!note) {

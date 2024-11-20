@@ -1,13 +1,15 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import MockDate from "mockdate"
+
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type AuditLogger from "../../../types/AuditLogger"
+import type PncGatewayInterface from "../../../types/PncGatewayInterface"
+
 import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type AuditLogger from "../../../types/AuditLogger"
-import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import generateMessage from "../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
 import enrichWithPncQuery from "./enrichWithPncQuery"

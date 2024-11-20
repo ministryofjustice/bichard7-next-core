@@ -1,9 +1,10 @@
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import TRPR0008 from "./TRPR0008"
 
 const generateMockAho = (
-  offences: { fullCode?: string; verdict: string; pleaStatus: string }[]
+  offences: { fullCode?: string; pleaStatus: string; verdict: string }[]
 ): AnnotatedHearingOutcome => {
   return generateAhoFromOffenceList(
     offences.map(

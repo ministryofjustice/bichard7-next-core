@@ -1,20 +1,20 @@
 export enum SpiPlea {
-  Guilty = "1",
-  NotGuilty = "2",
-  NoPlea = "3",
-  Consents = "4",
-  Opposed = "5",
-  Guilty6 = "6",
   Admits = "7",
-  Denies = "8"
+  Consents = "4",
+  Denies = "8",
+  Guilty = "1",
+  Guilty6 = "6",
+  NoPlea = "3",
+  NotGuilty = "2",
+  Opposed = "5"
 }
 
 export enum CjsPlea {
-  Guilty = "G",
-  NotGuilty = "NG",
-  Consents = "CON",
   Admits = "ADM",
+  Consents = "CON",
   Denies = "DEN",
+  Guilty = "G",
   None = "NONE",
+  NotGuilty = "NG",
   Opposed = "OPP"
 }

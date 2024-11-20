@@ -1,8 +1,9 @@
-import { AuditLogEventSource, auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
+import { auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
+
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseSpiResult from "../lib/parse/parseSpiResult"

@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../types/PncOperation"
 import ResultClass from "../../../types/ResultClass"
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"

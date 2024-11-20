@@ -1,6 +1,7 @@
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import ResultClass from "../../types/ResultClass"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200113 from "./HO200113"
 
 describe("HO200113", () => {

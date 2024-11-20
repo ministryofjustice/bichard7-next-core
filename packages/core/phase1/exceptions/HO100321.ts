@@ -1,8 +1,10 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
-import isDummyAsn from "../../lib/isDummyAsn"
+
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
+import isDummyAsn from "../../lib/isDummyAsn"
 import { isAsnFormatValid } from "../lib/isAsnValid"
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {

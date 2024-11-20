@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import getOffenceCode from "../lib/offence/getOffenceCode"
 
 const matchingCodes = ["MC80524", "MC80527", "MC80528"]

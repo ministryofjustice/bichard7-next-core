@@ -1,6 +1,8 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-import { amountSpecifiedInResultPath } from "../helpers/errorPaths"
+
 import type { Duration, GeneratePhase2MessageOptions } from "../helpers/generatePhase2Message"
+
+import { amountSpecifiedInResultPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"

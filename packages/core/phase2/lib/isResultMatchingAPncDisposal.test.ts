@@ -1,5 +1,6 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
+
 import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
 
 describe("isResultMatchingAPncDisposal", () => {

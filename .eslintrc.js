@@ -78,6 +78,14 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "off",
         "jest/no-standalone-expect": "off"
       }
+    },
+    {
+      // sort-objects breaks the comparison tests, because they're snapshots
+      // TODO: this rule should be more specific
+      files: ["packages/core/**/*"], 
+      rules: {
+        "perfectionist/sort-objects": "off"
+      }
     }
   ]
 }

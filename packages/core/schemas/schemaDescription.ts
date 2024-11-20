@@ -1,16 +1,20 @@
 import { default as rawSchemaRelations } from "./schemaRelations"
 
 const schemaRelations = rawSchemaRelations as Record<string, string[]>
-type AhoKey = keyof typeof rawSchemaRelations | (string & {})
+type AhoKey = ({} & string) | keyof typeof rawSchemaRelations
 
 class Describer {
-  private _content: string
+  static getText = (description: string) => ({
+    $description: description
+  })
 
-  private _value: string[] = []
+  private _content: string
 
   private _example: string
 
   private _path: AhoKey
+
+  private _value: string[] = []
 
   private generateLinkQuery = (path: string) =>
     path
@@ -18,31 +22,13 @@ class Describer {
       .map((p) => p.trim())
       .join("_")
 
-  static get $() {
-    return new Describer()
-  }
-
-  static getText = (description: string) => ({
-    $description: description
-  })
-
   content = (...contentParam: string[]) => {
     this._content = contentParam.join("\n")
     return this
   }
 
-  value = (...valueParam: string[]) => {
-    this._value = valueParam
-    return this
-  }
-
   example = (exampleParam: string) => {
     this._example = exampleParam
-    return this
-  }
-
-  path = (pathParam: AhoKey) => {
-    this._path = pathParam
     return this
   }
 
@@ -125,6 +111,20 @@ class Describer {
     }
 
     return { $description: description }
+  }
+
+  path = (pathParam: AhoKey) => {
+    this._path = pathParam
+    return this
+  }
+
+  value = (...valueParam: string[]) => {
+    this._value = valueParam
+    return this
+  }
+
+  static get $() {
+    return new Describer()
   }
 }
 

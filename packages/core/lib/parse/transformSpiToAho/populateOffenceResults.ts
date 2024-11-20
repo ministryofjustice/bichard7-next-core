@@ -5,6 +5,7 @@ import type {
   SpiOffence,
   SpiResult
 } from "../../../types/SpiResult"
+
 import countDecimalPlaces from "../../countDecimalPlaces"
 import {
   lookupModeOfTrialReasonBySpiCode,
@@ -39,8 +40,8 @@ const resultCurfew1 = 1052
 const resultCurfew2 = 3105
 
 export interface OffenceResultsResult {
-  results: Result[]
   bailQualifiers: string[]
+  results: Result[]
 }
 
 const createDuration = (durationUnit: string, durationValue: number): Duration => ({
@@ -67,8 +68,8 @@ const populateNextHearingDetails = (result: Result, nextHearingDetails: SpiNextH
 }
 
 type PopulateResultOutput = {
-  result: Result
   baResultCodeQualifierExcluded: boolean
+  result: Result
 }
 
 const populateResult = (

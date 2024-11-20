@@ -2,14 +2,16 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
+
+import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import phase2Handler from "../../phase2/phase2"
-import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
 import parseIncomingMessage from "./parseIncomingMessage"
@@ -19,13 +21,13 @@ import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 const excludeEventForBichard = (eventCode: string) =>
   ![
-    EventCode.ReceivedResubmittedHearingOutcome,
     EventCode.HearingOutcomeReceivedPhase2,
-    EventCode.HearingOutcomeSubmittedPhase3
+    EventCode.HearingOutcomeSubmittedPhase3,
+    EventCode.ReceivedResubmittedHearingOutcome
   ].includes(eventCode as EventCode)
 const excludeEventForCore = (eventCode: string) => eventCode !== EventCode.IgnoredAlreadyOnPNC
 
-const getCorrelationId = (comparison: OldPhase1Comparison | NewComparison): string | undefined => {
+const getCorrelationId = (comparison: NewComparison | OldPhase1Comparison): string | undefined => {
   if ("correlationId" in comparison) {
     return comparison.correlationId
   }

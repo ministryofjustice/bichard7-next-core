@@ -1,6 +1,7 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary, OffenceMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import hoOffencesAreEqual from "../hoOffencesAreEqual"
 import { checkIntentionalDifferenceForPhases } from "./index"
 

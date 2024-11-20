@@ -5,6 +5,7 @@ import type {
   SpiCourtIndividualDefendant,
   SpiDefendant
 } from "../../../types/SpiResult"
+
 import { lookupRemandStatusBySpiCode } from "../../dataLookup"
 import populateOffences from "./populateOffences"
 
@@ -92,16 +93,16 @@ const parseBailConditions = (spiBailConditions?: string): string[] => {
 }
 
 type PartialDefendantDetails =
+  | Pick<HearingDefendant, "Address" | "BailConditions" | "OrganisationName" | "PNCIdentifier" | "RemandStatus">
   | Pick<
       HearingDefendant,
+      | "Address"
+      | "BailConditions"
       | "CourtPNCIdentifier"
       | "DefendantDetail"
-      | "Address"
-      | "RemandStatus"
-      | "BailConditions"
       | "ReasonForBailConditions"
+      | "RemandStatus"
     >
-  | Pick<HearingDefendant, "PNCIdentifier" | "OrganisationName" | "Address" | "RemandStatus" | "BailConditions">
 
 const processDefendant = (spiDefendant: SpiDefendant): PartialDefendantDetails => {
   if (spiDefendant.CourtIndividualDefendant) {

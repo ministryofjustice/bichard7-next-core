@@ -1,8 +1,10 @@
 import logger from "@moj-bichard7/common/utils/logger"
-import { lookupOrganisationUnitByCode } from "../../../lib/dataLookup"
+
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
-import isAsnValid from "../../lib/isAsnValid"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
+
+import { lookupOrganisationUnitByCode } from "../../../lib/dataLookup"
+import isAsnValid from "../../lib/isAsnValid"
 
 // prettier-ignore
 const validForceCodes = [

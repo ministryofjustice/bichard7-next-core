@@ -1,8 +1,9 @@
 import type { GenerateAhoMatchingPncAdjudicationAndDisposalsOptions } from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
+
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 
-type TestInput = GenerateAhoMatchingPncAdjudicationAndDisposalsOptions & { when: string }
+type TestInput = { when: string } & GenerateAhoMatchingPncAdjudicationAndDisposalsOptions
 
 describe("checkResultsMatchingPncDisposalsExceptions", () => {
   it("should call the check exception function when the PNC adjudication matches", () => {

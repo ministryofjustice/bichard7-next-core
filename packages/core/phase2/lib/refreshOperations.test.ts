@@ -1,5 +1,6 @@
-import { PncOperation } from "../../types/PncOperation"
 import type { Operation } from "../../types/PncUpdateDataset"
+
+import { PncOperation } from "../../types/PncOperation"
 import generateFakePncUpdateDataset from "../tests/fixtures/helpers/generateFakePncUpdateDataset"
 import refreshOperations from "./refreshOperations"
 

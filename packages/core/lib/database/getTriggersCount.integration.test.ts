@@ -1,11 +1,14 @@
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import getTriggersCount from "./getTriggersCount"
 import type { Sql } from "postgres"
-import postgres from "postgres"
-import type ErrorListRecord from "../../types/ErrorListRecord"
-import { randomUUID } from "crypto"
-import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
+import postgres from "postgres"
+
+import type ErrorListRecord from "../../types/ErrorListRecord"
+import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import getTriggersCount from "./getTriggersCount"
 
 const dbConfig = createDbConfig()
 const db = postgres({

@@ -6,25 +6,25 @@ export type ResultSummary = {
 }
 
 export type OffenceSummary = {
+  ActualOffenceEndDate?: { EndDate: Date }
+  ActualOffenceStartDate: { StartDate: Date }
   CourtOffenceSequenceNumber: number
   CriminalProsecutionReference: {
     OffenceReason?: OffenceReason
   }
   Result: ResultSummary[]
-  ActualOffenceStartDate: { StartDate: Date }
-  ActualOffenceEndDate?: { EndDate: Date }
 }
 
 export type CourtResultSummary = {
   AnnotatedHearingOutcome: {
     HearingOutcome: {
-      Hearing: {
-        DateOfHearing: Date
-      }
       Case: {
         HearingDefendant: {
           Offence: OffenceSummary[]
         }
+      }
+      Hearing: {
+        DateOfHearing: Date
       }
     }
   }
@@ -32,10 +32,10 @@ export type CourtResultSummary = {
 
 export type PncOffenceSummary = {
   offence: {
-    sequenceNumber: number
     cjsOffenceCode: string
-    startDate: Date
     endDate?: Date
+    sequenceNumber: number
+    startDate: Date
   }
 }
 
@@ -45,8 +45,8 @@ export type PncCourtCaseSummary = {
 }
 
 export type PncPenaltyCaseSummary = {
-  penaltyCaseReference: string
   offences: PncOffenceSummary[]
+  penaltyCaseReference: string
 }
 
 export type PncSummary = {
@@ -55,16 +55,16 @@ export type PncSummary = {
 }
 
 export type OffenceMatchingSummary = {
+  addedByCourt?: boolean
+  courtCaseReference?: null | string
   hoSequenceNumber: number
   offenceCode?: string
-  courtCaseReference?: string | null
-  addedByCourt?: boolean
   pncSequenceNumber?: number
 }
 
 export type CourtResultMatchingSummary =
   | {
-      caseReference?: string | null
+      caseReference?: null | string
       offences: OffenceMatchingSummary[]
     }
   | {
@@ -73,8 +73,8 @@ export type CourtResultMatchingSummary =
 
 export type MatchingComparisonOutput = {
   courtResult: CourtResultSummary
-  pnc?: PncSummary
-  matching: CourtResultMatchingSummary | null
   exceptions: Exception[]
   file: string
+  matching: CourtResultMatchingSummary | null
+  pnc?: PncSummary
 }

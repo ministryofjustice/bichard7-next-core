@@ -1,11 +1,12 @@
 import type { OrganisationUnitCodes, Result } from "../../../types/AnnotatedHearingOutcome"
+
 import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../dataLookup"
 import extractCodesFromOU from "../../dataLookup/extractCodesFromOU"
 import lookupCrownCourtByNameAndFirstPsaCode from "../../dataLookup/lookupCrownCourtByNameAndFirstPsaCode"
 
 export interface RemandDetails {
-  location?: OrganisationUnitCodes
   date?: Date
+  location?: OrganisationUnitCodes
 }
 
 interface ExtractedResultTextDate {

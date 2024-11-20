@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
+
 import ResultClass from "../../types/ResultClass"
 import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 

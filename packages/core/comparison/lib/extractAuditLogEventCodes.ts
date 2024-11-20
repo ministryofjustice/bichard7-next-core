@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser"
+
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
 
 type NameValuePair = {

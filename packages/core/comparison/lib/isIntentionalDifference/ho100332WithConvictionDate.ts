@@ -1,6 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core uses Conviction Date on the incoming offences to disambiguate between offence matches. This means it

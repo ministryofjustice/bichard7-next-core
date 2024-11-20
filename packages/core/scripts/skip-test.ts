@@ -1,5 +1,7 @@
 import type DynamoDB from "aws-sdk/clients/dynamodb"
+
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
+
 import type { ComparisonLog } from "../comparison/types"
 
 const config: DynamoDB.ClientConfiguration = {

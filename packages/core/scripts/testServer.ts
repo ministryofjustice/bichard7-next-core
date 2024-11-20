@@ -1,14 +1,17 @@
+import type { Request, Response } from "express"
+
 /* eslint-disable import/no-extraneous-dependencies */
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import type { Request, Response } from "express"
 import express from "express"
+
+import type { PncQueryResult } from "../types/PncQueryResult"
+
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import CorePhase1 from "../phase1/phase1"
 import CorePhase2 from "../phase2/phase2"
 import Phase from "../types/Phase"
-import type { PncQueryResult } from "../types/PncQueryResult"
 
 const app = express()
 app.use(express.raw({ type: "*/*", limit: 10_000_000 }))
@@ -16,8 +19,8 @@ const port = 6000
 
 type TestInput = {
   inputMessage: string
-  pncQueryResult?: PncQueryResult
   phase: Phase
+  pncQueryResult?: PncQueryResult
 }
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z$/

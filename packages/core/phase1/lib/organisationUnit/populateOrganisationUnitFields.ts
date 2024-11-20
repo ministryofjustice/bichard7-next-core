@@ -1,6 +1,6 @@
 import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
 
-const safeSubstring = (input: string, start: number, end: number): string | null =>
+const safeSubstring = (input: string, start: number, end: number): null | string =>
   input.length >= end ? input.substring(start, end) : null
 
 const populateOrganisationUnitFields = (organisationUnit: OrganisationUnitCodes): OrganisationUnitCodes => {

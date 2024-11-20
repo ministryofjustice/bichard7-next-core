@@ -1,6 +1,7 @@
-import type { PncOffence } from "../../types/PncQueryResult"
-import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncOffence } from "../../types/PncQueryResult"
+
+import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
 
 describe("areResultsMatchingPncAdjudication", () => {
   const matchingResult = { PNCDisposalType: 2063, Verdict: "G", PleaStatus: "G" } as Result

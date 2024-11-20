@@ -1,7 +1,9 @@
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
-import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
+
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { ComparisonData } from "../../types/ComparisonData"
+
+import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core parses the offences TIC string more accurately so will now add it to the AHO

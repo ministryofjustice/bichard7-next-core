@@ -1,8 +1,9 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type Task from "@moj-bichard7/common/conductor/types/Task"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
-import type Task from "@moj-bichard7/common/conductor/types/Task"
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"

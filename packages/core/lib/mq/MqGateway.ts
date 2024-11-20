@@ -1,8 +1,11 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import { isError } from "@moj-bichard7/common/types/Result"
 import type { Client, connect } from "stompit"
+
+import { isError } from "@moj-bichard7/common/types/Result"
 import { ConnectFailover } from "stompit"
+
 import type MqConfig from "./MqConfig"
+
 import deconstructServers from "./deconstructServers"
 
 const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
@@ -13,25 +16,12 @@ const reconnectOptions: ConnectFailover.ConnectFailoverOptions = {
 }
 
 export default class MqGateway {
-  private readonly connectionOptions: connect.ConnectOptions[]
-
   private client: Client | null
+
+  private readonly connectionOptions: connect.ConnectOptions[]
 
   constructor(config: MqConfig) {
     this.connectionOptions = deconstructServers(config)
-  }
-
-  private connectAsync(): PromiseResult<Client> {
-    return new Promise((resolve, reject) => {
-      const connectionManager = new ConnectFailover(this.connectionOptions, reconnectOptions)
-      connectionManager.connect((error: Error | null, client: Client) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(client)
-        }
-      })
-    })
   }
 
   protected async connectIfRequired(): PromiseResult<Client> {
@@ -46,19 +36,6 @@ export default class MqGateway {
     }
 
     return this.client
-  }
-
-  async sendMessage(message: string, queueName: string): PromiseResult<void> {
-    const client = await this.connectIfRequired()
-
-    if (isError(client)) {
-      return client
-    }
-
-    const sendResult = await this._sendMessage(message, queueName)
-    const disposeResult = await this.dispose()
-
-    return isError(sendResult) ? sendResult : disposeResult
   }
 
   private _sendMessage(message: string, queueName: string): Promise<void> {
@@ -84,6 +61,31 @@ export default class MqGateway {
     })
   }
 
+  private connectAsync(): PromiseResult<Client> {
+    return new Promise((resolve, reject) => {
+      const connectionManager = new ConnectFailover(this.connectionOptions, reconnectOptions)
+      connectionManager.connect((error: Error | null, client: Client) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(client)
+        }
+      })
+    })
+  }
+
+  private disconnectAsync(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.client!.disconnect((error: Error | null) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
   async dispose(): PromiseResult<void> {
     if (!this.client) {
       return undefined
@@ -98,15 +100,16 @@ export default class MqGateway {
     return disconnectionResult
   }
 
-  private disconnectAsync(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.client!.disconnect((error: Error | null) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve()
-        }
-      })
-    })
+  async sendMessage(message: string, queueName: string): PromiseResult<void> {
+    const client = await this.connectIfRequired()
+
+    if (isError(client)) {
+      return client
+    }
+
+    const sendResult = await this._sendMessage(message, queueName)
+    const disposeResult = await this.dispose()
+
+    return isError(sendResult) ? sendResult : disposeResult
   }
 }

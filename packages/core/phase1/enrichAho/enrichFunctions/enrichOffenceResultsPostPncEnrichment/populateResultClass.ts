@@ -1,4 +1,5 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import ResultClass from "../../../../types/ResultClass"
 import isAdjourned from "../../../lib/result/isAdjourned"
 import isWarrantIssued from "../../../lib/result/isWarrantIssued"

@@ -1,21 +1,23 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
+
+import type { Phase3Comparison } from "../types/ComparisonFile"
+import type { Phase3ComparisonResultDebugOutput, Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import type { Phase3Comparison } from "../types/ComparisonFile"
-import type { Phase3ComparisonResultDebugOutput, Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
+import phase3Handler from "../../phase3/phase3"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
+import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-import phase3Handler from "../../phase3/phase3"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import MockPncGateway from "./MockPncGateway"
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<Phase3ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison

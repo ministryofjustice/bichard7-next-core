@@ -1,7 +1,10 @@
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
 import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import axios from "axios"
 import https from "https"
-import { pncApiResultSchema } from "../schemas/pncApiResult"
+
+import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 import type PncApiConfig from "../types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../types/PncApiResult"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
@@ -13,8 +16,8 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "../types/PncQueryResult"
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
+
+import { pncApiResultSchema } from "../schemas/pncApiResult"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 
@@ -97,11 +100,11 @@ class PncApiError extends Error {
 }
 
 export default class PncGateway implements PncGatewayInterface {
-  constructor(private config: PncApiConfig) {}
-
   queryTime: Date | undefined
 
-  query(asn: string, correlationId: string): Promise<PncQueryResult | Error | undefined> {
+  constructor(private config: PncApiConfig) {}
+
+  query(asn: string, correlationId: string): Promise<Error | PncQueryResult | undefined> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {
