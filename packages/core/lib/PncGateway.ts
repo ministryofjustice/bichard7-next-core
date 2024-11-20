@@ -105,7 +105,7 @@ export default class PncGateway implements PncGatewayInterface {
 
   queryTime: Date | undefined
 
-  query(asn: string, correlationId: string): Promise<PncQueryResult | PncApiError | undefined> {
+  query(asn: string, correlationId: string): Promise<PncQueryResult | PncApiError> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {

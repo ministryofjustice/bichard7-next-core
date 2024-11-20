@@ -2,6 +2,7 @@ import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import type { PncQueryResult } from "../../types/PncQueryResult"
 import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
 import { PncApiError } from "../../lib/PncGateway"
+import type { PncException } from "../../types/Exception"
 
 /*
 Sample CXE element
@@ -24,7 +25,7 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): PncQueryResult | PncApiError | undefined => {
+export default (ahoXml: string): PncQueryResult | PncApiError => {
   const parsedAho = parseAhoXml(ahoXml)
 
   if (isError(parsedAho)) {
@@ -35,9 +36,7 @@ export default (ahoXml: string): PncQueryResult | PncApiError | undefined => {
     return parsedAho.PncQuery
   }
 
-  if (parsedAho.PncErrorMessage) {
-    return new PncApiError(parsedAho.PncErrorMessage)
-  }
+  const errorMessages = parsedAho.Exceptions.filter((e) => "message" in e).map((e) => (e as PncException).message)
 
-  return undefined
+  return new PncApiError(errorMessages)
 }

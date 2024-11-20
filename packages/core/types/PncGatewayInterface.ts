@@ -4,7 +4,7 @@ import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 import type { PncApiError } from "../lib/PncGateway"
 
 interface PncGatewayInterface {
-  query: (asn: string, correlationId: string) => PromiseResult<PncQueryResult | PncApiError | undefined>
+  query: (asn: string, correlationId: string) => Promise<PncQueryResult | PncApiError | undefined>
   queryTime: Date | undefined
   update: (request: PncUpdateRequest, correlationId: string) => PromiseResult<void>
 }

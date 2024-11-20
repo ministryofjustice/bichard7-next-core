@@ -11,12 +11,17 @@ import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import generateMessage from "../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
 import enrichWithPncQuery from "./enrichWithPncQuery"
+import { PncApiError } from "../../../lib/PncGateway"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "../../../lib/exceptions/errorPaths"
+import type { PncQueryResult } from "../../../types/PncQueryResult"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string
   let aho: AnnotatedHearingOutcome
   let pncGateway: PncGatewayInterface
   let auditLogger: AuditLogger
+  let response: PncQueryResult
   const mockedDate = new Date()
 
   beforeEach(() => {
@@ -34,7 +39,7 @@ describe("enrichWithQuery()", () => {
     const spiResult = parseSpiResult(incomingMessage)
     aho = transformSpiToAho(spiResult)
 
-    const response = generateMockPncQueryResult(incomingMessage)
+    response = generateMockPncQueryResult(incomingMessage)
     pncGateway = new MockPncGateway(response)
   })
 
@@ -43,10 +48,9 @@ describe("enrichWithQuery()", () => {
   })
 
   it("should enrich AHO with results from PNC query", async () => {
-    expect(aho.PncQuery).toBeUndefined()
     const resultAho = await enrichWithPncQuery(aho, pncGateway, auditLogger)
-    const expected = await pncGateway.query("MockASN", "Mock correlation ID")
-    expect(resultAho.PncQuery).toBe(expected)
+
+    expect(resultAho.PncQuery).toBe(response)
   })
 
   it("should populate the court case offence titles from PNC query", async () => {
@@ -56,6 +60,79 @@ describe("enrichWithQuery()", () => {
     expect(offences).toHaveLength(2)
     expect(offences![0].offence.title).toBe("POSSESSING PART OF DEAD BADGER")
     expect(offences![1].offence.title).toBe("POSSESSING THING DERIVED FROM DEAD BADGER")
+  })
+
+  describe("when the case is not recordable", () => {
+    it("should generate PNC exceptions from PNC error messages when the error is not a 'not found' error", async () => {
+      const errorMessages = ["I0013 - message 1", "I0208 - message 2"]
+      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+
+      const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
+      const exceptions = result.Exceptions
+
+      expect(exceptions).toHaveLength(2)
+      expect(exceptions[0]).toStrictEqual({
+        code: ExceptionCode.HO100301,
+        path: errorPaths.case.asn,
+        message: errorMessages[0]
+      })
+      expect(exceptions[1]).toStrictEqual({
+        code: ExceptionCode.HO100313,
+        path: errorPaths.case.asn,
+        message: errorMessages[1]
+      })
+    })
+
+    it("should not generate PNC exceptions when there is a 'not found' error", async () => {
+      const errorMessages = ["I1008 ARREST/SUMMONS REF ABC123 NOT FOUND"]
+      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+
+      const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
+      const exceptions = result.Exceptions
+
+      expect(exceptions).toHaveLength(0)
+    })
+  })
+
+  describe("when the case is recordable", () => {
+    beforeEach(() => {
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].RecordableOnPNCindicator = true
+    })
+
+    it("should generate PNC exceptions when there is a 'not found' error", async () => {
+      const errorMessages = ["I1008 ARREST/SUMMONS REF ABC123 NOT FOUND"]
+      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+
+      const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
+      const exceptions = result.Exceptions
+
+      expect(exceptions).toHaveLength(1)
+      expect(exceptions[0]).toStrictEqual({
+        code: ExceptionCode.HO100301,
+        path: errorPaths.case.asn,
+        message: errorMessages[0]
+      })
+    })
+
+    it("should generate PNC exceptions from PNC error messages when there is not a 'not found' error", async () => {
+      const errorMessages = ["I0013 - message 1", "I0208 - message 2"]
+      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+
+      const result = await enrichWithPncQuery(aho, pncGateway, auditLogger)
+      const exceptions = result.Exceptions
+
+      expect(exceptions).toHaveLength(2)
+      expect(exceptions[0]).toStrictEqual({
+        code: ExceptionCode.HO100301,
+        path: errorPaths.case.asn,
+        message: errorMessages[0]
+      })
+      expect(exceptions[1]).toStrictEqual({
+        code: ExceptionCode.HO100313,
+        path: errorPaths.case.asn,
+        message: errorMessages[1]
+      })
+    })
   })
 
   it("should populate the penalty case offence titles from PNC query", async () => {
@@ -120,7 +197,7 @@ describe("enrichWithQuery()", () => {
   it("should log a failed PNC query", async () => {
     const auditLoggerSpy = jest.spyOn(auditLogger, "info")
     jest.spyOn(pncGateway, "query").mockImplementation(() => {
-      return Promise.resolve(new Error("PNC error"))
+      return Promise.resolve(new PncApiError(["PNC error", "PNC error 2"]))
     })
 
     await enrichWithPncQuery(aho, pncGateway, auditLogger)
@@ -131,7 +208,7 @@ describe("enrichWithQuery()", () => {
       "PNC Attempts Made": 1,
       "PNC Request Message": "1101ZD0100000448754K",
       "PNC Request Type": "enquiry",
-      "PNC Response Message": "PNC error",
+      "PNC Response Message": "PNC error, PNC error 2",
       sensitiveAttributes: "PNC Request Message,PNC Response Message"
     })
   })
